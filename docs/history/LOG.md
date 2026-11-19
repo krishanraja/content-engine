@@ -5,6 +5,12 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-11-19
+
+- reconciled at `6bbfa12`: NOW.md carried `head: b0ca88d`, which is no longer a commit after the 18 Nov history scrub (`053d6b3c`), so the strict validator could not run on the way in; `head` moved to `6bbfa12`. Sessions had folded their own closeout notes through it and none was left to fold. The 2026-11-19 "What changed recently" bullet was a list of files and now carries the why from `25ee9d2c`. The NOW.md audit's `old_dated_claims` warning (the ve and Phase 3 bullet, dated 2026-11-04) is fixed by restating it against `docs/ve/STATUS.md` ("Phase 3 count": 0 of 3); its earlier detail is below.
+- rolled from NOW.md, verbatim (replaced by the restated bullet):
+  **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3** (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`, `docs/ve/STATUS.md`). From 9 Nov one production round: `ve proof` shows the hardest beat moving on his own take, and `ve render` refuses a whole cut until he presses Approve proof; the day tab carries four presses (Sign storyboard with a `ve expect` sheet, Pick a style, Approve proof, Approve cut) in `meta.making.gates`. Five lessons of the killed Thursday 5 Nov cut are guards in `scripts/velib/guards.py`, binding from 9 Nov. (2026-11-04)
+
 ## 2026-11-17
 
 - reconciled at `e7b785b`: NOW.md re-stamped from `3379360`; sessions had folded their own closeout notes through `e7b785b` (109 non-steward commits), and the NOW.md audit passed. Four "Where it is right now" bullets told the StyleStill covers pass by pass and two still called cards queued that had since been built, merged and reviewed (`2faede8f`, `5054cd7a`); they are one bullet now, from the commits and `config/ve/style-samples.json`. The one "What changed recently" bullet for 16 Nov was a list of files; it now says what was built and why, in the words of `82360c9b` and `c631e0ac`. The digest's stale stamps (`docs/STATE.md`, `docs/SYSTEM_MAP.md`, `docs/STUDIO.md`, `docs/GLOSSARY.md`, `docs/CONTENT_ENGINE.md`) were left as they are: their bodies were not rechecked in this run.

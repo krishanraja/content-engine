@@ -14,7 +14,7 @@ import re
 import sys
 from pathlib import Path, PureWindowsPath
 
-from .common import CONFIG, ROOT, load_json, sha256_file
+from .common import ROOT, load_json, sha256_file
 from .lint import pending_devices_error
 from . import palettes
 
@@ -309,38 +309,24 @@ _WEAK_ENDS = {'a', 'an', 'the', 'to', 'of', 'in', 'on', 'for', 'and', 'but', 'or
               'its', 'it', 'i', 'you', 'we', 'they', 'is', 'are', 'was', 'be', 'once', 'that', 'this', 'no', 'not',
               'with', 'at', 'by', 'as', 'if', 'how', 'just', 'can', 'will'}
 _END = re.compile(r'[.!?]["\x27)\u2019\u201d]*$')
+# The words the on-screen phrase check (config/ve/onscreen-checks.json, captions.opens_phrase) refuses at the start of a
+# page that follows a page with no closing punctuation (Wed 18, 19 Nov 2026: six pages broke there).
+_OPENS_PHRASE = {'a', 'an', 'the', 'of', 'to', 'my', 'your', 'our', 'their', 'his', 'her', 'its'}
 _PAUSE = re.compile(r'[,.!?;:]["\x27)\u2019\u201d]*$')
-
-
-def _phrase_words() -> tuple[set, set]:
-    """The words ve qc's captions.phrase_breaks reads (config/ve/onscreen-checks.json): a page may not end on one of
-    the first, and the next page may not open on one of the second. The pager reads the same list so what it makes is
-    what QC passes (habits short, 18 Nov 2026: 12 pages broke as "going | to be harder", "put | the car on trial")."""
-    try:
-        rules = load_json(CONFIG / 'onscreen-checks.json')['captions']
-        return set(rules['weak_ends']), set(rules['opens_phrase'])
-    except (OSError, ValueError, KeyError):
-        return set(), set()
-
-
-def _word(text: str) -> str:
-    return re.sub(r'[^a-z\']', '', text.lower())
 
 
 def _page_cost(rows: list[dict], start: int, n: int) -> int:
     """How badly a page of rows[start:start+n] reads. Lower is better; every rule here is a reading, not a limit."""
     page = rows[start:start + n]
-    last = _word(page[-1]['text'])
-    weak, opens = _phrase_words()
+    last = re.sub(r'[^a-z\']', '', page[-1]['text'].lower())
     cost = 0
     if any(_END.search(r['text']) for r in page[:-1]):
         cost += 6   # a page runs past the end of a sentence ("myself. I just put")
-    if start + n < len(rows) and not _PAUSE.search(page[-1]['text']) and last in weak:
-        cost += 10  # it ends mid-phrase on a small word QC refuses (heavier than a quick flip, which QC passes)
-    elif start + n < len(rows) and not _PAUSE.search(page[-1]['text']) and last in _WEAK_ENDS:
-        cost += 4   # it ends on one of the house's own small words (Thursday 5 Nov: "or tells | you how to lock it")
-    if start + n < len(rows) and not _PAUSE.search(page[-1]['text']) and _word(rows[start + n]['text']) in opens:
-        cost += 10  # the next page opens mid-phrase ("we don't put | the car on trial")
+    if start + n < len(rows) and not _PAUSE.search(page[-1]['text']) and last in _WEAK_ENDS:
+        cost += 12  # it ends mid-phrase on a small word: break anywhere else that reads
+    if start + n < len(rows) and not _PAUSE.search(page[-1]['text']) and \
+            re.sub(r'[^a-z\']', '', rows[start + n]['text'].lower()) in _OPENS_PHRASE:
+        cost += 12  # the next page opens on an article or possessive, the half of a phrase ("can't | your pay")
     if any(_PAUSE.search(r['text']) for r in page[:-1]):
         cost += 3   # a clause break inside the page ("Netflix for your evenings, Google")
     if not _held(rows, start + n):
@@ -353,17 +339,14 @@ def _page_cost(rows: list[dict], start: int, n: int) -> int:
 
 
 def _caption_groups(rows: list[dict], aspect: str = '9:16', emphasis=()) -> list[list[dict]]:
-    """Fit 2-5 words per page (6 when the sixth ends the sentence), choosing the breaks that read best over the whole run, never stranding an orphan."""
+    """Fit 2-5 words per page, choosing the breaks that read best over the whole run, never stranding an orphan."""
     size, available = (54, 1316) if aspect == '16:9' else (68, 816)
     for row in rows:
         caption_line_count([row], aspect, emphasis)
     # best[start] = (cost, page length) for the rest of the run from start; the run's end costs nothing.
     best = {len(rows): (0, 0)}
     for start in range(len(rows) - 1, -1, -1):
-        # A sixth word only when it ends the sentence: "it can get a bit dangerous." reads as one page, where every
-        # five-word split strands a small word QC refuses (18 Nov 2026).
-        longest = 6 if start + 5 < len(rows) and _END.search(rows[start + 5]['text']) else 5
-        options = [(_page_cost(rows, start, n) + best[start + n][0], n) for n in range(2, min(longest, len(rows) - start) + 1)
+        options = [(_page_cost(rows, start, n) + best[start + n][0], n) for n in range(2, min(5, len(rows) - start) + 1)
                    if start + n in best
                    and sum(r['w'] in emphasis for r in rows[start:start + n]) <= 1
                    and caption_line_count(rows[start:start + n], aspect, emphasis) <= 2]
@@ -419,9 +402,8 @@ def title_moment_props(spec: dict, cut_id: str, rows: list[dict], duration: int)
     holder = next((b for b in spec['cuts'][cut_id].get('beats', []) if b['span']['from_w'] <= span['to_w'] <= b['span']['to_w']), None)
     end_w = holder['span']['to_w'] if holder else span['to_w']
     after = next((row['atFrame'] for row in rows if row['w'] > end_w), duration)
-    resumes = next((row['atFrame'] for row in rows if row['w'] > span['to_w']), duration)
     return {'fromFrame': said[0]['atFrame'], 'toFrame': after, 'span': (span['from_w'], span['to_w']),
-            'release': 'fade' if resumes < after else 'captions',
+            'release': 'captions',  # the captions stay away while it holds, so it always flows back into them
             'words': [{'text': row['text'][:1].upper() + row['text'][1:] if i == 0 else row['text'], 'atFrame': row['atFrame']}
                       for i, row in enumerate(said)]}
 
@@ -630,7 +612,10 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     word_mode = spec['brand'].get('captions') == 'word' and not picked_theme
     moment = title_moment_props(spec, cut_id, rows, duration)
     # The captions step aside for the title's words, so they appear once (docs/ve/INGREDIENTS.md, the episode title moment).
-    spoken = [row for row in rows if not (moment and moment['span'][0] <= row['w'] <= moment['span'][1])]
+    # They stay away while the title holds too, so no lone caption word sits under it (Tue 17, 18 Nov: "find" under
+    # the held title); the title flows back into the caption line as the next caption starts.
+    spoken = [row for row in rows if not (moment and (moment['span'][0] <= row['w'] <= moment['span'][1]
+                                                      or moment['fromFrame'] <= row['atFrame'] < moment['toFrame']))]
     groups = [[row] for row in spoken] if word_mode else \
         [g for part in _zone_runs(spoken, beats) for g in _caption_groups(part, cut['aspect'], emphasis)]
     captions = []
@@ -692,7 +677,8 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         **({'captionTheme': spec['brand']['caption_theme']} if spec['brand'].get('caption_theme') else {}),
         **caption_props(spec),
         **({'title': spec['brand']['title']} if spec['brand'].get('title') else {}),
-        **({'titleMoment': {k: moment[k] for k in ('fromFrame', 'toFrame', 'release', 'words')}} if moment else {}),
+        **({'titleMoment': {**{k: moment[k] for k in ('fromFrame', 'toFrame', 'release', 'words')},
+                            **({'card': True} if (spec.get('title_moment') or {}).get('card') else {})}} if moment else {}),
         'beats': beats, 'objects': objects, 'events': events,
     }
     if sting:

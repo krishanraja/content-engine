@@ -650,3 +650,8 @@ above the "Make Your Mind Up" word mark. Which should be a bit larger and center
 - This replaces the bottom-corner placement for the last card only. The other cards keep the mark small in a bottom
   corner.
 - Nothing else sits between the words and the mark, and neither overlaps the card's own words.
+
+
+## Never an off-day tag (Krish, 2026-11-19)
+
+The words off.day, off-day or Off day are never on a card, a cover, a caption or a title: not as an eyebrow, a pill, a hashtag or a label. It is an internal name for Tuesday, Thursday and Saturday. The copy lint refuses it on every public surface (`off_day_tag`, `config/copy-lint.json`).

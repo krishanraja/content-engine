@@ -1,0 +1,5240 @@
+[
+{
+"w": 0,
+"word": "I",
+"onset_s": 0.12,
+"end_s": 0.14
+},
+{
+"w": 1,
+"word": "find",
+"onset_s": 0.2,
+"end_s": 0.4
+},
+{
+"w": 2,
+"word": "it",
+"onset_s": 0.42,
+"end_s": 0.5
+},
+{
+"w": 3,
+"word": "kind",
+"onset_s": 0.56,
+"end_s": 0.76
+},
+{
+"w": 4,
+"word": "of",
+"onset_s": 0.78,
+"end_s": 0.82
+},
+{
+"w": 5,
+"word": "crazy",
+"onset_s": 0.94,
+"end_s": 1.38
+},
+{
+"w": 6,
+"word": "that",
+"onset_s": 1.46,
+"end_s": 1.66
+},
+{
+"w": 7,
+"word": "Anthropic,",
+"onset_s": 1.9,
+"end_s": 2.68
+},
+{
+"w": 8,
+"word": "which",
+"onset_s": 2.92,
+"end_s": 3.12
+},
+{
+"w": 9,
+"word": "makes",
+"onset_s": 3.18,
+"end_s": 3.42
+},
+{
+"w": 10,
+"word": "Claude,",
+"onset_s": 3.48,
+"end_s": 3.8
+},
+{
+"w": 11,
+"word": "pays",
+"onset_s": 3.88,
+"end_s": 4.24
+},
+{
+"w": 12,
+"word": "for",
+"onset_s": 4.56,
+"end_s": 4.66
+},
+{
+"w": 13,
+"word": "other",
+"onset_s": 4.78,
+"end_s": 4.96
+},
+{
+"w": 14,
+"word": "companies'",
+"onset_s": 5.02,
+"end_s": 5.52
+},
+{
+"w": 15,
+"word": "tools,",
+"onset_s": 5.54,
+"end_s": 5.92
+},
+{
+"w": 16,
+"word": "for",
+"onset_s": 6.56,
+"end_s": 6.66
+},
+{
+"w": 17,
+"word": "tracking",
+"onset_s": 6.8,
+"end_s": 7.18
+},
+{
+"w": 18,
+"word": "its",
+"onset_s": 7.22,
+"end_s": 7.34
+},
+{
+"w": 19,
+"word": "customers,",
+"onset_s": 7.38,
+"end_s": 8.1
+},
+{
+"w": 20,
+"word": "customer",
+"onset_s": 8.7,
+"end_s": 9.0
+},
+{
+"w": 21,
+"word": "service,",
+"onset_s": 9.04,
+"end_s": 9.52
+},
+{
+"w": 22,
+"word": "and",
+"onset_s": 10.52,
+"end_s": 10.58
+},
+{
+"w": 23,
+"word": "even",
+"onset_s": 10.6,
+"end_s": 10.74
+},
+{
+"w": 24,
+"word": "for",
+"onset_s": 10.8,
+"end_s": 10.88
+},
+{
+"w": 25,
+"word": "running",
+"onset_s": 10.98,
+"end_s": 11.24
+},
+{
+"w": 26,
+"word": "its",
+"onset_s": 11.28,
+"end_s": 11.4
+},
+{
+"w": 27,
+"word": "own",
+"onset_s": 11.56,
+"end_s": 11.72
+},
+{
+"w": 28,
+"word": "financing",
+"onset_s": 11.86,
+"end_s": 12.52
+},
+{
+"w": 29,
+"word": "payroll.",
+"onset_s": 12.58,
+"end_s": 13.14
+},
+{
+"w": 30,
+"word": "This",
+"onset_s": 13.68,
+"end_s": 13.82
+},
+{
+"w": 31,
+"word": "is",
+"onset_s": 13.88,
+"end_s": 13.98
+},
+{
+"w": 32,
+"word": "the",
+"onset_s": 14.04,
+"end_s": 14.12
+},
+{
+"w": 33,
+"word": "company",
+"onset_s": 14.18,
+"end_s": 14.52
+},
+{
+"w": 34,
+"word": "that",
+"onset_s": 14.58,
+"end_s": 14.74
+},
+{
+"w": 35,
+"word": "everyone",
+"onset_s": 15.12,
+"end_s": 15.38
+},
+{
+"w": 36,
+"word": "else",
+"onset_s": 15.42,
+"end_s": 15.56
+},
+{
+"w": 37,
+"word": "builds",
+"onset_s": 15.58,
+"end_s": 15.88
+},
+{
+"w": 38,
+"word": "their",
+"onset_s": 15.92,
+"end_s": 16.041
+},
+{
+"w": 39,
+"word": "software",
+"onset_s": 16.101,
+"end_s": 16.501
+},
+{
+"w": 40,
+"word": "with",
+"onset_s": 16.541,
+"end_s": 16.761
+},
+{
+"w": 41,
+"word": "now,",
+"onset_s": 16.861,
+"end_s": 17.041
+},
+{
+"w": 42,
+"word": "and",
+"onset_s": 17.301,
+"end_s": 17.401
+},
+{
+"w": 43,
+"word": "yet",
+"onset_s": 17.421,
+"end_s": 17.581
+},
+{
+"w": 44,
+"word": "it",
+"onset_s": 17.761,
+"end_s": 17.861
+},
+{
+"w": 45,
+"word": "shops",
+"onset_s": 17.941,
+"end_s": 18.241
+},
+{
+"w": 46,
+"word": "outside,",
+"onset_s": 18.321,
+"end_s": 18.781
+},
+{
+"w": 47,
+"word": "even",
+"onset_s": 18.821,
+"end_s": 18.981
+},
+{
+"w": 48,
+"word": "though",
+"onset_s": 19.001,
+"end_s": 19.201
+},
+{
+"w": 49,
+"word": "it",
+"onset_s": 19.201,
+"end_s": 19.281
+},
+{
+"w": 50,
+"word": "definitely",
+"onset_s": 19.561,
+"end_s": 19.961
+},
+{
+"w": 51,
+"word": "could",
+"onset_s": 20.061,
+"end_s": 20.261
+},
+{
+"w": 52,
+"word": "build",
+"onset_s": 20.321,
+"end_s": 20.521
+},
+{
+"w": 53,
+"word": "them.",
+"onset_s": 20.561,
+"end_s": 20.701
+},
+{
+"w": 54,
+"word": "Is",
+"onset_s": 21.501,
+"end_s": 21.641
+},
+{
+"w": 55,
+"word": "the",
+"onset_s": 22.081,
+"end_s": 22.161
+},
+{
+"w": 56,
+"word": "engineer",
+"onset_s": 22.221,
+"end_s": 22.641
+},
+{
+"w": 57,
+"word": "in",
+"onset_s": 22.681,
+"end_s": 22.741
+},
+{
+"w": 58,
+"word": "your",
+"onset_s": 22.781,
+"end_s": 22.901
+},
+{
+"w": 59,
+"word": "team",
+"onset_s": 22.981,
+"end_s": 23.281
+},
+{
+"w": 60,
+"word": "who",
+"onset_s": 23.521,
+"end_s": 23.621
+},
+{
+"w": 61,
+"word": "now",
+"onset_s": 24.161,
+"end_s": 24.321
+},
+{
+"w": 62,
+"word": "feels",
+"onset_s": 24.421,
+"end_s": 24.681
+},
+{
+"w": 63,
+"word": "like",
+"onset_s": 24.741,
+"end_s": 24.961
+},
+{
+"w": 64,
+"word": "the",
+"onset_s": 25.021,
+"end_s": 25.081
+},
+{
+"w": 65,
+"word": "Crocodile",
+"onset_s": 25.141,
+"end_s": 25.601
+},
+{
+"w": 66,
+"word": "Hunter,",
+"onset_s": 25.621,
+"end_s": 25.961
+},
+{
+"w": 67,
+"word": "you",
+"onset_s": 26.541,
+"end_s": 26.601
+},
+{
+"w": 68,
+"word": "know",
+"onset_s": 26.621,
+"end_s": 26.781
+},
+{
+"w": 69,
+"word": "who",
+"onset_s": 27.001,
+"end_s": 27.061
+},
+{
+"w": 70,
+"word": "I'm",
+"onset_s": 27.101,
+"end_s": 27.201
+},
+{
+"w": 71,
+"word": "the",
+"onset_s": 27.241,
+"end_s": 28.741
+},
+{
+"w": 72,
+"word": "guy",
+"onset_s": 28.781,
+"end_s": 28.961
+},
+{
+"w": 73,
+"word": "who",
+"onset_s": 29.041,
+"end_s": 29.141
+},
+{
+"w": 74,
+"word": "says",
+"onset_s": 29.701,
+"end_s": 29.901
+},
+{
+"w": 75,
+"word": "he",
+"onset_s": 29.921,
+"end_s": 29.981
+},
+{
+"w": 76,
+"word": "can",
+"onset_s": 30.021,
+"end_s": 30.141
+},
+{
+"w": 77,
+"word": "build",
+"onset_s": 30.181,
+"end_s": 30.361
+},
+{
+"w": 78,
+"word": "everything",
+"onset_s": 30.401,
+"end_s": 30.701
+},
+{
+"w": 79,
+"word": "himself",
+"onset_s": 30.721,
+"end_s": 31.121
+},
+{
+"w": 80,
+"word": "now.",
+"onset_s": 31.201,
+"end_s": 31.381
+},
+{
+"w": 81,
+"word": "Is",
+"onset_s": 31.641,
+"end_s": 31.721
+},
+{
+"w": 82,
+"word": "he",
+"onset_s": 31.741,
+"end_s": 31.781
+},
+{
+"w": 83,
+"word": "completely",
+"onset_s": 31.861,
+"end_s": 32.261
+},
+{
+"w": 84,
+"word": "wrong?",
+"onset_s": 32.301,
+"end_s": 32.501
+},
+{
+"w": 85,
+"word": "Let's",
+"onset_s": 32.761,
+"end_s": 32.941
+},
+{
+"w": 86,
+"word": "dive",
+"onset_s": 33.001,
+"end_s": 33.241
+},
+{
+"w": 87,
+"word": "in.",
+"onset_s": 33.261,
+"end_s": 33.361
+},
+{
+"w": 88,
+"word": "Build",
+"onset_s": 33.901,
+"end_s": 34.201
+},
+{
+"w": 89,
+"word": "or",
+"onset_s": 34.341,
+"end_s": 34.401
+},
+{
+"w": 90,
+"word": "buy",
+"onset_s": 34.461,
+"end_s": 34.661
+},
+{
+"w": 91,
+"word": "your",
+"onset_s": 34.681,
+"end_s": 34.821
+},
+{
+"w": 92,
+"word": "tools",
+"onset_s": 34.881,
+"end_s": 35.261
+},
+{
+"w": 93,
+"word": "in",
+"onset_s": 35.421,
+"end_s": 35.501
+},
+{
+"w": 94,
+"word": "an",
+"onset_s": 35.541,
+"end_s": 35.601
+},
+{
+"w": 95,
+"word": "AI",
+"onset_s": 35.661,
+"end_s": 35.941
+},
+{
+"w": 96,
+"word": "world.",
+"onset_s": 36.001,
+"end_s": 36.281
+},
+{
+"w": 97,
+"word": "So",
+"onset_s": 36.521,
+"end_s": 36.601
+},
+{
+"w": 98,
+"word": "first,",
+"onset_s": 36.901,
+"end_s": 37.341
+},
+{
+"w": 99,
+"word": "why",
+"onset_s": 37.581,
+"end_s": 37.781
+},
+{
+"w": 100,
+"word": "does",
+"onset_s": 37.821,
+"end_s": 37.961
+},
+{
+"w": 101,
+"word": "everyone",
+"onset_s": 38.001,
+"end_s": 38.321
+},
+{
+"w": 102,
+"word": "suddenly",
+"onset_s": 38.561,
+"end_s": 38.901
+},
+{
+"w": 103,
+"word": "want",
+"onset_s": 39.021,
+"end_s": 39.181
+},
+{
+"w": 104,
+"word": "to",
+"onset_s": 39.241,
+"end_s": 39.321
+},
+{
+"w": 105,
+"word": "build?",
+"onset_s": 39.321,
+"end_s": 39.621
+},
+{
+"w": 106,
+"word": "Honestly,",
+"onset_s": 40.001,
+"end_s": 40.341
+},
+{
+"w": 107,
+"word": "it's",
+"onset_s": 40.421,
+"end_s": 40.661
+},
+{
+"w": 108,
+"word": "the",
+"onset_s": 41.081,
+"end_s": 41.141
+},
+{
+"w": 109,
+"word": "bills",
+"onset_s": 41.221,
+"end_s": 41.561
+},
+{
+"w": 110,
+"word": "really.",
+"onset_s": 41.641,
+"end_s": 41.901
+},
+{
+"w": 111,
+"word": "The",
+"onset_s": 42.501,
+"end_s": 42.561
+},
+{
+"w": 112,
+"word": "software",
+"onset_s": 42.701,
+"end_s": 43.101
+},
+{
+"w": 113,
+"word": "you",
+"onset_s": 43.121,
+"end_s": 43.221
+},
+{
+"w": 114,
+"word": "rent",
+"onset_s": 43.261,
+"end_s": 43.461
+},
+{
+"w": 115,
+"word": "keeps",
+"onset_s": 43.661,
+"end_s": 43.921
+},
+{
+"w": 116,
+"word": "getting",
+"onset_s": 43.961,
+"end_s": 44.161
+},
+{
+"w": 117,
+"word": "more",
+"onset_s": 44.181,
+"end_s": 44.301
+},
+{
+"w": 118,
+"word": "expensive.",
+"onset_s": 44.321,
+"end_s": 44.901
+},
+{
+"w": 119,
+"word": "Lots",
+"onset_s": 45.321,
+"end_s": 45.541
+},
+{
+"w": 120,
+"word": "of",
+"onset_s": 45.601,
+"end_s": 45.701
+},
+{
+"w": 121,
+"word": "companies",
+"onset_s": 46.061,
+"end_s": 46.481
+},
+{
+"w": 122,
+"word": "rent",
+"onset_s": 46.581,
+"end_s": 46.781
+},
+{
+"w": 123,
+"word": "the",
+"onset_s": 47.141,
+"end_s": 47.221
+},
+{
+"w": 124,
+"word": "software",
+"onset_s": 47.281,
+"end_s": 47.701
+},
+{
+"w": 125,
+"word": "that",
+"onset_s": 47.721,
+"end_s": 47.841
+},
+{
+"w": 126,
+"word": "runs",
+"onset_s": 47.961,
+"end_s": 48.242
+},
+{
+"w": 127,
+"word": "their",
+"onset_s": 48.302,
+"end_s": 48.442
+},
+{
+"w": 128,
+"word": "servers.",
+"onset_s": 48.542,
+"end_s": 49.022
+},
+{
+"w": 129,
+"word": "Then",
+"onset_s": 49.582,
+"end_s": 49.682
+},
+{
+"w": 130,
+"word": "that",
+"onset_s": 49.742,
+"end_s": 49.902
+},
+{
+"w": 131,
+"word": "software",
+"onset_s": 50.182,
+"end_s": 50.822
+},
+{
+"w": 132,
+"word": "got",
+"onset_s": 51.182,
+"end_s": 51.302
+},
+{
+"w": 133,
+"word": "a",
+"onset_s": 51.342,
+"end_s": 51.362
+},
+{
+"w": 134,
+"word": "new",
+"onset_s": 51.402,
+"end_s": 51.562
+},
+{
+"w": 135,
+"word": "owner",
+"onset_s": 51.662,
+"end_s": 51.902
+},
+{
+"w": 136,
+"word": "and",
+"onset_s": 51.942,
+"end_s": 52.042
+},
+{
+"w": 137,
+"word": "some",
+"onset_s": 52.122,
+"end_s": 52.342
+},
+{
+"w": 138,
+"word": "say",
+"onset_s": 52.762,
+"end_s": 52.962
+},
+{
+"w": 139,
+"word": "their",
+"onset_s": 53.162,
+"end_s": 53.382
+},
+{
+"w": 140,
+"word": "bill",
+"onset_s": 53.902,
+"end_s": 54.082
+},
+{
+"w": 141,
+"word": "went",
+"onset_s": 54.162,
+"end_s": 54.342
+},
+{
+"w": 142,
+"word": "up",
+"onset_s": 54.422,
+"end_s": 54.562
+},
+{
+"w": 143,
+"word": "10",
+"onset_s": 55.022,
+"end_s": 55.042
+},
+{
+"w": 144,
+"word": "times,",
+"onset_s": 55.382,
+"end_s": 55.762
+},
+{
+"w": 145,
+"word": "literally",
+"onset_s": 55.822,
+"end_s": 56.122
+},
+{
+"w": 146,
+"word": "10",
+"onset_s": 56.222,
+"end_s": 56.242
+},
+{
+"w": 147,
+"word": "times.",
+"onset_s": 56.362,
+"end_s": 56.722
+},
+{
+"w": 148,
+"word": "if",
+"onset_s": 57.202,
+"end_s": 57.282
+},
+{
+"w": 149,
+"word": "that",
+"onset_s": 57.302,
+"end_s": 57.422
+},
+{
+"w": 150,
+"word": "company",
+"onset_s": 57.462,
+"end_s": 57.742
+},
+{
+"w": 151,
+"word": "gets",
+"onset_s": 57.802,
+"end_s": 57.962
+},
+{
+"w": 152,
+"word": "sold",
+"onset_s": 57.982,
+"end_s": 58.182
+},
+{
+"w": 153,
+"word": "to",
+"onset_s": 58.222,
+"end_s": 58.262
+},
+{
+"w": 154,
+"word": "someone",
+"onset_s": 58.322,
+"end_s": 58.562
+},
+{
+"w": 155,
+"word": "else.",
+"onset_s": 58.622,
+"end_s": 58.862
+},
+{
+"w": 156,
+"word": "And",
+"onset_s": 59.742,
+"end_s": 59.822
+},
+{
+"w": 157,
+"word": "at",
+"onset_s": 59.842,
+"end_s": 59.902
+},
+{
+"w": 158,
+"word": "the",
+"onset_s": 59.922,
+"end_s": 59.982
+},
+{
+"w": 159,
+"word": "same",
+"onset_s": 60.022,
+"end_s": 60.242
+},
+{
+"w": 160,
+"word": "time,",
+"onset_s": 60.402,
+"end_s": 60.742
+},
+{
+"w": 161,
+"word": "building",
+"onset_s": 60.942,
+"end_s": 61.322
+},
+{
+"w": 162,
+"word": "suddenly",
+"onset_s": 61.542,
+"end_s": 61.882
+},
+{
+"w": 163,
+"word": "feels",
+"onset_s": 62.042,
+"end_s": 62.382
+},
+{
+"w": 164,
+"word": "free.",
+"onset_s": 62.462,
+"end_s": 62.722
+},
+{
+"w": 165,
+"word": "And",
+"onset_s": 63.282,
+"end_s": 63.362
+},
+{
+"w": 166,
+"word": "you've",
+"onset_s": 63.362,
+"end_s": 63.482
+},
+{
+"w": 167,
+"word": "probably",
+"onset_s": 63.482,
+"end_s": 63.682
+},
+{
+"w": 168,
+"word": "heard",
+"onset_s": 63.722,
+"end_s": 63.862
+},
+{
+"w": 169,
+"word": "of",
+"onset_s": 63.882,
+"end_s": 63.942
+},
+{
+"w": 170,
+"word": "vibe",
+"onset_s": 63.962,
+"end_s": 64.202
+},
+{
+"w": 171,
+"word": "coding.",
+"onset_s": 64.222,
+"end_s": 64.562
+},
+{
+"w": 172,
+"word": "You",
+"onset_s": 64.922,
+"end_s": 65.002
+},
+{
+"w": 173,
+"word": "describe",
+"onset_s": 65.022,
+"end_s": 65.422
+},
+{
+"w": 174,
+"word": "what",
+"onset_s": 65.442,
+"end_s": 65.542
+},
+{
+"w": 175,
+"word": "you",
+"onset_s": 65.582,
+"end_s": 65.662
+},
+{
+"w": 176,
+"word": "want",
+"onset_s": 65.662,
+"end_s": 65.862
+},
+{
+"w": 177,
+"word": "in",
+"onset_s": 65.942,
+"end_s": 66.002
+},
+{
+"w": 178,
+"word": "plain",
+"onset_s": 66.062,
+"end_s": 66.282
+},
+{
+"w": 179,
+"word": "words",
+"onset_s": 66.342,
+"end_s": 66.682
+},
+{
+"w": 180,
+"word": "and",
+"onset_s": 66.722,
+"end_s": 66.842
+},
+{
+"w": 181,
+"word": "the",
+"onset_s": 66.982,
+"end_s": 67.062
+},
+{
+"w": 182,
+"word": "AI",
+"onset_s": 67.142,
+"end_s": 67.382
+},
+{
+"w": 183,
+"word": "writes",
+"onset_s": 67.442,
+"end_s": 67.842
+},
+{
+"w": 184,
+"word": "the",
+"onset_s": 68.042,
+"end_s": 68.122
+},
+{
+"w": 185,
+"word": "code",
+"onset_s": 68.162,
+"end_s": 68.362
+},
+{
+"w": 186,
+"word": "out.",
+"onset_s": 68.402,
+"end_s": 68.562
+},
+{
+"w": 187,
+"word": "So",
+"onset_s": 68.902,
+"end_s": 68.962
+},
+{
+"w": 188,
+"word": "you",
+"onset_s": 69.022,
+"end_s": 69.122
+},
+{
+"w": 189,
+"word": "can",
+"onset_s": 69.122,
+"end_s": 69.242
+},
+{
+"w": 190,
+"word": "type,",
+"onset_s": 69.262,
+"end_s": 69.562
+},
+{
+"w": 191,
+"word": "give",
+"onset_s": 69.842,
+"end_s": 69.962
+},
+{
+"w": 192,
+"word": "me",
+"onset_s": 69.962,
+"end_s": 70.022
+},
+{
+"w": 193,
+"word": "a",
+"onset_s": 70.062,
+"end_s": 70.082
+},
+{
+"w": 194,
+"word": "page",
+"onset_s": 70.142,
+"end_s": 70.502
+},
+{
+"w": 195,
+"word": "with",
+"onset_s": 70.562,
+"end_s": 70.742
+},
+{
+"w": 196,
+"word": "all",
+"onset_s": 70.962,
+"end_s": 71.042
+},
+{
+"w": 197,
+"word": "my",
+"onset_s": 71.062,
+"end_s": 71.182
+},
+{
+"w": 198,
+"word": "customers",
+"onset_s": 71.262,
+"end_s": 71.702
+},
+{
+"w": 199,
+"word": "on",
+"onset_s": 71.742,
+"end_s": 71.822
+},
+{
+"w": 200,
+"word": "it",
+"onset_s": 71.842,
+"end_s": 71.922
+},
+{
+"w": 201,
+"word": "and",
+"onset_s": 71.942,
+"end_s": 72.022
+},
+{
+"w": 202,
+"word": "a",
+"onset_s": 72.082,
+"end_s": 72.102
+},
+{
+"w": 203,
+"word": "big",
+"onset_s": 72.182,
+"end_s": 72.342
+},
+{
+"w": 204,
+"word": "button",
+"onset_s": 72.462,
+"end_s": 72.682
+},
+{
+"w": 205,
+"word": "to",
+"onset_s": 72.742,
+"end_s": 72.822
+},
+{
+"w": 206,
+"word": "log",
+"onset_s": 72.922,
+"end_s": 73.082
+},
+{
+"w": 207,
+"word": "a",
+"onset_s": 73.102,
+"end_s": 73.122
+},
+{
+"w": 208,
+"word": "call.",
+"onset_s": 73.222,
+"end_s": 73.442
+},
+{
+"w": 209,
+"word": "And",
+"onset_s": 73.942,
+"end_s": 74.002
+},
+{
+"w": 210,
+"word": "a",
+"onset_s": 74.022,
+"end_s": 74.042
+},
+{
+"w": 211,
+"word": "few",
+"onset_s": 74.062,
+"end_s": 74.202
+},
+{
+"w": 212,
+"word": "minutes",
+"onset_s": 74.242,
+"end_s": 74.462
+},
+{
+"w": 213,
+"word": "later,",
+"onset_s": 74.502,
+"end_s": 74.742
+},
+{
+"w": 214,
+"word": "hey",
+"onset_s": 74.982,
+"end_s": 75.102
+},
+{
+"w": 215,
+"word": "presto,",
+"onset_s": 75.162,
+"end_s": 75.502
+},
+{
+"w": 216,
+"word": "hey",
+"onset_s": 75.922,
+"end_s": 76.002
+},
+{
+"w": 217,
+"word": "presto.",
+"onset_s": 76.062,
+"end_s": 76.362
+},
+{
+"w": 218,
+"word": "There",
+"onset_s": 77.442,
+"end_s": 77.702
+},
+{
+"w": 219,
+"word": "it",
+"onset_s": 77.702,
+"end_s": 77.782
+},
+{
+"w": 220,
+"word": "is.",
+"onset_s": 77.882,
+"end_s": 78.082
+},
+{
+"w": 221,
+"word": "Honestly,",
+"onset_s": 78.942,
+"end_s": 79.322
+},
+{
+"w": 222,
+"word": "it's",
+"onset_s": 79.462,
+"end_s": 79.602
+},
+{
+"w": 223,
+"word": "a",
+"onset_s": 79.702,
+"end_s": 79.722
+},
+{
+"w": 224,
+"word": "bit",
+"onset_s": 79.902,
+"end_s": 80.062
+},
+{
+"w": 225,
+"word": "magic",
+"onset_s": 80.102,
+"end_s": 80.463
+},
+{
+"w": 226,
+"word": "the",
+"onset_s": 80.543,
+"end_s": 80.603
+},
+{
+"w": 227,
+"word": "first",
+"onset_s": 80.643,
+"end_s": 80.883
+},
+{
+"w": 228,
+"word": "time",
+"onset_s": 80.903,
+"end_s": 81.103
+},
+{
+"w": 229,
+"word": "you",
+"onset_s": 81.123,
+"end_s": 81.223
+},
+{
+"w": 230,
+"word": "see",
+"onset_s": 81.283,
+"end_s": 81.423
+},
+{
+"w": 231,
+"word": "it.",
+"onset_s": 81.443,
+"end_s": 81.543
+},
+{
+"w": 232,
+"word": "Bills",
+"onset_s": 81.683,
+"end_s": 82.043
+},
+{
+"w": 233,
+"word": "go",
+"onset_s": 82.743,
+"end_s": 82.823
+},
+{
+"w": 234,
+"word": "up",
+"onset_s": 82.963,
+"end_s": 83.123
+},
+{
+"w": 235,
+"word": "and",
+"onset_s": 83.283,
+"end_s": 83.423
+},
+{
+"w": 236,
+"word": "building",
+"onset_s": 83.843,
+"end_s": 84.223
+},
+{
+"w": 237,
+"word": "tools",
+"onset_s": 84.623,
+"end_s": 84.963
+},
+{
+"w": 238,
+"word": "that",
+"onset_s": 85.023,
+"end_s": 85.163
+},
+{
+"w": 239,
+"word": "feels",
+"onset_s": 85.203,
+"end_s": 85.443
+},
+{
+"w": 240,
+"word": "like",
+"onset_s": 85.483,
+"end_s": 85.643
+},
+{
+"w": 241,
+"word": "magic.",
+"onset_s": 85.663,
+"end_s": 85.983
+},
+{
+"w": 242,
+"word": "So",
+"onset_s": 86.063,
+"end_s": 86.143
+},
+{
+"w": 243,
+"word": "no",
+"onset_s": 86.723,
+"end_s": 86.783
+},
+{
+"w": 244,
+"word": "wonder",
+"onset_s": 86.863,
+"end_s": 87.143
+},
+{
+"w": 245,
+"word": "old",
+"onset_s": 87.243,
+"end_s": 87.403
+},
+{
+"w": 246,
+"word": "mate",
+"onset_s": 87.463,
+"end_s": 87.703
+},
+{
+"w": 247,
+"word": "software",
+"onset_s": 87.923,
+"end_s": 88.243
+},
+{
+"w": 248,
+"word": "developer",
+"onset_s": 88.243,
+"end_s": 88.603
+},
+{
+"w": 249,
+"word": "in",
+"onset_s": 88.643,
+"end_s": 88.703
+},
+{
+"w": 250,
+"word": "your",
+"onset_s": 88.723,
+"end_s": 88.823
+},
+{
+"w": 251,
+"word": "business",
+"onset_s": 88.843,
+"end_s": 89.163
+},
+{
+"w": 252,
+"word": "the",
+"onset_s": 89.223,
+"end_s": 89.303
+},
+{
+"w": 253,
+"word": "crocodile",
+"onset_s": 89.343,
+"end_s": 89.723
+},
+{
+"w": 254,
+"word": "hunter",
+"onset_s": 89.743,
+"end_s": 90.083
+},
+{
+"w": 255,
+"word": "The",
+"onset_s": 90.643,
+"end_s": 90.703
+},
+{
+"w": 256,
+"word": "one",
+"onset_s": 90.783,
+"end_s": 90.903
+},
+{
+"w": 257,
+"word": "who",
+"onset_s": 90.923,
+"end_s": 90.983
+},
+{
+"w": 258,
+"word": "thinks",
+"onset_s": 91.023,
+"end_s": 91.223
+},
+{
+"w": 259,
+"word": "he",
+"onset_s": 91.223,
+"end_s": 91.283
+},
+{
+"w": 260,
+"word": "can",
+"onset_s": 91.303,
+"end_s": 91.403
+},
+{
+"w": 261,
+"word": "wrestle",
+"onset_s": 91.423,
+"end_s": 91.683
+},
+{
+"w": 262,
+"word": "any",
+"onset_s": 91.723,
+"end_s": 91.823
+},
+{
+"w": 263,
+"word": "problem",
+"onset_s": 91.883,
+"end_s": 92.183
+},
+{
+"w": 264,
+"word": "with",
+"onset_s": 92.203,
+"end_s": 92.303
+},
+{
+"w": 265,
+"word": "his",
+"onset_s": 92.323,
+"end_s": 92.423
+},
+{
+"w": 266,
+"word": "bare",
+"onset_s": 92.463,
+"end_s": 92.663
+},
+{
+"w": 267,
+"word": "hands",
+"onset_s": 92.703,
+"end_s": 93.083
+},
+{
+"w": 268,
+"word": "is",
+"onset_s": 93.203,
+"end_s": 93.343
+},
+{
+"w": 269,
+"word": "excited",
+"onset_s": 93.423,
+"end_s": 93.883
+},
+{
+"w": 270,
+"word": "so",
+"onset_s": 94.663,
+"end_s": 94.743
+},
+{
+"w": 271,
+"word": "I",
+"onset_s": 95.063,
+"end_s": 95.083
+},
+{
+"w": 272,
+"word": "went",
+"onset_s": 95.163,
+"end_s": 95.343
+},
+{
+"w": 273,
+"word": "digging",
+"onset_s": 95.563,
+"end_s": 95.903
+},
+{
+"w": 274,
+"word": "into",
+"onset_s": 95.983,
+"end_s": 96.143
+},
+{
+"w": 275,
+"word": "the",
+"onset_s": 96.163,
+"end_s": 96.243
+},
+{
+"w": 276,
+"word": "companies",
+"onset_s": 96.283,
+"end_s": 96.703
+},
+{
+"w": 277,
+"word": "that",
+"onset_s": 96.763,
+"end_s": 96.883
+},
+{
+"w": 278,
+"word": "actually",
+"onset_s": 96.983,
+"end_s": 97.323
+},
+{
+"w": 279,
+"word": "do",
+"onset_s": 97.443,
+"end_s": 97.523
+},
+{
+"w": 280,
+"word": "this",
+"onset_s": 97.623,
+"end_s": 97.843
+},
+{
+"w": 281,
+"word": "and",
+"onset_s": 97.883,
+"end_s": 98.003
+},
+{
+"w": 282,
+"word": "the",
+"onset_s": 98.243,
+"end_s": 98.323
+},
+{
+"w": 283,
+"word": "headlines",
+"onset_s": 98.743,
+"end_s": 99.103
+},
+{
+"w": 284,
+"word": "are",
+"onset_s": 99.103,
+"end_s": 99.183
+},
+{
+"w": 285,
+"word": "much",
+"onset_s": 99.183,
+"end_s": 99.363
+},
+{
+"w": 286,
+"word": "bigger",
+"onset_s": 99.403,
+"end_s": 99.603
+},
+{
+"w": 287,
+"word": "than",
+"onset_s": 99.623,
+"end_s": 99.763
+},
+{
+"w": 288,
+"word": "What",
+"onset_s": 100.243,
+"end_s": 100.443
+},
+{
+"w": 289,
+"word": "actually",
+"onset_s": 100.663,
+"end_s": 101.063
+},
+{
+"w": 290,
+"word": "are",
+"onset_s": 101.363,
+"end_s": 101.443
+},
+{
+"w": 291,
+"word": "expected",
+"onset_s": 101.463,
+"end_s": 101.943
+},
+{
+"w": 292,
+"word": "start",
+"onset_s": 102.383,
+"end_s": 102.683
+},
+{
+"w": 293,
+"word": "with",
+"onset_s": 102.923,
+"end_s": 103.103
+},
+{
+"w": 294,
+"word": "Klarna",
+"onset_s": 103.363,
+"end_s": 103.723
+},
+{
+"w": 295,
+"word": "the",
+"onset_s": 103.863,
+"end_s": 103.923
+},
+{
+"w": 296,
+"word": "buy",
+"onset_s": 104.043,
+"end_s": 104.203
+},
+{
+"w": 297,
+"word": "now",
+"onset_s": 104.243,
+"end_s": 104.423
+},
+{
+"w": 298,
+"word": "pay",
+"onset_s": 104.483,
+"end_s": 104.623
+},
+{
+"w": 299,
+"word": "later",
+"onset_s": 104.663,
+"end_s": 104.923
+},
+{
+"w": 300,
+"word": "app",
+"onset_s": 104.983,
+"end_s": 105.103
+},
+{
+"w": 301,
+"word": "The",
+"onset_s": 105.643,
+"end_s": 105.703
+},
+{
+"w": 302,
+"word": "headline",
+"onset_s": 105.703,
+"end_s": 106.043
+},
+{
+"w": 303,
+"word": "said",
+"onset_s": 106.083,
+"end_s": 106.183
+},
+{
+"w": 304,
+"word": "Klarna",
+"onset_s": 106.223,
+"end_s": 106.463
+},
+{
+"w": 305,
+"word": "had",
+"onset_s": 106.503,
+"end_s": 106.623
+},
+{
+"w": 306,
+"word": "switched",
+"onset_s": 106.703,
+"end_s": 107.003
+},
+{
+"w": 307,
+"word": "off",
+"onset_s": 107.023,
+"end_s": 107.123
+},
+{
+"w": 308,
+"word": "salesforce",
+"onset_s": 107.183,
+"end_s": 107.823
+},
+{
+"w": 309,
+"word": "the",
+"onset_s": 108.023,
+"end_s": 108.103
+},
+{
+"w": 310,
+"word": "software",
+"onset_s": 108.223,
+"end_s": 108.683
+},
+{
+"w": 311,
+"word": "the",
+"onset_s": 108.983,
+"end_s": 109.043
+},
+{
+"w": 312,
+"word": "sales",
+"onset_s": 109.143,
+"end_s": 109.383
+},
+{
+"w": 313,
+"word": "teams",
+"onset_s": 109.443,
+"end_s": 109.723
+},
+{
+"w": 314,
+"word": "used",
+"onset_s": 109.783,
+"end_s": 109.923
+},
+{
+"w": 315,
+"word": "to",
+"onset_s": 109.923,
+"end_s": 109.983
+},
+{
+"w": 316,
+"word": "track",
+"onset_s": 110.043,
+"end_s": 110.263
+},
+{
+"w": 317,
+"word": "every",
+"onset_s": 110.323,
+"end_s": 110.463
+},
+{
+"w": 318,
+"word": "customer",
+"onset_s": 110.523,
+"end_s": 110.923
+},
+{
+"w": 319,
+"word": "the",
+"onset_s": 111.123,
+"end_s": 111.183
+},
+{
+"w": 320,
+"word": "one",
+"onset_s": 111.263,
+"end_s": 111.403
+},
+{
+"w": 321,
+"word": "that",
+"onset_s": 111.643,
+"end_s": 111.743
+},
+{
+"w": 322,
+"word": "everyone",
+"onset_s": 111.763,
+"end_s": 112.043
+},
+{
+"w": 323,
+"word": "hates",
+"onset_s": 112.083,
+"end_s": 112.384
+},
+{
+"w": 324,
+"word": "on",
+"onset_s": 112.544,
+"end_s": 112.644
+},
+{
+"w": 325,
+"word": "planet",
+"onset_s": 112.784,
+"end_s": 113.004
+},
+{
+"w": 326,
+"word": "earth",
+"onset_s": 113.044,
+"end_s": 113.224
+},
+{
+"w": 327,
+"word": "and",
+"onset_s": 113.784,
+"end_s": 113.884
+},
+{
+"w": 328,
+"word": "workday",
+"onset_s": 113.944,
+"end_s": 114.364
+},
+{
+"w": 329,
+"word": "too",
+"onset_s": 114.444,
+"end_s": 114.624
+},
+{
+"w": 330,
+"word": "that",
+"onset_s": 114.924,
+"end_s": 115.104
+},
+{
+"w": 331,
+"word": "software",
+"onset_s": 115.284,
+"end_s": 115.664
+},
+{
+"w": 332,
+"word": "that",
+"onset_s": 115.684,
+"end_s": 115.824
+},
+{
+"w": 333,
+"word": "runs",
+"onset_s": 115.904,
+"end_s": 116.204
+},
+{
+"w": 334,
+"word": "pay",
+"onset_s": 116.264,
+"end_s": 116.484
+},
+{
+"w": 335,
+"word": "and",
+"onset_s": 116.544,
+"end_s": 116.644
+},
+{
+"w": 336,
+"word": "holidays",
+"onset_s": 116.644,
+"end_s": 117.144
+},
+{
+"w": 337,
+"word": "both",
+"onset_s": 117.224,
+"end_s": 117.484
+},
+{
+"w": 338,
+"word": "of",
+"onset_s": 117.504,
+"end_s": 117.564
+},
+{
+"w": 339,
+"word": "them",
+"onset_s": 117.584,
+"end_s": 117.724
+},
+{
+"w": 340,
+"word": "bang",
+"onset_s": 118.044,
+"end_s": 118.284
+},
+{
+"w": 341,
+"word": "replaced",
+"onset_s": 118.344,
+"end_s": 118.764
+},
+{
+"w": 342,
+"word": "with",
+"onset_s": 118.804,
+"end_s": 118.944
+},
+{
+"w": 343,
+"word": "ai",
+"onset_s": 118.984,
+"end_s": 119.324
+},
+{
+"w": 344,
+"word": "then",
+"onset_s": 120.264,
+"end_s": 120.424
+},
+{
+"w": 345,
+"word": "Klarna's",
+"onset_s": 120.544,
+"end_s": 120.884
+},
+{
+"w": 346,
+"word": "boss",
+"onset_s": 120.944,
+"end_s": 121.124
+},
+{
+"w": 347,
+"word": "went",
+"onset_s": 121.164,
+"end_s": 121.304
+},
+{
+"w": 348,
+"word": "online",
+"onset_s": 121.324,
+"end_s": 121.644
+},
+{
+"w": 349,
+"word": "and",
+"onset_s": 121.644,
+"end_s": 121.744
+},
+{
+"w": 350,
+"word": "said",
+"onset_s": 121.784,
+"end_s": 121.964
+},
+{
+"w": 351,
+"word": "that",
+"onset_s": 122.384,
+"end_s": 122.484
+},
+{
+"w": 352,
+"word": "they",
+"onset_s": 122.524,
+"end_s": 122.644
+},
+{
+"w": 353,
+"word": "did",
+"onset_s": 122.704,
+"end_s": 122.844
+},
+{
+"w": 354,
+"word": "not",
+"onset_s": 122.984,
+"end_s": 123.184
+},
+{
+"w": 355,
+"word": "replace",
+"onset_s": 123.544,
+"end_s": 123.944
+},
+{
+"w": 356,
+"word": "that",
+"onset_s": 123.964,
+"end_s": 124.104
+},
+{
+"w": 357,
+"word": "software",
+"onset_s": 124.164,
+"end_s": 124.624
+},
+{
+"w": 358,
+"word": "with",
+"onset_s": 124.824,
+"end_s": 125.024
+},
+{
+"w": 359,
+"word": "ai",
+"onset_s": 125.104,
+"end_s": 125.364
+},
+{
+"w": 360,
+"word": "so",
+"onset_s": 125.664,
+"end_s": 125.744
+},
+{
+"w": 361,
+"word": "what",
+"onset_s": 126.664,
+"end_s": 126.824
+},
+{
+"w": 362,
+"word": "did",
+"onset_s": 126.964,
+"end_s": 127.104
+},
+{
+"w": 363,
+"word": "replace",
+"onset_s": 127.164,
+"end_s": 127.544
+},
+{
+"w": 364,
+"word": "them",
+"onset_s": 127.564,
+"end_s": 127.704
+},
+{
+"w": 365,
+"word": "for",
+"onset_s": 128.004,
+"end_s": 128.104
+},
+{
+"w": 366,
+"word": "workday",
+"onset_s": 128.164,
+"end_s": 128.584
+},
+{
+"w": 367,
+"word": "another",
+"onset_s": 128.624,
+"end_s": 128.944
+},
+{
+"w": 368,
+"word": "app",
+"onset_s": 129.144,
+"end_s": 129.384
+},
+{
+"w": 369,
+"word": "for",
+"onset_s": 129.704,
+"end_s": 129.804
+},
+{
+"w": 370,
+"word": "paying",
+"onset_s": 129.844,
+"end_s": 130.084
+},
+{
+"w": 371,
+"word": "staff",
+"onset_s": 130.144,
+"end_s": 130.504
+},
+{
+"w": 372,
+"word": "which",
+"onset_s": 130.784,
+"end_s": 130.964
+},
+{
+"w": 373,
+"word": "they",
+"onset_s": 131.004,
+"end_s": 131.124
+},
+{
+"w": 374,
+"word": "also",
+"onset_s": 131.204,
+"end_s": 131.404
+},
+{
+"w": 375,
+"word": "rent",
+"onset_s": 131.504,
+"end_s": 131.684
+},
+{
+"w": 376,
+"word": "for",
+"onset_s": 131.904,
+"end_s": 132.004
+},
+{
+"w": 377,
+"word": "salesforce",
+"onset_s": 132.064,
+"end_s": 132.724
+},
+{
+"w": 378,
+"word": "more",
+"onset_s": 132.964,
+"end_s": 133.124
+},
+{
+"w": 379,
+"word": "rented",
+"onset_s": 133.184,
+"end_s": 133.504
+},
+{
+"w": 380,
+"word": "apps",
+"onset_s": 133.584,
+"end_s": 133.864
+},
+{
+"w": 381,
+"word": "and",
+"onset_s": 134.224,
+"end_s": 134.304
+},
+{
+"w": 382,
+"word": "then",
+"onset_s": 134.324,
+"end_s": 134.424
+},
+{
+"w": 383,
+"word": "some",
+"onset_s": 134.484,
+"end_s": 134.644
+},
+{
+"w": 384,
+"word": "of",
+"onset_s": 134.684,
+"end_s": 134.744
+},
+{
+"w": 385,
+"word": "their",
+"onset_s": 134.764,
+"end_s": 134.864
+},
+{
+"w": 386,
+"word": "own",
+"onset_s": 134.924,
+"end_s": 135.064
+},
+{
+"w": 387,
+"word": "code",
+"onset_s": 135.124,
+"end_s": 135.444
+},
+{
+"w": 388,
+"word": "so",
+"onset_s": 136.044,
+"end_s": 136.104
+},
+{
+"w": 389,
+"word": "mostly",
+"onset_s": 136.384,
+"end_s": 136.804
+},
+{
+"w": 390,
+"word": "they",
+"onset_s": 136.884,
+"end_s": 136.984
+},
+{
+"w": 391,
+"word": "actually",
+"onset_s": 137.024,
+"end_s": 137.324
+},
+{
+"w": 392,
+"word": "swapped",
+"onset_s": 137.484,
+"end_s": 137.864
+},
+{
+"w": 393,
+"word": "one",
+"onset_s": 138.004,
+"end_s": 138.124
+},
+{
+"w": 394,
+"word": "rented",
+"onset_s": 138.164,
+"end_s": 138.484
+},
+{
+"w": 395,
+"word": "software",
+"onset_s": 138.544,
+"end_s": 138.964
+},
+{
+"w": 396,
+"word": "for",
+"onset_s": 138.984,
+"end_s": 139.084
+},
+{
+"w": 397,
+"word": "other",
+"onset_s": 139.184,
+"end_s": 139.404
+},
+{
+"w": 398,
+"word": "bits",
+"onset_s": 139.964,
+"end_s": 140.204
+},
+{
+"w": 399,
+"word": "of",
+"onset_s": 140.224,
+"end_s": 140.284
+},
+{
+"w": 400,
+"word": "rented",
+"onset_s": 140.324,
+"end_s": 140.644
+},
+{
+"w": 401,
+"word": "software.",
+"onset_s": 140.684,
+"end_s": 141.004
+},
+{
+"w": 402,
+"word": "So",
+"onset_s": 141.044,
+"end_s": 141.104
+},
+{
+"w": 403,
+"word": "it's",
+"onset_s": 141.184,
+"end_s": 141.264
+},
+{
+"w": 404,
+"word": "just",
+"onset_s": 141.264,
+"end_s": 141.404
+},
+{
+"w": 405,
+"word": "subbed",
+"onset_s": 141.504,
+"end_s": 141.764
+},
+{
+"w": 406,
+"word": "out.",
+"onset_s": 141.824,
+"end_s": 142.024
+},
+{
+"w": 407,
+"word": "Then",
+"onset_s": 142.304,
+"end_s": 142.504
+},
+{
+"w": 408,
+"word": "there's",
+"onset_s": 142.924,
+"end_s": 143.064
+},
+{
+"w": 409,
+"word": "another",
+"onset_s": 143.084,
+"end_s": 143.284
+},
+{
+"w": 410,
+"word": "example",
+"onset_s": 143.304,
+"end_s": 143.764
+},
+{
+"w": 411,
+"word": "of",
+"onset_s": 144.024,
+"end_s": 144.124
+},
+{
+"w": 412,
+"word": "a",
+"onset_s": 144.204,
+"end_s": 144.224
+},
+{
+"w": 413,
+"word": "business",
+"onset_s": 144.284,
+"end_s": 144.605
+},
+{
+"w": 414,
+"word": "called",
+"onset_s": 144.665,
+"end_s": 144.905
+},
+{
+"w": 415,
+"word": "Curative,",
+"onset_s": 145.345,
+"end_s": 145.885
+},
+{
+"w": 416,
+"word": "which",
+"onset_s": 145.925,
+"end_s": 146.085
+},
+{
+"w": 417,
+"word": "is",
+"onset_s": 146.125,
+"end_s": 146.205
+},
+{
+"w": 418,
+"word": "a",
+"onset_s": 146.225,
+"end_s": 146.245
+},
+{
+"w": 419,
+"word": "health",
+"onset_s": 146.345,
+"end_s": 146.665
+},
+{
+"w": 420,
+"word": "insurer.",
+"onset_s": 147.105,
+"end_s": 147.505
+},
+{
+"w": 421,
+"word": "This",
+"onset_s": 148.265,
+"end_s": 148.405
+},
+{
+"w": 422,
+"word": "summer,",
+"onset_s": 148.445,
+"end_s": 148.665
+},
+{
+"w": 423,
+"word": "its",
+"onset_s": 148.745,
+"end_s": 148.905
+},
+{
+"w": 424,
+"word": "boss",
+"onset_s": 149.005,
+"end_s": 149.185
+},
+{
+"w": 425,
+"word": "said",
+"onset_s": 149.265,
+"end_s": 149.445
+},
+{
+"w": 426,
+"word": "they'd",
+"onset_s": 149.685,
+"end_s": 149.845
+},
+{
+"w": 427,
+"word": "canceled",
+"onset_s": 149.925,
+"end_s": 150.505
+},
+{
+"w": 428,
+"word": "their",
+"onset_s": 150.845,
+"end_s": 151.005
+},
+{
+"w": 429,
+"word": "Salesforce",
+"onset_s": 151.105,
+"end_s": 151.745
+},
+{
+"w": 430,
+"word": "subscription",
+"onset_s": 151.745,
+"end_s": 152.245
+},
+{
+"w": 431,
+"word": "because",
+"onset_s": 152.305,
+"end_s": 152.685
+},
+{
+"w": 432,
+"word": "they'd",
+"onset_s": 152.925,
+"end_s": 153.105
+},
+{
+"w": 433,
+"word": "managed",
+"onset_s": 153.165,
+"end_s": 153.525
+},
+{
+"w": 434,
+"word": "to",
+"onset_s": 153.565,
+"end_s": 153.625
+},
+{
+"w": 435,
+"word": "build",
+"onset_s": 154.085,
+"end_s": 154.265
+},
+{
+"w": 436,
+"word": "their",
+"onset_s": 154.285,
+"end_s": 154.385
+},
+{
+"w": 437,
+"word": "own.",
+"onset_s": 154.445,
+"end_s": 154.565
+},
+{
+"w": 438,
+"word": "And",
+"onset_s": 155.325,
+"end_s": 155.405
+},
+{
+"w": 439,
+"word": "that",
+"onset_s": 155.405,
+"end_s": 155.505
+},
+{
+"w": 440,
+"word": "contract",
+"onset_s": 155.585,
+"end_s": 156.005
+},
+{
+"w": 441,
+"word": "was",
+"onset_s": 156.025,
+"end_s": 156.125
+},
+{
+"w": 442,
+"word": "worth",
+"onset_s": 156.185,
+"end_s": 156.345
+},
+{
+"w": 443,
+"word": "about",
+"onset_s": 156.405,
+"end_s": 156.645
+},
+{
+"w": 444,
+"word": "$600,000",
+"onset_s": 157.665,
+"end_s": 157.965
+},
+{
+"w": 445,
+"word": "a",
+"onset_s": 158.065,
+"end_s": 158.085
+},
+{
+"w": 446,
+"word": "year",
+"onset_s": 158.145,
+"end_s": 158.385
+},
+{
+"w": 447,
+"word": "and",
+"onset_s": 158.565,
+"end_s": 158.685
+},
+{
+"w": 448,
+"word": "they",
+"onset_s": 158.725,
+"end_s": 158.825
+},
+{
+"w": 449,
+"word": "built",
+"onset_s": 158.945,
+"end_s": 159.125
+},
+{
+"w": 450,
+"word": "their",
+"onset_s": 159.145,
+"end_s": 159.265
+},
+{
+"w": 451,
+"word": "own",
+"onset_s": 159.325,
+"end_s": 159.465
+},
+{
+"w": 452,
+"word": "in",
+"onset_s": 159.685,
+"end_s": 159.785
+},
+{
+"w": 453,
+"word": "two",
+"onset_s": 160.145,
+"end_s": 160.285
+},
+{
+"w": 454,
+"word": "months.",
+"onset_s": 160.305,
+"end_s": 160.645
+},
+{
+"w": 455,
+"word": "Wow,",
+"onset_s": 160.945,
+"end_s": 161.165
+},
+{
+"w": 456,
+"word": "brilliant.",
+"onset_s": 161.345,
+"end_s": 161.685
+},
+{
+"w": 457,
+"word": "Except,",
+"onset_s": 162.165,
+"end_s": 162.585
+},
+{
+"w": 458,
+"word": "of",
+"onset_s": 162.985,
+"end_s": 163.065
+},
+{
+"w": 459,
+"word": "course,",
+"onset_s": 163.125,
+"end_s": 163.345
+},
+{
+"w": 460,
+"word": "their",
+"onset_s": 163.385,
+"end_s": 163.505
+},
+{
+"w": 461,
+"word": "boss",
+"onset_s": 163.525,
+"end_s": 163.725
+},
+{
+"w": 462,
+"word": "has",
+"onset_s": 163.745,
+"end_s": 163.865
+},
+{
+"w": 463,
+"word": "since",
+"onset_s": 163.945,
+"end_s": 164.165
+},
+{
+"w": 464,
+"word": "admitted",
+"onset_s": 164.185,
+"end_s": 164.565
+},
+{
+"w": 465,
+"word": "that",
+"onset_s": 164.645,
+"end_s": 164.805
+},
+{
+"w": 466,
+"word": "keeping",
+"onset_s": 164.905,
+"end_s": 165.205
+},
+{
+"w": 467,
+"word": "it",
+"onset_s": 165.225,
+"end_s": 165.285
+},
+{
+"w": 468,
+"word": "running,",
+"onset_s": 165.325,
+"end_s": 165.605
+},
+{
+"w": 469,
+"word": "not",
+"onset_s": 166.025,
+"end_s": 166.145
+},
+{
+"w": 470,
+"word": "so",
+"onset_s": 166.185,
+"end_s": 166.265
+},
+{
+"w": 471,
+"word": "easy.",
+"onset_s": 166.365,
+"end_s": 166.585
+},
+{
+"w": 472,
+"word": "And",
+"onset_s": 167.025,
+"end_s": 167.105
+},
+{
+"w": 473,
+"word": "that's",
+"onset_s": 167.125,
+"end_s": 167.285
+},
+{
+"w": 474,
+"word": "the",
+"onset_s": 167.325,
+"end_s": 167.385
+},
+{
+"w": 475,
+"word": "bit",
+"onset_s": 167.445,
+"end_s": 167.585
+},
+{
+"w": 476,
+"word": "that",
+"onset_s": 167.625,
+"end_s": 167.705
+},
+{
+"w": 477,
+"word": "most",
+"onset_s": 167.745,
+"end_s": 167.925
+},
+{
+"w": 478,
+"word": "people",
+"onset_s": 167.945,
+"end_s": 168.165
+},
+{
+"w": 479,
+"word": "miss.",
+"onset_s": 168.205,
+"end_s": 168.405
+},
+{
+"w": 480,
+"word": "Writing",
+"onset_s": 169.045,
+"end_s": 169.445
+},
+{
+"w": 481,
+"word": "the",
+"onset_s": 169.565,
+"end_s": 169.625
+},
+{
+"w": 482,
+"word": "tool",
+"onset_s": 169.665,
+"end_s": 169.865
+},
+{
+"w": 483,
+"word": "is",
+"onset_s": 170.025,
+"end_s": 170.165
+},
+{
+"w": 484,
+"word": "pretty",
+"onset_s": 170.745,
+"end_s": 170.925
+},
+{
+"w": 485,
+"word": "cheap",
+"onset_s": 171.005,
+"end_s": 171.265
+},
+{
+"w": 486,
+"word": "now.",
+"onset_s": 171.345,
+"end_s": 171.485
+},
+{
+"w": 487,
+"word": "Owning",
+"onset_s": 171.625,
+"end_s": 171.905
+},
+{
+"w": 488,
+"word": "it",
+"onset_s": 171.945,
+"end_s": 172.025
+},
+{
+"w": 489,
+"word": "is",
+"onset_s": 172.105,
+"end_s": 172.225
+},
+{
+"w": 490,
+"word": "the",
+"onset_s": 172.285,
+"end_s": 172.365
+},
+{
+"w": 491,
+"word": "expensive",
+"onset_s": 172.445,
+"end_s": 172.965
+},
+{
+"w": 492,
+"word": "part.",
+"onset_s": 172.985,
+"end_s": 173.245
+},
+{
+"w": 493,
+"word": "You",
+"onset_s": 173.805,
+"end_s": 173.865
+},
+{
+"w": 494,
+"word": "can",
+"onset_s": 173.885,
+"end_s": 173.985
+},
+{
+"w": 495,
+"word": "think",
+"onset_s": 174.005,
+"end_s": 174.165
+},
+{
+"w": 496,
+"word": "of",
+"onset_s": 174.185,
+"end_s": 174.245
+},
+{
+"w": 497,
+"word": "it",
+"onset_s": 174.265,
+"end_s": 174.345
+},
+{
+"w": 498,
+"word": "like",
+"onset_s": 174.385,
+"end_s": 174.625
+},
+{
+"w": 499,
+"word": "getting",
+"onset_s": 174.925,
+"end_s": 175.125
+},
+{
+"w": 500,
+"word": "a",
+"onset_s": 175.145,
+"end_s": 175.165
+},
+{
+"w": 501,
+"word": "puppy.",
+"onset_s": 175.225,
+"end_s": 175.445
+},
+{
+"w": 502,
+"word": "The",
+"onset_s": 175.585,
+"end_s": 175.645
+},
+{
+"w": 503,
+"word": "puppy",
+"onset_s": 175.705,
+"end_s": 175.945
+},
+{
+"w": 504,
+"word": "is",
+"onset_s": 176.025,
+"end_s": 176.125
+},
+{
+"w": 505,
+"word": "cheap",
+"onset_s": 176.726,
+"end_s": 176.966
+},
+{
+"w": 506,
+"word": "to",
+"onset_s": 177.106,
+"end_s": 177.186
+},
+{
+"w": 507,
+"word": "buy",
+"onset_s": 177.506,
+"end_s": 177.786
+},
+{
+"w": 508,
+"word": "or",
+"onset_s": 178.066,
+"end_s": 178.146
+},
+{
+"w": 509,
+"word": "free",
+"onset_s": 178.786,
+"end_s": 179.006
+},
+{
+"w": 510,
+"word": "sometimes,",
+"onset_s": 179.146,
+"end_s": 179.606
+},
+{
+"w": 511,
+"word": "but",
+"onset_s": 180.206,
+"end_s": 180.366
+},
+{
+"w": 512,
+"word": "it's",
+"onset_s": 180.606,
+"end_s": 180.746
+},
+{
+"w": 513,
+"word": "the",
+"onset_s": 180.766,
+"end_s": 180.846
+},
+{
+"w": 514,
+"word": "next",
+"onset_s": 180.866,
+"end_s": 181.106
+},
+{
+"w": 515,
+"word": "15",
+"onset_s": 181.546,
+"end_s": 181.566
+},
+{
+"w": 516,
+"word": "years",
+"onset_s": 181.666,
+"end_s": 181.926
+},
+{
+"w": 517,
+"word": "of",
+"onset_s": 181.966,
+"end_s": 182.026
+},
+{
+"w": 518,
+"word": "looking",
+"onset_s": 182.066,
+"end_s": 182.266
+},
+{
+"w": 519,
+"word": "after",
+"onset_s": 182.306,
+"end_s": 182.546
+},
+{
+"w": 520,
+"word": "it",
+"onset_s": 182.546,
+"end_s": 182.606
+},
+{
+"w": 521,
+"word": "that's",
+"onset_s": 182.626,
+"end_s": 182.766
+},
+{
+"w": 522,
+"word": "gonna",
+"onset_s": 182.786,
+"end_s": 182.946
+},
+{
+"w": 523,
+"word": "cost",
+"onset_s": 182.986,
+"end_s": 183.246
+},
+{
+"w": 524,
+"word": "you.",
+"onset_s": 183.286,
+"end_s": 183.366
+},
+{
+"w": 525,
+"word": "So",
+"onset_s": 184.246,
+"end_s": 184.346
+},
+{
+"w": 526,
+"word": "we",
+"onset_s": 184.466,
+"end_s": 184.526
+},
+{
+"w": 527,
+"word": "did",
+"onset_s": 184.566,
+"end_s": 184.686
+},
+{
+"w": 528,
+"word": "the",
+"onset_s": 184.706,
+"end_s": 184.766
+},
+{
+"w": 529,
+"word": "sums",
+"onset_s": 184.846,
+"end_s": 185.186
+},
+{
+"w": 530,
+"word": "for",
+"onset_s": 185.226,
+"end_s": 185.306
+},
+{
+"w": 531,
+"word": "a",
+"onset_s": 185.406,
+"end_s": 185.426
+},
+{
+"w": 532,
+"word": "mid",
+"onset_s": 185.526,
+"end_s": 185.686
+},
+{
+"w": 533,
+"word": "-sized",
+"onset_s": 185.766,
+"end_s": 186.126
+},
+{
+"w": 534,
+"word": "company",
+"onset_s": 186.166,
+"end_s": 186.486
+},
+{
+"w": 535,
+"word": "and",
+"onset_s": 186.566,
+"end_s": 186.666
+},
+{
+"w": 536,
+"word": "there",
+"onset_s": 186.686,
+"end_s": 186.846
+},
+{
+"w": 537,
+"word": "are",
+"onset_s": 186.886,
+"end_s": 187.006
+},
+{
+"w": 538,
+"word": "own",
+"onset_s": 187.066,
+"end_s": 187.206
+},
+{
+"w": 539,
+"word": "estimates.",
+"onset_s": 187.326,
+"end_s": 187.926
+},
+{
+"w": 540,
+"word": "So",
+"onset_s": 188.246,
+"end_s": 188.326
+},
+{
+"w": 541,
+"word": "take",
+"onset_s": 188.646,
+"end_s": 188.826
+},
+{
+"w": 542,
+"word": "them",
+"onset_s": 188.826,
+"end_s": 188.926
+},
+{
+"w": 543,
+"word": "with",
+"onset_s": 188.926,
+"end_s": 189.026
+},
+{
+"w": 544,
+"word": "a",
+"onset_s": 189.046,
+"end_s": 189.066
+},
+{
+"w": 545,
+"word": "pinch",
+"onset_s": 189.086,
+"end_s": 189.306
+},
+{
+"w": 546,
+"word": "of",
+"onset_s": 189.346,
+"end_s": 189.406
+},
+{
+"w": 547,
+"word": "salt.",
+"onset_s": 189.466,
+"end_s": 189.686
+},
+{
+"w": 548,
+"word": "Take",
+"onset_s": 190.126,
+"end_s": 190.306
+},
+{
+"w": 549,
+"word": "a",
+"onset_s": 190.346,
+"end_s": 190.366
+},
+{
+"w": 550,
+"word": "help",
+"onset_s": 190.426,
+"end_s": 190.606
+},
+{
+"w": 551,
+"word": "desk,",
+"onset_s": 190.706,
+"end_s": 191.006
+},
+{
+"w": 552,
+"word": "the",
+"onset_s": 191.106,
+"end_s": 191.166
+},
+{
+"w": 553,
+"word": "tool",
+"onset_s": 191.306,
+"end_s": 191.526
+},
+{
+"w": 554,
+"word": "that",
+"onset_s": 191.586,
+"end_s": 191.706
+},
+{
+"w": 555,
+"word": "answers",
+"onset_s": 191.806,
+"end_s": 192.226
+},
+{
+"w": 556,
+"word": "your",
+"onset_s": 192.406,
+"end_s": 192.546
+},
+{
+"w": 557,
+"word": "customers.",
+"onset_s": 192.626,
+"end_s": 193.126
+},
+{
+"w": 558,
+"word": "Over",
+"onset_s": 193.606,
+"end_s": 193.766
+},
+{
+"w": 559,
+"word": "three",
+"onset_s": 193.806,
+"end_s": 194.006
+},
+{
+"w": 560,
+"word": "years,",
+"onset_s": 194.026,
+"end_s": 194.206
+},
+{
+"w": 561,
+"word": "building",
+"onset_s": 194.286,
+"end_s": 194.626
+},
+{
+"w": 562,
+"word": "your",
+"onset_s": 194.806,
+"end_s": 194.946
+},
+{
+"w": 563,
+"word": "own",
+"onset_s": 195.006,
+"end_s": 195.126
+},
+{
+"w": 564,
+"word": "one",
+"onset_s": 195.206,
+"end_s": 195.366
+},
+{
+"w": 565,
+"word": "came",
+"onset_s": 195.906,
+"end_s": 196.126
+},
+{
+"w": 566,
+"word": "out",
+"onset_s": 196.166,
+"end_s": 196.306
+},
+{
+"w": 567,
+"word": "about",
+"onset_s": 196.366,
+"end_s": 196.626
+},
+{
+"w": 568,
+"word": "six",
+"onset_s": 197.126,
+"end_s": 197.346
+},
+{
+"w": 569,
+"word": "times",
+"onset_s": 197.466,
+"end_s": 197.746
+},
+{
+"w": 570,
+"word": "more",
+"onset_s": 197.786,
+"end_s": 197.906
+},
+{
+"w": 571,
+"word": "expensive",
+"onset_s": 197.926,
+"end_s": 198.346
+},
+{
+"w": 572,
+"word": "than",
+"onset_s": 198.346,
+"end_s": 198.466
+},
+{
+"w": 573,
+"word": "buying",
+"onset_s": 198.586,
+"end_s": 198.886
+},
+{
+"w": 574,
+"word": "one",
+"onset_s": 198.946,
+"end_s": 199.046
+},
+{
+"w": 575,
+"word": "because",
+"onset_s": 199.066,
+"end_s": 199.426
+},
+{
+"w": 576,
+"word": "once",
+"onset_s": 199.846,
+"end_s": 200.006
+},
+{
+"w": 577,
+"word": "you",
+"onset_s": 200.026,
+"end_s": 200.126
+},
+{
+"w": 578,
+"word": "build",
+"onset_s": 200.226,
+"end_s": 200.446
+},
+{
+"w": 579,
+"word": "it,",
+"onset_s": 200.486,
+"end_s": 200.586
+},
+{
+"w": 580,
+"word": "someone",
+"onset_s": 200.646,
+"end_s": 200.886
+},
+{
+"w": 581,
+"word": "has",
+"onset_s": 200.906,
+"end_s": 201.046
+},
+{
+"w": 582,
+"word": "to",
+"onset_s": 201.086,
+"end_s": 201.166
+},
+{
+"w": 583,
+"word": "fix",
+"onset_s": 201.266,
+"end_s": 201.466
+},
+{
+"w": 584,
+"word": "it",
+"onset_s": 201.586,
+"end_s": 201.666
+},
+{
+"w": 585,
+"word": "and",
+"onset_s": 201.706,
+"end_s": 201.786
+},
+{
+"w": 586,
+"word": "keep",
+"onset_s": 201.826,
+"end_s": 202.006
+},
+{
+"w": 587,
+"word": "it",
+"onset_s": 202.046,
+"end_s": 202.126
+},
+{
+"w": 588,
+"word": "safe",
+"onset_s": 202.186,
+"end_s": 202.446
+},
+{
+"w": 589,
+"word": "and",
+"onset_s": 202.466,
+"end_s": 202.546
+},
+{
+"w": 590,
+"word": "they",
+"onset_s": 202.546,
+"end_s": 202.646
+},
+{
+"w": 591,
+"word": "have",
+"onset_s": 202.686,
+"end_s": 202.826
+},
+{
+"w": 592,
+"word": "to",
+"onset_s": 202.866,
+"end_s": 202.906
+},
+{
+"w": 593,
+"word": "keep",
+"onset_s": 202.986,
+"end_s": 203.186
+},
+{
+"w": 594,
+"word": "it",
+"onset_s": 203.226,
+"end_s": 203.306
+},
+{
+"w": 595,
+"word": "working",
+"onset_s": 203.346,
+"end_s": 203.726
+},
+{
+"w": 596,
+"word": "as",
+"onset_s": 204.186,
+"end_s": 204.286
+},
+{
+"w": 597,
+"word": "everything",
+"onset_s": 204.386,
+"end_s": 204.766
+},
+{
+"w": 598,
+"word": "around",
+"onset_s": 204.766,
+"end_s": 205.126
+},
+{
+"w": 599,
+"word": "it",
+"onset_s": 205.186,
+"end_s": 205.266
+},
+{
+"w": 600,
+"word": "changes.",
+"onset_s": 205.306,
+"end_s": 205.786
+},
+{
+"w": 601,
+"word": "So",
+"onset_s": 206.226,
+"end_s": 206.306
+},
+{
+"w": 602,
+"word": "picture",
+"onset_s": 206.746,
+"end_s": 207.106
+},
+{
+"w": 603,
+"word": "your",
+"onset_s": 207.146,
+"end_s": 207.266
+},
+{
+"w": 604,
+"word": "homemade",
+"onset_s": 207.346,
+"end_s": 207.946
+},
+{
+"w": 605,
+"word": "help",
+"onset_s": 208.026,
+"end_s": 208.226
+},
+{
+"w": 606,
+"word": "desk",
+"onset_s": 208.326,
+"end_s": 208.587
+},
+{
+"w": 607,
+"word": "bot",
+"onset_s": 208.647,
+"end_s": 208.847
+},
+{
+"w": 608,
+"word": "at",
+"onset_s": 208.847,
+"end_s": 208.907
+},
+{
+"w": 609,
+"word": "two",
+"onset_s": 209.027,
+"end_s": 209.207
+},
+{
+"w": 610,
+"word": "in",
+"onset_s": 209.247,
+"end_s": 209.287
+},
+{
+"w": 611,
+"word": "the",
+"onset_s": 209.307,
+"end_s": 209.367
+},
+{
+"w": 612,
+"word": "morning.",
+"onset_s": 209.387,
+"end_s": 209.687
+},
+{
+"w": 613,
+"word": "It",
+"onset_s": 209.947,
+"end_s": 210.027
+},
+{
+"w": 614,
+"word": "tells",
+"onset_s": 210.067,
+"end_s": 210.287
+},
+{
+"w": 615,
+"word": "a",
+"onset_s": 210.327,
+"end_s": 210.347
+},
+{
+"w": 616,
+"word": "customer",
+"onset_s": 210.387,
+"end_s": 210.727
+},
+{
+"w": 617,
+"word": "they",
+"onset_s": 210.747,
+"end_s": 210.867
+},
+{
+"w": 618,
+"word": "owe",
+"onset_s": 211.007,
+"end_s": 211.207
+},
+{
+"w": 619,
+"word": "you",
+"onset_s": 211.567,
+"end_s": 211.687
+},
+{
+"w": 620,
+"word": "the",
+"onset_s": 211.827,
+"end_s": 211.907
+},
+{
+"w": 621,
+"word": "price",
+"onset_s": 211.947,
+"end_s": 212.347
+},
+{
+"w": 622,
+"word": "of",
+"onset_s": 212.407,
+"end_s": 212.487
+},
+{
+"w": 623,
+"word": "a",
+"onset_s": 212.507,
+"end_s": 212.527
+},
+{
+"w": 624,
+"word": "small",
+"onset_s": 212.587,
+"end_s": 212.807
+},
+{
+"w": 625,
+"word": "yacht.",
+"onset_s": 212.847,
+"end_s": 213.107
+},
+{
+"w": 626,
+"word": "Who's",
+"onset_s": 213.347,
+"end_s": 213.587
+},
+{
+"w": 627,
+"word": "gonna",
+"onset_s": 213.607,
+"end_s": 213.767
+},
+{
+"w": 628,
+"word": "get",
+"onset_s": 213.767,
+"end_s": 213.867
+},
+{
+"w": 629,
+"word": "that",
+"onset_s": 213.887,
+"end_s": 214.027
+},
+{
+"w": 630,
+"word": "call?",
+"onset_s": 214.067,
+"end_s": 214.247
+},
+{
+"w": 631,
+"word": "You're",
+"onset_s": 214.987,
+"end_s": 215.107
+},
+{
+"w": 632,
+"word": "gonna",
+"onset_s": 215.107,
+"end_s": 215.227
+},
+{
+"w": 633,
+"word": "get",
+"onset_s": 215.227,
+"end_s": 215.307
+},
+{
+"w": 634,
+"word": "that",
+"onset_s": 215.347,
+"end_s": 215.467
+},
+{
+"w": 635,
+"word": "call,",
+"onset_s": 215.507,
+"end_s": 215.667
+},
+{
+"w": 636,
+"word": "right?",
+"onset_s": 215.707,
+"end_s": 215.927
+},
+{
+"w": 637,
+"word": "This",
+"onset_s": 216.507,
+"end_s": 216.707
+},
+{
+"w": 638,
+"word": "AI",
+"onset_s": 216.927,
+"end_s": 217.147
+},
+{
+"w": 639,
+"word": "agent",
+"onset_s": 217.247,
+"end_s": 217.547
+},
+{
+"w": 640,
+"word": "certainly",
+"onset_s": 217.607,
+"end_s": 217.907
+},
+{
+"w": 641,
+"word": "is",
+"onset_s": 217.967,
+"end_s": 218.027
+},
+{
+"w": 642,
+"word": "not.",
+"onset_s": 218.087,
+"end_s": 218.267
+},
+{
+"w": 643,
+"word": "And",
+"onset_s": 218.847,
+"end_s": 218.947
+},
+{
+"w": 644,
+"word": "every",
+"onset_s": 219.047,
+"end_s": 219.227
+},
+{
+"w": 645,
+"word": "time",
+"onset_s": 219.307,
+"end_s": 219.627
+},
+{
+"w": 646,
+"word": "your",
+"onset_s": 220.127,
+"end_s": 220.247
+},
+{
+"w": 647,
+"word": "product",
+"onset_s": 220.287,
+"end_s": 220.567
+},
+{
+"w": 648,
+"word": "changes,",
+"onset_s": 220.587,
+"end_s": 220.987
+},
+{
+"w": 649,
+"word": "someone",
+"onset_s": 221.027,
+"end_s": 221.247
+},
+{
+"w": 650,
+"word": "has",
+"onset_s": 221.247,
+"end_s": 221.347
+},
+{
+"w": 651,
+"word": "to",
+"onset_s": 221.387,
+"end_s": 221.447
+},
+{
+"w": 652,
+"word": "teach",
+"onset_s": 221.507,
+"end_s": 221.787
+},
+{
+"w": 653,
+"word": "the",
+"onset_s": 221.847,
+"end_s": 221.907
+},
+{
+"w": 654,
+"word": "bot",
+"onset_s": 221.947,
+"end_s": 222.087
+},
+{
+"w": 655,
+"word": "about",
+"onset_s": 222.107,
+"end_s": 222.387
+},
+{
+"w": 656,
+"word": "it.",
+"onset_s": 222.447,
+"end_s": 222.527
+},
+{
+"w": 657,
+"word": "And",
+"onset_s": 222.567,
+"end_s": 222.647
+},
+{
+"w": 658,
+"word": "then",
+"onset_s": 222.647,
+"end_s": 222.767
+},
+{
+"w": 659,
+"word": "when",
+"onset_s": 222.847,
+"end_s": 223.007
+},
+{
+"w": 660,
+"word": "that",
+"onset_s": 223.187,
+"end_s": 223.367
+},
+{
+"w": 661,
+"word": "person",
+"onset_s": 223.427,
+"end_s": 223.787
+},
+{
+"w": 662,
+"word": "who",
+"onset_s": 223.807,
+"end_s": 223.867
+},
+{
+"w": 663,
+"word": "built",
+"onset_s": 223.907,
+"end_s": 224.087
+},
+{
+"w": 664,
+"word": "it",
+"onset_s": 224.127,
+"end_s": 224.207
+},
+{
+"w": 665,
+"word": "leaves,",
+"onset_s": 224.247,
+"end_s": 224.547
+},
+{
+"w": 666,
+"word": "Who",
+"onset_s": 224.827,
+"end_s": 224.887
+},
+{
+"w": 667,
+"word": "even",
+"onset_s": 224.967,
+"end_s": 225.127
+},
+{
+"w": 668,
+"word": "knows",
+"onset_s": 225.527,
+"end_s": 225.767
+},
+{
+"w": 669,
+"word": "how",
+"onset_s": 225.807,
+"end_s": 225.927
+},
+{
+"w": 670,
+"word": "it",
+"onset_s": 225.987,
+"end_s": 226.047
+},
+{
+"w": 671,
+"word": "works?",
+"onset_s": 226.087,
+"end_s": 226.447
+},
+{
+"w": 672,
+"word": "So",
+"onset_s": 227.027,
+"end_s": 227.107
+},
+{
+"w": 673,
+"word": "back",
+"onset_s": 227.827,
+"end_s": 227.987
+},
+{
+"w": 674,
+"word": "to",
+"onset_s": 228.047,
+"end_s": 228.107
+},
+{
+"w": 675,
+"word": "the",
+"onset_s": 228.127,
+"end_s": 228.187
+},
+{
+"w": 676,
+"word": "Anthropic",
+"onset_s": 228.247,
+"end_s": 228.707
+},
+{
+"w": 677,
+"word": "example,",
+"onset_s": 228.807,
+"end_s": 229.207
+},
+{
+"w": 678,
+"word": "who",
+"onset_s": 229.247,
+"end_s": 229.307
+},
+{
+"w": 679,
+"word": "can",
+"onset_s": 229.427,
+"end_s": 229.567
+},
+{
+"w": 680,
+"word": "build",
+"onset_s": 230.067,
+"end_s": 230.287
+},
+{
+"w": 681,
+"word": "almost",
+"onset_s": 230.547,
+"end_s": 230.807
+},
+{
+"w": 682,
+"word": "anything",
+"onset_s": 230.827,
+"end_s": 231.167
+},
+{
+"w": 683,
+"word": "really.",
+"onset_s": 231.207,
+"end_s": 231.407
+},
+{
+"w": 684,
+"word": "Their",
+"onset_s": 232.067,
+"end_s": 232.227
+},
+{
+"w": 685,
+"word": "finance",
+"onset_s": 232.347,
+"end_s": 232.947
+},
+{
+"w": 686,
+"word": "and",
+"onset_s": 233.047,
+"end_s": 233.167
+},
+{
+"w": 687,
+"word": "their",
+"onset_s": 233.247,
+"end_s": 233.427
+},
+{
+"w": 688,
+"word": "people",
+"onset_s": 233.507,
+"end_s": 233.867
+},
+{
+"w": 689,
+"word": "run",
+"onset_s": 234.427,
+"end_s": 234.547
+},
+{
+"w": 690,
+"word": "on",
+"onset_s": 234.587,
+"end_s": 234.667
+},
+{
+"w": 691,
+"word": "workday.",
+"onset_s": 234.747,
+"end_s": 235.207
+},
+{
+"w": 692,
+"word": "Yes,",
+"onset_s": 235.747,
+"end_s": 235.927
+},
+{
+"w": 693,
+"word": "the",
+"onset_s": 235.987,
+"end_s": 236.067
+},
+{
+"w": 694,
+"word": "same",
+"onset_s": 236.107,
+"end_s": 236.327
+},
+{
+"w": 695,
+"word": "workday",
+"onset_s": 236.367,
+"end_s": 236.727
+},
+{
+"w": 696,
+"word": "that",
+"onset_s": 236.767,
+"end_s": 236.867
+},
+{
+"w": 697,
+"word": "Klarna",
+"onset_s": 236.907,
+"end_s": 237.147
+},
+{
+"w": 698,
+"word": "switched",
+"onset_s": 237.227,
+"end_s": 237.527
+},
+{
+"w": 699,
+"word": "off.",
+"onset_s": 237.567,
+"end_s": 237.687
+},
+{
+"w": 700,
+"word": "Their",
+"onset_s": 237.867,
+"end_s": 238.007
+},
+{
+"w": 701,
+"word": "customers",
+"onset_s": 238.427,
+"end_s": 238.947
+},
+{
+"w": 702,
+"word": "and",
+"onset_s": 239.427,
+"end_s": 239.507
+},
+{
+"w": 703,
+"word": "their",
+"onset_s": 239.527,
+"end_s": 239.647
+},
+{
+"w": 704,
+"word": "deals",
+"onset_s": 239.707,
+"end_s": 240.067
+},
+{
+"w": 705,
+"word": "run",
+"onset_s": 240.648,
+"end_s": 240.788
+},
+{
+"w": 706,
+"word": "on",
+"onset_s": 240.808,
+"end_s": 240.888
+},
+{
+"w": 707,
+"word": "Salesforce.",
+"onset_s": 240.928,
+"end_s": 241.548
+},
+{
+"w": 708,
+"word": "And",
+"onset_s": 242.068,
+"end_s": 242.168
+},
+{
+"w": 709,
+"word": "for",
+"onset_s": 242.208,
+"end_s": 242.308
+},
+{
+"w": 710,
+"word": "their",
+"onset_s": 242.328,
+"end_s": 242.448
+},
+{
+"w": 711,
+"word": "help",
+"onset_s": 242.508,
+"end_s": 242.708
+},
+{
+"w": 712,
+"word": "desk,",
+"onset_s": 242.808,
+"end_s": 243.108
+},
+{
+"w": 713,
+"word": "they",
+"onset_s": 243.448,
+"end_s": 243.568
+},
+{
+"w": 714,
+"word": "signed",
+"onset_s": 243.648,
+"end_s": 243.868
+},
+{
+"w": 715,
+"word": "up",
+"onset_s": 243.888,
+"end_s": 243.968
+},
+{
+"w": 716,
+"word": "for",
+"onset_s": 244.028,
+"end_s": 244.128
+},
+{
+"w": 717,
+"word": "a",
+"onset_s": 244.168,
+"end_s": 244.188
+},
+{
+"w": 718,
+"word": "ready",
+"onset_s": 244.308,
+"end_s": 244.488
+},
+{
+"w": 719,
+"word": "-made",
+"onset_s": 244.548,
+"end_s": 244.768
+},
+{
+"w": 720,
+"word": "help",
+"onset_s": 244.808,
+"end_s": 245.008
+},
+{
+"w": 721,
+"word": "desk",
+"onset_s": 245.088,
+"end_s": 245.308
+},
+{
+"w": 722,
+"word": "bot",
+"onset_s": 245.408,
+"end_s": 245.648
+},
+{
+"w": 723,
+"word": "called",
+"onset_s": 245.768,
+"end_s": 245.988
+},
+{
+"w": 724,
+"word": "Fin.",
+"onset_s": 246.188,
+"end_s": 246.388
+},
+{
+"w": 725,
+"word": "It",
+"onset_s": 246.668,
+"end_s": 246.728
+},
+{
+"w": 726,
+"word": "was",
+"onset_s": 246.748,
+"end_s": 246.828
+},
+{
+"w": 727,
+"word": "live",
+"onset_s": 246.888,
+"end_s": 247.148
+},
+{
+"w": 728,
+"word": "in",
+"onset_s": 247.188,
+"end_s": 247.248
+},
+{
+"w": 729,
+"word": "under",
+"onset_s": 247.288,
+"end_s": 247.468
+},
+{
+"w": 730,
+"word": "a",
+"onset_s": 247.488,
+"end_s": 247.508
+},
+{
+"w": 731,
+"word": "week.",
+"onset_s": 247.568,
+"end_s": 247.788
+},
+{
+"w": 732,
+"word": "And",
+"onset_s": 248.828,
+"end_s": 248.908
+},
+{
+"w": 733,
+"word": "now",
+"onset_s": 248.948,
+"end_s": 249.108
+},
+{
+"w": 734,
+"word": "for",
+"onset_s": 249.148,
+"end_s": 249.228
+},
+{
+"w": 735,
+"word": "my",
+"onset_s": 249.268,
+"end_s": 249.368
+},
+{
+"w": 736,
+"word": "favorite",
+"onset_s": 249.428,
+"end_s": 249.808
+},
+{
+"w": 737,
+"word": "detail,",
+"onset_s": 249.828,
+"end_s": 250.168
+},
+{
+"w": 738,
+"word": "Fin",
+"onset_s": 250.668,
+"end_s": 250.868
+},
+{
+"w": 739,
+"word": "runs",
+"onset_s": 251.268,
+"end_s": 251.488
+},
+{
+"w": 740,
+"word": "on",
+"onset_s": 251.528,
+"end_s": 251.608
+},
+{
+"w": 741,
+"word": "Claude.",
+"onset_s": 251.688,
+"end_s": 252.088
+},
+{
+"w": 742,
+"word": "So",
+"onset_s": 252.368,
+"end_s": 252.448
+},
+{
+"w": 743,
+"word": "the",
+"onset_s": 252.648,
+"end_s": 252.708
+},
+{
+"w": 744,
+"word": "people",
+"onset_s": 252.788,
+"end_s": 253.048
+},
+{
+"w": 745,
+"word": "who",
+"onset_s": 253.108,
+"end_s": 253.188
+},
+{
+"w": 746,
+"word": "make",
+"onset_s": 253.308,
+"end_s": 253.548
+},
+{
+"w": 747,
+"word": "the",
+"onset_s": 253.608,
+"end_s": 253.688
+},
+{
+"w": 748,
+"word": "AI",
+"onset_s": 253.768,
+"end_s": 254.028
+},
+{
+"w": 749,
+"word": "pay",
+"onset_s": 254.108,
+"end_s": 254.288
+},
+{
+"w": 750,
+"word": "for",
+"onset_s": 254.408,
+"end_s": 254.528
+},
+{
+"w": 751,
+"word": "a",
+"onset_s": 254.588,
+"end_s": 254.608
+},
+{
+"w": 752,
+"word": "bot",
+"onset_s": 254.668,
+"end_s": 254.868
+},
+{
+"w": 753,
+"word": "that",
+"onset_s": 254.948,
+"end_s": 255.048
+},
+{
+"w": 754,
+"word": "runs",
+"onset_s": 255.108,
+"end_s": 255.348
+},
+{
+"w": 755,
+"word": "on",
+"onset_s": 255.388,
+"end_s": 255.468
+},
+{
+"w": 756,
+"word": "their",
+"onset_s": 255.508,
+"end_s": 255.648
+},
+{
+"w": 757,
+"word": "own",
+"onset_s": 255.728,
+"end_s": 255.908
+},
+{
+"w": 758,
+"word": "AI",
+"onset_s": 256.068,
+"end_s": 256.388
+},
+{
+"w": 759,
+"word": "They",
+"onset_s": 256.888,
+"end_s": 256.988
+},
+{
+"w": 760,
+"word": "let",
+"onset_s": 257.068,
+"end_s": 257.188
+},
+{
+"w": 761,
+"word": "Fin's",
+"onset_s": 257.268,
+"end_s": 257.508
+},
+{
+"w": 762,
+"word": "makers",
+"onset_s": 257.568,
+"end_s": 257.868
+},
+{
+"w": 763,
+"word": "take",
+"onset_s": 257.948,
+"end_s": 258.228
+},
+{
+"w": 764,
+"word": "the",
+"onset_s": 258.748,
+"end_s": 258.828
+},
+{
+"w": 765,
+"word": "two",
+"onset_s": 258.908,
+"end_s": 259.088
+},
+{
+"w": 766,
+"word": "in",
+"onset_s": 259.168,
+"end_s": 259.228
+},
+{
+"w": 767,
+"word": "a",
+"onset_s": 259.268,
+"end_s": 259.288
+},
+{
+"w": 768,
+"word": "morning",
+"onset_s": 259.308,
+"end_s": 259.588
+},
+{
+"w": 769,
+"word": "call",
+"onset_s": 259.628,
+"end_s": 259.848
+},
+{
+"w": 770,
+"word": "and",
+"onset_s": 260.028,
+"end_s": 260.128
+},
+{
+"w": 771,
+"word": "their",
+"onset_s": 260.168,
+"end_s": 260.288
+},
+{
+"w": 772,
+"word": "team",
+"onset_s": 260.348,
+"end_s": 260.568
+},
+{
+"w": 773,
+"word": "says",
+"onset_s": 260.688,
+"end_s": 260.868
+},
+{
+"w": 774,
+"word": "it",
+"onset_s": 260.888,
+"end_s": 260.968
+},
+{
+"w": 775,
+"word": "lets",
+"onset_s": 261.008,
+"end_s": 261.188
+},
+{
+"w": 776,
+"word": "them",
+"onset_s": 261.208,
+"end_s": 261.348
+},
+{
+"w": 777,
+"word": "stay",
+"onset_s": 261.588,
+"end_s": 261.768
+},
+{
+"w": 778,
+"word": "focused",
+"onset_s": 261.808,
+"end_s": 262.208
+},
+{
+"w": 779,
+"word": "on",
+"onset_s": 262.248,
+"end_s": 262.328
+},
+{
+"w": 780,
+"word": "their",
+"onset_s": 262.448,
+"end_s": 262.548
+},
+{
+"w": 781,
+"word": "own",
+"onset_s": 262.588,
+"end_s": 262.708
+},
+{
+"w": 782,
+"word": "work",
+"onset_s": 262.748,
+"end_s": 262.988
+},
+{
+"w": 783,
+"word": "So",
+"onset_s": 263.248,
+"end_s": 263.328
+},
+{
+"w": 784,
+"word": "is",
+"onset_s": 263.848,
+"end_s": 263.928
+},
+{
+"w": 785,
+"word": "old",
+"onset_s": 263.968,
+"end_s": 264.108
+},
+{
+"w": 786,
+"word": "mate",
+"onset_s": 264.148,
+"end_s": 264.388
+},
+{
+"w": 787,
+"word": "Crocodile",
+"onset_s": 264.448,
+"end_s": 264.848
+},
+{
+"w": 788,
+"word": "Hunter",
+"onset_s": 264.868,
+"end_s": 265.168
+},
+{
+"w": 789,
+"word": "in",
+"onset_s": 265.208,
+"end_s": 265.248
+},
+{
+"w": 790,
+"word": "your",
+"onset_s": 265.288,
+"end_s": 265.368
+},
+{
+"w": 791,
+"word": "business",
+"onset_s": 265.388,
+"end_s": 265.748
+},
+{
+"w": 792,
+"word": "totally",
+"onset_s": 266.308,
+"end_s": 266.548
+},
+{
+"w": 793,
+"word": "wrong?",
+"onset_s": 266.568,
+"end_s": 266.748
+},
+{
+"w": 794,
+"word": "Not",
+"onset_s": 267.048,
+"end_s": 267.208
+},
+{
+"w": 795,
+"word": "completely.",
+"onset_s": 267.468,
+"end_s": 267.988
+},
+{
+"w": 796,
+"word": "In",
+"onset_s": 268.328,
+"end_s": 268.408
+},
+{
+"w": 797,
+"word": "the",
+"onset_s": 268.428,
+"end_s": 268.488
+},
+{
+"w": 798,
+"word": "surveys",
+"onset_s": 268.568,
+"end_s": 269.008
+},
+{
+"w": 799,
+"word": "lots",
+"onset_s": 269.328,
+"end_s": 269.588
+},
+{
+"w": 800,
+"word": "of",
+"onset_s": 269.628,
+"end_s": 269.688
+},
+{
+"w": 801,
+"word": "teams",
+"onset_s": 269.748,
+"end_s": 270.068
+},
+{
+"w": 802,
+"word": "have",
+"onset_s": 270.108,
+"end_s": 270.288
+},
+{
+"w": 803,
+"word": "swapped",
+"onset_s": 270.448,
+"end_s": 270.848
+},
+{
+"w": 804,
+"word": "small",
+"onset_s": 270.988,
+"end_s": 271.208
+},
+{
+"w": 805,
+"word": "stuff",
+"onset_s": 271.268,
+"end_s": 271.488
+},
+{
+"w": 806,
+"word": "for",
+"onset_s": 271.568,
+"end_s": 271.728
+},
+{
+"w": 807,
+"word": "something",
+"onset_s": 272.168,
+"end_s": 272.448
+},
+{
+"w": 808,
+"word": "They",
+"onset_s": 272.448,
+"end_s": 272.548
+},
+{
+"w": 809,
+"word": "have",
+"onset_s": 272.608,
+"end_s": 272.829
+},
+{
+"w": 810,
+"word": "built",
+"onset_s": 272.869,
+"end_s": 273.089
+},
+{
+"w": 811,
+"word": "like",
+"onset_s": 273.189,
+"end_s": 273.369
+},
+{
+"w": 812,
+"word": "dashboards",
+"onset_s": 273.389,
+"end_s": 273.929
+},
+{
+"w": 813,
+"word": "and",
+"onset_s": 273.949,
+"end_s": 274.029
+},
+{
+"w": 814,
+"word": "admin",
+"onset_s": 274.069,
+"end_s": 274.309
+},
+{
+"w": 815,
+"word": "pages",
+"onset_s": 274.369,
+"end_s": 274.769
+},
+{
+"w": 816,
+"word": "and",
+"onset_s": 275.109,
+"end_s": 275.209
+},
+{
+"w": 817,
+"word": "that",
+"onset_s": 275.229,
+"end_s": 275.389
+},
+{
+"w": 818,
+"word": "is",
+"onset_s": 275.449,
+"end_s": 275.549
+},
+{
+"w": 819,
+"word": "where",
+"onset_s": 275.589,
+"end_s": 275.749
+},
+{
+"w": 820,
+"word": "building",
+"onset_s": 275.849,
+"end_s": 276.189
+},
+{
+"w": 821,
+"word": "wins.",
+"onset_s": 276.229,
+"end_s": 276.569
+},
+{
+"w": 822,
+"word": "So",
+"onset_s": 277.209,
+"end_s": 277.289
+},
+{
+"w": 823,
+"word": "I",
+"onset_s": 277.749,
+"end_s": 277.789
+},
+{
+"w": 824,
+"word": "reckon",
+"onset_s": 277.829,
+"end_s": 278.069
+},
+{
+"w": 825,
+"word": "the",
+"onset_s": 278.089,
+"end_s": 278.149
+},
+{
+"w": 826,
+"word": "rule",
+"onset_s": 278.209,
+"end_s": 278.389
+},
+{
+"w": 827,
+"word": "is",
+"onset_s": 278.409,
+"end_s": 278.489
+},
+{
+"w": 828,
+"word": "simple",
+"onset_s": 279.129,
+"end_s": 279.449
+},
+{
+"w": 829,
+"word": "I'll",
+"onset_s": 280.049,
+"end_s": 280.149
+},
+{
+"w": 830,
+"word": "build",
+"onset_s": 280.369,
+"end_s": 280.669
+},
+{
+"w": 831,
+"word": "what",
+"onset_s": 281.129,
+"end_s": 281.269
+},
+{
+"w": 832,
+"word": "makes",
+"onset_s": 281.369,
+"end_s": 281.769
+},
+{
+"w": 833,
+"word": "us",
+"onset_s": 282.049,
+"end_s": 282.209
+},
+{
+"w": 834,
+"word": "different",
+"onset_s": 282.329,
+"end_s": 282.729
+},
+{
+"w": 835,
+"word": "and",
+"onset_s": 282.989,
+"end_s": 283.109
+},
+{
+"w": 836,
+"word": "buy",
+"onset_s": 283.189,
+"end_s": 283.409
+},
+{
+"w": 837,
+"word": "the",
+"onset_s": 283.489,
+"end_s": 283.549
+},
+{
+"w": 838,
+"word": "boring",
+"onset_s": 283.689,
+"end_s": 284.129
+},
+{
+"w": 839,
+"word": "plumbing",
+"onset_s": 284.269,
+"end_s": 284.669
+},
+{
+"w": 840,
+"word": "like",
+"onset_s": 284.809,
+"end_s": 285.009
+},
+{
+"w": 841,
+"word": "pay",
+"onset_s": 285.069,
+"end_s": 285.389
+},
+{
+"w": 842,
+"word": "and",
+"onset_s": 285.469,
+"end_s": 285.569
+},
+{
+"w": 843,
+"word": "help",
+"onset_s": 285.609,
+"end_s": 285.809
+},
+{
+"w": 844,
+"word": "desks",
+"onset_s": 285.889,
+"end_s": 286.349
+},
+{
+"w": 845,
+"word": "and",
+"onset_s": 286.969,
+"end_s": 287.069
+},
+{
+"w": 846,
+"word": "Before",
+"onset_s": 287.129,
+"end_s": 287.409
+},
+{
+"w": 847,
+"word": "I",
+"onset_s": 287.449,
+"end_s": 287.469
+},
+{
+"w": 848,
+"word": "build",
+"onset_s": 287.509,
+"end_s": 287.689
+},
+{
+"w": 849,
+"word": "anything",
+"onset_s": 287.749,
+"end_s": 288.069
+},
+{
+"w": 850,
+"word": "I'll",
+"onset_s": 288.149,
+"end_s": 288.249
+},
+{
+"w": 851,
+"word": "ask",
+"onset_s": 288.289,
+"end_s": 288.549
+},
+{
+"w": 852,
+"word": "who's",
+"onset_s": 288.769,
+"end_s": 289.089
+},
+{
+"w": 853,
+"word": "gonna",
+"onset_s": 289.129,
+"end_s": 289.309
+},
+{
+"w": 854,
+"word": "get",
+"onset_s": 289.389,
+"end_s": 289.549
+},
+{
+"w": 855,
+"word": "that",
+"onset_s": 289.589,
+"end_s": 289.729
+},
+{
+"w": 856,
+"word": "phone",
+"onset_s": 289.789,
+"end_s": 290.029
+},
+{
+"w": 857,
+"word": "call",
+"onset_s": 290.069,
+"end_s": 290.269
+},
+{
+"w": 858,
+"word": "when",
+"onset_s": 290.329,
+"end_s": 290.429
+},
+{
+"w": 859,
+"word": "it",
+"onset_s": 290.469,
+"end_s": 290.549
+},
+{
+"w": 860,
+"word": "breaks",
+"onset_s": 290.609,
+"end_s": 290.929
+},
+{
+"w": 861,
+"word": "at",
+"onset_s": 290.949,
+"end_s": 291.069
+},
+{
+"w": 862,
+"word": "2",
+"onset_s": 291.189,
+"end_s": 291.209
+},
+{
+"w": 863,
+"word": "in",
+"onset_s": 291.209,
+"end_s": 291.249
+},
+{
+"w": 864,
+"word": "the",
+"onset_s": 291.249,
+"end_s": 291.309
+},
+{
+"w": 865,
+"word": "morning",
+"onset_s": 291.349,
+"end_s": 291.609
+},
+{
+"w": 866,
+"word": "The",
+"onset_s": 291.869,
+"end_s": 291.929
+},
+{
+"w": 867,
+"word": "full",
+"onset_s": 291.949,
+"end_s": 292.109
+},
+{
+"w": 868,
+"word": "story",
+"onset_s": 292.149,
+"end_s": 292.389
+},
+{
+"w": 869,
+"word": "is",
+"onset_s": 292.449,
+"end_s": 292.529
+},
+{
+"w": 870,
+"word": "free",
+"onset_s": 292.589,
+"end_s": 292.749
+},
+{
+"w": 871,
+"word": "at",
+"onset_s": 292.789,
+"end_s": 292.849
+},
+{
+"w": 872,
+"word": "makeyourmindup.ai",
+"onset_s": 292.889,
+"end_s": 294.209
+}
+]

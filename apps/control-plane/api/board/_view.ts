@@ -86,7 +86,19 @@ export type PromptAction = {
 /** Contract 1.19.0: a note of his already saved on the item, newest first, whole (Krish, 2026-11-17: "when I add feedback
  *  in to the control center UI, it obviously loads in to the prompt that comes here, but when i reopen the piece at a later
  *  date it seems to have vanished"). The box stays empty for new words; these show beside it. */
-export interface SavedNote { at: string; text: string; frame?: 'visual_points' }
+export interface SavedNote { at: string; text: string; frame?: 'visual_points'; for?: NoteFor }
+/** Which prompt a saved note feeds (contract 1.33.0; Krish, 2026-11-19: "add notes at this point that either load into the
+ *  Perplexity prompt or the Claude production prompt"): the Claude production prompt, the Perplexity research prompt, or
+ *  both. A note saved before 1.33.0 names none and feeds both. */
+export type NoteFor = 'claude' | 'perplexity' | 'both'
+export const noteFor = (v: unknown): NoteFor => (v === 'claude' || v === 'perplexity' ? v : 'both')
+/** The most of his notes listed beside a prompt's box: every one he saved on the item, so none is ever lost from view
+ *  (Krish, 2026-11-19: "save that note to this board, and it never disappears ever again"). The prompt itself carries the
+ *  newest SAVED_NOTES_MAX. */
+export const SAVED_NOTES_SHOWN = 100
+/** An off-day post's notes key without its day (off-thu-x and off-tue-x are the same post moved), so a note saved on one
+ *  day stays its own after Move to... (Krish, 2026-11-19: "it never disappears ever again"). */
+export const noteItemKey = (k: unknown): string | null => (typeof k === 'string' && k ? k.replace(/^off-(mon|tue|wed|thu|fri|sat|sun)-/, 'off-') : null)
 
 /** The heading his earlier notes go under in a Claude prompt. */
 /** How a saved answer to the production plan's question reads among his earlier notes, so its framing is never lost. */
@@ -98,18 +110,40 @@ export const SAVED_NOTES_MAX = 10
 const SAVED_NOTE_CHARS = 2000
 
 /** His saved notes for one item (its piece, or an off-day post's key), newest first: the claude_notes comments he left. */
-export function savedNotesFor(rows: ViewInputs['comments'], target: { piece_id?: unknown; item?: unknown }): SavedNote[] {
+export function savedNotesFor(rows: ViewInputs['comments'], target: { piece_id?: unknown; item?: unknown }, tool: 'claude' | 'perplexity' | null = null): SavedNote[] {
   const piece = typeof target.piece_id === 'string' ? target.piece_id.toLowerCase() : null
-  const item = !piece && typeof target.item === 'string' ? target.item : null
+  const item = !piece ? noteItemKey(target.item) : null
   if (!piece && !item) return []
   return (rows || []).filter(c => isObj(c.body) && c.body.use === 'claude_notes' && c.updated_by === 'Krish' && typeof c.body.text === 'string' && c.body.text.trim()
-    && (piece ? String(c.body.piece_id || '').toLowerCase() === piece : c.body.item === item))
+    && (piece ? String(c.body.piece_id || '').toLowerCase() === piece : noteItemKey(c.body.item) === item)
+    && (!tool || noteFor(c.body.for) === 'both' || noteFor(c.body.for) === tool))
     .map(c => ({ at: String(c.body.at || c.updated_at || ''), text: String(c.body.text).trim().slice(0, SAVED_NOTE_CHARS),
+      ...(c.body.for === 'claude' || c.body.for === 'perplexity' || c.body.for === 'both' ? { for: c.body.for as NoteFor } : {}),
       // His answer to the production plan's question (_weekModel.ts VISUAL_POINTS_ASK) keeps its framing on later prompts.
       ...(c.body.frame === 'visual_points' ? { frame: 'visual_points' as const } : {}) }))
     .sort((a, b) => b.at.localeCompare(a.at))
     .filter((n, i, all) => all.findIndex(x => x.text === n.text) === i)
-    .slice(0, SAVED_NOTES_MAX)
+    .slice(0, SAVED_NOTES_SHOWN)
+}
+
+/** His claude_notes comments on the given pieces and off-day items saved in any other week (the view's own week is read
+ *  already). A store that cannot be read gives none, never an error. */
+export async function crossWeekNotes(db: SupabaseClient, week: string, pieceIds: string[], itemKeys: string[]): Promise<ViewInputs['comments']> {
+  const ids = [...new Set(pieceIds.filter(x => /^[0-9a-f-]{36}$/i.test(x)).map(x => x.toLowerCase()))]
+  const keys = [...new Set(itemKeys.filter(Boolean))]
+  const reads: Array<PromiseLike<unknown[]>> = []
+  const base = () => db.from('board_documents').select('doc_id,body,updated_by,updated_at,week').eq('collection', 'comments').neq('week', week)
+    .eq('body->>use', 'claude_notes')
+  if (ids.length) reads.push(base().in('body->>piece_id', ids).limit(500).then(r => (r.error ? [] : r.data || []), () => []))
+  // A post's notes key carries its day (off-thu-x); one moved keeps its option id, so it is matched without the day.
+  for (const k of keys.slice(0, 40)) {
+    const id = noteItemKey(k)?.replace(/^off-/, '')
+    if (id && /^[A-Za-z0-9_-]{1,120}$/.test(id)) reads.push(base().like('body->>item', `off-%-${id}`).limit(200).then(r => (r.error ? [] : r.data || []), () => []))
+  }
+  const rows = (await Promise.all(reads)).flat() as Array<Body & { week?: string }>
+  const seen = new Set<string>()
+  return rows.filter(r => { const k = `${r.week}/${r.doc_id}`; if (seen.has(k)) return false; seen.add(k); return true })
+    .map(({ week: _w, ...r }) => r) as ViewInputs['comments']
 }
 
 /** Every Claude prompt in the week model that asks for his notes carries the ones he already saved on its item. */
@@ -118,13 +152,22 @@ export function withSavedNotes(model: WeekModel, rows: ViewInputs['comments']): 
     if (!a || a.kind !== 'prompt' || !a.notes?.save) return
     const body = (a.notes.save as { body?: Body }).body || {}
     if (body.use !== 'claude_notes') return
-    a.notes.saved = savedNotesFor(rows, body)
+    a.notes.saved = savedNotesFor(rows, body, a.tool === 'perplexity' ? 'perplexity' : 'claude')
     // The Claude session starts with nothing to assume: his earlier notes are in its prompt too (the research prompt
     // carries them in its own words).
     if (a.tool !== 'perplexity' && a.notes.saved.length && !a.prompt.includes(EARLIER_NOTES))
-      a.prompt = `${a.prompt}\n\n${EARLIER_NOTES}\n${a.notes.saved.map(n => `- ${n.at ? `${n.at.slice(0, 16).replace('T', ' ')} UTC: ` : ''}${n.frame === 'visual_points' ? `${VISUAL_POINT_LINE} ` : ''}${n.text}`).join('\n')}`
+      a.prompt = `${a.prompt}\n\n${EARLIER_NOTES}\n${a.notes.saved.slice(0, SAVED_NOTES_MAX).map(n => `- ${n.at ? `${n.at.slice(0, 16).replace('T', ' ')} UTC: ` : ''}${n.frame === 'visual_points' ? `${VISUAL_POINT_LINE} ` : ''}${n.text}`).join('\n')}`
   }
-  for (const d of model.days) for (const it of d.items) { fill(it.next); for (const o of it.others) fill(o) }
+  for (const d of model.days) for (const it of d.items) {
+    fill(it.next); for (const o of it.others) fill(o)
+    // Every card, at every stage, keeps his notes box and every note he saved on it (contract 1.33.0): the save press of
+    // its prompts, or the same press made for it when it carries no prompt (a post that is scheduled or live).
+    const own = [it.next, ...it.others].map(a => (a && a.kind === 'prompt' ? (a.notes?.save as PressAction | undefined) : undefined)).find(Boolean)
+    const save: PressAction = own ?? { ...thoughtPress(it.day, 'notes'), label: 'Save your note', done: 'Saved on the board, with the piece for good.',
+      body: { ...thoughtPress(it.day, 'notes').body, use: 'claude_notes', title: it.title.slice(0, 300), ...(it.piece_id ? { piece_id: it.piece_id } : { item: it.key }) },
+      words: { path: 'text', ask: 'Your note', required: true } }
+    it.notes = { save, saved: savedNotesFor(rows, save.body) }
+  }
   return model
 }
 export interface DayView {
@@ -344,14 +387,37 @@ export interface ViewInputs {
   plans?: Record<string, Body | null>
 }
 
+/** A folder's or an option's title as a comparison key: letters and digits, lower case. */
+const titleKey = (t: string): string => t.toLowerCase().replace(/[^a-z0-9]+/g, '')
+/** The title a post folder carries after its date and day ("2026-11-17 Tue off.day - Free ChatGPT has ads now"). */
+const folderTitle = (name: string): string => name.replace(/^\d{4}-\d{2}-\d{2}\s+\w{3}\s+[^-]*-\s*/, '')
+
 /** The day's post folders, each bound to the option whose `drive` names it and to the piece whose making record files
- *  into it (pack.folder): the bound ones first, then by name. Null when Drive could not be read. */
+ *  into it (pack.folder): the bound ones first, then by name. Null when Drive could not be read.
+ *
+ *  A post's folder is dated for the day it was made for, and a post he moves to another day keeps its folder (Krish,
+ *  2026-11-18: a post scheduled for Fri 20 showed no files at all, because its folder was dated Tue 17 and its card sat on
+ *  Thu 19: "at no point did I ever see the covers, thumbnails etc"). So a folder of another day of the week is also this
+ *  day's when an option here names it (`drive`), or, with nothing naming it, when its title is the one option's title
+ *  (a folder named "... - Free ChatGPT has ads now" and an option "Free ChatGPT has ads now. Here is ..."): never when
+ *  more than one option here would claim it. */
 export function dayPosts(posts: DrivePost[] | null | undefined, date: string, options: ViewOption[], pieces: Body[]): ViewPost[] | null {
   if (!Array.isArray(posts)) return null
   // The folder each piece is bound to now (its binding, else its pack's folder, its date put right after a move).
   const packOf = (p: Body) => currentFolder(isObj(p.meta) && isObj(p.meta.making) ? p.meta.making as never : null, p.scheduled_for) ?? ''
-  return posts.filter(p => p.date === date).map(p => {
-    const option = options.find(o => o.post === p.id)?.id ?? null
+  const here = posts.filter(p => p.date === date)
+  const hereIds = new Set(here.map(p => p.id))
+  const claimed = (p: DrivePost): string | null => {
+    const named = options.find(o => o.post === p.id)
+    if (named) return named.id
+    const key = titleKey(folderTitle(p.name))
+    if (key.length < 12) return null
+    const hits = options.filter(o => !o.post && titleKey(o.title).includes(key))
+    return hits.length === 1 ? hits[0].id : null
+  }
+  const moved = posts.filter(p => p.date !== date && !hereIds.has(p.id) && claimed(p) !== null)
+  return [...here, ...moved].map(p => {
+    const option = claimed(p)
     const piece = pieces.find(x => packOf(x) === p.name)
     return { id: p.id, name: p.name, url: p.url, option, piece_id: piece ? String(piece.id).toLowerCase() : null, assets: p.assets }
   }).sort((a, b) => Number(!a.option && !a.piece_id) - Number(!b.option && !b.piece_id) || a.name.localeCompare(b.name))
@@ -1006,7 +1072,7 @@ export function buildView(i: ViewInputs): WeekView {
     const dv = days.find(x => x.day === day)
     if (!dv || !it.piece_id) return null
     return { series: dv.series || null, dayLabel: dv.label, lock: lockOf(i.locks, day as PostedDay, it.piece_id)?.text ?? null,
-      materials: dv.piece_id === it.piece_id ? dv.materials : [], saved: savedNotesFor(i.comments, { piece_id: it.piece_id }) }
+      materials: dv.piece_id === it.piece_id ? dv.materials : [], saved: savedNotesFor(i.comments, { piece_id: it.piece_id }, 'perplexity').slice(0, SAVED_NOTES_MAX) }
   }), i.comments)
   // What waits on his press: only his real decisions (Approve for publish on a made piece, an approved post's missing
   // choice), never an idea (Ruling, Krish, 2026-11-13).
@@ -1331,6 +1397,9 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
     cards: noted.filter(x => x.why_like && x.why_like.trim()).slice(0, 3).map(x => ({ id: x.id, name: x.name, words: String(x.why_like).trim().slice(0, 600), saved: x.drive_created_at })),
     unread: (unreadRows as unknown[]).length,
   }
+  // His notes on this week's pieces and posts saved in any week, so a note follows its piece across a move to another week
+  // and is never dropped by the week's own 200 comments (Krish, 2026-11-19: "it never disappears ever again").
+  const noteRows = await crossWeekNotes(db, week, (pieces as Body[]).map(p => String(p.id || '')), (items ?? []).map(x => (x.day ? `off-${x.day}-${x.option_id}` : '')))
   let ideas: Body | null = null
   try { ideas = ideasText ? JSON.parse(ideasText) : null } catch { ideas = null }
   let north: { current: number; target: number; measured?: number } | null = null
@@ -1346,7 +1415,7 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
     locks: Object.fromEntries(LOCK_DAYS.map((d, k) => [d, locks[k] as string | null])),
     research_files: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, Boolean(research[k])])), formats, motion,
     specs: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, specs[k]])), inspiration, overlay, scripts, productionPlans, approvals,
-    comments: commentRows as ViewInputs['comments'], ticks: tickRows as ViewInputs['ticks'], revision: signal as number | null,
+    comments: [...(commentRows as ViewInputs['comments']), ...noteRows] as ViewInputs['comments'], ticks: tickRows as ViewInputs['ticks'], revision: signal as number | null,
     drive_posts: await drivePosts, drafts: Object.fromEntries(drafts), items, all_items: allItems, recent_pieces: recentPieces as Body[],
     plans: { [shiftYmd(week, -7)]: beside[0] ?? null, [shiftYmd(week, 7)]: beside[1] ?? null }, sign_offs: await signOffs })
 }
@@ -1367,7 +1436,14 @@ export function growthLiveLine(posts: GrowthPost[]): string {
   const channels = [...new Set(sorted.map(p => channelWord(p.channel)))]
   const last = sorted[sorted.length - 1]
   const who = sorted.length && sorted.every(p => p.check === 'buffer_sent') ? 'Buffer shows it sent' : 'Growth posted it'
-  return `Live on ${channels.join(', ')}. ${who}${last?.at ? `, ${approvedWhen(last.at)}` : ''}`
+  const live = `Live on ${channels.join(', ')}. ${who}${last?.at ? `, ${approvedWhen(last.at)}` : ''}`
+  // The live check (Krish, 2026-11-19): what each send was checked for, and what went out wrong, said plainly. A post Buffer
+  // could not be read for says nothing: never "checked".
+  const checked = sorted.filter(p => p.verify)
+  const wrong = checked.flatMap(p => (p.verify!.ok ? [] : p.verify!.failed.map(f => `${channelWord(p.channel)}: ${f}`)))
+  if (wrong.length) return `${live}. It did not all go out right: ${wrong.join('; ')}`
+  if (checked.length && checked.length === sorted.length) return `${live}. Checked live: every post matches how it was made`
+  return live
 }
 
 /** What Growth posted on a day for its off-day items, from its own record: one line per channel, with the post's link. */

@@ -356,11 +356,12 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
            caption_style: str = 'house', face_detector=None, plate_video: str | None = None,
            plate_offset: int = 0, opening: dict | None = None, publish_day: str | None = None,
            body_logo: bool = True,
-           onscreen_reader=None) -> dict:
+           onscreen_reader=None, frame_props: dict | None = None, kept_restarts: list | None = None) -> dict:
     fmt = load_json(CONFIG / 'formats' / f'{format_id}.json')['qc']
     targets = targets or {'lufs': -14, 'tp': -1}
     loud = loudness(path)
-    move = motion(frame_diffs(path))
+    diffs = frame_diffs(path)
+    move = motion(diffs)
     silences = long_silences(path)
     checks = {
         'loudness.integrated': {'value': loud['integrated_lufs'], 'target': f"{targets['lufs']} ±1",
@@ -517,6 +518,14 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
         from . import qc_onscreen
         checks.update(qc_onscreen.rows(path, composition_props, publish_day, read=onscreen_reader,
                                        lead=opening_lead(composition_props)))
+    # The Tue 17 and Wed 18 failure lists as rows (velib/qc_frames.py, config/ve/frame-checks.json): one carrier a beat, figures
+    # shown, no ghost of his face, no flat-black graphics, the render knew the logo rule, "off.day" drawn nowhere, the title a
+    # card from his spoken line, no false start left in, motion in the first seconds, his whole head in frame. Any aspect.
+    if frame_props and frame_props.get('beats'):
+        from . import qc_frames
+        checks.update(qc_frames.rows(path, frame_props, publish_day, beats=beats, aspect=aspect, fps=fps, diffs=diffs,
+                                     heard=heard, kept_restarts=kept_restarts, face_detector=face_detector,
+                                     read=onscreen_reader, lead=opening_lead(frame_props)))
     # A picture smeared into stripes (8 Nov, the proactive-AI opening's plate): every cut, advisory before its own date.
     checks['picture.smeared'] = picture_smeared(path, publish_day)
     # A tall meme is centred on the screen (Ruling, Krish, 2026-11-15: tall memes are centred; scripts/layout_centre.py,

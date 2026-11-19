@@ -135,6 +135,8 @@ export const EngineRenderPropsSchema = z.object({
     toFrame: z.number().int().positive(),
     /** 'fade' when the captions take his next words while the finished title still holds. */
     release: z.enum(['captions', 'fade']).optional(),
+    /** The title lands on a card that slams in over the caption band (spec title_moment.card; Krish, 18 Nov 2026). */
+    card: z.boolean().optional(),
     words: z.array(z.object({ text: z.string().min(1), atFrame: z.number().int().nonnegative() }).strict()).min(1),
   }).strict().optional(),
   beats: z.array(EngineBeatSchema).min(1),

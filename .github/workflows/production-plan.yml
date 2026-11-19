@@ -101,7 +101,7 @@ jobs:
           github_token: ${{ github.token }}
           claude_args: >-
             --max-turns 300
-            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/post-pack/recording.py:*),Bash(python3 scripts/post-pack/edit_pass.py:*),Bash(python3 scripts/post-pack/plan_scene.py:*),Bash(python3 scripts/post-pack/board_session.py ${{ steps.piece.outputs.id }} show:*),Bash(python3 scripts/post-pack/board_session.py ${{ steps.piece.outputs.id }} read:*),Bash(python3 scripts/post-pack/board_session.py ${{ steps.piece.outputs.id }} add:*),Bash(python3 scripts/post-pack/board_session.py ${{ steps.piece.outputs.id }} start:*),Bash(python3 scripts/post-pack/board_session.py ${{ steps.piece.outputs.id }} progress:*),Bash(python3 scripts/post-pack/board_session.py ${{ steps.piece.outputs.id }} blocked:*),Bash(python3 scripts/post-pack/board_session.py ${{ steps.piece.outputs.id }} done:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/live_board.py:*),Read,Glob,Grep,Edit(.scratch/plan/**),Write(.scratch/plan/**),WebSearch,WebFetch,TodoWrite"
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/post-pack/recording.py:*),Bash(python3 scripts/post-pack/edit_pass.py:*),Bash(python3 scripts/post-pack/plan_scene.py:*),Bash(python3 scripts/post-pack/board_session.py ${{ steps.piece.outputs.id }} show:*),Bash(python3 scripts/post-pack/board_session.py ${{ steps.piece.outputs.id }} read:*),Bash(python3 scripts/post-pack/board_session.py ${{ steps.piece.outputs.id }} add:*),Bash(python3 scripts/post-pack/board_session.py ${{ steps.piece.outputs.id }} start:*),Bash(python3 scripts/post-pack/board_session.py ${{ steps.piece.outputs.id }} progress:*),Bash(python3 scripts/post-pack/board_session.py ${{ steps.piece.outputs.id }} blocked:*),Bash(python3 scripts/post-pack/board_session.py ${{ steps.piece.outputs.id }} done:*),Bash(python3 scripts/post-pack/board_session.py ${{ steps.piece.outputs.id }} archive:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/live_board.py:*),Read,Glob,Grep,Edit(.scratch/plan/**),Write(.scratch/plan/**),WebSearch,WebFetch,TodoWrite"
             --disallowedTools "Read(//proc/**)"
           prompt: |
             piece_id: ${{ steps.piece.outputs.id }}
@@ -125,6 +125,9 @@ jobs:
             picture, each drawn in his picked captions and motion style with plan_scene.py --captions, --motion and --kind,
             never three frames of his face with the same caption), and the done report
             names the edit line (how long the take ran, what was cut, the speed-up, the final length).
+            A new plan replaces the old one whole: once it is filed, archive every older plan_scene still on the piece with
+            board_session.py PIECE archive MATERIAL_ID --reason "superseded by production plan <new plan material id>", so no
+            session or sheet ever reads a scene from a plan he discarded (Krish, 2026-11-19). Archive only; never delete.
 
       - name: Keep the session record
         if: always() && steps.claude.outputs.execution_file != ''

@@ -1484,39 +1484,6 @@
       "swipeIndex": null
     },
     {
-      "fromFrame": 1241,
-      "toFrame": 1245,
-      "words": [
-        {
-          "text": "Let's",
-          "atFrame": 1241
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 1245,
-      "toFrame": 1253,
-      "words": [
-        {
-          "text": "find",
-          "atFrame": 1245
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 1253,
-      "toFrame": 1266,
-      "words": [
-        {
-          "text": "out.",
-          "atFrame": 1253
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
       "fromFrame": 1266,
       "toFrame": 1268,
       "words": [
@@ -11533,7 +11500,7 @@
   "titleMoment": {
     "fromFrame": 1091,
     "toFrame": 1266,
-    "release": "fade",
+    "release": "captions",
     "words": [
       {
         "text": "Where",
@@ -11603,7 +11570,7 @@
   },
   "beats": [
     {
-      "id": "l1",
+      "id": "hook",
       "role": "hook",
       "layout": "P1",
       "fromFrame": 0,
@@ -11699,7 +11666,7 @@
       "keyFrame": 1194
     },
     {
-      "id": "l6",
+      "id": "face",
       "role": "bridge",
       "layout": "P1",
       "fromFrame": 1266,
@@ -11776,7 +11743,7 @@
       "keyFrame": 2615
     },
     {
-      "id": "l10",
+      "id": "proof",
       "role": "anchor",
       "layout": "P6",
       "fromFrame": 2698,
@@ -12193,7 +12160,7 @@
       "keyFrame": 9379
     },
     {
-      "id": "l29",
+      "id": "close",
       "role": "bridge",
       "layout": "STAGE",
       "fromFrame": 9472,
@@ -12532,14 +12499,14 @@
   ],
   "events": [
     {
-      "id": "l1-0",
+      "id": "hook-0",
       "obj": "ddn_l",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 0
     },
     {
-      "id": "l1-1",
+      "id": "hook-1",
       "obj": "recalled_l",
       "verb": "stamp",
       "toState": "RECALLED",
@@ -12609,28 +12576,28 @@
       "atFrame": 2571
     },
     {
-      "id": "l10-0",
+      "id": "proof-0",
       "obj": "ban_stat_l",
       "verb": "enter",
       "toState": "visible",
       "atFrame": 2841
     },
     {
-      "id": "l10-1",
+      "id": "proof-1",
       "obj": "block_l",
       "verb": "stamp",
       "toState": "ban",
       "atFrame": 2908
     },
     {
-      "id": "l10-2",
+      "id": "proof-2",
       "obj": "ban_stat_l",
       "verb": "count_to",
       "toState": "for the ban",
       "atFrame": 2943
     },
     {
-      "id": "l10-3",
+      "id": "proof-3",
       "obj": "block_l",
       "verb": "add",
       "toState": "ballot",

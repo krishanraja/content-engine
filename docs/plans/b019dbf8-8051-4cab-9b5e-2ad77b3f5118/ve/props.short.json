@@ -593,39 +593,6 @@
       "swipeIndex": null
     },
     {
-      "fromFrame": 485,
-      "toFrame": 489,
-      "words": [
-        {
-          "text": "Let's",
-          "atFrame": 485
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 489,
-      "toFrame": 496,
-      "words": [
-        {
-          "text": "find",
-          "atFrame": 489
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
-      "fromFrame": 496,
-      "toFrame": 506,
-      "words": [
-        {
-          "text": "out.",
-          "atFrame": 496
-        }
-      ],
-      "swipeIndex": null
-    },
-    {
       "fromFrame": 506,
       "toFrame": 514,
       "words": [
@@ -3525,7 +3492,7 @@
   "titleMoment": {
     "fromFrame": 391,
     "toFrame": 506,
-    "release": "fade",
+    "release": "captions",
     "words": [
       {
         "text": "Where",

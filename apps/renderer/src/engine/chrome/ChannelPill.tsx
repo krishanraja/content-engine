@@ -1,3 +1,4 @@
+import { isOffDayLabel } from './offDay'
 import { SectionPill } from '../../house/components'
 import { HOUSE } from '../../house/geometry'
 import { textWidth } from '../../house/metrics'
@@ -8,6 +9,8 @@ import { houseTokens } from './tokens'
 
 export function ChannelPill({ props, beat }: { props: EngineRenderProps; beat: EngineBeat }) {
   if (!beat.sectionBeat) return null
+  // An off day wears no tag at all (Ruling, Krish, 2026-11-18: "off.day is NEVER to be used ever as a tag").
+  if (isOffDayLabel(props.series.label)) return null
   const box = boxFor('pill', props.aspect)
   const label = props.series.label.toLowerCase()
   const natural = {

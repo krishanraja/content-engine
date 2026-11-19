@@ -1,5 +1,6 @@
 import { SERIES_DAYS, type PostedDay } from './_posted.js'
 import { writeBack } from './_writeBack.js'
+import { bufferUrl, channelWords, placementFor } from './_growthPlacement.js'
 import { asWritten, backDocId, takenBackAt, wordsBody, wordsDocId } from './_contracts.js'
 import { spokenTitle, type FiledScript, type PieceDecisions } from './_decisions.js'
 import type { MoveSpec, OffdayItem } from './_offdayItems.js'
@@ -120,6 +121,10 @@ export interface ModelAsset { name: string; kind: string; url: string; folder: s
 export interface ModelItem {
   /** `piece:<id>` for a piece, the option's document id (off-<day>-<id>) for a post. */
   key: string
+  /** Contract 1.33.0: his notes box on the card at every stage: the press that saves a note (use claude_notes, `for` the
+   *  prompt it feeds) and every note he saved on it, newest first (Krish, 2026-11-19: "Should be able to save notes in
+   *  this step too"; "it never disappears ever again"). Set by _view.ts withSavedNotes. */
+  notes?: { save: PressAction; saved: Array<{ at: string; text: string; for?: string; frame?: string }> }
   type: 'piece' | 'post'
   day: PostedDay
   date: string
@@ -132,6 +137,9 @@ export interface ModelItem {
   path: ModelStep[]
   /** Its day passed and it is not marked live. */
   missed: boolean
+  /** Contract 1.32.0: its day passed but it is still being made (a proof waiting on him, a session working on it, or its final
+   *  files waiting on his Approve for publish), so it is never `missed`: it keeps its real next step and its Move to…. */
+  passed?: boolean
   /** Where it is, in one plain sentence. */
   line: string
   next: ModelAction | null
@@ -216,7 +224,7 @@ export interface WeekModel {
 export interface ModelInputs {
   week: string
   /** The work on file by scope: each piece id, and day:<Monday>/<day> (_writeBack.ts workByScope). */
-  work?: Record<string, { sessions: Array<{ by: string; state: string; step: string | null; doing: string | null; last_at: string }>; materials: Array<{ title: string; at: string | null; where?: string }> }>
+  work?: Record<string, { sessions: Array<{ by: string; state: string; step: string | null; doing: string | null; last_at: string }>; materials: Array<{ title: string; at: string | null; where?: string; role?: string | null; kind?: string; version?: number; sha256?: string | null }> }>
   today: string
   /** The read's clock, for how long a plan run has been going (_productionPlan.ts planView). */
   now?: Date
@@ -525,7 +533,10 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   const done = Math.max(0, flags.findIndex(f => !f)) || (flags.every(Boolean) ? flags.length : 0)
   const when = [stage('agreed')?.when ?? null, stage('flesh_out')?.when ?? null, null, stage('after_recording')?.when ?? null, out ? (p.stage?.at?.slice(0, 10) ?? d.date) : null]
   const path = steps(PIECE_PATH, done, when)
-  const missed = d.who === 'missed'
+  const lapsed = d.who === 'missed'
+  const making = lapsed ? stillBeingMade(m, [d.piece_id], [d.piece_id, dayScope(m.week, d.day)], Boolean(d.manifest?.press && d.manifest.state !== 'approved')) : null
+  const missed = lapsed && !making
+  const passed = lapsed && Boolean(making)
   const raw = rawOption(m, d.day, d.piece_id)
   const row = m.pieces.find(x => String(x.id).toLowerCase() === d.piece_id) ?? null
   const read = withWork(readOf(raw, { row, research: [...(d.path?.materials || []).map(x => x.title), ...d.materials.map(x => x.title)] }), m, [d.piece_id, dayScope(m.week, d.day)])
@@ -533,13 +544,13 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   const label = where.label
   const base = { key: `piece:${d.piece_id}`, type: 'piece' as const, day: d.day, date: d.date, kind: PIECE_KIND.key, kind_label: d.series,
     title: workingTitle(m, d.piece_id, d.title, out), approved: p.approval.label, stage: where, path, missed, read, piece_id: d.piece_id,
-    item: null, supports: null, move: p.move ?? null, links: p.stage?.links ?? [], stories: null, stories_planned: null, others: [] as PressAction[] }
+    item: null, supports: null, move: p.move ?? null, links: p.stage?.links ?? [], stories: null, stories_planned: null, others: [] as PressAction[], ...(passed ? { passed: true } : {}) }
   if (out) return { ...base, line: p.stage?.state === 'live' ? p.stage.label : d.next, next: null, decision: false }
   // His Approve for publish on the made piece, bound to its manifest: his decision for the day.
   const publish = d.manifest?.press && d.manifest.state !== 'approved' ? d.manifest.press as unknown as PressAction : null
   const yes = d.actions.find(a => a.kind === 'press' && a.collection === 'picks' && isObj(a.body) && (a.body as Body).kind === 'yes')
   const decision = publish ?? yes ?? null
-  const line = missed ? `Missed: ${d.label} passed and it is not marked live. If it went out, press It's live with its link.` : `${label}. ${d.next.replace(/[.\s]+$/, '')}.`
+  const line = missed ? `Missed: ${d.label} passed and it is not marked live. If it went out, press It's live with its link.` : `${passed ? `Its day, ${d.label}, has passed and it is still being made: ${making!.line}. ` : ''}${label}. ${d.next.replace(/[.\s]+$/, '')}.`
   if (decision && !missed) return { ...base, line, next: decision, decision: true }
   // His pick of the thumbnail (contract 1.16.0, _thumbs.ts): while a judged set waits on him, it is his decision for the
   // day; the board opens the options at their own shapes, and the choice is the fallback a board that cannot draw them
@@ -599,6 +610,30 @@ function pieceItem(m: ModelInputs, d: DayView): ModelItem | null {
   return { ...base, line, next: itemPrompt(m.week, { ...base, line }, d.path?.current || 'next', null, signedStory, m.decisions?.[d.piece_id] ?? null), decision: false, others: picks }
 }
 
+
+/** Whether a piece is still being made, so its day passing never makes it Missed (Krish, 2026-11-19: piece 701a2c55, Tue 17's
+ *  habits voiceover, "I don't see this on the board anywhere": once Tue 17 passed the card read Missed and the Approve proof
+ *  press vanished while the production session still waited on him). Still being made means: a proof filed on the piece whose
+ *  proof gate he has not answered for that file; or a production session working on it; or its final files filed and their
+ *  Approve for publish not pressed. A finished or due piece that was simply never marked live is still Missed. Pure. */
+export function stillBeingMade(m: Pick<ModelInputs, 'work' | 'pieces'>, pieceIds: Array<string | null | undefined>, scopes: string[], finalWaits = false): { why: 'proof' | 'session' | 'final'; line: string } | null {
+  const ids = pieceIds.filter((x): x is string => typeof x === 'string' && x.length > 0).map(x => x.toLowerCase())
+  const work = scopes.map(sc => m.work?.[sc]).filter((x): x is NonNullable<typeof x> => Boolean(x))
+  const proof = work.flatMap(w => w.materials).filter(x => x.role === 'proof' && x.kind === 'video' && x.where !== 'day')
+    .sort((a, b) => (b.version ?? 1) - (a.version ?? 1) || String(b.at || '').localeCompare(String(a.at || '')))[0]
+  if (proof) {
+    const row = m.pieces.find(x => ids.includes(String(x.id).toLowerCase()))
+    const meta = isObj(row?.meta) ? row!.meta as Body : null
+    const gates = meta && isObj(meta.making) && isObj((meta.making as Body).gates) ? (meta.making as Body).gates as Body : null
+    const gate = gates && isObj(gates.proof) ? gates.proof as Body : null
+    const answered = Boolean(gate) && (!proof.sha256 || gate!.sha256 === proof.sha256)
+    if (!answered) return { why: 'proof', line: `${cut(proof.title, 120)} is waiting on your Approve proof` }
+  }
+  if (work.some(w => w.sessions.some(x => x.state === 'working' || x.state === 'blocked'))) return { why: 'session', line: 'a production session is working on it' }
+  if (finalWaits) return { why: 'final', line: 'its final files are filed and wait on your Approve for publish' }
+  return null
+}
+
 /** A piece his approval holds on a day that is not the day's own piece (moved there, or kept alongside). */
 /** What a placed piece waits on next, by the step his decisions leave (_decisions.ts). */
 const PLACED_NEXT: Record<'story' | 'look' | 'board' | 'record', string> = {
@@ -624,14 +659,17 @@ function placedPieceItem(m: ModelInputs, d: DayView, p: DayView['pieces'][number
   const done = out ? PIECE_PATH.length : branded ? (lookPicked ? (scriptsOk && !unsent ? 3 : 2) : 1) : 0
   // What it says now: the signed lock, never the idea row it started from (F47).
   const said = m.lockReads?.[p.id]
-  const missed = !out && missedOn(d.date, m.today)
+  const lapsed = !out && missedOn(d.date, m.today)
+  const making = lapsed ? stillBeingMade(m, [p.id], [p.id], Boolean(d.manifest?.press && d.manifest.state !== 'approved' && String(d.piece_id || '').toLowerCase() === p.id)) : null
+  const missed = lapsed && !making
+  const passed = lapsed && Boolean(making)
   const base = { key: `piece:${p.id}`, type: 'piece' as const, day: d.day, date: d.date, kind: PIECE_KIND.key, kind_label: p.series ? p.series.replace(/_/g, '.') : d.series,
     title: workingTitle(m, p.id, p.title, out), approved: p.approval?.label ?? null, stage: stageOf(PIECE_PATH, done), path: steps(PIECE_PATH, done), missed,
     read: withWork(withLock(readOf(null, { row }), said), m, [p.id]), piece_id: p.id, item: null, supports: null, move: p.move ?? null, links: p.stage?.links ?? [], stories: null,
-    stories_planned: null, others: [] as PressAction[] }
+    stories_planned: null, others: [] as PressAction[], ...(passed ? { passed: true } : {}) }
   const step = decided?.next_step ?? (branded ? 'look' : 'next')
   const line = out ? 'Live.' : missed ? `Missed: ${d.label} passed and it is not marked live. If it went out, press It's live with its link.`
-    : `${branded ? 'Branded: its narrative lock is signed' : 'Approved'} for ${d.label}. ${branded && decided?.next_step ? `${PLACED_NEXT[decided.next_step]}.` : 'It carries on from where it is.'}`
+    : `${passed ? `Its day, ${d.label}, has passed and it is still being made: ${making!.line}. ` : ''}${branded ? 'Branded: its narrative lock is signed' : 'Approved'} for ${d.label}. ${branded && decided?.next_step ? `${PLACED_NEXT[decided.next_step]}.` : 'It carries on from where it is.'}`
   const picks = out || missed ? [] : lookPresses(p.id, m.placedStyles?.[p.id])
   const toSign = !out && !missed && !branded ? m.locksToSign?.[p.id] : undefined
   if (toSign) {
@@ -828,14 +866,27 @@ function madeAssets(d: DayView, option: string): ModelAsset[] {
 const ASSET_KIND_WORD: Record<string, string> = { cut: 'cut', video: 'video', meme: 'meme', carousel: 'carousel', image: 'image', cover: 'cover', figure: 'figure', thumbnail: 'thumbnail', note: 'caption or note' }
 /** The Publish prompt of a made post (Krish, 2026-11-18: "when a piece is complete [...] a button that just says Publish [...] schedule in Buffer directly, ideally, or produce a prompt that I could do it in a session"). */
 function publishLines(files: ModelAsset[]): string {
-  return files.map((f, i) => `${i + 1}. ${ASSET_KIND_WORD[f.kind] ?? f.kind}: ${f.name}${f.folder ? ` (${f.folder})` : ''} ${f.url}${f.slides.length ? ` [${f.slides.length} slides: ${f.slides.map(x => x.url).join(' ')}]` : ''}`).join('\n')
+  return files.map((f, i) => `${i + 1}. ${ASSET_KIND_WORD[f.kind] ?? f.kind}: ${f.name}${f.folder ? ` (${f.folder})` : ''} ${bufferUrl(f.url)}${f.slides.length ? ` [${f.slides.length} slides: ${f.slides.map(x => bufferUrl(x.url)).join(' ')}]` : ''}`).join('\n')
 }
-const PUBLISH_HEAD = 'This is the Publish step: schedule this one approved, finished post in Buffer, nothing else. Krish pressing this prompt is his approval to schedule exactly the files and words listed '
-  + 'below on its own channels. 1. Open every file below from its Drive link and check it is the finished one: the right images in order, the covers and thumbnails, and each caption. If a file is missing, wrong or '
-  + 'unreadable, stop and report blocked naming it; never schedule a different file or reword a caption. 2. Schedule through the Buffer connector (the Make Your Mind Up channels only, never Heartside\'s): one scheduled '
-  + 'post per channel the post is for, each with its own caption verbatim and its own files attached, due at the post\'s day and the channel\'s usual time (ask him once if the time is not on the board). Never publish '
-  + 'now, and never post a channel the board does not list. 3. Read each scheduled post back from Buffer and check its text and every attachment match the files below. 4. Report on the board with the Buffer post ids; '
-  + 'Control Centre also reads Buffer every 15 minutes and moves the card to Scheduled by itself. If you cannot schedule it, say exactly why on the board as blocked; never leave the card as it was.\n\n'
+/** The Publish prompt's head: everything a session needs to schedule the post with no question to Krish. The channels and
+ *  the four daily slots are Growth's (vendor/makeyourmindup/mix.json); the captions are written here, in Growth's account
+ *  voices (Krish, 2026-11-19: he has never chosen channels, times or captions: Growth knows them). */
+function publishHead(kind: string, dateWord: string): string {
+  const p = placementFor(kind)
+  const channels = p ? `${channelWords(p)} (${p.channels.map(c => `${c.name}: ${c.format}`).join('; ')})` : 'the channels of the Make Your Mind Up lane this kind of post belongs to in growth-makeyourmindup mix.json'
+  const times = p ? p.times.join(', ') : '08:30, 12:30, 17:30, 20:30'
+  return 'This is the Publish step: schedule this one approved, finished post in Buffer, nothing else. Krish pressing this prompt is his approval to schedule exactly the files listed below. '
+    + 'He has never chosen the channels, the time or the captions: Growth already knows them, so nothing here is a question for him, and a missing channel list, time or caption is never a reason to stop. '
+    + `1. Channels: ${channels}: Growth's own placement for this kind of post, Make Your Mind Up's channels only (never Heartside's, fulltime.fm's, yourdoghasnotes' or Krish's LinkedIn). Confirm each with get_account and list_channels. `
+    + 'A channel that is not connected, or whose route Growth holds (Buffer TikTok short video is held: social/guides/buffer.md), is skipped and named in your report; it never stops the other channels. '
+    + `2. Time: Growth's four daily slots, ${times}, New York time, on the card's day (${dateWord}). For each channel read its scheduled posts for that day from Buffer and take the first slot not taken that is more than 90 minutes away; if none is left, the next day's first. Set dueAt in New York time with its UTC offset. `
+    + '3. Captions: write each channel\'s own caption yourself now, from the card\'s idea, claim and files only. Instagram and YouTube speak as the publication; X and TikTok are personal: sincere, warm and humble, first person allowed, Krish\'s name never in the text (growth-makeyourmindup docs/ACCOUNT-VOICE.md). '
+    + 'No em dashes, no hashtags, no emojis, no links, never ask for a share, like or follow, and never the tag off.day, off-day or Off day anywhere (Krish, 2026-11-19: never on any post); check each personal caption with check_voice and every caption with the copy lint (config/copy-lint.json). File all of them on the piece with add_piece_material before you schedule. '
+    + '4. Files: Buffer fetches each file from an https address. The addresses below are Drive download addresses (https://drive.google.com/uc?export=download&id=...), the same form Buffer took for the 18 Nov explainer\'s eight images; use them exactly. '
+    + 'Drive\'s share pages are for people, so "there is no public link" is not a blocker. Open each file from its address and check it is the finished one first (the right images in order, the covers and thumbnails); if a file is missing, wrong or unreadable, stop and report blocked naming it; never schedule a different file. A video goes as a video asset, with its designed cover\'s frame as thumbnailOffset. '
+    + '5. Schedule through the Buffer connector: one scheduled post per channel, each with its own caption and its own files attached. Never publish now, and never post a channel outside the list above. '
+    + '6. Read each scheduled post back from Buffer and check its text and every attachment match. 7. Report on the board with the Buffer post ids; Control Centre also reads Buffer every 15 minutes and moves the card to Scheduled by itself. If you cannot schedule it, say exactly why on the board as blocked; never leave the card as it was.\n\n'
+}
 function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
   const raw = rawOption(m, d.day, o.id)
   const { kind, supports } = offdayKind({ ...(raw || {}), format: raw?.format ?? o.format })
@@ -843,20 +894,26 @@ function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
   const state = o.stage?.state ?? 'approved'
   const made = (o.posts || []).some(p => p.state === 'made') || (d.posts || []).some(p => p.option === o.id && p.assets.length > 0)
   const scheduled = (o.posts || []).some(p => p.state === 'scheduled')
+  // Its files in Drive, shown at every step from Made to Live, not only before it is scheduled (Krish, 2026-11-18).
+  const filed = madeAssets(d, o.id)
   const doneOf: Record<string, number> = { approved: 1, made: 2, scheduled: 3, live: 4 }
   const done = state === 'missed' ? (scheduled ? 3 : made ? 2 : 1) : doneOf[state] ?? 1
   const path = steps(POST_PATH, done, [o.outcome?.at?.slice(0, 10) ?? null, null, o.stage?.state === 'scheduled' ? o.stage.at?.slice(0, 10) ?? null : null, o.stage?.state === 'live' ? o.stage.at?.slice(0, 10) ?? null : null])
-  const missed = state === 'missed'
   const stories = kind === 'good_news' ? storiesOf(raw, o) : null
   // An off-day piece he records has its own record in the engine (placeOffday): its reports and materials, and its
   // prompt's write-back, go to that piece; the day's scope is read beside it, where sessions reported before it had one.
   const own = recordedPiece(m, raw) ?? linkedPiece(m, offdayPieceId(m.week, o.doc_id, raw))
   const read = withWork(readOf(raw, { text: o.text, said: o.said, source: o.source }), m, [...(own ? [own] : []), dayScope(m.week, d.day)])
+  // A post whose day passed while it is still being made is never Missed (stillBeingMade): it keeps its real next step.
+  const lapsed = state === 'missed'
+  const making = lapsed && own ? stillBeingMade(m, [own], [own, dayScope(m.week, d.day)], Boolean(d.piece_id && String(d.piece_id).toLowerCase() === own && d.manifest?.press && d.manifest.state !== 'approved')) : null
+  const missed = lapsed && !making
+  const passed = lapsed && Boolean(making)
   const base = { key: o.doc_id, type: 'post' as const, day: d.day, date: d.date, kind, kind_label, title: cut(o.title, 200), approved: o.outcome?.label ?? null,
-    stage: stageOf(POST_PATH, done), path, missed, read, piece_id: null,
-    item: o.item?.key ?? null, supports, move: o.move ?? null, links: o.stage?.links ?? [], stories, stories_planned: kind === 'good_news' ? GOOD_NEWS_STORIES : null, others: [] as PressAction[] }
+    stage: stageOf(POST_PATH, done), path, missed, read, piece_id: null, ...(filed.length ? { assets: filed } : {}),
+    item: o.item?.key ?? null, supports, move: o.move ?? null, links: o.stage?.links ?? [], stories, stories_planned: kind === 'good_news' ? GOOD_NEWS_STORIES : null, others: [] as PressAction[], ...(passed ? { passed: true } : {}) }
   if (state === 'live') return { ...base, line: o.stage!.label, next: null, decision: false }
-  const where = o.stage?.label ?? 'Approved by you'
+  const where = `${passed ? `Its day, ${d.label}, has passed and it is still being made: ${making!.line}. ` : ''}${o.stage?.label ?? 'Approved by you'}`
   // How many of its five stories good news holds is said by its stories (`stories`, `stories_planned`), never twice.
   const line = (missed ? `Missed: ${d.label} passed and it is not marked live. If it went out, press It's live with its link.` : `${where}.`).replace(/\.\./g, '.')
   // A choice the approved post is still missing: its direction (the look), offered as his presses after his Approve.
@@ -885,11 +942,11 @@ function postItemBase(m: ModelInputs, d: DayView, o: ViewOption): ModelItem {
     return { ...base, line: d.manifest!.why ? `${filed} ${d.manifest!.why}` : filed, next: sealed as Action, decision: true }
   }
   // A made post with its final files filed: the Publish step, with every file listed (the cut, slides, covers, thumbnails, captions).
-  const files = made && !missed && !scheduled ? madeAssets(d, o.id) : []
+  const files = made && !missed && !scheduled ? filed : []
   if (files.length) {
-    const lineMade = `${where}. Its ${files.length} file${files.length === 1 ? ' is' : 's are'} made and filed. Check each one, then publish: it is scheduled in Buffer exactly as listed.`.replace(/\.\./g, '.')
+    const lineMade = `${where}. Its ${files.length} file${files.length === 1 ? ' is' : 's are'} made and filed. Check each one, then publish: it goes to ${(() => { const pl = placementFor(kind); return pl ? channelWords(pl) : 'its channels' })()} in Growth's next free slot, exactly as listed.`.replace(/\.\./g, '.')
     const prompt = itemPrompt(m.week, { ...base, line: lineMade }, 'publish', null, null, own ? m.decisions?.[own] ?? null : null, own,
-      `${PUBLISH_HEAD}The post: "${base.title}" (${base.kind_label}, ${DAY_WORD[d.day]} ${d.date}, item ${o.doc_id}).\nThe files:\n${publishLines(files)}\n\n`, true)
+      `${publishHead(kind, `${DAY_WORD[d.day]} ${d.date}`)}The post: "${base.title}" (${base.kind_label}, ${DAY_WORD[d.day]} ${d.date}, item ${o.doc_id}).\nThe files:\n${publishLines(files)}\n\n`, true)
     return { ...base, line: lineMade, assets: files, next: { ...prompt, label: PUBLISH_LABEL } as ModelAction, decision: false }
   }
   // A post he records himself, its script approved: the next session assumes the take is in the Video Engine Inbox and
@@ -1289,7 +1346,7 @@ export function weekModel(days: DayView[], m: ModelInputs): WeekModel {
     // The scripts on every card that holds them (scriptsOnCard; Krish, 2026-11-17).
     for (let n = 0; n < items.length; n++) items[n] = scriptsOnCard(m, d, items[n])
     // The day after its own, an item not out is Late on its own next step, and says so first (_stage.ts, lateOn).
-    if (lateOn(d.date, m.today)) for (const it of items) if (!it.missed && it.stage.key !== 'live' && it.stage.key !== 'scheduled' && !/^Late:/.test(it.line)) it.line = `${lateLine(d.label, m.today)} ${it.line}`
+    if (lateOn(d.date, m.today)) for (const it of items) if (!it.missed && !it.passed && it.stage.key !== 'live' && it.stage.key !== 'scheduled' && !/^Late:/.test(it.line)) it.line = `${lateLine(d.label, m.today)} ${it.line}`
     const day: ModelDay = { day: d.day, date: d.date, label: d.label, series: SERIES_DAYS.includes(d.day) ? d.series : null, items,
       decisions: items.filter(i => i.decision).length, ideas: ideas.filter(x => x.day === d.day).length, line: '' }
     day.line = dayLine(day)
