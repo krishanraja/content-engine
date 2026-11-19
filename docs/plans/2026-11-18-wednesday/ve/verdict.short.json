@@ -1,0 +1,169 @@
+{
+  "schema": "ve-verdict/2",
+  "piece": "2026-11-18-wednesday",
+  "cut": "short",
+  "sha256": "1849930abcc084f8da0e6290ea4f04a7ae35539fb2157f8a1b202dbc708e66ae",
+  "reviewer": "ve-critic (Opus subagent, did not make the cut)",
+  "reviewed_at": "2026-11-19T21:28:14.293138+00:00",
+  "lens_sha256": "6967b939fc12c52d2216ca482801c6e16d407a568b38a31aa5a5ace0d30b6a16",
+  "frames_viewed": [
+    {
+      "at_s": 0.0
+    },
+    {
+      "at_s": 9.1
+    },
+    {
+      "at_s": 10.3
+    },
+    {
+      "at_s": 13.1
+    },
+    {
+      "at_s": 18.5
+    },
+    {
+      "at_s": 20.7
+    },
+    {
+      "at_s": 23.5
+    },
+    {
+      "at_s": 28.8
+    },
+    {
+      "at_s": 35.0
+    },
+    {
+      "at_s": 36.8
+    },
+    {
+      "at_s": 39.3
+    },
+    {
+      "at_s": 41.5
+    },
+    {
+      "at_s": 47.4
+    },
+    {
+      "at_s": 51.3
+    },
+    {
+      "at_s": 53.0
+    },
+    {
+      "at_s": 57.6
+    },
+    {
+      "at_s": 60.7
+    },
+    {
+      "at_s": 63.8
+    },
+    {
+      "at_s": 66.3
+    },
+    {
+      "at_s": 69.1
+    },
+    {
+      "at_s": 87.0
+    }
+  ],
+  "findings": [
+    {
+      "severity": "block",
+      "area": "other",
+      "frame_s": 36.8,
+      "text": "Q1 beside The Ladder: the HUD terminal idea (style.idea.object) shows on screen only as the FACT CHECK chip (f1102-1117) and a thin BUILT IN-HOUSE chip (f1727+). No card is ever seen being locked onto a line, and the logo tiles (f712, f865, f1330, f1975, f2075) name each noun as he says it. The story reads, but not as one object carrying every move as clearly as The Ladder."
+    },
+    {
+      "severity": "block",
+      "area": "evidence",
+      "frame_s": 51.3,
+      "text": "Q5/Q8: headline crops cut the headline mid-sentence, so the evidence loses its point. CX Today reads only 'Klarna Didn't Replace Salesforce &' (f1588-1712), diginomica reads 'Klarna...no, we didn't replace SaaS', IT Pro reads 'move to scrap Workday,' (f351-423). Spec: objects hl_cxtoday, hl_diginomica, hl_itpro params.crop."
+    },
+    {
+      "severity": "block",
+      "area": "evidence",
+      "frame_s": 10.3,
+      "text": "Q8: QC evidence.readable is real. Card words are 20-24 px on 1080x1920 against 40: hl_fullstack f309, hl_itpro f393, saas_dead f1051, x_post f1180, hl_diginomica f1244, hl_cxtoday f1657. The BUILT IN-HOUSE chip (f1727+) is smaller still."
+    },
+    {
+      "severity": "fix",
+      "area": "motion",
+      "frame_s": 63.8,
+      "text": "Q10/Q1 (advisory): four beats open on an empty blurred page before their graphic arrives: deel about 1 s from f1270, rented f1588-1590, worth f1727-1729, slack about 2 s, f1915 to about f1975."
+    },
+    {
+      "severity": "fix",
+      "area": "motion",
+      "frame_s": 23.5,
+      "text": "Q10 (advisory): the title fades over his face for about 8 frames (f704-f711) where style.transitions.kind is 'cut'."
+    },
+    {
+      "severity": "fix",
+      "area": "motion",
+      "frame_s": 57.6,
+      "text": "Q11 (advisory): graphic beats look still between their events (f1588-1712 rented, f1727-1822 worth), against style.camera 'phased'."
+    },
+    {
+      "severity": "fix",
+      "area": "other",
+      "frame_s": 0.0,
+      "text": "Audio, QC's number (measured, not heard): the bed swells 3.4 LU from its median against a 3.0 limit."
+    },
+    {
+      "severity": "note",
+      "area": "brand",
+      "frame_s": 23.5,
+      "text": "Q3: QC title.lockup_frame at f693 is a measurement error. At f704 the title is one centred lockup with the stacked wordmark inside, meeting his proof condition."
+    },
+    {
+      "severity": "note",
+      "area": "brand",
+      "frame_s": 66.3,
+      "text": "Q3: the Slack fix is confirmed, a white tile over the blurred page, off his face (f2067-2074)."
+    },
+    {
+      "severity": "note",
+      "area": "copy",
+      "frame_s": 18.5,
+      "text": "Q8: serif text 'I'm H… & I…' at the bottom-right edge on face beats is most likely his T-shirt print."
+    },
+    {
+      "severity": "note",
+      "area": "other",
+      "frame_s": 20.7,
+      "text": "QC captions.render (22 of 84 pages) is mostly OCR noise from rack-focus and plates; page 20 (f621) falls inside the title hold."
+    }
+  ],
+  "blocking": true,
+  "references": [
+    {
+      "card": "instagram_DfkCOCLt7KZ",
+      "score": 4,
+      "matches": false,
+      "note": "Look. The reference is art-directed display type and HUD across full-bleed footage; the cut's evidence frames are thin headline strips and small logo tiles on a blurred page (f309, f1588, f1975). The full-frame plates match its finish (hook, confetti f1421)."
+    },
+    {
+      "card": "instagram_DdCY4cJAQZk",
+      "score": 4,
+      "matches": false,
+      "note": "Motion (infographic style). The reference builds one linked system; the cut's tiles fade up singly and hold on a still backdrop (f712-716, f1588-1712)."
+    },
+    {
+      "card": "instagram_DdcAPSuEw-o",
+      "score": 6,
+      "matches": false,
+      "note": "Captions. White, word by word, chest height, off his face, built on the word (f0-273) matches; the reference mixes scale, the cut keeps one size except 'NOT' (f1207)."
+    },
+    {
+      "card": "proof",
+      "score": 9,
+      "matches": true,
+      "note": "The hook (f0-273) is the approved proof clip frame for frame; the title frame at f704 is strong, as his approval asked."
+    }
+  ]
+}
