@@ -417,9 +417,10 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
     <AbsoluteFill key="staging-ground" data-staging={props.layout!.mode} style={{ backgroundColor: stagedNow.under === 'cream' ? props.tokens.cream : props.tokens.ink }}>
       <div style={{ ...boxStyle(stagedNow.panel), borderRadius: stagedNow.panel.radius, background: `radial-gradient(ellipse at 30% 30%, ${props.tokens.inkSoft} 0%, ${props.tokens.ink} 70%)` }} />
       {groundTexture(profile?.ground.texture, props.tokens, frame) ? <div data-ground-texture style={{ ...boxStyle(stagedNow.panel), borderRadius: stagedNow.panel.radius, ...groundTexture(profile?.ground.texture, props.tokens, frame)! }} /> : null}
-      {stagedNow.hairline ? <div style={{ ...boxStyle(stagedNow.hairline), backgroundColor: props.tokens.channel }} /> : null}
-      {stagedNow.corner ? <div data-staging-corner style={{ ...boxStyle(stagedNow.corner), borderRadius: stagedNow.corner.radius,
-        backgroundColor: props.tokens.inkDeep, boxShadow: `inset 6px 6px 0 color-mix(in srgb, ${props.tokens.mint} 22%, transparent)` }} /> : null}
+      {/* Stage's corner shares the hairline's slot (only band draws a hairline), so a band cut's tree is unchanged. */}
+      {stagedNow.hairline ? <div style={{ ...boxStyle(stagedNow.hairline), backgroundColor: props.tokens.channel }} />
+        : stagedNow.corner ? <div data-staging-corner style={{ ...boxStyle(stagedNow.corner), borderRadius: stagedNow.corner.radius,
+          backgroundColor: props.tokens.inkDeep, boxShadow: `inset 6px 6px 0 color-mix(in srgb, ${props.tokens.mint} 22%, transparent)` }} /> : null}
     </AbsoluteFill>) : undefined
   // A backdrop fills the panel above his face, over the ink panel and under the take and the graphics; with none the
   // staging ground is exactly as before.

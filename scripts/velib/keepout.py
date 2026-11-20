@@ -42,7 +42,7 @@ STAGED = {
 }
 # Stage cut out by the subject matte: the region reaches down to his head (kit/staging.ts, `cutout`).
 CUTOUT = {('stage', '9:16'): (60, 280, 800, 760), ('stage', '16:9'): (96, 120, 1240, 715)}
-ANCHOR_PROPS = [(40, 860, 320, 266)]
+ANCHOR_PROPS = [(40, 860, 320, 252)]
 # The house caption's band (kit/staging.ts clearOfCaptions, unthemed).
 HOUSE_BAND = {'9:16': (70, 1090, 800, 230), '16:9': (192, 790, 1536, 236)}
 

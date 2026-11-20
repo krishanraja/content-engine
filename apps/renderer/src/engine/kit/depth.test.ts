@@ -86,7 +86,7 @@ describe('the anchor title behind his head', () => {
 
 describe('anchor slots and scrim', () => {
   const region = { left: 60, top: 280, width: 960, height: 220 }
-  const prop = { left: 40, top: 860, width: 320, height: 266 }
+  const prop = { left: 40, top: 860, width: 320, height: 252 }
   it('a real image stands beside him in the prop box; the rest share the space above his head', () => {
     const slots = anchorSlots(['stat', 'photo'], id => id === 'photo', { region, props: [prop] })
     expect(slots[1]).toEqual(prop)

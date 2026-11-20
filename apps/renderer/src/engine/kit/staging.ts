@@ -97,7 +97,7 @@ export function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placem
       const r = clearOfCaptions({ left: 60, top: 280, width: 960, height: 220 }, aspect, placement, themed)
       return { take: { left: 0, top: 0, width: 1080, height: 1920, radius: 0, border: false },
         panel: { ...r, height: 0, radius: '0' }, region: r, rises: false,
-        props: [clearOfCaptions({ left: 40, top: 860, width: 320, height: 266 }, aspect, placement, themed)] }
+        props: [clearOfCaptions({ left: 40, top: 860, width: 320, height: 252 }, aspect, placement, themed)] }
     }
     if (mode === 'band') {
       const seam = 1000

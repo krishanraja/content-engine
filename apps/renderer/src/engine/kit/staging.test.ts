@@ -97,7 +97,7 @@ describe('the stage and anchor fixes (shot grammar step 5, 20 Nov 2026)', () => 
     const g = stagingGeometry('anchor', '9:16', 'chin', true)
     expect(g.region).toMatchObject({ left: 60, top: 280, width: 960, height: 220 })
     expect(g.region.top + g.region.height).toBeLessThanOrEqual(512)
-    expect(g.props).toEqual([{ left: 40, top: 860, width: 320, height: 266 }])
+    expect(g.props).toEqual([{ left: 40, top: 860, width: 320, height: 252 }])
     expect(REGIONS['9:16'].chin.top).toBeGreaterThan(g.region.top + g.region.height)
   })
 })

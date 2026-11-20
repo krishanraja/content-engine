@@ -226,7 +226,7 @@ class FaceKeepOutTest(unittest.TestCase):
         for literal in ('{ left: 430, top: 765, width: 650, height: 1155', 'const seam = 1000',
                         'const bottom = cutout ? 1040 : take.top - GAP', '{ left: 60, top: 280, width: 800, height: bottom - 280 }',
                         '{ left: 60, top: 900, width: 600, height: 600 }', 'const seam = 1920 - PILLAR_TAKE_WIDTH',
-                        '{ left: 60, top: 280, width: 960, height: 220 }', '{ left: 40, top: 860, width: 320, height: 266 }',
+                        '{ left: 60, top: 280, width: 960, height: 220 }', '{ left: 40, top: 860, width: 320, height: 252 }',
                         'take: { left: 1360, top: 380, width: 560, height: 700', '{ left: 96, top: 120, width: 1240, height: 715 }',
                         '{ left: 96, top: 480, width: 900, height: 540 }', 'left: 96, top: 140, width: seam - 96 - 60, height: 800',
                         'Math.round(1080 * 9 / 16)'):
@@ -237,7 +237,7 @@ class FaceKeepOutTest(unittest.TestCase):
         self.assertEqual(keepout.STAGED[('stage', '9:16')][1], (60, 280, 800, 765 - 24 - 280))
         self.assertEqual(keepout.CUTOUT[('stage', '9:16')], (60, 280, 800, 1040 - 280))
         self.assertEqual(keepout.STAGED[('anchor', '9:16')][1], (60, 280, 960, 220))
-        self.assertEqual(keepout.ANCHOR_PROPS, [(40, 860, 320, 266)])
+        self.assertEqual(keepout.ANCHOR_PROPS, [(40, 860, 320, 252)])
 
     def test_the_face_box_comes_from_the_landmarks(self):
         points = [SimpleNamespace(x=0.4, y=0.2), SimpleNamespace(x=0.6, y=0.45), SimpleNamespace(x=0.5, y=0.3)]
