@@ -15,6 +15,14 @@ const Common = {
   source: z.string().trim().min(1).optional(),
   // Asset provenance lives in the spec. Set this flag on the plate when using a generated asset.
   generated: z.boolean().default(false),
+  // The platform walkthrough's loops (kept as it is: Krish, 2026-11-20): 'loop' draws a hand-drawn loop round the named
+  // region of the recording on the word that names it (8 f, utility), a double stroke (9 px and a 3 px echo turned 4
+  // degrees, 3 f later), in the series colour or mint; keepMarks keeps every loop drawn so far. 'ring' is the old mark.
+  markStyle: z.enum(['ring', 'loop']).default('ring'),
+  markColour: z.enum(['mint', 'channel']).default('mint'),
+  keepMarks: z.boolean().default(false),
+  // A device frame for a screen recording: a 22 px radius and a 2 px cream border at 16%.
+  frame: z.boolean().default(false),
 }
 
 export const ParamsSchema = z.union([

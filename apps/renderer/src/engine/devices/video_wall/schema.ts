@@ -13,13 +13,19 @@ const clip = z.object({
  * `add: next` adds the next unplaced clip; `add: wall` schedules all remaining clips. */
 export const ParamsSchema = z.object({
   clips: z.array(clip).min(1).max(6),
-  mode: z.enum(['wall', 'placed']).default('wall'),
+  // 'tiles' (the platform walkthrough's UI wall, kept as it is: Krish, 2026-11-20): a tiled wall built from his own screen
+  // grabs (image clips, cycled across the box), drifting 0.6 px a frame so it is never still, under an ink scrim from 55%
+  // at the top to 72% at the bottom; one mono source line, the first clip's source, under it.
+  mode: z.enum(['wall', 'placed', 'tiles']).default('wall'),
+  columns: z.number().int().min(3).max(10).optional(),
   intervalFrames: z.union([z.literal(6), z.literal(7)]).default(7),
 }).strict().superRefine((p, ctx) => {
   if (new Set(p.clips.map(c => c.id)).size !== p.clips.length)
     ctx.addIssue({ code: 'custom', path: ['clips'], message: 'clip ids must be unique' })
   if (p.mode === 'placed' && p.clips.some(c => !c.placement))
     ctx.addIssue({ code: 'custom', path: ['clips'], message: 'placed clips need a placement' })
+  if (p.mode === 'tiles' && p.clips.some(c => c.kind !== 'image'))
+    ctx.addIssue({ code: 'custom', path: ['clips'], message: 'a tiled UI wall is built from his screen grabs: image clips only' })
   if (p.clips.some(c => ['wall', 'next', 'visible'].includes(c.id)))
     ctx.addIssue({ code: 'custom', path: ['clips'], message: 'clip ids must not use reserved state names' })
 })

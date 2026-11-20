@@ -179,7 +179,8 @@
     "keyline_px": 16,
     "colours": [
       "cream",
-      "mint"
+      "mint",
+      "channel"
     ],
     "draw_on_frames": 10,
     "path_length": 1,

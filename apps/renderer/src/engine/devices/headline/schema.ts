@@ -1,6 +1,13 @@
 import { z } from 'zod'
 export const ParamsSchema = z.object({
-  reveal: z.literal('assemble').optional(),
+  // 'assemble' lands each word from a scale; 'blur' (the platform walkthrough, Krish, 2026-11-20) sharpens each word from 8 px
+  // of blur over 3 frames, 4 frames apart, never a move: the Character.ai card's WORD BLUR-IN.
+  reveal: z.enum(['assemble', 'blur']).optional(),
+  // Per-word tone: these words in mint (or the series colour) with no box behind them, the platform walkthrough's two-tone line.
+  tone: z.array(z.object({ line: z.number().int().min(0).max(1), word: z.number().int().nonnegative(),
+    colour: z.enum(['mint', 'channel']).default('mint') }).strict()).max(3).optional(),
+  // A soft ink shadow under the lines, for legibility over a busy wall (the UI wall behind a platform-walkthrough headline).
+  shadow: z.boolean().default(false),
   lines: z.array(z.string().trim().min(1)).min(1).max(2),
   swipe: z.object({ line: z.number().int().min(0).max(1), word: z.number().int().nonnegative() }).strict().optional(),
   dek: z.string().min(1).optional(),
@@ -14,4 +21,6 @@ export const ParamsSchema = z.object({
 }).strict().superRefine((p, ctx) => {
   if (p.swipe && !p.lines[p.swipe.line]?.split(/\s+/)[p.swipe.word])
     ctx.addIssue({ code: 'custom', message: 'Swipe must address one existing word' })
+  for (const t of p.tone ?? []) if (!p.lines[t.line]?.split(/\s+/)[t.word])
+    ctx.addIssue({ code: 'custom', message: 'A tone must address one existing word' })
 })

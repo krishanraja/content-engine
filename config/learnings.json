@@ -2,6 +2,36 @@
   "_about": "Say nothing twice. Krish, 2026-10-17: \"Asa, everything I say to you, whether it's feedback or ideas, you should always be thinking about why I'm saying it and what that means for the future. I want a \\\"say nothing twice\\\" policy in this engine, where you understand me, how we work, and how we iterate.\" Every piece of feedback or idea he gives becomes one entry: his exact words (an excerpt, never a transcript), why he said it, what it means from now on, and where it is now enforced, each place with a marker that must stay there. scripts/check_failures.py (run first in every session) fails when a marker is gone, and lists the learnings still open. A failure he raised goes in config/failures.json; everything else he says goes here.",
   "learnings": [
     {
+      "id": "protected-baselines-walkthrough-and-unit-chart",
+      "on": "2026-11-20",
+      "krish": "Just make sure that we don't lose the character.ai top half of the screen style ... integrate it into future videos, particularly where I deep dive into an actual platform.",
+      "why": "He named two looks to keep as they are: the Character.ai top half (wordmark header, UI wall, two-tone headline, event tape, loops on the recording) and the additive badge-grid unit chart from the Anthropic jobs piece (\"this visual was really nice in how it explained additively what I was saying in the Anthropic jobs video\"). Their devices could not draw them as he saw them.",
+      "means": "The platform walkthrough look is the default recipe for a piece about one platform, and the badge grid the default for any share or count on follow.the.money; the devices carry what they were missing (marquee tape, a channel-colour scribble bound to a region of a recording, video_wall tiles from his grabs, a per-word tone on headline, and on unit_field a badge mark, a striped subset, a 3D plane, greying from the end and a bound counter).",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "config/ve/recipes/character-ai-receipts.json",
+          "contains": "\"deep_dive\": true",
+          "how": "the default for a platform walkthrough"
+        },
+        {
+          "file": "config/ve/recipes/data-story.json",
+          "contains": "\"protected_default\"",
+          "how": "the badge grid first for a share or a count"
+        },
+        {
+          "file": "apps/renderer/src/engine/devices/unit_field/schema.ts",
+          "contains": "'badge'",
+          "how": "the badge mark and its options"
+        },
+        {
+          "file": ".agents/skills/motion-designer/SKILL.md",
+          "contains": "Protected baselines",
+          "how": "the planner picks them first"
+        }
+      ]
+    },
+    {
       "id": "accent-kit-big-moments-only",
       "on": "2026-11-20",
       "krish": "approved the polish board of 20 Nov: ember, ember deep, plum, plum deep and peach join the kit for big moments, gradients and duotone cut-outs on Monday, Wednesday and Friday only",
