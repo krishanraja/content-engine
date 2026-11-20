@@ -389,6 +389,11 @@ Invoke-Check 'codex_profile' {
 # No Codex allowance check: Codex use is never counted (Ruling, Krish, 2026-11-17: "We have plenty of Codex credits,
 # you need to permanently stop counting codex credits everywhere").
 
+# The pinned ffmpeg and Tesseract, read once for both checks below. A read that fails becomes its message, which
+# each check raises as its own failure. (Lost with the Codex allowance check on 17 Nov: every ffmpeg and Tesseract
+# check since then stopped on an unset $Pinned, so both home computers failed preflight whatever was installed.)
+$Pinned = try { Get-PinnedTools } catch { [string]$_.Exception.Message }
+
 Invoke-Check 'ffmpeg' {
   if ($Pinned -is [string]) { throw $Pinned }
   $ffmpeg = Join-Path $Pinned.ffmpeg 'ffmpeg.exe'
