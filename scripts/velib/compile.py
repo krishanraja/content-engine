@@ -532,7 +532,8 @@ def _params(params: dict, source) -> dict:
 
 
 def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Path, *, report: dict | None = None,
-                edl: dict | None = None, take_frame: dict | None = None, faces: dict | None = None) -> dict:
+                edl: dict | None = None, take_frame: dict | None = None, faces: dict | None = None,
+                matte: dict | str | None = 'auto') -> dict:
     """Return EngineRenderProps without writing files or changing the spec.
 
     With an EDL from ve conform (already through its F09 lint), the source edits are applied: the words are the
@@ -865,6 +866,22 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     if spec.get('character') and cut_id in spec['character'].get('cuts', []):
         from .character_track import compile_track
         props['character'] = compile_track(spec, cut_id, rows, props, assets_dir)
+    # Depth (shot grammar step 5): the subject matte of his take (`ve matte`, cached by the take's sha256), the type set
+    # behind him, the title behind his head on an anchor cut, and the body keep-out (velib/depth.py). 'auto' reads the
+    # cache for the take's bytes; a cut that wants type behind him with no matte is refused there.
+    from . import depth as depth_mod  # noqa: PLC0415
+    record = matte
+    if matte == 'auto':
+        record = None
+        if props.get('segments') and len(props['segments']) == 1:
+            from . import matte as matte_mod  # noqa: PLC0415
+            record = matte_mod.cached(props['segments'][0]['src'])
+    depth_problems = depth_mod.apply(props, spec, cut_id, rows, record, assets_dir, take_frame)
+    if report is not None and (record or depth_problems):
+        report['depth'] = {'matte': (record or {}).get('subject_sha256'), 'items': len(props.get('depth') or []),
+                           'title_behind': bool((props.get('titleMoment') or {}).get('behind'))}
+    if depth_problems:
+        raise ValueError('; '.join(depth_problems))
     # Nothing is drawn over his face (Krish, 2026-11-19: "the card generates over my face"): the face keep-out per beat from
     # the take's face track (faces: take -> its boxes, velib/keepout.py), and a refusal of anything compile places on it.
     from . import keepout  # noqa: PLC0415
@@ -879,7 +896,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
 # The ingredients chosen per piece apart from the motion style (docs/ve/INGREDIENTS.md; Krish, 2026-11-13: "the
 # captions should be decoupled from the animation styles"). Names as the renderer's captions/names.ts and
 # kit/ingredients.ts; engine.test.ts holds the two lists in step.
-CAPTION_PLACEMENTS = ('lower', 'centre', 'upper', 'seam')
+CAPTION_PLACEMENTS = ('lower', 'centre', 'upper', 'seam', 'chin')
 ENERGIES = ('calm', 'medium', 'high')
 TRANSITIONS = ('cut', 'whip', 'push', 'zoom-through', 'flash', 'punch', 'crossfade')
 CAMERAS = ('none', 'drift', 'phased', 'punch')

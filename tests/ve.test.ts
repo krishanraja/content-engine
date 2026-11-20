@@ -107,6 +107,7 @@ describe('ve', () => {
     ['the Thursday guards: no idea no production, the real thing shown, the engine frozen, two loops, one type system (F31 to F36)', 'tests/ve_thursday_guards_test.py'],
     ['ve said: what he said on the take against the script, his words spelled as the script spells them (Krish, 4 Nov)', 'tests/ve_said_test.py'],
     ['the Maxine pod: never started without his yes or over its cap, terminated on success, failure and the time cap, keys kept out of the receipt', 'tests/ve_maxine_pod_test.py'],
+    ['the GPU matte pod: never started without his yes, over its cap or with an unpinned model, terminated on success, failure and the time cap (Ruling, Krish, 2026-11-20)', 'tests/ve_matte_pod_test.py'],
     ['eye gaze: eyes turned toward the lens only where they are off it, never on a blink or a turned head, sound and frame times kept exactly, a model that changes nothing or may not be published refused (Krish, 5 Nov)', 'tests/ve_eyeline_test.py'],
     ['the listen pass: hesitations the transcript left out are cut, no join lands on sound, the reading that sounded right wins, his lexicon learns facts and never taste (Krish, 5 Nov)', 'tests/ve_listen_test.py'],
     ['the voice pass: sniffs turned down, never cut; the repair chain only with his words (Krish, 17 Oct)', 'tests/ve_voice_test.py'],
