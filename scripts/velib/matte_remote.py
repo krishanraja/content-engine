@@ -36,7 +36,9 @@ def probe(take):
 
 
 def frames(take, width, height):
-    decoder = subprocess.Popen(['ffmpeg', '-v', 'error', '-i', str(take), '-map', '0:v:0', '-fps_mode', 'passthrough',
+    # -vsync, not -fps_mode: the pod's Ubuntu 22.04 ffmpeg is 4.4, which has no -fps_mode (run 44739662276 decoded no
+    # frames on either model); -vsync passthrough is still read by ffmpeg 5 to 7.
+    decoder = subprocess.Popen(['ffmpeg', '-v', 'error', '-i', str(take), '-map', '0:v:0', '-vsync', 'passthrough',
                                 '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'], stdout=subprocess.PIPE)
     size = width * height * 3
     try:
