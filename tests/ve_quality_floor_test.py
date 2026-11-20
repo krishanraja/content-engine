@@ -326,10 +326,22 @@ class RecipeTest(unittest.TestCase):
                                    {'id': 'still', 'kind': 'illustration', 'origin': 'generated'}])
         self.assertEqual(sorted(f.split(' ')[0] for f in found), ['floor.recipe_captions', 'floor.recipe_generated'])
 
-    def test_the_shipped_recipe_carries_its_rating_field(self):
-        recipe = json.loads((ROOT / 'config' / 've' / 'recipes' / 'data-story.json').read_text(encoding='utf-8'))
-        self.assertIn('rated', recipe)
-        self.assertIsNone(recipe['rated'], 'only Krish rates a recipe')
+    def test_every_shipped_recipe_is_unrated_or_rated_by_krish_in_his_words(self):
+        for path in sorted((ROOT / 'config' / 've' / 'recipes').glob('*.json')):
+            recipe = json.loads(path.read_text(encoding='utf-8'))
+            self.assertIn('rated', recipe, path.name)
+            if recipe['rated'] is not None:
+                self.assertEqual(recipe['rated']['by'], 'Krish', path.name)
+                self.assertTrue(recipe['rated']['words'].strip(), f'{path.name}: only his words rate a recipe')
+
+    def test_his_approval_with_no_score_passes_the_floor(self):
+        write_json(self.root / 'approved.json', {'rated': {'approved': True, 'by': 'Krish', 'on': '2026-11-20', 'words': 'all approved'},
+                                                  'caption_themes': ['podcast'], 'generated_kinds': []})
+        write_json(self.root / 'wordless.json', {'rated': {'approved': True, 'by': 'Krish', 'on': '2026-11-20', 'words': ' '}})
+        self.assertEqual(self.lints({'recipe': 'approved', 'captions': {'theme': 'podcast', 'reason': 'x'}}), [])
+        self.assertIn('no rating of 9', self.lints({'recipe': 'wordless'})[0])
+        self.assertEqual([f.split(' ')[0] for f in self.lints({'recipe': 'approved'}, assets=[{'id': 'p', 'kind': 'broll', 'origin': 'generated'}])],
+                         ['floor.recipe_generated'])
 
 
 if __name__ == '__main__':

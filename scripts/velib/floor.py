@@ -18,8 +18,8 @@ Four parts, each one rule in one place:
 - held means rebuild (`held_line`): a held cut is one line for Krish, never a list of patches. The session re-renders
   once on a proven recipe; if that is still held, one line to Krish and nothing is filed.
 - recipes rated before use (`recipe_lints`, Ruling, Krish, 2026-11-19: recipes plus one named experiment slot proven
-  before Sign storyboard): from RECIPE_FROM, a spec's style is a recipe in config/ve/recipes/ that Krish rated 9 or more,
-  or its one named experiment (`style.experiment`); its caption style and any generated asset come from the recipe.
+  before Sign storyboard): from RECIPE_FROM, a spec's style is a recipe in config/ve/recipes/ that Krish rated 9 or more
+  or approved (Ruling, Krish, 2026-11-20: all ten style combinations on the style board are approved), or its one named experiment (`style.experiment`); its caption style and any generated asset come from the recipe.
 """
 from __future__ import annotations
 
@@ -200,9 +200,15 @@ def recipe(name: str | None, root: Path | None = None) -> dict | None:
 
 
 def rated(r: dict | None) -> bool:
+    """Krish rated the recipe 9 or more, or approved it with no number (Ruling, Krish, 2026-11-20: all ten style combinations
+    on the style board are approved; `ve recipe rate <id> --approved`, velib/recipes.py). Either needs his words."""
     rating = (r or {}).get('rated')
-    return isinstance(rating, dict) and rating.get('by') == 'Krish' and isinstance(rating.get('score'), (int, float)) \
-        and rating['score'] >= RATED_AT_LEAST
+    if not isinstance(rating, dict) or rating.get('by') != 'Krish':
+        return False
+    if rating.get('approved') is True:
+        return bool(str(rating.get('words') or '').strip())
+    score = rating.get('score')
+    return isinstance(score, (int, float)) and not isinstance(score, bool) and score >= RATED_AT_LEAST
 
 
 def recipe_lints(spec: dict, directory: Path | None = None, *, today: str | None = None, root: Path | None = None) -> list[str]:
@@ -220,7 +226,7 @@ def recipe_lints(spec: dict, directory: Path | None = None, *, today: str | None
                 '(style.experiment) (Ruling, Krish, 2026-11-19: recipes plus one named experiment slot)']
     out = []
     if not rated(r):
-        out.append(f'floor.recipe style.recipe: {name} has no rating of {RATED_AT_LEAST} or more from Krish '
+        out.append(f'floor.recipe style.recipe: {name} has no rating of {RATED_AT_LEAST} or more, and no approval, from Krish '
                    f'(config/ve/recipes/{name}.json rated); use a rated recipe or name the piece\'s one experiment')
     theme = (style.get('captions') or {}).get('theme')
     allowed = r.get('caption_themes') or []

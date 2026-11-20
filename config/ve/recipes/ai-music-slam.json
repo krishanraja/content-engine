@@ -1,0 +1,39 @@
+{
+  "style": "ai-music-slam",
+  "name": "Proof slams onto the stage",
+  "description": "Real proof slams onto an ink stage over the top of the frame on a back curve while he talks from a window below; the camera never stops pushing and scenes whip.",
+  "rated": {
+    "approved": true,
+    "by": "Krish",
+    "on": "2026-11-20",
+    "words": "They're all approved. I don't actually think these are the problem. I think how we integrate title cards and real-world images and motion animation is the issue."
+  },
+  "rated_note": "Krish's rating, written only by `python scripts/ve.py recipe rate <id> <score> --words \"...\"` ({score, by: Krish, on, words}) or `--approved` ({approved: true, by: Krish, on, words}, no score); null until he gives it. From 23 Nov 2026 ve lint uses only a recipe rated 9 or more or approved by him, or the piece's one named experiment (style.experiment) (Ruling, Krish, 2026-11-19: recipes plus one named experiment slot; Ruling, Krish, 2026-11-20: all ten style combinations on the style board are approved; scripts/velib/floor.py).",
+  "motion": "ai-music-slam",
+  "caption_themes": [
+    "mint-word"
+  ],
+  "captions": {
+    "theme": "mint-word",
+    "placement": {
+      "9:16": "upper",
+      "16:9": "lower"
+    }
+  },
+  "transitions": {
+    "kind": "whip"
+  },
+  "camera": {
+    "move": "phased",
+    "hits": true
+  },
+  "energy": "high",
+  "staging": "stage",
+  "layout": {
+    "9:16": "stage",
+    "16:9": "pillar"
+  },
+  "generated_kinds": [],
+  "generated_note": "Generated (AI-made) imagery never appears in a cut (Krish, 2026-11-20), so no recipe names a generated kind and ve lint refuses any generated asset (floor.recipe_generated).",
+  "source": "Krish's own cut AI music, Wed 11 Nov 2026 (tall, sha256 3c360c73); docs/ve/styles/ai-music-slam.card.json"
+}

@@ -1,17 +1,30 @@
 {
   "style": "data-story",
   "name": "The Ladder: one object, every number on it",
-  "rated": null,
-  "rated_note": "Krish's rating of this recipe's golden cut, {\"by\": \"Krish\", \"score\": 0-10, \"on\": \"YYYY-MM-DD\", \"said\": his words}, null until he rates it. From 23 Nov 2026 ve lint uses only a recipe rated 9 or more, or the piece's one named experiment (style.experiment) (Ruling, Krish, 2026-11-19: recipes plus one named experiment slot proven before Sign storyboard; scripts/velib/floor.py).",
-  "caption_themes": [],
+  "rated": {
+    "approved": true,
+    "by": "Krish",
+    "on": "2026-11-20",
+    "words": "They're all approved. I don't actually think these are the problem. I think how we integrate title cards and real-world images and motion animation is the issue."
+  },
+  "rated_note": "Krish's rating, written only by `python scripts/ve.py recipe rate <id> <score> --words \"...\"` ({score, by: Krish, on, words}) or `--approved` ({approved: true, by: Krish, on, words}, no score); null until he gives it. From 23 Nov 2026 ve lint uses only a recipe rated 9 or more or approved by him, or the piece's one named experiment (style.experiment) (Ruling, Krish, 2026-11-19: recipes plus one named experiment slot; Ruling, Krish, 2026-11-20: all ten style combinations on the style board are approved; scripts/velib/floor.py).",
+  "caption_themes": [
+    "podcast"
+  ],
   "generated_kinds": [],
   "saved_from": {
     "piece_id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
     "title": "Who trains your 2030 seniors (Monday 2 Nov 2026)",
     "approval": "Krish's favourite cut; he agreed on 4 Nov 2026 that it is the Critic's first comparison (config/reference-cuts.json mon02-wide and mon02-tall, critic_first)",
     "cuts": [
-      {"id": "mon02-wide", "sha256": "a7eb0a498d6f5ec0dc9d2c6342c72f01151bb10710760731d2325b6a0c4ec48b"},
-      {"id": "mon02-tall", "sha256": "2cdff09a0c851e5ccb5373cd6a9d63e4f476d9e4f480160d38355a1e566f581a"}
+      {
+        "id": "mon02-wide",
+        "sha256": "a7eb0a498d6f5ec0dc9d2c6342c72f01151bb10710760731d2325b6a0c4ec48b"
+      },
+      {
+        "id": "mon02-tall",
+        "sha256": "2cdff09a0c851e5ccb5373cd6a9d63e4f476d9e4f480160d38355a1e566f581a"
+      }
     ],
     "motion_system": "docs/plans/2026-11-02-monday/motion-system.md",
     "made_by": "per-piece code (docs/plans/2026-11-02-monday/rebuild/); ve cannot draw the through-line yet (docs/ve/cards/through-line/ve-through-line-1.fields.json)"
@@ -43,12 +56,21 @@
     "source": "docs/ve/MOTION_STANDARD.md (signed by Krish, 3 Nov 2026)",
     "cuts_per_minute_graphics_led": 30,
     "longest_hold_without_change_s": 3.5,
-    "entrance_settle_frames": [4, 7],
+    "entrance_settle_frames": [
+      4,
+      7
+    ],
     "change_density": 1.0,
     "longest_still_s": 1,
     "kinds_of_beat_in_any_15s": 3
   },
-  "captions": "Word captions, one word at a time, off his face (face-with-proof default, MOTION_STANDARD); on-screen words never repeat the sentence he is saying.",
+  "captions": {
+    "theme": "podcast",
+    "placement": {
+      "9:16": "lower",
+      "16:9": "lower"
+    }
+  },
   "sound": "One sound, on the big moment only (THE_BAR ruling 11): Monday's is the drop, the count down the junior rung.",
   "opening_and_close": "The hook on his face first; one calm close, held long enough to read.",
   "never": [
@@ -56,5 +78,21 @@
     "No on-screen words that repeat what he is saying: a card adds the number, the producer, the date or the changed word.",
     "No eyebrow labels, asterisks, \"our read\" tags or AI notes.",
     "Never his name."
-  ]
+  ],
+  "description": "Real numbers drawn mark by mark on one object, each with its producer at the foot of the frame, and one annotation that says what changed.",
+  "motion": "data-story",
+  "transitions": {
+    "kind": "crossfade"
+  },
+  "camera": {
+    "move": "drift"
+  },
+  "energy": "medium",
+  "staging": "anchor",
+  "layout": {
+    "9:16": "band",
+    "16:9": "pillar"
+  },
+  "generated_note": "Generated (AI-made) imagery never appears in a cut (Krish, 2026-11-20), so no recipe names a generated kind and ve lint refuses any generated asset (floor.recipe_generated).",
+  "source": "Krish's favourite cut, Who trains your 2030 seniors, Mon 2 Nov 2026 (config/reference-cuts.json mon02-wide, mon02-tall)"
 }
