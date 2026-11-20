@@ -1,0 +1,65 @@
+{
+  "about": "Krish's verdicts on the 10 style recipes, 2026-11-20 03:14 to 03:16 UTC, from the style-approvals board (a claude.ai artifact owned by the old account, so this is the durable copy). All ten approved, no notes. His words: \"They're all approved. I don't actually think these are the problem. I think how we integrate title cards and real-world images and motion animation is the issue.\"",
+  "verdicts": [
+    {
+      "combo": "ai-music-slam",
+      "decision": "approve",
+      "note": "",
+      "at": "2026-11-20T03:14:31.650Z"
+    },
+    {
+      "combo": "character-ai-receipts",
+      "decision": "approve",
+      "note": "",
+      "at": "2026-11-20T03:14:24.753Z"
+    },
+    {
+      "combo": "dark-keynote",
+      "decision": "approve",
+      "note": "",
+      "at": "2026-11-20T03:14:46.641Z"
+    },
+    {
+      "combo": "data-story",
+      "decision": "approve",
+      "note": "",
+      "at": "2026-11-20T03:14:43.611Z"
+    },
+    {
+      "combo": "depth",
+      "decision": "approve",
+      "note": "",
+      "at": "2026-11-20T03:14:39.204Z"
+    },
+    {
+      "combo": "eating-jobs-ladder",
+      "decision": "approve",
+      "note": "",
+      "at": "2026-11-20T03:14:27.405Z"
+    },
+    {
+      "combo": "hud-terminal",
+      "decision": "approve",
+      "note": "",
+      "at": "2026-11-20T03:14:56.002Z"
+    },
+    {
+      "combo": "ladder",
+      "decision": "approve",
+      "note": "",
+      "at": "2026-11-20T03:14:59.608Z"
+    },
+    {
+      "combo": "living-screen",
+      "decision": "approve",
+      "note": "",
+      "at": "2026-11-20T03:15:53.387Z"
+    },
+    {
+      "combo": "living-ui",
+      "decision": "approve",
+      "note": "",
+      "at": "2026-11-20T03:14:52.941Z"
+    }
+  ]
+}
