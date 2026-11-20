@@ -2,6 +2,41 @@
   "_about": "Say nothing twice. Krish, 2026-10-17: \"Asa, everything I say to you, whether it's feedback or ideas, you should always be thinking about why I'm saying it and what that means for the future. I want a \\\"say nothing twice\\\" policy in this engine, where you understand me, how we work, and how we iterate.\" Every piece of feedback or idea he gives becomes one entry: his exact words (an excerpt, never a transcript), why he said it, what it means from now on, and where it is now enforced, each place with a marker that must stay there. scripts/check_failures.py (run first in every session) fails when a marker is gone, and lists the learnings still open. A failure he raised goes in config/failures.json; everything else he says goes here.",
   "learnings": [
     {
+      "id": "series-close-is-the-sting",
+      "on": "2026-11-20",
+      "krish": "A, with Built to help you decide, and then Subscribe free at makeyourmindup.ai",
+      "why": "He ruled on 19 Nov that the tall close is the 9:16 intro sting with \"Built to help you decide.\" layered on, and picked direction A of the polish board on 20 Nov; the palette still made the tall close an ink card and its retired list would have refused a close named after the sting.",
+      "means": "A series cut from Mon 23 Nov closes on its own series sting at the END (tall: 1.5x, the band lifts, the line lands under it, exactly 2.0 s; wide: the full sting resolves into the statement card, settled by 2.75 s, the right 44% clear for the end screen). Nothing goes before the hook still. Off days keep the mint statement close until he decides on a mint sting.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "config/brand-palette.json",
+          "contains": "\"sting_close\"",
+          "how": "the close ids, their date and the one copy of the words"
+        },
+        {
+          "file": "config/intro-sting.json",
+          "contains": "\"close\": {",
+          "how": "the clips approved as the close, never an opening"
+        },
+        {
+          "file": "scripts/brand_palette.py",
+          "contains": "def sting_clip",
+          "how": "the guard refuses the ink card on a series day and a close with no or the wrong sting"
+        },
+        {
+          "file": "apps/renderer/src/engine/chrome/EndingBand.tsx",
+          "contains": "export function StingClose",
+          "how": "ve draws it"
+        },
+        {
+          "file": "scripts/velib/compile.py",
+          "contains": "def ending_problems",
+          "how": "ve render refuses a series cut that closes on ink"
+        }
+      ]
+    },
+    {
       "id": "titles-after-recording",
       "on": "2026-10-17",
       "krish": "the fact that I need to approve/sign off on titles and headers and thumbnail headings and whatnot after recording is an important distinction because only after recording do I really feel like I've got a message. Usually I change or understand a fair bit more after reading a script out loud than I do creating a script.",

@@ -299,11 +299,15 @@ def palette_lints(spec: dict) -> list[str]:
         if not shape:
             continue
         sting = 'none'
+        # The series close plays the intro sting at the end from its own date (Ruling, Krish, 2026-11-20); the tall one
+        # carries no days row (EndingBand.tsx).
+        closes_on_sting = kind == 'series' and ve_compile._intro().close_wanted(shape, series, when)
+        ids = ('sting_card', 'sting_beat') if closes_on_sting else ('statement_card', 'statement_beat')
         record = {'date': when, 'format': 'long_cut' if shape == '16x9' else 'short_cut', 'shape': shape, 'kind': kind,
                   'opening': 'hook', 'sting': sting,
-                  'close': {'id': 'statement_card' if shape == '16x9' else 'statement_beat',
+                  'close': {'id': ids[0] if shape == '16x9' else ids[1], 'sting': bool(closes_on_sting),
                             'seconds': getattr(ve_compile, 'ENDING_FRAMES_BY_ASPECT', {}).get(cut.get('aspect'), ve_compile.ENDING_FRAMES)
-                            / ve_compile.FPS, 'days_row': kind == 'series'}}
+                            / ve_compile.FPS, 'days_row': kind == 'series' and not (closes_on_sting and shape == '9x16')}}
         out += [f'brand.palette cuts.{cut_id}: {p}' for p in brand_palette.check(record, palette)]
     return out
 
