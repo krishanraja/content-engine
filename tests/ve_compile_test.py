@@ -618,6 +618,62 @@ class StingTest(unittest.TestCase):
 
 
 
+class StingCloseTest(unittest.TestCase):
+    """The series close on the intro sting (Ruling, Krish, 2026-11-20: "A, with Built to help you decide, and then
+    Subscribe free at makeyourmindup.ai"): the clip plays at the END of a whole cut of a series piece dated from
+    config/intro-sting.json close.applies_from, never at the start, and never on an off day. Stand-in clips, never his."""
+
+    @classmethod
+    def setUpClass(cls):
+        (ROOT / '.cache').mkdir(exist_ok=True)
+        cls.temp = tempfile.TemporaryDirectory(dir=ROOT / '.cache', prefix='ve-close-test-')
+        cls.addClassCleanup(cls.temp.cleanup)
+        cls.config, cls.clips = intro.stand_in(Path(cls.temp.name), shapes=('16x9', '9x16'))
+
+    def env(self, clips=None):
+        return patch.dict(os.environ, {intro.CONFIG_ENV: str(self.config), intro.CLIPS_ENV: str(clips or self.clips)})
+
+    def spec(self, day, cut):
+        spec = load_json(FIXTURE / 'spec.json')
+        spec['publish_day'] = day
+        spec['cuts'][cut]['excerpt'] = False
+        return spec
+
+    def test_a_series_whole_cut_from_23_nov_closes_on_its_own_sting_at_the_end(self):
+        for cut, shape, frames in (('proof-wide', '16x9', ENDING_FRAMES), ('proof-tall', '9x16', 60)):
+            with self.subTest(cut), self.env():
+                spec = self.spec('2026-11-27', cut)  # mind.the.gap on a Friday, its own day
+                report = {}
+                props = compile_cut(spec, cut, timed_words(), FIXTURE, report=report)
+                sting = props['ending']['sting']
+                self.assertEqual(sting['series'], 'mind_the_gap')
+                self.assertEqual(sting['sha256'], intro.load(self.config)['clips'][shape]['mind_the_gap']['sha256'])
+                self.assertEqual(report['close'], 'sting')
+                self.assertNotIn('sting', props)  # nothing before the hook: the opening is unchanged
+                self.assertEqual(props['durationFrames'] - props['ending']['fromFrame'], frames)
+                self.assertEqual(ve_compile.ending_problems(props, spec), [])
+                inked = copy.deepcopy(props)
+                inked['ending'].pop('sting')
+                self.assertRegex(' '.join(ve_compile.ending_problems(inked, spec)), 'closes on the intro sting')
+
+    def test_no_sting_close_before_23_nov_or_on_an_off_day(self):
+        for name, day in (('a series piece of the week of 16 Nov', '2026-11-20'), ('an off day', '2026-11-26')):
+            with self.subTest(name), self.env():
+                spec = self.spec(day, 'proof-tall')
+                props = compile_cut(spec, 'proof-tall', timed_words(), FIXTURE)
+                self.assertNotIn('sting', props['ending'])
+                self.assertEqual(ve_compile.ending_problems(props, spec), [])
+
+    def test_a_missing_clip_closes_on_ink_and_render_is_refused(self):
+        with self.env(Path(self.temp.name) / 'no-clips-here'):
+            spec = self.spec('2026-11-27', 'proof-tall')
+            report = {}
+            props = compile_cut(spec, 'proof-tall', timed_words(), FIXTURE, report=report)
+            self.assertNotIn('sting', props['ending'])
+            self.assertRegex(report['close'], 'sting missing')
+            self.assertTrue(ve_compile.ending_problems(props, spec))
+
+
 class StingAfterHookTest(StingTest):
     """The sting straight after the hook: a new design, built in ve and laid by compile only once Krish approves one
     (config/intro-sting.json is retired; none is). Here a sting is placed by hand on compiled props, at hook_end, with a

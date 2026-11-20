@@ -115,6 +115,18 @@ export async function stageRenderAssets(inputProps, propsPath, publicDir, reposi
     }
     inputProps.sting.src = await stage(inputProps.sting.src)
   }
+  const close = inputProps.ending?.sting
+  if (close) {
+    // The series close on the sting (Ruling, Krish, 2026-11-20; config/intro-sting.json close): the clip named byte for
+    // byte, checked before anything renders, the same as an opening sting was.
+    if (/^https?:\/\//.test(close.src)) throw new Error('the close\'s sting must be a local clip, so its sha256 can be checked')
+    const local = path.resolve(path.dirname(path.resolve(propsPath)), close.src)
+    const sha256 = createHash('sha256').update(await readFile(local)).digest('hex')
+    if (sha256 !== close.sha256) {
+      throw new Error(`the ${close.series} close sting at ${local} is not the clip its props name (sha256 ${sha256}, not ${close.sha256})`)
+    }
+    close.src = await stage(close.src)
+  }
   async function stageParams(value) {
     if (Array.isArray(value)) { for (const item of value) await stageParams(item); return }
     if (!value || typeof value !== 'object') return

@@ -43,9 +43,11 @@ export function Device({ object, events, box, aspect, tokens, frame }: DevicePro
   const assemble = s.reveal === 'assemble'
   const wordCount = s.lines.reduce((n, line) => n + line.split(/\s+/).length, 0)
   let wordIndex = 0
+  let blurIndex = 0
   return <>
     <div data-overlay="headline" style={{ ...canvasRect(at.x, at.y, at.w, l.height), color: s.ground === 'light' ? tokens.ink : tokens.cream,
-      fontFamily: HOUSE_FONTS.display, fontSize: l.size, lineHeight: 0.88, opacity: 1 - s.exit }}>
+      fontFamily: HOUSE_FONTS.display, fontSize: l.size, lineHeight: 0.88, opacity: 1 - s.exit,
+      ...(s.shadow ? { textShadow: `0 6px 28px ${tokens.inkDeep}, 0 2px 6px ${tokens.inkDeep}` } : {}) }}>
       {s.lines.map((line, i) => {
         // The shared reveal (kit/reveal.ts): by line with no style, as before; by word, typed or rolled in a style.
         const r = reveal[i]!
@@ -66,6 +68,15 @@ export function Device({ object, events, box, aspect, tokens, frame }: DevicePro
           // A word typing in shows its typed part; the swiped word waits until it is whole.
           let unit = w.chars < word.length ? (swiped ? <span style={{ opacity: 0 }}>{body}</span> : shown)
             : w.p === 1 ? body : <span style={{ display: 'inline-block', ...entranceStyle(w.p) }}>{body}</span>
+          const tone = s.tone?.find(t => t.line === i && t.word === j)
+          if (tone) unit = <span data-tone={tone.colour} style={{ color: tokens[tone.colour] }}>{unit}</span>
+          if (s.reveal === 'blur') {
+            // WORD BLUR-IN (the platform walkthrough's card): each word sharpens from 8 px over 3 frames, 4 frames apart; no move.
+            const since = s.age - 4 * blurIndex++
+            const p = Math.min(1, Math.max(0, since / 3))
+            unit = <span data-blur-word style={{ display: 'inline-block', opacity: since < 0 ? 0 : Math.max(0.25, p),
+              filter: p < 1 ? `blur(${(8 * (1 - p)).toFixed(2)}px)` : undefined }}>{tone ? <span data-tone={tone.colour} style={{ color: tokens[tone.colour] }}>{word}</span> : word}</span>
+          }
           if (assemble) {
             const delay = wordCount > 1 ? 3 * wordIndex / (wordCount - 1) : 0
             const p = Math.min(1, Math.max(0, progress(s.age - delay, 7, ENTER)))
@@ -79,9 +90,9 @@ export function Device({ object, events, box, aspect, tokens, frame }: DevicePro
           }
           return <React.Fragment key={j}>{j > 0 ? ' ' : ''}{unit}</React.Fragment>
         })
-        if (!assemble && r.roll) return <div key={i} style={{ overflow: 'hidden', whiteSpace: 'nowrap' }}>
+        if (!assemble && s.reveal !== 'blur' && r.roll) return <div key={i} style={{ overflow: 'hidden', whiteSpace: 'nowrap' }}>
           <div style={{ transform: `translateY(${(100 * (1 - r.p)).toFixed(3)}%)`, opacity: Math.min(1, r.p * 2) }}>{words}</div></div>
-        return <div key={i} style={{ ...(assemble ? {} : entranceStyle(r.p)), whiteSpace: 'nowrap' }}>{words}</div>
+        return <div key={i} style={{ ...(assemble || s.reveal === 'blur' ? {} : entranceStyle(r.p)), whiteSpace: 'nowrap' }}>{words}</div>
       })}
     </div>
     {s.dek && <div style={{ ...canvasRect(s.dekAt?.x ?? (beside ? at.x + wordWidth + 32 : at.x),

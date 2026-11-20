@@ -5075,6 +5075,11 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 - `function statementLines(aspect: EngineRenderProps['aspect'], tagline: string = ENDING_TAGLINE): string[]`
 - `function endingBandLayout(props: Pick<EngineRenderProps, 'aspect' | 'brand' | 'series' | 'ending'>)`
 - `function endingBandModel(props: EngineRenderProps, frame: number)`
+- `const STING_CLOSE`
+- `const STING_CLOSE_SETTLED`
+- `function stingCloseFrame(aspect: EngineRenderProps['aspect'], since: number): number`
+- `function stingCloseModel(props: EngineRenderProps, frame: number)`
+- `function StingClose({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
 - `function EndingBand({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
 
 ### `apps/renderer/src/engine/chrome/LeadCaption.tsx`
@@ -5492,11 +5497,12 @@ A sourced amount as a viewer reads it: 195 "THOUSAND DOLLARS" is "$195,000", nev
 
 ### `apps/renderer/src/engine/devices/marquee/index.tsx`
 
-- `function Device({ object, events, tokens, frame }: DeviceProps)`
+- `function Device(props: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/marquee/schema.ts`
 
 - `const ParamsSchema`
+- `const TAPE`
 
 ### `apps/renderer/src/engine/devices/marquee/state.ts`
 
@@ -5577,6 +5583,7 @@ A sourced amount as a viewer reads it: 195 "THOUSAND DOLLARS" is "$195,000", nev
 - `function coverCrop(picture: Picture, box: Size, focus = CENTRE, push = 0, zoom = 1): Box`
 - `function photoPlateCrop(box: Size, state: ReturnType<typeof photoPlateState>): Box`
 - `function photoPlateState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+- `const LOOP`
 
 ### `apps/renderer/src/engine/devices/pixel_stage/index.tsx`
 
@@ -5870,21 +5877,27 @@ A sourced amount as a viewer reads it: 195 "THOUSAND DOLLARS" is "$195,000", nev
 ### `apps/renderer/src/engine/devices/unit_field/grid.tsx`
 
 - `function dotGridPosition(index: number, columns: number, pitch = 64)`
-- `function UnitMark({ kind, weight, colour, soft }: { kind: 'dot' | 'block'; weight: number; colour: string; soft: string…`
+- `const BADGE`
+- `const BADGE_PITCH`
+- `function badgeGridPosition(index: number, columns: number)`
+- `function UnitMark({ kind, weight, colour, soft, stripe = 0, stripeColour, shadow }: { kind: 'dot' | 'block' | 'badge'; …`
 
 ### `apps/renderer/src/engine/devices/unit_field/index.tsx`
 
 - `export { dotGridPosition, UnitMark } from './grid'`
-- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+- `const BOARD`
+- `function Device(props: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/unit_field/schema.ts`
 
 - `const ParamsSchema`
+- `const PLANE`
 
 ### `apps/renderer/src/engine/devices/unit_field/state.ts`
 
 - `const CHANGE_FRAMES`
 - `const COPY_STEP_FRAMES`
+- `function scatterRank(ids: readonly number[], total: number): number[]`
 - `function unitFieldState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
 ### `apps/renderer/src/engine/devices/upload_flood/hatch.ts`
@@ -5904,7 +5917,8 @@ A sourced amount as a viewer reads it: 195 "THOUSAND DOLLARS" is "$195,000", nev
 
 ### `apps/renderer/src/engine/devices/video_wall/index.tsx`
 
-- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+- `const TILES`
+- `function Device(props: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/video_wall/schema.ts`
 
@@ -5951,7 +5965,16 @@ A sourced amount as a viewer reads it: 195 "THOUSAND DOLLARS" is "$195,000", nev
 
 ### `apps/renderer/src/engine/kit/Scribble.tsx`
 
-- `function Scribble({ d, colour, tokens, sinceFrames, exiting = false }: { d: string; colour: 'cream' | 'mint'; tokens: E…`
+- `function Scribble({ d, colour, tokens, sinceFrames, exiting = false }: { d: string; colour: 'cream' | 'mint' | 'channel…`
+
+### `apps/renderer/src/engine/kit/accentKit.ts`
+
+- `type AccentRole = 'big_moment' | 'gradient' | 'duotone_cutout'`
+- `const ACCENT_COLOURS`
+- `const ACCENT_ROLES`
+- `function accentKit(seriesDay: boolean)`
+- `function accentGradient(name: 'moment' | 'title', seriesDay: boolean): string | null`
+- `function duotoneEmber(seriesDay: boolean): Array<{ colour: string; at: number }> | null`
 
 ### `apps/renderer/src/engine/kit/beatMotion.ts`
 

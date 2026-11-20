@@ -24,6 +24,26 @@
     "from": "2026-11-16",
     "from_why": "Krish, 2026-11-18: \"we have a strict NO ICONS, ONLY THE WORDMARK DURING THE TITLE FRAME AND THE CLOSING FRAME\", after the icon tile still appeared on this week's cuts. The earlier date of 23 Nov kept the tile on every piece of the week of 16 Nov; that carve-out is gone: the rule binds every piece from the palette's own start, Mon 16 Nov, and Fri 13 Nov (a frozen engine, F33) is the only older piece."
   },
+  "sting_close": {
+    "ruled": "Ruling (Krish, 2026-11-20): the series close is the intro sting at the end of the cut, direction A: tall, the 9:16 sting at 1.5x, then the band lifts and \"Built to help you decide.\" lands under it with Subscribe free and makeyourmindup.ai, exactly 2.0 s; wide, the full sting, then an ink ground wipes in, the band moves into the masthead slot and the line and days row land, settled by 2.75 s, the right 44% clear for YouTube's end-screen elements.",
+    "words": [
+      "Krish, 2026-11-19 (relayed): the tall close is the 9:16 intro sting with \"Built to help you decide.\" layered on.",
+      "Krish, 2026-11-20: \"A, with Built to help you decide, and then Subscribe free at makeyourmindup.ai\""
+    ],
+    "from": "2026-11-23",
+    "from_why": "Pieces of the week of 16 Nov are made on engines frozen at their storyboards (F33); a series piece dated before Mon 23 Nov keeps the ink close it was signed with.",
+    "before": {
+      "long_cut": {
+        "close": "statement_card"
+      },
+      "short_cut": {
+        "close": "statement_beat",
+        "days_row": true
+      }
+    },
+    "sting": "config/intro-sting.json close (its clips, by sha256); the opening stays retired: nothing before the hook, ever",
+    "off_days": "no sting exists for an off day, so an off-day cut keeps the mint statement close with no series days until Krish decides on a mint sting"
+  },
   "days": {
     "monday": {
       "kind": "series",
@@ -53,7 +73,22 @@
   },
   "colour": {
     "series": "the series' own colour (config/studio.json house_style; follow.the.money #FFD84D, under.the.hood #B7A6FF, mind.the.gap #FF6A4D), never another's",
-    "off": "house mint #7EF0C0 and the house tones; never butter, lilac or coral, and no series name, pill or days row"
+    "off": "house mint #7EF0C0 and the house tones; never butter, lilac or coral, and no series name, pill or days row",
+    "accent": {
+      "ruled": "Krish approved on 2026-11-20 (the polish board): ember #E2551F, ember_deep #B8321C, plum #3B1232, plum_deep #1E0918 and peach #FFB48F to #FFE3D1 join the kit, for big moments, gradients and duotone cut-outs on series days only.",
+      "colours": "config/ve/brand-tokens.json accent_kit (the values, once)",
+      "roles": [
+        "big_moment",
+        "gradient",
+        "duotone_cutout"
+      ],
+      "days": [
+        "monday",
+        "wednesday",
+        "friday"
+      ],
+      "never": "on an off day, as type on its own, as a status colour, or anywhere but those three roles; ve lint refuses it (scripts/velib/accent_kit.py)"
+    }
   },
   "marks": {
     "icon": {
@@ -125,9 +160,39 @@
     ],
     "feed_margin_px": 80
   },
+  "close_copy": {
+    "about": "The one copy of the close's words, read by ve compile (props.ending), quick-edit's kit (endcard.html) and the renderer's tests: Krish, 10 Nov 2026, \"The copy should read: \"Built to help you decide.\"\"; and 20 Nov 2026, \"A, with Built to help you decide, and then Subscribe free at makeyourmindup.ai\".",
+    "tagline": "Built to help you decide.",
+    "cta": "Subscribe free",
+    "site": "makeyourmindup.ai"
+  },
   "closes": {
+    "sting_card": {
+      "about": "The series wide close (Ruling, Krish, 2026-11-20, direction A): the 16:9 sting in full (56 frames), then on its band frame an ink ground wipes in from the right (12 f, hero), the band moves into the masthead slot at half size, \"Built to help you\" (Anton, cream) and \"decide.\" (Fraunces italic, series colour) slide in, then a mint Subscribe free pill, makeyourmindup.ai and the days row in their series colours; settled by 2.75 s, then held for YouTube's clickable end-screen elements, with the right 44% (x 1100 to 1800) kept clear for them.",
+      "shapes": [
+        "16x9"
+      ],
+      "seconds_min": 6,
+      "sting": "16x9",
+      "made_by": [
+        "apps/renderer/src/engine/chrome/EndingBand.tsx (props.ending.sting)"
+      ]
+    },
+    "sting_beat": {
+      "about": "The series tall close (Ruling, Krish, 2026-11-20, direction A): the 9:16 sting's frames 1 to 44 at 1.5x, then its settled band (frame 48) holds while the plate lifts 330 px; \"Built to help you\" (Anton) and \"decide.\" (Fraunces italic) land under it in ink, then an ink Subscribe free pill beside makeyourmindup.ai. Exactly 2.0 s, every word inside the tall core box, no days row. The only place a wordmark appears on a tall cut but the title frame.",
+      "shapes": [
+        "9x16"
+      ],
+      "seconds_max": 2.0,
+      "seconds_min": 2.0,
+      "box": "tall_core",
+      "sting": "9x16",
+      "made_by": [
+        "apps/renderer/src/engine/chrome/EndingBand.tsx (props.ending.sting)"
+      ]
+    },
     "statement_card": {
-      "about": "The wide close: one cut to ink, \"Built to help you decide.\" with the last word in the colour, the masthead, Subscribe free and the address, settled by 2.75 s, then held long enough for YouTube's clickable end-screen elements (5 to 20 s, docs/production/CLOSING.md, end_hold_s). No burned-in click here.",
+      "about": "The off-day wide close, and the series wide close before sting_close.from: one cut to ink, \"Built to help you decide.\" with the last word in the colour, the masthead, Subscribe free and the address, settled by 2.75 s, then held long enough for YouTube's clickable end-screen elements (5 to 20 s, docs/production/CLOSING.md, end_hold_s). No burned-in click here.",
       "shapes": [
         "16x9"
       ],
@@ -138,7 +203,7 @@
       ]
     },
     "statement_beat": {
-      "about": "The tall close: one compact end beat of at most 2 s, \"Built to help you decide.\" and one action (Subscribe free, makeyourmindup.ai) with the masthead, every word and mark inside the tall core box. The only place a wordmark appears on a tall cut.",
+      "about": "The off-day tall close, and the series tall close before sting_close.from (an ink card, refused as a series close from Mon 23 Nov): one compact end beat of at most 2 s, \"Built to help you decide.\" and one action (Subscribe free, makeyourmindup.ai) with the masthead, every word and mark inside the tall core box. The only place a wordmark appears on a tall cut.",
       "shapes": [
         "9x16"
       ],
@@ -170,7 +235,8 @@
       "outro_one": "the one-screen question and address trim (26 Oct)",
       "ending_ticker_band": "ve's ink band with a ticker over the last shot (to 10 Nov)",
       "piece_close_card": "per-piece close cards in docs/plans/*/rebuild/scene.html",
-      "sting_held_as_outro": "the 9:16 sting held on its wordmark with a badge (11 Nov off-day cut)",
+      "sting_held_as_outro": "the 9:16 sting held on its wordmark with a badge (11 Nov off-day cut); not the series close of 20 Nov (sting_beat), which plays the sting at 1.5x and lands the line under it, filed as close-sting-*",
+      "ink_card_as_series_close": "the ink statement card closing a series cut, tall or wide (12 Nov to 22 Nov); off days keep it",
       "packaging_outro": "apps/renderer/src/border-control Packaging outro mode",
       "carousel_piece_kit_close": "Growth's per-piece kit endings (log, socket, keyboard, clipboard, machine takeaway)"
     },
@@ -200,7 +266,7 @@
           "wordmark": false,
           "series_pill": "section_beats"
         },
-        "close": "statement_card",
+        "close": "sting_card",
         "days_row": true,
         "sting_when_built": "after_hook",
         "sting_retired": {
@@ -232,8 +298,8 @@
           "wordmark": false,
           "series_pill": false
         },
-        "close": "statement_beat",
-        "days_row": true
+        "close": "sting_beat",
+        "days_row": false
       },
       "off": {
         "opening": "hook",

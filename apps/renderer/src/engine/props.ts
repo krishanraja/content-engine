@@ -20,7 +20,7 @@ export const EngineImageSchema = z.object({ src: z.string().min(1), pixelWidth: 
 export const EngineEventSchema = z.object({
   id: z.string().min(1),
   obj: z.string().min(1),
-  verb: z.enum(['enter', 'move', 'mark', 'fill', 'stamp', 'count_to', 'highlight', 'carry', 'exit', 'draw', 'bounce', 'sulk', 'wave', 'add', 'chip', 'type', 'send', 'pick', 'drop', 'grey', 'multiply', 'dim', 'thin', 'grow', 'light', 'connect', 'rest_on']),
+  verb: z.enum(['enter', 'move', 'mark', 'fill', 'stamp', 'count_to', 'highlight', 'carry', 'exit', 'draw', 'bounce', 'sulk', 'wave', 'add', 'chip', 'type', 'send', 'pick', 'drop', 'grey', 'multiply', 'dim', 'thin', 'grow', 'light', 'connect', 'rest_on', 'stripe']),
   toState: z.string().min(1),
   atFrame: Frame,
   sfx: z.string().optional(),
@@ -174,7 +174,11 @@ export const EngineRenderPropsSchema = z.object({
   // The house close (chrome/EndingBand.tsx, docs/production/CLOSING.md). `ticker` is kept for old props and drawn by nothing.
   ending: z.object({ fromFrame: Frame, url: z.string().min(1), ticker: z.boolean().default(true),
     tagline: z.string().min(1).optional(), cta: z.string().min(1).optional(),
-    days: z.array(z.object({ day: z.string().min(1), colour: z.string().min(1) }).strict()).optional() }).strict().optional(),
+    days: z.array(z.object({ day: z.string().min(1), colour: z.string().min(1) }).strict()).optional(),
+    /** The series close on the intro sting (Ruling, Krish, 2026-11-20; config/intro-sting.json close): the clip of this
+     *  cut's shape, byte for byte the one he saw, played at the END of the cut inside the close (EndingBand.tsx). Never
+     *  an opening. ve-render refuses a file whose sha256 is not this one. */
+    sting: EngineStingSchema.omit({ atFrame: true }).optional() }).strict().optional(),
   /** The motion style Krish picked (spec style.motion) and its profile; absent means the house motion, unchanged. */
   motion: EngineMotionSchema.optional(),
   /** The transitions, camera and energy chosen per piece (spec style.transitions, style.camera, style.energy;
@@ -195,6 +199,14 @@ export const EngineRenderPropsSchema = z.object({
   const ruling = 'nothing goes before the hook (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good.")'
   if (props.sting && !(props.sting.atFrame ?? 0)) context.addIssue({ code: 'custom', path: ['sting'], message: `a sting in front of the cut: ${ruling}` })
   if (props.opening) context.addIssue({ code: 'custom', path: ['opening'], message: `an episode card in front of the cut: ${ruling}` })
+  // The close's sting is the series' own clip, and an off day (no series days) has none (config/intro-sting.json close).
+  const close = props.ending?.sting
+  if (close && close.series !== props.series.label.replaceAll('.', '_')) {
+    context.addIssue({ code: 'custom', path: ['ending', 'sting'], message: `the ${close.series} sting cannot close the ${props.series.label} cut` })
+  }
+  if (close && props.ending?.days && props.ending.days.length === 0) {
+    context.addIssue({ code: 'custom', path: ['ending', 'sting'], message: 'an off-day cut closes on the mint statement card, never a series sting' })
+  }
   if (!props.sting) return
   // Only the 16:9 long cut of a weekly series piece wears it: the 9:16 short opens straight on its hook
   // (HOOK_IS_THE_INTRO), a proof excerpt (no ending band) is never a whole cut, and an off day wears no sting.

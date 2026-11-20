@@ -6,7 +6,7 @@ model: opus
 
 # Plan the motion, beat by beat
 
-The one job: before Krish presses Sign storyboard, write how every beat of every cut moves, into the spec he will
+The job: before Krish presses Sign storyboard, write how every beat of every cut moves, into the spec he will
 sign. The plan uses the fields the spec already has; nothing here changes the schema, writes per-piece code, or makes a
 scene file. A note the spec has no field for goes in the storyboard document (`<ve dir>/storyboard.md`, beside
 `expect.md`), one short paragraph per beat.
@@ -31,8 +31,8 @@ The plan answers to the house, never the other way round:
 ## Before anything
 
 1. `python3 scripts/check_failures.py --piece <piece>`, `python3 scripts/floor.py --format long_video --piece <piece>`
-   and `--format short_video`, then `python3 scripts/preflight.py <piece> --skill motion-designer`. Read Krish's
-   approved taste for makeyourmindup (`get_approved_taste`) where the connector offers it.
+   and `--format short_video`, then `python3 scripts/preflight.py <piece> --skill motion-designer`. Read his
+   approved taste (`get_approved_taste`) where offered.
 2. Read the signed narrative lock, both scripts as he will say them, the spec as it stands, `docs/ve/MOTION_STANDARD.md`
    and `docs/ve/INGREDIENTS.md` ("How a session uses it").
 3. Read `.agents/skills/motion-designer/references/method.md` (how a beat moves) and
@@ -54,6 +54,8 @@ Set each with its `reason` in one plain line (`.agents/skills/motion-designer/re
   (Ruling, Krish, 2026-11-20); only title, chapter, end card, anchor plates break it. Nothing generated.
   INGREDIENTS.md "Shot grammar".
 - Captions are their own choice (`style.captions`); the plan keeps their band clear and never repeats their words.
+- **Protected baselines** (Krish, 20 Nov):
+  `.agents/skills/motion-designer/references/protected-baselines.md`.
 
 ## 2. Every beat
 
@@ -64,8 +66,8 @@ Follow the method's rules 1 to 7 (`method.md`, read in "Before anything"): the s
 signed floor, the outgoing beat gone before the incoming, a cursor on his words, every box at its final size from the
 first frame, one mint accent, one idea per frame, density from small events, never more scenes.
 
-When the beat that is hardest to make move is not the one the proof rule would pick (most distinct devices), name it in
-`style.proof.beat` and say why in the storyboard document.
+If the hardest beat is not the one the proof rule picks, name it in `style.proof.beat` and say why in the
+storyboard document.
 
 ## 3. The cartoon character
 
@@ -94,7 +96,7 @@ None after Sign storyboard (Ruling, Krish, 2026-11-19): `.agents/skills/ve/refer
 
 All of `.agents/skills/motion-designer/references/adaptations.md`: a white stage, violet or coral accents, an outside font,
 small UI, a sound on every hit, unlicensed music, lockups, sparkles, shimmer loaders, recreated UIs, invented numbers,
-per-video scenes, any pace target.
+per-video scenes.
 
 ## Walls
 

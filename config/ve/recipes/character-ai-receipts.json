@@ -37,5 +37,45 @@
     "broll"
   ],
   "generated_note": "Generated stills (illustration) and animation (broll) may come in and out of a cut when art-directed and clearly a metaphor (depicts: metaphor), inside its one staging; never a stand-in for a real document, sign, place or person (Ruling, Krish, 2026-11-20: generated imagery, photoreal included, is allowed when art-directed and clearly a metaphor; generated stand-ins for real documents, signs, places or people are refused). Its source cut measured no generated picture; the ruling lets a metaphor in, inside the staging.",
+  "deep_dive": true,
+  "deep_dive_note": "The protected baseline for a platform deep dive (Krish, 2026-11-20: \"Just make sure that we don't lose the character.ai top half of the screen style ... integrate it into future videos, particularly where I deep dive into an actual platform.\"): the default recipe when a piece's subject is one platform, kept as it is, never restyled away. Its grammar is fade and rise, never a camera move. The devices that draw it are in deep_dive_devices; the planner reads .agents/skills/motion-designer/references/protected-baselines.md.",
+  "deep_dive_devices": {
+    "wordmark_header": {
+      "device": "logo_card",
+      "note": "the platform's registry mark only; none is a gap, never drawn type"
+    },
+    "ui_wall": {
+      "device": "video_wall",
+      "params": {
+        "mode": "tiles"
+      },
+      "note": "his own screen grabs as image clips, drifting 0.6 px a frame under an ink scrim 55% to 72%"
+    },
+    "two_tone_headline": {
+      "device": "headline",
+      "params": {
+        "reveal": "blur",
+        "shadow": true,
+        "tone": "[{line, word}] in mint, no box"
+      }
+    },
+    "event_tape": {
+      "device": "marquee",
+      "params": {
+        "mode": "tape"
+      },
+      "note": "items[0] the display line, items[1] the filing line (the source)"
+    },
+    "loops_on_recording": {
+      "device": "photo_plate",
+      "params": {
+        "markStyle": "loop",
+        "markColour": "channel",
+        "keepMarks": true,
+        "frame": true
+      },
+      "note": "a mark event on the word that names each region"
+    }
+  },
   "source": "Krish's own cut Character.ai, Mon 26 Oct 2026 (config/reference-cuts.json mon26-tall, sha256 39f1039c); docs/ve/styles/character-ai-receipts.card.json"
 }
