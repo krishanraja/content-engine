@@ -30,14 +30,21 @@ import urllib.error
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from velib.maxine_pod import (CHUNK, CLOUDS, GPU_TRIES, GPU_WAIT_S, RATE_USD, SERVER as EYE_SERVER,  # noqa: E402
+from velib.maxine_pod import (CHUNK, GPU_TRIES, GPU_WAIT_S, RATE_USD, SERVER as EYE_SERVER,  # noqa: E402
                               Refused, estimate, http, sha256)
 
-API = 'https://rest.runpod.io/v1'
-# Cards listed at about $0.35 an hour or less (16 GB or more, enough for BiRefNet at 2048 in half precision): a dearer
-# card would only be refused at the cap after it started. The pod's own costPerHr is re-checked either way.
-GPUS = ['NVIDIA RTX A4000', 'NVIDIA RTX A4500', 'NVIDIA RTX A5000', 'NVIDIA GeForce RTX 3090', 'NVIDIA L4',
-        'NVIDIA RTX 4000 Ada Generation']
+# Runpod's REST API v2. v1 (rest.runpod.io) was retired on 15 Nov 2026 and its host no longer resolves: the first
+# matte-trial run (44737946351, 20 Nov) died there before any pod was made, at no cost. v2 places one GPU type per
+# create (no fallback list), so the runner reads the catalog and tries each affordable card in stock, cheapest first.
+API = 'https://api.runpod.io/v2'
+# Cards with 16 GB or more (BiRefNet at 2048 in half precision) that torch 2.5.1 with CUDA 12.4 runs (compute 7.0 to
+# 9.0; Blackwell cards are not supported by that build). Which of them is tried, and in which cloud, is decided by the
+# live catalog's price against the cap; the pod's own `cost` is re-checked either way.
+GPUS = ['NVIDIA RTX A4000', 'NVIDIA RTX A4500', 'NVIDIA RTX A5000', 'NVIDIA RTX A6000', 'NVIDIA GeForce RTX 3090',
+        'NVIDIA GeForce RTX 3090 Ti', 'NVIDIA GeForce RTX 4080 SUPER', 'NVIDIA GeForce RTX 4090', 'NVIDIA L4',
+        'NVIDIA RTX 4000 Ada Generation', 'NVIDIA RTX 2000 Ada Generation', 'NVIDIA A40', 'Tesla V100-SXM2-16GB',
+        'Tesla V100-PCIE-16GB']
+CUDA_FLOOR = '12.4'      # hosts whose driver runs the image's CUDA 12.4 (a floor; an exact list misses unlisted versions)
 IMAGE = 'pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime'   # torch 2.5.1, the version BiRefNet's requirements pin
 PORT = 8000
 PREFIX = 'matte-'
@@ -106,7 +113,7 @@ def run(media, out_dir, *, models: str = 'birefnet-hr,rvm', yes: bool = False, m
     token = secrets.token_urlsafe(24)
     receipt_path = out_dir / f'matte-pod.{media.stem}.json'
     started, pod_id = clock(), None
-    receipt = {'schema': 'matte-pod/1', 'image': IMAGE, 'gpu': GPUS, 'take': str(media), 'take_sha256': sha256(media),
+    receipt = {'schema': 'matte-pod/2', 'api': API, 'image': IMAGE, 'take': str(media), 'take_sha256': sha256(media),
                'models': chosen}
 
     def save():
@@ -114,44 +121,42 @@ def run(media, out_dir, *, models: str = 'birefnet-hr,rvm', yes: bool = False, m
         receipt_path.write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
 
     try:
-        def pod_body(cloud):
+        def pod_body(gpu, cloud):
             return {
-                'name': f'{PREFIX}{media.stem}'[:60], 'imageName': IMAGE, 'gpuTypeIds': GPUS,
-                'gpuTypePriority': 'availability', 'cloudType': cloud, 'gpuCount': 1, 'containerDiskInGb': 40,
-                'volumeInGb': 0, 'ports': [f'{PORT}/http'],
-                'allowedCudaVersions': ['12.4', '12.5', '12.6', '12.7', '12.8', '12.9', '13.0'],   # the image's CUDA 12.4
+                'name': f'{PREFIX}{media.stem}'[:60], 'image': IMAGE, 'cloud': cloud, 'disk': 40,
+                'gpu': {'id': gpu, 'count': 1, 'minCudaVersion': CUDA_FLOOR},
+                'ports': [f'{PORT}/http'],                     # no mounts: ephemeral disk only
                 'env': {'EYE_TOKEN': token, 'EYE_PORT': str(PORT), 'MATTE_MODELS': json.dumps(chosen),
                         'EYE_SERVER': base64.b64encode(SERVER.encode()).decode(),
                         'EYE_JOB': base64.b64encode(REMOTE_JOB.encode()).decode(),
                         'MATTE_PY': base64.b64encode(REMOTE.read_bytes()).decode()},
-                'dockerStartCmd': ['bash', '-c', 'mkdir -p /workspace; echo "$EYE_JOB" | base64 -d > /workspace/job.sh; '
-                                   'echo "$EYE_SERVER" | base64 -d > /workspace/server.py; '
-                                   'echo "$MATTE_PY" | base64 -d > /workspace/matte_remote.py; '
-                                   'exec python3 /workspace/server.py']}
+                'entrypoint': ['bash', '-c', 'mkdir -p /workspace; echo "$EYE_JOB" | base64 -d > /workspace/job.sh; '
+                               'echo "$EYE_SERVER" | base64 -d > /workspace/server.py; '
+                               'echo "$MATTE_PY" | base64 -d > /workspace/matte_remote.py; '
+                               'exec python3 /workspace/server.py']}
 
-        pod, tries, cloud = None, 0, None
+        pod, tries, gpu, cloud, said = None, 0, None, None, ''
         while pod is None:                            # no card free anywhere: ask again, waiting costs nothing
-            for cloud in CLOUDS:
+            for gpu, cloud, listed in candidates(call, api_key, max_usd, max_minutes):
                 try:
-                    pod = call('POST', f'{API}/pods', key=api_key, body=pod_body(cloud))
+                    pod = call('POST', f'{API}/pods', key=api_key, body=pod_body(gpu, cloud))
+                    receipt['listed_usd_per_h'] = listed
                     break
                 except urllib.error.HTTPError as error:
-                    said = error.read().decode('utf-8', 'replace')[:500]
-                    if 'no instances' not in said.lower():
-                        raise Refused(f'HTTP {error.code} from {API}/pods ({cloud}): {said}') from error
+                    said = f'HTTP {error.code} ({gpu}, {cloud}): ' + error.read().decode('utf-8', 'replace')[:300]
+                    if error.code == 402 or error.code == 422 or error.code == 401:
+                        raise Refused(said) from error    # balance, a bad body or the key: no candidate will do
+                    print(f'matte_pod: {said}', flush=True)  # 400 no capacity, 403 no access, 5xx: the next card
             if pod is None:
                 tries += 1
                 if tries >= GPU_TRIES:
-                    raise Refused(f'no GPU free on RunPod after {tries} tries {GPU_WAIT_S} s apart')
+                    raise Refused(f'no affordable GPU free on Runpod after {tries} tries {GPU_WAIT_S} s apart ({said})')
                 print(f'matte_pod: no card free (try {tries}); asking again in {GPU_WAIT_S} s', flush=True)
                 sleep(GPU_WAIT_S)
         started = clock()                             # billing, and the time cap, start with the pod
         pod_id = pod['id']
-        receipt.update(cloud=cloud, pod=pod_id)
-        got = (pod.get('machine') or {}).get('gpuTypeId') or pod.get('gpuTypeId')
-        if got:
-            receipt['gpu'] = got
-        rate = float(pod.get('costPerHr') or RATE_USD)
+        receipt.update(cloud=cloud, pod=pod_id, gpu=gpu)
+        rate = float(pod.get('cost') or receipt.get('listed_usd_per_h') or RATE_USD)
         receipt['rate_usd_per_h'] = rate
         save()
         if estimate(rate, max_minutes) > max_usd:
@@ -164,6 +169,11 @@ def run(media, out_dir, *, models: str = 'birefnet-hr,rvm', yes: bool = False, m
 
         while True:                                   # the pod's own server answers once it is up
             deadline()
+            info = call('GET', f'{API}/pods/{pod_id}', key=api_key, timeout=30)
+            state = info.get('status') if isinstance(info, dict) else None
+            if state in ('ERROR', 'EXITED', 'TERMINATED'):
+                raise Refused(f'the pod went {state} before its server answered')
+            receipt['pod_status'] = state
             try:
                 up = call('GET', f'{base}/status', token=token, timeout=20)
                 if isinstance(up, dict) and up.get('server') == 'matte':
@@ -231,6 +241,22 @@ def run(media, out_dir, *, models: str = 'birefnet-hr,rvm', yes: bool = False, m
         receipt['seconds'] = seconds
         receipt['cost_usd'] = round(seconds / 3600 * receipt.get('rate_usd_per_h', RATE_USD), 4) if pod_id else 0.0
         save()
+
+
+def candidates(call, api_key, max_usd, max_minutes):
+    """(gpu, cloud, listed $/h) for every card in GPUS the live catalog has in stock within the cap, cheapest first."""
+    found = call('GET', f'{API}/catalog/gpus?include=AVAILABILITY&product=POD', key=api_key, timeout=30)
+    rows = found.get('gpus', []) if isinstance(found, dict) else (found or [])
+    out = []
+    for row in rows:
+        if row.get('id') not in GPUS or str(row.get('availability') or 'NONE').upper() == 'NONE':
+            continue
+        for cloud in ('SECURE', 'COMMUNITY'):
+            price = (row.get('price') or {}).get(cloud.lower())
+            if row.get(cloud.lower()) is False or not price or estimate(float(price), max_minutes) > max_usd:
+                continue
+            out.append((row['id'], cloud, float(price)))
+    return sorted(out, key=lambda c: (c[2], GPUS.index(c[0])))
 
 
 def unpack(bundle, out_dir) -> dict:
