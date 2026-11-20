@@ -108,12 +108,14 @@ export function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placem
     if (mode === 'stage') {
       // AI music (shot grammar, 20 Nov 2026): him LARGE bottom right, face centre x 0.78, face about 0.21 of the frame wide.
       // The ink panel is the whole frame: above him and beside him is panel, never a cream band. Cut out by the matte, his
-      // head stands on the panel and the region reaches down to it (his head top is at y 1073 or lower on his takes);
+      // head stands on the panel and the region reaches down to it (his head top is near y 1175 as drawn on his takes);
       // as a window, the region ends above it.
-      const take = { left: 430, top: 765, width: 650, height: 1155, radius: cutout ? 0 : 44, border: false }
-      const bottom = cutout ? 1040 : take.top - GAP
+      // Step 5 fix loop: at 650 px wide his face was 0.15 of the frame and his head sat under the corner's edge; at 750 px
+      // (from y 740, his face and its margin clear of the seam captions, measured after render) his face is about 0.21 of the frame wide, as in AI music, and his head (top near y 1175 as drawn) crosses it.
+      const take = { left: 330, top: 740, width: 750, height: 1180, radius: cutout ? 0 : 44, border: false }
+      const bottom = cutout ? 940 : take.top - GAP
       return { take, panel: { left: 0, top: 0, width: 1080, height: 1920, radius: '0' }, cutout,
-        corner: { left: take.left + 40, top: 1110, width: 1080 - take.left - 40, height: 1920 - 1110, radius: '56px 0 0 0' },
+        corner: { left: take.left + 40, top: 1215, width: 1080 - take.left - 40, height: 1920 - 1215, radius: '56px 0 0 0' },
         region: clearOfCaptions({ left: 60, top: 280, width: 800, height: bottom - 280 }, aspect, placement, themed), rises: false }
     }
     // Over his chest, clear of his face: the tray needs the captions in the upper strip (compile refuses others).

@@ -331,7 +331,7 @@ class PanelFillTest(unittest.TestCase):
 
     def test_the_row_fails_a_half_empty_panel_and_passes_a_full_one(self):
         props = self.props()
-        self.assertEqual(qc_fill.region_for(props), (60, 280, 800, 765 - 24 - 280))
+        self.assertEqual(qc_fill.region_for(props), (60, 280, 800, 740 - 24 - 280))
         self.assertEqual(qc_fill.region_for({**props, 'matte': {'src': 'x'}}), (60, 280, 800, 900 - 24 - 280))
         half = qc_fill.row(None, props, read=lambda f: self.crop(0.5))
         self.assertFalse(half['pass'])

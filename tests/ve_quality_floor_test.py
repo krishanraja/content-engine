@@ -223,8 +223,8 @@ class FaceKeepOutTest(unittest.TestCase):
 
     def test_the_staged_boxes_are_kit_stagings_own_numbers(self):
         source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'kit' / 'staging.ts').read_text(encoding='utf-8')
-        for literal in ('{ left: 430, top: 765, width: 650, height: 1155', 'const seam = 1000',
-                        'const bottom = cutout ? 1040 : take.top - GAP', '{ left: 60, top: 280, width: 800, height: bottom - 280 }',
+        for literal in ('{ left: 330, top: 740, width: 750, height: 1180', 'const seam = 1000',
+                        'const bottom = cutout ? 940 : take.top - GAP', '{ left: 60, top: 280, width: 800, height: bottom - 280 }',
                         '{ left: 60, top: 900, width: 600, height: 600 }', 'const seam = 1920 - PILLAR_TAKE_WIDTH',
                         '{ left: 60, top: 280, width: 960, height: 220 }', '{ left: 40, top: 860, width: 320, height: 252 }',
                         'take: { left: 1360, top: 380, width: 560, height: 700', '{ left: 96, top: 120, width: 1240, height: 715 }',
@@ -234,8 +234,8 @@ class FaceKeepOutTest(unittest.TestCase):
         self.assertEqual(keepout.theme_bands()['9:16']['lower'], (70, 990, 800, 330))
         self.assertEqual(keepout.theme_bands()['16:9']['upper'], (192, 108, 1536, 240))
         self.assertEqual(keepout.theme_bands()['9:16']['chin'], (70, 1136, 786, 168))
-        self.assertEqual(keepout.STAGED[('stage', '9:16')][1], (60, 280, 800, 765 - 24 - 280))
-        self.assertEqual(keepout.CUTOUT[('stage', '9:16')], (60, 280, 800, 1040 - 280))
+        self.assertEqual(keepout.STAGED[('stage', '9:16')][1], (60, 280, 800, 740 - 24 - 280))
+        self.assertEqual(keepout.CUTOUT[('stage', '9:16')], (60, 280, 800, 940 - 280))
         self.assertEqual(keepout.STAGED[('anchor', '9:16')][1], (60, 280, 960, 220))
         self.assertEqual(keepout.ANCHOR_PROPS, [(40, 860, 320, 252)])
 

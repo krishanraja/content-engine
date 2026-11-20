@@ -29,7 +29,7 @@ STAGED = {
     ('band', '9:16'): ((0, 1000, 1080, 920), (60, 280, 800, 680), (0, 0, 1080, 1000)),
     # stage: the ink panel is the whole frame UNDER his take (20 Nov 2026 fix), so only the devices' region is drawn over
     # anything; the panel entry is that region. As a cut-out (props.matte) the region reaches his head (CUTOUT below).
-    ('stage', '9:16'): ((430, 765, 650, 1155), (60, 280, 800, 461), (60, 280, 800, 461)),
+    ('stage', '9:16'): ((330, 740, 750, 1180), (60, 280, 800, 436), (60, 280, 800, 436)),
     ('tray', '9:16'): ((0, 0, 1080, 1920), (60, 900, 600, 600), (60, 900, 600, 600)),
     ('pillar', '16:9'): ((1920 - PILLAR_TAKE_WIDTH, 0, PILLAR_TAKE_WIDTH, 1080), (96, 140, 1920 - PILLAR_TAKE_WIDTH - 156, 800),
                          (0, 0, 1920 - PILLAR_TAKE_WIDTH, 1080)),
@@ -41,7 +41,7 @@ STAGED = {
     ('tray', '16:9'): ((0, 0, 1920, 1080), (96, 480, 900, 540), (96, 480, 900, 540)),
 }
 # Stage cut out by the subject matte: the region reaches down to his head (kit/staging.ts, `cutout`).
-CUTOUT = {('stage', '9:16'): (60, 280, 800, 760), ('stage', '16:9'): (96, 120, 1240, 715)}
+CUTOUT = {('stage', '9:16'): (60, 280, 800, 660), ('stage', '16:9'): (96, 120, 1240, 715)}
 ANCHOR_PROPS = [(40, 860, 320, 252)]
 # The house caption's band (kit/staging.ts clearOfCaptions, unthemed).
 HOUSE_BAND = {'9:16': (70, 1090, 800, 230), '16:9': (192, 790, 1536, 236)}

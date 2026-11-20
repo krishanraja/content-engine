@@ -444,7 +444,23 @@ its title a small box over his torso. What changed:
   10 times a second past each beat's entrance and outside the title, end card and chapter marks, fails under 0.85 of the
   region's width for more than 0.5 s.
 
-**Reference renders after the fixes**: below, measured on his Friday 20 Nov take.
+**Reference renders after the fixes (20 Nov 2026)**, on the same Friday 20 Nov take and recipe-sample specs as #950, each
+planned by `ve shots` with zero `grammar.*` findings (`grammar.depth` and `grammar.title_timing` included, on the aligned
+words), compiled with his face track and the matte (the face and body keep-outs refused nothing), rendered whole and passed
+by the render frame guard. Pace is the body only.
+
+| Staging | Cut | sha256 (first 16) | Events a second | Longest gap | Frame used | Floor | panel.fill |
+|---|---|---|---|---|---|---|---|
+| anchor (number NO, chapters 1 and 2, the title behind him) | 9:16 | 31846f8468b1fb36 | 4.42 | 0.53 s | 0.57 | passes | not a panel staging |
+| stage (cut out, larger, his corner) | 9:16 | 1ab0d67811a7e989 | 3.76 | 0.93 s | 0.51 | passes | passes (median 1.0) |
+| stage (cut out, his corner) | 16:9 | 8c2494d3b8d086ec | 2.81 | 1.07 s | 0.28 | held: events a second | passes (median 1.0) |
+
+What still falls short, seen at full size: the anchor's space above his head holds small devices on a dark scrim that
+reads as a band at the top of the frame, and the title's second band runs behind his head, so "skeletons" is hidden on
+some frames; stage 16:9 is still held at 2.81 events a second (device events on his words merge with the one-word
+captions' changes, so more of them did not move the measure; an in-panel move off the word grid is the next lever); on
+stage 9:16 one caption page (31.2 s) meets his face box's 10% margin after render though compile's face-track keep-out
+passed it, and the mint-word captions measure under Instagram's action rail on the seam band (as on #950's stage).
 
 ## Sound on handovers and hits (14 Nov 2026)
 

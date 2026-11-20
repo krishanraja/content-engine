@@ -84,12 +84,12 @@ describe('the stage and anchor fixes (shot grammar step 5, 20 Nov 2026)', () => 
     }
     // As a window the region ends above his take; cut out by the matte it reaches down to his head.
     const window = stagingGeometry('stage', '9:16', 'lower', false, false)
-    expect(window.region.top + window.region.height).toBeLessThanOrEqual(765 - 24)
+    expect(window.region.top + window.region.height).toBeLessThanOrEqual(740 - 24)
     const cut = stagingGeometry('stage', '9:16', 'seam', true, true)
     expect(cut.region.top + cut.region.height).toBe(REGIONS['9:16'].seam.top - 24)
     expect(cut.region.height).toBeGreaterThan(window.region.height)
-    // His corner's edge runs below the top of his head (1073 at the highest on his takes), so his head crosses it.
-    expect(cut.corner!.top).toBeGreaterThan(1073)
+    // His corner's edge runs below the top of his head (near y 1175 as drawn on his takes), so his head crosses it.
+    expect(cut.corner!.top).toBeGreaterThan(1175)
     expect(cut.corner!.left + cut.corner!.width).toBe(1080)
   })
 
