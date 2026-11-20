@@ -1,6 +1,7 @@
 import { HERO, MOTION, progress, stateAt } from '../../clock'
 import type { EngineEvent, EngineObject } from '../../props'
 import { ParamsSchema } from './schema'
+import { formatAmount } from './money'
 
 export function kineticState(object: EngineObject, events: readonly EngineEvent[], frame: number) {
   const params = ParamsSchema.parse(object.params)
@@ -40,11 +41,13 @@ export function kineticState(object: EngineObject, events: readonly EngineEvent[
     }
     value = sample(frame)
   }
-  const format = (n: number) => dataset.denominator === null ? String(n) : `${n}/${dataset.denominator}`
+  // Money and thousands read as a viewer reads them ("$195,000", money.ts); a fraction keeps its denominator.
+  const format = (n: number) => dataset.denominator === null ? formatAmount(n, dataset.unit).text : `${n}/${dataset.denominator}`
   return {
     visible: frame >= object.fromFrame && frame < object.toFrame && visibility?.verb === 'enter',
-    value, target: row.value, unit: dataset.unit, denominator: dataset.denominator, producerLabel: dataset.producerLabel,
-    text: dataset.denominator === null ? String(value) : `${value}/${dataset.denominator}`,
+    value, target: row.value, unit: dataset.denominator === null ? formatAmount(row.value, dataset.unit).unit : dataset.unit,
+    denominator: dataset.denominator, producerLabel: dataset.producerLabel,
+    text: format(value), targetText: format(row.value),
     ghostText: ghostValue === null ? null : format(ghostValue),
   }
 }

@@ -19,7 +19,7 @@ import { focusRoom, placed } from './kit/focus'
 import { Brackets, PaperTexture, SketchFrame, TORN_DEVICES, TornFilter, TornSeam, cutoutPose, darkGround, scanLines, splitGroundColour, tokensFor } from './kit/overlays'
 import { HeroType, heroArea, heroLayout, heroPhrase } from './kit/heroType'
 import { FOCUS_SCALE, LEAD_AFTER, TRANSITION_FRAMES, cameraAt, cameraStyle, flashAt, hitFrames, leadMoveAt, leadStyle, leads } from './kit/ingredients'
-import { regionSlots } from './kit/layout'
+import { GRAMMAR_GROW, regionSlots } from './kit/layout'
 import { boxStyle, isStaging, staged, stagingGeometry, trayRise } from './kit/staging'
 import { layoutSlots } from './kit/layout'
 import { EngineAudio } from './audio'
@@ -138,7 +138,12 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
   // WINDOW beat keeps the window's own moves.
   const staging = !hasWindow && isStaging(props.layout?.mode, props.aspect)
     ? stagingGeometry(props.layout!.mode as 'band', props.aspect, props.captionPlacement, !!props.captionTheme) : undefined
-  const stagedNow = staging && activeBeat && staged(activeBeat) ? staging : undefined
+  // Under the shot grammar (props.layout.grammar; Ruling, Krish, 2026-11-20: one staging per cut) a band or stage cut's
+  // graphics-only beat stays in the panel with his face on screen; only an anchor cut's plate takes the whole frame.
+  const grammar = props.layout?.grammar ? props.layout : undefined
+  const stagedNow = staging && activeBeat && staged(activeBeat, grammar) ? staging : undefined
+  // A full-frame graphic beat: no plate, and not held in the staging by the grammar.
+  const plateBeat = (b: EngineBeat) => b.layout === 'STAGE' && b.plate?.source === 'none' && !(staging && staged(b, grammar))
   const stagedTake = stagedNow ? { ...boxStyle(stagedNow.take), borderRadius: stagedNow.take.radius,
     ...(stagedNow.take.border ? { border: `6px solid ${props.tokens.cream}`, boxSizing: 'border-box' as const, boxShadow: `14px 14px 0 ${props.tokens.inkDeep}` } : {}) } : undefined
 
@@ -176,16 +181,16 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         const leadOut = leading && beat.transitionOut !== 'carry' && keepsOutgoing(profile, beat, next, true)
         // A full-screen picture and a beat that shows his face never dissolve into each other: half of each is his face
         // as a ghost through the picture (Krish, 2026-11-18, yes to cutting them clean). They cut; same kinds still dissolve.
-        const fullScreen = (b: EngineBeat) => b.layout === 'STAGE' && b.plate?.source === 'none'
+        const fullScreen = plateBeat
         const kindChange = !!next && !!props.layout && fullScreen(beat) !== fullScreen(next)
         const overlap = leadOut ? LEAD_AFTER : profile && !kindChange && keepsOutgoing(profile, beat, next) ? transitionFrames(profile) : 0
         const outgoing = frame >= beat.toFrame && frame < beat.toFrame + overlap
         if ((frame < beat.fromFrame || frame >= beat.toFrame) && !outgoing) return null
         const now = outgoing && !leadOut ? beat.toFrame - 1 : frame
         // The layout ingredient (kit/layout.ts): a graphics-only beat's devices fill the region the captions leave.
-        const graphicsOnly = beat.layout === 'STAGE' && beat.plate?.source === 'none'
-        const stagedBeat = staging && staged(beat) ? staging : undefined
-        const slots = (stagedBeat ? regionSlots(stagedBeat.region, beat.uses.length) : undefined)
+        const graphicsOnly = plateBeat(beat)
+        const stagedBeat = staging && staged(beat, grammar) ? staging : undefined
+        const slots = (stagedBeat ? regionSlots(stagedBeat.region, beat.uses.length, GRAMMAR_GROW) : undefined)
           ?? (graphicsOnly ? layoutSlots(props.layout, props.aspect, props.captionPlacement, !!props.captionTheme, beat.uses.length) : undefined)
           ?? slotsFor(beat.layout, props.aspect, beat.uses.length)
         if (beat.layout === 'WINDOW' && slots.length)
@@ -216,12 +221,12 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
           // A STAGE beat with no plate is voice over graphics: the take is hidden under the house ink ground,
           // the ground StageHeader's logo is drawn for.
           // face-with-proof (lightStage) sits on the light wash of its SPLIT stage.
-          : beat.layout === 'STAGE' && beat.plate?.source === 'none' ? (lightStage(props)
+          : plateBeat(beat) ? (lightStage(props)
             ? { background: `radial-gradient(ellipse at 50% 40%, ${props.tokens.cream} 0%, color-mix(in srgb, ${props.tokens.cream} 86%, ${props.tokens.mint}) 100%)` }
             : stageGround(profile, props.tokens)) : {}
         // What the style lays on a graphic ground (kit/overlays.tsx): only a SPLIT stage or a graphics-only STAGE beat
         // has one; over his take full frame nothing is laid.
-        const grounded = beat.layout === 'SPLIT' || (beat.layout === 'STAGE' && beat.plate?.source === 'none')
+        const grounded = beat.layout === 'SPLIT' || plateBeat(beat)
         const overlays = profile?.overlays ?? []
         const sinceBeat = at - beat.fromFrame
         const hero = profile?.type?.hero && grounded ? heroPhrase(beat, objects, props.events, props.captions, shown) : undefined
@@ -347,7 +352,8 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
     <AbsoluteFill key="title-moment" data-title-moment>
       <TitleMoment words={props.titleMoment.words} fromFrame={props.titleMoment.fromFrame} toFrame={props.titleMoment.toFrame}
         frame={frame} aspect={props.aspect} width={width} height={height} tokens={props.tokens as unknown as Record<string, string>}
-        wordmark={props.brand.stacked} Image={Img} />
+        wordmark={props.brand.stacked} Image={Img} fullFrom={props.titleMoment.fullFrom}
+        panel={props.titleMoment.fullFrom !== undefined && staging ? (staging.panel.height > 0 ? staging.panel : staging.region) : undefined} />
     </AbsoluteFill>) : null
   // The staging's ground: stage's cream band, the ink panel and band's series-colour hairline, all under his take.
   const stagingGround = stagedNow && !stagedNow.rises ? (

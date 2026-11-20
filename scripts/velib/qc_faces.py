@@ -137,7 +137,10 @@ def default_detector():
 
 
 def off_face(video: str, pages: list, *, style: str = 'house', aspect: str = '9:16', region=None,
-             fps: float = 30, detector=None, grab=None, beats=None) -> dict:
+             fps: float = 30, detector=None, grab=None, beats=None, props: dict | None = None) -> dict:
+    """With the cut's props, each page's box is where the renderer really draws it (a caption style's own band at its
+    placement, top or bottom, through keepout.caption_box), never the house band: top-placed captions failed wrongly on
+    the 20 Nov recipe samples."""
     target = 'no caption page overlaps the face box (+10%)'
     eligible = [p for p in pages if beats is None or any(
         b['fromFrame'] <= sampled_frame(p) < b['toFrame'] and (b.get('plate') or {}).get('source') == 'take'
@@ -152,8 +155,12 @@ def off_face(video: str, pages: list, *, style: str = 'house', aspect: str = '9:
     for page in eligible:
         frame = sampled_frame(page)
         beat = next((b for b in (beats or []) if b['fromFrame'] <= frame < b['toFrame']), {})
-        box = caption_box(page, style, aspect, region, layout=beat.get('layout'),
-                          plate=(beat.get('plate') or {}).get('source'))
+        if props is not None and props.get('captionTheme'):
+            from . import keepout  # noqa: PLC0415
+            box = tuple(keepout.caption_box(props, page, beat or {'layout': None}))
+        else:
+            box = caption_box(page, style, aspect, region, layout=beat.get('layout'),
+                              plate=(beat.get('plate') or {}).get('source'))
         faces = detector(grab(frame))
         hits = [f for f in faces if overlap(box, grown(f))]
         if hits:

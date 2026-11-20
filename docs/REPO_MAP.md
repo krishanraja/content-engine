@@ -4938,7 +4938,7 @@ Run a Vercel serverless handler locally against the real environment.
 - `type Page = EngineRenderProps['captions'][number]`
 - `type Aspect = EngineRenderProps['aspect']`
 - `type Box = { left: number; top: number; width: number; height: number }`
-- `const REGIONS: Record<Aspect, { lower: Box; upper: Box; centre: Box }>`
+- `const REGIONS: Record<Aspect, { lower: Box; upper: Box; centre: Box; seam: Box }>`
 - `function band(props: Pick<EngineRenderProps, 'aspect' | 'captionPlacement'>): Box`
 - `const scale = (aspect: Aspect) =>`
 - `const F`
@@ -5389,6 +5389,12 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 
 - `function kineticLayout(box: Box, text: string, unit: string, producerLabel: string, aspect: DeviceProps['aspect'], ghos…`
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+
+### `apps/renderer/src/engine/devices/kinetic_stat/money.ts`
+
+A sourced amount as a viewer reads it: 195 "THOUSAND DOLLARS" is "$195,000", never "195" over a unit line (the
+
+- `function formatAmount(value: number, unit: string): { text: string; unit: string }`
 
 ### `apps/renderer/src/engine/devices/kinetic_stat/schema.ts`
 
@@ -6076,11 +6082,13 @@ Direct port of ref/H/build.py: eight unknowns, h22 fixed at one.
 - `const EngineLayoutSchema`
 - `type EngineLayout = z.infer<typeof EngineLayoutSchema>`
 - `const MAX_GROW`
+- `const GRAMMAR_GROW`
 - `const isRegion = (box: Box): boolean =>`
+- `const regionGrow = (box: Box): number =>`
 - `const markRegion`
 - `function freeRegion(aspect: Aspect, placement: Placement, themed: boolean): Box`
 - `function layoutSlots(layout: EngineLayout | undefined, aspect: Aspect, placement: Placement, themed: boolean, count: nu…`
-- `function regionSlots(region: Box, count: number): Box[]`
+- `function regionSlots(region: Box, count: number, grow: number = MAX_GROW): Box[]`
 
 ### `apps/renderer/src/engine/kit/lock.ts`
 
@@ -6191,7 +6199,7 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `interface StagingGeometry`
 - `const PILLAR_TAKE_WIDTH`
 - `function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placement, themed: boolean): StagingGeometry`
-- `function staged(beat: { layout: string; plate?: { source: string } | undefined }): boolean`
+- `function staged(beat: { layout: string; plate?: { source: string } | undefined; shot?: string | undefined }, grammar?: …`
 - `function trayRise(frame: number, from: number): { scale: number; ty: number; opacity: number }`
 - `function boxStyle(box: Box): CSSProperties`
 
@@ -6303,6 +6311,7 @@ Spot inks, paper and shadow. All still colour values live here, including device
 - `type LockupGeometry`
 - `function lockupGeometry(words: TitleWord[], width: number, height: number, aspect: TitleMomentProps['aspect'], wordmark…`
 - `function lockupOpacity(frame: number, fromFrame: number, toFrame: number): number`
+- `function inPanel(panel: Box | undefined, fullFrom: number | undefined, frame: number): panel is Box`
 - `function TitleMoment(props: TitleMomentProps): JSX.Element | null`
 
 ### `apps/renderer/src/engine/transport.ts`
@@ -6847,6 +6856,8 @@ Artifact-bound user confirmation references.
 - `const VE_NOTHING_BEFORE_HOOK`
 - `const VeAspectSchema`
 - `const VeLayoutSchema`
+- `const VE_SHOTS`
+- `const VE_STAGING_MODES`
 - `const VeRoleSchema`
 - `const VeVerbSchema`
 - `const VeTransitionSchema`

@@ -285,6 +285,11 @@ def inputs_from_props(props: dict) -> dict:
     # boxFor('caption') in apps/renderer/src/engine/geometry.ts, using
     # HOUSE.caption in apps/renderer/src/house/geometry.ts; round outwards.
     region = (60, 1090, 800, 217) if aspect == '9:16' else (260, 773, 1400, 187)  # house/geometry.ts HOUSE.caption
+    if props.get('captionTheme'):
+        # A caption style draws in its own band at its placement (captions/kit.ts REGIONS), never the house band: the
+        # 20 Nov recipe samples' seam and upper captions were read where nothing was drawn.
+        from . import keepout  # noqa: PLC0415
+        region = keepout.theme_bands()[aspect][props.get('captionPlacement') or 'lower']
     stem = props['audio']['stem']
     # The stem is already assembled. Source-take trims in props.segments must
     # never be applied to it; compare each beat at its position in this master.
@@ -330,6 +335,30 @@ def inputs_from_props(props: dict) -> dict:
                 plate_video=(props.get('segments') or [{}])[0].get('src') if len(props.get('segments') or []) == 1 else None,
                 plate_offset=int((props.get('segments') or [{}])[0].get('trimBeforeFrames', 0)),
                 opening=opening_view(props))
+
+
+def title_window_s(props: dict | None, fps: float = 30) -> tuple[float, float] | None:
+    """The title lockup's own seconds: its pulsing bars are its design, never a smeared picture."""
+    title = (props or {}).get('titleMoment') or {}
+    if 'fromFrame' not in title or 'toFrame' not in title:
+        return None
+    rate = float((props or {}).get('fps') or fps)
+    return title['fromFrame'] / rate, title['toFrame'] / rate
+
+
+def without_title_bars(row: dict, props: dict | None) -> dict:
+    """The title lockup's pulsing bars are its design, never a smeared picture: a stripe band wholly inside the title's
+    own seconds is left out (the 20 Nov recipe samples, where the lockup built in the panel read as a smear)."""
+    title = title_window_s(props)
+    if not title or not isinstance(row.get('value'), list):
+        return row
+    kept = [m for m in row['value'] if not (m.get('from_s', -1) >= title[0] - 0.5 and m.get('to_s', 1e9) <= title[1] + 0.5)]
+    if len(kept) == len(row['value']):
+        return row
+    out = dict(row, value=kept, title_bars_left_out=len(row['value']) - len(kept))
+    if row.get('pass') is False and not kept:
+        out['pass'] = True
+    return out
 
 
 def picture_smeared(path: str, publish_day: str | None = None) -> dict:
@@ -437,7 +466,7 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
          lambda: qc_gates.captions_render(path, pages, region, caption_ocr)),
         ('captions.off_face', bool(pages) and aspect is not None,
          lambda: qc_faces.off_face(path, pages, style=caption_style, aspect=aspect, region=region, fps=fps,
-                                   detector=face_detector, beats=beats)),
+                                   detector=face_detector, beats=beats, props=frame_props)),
         # Krish, 18 Nov 2026: his head is never cut off. On a SPLIT take beat the whole head sits in the camera band.
         ('plate.head_in_band', aspect == '9:16' and any(b.get('layout') == 'SPLIT' for b in beats or []),
          lambda: qc_faces.head_in_band(path, beats, seam=qc_composition.split_seam(), aspect=aspect, fps=fps,
@@ -543,6 +572,7 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
                                      read=onscreen_reader, lead=opening_lead(frame_props)))
     # A picture smeared into stripes (8 Nov, the proactive-AI opening's plate): every cut, advisory before its own date.
     checks['picture.smeared'] = picture_smeared(path, publish_day)
+    checks['picture.smeared'] = without_title_bars(checks['picture.smeared'], frame_props)
     # A tall meme is centred on the screen (Ruling, Krish, 2026-11-15: tall memes are centred; scripts/layout_centre.py,
     # the bars in config/brand-palette.json formats.meme_tall).
     if 'meme' in str(format_id) and aspect == '9:16':

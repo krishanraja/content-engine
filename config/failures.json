@@ -4536,6 +4536,116 @@
           "test": "npx vitest run tests/checkout-tidy.test.ts"
         }
       ]
+    },
+    {
+      "id": "layout-thrash-cards-and-cutaways",
+      "on": "2026-11-20",
+      "krish": "how we integrate title cards and real-world images and motion animation is the issue",
+      "what": "The rejected Tue 17 short switched layout 14 times (9.9 a minute) with four 1 s runs without his face and full-frame photos in his place; Wed 18's long cut to 11 generated full-frame stills (100 s) and shrank real headlines to 0.13 to 0.27 of the frame on blur, with a 6 s title card detached from his line. Every good cut keeps his face in one place for the whole body and puts real images and motion inside one region, filling it.",
+      "symptom": "Cuts that thrashed between layouts, cut his face away for a second at a time, and showed evidence too small to read.",
+      "cause": "motion.layout_variety demanded 3 layout types a minute in 9:16 (4 in voice-led-pictures), a graphics-only beat became a full-frame takeover by default, and nothing checked staging, face runs, evidence size or repeats.",
+      "status": "guarded",
+      "mode": "layout-thrash",
+      "guard_level": "lint_refuse",
+      "surface": "ve lint (grammar.*) and ve shots on every ve piece frozen from 2026-11-23; the renderer's stagings",
+      "guards": [
+        {
+          "file": "scripts/velib/grammar.py",
+          "contains": "def staging_lints(",
+          "how": "grammar.staging: one staging for a cut's body (band, stage or anchor), every beat's shot from it, the transition matrix",
+          "test": "python3 tests/ve_shot_grammar_test.py"
+        },
+        {
+          "file": "scripts/velib/grammar.py",
+          "contains": "def face_run_lints(",
+          "how": "grammar.face_runs: face share 0.90 (0.45 with plates), runs of at least 4 s, at most 4 switches a minute",
+          "test": "python3 tests/ve_shot_grammar_test.py"
+        },
+        {
+          "file": "scripts/velib/grammar.py",
+          "contains": "def evidence_size_lints(",
+          "how": "grammar.evidence_size and grammar.region: a real image fills its region, words 40 px, the panel never empty past 0.5 s"
+        },
+        {
+          "file": "scripts/velib/lint.py",
+          "contains": "No layout-variety rule: it forced switching",
+          "how": "the variety rule is retired, so nothing demands a layout change"
+        },
+        {
+          "file": "scripts/velib/shots.py",
+          "contains": "def plan_cut(",
+          "how": "ve shots writes every beat's shot type from the cut's one staging and the shot table on the storyboard he signs"
+        }
+      ]
+    },
+    {
+      "id": "generated-imagery-in-cut",
+      "on": "2026-11-20",
+      "krish": "how we integrate title cards and real-world images and motion animation is the issue",
+      "what": "Wed 18's long carried 11 generated full-frame stills, 100 s (33%) of the cut, none carrying a fact; Tue 17 showed suspected generated stand-ins for real photos (a plaque, a town sign).",
+      "symptom": "Generated pictures stood in for evidence and filled time.",
+      "cause": "Generated plates and moves had a route (ve brief, plate-moves) and a recipe slot; nothing refused them in a cut.",
+      "status": "guarded",
+      "mode": "generated-imagery",
+      "guard_level": "lint_refuse",
+      "surface": "ve lint and ve brief on every ve piece frozen from 2026-11-23",
+      "guards": [
+        {
+          "file": "scripts/velib/grammar.py",
+          "contains": "def generated_lints(",
+          "how": "grammar.generated refuses any generated asset outright (his approved clone voice on an off-day short is kept: a voice, not imagery)",
+          "test": "python3 tests/ve_shot_grammar_test.py"
+        },
+        {
+          "file": "scripts/ve.py",
+          "contains": "grammar.generation_refusal(spec, directory)",
+          "how": "ve brief writes no generated plate brief for a bound piece"
+        }
+      ]
+    },
+    {
+      "id": "recipe-samples-staged-faults",
+      "on": "2026-11-20",
+      "krish": "how we integrate title cards and real-world images and motion animation is the issue",
+      "what": "The 20 Nov recipe samples on his Friday take: the stage staging drew him in a small framed window above an empty cream band; the full-frame title lockup held 4 to 8 s and tripped the plain-dark-band guard; a number sat small in a large dark field and \"195\" printed over \"THOUSAND DOLLARS\"; the 6 s 16:9 close alone put every wide cut below the pace floor; captions.off_face measured the house band, not top-placed captions.",
+      "symptom": "Every recipe sample was held or looked unfinished for faults of the engine, not of the piece.",
+      "cause": "Staging geometry, the title hold, device growth, money formatting and the pace window were never measured against his good cuts.",
+      "status": "guarded",
+      "mode": "staged-engine-faults",
+      "guard_level": "gate",
+      "surface": "the renderer (kit/staging.ts, title/TitleMoment.tsx, kinetic_stat, kit/layout.ts), compile, the pace floor and ve qc",
+      "guards": [
+        {
+          "file": "apps/renderer/src/engine/kit/staging.ts",
+          "contains": "take: { left: 430, top: 765, width: 650, height: 1155",
+          "how": "stage draws him large and unframed bottom right, his head on the stage edge",
+          "test": "python3 tests/ve_quality_floor_test.py"
+        },
+        {
+          "file": "scripts/velib/compile.py",
+          "contains": "TITLE_FULL_MAX_FRAMES = 60",
+          "how": "on every staged cut the title builds in the panel and holds full frame at most 2 s",
+          "test": "python3 tests/ve_shot_grammar_test.py"
+        },
+        {
+          "file": "scripts/velib/floor.py",
+          "contains": "def fixed_moments(",
+          "how": "the pace floor measures the body only, leaving out the end card and the full-frame title",
+          "test": "python3 tests/ve_shot_grammar_test.py"
+        },
+        {
+          "file": "apps/renderer/src/engine/devices/kinetic_stat/money.ts",
+          "contains": "export function formatAmount(",
+          "how": "money and thousands are written as a viewer reads them ($195,000)",
+          "test": "npx vitest run apps/renderer/src/engine/devices/kinetic_stat/money.test.ts"
+        },
+        {
+          "file": "scripts/velib/qc_faces.py",
+          "contains": "if props is not None and props.get('captionTheme'):",
+          "how": "captions.off_face reads where a caption style really draws",
+          "test": "python3 tests/ve_qc_faces_test.py"
+        }
+      ]
     }
   ]
 }

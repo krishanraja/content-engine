@@ -261,6 +261,11 @@ def check_frames(path: str, props: dict, *, grab=None, fps: float | None = None,
         # so a frame inside it is never a plain dark band (Fri 20 Nov: the guard refused the palette's own close card).
         close_from = (props.get('ending') or {}).get('fromFrame')
         judged = [item for item in gray_frames if not (isinstance(close_from, int) and item[1] >= close_from)]
+        # The title lockup is the brand's own ink ground with its pulsing bars, a fixed moment of at most 2 s full frame
+        # under the shot grammar (compile.grammar_title): never a plain dark band (the 20 Nov recipe samples tripped on it).
+        title = props.get('titleMoment') or {}
+        if isinstance(title.get('fromFrame'), int) and isinstance(title.get('toFrame'), int):
+            judged = [item for item in judged if not title['fromFrame'] <= item[1] < title['toFrame']]
         plain = plain_dark_problems(judged, rules)
         ink = hex_rgb((props.get('tokens') or {}).get('cream'))
         items = []
