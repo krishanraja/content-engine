@@ -65,6 +65,19 @@ export const LANE_PROBLEMS: Readonly<Record<string, string>> = Object.freeze({
  *  not a fault, the other one does the work. */
 export const LANE_REPORT_FRESH_HOURS = 6
 
+/** A failed pull of main whose heal failed too (scripts/home-copy.ps1, Update-HomeCopy): the copy it names runs old
+ *  code until it is fixed. From 18 to 20 November 2026, after main's history was rewritten, both home computers
+ *  reported these for more than a day and nobody acted (Krish, 2026-11-20: "We need to ensure this can never happen
+ *  again in the future."). */
+export const PULL_PROBLEMS: Readonly<Record<string, string>> = Object.freeze({
+  engine_pull_failed: 'recordings-source',
+  library_source_pull_failed: 'library-source',
+})
+
+/** A pull problem held longer than this is a stale copy: the Inbox job's line names the machine, how long, and the
+ *  fix, ahead of every other problem. */
+export const PULL_STALE_HOURS = 2
+
 /** The content watcher's health on one machine, as its recordings pass read it: class names, counts and times only,
  *  never a link, a caption, a file name or a message. */
 export interface WatchHealth {
@@ -167,6 +180,9 @@ export interface LaneReport {
   windows?: WindowsHealth
   preflight?: PreflightHealth
   overnight?: OvernightHealth
+  /** When each pull problem in problems was first reported, carried from report to report by the engine
+   *  (carryPullSince), never taken from the machine. */
+  pull_since?: Record<string, string>
 }
 
 const COUNT_KEY_RE = /^[a-z0-9_.]{1,80}$/
@@ -317,11 +333,62 @@ export function parseLaneReport(value: unknown, now: string): LaneReport | null 
   const windows = parseWindowsHealth(body.windows)
   const preflight = parsePreflightHealth(body.preflight)
   const overnight = parseOvernightHealth(body.overnight)
+  const pullSince: Record<string, string> = {}
+  if (body.pull_since && typeof body.pull_since === 'object' && !Array.isArray(body.pull_since)) {
+    for (const [code, at] of Object.entries(body.pull_since as Record<string, unknown>)) {
+      const iso = isoOrNull(at)
+      if (iso && problems.includes(code) && Object.prototype.hasOwnProperty.call(PULL_PROBLEMS, code)) pullSince[code] = iso
+    }
+  }
   return {
     schema_version: 1, machine: body.machine, at: now, problems: (problems as string[]).sort(),
     ...(watch ? { watch } : {}), ...(windows ? { windows } : {}), ...(preflight ? { preflight } : {}),
-    ...(overnight ? { overnight } : {}),
+    ...(overnight ? { overnight } : {}), ...(Object.keys(pullSince).length ? { pull_since: pullSince } : {}),
   }
+}
+
+/** The report to store: each pull problem keeps the time it was first reported while the machine's reports go on
+ *  holding it, and starts now when it is new (or the last report could not be read). Pure. */
+export function carryPullSince(previous: LaneReport | null, report: LaneReport): LaneReport {
+  const rest: LaneReport = { ...report }
+  delete rest.pull_since
+  const since: Record<string, string> = {}
+  for (const code of report.problems) {
+    if (!Object.prototype.hasOwnProperty.call(PULL_PROBLEMS, code)) continue
+    const held = previous && previous.machine === report.machine && previous.problems.includes(code)
+    since[code] = held ? (previous!.pull_since?.[code] || previous!.at) : report.at
+  }
+  return Object.keys(since).length ? { ...rest, pull_since: since } : rest
+}
+
+export interface StaleCopy { machine: string; problem: string; copy: string; since: string; hours: number }
+
+/** Every pull problem a fresh report has held for more than PULL_STALE_HOURS. Pure. */
+export function staleCopies(reports: readonly LaneReport[], now: number): StaleCopy[] {
+  const out: StaleCopy[] = []
+  for (const report of reports) {
+    const at = Date.parse(report.at)
+    if (!Number.isFinite(at) || now - at > LANE_REPORT_FRESH_HOURS * 3_600_000) continue
+    for (const problem of report.problems) {
+      const copy = PULL_PROBLEMS[problem]
+      const since = report.pull_since?.[problem]
+      if (!copy || !since) continue
+      const held = now - Date.parse(since)
+      if (Number.isFinite(held) && held > PULL_STALE_HOURS * 3_600_000) {
+        out.push({ machine: report.machine, problem, copy, since, hours: Math.floor(held / 3_600_000) })
+      }
+    }
+  }
+  return out
+}
+
+/** The plain line for a stale copy: the machine, how long, and the fix by hand when its own heal could not run. */
+export function staleCopyLine(stale: StaleCopy): string {
+  const day = stale.since.slice(0, 10).replace(/-/g, '')
+  return `home computer ${stale.machine} has run an out-of-date copy of the engine for ${stale.hours} hours: its ` +
+    `${stale.copy} copy could not be brought up to date from main and could not heal itself (scripts/home-copy.ps1; ` +
+    `its log says why). Fix on ${stale.machine}: in %USERPROFILE%\\Documents\\MindmakeVideoStudio\\${stale.copy} run ` +
+    `git fetch origin main, then git branch backup/manual-${day} HEAD, then git checkout main, then git reset --hard origin/main`
 }
 
 export function laneKey(machine: string): string {
@@ -331,11 +398,16 @@ export function laneKey(machine: string): string {
 /** The problems every machine reported on its last pass, in plain words, for
  *  reports newer than LANE_REPORT_FRESH_HOURS. Pure. */
 export function lanePlainProblems(reports: readonly LaneReport[], now: number): string[] {
-  const out: string[] = []
+  // A copy stale for more than PULL_STALE_HOURS leads, in its own words with the fix, in place of its code's words.
+  const stale = staleCopies(reports, now)
+  const out: string[] = stale.map(staleCopyLine)
   for (const report of reports) {
     const at = Date.parse(report.at)
     if (!Number.isFinite(at) || now - at > LANE_REPORT_FRESH_HOURS * 3_600_000) continue
-    for (const problem of report.problems) out.push(`home computer ${report.machine} ${LANE_PROBLEMS[problem]}`)
+    for (const problem of report.problems) {
+      if (stale.some((s) => s.machine === report.machine && s.problem === problem)) continue
+      out.push(`home computer ${report.machine} ${LANE_PROBLEMS[problem]}`)
+    }
   }
   return out
 }
@@ -344,6 +416,16 @@ export async function writeLaneReport(bucket: string, report: LaneReport): Promi
   const body = Buffer.from(JSON.stringify(report), 'utf8')
   const result = await supabase.storage.from(bucket).upload(laneKey(report.machine), body, { contentType: 'application/json', upsert: true })
   return !result.error
+}
+
+/** One machine's last stored report, or null when there is none or it cannot be read. */
+export async function readLaneReport(bucket: string, machine: string): Promise<LaneReport | null> {
+  const file = await supabase.storage.from(bucket).download(laneKey(machine))
+  if (file.error || !file.data) return null
+  try {
+    const raw = JSON.parse(await file.data.text())
+    return parseLaneReport(raw, typeof raw?.at === 'string' ? raw.at : '')
+  } catch { return null }
 }
 
 export async function readLaneReports(bucket: string): Promise<{ reports: LaneReport[]; error: boolean }> {

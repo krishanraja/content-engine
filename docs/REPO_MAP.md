@@ -3829,6 +3829,8 @@ What the compiler looks for, as pure functions.
 - `const LANE_PREFIX`
 - `const LANE_PROBLEMS: Readonly<Record<string, string>>`
 - `const LANE_REPORT_FRESH_HOURS`
+- `const PULL_PROBLEMS: Readonly<Record<string, string>>`
+- `const PULL_STALE_HOURS`
 - `interface WatchHealth`
 - `interface WindowsHealth`
 - `const PREFLIGHT_CHECKS: readonly string[]`
@@ -3843,9 +3845,14 @@ What the compiler looks for, as pure functions.
 - `function parseOvernightHealth(value: unknown): OvernightHealth | undefined`
 - `function overnightReadiness(reports: readonly LaneReport[], now: number): { primary: { machine: string; ok: boolean; at…`
 - `function parseLaneReport(value: unknown, now: string): LaneReport | null`
+- `function carryPullSince(previous: LaneReport | null, report: LaneReport): LaneReport`
+- `interface StaleCopy`
+- `function staleCopies(reports: readonly LaneReport[], now: number): StaleCopy[]`
+- `function staleCopyLine(stale: StaleCopy): string`
 - `function laneKey(machine: string): string`
 - `function lanePlainProblems(reports: readonly LaneReport[], now: number): string[]`
 - `async function writeLaneReport(bucket: string, report: LaneReport): Promise<boolean>`
+- `async function readLaneReport(bucket: string, machine: string): Promise<LaneReport | null>`
 - `async function readLaneReports(bucket: string): Promise<{ reports: LaneReport[]; error: boolean }>`
 
 ### `apps/control-plane/api/library/_library.ts`

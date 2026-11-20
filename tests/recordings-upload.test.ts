@@ -118,19 +118,21 @@ describe('the recordings upload on Krish\'s runner machines', () => {
     const update = fn('Update-Source')
     expect(update).toContain("if ((Split-Path -Leaf $RepoRoot) -ne $SourceFolderName) { return }")
     expect(upload).toContain("$SourceFolderName = 'recordings-source'")
-    expect(update).toContain('pull --ff-only --quiet')
+    // The pull, and its heal after a rewrite of main, is the shared Update-HomeCopy (tests/home-copy.test.ts).
+    expect(update).toContain('$copy = Update-HomeCopy $git.Source $RepoRoot')
+    expect(update).not.toMatch(/& \$git\.Source/)
     const loop = upload.slice(upload.indexOf('while ($true) {'))
     expect(loop.indexOf('Update-Source')).toBeLessThan(loop.indexOf('Invoke-Pass'))
     expect(loop.indexOf('(Get-SourceStamp) -ne $scriptSha')).toBeGreaterThan(-1)
     expect(loop.indexOf('(Get-SourceStamp) -ne $scriptSha')).toBeLessThan(loop.indexOf('Invoke-Pass'))
   })
 
-  it('pulls the library sync\'s own clone too, fast-forward only, so a library lane change needs no hand pull (2026-11-03)', () => {
+  it('pulls the library sync\'s own clone too, healed after a rewrite of main, so a library lane change needs no hand pull (2026-11-03)', () => {
     const update = fn('Update-LibrarySource')
     expect(update).toContain("Join-Path (Split-Path -Parent $RepoRoot) 'library-source'")
-    expect(update).toContain('pull --ff-only --quiet')
-    // Its one git call is a fast-forward pull of that clone: never reset, clean, checkout or clone.
-    expect(update.match(/& \$git\.Source[^\n]*/g)).toEqual(['& $git.Source -C $library pull --ff-only --quiet 2>&1)'])
+    // Its one git step is the shared Update-HomeCopy on that clone: no git call of its own (no reset, clean or clone).
+    expect(update).toContain('$copy = Update-HomeCopy $git.Source $library')
+    expect(update).not.toMatch(/& \$git\.Source/)
     const loop = upload.slice(upload.indexOf('while ($true) {'))
     expect(loop.indexOf('Update-LibrarySource')).toBeGreaterThan(-1)
     expect(loop.indexOf('Update-LibrarySource')).toBeLessThan(loop.indexOf('Invoke-Pass'))
@@ -230,7 +232,7 @@ describe('it places each take on its piece and cut, at the end of every pass', (
 describe('its installer, for both runner machines', () => {
   it('runs only from the dedicated recordings-source clone, pulls it, checks, then registers a task every five minutes', () => {
     expect(installer).toContain("$sourceFolder = 'recordings-source'")
-    const pull = installer.indexOf('pull --ff-only', installer.indexOf('#>'))
+    const pull = installer.indexOf('$copy = Update-HomeCopy $git.Source $repoRoot', installer.indexOf('#>'))
     const check = installer.indexOf('-File $uploadScript -Check')
     const register = installer.indexOf('Register-ScheduledTask')
     expect(pull).toBeGreaterThan(installer.indexOf('#>'))

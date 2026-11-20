@@ -60,8 +60,11 @@ if (-not (Test-Path -LiteralPath $uploadScript -PathType Leaf)) { throw 'scripts
 $git = Get-Command git.exe -ErrorAction SilentlyContinue
 if ($null -eq $git) { throw 'git is not on this machine. The upload pulls its own fixes with git, so install Git for Windows first.' }
 Write-Output "Bringing $repoRoot up to date..."
-& $git.Source -C $repoRoot pull --ff-only
-if ($LASTEXITCODE -ne 0) { throw "git pull in $repoRoot did not finish (the reason is above). Nothing was installed." }
+# The same pull, and heal after a rewrite of main, as every pass (scripts\home-copy.ps1, Update-HomeCopy).
+. (Join-Path $PSScriptRoot 'home-copy.ps1')
+$copy = Update-HomeCopy $git.Source $repoRoot
+if ($copy.line) { Write-Output $copy.line }
+if (-not $copy.ok) { throw "$repoRoot could not be brought up to date from main ($($copy.reason)). Nothing was installed." }
 foreach ($needed in @('scripts\get-credential.ps1', 'scripts\engine.py', 'config\studio.json')) {
   if (-not (Test-Path -LiteralPath (Join-Path $repoRoot $needed) -PathType Leaf)) { throw "$needed is missing from $repoRoot." }
 }

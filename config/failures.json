@@ -4492,6 +4492,50 @@
           "test": "python3 tests/ve_quality_floor_test.py"
         }
       ]
+    },
+    {
+      "id": "home-copies-stale-after-history-rewrite",
+      "on": "2026-11-20",
+      "krish": "We need to ensure this can never happen again in the future.",
+      "what": "After main's history was force-rewritten on GitHub (18 to 20 Nov, the history scrub), every machine-owned copy on both home computers (recordings-source, library-source on LORIMER and SURFACE) was ahead of and behind origin/main; git pull --ff-only failed on every pass for more than 24 hours (145+ failures) and the lanes kept running old code. Krish realigned each copy by hand.",
+      "symptom": "The home lanes ran stale code for more than a day, and the only sign was a problem code in the lane report that nobody acted on.",
+      "cause": "The home scripts only fast-forwarded: a rewrite of main left nothing that could heal a copy, and a pull problem read like any other however long it lasted.",
+      "status": "guarded",
+      "mode": "stale-home-copy",
+      "guard_level": "gate",
+      "surface": "scripts/recordings-upload.ps1, scripts/library-sync.ps1 and scripts/install-recordings-upload.ps1 on both home computers; the recordings_drive_inbox run; scripts/checkout_tidy.mjs on a person's copy",
+      "guards": [
+        {
+          "file": "scripts/home-copy.ps1",
+          "contains": "function Update-HomeCopy(",
+          "how": "one shared pull for the machine-owned copies: when the fast-forward fails it fetches, keeps HEAD on backup/auto-<stamp>, checks out main and resets to origin/main, only with no tracked changes and no operation in progress, and never for runner-source or a person's copy",
+          "test": "npx vitest run tests/home-copy.test.ts"
+        },
+        {
+          "file": "scripts/recordings-upload.ps1",
+          "contains": "Set-PullProblem 'engine_pull_failed' (-not $copy.ok)",
+          "how": "the recordings lane pulls its own copy and library-source only through Update-HomeCopy, and reports a pull problem only when the heal failed too",
+          "test": "npx vitest run tests/home-copy.test.ts tests/lane-pull-problems.test.ts tests/recordings-upload.test.ts"
+        },
+        {
+          "file": "scripts/library-sync.ps1",
+          "contains": "Set-PullProblem 'library_source_pull_failed' (-not $copy.ok)",
+          "how": "the library sync pulls its own copy only through Update-HomeCopy",
+          "test": "npx vitest run tests/home-copy.test.ts tests/library-sync.test.ts"
+        },
+        {
+          "file": "apps/control-plane/api/library/_lanes.ts",
+          "contains": "export function staleCopies(",
+          "how": "a pull problem held for more than two hours leads the recordings_drive_inbox failure with the machine, the hours and the fix, and is counted as stale_copies in the run ledger",
+          "test": "npx vitest run tests/lane-pull-problems.test.ts tests/control-plane/recordings-drive-inbox.test.ts"
+        },
+        {
+          "file": "scripts/checkout_tidy.mjs",
+          "contains": "function rewrittenOrigin(",
+          "how": "a person's copy is never reset: checkout_tidy names a rewrite of origin/main (by patch-id, or over 200 local-only commits) and prints the three commands that back up the old main and realign it",
+          "test": "npx vitest run tests/checkout-tidy.test.ts"
+        }
+      ]
     }
   ]
 }

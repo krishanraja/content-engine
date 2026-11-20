@@ -6,7 +6,7 @@ import { withContentRun } from '../../_runs.js'
 import { supabase } from '../../_supabase.js'
 import { isSignedPreviewUrlAllowed } from '../../video-studio/_previewStorage.js'
 import { INBOX_FOLDER_ID, INBOX_RUN_BUDGET_MS, copyDriveFile, copyFits, decideRecording, listInbox, planInbox, type InboxSkip } from '../_inboxDrive.js'
-import { lanePlainProblems, readLaneReports } from '../_lanes.js'
+import { lanePlainProblems, readLaneReports, staleCopies } from '../_lanes.js'
 import { dispatchPlaceTakes } from '../_placeTakes.js'
 import { configuredLibraryStore, verifyStoredLibraryObject } from '../_library.js'
 import { readRecordingManifest, recordingObjectKey, withName, writeRecordingManifest } from '../_recordings.js'
@@ -47,6 +47,8 @@ async function handler(req: VercelRequest, res: VercelResponse) {
   // The home computers first: their problems are reported whatever Drive says.
   const lanes = await readLaneReports(bucket)
   const machineProblems = lanePlainProblems(lanes.reports, started)
+  // A home copy that could not pull or heal for more than two hours: counted in the ledger, its line first.
+  const staleCopyCount = staleCopies(lanes.reports, started).length
 
   const listing = await listInbox(folderId)
   if (listing.ok === false) {
@@ -54,6 +56,7 @@ async function handler(req: VercelRequest, res: VercelResponse) {
       ok: false,
       error: `the Video Engine Inbox cannot be read by its ID: ${listing.reason}. ${listing.fix}${machineProblems.length ? ` Also: ${machineProblems.join('; ')}.` : ''}`,
       machine_problems: machineProblems.length,
+      stale_copies: staleCopyCount,
     })
   }
 
@@ -125,12 +128,15 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     no_checksum: skipped.no_checksum,
     settling: skipped.settling,
     machine_problems: machineProblems.length,
+    stale_copies: staleCopyCount,
   }
   const problems = [
+    // A stale home copy leads: it means every other lane on that machine runs old code.
+    ...machineProblems.slice(0, staleCopyCount),
     ...(failures.length ? [`${failures.length} recording(s) could not be copied from the Inbox (${failures.slice(0, 3).join('; ')})`] : []),
     ...(listing.truncated ? ['the Inbox holds more files than one run lists; the oldest were not looked at'] : []),
     ...(skipped.too_large ? [`${skipped.too_large} recording(s) in the Inbox are over the 2 GiB the engine takes`] : []),
-    ...machineProblems,
+    ...machineProblems.slice(staleCopyCount),
     ...(lanes.error ? ['the home computers\' reports could not be read'] : []),
   ]
   if (problems.length) return res.status(200).json({ ok: false, error: problems.join('. '), ...counts })

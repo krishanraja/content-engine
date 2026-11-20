@@ -145,6 +145,62 @@ describe('checkout_tidy', () => {
     expect(head()).toBe(before)
   })
 
+  // Krish, 2026-11-20, after main's history was rewritten on GitHub and every copy sat ahead and behind for days:
+  // "We need to ensure this can never happen again in the future." A person's copy is never reset; the line names the
+  // rewrite and gives the three commands that keep the old main and realign it.
+  function rewriteOrigin() {
+    const other = upstreamCommit('a.txt', 'a\n')
+    git(work, 'pull', '-q', 'origin', 'main')
+    // Every commit gets a new hash with the same patch, as a history rewrite that removes nothing from these files does.
+    const r = spawnSync('git', ['filter-branch', '-f', '--env-filter', 'export GIT_COMMITTER_DATE="2001-01-01T00:00:00Z"', 'main'],
+      { cwd: other, env: { ...env, FILTER_BRANCH_SQUELCH_WARNING: '1' }, encoding: 'utf8' })
+    if (r.status !== 0) throw new Error(r.stderr)
+    git(other, 'push', '-q', '-f', 'origin', 'main')
+    commit(other, 'after.txt', 'after\n')
+    git(other, 'push', '-q', 'origin', 'main')
+  }
+
+  it('prints the realign for a main left on history origin rewrote, by patch-id, and resets nothing', () => {
+    rewriteOrigin()
+    git(work, 'fetch', '-q', 'origin', 'main')
+    const before = head()
+    const out = tidy()
+    expect(out).toMatch(/origin\/main was rewritten \(every one of its 2 local-only commit\(s\) is already on origin\/main by patch\)/)
+    const backup = /git branch (backup\/main-before-realign-\d{8}-\d{6}) main/.exec(out)?.[1]
+    expect(backup).toBeTruthy()
+    expect(out).toContain('`git checkout main`')
+    expect(out).toContain('`git reset --hard origin/main`')
+    expect(head()).toBe(before)
+    const log = readFileSync(join(work, '.scratch', 'checkout-tidy.jsonl'), 'utf8').trim().split('\n').map((l) => JSON.parse(l))
+    expect(log.at(-1)).toMatchObject({ outcome: 'held', rewritten: 'patch-id', ahead: 2, behind: 3 })
+    // The three commands do what they say: the old main is kept, main matches origin.
+    git(work, 'branch', backup!, 'main')
+    git(work, 'checkout', '-q', 'main')
+    git(work, 'reset', '-q', '--hard', 'origin/main')
+    expect(head()).toBe(originMain())
+    expect(git(work, 'rev-parse', backup!)).toBe(before)
+  })
+
+  it('prints the realign when local main is more than 200 commits ahead and also behind', () => {
+    // 201 commits only here, made in one fast-import, while origin moves on.
+    // Dates after the seed's, so git's walk is not misled by clock skew.
+    const now = Math.floor(Date.now() / 1000) + 60
+    const lines: string[] = []
+    for (let i = 0; i < 201; i++) {
+      lines.push('commit refs/heads/main', `committer Test <test@invalid> ${now + i} +0000`, 'data 3', `c${String(i % 10)}`,
+        ...(i === 0 ? [`from ${head()}`] : []), `M 644 inline old-${i}.txt`, `data ${String(i).length + 1}`, `${i}`, '')
+    }
+    const r = spawnSync('git', ['fast-import', '--quiet'], { cwd: work, env, input: lines.join('\n') + '\n', encoding: 'utf8' })
+    if (r.status !== 0) throw new Error(r.stderr)
+    git(work, 'reset', '-q', '--hard', 'main')
+    upstreamCommit('new.txt', 'new\n')
+    const before = head()
+    const out = tidy()
+    expect(out).toMatch(/origin\/main was rewritten \(201 local-only commit\(s\), more than 200, with main also 1 behind\)/)
+    expect(out).toMatch(/git reset --hard origin\/main/)
+    expect(head()).toBe(before)
+  })
+
   it('skips a linked worktree', () => {
     upstreamCommit('a.txt', 'a\n')
     const wt = join(root, 'wt')

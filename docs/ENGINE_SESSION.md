@@ -96,6 +96,10 @@ commits behind origin/main, with an uncommitted edit blocking `git pull`.
 - Tracked changes, unmerged commits, a local main ahead of origin, or a merge or rebase in progress: it changes nothing,
   prints one line with the branch, the files and the commands to keep them (`git stash push -m ...` or a commit), and
   records the case in the ignored `.scratch/checkout-tidy.jsonl`.
+- A local main both ahead of and behind origin/main because origin/main was rewritten (every local-only commit's patch
+  is already on origin/main, or there are more than 200 of them): it still changes nothing, says which, and prints the
+  three commands that keep the old main and realign it: `git branch backup/main-before-realign-<stamp> main`,
+  `git checkout main`, `git reset --hard origin/main`.
 - It skips a linked worktree (`.claude/worktrees`, `.worktrees`), a cloud container (`CLAUDE_CODE_REMOTE`), CI, and a
   checkout another live session holds.
 
@@ -104,6 +108,34 @@ Claude Code runs it by itself: the SessionStart hook (`--hook start`) tidies and
 is stale after 12 hours or once its pid is gone, and is then taken over. Codex reads no hooks, so AGENTS.md's start route
 runs it as step 0, before work and again before finishing. It is silent when there is nothing to do and always exits 0.
 `CHECKOUT_TIDY_OFF=1` turns it off for one run. Held by `tests/checkout-tidy.test.ts`.
+
+## After main's history is rewritten
+
+Ruling (Krish, 2026-11-20): home engine copies heal themselves after any rewrite of main; a stale copy is never silent.
+From 18 to 20 Nov 2026 main was force-rewritten on GitHub (the history scrub,
+`docs/proposals/2026-11-18-history-scrub-support-request.md`). Every machine-owned copy on both home computers was then
+ahead (the old history) and behind, `git pull --ff-only` failed on every pass for more than a day, the lanes ran old
+code, and the only sign was a problem code in the lane report. Krish realigned each copy by hand, then: "We need to
+ensure this can never happen again in the future."
+
+Anyone who rewrites main (a scrub, `git filter-repo`, `git filter-branch`, any force push to main) needs to do nothing
+more on the home computers, because each kind of copy has its own route:
+
+- **Machine-owned copies** (`recordings-source`, `library-source`) heal themselves on their next pass.
+  `scripts/home-copy.ps1` (`Update-HomeCopy`) is the one pull they use: when the fast-forward fails it fetches origin
+  main and, only when the copy has no tracked changes and no merge or rebase in progress, keeps HEAD on a local branch
+  `backup/auto-<yyyyMMdd-HHmmss>` (never deleted, never pushed), checks out main and resets it to origin/main.
+  Untracked files stay. It writes one line to the lane's log. Only when the heal fails too does the lane report
+  `engine_pull_failed` or `library_source_pull_failed`; once that has been held for more than two hours, the Inbox job
+  (`recordings_drive_inbox`) fails with the machine, how long and the fix by hand as its first line, and counts it as
+  `stale_copies` in the run ledger (`apps/control-plane/api/library/_lanes.ts`, `staleCopies`).
+- **The runner's pinned checkout** (`runner-source`) is never pulled or healed by these scripts.
+  `scripts/verify-runner-source.ps1` guards it, and only its own installer re-pins it.
+- **A person's own working copy** (`C:\Users\krish\dev\...`) is never reset. `scripts/checkout_tidy.mjs` holds it and
+  prints the three commands that back up the old main and realign it (above).
+
+Held by `tests/home-copy.test.ts`, `tests/checkout-tidy.test.ts` and `tests/lane-pull-problems.test.ts`; registered
+as failure `home-copies-stale-after-history-rewrite` in `config/failures.json`.
 
 ## Running from Claude Code
 
