@@ -309,7 +309,9 @@ def palette_lints(spec: dict) -> list[str]:
                             'seconds': getattr(ve_compile, 'ENDING_FRAMES_BY_ASPECT', {}).get(cut.get('aspect'), ve_compile.ENDING_FRAMES)
                             / ve_compile.FPS, 'days_row': kind == 'series' and not (closes_on_sting and shape == '9x16')}}
         out += [f'brand.palette cuts.{cut_id}: {p}' for p in brand_palette.check(record, palette)]
-    return out
+    # The accent kit (Krish, 2026-11-20): big moments, gradients and duotone cut-outs on series days only.
+    from . import accent_kit  # noqa: PLC0415
+    return out + accent_kit.accent_problems(spec)
 
 
 TITLE_MOMENT_FROM = '2026-11-16'

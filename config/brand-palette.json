@@ -73,7 +73,22 @@
   },
   "colour": {
     "series": "the series' own colour (config/studio.json house_style; follow.the.money #FFD84D, under.the.hood #B7A6FF, mind.the.gap #FF6A4D), never another's",
-    "off": "house mint #7EF0C0 and the house tones; never butter, lilac or coral, and no series name, pill or days row"
+    "off": "house mint #7EF0C0 and the house tones; never butter, lilac or coral, and no series name, pill or days row",
+    "accent": {
+      "ruled": "Krish approved on 2026-11-20 (the polish board): ember #E2551F, ember_deep #B8321C, plum #3B1232, plum_deep #1E0918 and peach #FFB48F to #FFE3D1 join the kit, for big moments, gradients and duotone cut-outs on series days only.",
+      "colours": "config/ve/brand-tokens.json accent_kit (the values, once)",
+      "roles": [
+        "big_moment",
+        "gradient",
+        "duotone_cutout"
+      ],
+      "days": [
+        "monday",
+        "wednesday",
+        "friday"
+      ],
+      "never": "on an off day, as type on its own, as a status colour, or anywhere but those three roles; ve lint refuses it (scripts/velib/accent_kit.py)"
+    }
   },
   "marks": {
     "icon": {
