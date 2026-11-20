@@ -77,6 +77,15 @@ describe('photo_plate: loops on a region of the recording', () => {
     expect(markup).toContain('border-radius:22px')
     expect(markup).not.toContain('data-mark=""') // the old mint rectangle is not drawn under a loop
   })
+  it('frames the recording at the panel\'s width with its source line under it, never a chip on the picture', () => {
+    const withSource = EngineObjectSchema.parse({ ...object, params: { ...object.params, source: 'CHARACTER.AI HOME PAGE · SCREEN RECORDING' } })
+    const markup = draw(PhotoPlate, withSource, events, 80, { left: 0, top: 0, width: 1080, height: 1000 })
+    const card = markup.match(/data-framed="" style="position:absolute;left:(\d+)px;top:([\d.]+)px;width:(\d+)px;height:([\d.]+)px/)!
+    expect(Number(card[3])).toBe(960)
+    const source = markup.match(/data-provenance="" style="position:absolute;left:\d+px;top:([\d.]+)px/)!
+    expect(Number(source[1])).toBeGreaterThan(Number(card[2]) + Number(card[4]))
+    expect(markup).toContain('font-size:40px')
+  })
   it('a scribble may wear the series colour', () => {
     expect(ScribbleParams.parse({ shape: 'tick', cx: 1, cy: 1, size: 10, colour: 'channel', seed: 's' }).colour).toBe('channel')
   })

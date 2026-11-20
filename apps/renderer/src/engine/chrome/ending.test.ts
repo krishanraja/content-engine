@@ -167,7 +167,9 @@ describe('the series close on the intro sting (Ruling, Krish, 2026-11-20)', () =
     // every word inside the tall core box x 120 to 820, y 330 to 1180 (config/brand-palette.json safe.tall_core)
     const box = STING_CLOSE.tall.box
     expect(box.left).toBeGreaterThanOrEqual(120); expect(box.left + box.width).toBeLessThanOrEqual(820)
-    expect(box.lineTop).toBeGreaterThanOrEqual(330); expect(box.actionTop + 60).toBeLessThanOrEqual(1180)
+    expect(box.lineTop).toBeGreaterThanOrEqual(330); expect(box.urlTop + STING_CLOSE.tall.sizes.url * 1.1).toBeLessThanOrEqual(1180)
+    // the wordmark lifted with the band stays inside the core box too (frame 48: y 784 to 1022)
+    expect(784 - STING_CLOSE.tall.lift.px).toBeGreaterThanOrEqual(330)
     const markup = renderToStaticMarkup(React.createElement(EndingBand, { props, frame: start + 59 }))
     for (const text of ['Built to help you', 'decide.', 'Subscribe free', 'makeyourmindup.ai', 'sting-beat']) expect(markup).toContain(text)
     expect(markup).not.toContain('Mondays') // no days row on the tall close
@@ -191,5 +193,28 @@ describe('the series close on the intro sting (Ruling, Krish, 2026-11-20)', () =
     const base = withSting('9:16')
     expect(() => EngineRenderPropsSchema.parse({ ...base, ending: { ...base.ending, sting: { ...base.ending!.sting!, series: 'mind_the_gap' } } })).toThrow()
     expect(() => EngineRenderPropsSchema.parse({ ...base, ending: { ...base.ending, days: [] } })).toThrow()
+  })
+})
+
+describe('every word of the sting close is legible (config/ve/shot-grammar.json evidence.words_min_px)', () => {
+  it('each size is at least words_min_px, and the pill and the address at least 40 px of cap height, on both shapes', async () => {
+    const { STING_CLOSE, CAP_HEIGHT } = await import('./EndingBand')
+    const grammar = JSON.parse(readFileSync(new URL('../../../../../config/ve/shot-grammar.json', import.meta.url), 'utf8'))
+    const min = grammar.evidence.words_min_px as number
+    expect(min).toBe(40)
+    for (const shape of [STING_CLOSE.tall, STING_CLOSE.wide]) {
+      for (const size of Object.values(shape.sizes)) expect(size).toBeGreaterThanOrEqual(min)
+      expect(shape.sizes.pill * CAP_HEIGHT.structure).toBeGreaterThanOrEqual(40)
+      expect(shape.sizes.url * CAP_HEIGHT.data).toBeGreaterThanOrEqual(40)
+    }
+  })
+
+  it('the wide close keeps every word left of the end-screen area', async () => {
+    const { STING_CLOSE } = await import('./EndingBand')
+    const { textWidth } = await import('../../house/metrics')
+    const w = STING_CLOSE.wide
+    expect(w.box.left + textWidth('mono', 'makeyourmindup.ai', w.sizes.url, 0.06)).toBeLessThanOrEqual(w.endScreen.left)
+    expect(w.box.left + textWidth('mono', 'MONDAYS · WEDNESDAYS · FRIDAYS', w.sizes.days, 0.12)).toBeLessThanOrEqual(w.endScreen.left)
+    expect(w.box.left + textWidth('anton', 'BUILT TO HELP YOU', w.sizes.line, 0.005)).toBeLessThanOrEqual(w.endScreen.left)
   })
 })

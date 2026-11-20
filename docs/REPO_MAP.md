@@ -5076,6 +5076,7 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 - `function endingBandLayout(props: Pick<EngineRenderProps, 'aspect' | 'brand' | 'series' | 'ending'>)`
 - `function endingBandModel(props: EngineRenderProps, frame: number)`
 - `const STING_CLOSE`
+- `const CAP_HEIGHT`
 - `const STING_CLOSE_SETTLED`
 - `function stingCloseFrame(aspect: EngineRenderProps['aspect'], since: number): number`
 - `function stingCloseModel(props: EngineRenderProps, frame: number)`
@@ -5572,6 +5573,7 @@ A sourced amount as a viewer reads it: 195 "THOUSAND DOLLARS" is "$195,000", nev
 
 ### `apps/renderer/src/engine/devices/photo_plate/index.tsx`
 
+- `const FRAMED_SOURCE`
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/photo_plate/schema.ts`
