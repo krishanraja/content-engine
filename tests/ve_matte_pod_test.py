@@ -206,6 +206,10 @@ class MattePodTest(unittest.TestCase):
             self.go(fake)
         self.assertTrue(fake.deleted())
 
+    def test_the_pod_job_uses_only_options_its_ffmpeg_4_4_reads(self):
+        # Run 44739662276 (20 Nov): the pod's Ubuntu 22.04 ffmpeg 4.4 refused -fps_mode and both models decoded nothing.
+        self.assertNotIn("'-fps_mode'", matte_pod.REMOTE.read_text(encoding='utf-8'))
+
     def test_cleanup_ends_only_matte_pods(self):
         calls = []
 
