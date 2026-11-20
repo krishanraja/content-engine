@@ -2,7 +2,8 @@ import { Img, OffthreadVideo, Sequence } from 'remotion'
 import brand from '../../../../../../config/ve/brand-tokens.json'
 import { HOUSE_FONTS } from '../../../house/geometry'
 import type { DeviceProps } from '../types'
-import { photoPlateCrop, photoPlateState } from './state'
+import { scribblePath } from '../../kit/scribblePath'
+import { LOOP, photoPlateCrop, photoPlateState } from './state'
 
 export function Device({ object, events, box, tokens, aspect, frame }: DeviceProps) {
   const state = photoPlateState(object, events, frame)
@@ -27,6 +28,7 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
 
   return <div data-device="photo_plate" style={{
     position: 'absolute', ...box, overflow: 'hidden',
+    ...(params.frame ? { borderRadius: 22, boxShadow: `inset 0 0 0 2px color-mix(in srgb, ${tokens.cream} 16%, transparent)` } : {}),
     clipPath: reveal < 1 ? `inset(${(1 - reveal) * 100}% 0 0 0)` : undefined,
   }}>
     {'video' in params
@@ -37,7 +39,23 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
     {params.scrim > 0 && <div data-scrim="" style={{
       position: 'absolute', inset: 0, backgroundColor: tokens.ink, opacity: params.scrim,
     }} />}
-    {region && state.drawn > 0 && <svg aria-hidden="true" width={width} height={height}
+    {state.loops.length > 0 && <svg aria-hidden="true" width={width} height={height} style={{ position: 'absolute', inset: 0, overflow: 'visible' }}>
+      {state.loops.map(loop => {
+        const cx = crop.left + (loop.region.x + loop.region.w / 2) * crop.width
+        const cy = crop.top + (loop.region.y + loop.region.h / 2) * crop.height
+        const d = scribblePath({ shape: 'loop', cx, cy, u: [loop.region.w * crop.width * 0.62, 0], v: [0, loop.region.h * crop.height * 0.66],
+          turns: 1.08 }, `${object.obj}:${loop.name}`)
+        const colour = tokens[params.markColour]
+        return <g key={loop.name} data-loop={loop.name}>
+          {loop.drawn > 0 && <path d={d} fill="none" stroke={colour} strokeWidth={LOOP.stroke} strokeLinecap="round" strokeLinejoin="round"
+            pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - loop.drawn} />}
+          {loop.echo > 0 && <path d={d} fill="none" stroke={colour} strokeWidth={LOOP.echo} strokeLinecap="round" strokeLinejoin="round"
+            pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - loop.echo}
+            transform={`rotate(${LOOP.echoTurnDegrees} ${cx} ${cy})`} />}
+        </g>
+      })}
+    </svg>}
+    {params.markStyle === 'ring' && region && state.drawn > 0 && <svg aria-hidden="true" width={width} height={height}
       style={{ position: 'absolute', inset: 0 }}>
       <rect data-mark="" x={crop.left + region.x * crop.width} y={crop.top + region.y * crop.height}
         width={region.w * crop.width} height={region.h * crop.height} rx={8}

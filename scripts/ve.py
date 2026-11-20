@@ -2023,6 +2023,13 @@ def cmd_render(args) -> int:
         print('ve render: refused, the cut must open on its hook:')
         print('\n'.join(f'  - {reason}' for reason in opening))
         return 1
+    from velib.compile import ending_problems
+    closing = ending_problems(props, spec)
+    if closing:
+        # The series close is the intro sting at the end (Ruling, Krish, 2026-11-20); never the plain ink card in its place.
+        print('ve render: refused, the cut must close on its palette close:')
+        print('\n'.join(f'  - {reason}' for reason in closing))
+        return 1
     render(args.props, args.out, args.scale)
     from velib import guards, plainframes
     from velib.common import sha256_file
