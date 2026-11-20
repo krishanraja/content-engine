@@ -346,7 +346,22 @@ def title_window_s(props: dict | None, fps: float = 30) -> tuple[float, float] |
     return title['fromFrame'] / rate, title['toFrame'] / rate
 
 
-def picture_smeared(path: str, publish_day: str | None = None, props: dict | None = None) -> dict:
+def without_title_bars(row: dict, props: dict | None) -> dict:
+    """The title lockup's pulsing bars are its design, never a smeared picture: a stripe band wholly inside the title's
+    own seconds is left out (the 20 Nov recipe samples, where the lockup built in the panel read as a smear)."""
+    title = title_window_s(props)
+    if not title or not isinstance(row.get('value'), list):
+        return row
+    kept = [m for m in row['value'] if not (m.get('from_s', -1) >= title[0] - 0.5 and m.get('to_s', 1e9) <= title[1] + 0.5)]
+    if len(kept) == len(row['value']):
+        return row
+    out = dict(row, value=kept, title_bars_left_out=len(row['value']) - len(kept))
+    if row.get('pass') is False and not kept:
+        out['pass'] = True
+    return out
+
+
+def picture_smeared(path: str, publish_day: str | None = None) -> dict:
     """Row picture.smeared: no picture smeared into stripes on the rendered cut (scripts/frame_smear.py). Measured on
     every cut; counted only for a piece published from config/ve/onscreen-checks.json picture.binds_from (F33)."""
     import sys as _sys
@@ -356,11 +371,8 @@ def picture_smeared(path: str, publish_day: str | None = None, props: dict | Non
     target = 'no picture smeared into stripes (scripts/frame_smear.py)'
     try:
         result = frame_smear.measure(path)
-        title = title_window_s(props)
-        smears = [m for m in result['smears'] if not (title and m.get('from_s', -1) >= title[0] - 0.5
-                                                       and m.get('to_s', 1e9) <= title[1] + 0.5)]
-        row = {'value': smears[:10], 'target': target,
-               'pass': None if result['status'] == 'inconclusive' else (result['pass'] or not smears)}
+        row = {'value': result['smears'][:10], 'target': target,
+               'pass': None if result['status'] == 'inconclusive' else result['pass']}
         if result['status'] == 'inconclusive':
             row.update(status='not_run', reason='no frames decoded')
     except (OSError, ValueError, subprocess.CalledProcessError, frame_smear.FrameSmearError) as exc:
@@ -559,7 +571,8 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
                                      heard=heard, kept_restarts=kept_restarts, face_detector=face_detector,
                                      read=onscreen_reader, lead=opening_lead(frame_props)))
     # A picture smeared into stripes (8 Nov, the proactive-AI opening's plate): every cut, advisory before its own date.
-    checks['picture.smeared'] = picture_smeared(path, publish_day, frame_props)
+    checks['picture.smeared'] = picture_smeared(path, publish_day)
+    checks['picture.smeared'] = without_title_bars(checks['picture.smeared'], frame_props)
     # A tall meme is centred on the screen (Ruling, Krish, 2026-11-15: tall memes are centred; scripts/layout_centre.py,
     # the bars in config/brand-palette.json formats.meme_tall).
     if 'meme' in str(format_id) and aspect == '9:16':

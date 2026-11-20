@@ -358,6 +358,17 @@ class PaceBodyTest(unittest.TestCase):
         self.assertLess(only_body['longest_gap_s'], 1.5)
 
 
+class TitleBarsTest(unittest.TestCase):
+    def test_the_title_lockup_bars_are_not_a_smear_but_a_smear_elsewhere_still_fails(self):
+        from velib import qc
+        props = {'fps': 30, 'titleMoment': {'fromFrame': 555, 'toFrame': 620}}
+        row = {'value': [{'from_s': 18.5, 'to_s': 20.75}], 'pass': False}
+        self.assertTrue(qc.without_title_bars(row, props)['pass'])
+        row = {'value': [{'from_s': 18.5, 'to_s': 20.75}, {'from_s': 30.0, 'to_s': 31.0}], 'pass': False}
+        self.assertFalse(qc.without_title_bars(row, props)['pass'])
+        self.assertEqual(qc.without_title_bars(row, None), row)
+
+
 class RetiredTest(unittest.TestCase):
     def test_the_variety_rule_and_the_dead_face_cap_are_gone(self):
         for path in (ROOT / 'config' / 've' / 'formats').glob('*.json'):
