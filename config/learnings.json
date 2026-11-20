@@ -2856,8 +2856,8 @@
         },
         {
           "file": "config/ve/recipes/data-story.json",
-          "contains": "\"rated\": null",
-          "how": "the recipe's rating field, null until Krish rates it"
+          "contains": "\"rated\": {",
+          "how": "the recipe's rating field, written only by ve recipe rate with his words (null until he rates it; approved 20 Nov 2026)"
         }
       ]
     },
