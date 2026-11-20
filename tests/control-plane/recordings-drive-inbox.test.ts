@@ -230,6 +230,25 @@ describe('GET /api/library/recordings/drive-inbox', () => {
     await call(lane, { method: 'POST', headers: { authorization: `Bearer ${RUNNER}`, 'content-type': 'application/json' }, body: { machine: 'KRISH-PC', problems: [] } })
     expect((await call(driveInbox, asCron)).body.ok).toBe(true)
   })
+
+  it('leads with a home copy that could not pull or heal for more than two hours, naming the machine and the fix', async () => {
+    // 18 to 20 Nov 2026: main's history was rewritten and both copies reported engine_pull_failed for a day unread.
+    const since = new Date(Date.now() - 3 * 3_600_000).toISOString()
+    const body = JSON.stringify({ schema_version: 1, machine: 'LORIMER', at: new Date(Date.now() - 5 * 60_000).toISOString(),
+      problems: ['engine_pull_failed'], pull_since: { engine_pull_failed: since } })
+    db.objects.set('lanes/recordings-lorimer.json', { size: body.length, contentType: 'application/json', body })
+    // The machine cannot set its own time: the engine carries it from the last stored report.
+    const sent = await call(lane, { method: 'POST', headers: { authorization: `Bearer ${RUNNER}`, 'content-type': 'application/json' },
+      body: { machine: 'LORIMER', problems: ['engine_pull_failed'], pull_since: { engine_pull_failed: new Date().toISOString() } } })
+    expect(sent.statusCode).toBe(200)
+    expect(JSON.parse(db.objects.get('lanes/recordings-lorimer.json')!.body!).pull_since).toEqual({ engine_pull_failed: since })
+    const res = await call(driveInbox, asCron)
+    expect(res.body.ok).toBe(false)
+    expect(res.body.stale_copies).toBe(1)
+    expect(res.body.error).toMatch(/^home computer LORIMER has run an out-of-date copy of the engine for 3 hours: its recordings-source copy/)
+    expect(res.body.error).toContain('git reset --hard origin/main')
+    expect(db.runs.at(-1)).toMatchObject({ job: 'recordings_drive_inbox', status: 'failed' })
+  })
 })
 
 describe('POST /api/library/recordings/lane', () => {
