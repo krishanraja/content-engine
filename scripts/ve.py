@@ -1554,7 +1554,8 @@ def cmd_brief(args) -> int:
                 print(finding)
             print(f"ve brief: {args.plate} candidates {'pass' if report['pass'] else 'FAIL'}; OCR {report['ocr']}")
             return 0 if report['pass'] else 1
-        # No generation in a cut (Ruling, Krish, 2026-11-20: generated imagery never): a bound piece gets no plate brief.
+        # A generated plate is a metaphor or nothing (Ruling, Krish, 2026-11-20: generated imagery, photoreal included, is allowed
+        # when art-directed and clearly a metaphor; stand-ins for real documents, signs, places or people are refused).
         from velib import grammar
         refusal = grammar.generation_refusal(spec, directory)
         if refusal and brief.build_briefs(spec, cut=cut, script=script, words=words, beats=args.beat, moves=moves):
@@ -2385,6 +2386,41 @@ def cmd_shots(args) -> int:
     return 1 if found else 0
 
 
+def cmd_matte(args) -> int:
+    """The subject matte of a cut's picture, cached by its sha256 (velib/matte.py; shot grammar step 5): offline, MediaPipe's
+    bundled model, nothing generated or spent. Writes matte.<cut>.json beside the spec, which ve lint (grammar.depth)
+    reads; compile finds the cached subject by the picture's bytes."""
+    from velib import matte, takes, verdict
+    spec_path = Path(args.spec)
+    spec = load_json(spec_path)
+    directory = verdict.ve_dir(spec_path)
+    cuts = [args.cut] if args.cut else list(spec['cuts'])
+    for cut_id in cuts:
+        if cut_id not in spec['cuts']:
+            print(f've matte: no cut {cut_id}', file=sys.stderr)
+            return 1
+        picture = Path(args.picture) if args.picture else None
+        if picture is None:
+            try:
+                record = takes.load_take(directory, spec['cuts'][cut_id]['take'])
+            except (OSError, ValueError) as error:
+                print(f've matte: {error}; give --picture (the file the cut plays)', file=sys.stderr)
+                return 1
+            picture = Path(record['media']['path'])
+        try:
+            found = matte.run_ensure(picture)
+        except (ImportError, RuntimeError, ValueError, OSError) as error:
+            print(f've matte: {error}', file=sys.stderr)
+            return 1
+        note = {'cut': cut_id, 'picture': str(picture), 'picture_sha256': found['take_sha256'],
+                'subject_sha256': found['subject_sha256'], 'model_sha256': found['model_sha256'], 'frames': found['frames'],
+                'mean_edge_confidence': found['mean_edge_confidence'], 'status': found['status']}
+        out = write_json(directory / f'matte.{cut_id}.json', note)
+        print(f"ve matte: {cut_id}: {found['frames']} frames, {'cached' if found.get('cached') else 'made'}, subject "
+              f"{found['subject_sha256'][:16]} -> {out}")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(prog='ve', description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest='cmd', required=True)
@@ -2589,6 +2625,9 @@ def main() -> int:
     p = sub.add_parser('shots', help="write each beat's shot type from its cut's one staging and the shot table on the storyboard")
     p.add_argument('spec'); p.add_argument('--dry-run', action='store_true', help='print the shot table; write nothing')
     p.set_defaults(fn=cmd_shots)
+    p = sub.add_parser('matte', help="the subject matte of a cut's picture, cached by its sha256 (offline; shot grammar step 5)")
+    p.add_argument('spec'); p.add_argument('--cut'); p.add_argument('--picture', help='the file the cut plays (default: its take)')
+    p.set_defaults(fn=cmd_matte)
     p = sub.add_parser('expect', help='write expect.md: at most six lines of what this cut will and will not do')
     p.add_argument('spec'); p.set_defaults(fn=cmd_expect)
     p = sub.add_parser('ledger', help='report or append piece usage against budget caps',

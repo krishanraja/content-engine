@@ -94,6 +94,8 @@ export async function stageRenderAssets(inputProps, propsPath, publicDir, reposi
   inputProps.audio.stem.src = await stage(inputProps.audio.stem.src)
   for (const sfx of inputProps.audio.sfx) sfx.src = await stage(sfx.src)
   for (const segment of inputProps.segments) segment.src = await stage(segment.src)
+  // The subject matte of his take (shot grammar step 5, velib/matte.py): staged like the take it is cut from.
+  if (inputProps.matte) inputProps.matte.src = await stage(inputProps.matte.src)
   for (const beat of inputProps.beats ?? []) if (beat?.backdrop) beat.backdrop.src = await stage(beat.backdrop.src)
   if ((inputProps.sting && !inputProps.sting.atFrame) || inputProps.opening) {
     // Nothing goes before the hook on any cut, ever (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove

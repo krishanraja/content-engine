@@ -39,9 +39,13 @@ export const regionGrow = (box: Box): number => regions.get(box) ?? 1
 const mark = (box: Box, grow: number = MAX_GROW): Box => { regions.set(box, grow); return box }
 /** Mark a box as a region devices may grow into (the stagings, kit/staging.ts). */
 export const markRegion = mark
+/** Regions whose object fills their width (the stage staging, shot grammar step 5: a figure held to half the panel by its
+ *  source line read as "a small number in a large dark field"). Band keeps the look Krish approved on 20 Nov. */
+const widthFill = new WeakSet<Box>()
+export const fillsWidth = (box: Box): boolean => widthFill.has(box)
 
 type Aspect = '9:16' | '16:9'
-type Placement = 'lower' | 'centre' | 'upper' | 'seam' | undefined
+type Placement = 'lower' | 'centre' | 'upper' | 'seam' | 'chin' | undefined
 
 /** The free region on a graphics-only beat: the channel-safe area minus the band the captions sit in. 9:16 keeps type
  *  in x 60 to 860 (the action rail starts at 880), from y 280 under every top bar to y 1320 above the bottom band. */
@@ -67,8 +71,9 @@ export function layoutSlots(layout: EngineLayout | undefined, aspect: Aspect, pl
 }
 
 /** The boxes for a staged beat's devices: the staging's region, shared top to bottom when there are several. */
-export function regionSlots(region: Box, count: number, grow: number = MAX_GROW): Box[] {
-  if (count <= 1) return [mark({ ...region }, grow)]
+export function regionSlots(region: Box, count: number, grow: number = MAX_GROW, fill = false): Box[] {
+  const made = (box: Box) => { const m = mark(box, grow); if (fill) widthFill.add(m); return m }
+  if (count <= 1) return [made({ ...region })]
   const h = (region.height - GAP * (count - 1)) / count
-  return Array.from({ length: count }, (_, i) => mark({ left: region.left, top: Math.round(region.top + i * (h + GAP)), width: region.width, height: Math.floor(h) }, grow))
+  return Array.from({ length: count }, (_, i) => made({ left: region.left, top: Math.round(region.top + i * (h + GAP)), width: region.width, height: Math.floor(h) }))
 }

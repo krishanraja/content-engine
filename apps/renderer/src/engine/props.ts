@@ -130,7 +130,7 @@ export const EngineRenderPropsSchema = z.object({
   /** Where a caption theme sits, chosen with it and apart from the motion style (spec style.captions.placement;
    *  Krish, 2026-11-13: "the captions should be decoupled from the animation styles"): the lower band (the default),
    *  the centre of the frame, or the upper strip. Every place is inside every channel's safe area (captions/kit.ts). */
-  captionPlacement: z.enum(['lower', 'centre', 'upper', 'seam']).optional(),
+  captionPlacement: z.enum(['lower', 'centre', 'upper', 'seam', 'chin']).optional(),
   title: z.string().min(1).optional(),
   /** The episode title moment (spec title_moment; Krish, 2026-11-17: "seamlessly flowing out of the captions and back
    *  in to them again"): the words he says as the title, each on its spoken frame. The captions leave these words out,
@@ -148,8 +148,25 @@ export const EngineRenderPropsSchema = z.object({
     /** Under the shot grammar (Ruling, Krish, 2026-11-20): the lockup builds inside the staging's panel as he says the
      *  line and goes full frame only from this frame, his last title word, for at most 2 s (compile caps toFrame). */
     fullFrom: z.number().int().nonnegative().optional(),
+    /** Depth (shot grammar step 5): on an anchor cut with a subject matte, the lockup builds in this box on his wall,
+     *  behind his head, while he talks (title/TitleMoment.tsx `behind`); no full-frame hold. */
+    behind: z.object({ left: z.number(), top: z.number(), width: z.number().positive(), height: z.number().positive() }).strict().optional(),
     words: z.array(z.object({ text: z.string().min(1), atFrame: z.number().int().nonnegative() }).strict()).min(1),
   }).strict().optional(),
+  /** The subject matte of his take (velib/matte.py, `ve matte`): his take with the clipped matte as alpha, frame for frame
+   *  with the take, so type can sit behind him and he can be cut out over the panel (shot grammar step 5). */
+  matte: z.object({ src: z.string().min(1), sha256: z.string().regex(/^[0-9a-f]{64}$/), takeSha256: z.string().regex(/^[0-9a-f]{64}$/) }).strict().optional(),
+  /** Type in his world (kit/depth.ts, depth/DepthLayer.tsx): the in-world number behind him and the chapter marks. */
+  depth: z.array(z.object({
+    kind: z.enum(['number', 'chapter']),
+    text: z.string().min(1).max(12),
+    label: z.string().min(1).max(16).optional(),
+    arrangement: z.enum(['beside_left', 'beside_right', 'rotated', 'behind']).optional(),
+    accent: z.enum(['mint', 'channel']).optional(),
+    behind: z.boolean().optional(),
+    fromFrame: Frame, atFrame: Frame, toFrame: z.number().int().positive(),
+    head: z.object({ top: z.number(), left: z.number(), right: z.number(), centreY: z.number() }).strict(),
+  }).strict()).optional(),
   beats: z.array(EngineBeatSchema).min(1),
   objects: z.array(EngineObjectSchema),
   events: z.array(EngineEventSchema),

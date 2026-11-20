@@ -1,4 +1,4 @@
-"""The shot grammar (Ruling, Krish, 2026-11-20): one staging per cut, generated imagery never, the grammar approved.
+"""The shot grammar (Ruling, Krish, 2026-11-20): one staging per cut, generated imagery only as a metaphor, the grammar approved.
 
 Each of the seven grammar.* lints is shown refusing what the rejected cuts did and passing what his good cuts do; the
 planner (ve shots) writes a plan the lints pass; compile draws a grammar cut in one staging and caps the full-frame
@@ -213,24 +213,62 @@ class EvidenceSizeTest(unittest.TestCase):
 
 
 class GeneratedTest(unittest.TestCase):
-    def test_any_generated_image_is_refused_outright(self):
-        s = good_band()
-        s['assets'].append({'id': 'crocodile', 'kind': 'illustration', 'origin': 'generated', 'tool': 'higgsfield',
-                            'path': 'img/croc.png', 'sha256': 'b' * 64, 'licence': 'generated'})
-        self.assertIn('grammar.generated assets.crocodile', found(s, 'grammar.generated')[0])
+    """Ruling, Krish, 2026-11-20 (correcting the morning's "never"): generated imagery, photoreal included, is allowed when
+    art-directed and clearly a metaphor; generated stand-ins for real documents, signs, places or people are refused."""
 
-    def test_his_clone_voice_is_not_imagery(self):
+    def croc(self, **extra):
+        return {'id': 'crocodile', 'kind': 'illustration', 'origin': 'generated', 'tool': 'higgsfield',
+                'path': 'img/croc.png', 'sha256': 'b' * 64, 'licence': 'generated', **extra}
+
+    def test_a_metaphor_is_allowed(self):
+        s = good_band()
+        s['assets'].append(self.croc(depicts='metaphor'))
+        self.assertEqual(found(s, 'grammar.generated'), [])
+
+    def test_a_stand_in_for_a_real_thing_is_refused(self):
+        s = good_band()
+        s['assets'].append(self.croc(id='town-sign', depicts='real'))
+        out = found(s, 'grammar.generated')
+        self.assertEqual(len(out), 1)
+        self.assertIn('assets.town-sign', out[0])
+        self.assertIn('stands in for a real document, sign, place or person', out[0])
+
+    def test_an_undeclared_generated_picture_is_refused_until_declared(self):
+        s = good_band()
+        s['assets'].append(self.croc())
+        self.assertIn('does not say what it depicts', found(s, 'grammar.generated')[0])
+
+    def test_a_generated_picture_still_never_takes_his_place_on_a_staged_cut(self):
+        s = good_band()
+        s['assets'].append(self.croc(depicts='metaphor'))
+        s['cuts']['short']['beats'][1]['plate'] = {'source': 'asset:crocodile'}
+        self.assertTrue(any('full-frame picture (asset:crocodile)' in f for f in found(s, 'grammar.region')))
+
+    def test_his_clone_voice_and_sound_are_not_pictures(self):
         s = good_band()
         s['assets'].append({'id': 'voice', 'kind': 'voice', 'origin': 'generated', 'tool': 'elevenlabs.voice_clone:krish',
                             'path': 'voice.wav', 'sha256': 'c' * 64, 'licence': 'own'})
+        s['assets'].append({'id': 'whoosh', 'kind': 'sfx', 'origin': 'generated', 'tool': 'elevenlabs',
+                            'path': 'w.wav', 'sha256': 'd' * 64, 'licence': 'own'})
         self.assertEqual(found(s, 'grammar.generated'), [])
 
-    def test_ve_brief_refuses_generation_for_a_bound_piece(self):
+    def test_ve_brief_asks_for_a_metaphor_for_a_bound_piece(self):
         directory = Path(tempfile.mkdtemp())
+        undeclared = {'assets': [self.croc()]}
         write_json(directory / 'engine.json', {'at': '2026-11-19T09:00:00Z'})
-        self.assertIsNone(grammar.generation_refusal({}, directory))
+        self.assertIsNone(grammar.generation_refusal(undeclared, directory))
         write_json(directory / 'engine.json', {'at': '2026-11-23T09:00:00Z'})
-        self.assertIn('generated imagery never', grammar.generation_refusal({}, directory))
+        self.assertIn('depicts: metaphor', grammar.generation_refusal(undeclared, directory))
+        self.assertIn('stands in', grammar.generation_refusal({'assets': [self.croc(depicts='real')]}, directory))
+        self.assertIsNone(grammar.generation_refusal({'assets': [self.croc(depicts='metaphor')]}, directory))
+        self.assertIsNone(grammar.generation_refusal({}, directory))
+
+    def test_every_recipe_names_the_generated_kinds_it_may_use(self):
+        for path in sorted((ROOT / 'config' / 've' / 'recipes').glob('*.json')):
+            r = load_json(path)
+            self.assertTrue(r['generated_kinds'], path.name)
+            self.assertTrue(set(r['generated_kinds']) <= {'illustration', 'broll'}, path.name)
+        self.assertEqual(load_json(ROOT / 'config/ve/recipes/ai-music-slam.json')['generated_kinds'], ['illustration', 'broll'])
 
 
 class RepeatTest(unittest.TestCase):

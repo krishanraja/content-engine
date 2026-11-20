@@ -291,7 +291,10 @@ Krish, 2026-11-20, of the week's rejected cuts: "how we integrate title cards an
 animation is the issue". The study measured his good cuts (Character.ai tall and wide, eating its own jobs tall, AI music
 tall) and The Athletic's "8 facts about Man United's finances" against the rejected Tue 17 short, Wed 18 long and the
 9 s long, every 0.5 s with a face detector and a hand shot log. His rulings that day: **one staging per cut**, picked at
-the lock with the recipe; **generated (AI-made) imagery never**; **the shot grammar is approved**. Every number below
+the lock with the recipe; **the shot grammar is approved**; and, correcting that morning's "generated imagery never"
+the same day, **generated imagery, photoreal included, is allowed when art-directed and clearly a metaphor; generated
+stand-ins for real documents, signs, places or people are refused** (his words: "we actually do use AI to generate a lot of
+striking imagery that comes in and out of our pieces ... The AI music video is a really good example"). Every number below
 lives once, in `config/ve/shot-grammar.json`; `ve lint` checks them as `grammar.*` (`scripts/velib/grammar.py`) for a
 piece frozen at `ve expect` from 23 Nov 2026, and `ve shots` (`scripts/velib/shots.py`) writes the plan.
 
@@ -304,7 +307,7 @@ piece frozen at `ve expect` from 23 Nov 2026, and `ve shots` (`scripts/velib/sho
 | Face switches | 0 to 1 (Jobs 4, 3.5 a minute) | Tue 17 14 (9.9 a minute), Wed 18 18 |
 | Shortest run without his face | 4 s (Jobs) | Tue 17 1 s, four times |
 | Real image size | fills its panel; about 0.55 of the wide frame | Wed 18 0.13 to 0.27 on blur |
-| Generated imagery | none (AI music one small inset) | Wed 18 11 full-frame stills, 100 s (33%) |
+| Generated imagery | metaphor only, inside the staging (AI music: generated animations beside real footage) | Wed 18 11 full-frame stills in his place, 100 s (33%); Tue 17 a generated plaque and town sign |
 | Empty panel | none | Wed 18 60 s or more of blur; 9 s cut 4.5 of 9 s |
 | Full-frame title | AI music 2 s, in the panel first | Wed 18 6 s, detached from his line |
 
@@ -313,8 +316,8 @@ piece frozen at `ve expect` from 23 Nov 2026, and `ve shots` (`scripts/velib/sho
 | Staging | 9:16 | 16:9 |
 |---|---|---|
 | Band (Character.ai) | panel y 0 to 0.52; face band 0.52 to 1.0, face 0.45 to 0.55 of the width, centred | the 608 px face column on the right (0.32), panel the rest; `pillar` is the same for a vertical take |
-| Stage (AI music) | panel y 0 to 0.64, rounded bottom; him large bottom right, face centre x 0.78, about 0.21 wide, head over the edge | panel y 0 to 0.81, him bottom right |
-| Anchor (The Athletic) | his face is the frame, eyes y 0.30 to 0.44; graphics only in the chest band (measured 0.60 to 0.80; drawn at 0.65 to 0.84 because his takes sit his face lower) | refused until a good wide face-as-frame cut is measured |
+| Stage (AI music) | the ink panel is the whole frame but his corner (no cream band); him large bottom right, face centre x 0.78, about 0.21 wide, cut out of his wall by the matte (else a rounded window); the region above and beside him | the panel fills the frame but his corner, him bottom right |
+| Anchor (The Athletic) | his face is the frame; graphics only above his head (y 280 to 500, on an ink scrim), a number, chapter mark or the title behind him through the matte, a real image or document a prop beside him at his scale; captions under his chin (`chin`, y 1150 to 1320) | refused until a good wide face-as-frame cut is measured |
 
 **The shot types** (`beat.shot`):
 
@@ -323,11 +326,13 @@ piece frozen at `ve expect` from 23 Nov 2026, and `ve shots` (`scripts/velib/sho
 2. `plate`: a full-frame graphic with no face, anchor cuts only (Jobs' blocks): a data device, a quote or a real
    document; at least 4 s; a crossfade to and from his face.
 3. `number`: a hero number or word at head height (The Athletic's giant 8), 1 to 6 s. In the panel on band and stage;
-   behind him on anchor waits on a matte device that is not built.
-4. `chapter`: a numeral or label beside or behind him, at most 1.5 s, him on screen.
+   on anchor the in-world number behind him through the matte (`world: {text, at_w}`; below, "Depth").
+4. `chapter`: a numeral or label beside or behind him, at most 1.5 s, him on screen (`chapter: {mark, arrangement}`).
 5. `title`: the beat that carries the title line. The lockup builds in the panel as he says the line, then holds full
    frame at most 2 s from his last title word, then the cut is back on its staging (compile caps it on every staged cut,
-   `compile.grammar_title`; the renderer's `TitleMoment` `panel` and `fullFrom`). No captions while it holds.
+   `compile.grammar_title`; the renderer's `TitleMoment` `panel` and `fullFrom`). No captions while it holds. On an anchor
+   cut it builds instead on his wall above and behind his head while he talks, at most 6 s, never a box on his chest
+   (`titleMoment.behind`). It starts on his spoken title words within the opening 30 s (`grammar.title_timing`).
 6. `end`: the end card, full frame, 3.5 to 5 s, the last beat.
 
 **The transition matrix** (from, then what it may hand to):
@@ -347,9 +352,11 @@ piece frozen at `ve expect` from 23 Nov 2026, and `ve shots` (`scripts/velib/sho
 | `grammar.face_runs` | his face on 90% of the body on band and stage, 90% of an anchor cut's anchor beats and 45% overall with plates; every run with or without his face at least 4 s; at most 4 switches a minute; chapter at most 1.5 s; end card 3.5 to 5 s | the good cuts 91% to 97.5%, Jobs 48% and 3.5 a minute |
 | `grammar.region` | every device in the staging's region, a device that grows to fill it (`fills_region`; a grammar panel lets it grow 6 times, `GRAMMAR_GROW`), never a full-frame picture in his place, the panel never empty past 0.5 s | Wed 18's blur; the 20 Nov recipe samples' small number in a large dark field |
 | `grammar.evidence_size` | a real image at least 0.55 of the frame wide or filling its region, alone in it but for a stamp or a mark; words 40 px or more | the good wide cut 0.55; Wed 18 0.13 to 0.27 |
-| `grammar.generated` | no generated asset at all (his approved clone voice on an off-day short is a voice, not imagery); `ve brief` writes no generated plate for a bound piece | Wed 18's 11 stills |
+| `grammar.generated` | every generated picture declares `depicts`: `metaphor` (art-directed, allowed, inside the staging) or `real` (a stand-in for a real document, sign, place or person, refused); undeclared is refused until declared; `ve brief` writes a plate brief only for metaphors; voice and sound are not pictures | Wed 18's 11 stills in his place; Tue 17's plaque and sign |
 | `grammar.repeat` | a device at most 3 times a cut, never twice running without a new state | Tue 17's box, five times |
 | `grammar.caption_zone` | one caption zone a cut, the same y on every beat within 0.02 | Character.ai's pill at y 0.50 to 0.53; Tue 17's captions moved |
+| `grammar.depth` | an in-world number on anchor has its word (`world.text`) standing 0.4 to 0.6 of the frame tall, 1 to 6 s, slamming in on a word of its beat, and a subject matte; a world word only on anchor; each chapter mark in a different arrangement; a mark behind him and an anchor title need the matte | The Athletic's 8 and Fact N; the #950 anchor's cards on his chest |
+| `grammar.title_timing` | a whole cut of a titled piece names its spoken title span, starting on the first word of his title line, within the opening 30 s | Krish, 2026-11-20: "The title slide comes in as I say the words of the title within the opening 30 seconds" |
 
 **Retired by it:** `motion.layout_variety` and `layout_types_per_min_tall` (3 layout types a minute forced the
 switching), the dead `face_share_max: 0.6` (below every good cut; nothing read it), the full-frame takeover for a
@@ -357,9 +364,11 @@ graphics-only beat on a band or stage cut, the P and F slots over a full-frame t
 every device in the staging's region), and the `pivot-split` treatment.
 
 **The never-list.** Never a second staging in a cut's body; never a card or device over his face; never his face cut
-away for under 4 s; never a generated image, plate or move; never real evidence shrunk onto blur; never an empty or
+away for under 4 s; never real evidence shrunk onto blur; never an empty or
 blur-only panel past 0.5 s; never a title card detached from his line or held full frame past 2 s; never captions that
-move from beat to beat; never one device back again with nothing new.
+move from beat to beat; never one device back again with nothing new; never a generated stand-in for a real document,
+sign, place or person, and never a generated picture in his place on band or stage; never a card on his torso, arms or
+hands; never an empty cream block beside him.
 
 **How a session uses it.** At the lock pick the staging with the recipe (`style.layout`); the motion-designer skill
 plans each beat; `python scripts/ve.py shots <spec>` writes every beat's shot type and the shot table into
@@ -404,10 +413,38 @@ in the small chest band; `evidence.readable` and `figures.shown` flag record_car
 which are the devices' own type, not the grammar's. The renders are not committed (media never is); a golden test of them
 does not fit `houseGolden` (it reads props from `docs/plans`, and these props point at a scratch take).
 
-**Inferred, not measured.** The 16:9 rules rest on one good wide cut; anchor at 16:9 is unmeasured; the in-world number
-behind him needs a matte device that is not built; "fills 0.85 of its region" is held before render by the device list,
-and no after-render check measures it yet. The stage take is a large unframed window, not a cut-out: a cut-out needs a
-video matte of the take, which ve does not make yet.
+**Inferred, not measured.** The 16:9 rules rest on one good wide cut; anchor at 16:9 is unmeasured. (Step 5, below,
+built the matte, the in-world number, the chapter marks, the cut-out stage and the after-render fill check.)
+
+### Depth and the staging fixes (step 5, 20 Nov 2026)
+
+Krish's verdict on the #950 references: band clearly better (kept); stage left an empty cream block beside him (9:16) and
+a cream band (16:9, held by the pace floor at 2.81 events a second); anchor not ready, its cards on his chest and arms and
+its title a small box over his torso. What changed:
+
+- **The matte** (`ve matte`, `scripts/velib/matte.py`): MediaPipe's bundled selfie model on every frame of the picture
+  the cut plays, offline, cached by its sha256. The subject is his take with the matte as alpha, clipped by confidence
+  (a probability under 0.45 is not him, over 0.80 is, eroded one pixel), so a fast hand's soft halo never carries the
+  wall over the type; the type sits at head and torso height where the matte is surest. Edge quality on hair and hands
+  stays an operator gate (`status: unverified`).
+- **Depth in the renderer**: his take, then the type behind him (`depth/DepthLayer.tsx`, `kit/depth.ts`), then the
+  subject over it, frame for frame (the same box, crop and face lift), mounted only while such type is on screen.
+- **The in-world number** (study shot 5): ink type with a mint drop, its glyphs 0.4 to 0.6 of the frame tall (one or two
+  characters: `NO`, `AI`, `8`), centred at his eyes on the side of his head with more wall, slamming in on its word.
+- **The chapter mark** (study shot 6): a numeral at most 1.5 s, beside him left or right at the frame's edge, rotated a
+  quarter turn, or huge behind him; with a matte every mark stands behind him, so his head crosses it and it never crosses
+  his face; the arrangement changes each time.
+- **Anchor rebuilt**: graphics only above his head on an ink scrim; a real image or document a prop beside him; the
+  number, chapter and title behind him; captions under his chin; compile refuses any box his silhouette fills more than
+  2% of (`body.keep_out`, from the matte). The face keep-out now reads the face lift the render applies (it sat 80 px low).
+- **Stage fixed**: the panel is the whole frame but his corner; cut out by the matte he stands on the panel and the
+  devices' region reaches down to his head; `kinetic_stat` in a region sets its figure to the region's width (its source
+  line had held it to half the panel).
+- **`panel.fill`** (ve qc, `scripts/velib/qc_fill.py`): on a band or stage cut the drawn extent of the region, sampled
+  10 times a second past each beat's entrance and outside the title, end card and chapter marks, fails under 0.85 of the
+  region's width for more than 0.5 s.
+
+**Reference renders after the fixes**: below, measured on his Friday 20 Nov take.
 
 ## Sound on handovers and hits (14 Nov 2026)
 
