@@ -3005,6 +3005,31 @@
           "how": "every number, once, with its measurement"
         }
       ]
+    },
+    {
+      "id": "gpu-matte-trial-before-wiring",
+      "on": "2026-11-20",
+      "krish": "yes, to one GPU matte comparison run on RunPod costing about $0.10 (relayed by the session that asked him; an observation, not his typed words)",
+      "why": "Words behind him, the depth recipe and duotone cut-outs all stand on a subject matte, and the engine's only matte is a CPU candidate (MediaPipe selfie segmentation) never checked on his hair, hands or fast movement.",
+      "means": "A GPU matte is tried on his real take beside the CPU matte, at full size on the hard moments, before anything is wired into a render; the models are pinned by commit and weights sha256, permissively licensed or run on the pod as a separate tool, and the spend goes through the RunPod runner's cap, typed confirmation and terminate-on-every-path.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/velib/matte_pod.py",
+          "contains": "Nothing here is wired into a render; that waits for his read.",
+          "how": "the runner names the trial and keeps it out of renders"
+        },
+        {
+          "file": ".github/workflows/matte-trial.yml",
+          "contains": "nothing here feeds a render",
+          "how": "the hand-only workflow with the typed confirmation"
+        },
+        {
+          "file": "tests/ve_matte_pod_test.py",
+          "contains": "def test_a_model_without_a_pin_is_refused_before_any_spend",
+          "how": "no unpinned model, no spend without his yes, the pod terminated on every path"
+        }
+      ]
     }
   ]
 }
