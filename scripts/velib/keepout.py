@@ -27,7 +27,7 @@ PILLAR_TAKE_WIDTH = round(1080 * 9 / 16)
 # kit/staging.ts stagingGeometry: (take box, the devices' region before it is cut clear of the captions, the panel).
 STAGED = {
     ('band', '9:16'): ((0, 1000, 1080, 920), (60, 280, 800, 680), (0, 0, 1080, 1000)),
-    ('stage', '9:16'): ((430, 765, 650, 1155), (60, 280, 800, 596), (0, 0, 1080, 1236)),
+    ('stage', '9:16'): ((430, 765, 650, 1155), (60, 280, 800, 461), (0, 0, 1080, 1236)),
     ('tray', '9:16'): ((0, 0, 1080, 1920), (60, 900, 600, 600), (60, 900, 600, 600)),
     ('pillar', '16:9'): ((1920 - PILLAR_TAKE_WIDTH, 0, PILLAR_TAKE_WIDTH, 1080), (96, 140, 1920 - PILLAR_TAKE_WIDTH - 156, 800),
                          (0, 0, 1920 - PILLAR_TAKE_WIDTH, 1080)),

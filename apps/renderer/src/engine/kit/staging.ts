@@ -98,7 +98,7 @@ export function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placem
       // his head crossing the stage edge (y 1236), no frame round him and no empty band; the caption sits beside him.
       return { take: { left: 430, top: 765, width: 650, height: 1155, radius: 44, border: false },
         panel: { left: 0, top: 0, width: 1080, height: edge, radius: '0 0 56px 56px' }, under: 'cream',
-        region: clearOfCaptions({ left: 60, top: 280, width: 800, height: 900 - GAP - 280 }, aspect, placement, themed), rises: false }
+        region: clearOfCaptions({ left: 60, top: 280, width: 800, height: 765 - GAP - 280 }, aspect, placement, themed), rises: false }
     }
     // Over his chest, clear of his face: the tray needs the captions in the upper strip (compile refuses others).
     const r = clearOfCaptions({ left: 60, top: 900, width: 600, height: 600 }, aspect, placement, themed)
