@@ -5,11 +5,36 @@ import type { DeviceProps } from '../types'
 import { scribblePath } from '../../kit/scribblePath'
 import { LOOP, photoPlateCrop, photoPlateState } from './state'
 
+/** The source line under a framed recording: Plex Mono at the 40 px words floor (config/ve/shot-grammar.json). */
+export const FRAMED_SOURCE = { px: 40, gap: 18 } as const
+
 export function Device({ object, events, box, tokens, aspect, frame }: DeviceProps) {
   const state = photoPlateState(object, events, frame)
   if (!state.visible) return null
 
   const { params, region, reveal, playbackFrom } = state
+  if (params.frame) {
+    // A recording in a device frame (the platform walkthrough, PD-2): the panel's full width less its margins, at the
+    // recording's own shape, the source line in mono under it (never a chip on the picture), the group centred in the box
+    // so no dead area sits above it. The picture, its push, moves and loops are the plate's own, drawn in the card.
+    const picture = 'video' in params ? params.video : params.image
+    const margin = aspect === '9:16' ? 60 : 96
+    const cardW = box.width - 2 * margin
+    const cardH = Math.min(cardW * picture.pixelHeight / picture.pixelWidth, box.height * 0.8)
+    const sourceH = params.source ? FRAMED_SOURCE.gap + 2 * FRAMED_SOURCE.px * 1.2 : 0
+    // Centred, but never lower than 22% down the box, so a tall panel keeps the picture high, as PD-2 has it.
+    const card = { left: box.left + margin, top: box.top + Math.max(0, Math.min((box.height - cardH - sourceH) / 2, box.height * 0.22)), width: cardW, height: cardH }
+    const inner = { ...object, params: { ...object.params, frame: false, source: undefined } }
+    return <>
+      <div data-device="photo_plate" data-framed="" style={{ position: 'absolute', ...card, overflow: 'hidden', borderRadius: 22 }}>
+        <Device object={inner} events={events} box={{ left: 0, top: 0, width: cardW, height: cardH }} tokens={tokens} aspect={aspect} frame={frame} />
+        <div style={{ position: 'absolute', inset: 0, borderRadius: 22, boxShadow: `inset 0 0 0 2px color-mix(in srgb, ${tokens.cream} 16%, transparent)` }} />
+      </div>
+      {params.source && <div data-provenance="" style={{ position: 'absolute', left: card.left, top: card.top + cardH + FRAMED_SOURCE.gap, width: cardW,
+        color: tokens.cream, fontFamily: HOUSE_FONTS.data, fontSize: FRAMED_SOURCE.px, lineHeight: 1.2, letterSpacing: '0.06em',
+        textTransform: 'uppercase', opacity: 0.75 * reveal }}>{params.source}</div>}
+    </>
+  }
   // ve compile resolves nested src fields and ve-render stages them, just as it does for evidence_card.
   const crop = photoPlateCrop(box, state)
   const mediaStyle = { position: 'absolute' as const, ...crop, objectFit: 'contain' as const }
@@ -28,7 +53,6 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
 
   return <div data-device="photo_plate" style={{
     position: 'absolute', ...box, overflow: 'hidden',
-    ...(params.frame ? { borderRadius: 22, boxShadow: `inset 0 0 0 2px color-mix(in srgb, ${tokens.cream} 16%, transparent)` } : {}),
     clipPath: reveal < 1 ? `inset(${(1 - reveal) * 100}% 0 0 0)` : undefined,
   }}>
     {'video' in params

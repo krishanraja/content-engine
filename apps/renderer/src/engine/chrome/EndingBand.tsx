@@ -118,11 +118,15 @@ export const STING_CLOSE = {
   tall: {
     /** c 0 to 29: the sting's frames 1 to 44 at 1.5x; then its settled band, frame 48, held. */
     playFrames: 30, firstFrame: 1, lastPlayed: 44, holdFrame: 48,
-    lift: { start: 30, dur: 12, px: 330 },
+    /** The band lifts 450 px (the mock's 330 left the lower core box empty): the wordmark then sits at y 334 to 572, just
+     *  inside the tall core box, and the line block fills the box below it down to y 1180. */
+    lift: { start: 30, dur: 12, px: 450 },
     line: { start: 34, dur: 10, travel: 500 }, accent: { start: 40, dur: 10, travel: 500 },
     action: { start: 46, dur: 8, rise: 14 },
-    box: { left: 120, width: 700, lineTop: 860, actionTop: 1120 },
-    sizes: { line: 96, accent: 176, pill: 30, url: 26 },
+    /** Left-aligned on the wordmark's own left edge (x 122 in every 9:16 clip's frame 48), to the core box's right edge.
+     *  "BUILT TO HELP YOU" at 100 px is 683 px wide, about the wordmark's 730. */
+    box: { left: 122, width: 698, lineTop: 735, accentTop: 812, pillTop: 1012, urlTop: 1108 },
+    sizes: { line: 100, accent: 190, pill: 56, url: 58 },
   },
   wide: {
     /** The full sting, then on its band frame the ink ground wipes in from the right and the band takes the masthead slot. */
@@ -130,12 +134,15 @@ export const STING_CLOSE = {
     /** The band as the sting draws it on its settled frame (measured from the 16:9 clips, every series alike). */
     band: [[0, 444], [1920, 310], [1920, 711], [0, 846]] as const,
     masthead: { dx: -80, dy: -110, scale: 0.5 },
-    box: { left: 120, lineTop: 400, lineWidth: 920, daysTop: 780, actionTop: 850 },
-    sizes: { line: 120, accent: 180, pill: 32, url: 28, days: 24 },
+    box: { left: 120, lineTop: 400, lineWidth: 920, daysTop: 720, actionTop: 790, urlTop: 892 },
+    sizes: { line: 120, accent: 180, pill: 56, url: 58, days: 44 },
     /** YouTube's end-screen elements: nothing of the close is drawn here once it has settled. */
     endScreen: { left: 1100, top: 150, right: 1800, bottom: 880 },
   },
 } as const
+/** Words on screen are at least 40 px (config/ve/shot-grammar.json evidence.words_min_px), and the action's pill and
+ *  address at least 40 px of cap height: the faces' cap heights as a share of their size. */
+export const CAP_HEIGHT = { display: 0.86, structure: 0.72, data: 0.7, dek: 0.7 } as const
 /** Settled frames: the tall beat at its action's end (well inside its 60), the wide card by 2.75 s. */
 export const STING_CLOSE_SETTLED = { tall: STING_CLOSE.tall.action.start + STING_CLOSE.tall.action.dur,
   wide: STING_CLOSE.wide.action.start + STING_CLOSE.wide.action.dur } as const
@@ -185,7 +192,7 @@ export function StingClose({ props, frame }: { props: EngineRenderProps; frame: 
   const pill = (size: number, onInk: boolean, p: number, rise: number): React.ReactElement => (
     <span style={{ fontFamily: HOUSE_FONTS.structure, fontStretch: '62%', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em',
       fontSize: size, lineHeight: 1.1, whiteSpace: 'nowrap', background: onInk ? tokens.mint : tokens.ink, color: onInk ? tokens.ink : tokens.cream,
-      padding: `${Math.round(size * 0.42)}px ${Math.round(size * 0.78)}px`, borderRadius: 40, opacity: p, transform: `translateY(${(1 - p) * rise}px)` }}>{cta}</span>
+      display: 'inline-block', padding: `${Math.round(size * 0.22)}px ${Math.round(size * 0.5)}px`, borderRadius: 60, opacity: p, transform: `translateY(${(1 - p) * rise}px)` }}>{cta}</span>
   )
   const mono: React.CSSProperties = { fontFamily: HOUSE_FONTS.data, fontWeight: 500, letterSpacing: '0.06em', whiteSpace: 'nowrap' }
   const accent: React.CSSProperties = { fontFamily: HOUSE_FONTS.dek, fontStyle: 'italic', fontWeight: 560, letterSpacing: '-0.01em',
@@ -200,15 +207,15 @@ export function StingClose({ props, frame }: { props: EngineRenderProps; frame: 
     return (
       <div data-close="sting-beat" style={{ position: 'absolute', zIndex: 920, left: 0, top: 0, width: 1080, height: 1920, overflow: 'hidden', background: tokens.channel, pointerEvents: 'none' }}>
         <StingPlate src={sting.src} at={model.stingFrame} style={{ height: 1920, top: -model.lift }} />
-        <div style={{ position: 'absolute', left: t.box.left, width: t.box.width, top: t.box.lineTop, textAlign: 'center', color: tokens.ink }}>
-          <div style={{ ...display, fontSize: t.sizes.line, opacity: model.line > 0 ? 1 : 0, transform: `translateX(${(1 - model.line) * t.line.travel}px)`, filter: `blur(${model.lineBlur}px)` }}>{tagHead}</div>
-          <div style={{ ...accent, fontSize: t.sizes.accent, marginTop: -6, opacity: model.accent > 0 ? 1 : 0, transform: `translateX(${(1 - model.accent) * t.accent.travel}px)`, filter: `blur(${model.accentBlur}px)` }}>{tagLast}</div>
-        </div>
-        <div style={{ position: 'absolute', left: t.box.left, width: t.box.width, top: t.box.actionTop, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 18,
-          opacity: model.action, transform: `translateY(${(1 - model.action) * t.action.rise}px)` }}>
+        <div style={{ ...display, position: 'absolute', left: t.box.left, top: t.box.lineTop, color: tokens.ink, fontSize: t.sizes.line,
+          opacity: model.line > 0 ? 1 : 0, transform: `translateX(${(1 - model.line) * t.line.travel}px)`, filter: `blur(${model.lineBlur}px)` }}>{tagHead}</div>
+        <div style={{ ...accent, position: 'absolute', left: t.box.left - 4, top: t.box.accentTop, color: tokens.ink, fontSize: t.sizes.accent,
+          opacity: model.accent > 0 ? 1 : 0, transform: `translateX(${(1 - model.accent) * t.accent.travel}px)`, filter: `blur(${model.accentBlur}px)` }}>{tagLast}</div>
+        <div style={{ position: 'absolute', left: t.box.left, top: t.box.pillTop, opacity: model.action, transform: `translateY(${(1 - model.action) * t.action.rise}px)` }}>
           {pill(t.sizes.pill, false, 1, 0)}
-          <span style={{ ...mono, fontSize: t.sizes.url, color: tokens.ink }}>{url}</span>
         </div>
+        <div style={{ ...mono, position: 'absolute', left: t.box.left, top: t.box.urlTop, fontSize: t.sizes.url, lineHeight: 1.1, color: tokens.ink,
+          opacity: model.action, transform: `translateY(${(1 - model.action) * t.action.rise}px)` }}>{url}</div>
       </div>
     )
   }
@@ -232,10 +239,9 @@ export function StingClose({ props, frame }: { props: EngineRenderProps; frame: 
         <div style={{ ...display, fontSize: w.sizes.line, color: tokens.cream }}>{tagHead}</div>
         <div style={{ ...accent, fontSize: w.sizes.accent, color: tokens.channel, marginTop: -10 }}>{tagLast}</div>
       </div>
-      <div style={{ position: 'absolute', left: w.box.left, top: w.box.actionTop, display: 'flex', gap: 20, alignItems: 'center', opacity: model.action }}>
-        {pill(w.sizes.pill, true, 1, 0)}
-        <span style={{ ...mono, fontSize: w.sizes.url, color: tokens.cream }}>{url}</span>
-      </div>
+      <div style={{ position: 'absolute', left: w.box.left, top: w.box.actionTop, opacity: model.action }}>{pill(w.sizes.pill, true, 1, 0)}</div>
+      {/* The address on its own line under the pill: at 58 px it would run past x 1100 beside it. */}
+      <div style={{ ...mono, position: 'absolute', left: w.box.left, top: w.box.urlTop, fontSize: w.sizes.url, lineHeight: 1.1, color: tokens.cream, opacity: model.action }}>{url}</div>
       {/* The days row on a line of its own above the action, so nothing of the close reaches x 1100, where YouTube draws
           its end-screen elements (the mock ran it on the action's line into that area). */}
       {days.length > 0 && <div style={{ position: 'absolute', left: w.box.left, top: w.box.daysTop, ...mono, fontSize: w.sizes.days, letterSpacing: '0.12em',
