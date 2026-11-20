@@ -383,6 +383,27 @@ plans each beat; `python scripts/ve.py shots <spec>` writes every beat's shot ty
 - a vertical take may stage as band or stage on 16:9 as well as pillar (`config/ve/piece-guards.json`), and the
   take-orientation guard reads the cut's own staging.
 
+**Reference renders (20 Nov 2026)**, one per staging, on his Friday 20 Nov take (the recipe-sample specs: the bill
+story, its sourced figures), each planned by `ve shots`, clean of every `grammar.*` lint, compiled with his face track
+(compile's keep-out refused nothing) and rendered whole; the render frame guard (`plainframes.check_frames`: no plain dark band, no caption over bright content) passes on all five. Pace is the body only (`floor.fixed_moments`); "held" means a
+body measure is below every reference he keeps (`config/ve/pace-references.json`, events from 2.87 a second).
+
+| Staging | Cut | Recipe | sha256 (first 16) | Events a second | Longest gap | Frame used | Floor |
+|---|---|---|---|---|---|---|---|
+| band | 9:16 | character-ai-receipts, receipt-chip on the seam | 6b34bd73de5c9adb | 3.57 | 0.93 s | 0.62 | passes |
+| stage | 9:16 | ai-music-slam, mint-word on the seam | c907e5668f316b44 | 3.91 | 1.20 s | 0.56 | passes |
+| anchor | 9:16 | ai-music-slam, mint-word upper | 9f29c491b92b228c | 4.39 | 0.53 s | 0.58 | passes |
+| band (pillar) | 16:9 | ai-music-slam motion, receipt-chip on the seam | ece89d1ffb6916c1 | 2.89 | 1.07 s | 0.32 | passes |
+| stage | 16:9 | ai-music-slam, mint-word upper | fb2b790c7f553610 | 2.81 | 1.33 s | 0.32 | held: events a second |
+
+What the frames showed at full size, and was fixed before these numbers: stage's devices ran under the corner of his
+take (its region now ends above it); the wide seam band sat on stage's cream band with no scrim (stage at 16:9 takes the
+upper band); the band 16:9 receipts plan measured 2.67 events a second, under the floor, so the wide band reference uses
+the slam recipe. Still open: stage at 16:9 is held at 2.81 events a second on this take; the anchor staging's title builds
+in the small chest band; `evidence.readable` and `figures.shown` flag record_card labels at 26 px and a ghosted figure,
+which are the devices' own type, not the grammar's. The renders are not committed (media never is); a golden test of them
+does not fit `houseGolden` (it reads props from `docs/plans`, and these props point at a scratch take).
+
 **Inferred, not measured.** The 16:9 rules rest on one good wide cut; anchor at 16:9 is unmeasured; the in-world number
 behind him needs a matte device that is not built; "fills 0.85 of its region" is held before render by the device list,
 and no after-render check measures it yet. The stage take is a large unframed window, not a cut-out: a cut-out needs a
