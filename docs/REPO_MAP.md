@@ -4909,6 +4909,9 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/FormatMaster.tsx`
 
 - `function backdropFocus(beats: readonly EngineBeat[], beat: EngineBeat, frame: number): number`
+- `function anchorScrim(staging: { region: Box } | undefined, beat: EngineBeat, mode: string | undefined, tokens: EngineRe…`
+- `function realImage(object: EngineObject | undefined): boolean`
+- `function anchorSlots(uses: readonly string[], isProp: (id: string) => boolean, staging: { region: Box; props?: Box[] | …`
 - `function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean })`
 - `const FACE_LIFT`
 - `function faceLift(aspect: string, windowed: number): number`
@@ -4938,7 +4941,7 @@ Run a Vercel serverless handler locally against the real environment.
 - `type Page = EngineRenderProps['captions'][number]`
 - `type Aspect = EngineRenderProps['aspect']`
 - `type Box = { left: number; top: number; width: number; height: number }`
-- `const REGIONS: Record<Aspect, { lower: Box; upper: Box; centre: Box; seam: Box }>`
+- `const REGIONS: Record<Aspect, { lower: Box; upper: Box; centre: Box; seam: Box; chin: Box }>`
 - `function band(props: Pick<EngineRenderProps, 'aspect' | 'captionPlacement'>): Box`
 - `const scale = (aspect: Aspect) =>`
 - `const F`
@@ -5136,6 +5139,13 @@ An off day wears no tag, however its label is spelled (Ruling, Krish, 2026-11-18
 - `function drift(frame: number, fromFrame: number, toFrame: number, pct: number = MOTION.driftPct): number`
 - `function onTwos(frame: number, fromFrame: number): number`
 - `function typingProgress(frame: number, cue: EngineEvent, durationFrames: number, leadFrames: number): number`
+
+### `apps/renderer/src/engine/depth/DepthLayer.tsx`
+
+- `type DepthItem`
+- `function behind(item: DepthItem): boolean`
+- `function liveItems(items: readonly DepthItem[] | undefined, frame: number, back: boolean): DepthItem[]`
+- `function DepthLayer({ items, frame, tokens, width, height, back }: { items: readonly DepthItem[]; frame: number; tokens…`
 
 ### `apps/renderer/src/engine/devices/agent_swarm/index.tsx`
 
@@ -5965,6 +5975,21 @@ A sourced amount as a viewer reads it: 195 "THOUSAND DOLLARS" is "$195,000", nev
 - `class Cam`
 - `function lerpCam(a: Camera, b: Camera, t: number): Cam`
 
+### `apps/renderer/src/engine/kit/depth.ts`
+
+- `const IN_WORLD`
+- `const ANTON_CAP`
+- `const CHAPTER_ARRANGEMENTS`
+- `type ChapterArrangement = typeof CHAPTER_ARRANGEMENTS[number]`
+- `type Head`
+- `type InWorld`
+- `function inWorldLayout(text: string, width: number, height: number, head: Head): InWorld`
+- `function inWorldShare(text: string, width: number, height: number): number`
+- `function slam(frame: number, at: number, to: number): { scale: number; opacity: number }`
+- `type ChapterPlace`
+- `function chapterPlace(arrangement: ChapterArrangement, width: number, height: number, head: Head): ChapterPlace`
+- `function titleBox(width: number, height: number, head: Head): Box`
+
 ### `apps/renderer/src/engine/kit/flags.tsx`
 
 - `function PrintedFlag({ kind, tokens, width = 214, height = 113 }: { kind: 'usa' | 'china' | 'unknown'; tokens: EngineTo…`
@@ -6086,9 +6111,10 @@ Direct port of ref/H/build.py: eight unknowns, h22 fixed at one.
 - `const isRegion = (box: Box): boolean =>`
 - `const regionGrow = (box: Box): number =>`
 - `const markRegion`
+- `const fillsWidth = (box: Box): boolean =>`
 - `function freeRegion(aspect: Aspect, placement: Placement, themed: boolean): Box`
 - `function layoutSlots(layout: EngineLayout | undefined, aspect: Aspect, placement: Placement, themed: boolean, count: nu…`
-- `function regionSlots(region: Box, count: number, grow: number = MAX_GROW): Box[]`
+- `function regionSlots(region: Box, count: number, grow: number = MAX_GROW, fill = false): Box[]`
 
 ### `apps/renderer/src/engine/kit/lock.ts`
 
@@ -6198,7 +6224,7 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `const isStaging = (mode: string | undefined, aspect?: string): mode is Staging =>`
 - `interface StagingGeometry`
 - `const PILLAR_TAKE_WIDTH`
-- `function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placement, themed: boolean): StagingGeometry`
+- `function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placement, themed: boolean, cutout = false): Staging…`
 - `function staged(beat: { layout: string; plate?: { source: string } | undefined; shot?: string | undefined }, grammar?: …`
 - `function trayRise(frame: number, from: number): { scale: number; ty: number; opacity: number }`
 - `function boxStyle(box: Box): CSSProperties`
@@ -6312,6 +6338,7 @@ Spot inks, paper and shadow. All still colour values live here, including device
 - `function lockupGeometry(words: TitleWord[], width: number, height: number, aspect: TitleMomentProps['aspect'], wordmark…`
 - `function lockupOpacity(frame: number, fromFrame: number, toFrame: number): number`
 - `function inPanel(panel: Box | undefined, fullFrom: number | undefined, frame: number): panel is Box`
+- `function behindTile(width: number, aspect: TitleMomentProps['aspect'], wordmark?: TitleImage): { width: number; height:…`
 - `function TitleMoment(props: TitleMomentProps): JSX.Element | null`
 
 ### `apps/renderer/src/engine/transport.ts`
