@@ -450,6 +450,18 @@ def cmd_pace(args) -> int:
         return 1
 
 
+def cmd_recipe(args) -> int:
+    """Krish's rating of a style recipe in his own words (velib/recipes.py): a score 0 to 10, or --approved with no number."""
+    from velib import recipes
+    try:
+        block = recipes.rate(args.id, args.score, approved=args.approved, words=args.words, on=args.on)
+    except ValueError as error:
+        print(f've recipe rate: {error}', file=sys.stderr)
+        return 1
+    print(f've recipe rate: {args.id} rated {json.dumps(block, ensure_ascii=False)}')
+    return 0
+
+
 def cmd_judge(args) -> int:
     """The blind overall judge (velib/judge.py): assemble the cut beside his references under letters, or record the scores
     the ve-critic agent gave them. The model call is the session's; this only assembles, records and is enforced by ve status."""
@@ -2402,6 +2414,13 @@ def main() -> int:
     p.add_argument('video', nargs='?'); p.add_argument('--out'); p.add_argument('--seconds', type=float)
     p.add_argument('--refs', action='store_true'); p.add_argument('--dir', default=str(ROOT / '.cache' / 'references'))
     p.set_defaults(fn=cmd_pace)
+    p = sub.add_parser('recipe', help="record Krish's rating of a style recipe, in his words")
+    rsub = p.add_subparsers(dest='action', required=True)
+    a = rsub.add_parser('rate', help='rate <id> <score 0-10> --words "..." or rate <id> --approved --words "..."')
+    a.add_argument('id'); a.add_argument('score', nargs='?', type=float)
+    a.add_argument('--approved', action='store_true', help='his approval with no number: records no score')
+    a.add_argument('--words', required=True, help='his exact typed words'); a.add_argument('--on', help='YYYY-MM-DD, default today')
+    p.set_defaults(fn=cmd_recipe)
     p = sub.add_parser('judge', help='the blind overall judge: the cut beside his references under letters, then its score')
     p.add_argument('piece'); p.add_argument('--cut', required=True); p.add_argument('--refs-dir')
     p.add_argument('--record', help='the judge JSON: {"scores": {letter: 0-10}, "notes": {...}}')

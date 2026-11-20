@@ -2875,6 +2875,26 @@
           "how": "THE_BAR wording for the pace floor"
         }
       ]
+    },
+    {
+      "id": "style-recipes-approved",
+      "on": "2026-11-20",
+      "krish": "They're all approved. I don't actually think these are the problem. I think how we integrate title cards and real-world images and motion animation is the issue.",
+      "why": "From 23 Nov ve lint uses only a recipe Krish rated 9 or more; he approved all ten style combinations on the style board without a number, and no recipe could pass the floor on an approval.",
+      "means": "An approval in his words passes the recipe floor like a rating of 9 or more and records no invented score (ve recipe rate <id> --approved --words). The ten combinations are recipe files in config/ve/recipes/. What he named as the problem is integration: title cards, real-world images and motion, not the styles.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/velib/floor.py",
+          "contains": "all ten style combinations on the style board are approved",
+          "how": "floor.rated accepts his approval with his words"
+        },
+        {
+          "file": "scripts/velib/recipes.py",
+          "contains": "--approved",
+          "how": "ve recipe rate records a score or his approval, always with his words"
+        }
+      ]
     }
   ]
 }
