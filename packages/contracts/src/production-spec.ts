@@ -61,6 +61,13 @@ export const VeBeatSchema = z.object({
   // staging per cut). The body takes the cut's one staging (band, stage or anchor); only the title, a chapter mark, the end
   // card and, on an anchor cut, a full graphic plate break from it. The planner writes it; ve lint (grammar.*) reads it.
   shot: z.enum(VE_SHOTS).optional(),
+  // Depth (shot grammar step 5; docs/ve/INGREDIENTS.md "Shot grammar"): a `number` beat's in-world word or number, set
+  // behind him through the subject matte at head height, its glyphs 0.4 to 0.6 of the frame's height, slamming in on
+  // at_w (anchor cuts; `ve matte` makes the matte); a `chapter` beat's numeral beside or behind him, a different
+  // arrangement each time in a cut.
+  world: z.object({ text: z.string().min(1).max(12), at_w: WordSchema.optional(), accent: z.enum(['mint', 'channel']).optional() }).strict().optional(),
+  chapter: z.object({ mark: z.string().min(1).max(3), label: z.string().min(1).max(16).optional(),
+    arrangement: z.enum(['beside_left', 'beside_right', 'rotated', 'behind']), accent: z.enum(['mint', 'channel']).optional() }).strict().optional(),
   plate: z.object({ source: z.string().regex(/^(take|none|asset:[a-z0-9][a-z0-9_-]*)$/), crop: z.string().min(1).optional() }).strict(),
   // One real picture under the beat's graphics, fitted by cover: the panel above his face on a staged beat, the whole
   // frame on a graphics-only beat (Krish, 2026-11-18: "making actual use of the full screen when it isn't my face").
@@ -166,6 +173,11 @@ export const VeAssetSchema = z.object({
   job_id: z.string().min(1).optional(),
   prompt_ref: z.string().min(1).optional(),
   credits: z.number().nonnegative().optional(),
+  // What a generated picture stands for (Ruling, Krish, 2026-11-20: generated imagery, photoreal included, is allowed when
+  // art-directed and clearly a metaphor; generated stand-ins for real documents, signs, places or people are refused):
+  // `metaphor` (an art-directed image that reads as a figure of speech) or `real` (it stands in for a real document,
+  // sign, place or person, which ve lint refuses). Required on every generated picture (grammar.generated).
+  depicts: z.enum(['real', 'metaphor']).optional(),
   // A note for the record only: ve never draws it and no check requires it (no ILLUSTRATION tag, Krish, 28 Oct 2026).
   label: z.string().min(2).optional(),
   // A recording's frame in pixels, so a 16:9 cut knows a vertical take before any layout is chosen (config/ve/piece-guards.json
@@ -311,7 +323,7 @@ export const ProductionSpecV2Schema = z.object({
     // should be decoupled from the animation styles"). captions wins over brand.caption_theme.
     captions: z.object({ theme: z.enum(['pop', 'karaoke', 'kinetic-01', 'kinetic-02', 'hustle', 'grape', 'beast', 'poppin', 'aarit',
       'soft-ai', 'gaming-stream', 'simple-one-word', 'podcast', 'art-directed', 'cinematic', 'slam', 'georgia-build', 'stair-flash', 'tuck-stack', 'anchor-quote', 'rack-focus', 'flip-hinge', 'slice', 'slot-roll', 'receipt-chip', 'ink-block', 'mint-word']),
-      placement: z.enum(['lower', 'centre', 'upper', 'seam']).optional(), reason: z.string().min(1) }).strict().optional(),
+      placement: z.enum(['lower', 'centre', 'upper', 'seam', 'chin']).optional(), reason: z.string().min(1) }).strict().optional(),
     // lead: the exit leads the entrance, on a handover that travels (docs/ve/INGREDIENTS.md, 15 Nov 2026).
     transitions: z.object({ kind: z.enum(['cut', 'whip', 'push', 'zoom-through', 'flash', 'punch', 'crossfade']), lead: z.boolean().optional(), reason: z.string().min(1) }).strict()
       .refine((t) => !t.lead || (['whip', 'push', 'zoom-through', 'punch'] as string[]).includes(t.kind), { message: 'style.transitions.lead leads a handover that travels: whip, push, zoom-through or punch', path: ['lead'] }).optional(),

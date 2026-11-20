@@ -1,5 +1,5 @@
 {
-  "_about": "The shot grammar Krish approved on 20 Nov 2026 (Ruling, Krish, 2026-11-20: \"The shot grammar is approved: build it and run Monday's piece on it\"; one staging per cut; generated imagery never). Every number is measured from his good cuts (Character.ai tall and wide, eating its own jobs tall, AI music tall) and The Athletic's \"8 facts about Man United's finances\", against the rejected Tue 17 short, Wed 18 long and the 9 s long, frame by frame every 0.5 s with a face detector and a hand shot log (docs/ve/INGREDIENTS.md, \"Shot grammar\"). Read by scripts/velib/grammar.py (ve lint grammar.*) and scripts/velib/shots.py (the planner, ve shots). Binds pieces frozen at ve expect from floor.RECIPE_FROM (2026-11-23).",
+  "_about": "The shot grammar Krish approved on 20 Nov 2026 (Ruling, Krish, 2026-11-20: \"The shot grammar is approved: build it and run Monday's piece on it\"; one staging per cut; generated imagery only when art-directed and clearly a metaphor, corrected the same day). Every number is measured from his good cuts (Character.ai tall and wide, eating its own jobs tall, AI music tall) and The Athletic's \"8 facts about Man United's finances\", against the rejected Tue 17 short, Wed 18 long and the 9 s long, frame by frame every 0.5 s with a face detector and a hand shot log (docs/ve/INGREDIENTS.md, \"Shot grammar\"). Read by scripts/velib/grammar.py (ve lint grammar.*) and scripts/velib/shots.py (the planner, ve shots). Binds pieces frozen at ve expect from floor.RECIPE_FROM (2026-11-23).",
   "measured": "2026-11-20",
   "stagings": {
     "band": {"from": "Character.ai: face on screen 91% tall, 97.5% wide, 0 face switches", "aspects": ["9:16", "16:9"]},
@@ -47,7 +47,20 @@
   "repeat": {"max_appearances": 3, "annotations": ["stamp", "scribble", "mint_ring"],
              "from": "R5; Tue 17 showed one isometric box at 5-8, 17-23, 25-29, 50-55 and 76-79 s with no new state"},
   "caption_zone": {"max_y_spread_share": 0.02, "from": "R7: every good cut keeps one caption y (Character.ai's pill y 0.50 to 0.53); Tue 17's captions moved beat to beat"},
-  "generated": {"kept_kinds": ["voice"],
-                "kept_why": "his approved clone voice on an off-day voiceover short (Ruling, Krish, 2026-11-15) is a voice, not imagery",
-                "from": "Ruling, Krish, 2026-11-20: generated imagery never; Wed 18 had 11 generated full-frame stills, 100 s"}
+  "title": {"by_s": 30,
+            "from": "Krish, 2026-11-20: \"a good looking title slide, and a good looking outro are hugely important. The title slide comes in as I say the words of the title within the opening 30 seconds.\""},
+  "depth": {
+    "in_world_share": {"min": 0.4, "target": 0.5, "max": 0.6},
+    "anton_cap_em": 0.86,
+    "world_s": [1.0, 6.0],
+    "title_behind_max_s": 6.0,
+    "chapter_arrangements": ["beside_left", "beside_right", "rotated", "behind"],
+    "panel_fill": {"share": 0.85, "max_under_s": 0.5, "sample_fps": 10},
+    "from": "the study's shots 5 and 6: The Athletic's giant 8 and 7 stand 0.4 to 0.6 of the frame's height at head height behind the presenter, 1 to 6 s, and its Fact N numerals sit beside or behind him for at most 1.5 s, a different place each time; its title builds over him while he talks, 1 to 6 s. Krish's 20 Nov verdict on the #950 anchor reference: cards on his chest and arms, the title a small box over his torso. panel_fill: the after-render measure of fills_region (qc panel.fill)."
+  },
+  "generated": {"kept_kinds": ["voice", "sfx", "music"],
+                "kept_why": "his approved clone voice on an off-day voiceover short (Ruling, Krish, 2026-11-15) is a voice, and sound is not a picture",
+                "depicts": ["metaphor"],
+                "refused_depicts": ["real"],
+                "from": "Ruling, Krish, 2026-11-20 (correcting that morning's 'generated imagery never'): generated imagery, photoreal included, is allowed when art-directed and clearly a metaphor; generated stand-ins for real documents, signs, places or people are refused. His words: 'we actually do use AI to generate a lot of striking imagery that comes in and out of our pieces ... The AI music video is a really good example of world-class treatment of video footage and social media videos being integrated really nicely alongside generated animations.' Wed 18's 11 generated full-frame stills broke the staging (full frame in his place) and Tue 17's plaque and town sign stood in for real things: those stay refused."}
 }

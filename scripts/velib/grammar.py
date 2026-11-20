@@ -8,7 +8,8 @@ for a second at a time, shrank real evidence onto blur and filled the gaps with 
 
 - one staging per cut: band, stage or anchor for the whole body, picked at the lock with the recipe; only the title, a
   chapter mark, the end card and, on an anchor cut, a full graphic plate break from it (the variety rule is retired);
-- generated (AI-made) imagery: never;
+- generated imagery (corrected the same day): allowed, photoreal included, when art-directed and clearly a metaphor;
+  a generated stand-in for a real document, sign, place or person is refused;
 - the shot grammar is approved.
 
 Seven checks, each one rule in one place, every number in config/ve/shot-grammar.json with the measurement it rests on:
@@ -19,7 +20,7 @@ Seven checks, each one rule in one place, every number in config/ve/shot-grammar
 - grammar.region: every device and real image in the staging's region, never a full-frame picture in his place, and
   the panel never empty longer than 0.5 s;
 - grammar.evidence_size: a real image fills its region (at least 0.55 of the frame wide) and words are 40 px or more;
-- grammar.generated: no generated asset in a cut;
+- grammar.generated: a generated picture declares `depicts`; a metaphor is allowed, a stand-in for a real thing refused;
 - grammar.repeat: a device at most 3 times a cut, never twice running without a new state;
 - grammar.caption_zone: one caption zone for the whole cut, the same y on every beat.
 
@@ -34,6 +35,8 @@ from pathlib import Path
 from .common import CONFIG, load_json
 
 TABLE = CONFIG / 'shot-grammar.json'
+RULING_GENERATED = ('Ruling, Krish, 2026-11-20: generated imagery, photoreal included, is allowed when art-directed '
+                    'and clearly a metaphor; generated stand-ins for real documents, signs, places or people are refused')
 WORDS_PER_SECOND = 2.6          # velib.lint: his measured read rate, before ingest gives real times
 STAGED_SHOTS = ('band', 'stage', 'anchor')
 FACELESS = ('plate', 'end')
@@ -335,20 +338,39 @@ def evidence_size_lints(spec: dict, cut_id: str, mode: str | None) -> list[str]:
 # ------------------------------------------------------------------------------------------------------- generated
 
 def generated_lints(spec: dict) -> list[str]:
-    kept = set(table()['generated']['kept_kinds'])
-    return [f'grammar.generated assets.{a.get("id")}: a generated {a.get("kind")} ({a.get("tool") or "no tool named"}) is '
-            'refused outright: real images, real screenshots and the motion devices only, nothing generated in a cut '
-            '(Ruling, Krish, 2026-11-20: generated imagery never)'
-            for a in spec.get('assets', []) if a.get('origin') == 'generated' and a.get('kind') not in kept]
+    """grammar.generated: a generated picture is art-directed and clearly a metaphor, never a stand-in for a real document,
+    sign, place or person (Ruling, Krish, 2026-11-20); it declares which (`depicts`), and one that does not is refused until
+    it does. It lives in the cut's one staging like any device (grammar.region refuses a full-frame picture in his place
+    on band and stage). His approved clone voice and sound are not pictures."""
+    t = table()['generated']
+    kept = set(t['kept_kinds'])
+    out = []
+    for a in spec.get('assets', []):
+        if a.get('origin') != 'generated' or a.get('kind') in kept:
+            continue
+        where = f'grammar.generated assets.{a.get("id")}'
+        what = f'a generated {a.get("kind")} ({a.get("tool") or "no tool named"})'
+        if a.get('depicts') == 'real':
+            out.append(f'{where}: {what} stands in for a real document, sign, place or person; those are refused: use the real '
+                       f'thing (a real photo, screenshot or document) ({RULING_GENERATED})')
+        elif a.get('depicts') != 'metaphor':
+            out.append(f'{where}: {what} does not say what it depicts; set depicts: metaphor for an art-directed image that '
+                       f'reads as a metaphor, and use the real thing for a real document, sign, place or person '
+                       f'({RULING_GENERATED})')
+    return out
 
 
 def generation_refusal(spec: dict, directory: Path | None, today: str | None = None) -> str | None:
-    """ve brief (plate briefs and their generation route): refused outright for a piece the grammar binds."""
+    """ve brief (plate briefs and their generation route): for a piece the grammar binds, every generated picture the spec
+    names is declared a metaphor before a brief is written; a stand-in for a real thing is never briefed."""
     from .floor import binds  # noqa: PLC0415
     if not binds(directory, today):
         return None
-    return ('grammar.generated: a piece frozen from 2026-11-23 makes no generated plate or move (Ruling, Krish, 2026-11-20: '
-            'generated imagery never); use a real image, a real screenshot or a motion device in the staging\'s region')
+    found = generated_lints(spec)
+    if not found:
+        return None
+    return ('grammar.generated: a plate brief needs every generated picture declared depicts: metaphor (never a stand-in '
+            f'for a real document, sign, place or person; {RULING_GENERATED}): ' + '; '.join(found))
 
 
 # ---------------------------------------------------------------------------------------------------------- repeat
@@ -422,6 +444,152 @@ def caption_zone_lints(spec: dict, cut_id: str) -> list[str]:
     return []
 
 
+# ------------------------------------------------------------------------------------------------------------ title
+
+def _norm(word: str) -> str:
+    return ''.join(ch for ch in str(word).lower() if ch.isalnum())
+
+
+def title_timing_lints(spec: dict, cut_id: str, directory: Path | None) -> list[str]:
+    """grammar.title_timing: the title lands as he says its words, inside the first 30 s (Krish, 2026-11-20: "a good
+    looking title slide, and a good looking outro are hugely important. The title slide comes in as I say the words of the
+    title within the opening 30 seconds"). A whole cut of a piece with a title moment names the span of his spoken title
+    words; the span starts on the line's first word as he said it (the aligned words when ve conform wrote them, else the
+    spec's own script words); and that word starts within title_by_s of the cut's first frame (the hook: nothing goes before it)."""
+    moment = spec.get('title_moment') or {}
+    cut = spec['cuts'][cut_id]
+    if not moment or cut.get('excerpt'):
+        return []
+    t = table()['title']
+    where = f'grammar.title_timing cuts.{cut_id}'
+    span = (moment.get('spans') or {}).get(cut_id)
+    if not span:
+        return [f'{where}: the piece has a title moment but this cut names no span of his spoken title words '
+                '(title_moment.spans); the title comes in as he says it, never as a card of its own']
+    out = []
+    words = _words(directory, cut_id)
+    line = [w for w in (_norm(x) for x in str(moment.get('line') or '').split()) if w]
+    if words and line:
+        said = [_norm(words[i].get('word', words[i].get('text', ''))) for i in range(span['from_w'], span['to_w'] + 1) if i in words]
+        if not said or said[0] != line[0]:
+            out.append(f'{where}: the title span starts on "{said[0] if said else "?"}", not on the first word of his title line '
+                       f'("{line[0]}"); it starts on the words he says as the title')
+    if words and span['from_w'] in words:
+        at = float(words[span['from_w']]['onset_s'])
+    else:
+        at = span['from_w'] / WORDS_PER_SECOND
+    if at > t['by_s'] + 1e-6:
+        out.append(f'{where}: the title starts {at:.1f} s into the cut; it comes in within the opening {t["by_s"]:g} s '
+                   f'({t["from"]})')
+    return out
+
+
+# ------------------------------------------------------------------------------------------------------------ depth
+
+def matte_record(directory: Path | None, cut_id: str) -> dict | None:
+    """The subject matte `ve matte` recorded for this cut's picture (matte.<cut>.json beside the spec), when its cached
+    files are still there for those bytes; else None."""
+    if directory is None:
+        return None
+    path = Path(directory) / f'matte.{cut_id}.json'
+    if not path.is_file():
+        return None
+    try:
+        note = load_json(path)
+    except (OSError, ValueError):
+        return None
+    from . import matte  # noqa: PLC0415
+    root = Path(note['cache']) if note.get('cache') else matte.CACHE
+    folder = matte.cache_dir(note.get('picture_sha256', ''), root)
+    if not (folder / 'matte.json').is_file() or not (folder / 'subject.mov').is_file():
+        return None
+    return note
+
+
+_ANTON: dict | None = None
+
+
+def anton_advance() -> dict:
+    """Anton's advance widths (thousandths of an em), read from the renderer's own table (house/metrics.ts)."""
+    global _ANTON
+    if _ANTON is None:
+        import re  # noqa: PLC0415
+        from .common import ROOT  # noqa: PLC0415
+        text = (ROOT / 'apps' / 'renderer' / 'src' / 'house' / 'metrics.ts').read_text(encoding='utf-8')
+        line = next(l for l in text.splitlines() if l.startswith('const CHARACTERS = '))
+        raw = line[len("const CHARACTERS = '"):-1]
+        chars = raw.replace("\\'", "'").replace('\\\\', '\\')
+        widths = [int(n) for n in re.search(r'anton: \[([0-9, ]+)\]', text).group(1).split(',')]
+        _ANTON = dict(zip(chars, widths))
+    return _ANTON
+
+
+def in_world_share(text: str, aspect: str) -> float:
+    """kit/depth.ts inWorldShare: the glyph height, as a share of the frame's height, the in-world word gets."""
+    t = table()['depth']
+    w, h = FRAME[aspect]
+    per_em = max(1, sum(anton_advance().get(ch, 600) for ch in text.upper())) / 1000
+    cap = t['anton_cap_em']
+    font = min(t['in_world_share']['target'] * h / cap, w * 0.94 / per_em, t['in_world_share']['max'] * h / cap)
+    return cap * font / h
+
+
+def depth_lints(spec: dict, cut_id: str, mode: str | None, seconds: list, directory: Path | None) -> list:
+    """grammar.depth: the in-world number, the chapter marks and the anchor title behind him (shot grammar step 5)."""
+    cut = spec['cuts'][cut_id]
+    t = table()['depth']
+    where = f'grammar.depth cuts.{cut_id}'
+    out = []
+    has_matte = matte_record(directory, cut_id) is not None
+    no_matte = (f'take {cut.get("take")} has no subject matte; run `ve matte` (offline, no generation, no spend), so the type '
+                'sits behind him and never on his chest')
+    arrangements: list = []
+    for i, beat in enumerate(cut['beats']):
+        at = f'{where}.beats.{i}'
+        shot = beat.get('shot')
+        if beat.get('world') and shot != 'number':
+            out.append(f'{at}: a world word on a {shot} beat; it is a number shot')
+        if beat.get('chapter') and shot != 'chapter':
+            out.append(f'{at}: a chapter mark on a {shot} beat; it is a chapter shot')
+        if shot == 'number' and mode == 'anchor':
+            world = beat.get('world')
+            if not world:
+                out.append(f'{at}: a number shot on an anchor cut is the in-world number behind him: give it world.text')
+                continue
+            share = in_world_share(world['text'], cut['aspect'])
+            if share < t['in_world_share']['min'] - 1e-9:
+                out.append(f'{at}: "{world["text"]}" stands {share:.2f} of the frame tall at its widest fit; an in-world number is '
+                           f'{t["in_world_share"]["min"]} to {t["in_world_share"]["max"]} of the frame ({t["from"]}): '
+                           'a shorter word or number, or put it in the space above his head')
+            lo, hi = t['world_s']
+            if not lo - 1e-6 <= seconds[i] <= hi + 1e-6:
+                out.append(f'{at}: the in-world number holds {seconds[i]:.1f} s; it holds {lo:g} to {hi:g} s')
+            span = beat['span']
+            if world.get('at_w') is not None and not span['from_w'] <= world['at_w'] <= span['to_w']:
+                out.append(f'{at}: world.at_w {world["at_w"]} is outside the beat; it slams in on a word he says in it')
+            if not has_matte:
+                out.append(f'{at}: an in-world number, but {no_matte}')
+        elif shot == 'number' and beat.get('world'):
+            out.append(f"{at}: a world word on a {mode} cut; behind him is anchor's, and on {mode} the number fills the panel")
+        if shot == 'chapter':
+            c = beat.get('chapter')
+            if not c:
+                out.append(f'{at}: a chapter shot with no chapter mark (chapter.mark and chapter.arrangement)')
+                continue
+            seen = arrangements[-(len(t['chapter_arrangements']) - 1):] if arrangements else []
+            if c['arrangement'] in seen:
+                out.append(f'{at}: chapter mark {c["mark"]} is {c["arrangement"]} again; a different arrangement each time '
+                           f'({", ".join(t["chapter_arrangements"])})')
+            arrangements.append(c['arrangement'])
+            if c['arrangement'] == 'behind' and not has_matte:
+                out.append(f'{at}: a chapter mark behind him, but {no_matte}')
+    span = (((spec.get('title_moment') or {}).get('spans') or {}).get(cut_id))
+    if mode == 'anchor' and span and not has_matte:
+        out.append(f'{where}: the anchor title builds behind his head through the matte (never a small box on his chest), '
+                   f'but {no_matte}')
+    return out
+
+
 # ------------------------------------------------------------------------------------------------------------ lints
 
 def lints(spec: dict, spec_path: Path | None = None, *, today: str | None = None) -> list[str]:
@@ -448,4 +616,6 @@ def check(spec: dict, directory: Path | None = None) -> list[str]:
         out += evidence_size_lints(spec, cut_id, mode)
         out += repeat_lints(spec, cut_id)
         out += caption_zone_lints(spec, cut_id)
+        out += depth_lints(spec, cut_id, mode, seconds, directory)
+        out += title_timing_lints(spec, cut_id, directory)
     return out

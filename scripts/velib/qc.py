@@ -570,6 +570,11 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
         checks.update(qc_frames.rows(path, frame_props, publish_day, beats=beats, aspect=aspect, fps=fps, diffs=diffs,
                                      heard=heard, kept_restarts=kept_restarts, face_detector=face_detector,
                                      read=onscreen_reader, lead=opening_lead(frame_props)))
+        # The panel's object fills its region, measured on the frames (shot grammar step 5; velib/qc_fill.py): band and
+        # stage cuts drawn by the grammar.
+        if (frame_props.get('layout') or {}).get('grammar'):
+            from . import qc_fill
+            checks['panel.fill'] = qc_fill.row(path, frame_props, to_file=lambda f: to_file(f, frame_props))
     # A picture smeared into stripes (8 Nov, the proactive-AI opening's plate): every cut, advisory before its own date.
     checks['picture.smeared'] = picture_smeared(path, publish_day)
     checks['picture.smeared'] = without_title_bars(checks['picture.smeared'], frame_props)

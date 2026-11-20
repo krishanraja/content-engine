@@ -27,16 +27,22 @@ PILLAR_TAKE_WIDTH = round(1080 * 9 / 16)
 # kit/staging.ts stagingGeometry: (take box, the devices' region before it is cut clear of the captions, the panel).
 STAGED = {
     ('band', '9:16'): ((0, 1000, 1080, 920), (60, 280, 800, 680), (0, 0, 1080, 1000)),
-    ('stage', '9:16'): ((430, 765, 650, 1155), (60, 280, 800, 461), (0, 0, 1080, 1236)),
+    # stage: the ink panel is the whole frame UNDER his take (20 Nov 2026 fix), so only the devices' region is drawn over
+    # anything; the panel entry is that region. As a cut-out (props.matte) the region reaches his head (CUTOUT below).
+    ('stage', '9:16'): ((330, 740, 750, 1180), (60, 280, 800, 436), (60, 280, 800, 436)),
     ('tray', '9:16'): ((0, 0, 1080, 1920), (60, 900, 600, 600), (60, 900, 600, 600)),
     ('pillar', '16:9'): ((1920 - PILLAR_TAKE_WIDTH, 0, PILLAR_TAKE_WIDTH, 1080), (96, 140, 1920 - PILLAR_TAKE_WIDTH - 156, 800),
                          (0, 0, 1920 - PILLAR_TAKE_WIDTH, 1080)),
     ('band', '16:9'): ((1920 - PILLAR_TAKE_WIDTH, 0, PILLAR_TAKE_WIDTH, 1080), (96, 140, 1920 - PILLAR_TAKE_WIDTH - 156, 800),
                        (0, 0, 1920 - PILLAR_TAKE_WIDTH, 1080)),
-    ('anchor', '9:16'): ((0, 0, 1080, 1920), (60, 1240, 800, 380), (60, 1240, 800, 380)),
-    ('stage', '16:9'): ((1360, 380, 560, 700), (96, 120, 1260, 695), (0, 0, 1920, 875)),
+    # anchor: graphics only above his head (step 5 rebuild); a real image is a prop beside him (ANCHOR_PROPS).
+    ('anchor', '9:16'): ((0, 0, 1080, 1920), (60, 280, 960, 220), (60, 280, 960, 220)),
+    ('stage', '16:9'): ((1360, 380, 560, 700), (96, 120, 1240, 715), (96, 120, 1240, 715)),
     ('tray', '16:9'): ((0, 0, 1920, 1080), (96, 480, 900, 540), (96, 480, 900, 540)),
 }
+# Stage cut out by the subject matte: the region reaches down to his head (kit/staging.ts, `cutout`).
+CUTOUT = {('stage', '9:16'): (60, 280, 800, 660), ('stage', '16:9'): (96, 120, 1240, 715)}
+ANCHOR_PROPS = [(40, 860, 320, 252)]
 # The house caption's band (kit/staging.ts clearOfCaptions, unthemed).
 HOUSE_BAND = {'9:16': (70, 1090, 800, 230), '16:9': (192, 790, 1536, 236)}
 
@@ -125,9 +131,13 @@ def take_box(mode: str | None, aspect: str, beat: dict) -> tuple | None:
     return (0, 0) + FRAME[aspect]
 
 
-def to_frame(norm: list[float], box: tuple, take_frame: dict | None) -> tuple[int, int, int, int]:
-    """A face box in shares of the take, as drawn into `box` by cover (the take fills the box, centred), clipped to the
-    box and grown by MARGIN."""
+FACE_LIFT = 1.1   # FormatMaster.faceLift: a tall cut's take is framed 1.1 from its box's bottom centre
+
+
+def to_frame(norm: list[float], box: tuple, take_frame: dict | None, lift: float = 1.0) -> tuple[int, int, int, int]:
+    """A face box in shares of the take, as drawn into `box` by cover (the take fills the box, centred) and scaled `lift`
+    from the box's bottom centre (FormatMaster's faceLift on a tall cut: his face sits higher than the cover alone puts
+    it, step 5 found the keep-out 80 px low), clipped to the box and grown by MARGIN."""
     bx, by, bw, bh = box
     tw, th = ((take_frame or {}).get('width'), (take_frame or {}).get('height'))
     if not tw or not th:
@@ -136,6 +146,10 @@ def to_frame(norm: list[float], box: tuple, take_frame: dict | None) -> tuple[in
     ox, oy = bx + (bw - tw * s) / 2, by + (bh - th * s) / 2
     x0, y0 = ox + norm[0] * tw * s, oy + norm[1] * th * s
     x1, y1 = x0 + norm[2] * tw * s, y0 + norm[3] * th * s
+    if lift != 1.0:
+        cx, base = bx + bw / 2, by + bh
+        x0, x1 = cx + (x0 - cx) * lift, cx + (x1 - cx) * lift
+        y0, y1 = base - (base - y0) * lift, base - (base - y1) * lift
     x0, y0, x1, y1 = max(x0, bx), max(y0, by), min(x1, bx + bw), min(y1, by + bh)
     if x1 <= x0 or y1 <= y0:
         return (0, 0, 0, 0)
@@ -206,7 +220,8 @@ def apply(props: dict, spec: dict, cut_id: str, *, edl: dict | None, tracks: dic
                     continue
                 box = take_box(mode, aspect, spec_beats.get(beat['id'], beat))
                 if box is not None:
-                    by_beat.setdefault(beat['id'], []).append(to_frame(sample['box'], box, take_frame))
+                    lift = FACE_LIFT if aspect == '9:16' and not any(seg.get('crop') for seg in props.get('segments') or []) else 1.0
+                    by_beat.setdefault(beat['id'], []).append(to_frame(sample['box'], box, take_frame, lift))
     problems = []
     for beat in props['beats']:
         keep = _union(by_beat.get(beat['id'], []))
@@ -216,6 +231,8 @@ def apply(props: dict, spec: dict, cut_id: str, *, edl: dict | None, tracks: dic
         source = spec_beats.get(beat['id'], {})
         if mode and (mode, aspect) in STAGED:
             _take, region, panel = STAGED[(mode, aspect)]
+            if props.get('matte') and (mode, aspect) in CUTOUT:
+                region = CUTOUT[(mode, aspect)]
             if any(u in objects and objects[u]['device'] != 'stamp' for u in source.get('uses', [])) and overlap(region, keep):
                 problems.append(f"face.keep_out beat {beat['id']}: the devices' region {region} on the {mode} staging meets his "
                                 f'face {keep}')
