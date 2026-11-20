@@ -19,23 +19,29 @@ import { REGIONS } from '../captions/kit'
  *  Only boxes this module hands out may grow (`isRegion`), so chrome and every other user of `fit.ts` draw exactly as
  *  before. Pure: the regions are a function of the props alone. */
 
-export const LAYOUTS = ['house', 'fill', 'stack', 'band', 'stage', 'tray', 'pillar'] as const
-export const EngineLayoutSchema = z.object({ mode: z.enum(LAYOUTS) }).strict()
+export const LAYOUTS = ['house', 'fill', 'stack', 'band', 'stage', 'tray', 'pillar', 'anchor'] as const
+/** `grammar`: the cut is drawn by the shot grammar (every beat carries its shot type; kit/staging.ts staged()). */
+export const EngineLayoutSchema = z.object({ mode: z.enum(LAYOUTS), grammar: z.literal(true).optional() }).strict()
 export type EngineLayout = z.infer<typeof EngineLayoutSchema>
 
 /** How far a device in a region may grow past its natural size. */
 export const MAX_GROW = 3
 const GAP = 24
 
-const regions = new WeakSet<Box>()
+/** How far a device may grow in a staged panel (every staging, not only a grammar cut): enough that a number or a checklist fills the region's width
+ *  (Krish's coordinator, 20 Nov 2026, of the recipe samples: "a small number in a large dark field"). */
+export const GRAMMAR_GROW = 6
+const regions = new WeakMap<Box, number>()
 /** Whether a box is a layout region: only then may a device grow to fill it and centre in it. */
 export const isRegion = (box: Box): boolean => regions.has(box)
-const mark = (box: Box): Box => { regions.add(box); return box }
+/** How far a device may grow in this region (MAX_GROW unless the grammar marked it). */
+export const regionGrow = (box: Box): number => regions.get(box) ?? 1
+const mark = (box: Box, grow: number = MAX_GROW): Box => { regions.set(box, grow); return box }
 /** Mark a box as a region devices may grow into (the stagings, kit/staging.ts). */
 export const markRegion = mark
 
 type Aspect = '9:16' | '16:9'
-type Placement = 'lower' | 'centre' | 'upper' | undefined
+type Placement = 'lower' | 'centre' | 'upper' | 'seam' | undefined
 
 /** The free region on a graphics-only beat: the channel-safe area minus the band the captions sit in. 9:16 keeps type
  *  in x 60 to 860 (the action rail starts at 880), from y 280 under every top bar to y 1320 above the bottom band. */
@@ -45,7 +51,7 @@ export function freeRegion(aspect: Aspect, placement: Placement, themed: boolean
   if (!themed) return { left, top, width, height: 1060 - top }          // the house caption box starts at y 1090
   const band = REGIONS['9:16'][placement ?? 'lower']
   if (placement === 'upper') return { left, top: band.top + band.height + 24, width, height: bottom - (band.top + band.height + 24) }
-  if (placement === 'centre') return { left, top, width, height: band.top - 24 - top }
+  if (placement === 'centre' || placement === 'seam') return { left, top, width, height: band.top - 24 - top }
   return { left, top, width, height: band.top - 24 - top }
 }
 
@@ -61,8 +67,8 @@ export function layoutSlots(layout: EngineLayout | undefined, aspect: Aspect, pl
 }
 
 /** The boxes for a staged beat's devices: the staging's region, shared top to bottom when there are several. */
-export function regionSlots(region: Box, count: number): Box[] {
-  if (count <= 1) return [mark({ ...region })]
+export function regionSlots(region: Box, count: number, grow: number = MAX_GROW): Box[] {
+  if (count <= 1) return [mark({ ...region }, grow)]
   const h = (region.height - GAP * (count - 1)) / count
-  return Array.from({ length: count }, (_, i) => mark({ left: region.left, top: Math.round(region.top + i * (h + GAP)), width: region.width, height: Math.floor(h) }))
+  return Array.from({ length: count }, (_, i) => mark({ left: region.left, top: Math.round(region.top + i * (h + GAP)), width: region.width, height: Math.floor(h) }, grow))
 }

@@ -430,6 +430,24 @@ def title_moment_props(spec: dict, cut_id: str, rows: list[dict], duration: int)
                       for i, row in enumerate(said)]}
 
 
+# The full-frame title lockup holds at most 2 s (shot grammar, from AI music's 13 to 14.9 s; Wed 18's 6 s card was rejected).
+TITLE_FULL_MAX_FRAMES = 60
+
+
+def grammar_title(cut: dict, moment: dict, mode: str | None = None) -> dict:
+    """Under the shot grammar (every beat carries its shot type, or the cut is staged; Ruling, Krish, 2026-11-20) the title builds in
+    the staging's panel as he says the line and goes full frame only from his last title word, for at most
+    TITLE_FULL_MAX_FRAMES, then the cut is back on its one staging. Off the grammar the lockup draws as before."""
+    beats = cut.get('beats') or []
+    # Every staged cut holds the lockup to the lock (the coordinator's 20 Nov recipe samples held it 4 to 8 s full frame
+    # and tripped the plain-dark-band guard), not only a cut whose beats carry their shot types.
+    if not beats or not (all(b.get('shot') for b in beats) or mode in ('band', 'stage', 'pillar', 'anchor')):
+        return {}
+    last = max(w['atFrame'] for w in moment['words'])
+    moment['toFrame'] = min(moment['toFrame'], last + TITLE_FULL_MAX_FRAMES)
+    return {'fullFrom': last, 'toFrame': moment['toFrame']}
+
+
 def backdrop(spec: dict, beat: dict, assets_dir) -> dict:
     """The one real picture under a beat's graphics (Krish, 2026-11-18: "making actual use of the full screen when it
     isn't my face"): a photo, a screenshot or a scene from the spec's assets, its staged bytes checked against the
@@ -548,6 +566,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         if end <= start:
             raise ValueError(f'beat {beat["id"]} has no positive frame interval')
         beats.append({'id': beat['id'], 'role': beat['role'], 'layout': beat['layout'],
+                      **({'shot': beat['shot']} if beat.get('shot') else {}),
                       'fromFrame': start, 'toFrame': end, 'uses': list(beat.get('uses', [])),
                       **({'face': beat['face']} if 'face' in beat else {}),
                       'transitionOut': beat.get('transition_out', 'cut'), 'sectionBeat': index == 0,
@@ -703,7 +722,8 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         **({'title': spec['brand']['title']} if spec['brand'].get('title') else {}),
         # The title is one full-frame lockup with the wordmark inside it (Ruling, Krish, 2026-11-19); 'lockup' tells ve qc
         # the cut was rendered after the lockup replaced the panel card and the separate wordmark.
-        **({'titleMoment': {**{k: moment[k] for k in ('fromFrame', 'toFrame', 'release', 'words')}, 'card': True, 'lockup': True}}
+        **({'titleMoment': {**{k: moment[k] for k in ('fromFrame', 'toFrame', 'release', 'words')}, 'card': True, 'lockup': True,
+                            **grammar_title(cut, moment, cut_layout_mode(spec, cut_id, take_frame))}}
            if moment else {}),
         'beats': beats, 'objects': objects, 'events': events,
     }
@@ -771,14 +791,21 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         props['ingredients'] = ingredients
     if 'sound' in (spec.get('style') or {}):
         props['audio']['sfx'] = sound_props(spec, props, assets_dir)
-    layout = ((spec.get('style') or {}).get('layout') or {}).get('mode') or default_layout(spec, cut_id, take_frame)
+    layout = cut_layout_mode(spec, cut_id, take_frame)
     if layout and layout != 'house':
         if layout not in LAYOUTS:
             raise ValueError(f"style.layout.mode {layout} is not one of {', '.join(LAYOUTS)}")
         if layout == 'tray' and props.get('captionPlacement') != 'upper':
             raise ValueError('style.layout.mode tray leaves his face clear, so the captions go in the upper strip: '
                              'set style.captions.placement upper')
+        if layout == 'anchor' and spec['cuts'][cut_id]['aspect'] != '9:16':
+            raise ValueError('style.layout anchor is 9:16 only until a good wide face-as-frame cut is measured '
+                             '(docs/ve/INGREDIENTS.md, "Shot grammar")')
         props['layout'] = {'mode': layout}
+        # A cut whose every beat carries its shot type is drawn by the shot grammar (Ruling, Krish, 2026-11-20: one staging
+        # per cut): its graphics-only beats stay in the staging's panel with his face on screen, except an anchor cut's plates.
+        if cut['beats'] and all(b.get('shot') for b in cut['beats']):
+            props['layout']['grammar'] = True
     if spec.get('character') and cut_id in spec['character'].get('cuts', []):
         from .character_track import compile_track
         props['character'] = compile_track(spec, cut_id, rows, props, assets_dir)
@@ -796,14 +823,21 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
 # The ingredients chosen per piece apart from the motion style (docs/ve/INGREDIENTS.md; Krish, 2026-11-13: "the
 # captions should be decoupled from the animation styles"). Names as the renderer's captions/names.ts and
 # kit/ingredients.ts; engine.test.ts holds the two lists in step.
-CAPTION_PLACEMENTS = ('lower', 'centre', 'upper')
+CAPTION_PLACEMENTS = ('lower', 'centre', 'upper', 'seam')
 ENERGIES = ('calm', 'medium', 'high')
 TRANSITIONS = ('cut', 'whip', 'push', 'zoom-through', 'flash', 'punch', 'crossfade')
 CAMERAS = ('none', 'drift', 'phased', 'punch')
 # The handovers whose exit can lead their entrance (style.transitions.lead, 15 Nov 2026): the ones that travel.
 LEAD_TRANSITIONS = ('whip', 'push', 'zoom-through', 'punch')
-LAYOUTS = ('house', 'fill', 'stack', 'band', 'stage', 'tray', 'pillar')
+LAYOUTS = ('house', 'fill', 'stack', 'band', 'stage', 'tray', 'pillar', 'anchor')
 WIDE_ASPECTS = ('16:9',)
+
+
+def cut_layout_mode(spec: dict, cut_id: str, take_frame: dict | None = None) -> str | None:
+    """The staging a cut is drawn with: its own style.layout.cuts entry, else style.layout.mode, else the default (one
+    staging per cut, picked at the lock with the recipe; Ruling, Krish, 2026-11-20). One rule, read by compile and lint."""
+    layout = (spec.get('style') or {}).get('layout') or {}
+    return (layout.get('cuts') or {}).get(cut_id) or layout.get('mode') or default_layout(spec, cut_id, take_frame)
 
 
 def default_layout(spec: dict, cut_id: str, take_frame: dict | None = None) -> str | None:

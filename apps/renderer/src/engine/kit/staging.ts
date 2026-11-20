@@ -12,27 +12,34 @@ import { REGIONS } from '../captions/kit'
  *
  *  - `band` (Character.ai): an ink graphics panel over the top of the frame, a 10 px series-colour hairline, and his
  *    take as a still face band under it (9:16: panel to y 1000, face from y 1000 to 1920).
- *  - `stage` (AI music): an ink stage over y 0 to 1236 with rounded bottom corners on a cream band, and his take in a
- *    rounded window bottom right that crosses the stage edge.
+ *  - `stage` (AI music): an ink stage over y 0 to 1236 with rounded bottom corners on a cream band, and his take LARGE
+ *    bottom right (face centre x 0.78, about 0.21 of the frame wide), unframed, his head crossing the stage edge.
  *  - `tray` (eating its own jobs): his take stays full frame and the graphics rise in a cream tray from bottom left
  *    over his chest, with a hard ink drop. His face is left clear, so the captions go in the upper strip.
  *  - `pillar` (a vertical take on a 16:9 cut; Krish, 19 Nov 2026, picked "Pillar: whole take on the right"): his
  *    1080x1920 take whole and uncropped as a full-height 608 px panel on the right of the wide frame, a series-colour
  *    hairline, the ink graphics panel on the left. A tall cut is not staged by it at all and draws exactly as `fill`.
  *
- *  A SPLIT or WINDOW beat keeps its own lock, and a graphics-only beat stays a full-frame takeover (the `fill` region).
+ *  - `anchor` (The Athletic's set, the face beats of eating its own jobs; shot grammar, 20 Nov 2026): his face is the
+ *    frame, 9:16 only. Graphics sit only in the chest band (y 0.60 to 0.80, clear of the captions), never over his face;
+ *    a graphics-only beat on an anchor cut is a PLATE, the full-frame takeover below.
+ *
+ *  A SPLIT or WINDOW beat keeps its own lock. A graphics-only beat is a full-frame takeover (the `fill` region) only where
+ *  the shot grammar allows one: on an anchor cut (a PLATE), or on a cut not drawn by the grammar. Under the grammar
+ *  (props.layout.grammar, Ruling, Krish, 2026-11-20: one staging per cut) a band or stage cut's graphics-only beat stays
+ *  in the panel with his face on screen, so the body never switches layout.
  *  Pure: geometry is a function of the props alone, and every box handed to devices is a layout region they may grow
  *  into (`kit/layout.ts`, `isRegion`). */
 
-export const STAGINGS = ['band', 'stage', 'tray', 'pillar'] as const
+export const STAGINGS = ['band', 'stage', 'tray', 'pillar', 'anchor'] as const
 export type Staging = typeof STAGINGS[number]
 /** Whether a layout mode stages his take on a cut of this aspect. The pillar is for a vertical take on a wide cut only:
  *  on 9:16 the take is already the frame's shape, so a pillar piece's tall cut draws exactly as under `fill`. */
 export const isStaging = (mode: string | undefined, aspect?: string): mode is Staging =>
-  (STAGINGS as readonly string[]).includes(mode ?? '') && !(mode === 'pillar' && aspect === '9:16')
+  (STAGINGS as readonly string[]).includes(mode ?? '') && !(mode === 'pillar' && aspect === '9:16') && !(mode === 'anchor' && aspect === '16:9')
 
 type Aspect = '9:16' | '16:9'
-type Placement = 'lower' | 'centre' | 'upper' | undefined
+type Placement = 'lower' | 'centre' | 'upper' | 'seam' | undefined
 
 export interface StagingGeometry {
   /** Where his take is drawn, and its corner radius. */
@@ -73,6 +80,12 @@ export function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placem
         panel: { left: 0, top: 0, width: 1080, height: 0, radius: '0' },
         region: clearOfCaptions({ left: 60, top: 280, width: 800, height: 560 }, aspect, placement, themed), rises: false }
     }
+    if (mode === 'anchor') {
+      // His face is the frame. The chest band (y 1240 to 1620, 0.65 to 0.84: under a face that sits low in his takes) is the only place graphics go, cut clear of the captions.
+      const r = clearOfCaptions({ left: 60, top: 1240, width: 800, height: 380 }, aspect, placement, themed)
+      return { take: { left: 0, top: 0, width: 1080, height: 1920, radius: 0, border: false },
+        panel: { ...r, height: 0, radius: '0' }, region: r, rises: false }
+    }
     if (mode === 'band') {
       const seam = 1000
       return { take: { left: 0, top: seam, width: 1080, height: 1920 - seam, radius: 0, border: false },
@@ -81,9 +94,11 @@ export function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placem
     }
     if (mode === 'stage') {
       const edge = 1236
-      return { take: { left: 600, top: 980, width: 420, height: 700, radius: 44, border: true },
+      // AI music (shot grammar, 20 Nov 2026): him LARGE bottom right, face centre x 0.78, face about 0.21 of the frame wide,
+      // his head crossing the stage edge (y 1236), no frame round him and no empty band; the caption sits beside him.
+      return { take: { left: 430, top: 765, width: 650, height: 1155, radius: 44, border: false },
         panel: { left: 0, top: 0, width: 1080, height: edge, radius: '0 0 56px 56px' }, under: 'cream',
-        region: clearOfCaptions({ left: 60, top: 280, width: 800, height: 980 - GAP - 280 }, aspect, placement, themed), rises: false }
+        region: clearOfCaptions({ left: 60, top: 280, width: 800, height: 900 - GAP - 280 }, aspect, placement, themed), rises: false }
     }
     // Over his chest, clear of his face: the tray needs the captions in the upper strip (compile refuses others).
     const r = clearOfCaptions({ left: 60, top: 900, width: 600, height: 600 }, aspect, placement, themed)
@@ -97,14 +112,16 @@ export function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placem
       region: clearOfCaptions({ left: 96, top: 140, width: seam - 96 - 60, height: 800 }, aspect, placement, themed), rises: false }
   }
   if (mode === 'band') {
-    const seam = 1152
+    // The face column is the pillar's 608 px (0.32 of the frame), on the right: the Character.ai wide cut (shot grammar).
+    const seam = 1920 - PILLAR_TAKE_WIDTH
     return { take: { left: seam, top: 0, width: 1920 - seam, height: 1080, radius: 0, border: false },
       panel: { left: 0, top: 0, width: seam, height: 1080, radius: '0' }, hairline: { left: seam - 10, top: 0, width: 10, height: 1080 },
       region: clearOfCaptions({ left: 96, top: 140, width: seam - 96 - 60, height: 800 }, aspect, placement, themed), rises: false }
   }
   if (mode === 'stage') {
-    const edge = 880
-    return { take: { left: 1400, top: 560, width: 440, height: 460, radius: 44, border: true },
+    // Panel to y 0.81, him large bottom right with his head over the stage edge (shot grammar, 20 Nov 2026).
+    const edge = 875
+    return { take: { left: 1360, top: 380, width: 560, height: 700, radius: 44, border: false },
       panel: { left: 0, top: 0, width: 1920, height: edge, radius: '0 0 56px 56px' }, under: 'cream',
       region: clearOfCaptions({ left: 96, top: 120, width: 1260, height: edge - 60 - 120 }, aspect, placement, themed), rises: false }
   }
@@ -113,9 +130,14 @@ export function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placem
     panel: { ...r, radius: '28px' }, region: { left: r.left + GAP, top: r.top + GAP, width: r.width - 2 * GAP, height: r.height - 2 * GAP }, rises: true }
 }
 
-/** Whether a beat is staged: it shows his take and keeps no lock of its own. */
-export function staged(beat: { layout: string; plate?: { source: string } | undefined }): boolean {
-  return beat.layout !== 'SPLIT' && beat.layout !== 'WINDOW' && !(beat.layout === 'STAGE' && beat.plate?.source === 'none')
+/** Whether a beat is staged: it shows his take and keeps no lock of its own. Under the shot grammar (`grammar`, a band or
+ *  stage cut drawn by it) a graphics-only beat stays staged too: only an anchor cut's plate and the end card leave his
+ *  face (Ruling, Krish, 2026-11-20: one staging per cut). */
+export function staged(beat: { layout: string; plate?: { source: string } | undefined; shot?: string | undefined },
+  grammar?: { mode: string } | undefined): boolean {
+  if (beat.layout === 'SPLIT' || beat.layout === 'WINDOW') return false
+  if (grammar && beat.shot) return beat.shot !== 'plate' && beat.shot !== 'end'
+  return !(beat.layout === 'STAGE' && beat.plate?.source === 'none')
 }
 
 /** The tray's rise from bottom left: 9 frames, a 6% overshoot on scale, ease out. 1 once landed. */

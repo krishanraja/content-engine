@@ -30,6 +30,10 @@ export type TitleMomentProps = {
   /** Accepted for older props; the lockup always fades where it stands, over the whole frame. */
   release?: 'captions' | 'fade'
   card?: boolean
+  /** Shot grammar (Ruling, Krish, 2026-11-20): the lockup builds inside this box (the staging's panel) while he says the
+   *  line, and goes full frame from `fullFrom` (his last title word) over 6 frames. Absent: full frame throughout. */
+  panel?: Box | undefined
+  fullFrom?: number | undefined
   stage?: Box
   captionBox?: Box
 }
@@ -138,10 +142,23 @@ export function lockupOpacity(frame: number, fromFrame: number, toFrame: number)
   return Math.min(fadeIn, 1 - unit((frame - (toFrame - out)) / out))
 }
 
+/** Whether the lockup is still building in the panel: from its first word until `fullFrom` (his last title word). It is
+ *  laid out for the panel's own size there (never a full-frame picture shrunk into it), then cuts to the full frame. */
+export function inPanel(panel: Box | undefined, fullFrom: number | undefined, frame: number): panel is Box {
+  return !!panel && fullFrom !== undefined && panel.width > 0 && panel.height > 0 && frame < fullFrom
+}
+
 /** Cut-clock only; deliberately no Remotion context, clocks, random values or persistent state. */
 export function TitleMoment(props: TitleMomentProps): JSX.Element | null {
   const { words, frame, fromFrame, toFrame, width, height, tokens } = props
   if (frame < fromFrame || frame >= toFrame || !words.length || width <= 0 || height <= 0) return null
+  if (inPanel(props.panel, props.fullFrom, frame)) {
+    const box = props.panel!
+    return <div data-title-in-panel="" style={{ position: 'absolute', left: box.left, top: box.top, width: box.width, height: box.height,
+      overflow: 'hidden', pointerEvents: 'none' }}>
+      <TitleMoment {...props} width={box.width} height={box.height} panel={undefined} fullFrom={undefined} />
+    </div>
+  }
   const geo = lockupGeometry(words, width, height, props.aspect, props.wordmark)
   const opacity = lockupOpacity(frame, fromFrame, toFrame)
   const cream = tokens.cream ?? tokens.text ?? 'white'

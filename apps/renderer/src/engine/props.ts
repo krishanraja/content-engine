@@ -45,6 +45,8 @@ export const EngineBeatSchema = z.object({
   id: z.string().min(1),
   role: z.enum(['hook', 'anchor', 'bridge', 'pivot', 'payoff', 'call']),
   layout: z.enum(['P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SPLIT', 'WINDOW']),
+  /** The beat's shot type under the shot grammar (spec beat.shot; docs/ve/INGREDIENTS.md, "Shot grammar"). */
+  shot: z.enum(['band', 'stage', 'anchor', 'plate', 'number', 'chapter', 'title', 'end']).optional(),
   face: z.enum(['full', 'window', 'off']).optional(),
   plate: z.object({ source: z.string().min(1), crop: z.string().min(1).optional() }).strict().optional(),
   backdrop: z.object({ src: z.string().min(1) }).strict().optional(),
@@ -128,7 +130,7 @@ export const EngineRenderPropsSchema = z.object({
   /** Where a caption theme sits, chosen with it and apart from the motion style (spec style.captions.placement;
    *  Krish, 2026-11-13: "the captions should be decoupled from the animation styles"): the lower band (the default),
    *  the centre of the frame, or the upper strip. Every place is inside every channel's safe area (captions/kit.ts). */
-  captionPlacement: z.enum(['lower', 'centre', 'upper']).optional(),
+  captionPlacement: z.enum(['lower', 'centre', 'upper', 'seam']).optional(),
   title: z.string().min(1).optional(),
   /** The episode title moment (spec title_moment; Krish, 2026-11-17: "seamlessly flowing out of the captions and back
    *  in to them again"): the words he says as the title, each on its spoken frame. The captions leave these words out,
@@ -143,6 +145,9 @@ export const EngineRenderPropsSchema = z.object({
     /** The title is one full-frame lockup with the wordmark inside it (Ruling, Krish, 2026-11-19): compile always says so,
      *  so ve qc can refuse a cut rendered before the lockup. */
     lockup: z.literal(true).optional(),
+    /** Under the shot grammar (Ruling, Krish, 2026-11-20): the lockup builds inside the staging's panel as he says the
+     *  line and goes full frame only from this frame, his last title word, for at most 2 s (compile caps toFrame). */
+    fullFrom: z.number().int().nonnegative().optional(),
     words: z.array(z.object({ text: z.string().min(1), atFrame: z.number().int().nonnegative() }).strict()).min(1),
   }).strict().optional(),
   beats: z.array(EngineBeatSchema).min(1),

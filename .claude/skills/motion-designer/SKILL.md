@@ -22,8 +22,8 @@ The plan answers to the house, never the other way round:
   brief: "apply 1 to 6 from the next piece you make this week"). On a 9:16 cut the hook beat's first frame shows the
   piece's one named thing, and its first event lands by the hook's second word, so words are on screen inside the
   first second: `ve lint` (`story.hook_event`) refuses it later, and `dialogue.short_max` refuses a short past
-  SHORT_CUT's 35 seconds. The promoted TikTok of "The UK number two" kept 35.7 in 100 viewers past 2 seconds and 0.6
-  to the end: plan the opening for a stranger scrolling with the sound off.
+  SHORT_CUT's 35 seconds. Plan the opening for a stranger scrolling with the sound off ("The UK number two": 35.7 in
+  100 past 2 seconds).
   STORY_ARC: one story, each beat setting up or answering its question. VISUAL_EXPLAINS: a moving picture exists only to
   make one point land faster than the words. MUSIC_BED: only licensed music from the ledger, never a clock.
 - **His words are the clock.** Every event sits on the word that names it; every handover sits in a pause.
@@ -49,15 +49,17 @@ Set each with its `reason` in one plain line (`.agents/skills/motion-designer/re
   Before Sign storyboard: `.agents/skills/motion-designer/references/pre-critic.md` (`ve critic --pre`).
 - `style.motion`: his pick, or before he records the proposal from
   `python3 scripts/post-pack/creative_direction.py motion --points ... --format ...`.
-- `style.transitions`, `style.camera`, `style.energy`, `style.layout`: chosen apart from the motion style, for this
-  piece (INGREDIENTS.md). A staging (`band`, `stage`, `tray`) when the piece shows his take; `fill` or `stack` when
-  it does not.
+- `style.transitions`, `style.camera`, `style.energy`: chosen apart from the motion style (INGREDIENTS.md).
+- `style.layout`: ONE staging per cut, `band`, `stage` or `anchor` (9:16 only; `style.layout.cuts`), with the recipe
+  (Ruling, Krish, 2026-11-20); only title, chapter, end card, anchor plates break it. Nothing generated.
+  INGREDIENTS.md "Shot grammar".
 - Captions are their own choice (`style.captions`); the plan keeps their band clear and never repeats their words.
 
 ## 2. Every beat
 
 For each beat of each cut, in order, write: `role`, `span` (his words), `point` (one idea, one sentence a stranger
 would follow muted), `layout`, `uses`, `events` (each `at_w` on the word that names the change) and `transition_out`.
+Then `ve shots <spec>` writes each beat's `shot` and the shot table in `storyboard.md`.
 Follow the method's rules 1 to 7 (`method.md`, read in "Before anything"): the style's own entrances inside the
 signed floor, the outgoing beat gone before the incoming, a cursor on his words, every box at its final size from the
 first frame, one mint accent, one idea per frame, density from small events, never more scenes.
@@ -67,9 +69,7 @@ When the beat that is hardest to make move is not the one the proof rule would p
 
 ## 3. The cartoon character
 
-Only when the spec names one (`spec.character`) and `ve lint` accepts it: pick each pose by
-`.agents/skills/motion-designer/references/character.md`. Never in the hook, 9:16 only, and the pose matches the
-beat's point.
+Only when `spec.character` names one and `ve lint` accepts it: `.agents/skills/motion-designer/references/character.md`.
 
 ## 4. Check the plan
 
@@ -93,11 +93,10 @@ None after Sign storyboard (Ruling, Krish, 2026-11-19): `.agents/skills/ve/refer
 ## Refused, whatever a reference shows
 
 All of `.agents/skills/motion-designer/references/adaptations.md`: a white stage, violet or coral accents, an outside font,
-small UI, a sound on every hit, unlicensed music, lockups,
-sparkles, shimmer loaders, recreated UIs, invented numbers, per-video scenes, any pace target.
+small UI, a sound on every hit, unlicensed music, lockups, sparkles, shimmer loaders, recreated UIs, invented numbers,
+per-video scenes, any pace target.
 
 ## Walls
 
-Nothing here renders a paid asset, dispatches Codex, sends, posts, publishes or spends. A move the device library
-cannot draw is named in the storyboard document as a gap; its card waits for the ve skill (step 7), never per-piece
-code. No outside picture or clip enters the repository.
+Nothing here renders a paid asset, dispatches Codex, sends, posts, publishes or spends. A move the library cannot
+draw is a gap in the storyboard document; its card waits for the ve skill (step 7). No outside picture enters the repo.

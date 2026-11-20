@@ -14,8 +14,8 @@
       "SPLIT"
     ],
     "vertical_source_layouts": [],
-    "vertical_source_stagings": ["pillar"],
-    "vertical_source_stagings_why": "Krish, 19 Nov 2026, of the Fri 20 long cut's vertical take: \"Pillar: whole take on the right\". The pillar staging (apps/renderer/src/engine/kit/staging.ts) draws the take whole at full height; a WINDOW or SPLIT beat keeps its own lock and is still refused."
+    "vertical_source_stagings": ["pillar", "band", "stage"],
+    "vertical_source_stagings_why": "Krish, 19 Nov 2026, of the Fri 20 long cut's vertical take: \"Pillar: whole take on the right\". The pillar staging (apps/renderer/src/engine/kit/staging.ts) draws the take whole at full height; a WINDOW or SPLIT beat keeps its own lock and is still refused. From the shot grammar (20 Nov 2026) band at 16:9 is the same 608 px full-height column, and stage at 16:9 draws his take in a portrait box (560 by 700) bottom right, so a vertical take fills both without cutting his head."
   },
   "logos": {
     "why": "Fin's mark is black on a black stage and vanished; Salesforce's cloud sat bulky beside two wordmarks. Fixed on the piece with equal white tiles (logo_card params.tiles).",

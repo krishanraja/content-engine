@@ -1554,6 +1554,12 @@ def cmd_brief(args) -> int:
                 print(finding)
             print(f"ve brief: {args.plate} candidates {'pass' if report['pass'] else 'FAIL'}; OCR {report['ocr']}")
             return 0 if report['pass'] else 1
+        # No generation in a cut (Ruling, Krish, 2026-11-20: generated imagery never): a bound piece gets no plate brief.
+        from velib import grammar
+        refusal = grammar.generation_refusal(spec, directory)
+        if refusal and brief.build_briefs(spec, cut=cut, script=script, words=words, beats=args.beat, moves=moves):
+            print(f've brief: refused, {refusal}', file=sys.stderr)
+            return 1
         paths = brief.write_briefs(spec, directory, cut=cut, script=script, words=words, beats=args.beat, moves=moves)
         if not paths:
             print('ve brief: no plate slots (no beat uses a generated asset; name one with --beat)')
@@ -2351,6 +2357,34 @@ def cmd_expect(args) -> int:
     return 0
 
 
+def cmd_shots(args) -> int:
+    """Write every beat's shot type from its cut's one staging and draw the shot table on the storyboard document
+    (Ruling, Krish, 2026-11-20: the shot grammar is approved; one staging per cut)."""
+    from velib import grammar, shots, verdict
+    spec_path = Path(args.spec)
+    spec = load_json(spec_path)
+    directory = verdict.ve_dir(spec_path)
+    try:
+        changed = shots.plan(spec, directory)
+    except ValueError as error:
+        print(f've shots: {error}', file=sys.stderr)
+        return 1
+    for line in changed:
+        print(f've shots: {line}')
+    found = grammar.check(spec, directory)
+    if args.dry_run:
+        print(shots.table_md(spec, directory))
+    else:
+        write_json(spec_path, spec)
+        board = directory / 'storyboard.md'
+        shots.write_storyboard(board, shots.table_md(spec, directory))
+        print(f've shots: {spec_path} and the shot table in {board}')
+    for line in found:
+        print(f'  - {line}')
+    print(f've shots: {len(found)} grammar finding(s); ve lint holds them for a piece frozen from 2026-11-23')
+    return 1 if found else 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(prog='ve', description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest='cmd', required=True)
@@ -2552,6 +2586,9 @@ def main() -> int:
     p.add_argument('--points', help='comma list of point types; default from the spec'); p.add_argument('--props')
     p.add_argument('--scale', type=float, default=1.0)
     p.set_defaults(fn=cmd_styles)
+    p = sub.add_parser('shots', help="write each beat's shot type from its cut's one staging and the shot table on the storyboard")
+    p.add_argument('spec'); p.add_argument('--dry-run', action='store_true', help='print the shot table; write nothing')
+    p.set_defaults(fn=cmd_shots)
     p = sub.add_parser('expect', help='write expect.md: at most six lines of what this cut will and will not do')
     p.add_argument('spec'); p.set_defaults(fn=cmd_expect)
     p = sub.add_parser('ledger', help='report or append piece usage against budget caps',

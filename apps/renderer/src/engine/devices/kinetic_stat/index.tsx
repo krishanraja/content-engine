@@ -1,3 +1,4 @@
+import { formatAmount } from './money'
 import React from 'react'
 import { HOUSE_FONTS } from '../../../house/geometry'
 import { textWidth } from '../../../house/metrics'
@@ -23,9 +24,9 @@ export function Device({ object, events, box, tokens, aspect, frame }: DevicePro
   const state = kineticState(object, events, frame)
   if (!state.visible) return null
   // Size against the final value, so counting never changes the geometry.
-  const target = state.denominator === null ? String(state.target) : `${state.target}/${state.denominator}`
+  const target = state.targetText
   const ghostTexts = object.params.ghost === true ? object.dataset!.rows.map(row =>
-    state.denominator === null ? String(row.value) : `${row.value}/${state.denominator}`) : []
+    state.denominator === null ? formatAmount(row.value, object.dataset!.unit).text : `${row.value}/${state.denominator}`) : []
   const l = kineticLayout(box, target, state.unit, state.producerLabel, aspect, ghostTexts)
   return <div style={{ color: tokens.cream, textAlign: 'center' }}>
     {state.ghostText !== null && <div data-kinetic-ghost="" style={{ position: 'absolute', ...l.number,

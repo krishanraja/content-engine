@@ -223,9 +223,10 @@ class FaceKeepOutTest(unittest.TestCase):
 
     def test_the_staged_boxes_are_kit_stagings_own_numbers(self):
         source = (ROOT / 'apps' / 'renderer' / 'src' / 'engine' / 'kit' / 'staging.ts').read_text(encoding='utf-8')
-        for literal in ('take: { left: 600, top: 980, width: 420, height: 700', 'const seam = 1000', 'const edge = 1236',
-                        '{ left: 60, top: 900, width: 600, height: 600 }', 'const seam = 1152',
-                        'take: { left: 1400, top: 560, width: 440, height: 460', 'const edge = 880',
+        for literal in ('take: { left: 430, top: 765, width: 650, height: 1155', 'const seam = 1000', 'const edge = 1236',
+                        '{ left: 60, top: 900, width: 600, height: 600 }', 'const seam = 1920 - PILLAR_TAKE_WIDTH',
+                        '{ left: 60, top: 1240, width: 800, height: 380 }',
+                        'take: { left: 1360, top: 380, width: 560, height: 700', 'const edge = 875',
                         '{ left: 96, top: 480, width: 900, height: 540 }', 'left: 96, top: 140, width: seam - 96 - 60, height: 800',
                         'left: 96, top: 120, width: 1260', 'Math.round(1080 * 9 / 16)'):
             self.assertIn(literal, source)
