@@ -153,8 +153,10 @@ ENDCARD_SECONDS = 6
 # statement_beat; Ruling, Krish, 2026-11-12: "I approve the brand palette sheet, but only if it falls in line with
 # the attached", docs/production/SOCIAL-BEST-PRACTICES-2026.md section 5: a compact end beat, never a long card).
 ENDCARD_SECONDS_BY_SHAPE = {'16x9': ENDCARD_SECONDS, '9x16': 2}
-TAGLINE = 'Built to help you decide.'
-CTA = 'Subscribe free'
+# The one copy of the close's words (config/brand-palette.json close_copy), the same ve compile reads.
+_CLOSE_COPY = json.loads((REPO / 'config' / 'brand-palette.json').read_text(encoding='utf-8'))['close_copy']
+TAGLINE = _CLOSE_COPY['tagline']
+CTA = _CLOSE_COPY['cta']
 
 # How big a picture's words come out, from house rule SUBSTACK_FIT: a
 # 1360-wide article picture draws every word a reader needs at 54 pixels or

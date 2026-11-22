@@ -73,12 +73,26 @@ def _onsets(signal: np.ndarray, floor: float) -> list[int]:
     return hits
 
 
-def measure(path: str | Path, seconds: float | None = None) -> dict:
+def measure(path: str | Path, seconds: float | None = None, exclude: list[tuple[float, float]] | None = None) -> dict:
+    """`exclude`: windows in seconds left out of the measure (the floor measures the body only: the end card and the
+    full-frame title lockup are fixed moments, not the cut's pace; coordinator's 20 Nov recipe samples, where the 6 s
+    house close alone held every 16:9 cut). The windows are cut out and the frames either side are never compared."""
     f = frames(path, seconds)
+    joins = np.zeros(max(len(f) - 1, 0), dtype=bool)
+    if exclude:
+        t = np.arange(len(f)) / SAMPLE_FPS
+        keep = np.ones(len(f), dtype=bool)
+        for a, b in exclude:
+            keep &= ~((t >= a) & (t < b))
+        idx = np.flatnonzero(keep)
+        f = f[idx]
+        joins = np.diff(idx) > 1 if len(idx) > 1 else np.zeros(0, dtype=bool)
     if len(f) < SAMPLE_FPS:
         raise ValueError(f'{path}: under a second of picture decoded')
     duration = len(f) / SAMPLE_FPS
     d = np.abs(np.diff(f, axis=0))                       # [n-1, H, W]
+    if joins.any():
+        d[joins] = 0                                     # a cut-out window is no change of the cut's own
     whole = d.mean(axis=(1, 2))                          # change over the frame
     tile_d = _tiles(d).mean(axis=3)                      # [n-1, 16, 9]
     # events: onsets on the whole frame, and in each tile (an element arriving somewhere small)

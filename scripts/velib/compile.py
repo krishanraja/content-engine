@@ -24,8 +24,9 @@ ENDING_FRAMES = 180  # the house close: 6 s, settled by 2.75 s then held (docs/p
 # Ruling, Krish, 2026-11-12: "I approve the brand palette sheet, but only if it falls in line with the attached").
 ENDING_FRAMES_BY_ASPECT = {'16:9': ENDING_FRAMES, '9:16': 60}
 # Krish, 10 Nov 2026: "The copy should read: "Built to help you decide."" (the same words as quick-edit's kit TAGLINE).
-ENDING_TAGLINE = 'Built to help you decide.'
-ENDING_CTA = 'Subscribe free'
+_CLOSE_COPY = load_json(ROOT / 'config' / 'brand-palette.json')['close_copy']  # the one copy of the close's words
+ENDING_TAGLINE = _CLOSE_COPY['tagline']
+ENDING_CTA = _CLOSE_COPY['cta']
 # The opening, under test (Krish, 29 Oct 2026: "I'd pick number one here but I think that we need to test and learn.
 # We need to figure out what the right tone is over time based on real engagement. Let's go with number one for
 # now."): the hook is the intro. The first beat owns frame 0 with the logo and the series tag in its corners, and no
@@ -87,6 +88,54 @@ def sting_props(cut: dict, channel: str, off: bool, report: dict | None = None) 
     the sting exception for good."). From 5 Nov to 12 Nov the 16:9 whole cut of a weekly series piece opened on the
     house sting; config/intro-sting.json keeps that record, retired, and is no longer read to open a cut."""
     return None
+
+
+CLOSE_STING_SHAPE = {'16:9': '16x9', '9:16': '9x16'}
+
+
+def close_sting_props(spec: dict, cut: dict, channel: str, off: bool) -> tuple[dict | None, str | None]:
+    """props.ending.sting for this cut, and why there is none when the close wants one. The series close is the intro
+    sting at the END of the cut (Ruling, Krish, 2026-11-20: "A, with Built to help you decide, and then Subscribe free at
+    makeyourmindup.ai"; config/intro-sting.json close, config/brand-palette.json sting_beat and sting_card), for a whole
+    cut of a weekly series piece dated from close.applies_from. Never an opening: the sting at the start stays retired.
+    (None, None) when the cut does not close on it (an excerpt, an off day, a piece dated before it); (None, why) when
+    it should and its clip is not on this machine, so ve render refuses (ending_problems) rather than closing on ink."""
+    shape = CLOSE_STING_SHAPE.get(cut.get('aspect'))
+    if cut.get('excerpt', False) or off or not shape:
+        return None, None
+    intro = _intro()
+    if not intro.close_wanted(shape, channel, spec.get('publish_day')):
+        return None, None
+    try:
+        path, sha256, frames = intro.close_clip(shape, channel)
+    except intro.IntroError as error:
+        return None, str(error)
+    return {'src': str(path), 'series': intro.series_name(channel), 'sha256': sha256, 'frames': int(frames)}, None
+
+
+def ending_problems(props: dict, spec: dict | None = None) -> list[str]:
+    """Why a whole cut's close is not the one the palette asks for it: a series piece dated from the close's
+    applies_from closes on the sting clip Krish saw (Ruling, Krish, 2026-11-20), never on the plain ink card; an off
+    day never closes on one. Empty for an excerpt or a piece dated before the close."""
+    ending = props.get('ending')
+    if not ending or spec is None:
+        return []
+    channel = str((spec.get('brand') or {}).get('series') or '').replace('.', '_')
+    off = not ending.get('days')
+    shape = CLOSE_STING_SHAPE.get(props.get('aspect'))
+    intro = _intro()
+    want = (not off) and shape and intro.close_wanted(shape, channel, spec.get('publish_day'))
+    sting = ending.get('sting')
+    if want and not sting:
+        return [f'this {props.get("aspect")} cut of a series piece closes on the intro sting from '
+                f'{(intro.close_rules() or {}).get("applies_from")} (Ruling, Krish, 2026-11-20), and its props close on the '
+                'ink card: run python scripts/quick-edit/intro.py fetch, then ve compile again']
+    if sting and not want:
+        return ['the props close on a sting this cut does not wear (an off day, or a piece dated before the sting close)']
+    if sting and sting.get('sha256') != intro.clip_sha256(shape, channel):
+        return [f'the close plays sting {str(sting.get("sha256"))[:12]}, not the {shape} {channel} clip Krish saw '
+                '(config/intro-sting.json)']
+    return []
 
 
 def hook_end(props: dict) -> int:
@@ -430,6 +479,24 @@ def title_moment_props(spec: dict, cut_id: str, rows: list[dict], duration: int)
                       for i, row in enumerate(said)]}
 
 
+# The full-frame title lockup holds at most 2 s (shot grammar, from AI music's 13 to 14.9 s; Wed 18's 6 s card was rejected).
+TITLE_FULL_MAX_FRAMES = 60
+
+
+def grammar_title(cut: dict, moment: dict, mode: str | None = None) -> dict:
+    """Under the shot grammar (every beat carries its shot type, or the cut is staged; Ruling, Krish, 2026-11-20) the title builds in
+    the staging's panel as he says the line and goes full frame only from his last title word, for at most
+    TITLE_FULL_MAX_FRAMES, then the cut is back on its one staging. Off the grammar the lockup draws as before."""
+    beats = cut.get('beats') or []
+    # Every staged cut holds the lockup to the lock (the coordinator's 20 Nov recipe samples held it 4 to 8 s full frame
+    # and tripped the plain-dark-band guard), not only a cut whose beats carry their shot types.
+    if not beats or not (all(b.get('shot') for b in beats) or mode in ('band', 'stage', 'pillar', 'anchor')):
+        return {}
+    last = max(w['atFrame'] for w in moment['words'])
+    moment['toFrame'] = min(moment['toFrame'], last + TITLE_FULL_MAX_FRAMES)
+    return {'fullFrom': last, 'toFrame': moment['toFrame']}
+
+
 def backdrop(spec: dict, beat: dict, assets_dir) -> dict:
     """The one real picture under a beat's graphics (Krish, 2026-11-18: "making actual use of the full screen when it
     isn't my face"): a photo, a screenshot or a scene from the spec's assets, its staged bytes checked against the
@@ -465,7 +532,8 @@ def _params(params: dict, source) -> dict:
 
 
 def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Path, *, report: dict | None = None,
-                edl: dict | None = None, take_frame: dict | None = None, faces: dict | None = None) -> dict:
+                edl: dict | None = None, take_frame: dict | None = None, faces: dict | None = None,
+                matte: dict | str | None = 'auto') -> dict:
     """Return EngineRenderProps without writing files or changing the spec.
 
     With an EDL from ve conform (already through its F09 lint), the source edits are applied: the words are the
@@ -548,6 +616,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         if end <= start:
             raise ValueError(f'beat {beat["id"]} has no positive frame interval')
         beats.append({'id': beat['id'], 'role': beat['role'], 'layout': beat['layout'],
+                      **({'shot': beat['shot']} if beat.get('shot') else {}),
                       'fromFrame': start, 'toFrame': end, 'uses': list(beat.get('uses', [])),
                       **({'face': beat['face']} if 'face' in beat else {}),
                       'transitionOut': beat.get('transition_out', 'cut'), 'sectionBeat': index == 0,
@@ -703,7 +772,8 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         **({'title': spec['brand']['title']} if spec['brand'].get('title') else {}),
         # The title is one full-frame lockup with the wordmark inside it (Ruling, Krish, 2026-11-19); 'lockup' tells ve qc
         # the cut was rendered after the lockup replaced the panel card and the separate wordmark.
-        **({'titleMoment': {**{k: moment[k] for k in ('fromFrame', 'toFrame', 'release', 'words')}, 'card': True, 'lockup': True}}
+        **({'titleMoment': {**{k: moment[k] for k in ('fromFrame', 'toFrame', 'release', 'words')}, 'card': True, 'lockup': True,
+                            **grammar_title(cut, moment, cut_layout_mode(spec, cut_id, take_frame))}}
            if moment else {}),
         'beats': beats, 'objects': objects, 'events': events,
     }
@@ -749,6 +819,13 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                                     for c in house['channels'] if c in publication['channel_colors']] if not off else []}
         if spec.get('style', {}).get('ending_ticker') is False:
             props['ending']['ticker'] = False  # no scrolling promise strip (Krish: no marquee)
+        # The series close on the sting (Ruling, Krish, 2026-11-20): the same 60 frames tall and 180 wide, the sting
+        # inside them (EndingBand.tsx). Without its clip here the props close on ink and ve render refuses them.
+        close_sting, close_why = close_sting_props(spec, cut, channel, off)
+        if close_sting:
+            props['ending']['sting'] = close_sting
+        if report is not None:
+            report['close'] = 'sting' if close_sting else ('ink' if not close_why else f'ink, sting missing: {close_why}')
         props['durationFrames'] += ENDING_FRAMES_BY_ASPECT.get(cut['aspect'], ENDING_FRAMES)
         # The ending band is drawn by BrandFrame, which FormatMaster mounts only for an active beat, so the last
         # beat (and what persists to it) runs through the ending. Captions stop at its start.
@@ -771,17 +848,40 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         props['ingredients'] = ingredients
     if 'sound' in (spec.get('style') or {}):
         props['audio']['sfx'] = sound_props(spec, props, assets_dir)
-    layout = ((spec.get('style') or {}).get('layout') or {}).get('mode') or default_layout(spec, cut_id, take_frame)
+    layout = cut_layout_mode(spec, cut_id, take_frame)
     if layout and layout != 'house':
         if layout not in LAYOUTS:
             raise ValueError(f"style.layout.mode {layout} is not one of {', '.join(LAYOUTS)}")
         if layout == 'tray' and props.get('captionPlacement') != 'upper':
             raise ValueError('style.layout.mode tray leaves his face clear, so the captions go in the upper strip: '
                              'set style.captions.placement upper')
+        if layout == 'anchor' and spec['cuts'][cut_id]['aspect'] != '9:16':
+            raise ValueError('style.layout anchor is 9:16 only until a good wide face-as-frame cut is measured '
+                             '(docs/ve/INGREDIENTS.md, "Shot grammar")')
         props['layout'] = {'mode': layout}
+        # A cut whose every beat carries its shot type is drawn by the shot grammar (Ruling, Krish, 2026-11-20: one staging
+        # per cut): its graphics-only beats stay in the staging's panel with his face on screen, except an anchor cut's plates.
+        if cut['beats'] and all(b.get('shot') for b in cut['beats']):
+            props['layout']['grammar'] = True
     if spec.get('character') and cut_id in spec['character'].get('cuts', []):
         from .character_track import compile_track
         props['character'] = compile_track(spec, cut_id, rows, props, assets_dir)
+    # Depth (shot grammar step 5): the subject matte of his take (`ve matte`, cached by the take's sha256), the type set
+    # behind him, the title behind his head on an anchor cut, and the body keep-out (velib/depth.py). 'auto' reads the
+    # cache for the take's bytes; a cut that wants type behind him with no matte is refused there.
+    from . import depth as depth_mod  # noqa: PLC0415
+    record = matte
+    if matte == 'auto':
+        record = None
+        if props.get('segments') and len(props['segments']) == 1:
+            from . import matte as matte_mod  # noqa: PLC0415
+            record = matte_mod.cached(props['segments'][0]['src'])
+    depth_problems = depth_mod.apply(props, spec, cut_id, rows, record, assets_dir, take_frame)
+    if report is not None and (record or depth_problems):
+        report['depth'] = {'matte': (record or {}).get('subject_sha256'), 'items': len(props.get('depth') or []),
+                           'title_behind': bool((props.get('titleMoment') or {}).get('behind'))}
+    if depth_problems:
+        raise ValueError('; '.join(depth_problems))
     # Nothing is drawn over his face (Krish, 2026-11-19: "the card generates over my face"): the face keep-out per beat from
     # the take's face track (faces: take -> its boxes, velib/keepout.py), and a refusal of anything compile places on it.
     from . import keepout  # noqa: PLC0415
@@ -796,14 +896,21 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
 # The ingredients chosen per piece apart from the motion style (docs/ve/INGREDIENTS.md; Krish, 2026-11-13: "the
 # captions should be decoupled from the animation styles"). Names as the renderer's captions/names.ts and
 # kit/ingredients.ts; engine.test.ts holds the two lists in step.
-CAPTION_PLACEMENTS = ('lower', 'centre', 'upper')
+CAPTION_PLACEMENTS = ('lower', 'centre', 'upper', 'seam', 'chin')
 ENERGIES = ('calm', 'medium', 'high')
 TRANSITIONS = ('cut', 'whip', 'push', 'zoom-through', 'flash', 'punch', 'crossfade')
 CAMERAS = ('none', 'drift', 'phased', 'punch')
 # The handovers whose exit can lead their entrance (style.transitions.lead, 15 Nov 2026): the ones that travel.
 LEAD_TRANSITIONS = ('whip', 'push', 'zoom-through', 'punch')
-LAYOUTS = ('house', 'fill', 'stack', 'band', 'stage', 'tray', 'pillar')
+LAYOUTS = ('house', 'fill', 'stack', 'band', 'stage', 'tray', 'pillar', 'anchor')
 WIDE_ASPECTS = ('16:9',)
+
+
+def cut_layout_mode(spec: dict, cut_id: str, take_frame: dict | None = None) -> str | None:
+    """The staging a cut is drawn with: its own style.layout.cuts entry, else style.layout.mode, else the default (one
+    staging per cut, picked at the lock with the recipe; Ruling, Krish, 2026-11-20). One rule, read by compile and lint."""
+    layout = (spec.get('style') or {}).get('layout') or {}
+    return (layout.get('cuts') or {}).get(cut_id) or layout.get('mode') or default_layout(spec, cut_id, take_frame)
 
 
 def default_layout(spec: dict, cut_id: str, take_frame: dict | None = None) -> str | None:

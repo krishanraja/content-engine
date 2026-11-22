@@ -636,19 +636,12 @@
       "never_beneath": "Stable, well-framed footage with his head centred, untouched room treatment, and joins and transitions with no glitch, flash or doubled frame; a visual Critic checks before he sees it.",
       "check": "Stabilisation check on every take; frame-check every join; Critic pass.",
       "members": [
-        "s044b7ab580",
         "s0fdeba76f2",
         "s2de122e11a",
-        "s34aa242137",
         "s3b50062c42",
         "s415326ed7e",
         "s4c8d880846",
-        "s5065b02582",
-        "s638de1e2ae",
         "s64af075d11",
-        "s69c467ce0a",
-        "s7999cf4f87",
-        "s868a06fc1a",
         "s8eae797bbf",
         "sa2b8ede84c",
         "seb7b1d5539"
@@ -661,8 +654,7 @@
       "never_beneath": "Every script, card and brief is clear on one read: each line is read aloud and smoothed before recording, every company or thing is named on first mention, every label and number is explained as it is heard, the precise term is used, an analogy stays whole, and pros and cons are plain; never a cryptic card, an ambiguous sentence, a vague pronoun or garbled shorthand.",
       "check": "Read the whole script and every brief aloud as if to someone with no context; flag any line that needs a second read, any unnamed 'it' or 'the company', any unexplained term or number, and any blended analogy.",
       "members": [
-        "s7a30a68e9e",
-        "s89e745868c"
+        "s7a30a68e9e"
       ],
       "evolves": "clear_on_one_hearing"
     },
@@ -674,11 +666,9 @@
       "members": [
         "s04d8bb71d4",
         "s5341c5158a",
-        "s634b9f91f3",
         "s66a5bbed88",
         "s816ae6d75a",
         "s86b28843d1",
-        "sb19a6a5ddd",
         "se9363be404"
       ],
       "evolves": "covers_personality"
@@ -689,26 +679,12 @@
       "never_beneath": "Every animation, card, label and line of text sits fully inside the frame and its safe area, apart from every other element, and the frame is filled deliberately top to bottom; never a cropped animation, a clipped component, overlapping titles, large empty areas, visuals cramped into corners, or a vertical template with a third cut off.",
       "check": "Scrub every frame at full size in the tall and wide exports: nothing clipped or overlapping, no dead band or empty area, and every line inside the safe-area guide.",
       "members": [
-        "s1e1de7780b",
         "s22fe24fc33",
-        "sa94cbbb736",
         "scb9f83d120",
         "sd2e6a86694",
-        "sd3bc37c928",
-        "sf742236cba",
-        "sffc2f3b668"
+        "sd3bc37c928"
       ],
       "evolves": "frame_whole"
-    },
-    {
-      "key": "his_voice_e261118",
-      "title": "Scripts are his spoken words, with personality (evolution, week of 2026-11-18)",
-      "never_beneath": "A script is only the words he will say, in his natural joined phrasing, with dry wit and opinion, in a reflective tone, for the leader of a medium-sized company; no stage directions, no AI disclosure line.",
-      "check": "Read it in his voice: no headings, no clipped robotic runs, no disclosure line.",
-      "members": [
-        "s647a747d7e"
-      ],
-      "evolves": "his_voice"
     },
     {
       "key": "house_brand_e261118",
@@ -718,8 +694,6 @@
       "members": [
         "s0497f76182",
         "s74dce65084",
-        "s98153b585a",
-        "sdbb299917b",
         "se0af88f5fd",
         "sec828b0f20"
       ],
@@ -733,23 +707,11 @@
       "members": [
         "s08ff0a2358",
         "s0df705f0e4",
-        "s224c1ff3d9",
         "s697bb2c6d8",
-        "s7ee62ee39b",
         "s8017e3e021",
-        "sc1e09b7bd6",
         "sd3b35020cb"
       ],
       "evolves": "motion_fast_full"
-    },
-    {
-      "key": "new_whole_cut_261118",
-      "title": "New: whole cut (week of 2026-11-18)",
-      "never_beneath": "Never reuse a template that has already been rejected as below the current quality bar; always match the standard of recent approved content.",
-      "check": "Compare the new piece's template side by side with the last few approved pieces and confirm it meets or exceeds their visual quality, not a previously rejected format.",
-      "members": [
-        "sa9b7a79b35"
-      ]
     },
     {
       "key": "real_evidence_e261118",
@@ -779,7 +741,6 @@
       "never_beneath": "The music runs one steady arc, loud at the open, soft and steady under speech, loud again at the close, with the opening bed fading out around 18 seconds into the next track, which stays audible; its tone matches the piece, and his voice is treated to sound deep, clear and professional; never volume rising and falling throughout, music burying the voice, dance music under a serious piece, or raw voice audio.",
       "check": "Listen to the whole mix on speakers and headphones: one arc with no pumping, the voice clear above the bed, the bed's tone right for the script, and the voice track processed.",
       "members": [
-        "s2b80bf9f53",
         "s30355752f3",
         "s38c5b1fe7a",
         "se54b6bc210"
@@ -796,8 +757,7 @@
         "s6aac46213a",
         "s8cfec15a70",
         "saf57b5b61c",
-        "sbeecebdf6d",
-        "scc90d8c6de"
+        "sbeecebdf6d"
       ],
       "evolves": "words_add"
     },
@@ -807,9 +767,6 @@
       "never_beneath": "A prediction names real companies, commits to a clear near-term call that is not already happening, and only appears where that day's close format calls for one; no doomsaying opener.",
       "check": "Named entities; dated and checkable; not already true; matches the agreed close.",
       "members": [
-        "s127ed5d9c6",
-        "s6692936a1f",
-        "s83427b0b89",
         "secddf8b1ab"
       ],
       "evolves": "bold_predictions"
@@ -820,12 +777,8 @@
       "never_beneath": "Stable, well-framed footage with his head centred, untouched room treatment, and joins and transitions with no glitch, flash or doubled frame; a visual Critic checks before he sees it.",
       "check": "Stabilisation check on every take; frame-check every join; Critic pass.",
       "members": [
-        "s5f0f8fe8a5",
-        "s65fbb0c509",
         "s67cd0d6d7f",
-        "s6d471eb3c4",
-        "s81e35bbb34",
-        "sf3aa210d2f"
+        "s6d471eb3c4"
       ],
       "evolves": "clean_picture"
     },
@@ -835,21 +788,8 @@
       "never_beneath": "Every script, card and brief is clear on one read: each line is read aloud and smoothed before recording, every company or thing is named on first mention, every label and number is explained as it is heard, the precise term is used, an analogy stays whole, and pros and cons are plain; never a cryptic card, an ambiguous sentence, a vague pronoun or garbled shorthand.",
       "check": "Read the whole script and every brief aloud as if to someone with no context; flag any line that needs a second read, any unnamed 'it' or 'the company', any unexplained term or number, and any blended analogy.",
       "members": [
-        "s0ddbc0dc82",
-        "s22a20caaef",
-        "s22a3808f9e",
         "s23d695987a",
-        "s2ea3e312b9",
-        "s36d4a49240",
-        "s4a2c868aa3",
-        "s7a463c5b7a",
-        "s84f3a750fe",
-        "s8d750df25c",
-        "sa04f69a14f",
-        "sa4001c540b",
-        "sc62359b774",
-        "se582a65698",
-        "se729748422"
+        "s4a2c868aa3"
       ],
       "evolves": "clear_on_one_hearing"
     },
@@ -859,17 +799,7 @@
       "never_beneath": "Covers and thumbnails are bold and on-brand, with plainly dressed people, drawn for each platform's real crop (wide and vertical), labelled by surface, and end cards designed into the reader's flow.",
       "check": "One cover per surface and crop; passes the visual gate; no raw URL over a photo.",
       "members": [
-        "s320d1f099d",
-        "s4aa3274cda",
-        "s752807e871",
-        "s864105b271",
-        "s8e537a87a3",
-        "s95d529d3a4",
-        "sa16ee36e64",
-        "sce857e443c",
-        "sd3c333f950",
-        "sed02e86508",
-        "seda6e01218"
+        "s752807e871"
       ],
       "evolves": "covers_personality"
     },
@@ -880,34 +810,8 @@
       "check": "Scrub every frame at full size in the tall and wide exports: nothing clipped or overlapping, no dead band or empty area, and every line inside the safe-area guide.",
       "members": [
         "s079bc496bd",
-        "s0a465eb907",
-        "s0c95da7d2b",
-        "s22ee7d4e8e",
-        "s2539727b14",
-        "s2776d58d2f",
-        "s3017029a79",
-        "s33bdb8e8df",
-        "s33dfa63297",
-        "s3696fc2319",
-        "s40a1fa2b20",
-        "s44ec049c59",
-        "s7bed6bfb55",
-        "s933cd9e39b",
-        "s9a2732d6d2",
         "s9c344abe2a",
-        "s9c5507593d",
-        "sa36f92b06b",
-        "sb55f834013",
-        "sbcca948c5d",
-        "sc6d74e3853",
-        "sc724ba81d5",
-        "sc84f17c443",
-        "scd87322438",
-        "sde55547c5b",
-        "se28dded749",
-        "see77d6222d",
-        "sf415afef51",
-        "sf688130c52"
+        "se28dded749"
       ],
       "evolves": "frame_whole"
     },
@@ -917,16 +821,9 @@
       "never_beneath": "A script is only the words he will say, in his natural joined phrasing, with dry wit and opinion, in a reflective tone, for the leader of a medium-sized company; no stage directions, no AI disclosure line.",
       "check": "Read it in his voice: no headings, no clipped robotic runs, no disclosure line.",
       "members": [
-        "s1935fa0391",
-        "s43b1e7fecf",
-        "s604bf1582e",
-        "s7408818d67",
-        "s8774da40d2",
         "sb8291edf84",
         "sbd698b0898",
-        "sd3ad9c4720",
-        "sd85f4bbbe1",
-        "se6a12d3f54"
+        "sd85f4bbbe1"
       ],
       "evolves": "his_voice"
     },
@@ -936,41 +833,11 @@
       "never_beneath": "Every asset and page carries the makeyourmindup wordmark, the brand book's fonts and colours, and a bold, colourful look; never a muted corporate one. On video the wordmark appears only at the close, never during the animated content; on a carousel, meme or Notes image it sits small in the bottom-right corner; a wide thumbnail carries none.",
       "check": "Wordmark visible; one font family; colours from the brand tokens.",
       "members": [
-        "s38d9993176",
         "s4abd3e361e",
-        "s524104950e",
-        "s53a086efbf",
-        "s6aaea1ebb3",
-        "s6d6fbfa73a",
         "s71488aaa63",
-        "s9c2e936c58",
-        "sa3faf83370",
-        "sb3b28a9f12",
-        "sc04d91e083",
-        "scd649d4b91",
-        "sce0f9bc1b4",
-        "sdad6bcd28e",
-        "sdc1714c3fc",
-        "se40d2c08f5",
-        "se583e79d9b",
-        "sf2c9f0869b",
-        "sf914e1a128"
+        "s9c2e936c58"
       ],
       "evolves": "house_brand"
-    },
-    {
-      "key": "new_decorative_motion_261119",
-      "title": "New: decorative motion (week of 2026-11-19)",
-      "never_beneath": "Always decouple caption styling from the surrounding animation treatment; never force captions to inherit the same visual style as the rest of the motion design.",
-      "check": "Compare the caption font and treatment against the title and card animation styles in the same cut; confirm they are deliberately distinct.",
-      "members": [
-        "s6ace1a1f95",
-        "s8ba7c059b5",
-        "sb12684205f",
-        "sea60d42d9e",
-        "sebeedff75e"
-      ],
-      "near": "motion_fast_full_e261118"
     },
     {
       "key": "new_process_261119",
@@ -978,76 +845,13 @@
       "never_beneath": "Never leave working or superseded files in a post's Drive publish folder; always keep only the current approved version there and store drafts elsewhere.",
       "check": "Open the post's Drive publish folder: confirm it holds exactly one current approved file per deliverable with no dated or 'working' copies.",
       "members": [
-        "s0271bf26a5",
-        "s086357b765",
-        "s09bb062716",
-        "s0be8349fbe",
-        "s17bf0d46ad",
-        "s1b2cbf874d",
-        "s1fb86e3b84",
-        "s27d13fec06",
-        "s2f6355f704",
-        "s34cd9c397c",
         "s34cf068871",
-        "s366c8c7f08",
-        "s3829007a4b",
-        "s3de21c4ac5",
-        "s3e37af7028",
-        "s43a910ddca",
-        "s44d75c52bb",
-        "s4653e2aa2e",
-        "s4766fa0d86",
-        "s4ef905054a",
-        "s572cb90653",
         "s580c13364a",
-        "s58f40d0807",
-        "s602d2bcb2d",
-        "s617ac71188",
-        "s69b5d71db6",
-        "s6f8d1fbeb1",
         "s72d85ac617",
-        "s74a02d5388",
-        "s751243cce8",
-        "s7835b29596",
-        "s8507c6ccb7",
-        "s85a63fc720",
-        "s933ced8c78",
         "s9e939ac915",
-        "sa388a00c80",
-        "sa9900be778",
-        "saa52184bd6",
-        "saeeacab3eb",
-        "sb0fcf9acd5",
-        "sc215375c40",
-        "sc52e3ad521",
-        "scccb208cb5",
-        "sce897364cc",
-        "sd1fb4cfea5",
-        "sd42d57aa0b",
-        "sd60b999b9f",
-        "sd89eb1d178",
-        "sdc610c1697",
-        "sde1eec14e4",
-        "se075bb2041",
-        "se0ad48d3ab",
-        "se0cdcc2998",
-        "se8c8a9db71",
-        "sf5903287a5",
-        "sf66f307822",
-        "sf9a4f452be",
-        "sfaed8f0ea6",
-        "sfb7a991022"
+        "scccb208cb5"
       ],
       "near": "clean_picture_e261118"
-    },
-    {
-      "key": "new_whole_cut_261119",
-      "title": "New: whole cut (week of 2026-11-19)",
-      "never_beneath": "Always vary the visual narrative style across videos instead of defaulting to his face in every shot, while keeping the irreverence, branding, humour, and simple explanations.",
-      "check": "Look across the last several deliveries and confirm not every one centres his face throughout the whole runtime; check the irreverence, branding, humour, and simple explanations are still present.",
-      "members": [
-        "s4a5b7339d4"
-      ]
     },
     {
       "key": "real_evidence_e261119",
@@ -1055,21 +859,8 @@
       "never_beneath": "Show the real thing: dated screenshots, real products, real interactions and sourced charts; never clipart, emoji icons, stock gimmicks or a literal cartoon of a script analogy.",
       "check": "Every visual is a real artefact or real imagery blended with the brand; no generic icon or invented analogy picture.",
       "members": [
-        "s0ae44257f3",
-        "s0ba1939600",
-        "s0f7c09795b",
-        "s145d1ec68f",
-        "s3682ccbf29",
         "sa12fcee669",
-        "sa7b823d7e1",
-        "sb2974c70db",
-        "sb2e090a0cd",
-        "sc01ee00721",
-        "sc3fd978b45",
-        "sd62a1ae15c",
-        "sdb0717f24f",
-        "sf460a2b8c7",
-        "sfdc593b8ee"
+        "sf460a2b8c7"
       ],
       "evolves": "real_evidence"
     },
@@ -1079,39 +870,10 @@
       "never_beneath": "Open straight on a provocative hook (no preamble, no 'I'm Krish'), tell one story, use one opening and one closing screen, end on a spoken outro to the article, and keep each format to its length.",
       "check": "First line is the hook; one intro, one close; short under 89 s; article 1,000 to 1,400 words.",
       "members": [
-        "s169eb2c3d7",
-        "s1a87b3f4dd",
-        "s1ecd5d70af",
-        "s1f2b10d266",
-        "s27cd7f079a",
-        "s34d7371977",
-        "s3c96d07c11",
-        "s478340bde4",
-        "s4801f4c925",
         "s558b365160",
-        "s59c0c042f6",
-        "s6ba109665c",
-        "s730fbb4830",
-        "s7b4fa4992f",
-        "sd1625a51fc",
-        "sd5d51ea8b3",
-        "sea5cffc2b3",
-        "sfe808fe58f"
+        "s59c0c042f6"
       ],
       "evolves": "shape"
-    },
-    {
-      "key": "sound_bed_voice_e261119",
-      "title": "A steady bed that fits the piece, and a treated voice (adds to Always a music bed) (evolution, week of 2026-11-19)",
-      "never_beneath": "The music runs one steady arc, loud at the open, soft and steady under speech, loud again at the close, with the opening bed fading out around 18 seconds into the next track, which stays audible; its tone matches the piece, and his voice is treated to sound deep, clear and professional; never volume rising and falling throughout, music burying the voice, dance music under a serious piece, or raw voice audio.",
-      "check": "Listen to the whole mix on speakers and headphones: one arc with no pumping, the voice clear above the bed, the bed's tone right for the script, and the voice track processed.",
-      "members": [
-        "s0744b7c946",
-        "s40c9247a98",
-        "s8fb04ce103",
-        "sbd0a4079b2"
-      ],
-      "evolves": "sound_bed_voice"
     },
     {
       "key": "words_add_e261119",
@@ -1119,26 +881,347 @@
       "never_beneath": "On-screen words add a source, date, number or picture the voice doesn't give, read in about a second, and sit beside a real image; never a text-only card, never a copy of the captions. The one exception is the episode title moment: when he says the episode title, it animates as its own title and the captions step aside for that line, so the words appear once.",
       "check": "No card repeats the narration; each heading reads in a glance; each text card has an image.",
       "members": [
-        "s15ddda2125",
-        "s3898ac671d",
-        "s467afb18f4",
-        "s471f5292bf",
-        "s4f053e1263",
-        "s4f75dc913d",
         "s734ada4d81",
-        "s7691e4ae87",
-        "s77760fa909",
-        "s86598fa7ea",
-        "s8e864c1ef6",
-        "s8ecb3ff884",
-        "s8f00c90c46",
-        "s9eeaf4e034",
-        "sbb709fe2e1",
-        "sc03dcc10cc",
-        "se8c333ef28",
-        "sf84c9ba58a",
-        "sf9137ad782",
-        "sf9791e3842"
+        "se8c333ef28"
+      ],
+      "evolves": "words_add"
+    },
+    {
+      "key": "bold_predictions_e261122",
+      "title": "Bold, checkable predictions (evolution, week of 2026-11-22)",
+      "never_beneath": "A prediction names real companies, commits to a clear near-term call that is not already happening, and only appears where that day's close format calls for one; no doomsaying opener.",
+      "check": "Named entities; dated and checkable; not already true; matches the agreed close.",
+      "members": [
+        "s08e19e659c",
+        "s10bd03a730",
+        "s134d2e7f44",
+        "s172d06ce8b",
+        "s6eb417dd40",
+        "sb0e20f145c",
+        "se49eca7e39",
+        "sf89aa11473"
+      ],
+      "evolves": "bold_predictions"
+    },
+    {
+      "key": "clean_picture_e261122",
+      "title": "A clean picture and seamless joins (evolution, week of 2026-11-22)",
+      "never_beneath": "Stable, well-framed footage with his head centred, untouched room treatment, and joins and transitions with no glitch, flash or doubled frame; a visual Critic checks before he sees it.",
+      "check": "Stabilisation check on every take; frame-check every join; Critic pass.",
+      "members": [
+        "s4768ca4e91",
+        "s71801ea4fd",
+        "sa904cd0734"
+      ],
+      "evolves": "clean_picture"
+    },
+    {
+      "key": "clear_on_one_hearing_e261122",
+      "title": "Every line clear on one hearing (adds to Words a stranger and a 12-year-old follow) (evolution, week of 2026-11-22)",
+      "never_beneath": "Every script, card and brief is clear on one read: each line is read aloud and smoothed before recording, every company or thing is named on first mention, every label and number is explained as it is heard, the precise term is used, an analogy stays whole, and pros and cons are plain; never a cryptic card, an ambiguous sentence, a vague pronoun or garbled shorthand.",
+      "check": "Read the whole script and every brief aloud as if to someone with no context; flag any line that needs a second read, any unnamed 'it' or 'the company', any unexplained term or number, and any blended analogy.",
+      "members": [
+        "s23b742ddc3",
+        "s438120032e",
+        "s4a61a36cc9",
+        "s4fbdd87354",
+        "s549d035737",
+        "s610e937171",
+        "s6a06f07f04",
+        "s98b83afcd4",
+        "s99c54370cd",
+        "s9aaa5b15c5",
+        "sa8d5ec761c",
+        "scbf150869d",
+        "sfacaf836c4"
+      ],
+      "evolves": "clear_on_one_hearing"
+    },
+    {
+      "key": "covers_personality_e261122",
+      "title": "Covers with the house's personality, for every crop (evolution, week of 2026-11-22)",
+      "never_beneath": "Covers and thumbnails are bold and on-brand, with plainly dressed people, drawn for each platform's real crop (wide and vertical), labelled by surface, and end cards designed into the reader's flow.",
+      "check": "One cover per surface and crop; passes the visual gate; no raw URL over a photo.",
+      "members": [
+        "s01e229a940",
+        "s08fdc4caa8",
+        "s1401ec0dd7",
+        "s285cee5336",
+        "sa040b9d75b",
+        "se2d0259deb",
+        "se31a37ba4e",
+        "se97a8f4721"
+      ],
+      "evolves": "covers_personality"
+    },
+    {
+      "key": "frame_whole_e261122",
+      "title": "Every element whole, apart, and filling the frame (adds to Composed frames) (evolution, week of 2026-11-22)",
+      "never_beneath": "Every animation, card, label and line of text sits fully inside the frame and its safe area, apart from every other element, and the frame is filled deliberately top to bottom; never a cropped animation, a clipped component, overlapping titles, large empty areas, visuals cramped into corners, or a vertical template with a third cut off.",
+      "check": "Scrub every frame at full size in the tall and wide exports: nothing clipped or overlapping, no dead band or empty area, and every line inside the safe-area guide.",
+      "members": [
+        "s0cd0c181fa",
+        "s1079282c70",
+        "s186d73be12",
+        "s1e001d127e",
+        "s2b561ebfa6",
+        "s3d21e8452d",
+        "s3e75b5b670",
+        "s4eb2998363",
+        "s53379670cd",
+        "s54b04d330f",
+        "s58275078c4",
+        "s78557aacae",
+        "s7a4cef6a25",
+        "s9e0881e02a",
+        "s9f9b413786",
+        "sa2cffea94b",
+        "sa56df377b4",
+        "sa6ecabcf67",
+        "sab6e93f9eb",
+        "sae40a35bd8",
+        "sb72a7f6226",
+        "sc707c54df9",
+        "sc7e2bbbe20",
+        "sd056fa344f",
+        "se85aedc030"
+      ],
+      "evolves": "frame_whole"
+    },
+    {
+      "key": "his_voice_e261122",
+      "title": "Scripts are his spoken words, with personality (evolution, week of 2026-11-22)",
+      "never_beneath": "A script is only the words he will say, in his natural joined phrasing, with dry wit and opinion, in a reflective tone, for the leader of a medium-sized company; no stage directions, no AI disclosure line.",
+      "check": "Read it in his voice: no headings, no clipped robotic runs, no disclosure line.",
+      "members": [
+        "s0447ff5ad2",
+        "s1ec1786396",
+        "s2af59df84e",
+        "s546f194601",
+        "sa4cb7fe63d",
+        "sb3663a7907",
+        "sd57095291d",
+        "sd84568aeaa",
+        "sfaa5cefa77"
+      ],
+      "evolves": "his_voice"
+    },
+    {
+      "key": "house_brand_e261122",
+      "title": "The house brand on everything (evolution, week of 2026-11-22)",
+      "never_beneath": "Every asset and page carries the makeyourmindup wordmark, the brand book's fonts and colours, and a bold, colourful look; never a muted corporate one. On video the wordmark appears only at the close, never during the animated content; on a carousel, meme or Notes image it sits small in the bottom-right corner; a wide thumbnail carries none.",
+      "check": "Wordmark visible; one font family; colours from the brand tokens.",
+      "members": [
+        "s11422ecc22",
+        "s14f3d22e47",
+        "s1917c8e077",
+        "s198ca9a21b",
+        "s1da1086741",
+        "s245f20623f",
+        "s2c9e513b58",
+        "s6059e460cc",
+        "s90073f213f",
+        "sbc9ea45b34",
+        "sc12f223fff",
+        "sd34b3745db",
+        "sef368a3146",
+        "sf58925cb2e"
+      ],
+      "evolves": "house_brand"
+    },
+    {
+      "key": "motion_fast_full_e261122",
+      "title": "Motion that is fast, full and always moving (adds to Motion that explains) (evolution, week of 2026-11-22)",
+      "never_beneath": "Motion design keeps moving across every panel, advances the narrative with real objects changing state, paces briskly and fills the frame, and text highlights finish cleanly in time with their words; never symbols that arrive and hold, a still with a couple of arrow circles, animation ten times too slow, or a typing effect.",
+      "check": "Play the cut at full speed and list each motion beat: something changes to make a point, nothing sits idle or sluggish, every underline lands on its word, and no text types itself on.",
+      "members": [
+        "s04e1e06804",
+        "s473764723c",
+        "s7445eaf6cb",
+        "s9d70502edc",
+        "sbb9118c0b1",
+        "se65c9893bc",
+        "sf0c751523f",
+        "sf16212e7e8"
+      ],
+      "evolves": "motion_fast_full"
+    },
+    {
+      "key": "new_process_261122",
+      "title": "New: process (week of 2026-11-22)",
+      "never_beneath": "Never test a capability with one vague prompt; always test with several concrete, everyday jobs.",
+      "check": "Review the test plan before running it and confirm it lists multiple specific tasks rather than a single generic question.",
+      "members": [
+        "s025a945f28",
+        "s10bd3dbc6c",
+        "s1112dd360d",
+        "s1679eac005",
+        "s1c3b0fe6f0",
+        "s24f48d45fe",
+        "s29bae0dbdc",
+        "s2b48aa87b1",
+        "s35a9fa18f2",
+        "s3824287d12",
+        "s3a9dae466e",
+        "s40443f5ac3",
+        "s43dee8648b",
+        "s4951b8ec06",
+        "s4fd0e3c20d",
+        "s5101c807c3",
+        "s53744ea42e",
+        "s5437e24561",
+        "s59e7c66f4e",
+        "s5aee01dc87",
+        "s5c3f622b91",
+        "s5ea62fd0b2",
+        "s6556db5afd",
+        "s6e17e96cfd",
+        "s6ff8337153",
+        "s7089ec7779",
+        "s72e6537a00",
+        "s746fbd4b7a",
+        "s7511f1f29d",
+        "s766ad7cb22",
+        "s776678c86b",
+        "s7a97500129",
+        "s7b11dc167c",
+        "s7e87425d31",
+        "s80e6d61270",
+        "s864ce391d9",
+        "s8b9d9a89b9",
+        "s8e1090d7ab",
+        "s92dcccfb9e",
+        "s95d352ffa6",
+        "s984b03e225",
+        "s9ba46a969a",
+        "s9d13bb873f",
+        "s9e05416c33",
+        "s9f91601ba1",
+        "sb263f3b7dd",
+        "sb5fde33d6a",
+        "sb6e739ba8a",
+        "sbcd17506bf",
+        "sc100bd6730",
+        "sc36e0ed3c8",
+        "sc677f5bd3b",
+        "sc6ba558a70",
+        "scaa7cd5c9c",
+        "sce76e7d5e3",
+        "scf328281c5",
+        "sdc032ac619",
+        "se001de5aab",
+        "se63f91bbbe",
+        "se6efc3b31b",
+        "se6fc2e496e",
+        "se846a19f51",
+        "seb229b6be5",
+        "seef484fd78",
+        "sf1ef6c1f19",
+        "sf27ef73fcc",
+        "sf8c303ba2f",
+        "sf8ff4bbd63",
+        "sfae133926f",
+        "sfcbd941b94"
+      ],
+      "near": "clean_picture_e261118"
+    },
+    {
+      "key": "new_whole_cut_261122",
+      "title": "New: whole cut (week of 2026-11-22)",
+      "never_beneath": "Never let a video stay boring or monotonous all the way through; always keep every section visually and narratively engaging.",
+      "check": "Watch the entire cut start to finish at normal speed and flag any stretch where pace or interest drops, not just the opening frame.",
+      "members": [
+        "s3f8848bf5f",
+        "se1897eb1e2",
+        "sedf71fd874"
+      ]
+    },
+    {
+      "key": "real_evidence_e261122",
+      "title": "Real, dated evidence, never clipart (evolution, week of 2026-11-22)",
+      "never_beneath": "Show the real thing: dated screenshots, real products, real interactions and sourced charts; never clipart, emoji icons, stock gimmicks or a literal cartoon of a script analogy.",
+      "check": "Every visual is a real artefact or real imagery blended with the brand; no generic icon or invented analogy picture.",
+      "members": [
+        "s392ab84fdc",
+        "s53302afa28",
+        "s5894211f00",
+        "s5df2446e23",
+        "s6b1bb9938b",
+        "s7a616dc737",
+        "s93a2a8d700",
+        "sa03fe4918a",
+        "sa4ce8ba583",
+        "sb2bbbe2129",
+        "sb4ec41ddf0",
+        "sf6fb5df3bb",
+        "sf851480095",
+        "sfc49872456",
+        "sfe2a09aaaf"
+      ],
+      "evolves": "real_evidence"
+    },
+    {
+      "key": "shape_e261122",
+      "title": "Hook first, one story, one close (evolution, week of 2026-11-22)",
+      "never_beneath": "Open straight on a provocative hook (no preamble, no 'I'm Krish'), tell one story, use one opening and one closing screen, end on a spoken outro to the article, and keep each format to its length.",
+      "check": "First line is the hook; one intro, one close; short under 89 s; article 1,000 to 1,400 words.",
+      "members": [
+        "s248c1f6917",
+        "s5dae43ecd2",
+        "s7b3e02cacf",
+        "s989127eb75",
+        "sbf49e2086a",
+        "sd66e50eb9f",
+        "se09aca9d0e",
+        "sf9622dc0ae"
+      ],
+      "evolves": "shape"
+    },
+    {
+      "key": "sound_bed_voice_e261122",
+      "title": "A steady bed that fits the piece, and a treated voice (adds to Always a music bed) (evolution, week of 2026-11-22)",
+      "never_beneath": "The music runs one steady arc, loud at the open, soft and steady under speech, loud again at the close, with the opening bed fading out around 18 seconds into the next track, which stays audible; its tone matches the piece, and his voice is treated to sound deep, clear and professional; never volume rising and falling throughout, music burying the voice, dance music under a serious piece, or raw voice audio.",
+      "check": "Listen to the whole mix on speakers and headphones: one arc with no pumping, the voice clear above the bed, the bed's tone right for the script, and the voice track processed.",
+      "members": [
+        "s0993494826",
+        "s358083552c",
+        "s368d9b2d4c",
+        "s63b1db3b1e",
+        "s766d3a1b4c",
+        "s7e5a1e9947",
+        "s9bcb7c0d30",
+        "s9df0ba8a92",
+        "sad1afa2734",
+        "sb459696af9",
+        "sd03c4e00a4",
+        "sd423c792e9",
+        "sd808737c14",
+        "sf77ed5d2fe"
+      ],
+      "evolves": "sound_bed_voice"
+    },
+    {
+      "key": "words_add_e261122",
+      "title": "On-screen words add, never repeat (evolution, week of 2026-11-22)",
+      "never_beneath": "On-screen words add a source, date, number or picture the voice doesn't give, read in about a second, and sit beside a real image; never a text-only card, never a copy of the captions. The one exception is the episode title moment: when he says the episode title, it animates as its own title and the captions step aside for that line, so the words appear once.",
+      "check": "No card repeats the narration; each heading reads in a glance; each text card has an image.",
+      "members": [
+        "s1f44bb12c6",
+        "s1fde7f82e9",
+        "s299453151c",
+        "s33a3f53c9a",
+        "s4005c5f793",
+        "s40fc476061",
+        "s7b99bc87c2",
+        "s91bea8c0fd",
+        "s9d9bedb937",
+        "sa4f0a91740",
+        "sae277a4f9a",
+        "sbcfd4d26f7",
+        "sce4cb6100a",
+        "sd098bfa56d",
+        "sea58b8488f",
+        "sf31ca6b597"
       ],
       "evolves": "words_add"
     }
@@ -1154,6 +1237,31 @@
     {
       "key": "bold_predictions_e261118",
       "title": "Bold, checkable predictions (evolution, week of 2026-11-18)",
+      "why": "every member was retired by a newer floor"
+    },
+    {
+      "key": "his_voice_e261118",
+      "title": "Scripts are his spoken words, with personality (evolution, week of 2026-11-18)",
+      "why": "every member was retired by a newer floor"
+    },
+    {
+      "key": "new_whole_cut_261118",
+      "title": "New: whole cut (week of 2026-11-18)",
+      "why": "every member was retired by a newer floor"
+    },
+    {
+      "key": "new_decorative_motion_261119",
+      "title": "New: decorative motion (week of 2026-11-19)",
+      "why": "every member was retired by a newer floor"
+    },
+    {
+      "key": "new_whole_cut_261119",
+      "title": "New: whole cut (week of 2026-11-19)",
+      "why": "every member was retired by a newer floor"
+    },
+    {
+      "key": "sound_bed_voice_e261119",
+      "title": "A steady bed that fits the piece, and a treated voice (adds to Always a music bed) (evolution, week of 2026-11-19)",
       "why": "every member was retired by a newer floor"
     }
   ]
