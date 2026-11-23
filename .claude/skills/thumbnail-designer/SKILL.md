@@ -71,8 +71,6 @@ last five posts"); with none, the mock shows the options alone and says so. Neve
 - `python3 scripts/pages/thumb_options.py show WORK/thumbs`: the words, the parts and any logo the brief does not name.
 - Look at every file at full size, and at the grid mock, yourself, against the QA list
   (`.agents/skills/thumbnail-designer/references/qa.md`).
-- The antislop PASS/FAIL report (`.agents/skills/antislop/ADAPTER.md` first, then the skills it names) on each option: fix each FAIL no house
-  rule overrules; his picked words are never changed for it.
 
 ## 4. The critic
 

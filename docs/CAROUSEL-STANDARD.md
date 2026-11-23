@@ -103,6 +103,13 @@ was the panel's lower median at 7 with the pictures unseen, which is how the 14 
 A fail comes back with each judge's fix and is never posted. `docs/GROWTH-HANDOFF.md`, "Every carousel and Short
 through the 10/10 judges", has the route.
 
+## The antislop report (Ruling, Krish, 23 November 2026)
+
+Krish asked for the antislop guardrail. At the carousel skill's step 5, beside `carousel_check.py --cards` and the
+judges, the maker runs the antislop PASS/FAIL report on the deck and the cards (`.agents/skills/antislop/ADAPTER.md`
+first, then the skills it names) and fixes each FAIL that no house rule overrules. This standard, the brand book, the
+floor and the copy lint win wherever they and antislop disagree; antislop checks, it never writes or picks a look.
+
 ## Approved floor
 
 Every carousel needs an original visual idea that carries the specific

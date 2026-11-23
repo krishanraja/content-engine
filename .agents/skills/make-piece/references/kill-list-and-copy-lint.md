@@ -38,3 +38,5 @@ Moved word for word from `.agents/skills/make-piece/SKILL.md` on 2026-11-17, whe
    `--channel article` and `--channel carousel` on those words
    (`piece_manifest.py draft` checks channel copy itself). Exit 1: fix and
    rerun. Exit 2: not checked, so the step holds, named on the day's tab.
+   Then the antislop PASS/FAIL report (`.agents/skills/antislop/ADAPTER.md` first, then the skills it names) on
+   each script and, once written, the article: fix each FAIL no house rule overrules.
