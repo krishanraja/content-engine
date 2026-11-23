@@ -99,7 +99,9 @@ describe('the shared pull and heal of a machine-owned copy', () => {
   })
 })
 
-describe.runIf(shell)('the heal on real repositories (PowerShell)', () => {
+// Real repositories and a real PowerShell per pass: on the Windows runner one test outran vitest's default 5 s, while each
+// PowerShell call already allows itself 120 s.
+describe.runIf(shell)('the heal on real repositories (PowerShell)', { timeout: 120_000 }, () => {
   const env: NodeJS.ProcessEnv = {
     ...process.env, GIT_AUTHOR_NAME: 'Test', GIT_AUTHOR_EMAIL: 'test@invalid', GIT_COMMITTER_NAME: 'Test', GIT_COMMITTER_EMAIL: 'test@invalid',
     GIT_CONFIG_NOSYSTEM: '1', GIT_CONFIG_GLOBAL: process.platform === 'win32' ? 'NUL' : '/dev/null',

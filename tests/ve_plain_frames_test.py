@@ -272,6 +272,7 @@ class CompareWithApproved(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.dir = Path(self.tmp.name) / 've'
         self.dir.mkdir()
+        t.guards.freeze(self.dir, now=t.FROZEN_BEFORE_THE_FLOOR)  # the real lock, so ve proof stays on this engine
         self.spec = copy.deepcopy(t.FIXTURE)
         self.write_spec(self.spec)
         (self.dir / f'props.{t.CUT}.json').write_text(json.dumps(props_with(t.props_for(self.spec)['captions'])), encoding='utf-8')
