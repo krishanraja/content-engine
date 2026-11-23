@@ -46,8 +46,13 @@ class WireHTests(unittest.TestCase):
 
     def test_lints_without_legacy_note(self):
         # The fixture is a piece of 23 Oct: it lints clean under the rules of its own publish day (bind_unshown is gone;
-        # rules freeze at Sign storyboard, Ruling, Krish, 2026-11-19).
-        spec, findings = lint(FIXTURE / 'spec.json')
+        # rules freeze at Sign storyboard, Ruling, Krish, 2026-11-19). A copy carries a lock from before the recipe floor
+        # (velib.floor.RECIPE_FROM); with no lock it would freeze "today" and turn red on a date.
+        with staging_directory() as directory:
+            shutil.copy(FIXTURE / 'spec.json', directory / 'spec.json')
+            (directory / 've').mkdir()
+            (directory / 've' / 'engine.json').write_text(json.dumps({'at': '2026-11-19T00:00:00Z'}), encoding='utf-8')
+            spec, findings = lint(directory / 'spec.json')
         self.assertIsNotNone(spec)
         self.assertEqual(findings, [])
         self.assertEqual(spec['format'], 'hand-held-screen')

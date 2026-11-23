@@ -108,7 +108,7 @@ describe('Growth\'s audience brief of 16 Nov: changes 1 to 6 are enforced from t
       'except wb.BoardError as e:', "    print('held' if 'ONE_CONCRETE_THING' in str(e) else str(e))"].join('\n')
     const run = spawnSync(py, ['-c', py3], { encoding: 'utf8' })
     assert.equal(run.status, 0, run.stderr)
-    assert.deepEqual(run.stdout.trim().split('\n'), ["['sat', 'thu', 'tue']", 'held'])
+    assert.deepEqual(run.stdout.trim().split(/\r?\n/), ["['sat', 'thu', 'tue']", 'held']) // Python prints CRLF on Windows
   })
 
   test('ve lint holds a vertical from 16 Nov to SHORT_CUT and to its first event by the second word (changes 1 and 2)', () => {
