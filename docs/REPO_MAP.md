@@ -3239,6 +3239,8 @@ What every prompt the board copies out says about reporting back, and what the b
 - `const WALLS_SCHEDULE`
 - `const CLOSE_LOOP`
 - `const APPROVAL_RULE`
+- `const ROLES`
+- `const LEARNING_RULE`
 - `interface WriteBackTarget`
 - `function stepKey(raw: string | null | undefined): string`
 - `function writeBack(t: WriteBackTarget): string`
