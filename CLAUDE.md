@@ -54,10 +54,11 @@ reading it whole. It is about 335 KB (some 80k tokens).
 | A ve piece's per-beat motion plan, written into its spec before Sign storyboard (the ve skill, step 6, points to it) | `/motion-designer` |
 | Any video script checked against Hannah Fry's teaching craft (make-piece's Scripts step, 3c, points to it) | `/hannah-fry` |
 | An experiment Krish acts out from a shot script, transformed with AI in post (separate from the style pickers) | `/directed-shoot` |
+| Checking finished copy, a visual or code for AI slop: a validator after the producer, never a writer (the producing skills' check steps call it) | `/antislop` and `antislop-copywriting`, `-ui`, `-layoutmobile`, `-human`, `-code`, vendored unmodified; always read `.agents/skills/antislop/ADAPTER.md` first, which outranks them: no mode question, Krish's rules win |
 | A Studio station (brief, script, render, qa...) | the `mindmake-studio` MCP tools, inside a tracked session (`docs/ENGINE_SESSION.md`) |
 | Krish's voice or a channel decision | his account-wide `krish-voice` and `content-corpus` |
 
-The skills live once in `.agents/skills/`; `.claude/skills/` holds exact copies of the eleven
+The skills live once in `.agents/skills/`; `.claude/skills/` holds exact copies of the seventeen
 above (AGENTS.md, Verification). `mindmake-video` and `video-engine` are not loaded here on
 purpose; `scripts/validate-skills.py` (`NOT_FOR_CLAUDE`) says why and fails on any new skill that
 is neither copied nor listed.

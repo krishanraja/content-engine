@@ -1,0 +1,4 @@
+interface:
+  display_name: "Check a layout on phones"
+  short_description: "antislop mobile layout rules on a finished page"
+  default_prompt: "Use $antislop-layoutmobile with .agents/skills/antislop/ADAPTER.md to check this page on phone sizes."

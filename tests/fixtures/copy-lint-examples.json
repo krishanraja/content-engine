@@ -738,6 +738,126 @@
      "applies_to": "titles"
     }
    ]
+  },
+  "antislop_emoji_bullet": {
+   "hit": [
+    {
+     "text": "🚀 Claude Duet ships to every team plan",
+     "applies_to": "channel_copy"
+    },
+    {
+     "text": "✅ Read the terms first",
+     "applies_to": "carousel_text"
+    },
+    {
+     "text": "Three things to do:\n✨ Ask who owns the data",
+     "applies_to": "channel_copy"
+    },
+    {
+     "text": "💡 Why Disney paid first",
+     "applies_to": "titles"
+    }
+   ],
+   "pass": [
+    {
+     "text": "Prices rose again this week 👀",
+     "applies_to": "channel_copy"
+    },
+    {
+     "text": "→ Read the terms first",
+     "applies_to": "carousel_text"
+    },
+    {
+     "text": "• Ask who owns the data",
+     "applies_to": "channel_copy"
+    },
+    {
+     "text": "£5 a month buys the cheapest plan",
+     "applies_to": "video_onscreen"
+    }
+   ]
+  },
+  "antislop_caps_shout": {
+   "hit": [
+    {
+     "text": "The deal is done and YOU NEED TO MOVE NOW before the price changes.",
+     "applies_to": "channel_copy"
+    },
+    {
+     "text": "THE AI BUBBLE IS POPPING",
+     "applies_to": "titles"
+    }
+   ],
+   "pass": [
+    {
+     "text": "The EU AI Act starts to bite in August.",
+     "applies_to": "channel_copy"
+    },
+    {
+     "text": "WHO MAKES THE AI YOUR BUSINESS RUNS ON?",
+     "applies_to": "video_onscreen"
+    },
+    {
+     "text": "OpenAI, NVIDIA and AMD signed the same week.",
+     "applies_to": "article_metadata"
+    }
+   ]
+  },
+  "antislop_hype_phrase": {
+   "hit": [
+    {
+     "text": "A next-gen model for your whole team",
+     "applies_to": "carousel_text"
+    },
+    {
+     "text": "This marks a new era of work.",
+     "applies_to": "channel_copy"
+    },
+    {
+     "text": "World-class tools for small firms",
+     "applies_to": "titles"
+    },
+    {
+     "text": "Unlock the full potential of your data",
+     "applies_to": "article_metadata"
+    }
+   ],
+   "pass": [
+    {
+     "text": "The next generation of staff will learn the job from a model.",
+     "applies_to": "channel_copy"
+    },
+    {
+     "text": "A class of tools that runs on your own laptop",
+     "applies_to": "titles"
+    },
+    {
+     "text": "Open the settings page and switch it off.",
+     "applies_to": "carousel_text"
+    }
+   ]
+  },
+  "antislop_vague_stat": {
+   "hit": [
+    {
+     "text": "Trusted by 10K+ teams",
+     "applies_to": "channel_copy"
+    },
+    {
+     "text": "500+ companies already use it",
+     "applies_to": "carousel_text"
+    }
+   ],
+   "pass": [
+    {
+     "text": "OpenAI says 800 million people use ChatGPT each week.",
+     "applies_to": "channel_copy"
+    },
+    {
+     "text": "Plans start at 20 dollars for 5 users",
+     "applies_to": "video_onscreen"
+    }
+   ]
   }
  }
 }

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Check copy for AI slop"
+  short_description: "antislop copy rules on finished public words, under Krish's voice rules"
+  default_prompt: "Use $antislop-copywriting with .agents/skills/antislop/ADAPTER.md to check these finished words."
