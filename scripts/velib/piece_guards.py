@@ -59,7 +59,8 @@ def take_orientation(spec: dict, rule: dict, spec_dir: Path | None = None) -> li
             continue
         # A staging built for a vertical take (kit/staging.ts pillar) draws every staged beat's take whole; with none
         # chosen, compile.default_layout picks pillar for a vertical take on 16:9.
-        staging = (((spec.get('style') or {}).get('layout') or {}).get('mode')) or 'pillar'
+        from .compile import cut_layout_mode  # noqa: PLC0415
+        staging = cut_layout_mode(spec, cid, frame) or 'pillar'
         vertical_staging = staging in rule.get('vertical_source_stagings', [])
         for beat in cut.get('beats') or []:
             if vertical_staging and beat.get('layout') not in ('WINDOW', 'SPLIT'):

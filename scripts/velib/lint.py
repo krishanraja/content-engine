@@ -299,13 +299,19 @@ def palette_lints(spec: dict) -> list[str]:
         if not shape:
             continue
         sting = 'none'
+        # The series close plays the intro sting at the end from its own date (Ruling, Krish, 2026-11-20); the tall one
+        # carries no days row (EndingBand.tsx).
+        closes_on_sting = kind == 'series' and ve_compile._intro().close_wanted(shape, series, when)
+        ids = ('sting_card', 'sting_beat') if closes_on_sting else ('statement_card', 'statement_beat')
         record = {'date': when, 'format': 'long_cut' if shape == '16x9' else 'short_cut', 'shape': shape, 'kind': kind,
                   'opening': 'hook', 'sting': sting,
-                  'close': {'id': 'statement_card' if shape == '16x9' else 'statement_beat',
+                  'close': {'id': ids[0] if shape == '16x9' else ids[1], 'sting': bool(closes_on_sting),
                             'seconds': getattr(ve_compile, 'ENDING_FRAMES_BY_ASPECT', {}).get(cut.get('aspect'), ve_compile.ENDING_FRAMES)
-                            / ve_compile.FPS, 'days_row': kind == 'series'}}
+                            / ve_compile.FPS, 'days_row': kind == 'series' and not (closes_on_sting and shape == '9x16')}}
         out += [f'brand.palette cuts.{cut_id}: {p}' for p in brand_palette.check(record, palette)]
-    return out
+    # The accent kit (Krish, 2026-11-20): big moments, gradients and duotone cut-outs on series days only.
+    from . import accent_kit  # noqa: PLC0415
+    return out + accent_kit.accent_problems(spec)
 
 
 TITLE_MOMENT_FROM = '2026-11-16'
@@ -674,10 +680,8 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
             if role in ('anchor', 'bridge') and run_len == 3:
                 out.append(f'story.alternation {where}.beats.{index}: three {role} beats in a row; alternate anchor and bridge')
         # creative, motion, sound
-        layouts = set()
         for index, beat in enumerate(beats):
             at = f'{where}.beats.{index}'
-            layouts.add(beat['layout'])
             words = beat['span']['to_w'] - beat['span']['from_w'] + 1
             if index and not beat.get('override_reason'):
                 prev = beats[index - 1]
@@ -710,13 +714,8 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
         for obj_id, (word, verb) in first_verb.items():
             if verb != 'enter' and not ((verb, objects.get(obj_id, {}).get('device')) in {('draw', 'scribble'), ('stamp', 'stamp')}):
                 out.append(f'motion.enters {where}: {obj_id} first acts with "{verb}" at word {word}; an object enters before anything else happens to it, or it never appears')
-        if cut['aspect'] == '9:16' and whole:
-            minutes = max(1.0, (beats[-1]['span']['to_w'] - beats[0]['span']['from_w']) / (WORDS_PER_SECOND * 60))
-            need = math.ceil(fmt['qc'].get('layout_types_per_min_tall', 1) * min(minutes, 1.0))
-            # Krish may waive variety for a piece in his own words (an exception approval), as for Thursday 5 Nov:
-            # "This Thursday video should be the simplest to produce and feature my face minimally".
-            if len(layouts) < need and not any(a['gate'] == 'exception' and a.get('scope') != 'engine' for a in spec['approvals']):
-                out.append(f'motion.layout_variety {where}: {len(layouts)} layout types, the format needs at least {need} a minute')
+        # No layout-variety rule: it forced switching (Ruling, Krish, 2026-11-20: one staging per cut; the shot grammar,
+        # velib/grammar.py, holds the body to one staging instead).
 
     bed_mode = spec['audio']['bed']['mode']
     if spec['audio']['master'] == 'vo' and bed_mode not in ('continuous', 'ducked', 'episode_bed'):
@@ -805,9 +804,9 @@ def lint(spec_path: Path) -> tuple[dict | None, list[str]]:
     from .verdict import ve_dir  # noqa: PLC0415
     guards.set_bind_day(showgate.effective_day(spec, ve_dir(spec_path)))
     try:
-        from . import floor, piece_guards  # noqa: PLC0415
+        from . import floor, grammar, piece_guards  # noqa: PLC0415
         return spec, (crew_lints(spec) + title_line_lints(spec, spec_path) + guards.pre_critic_lints(spec, spec_path)
                       + piece_guards.lints(spec, guards.bind_day(spec), Path(spec_path).parent)
-                      + floor.lints(spec, Path(spec_path)))
+                      + floor.lints(spec, Path(spec_path)) + grammar.lints(spec, Path(spec_path)))
     finally:
         guards.set_bind_day(None)

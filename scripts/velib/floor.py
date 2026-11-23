@@ -45,13 +45,38 @@ def _measure_cached(video: Path, digest: str | None, directory: Path, cut: str, 
             kept = load_json(path)
         except (OSError, ValueError):
             kept = {}
-        if kept.get('sha256') == digest and isinstance(kept.get('card'), dict):
+        if kept.get('sha256') == digest and isinstance(kept.get('card'), dict) and \
+                kept['card'].get('excluded_s') == ([[round(a, 2), round(b, 2)] for a, b in fixed_moments(Path(directory), cut)] or None):
             return kept['card']
-    card = (measure_fn or pace.measure)(video)
+    exclude = fixed_moments(Path(directory), cut)
+    card = (measure_fn or pace.measure)(video, exclude=exclude) if exclude else (measure_fn or pace.measure)(video)
     card['file'] = Path(video).name
+    if exclude:
+        card['excluded_s'] = [[round(a, 2), round(b, 2)] for a, b in exclude]
     if digest:
         write_json(path, {'schema': 've-pace-floor/1', 'sha256': digest, 'card': card})
     return card
+
+
+def fixed_moments(directory: Path, cut: str) -> list[tuple[float, float]]:
+    """The end card and the full-frame title lockup on this cut's clock, from its props (props.<cut>.json): the floor
+    measures the body only, so a held close (6 s on 16:9) or the title never holds a cut on its own."""
+    path = Path(directory) / f'props.{cut}.json'
+    if not path.is_file():
+        return []
+    try:
+        props = load_json(path)
+    except (OSError, ValueError):
+        return []
+    fps = float(props.get('fps') or 30)
+    out = []
+    title = props.get('titleMoment') or {}
+    if 'toFrame' in title:
+        out.append((float(title.get('fullFrom', title.get('fromFrame', 0))) / fps, float(title['toFrame']) / fps))
+    ending = props.get('ending') or {}
+    if 'fromFrame' in ending and props.get('durationFrames'):
+        out.append((float(ending['fromFrame']) / fps, float(props['durationFrames']) / fps))
+    return out
 
 
 def pace_problems(video, digest: str | None, directory: Path, cut: str, *, table: Path | None = None,
@@ -92,7 +117,7 @@ def held_line(cut: str, floor: list[str]) -> str:
 
 # ----------------------------------------------------------------------------------------------------- dead panel lint
 
-STAGINGS = ('band', 'stage', 'tray', 'pillar')
+STAGINGS = ('band', 'stage', 'tray', 'pillar', 'anchor')
 DEAD_PANEL_S = 1.5
 WORDS_PER_SECOND = 2.6          # Krish's measured read rate (velib.lint), before ingest gives real times
 NOT_CONTENT = {'stamp'}          # a stamp labels a hero card; it never fills a panel alone (motion.stamp_not_hero)
@@ -102,9 +127,8 @@ def staging_mode(spec: dict, cut_id: str, directory: Path | None = None) -> str 
     """The staging a cut is drawn with: style.layout.mode, else compile's default (pillar for a vertical take on 16:9,
     from the take frame ve ingest measured)."""
     from . import takes  # noqa: PLC0415
-    from .compile import default_layout  # noqa: PLC0415
-    mode = ((spec.get('style') or {}).get('layout') or {}).get('mode') or \
-        default_layout(spec, cut_id, takes.cut_frame(spec, cut_id, directory)[1])
+    from .compile import cut_layout_mode  # noqa: PLC0415
+    mode = cut_layout_mode(spec, cut_id, takes.cut_frame(spec, cut_id, directory)[1])
     aspect = spec['cuts'][cut_id]['aspect']
     if mode not in STAGINGS or (mode == 'pillar' and aspect == '9:16'):
         return None   # kit/staging.ts isStaging: a pillar never stages a tall cut
@@ -112,7 +136,11 @@ def staging_mode(spec: dict, cut_id: str, directory: Path | None = None) -> str 
 
 
 def shows_take(beat: dict) -> bool:
-    """kit/staging.ts staged(): the beat shows his take and keeps no lock of its own."""
+    """kit/staging.ts staged(): the beat shows his take and keeps no lock of its own. Under the shot grammar the beat's
+    shot type says it: only a plate and the end card leave his face (Ruling, Krish, 2026-11-20: one staging per cut)."""
+    shot = beat.get('shot')
+    if shot:
+        return shot not in ('plate', 'end')
     layout = beat.get('layout')
     if layout in ('SPLIT', 'WINDOW'):
         return False
@@ -133,7 +161,7 @@ def dead_panel_lints(spec: dict, directory: Path | None = None) -> list[str]:
     out = []
     for cut_id, cut in spec['cuts'].items():
         mode = staging_mode(spec, cut_id, directory)
-        if mode is None or cut_id in figure_cuts:
+        if mode is None or mode == 'anchor' or cut_id in figure_cuts:   # an anchor's frame is his take: no panel to fill
             continue
         seen: set[str] = set()   # content objects already on screen, carried from an earlier beat
         for index, beat in enumerate(cut['beats']):
