@@ -83,5 +83,6 @@ experiment with the floor itself; if an experiment needs a floor line broken, as
    when it appears; say the cost first). The company's official wordmark from Brandfetch when the story names one.
 4. Write the Codex card (`ve card`, kind `carousel`, with `references`, `date`, `deck`), the scenes and wordmarks copied
    into its worktree and its goal carrying the house look's exact layout, and dispatch it.
-5. Verify: `carousel_check.py --cards`, the judges, a full-size and phone-size look. Fix and recheck the whole arc.
+5. Verify: `carousel_check.py --cards`, the judges, a full-size and phone-size look, and the antislop PASS/FAIL report (`.agents/skills/antislop/ADAPTER.md` first, then the skills it names) on the deck and
+   the cards: fix each FAIL no house rule overrules. Fix and recheck the whole arc.
 6. File through `send.py` to `3 Posts`, report on the board, send Krish the cards, and record his words.

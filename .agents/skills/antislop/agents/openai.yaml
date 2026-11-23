@@ -1,0 +1,4 @@
+interface:
+  display_name: "Check for AI slop"
+  short_description: "The antislop PASS/FAIL report on finished work, after the producer, under the house rules in ADAPTER.md"
+  default_prompt: "Use $antislop, read with .agents/skills/antislop/ADAPTER.md, to check this finished work and fix each FAIL no house rule overrules."

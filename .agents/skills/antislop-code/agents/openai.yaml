@@ -1,0 +1,4 @@
+interface:
+  display_name: "Check code comments for slop"
+  short_description: "antislop comment hygiene on changed code; it never touches the code"
+  default_prompt: "Use $antislop-code with .agents/skills/antislop/ADAPTER.md to check the comments in this change."

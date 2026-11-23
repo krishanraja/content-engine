@@ -344,7 +344,8 @@ read `.agents/skills/make-piece/references/long-cut.md`.
    `.agents/skills/hannah-fry/SKILL.md`. His house rules win any clash with her habits; it never holds his own Approve
    scripts press (F49).
 3b. **The kill list and the copy lint, before any paid call.** Run both on every script before any paid call; the commands,
-   what each refuses and what to do: `.agents/skills/make-piece/references/kill-list-and-copy-lint.md`.
+   what each refuses and what to do: `.agents/skills/make-piece/references/kill-list-and-copy-lint.md`. Then
+   the antislop PASS/FAIL report (`.agents/skills/antislop/ADAPTER.md` first, then the skills it names) on each script and, once written, the article: fix each FAIL no house rule overrules.
 4. **The read-back, required.** Three fresh readers hear each script, every
    time its words change. In Claude Code, start three subagents (the Agent
    tool, description "Separate reader: read-back A", "B" or "C", which the cost

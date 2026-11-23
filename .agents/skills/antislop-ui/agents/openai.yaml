@@ -1,0 +1,4 @@
+interface:
+  display_name: "Check a visual for AI slop"
+  short_description: "antislop visual rules on a finished card, cover or page, under the brand book"
+  default_prompt: "Use $antislop-ui with .agents/skills/antislop/ADAPTER.md to check this finished visual."

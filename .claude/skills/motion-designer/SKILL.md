@@ -77,7 +77,8 @@ Only when `spec.character` names one and `ve lint` accepts it: `.agents/skills/m
 
 1. `python scripts/ve.py lint <spec>` is clean.
 2. Read every beat against the self-check in `.agents/skills/motion-designer/references/plan-template.md`. A beat that
-   fails one is rewritten, never waved through.
+   fails one is rewritten, never waved through. Then the antislop PASS/FAIL report (`.agents/skills/antislop/ADAPTER.md` first, then the skills it names) on every beat's on-screen
+   words and visual: fix each FAIL no house rule overrules.
 3. `python scripts/ve.py expect <spec>` writes `expect.md`; the storyboard document sits beside it. Both go to his
    Sign storyboard press on the board. One press; never ask in chat.
 
