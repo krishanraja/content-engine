@@ -5,6 +5,10 @@ editions/**/*.md text eol=lf
 # Stored piece bodies are LF; the writer tests use real ones as fixtures.
 tests/fixtures/control-plane/*.md text eol=lf
 
+# Growth's vendored mix is held byte for byte by its hash
+# (tests/control-plane/growth-placement.test.ts), Windows checkouts included.
+vendor/makeyourmindup/mix.json -text
+
 # Repair evidence includes hashes of the exact JSON bytes. Preserve those bytes
 # across Windows and Linux, including transcript and caption-repair documents.
 # CRLF is legitimate in these byte-preserved Windows exports; keep the usual

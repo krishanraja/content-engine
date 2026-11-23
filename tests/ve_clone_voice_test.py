@@ -93,6 +93,10 @@ def lint_codes(spec: dict) -> list[str]:
     with tempfile.TemporaryDirectory() as temp:
         path = Path(temp) / 'spec.json'
         path.write_text(json.dumps(spec), encoding='utf-8')
+        # The fixture names no recipe, so it freezes before the recipe floor (velib.floor.RECIPE_FROM); with no lock it
+        # would freeze "today" and turn red on a date. Binding is tested in ve_quality_floor_test.py.
+        (Path(temp) / 've').mkdir()
+        (Path(temp) / 've' / 'engine.json').write_text(json.dumps({'at': '2026-11-19T00:00:00Z'}), encoding='utf-8')
         _, problems = ve_lint.lint(path)
     return [p.split(' ', 1)[0] for p in problems]
 

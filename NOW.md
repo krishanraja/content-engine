@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-23","week_target":20,"current":2,"current_as_of":"2026-11-23","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (0 published, and 2 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (10% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 2, against 20 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
+- main's red verify is fixed in tests and fixtures only. Fixtures that name no recipe now freeze before the recipe floor's start date, and three Windows-only test failures (CRLF in a test's output, CRLF on Growth's vendored mix, a 5-second default timeout) are fixed. No rule for real pieces changed. (2026-11-23)
 - The antislop guardrail (miqdadbadjuber/anti-slop at 7f6a03d) is vendored unmodified in .agents/skills/antislop*, with ADAPTER.md putting Krish's own rules above it; its PASS/FAIL report runs in the check steps of meme and cover-art, in the references the make-piece, thumbnail-designer and motion-designer checks read, and in docs/CAROUSEL-STANDARD.md for carousels (the cores sit at their byte caps), and the copy lint carries four antislop_ patterns (emoji bullets, capitals shouting in prose, hype phrases, rounded "N+ users" counts). (2026-11-23)
 - The tall and wide sting closes and the Character.ai recording layout carry their size and fill fixes (every close size at least 40 px, the tall band lifted 450 px, the wide close clear of x 1100, the recording filling its panel with its source line beneath); these missed the first merge of the outro pull request. (2026-11-20)
 - The premium title slide (direction A) is queued to Codex as card ve-title-premium-a on gpt-6.2-astra, set on this card only; the engine's default model pin is unchanged. (2026-11-20)
@@ -55,7 +56,7 @@ Older lines: `docs/history/2026-11-20-NOW-moved-5.md` (it names every earlier mo
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-23): Run the antislop report on the next carousel Growth makes and record any FAIL that the house rules turn out to overrule in ADAPTER.md.
+- Next (2026-11-23): confirm the next Full verify on main is green once this merges.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
 - North Star check (2026-11-23): holds.
