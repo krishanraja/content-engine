@@ -1902,12 +1902,87 @@ def copied_run(ours, theirs, n=COPY_RUN):
     return None
 
 
+# The beat (Ruling, Krish, 2026-11-24: the engine brings stories in his focus sectors, media, entertainment, content,
+# arts, music, creator tech, with the economics of AI inside them, and not governance, regulation, security or data
+# breaches). Every word reads config/beat.json, as good_news_config() reads its file, so a keyword is a row there; the
+# headline gate in apps/control-plane/api/_beat.ts reads the same rows.
+
+def beat_config():
+    return json.loads((Path(__file__).resolve().parents[2] / 'config' / 'beat.json').read_text(encoding='utf-8'))
+
+
+def keyword_pattern(keywords):
+    """Whole-word, case-blind regex over config keywords: a trailing * matches any ending, a space or hyphen either."""
+    alts = []
+    for k in keywords or []:
+        k = str(k).strip().lower()
+        stem, star = (k[:-1], True) if k.endswith('*') else (k, False)
+        words = [re.escape(w) for w in re.split(r'[\s-]+', stem) if w]
+        if words:
+            alts.append(r'[\s-]+'.join(words) + (r'\w*' if star else ''))
+    return re.compile(r'\b(?:' + '|'.join(alts) + r')\b', re.I) if alts else re.compile(r'(?!)')
+
+
+BEAT = beat_config()
+BEAT_FROM = BEAT['from']
+BEAT_AVOID = [(row['label'], keyword_pattern(row.get('keywords'))) for row in BEAT['avoid']] + \
+    [(BEAT['enterprise']['label'], keyword_pattern(BEAT['enterprise']['keywords']))]
+BEAT_AVOID_EXCEPT = keyword_pattern(BEAT.get('avoid_not_when'))
+BEAT_FOCUS = keyword_pattern([k for row in BEAT['focus_sectors'] for k in row.get('keywords') or []])
+BEAT_FOCUS_EXCEPT = keyword_pattern(BEAT.get('focus_not_when'))
+
+
+def off_beat(topic):
+    """(what the avoid list calls it, the word that matched) when a topic is on the beat's avoid list and carries no
+    focus-sector angle of its own, else None. Only the topic is read, never the option's whole body: one passing
+    'design' or 'media' in a so-what would otherwise rescue a governance or breach option. The exception phrases are
+    read first: 'job security' is not a security story and 'state of the art' is not an art story."""
+    if BEAT_FOCUS.search(BEAT_FOCUS_EXCEPT.sub(' ', str(topic or ''))):
+        return None
+    bare = BEAT_AVOID_EXCEPT.sub(' ', str(topic or ''))
+    for label, pattern in BEAT_AVOID:
+        m = pattern.search(bare)
+        if m:
+            return label, m.group(0)
+    return None
+
+
+def option_topic(o, main):
+    """What an option is about, in its own words: its title and hook, its plain question and headline, and its story's
+    first sentence. Both the avoid list and the focus-sector angle are read here and nowhere else in the option."""
+    pitch = o.get('pitch') if isinstance(o.get('pitch'), dict) else {}
+    parts = [o.get('title'), o.get('hook')]
+    if main:
+        parts += [pitch.get('question'), pitch.get('headline'), pitch.get('hook'), (sentences(o.get('story') or '') or [''])[0]]
+    return ' '.join(str(p) for p in parts if p)
+
+
+def offbeat_findings(ideas, week):
+    """From BEAT_FROM, an option whose topic is on the beat's avoid list (governance, regulation, compliance, policy,
+    security, privacy, surveillance, breaches, enterprise productivity) and carries no focus-sector angle is refused,
+    with the reason in plain words. The weekly good news is its own series with its own check and is left out."""
+    if str(week) < BEAT_FROM:
+        return []
+    out = []
+    for ref, day, main, o in board_raw(ideas):
+        if o.get('weekly'):
+            continue
+        hit = off_beat(option_topic(o, main))
+        if hit:
+            label = f'{ref} ({str(o.get("id") or "")[:8]})' if main else ref
+            out.append({'code': 'off_beat', 'ref': ref, 'line': f'off_beat: {label} is about "{hit[1]}" ({hit[0].lower()}) with no '
+                        'focus-sector angle; the beat is AI in media, entertainment, arts, music and creator tech, their economics '
+                        'included (Ruling, Krish, 2026-11-24; config/beat.json). Find the creative angle or replace it'})
+    return out
+
+
 # The findings that fail the Sunday run (board_feed.py gate): a subject he refused offered again, a warned option placed
 # first or shown without his words, a return that came back no deeper, a repeat of what went out (Krish, 2026-11-16),
 # from the 23 Nov board an option without its shape, aim, humour and lookalike, and from the 30 Nov board a Saturday
 # option that is not a sheet carousel followed card for card, or a meme template that is not whole (Krish, 2026-11-17).
-# The rest of cover stays the run's to fix before it stops, as before.
-GATE_CODES = ('refused', 'warned_first', 'warning_line', 'return', 'repeat', 'aim', 'saturday', 'template', 'goodnews')
+# The rest of cover stays the run's to fix before it stops, as before. From the 30 Nov board an option off the beat
+# (offbeat_findings; Ruling, Krish, 2026-11-24) fails it too.
+GATE_CODES = ('refused', 'warned_first', 'warning_line', 'return', 'repeat', 'aim', 'saturday', 'template', 'goodnews', 'off_beat')
 # What the checks say without failing anything: a warned option (it carries his words) and an idea from his tick on a
 # subject he refused (it carries the refusal; Ruling, Krish, 2026-11-12).
 NOTE_CODES = ('warned', 'his_tick', 'his_repeat')

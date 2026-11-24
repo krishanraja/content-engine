@@ -756,6 +756,8 @@ def wave1(ideas, sources, plans=None, p6=None):
     # "We should find good news that's not medical stuff"; config/good-news.json).
     if week >= idea_checks.GOOD_NEWS_FROM:
         found += idea_checks.goodnews_findings(ideas, week, idea_checks.goodnews_history(sources, earlier_ideas(week, plans)))
+    # The beat: his focus sectors, not governance, regulation, security or breaches (Krish, 2026-11-24; config/beat.json).
+    found += idea_checks.offbeat_findings(ideas, week)
     return found
 
 

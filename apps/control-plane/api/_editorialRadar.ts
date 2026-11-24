@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto'
-import { onTeardownBeat } from './_beat.js'
+import { beatPromptBlock, onTeardownBeat } from './_beat.js'
 import { sanitizeVoice } from './_content.js'
 
 export const EDITORIAL_RADAR_SCHEMA_VERSION = 2 as const
@@ -182,6 +182,10 @@ export function buildEditorialLensSystemPrompt(series: EditorialSeries, voice: s
     'Be demanding about semantic meaning, audience value, novelty and proof. Content for content sake is a failure.',
     'Avoid generic advice, bossy language, marketing slogans, AI clichés, fake certainty and em dashes.',
     lens,
+    // Ruling (Krish, 2026-11-24): his focus sectors, not governance,
+    // regulation, security or data breaches. Built from config/beat.json, the
+    // same rows the headline gate reads.
+    beatPromptBlock(),
     includeBuildLens ? buildLensBlock(series) : '',
     voice ? `KRISH VOICE\n${voice.slice(0, 5000)}` : '',
     corpus ? `CHANNEL CORPUS\n${corpus.slice(0, 6500)}` : '',

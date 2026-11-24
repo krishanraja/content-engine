@@ -36,7 +36,9 @@ comments (every Save is also posted as a comment, so both accounts read it). His
 capabilities, and update the docs that describe it: the `plan-week` skill (both copies, then
 `python scripts/validate-skills.py --sync-claude`) and `README.md` for the board.
 
-**2. Where ideas come from (read only; nothing new is scraped without Krish's yes).** Use what the engine already
+**2. Where ideas come from (read only; nothing new is scraped without Krish's yes).** Every idea is on the beat
+(`config/beat.json`; Krish, 2026-11-24): AI in media, entertainment, arts, music and creator tech, their economics
+included, never governance, regulation, security or breaches. Use what the engine already
 collects, each through its own route or table:
 
 - **Krish's own words:** ideas he said (content ideas with `source_type` `manual` and their `said:` refs) and
