@@ -87,7 +87,10 @@ rejects "all-caps word-by-word captions" and "empty comment CTAs":
 | 6, comment prompt | A one-word comment prompt is close to the empty comment prompt he rejected. The Studio's pattern check (`packages/core/src/editorial.ts`) looks for phrases like "comment below" and would miss this wording, so only his ruling settles it. | End on the full face delivering the piece's dated prediction, with the date and confidence on screen: the brand's "Every piece makes a call. We keep score." |
 
 Both defaults are confirmed (Krish, 2026-09-26): captions in sentence case
-with at most one loud word, and the close on the dated prediction.
+with at most one loud word, and the close on the dated prediction. The close
+is superseded on 24 Nov 2026: a piece closes on its why-ladder's landing, what
+it shows and an open question, with no date or confidence on screen
+(`docs/FIVE-WHYS.md`; Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores).
 
 ## What changes if he confirms
 

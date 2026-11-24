@@ -116,13 +116,11 @@ Models are named by constant (`api/_models.ts`): `SYNTHESIS_MODEL` and
 | `/api/content-ideas/archive-stale` (cron) | archives idle ideas | none |
 | `/api/shifts/detect` (cron), `/api/shifts/[id]` | proposes shifts over a 21-day corpus through a deterministic gate; Krish's rulings on them | Sonnet [`shifts-*`] |
 | `/api/signals/news` (cron) | news velocity for the pieces in play: what GDELT saw about each subject in two days and what Hacker News said, every headline to `trend_observations` (origin `gdelt` or `hn`, story key the piece's id, `gathered_not_selected`); a subject that doubles in a day turns the board's "News velocity" signal to warn (`api/_signals.ts`, docs/ENGINE_100X.md) | none, keyless |
-| `/api/signals/odds` (cron) | the market's odds on every Call with a market pinned: reads Polymarket or Kalshi once a day and appends the reading to `meta.call_market.history` | none, keyless |
-| `/api/content-ideas/[id]/call-market` | pin a prediction market (Polymarket slug or Kalshi ticker) to a piece's dated Call, read once to refuse a wrong one; GET reads it, `{clear: true}` unpins | none, keyless |
+| `/api/signals/odds` (cron), `/api/content-ideas/[id]/call-market`, `/api/calls` | retired on 24 Nov 2026 with every call, odds reading and scoreboard (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores); a piece is a why-ladder (`docs/FIVE-WHYS.md`) | none |
 | `/api/content-ideas/[id]/making` | where the piece is between the workroom and every channel (`meta.making`: workroom and publish page links, visual gate, script check, pack, recordings, video assets, channels posted, the session making it); GET reads it with the steps, POST merges a patch. Written by Claude Code sessions (`scripts/post-pack/making.py`) and by Krish's cookie when he ticks a channel off; read by Control Center over its realtime subscription on `content_ideas`, and by its done-check sweep for each piece's steps. After a write lands it asks that sweep to look at the piece's open board items (`POST /api/done-checks {keys}` with the access cookie, `_controlCenter.ts`; the write waits up to 3 s for it before it answers); it closes none itself | none, keyless |
 | `/api/week/options` | the week's options (Krish, 2026-10-11: one Sunday decision for Monday, Wednesday and Friday). GET `?week_start=<Monday>` hands a session each series' mandate, the options written for that week, what is in flight, the judges' best and the ideas Krish dropped in; POST `{week_start, series, options:[{id, rank, pitch, why_now, recommended}]}` writes `meta.week_option` on each row and clears it from rows the day no longer offers. Read live by Control Center's week page. Picks nothing | none, keyless |
 | `/api/publish/watch` | hourly: marks a piece published from the publication's public archive (the Substack archive) and records its YouTube video and Short from the @makeyourmind-up channel feed, matched to the piece by address, then title, then day (and ticks Substack on its making record, when it has one), asks the done-check sweep to look at its board items, and holds a fresh post that matches no piece as one `post_matched` question for a session (`_publishWatch.ts`). It closes no board item: Control Center's done-check sweep does (step 4) | none, keyless |
 | `/api/publish/catalogue` | public, read-only: every published piece with its article, its YouTube video and its Short, from the making record; makeyourmindup.ai reads it and takes each cover from Substack | none |
-| `/api/calls` | public, read-only: every published piece's Call, our confidence, `not_due_yet` or `due`, Krish's verdict when he has made it, and the pinned market's odds; the scoreboard on makeyourmindup.ai reads it | none |
 | `/api/arcs/surface` (cron) | composes, lints and scores arc cards; surfaces 7 | Sonnet [`arcs-*`] |
 | `/api/content-decisions/[id]`, `likely-reasons` | resolves a weekly queue card; predicts reject reasons | Haiku [`content-decisions`] |
 | `/api/idea-queue` | the one idea queue: `GET` reads it (and the oldest two untriaged as the A/B pair); `POST` queues an idea, triages it (story, angle, cute, curious with his reason, drop; only `decided_by: 'Krish'`) or takes it out. Rows are `content_ideas` with `queued_at` and `protected_at`; no purge, expiry, bury or stale sweep touches them | none |
@@ -237,30 +235,16 @@ of its 409 `changed_during_draft`) and of revise's `done`:
     { "rule": "R7", "found": "Reads at about age 13.5. Above 13 cannot be approved: ..." }
   ],
   "retried": true,                      // a second call ran and answered
-  "note": "The second try broke as many rules as the first, so this is the first answer.",
-  "confidence_restored": true           // Krish's confidence had to be put back (below)
+  "note": "The second try broke as many rules as the first, so this is the first answer."
 }                                       // note: only when a retry was wanted and the first answer kept
 ```
 
-**The writer never sets Krish's confidence** (since 2026-09-30, walk log
-F43). How sure we are is his judgement (his ruling, 2026-09-26: "I'd rather
-take a clearer stance than sit on the fence all the time and say 60%", and
-he sets the number). After the model and any retry, in code
-(`guardConfidence`, `api/_selfCheck.ts`): a first draft says
-`How sure we are: [to set]`, whatever the model wrote; a rewrite keeps
-the source text's confidence exactly, label and number ("How sure we are:
-70%." stays that, "Confidence: 70%." stays that, and the placeholder stays
-the placeholder, the old `[Krish to set]` written as `[to set]` because it
-named him, house rule NO_NAME; the fact gate's hash reads both the same, so a
-passed check holds); a rewrite of a text with no confidence gets the placeholder
-in place of any number the model wrote. A confidence the model dropped is put
-back at the end of the call (a paragraph of its own under a heading, the last
-sentence of a bold-label paragraph); with no call at all there is nowhere to
-put it, and CALL says so. It is found by the shared call reader
-(`labelledConfidences`, `callSectionOf`) as the fact gate finds it: "How sure
-we are:" anywhere, "Confidence:" inside the call only, so a labelled number
-elsewhere ("Consumer confidence: 62% in August") is left as written.
-`self_check.confidence_restored` is true whenever it changed the text.
+**No confidence number** (since 24 Nov 2026). The writers once kept a
+"How sure we are" number in place for Krish to set (`guardConfidence`,
+walk log F43, and `self_check.confidence_restored`). A piece carries no
+prediction and no confidence number at all now (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores), so there is nothing to
+keep: a confidence the model writes is a fault the checks name, never a value
+to protect. The piece's structure is its why-ladder (`docs/FIVE-WHYS.md`).
 
 **A rewrite in place** (since 2026-09-30, walk log F44). Given a `selection`,
 revise hands the model the whole draft and the passage, then puts the answer
@@ -282,9 +266,9 @@ that paid call.
 
 **The fact gate, in practice.** A second model reads every sentence the
 claim lister did not cover (twelve at a time, with its section heading), and
-a sentence is set aside as a joke, scenario, guess or the piece's own
-prediction only when both readings agree; a sentence with a number is never
-set aside unless it reads as a forecast. Sources are strongest filed word for
+a sentence is set aside as a joke, scenario or guess only when both readings
+agree; a sentence with a number is never set aside. A piece makes no
+forecast (since 24 Nov 2026), so no sentence is set aside as one. Sources are strongest filed word for
 word: `apps/control-plane/scripts/file-verbatim-source.ts` files a page's own
 words (title, dates, matching passages) with its URL, link text as plain words
 without the markdown link syntax (walk log F34). The word-for-word
@@ -331,17 +315,9 @@ from the dashes `save-draft` swaps for commas. Anything else is a 409
 Krish asked for it on 2026-09-25, after the engine's first draft of a piece
 rescaled Cisco's $900 million a year to "close to a million dollars".
 
-Two things may change without a new check: the dashes, and the number of
-Krish's confidence in the call (his ruling, 2026-09-26: a confidence no longer
-forces a fact re-check). Since 2026-09-28 (walk log F41) the confidence is
-found by the same reader CALL and the Studio use
-(`packages/contracts/src/call.ts`), under either label: a line of its own,
-"How sure we are: 75%.", anywhere in the piece, as before, and any number
-after "How sure we are:" or "Confidence:" inside the call, so piece 1's
-"... sponsored listings. Confidence: 70%." can be re-set too. Only the number
-is exempt: the label, the words after it, the call's statement and date, and
-a labelled number outside the call are checked like any other text. A
-sentence that is only the confidence is never a claim to check.
+One thing may change without a new check: the dashes. The confidence number
+that was also exempt (his ruling, 2026-09-26) went with every prediction on
+24 Nov 2026.
 
 **Krish's house rules** (`api/_houseRules.ts`). Every ruling Krish has given
 in words is one record: the instruction, his exact words, the date, live or
@@ -349,9 +325,11 @@ on trial, and the stages that enforce it. Writers read them through
 `VOICE_GUARDRAILS` (the joke pass included), the drafter and rewriter add the
 rules scoped to their subchannel, both judge gates put the rules for their
 gate in every judge's context, and the final pass builds its absolutes from
-them. House rules win over a mandate where they disagree. No piece needs a
-prediction: one is made only when Krish asks for it on that piece
-(`meta.prediction`; Ruling, Krish, 2026-11-19). They also require every sentence to have one
+them. House rules win over a mandate where they disagree. No piece makes a
+prediction, a call, a forecast, odds or a confidence number, even on request
+(Ruling, Krish, 2026-11-24; the 19 Nov opt-in path, `meta.prediction`, is gone): every piece is a
+why-ladder that lands on what it shows and an open question
+(`docs/FIVE-WHYS.md`). They also require every sentence to have one
 clear reading, and ask unfamiliar mechanisms to use a factual historical
 parallel, familiar analogy or clearly signposted comic exaggeration when that
 makes the idea easier to grasp. Every visual must make one critical point
@@ -371,16 +349,14 @@ stage.
 **Before approval** (`api/_publishChecks.ts`). `approved` and `published`
 also need the checks a machine can make: the fact gate, no "Not X, Y", no em
 dashes, no exclamation marks outside quotes, British spelling outside quotes
-and names, a reading age of 13 at most (12 to 13 warns), and, only for a piece
-that carries a prediction (one Krish asked for, `meta.prediction`, or a body with
-a prediction section), a prediction with a date and a percentage; a piece with
-none needs none (Ruling, Krish, 2026-11-19). The prediction is read by the same reader the
-Studio uses to put the call on a Short (`packages/contracts/src/call.ts`), so
-a piece passes only with a call a Short can show word for word: one dated
-paragraph, a real date, and one labelled whole percentage.
-`CLEAR_STANCE`, a warning, reads the confidence written as "How sure we are:
-75%" or "Confidence: 70%", and is green only on a number it has read, at 70%
-or more (walk log F35). Anything else is a 409 `publish_gate` naming what is
+and names, a reading age of 13 at most (12 to 13 warns), and the why-ladder:
+`WHY_LADDER` reads the piece's ladder (`meta.whys`) with `checkWhyLadder`
+(`packages/contracts/src/whys.ts`): 3 to 7 rungs (fewer only with a stop
+reason), every rung that is not open backed by at least 2 sources on at least
+2 domains, each answer 60 words or fewer, and a landing with no forecast,
+odds, confidence or preaching wording. A failing rung is named ("Why 3 needs a
+second source"), never dropped. The old CALL, CALL_HORIZON and CLEAR_STANCE
+checks are retired (Ruling, Krish, 2026-11-24). Anything else is a 409 `publish_gate` naming what is
 left. `GET /fact-check` returns the whole
 checklist, whether the piece is `ready`, and its receipts.
 
@@ -436,8 +412,7 @@ companies in the story, puts them in a plain conflict or change, leaves one
 question the video answers, adds to the thumbnail text instead of repeating
 it, and fits in 60 characters (YouTube stops at 100). The description opens
 with a hook that fits in about 150 characters, then two or three plain
-sentences, then the piece's dated prediction as the piece gives it, then
-"Read the full piece free at makeyourmindup.ai", then at most three
+sentences, then "Read the full piece free at makeyourmindup.ai", then at most three
 hashtags, or none.
 
 **The Substack title and subtitle** (since 2026-10-05, walk log F65). The
@@ -476,8 +451,7 @@ each problem in plain words, and the answer that fails less is kept, the
 first on a tie; it never asks a third time. A Substack title over 100 fails,
 and so does an answer with no Substack title or subtitle: its YouTube fields
 are kept, and the one retry asks for what is missing. A `warn` (a title over
-60 characters, a title that names nobody, a description without the piece's
-prediction, a subtitle whose first sentence runs past about 60 characters or
+60 characters, a title that names nobody, a subtitle whose first sentence runs past about 60 characters or
 that runs past 150 in all) is for the person reading. A conflict, an open
 question, being true beyond the numbers, a Substack title that tells the
 same story as the YouTube one, and a first sentence that makes sense alone
@@ -652,7 +626,6 @@ rows in the last seven days.
 | Thu 21:00 | `investigations` | `/api/investigations/run` |
 | Fri 17:30 | `shifts_detect` | `/api/shifts/detect` |
 | daily 06:30 | `signals_news` | `/api/signals/news` |
-| daily 06:45 | `signals_odds` | `/api/signals/odds` |
 | Fri 17:50 | `arcs_surface` | `/api/arcs/surface` |
 | Fri 18:00 | `briefs_assemble` | `/api/briefs/assemble` |
 | Sat 05:00 | `build_signals` | `/api/discover-build-signals` |
@@ -701,7 +674,7 @@ passes." Do not start it early.
   rewrites.
 - *Why it waits.* A cache only pays while the front of a prompt stays the
   same, and the prompts are still moving: house rules entered every stage on
-  2026-09-25, mandates and the prediction are still settling. Cache
+  2026-09-25, and the mandates and the signature format are still settling. Cache
   boundaries drawn now would be redrawn with each change.
 - *How to run it.* Measure before changing anything. On 2026-09-24 a caching
   change to the judge panel produced zero cache reads over 153 calls (the

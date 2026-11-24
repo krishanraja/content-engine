@@ -23,7 +23,7 @@ that name it.
 | `proof` | the evidence the line names (a real record, document, quote or screen) beside or over him | P3, P6 |
 | `close` | one calm close: the ending band, held long enough to read | F1 |
 
-Extra beats (more hooks, stats, the dated call) are allowed between them and are composition-checked only.
+Extra beats (more hooks, stats, a Why with its evidence) are allowed between them and are composition-checked only. A dated call is never one of them (Ruling, Krish, 2026-11-24).
 
 ## Modules inside it
 

@@ -48,8 +48,9 @@ before the pack.
   reader who is not yet a subscriber, and one right after the three actions of "3 things you can do tomorrow", as the
   last paragraph of that section. Each says what the reader gets and links the subscribe page in
   `vendor/makeyourmindup/subscribe-route.json` (`https://home.makeyourmindup.ai/subscribe`), for example: "Three pieces
-  a week on what AI changes in your business. Subscribe free." Never promise predictions, calls or a scorecard of
-  them: no piece needs a prediction (Ruling, Krish, 2026-11-19), and makeyourmindup.ai shows only an example board. The publish check
+  a week on what AI changes in your business. Subscribe free." Never promise predictions, calls, odds or a scorecard:
+  no piece makes one (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that
+  suggests predictions, calls, dated, odds or scores), and makeyourmindup.ai shows only an example board. The publish check
   ARTICLE_SUBSCRIBE_ASK reads both (not blocking until Krish has seen pieces carry it).
 - **The subtitle says the stake** (FOR_THE_LEADER): what the piece changes for a business.
 

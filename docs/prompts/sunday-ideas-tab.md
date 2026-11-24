@@ -26,8 +26,9 @@ taken from `meter_daily`.
 
 **1. The tab (code, in `scripts/post-pack/week_board.py` and `week_board/`).** A fourth tab before Mon, Wed and Fri,
 named Ideas. For each publishing day (Monday follow.the.money, Wednesday under.the.hood, Friday mind.the.gap): three
-or four candidate ideas, each with a one-line hook, the basic narrative in four or five beats (what is happening,
-why it matters, what it means for the reader, the call), the sources it comes from with links, and why it fits that
+or four candidate ideas, each with a one-line hook, the basic narrative as a why-ladder of three to five Whys (the
+title question, then each Why with its sourced answer, landing on what it shows and an open question for the reader;
+`docs/FIVE-WHYS.md`), the sources it comes from with links, and why it fits that
 series' mandate (read live from `venture_formats.mandate`, never copied). Krish picks one per day with a tick, edits
 the narrative in place and comments, through the board's existing review card (`--review`), edits store and
 comments (every Save is also posted as a comment, so both accounts read it). His pick is recorded through
@@ -55,8 +56,9 @@ stale or failing, and any source Krish named that has no route yet (for example 
 `content_creators`). Ask him before adding a new source or anything that spends.
 
 **3. Ideas are checked before they reach him.** Each idea is new to the publication (not a repeat of the last eight
-weeks), fits its day's mandate and has at least one primary source. It needs no prediction: a piece makes one only when Krish
-asks for it on that piece (Ruling, Krish, 2026-11-19). Titles stay out: titles are signed off after he records.
+weeks), fits its day's mandate and has at least one primary source. It carries no prediction, call, odds or confidence
+number (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests predictions,
+calls, dated, odds or scores). Titles stay out: titles are signed off after he records.
 
 **4. Build and publish.** Make next week's board (the Monday after today) with the Ideas tab first, verify it
 (`week_board.py --verify`), and publish the same built file to every link in `config/boards.json` under that week,

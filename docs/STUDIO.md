@@ -61,12 +61,14 @@ follow.the.money, `built_with_ai` of under.the.hood (`SERIES_LINE`). Rules,
 treatment presets and visual devices approved for a retired id serve its
 successor, and a list naming both retired ids serves all three; every old job
 matches exactly what it matched before. follow.the.money and under.the.hood
-take their predecessors' formats; mind.the.gap has The Fork (Krish,
-2026-09-26: "The Fork is good"): then, now, the fork, our call, the order its
-timeline draws the story in. A Fork carousel must end on the call, with the
-prediction's date and how sure we are (the Studio's check, `theForkIssues`,
-went with the Studio's carousel code on 13 Nov 2026; `docs/CAROUSEL-STANDARD.md`,
-"How a carousel is made", is the route now). A piece on a
+take their predecessors' formats, and since 24 Nov 2026 every piece on all
+three is a why-ladder (`docs/FIVE-WHYS.md`; Ruling, Krish, 2026-11-24: the
+signature format is the 5 Whys; get rid of everything that suggests
+predictions, calls, dated, odds or scores). The Fork's old order for
+mind.the.gap (Krish, 2026-09-26: "The Fork is good") ended on a call; that
+ending is retired, and a carousel follows the ladder, one rung per card plus a
+recap (`docs/CAROUSEL-STANDARD.md`, "How a carousel is made", is the route).
+A piece on a
 live subchannel gets a brief in its own name; a piece on a retired slot keeps
 its retired id.
 
@@ -147,11 +149,11 @@ What the job-based Studio renderer draws (ve uses `apps/renderer/src/engine/`):
   (the first emphasis word; sentence case, at most one loud word, Krish,
   2026-09-26). The channel's sticker, tilted -6 degrees, on the second beat,
   left out wherever it would cover the face, a directed layer or the tile.
-  The call card on the beat the manifest names (below). The ending band in
+  The landing card, which replaced the call card on 24 Nov 2026 (below). The ending band in
   place of the old ending plate, for the same two seconds at the end: a
   ticker with the channel's promise and day (the only thing that keeps
   moving, about one cycle every 38 seconds), the stacked logo on ink, the
-  day, the section pill and makeyourmindup.ai. The band and the call card
+  day, the section pill and makeyourmindup.ai. The band and the landing card
   each take the caption's place while they are up, as in the mock. Things
   arrive with a short slide, drop or slap, every motion a pure function of
   the frame. The band may sit over the torso, as in the mock, and must
@@ -169,13 +171,13 @@ What the job-based Studio renderer draws (ve uses `apps/renderer/src/engine/`):
 - A carousel, until 13 Nov 2026, when the Studio's carousel code was
   retired (a carousel is now made in a Claude session:
   `docs/CAROUSEL-STANDARD.md`, "How a carousel is made"). It drew the cover on the section's colour (day, pill, mark tile, the
-  headline, the dek, a sticker pointing at the call for The Fork or the
-  channel's sticker otherwise, and the channel's standing question); middle
+  headline, the dek, the channel's sticker, and the channel's standing
+  question); middle
   cards on ink with grain (day, pill, mark tile, the headline with one swiped
   word where the slide has an accent, the body in Archivo, the data label in
   mint mono, a page counter "n / N"); the last card as the mock (day, pill,
-  counter, headline, body, the mono line, for The Fork the line about how
-  calls are marked, and the horizontal logo and address in the footer). No
+  counter, headline, body, the mono line, and the horizontal logo and address
+  in the footer). No
   Mindmake scene artwork in this theme. Headlines were sized to fit before a
   card rendered, from the kit fonts' own metrics.
 - The retired series keep the Mindmake theme exactly as approved: their
@@ -184,35 +186,21 @@ What the job-based Studio renderer draws (ve uses `apps/renderer/src/engine/`):
 - Control Center's video plate (`VideoBrandLockup`) still shows the version 1
   look; it needs its own change there.
 
-The call. Nothing upstream marked which beat of a Short carries the piece's
-call (The Fork marks only a carousel's last slide), so a render manifest
-names it: `call: { beat_id, statement, due, confidence_percent }`
-(`RenderCallV1Schema`, `packages/contracts/src/v2.ts`). The card renders
-only in the house style; a call that would cover the face, run into the
-platform's lower safe zone or share the screen with the ending band stops
-the render with the reason.
-
-Where the call comes from. A wrong date or percentage on the card is a
-factual error in public, so the call comes from the approved text of the
-production brief bound to the job, read by one parser, `readPieceCall`
-(`packages/contracts/src/call.ts`), which the control plane's publish checks
-share. It reads the section under `## OUR
-PREDICTION`, `## THE CALL` or `## PREDICTION`, or a paragraph that opens
-`**The Call.**` or `**Our prediction**`: the one paragraph with a date to
-check it by ("by 30 September 2027", or `2027-09-30`), and how sure we are
-("How sure we are: 75%" or "Confidence: 70%"). It refuses, with the reason,
-whenever any of the three is missing or open to doubt (two dates, two
-percentages, a date that is not on the calendar, a percentage only in square
-brackets). `studio v2 call --job <job> --beat <beat_id>` prints the call
-ready to paste into the manifest as `"call"`. A house style render for a
-live subchannel whose job has a production brief refuses without a call, and
-refuses a call whose statement, date or percentage differs from the approved
-text by a single character (`packages/core/src/render-call.ts`). The check
-runs where a review or treatment manifest is taken in (`styleframes create`,
-`animatic create`, `treatment register`) and again before every render, so
-it covers styleframes, animatics, previews, masters and magic-edit previews.
-The retired series, unbranded renders and a job with no production brief are
-left exactly as they were.
+The landing (since 24 Nov 2026). A Short no longer carries a call: the call
+card, the render manifest's `call` field (`RenderCallV1Schema`), the call
+reader (`packages/contracts/src/call.ts`, `readPieceCall`), the render check
+in `packages/core/src/render-call.ts` and `studio v2 call` are retired with
+predictions, dated calls and how sure we are (Ruling, Krish, 2026-11-24: the
+signature format is the 5 Whys; get rid of everything that suggests
+predictions, calls, dated, odds or scores). A Short ends on the landing card
+of the piece's why-ladder: what this shows, and the open question handed to
+the viewer, taken from the approved ladder (`meta.whys`, read by
+`parseWhyLadder` in `packages/contracts/src/whys.ts`) and never rewritten on
+the way. The landing card follows the call card's placement rules: it never
+covers the face, runs into the platform's lower safe zone or shares the
+screen with the ending band. The parts of the ladder on screen (rail, step
+card, evidence plates, recap stack, landing card) are in `docs/FIVE-WHYS.md`.
+The retired series and unbranded renders are left exactly as they were.
 
 How it is built: `makeyourmindup-video-v1` version 2 in `config/studio.json`,
 status `candidate`, no approval. Its `typography` is the house set (Anton,
@@ -221,7 +209,7 @@ Archivo, Fraunces, IBM Plex Mono) and its `publication` lockup
 `publication_band` identity, the tile's shadow and a `house_style` block
 (`BrandHouseStyleV1Schema`: the tokens, each channel's day, sticker, promise
 and standing question from makeyourmindup.ai, and the fixed lines around the
-call). A job pinned under version 1 still parses and hashes as it did. The
+landing). A job pinned under version 1 still parses and hashes as it did. The
 mark, the horizontal logo and the stacked logo
 (`makeyourmindup-stacked.png`, 2415 x 740, sha256 `5a0e8a08...29a4fc`) are
 pinned by sha256 in control-center, `src/assets/brand/makeyourmindup/`,
@@ -260,9 +248,9 @@ Studio, `docs/ENGINE_SESSION.md`):
 2. Done 2026-10-02: both runners are on `cc0657e`
    (`docs/history/2026-11-12-STATE-before-recheck.md`, "The Studio's runners,
    2026-10-02").
-3. Render the proof in the Studio (a Short with its call, and its cover, the
+3. Render the proof in the Studio (a Short with its landing card, and its cover, the
    Receipt; the Studio has drawn no carousel since 13 Nov 2026 and no
-   thumbnail of its own since 15 Nov 2026) and show it to Krish. The call comes from the job's production
+   thumbnail of its own since 15 Nov 2026) and show it to Krish. The landing comes from the job's production
    brief, and a brief is built only from an approved piece
    (`api/content-ideas/[id]/production-brief.ts` refuses
    `exact_revision_not_approved`), so the proof follows Krish's approval of a
@@ -275,10 +263,9 @@ Studio, `docs/ENGINE_SESSION.md`):
    theme; the channel name is type, which the brand book requires and which
    is not a recreated mark).
 6. A render manifest for a live subchannel then names `makeyourmindup-video-v1`,
-   pins the mark, logo and stacked logo hashes, and carries the call that
-   `studio v2 call --job <job> --beat <beat_id>` prints from the job's
-   production brief. The render refuses without it, or with any difference
-   from the approved text.
+   pins the mark, logo and stacked logo hashes, and ends on the landing card
+   of the job's approved why-ladder, word for word. It carries no call (Ruling,
+   Krish, 2026-11-24).
 
 Proof rendered by the Studio's own renderer in a cloud container on
 2026-09-28, against the mock's frames, with a still of Krish as the
@@ -333,7 +320,7 @@ kept so V1 jobs can resume (the `carousel` group went with the carousel
 engine on 13 Nov 2026); and under `v2`: `production-brief
 import|materialize`, `identity`, `job create|status|resume`, the stage commands
 (`ingest`, `transcribe`, `candidates`, `recording-brief create`, `stage
-import`, `source analyze`), `repertoire`, `visual-plan`, `assets`, `call`,
+import`, `source analyze`), `repertoire`, `visual-plan`, `assets` (`call` retired 24 Nov 2026),
 `styleframes`, `animatic`, `treatment`, `render`, `qa`, `approve`, `feedback`,
 `package create|archive`, `publish youtube` (private only), `magic`, `inbox`,
 `runner once|status|resolve-project-conflict|project|daemon`, `analytics

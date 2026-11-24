@@ -17,8 +17,8 @@ pieces, measured four ways:
 1. **True beyond doubt.** Every number checked twice, now against more
    independent sources, so the fact gate is harder to fool as well as faster.
 2. **Impossible to fake.** Built from the operational exhaust and from live,
-   sourced data nobody else bothers to pull: market odds, news velocity, the
-   room's real words.
+   sourced data nobody else bothers to pull: filings, news velocity, the
+   room's real words, each one backing a rung of the piece's why-ladder.
 3. **Lands faster than the words.** Every piece carries one visual or
    interactive that makes its hardest point obvious in a second, and a video
    of Krish reacting to the facts.
@@ -26,8 +26,8 @@ pieces, measured four ways:
    piece starts ahead of the last.
 
 The real multiplier is the **combinations** (last
-section): odds plus a scoreboard, a scrape plus a judge, a transcript plus a
-story check. One tool is 2x. The right chain is 100x.
+section): a why-ladder plus a source for every rung, a scrape plus a judge, a
+transcript plus a story check. One tool is 2x. The right chain is 100x.
 
 ## The pipeline, tool by tool
 
@@ -37,10 +37,13 @@ only a reader; connector means reached through an MCP connector in a session.
 
 ### Find: better raw material than anyone else has
 
-- **Prediction markets** (Polymarket, Kalshi; keyless, live). Read the market's
-  odds on any question we have an opinion on. This is the signature move: every
-  piece makes a dated Call with a confidence; show the market's number beside
-  ours and track both to the due date. Nobody in this lane does it.
+- **The why-ladder's research** (the board's research prompt and the engine's
+  own research step). The signature move since 24 Nov 2026: every piece climbs
+  a ladder of Whys, and research returns one sourced answer per Why, with its
+  strongest counter-explanation (`docs/FIVE-WHYS.md`). Prediction markets and
+  the dated Call they were read against are retired (Ruling, Krish,
+  2026-11-24: the signature format is the 5 Whys; get rid of everything that
+  suggests predictions, calls, dated, odds or scores).
 - **GDELT** (keyless, live). The whole world's news by subject and hour. Gives
   the velocity behind a story (is this one article or a pile-on) and the raw
   material for the news-wall picture.
@@ -77,8 +80,9 @@ only a reader; connector means reached through an MCP connector in a session.
 - **Gemini video understanding** (keyed, built as `scripts/signals/video.py`, cheap). A judge that can
   watch our cut or a competitor's and describe every shot and where attention
   would drop.
-- **Market odds as a judge of our own Call.** If the market strongly disagrees
-  with our confidence, that is a flag to go deeper before we publish.
+- **Counter-evidence as a judge of each Why.** If the strongest competing
+  explanation for a rung is as well sourced as the answer, that is a flag to
+  branch the ladder or go deeper before we publish.
 
 ### Write: Krish's voice, sharper and more his
 
@@ -111,7 +115,7 @@ only a reader; connector means reached through an MCP connector in a session.
   or texture where the page tool cannot draw it, never as evidence, only where
   it makes one point land faster.
 - **The data pictures** (built in-house from live data): the news wall from
-  GDELT, the odds bars from the markets, the velocity timeline.
+  GDELT, the velocity timeline.
 
 ### Film: keep Krish the face, lower the cost of being on camera
 
@@ -127,7 +131,7 @@ only a reader; connector means reached through an MCP connector in a session.
 
 Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); the quick-edit path stays the fallback until ve passes Phase 3.
 
-1. **The data graphics** (news wall, odds bars) dropped in by anchor word
+1. **The data graphics** (news wall, velocity timeline) dropped in by anchor word
    (ve: word-indexed events compiled to frames; `scripts/quick-edit` remains the fallback).
 2. **Sound** from Runway or ElevenLabs: the receipt tearing, the till, a quiet
    bed under the cold open and outro. Krish's voice stays the only voice.
@@ -150,17 +154,13 @@ Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); th
 - **Mux / Cloudflare Stream** (keyed, to build): self-host the videos on
   makeyourmindup.ai with view analytics for the newsstand.
 - **n8n** (connector): the publish checklist as a workflow that fires when a
-  post is marked published (pack sent, library written, scoreboard set to "Not
-  due yet", LinkedIn ready).
+  post is marked published (pack sent, library written, LinkedIn ready).
 
 ### Learn: every piece starts ahead of the last
 
 - **Our own results** (YouTube Data API, Plausible/PostHog, Substack public
   stats via Apify): what readers did, weekly, into the ledger, so the judges
   are graded against reality and not only against Krish's taste.
-- **The Call versus the market** (Polymarket/Kalshi): track our dated calls and
-  the market's odds to the due date; the scoreboard becomes a record of who was
-  right, us or the crowd.
 - **The tool bank** (`docs/TOOL_BANK.md`): every post records what each tool
   added, and a status moves only on evidence.
 
@@ -168,10 +168,12 @@ Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); th
 
 A single tool is a feature. These chains are the publication:
 
-1. **The scoreboard that keeps score.** Market odds (keyless) + each Call's
-   stored slug + the scoreboard on makeyourmindup.ai: our dated prediction
-   beside the crowd's, both tracked to the day they resolve. No other AI
-   publication puts its own calls on a live betting line.
+1. **The ladder that shows its working.** One research prompt that returns a
+   `why-ladder/1` block + two sources on two domains for every rung + the
+   strongest counter-explanation per rung + the evidence plates on screen: the
+   viewer climbs from the question to what it shows, one sourced step at a
+   time (`docs/FIVE-WHYS.md`). This replaced "the scoreboard that keeps
+   score", retired on 24 Nov 2026 with every call, odds reading and score.
 2. **The pile-on, proven.** GDELT velocity + Firecrawl on each outlet + a
    generated news-wall picture: the story's own spread becomes the evidence
    that it matters, in one image and one video beat.
@@ -196,12 +198,9 @@ skip the rest. The bank learns; this plan is the menu.
 
 ## What is live right now (2026-10-09, end of day)
 
-- **The scoreboard that keeps score, built.** `POST /api/content-ideas/:id/call-market`
-  pins a Polymarket slug or Kalshi ticker to a piece's Call (read once, so a
-  wrong one is refused); the `signals_odds` cron reads every pinned market
-  daily into `meta.call_market.history`; `GET /api/calls` serves every
-  published piece's Call, our confidence, `not_due_yet` or `due`, Krish's
-  verdict when made, and the market's odds. Keyless. The cover site reads it.
+- **The scoreboard that keeps score, built, then retired on 24 Nov 2026.**
+  `call-market`, the `signals_odds` cron and `GET /api/calls` are removed with
+  every call, odds reading and score (Ruling, Krish, 2026-11-24).
 - **The pile-on, proven, built.** The `signals_news` cron sweeps GDELT and
   Hacker News for every piece in review, approved or published in the last
   thirty days, records each headline in `trend_observations`, and turns the
@@ -223,8 +222,7 @@ skip the rest. The bank learns; this plan is the menu.
 - **Connectors live in a session:** Firecrawl, GitHub, Apify, ElevenLabs, and
   the creative tools (Higgsfield, Runway, HeyGen, Canva, 21st Dev, Riverside,
   Brandfetch, Wispr Flow).
-- **Next, by value:** draw the news-wall picture from the sweep's rows; pin
-  Friday's Call to a market and watch the scoreboard fill; wire Brave and Exa
+- **Next, by value:** draw the news-wall picture from the sweep's rows; wire Brave and Exa
   as a second independent verdict inside the fact gate (today they feed its
   research and stand in as the checker only when Perplexity has no key); the Reddit chorus through Apify; the personality pass on Friday's
   script.

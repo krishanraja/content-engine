@@ -13,11 +13,12 @@ claims tables. Version 2 is kept verbatim at
 **Where it stands (checked 16 November 2026).** This is the plan of 25
 September, and the pack itself was never built: no `SignaturePackV1` or
 `SignatureInputsV1` exists in the code. What shipped took other shapes. The
-Call (P6) is the piece's dated prediction, read by
-`packages/contracts/src/call.ts` and held by the publish checks; its
-scoreboard feed is `GET /api/calls` (`apps/control-plane/api/calls.ts`), a
-JSON feed for makeyourmindup.ai with Krish's ruling in `meta.call_verdict`,
-in place of the CSV over `investigation_claims` that P6 planned. Video is
+Call (P6) shipped as the piece's dated prediction with a public scoreboard
+feed, and is **superseded on 24 November 2026 by the 5 Whys**
+(`docs/FIVE-WHYS.md`; Ruling, Krish, 2026-11-24: the signature format is the 5
+Whys; get rid of everything that suggests predictions, calls, dated, odds or
+scores). The call reader, the scoreboard feed and every confidence number are
+retired; P6 below is kept as the record of what was planned. Video is
 made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`), with
 quick-edit as the fallback until ve passes Phase 3, and licensed music comes
 from the ledger in `config/music-library.json`. Growth has made the derived
@@ -50,7 +51,8 @@ and the disagreement is written into `docs/STATE.md`.
 | 2026-09-25 | Each signature format runs on every article, or not at all. | "I want these to be signature bulletproof formats that can run across any article FYI, if they are going in, they need to go in for everything." |
 | 2026-09-25 | Each subchannel's signature device follows the diagram language its mandate names. | agreed to recommendation 1 |
 | 2026-09-25 | The cold open is the opening artifact each mandate already asks for: the device's first state, posing the subchannel's question. | agreed to recommendation 2 |
-| 2026-09-25 | Calls are published through the engine's existing claims system, with its held, broke, unclear and not checkable rulings. | agreed to recommendation 3 |
+| 2026-09-25 | Calls are published through the engine's existing claims system, with its held, broke, unclear and not checkable rulings. **Superseded 2026-11-24** (next row). | agreed to recommendation 3 |
+| 2026-11-24 | The signature format is the 5 Whys (`docs/FIVE-WHYS.md`). Remove everything that suggests predictions, calls, dated calls, odds, confidence numbers, scoring or track records; keep the Mon/Wed/Fri series. | "get rid of everything that suggests predictions, calls, dated, etc etc - we can keep the mon/wed/fri themes though, and just strengthen the differentiation in each theme"; "Remove all; rename, don't kill" |
 | 2026-09-25 | Components become universal one at a time: each one runs on every article from the day it passes the corpus test, and never comes back out. | agreed to recommendation 4 |
 | 2026-09-25 | Krish's time per piece, beyond reading and approving it, is budgeted at about 20 minutes: one read that feeds both the audio edition and the Short's voice. | agreed to question 3 |
 | 2026-09-25 | The panel stamp leads with the panel's sharpest objection and Krish's answer; the score is small. | agreed to question 4 |
@@ -97,8 +99,9 @@ instrument panel built by someone with a sense of humour: precise, legible,
 alive, occasionally playful, and free of decoration.
 
 The name does work here. The publication is called makeyourmindup, and every
-piece makes a Call and keeps score on it in public (P6). The name is the
-promise; the scoreboard is the proof.
+piece climbs a ladder of Whys in public, each step sourced, and hands the
+viewer an open question to make up their own mind on (P6, the 5 Whys since 24
+November 2026). The name is the promise; the ladder is the proof.
 
 ### 1.3 The test every idea must pass
 
@@ -165,12 +168,12 @@ The universality ruling and the publishing rule fit together this way:
    switched off for a piece.
 2. **The core set goes first**, because it is cheap and it ends the wall of
    text: identity (P1), the signature device as a still and a GIF (P3), the
-   panel stamp (P5), the Call (P6) and the Substack package (P8).
+   panel stamp (P5), the why-ladder (P6, which replaced the Call on 24
+   November 2026) and the Substack package (P8).
 3. **No piece waits for a component.** A piece publishes with whatever is live
    on the day it is approved.
 4. **Earlier pieces get later components where they can be added after
-   publication**: the lab page, the Calls scoreboard entry and the audio
-   edition. Their emails and Shorts stay as posted.
+   publication**: the lab page and the audio edition. Their emails and Shorts stay as posted.
 5. **The three walk pieces are the development fixtures.** Every component is
    designed and reviewed against them first, because they are real pieces
    Krish has judged, one per subchannel.
@@ -187,7 +190,7 @@ If no piece is moving, stop and report that instead of building.
 
 | Surface | Role | What it carries |
 |---|---|---|
-| makeyourmindup.ai | The cover page: the publication's front door | The masthead, the three subchannels, the Calls scoreboard, the latest pieces, the way to subscribe. Its lab pages (P9) live under it. What happens to CTRL's lead-magnet door, which lived at this domain, is open (section 8) |
+| makeyourmindup.ai | The cover page: the publication's front door | The masthead, the three subchannels, the latest pieces, the way to subscribe. Its lab pages (P9) live under it. What happens to CTRL's lead-magnet door, which lived at this domain, is open (section 8) |
 | Substack (makeyourmindup) | The hub. Where the full argument lives and the owned audience is built | Every piece with every live component (section 5), plus Notes and Live as recurring rituals |
 | YouTube Shorts, Instagram Reels, TikTok | Broad reach. Where strangers first meet the identity | One Short per piece, built from the piece's spine, ending with a path to the Substack piece |
 | Instagram carousels, TikTok photo mode | Broad reach, slower read | One flipbook carousel per piece (P7) |
@@ -265,7 +268,7 @@ component:
 | P3 | Signature device (one per subchannel, from its mandate) | Short, carousel, Substack GIFs, lab page | core (still and GIF), then motion |
 | P4 | Sonic layer: the panel sting, the subchannel motif, device sonification | Short, audio edition, lab page | later |
 | P5 | Panel stamp: the sharpest objection and Krish's answer | Substack header, the Short's last frame, the last carousel slide | core |
-| P6 | The Call, ruled on the Calls scoreboard | Close of the article, Substack embed, cover page, last carousel slide | core |
+| P6 | The 5 Whys: the why-ladder (`docs/FIVE-WHYS.md`). Superseded The Call and its scoreboard on 2026-11-24 | Every rung of the article, the Short and the carousel; the recap stack and landing card at the close | core |
 | P7 | Flipbook carousel | Instagram, TikTok photo mode, LinkedIn PDF when Krish shares | after core |
 | P8 | Substack package | Substack post and email | core |
 | P9 | Lab page: the signature device as an interactive | makeyourmindup.ai/lab/[piece], linked from the post | later |
@@ -300,8 +303,8 @@ from.
     better or worse off.
   - mind.the.gap, the timeline: threads, each a dated sequence of sourced
     events; the moments where threads meet, each tied to a sentence in the
-    draft; the resolved pattern in one sentence; and what it means is coming,
-    placed on the same axis as the Call.
+    draft; and the resolved pattern in one sentence, which is where its
+    why-ladder lands.
   - under.the.hood, the annotated product shot, "with what is real marked
     against what is theatre": the shipped thing, its parts, each part marked
     real or theatre with the evidence for the mark, and the one decision that
@@ -311,8 +314,9 @@ from.
 - **Panel:** the draft panel's run on the approved revision: its median, the
   sharpest objection (judge, verdict reference, the judge's own words), and
   Krish's answer to it in his words.
-- **The Call:** statement, due date, confidence, what would settle it, and its
-  claim id once stored (P6).
+- **The Whys:** the piece's `why-ladder/1` record (`meta.whys`): each rung's
+  question, answer, evidence, strength and counter, and the landing (P6; it
+  replaced the Call's statement, due date and confidence on 24 November 2026).
 - **Evidence assets:** approved screenshots and images with their hashes and
   their truth role (evidence or illustration).
 
@@ -335,7 +339,7 @@ by Krish:
 - mind.the.gap: at least 3 threads, each with at least 2 dated, sourced
   events, and at least 2 meeting points.
 - under.the.hood: at least 3 parts, each marked real or theatre with evidence.
-- Every subchannel: a Call that passes the Call check (P6).
+- Every subchannel: a why-ladder that passes `checkWhyLadder` (P6).
 
 ### 5.3 The components
 
@@ -405,8 +409,8 @@ signature device per Short (`config/techniques.json`) holds: this is that one.
   as a line of dated, sourced events. As the piece argues, the lines bend
   toward each other and meet at today; the meeting point is the pattern. From
   today the line forks into possible futures that never rejoin (house rule
-  TIMELINE, Krish's R5), and the Call sits on one branch at its date. The Fork
-  is the format that tells a Short or carousel in this order.
+  TIMELINE, Krish's R5). No branch carries a call or a date to check it by
+  (superseded 24 November 2026); the ladder lands on the pattern.
 - **Real or theatre (under.the.hood).** The annotated product shot. The shipped
   thing comes apart into its parts; each part is labelled and stamped real or
   theatre, with the evidence for the stamp one tap or one frame away.
@@ -513,9 +517,16 @@ its approved revision. No panel run, no pack.
 objection matches a recorded verdict and whose score equals the recorded
 median, by test.
 
-#### P6. The Call
+#### P6. The Call (superseded 2026-11-24 by the 5 Whys)
 
-**Intent.** Every piece puts one falsifiable call on the record, with a date
+**Superseded.** On 24 November 2026 Krish replaced the Call with the 5 Whys:
+"get rid of everything that suggests predictions, calls, dated, etc etc - we
+can keep the mon/wed/fri themes though, and just strengthen the
+differentiation in each theme". The format is specified in
+`docs/FIVE-WHYS.md`. The text below is the plan of 25 September, kept as the
+record of what was planned; do not build any of it.
+
+**Intent (25 September).** Every piece puts one falsifiable call on the record, with a date
 and a confidence, and every call is ruled on one public scoreboard for the
 whole publication. Misses are shown as plainly as hits. The publication is
 called makeyourmindup; the scoreboard is where it makes its mind up in public
@@ -596,13 +607,13 @@ device's state for that section.
 
 **Build.** An extension of the existing `substack` channel cut: the post body
 in its signature sections, the header GIF (P2 once live, P3 still before
-that), one device image per section (P3), the stamp (P5), the Calls scoreboard
-embed (P6), any Datawrapper charts the piece needs, and links to the lab page
+that), one device image per section (P3), the stamp (P5), the why-ladder's
+recap stack (P6), any Datawrapper charts the piece needs, and links to the lab page
 (P9) and the audio edition (P10) once they are live. The engine produces the
 package; Krish posts it.
 
-**Degraded mode.** A piece with no chartable data carries only the scoreboard
-embed.
+**Degraded mode.** A piece with no chartable data carries only the recap
+stack.
 
 **Done when.** Every corpus piece produces a package, and a test email to
 Krish's own inbox shows the GIFs animating.
@@ -689,11 +700,11 @@ separate command before a component change merges.
 **Phase 0. The gate.** Section 2.
 
 **Phase 1. The spine.** `SignatureInputsV1`, the extraction and completeness
-check, the Call link to pieces and the Call check (enforcement waits on
-Krish's mandate change), and the corpus test harness.
+check, the why-ladder check (it replaced the Call link and the Call check on
+24 November 2026), and the corpus test harness.
 
-**Phase 2. The core set.** P1, P3 as a still and a GIF, P5, P6 with its
-scoreboard, P8. Each goes universal on the day it passes.
+**Phase 2. The core set.** P1, P3 as a still and a GIF, P5, P6 (the
+why-ladder), P8. Each goes universal on the day it passes.
 
 **Phase 3. Motion.** P2 and P3 in motion, the Short, P7.
 
@@ -708,8 +719,11 @@ shipped, what Krish approved and what waits on him.
 
 ## 8. Decisions still waiting on Krish
 
-Settled since: the Call is in all three mandates (Krish, 2026-10-02: "yes";
-`supabase/migrations/20261002090000_mandates_dated_prediction.sql`). The
+Settled since: the Call went into all three mandates (Krish, 2026-10-02: "yes";
+`supabase/migrations/20261002090000_mandates_dated_prediction.sql`), and was
+superseded on 2026-11-24 by the 5 Whys. The three mandates are to be
+rewritten as why-ladder mandates per day, a Supabase write that waits on his
+yes. The
 Studio's series took the subchannel names after Krish gave the go on
 2026-09-26 (`packages/contracts/src/series.ts`).
 
@@ -753,8 +767,9 @@ apply unchanged.
    carries it, with each component's mode recorded.
 2. The corpus test passes at the section 6 bar and runs before every change
    to a live component.
-3. The Calls scoreboard is live on Substack and the cover page and has
-   updated at least once without a republish.
+3. Superseded 2026-11-24 (it was: the Calls scoreboard is live on Substack
+   and the cover page). Now: every piece approved since the 5 Whys went live
+   carries a why-ladder that passes `checkWhyLadder`.
 4. The audio-asset ledger exists and the music block is lifted only for
    approved assets.
 5. The three signature devices are `signature: true` registry entries with
@@ -786,4 +801,4 @@ verified are separate states, and each is claimed only with evidence.
   rule.
 - Do not publish a stamp answer Krish has not approved.
 - Do not expose anything on the `never_publish` list on any public surface,
-  including the lab pages, the cover page and the Calls CSV.
+  including the lab pages and the cover page.

@@ -146,11 +146,17 @@ Krish's decisions on the profiles, in his words:
 Krish was given on 11 October (a Claude doc in his account) sets one number,
 new Substack subscribers per week that arrive from social, read from
 Substack's subscriber sources, and a job for each channel. It also proposes
-a your.call loop (a two-option poll on the call the day a piece goes out,
-and a 30-second Scored cut when a call falls due) and five template jobs the
-engine does not do yet: a 1080 x 1350 carousel per piece, an X card, a
-1080 x 1920 poll frame and a Scored frame, a captions file, and a short-cut
-ending that says the call. None of these is a ruling; the standing five above
+a your.call loop and five template jobs the engine does not do yet: a 1080 x
+1350 carousel per piece, an X card, a 1080 x 1920 poll frame, a captions
+file, and a short-cut ending. Since 24 Nov 2026 no piece makes a call, so the
+parts built on one are gone: the 30-second Scored cut when a call fell due,
+the Scored frame and a short-cut ending that says the call (Ruling, Krish,
+2026-11-24: the signature format is the 5 Whys; get rid of everything that
+suggests predictions, calls, dated, odds or scores). A short cut ends on the
+why-ladder's landing instead (`docs/FIVE-WHYS.md`). your.call keeps its
+mechanic, a two-option poll the reader answers the day a piece goes out,
+under a new name Krish will choose ("rename, don't kill"); until he names it,
+it is not built. None of these is a ruling; the standing five above
 are what the engine enforces. Ask Krish before building any of them. Since
 28 October the derived carousels are Growth's to make (`docs/GROWTH-HANDOFF.md`).
 
