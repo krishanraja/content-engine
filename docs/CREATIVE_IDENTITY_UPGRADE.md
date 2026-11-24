@@ -52,7 +52,7 @@ and the disagreement is written into `docs/STATE.md`.
 | 2026-09-25 | Each subchannel's signature device follows the diagram language its mandate names. | agreed to recommendation 1 |
 | 2026-09-25 | The cold open is the opening artifact each mandate already asks for: the device's first state, posing the subchannel's question. | agreed to recommendation 2 |
 | 2026-09-25 | Calls are published through the engine's existing claims system, with its held, broke, unclear and not checkable rulings. **Superseded 2026-11-24** (next row). | agreed to recommendation 3 |
-| 2026-11-24 | The signature format is the 5 Whys (`docs/FIVE-WHYS.md`). Remove everything that suggests predictions, calls, dated calls, odds, confidence numbers, scoring or track records; keep the Mon/Wed/Fri series. | "the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores"; "Remove all; rename, don't kill" |
+| 2026-11-24 | The signature format is the 5 Whys (`docs/FIVE-WHYS.md`). Remove everything that suggests predictions, calls, dated calls, odds, confidence numbers, scoring or track records; keep the Mon/Wed/Fri series. | "get rid of everything that suggests predictions, calls, dated, etc etc - we can keep the mon/wed/fri themes though, and just strengthen the differentiation in each theme"; "Remove all; rename, don't kill" |
 | 2026-09-25 | Components become universal one at a time: each one runs on every article from the day it passes the corpus test, and never comes back out. | agreed to recommendation 4 |
 | 2026-09-25 | Krish's time per piece, beyond reading and approving it, is budgeted at about 20 minutes: one read that feeds both the audio edition and the Short's voice. | agreed to question 3 |
 | 2026-09-25 | The panel stamp leads with the panel's sharpest objection and Krish's answer; the score is small. | agreed to question 4 |
@@ -520,8 +520,9 @@ median, by test.
 #### P6. The Call (superseded 2026-11-24 by the 5 Whys)
 
 **Superseded.** On 24 November 2026 Krish replaced the Call with the 5 Whys:
-"the signature format is the 5 Whys; get rid of everything that suggests
-predictions, calls, dated, odds or scores". The format is specified in
+"get rid of everything that suggests predictions, calls, dated, etc etc - we
+can keep the mon/wed/fri themes though, and just strengthen the
+differentiation in each theme". The format is specified in
 `docs/FIVE-WHYS.md`. The text below is the plan of 25 September, kept as the
 record of what was planned; do not build any of it.
 
