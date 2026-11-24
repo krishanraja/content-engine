@@ -189,7 +189,7 @@ export async function xRecentSearch(query: string, max = 10): Promise<{ configur
 
 // ── The subject a piece is swept for ─────────────────────────────────────
 
-/** What the news and odds sweeps search for on a piece's behalf: the query a
+/** What the news sweep searches for on a piece's behalf: the query a
  *  session set in meta.signals.query, else the piece's own title with the
  *  punctuation a search engine trips on taken out. */
 export function signalsQueryFor(idea: { idea?: string | null; meta?: unknown }): string {
