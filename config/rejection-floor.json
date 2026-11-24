@@ -11,7 +11,7 @@
     "groups are the groups of standards he decided at /standards, approved or reworded (a group he rejected is left out): statement is the words he decided for the whole group, his latest amendment, else his correction when he decided it, else the group's never_beneath he approved; members are the file's standards that take the group's decision. A maker holds work to a group's statement as well as to each member's own never_beneath.",
     "Media are kept in the floor database (content-engine taste_rejection_media) by sha256: a still, a six-frame strip or a 4 s clip, never a master."
   ],
-  "version": "6fbdd6fb88b0331a68a2c33c64fffb53",
+  "version": "046ddf4bc0900f3dac7e13f6739f5643",
   "as_of": "2026-11-19",
   "counts": {
     "standards": 568,
@@ -115,8 +115,8 @@
         "id": "real_marks_with_rights",
         "listed": "real logos and images with rights, never redrawn",
         "standards": [
-          "s461de72a1a",
           "sac25a79d69",
+          "s461de72a1a",
           "s49d3e3d1f2",
           "s53328195a4",
           "s7a616dc737",
@@ -125,8 +125,8 @@
           "sde1ab48173"
         ],
         "blocking": [
-          "s461de72a1a",
           "sac25a79d69",
+          "s461de72a1a",
           "s49d3e3d1f2",
           "s53328195a4",
           "sde1ab48173"
@@ -162,9 +162,9 @@
     "s75efe9706c",
     "s2d01247cc3",
     "s9cfb4389f8",
-    "sc561ef0425",
     "sda613c74ce",
     "s53379670cd",
+    "sc561ef0425",
     "s13573ba562",
     "sc2f9860bac",
     "sc81e6d4d41",
@@ -178,10 +178,8 @@
     "sbb9118c0b1",
     "sbcfd4d26f7",
     "sf31ca6b597",
-    "s4fc495dbd2",
     "s53653daeb4",
     "s6bddda31e5",
-    "sd34b3745db",
     "s35b356e461",
     "s049754c7b9",
     "s5894211f00",
@@ -192,6 +190,7 @@
     "se35ec773d8",
     "s3da6ad084f",
     "s42e07de946",
+    "s4fc495dbd2",
     "s67cd0d6d7f",
     "s727a0f7bcd",
     "s7c56ff0a94",
@@ -205,13 +204,8 @@
     "sd5d68197ae",
     "sf2879c9a75",
     "sf460a2b8c7",
+    "sd34b3745db",
     "s90e5526a5a",
-    "s0e9283ef32",
-    "s2874957e20",
-    "s72bf7915f6",
-    "s829e7d0cfe",
-    "sa707eb4469",
-    "sb8e8f61511",
     "s9a22c6027e",
     "s095d1e92a6",
     "s0b4cfb1b4b",
@@ -225,12 +219,10 @@
     "s65dc096e24",
     "s722809c55e",
     "s95e9bece79",
-    "saa66d875d3",
     "sc855c83fcf",
     "sd067d011ff",
     "sd317c32174",
     "se65c9893bc",
-    "sec41c9469d",
     "sf0c751523f",
     "sf58925cb2e",
     "s013aa9b70e",
@@ -258,13 +250,10 @@
     "s220b8b133d",
     "s22fe24fc33",
     "s28d94d166e",
-    "s299453151c",
     "s2dbe412ef7",
     "s2f339576ac",
     "s309dd6d74d",
-    "s30a79854fc",
     "s33a3f53c9a",
-    "s343f7eb544",
     "s35a38988c2",
     "s392ab84fdc",
     "s3d21e8452d",
@@ -275,7 +264,6 @@
     "s415326ed7e",
     "s473764723c",
     "s4768ca4e91",
-    "s49d9a93e99",
     "s4abd3e361e",
     "s4d21492d7d",
     "s4e324101b7",
@@ -355,7 +343,6 @@
     "sb4ec41ddf0",
     "sb72a7f6226",
     "sb74c3ac75e",
-    "sb784eaae44",
     "sba7513bed8",
     "sbb1c523216",
     "sbc8d34f7fd",
@@ -389,12 +376,25 @@
     "sf35bd843d6",
     "sf421b6b31a",
     "sf52d4b909a",
-    "sf5535ccb46",
     "sf6fb5df3bb",
     "sf851480095",
     "sf8bff8d75e",
     "sf9f862f329",
-    "sfe2a09aaaf"
+    "sfe2a09aaaf",
+    "s0e9283ef32",
+    "s2874957e20",
+    "s299453151c",
+    "s30a79854fc",
+    "s343f7eb544",
+    "s49d9a93e99",
+    "s72bf7915f6",
+    "s829e7d0cfe",
+    "sa707eb4469",
+    "saa66d875d3",
+    "sb784eaae44",
+    "sb8e8f61511",
+    "sec41c9469d",
+    "sf5535ccb46"
   ],
   "examples": [
     "s392fbd995b",
@@ -431,8 +431,6 @@
     "s7b3e02cacf",
     "s7e5a1e9947",
     "s81602cf68b",
-    "s81f0c39ce8",
-    "s86b28843d1",
     "s901336d436",
     "s99c54370cd",
     "sb8291edf84",
@@ -440,6 +438,8 @@
     "se49eca7e39",
     "sfdc409987a",
     "s4492bf8bdc",
+    "s81f0c39ce8",
+    "s86b28843d1",
     "sf77ed5d2fe",
     "s5d5847ae7f",
     "sb31edbbaf1",
@@ -665,7 +665,6 @@
     "sdfc2b0826d",
     "se03364b806",
     "se09aca9d0e",
-    "se0af88f5fd",
     "se1897eb1e2",
     "se28dded749",
     "se2cdf87575",
@@ -699,7 +698,8 @@
     "sfc49872456",
     "sfcbd941b94",
     "sfce19674db",
-    "sff11b3194a"
+    "sff11b3194a",
+    "se0af88f5fd"
   ],
   "groups": [
     {
@@ -1381,8 +1381,8 @@
       "approved": [
         "s75efe9706c",
         "s9cfb4389f8",
-        "sc561ef0425",
         "sda613c74ce",
+        "sc561ef0425",
         "sc2f9860bac",
         "s392fbd995b",
         "s5a49870ad4",
@@ -1395,12 +1395,12 @@
         "sac25a79d69",
         "s55dd527e0b",
         "s81602cf68b",
-        "s81f0c39ce8",
         "s8ce587e7db",
         "s9a1885d334",
         "sae2fcdb893",
         "sd5d68197ae",
         "s4492bf8bdc",
+        "s81f0c39ce8",
         "s5d5847ae7f",
         "sb31edbbaf1",
         "s48893355a6",
@@ -1409,7 +1409,6 @@
         "s3d1ba8295b",
         "s7f008cbd3d",
         "s885505cab7",
-        "saa66d875d3",
         "sb23e5d4274",
         "sceefbee694",
         "sd067d011ff",
@@ -1492,10 +1491,11 @@
         "se646500ab1",
         "se6583569f0",
         "se9f2f404f9",
-        "sf5535ccb46",
         "sf8bff8d75e",
         "sfce19674db",
-        "sff11b3194a"
+        "sff11b3194a",
+        "saa66d875d3",
+        "sf5535ccb46"
       ],
       "draft": [
         "s1f44bb12c6",
@@ -1509,9 +1509,9 @@
         "s67cd0d6d7f",
         "s7b3e02cacf",
         "s7e5a1e9947",
-        "s86b28843d1",
         "sa56df377b4",
         "sd3b35020cb",
+        "s86b28843d1",
         "sf77ed5d2fe",
         "s358083552c",
         "s55fe656636",
@@ -1629,8 +1629,8 @@
       "aims": [
         "s75efe9706c",
         "s9cfb4389f8",
-        "sc561ef0425",
         "sda613c74ce",
+        "sc561ef0425",
         "sc2f9860bac",
         "s1f44bb12c6",
         "s53653daeb4",
@@ -1645,7 +1645,6 @@
         "sd5d68197ae",
         "s18a1f05674",
         "s2b561ebfa6",
-        "saa66d875d3",
         "sd067d011ff",
         "sf0c751523f",
         "s02e50c3abc",
@@ -1710,10 +1709,11 @@
         "se85aedc030",
         "seb7b1d5539",
         "sec828b0f20",
-        "sf5535ccb46",
         "sf851480095",
         "sf8bff8d75e",
-        "sfe2a09aaaf"
+        "sfe2a09aaaf",
+        "saa66d875d3",
+        "sf5535ccb46"
       ],
       "examples": [
         "s392fbd995b",
@@ -1728,9 +1728,9 @@
         "s7b3e02cacf",
         "s7e5a1e9947",
         "s81602cf68b",
+        "s4492bf8bdc",
         "s81f0c39ce8",
         "s86b28843d1",
-        "s4492bf8bdc",
         "sf77ed5d2fe",
         "s5d5847ae7f",
         "sb31edbbaf1",
@@ -1936,8 +1936,8 @@
       "approved": [
         "s75efe9706c",
         "s9cfb4389f8",
-        "sc561ef0425",
         "sda613c74ce",
+        "sc561ef0425",
         "sc2f9860bac",
         "s392fbd995b",
         "s5a49870ad4",
@@ -1949,17 +1949,16 @@
         "sac25a79d69",
         "s55dd527e0b",
         "s81602cf68b",
-        "s81f0c39ce8",
         "s8ce587e7db",
         "s9a1885d334",
         "sae2fcdb893",
         "sd5d68197ae",
         "s4492bf8bdc",
+        "s81f0c39ce8",
         "s5d5847ae7f",
         "s48893355a6",
         "s3d1ba8295b",
         "s7f008cbd3d",
-        "saa66d875d3",
         "sceefbee694",
         "sd067d011ff",
         "se7af98a12d",
@@ -1981,7 +1980,6 @@
         "s411c946586",
         "s4669a4441f",
         "s49d3e3d1f2",
-        "s49d9a93e99",
         "s4cf7933300",
         "s4e324101b7",
         "s4fd510df1a",
@@ -2035,10 +2033,12 @@
         "se646500ab1",
         "se6583569f0",
         "se9f2f404f9",
-        "sf5535ccb46",
         "sf8bff8d75e",
         "sfce19674db",
-        "sff11b3194a"
+        "sff11b3194a",
+        "s49d9a93e99",
+        "saa66d875d3",
+        "sf5535ccb46"
       ],
       "draft": [
         "s1f44bb12c6",
@@ -2051,9 +2051,9 @@
         "s38c5b1fe7a",
         "s7b3e02cacf",
         "s7e5a1e9947",
-        "s86b28843d1",
         "sa56df377b4",
         "sd3b35020cb",
+        "s86b28843d1",
         "sf77ed5d2fe",
         "s55fe656636",
         "s23d695987a",
@@ -2167,8 +2167,8 @@
       "aims": [
         "s75efe9706c",
         "s9cfb4389f8",
-        "sc561ef0425",
         "sda613c74ce",
+        "sc561ef0425",
         "sc2f9860bac",
         "s1f44bb12c6",
         "s53653daeb4",
@@ -2181,7 +2181,6 @@
         "sd3b35020cb",
         "sd5d68197ae",
         "s2b561ebfa6",
-        "saa66d875d3",
         "sd067d011ff",
         "sf0c751523f",
         "s02e50c3abc",
@@ -2197,7 +2196,6 @@
         "s3e75b5b670",
         "s411c946586",
         "s4768ca4e91",
-        "s49d9a93e99",
         "s4e324101b7",
         "s4eb2998363",
         "s52e68f27c5",
@@ -2243,10 +2241,12 @@
         "se85aedc030",
         "seb7b1d5539",
         "sec828b0f20",
-        "sf5535ccb46",
         "sf851480095",
         "sf8bff8d75e",
-        "sfe2a09aaaf"
+        "sfe2a09aaaf",
+        "s49d9a93e99",
+        "saa66d875d3",
+        "sf5535ccb46"
       ],
       "examples": [
         "s392fbd995b",
@@ -2260,9 +2260,9 @@
         "s7b3e02cacf",
         "s7e5a1e9947",
         "s81602cf68b",
+        "s4492bf8bdc",
         "s81f0c39ce8",
         "s86b28843d1",
-        "s4492bf8bdc",
         "sf77ed5d2fe",
         "s5d5847ae7f",
         "s23d695987a",
@@ -2468,7 +2468,6 @@
         "s2f339576ac",
         "s411c946586",
         "s49d3e3d1f2",
-        "s49d9a93e99",
         "s4d21492d7d",
         "s518240aae8",
         "s51e4b19cb3",
@@ -2498,7 +2497,8 @@
         "se646500ab1",
         "sf8bff8d75e",
         "sfce19674db",
-        "sff11b3194a"
+        "sff11b3194a",
+        "s49d9a93e99"
       ],
       "draft": [
         "s1f44bb12c6",
@@ -2513,7 +2513,6 @@
         "s1e001d127e",
         "s22fe24fc33",
         "s245f20623f",
-        "s299453151c",
         "s2de122e11a",
         "s34cf068871",
         "s392ab84fdc",
@@ -2561,7 +2560,8 @@
         "seef484fd78",
         "sf8ff4bbd63",
         "sfaa5cefa77",
-        "sfae133926f"
+        "sfae133926f",
+        "s299453151c"
       ],
       "blocking": [
         "s48893355a6",
@@ -2596,14 +2596,12 @@
         "s1e001d127e",
         "s220b8b133d",
         "s22fe24fc33",
-        "s299453151c",
         "s2f339576ac",
         "s392ab84fdc",
         "s3e75b5b670",
         "s4005c5f793",
         "s411c946586",
         "s4768ca4e91",
-        "s49d9a93e99",
         "s4d21492d7d",
         "s4eb2998363",
         "s5341c5158a",
@@ -2638,7 +2636,9 @@
         "sea58b8488f",
         "seb7b1d5539",
         "sec828b0f20",
-        "sf8bff8d75e"
+        "sf8bff8d75e",
+        "s299453151c",
+        "s49d9a93e99"
       ],
       "examples": [
         "s5a49870ad4",
@@ -3088,15 +3088,12 @@
     "card": {
       "maker": "On-screen cards, title cards, chapter cards and comparison graphics",
       "approved": [
-        "s4fc495dbd2",
         "sa3d700e467",
         "s049754c7b9",
         "se35ec773d8",
         "s3da6ad084f",
+        "s4fc495dbd2",
         "s7c56ff0a94",
-        "s0e9283ef32",
-        "s2874957e20",
-        "s72bf7915f6",
         "s48893355a6",
         "s095d1e92a6",
         "s722809c55e",
@@ -3139,7 +3136,6 @@
         "safac62a712",
         "saffcf7ff05",
         "sb427a641c9",
-        "sb784eaae44",
         "sbc8d34f7fd",
         "sbe4ef43833",
         "sc34d1381ee",
@@ -3156,14 +3152,18 @@
         "sf52d4b909a",
         "sf8bff8d75e",
         "sfce19674db",
-        "sff11b3194a"
+        "sff11b3194a",
+        "s0e9283ef32",
+        "s2874957e20",
+        "s72bf7915f6",
+        "sb784eaae44"
       ],
       "draft": [
         "s53379670cd",
         "s7445eaf6cb",
-        "sd34b3745db",
         "s816ae6d75a",
         "s9c2e936c58",
+        "sd34b3745db",
         "s10bd03a730",
         "s55fe656636",
         "s23d695987a",
@@ -3257,16 +3257,13 @@
       "aims": [
         "s53379670cd",
         "s7445eaf6cb",
-        "s4fc495dbd2",
-        "sd34b3745db",
         "s049754c7b9",
         "se35ec773d8",
         "s3da6ad084f",
+        "s4fc495dbd2",
         "s7c56ff0a94",
         "s9c2e936c58",
-        "s0e9283ef32",
-        "s2874957e20",
-        "s72bf7915f6",
+        "sd34b3745db",
         "s095d1e92a6",
         "s2c9e513b58",
         "s722809c55e",
@@ -3321,7 +3318,6 @@
         "saf57b5b61c",
         "safac62a712",
         "sb72a7f6226",
-        "sb784eaae44",
         "sbc8d34f7fd",
         "sbe4ef43833",
         "sc707c54df9",
@@ -3337,7 +3333,11 @@
         "sf16212e7e8",
         "sf35bd843d6",
         "sf52d4b909a",
-        "sf8bff8d75e"
+        "sf8bff8d75e",
+        "s0e9283ef32",
+        "s2874957e20",
+        "s72bf7915f6",
+        "sb784eaae44"
       ],
       "examples": [
         "sa3d700e467",
@@ -3458,18 +3458,12 @@
     "intro_outro": {
       "maker": "The intro sting, the outro, the end card and the brand mark on them",
       "approved": [
-        "s4fc495dbd2",
-        "s461de72a1a",
         "sa3d700e467",
         "s049754c7b9",
         "s42e07de946",
         "s463635e2ea",
-        "s0e9283ef32",
-        "s2874957e20",
-        "s72bf7915f6",
-        "s829e7d0cfe",
-        "sa707eb4469",
-        "sb8e8f61511",
+        "s4fc495dbd2",
+        "s461de72a1a",
         "s48893355a6",
         "s2289c1cc56",
         "s291effb73a",
@@ -3486,7 +3480,6 @@
         "s2d35153505",
         "s2f339576ac",
         "s309dd6d74d",
-        "s343f7eb544",
         "s49d3e3d1f2",
         "s518240aae8",
         "s5f89935777",
@@ -3505,7 +3498,6 @@
         "sad5604ad3b",
         "sae39706b0f",
         "sb427a641c9",
-        "sb784eaae44",
         "sbe4ef43833",
         "sc34d1381ee",
         "scb63fa47f9",
@@ -3523,11 +3515,19 @@
         "sf52d4b909a",
         "sf8bff8d75e",
         "sfce19674db",
-        "sff11b3194a"
+        "sff11b3194a",
+        "s0e9283ef32",
+        "s2874957e20",
+        "s343f7eb544",
+        "s72bf7915f6",
+        "s829e7d0cfe",
+        "sa707eb4469",
+        "sb784eaae44",
+        "sb8e8f61511"
       ],
       "draft": [
-        "sd34b3745db",
         "s816ae6d75a",
+        "sd34b3745db",
         "s10bd03a730",
         "s55fe656636",
         "s23d695987a",
@@ -3580,7 +3580,6 @@
         "sc12f223fff",
         "scb9f83d120",
         "sd098bfa56d",
-        "se0af88f5fd",
         "se31a37ba4e",
         "se9363be404",
         "seb7b1d5539",
@@ -3590,7 +3589,8 @@
         "sef368a3146",
         "sf8ff4bbd63",
         "sfaa5cefa77",
-        "sfae133926f"
+        "sfae133926f",
+        "se0af88f5fd"
       ],
       "blocking": [
         "s461de72a1a",
@@ -3613,16 +3613,10 @@
         "se67ed0142d"
       ],
       "aims": [
-        "s4fc495dbd2",
-        "sd34b3745db",
         "s049754c7b9",
         "s42e07de946",
-        "s0e9283ef32",
-        "s2874957e20",
-        "s72bf7915f6",
-        "s829e7d0cfe",
-        "sa707eb4469",
-        "sb8e8f61511",
+        "s4fc495dbd2",
+        "sd34b3745db",
         "s2289c1cc56",
         "s291effb73a",
         "s2c9e513b58",
@@ -3640,7 +3634,6 @@
         "s20bb13d729",
         "s2f339576ac",
         "s309dd6d74d",
-        "s343f7eb544",
         "s392ab84fdc",
         "s3e75b5b670",
         "s4768ca4e91",
@@ -3664,7 +3657,6 @@
         "sae39706b0f",
         "sae40a35bd8",
         "saf57b5b61c",
-        "sb784eaae44",
         "sbe4ef43833",
         "sc12f223fff",
         "scb9f83d120",
@@ -3678,7 +3670,15 @@
         "sec828b0f20",
         "sef368a3146",
         "sf52d4b909a",
-        "sf8bff8d75e"
+        "sf8bff8d75e",
+        "s0e9283ef32",
+        "s2874957e20",
+        "s343f7eb544",
+        "s72bf7915f6",
+        "s829e7d0cfe",
+        "sa707eb4469",
+        "sb784eaae44",
+        "sb8e8f61511"
       ],
       "examples": [
         "sa3d700e467",
@@ -3724,7 +3724,6 @@
         "scb63fa47f9",
         "sd6b5d7c66a",
         "sd8ba275187",
-        "se0af88f5fd",
         "se2cdf87575",
         "se31a37ba4e",
         "se4715fb212",
@@ -3736,7 +3735,8 @@
         "sfaa5cefa77",
         "sfae133926f",
         "sfce19674db",
-        "sff11b3194a"
+        "sff11b3194a",
+        "se0af88f5fd"
       ],
       "rejected": [
         "r592bfbf859",
@@ -3796,8 +3796,8 @@
         "sa3d700e467",
         "s115c0d62b4",
         "s81602cf68b",
-        "s81f0c39ce8",
         "s8ce587e7db",
+        "s81f0c39ce8",
         "s48893355a6",
         "s7f008cbd3d",
         "s885505cab7",
@@ -4093,7 +4093,6 @@
         "s7f008cbd3d",
         "s812be1325f",
         "s95e9bece79",
-        "sec41c9469d",
         "sfc3b843c52",
         "s02e50c3abc",
         "s05d796c310",
@@ -4136,7 +4135,8 @@
         "se646500ab1",
         "sf8bff8d75e",
         "sfce19674db",
-        "sff11b3194a"
+        "sff11b3194a",
+        "sec41c9469d"
       ],
       "draft": [
         "s5894211f00",
@@ -4220,7 +4220,6 @@
         "s9a22c6027e",
         "s0b4cfb1b4b",
         "s95e9bece79",
-        "sec41c9469d",
         "s02e50c3abc",
         "s04d8bb71d4",
         "s05d796c310",
@@ -4263,7 +4262,8 @@
         "se646500ab1",
         "seb7b1d5539",
         "sec828b0f20",
-        "sf8bff8d75e"
+        "sf8bff8d75e",
+        "sec41c9469d"
       ],
       "examples": [
         "s684e4c75f0",
@@ -4382,7 +4382,6 @@
         "s7f008cbd3d",
         "s812be1325f",
         "s95e9bece79",
-        "sec41c9469d",
         "sfc3b843c52",
         "s02e50c3abc",
         "s05d796c310",
@@ -4423,7 +4422,8 @@
         "se646500ab1",
         "sf8bff8d75e",
         "sfce19674db",
-        "sff11b3194a"
+        "sff11b3194a",
+        "sec41c9469d"
       ],
       "draft": [
         "s816ae6d75a",
@@ -4499,7 +4499,6 @@
         "s9a22c6027e",
         "s0b4cfb1b4b",
         "s95e9bece79",
-        "sec41c9469d",
         "s02e50c3abc",
         "s04d8bb71d4",
         "s05d796c310",
@@ -4539,7 +4538,8 @@
         "se646500ab1",
         "seb7b1d5539",
         "sec828b0f20",
-        "sf8bff8d75e"
+        "sf8bff8d75e",
+        "sec41c9469d"
       ],
       "examples": [
         "s684e4c75f0",
@@ -4644,7 +4644,6 @@
         "s48893355a6",
         "s7f008cbd3d",
         "s812be1325f",
-        "sec41c9469d",
         "s02e50c3abc",
         "s05d796c310",
         "s0e00d0be85",
@@ -4682,7 +4681,8 @@
         "se646500ab1",
         "sf8bff8d75e",
         "sfce19674db",
-        "sff11b3194a"
+        "sff11b3194a",
+        "sec41c9469d"
       ],
       "draft": [
         "sf31ca6b597",
@@ -4756,7 +4756,6 @@
       ],
       "aims": [
         "sf31ca6b597",
-        "sec41c9469d",
         "s02e50c3abc",
         "s04d8bb71d4",
         "s05d796c310",
@@ -4795,7 +4794,8 @@
         "se646500ab1",
         "seb7b1d5539",
         "sec828b0f20",
-        "sf8bff8d75e"
+        "sf8bff8d75e",
+        "sec41c9469d"
       ],
       "examples": [
         "s684e4c75f0",
@@ -6017,7 +6017,6 @@
         "s16f1b931da",
         "s1a0dd9998f",
         "s2f339576ac",
-        "s30a79854fc",
         "s49d3e3d1f2",
         "s518240aae8",
         "s6262d852ee",
@@ -6046,7 +6045,8 @@
         "sf8bff8d75e",
         "sf9f862f329",
         "sfce19674db",
-        "sff11b3194a"
+        "sff11b3194a",
+        "s30a79854fc"
       ],
       "draft": [
         "s816ae6d75a",
@@ -6119,7 +6119,6 @@
         "s16f1b931da",
         "s1e001d127e",
         "s2f339576ac",
-        "s30a79854fc",
         "s392ab84fdc",
         "s3e75b5b670",
         "s4768ca4e91",
@@ -6151,7 +6150,8 @@
         "seb7b1d5539",
         "sec828b0f20",
         "sf8bff8d75e",
-        "sf9f862f329"
+        "sf9f862f329",
+        "s30a79854fc"
       ],
       "examples": [
         "sa3d700e467",
@@ -7063,82 +7063,6 @@
         }
       ]
     },
-    "sc561ef0425": {
-      "taste_layer": "aim",
-      "blocks": false,
-      "weight": "pattern",
-      "productions": 4,
-      "standing": "approved",
-      "decided_on": "2026-11-15",
-      "never_beneath": "Never leave large portions of the frame empty or visuals cramped into corners; always fill the frame deliberately with imagery and type sized appropriately to the available space.",
-      "check_before_delivery": "View every card and layout in both tall and wide exports and confirm no large blank area or corner-cramped cluster remains unfilled.",
-      "check_by": "the engine, approved by him with the statement",
-      "formats": [
-        "long_video",
-        "short_video"
-      ],
-      "theme": "layout",
-      "layer": "graphics",
-      "kind": "form",
-      "support": 5,
-      "in_his_words": "cramped into corners, misaligned",
-      "his_words": [
-        {
-          "said": "Just have a look at this feedback from another session, which is running on the Friday videos, where some of the cards are just left a bit weirdly sparse.",
-          "on": "2026-10-19",
-          "is": "his words"
-        },
-        {
-          "said": "Some of the visuals are just subpar. See attached for some examples.",
-          "on": "2026-10-20",
-          "is": "his words"
-        },
-        {
-          "said": "The use of the screen is terrible ... Everything's cramped into corners, misaligned.",
-          "on": "2026-10-28",
-          "is": "his words"
-        },
-        {
-          "said": "i agree with you. The captions are nice, but thats about it",
-          "on": "2026-10-28",
-          "is": "his words"
-        },
-        {
-          "said": "When No Curves is playing, it needs to be louder, and it needs to come back in for the rest of the track in the long cut. Whenever the YouTube audio isn't playing, No Curves needs to be faded in or out, but in any instance, it needs to be a bit louder than it is right now. Right now, the long cut has no audio behind some of it. The screenshots in the attached screen grab are awful and need to be improved. They need to show an actual advert, an actual report, and an actual deck. The font for \"Who did which bit?\" is ridiculous and off-brand and not animated properly. Make sure all of the animation builds for things like this are awesome and epic and really engaging. The font even looks stupid for that text. And then, in the track layers, the components are all cramped and overlapping things.",
-          "on": "2026-11-11",
-          "is": "his words"
-        }
-      ],
-      "records": [
-        "r0627e4b655",
-        "r252f93e29b",
-        "r2a4a6a4e99",
-        "r30a6e53bdd",
-        "r5b61c5ebb4",
-        "r8d7480f2dc",
-        "r91f2155a71",
-        "rdac2f68372",
-        "re3a407c6f8"
-      ],
-      "boundary": [
-        {
-          "said": "The captions are nice, but thats about it",
-          "on": "2026-10-28"
-        },
-        {
-          "said": "The handheld screen would be my preference currently, but only if there's lots of motion and hand-drawn scribbles pointing to the most important thing on the screen in any one go.",
-          "on": "2026-10-28"
-        },
-        {
-          "said": "I really like the border assistant passport page, though. That's such a nice, powerful visual that we should use whenever I'm talking about the two passports as to where your AI lives.",
-          "on": "2026-10-28"
-        },
-        {
-          "said": "Approve direction",
-          "on": "2026-10-28"
-        }
-      ]
-    },
     "sda613c74ce": {
       "home": "engine",
       "taste_layer": "aim",
@@ -7270,6 +7194,82 @@
         "rf29dfe975c"
       ],
       "boundary": []
+    },
+    "sc561ef0425": {
+      "taste_layer": "aim",
+      "blocks": false,
+      "weight": "pattern",
+      "productions": 4,
+      "standing": "approved",
+      "decided_on": "2026-11-15",
+      "never_beneath": "Never leave large portions of the frame empty or visuals cramped into corners; always fill the frame deliberately with imagery and type sized appropriately to the available space.",
+      "check_before_delivery": "View every card and layout in both tall and wide exports and confirm no large blank area or corner-cramped cluster remains unfilled.",
+      "check_by": "the engine, approved by him with the statement",
+      "formats": [
+        "long_video",
+        "short_video"
+      ],
+      "theme": "layout",
+      "layer": "graphics",
+      "kind": "form",
+      "support": 4,
+      "in_his_words": "cramped into corners, misaligned",
+      "his_words": [
+        {
+          "said": "Just have a look at this feedback from another session, which is running on the Friday videos, where some of the cards are just left a bit weirdly sparse.",
+          "on": "2026-10-19",
+          "is": "his words"
+        },
+        {
+          "said": "Some of the visuals are just subpar. See attached for some examples.",
+          "on": "2026-10-20",
+          "is": "his words"
+        },
+        {
+          "said": "The use of the screen is terrible ... Everything's cramped into corners, misaligned.",
+          "on": "2026-10-28",
+          "is": "his words"
+        },
+        {
+          "said": "i agree with you. The captions are nice, but thats about it",
+          "on": "2026-10-28",
+          "is": "his words"
+        },
+        {
+          "said": "When No Curves is playing, it needs to be louder, and it needs to come back in for the rest of the track in the long cut. Whenever the YouTube audio isn't playing, No Curves needs to be faded in or out, but in any instance, it needs to be a bit louder than it is right now. Right now, the long cut has no audio behind some of it. The screenshots in the attached screen grab are awful and need to be improved. They need to show an actual advert, an actual report, and an actual deck. The font for \"Who did which bit?\" is ridiculous and off-brand and not animated properly. Make sure all of the animation builds for things like this are awesome and epic and really engaging. The font even looks stupid for that text. And then, in the track layers, the components are all cramped and overlapping things.",
+          "on": "2026-11-11",
+          "is": "his words"
+        }
+      ],
+      "records": [
+        "r0627e4b655",
+        "r252f93e29b",
+        "r2a4a6a4e99",
+        "r30a6e53bdd",
+        "r5b61c5ebb4",
+        "r8d7480f2dc",
+        "r91f2155a71",
+        "rdac2f68372",
+        "re3a407c6f8"
+      ],
+      "boundary": [
+        {
+          "said": "The captions are nice, but thats about it",
+          "on": "2026-10-28"
+        },
+        {
+          "said": "The handheld screen would be my preference currently, but only if there's lots of motion and hand-drawn scribbles pointing to the most important thing on the screen in any one go.",
+          "on": "2026-10-28"
+        },
+        {
+          "said": "I really like the border assistant passport page, though. That's such a nice, powerful visual that we should use whenever I'm talking about the two passports as to where your AI lives.",
+          "on": "2026-10-28"
+        },
+        {
+          "said": "Approve direction",
+          "on": "2026-10-28"
+        }
+      ]
     },
     "s13573ba562": {
       "taste_layer": "aim",
@@ -8310,69 +8310,6 @@
       ],
       "boundary": []
     },
-    "s4fc495dbd2": {
-      "taste_layer": "aim",
-      "blocks": false,
-      "weight": "pattern",
-      "productions": 2,
-      "standing": "approved",
-      "decided_on": "2026-11-04",
-      "never_beneath": "Always place the real logo of every business or product the piece discusses onto its cards and comparison graphics; never leave them out.",
-      "check_before_delivery": "List every company named or shown in the script, then check each is present as a real logo asset on the relevant card or badge; add any missing ones from the logo registry.",
-      "check_by": "the engine, approved by him with the statement",
-      "formats": [
-        "card",
-        "intro_outro"
-      ],
-      "theme": "clipart_generic",
-      "layer": "graphics",
-      "kind": "form",
-      "support": 6,
-      "in_his_words": "we need to add all the logos of the busineses that are related to what we are talking about",
-      "his_words": [
-        {
-          "said": "And then as I mentioned before, an article like this should screenshot as many live articles of model releases and articles that are about what we're talking about ... it should pile up on top of one another visually.",
-          "on": "2026-10-10",
-          "is": "his words"
-        },
-        {
-          "said": "we need to add all the logos of the busineses that are related to what we are talking about. Sometimes, that is just one business - but here, it's all the LLMs. This needs to be considered in every post possible.",
-          "on": "2026-10-10",
-          "is": "his words"
-        },
-        {
-          "said": "Did you actually watch these?… brand guidelines have been seriously violated… Overall, your prediction was right earlier. This is shit.",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "there are font consistency issues throughout, and the 'I scored Meta's Muse' slide just has text that falls off the page ... brand guidelines have been seriously violated",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "we've not made any use of business logos",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "an absolute dog's dinner, and looks half baked. Nobody understands the muse logo (they know Meta and Instagram)… badges are differently branded… this screen looks awful",
-          "on": "2026-10-13",
-          "is": "his words"
-        }
-      ],
-      "records": [
-        "r5d83207d94",
-        "rbd5233612b",
-        "re0fea101ce"
-      ],
-      "boundary": [
-        {
-          "said": "I love it, but we need to add all the logos of the busineses that are related to what we are talking about.",
-          "on": "2026-10-10"
-        }
-      ]
-    },
     "s5a49870ad4": {
       "home": "engine",
       "taste_layer": "example",
@@ -8431,57 +8368,6 @@
         "r8a15acab96",
         "ra3b48dcc27",
         "re527e10db3"
-      ],
-      "boundary": []
-    },
-    "s461de72a1a": {
-      "taste_layer": "floor",
-      "never": "real_marks_with_rights",
-      "blocks": true,
-      "weight": "pattern",
-      "productions": 2,
-      "standing": "approved",
-      "decided_on": "2026-11-15",
-      "never_beneath": "Always use each company's real official logo or brand mark; never substitute a typed-out wordmark, a founder's name, or a parent company's mark in its place.",
-      "check_before_delivery": "Compare every logo in the final render against the official logo-registry file for that company; replace any typed text, name, or parent-brand mark standing in for it.",
-      "check_by": "the engine, approved by him with the statement",
-      "formats": [
-        "intro_outro"
-      ],
-      "theme": "brand",
-      "layer": "packaging",
-      "kind": "form",
-      "support": 5,
-      "his_words": [
-        {
-          "said": "there are actually multiple instances of the wrong brand mark being used",
-          "on": "2026-10-12",
-          "is": "his words"
-        },
-        {
-          "said": "Did you actually watch these?… brand guidelines have been seriously violated… Overall, your prediction was right earlier. This is shit.",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "there are font consistency issues throughout, and the 'I scored Meta's Muse' slide just has text that falls off the page ... brand guidelines have been seriously violated",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "we've not made any use of business logos",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "an absolute dog's dinner, and looks half baked. Nobody understands the muse logo (they know Meta and Instagram)… badges are differently branded… this screen looks awful",
-          "on": "2026-10-13",
-          "is": "his words"
-        }
-      ],
-      "records": [
-        "re0fea101ce",
-        "ree0b17dced"
       ],
       "boundary": []
     },
@@ -8615,61 +8501,6 @@
         {
           "said": "There's a video I uploaded to the Inspiration House featuring Anthropic and GitHub, which I really liked as inspiration for how motion animation really helps tell the story.",
           "on": "2026-10-24"
-        }
-      ]
-    },
-    "sd34b3745db": {
-      "taste_layer": "aim",
-      "blocks": false,
-      "weight": "pattern",
-      "productions": 2,
-      "standing": "draft",
-      "never_beneath": "Always give every business or product named in a comparison its own authentic, matching-style logo; never leave a badge logo-less or branded differently from its counterpart.",
-      "check_before_delivery": "Pause on every comparison badge and intro/outro title card and confirm both sides show the real, current logo of the business discussed, rendered in a consistent badge style.",
-      "check_by": "the engine, a draft he has not seen",
-      "formats": [
-        "card",
-        "intro_outro"
-      ],
-      "theme": "brand",
-      "layer": "packaging",
-      "kind": "form",
-      "support": 5,
-      "his_words": [
-        {
-          "said": "we need to add all the logos of the busineses that are related to what we are talking about. Sometimes, that is just one business - but here, it's all the LLMs. This needs to be considered in every post possible.",
-          "on": "2026-10-10",
-          "is": "his words"
-        },
-        {
-          "said": "Did you actually watch these?… brand guidelines have been seriously violated… Overall, your prediction was right earlier. This is shit.",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "there are font consistency issues throughout, and the 'I scored Meta's Muse' slide just has text that falls off the page ... brand guidelines have been seriously violated",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "we've not made any use of business logos",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "an absolute dog's dinner, and looks half baked. Nobody understands the muse logo (they know Meta and Instagram)… badges are differently branded… this screen looks awful",
-          "on": "2026-10-13",
-          "is": "his words"
-        }
-      ],
-      "records": [
-        "r5d83207d94",
-        "re0fea101ce"
-      ],
-      "boundary": [
-        {
-          "said": "I love it, but we need to add all the logos of the busineses that are related to what we are talking about.",
-          "on": "2026-10-10"
         }
       ]
     },
@@ -10137,6 +9968,69 @@
         }
       ]
     },
+    "s4fc495dbd2": {
+      "taste_layer": "aim",
+      "blocks": false,
+      "weight": "pattern",
+      "productions": 2,
+      "standing": "approved",
+      "decided_on": "2026-11-04",
+      "never_beneath": "Always place the real logo of every business or product the piece discusses onto its cards and comparison graphics; never leave them out.",
+      "check_before_delivery": "List every company named or shown in the script, then check each is present as a real logo asset on the relevant card or badge; add any missing ones from the logo registry.",
+      "check_by": "the engine, approved by him with the statement",
+      "formats": [
+        "card",
+        "intro_outro"
+      ],
+      "theme": "clipart_generic",
+      "layer": "graphics",
+      "kind": "form",
+      "support": 2,
+      "in_his_words": "we need to add all the logos of the busineses that are related to what we are talking about",
+      "his_words": [
+        {
+          "said": "And then as I mentioned before, an article like this should screenshot as many live articles of model releases and articles that are about what we're talking about ... it should pile up on top of one another visually.",
+          "on": "2026-10-10",
+          "is": "his words"
+        },
+        {
+          "said": "we need to add all the logos of the busineses that are related to what we are talking about. Sometimes, that is just one business - but here, it's all the LLMs. This needs to be considered in every post possible.",
+          "on": "2026-10-10",
+          "is": "his words"
+        },
+        {
+          "said": "Did you actually watch these?… brand guidelines have been seriously violated… Overall, your prediction was right earlier. This is shit.",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "there are font consistency issues throughout, and the 'I scored Meta's Muse' slide just has text that falls off the page ... brand guidelines have been seriously violated",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "we've not made any use of business logos",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "an absolute dog's dinner, and looks half baked. Nobody understands the muse logo (they know Meta and Instagram)… badges are differently branded… this screen looks awful",
+          "on": "2026-10-13",
+          "is": "his words"
+        }
+      ],
+      "records": [
+        "r5d83207d94",
+        "rbd5233612b",
+        "re0fea101ce"
+      ],
+      "boundary": [
+        {
+          "said": "I love it, but we need to add all the logos of the busineses that are related to what we are talking about.",
+          "on": "2026-10-10"
+        }
+      ]
+    },
     "s5437e24561": {
       "home": "engine",
       "taste_layer": "example",
@@ -10478,82 +10372,6 @@
       "records": [
         "rc45117b381",
         "rca28f35fa3"
-      ],
-      "boundary": []
-    },
-    "s81f0c39ce8": {
-      "taste_layer": "example",
-      "blocks": false,
-      "on": "2026-11-03",
-      "weight": "pattern",
-      "productions": 2,
-      "standing": "approved",
-      "decided_on": "2026-11-15",
-      "never_beneath": "Always include the current intro and outro animation package in every delivered cut; never publish a video without the new intro/outro visuals.",
-      "check_before_delivery": "Open the export and confirm the current house intro animation plays at the start and the current outro animation plays at the end, before sign-off.",
-      "check_by": "the engine, approved by him with the statement",
-      "formats": [
-        "audio",
-        "long_video",
-        "short_video"
-      ],
-      "theme": "packaging",
-      "layer": "packaging",
-      "kind": "form",
-      "support": 2,
-      "in_his_words": "new intro and outro animations too",
-      "his_words": [
-        {
-          "said": "This MUST go out with music, and now you have been such a twat, I am going to also insist todays video goes out with the new intro and outro animations too",
-          "on": "2026-10-12",
-          "is": "his words"
-        },
-        {
-          "said": "This is not acceptable per the standards of what this engine produces. We fucking have standards for intro, background audio and outro",
-          "on": "2026-11-03",
-          "is": "his words"
-        }
-      ],
-      "records": [
-        "r59a5f74dca",
-        "rc45117b381"
-      ],
-      "boundary": []
-    },
-    "s86b28843d1": {
-      "taste_layer": "example",
-      "blocks": false,
-      "on": "2026-11-03",
-      "weight": "pattern",
-      "productions": 2,
-      "standing": "draft",
-      "never_beneath": "Always include the current intro and outro animation package in every delivered cut; never publish a video without the new intro/outro visuals.",
-      "check_before_delivery": "Confirm the current intro and outro animation files are present and playing in the exported cut before upload.",
-      "check_by": "the engine, a draft he has not seen",
-      "formats": [
-        "long_video",
-        "short_video"
-      ],
-      "theme": "packaging",
-      "layer": "packaging",
-      "kind": "form",
-      "support": 2,
-      "in_his_words": "insist todays video goes out with the new intro and outro animations too",
-      "his_words": [
-        {
-          "said": "This MUST go out with music, and now you have been such a twat, I am going to also insist todays video goes out with the new intro and outro animations too",
-          "on": "2026-10-12",
-          "is": "his words"
-        },
-        {
-          "said": "This is not acceptable per the standards of what this engine produces. We fucking have standards for intro, background audio and outro",
-          "on": "2026-11-03",
-          "is": "his words"
-        }
-      ],
-      "records": [
-        "r59a5f74dca",
-        "rc45117b381"
       ],
       "boundary": []
     },
@@ -11282,6 +11100,188 @@
         }
       ]
     },
+    "s461de72a1a": {
+      "taste_layer": "floor",
+      "never": "real_marks_with_rights",
+      "blocks": true,
+      "weight": "pattern",
+      "productions": 2,
+      "standing": "approved",
+      "decided_on": "2026-11-15",
+      "never_beneath": "Always use each company's real official logo or brand mark; never substitute a typed-out wordmark, a founder's name, or a parent company's mark in its place.",
+      "check_before_delivery": "Compare every logo in the final render against the official logo-registry file for that company; replace any typed text, name, or parent-brand mark standing in for it.",
+      "check_by": "the engine, approved by him with the statement",
+      "formats": [
+        "intro_outro"
+      ],
+      "theme": "brand",
+      "layer": "packaging",
+      "kind": "form",
+      "support": 1,
+      "his_words": [
+        {
+          "said": "there are actually multiple instances of the wrong brand mark being used",
+          "on": "2026-10-12",
+          "is": "his words"
+        },
+        {
+          "said": "Did you actually watch these?… brand guidelines have been seriously violated… Overall, your prediction was right earlier. This is shit.",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "there are font consistency issues throughout, and the 'I scored Meta's Muse' slide just has text that falls off the page ... brand guidelines have been seriously violated",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "we've not made any use of business logos",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "an absolute dog's dinner, and looks half baked. Nobody understands the muse logo (they know Meta and Instagram)… badges are differently branded… this screen looks awful",
+          "on": "2026-10-13",
+          "is": "his words"
+        }
+      ],
+      "records": [
+        "re0fea101ce",
+        "ree0b17dced"
+      ],
+      "boundary": []
+    },
+    "s81f0c39ce8": {
+      "taste_layer": "example",
+      "blocks": false,
+      "on": "2026-11-03",
+      "weight": "pattern",
+      "productions": 2,
+      "standing": "approved",
+      "decided_on": "2026-11-15",
+      "never_beneath": "Always include the current intro and outro animation package in every delivered cut; never publish a video without the new intro/outro visuals.",
+      "check_before_delivery": "Open the export and confirm the current house intro animation plays at the start and the current outro animation plays at the end, before sign-off.",
+      "check_by": "the engine, approved by him with the statement",
+      "formats": [
+        "audio",
+        "long_video",
+        "short_video"
+      ],
+      "theme": "packaging",
+      "layer": "packaging",
+      "kind": "form",
+      "support": 1,
+      "in_his_words": "new intro and outro animations too",
+      "his_words": [
+        {
+          "said": "This MUST go out with music, and now you have been such a twat, I am going to also insist todays video goes out with the new intro and outro animations too",
+          "on": "2026-10-12",
+          "is": "his words"
+        },
+        {
+          "said": "This is not acceptable per the standards of what this engine produces. We fucking have standards for intro, background audio and outro",
+          "on": "2026-11-03",
+          "is": "his words"
+        }
+      ],
+      "records": [
+        "r59a5f74dca",
+        "rc45117b381"
+      ],
+      "boundary": []
+    },
+    "s86b28843d1": {
+      "taste_layer": "example",
+      "blocks": false,
+      "on": "2026-11-03",
+      "weight": "pattern",
+      "productions": 2,
+      "standing": "draft",
+      "never_beneath": "Always include the current intro and outro animation package in every delivered cut; never publish a video without the new intro/outro visuals.",
+      "check_before_delivery": "Confirm the current intro and outro animation files are present and playing in the exported cut before upload.",
+      "check_by": "the engine, a draft he has not seen",
+      "formats": [
+        "long_video",
+        "short_video"
+      ],
+      "theme": "packaging",
+      "layer": "packaging",
+      "kind": "form",
+      "support": 1,
+      "in_his_words": "insist todays video goes out with the new intro and outro animations too",
+      "his_words": [
+        {
+          "said": "This MUST go out with music, and now you have been such a twat, I am going to also insist todays video goes out with the new intro and outro animations too",
+          "on": "2026-10-12",
+          "is": "his words"
+        },
+        {
+          "said": "This is not acceptable per the standards of what this engine produces. We fucking have standards for intro, background audio and outro",
+          "on": "2026-11-03",
+          "is": "his words"
+        }
+      ],
+      "records": [
+        "r59a5f74dca",
+        "rc45117b381"
+      ],
+      "boundary": []
+    },
+    "sd34b3745db": {
+      "taste_layer": "aim",
+      "blocks": false,
+      "weight": "pattern",
+      "productions": 2,
+      "standing": "draft",
+      "never_beneath": "Always give every business or product named in a comparison its own authentic, matching-style logo; never leave a badge logo-less or branded differently from its counterpart.",
+      "check_before_delivery": "Pause on every comparison badge and intro/outro title card and confirm both sides show the real, current logo of the business discussed, rendered in a consistent badge style.",
+      "check_by": "the engine, a draft he has not seen",
+      "formats": [
+        "card",
+        "intro_outro"
+      ],
+      "theme": "brand",
+      "layer": "packaging",
+      "kind": "form",
+      "support": 1,
+      "his_words": [
+        {
+          "said": "we need to add all the logos of the busineses that are related to what we are talking about. Sometimes, that is just one business - but here, it's all the LLMs. This needs to be considered in every post possible.",
+          "on": "2026-10-10",
+          "is": "his words"
+        },
+        {
+          "said": "Did you actually watch these?… brand guidelines have been seriously violated… Overall, your prediction was right earlier. This is shit.",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "there are font consistency issues throughout, and the 'I scored Meta's Muse' slide just has text that falls off the page ... brand guidelines have been seriously violated",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "we've not made any use of business logos",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "an absolute dog's dinner, and looks half baked. Nobody understands the muse logo (they know Meta and Instagram)… badges are differently branded… this screen looks awful",
+          "on": "2026-10-13",
+          "is": "his words"
+        }
+      ],
+      "records": [
+        "r5d83207d94",
+        "re0fea101ce"
+      ],
+      "boundary": [
+        {
+          "said": "I love it, but we need to add all the logos of the busineses that are related to what we are talking about.",
+          "on": "2026-10-10"
+        }
+      ]
+    },
     "sf77ed5d2fe": {
       "home": "engine",
       "taste_layer": "example",
@@ -11375,98 +11375,6 @@
       ],
       "boundary": []
     },
-    "s0e9283ef32": {
-      "taste_layer": "aim",
-      "blocks": false,
-      "weight": "one_off",
-      "productions": 1,
-      "standing": "reworded",
-      "decided_on": "2026-11-04",
-      "never_beneath": "Always use one consistent brand font family across every title and card in a piece; never mix inconsistent fonts within the same delivery.",
-      "check_before_delivery": "Step through every card and title frame in the timeline and compare the typeface used on each; flag and fix any card whose font does not match the house set.",
-      "check_by": "the engine, a draft: he reworded the statement, not this check",
-      "formats": [
-        "card",
-        "intro_outro"
-      ],
-      "theme": "brand",
-      "layer": "packaging",
-      "kind": "form",
-      "support": 4,
-      "in_his_words": "font consistency issues throughout",
-      "his_words": [
-        {
-          "said": "Did you actually watch these?… brand guidelines have been seriously violated… Overall, your prediction was right earlier. This is shit.",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "there are font consistency issues throughout, and the 'I scored Meta's Muse' slide just has text that falls off the page ... brand guidelines have been seriously violated",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "we've not made any use of business logos",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "an absolute dog's dinner, and looks half baked. Nobody understands the muse logo (they know Meta and Instagram)… badges are differently branded… this screen looks awful",
-          "on": "2026-10-13",
-          "is": "his words"
-        }
-      ],
-      "records": [
-        "re0fea101ce"
-      ],
-      "boundary": []
-    },
-    "s2874957e20": {
-      "taste_layer": "aim",
-      "blocks": false,
-      "weight": "one_off",
-      "productions": 1,
-      "standing": "approved",
-      "decided_on": "2026-11-04",
-      "never_beneath": "Always render both sides of a comparison badge in the same consistent branding style; never mix mismatched or unrecognisable logos between the two sides.",
-      "check_before_delivery": "Place both sides of the comparison badge next to each other and check they share the same visual treatment and both use logos the audience will recognise; fix any side that is differently styled or unfamiliar.",
-      "check_by": "the engine, approved by him with the statement",
-      "formats": [
-        "card",
-        "intro_outro"
-      ],
-      "theme": "brand",
-      "layer": "packaging",
-      "kind": "form",
-      "support": 4,
-      "in_his_words": "badges are differently branded",
-      "his_words": [
-        {
-          "said": "Did you actually watch these?… brand guidelines have been seriously violated… Overall, your prediction was right earlier. This is shit.",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "there are font consistency issues throughout, and the 'I scored Meta's Muse' slide just has text that falls off the page ... brand guidelines have been seriously violated",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "we've not made any use of business logos",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "an absolute dog's dinner, and looks half baked. Nobody understands the muse logo (they know Meta and Instagram)… badges are differently branded… this screen looks awful",
-          "on": "2026-10-13",
-          "is": "his words"
-        }
-      ],
-      "records": [
-        "re0fea101ce"
-      ],
-      "boundary": []
-    },
     "s5d5847ae7f": {
       "taste_layer": "example",
       "blocks": false,
@@ -11514,140 +11422,6 @@
       ],
       "boundary": []
     },
-    "s72bf7915f6": {
-      "taste_layer": "aim",
-      "blocks": false,
-      "weight": "one_off",
-      "productions": 1,
-      "standing": "approved",
-      "decided_on": "2026-11-04",
-      "never_beneath": "Always fit all on-screen text inside the card's safe area at final render size; never let a line of text run off the edge of the frame.",
-      "check_before_delivery": "Open the rendered card/title at full delivery resolution and zoom into every edge; if any word or letter is cropped or touching the frame edge, resize or re-fit the text box before export.",
-      "check_by": "the engine, approved by him with the statement",
-      "formats": [
-        "card",
-        "intro_outro"
-      ],
-      "theme": "words_on_screen",
-      "layer": "packaging",
-      "kind": "form",
-      "support": 4,
-      "in_his_words": "text that falls off the page",
-      "his_words": [
-        {
-          "said": "Did you actually watch these?… brand guidelines have been seriously violated… Overall, your prediction was right earlier. This is shit.",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "there are font consistency issues throughout, and the 'I scored Meta's Muse' slide just has text that falls off the page ... brand guidelines have been seriously violated",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "we've not made any use of business logos",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "an absolute dog's dinner, and looks half baked. Nobody understands the muse logo (they know Meta and Instagram)… badges are differently branded… this screen looks awful",
-          "on": "2026-10-13",
-          "is": "his words"
-        }
-      ],
-      "records": [
-        "re0fea101ce"
-      ],
-      "boundary": []
-    },
-    "s829e7d0cfe": {
-      "taste_layer": "aim",
-      "blocks": false,
-      "weight": "one_off",
-      "productions": 1,
-      "standing": "approved",
-      "decided_on": "2026-11-15",
-      "never_beneath": "Always use one consistent brand font family across every title and card in a piece; never mix inconsistent fonts within the same delivery.",
-      "check_before_delivery": "Open every title and card in the final export side by side and check the typeface against the brand font file; flag any card using a different font.",
-      "check_by": "the engine, approved by him with the statement",
-      "formats": [
-        "intro_outro"
-      ],
-      "theme": "brand",
-      "layer": "graphics",
-      "kind": "form",
-      "support": 4,
-      "his_words": [
-        {
-          "said": "Did you actually watch these?… brand guidelines have been seriously violated… Overall, your prediction was right earlier. This is shit.",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "there are font consistency issues throughout, and the 'I scored Meta's Muse' slide just has text that falls off the page ... brand guidelines have been seriously violated",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "we've not made any use of business logos",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "an absolute dog's dinner, and looks half baked. Nobody understands the muse logo (they know Meta and Instagram)… badges are differently branded… this screen looks awful",
-          "on": "2026-10-13",
-          "is": "his words"
-        }
-      ],
-      "records": [
-        "re0fea101ce"
-      ],
-      "boundary": []
-    },
-    "sa707eb4469": {
-      "taste_layer": "aim",
-      "blocks": false,
-      "weight": "one_off",
-      "productions": 1,
-      "standing": "approved",
-      "decided_on": "2026-11-15",
-      "never_beneath": "Always fit all on-screen text inside the card's safe area at final render size; never let a line of text run off the edge of the frame.",
-      "check_before_delivery": "Export the title plate at final resolution and scan every line of text against the safe-area guide; flag any line that touches or crosses the frame edge.",
-      "check_by": "the engine, approved by him with the statement",
-      "formats": [
-        "intro_outro"
-      ],
-      "theme": "words_on_screen",
-      "layer": "graphics",
-      "kind": "form",
-      "support": 4,
-      "his_words": [
-        {
-          "said": "Did you actually watch these?… brand guidelines have been seriously violated… Overall, your prediction was right earlier. This is shit.",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "there are font consistency issues throughout, and the 'I scored Meta's Muse' slide just has text that falls off the page ... brand guidelines have been seriously violated",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "we've not made any use of business logos",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "an absolute dog's dinner, and looks half baked. Nobody understands the muse logo (they know Meta and Instagram)… badges are differently branded… this screen looks awful",
-          "on": "2026-10-13",
-          "is": "his words"
-        }
-      ],
-      "records": [
-        "re0fea101ce"
-      ],
-      "boundary": []
-    },
     "sb31edbbaf1": {
       "taste_layer": "example",
       "blocks": false,
@@ -11691,50 +11465,6 @@
       ],
       "records": [
         "r5a6af03bad"
-      ],
-      "boundary": []
-    },
-    "sb8e8f61511": {
-      "taste_layer": "aim",
-      "blocks": false,
-      "weight": "one_off",
-      "productions": 1,
-      "standing": "approved",
-      "decided_on": "2026-11-15",
-      "never_beneath": "Always render both sides of a comparison badge in the same consistent branding style; never mix mismatched or unrecognisable logos between the two sides.",
-      "check_before_delivery": "Place both badge sides side by side in the final export and confirm identical style treatment (scale, colour, placement) for each brand's mark.",
-      "check_by": "the engine, approved by him with the statement",
-      "formats": [
-        "intro_outro"
-      ],
-      "theme": "brand",
-      "layer": "packaging",
-      "kind": "form",
-      "support": 4,
-      "his_words": [
-        {
-          "said": "Did you actually watch these?… brand guidelines have been seriously violated… Overall, your prediction was right earlier. This is shit.",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "there are font consistency issues throughout, and the 'I scored Meta's Muse' slide just has text that falls off the page ... brand guidelines have been seriously violated",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "we've not made any use of business logos",
-          "on": "2026-10-13",
-          "is": "his words"
-        },
-        {
-          "said": "an absolute dog's dinner, and looks half baked. Nobody understands the muse logo (they know Meta and Instagram)… badges are differently branded… this screen looks awful",
-          "on": "2026-10-13",
-          "is": "his words"
-        }
-      ],
-      "records": [
-        "re0fea101ce"
       ],
       "boundary": []
     },
@@ -12981,47 +12711,6 @@
         }
       ]
     },
-    "saa66d875d3": {
-      "taste_layer": "aim",
-      "blocks": false,
-      "weight": "one_off",
-      "productions": 1,
-      "standing": "approved",
-      "decided_on": "2026-11-04",
-      "never_beneath": "Never deliver handheld footage that is visibly shaky; always stabilise it and re-check the stabilised export before sign-off.",
-      "check_before_delivery": "Watch the stabilised file full-screen, not just a thumbnail, looking for residual shake; if it is still unstable, re-run stabilisation and recheck.",
-      "check_by": "the engine, approved by him with the statement",
-      "formats": [
-        "long_video",
-        "short_video"
-      ],
-      "theme": "camera",
-      "layer": "camerawork",
-      "kind": "form",
-      "support": 2,
-      "in_his_words": "The vertical video is still really unstable and shaky.",
-      "his_words": [
-        {
-          "said": "Yes, those fixes look right but the videos both need stabilization.",
-          "on": "2026-10-22",
-          "is": "his words"
-        },
-        {
-          "said": "The vertical video is still really unstable and shaky. I have uploaded an auto stabilized version of this to the inbox again, sub this out.",
-          "on": "2026-10-22",
-          "is": "his words"
-        }
-      ],
-      "records": [
-        "r5db59c9d96"
-      ],
-      "boundary": [
-        {
-          "said": "Yes, those fixes look right but the videos both need stabilization.",
-          "on": "2026-10-22"
-        }
-      ]
-    },
     "sb23e5d4274": {
       "taste_layer": "example",
       "blocks": false,
@@ -13309,57 +12998,6 @@
         "re5253fa5e6"
       ],
       "boundary": []
-    },
-    "sec41c9469d": {
-      "taste_layer": "aim",
-      "blocks": false,
-      "weight": "one_off",
-      "productions": 1,
-      "standing": "approved",
-      "decided_on": "2026-11-04",
-      "never_beneath": "Always align every cover, thumbnail, and title-card element (portraits, logos, names, text) to a measured grid, never leave them visibly unaligned.",
-      "check_before_delivery": "Zoom into the finished file and draw guide lines across portraits, logos, names, and text blocks to confirm edges and centers line up; reject any visible drift.",
-      "check_by": "the engine, approved by him with the statement",
-      "formats": [
-        "cover",
-        "thumbnail",
-        "title"
-      ],
-      "theme": "layout",
-      "layer": "packaging",
-      "kind": "form",
-      "support": 2,
-      "in_his_words": "not to mention the components dont align properly",
-      "his_words": [
-        {
-          "said": "not to mention the components dont align properly",
-          "on": "2026-10-22",
-          "is": "his words"
-        },
-        {
-          "said": "The long video still has text misalignments, as I've screenshotted. Other than that, it's good to go.",
-          "on": "2026-10-23",
-          "is": "his words"
-        }
-      ],
-      "records": [
-        "r77fea06de7",
-        "rbef12ae9ba"
-      ],
-      "boundary": [
-        {
-          "said": "Yes, those fixes look right but the videos both need stabilization.",
-          "on": "2026-10-22"
-        },
-        {
-          "said": "Yes, use this treatment",
-          "on": "2026-10-23"
-        },
-        {
-          "said": "much better. continue",
-          "on": "2026-10-23"
-        }
-      ]
     },
     "sf0c751523f": {
       "taste_layer": "aim",
@@ -15419,35 +15057,6 @@
       ],
       "boundary": []
     },
-    "s299453151c": {
-      "taste_layer": "aim",
-      "blocks": false,
-      "weight": "one_off",
-      "productions": 1,
-      "standing": "draft",
-      "never_beneath": "Never burn in captions that misquote, garble, or omit the speaker's actual words; always verify every caption line against the real transcript before delivery.",
-      "check_before_delivery": "Read every burned-in caption line against the real transcript word for word before export.",
-      "check_by": "the engine, a draft he has not seen",
-      "formats": [
-        "captions"
-      ],
-      "theme": "words_on_screen",
-      "layer": "editing",
-      "kind": "form",
-      "support": 1,
-      "in_his_words": "$4 a batch to read tokens, and $20 a batch to write tokens",
-      "his_words": [
-        {
-          "said": "1) say \"$4 a batch to read tokens, and $20 a batch to write tokens. 2) say \"two ways to bring the bill down\" 3) \"where you work\".",
-          "on": "2026-10-19",
-          "is": "his words"
-        }
-      ],
-      "records": [
-        "rafb58b97e7"
-      ],
-      "boundary": []
-    },
     "s29bae0dbdc": {
       "home": "engine",
       "taste_layer": "example",
@@ -15693,36 +15302,6 @@
       ],
       "boundary": []
     },
-    "s30a79854fc": {
-      "taste_layer": "aim",
-      "blocks": false,
-      "weight": "one_off",
-      "productions": 1,
-      "standing": "approved",
-      "decided_on": "2026-11-04",
-      "never_beneath": "Always double-check every element on the page for correct alignment before delivery.",
-      "check_before_delivery": "Open the finished page and scan every row, card, and text block for pixel-level alignment against the grid before marking it done.",
-      "check_by": "the engine, approved by him with the statement",
-      "formats": [
-        "site"
-      ],
-      "theme": "layout",
-      "layer": "proof",
-      "kind": "form",
-      "support": 1,
-      "in_his_words": "alignment issues",
-      "his_words": [
-        {
-          "said": "There are some alignment issues. Keep watch for those.",
-          "on": "2026-09-25",
-          "is": "his words"
-        }
-      ],
-      "records": [
-        "r8d45a6ee0d"
-      ],
-      "boundary": []
-    },
     "s33a3f53c9a": {
       "taste_layer": "aim",
       "blocks": false,
@@ -15780,35 +15359,6 @@
       ],
       "records": [
         "r623dc2a084"
-      ],
-      "boundary": []
-    },
-    "s343f7eb544": {
-      "taste_layer": "aim",
-      "blocks": false,
-      "weight": "one_off",
-      "productions": 1,
-      "standing": "approved",
-      "decided_on": "2026-11-15",
-      "never_beneath": "Always size competing brand logos to the same visible scale so neither side looks bigger than the other.",
-      "check_before_delivery": "Measure each logo's visible height and width in the final frame and confirm the two brands' marks match within a few pixels.",
-      "check_by": "the engine, approved by him with the statement",
-      "formats": [
-        "intro_outro"
-      ],
-      "theme": "layout",
-      "layer": "packaging",
-      "kind": "form",
-      "support": 1,
-      "his_words": [
-        {
-          "said": "And the logos are not the same size as one another",
-          "on": "2026-10-21",
-          "is": "his words"
-        }
-      ],
-      "records": [
-        "r558fe4f440"
       ],
       "boundary": []
     },
@@ -16718,37 +16268,6 @@
       ],
       "records": [
         "rf670596592"
-      ],
-      "boundary": []
-    },
-    "s49d9a93e99": {
-      "taste_layer": "aim",
-      "blocks": false,
-      "weight": "one_off",
-      "productions": 1,
-      "standing": "reworded",
-      "decided_on": "2026-11-15",
-      "never_beneath": "Never burn captions that don't match his actual words; always check captions against the real transcript before publishing, especially after any speed change.",
-      "check_before_delivery": "Read every caption line against the verified transcript word for word on the final export, not the draft script.",
-      "check_by": "the engine, a draft: he reworded the statement, not this check",
-      "formats": [
-        "captions",
-        "long_video"
-      ],
-      "theme": "words_on_screen",
-      "layer": "proof",
-      "kind": "form",
-      "support": 1,
-      "in_his_words": "two ways to bring the bill down",
-      "his_words": [
-        {
-          "said": "1) say \"$4 a batch to read tokens, and $20 a batch to write tokens. 2) say \"two ways to bring the bill down\" 3) \"where you work\".",
-          "on": "2026-10-19",
-          "is": "his words"
-        }
-      ],
-      "records": [
-        "rafb58b97e7"
       ],
       "boundary": []
     },
@@ -23091,37 +22610,6 @@
         }
       ]
     },
-    "sb784eaae44": {
-      "taste_layer": "aim",
-      "blocks": false,
-      "weight": "one_off",
-      "productions": 1,
-      "standing": "approved",
-      "decided_on": "2026-11-04",
-      "never_beneath": "Always size competing brand logos to the same visible scale so neither side looks bigger than the other.",
-      "check_before_delivery": "Place the two logos side by side at delivery resolution and measure their visible height/width; resize until they read as equal before export.",
-      "check_by": "the engine, approved by him with the statement",
-      "formats": [
-        "card",
-        "intro_outro"
-      ],
-      "theme": "layout",
-      "layer": "packaging",
-      "kind": "form",
-      "support": 1,
-      "in_his_words": "the logos are not the same size as one another",
-      "his_words": [
-        {
-          "said": "And the logos are not the same size as one another",
-          "on": "2026-10-21",
-          "is": "his words"
-        }
-      ],
-      "records": [
-        "r558fe4f440"
-      ],
-      "boundary": []
-    },
     "sba7513bed8": {
       "taste_layer": "aim",
       "blocks": false,
@@ -24965,35 +24453,6 @@
       ],
       "boundary": []
     },
-    "se0af88f5fd": {
-      "taste_layer": "example",
-      "blocks": false,
-      "on": "2026-10-12",
-      "weight": "one_off",
-      "productions": 1,
-      "standing": "draft",
-      "never_beneath": "Always use the one fixed set of intro and outro brand templates for every video in the weekly calendar; never let icons, word marks, or outro cards vary randomly between episodes.",
-      "check_before_delivery": "Compare the intro and outro of the new export against the approved template library and confirm icons and the outro card match exactly, with no ad-hoc substitutions.",
-      "check_by": "the engine, a draft he has not seen",
-      "formats": [
-        "intro_outro"
-      ],
-      "theme": "packaging",
-      "layer": "packaging",
-      "kind": "form",
-      "support": 1,
-      "his_words": [
-        {
-          "said": "This MUST go out with music, and now you have been such a twat, I am going to also insist todays video goes out with the new intro and outro animations too",
-          "on": "2026-10-12",
-          "is": "his words"
-        }
-      ],
-      "records": [
-        "rc45117b381"
-      ],
-      "boundary": []
-    },
     "se1897eb1e2": {
       "taste_layer": "example",
       "blocks": false,
@@ -26153,37 +25612,6 @@
       ],
       "boundary": []
     },
-    "sf5535ccb46": {
-      "taste_layer": "aim",
-      "blocks": false,
-      "weight": "one_off",
-      "productions": 1,
-      "standing": "approved",
-      "decided_on": "2026-11-04",
-      "never_beneath": "Never render competing logos at different visible sizes in the same frame; always balance all logos to equal visible size.",
-      "check_before_delivery": "Place the logos side by side in the export and compare their visible height and width; resize until they read as equal weight.",
-      "check_by": "the engine, approved by him with the statement",
-      "formats": [
-        "long_video",
-        "short_video"
-      ],
-      "theme": "layout",
-      "layer": "graphics",
-      "kind": "form",
-      "support": 1,
-      "in_his_words": "the logos are not the same size as one another",
-      "his_words": [
-        {
-          "said": "And the logos are not the same size as one another",
-          "on": "2026-10-21",
-          "is": "his words"
-        }
-      ],
-      "records": [
-        "r558fe4f440"
-      ],
-      "boundary": []
-    },
     "sf6fb5df3bb": {
       "taste_layer": "aim",
       "blocks": false,
@@ -26693,6 +26121,578 @@
       ],
       "records": [
         "r064c6c5994"
+      ],
+      "boundary": []
+    },
+    "s0e9283ef32": {
+      "taste_layer": "aim",
+      "blocks": false,
+      "weight": "one_off",
+      "productions": 1,
+      "standing": "reworded",
+      "decided_on": "2026-11-04",
+      "never_beneath": "Always use one consistent brand font family across every title and card in a piece; never mix inconsistent fonts within the same delivery.",
+      "check_before_delivery": "Step through every card and title frame in the timeline and compare the typeface used on each; flag and fix any card whose font does not match the house set.",
+      "check_by": "the engine, a draft: he reworded the statement, not this check",
+      "formats": [
+        "card",
+        "intro_outro"
+      ],
+      "theme": "brand",
+      "layer": "packaging",
+      "kind": "form",
+      "support": 0,
+      "in_his_words": "font consistency issues throughout",
+      "his_words": [
+        {
+          "said": "Did you actually watch these?… brand guidelines have been seriously violated… Overall, your prediction was right earlier. This is shit.",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "there are font consistency issues throughout, and the 'I scored Meta's Muse' slide just has text that falls off the page ... brand guidelines have been seriously violated",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "we've not made any use of business logos",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "an absolute dog's dinner, and looks half baked. Nobody understands the muse logo (they know Meta and Instagram)… badges are differently branded… this screen looks awful",
+          "on": "2026-10-13",
+          "is": "his words"
+        }
+      ],
+      "records": [
+        "re0fea101ce"
+      ],
+      "boundary": []
+    },
+    "s2874957e20": {
+      "taste_layer": "aim",
+      "blocks": false,
+      "weight": "one_off",
+      "productions": 1,
+      "standing": "approved",
+      "decided_on": "2026-11-04",
+      "never_beneath": "Always render both sides of a comparison badge in the same consistent branding style; never mix mismatched or unrecognisable logos between the two sides.",
+      "check_before_delivery": "Place both sides of the comparison badge next to each other and check they share the same visual treatment and both use logos the audience will recognise; fix any side that is differently styled or unfamiliar.",
+      "check_by": "the engine, approved by him with the statement",
+      "formats": [
+        "card",
+        "intro_outro"
+      ],
+      "theme": "brand",
+      "layer": "packaging",
+      "kind": "form",
+      "support": 0,
+      "in_his_words": "badges are differently branded",
+      "his_words": [
+        {
+          "said": "Did you actually watch these?… brand guidelines have been seriously violated… Overall, your prediction was right earlier. This is shit.",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "there are font consistency issues throughout, and the 'I scored Meta's Muse' slide just has text that falls off the page ... brand guidelines have been seriously violated",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "we've not made any use of business logos",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "an absolute dog's dinner, and looks half baked. Nobody understands the muse logo (they know Meta and Instagram)… badges are differently branded… this screen looks awful",
+          "on": "2026-10-13",
+          "is": "his words"
+        }
+      ],
+      "records": [
+        "re0fea101ce"
+      ],
+      "boundary": []
+    },
+    "s299453151c": {
+      "taste_layer": "aim",
+      "blocks": false,
+      "weight": "one_off",
+      "productions": 1,
+      "standing": "draft",
+      "never_beneath": "Never burn in captions that misquote, garble, or omit the speaker's actual words; always verify every caption line against the real transcript before delivery.",
+      "check_before_delivery": "Read every burned-in caption line against the real transcript word for word before export.",
+      "check_by": "the engine, a draft he has not seen",
+      "formats": [
+        "captions"
+      ],
+      "theme": "words_on_screen",
+      "layer": "editing",
+      "kind": "form",
+      "support": 0,
+      "in_his_words": "$4 a batch to read tokens, and $20 a batch to write tokens",
+      "his_words": [
+        {
+          "said": "1) say \"$4 a batch to read tokens, and $20 a batch to write tokens. 2) say \"two ways to bring the bill down\" 3) \"where you work\".",
+          "on": "2026-10-19",
+          "is": "his words"
+        }
+      ],
+      "records": [
+        "rafb58b97e7"
+      ],
+      "boundary": []
+    },
+    "s30a79854fc": {
+      "taste_layer": "aim",
+      "blocks": false,
+      "weight": "one_off",
+      "productions": 1,
+      "standing": "approved",
+      "decided_on": "2026-11-04",
+      "never_beneath": "Always double-check every element on the page for correct alignment before delivery.",
+      "check_before_delivery": "Open the finished page and scan every row, card, and text block for pixel-level alignment against the grid before marking it done.",
+      "check_by": "the engine, approved by him with the statement",
+      "formats": [
+        "site"
+      ],
+      "theme": "layout",
+      "layer": "proof",
+      "kind": "form",
+      "support": 0,
+      "in_his_words": "alignment issues",
+      "his_words": [
+        {
+          "said": "There are some alignment issues. Keep watch for those.",
+          "on": "2026-09-25",
+          "is": "his words"
+        }
+      ],
+      "records": [
+        "r8d45a6ee0d"
+      ],
+      "boundary": []
+    },
+    "s343f7eb544": {
+      "taste_layer": "aim",
+      "blocks": false,
+      "weight": "one_off",
+      "productions": 1,
+      "standing": "approved",
+      "decided_on": "2026-11-15",
+      "never_beneath": "Always size competing brand logos to the same visible scale so neither side looks bigger than the other.",
+      "check_before_delivery": "Measure each logo's visible height and width in the final frame and confirm the two brands' marks match within a few pixels.",
+      "check_by": "the engine, approved by him with the statement",
+      "formats": [
+        "intro_outro"
+      ],
+      "theme": "layout",
+      "layer": "packaging",
+      "kind": "form",
+      "support": 0,
+      "his_words": [
+        {
+          "said": "And the logos are not the same size as one another",
+          "on": "2026-10-21",
+          "is": "his words"
+        }
+      ],
+      "records": [
+        "r558fe4f440"
+      ],
+      "boundary": []
+    },
+    "s49d9a93e99": {
+      "taste_layer": "aim",
+      "blocks": false,
+      "weight": "one_off",
+      "productions": 1,
+      "standing": "reworded",
+      "decided_on": "2026-11-15",
+      "never_beneath": "Never burn captions that don't match his actual words; always check captions against the real transcript before publishing, especially after any speed change.",
+      "check_before_delivery": "Read every caption line against the verified transcript word for word on the final export, not the draft script.",
+      "check_by": "the engine, a draft: he reworded the statement, not this check",
+      "formats": [
+        "captions",
+        "long_video"
+      ],
+      "theme": "words_on_screen",
+      "layer": "proof",
+      "kind": "form",
+      "support": 0,
+      "in_his_words": "two ways to bring the bill down",
+      "his_words": [
+        {
+          "said": "1) say \"$4 a batch to read tokens, and $20 a batch to write tokens. 2) say \"two ways to bring the bill down\" 3) \"where you work\".",
+          "on": "2026-10-19",
+          "is": "his words"
+        }
+      ],
+      "records": [
+        "rafb58b97e7"
+      ],
+      "boundary": []
+    },
+    "s72bf7915f6": {
+      "taste_layer": "aim",
+      "blocks": false,
+      "weight": "one_off",
+      "productions": 1,
+      "standing": "approved",
+      "decided_on": "2026-11-04",
+      "never_beneath": "Always fit all on-screen text inside the card's safe area at final render size; never let a line of text run off the edge of the frame.",
+      "check_before_delivery": "Open the rendered card/title at full delivery resolution and zoom into every edge; if any word or letter is cropped or touching the frame edge, resize or re-fit the text box before export.",
+      "check_by": "the engine, approved by him with the statement",
+      "formats": [
+        "card",
+        "intro_outro"
+      ],
+      "theme": "words_on_screen",
+      "layer": "packaging",
+      "kind": "form",
+      "support": 0,
+      "in_his_words": "text that falls off the page",
+      "his_words": [
+        {
+          "said": "Did you actually watch these?… brand guidelines have been seriously violated… Overall, your prediction was right earlier. This is shit.",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "there are font consistency issues throughout, and the 'I scored Meta's Muse' slide just has text that falls off the page ... brand guidelines have been seriously violated",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "we've not made any use of business logos",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "an absolute dog's dinner, and looks half baked. Nobody understands the muse logo (they know Meta and Instagram)… badges are differently branded… this screen looks awful",
+          "on": "2026-10-13",
+          "is": "his words"
+        }
+      ],
+      "records": [
+        "re0fea101ce"
+      ],
+      "boundary": []
+    },
+    "s829e7d0cfe": {
+      "taste_layer": "aim",
+      "blocks": false,
+      "weight": "one_off",
+      "productions": 1,
+      "standing": "approved",
+      "decided_on": "2026-11-15",
+      "never_beneath": "Always use one consistent brand font family across every title and card in a piece; never mix inconsistent fonts within the same delivery.",
+      "check_before_delivery": "Open every title and card in the final export side by side and check the typeface against the brand font file; flag any card using a different font.",
+      "check_by": "the engine, approved by him with the statement",
+      "formats": [
+        "intro_outro"
+      ],
+      "theme": "brand",
+      "layer": "graphics",
+      "kind": "form",
+      "support": 0,
+      "his_words": [
+        {
+          "said": "Did you actually watch these?… brand guidelines have been seriously violated… Overall, your prediction was right earlier. This is shit.",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "there are font consistency issues throughout, and the 'I scored Meta's Muse' slide just has text that falls off the page ... brand guidelines have been seriously violated",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "we've not made any use of business logos",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "an absolute dog's dinner, and looks half baked. Nobody understands the muse logo (they know Meta and Instagram)… badges are differently branded… this screen looks awful",
+          "on": "2026-10-13",
+          "is": "his words"
+        }
+      ],
+      "records": [
+        "re0fea101ce"
+      ],
+      "boundary": []
+    },
+    "sa707eb4469": {
+      "taste_layer": "aim",
+      "blocks": false,
+      "weight": "one_off",
+      "productions": 1,
+      "standing": "approved",
+      "decided_on": "2026-11-15",
+      "never_beneath": "Always fit all on-screen text inside the card's safe area at final render size; never let a line of text run off the edge of the frame.",
+      "check_before_delivery": "Export the title plate at final resolution and scan every line of text against the safe-area guide; flag any line that touches or crosses the frame edge.",
+      "check_by": "the engine, approved by him with the statement",
+      "formats": [
+        "intro_outro"
+      ],
+      "theme": "words_on_screen",
+      "layer": "graphics",
+      "kind": "form",
+      "support": 0,
+      "his_words": [
+        {
+          "said": "Did you actually watch these?… brand guidelines have been seriously violated… Overall, your prediction was right earlier. This is shit.",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "there are font consistency issues throughout, and the 'I scored Meta's Muse' slide just has text that falls off the page ... brand guidelines have been seriously violated",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "we've not made any use of business logos",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "an absolute dog's dinner, and looks half baked. Nobody understands the muse logo (they know Meta and Instagram)… badges are differently branded… this screen looks awful",
+          "on": "2026-10-13",
+          "is": "his words"
+        }
+      ],
+      "records": [
+        "re0fea101ce"
+      ],
+      "boundary": []
+    },
+    "saa66d875d3": {
+      "taste_layer": "aim",
+      "blocks": false,
+      "weight": "one_off",
+      "productions": 1,
+      "standing": "approved",
+      "decided_on": "2026-11-04",
+      "never_beneath": "Never deliver handheld footage that is visibly shaky; always stabilise it and re-check the stabilised export before sign-off.",
+      "check_before_delivery": "Watch the stabilised file full-screen, not just a thumbnail, looking for residual shake; if it is still unstable, re-run stabilisation and recheck.",
+      "check_by": "the engine, approved by him with the statement",
+      "formats": [
+        "long_video",
+        "short_video"
+      ],
+      "theme": "camera",
+      "layer": "camerawork",
+      "kind": "form",
+      "support": 0,
+      "in_his_words": "The vertical video is still really unstable and shaky.",
+      "his_words": [
+        {
+          "said": "Yes, those fixes look right but the videos both need stabilization.",
+          "on": "2026-10-22",
+          "is": "his words"
+        },
+        {
+          "said": "The vertical video is still really unstable and shaky. I have uploaded an auto stabilized version of this to the inbox again, sub this out.",
+          "on": "2026-10-22",
+          "is": "his words"
+        }
+      ],
+      "records": [
+        "r5db59c9d96"
+      ],
+      "boundary": [
+        {
+          "said": "Yes, those fixes look right but the videos both need stabilization.",
+          "on": "2026-10-22"
+        }
+      ]
+    },
+    "sb784eaae44": {
+      "taste_layer": "aim",
+      "blocks": false,
+      "weight": "one_off",
+      "productions": 1,
+      "standing": "approved",
+      "decided_on": "2026-11-04",
+      "never_beneath": "Always size competing brand logos to the same visible scale so neither side looks bigger than the other.",
+      "check_before_delivery": "Place the two logos side by side at delivery resolution and measure their visible height/width; resize until they read as equal before export.",
+      "check_by": "the engine, approved by him with the statement",
+      "formats": [
+        "card",
+        "intro_outro"
+      ],
+      "theme": "layout",
+      "layer": "packaging",
+      "kind": "form",
+      "support": 0,
+      "in_his_words": "the logos are not the same size as one another",
+      "his_words": [
+        {
+          "said": "And the logos are not the same size as one another",
+          "on": "2026-10-21",
+          "is": "his words"
+        }
+      ],
+      "records": [
+        "r558fe4f440"
+      ],
+      "boundary": []
+    },
+    "sb8e8f61511": {
+      "taste_layer": "aim",
+      "blocks": false,
+      "weight": "one_off",
+      "productions": 1,
+      "standing": "approved",
+      "decided_on": "2026-11-15",
+      "never_beneath": "Always render both sides of a comparison badge in the same consistent branding style; never mix mismatched or unrecognisable logos between the two sides.",
+      "check_before_delivery": "Place both badge sides side by side in the final export and confirm identical style treatment (scale, colour, placement) for each brand's mark.",
+      "check_by": "the engine, approved by him with the statement",
+      "formats": [
+        "intro_outro"
+      ],
+      "theme": "brand",
+      "layer": "packaging",
+      "kind": "form",
+      "support": 0,
+      "his_words": [
+        {
+          "said": "Did you actually watch these?… brand guidelines have been seriously violated… Overall, your prediction was right earlier. This is shit.",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "there are font consistency issues throughout, and the 'I scored Meta's Muse' slide just has text that falls off the page ... brand guidelines have been seriously violated",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "we've not made any use of business logos",
+          "on": "2026-10-13",
+          "is": "his words"
+        },
+        {
+          "said": "an absolute dog's dinner, and looks half baked. Nobody understands the muse logo (they know Meta and Instagram)… badges are differently branded… this screen looks awful",
+          "on": "2026-10-13",
+          "is": "his words"
+        }
+      ],
+      "records": [
+        "re0fea101ce"
+      ],
+      "boundary": []
+    },
+    "se0af88f5fd": {
+      "taste_layer": "example",
+      "blocks": false,
+      "on": "2026-10-12",
+      "weight": "one_off",
+      "productions": 1,
+      "standing": "draft",
+      "never_beneath": "Always use the one fixed set of intro and outro brand templates for every video in the weekly calendar; never let icons, word marks, or outro cards vary randomly between episodes.",
+      "check_before_delivery": "Compare the intro and outro of the new export against the approved template library and confirm icons and the outro card match exactly, with no ad-hoc substitutions.",
+      "check_by": "the engine, a draft he has not seen",
+      "formats": [
+        "intro_outro"
+      ],
+      "theme": "packaging",
+      "layer": "packaging",
+      "kind": "form",
+      "support": 0,
+      "his_words": [
+        {
+          "said": "This MUST go out with music, and now you have been such a twat, I am going to also insist todays video goes out with the new intro and outro animations too",
+          "on": "2026-10-12",
+          "is": "his words"
+        }
+      ],
+      "records": [
+        "rc45117b381"
+      ],
+      "boundary": []
+    },
+    "sec41c9469d": {
+      "taste_layer": "aim",
+      "blocks": false,
+      "weight": "one_off",
+      "productions": 1,
+      "standing": "approved",
+      "decided_on": "2026-11-04",
+      "never_beneath": "Always align every cover, thumbnail, and title-card element (portraits, logos, names, text) to a measured grid, never leave them visibly unaligned.",
+      "check_before_delivery": "Zoom into the finished file and draw guide lines across portraits, logos, names, and text blocks to confirm edges and centers line up; reject any visible drift.",
+      "check_by": "the engine, approved by him with the statement",
+      "formats": [
+        "cover",
+        "thumbnail",
+        "title"
+      ],
+      "theme": "layout",
+      "layer": "packaging",
+      "kind": "form",
+      "support": 0,
+      "in_his_words": "not to mention the components dont align properly",
+      "his_words": [
+        {
+          "said": "not to mention the components dont align properly",
+          "on": "2026-10-22",
+          "is": "his words"
+        },
+        {
+          "said": "The long video still has text misalignments, as I've screenshotted. Other than that, it's good to go.",
+          "on": "2026-10-23",
+          "is": "his words"
+        }
+      ],
+      "records": [
+        "r77fea06de7",
+        "rbef12ae9ba"
+      ],
+      "boundary": [
+        {
+          "said": "Yes, those fixes look right but the videos both need stabilization.",
+          "on": "2026-10-22"
+        },
+        {
+          "said": "Yes, use this treatment",
+          "on": "2026-10-23"
+        },
+        {
+          "said": "much better. continue",
+          "on": "2026-10-23"
+        }
+      ]
+    },
+    "sf5535ccb46": {
+      "taste_layer": "aim",
+      "blocks": false,
+      "weight": "one_off",
+      "productions": 1,
+      "standing": "approved",
+      "decided_on": "2026-11-04",
+      "never_beneath": "Never render competing logos at different visible sizes in the same frame; always balance all logos to equal visible size.",
+      "check_before_delivery": "Place the logos side by side in the export and compare their visible height and width; resize until they read as equal weight.",
+      "check_by": "the engine, approved by him with the statement",
+      "formats": [
+        "long_video",
+        "short_video"
+      ],
+      "theme": "layout",
+      "layer": "graphics",
+      "kind": "form",
+      "support": 0,
+      "in_his_words": "the logos are not the same size as one another",
+      "his_words": [
+        {
+          "said": "And the logos are not the same size as one another",
+          "on": "2026-10-21",
+          "is": "his words"
+        }
+      ],
+      "records": [
+        "r558fe4f440"
       ],
       "boundary": []
     }
