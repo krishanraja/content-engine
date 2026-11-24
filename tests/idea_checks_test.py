@@ -837,7 +837,7 @@ FLOWS = {'p1': FLOW, 'gn': ['the topic', 'story', 'story', 'story', 'story', 'st
 
 
 def sat_option(**kw):
-    o = {'id': 'toolkit', 'kind': 'explainer', 'lookalike': {'pattern': 'p1', 'beats': CAROUSEL_POST, 'our_take': 'Ours names the free tools.'},
+    o = {'id': 'toolkit', 'kind': 'good_news', 'lookalike': {'pattern': 'p1', 'beats': CAROUSEL_POST, 'our_take': 'Ours names the free tools.'},
          'cards': [{'words': f'Card {n}', 'picture': 'x'} for n in range(5)],
          'direction': {'look': 'house', 'frames': [{'words': f'Card {n}', 'picture': 'x'} for n in range(5)]}}
     o.update(kw)
@@ -863,6 +863,8 @@ class SaturdayTest(unittest.TestCase):
 
     def test_a_sheet_carousel_followed_card_for_card_passes_and_the_good_news_too(self):
         self.assertEqual(self.run_(sat(sat_option(), good_news())), [])
+        # Krish, 2026-11-19: Saturday is good-news carousels only, so an explainer carousel is refused too.
+        self.assertIn('every Saturday option is a carousel (kind good_news)', self.run_(sat(sat_option(kind='explainer')))[0]['line'])
         self.assertTrue(all(f['code'] in ic.GATE_CODES for f in self.run_(sat(sat_option(kind='meme')))))
 
     def test_no_meme_voiceover_or_recorded_option_on_saturday(self):

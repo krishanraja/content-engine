@@ -11,6 +11,7 @@ import { operatorAttribution, sha256 } from '../../_editEvents.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import { loadSubchannel } from '../../_subchannels.js'
 import { subchannelRulesBlock } from '../../_houseRules.js'
+import { predictionWanted } from '../../_publishChecks.js'
 import { guardEngine } from '../../_auth.js'
 import { guardConfidence, selfCheck } from '../../_selfCheck.js'
 
@@ -54,7 +55,9 @@ import { guardConfidence, selfCheck } from '../../_selfCheck.js'
 // draft, 2026-09-30, broke R2 three times and read at about age 13.5. The
 // response says what the saved draft still breaks, as `self_check`. The
 // draft's confidence is always "How sure we are: [to set]": the number
-// is Krish's, and that draft wrote 78% on its own.
+// is Krish's, and that draft wrote 78% on its own. Since 19 November a draft
+// carries a prediction only when Krish asked for one on the piece
+// (meta.prediction; Ruling, Krish, 2026-11-19).
 
 const MAX_DRAFTS = 10
 // The time a request has for both calls: maxDuration (below), less 15
@@ -115,7 +118,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const [voice, corpus, taste] = await Promise.all([loadVoiceBlock(), loadCorpus(), loadTasteBlock(['voice', 'strategy'])])
   const system = [
     `You are drafting one piece for makeyourmindup, in the voice below, for the subchannel ${sub.label}. The article and its title, subtitle and description speak as the publication, "we", and never name or describe its maker (house rule NO_NAME).`,
-    `=== THE MANDATE FOR ${sub.label.toUpperCase()} ===\n${sub.mandate}\n\nThe mandate is the test this piece must pass. It governs the question the piece asks, its structure and how it closes. Where the voice notes below disagree with the mandate about structure or the close, the mandate wins. Krish's house rules win over both: every piece still ends with a dated prediction.`,
+    `=== THE MANDATE FOR ${sub.label.toUpperCase()} ===\n${sub.mandate}\n\nThe mandate is the test this piece must pass. It governs the question the piece asks, its structure and how it closes. Where the voice notes below disagree with the mandate about structure or the close, the mandate wins. Krish's house rules win over both. No piece needs a prediction; write one only when Krish asked for one on this piece${predictionWanted(row.meta) ? ' (he has: end with it)' : ' (he has not: make none)'}.`,
     subchannelRulesBlock('write', sub.slug),
     voice ? `=== VOICE ===\n${voice}` : '',
     taste ? `=== HOW KRISH LIKES IT (approved by him, form only) ===\n${taste}` : '',

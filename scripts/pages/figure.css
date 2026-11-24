@@ -1,7 +1,8 @@
 /* The article figure's house look: the publish page's tokens and fonts (ink #0C1512, cream #F4EFE4, mint #7EF0C0,
    amber #FFD84D; Anton headings, Archivo words, IBM Plex Mono labels). A figure links it from its pack:
    <link rel="stylesheet" href="../../../../scripts/pages/figure.css">, and draws with render_figure.mjs. Everything flows,
-   so the figure is as tall as its content and nothing can sit on top of anything else. */
+   so the figure is as tall as its content and nothing can sit on top of anything else. An inline figure carries no
+   mark: the Substack post already carries the brand (Krish, 2026-11-19; scripts/pages/figure_check.py refuses one). */
 @font-face{font-family:Anton;src:url('../../assets/fonts/makeyourmindup/Anton-Regular.ttf')}
 @font-face{font-family:Archivo;src:url('../../assets/fonts/makeyourmindup/Archivo-Variable.ttf')}
 @font-face{font-family:Plex;src:url('../../assets/fonts/makeyourmindup/IBMPlexMono-Medium.ttf')}
@@ -9,7 +10,6 @@ html,body{margin:0;width:1200px;background:#0C1512;color:#F4EFE4}
 body{position:relative}
 *{box-sizing:border-box}
 .wrap{padding:56px 64px 48px}
-.mark{position:absolute;right:64px;top:62px;font:900 24px Archivo}
 h1{font:400 60px/1.02 Anton;margin:0 0 8px;letter-spacing:.3px;max-width:800px;text-transform:uppercase}
 .sub{font:600 22px/1.35 Archivo;color:#a9b4ae;margin:0 0 30px;max-width:960px}
 .k{font:500 16px Plex;letter-spacing:2px;color:#a9b4ae;text-transform:uppercase}

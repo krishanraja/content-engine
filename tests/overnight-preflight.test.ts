@@ -98,6 +98,14 @@ describe('the overnight preflight on a home computer', () => {
     expect(preflight).toContain('It never starts Claude')
   })
 
+  it('reads the pinned tools once, before the ffmpeg and Tesseract checks use them', () => {
+    // 19 Nov 2026: $Pinned was never assigned, so both checks stopped on an unset variable on every home computer.
+    const at = preflight.indexOf('$Pinned = try { Get-PinnedTools }')
+    expect(at).toBeGreaterThan(-1)
+    expect(at).toBeLessThan(preflight.indexOf("Invoke-Check 'ffmpeg' {"))
+    expect(at).toBeLessThan(preflight.indexOf("Invoke-Check 'tesseract' {"))
+  })
+
   it('reads the pinned tools and the allowance ceiling from the one place each is written', () => {
     const pinned = fn(preflight, 'Get-PinnedTools')
     const pattern = (name: string) => new RegExp(/\[regex\]::Match\(\$text, '([^']+)'\)/g.exec(pinned.slice(pinned.indexOf(`$${name} = `)))![1]!)

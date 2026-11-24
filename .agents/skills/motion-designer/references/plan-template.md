@@ -78,3 +78,5 @@ Answer each for every beat before `ve lint`. A no is rewritten, never waved thro
 9. Does the frame use the safe screen, with nothing under 30 px and no small device in empty space?
 10. Is the real artifact shown as itself, every figure from a dataset with its producer?
 11. Is nothing on the refused list (`.agents/skills/motion-designer/references/adaptations.md`)?
+12. Does the beat's on-screen words and visual pass the antislop PASS/FAIL report (`.agents/skills/antislop/ADAPTER.md` first, then the skills it names), every FAIL no house rule
+    overrules fixed?

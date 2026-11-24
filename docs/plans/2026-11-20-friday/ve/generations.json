@@ -1,0 +1,215 @@
+{
+ "piece_id": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
+ "approval": {
+  "by": "Krish",
+  "on": "2026-11-19",
+  "where": "this Claude Code session, his answer to the credits question",
+  "said": "Up to 710, 1080p (Recommended)",
+  "ceiling_credits": 710,
+  "note": "the publication's Higgsfield share was spent (317 of 300); Control Center reserve_credit_spend refused over_share; spent on his yes"
+ },
+ "stills": [
+  {
+   "i": 1,
+   "beat": "b2",
+   "aspect": "9:16",
+   "model": "gpt_image_2_6 high 2k",
+   "job": "2816b183-79d5-4c7f-969c-32bb87219e74",
+   "credits": 2.75
+  },
+  {
+   "i": 2,
+   "beat": "b3",
+   "aspect": "9:16",
+   "model": "gpt_image_2_6 high 2k",
+   "job": "498a5eae-1472-496f-a717-4989b4bcfa6f",
+   "credits": 2.75
+  },
+  {
+   "i": 3,
+   "beat": "b4 money (Krish's sofa note)",
+   "aspect": "9:16",
+   "model": "gpt_image_2_6 high 2k",
+   "job": "5d128ee6-e662-4bf0-b147-95d89adca338",
+   "credits": 2.75
+  },
+  {
+   "i": 4,
+   "beat": "b4 skeletons (Krish's closet note)",
+   "aspect": "9:16",
+   "model": "gpt_image_2_6 high 2k",
+   "job": "67ad93a8-e3de-4182-808a-9c7bf72dc4d6",
+   "credits": 2.75
+  },
+  {
+   "i": 5,
+   "beat": "b8",
+   "aspect": "9:16",
+   "model": "gpt_image_2_6 high 2k",
+   "job": "75bf96ee-93fb-4dbd-9cb7-7a2f7022cee8",
+   "credits": 2.75
+  },
+  {
+   "i": 6,
+   "beat": "long-michelin",
+   "aspect": "16:9",
+   "model": "gpt_image_2_6 high 2k",
+   "job": "0274f016-145e-4087-a019-8a6b89276606",
+   "credits": 2.75
+  },
+  {
+   "i": 7,
+   "beat": "long-fortune",
+   "aspect": "16:9",
+   "model": "gpt_image_2_6 high 2k",
+   "job": "e4911c95-28fc-4742-9e48-ce5771714863",
+   "credits": 2.75
+  },
+  {
+   "i": 8,
+   "beat": "long hook money (Krish's sofa note)",
+   "aspect": "16:9",
+   "model": "gpt_image_2_6 high 2k",
+   "job": "d8ac3995-7cf5-48ff-b58a-535a92bbcf75",
+   "credits": 2.75
+  },
+  {
+   "i": 9,
+   "beat": "long hook skeletons (Krish's closet note)",
+   "aspect": "16:9",
+   "model": "gpt_image_2_6 high 2k",
+   "job": "6e23b0c3-6ec2-4b55-a79e-2947d97aeff7",
+   "credits": 2.75
+  },
+  {
+   "i": 10,
+   "beat": "long archives",
+   "aspect": "16:9",
+   "model": "gpt_image_2_6 high 2k",
+   "job": "c2c808d4-4431-41d5-85e0-7bab98c3c0b1",
+   "credits": 2.75
+  },
+  {
+   "i": 11,
+   "beat": "long billing office",
+   "aspect": "16:9",
+   "model": "gpt_image_2_6 high 2k",
+   "job": "42324e03-339f-4f9e-9645-f641ab1595ab",
+   "credits": 2.75
+  },
+  {
+   "i": 12,
+   "beat": "b14 close (Krish: 'generate it')",
+   "aspect": "9:16",
+   "model": "gpt_image_2_6 high 2k",
+   "job": "3a4a9127-f810-4de3-a133-6213d9cc9b8d",
+   "credits": 2.75
+  },
+  {
+   "i": 13,
+   "beat": "long-close (Krish: 'generate it')",
+   "aspect": "16:9",
+   "model": "gpt_image_2_6 high 2k",
+   "job": "d58bddce-7ff3-4dcf-8651-637f10f0ee15",
+   "credits": 2.75
+  }
+ ],
+ "clips": [
+  {
+   "from_still": 1,
+   "beat": "b2",
+   "aspect": "9:16",
+   "model": "seedance_2_5 omni_reference 4s 1080p, no audio",
+   "job": "7531ee4b-b098-4466-ad5e-9f179d37cea2",
+   "credits": 64
+  },
+  {
+   "from_still": 2,
+   "beat": "b3",
+   "aspect": "9:16",
+   "model": "seedance_2_5 omni_reference 4s 1080p, no audio",
+   "job": "5dabcba0-0e8b-407b-b991-4d2dd13a8da5",
+   "credits": 64
+  },
+  {
+   "from_still": 3,
+   "beat": "b4 money",
+   "aspect": "9:16",
+   "model": "seedance_2_5 omni_reference 4s 1080p, no audio",
+   "job": "0b2f8990-7656-48ab-b2aa-06c03a11a026",
+   "credits": 64
+  },
+  {
+   "from_still": 4,
+   "beat": "b4 skeletons",
+   "aspect": "9:16",
+   "model": "seedance_2_5 omni_reference 4s 1080p, no audio",
+   "job": "99452888-ab66-4e5d-9bc1-3008d51b9b32",
+   "credits": 64
+  },
+  {
+   "from_still": 5,
+   "beat": "b8",
+   "aspect": "9:16",
+   "model": "seedance_2_5 omni_reference 4s 1080p, no audio",
+   "job": "07df126a-e2dc-4f42-8d70-5c98c7c0e191",
+   "credits": 64
+  },
+  {
+   "from_still": 6,
+   "beat": "long-michelin",
+   "aspect": "16:9",
+   "model": "seedance_2_5 omni_reference 4s 1080p, no audio",
+   "job": "d326ae58-df30-4540-9a5a-84f803c4f03e",
+   "credits": 64
+  },
+  {
+   "from_still": 7,
+   "beat": "long-fortune",
+   "aspect": "16:9",
+   "model": "seedance_2_5 omni_reference 4s 1080p, no audio",
+   "job": "5b0e4ddb-63f9-48ff-aac3-0528cfc18236",
+   "credits": 64
+  },
+  {
+   "from_still": 8,
+   "beat": "long hook money",
+   "aspect": "16:9",
+   "model": "seedance_2_5 omni_reference 4s 1080p, no audio",
+   "job": "9b08ad6d-8f60-4b73-a76d-5c24c79cfe5e",
+   "credits": 64
+  },
+  {
+   "from_still": 9,
+   "beat": "long hook skeletons",
+   "aspect": "16:9",
+   "model": "seedance_2_5 omni_reference 4s 1080p, no audio",
+   "job": "367d1492-4e8e-450d-8171-fded2c54b9db",
+   "credits": 64
+  },
+  {
+   "from_still": 11,
+   "beat": "long billing office",
+   "aspect": "16:9",
+   "model": "seedance_2_5 omni_reference 4s 1080p, no audio",
+   "job": "fba86083-1582-4427-bf04-faaece70f970",
+   "credits": 64
+  },
+  {
+   "from_still": 12,
+   "beat": "b14 close",
+   "aspect": "9:16",
+   "model": "seedance_2_5 omni_reference 4s 720p, no audio",
+   "job": "67577111-e4d8-4c39-8f9b-4846ed6f4c79",
+   "credits": 28
+  }
+ ],
+ "total_credits": 703.75,
+ "note_long_archives": "no clip: the 16:9 archives still is used as a slow push plate, keeping the total under his 710 ceiling",
+ "close_said": {
+  "by": "Krish",
+  "on": "2026-11-19",
+  "said": "generate it",
+  "asked": "record the invoices screen recording, or stay on his face"
+ }
+}

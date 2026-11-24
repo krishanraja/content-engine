@@ -718,8 +718,8 @@
         },
         {
           "file": "scripts/quick-edit/quality.py",
-          "contains": "required = ('heard','sync','loudness','visuals','full_review')",
-          "how": "Exact video bytes must pass all five checks before delivery; proxy images cannot replace full review."
+          "contains": "required = ('heard','sync','loudness','visuals')",
+          "how": "Exact video bytes must pass heard, sync, loudness and visuals (the independent Critic watching and hearing these bytes) before delivery; proxy images cannot replace them. Krish's own full review gates publishing only (Ruling, Krish, 2026-11-19)."
         },
         {
           "file": "scripts/post-pack/send.py",
@@ -747,7 +747,7 @@
         },
         {
           "file": "scripts/quick-edit/quality.py",
-          "contains": "required = ('heard','sync','loudness','visuals','full_review')",
+          "contains": "required = ('heard','sync','loudness','visuals')",
           "how": "Delivery binds sync acceptance to exact video bytes."
         }
       ]
@@ -1976,12 +1976,12 @@
       "symptom": "Every render was on a different engine; nothing approved earlier still held.",
       "cause": "Nothing recorded which engine a storyboard was signed on, so nothing could notice it moving.",
       "status": "guarded",
-      "surface": "Freeze the engine during a piece: ve expect records the engine at storyboard; ve proof and ve render refuse a whole cut drawn on a changed one unless Krish approves the change.",
+      "surface": "Freeze the engine and the rules during a piece: ve expect records both at Sign storyboard; ve proof and ve render run on the pinned commit by themselves, before lint, whenever the engine or a rule file moved; a fix follows main only under his standing engine-follows-main yes or a renderer-only change that leaves the golden frames untouched and passes the house golden test, and nothing asks him to approve an engine hash (Ruling, Krish, 2026-11-19).",
       "guards": [
         {
           "file": "scripts/velib/guards.py",
           "contains": "def engine_problems(",
-          "how": "sha256 of the renderer source, compile.py and the ve brand, device and font configs, recorded at ve expect; a mismatch refuses ve proof and ve render from 9 Nov unless an exception approval binds the new hash",
+          "how": "sha256 of the renderer source, compile.py and the ve brand, device and font configs, recorded at ve expect with its commit; on a mismatch ve proof and ve render run on that commit (engine_route, pin_checkout), and a whole cut renders only on the engine of its approved proof (render_engine_problems)",
           "test": "python3 tests/ve_thursday_guards_test.py"
         }
       ],
@@ -2002,7 +2002,7 @@
           "short_video",
           "long_video"
         ],
-        "line": "Freeze the engine for the piece: ve expect records it, and any engine change before the cut renders needs his exception approval on the new hash."
+        "line": "Freeze the engine and the rules for the piece at Sign storyboard: proof and render run on the pinned commit by themselves; never ask him to approve an engine hash."
       }
     },
     {
@@ -3456,19 +3456,19 @@
           "file": "scripts/velib/qc_frames.py",
           "contains": "def rows(",
           "how": "ve qc rows for the Tue 17 and Wed 18 faults on any aspect: one carrier, figures, ghost cuts and frames, flat-black backdrops, the render knowing the logo rule, off.day, the title card, restarts, first-seconds motion, head in frame and bottom right",
-          "test": "python3 -m pytest tests/ve_frame_checks_test.py"
+          "test": "python3 tests/ve_frame_checks_test.py"
         },
         {
           "file": "config/ve/frame-checks.json",
           "contains": "HOW TO ADD A ROW",
           "how": "every threshold and the words it enforces, and the four steps to add a row for the next fault",
-          "test": "python3 -m pytest tests/ve_frame_checks_test.py"
+          "test": "python3 tests/ve_frame_checks_test.py"
         },
         {
           "file": "scripts/velib/guards.py",
           "contains": "qc_frames.lints(spec)",
           "how": "ve lint refuses a title_moment with no card, a kept restart with no reason, and off.day in the spec's words, for a piece published from binds_from",
-          "test": "python3 -m pytest tests/ve_frame_checks_test.py"
+          "test": "python3 tests/ve_frame_checks_test.py"
         }
       ]
     },
@@ -3498,25 +3498,25 @@
           "file": "scripts/velib/plainframes.py",
           "contains": "def plain_dark_problems(",
           "how": "a run of rows taller than 120 px, near-black with no detail, fails the proof and the render, naming beat, frame and band",
-          "test": "python3 -m pytest -q tests/ve_plain_frames_test.py -k PlainDark"
+          "test": "python3 tests/ve_plain_frames_test.py -k PlainDark"
         },
         {
           "file": "scripts/velib/plainframes.py",
           "contains": "def caption_over_content_problems(",
           "how": "a caption's drawn box (the art-directed stack, as the renderer measures it) over bright content fails, naming page and frame; a scrim clears it",
-          "test": "python3 -m pytest -q tests/ve_plain_frames_test.py -k CaptionOverContent"
+          "test": "python3 tests/ve_plain_frames_test.py -k CaptionOverContent"
         },
         {
           "file": "scripts/velib/proof.py",
           "contains": "def sendable_problems(",
           "how": "a proof is not sendable while its frames fail or a changed engine or asset has not been compared with the approved proof; ve render waits too",
-          "test": "python3 -m pytest -q tests/ve_plain_frames_test.py -k CompareWithApproved"
+          "test": "python3 tests/ve_plain_frames_test.py -k CompareWithApproved"
         },
         {
           "file": "scripts/ve.py",
           "contains": "NOT SENDABLE to Krish",
           "how": "ve proof exits 1 and prints why; ve render records nothing for a whole cut whose frames fail",
-          "test": "python3 -m pytest -q tests/ve_plain_frames_test.py"
+          "test": "python3 tests/ve_plain_frames_test.py"
         },
         {
           "file": "config/ve/plain-frames.json",
@@ -3557,7 +3557,7 @@
           "file": "config/copy-lint.json",
           "contains": "\"id\": \"off_day_tag\"",
           "how": "copy lint pattern off_day_tag on every public surface (channel copy, carousel text, video on-screen words, titles, article metadata): every spelling as a tag is refused, ordinary sentences pass",
-          "test": "python3 -m pytest -q tests/copy_lint_test.py"
+          "test": "python3 tests/copy_lint_test.py"
         },
         {
           "file": "apps/renderer/src/engine/chrome/offDay.ts",
@@ -4031,6 +4031,700 @@
           "contains": "test_a_passing_qc_row_answers_its_row_and_the_rest_need_attestation",
           "how": "a row ve qc does not answer is refused until the reviewer attests it in a line citing a frame or time",
           "test": "python3 tests/ve_show_gate_test.py"
+        }
+      ]
+    },
+    {
+      "id": "qc-rows-failed-a-fine-cut",
+      "on": "2026-11-19",
+      "krish": "\"fix the ve qc rows that fail cuts which are actually fine, so a cut in the art-directed caption style can pass the library's filing gate\" (19 Nov 2026, of the Tue 17 / Thu 19 habits voiceover short, piece 701a2c55; he ruled that one cut filed straight to Drive)",
+      "what": "Every gating row of the habits short passed and words.lost was clean, but captions.ocr and captions.render scored 0 to 0.75 on most pages, captions.clock failed 17 of 67 pages against an unmeasured 2-frame tolerance, and composition read photo texture as words, so measured_pass was false, ve status said NOT READY and send.py refused the video.",
+      "symptom": "A fine art-directed cut is NOT READY and the library refuses it.",
+      "cause": "The art-directed stack hangs above the house caption box by the cut's tallest page (cutHeight), so the read box cut its upper rows off; the read took the middle of the window and the strict judge counted the key word's faint echo and the previous page's ghost as stray words; the clock tolerance is a placeholder; tesseract read generated pictures' texture as words.",
+      "status": "guarded",
+      "guard_level": "gate",
+      "guards": [
+        {
+          "file": "scripts/velib/qc_captions.py",
+          "contains": "def art_view(",
+          "how": "an art page is read in its measured stack, once settled, and judged by its words in order; only the echo and ghost the renderer draws there are forgiven, and the 0.98 bar is unchanged",
+          "test": "python3 tests/ve_qc_false_fails_test.py"
+        },
+        {
+          "file": "scripts/cutgates/captions.py",
+          "contains": "def _in_order(",
+          "how": "captions.render reads an art page from its settle frame and judges it with the same in-order judge"
+        },
+        {
+          "file": "scripts/velib/qc_gates.py",
+          "contains": "keep the row advisory until it is measured",
+          "how": "captions.clock is shown, not counted, while config/gates.json says its tolerance is a placeholder"
+        },
+        {
+          "file": "config/ve/qc-ocr.json",
+          "contains": "\"photo_word\"",
+          "how": "a word OCR finds on a generated picture counts only at conf 90 or more and four letters or more; screen recordings, footage and type the engine draws keep the house rule"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "all"
+        ],
+        "line": "When a qc row fails a cut that looks right, measure what a viewer sees (where the renderer draws it, when it has settled, what else it draws there); never lower a bar to pass."
+      }
+    },
+    {
+      "id": "build-or-buy-components-carried-faults",
+      "on": "2026-11-19",
+      "status": "guarded",
+      "guard_level": "lint_refuse",
+      "surface": "ve lint (every ve piece), title_check (thumbnail and cover words)",
+      "krish": "Krish, 19 Nov 2026, in this session, of the Build or buy piece's failure report: \"here are the specific failures encountered in the Build or Buy piece that we need to surgically ensure all the components that went in to building that specific piece address next time they are used\"",
+      "what": "The Build or buy piece (Wed 18 Nov 2026, piece db9f9f6a) shipped proofs with: a vertical long take on 16:9 layouts that cut his head; logos invisible (a dark mark on the dark stage) or out of proportion; the site address wider than the short's caption line, then split so .ai dropped; a tall WINDOW under the app buttons, added to make up the layout count; full-page headline screenshots too small to read; about 85 s of talking head and pulsing logos; thumbnail words (\"BUILD IT? CRAZY.\") that passed the title rule.",
+      "symptom": "Each fault reached him in a proof; he found them, not a check.",
+      "cause": "No component carried these as rules: nothing read the take's orientation, logo contrast, a caption word's width before compile, a window against the channel zones, a bare talking-head stretch, or an all-capitals title's names against the piece.",
+      "guards": [
+        {
+          "file": "scripts/velib/piece_guards.py",
+          "contains": "def take_orientation(",
+          "how": "ve lint piece.take_orientation: a 16:9 cut's take names its frame, and a vertical take may not use a horizontal take layout",
+          "test": "python3 tests/ve_piece_guards_test.py"
+        },
+        {
+          "file": "scripts/velib/piece_guards.py",
+          "contains": "def logos(",
+          "how": "ve lint piece.logos: two or more logos, or a dark mark, sit on equal tiles",
+          "test": "python3 tests/ve_piece_guards_test.py"
+        },
+        {
+          "file": "scripts/velib/piece_guards.py",
+          "contains": "def tall_windows(",
+          "how": "ve lint piece.tall_windows: the tall WINDOW box (held to the renderer) never overlaps a channel's buttons or caption",
+          "test": "python3 tests/ve_piece_guards_test.py"
+        },
+        {
+          "file": "scripts/velib/piece_guards.py",
+          "contains": "def caption_words(",
+          "how": "ve lint piece.caption_words: every word fits one caption line, measured by the compile's own measure, and the site address is never split",
+          "test": "python3 tests/ve_piece_guards_test.py"
+        },
+        {
+          "file": "scripts/velib/piece_guards.py",
+          "contains": "def talking_head(",
+          "how": "ve lint piece.talking_head: no bare talking-head beat over 12 s and no more than 20% of a cut bare or pulsing logos",
+          "test": "python3 tests/ve_piece_guards_test.py"
+        },
+        {
+          "file": "scripts/post-pack/title_check.py",
+          "contains": "HYPE = re.compile(",
+          "how": "a shouted verdict (crazy, insane...) fails, and an all-capitals title counts only the piece's own names",
+          "test": "python3 tests/ve_piece_guards_test.py"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "all"
+        ],
+        "line": "Before a storyboard: the take's orientation matches the cut's layouts, logos sit on tiles, every caption word fits one line, no window under the app buttons, no long bare talking head, and thumbnail words pass title_check with the piece as --source."
+      }
+    },
+    {
+      "id": "saturday-good-news-not-good-news",
+      "on": "2026-11-19",
+      "status": "guarded",
+      "guard_level": "gate",
+      "surface": "ideas board, Saturday",
+      "krish": "\"We also need to significantly improve the good news suggestions. These are still all just one idea, mostly, and they're not good news carousels. Some of them are memes that are sneaking through, and the only actual uplifting carousel is about AI in hospital again, which is all we post about. We should find good news that's not medical stuff.\" (19 Nov 2026, Control Centre ideas board, Sat 28) Then, answering content-engine#923 the same day: \"Sat should just be good news carousels - 5 great things AI is doing for people (ideally things that make people smarter or better or happier or more successful).\" and \"Can mix if no1 is implemented properly.\"",
+      "what": "Sat 28 Nov's ideas were one hospital good-news carousel, a plain carousel, an explainer and two memes.",
+      "symptom": "Saturday offered memes and one-story carousels, and its only good news was medical again.",
+      "cause": "The Saturday rule bound from the 30 Nov board and allowed explainer and supporting carousels; nothing held the good news's topic to anything but five stories meeting, and health dominates search results, so the topic kept landing on medicine. The cap on medical stories waited for his yes.",
+      "guards": [
+        {
+          "file": "scripts/post-pack/idea_checks.py",
+          "contains": "def goodnews_findings(",
+          "how": "the Sunday run's gate (code goodnews): Saturday is good-news carousels only, at least three, each five great things AI is doing for people, each story saying who it helps and how (smarter, better, happier, more successful); a carousel may mix topics; no two options led by one theme or carrying one story, no lead of the four Saturdays before, no medicine-led carousel after two medical stories in a month, at most one medical story in any other carousel",
+          "test": "python3 tests/good_news_test.py"
+        },
+        {
+          "file": "config/good-news.json",
+          "contains": "\"medical_recent_max\"",
+          "how": "every topic, keyword and limit as rows"
+        },
+        {
+          "file": "apps/control-plane/api/board/_goodNews.ts",
+          "contains": "export function saturdayHold(",
+          "how": "the ideas board holds a Saturday option that is not a good-news carousel, with the reason",
+          "test": "npx vitest run tests/control-plane/board-ideas-system.test.ts"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "all"
+        ],
+        "line": "Saturday: only good-news carousels, three or more, each five great things AI is doing for people (who it helps and how), mixed topics allowed, never medicine-led after a month of medical stories."
+      }
+    },
+    {
+      "id": "ideas-board-repeats-work-and-drops-templates",
+      "on": "2026-11-19",
+      "status": "guarded",
+      "guard_level": "lint_refuse",
+      "surface": "ideas board, every week",
+      "krish": "\"every week's ideas board should include the meme templates feature as well, with no suggestions approved duplicated. right now I seem to get pieces I am already working on show up as suggestions for following weeks (that is happening on all days, not just memes)\" (19 Nov 2026, Control Centre ideas board)",
+      "what": "The week of 23 Nov's ideas board had no meme templates tab (only 16 Nov's had one), and pieces already approved and in production showed again as ideas on later weeks.",
+      "symptom": "A later week's ideas board offers what he is already making, and the meme templates come and go by week.",
+      "cause": "The repeat check skipped an idea that shared a key with what an earlier board put out (it treated it as itself), read pieces only from before the week and off-day items only up to the week's end, so work dated later was invisible; the templates lane bound from the 30 Nov board and nothing carried last week's open templates. Guarded in the board's view (it never shows such an idea); the Sunday run's own repeat gate (idea_checks repeat_findings) reads only the last three boards' posts, so work dated on a later week is caught by the board, not the run.",
+      "guards": [
+        {
+          "file": "apps/control-plane/api/board/_weekModel.ts",
+          "contains": "Already in work:",
+          "how": "an idea that is a piece or post approved or in work, on an earlier board or dated later, leaves the board, said in its repeats line",
+          "test": "npx vitest run tests/control-plane/board-ideas-system.test.ts"
+        },
+        {
+          "file": "apps/control-plane/api/board/_carryTemplates.ts",
+          "contains": "export function carryTemplates(",
+          "how": "last week's unanswered meme templates are carried onto this week's Tuesday and Thursday",
+          "test": "npx vitest run tests/control-plane/board-ideas-system.test.ts"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "all"
+        ],
+        "line": "Never offer an idea that is already approved or in work on any week; every week's ideas board carries the meme templates."
+      }
+    },
+    {
+      "id": "captions-unhaloed-under-his-chin",
+      "on": "2026-11-19",
+      "krish": "\"Halo + frame me higher\" (19 Nov 2026, Fri 20 production session, asked about the face beats of the AI-auditor short's proof: art-directed captions unhaloed on his light wall and starting 12 px under his chin)",
+      "what": "The Fri 20 Nov short's proof (piece c00cd4e0) drew art-directed captions white on his light wall with no halo, since the take halo was given only to rack-focus, and his take framed his chin at y 1066 against a caption band starting at 1095, which cannot sit lower because Instagram's caption zone begins at y 1320; ve qc failed captions.off_face.",
+      "symptom": "On a face beat of a tall cut the captions are hard to read on his wall and sit tight under his chin.",
+      "cause": "The halo was keyed to one caption theme, not to the picture behind the words; the full-frame take was drawn as shot, so a low-framed take put his chin on the caption band.",
+      "status": "guarded",
+      "guard_level": "gate",
+      "guards": [
+        {
+          "file": "apps/renderer/src/engine/BrandFrame.tsx",
+          "contains": "export function overTake(",
+          "how": "every caption style drawn over his take wears the take halo",
+          "test": "npx vitest run apps/renderer/src/engine/faceLift.test.ts"
+        },
+        {
+          "file": "apps/renderer/src/engine/FormatMaster.tsx",
+          "contains": "export const FACE_LIFT = 1.1",
+          "how": "his full-frame take on a tall cut is framed 1.1x from its bottom edge (face about 85 px higher), easing out into the window",
+          "test": "npx vitest run apps/renderer/src/engine/faceLift.test.ts"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "short_video"
+        ],
+        "line": "On a tall cut his face beats keep his chin clear of the caption band and every caption over his take wears the halo; ve qc captions.off_face measures it."
+      }
+    },
+    {
+      "id": "article-figure-typed-mark-and-word-cards",
+      "on": "2026-11-19",
+      "krish": "these dont look visually good enough and they have the wrong brand mark. Are these to go inside, in line, in the Substack article? If so, we don't even need the brand mark. (19 Nov 2026, the Fri 20 production session, of the piece's Substack figures)",
+      "what": "The Fri 20 article figures (piece c00cd4e0) reached Krish with a typed 'makeyourmindup' mark top right, as cards of words that restated the article, and after the redraw still said things the article never did: 'September 2024', 'BILLED TWICE', a timeline start date and a subtitle that did not fit one of its cases (reader test 2).",
+      "symptom": "An inline Substack figure carries a typed wordmark the post does not need, is a card of words instead of a picture, or states a number, date or claim the article does not.",
+      "cause": "scripts/pages/figure.css offered a .mark class and render_figure.mjs treated a mark as part of every figure, so each new figure built from the last piece's HTML carried one; the brand palette's check runs only on video cuts; nothing asked for a picture form; and the figure's words were checked against the article only by the reader test, after the figures were drawn and sent.",
+      "guards": [
+        {
+          "file": "scripts/pages/figure_check.py",
+          "contains": "def mark_problems(",
+          "how": "an inline figure with a mark element, an image named for a mark, or the typed words is refused; a share card's mark must be the palette's own image by its sha256",
+          "test": "python3 tests/article_figure_test.py"
+        },
+        {
+          "file": "scripts/pages/figure_check.py",
+          "contains": "def form_problems(",
+          "how": "a figure with no <meta name=\"figure-form\"> (source-page, scale, timeline, ledger, map, comparison) or more than max_running_words of running text outside its labels is refused",
+          "test": "python3 tests/article_figure_test.py"
+        },
+        {
+          "file": "scripts/pages/figure_check.py",
+          "contains": "def article_problems(",
+          "how": "every number, date, quoted phrase and mid-sentence name on the figure must be in the article, and a stamp's words must stand together there; the Fri 20 figures are the failing fixture",
+          "test": "python3 tests/article_figure_test.py"
+        },
+        {
+          "file": "scripts/pages/render_figure.mjs",
+          "contains": "figure_check.py",
+          "how": "the renderer runs the three checks before it draws anything and draws no refused figure",
+          "test": "python3 tests/article_figure_test.py"
+        },
+        {
+          "file": "config/article-figures.json",
+          "contains": "\"max_running_words\"",
+          "how": "the forms, the word limit, the mark names and the article-match rules, one place"
+        }
+      ],
+      "guard_level": "lint_refuse",
+      "status": "guarded",
+      "surface": "article figures (Substack)",
+      "watch": {
+        "formats": [
+          "article"
+        ],
+        "line": "An inline article figure carries no mark, names one picture form, and says nothing the article doesn't: render_figure.mjs refuses it otherwise."
+      }
+    },
+    {
+      "id": "title-card-split-logo-and-squeezed",
+      "on": "2026-11-19",
+      "krish": "give me a title card failure report, as I expect the title card to enter as I am talking, and the title of the piece is woven in to my script at the start. This is a good example of what actually was a good build for the title card.",
+      "what": "Wed 18 (\"Build or buy your tools in an AI world?\"): the timing worked, but the title was squeezed into his 608 px panel on the wide cut and an 800 x 420 box on the short (about 70 px type), and the wordmark was a separate layer that faded in 6 frames after his last word and out on its own, looking like a stray bug bottom right. Nothing was centred or composed as one picture. The good build, Wed 11's \"AI MUSIC or HUMAN MUSIC?\" (one full frame, two angled bands slamming in from opposite sides, a mint connector word, motion behind and a light sweep, the logo centred underneath as part of the unit), lived in a one-piece script and was lost when per-piece scripts were banned. No check looked at the title, and neither proof reached it (the title came at 0:34 and 0:21), yet his condition \"as long as the title card frame in each is strong\" was called met without the title frame being looked at.",
+      "status": "guarded",
+      "mode": "title-not-a-hero",
+      "guard_level": "gate",
+      "causes": [
+        {
+          "cause": "handoff_loss",
+          "evidence": "docs/plans/2026-11-11-wednesday/short-composite/brand_frames.py title_full held the craft; the engine's title component (apps/renderer/src/engine/title/TitleMoment.tsx) was built without it."
+        },
+        {
+          "cause": "check_missing",
+          "evidence": "ve qc measured captions, evidence cards and blank frames; no row measured title type size, centring or whether the wordmark sat inside the title, and no proof had to include the title frame."
+        },
+        {
+          "cause": "standard_missing",
+          "evidence": "No failure, floor rule or ruling said the title is one full-frame lockup with the logo inside it."
+        }
+      ],
+      "surface": "the episode title moment, every ve cut",
+      "guards": [
+        {
+          "file": "apps/renderer/src/engine/title/TitleMoment.tsx",
+          "contains": "export function lockupGeometry",
+          "how": "the title draws one full-frame lockup with the stacked wordmark inside it and on the lockup's own opacity",
+          "test": "npx vitest run apps/renderer/src/engine/title"
+        },
+        {
+          "file": "scripts/velib/qc_frames.py",
+          "contains": "def title_lockup_frame_problems",
+          "how": "ve qc reads the settled title frame: type size, centring, full width, the wordmark inside the lockup and only while it holds",
+          "test": "python3 tests/ve_frame_checks_test.py"
+        },
+        {
+          "file": "tests/ve_frame_checks_test.py",
+          "contains": "class TitleLockup",
+          "how": "each refusal fails on a bad frame and the good lockup passes"
+        },
+        {
+          "file": "scripts/velib/proof.py",
+          "contains": "def record_title_looked",
+          "how": "every proof renders the title frame, is not sendable until someone has looked at it, and an approval naming the title is met only once that look is recorded",
+          "test": "python3 tests/ve_proof_test.py"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "long_video",
+          "short_video"
+        ],
+        "line": "The title is one full-frame lockup, the wordmark inside it; every proof shows it."
+      }
+    },
+    {
+      "id": "title-wordmark-not-aligned-with-title",
+      "on": "2026-11-19",
+      "krish": "As I think I've told you 400,000 times, the word mark needs to be aligned with the title. (the Tue 17 production session, piece b019dbf8, \"Where does AI get built when towns say no?\")",
+      "what": "Tue 17's title frame reached Krish with the wordmark out of line with the title: it did not sit centred under the title as one unit, so the title and the mark read as two separate things. He had asked for this before, and nothing recorded it as a failure, so the next cut could repeat it.",
+      "status": "guarded",
+      "mode": "title-not-a-hero",
+      "guard_level": "gate",
+      "causes": [
+        {
+          "cause": "standard_missing",
+          "evidence": "No failure entry named the wordmark's alignment with the title, so his repeated correction lived only in chat."
+        },
+        {
+          "cause": "check_missing",
+          "evidence": "Before the title lockup check, ve qc never read where the wordmark sat against the title on the settled title frame."
+        }
+      ],
+      "surface": "the episode title moment, every ve cut",
+      "related": [
+        "title-card-split-logo-and-squeezed"
+      ],
+      "guards": [
+        {
+          "file": "scripts/velib/qc_frames.py",
+          "contains": "centred under the title",
+          "how": "ve qc reads the settled title frame and refuses a wordmark that is not inside the title's own columns and centred under it",
+          "test": "python3 tests/ve_frame_checks_test.py"
+        },
+        {
+          "file": "tests/ve_frame_checks_test.py",
+          "contains": "def test_a_wordmark_outside_the_lockup_fails",
+          "how": "a wordmark read away from the title fails; the good lockup passes"
+        }
+      ],
+      "watch": {
+        "formats": [
+          "long_video",
+          "short_video"
+        ],
+        "line": "The wordmark sits centred under the title, inside the one lockup."
+      }
+    },
+    {
+      "id": "checks-refused-the-engines-own-output",
+      "on": "2026-11-19",
+      "krish": "We need to eliminate the 4 million approvals like this that I'm required to make. It basically means I have to sit there for 7 hours waiting for the next stupid fucking approval to give and the engine refuses to move on even though it's just going to lead to more errors anyway.",
+      "what": "On Fri 20 and Tue 17 the engine's own checks refused what the engine itself had drawn: the plain-frame guard refused the brand palette's own close card, a frame grab at the clip's last frame read nothing and held the show gate as not_run, captions.word_default refused face-with-proof cuts whose picked caption style compile draws as phrase pages, and the pre-critic verdict, bound to the whole spec, went stale on every audio target, crop or counter edit (61 ve critic --pre runs on one piece). Each refusal stopped production and waited on a re-run or on Krish.",
+      "symptom": "Production stalled for hours on checks that disagreed with what compile draws, and every stall waited on a new run or a press.",
+      "cause": "Each check was written apart from the code that draws the cut, so nothing proved it passed the engine's own good output.",
+      "status": "guarded",
+      "mode": "check-disagrees-with-compile",
+      "guard_level": "lint_refuse",
+      "surface": "ve qc, ve lint and ve critic --pre on every ve cut",
+      "guards": [
+        {
+          "file": "scripts/velib/plainframes.py",
+          "contains": "close_from = (props.get('ending') or {}).get('fromFrame')",
+          "how": "no frame at or after the palette close (props.ending.fromFrame) is judged a plain dark band",
+          "test": "python3 tests/ve_plain_frames_test.py"
+        },
+        {
+          "file": "scripts/velib/qc_faces.py",
+          "contains": "the clip's own last frame is read",
+          "how": "a seek at the clip's last frame reads that frame; a frame well past the end is an error"
+        },
+        {
+          "file": "scripts/velib/lint.py",
+          "contains": "face-with-proof with no caption style picked",
+          "how": "captions.word_default asks for word captions only where no caption style is picked, as compile draws",
+          "test": "python3 tests/ve_lint_test.py"
+        },
+        {
+          "file": "scripts/velib/precritic.py",
+          "contains": "'figures': figures(spec)",
+          "how": "the pre-critic verdict is bound to the idea, each cut's structure and the figures it judged, never the whole spec",
+          "test": "python3 tests/ve_idea_numbers_guards_test.py"
+        }
+      ]
+    },
+    {
+      "id": "cut-zero-out-of-ten",
+      "on": "2026-11-19",
+      "krish": "they are so poor that I can't even bring myself to publish them. I refuse to. They're just the worst. Visually, motion, post-production, and everything is a zero out of ten. I'm going to need you to make sure that this can never happen again.",
+      "what": "The week's ve cuts reached him well below his own references. The rejected long measured, with ve pace, 2.21 events a second against his references' 2.87 to 4.6 and 5% of the frame active against 10% to 100%: BELOW EVERY REFERENCE on both. The picture was his vertical take in a pillar on the right, about two thirds of the frame a blurred dark backdrop with nothing on it, one-word grey captions in a corner and two flat mint stat bars.",
+      "symptom": "A cut slower and emptier than every cut he keeps was filed and shown to him.",
+      "cause": "ve pace was written to flag and never refuse (THE_BAR), so nothing held a cut below every reference; and nothing asked that the panel beside his take on a staged cut carry anything.",
+      "status": "guarded",
+      "mode": "cut-below-his-references",
+      "guard_level": "gate",
+      "surface": "ve status, ve file and ve lint on every ve cut",
+      "watch": {
+        "formats": [
+          "long_video",
+          "short_video"
+        ],
+        "line": "No cut with any ve pace measure below every reference he keeps, and no staged panel beside his take empty or only a backdrop for more than 1.5 s; a held cut is rebuilt once on a proven recipe, never patched."
+      },
+      "guards": [
+        {
+          "file": "scripts/velib/packet.py",
+          "contains": "floor.held_problems(video, digest",
+          "how": "readiness holds a cut with any ve pace measure below every reference, or a blind judge score below 8, so ve status never says READY and ve file refuses it",
+          "test": "python3 tests/ve_quality_floor_test.py"
+        },
+        {
+          "file": "scripts/ve.py",
+          "contains": "print(floor.held_line(cut, state['floor']))",
+          "how": "ve status prints one held line for Krish, never a list of patches",
+          "test": "python3 tests/ve_quality_floor_test.py"
+        },
+        {
+          "file": "scripts/velib/floor.py",
+          "contains": "def dead_panel_lints(",
+          "how": "ve lint refuses a staged cut whose panel beside his take holds nothing or only a backdrop for more than 1.5 s, for pieces frozen at ve expect from 23 Nov 2026 (a new rule binds from the next piece)",
+          "test": "python3 tests/ve_quality_floor_test.py"
+        },
+        {
+          "file": "scripts/velib/judge.py",
+          "contains": "def problems(",
+          "how": "the blind judge: the cut scored out of 10 beside his references without being told which clip is which, bound to the cut's sha256; below 8 is held, and from 23 Nov 2026 no score is held",
+          "test": "python3 tests/ve_quality_floor_test.py"
+        }
+      ]
+    },
+    {
+      "id": "card-drawn-over-his-face",
+      "on": "2026-11-19",
+      "krish": "the card generates over my face, the captions are awful, and the generated animations are tacky and not art directed well within the space at all",
+      "what": "On the Wed short a card was drawn over his face and the captions sat badly; the face check ran only after render and failed open where no detector ran.",
+      "symptom": "Graphics and captions over his face reached him.",
+      "cause": "Nothing before render knew where his face was: ve faces kept no face box, and compile placed devices and captions without one.",
+      "status": "guarded",
+      "mode": "graphic-over-face",
+      "guard_level": "lint_refuse",
+      "surface": "ve faces, ve compile, ve lint and ve expect on every ve cut that shows his take",
+      "watch": {
+        "formats": [
+          "long_video",
+          "short_video"
+        ],
+        "line": "Run ve faces on every take before compile: compile writes the face keep-out and refuses a caption, staged device region or backdrop panel on it."
+      },
+      "guards": [
+        {
+          "file": "scripts/velib/faceflags.py",
+          "contains": "def landmark_box(",
+          "how": "ve faces keeps the face's box at every sample",
+          "test": "python3 tests/ve_quality_floor_test.py"
+        },
+        {
+          "file": "scripts/velib/compile.py",
+          "contains": "keepout.apply(props, spec, cut_id",
+          "how": "compile writes faceKeepOut per beat and refuses a caption, device region or panel that meets it",
+          "test": "python3 tests/ve_quality_floor_test.py"
+        },
+        {
+          "file": "scripts/velib/keepout.py",
+          "contains": "def missing_lints(",
+          "how": "a take with no face track is named by ve expect and refused by ve lint from 23 Nov 2026",
+          "test": "python3 tests/ve_quality_floor_test.py"
+        }
+      ]
+    },
+    {
+      "id": "home-copies-stale-after-history-rewrite",
+      "on": "2026-11-20",
+      "krish": "We need to ensure this can never happen again in the future.",
+      "what": "After main's history was force-rewritten on GitHub (18 to 20 Nov, the history scrub), every machine-owned copy on both home computers (recordings-source, library-source on LORIMER and SURFACE) was ahead of and behind origin/main; git pull --ff-only failed on every pass for more than 24 hours (145+ failures) and the lanes kept running old code. Krish realigned each copy by hand.",
+      "symptom": "The home lanes ran stale code for more than a day, and the only sign was a problem code in the lane report that nobody acted on.",
+      "cause": "The home scripts only fast-forwarded: a rewrite of main left nothing that could heal a copy, and a pull problem read like any other however long it lasted.",
+      "status": "guarded",
+      "mode": "stale-home-copy",
+      "guard_level": "gate",
+      "surface": "scripts/recordings-upload.ps1, scripts/library-sync.ps1 and scripts/install-recordings-upload.ps1 on both home computers; the recordings_drive_inbox run; scripts/checkout_tidy.mjs on a person's copy",
+      "guards": [
+        {
+          "file": "scripts/home-copy.ps1",
+          "contains": "function Update-HomeCopy(",
+          "how": "one shared pull for the machine-owned copies: when the fast-forward fails it fetches, keeps HEAD on backup/auto-<stamp>, checks out main and resets to origin/main, only with no tracked changes and no operation in progress, and never for runner-source or a person's copy",
+          "test": "npx vitest run tests/home-copy.test.ts"
+        },
+        {
+          "file": "scripts/recordings-upload.ps1",
+          "contains": "Set-PullProblem 'engine_pull_failed' (-not $copy.ok)",
+          "how": "the recordings lane pulls its own copy and library-source only through Update-HomeCopy, and reports a pull problem only when the heal failed too",
+          "test": "npx vitest run tests/home-copy.test.ts tests/lane-pull-problems.test.ts tests/recordings-upload.test.ts"
+        },
+        {
+          "file": "scripts/library-sync.ps1",
+          "contains": "Set-PullProblem 'library_source_pull_failed' (-not $copy.ok)",
+          "how": "the library sync pulls its own copy only through Update-HomeCopy",
+          "test": "npx vitest run tests/home-copy.test.ts tests/library-sync.test.ts"
+        },
+        {
+          "file": "apps/control-plane/api/library/_lanes.ts",
+          "contains": "export function staleCopies(",
+          "how": "a pull problem held for more than two hours leads the recordings_drive_inbox failure with the machine, the hours and the fix, and is counted as stale_copies in the run ledger",
+          "test": "npx vitest run tests/lane-pull-problems.test.ts tests/control-plane/recordings-drive-inbox.test.ts"
+        },
+        {
+          "file": "scripts/checkout_tidy.mjs",
+          "contains": "function rewrittenOrigin(",
+          "how": "a person's copy is never reset: checkout_tidy names a rewrite of origin/main (by patch-id, or over 200 local-only commits) and prints the three commands that back up the old main and realign it",
+          "test": "npx vitest run tests/checkout-tidy.test.ts"
+        }
+      ]
+    },
+    {
+      "id": "layout-thrash-cards-and-cutaways",
+      "on": "2026-11-20",
+      "krish": "how we integrate title cards and real-world images and motion animation is the issue",
+      "what": "The rejected Tue 17 short switched layout 14 times (9.9 a minute) with four 1 s runs without his face and full-frame photos in his place; Wed 18's long cut to 11 generated full-frame stills (100 s) and shrank real headlines to 0.13 to 0.27 of the frame on blur, with a 6 s title card detached from his line. Every good cut keeps his face in one place for the whole body and puts real images and motion inside one region, filling it.",
+      "symptom": "Cuts that thrashed between layouts, cut his face away for a second at a time, and showed evidence too small to read.",
+      "cause": "motion.layout_variety demanded 3 layout types a minute in 9:16 (4 in voice-led-pictures), a graphics-only beat became a full-frame takeover by default, and nothing checked staging, face runs, evidence size or repeats.",
+      "status": "guarded",
+      "mode": "layout-thrash",
+      "guard_level": "lint_refuse",
+      "surface": "ve lint (grammar.*) and ve shots on every ve piece frozen from 2026-11-23; the renderer's stagings",
+      "guards": [
+        {
+          "file": "scripts/velib/grammar.py",
+          "contains": "def staging_lints(",
+          "how": "grammar.staging: one staging for a cut's body (band, stage or anchor), every beat's shot from it, the transition matrix",
+          "test": "python3 tests/ve_shot_grammar_test.py"
+        },
+        {
+          "file": "scripts/velib/grammar.py",
+          "contains": "def face_run_lints(",
+          "how": "grammar.face_runs: face share 0.90 (0.45 with plates), runs of at least 4 s, at most 4 switches a minute",
+          "test": "python3 tests/ve_shot_grammar_test.py"
+        },
+        {
+          "file": "scripts/velib/grammar.py",
+          "contains": "def evidence_size_lints(",
+          "how": "grammar.evidence_size and grammar.region: a real image fills its region, words 40 px, the panel never empty past 0.5 s"
+        },
+        {
+          "file": "scripts/velib/lint.py",
+          "contains": "No layout-variety rule: it forced switching",
+          "how": "the variety rule is retired, so nothing demands a layout change"
+        },
+        {
+          "file": "scripts/velib/shots.py",
+          "contains": "def plan_cut(",
+          "how": "ve shots writes every beat's shot type from the cut's one staging and the shot table on the storyboard he signs"
+        }
+      ]
+    },
+    {
+      "id": "generated-imagery-in-cut",
+      "on": "2026-11-20",
+      "krish": "how we integrate title cards and real-world images and motion animation is the issue; then, correcting the same day: \"we actually do use AI to generate a lot of striking imagery that comes in and out of our pieces ... The AI music video is a really good example of world-class treatment of video footage and social media videos being integrated really nicely alongside generated animations.\"",
+      "what": "Wed 18's long carried 11 generated full-frame stills, 100 s (33%) of the cut, none carrying a fact; Tue 17 showed suspected generated stand-ins for real photos (a plaque, a town sign).",
+      "symptom": "Generated pictures stood in for real evidence (a plaque, a town sign) and filled the frame in his place.",
+      "cause": "Nothing asked what a generated picture stands for, and nothing kept it inside the staging. The first fix refused every generated picture; Krish corrected it: a generated metaphor is allowed, a stand-in for a real thing is not.",
+      "status": "guarded",
+      "mode": "generated-imagery",
+      "guard_level": "lint_refuse",
+      "surface": "ve lint and ve brief on every ve piece frozen from 2026-11-23",
+      "guards": [
+        {
+          "file": "scripts/velib/grammar.py",
+          "contains": "def generated_lints(",
+          "how": "grammar.generated: every generated picture declares depicts; metaphor is allowed, real (a stand-in for a real document, sign, place or person) is refused, and an undeclared one is refused until declared; voice and sound are not pictures",
+          "test": "python3 tests/ve_shot_grammar_test.py"
+        },
+        {
+          "file": "scripts/velib/grammar.py",
+          "contains": "if shot in STAGED_SHOTS and source.startswith('asset:')",
+          "how": "grammar.region: a generated picture lives inside the staging, never a full-frame picture in his place on band or stage"
+        },
+        {
+          "file": "scripts/ve.py",
+          "contains": "grammar.generation_refusal(spec, directory)",
+          "how": "ve brief writes a plate brief only when every generated picture is declared depicts: metaphor"
+        }
+      ],
+      "ruling": "Ruling, Krish, 2026-11-20: generated imagery, photoreal included, is allowed when art-directed and clearly a metaphor; generated stand-ins for real documents, signs, places or people are refused"
+    },
+    {
+      "id": "recipe-samples-staged-faults",
+      "on": "2026-11-20",
+      "krish": "how we integrate title cards and real-world images and motion animation is the issue",
+      "what": "The 20 Nov recipe samples on his Friday take: the stage staging drew him in a small framed window above an empty cream band; the full-frame title lockup held 4 to 8 s and tripped the plain-dark-band guard; a number sat small in a large dark field and \"195\" printed over \"THOUSAND DOLLARS\"; the 6 s 16:9 close alone put every wide cut below the pace floor; captions.off_face measured the house band, not top-placed captions.",
+      "symptom": "Every recipe sample was held or looked unfinished for faults of the engine, not of the piece.",
+      "cause": "Staging geometry, the title hold, device growth, money formatting and the pace window were never measured against his good cuts.",
+      "status": "guarded",
+      "mode": "staged-engine-faults",
+      "guard_level": "gate",
+      "surface": "the renderer (kit/staging.ts, title/TitleMoment.tsx, kinetic_stat, kit/layout.ts), compile, the pace floor and ve qc",
+      "guards": [
+        {
+          "file": "apps/renderer/src/engine/kit/staging.ts",
+          "contains": "if (mode === 'stage') {",
+          "how": "stage draws him large bottom right on an ink panel that is the whole frame but his corner, cut out of his wall by the matte when the take has one (step 5: no cream band beside him)",
+          "test": "python3 tests/ve_quality_floor_test.py"
+        },
+        {
+          "file": "scripts/velib/compile.py",
+          "contains": "TITLE_FULL_MAX_FRAMES = 60",
+          "how": "on every staged cut the title builds in the panel and holds full frame at most 2 s",
+          "test": "python3 tests/ve_shot_grammar_test.py"
+        },
+        {
+          "file": "scripts/velib/floor.py",
+          "contains": "def fixed_moments(",
+          "how": "the pace floor measures the body only, leaving out the end card and the full-frame title",
+          "test": "python3 tests/ve_shot_grammar_test.py"
+        },
+        {
+          "file": "apps/renderer/src/engine/devices/kinetic_stat/money.ts",
+          "contains": "export function formatAmount(",
+          "how": "money and thousands are written as a viewer reads them ($195,000)",
+          "test": "npx vitest run apps/renderer/src/engine/devices/kinetic_stat/money.test.ts"
+        },
+        {
+          "file": "scripts/velib/qc_faces.py",
+          "contains": "if props is not None and props.get('captionTheme'):",
+          "how": "captions.off_face reads where a caption style really draws",
+          "test": "python3 tests/ve_qc_faces_test.py"
+        }
+      ]
+    },
+    {
+      "id": "anchor-cards-on-chest-and-stage-cream-block",
+      "on": "2026-11-20",
+      "krish": "Band 9:16 and 16:9: clearly better. Keep. (#950 reference verdict, relayed: stage left an empty cream block beside him; anchor not ready, cards on his chest and arms, the title a small box over his torso)",
+      "what": "The #950 shot grammar references: stage 9:16 drew an empty cream block beside him and stage 16:9 a cream band (held by the pace floor at 2.81 events a second); anchor put flat cards on his chest and arms and shrank the title into a box over his torso.",
+      "symptom": "Empty ground beside him; cards over his body; a title too small to read.",
+      "cause": "The stage panel stopped above his take on a cream ground; anchor's only graphics region was his chest band; ve had no matte, so nothing could sit behind him; no after-render check measured how much of the panel the object filled.",
+      "status": "guarded",
+      "mode": "staging",
+      "guard_level": "lint_refuse",
+      "surface": "ve compile, ve lint and ve qc on every grammar cut",
+      "guards": [
+        {
+          "file": "scripts/velib/depth.py",
+          "contains": "def body_keepout(",
+          "how": "compile refuses a box his silhouette (torso, arms, hands, from the matte) fills more than 2% of on an anchor cut or a cut-out stage",
+          "test": "python3 tests/ve_depth_test.py"
+        },
+        {
+          "file": "scripts/velib/grammar.py",
+          "contains": "def depth_lints(",
+          "how": "grammar.depth: an in-world number, a chapter mark behind him or an anchor title need the subject matte; the number stands 0.4 to 0.6 of the frame tall"
+        },
+        {
+          "file": "apps/renderer/src/engine/kit/staging.ts",
+          "contains": "{ left: 60, top: 280, width: 960, height: 220 }",
+          "how": "anchor's graphics only above his head"
+        },
+        {
+          "file": "scripts/velib/qc_fill.py",
+          "contains": "def row(",
+          "how": "ve qc panel.fill fails a band or stage cut whose panel object fills under 0.85 of its region's width for more than 0.5 s"
+        }
+      ]
+    },
+    {
+      "id": "title-not-on-his-words",
+      "on": "2026-11-20",
+      "krish": "a good looking title slide, and a good looking outro are hugely important. The title slide comes in as I say the words of the title within the opening 30 seconds.",
+      "what": "A title card can be drawn detached from the words he says (Wed 18's 6 s card at 34 to 39 s) or late in the cut.",
+      "symptom": "The title arrives on its own, not as he says it, or after the opening.",
+      "cause": "title.moment checked the span was in the first three beats, not that it started on his spoken title words or how many seconds in.",
+      "status": "guarded",
+      "mode": "title",
+      "guard_level": "lint_refuse",
+      "surface": "ve lint on every ve piece frozen from 2026-11-23",
+      "guards": [
+        {
+          "file": "scripts/velib/grammar.py",
+          "contains": "def title_timing_lints(",
+          "how": "grammar.title_timing: a whole cut of a titled piece names its spoken title span, starting on the first word of his title line, within the opening 30 s",
+          "test": "python3 tests/ve_depth_test.py"
+        }
+      ]
+    },
+    {
+      "id": "board-prompts-no-roles-or-learning",
+      "on": "2026-11-23",
+      "krish": "does every prompt generated by the Content Board explicitly make it clear that Codex is to be used for asset generation, with Claude arbitrating standards and acting as overviewer, ensuring that failures and best practices of any kind that are learnt are logged and sent to the internal-auditor (23 Nov 2026, Claude Code session)",
+      "what": "Only 2 of the 18 Claude prompts on the board for the week of 23 Nov named Codex, and none said where a failure or best practice goes.",
+      "symptom": "A session started from the board has to infer who builds the assets and leaves what it learned in its own chat.",
+      "cause": "The roles and the learning routes lived in AGENTS.md and the make routes; the one block every copied prompt carries (writeBack) said neither.",
+      "status": "guarded",
+      "mode": "handoff",
+      "guard_level": "gate",
+      "surface": "every Claude and Growth prompt the Content Board copies",
+      "guards": [
+        {
+          "file": "apps/control-plane/api/board/_writeBack.ts",
+          "contains": "export const LEARNING_RULE",
+          "how": "writeBack carries ROLES and LEARNING_RULE in every session prompt, and the board-sessions test fails if either is missing",
+          "test": "npx vitest run tests/control-plane/board-sessions.test.ts"
         }
       ]
     }

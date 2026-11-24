@@ -94,6 +94,8 @@ export async function stageRenderAssets(inputProps, propsPath, publicDir, reposi
   inputProps.audio.stem.src = await stage(inputProps.audio.stem.src)
   for (const sfx of inputProps.audio.sfx) sfx.src = await stage(sfx.src)
   for (const segment of inputProps.segments) segment.src = await stage(segment.src)
+  // The subject matte of his take (shot grammar step 5, velib/matte.py): staged like the take it is cut from.
+  if (inputProps.matte) inputProps.matte.src = await stage(inputProps.matte.src)
   for (const beat of inputProps.beats ?? []) if (beat?.backdrop) beat.backdrop.src = await stage(beat.backdrop.src)
   if ((inputProps.sting && !inputProps.sting.atFrame) || inputProps.opening) {
     // Nothing goes before the hook on any cut, ever (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove
@@ -112,6 +114,18 @@ export async function stageRenderAssets(inputProps, propsPath, publicDir, reposi
       throw new Error(`the ${inputProps.sting.series} sting at ${local} is not the clip its props name (sha256 ${sha256}, not ${inputProps.sting.sha256})`)
     }
     inputProps.sting.src = await stage(inputProps.sting.src)
+  }
+  const close = inputProps.ending?.sting
+  if (close) {
+    // The series close on the sting (Ruling, Krish, 2026-11-20; config/intro-sting.json close): the clip named byte for
+    // byte, checked before anything renders, the same as an opening sting was.
+    if (/^https?:\/\//.test(close.src)) throw new Error('the close\'s sting must be a local clip, so its sha256 can be checked')
+    const local = path.resolve(path.dirname(path.resolve(propsPath)), close.src)
+    const sha256 = createHash('sha256').update(await readFile(local)).digest('hex')
+    if (sha256 !== close.sha256) {
+      throw new Error(`the ${close.series} close sting at ${local} is not the clip its props name (sha256 ${sha256}, not ${close.sha256})`)
+    }
+    close.src = await stage(close.src)
   }
   async function stageParams(value) {
     if (Array.isArray(value)) { for (const item of value) await stageParams(item); return }

@@ -293,8 +293,12 @@ Invoke-Check 'codex_companion' {
   if (-not (Test-Path -LiteralPath $CodexThread -PathType Leaf)) { return [ordered]@{ ok = $false; version = $null; detail = 'scripts\codex_thread.mjs is not in this checkout, so ve dispatch cannot start Codex: pull main.' } }
   $node = Find-Program @('node.exe')
   if (-not $node) { return [ordered]@{ ok = $false; version = $null; detail = 'Node is not on this Windows side, so codex_thread.mjs cannot run: winget install OpenJS.NodeJS.LTS.' } }
+  # The same places scripts\codex_thread.mjs resolveCodex looks: a codex.exe on PATH, then Codex Desktop's own
+  # app-server under its stable "current" folder, so a Desktop update (which renames its versioned folders) never
+  # takes Codex off the lane (SURFACE, 20 Nov 2026).
   $codex = Find-Program @('codex.exe')
-  if (-not $codex) { return [ordered]@{ ok = $false; version = $null; detail = 'No codex.exe is on the Windows PATH, so the lane cannot start Codex: put the folder holding codex.exe on PATH.' } }
+  if (-not $codex) { $codex = Find-Program @() @((Join-Path $env:USERPROFILE '.codex\packages\app-server-daemon\current\bin\codex.exe')) }
+  if (-not $codex) { return [ordered]@{ ok = $false; version = $null; detail = 'No codex.exe is on the Windows PATH or at Codex Desktop''s .codex\packages\app-server-daemon\current\bin, so the lane cannot start Codex: open Codex Desktop once, or put the folder holding codex.exe on PATH.' } }
   $run = Invoke-Quiet $node @($CodexThread) 30
   $usage = @((($run.out + "`n" + $run.err) -split "`r?`n") | Where-Object { $_ -match 'codex_thread\.mjs open' } | Select-Object -First 1)
   if (-not $usage.Count) { return [ordered]@{ ok = $false; version = $null; detail = "node codex_thread.mjs did not print its usage ($(Get-Short $run))." } }
@@ -388,6 +392,11 @@ Invoke-Check 'codex_profile' {
 
 # No Codex allowance check: Codex use is never counted (Ruling, Krish, 2026-11-17: "We have plenty of Codex credits,
 # you need to permanently stop counting codex credits everywhere").
+
+# The pinned ffmpeg and Tesseract, read once for both checks below. A read that fails becomes its message, which
+# each check raises as its own failure. (Lost with the Codex allowance check on 17 Nov: every ffmpeg and Tesseract
+# check since then stopped on an unset $Pinned, so both home computers failed preflight whatever was installed.)
+$Pinned = try { Get-PinnedTools } catch { [string]$_.Exception.Message }
 
 Invoke-Check 'ffmpeg' {
   if ($Pinned -is [string]) { throw $Pinned }

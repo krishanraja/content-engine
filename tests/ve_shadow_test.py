@@ -190,6 +190,17 @@ class FileTest(unittest.TestCase):
         self.assertEqual(list(self.archive.iterdir()), [])
         self.assertEqual(list((self.library / '3 Posts').iterdir()), [])
 
+    def test_a_qc_passed_cut_files_with_no_final_approval_from_krish(self):
+        # Ruling (Krish, 2026-11-19): filing to his own post folder needs no approval; his Approve for publish press,
+        # bound to the file shas, gates publishing only.
+        def unapproved(spec, cut, directory):
+            return {**self.ready(spec, cut, directory), 'final': ['no final approval from Krish for this file']}
+        with patch.object(packet, 'readiness', unapproved):
+            self.assertEqual(filing.readiness(self.spec, 'proof-tall', self.ve)[0], [])
+            record = filing.file(self.spec, self.ve, ['proof-tall'], subject='Two passports', when='2026-11-06',
+                                 archive_at=str(self.archive), library_at=str(self.library), today='2026-11-06')
+        self.assertTrue(filing.delivered(record, self.library, 'proof-tall')[0])
+
     def test_files_ready_cuts_to_the_archive_and_3_video_bound_to_the_piece(self):
         with patch.object(packet, 'readiness', self.ready):
             plan = filing.file(self.spec, self.ve, ['proof-tall', 'proof-wide'], subject='Two passports', when='2026-11-06',
@@ -250,8 +261,8 @@ class FileTest(unittest.TestCase):
             with self.assertRaises(ValueError) as caught:
                 filing.file(self.spec, self.ve, ['proof-tall'], subject='Two passports', when='2026-11-06',
                             archive_at=str(self.archive), library_at=str(self.library))
-            # Refused either way: its bed-shape receipt names other bytes, and it changed after its approval.
-            self.assertRegex(str(caught.exception), 'changed after its approval|belongs to different bytes')
+            # Refused either way: its bed-shape receipt names other bytes, and it changed after its checks.
+            self.assertRegex(str(caught.exception), 'changed after its checks|belongs to different bytes')
 
 
 class BriefTest(unittest.TestCase):

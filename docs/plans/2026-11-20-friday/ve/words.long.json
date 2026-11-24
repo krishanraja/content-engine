@@ -1,0 +1,4934 @@
+[
+ {
+  "w": 0,
+  "word": "A",
+  "onset_s": 0.74,
+  "end_s": 0.76
+ },
+ {
+  "w": 1,
+  "word": "good",
+  "onset_s": 0.84,
+  "end_s": 1.0
+ },
+ {
+  "w": 2,
+  "word": "news",
+  "onset_s": 1.06,
+  "end_s": 1.3
+ },
+ {
+  "w": 3,
+  "word": "story",
+  "onset_s": 1.36,
+  "end_s": 1.64
+ },
+ {
+  "w": 4,
+  "word": "with",
+  "onset_s": 1.72,
+  "end_s": 1.86
+ },
+ {
+  "w": 5,
+  "word": "AI.",
+  "onset_s": 1.88,
+  "end_s": 2.14
+ },
+ {
+  "w": 6,
+  "word": "It",
+  "onset_s": 2.36,
+  "end_s": 2.44
+ },
+ {
+  "w": 7,
+  "word": "recently",
+  "onset_s": 2.5,
+  "end_s": 2.92
+ },
+ {
+  "w": 8,
+  "word": "helped",
+  "onset_s": 3.0,
+  "end_s": 3.26
+ },
+ {
+  "w": 9,
+  "word": "cut",
+  "onset_s": 3.3,
+  "end_s": 3.52
+ },
+ {
+  "w": 10,
+  "word": "a",
+  "onset_s": 3.58,
+  "end_s": 3.6
+ },
+ {
+  "w": 11,
+  "word": "family's",
+  "onset_s": 3.74,
+  "end_s": 4.28
+ },
+ {
+  "w": 12,
+  "word": "hospital",
+  "onset_s": 4.72,
+  "end_s": 5.06
+ },
+ {
+  "w": 13,
+  "word": "bill",
+  "onset_s": 5.1,
+  "end_s": 5.22
+ },
+ {
+  "w": 14,
+  "word": "from",
+  "onset_s": 5.24,
+  "end_s": 5.34
+ },
+ {
+  "w": 15,
+  "word": "195K",
+  "onset_s": 6.4,
+  "end_s": 6.42
+ },
+ {
+  "w": 16,
+  "word": "to",
+  "onset_s": 7.26,
+  "end_s": 7.3
+ },
+ {
+  "w": 17,
+  "word": "about",
+  "onset_s": 7.34,
+  "end_s": 7.5
+ },
+ {
+  "w": 18,
+  "word": "33",
+  "onset_s": 7.62,
+  "end_s": 7.64
+ },
+ {
+  "w": 19,
+  "word": "grand.",
+  "onset_s": 8.08,
+  "end_s": 8.34
+ },
+ {
+  "w": 20,
+  "word": "So",
+  "onset_s": 8.38,
+  "end_s": 8.46
+ },
+ {
+  "w": 21,
+  "word": "imagine",
+  "onset_s": 8.58,
+  "end_s": 9.04
+ },
+ {
+  "w": 22,
+  "word": "what",
+  "onset_s": 9.66,
+  "end_s": 9.78
+ },
+ {
+  "w": 23,
+  "word": "it",
+  "onset_s": 9.8,
+  "end_s": 9.86
+ },
+ {
+  "w": 24,
+  "word": "will",
+  "onset_s": 9.86,
+  "end_s": 9.96
+ },
+ {
+  "w": 25,
+  "word": "find",
+  "onset_s": 10.0,
+  "end_s": 10.28
+ },
+ {
+  "w": 26,
+  "word": "in",
+  "onset_s": 10.32,
+  "end_s": 10.38
+ },
+ {
+  "w": 27,
+  "word": "the",
+  "onset_s": 10.42,
+  "end_s": 10.48
+ },
+ {
+  "w": 28,
+  "word": "subscriptions",
+  "onset_s": 10.54,
+  "end_s": 11.3
+ },
+ {
+  "w": 29,
+  "word": "and",
+  "onset_s": 11.34,
+  "end_s": 11.42
+ },
+ {
+  "w": 30,
+  "word": "invoices",
+  "onset_s": 11.44,
+  "end_s": 12.0
+ },
+ {
+  "w": 31,
+  "word": "that",
+  "onset_s": 12.24,
+  "end_s": 12.34
+ },
+ {
+  "w": 32,
+  "word": "you",
+  "onset_s": 12.38,
+  "end_s": 12.46
+ },
+ {
+  "w": 33,
+  "word": "paid",
+  "onset_s": 12.52,
+  "end_s": 12.74
+ },
+ {
+  "w": 34,
+  "word": "last",
+  "onset_s": 12.8,
+  "end_s": 13.04
+ },
+ {
+  "w": 35,
+  "word": "year.",
+  "onset_s": 13.1,
+  "end_s": 13.26
+ },
+ {
+  "w": 36,
+  "word": "Hospitals",
+  "onset_s": 13.46,
+  "end_s": 13.84
+ },
+ {
+  "w": 37,
+  "word": "pay",
+  "onset_s": 13.92,
+  "end_s": 14.14
+ },
+ {
+  "w": 38,
+  "word": "whole",
+  "onset_s": 14.24,
+  "end_s": 14.46
+ },
+ {
+  "w": 39,
+  "word": "teams",
+  "onset_s": 14.52,
+  "end_s": 14.82
+ },
+ {
+  "w": 40,
+  "word": "to",
+  "onset_s": 14.84,
+  "end_s": 14.9
+ },
+ {
+  "w": 41,
+  "word": "get",
+  "onset_s": 14.94,
+  "end_s": 15.08
+ },
+ {
+  "w": 42,
+  "word": "bills",
+  "onset_s": 15.22,
+  "end_s": 15.46
+ },
+ {
+  "w": 43,
+  "word": "right",
+  "onset_s": 15.52,
+  "end_s": 15.74
+ },
+ {
+  "w": 44,
+  "word": "and",
+  "onset_s": 15.84,
+  "end_s": 16.04
+ },
+ {
+  "w": 45,
+  "word": "a",
+  "onset_s": 16.66,
+  "end_s": 16.68
+ },
+ {
+  "w": 46,
+  "word": "simple",
+  "onset_s": 16.74,
+  "end_s": 17.0
+ },
+ {
+  "w": 47,
+  "word": "chatbot",
+  "onset_s": 17.06,
+  "end_s": 17.5
+ },
+ {
+  "w": 48,
+  "word": "found",
+  "onset_s": 17.68,
+  "end_s": 18.0
+ },
+ {
+  "w": 49,
+  "word": "what",
+  "onset_s": 18.1,
+  "end_s": 18.26
+ },
+ {
+  "w": 50,
+  "word": "they",
+  "onset_s": 18.38,
+  "end_s": 18.48
+ },
+ {
+  "w": 51,
+  "word": "all",
+  "onset_s": 18.54,
+  "end_s": 18.62
+ },
+ {
+  "w": 52,
+  "word": "missed.",
+  "onset_s": 18.66,
+  "end_s": 18.96
+ },
+ {
+  "w": 53,
+  "word": "Radiologists",
+  "onset_s": 19.76,
+  "end_s": 20.401
+ },
+ {
+  "w": 54,
+  "word": "are",
+  "onset_s": 20.461,
+  "end_s": 20.541
+ },
+ {
+  "w": 55,
+  "word": "being",
+  "onset_s": 20.541,
+  "end_s": 20.781
+ },
+ {
+  "w": 56,
+  "word": "already",
+  "onset_s": 21.001,
+  "end_s": 21.381
+ },
+ {
+  "w": 57,
+  "word": "outsmarted",
+  "onset_s": 21.521,
+  "end_s": 22.141
+ },
+ {
+  "w": 58,
+  "word": "by",
+  "onset_s": 22.181,
+  "end_s": 22.281
+ },
+ {
+  "w": 59,
+  "word": "the",
+  "onset_s": 22.321,
+  "end_s": 22.401
+ },
+ {
+  "w": 60,
+  "word": "day",
+  "onset_s": 22.441,
+  "end_s": 22.621
+ },
+ {
+  "w": 61,
+  "word": "and",
+  "onset_s": 22.741,
+  "end_s": 22.821
+ },
+ {
+  "w": 62,
+  "word": "I",
+  "onset_s": 22.921,
+  "end_s": 22.941
+ },
+ {
+  "w": 63,
+  "word": "reckon",
+  "onset_s": 23.001,
+  "end_s": 23.281
+ },
+ {
+  "w": 64,
+  "word": "your",
+  "onset_s": 23.561,
+  "end_s": 23.701
+ },
+ {
+  "w": 65,
+  "word": "finance",
+  "onset_s": 23.761,
+  "end_s": 24.201
+ },
+ {
+  "w": 66,
+  "word": "lead",
+  "onset_s": 24.241,
+  "end_s": 24.421
+ },
+ {
+  "w": 67,
+  "word": "has",
+  "onset_s": 24.901,
+  "end_s": 25.041
+ },
+ {
+  "w": 68,
+  "word": "a",
+  "onset_s": 25.081,
+  "end_s": 25.101
+ },
+ {
+  "w": 69,
+  "word": "folder",
+  "onset_s": 25.221,
+  "end_s": 25.561
+ },
+ {
+  "w": 70,
+  "word": "of",
+  "onset_s": 25.601,
+  "end_s": 25.641
+ },
+ {
+  "w": 71,
+  "word": "invoices",
+  "onset_s": 25.681,
+  "end_s": 26.181
+ },
+ {
+  "w": 72,
+  "word": "they've",
+  "onset_s": 26.221,
+  "end_s": 26.401
+ },
+ {
+  "w": 73,
+  "word": "not",
+  "onset_s": 26.441,
+  "end_s": 26.561
+ },
+ {
+  "w": 74,
+  "word": "looked",
+  "onset_s": 26.601,
+  "end_s": 26.821
+ },
+ {
+  "w": 75,
+  "word": "at",
+  "onset_s": 26.861,
+  "end_s": 26.961
+ },
+ {
+  "w": 76,
+  "word": "for",
+  "onset_s": 26.981,
+  "end_s": 27.081
+ },
+ {
+  "w": 77,
+  "word": "five",
+  "onset_s": 27.121,
+  "end_s": 27.381
+ },
+ {
+  "w": 78,
+  "word": "years.",
+  "onset_s": 27.401,
+  "end_s": 27.641
+ },
+ {
+  "w": 79,
+  "word": "Will",
+  "onset_s": 27.921,
+  "end_s": 28.081
+ },
+ {
+  "w": 80,
+  "word": "your",
+  "onset_s": 28.221,
+  "end_s": 28.401
+ },
+ {
+  "w": 81,
+  "word": "AI",
+  "onset_s": 28.521,
+  "end_s": 28.741
+ },
+ {
+  "w": 82,
+  "word": "auditor",
+  "onset_s": 28.841,
+  "end_s": 29.141
+ },
+ {
+  "w": 83,
+  "word": "find",
+  "onset_s": 29.221,
+  "end_s": 29.521
+ },
+ {
+  "w": 84,
+  "word": "missing",
+  "onset_s": 29.921,
+  "end_s": 30.181
+ },
+ {
+  "w": 85,
+  "word": "money",
+  "onset_s": 30.221,
+  "end_s": 30.401
+ },
+ {
+  "w": 86,
+  "word": "or",
+  "onset_s": 30.721,
+  "end_s": 30.801
+ },
+ {
+  "w": 87,
+  "word": "will",
+  "onset_s": 30.841,
+  "end_s": 30.961
+ },
+ {
+  "w": 88,
+  "word": "it",
+  "onset_s": 31.001,
+  "end_s": 31.061
+ },
+ {
+  "w": 89,
+  "word": "find",
+  "onset_s": 31.161,
+  "end_s": 31.441
+ },
+ {
+  "w": 90,
+  "word": "skeletons",
+  "onset_s": 31.541,
+  "end_s": 32.021
+ },
+ {
+  "w": 91,
+  "word": "in",
+  "onset_s": 32.061,
+  "end_s": 32.121
+ },
+ {
+  "w": 92,
+  "word": "your",
+  "onset_s": 32.141,
+  "end_s": 32.241
+ },
+ {
+  "w": 93,
+  "word": "closet?",
+  "onset_s": 32.261,
+  "end_s": 32.561
+ },
+ {
+  "w": 94,
+  "word": "Let's",
+  "onset_s": 32.681,
+  "end_s": 32.821
+ },
+ {
+  "w": 95,
+  "word": "find",
+  "onset_s": 32.881,
+  "end_s": 33.101
+ },
+ {
+  "w": 96,
+  "word": "out.",
+  "onset_s": 33.141,
+  "end_s": 33.281
+ },
+ {
+  "w": 97,
+  "word": "So",
+  "onset_s": 33.661,
+  "end_s": 33.721
+ },
+ {
+  "w": 98,
+  "word": "here's",
+  "onset_s": 33.821,
+  "end_s": 33.981
+ },
+ {
+  "w": 99,
+  "word": "how",
+  "onset_s": 34.001,
+  "end_s": 34.081
+ },
+ {
+  "w": 100,
+  "word": "this",
+  "onset_s": 34.101,
+  "end_s": 34.221
+ },
+ {
+  "w": 101,
+  "word": "happened.",
+  "onset_s": 34.261,
+  "end_s": 34.521
+ },
+ {
+  "w": 102,
+  "word": "A",
+  "onset_s": 34.541,
+  "end_s": 34.561
+ },
+ {
+  "w": 103,
+  "word": "man",
+  "onset_s": 34.621,
+  "end_s": 34.841
+ },
+ {
+  "w": 104,
+  "word": "who",
+  "onset_s": 34.961,
+  "end_s": 35.041
+ },
+ {
+  "w": 105,
+  "word": "goes",
+  "onset_s": 35.101,
+  "end_s": 35.321
+ },
+ {
+  "w": 106,
+  "word": "by",
+  "onset_s": 35.401,
+  "end_s": 35.641
+ },
+ {
+  "w": 107,
+  "word": "nthmonkey",
+  "onset_s": 36.501,
+  "end_s": 37.041
+ },
+ {
+  "w": 108,
+  "word": "online",
+  "onset_s": 37.181,
+  "end_s": 37.601
+ },
+ {
+  "w": 109,
+  "word": "reported",
+  "onset_s": 38.761,
+  "end_s": 39.161
+ },
+ {
+  "w": 110,
+  "word": "that",
+  "onset_s": 39.181,
+  "end_s": 39.281
+ },
+ {
+  "w": 111,
+  "word": "he",
+  "onset_s": 39.301,
+  "end_s": 39.341
+ },
+ {
+  "w": 112,
+  "word": "lost",
+  "onset_s": 39.401,
+  "end_s": 39.601
+ },
+ {
+  "w": 113,
+  "word": "his",
+  "onset_s": 39.621,
+  "end_s": 39.741
+ },
+ {
+  "w": 114,
+  "word": "brother-in-law",
+  "onset_s": 39.781,
+  "end_s": 40.301
+ },
+ {
+  "w": 115,
+  "word": "to",
+  "onset_s": 40.441,
+  "end_s": 40.501
+ },
+ {
+  "w": 116,
+  "word": "a",
+  "onset_s": 40.581,
+  "end_s": 40.601
+ },
+ {
+  "w": 117,
+  "word": "heart",
+  "onset_s": 40.661,
+  "end_s": 40.861
+ },
+ {
+  "w": 118,
+  "word": "attack.",
+  "onset_s": 40.881,
+  "end_s": 41.261
+ },
+ {
+  "w": 119,
+  "word": "His",
+  "onset_s": 42.801,
+  "end_s": 42.961
+ },
+ {
+  "w": 120,
+  "word": "brother-in-law's",
+  "onset_s": 43.201,
+  "end_s": 43.701
+ },
+ {
+  "w": 121,
+  "word": "health",
+  "onset_s": 43.741,
+  "end_s": 43.961
+ },
+ {
+  "w": 122,
+  "word": "cover",
+  "onset_s": 44.021,
+  "end_s": 44.241
+ },
+ {
+  "w": 123,
+  "word": "had",
+  "onset_s": 44.281,
+  "end_s": 44.401
+ },
+ {
+  "w": 124,
+  "word": "just",
+  "onset_s": 44.601,
+  "end_s": 44.881
+ },
+ {
+  "w": 125,
+  "word": "run",
+  "onset_s": 45.161,
+  "end_s": 45.281
+ },
+ {
+  "w": 126,
+  "word": "out",
+  "onset_s": 45.341,
+  "end_s": 45.501
+ },
+ {
+  "w": 127,
+  "word": "two",
+  "onset_s": 45.641,
+  "end_s": 45.821
+ },
+ {
+  "w": 128,
+  "word": "months",
+  "onset_s": 45.861,
+  "end_s": 46.061
+ },
+ {
+  "w": 129,
+  "word": "before",
+  "onset_s": 46.101,
+  "end_s": 46.421
+ },
+ {
+  "w": 130,
+  "word": "so",
+  "onset_s": 46.481,
+  "end_s": 46.541
+ },
+ {
+  "w": 131,
+  "word": "the",
+  "onset_s": 46.601,
+  "end_s": 46.661
+ },
+ {
+  "w": 132,
+  "word": "family",
+  "onset_s": 46.741,
+  "end_s": 47.081
+ },
+ {
+  "w": 133,
+  "word": "owed",
+  "onset_s": 47.241,
+  "end_s": 47.441
+ },
+ {
+  "w": 134,
+  "word": "the",
+  "onset_s": 47.541,
+  "end_s": 47.621
+ },
+ {
+  "w": 135,
+  "word": "whole",
+  "onset_s": 47.721,
+  "end_s": 47.961
+ },
+ {
+  "w": 136,
+  "word": "bill.",
+  "onset_s": 48.001,
+  "end_s": 48.161
+ },
+ {
+  "w": 137,
+  "word": "And",
+  "onset_s": 49.221,
+  "end_s": 49.341
+ },
+ {
+  "w": 138,
+  "word": "here's",
+  "onset_s": 49.361,
+  "end_s": 49.541
+ },
+ {
+  "w": 139,
+  "word": "the",
+  "onset_s": 49.581,
+  "end_s": 49.661
+ },
+ {
+  "w": 140,
+  "word": "bit",
+  "onset_s": 49.721,
+  "end_s": 49.881
+ },
+ {
+  "w": 141,
+  "word": "most",
+  "onset_s": 49.941,
+  "end_s": 50.121
+ },
+ {
+  "w": 142,
+  "word": "people",
+  "onset_s": 50.161,
+  "end_s": 50.401
+ },
+ {
+  "w": 143,
+  "word": "miss.",
+  "onset_s": 50.461,
+  "end_s": 50.701
+ },
+ {
+  "w": 144,
+  "word": "He",
+  "onset_s": 50.861,
+  "end_s": 50.921
+ },
+ {
+  "w": 145,
+  "word": "didn't",
+  "onset_s": 51.021,
+  "end_s": 51.341
+ },
+ {
+  "w": 146,
+  "word": "argue",
+  "onset_s": 51.561,
+  "end_s": 51.941
+ },
+ {
+  "w": 147,
+  "word": "with",
+  "onset_s": 51.981,
+  "end_s": 52.101
+ },
+ {
+  "w": 148,
+  "word": "the",
+  "onset_s": 52.121,
+  "end_s": 52.201
+ },
+ {
+  "w": 149,
+  "word": "total,",
+  "onset_s": 52.241,
+  "end_s": 52.661
+ },
+ {
+  "w": 150,
+  "word": "he",
+  "onset_s": 52.801,
+  "end_s": 52.881
+ },
+ {
+  "w": 151,
+  "word": "asked",
+  "onset_s": 53.081,
+  "end_s": 53.361
+ },
+ {
+  "w": 152,
+  "word": "the",
+  "onset_s": 53.381,
+  "end_s": 53.441
+ },
+ {
+  "w": 153,
+  "word": "hospital",
+  "onset_s": 53.501,
+  "end_s": 53.961
+ },
+ {
+  "w": 154,
+  "word": "for",
+  "onset_s": 54.161,
+  "end_s": 54.261
+ },
+ {
+  "w": 155,
+  "word": "the",
+  "onset_s": 54.281,
+  "end_s": 54.361
+ },
+ {
+  "w": 156,
+  "word": "bill",
+  "onset_s": 54.441,
+  "end_s": 54.641
+ },
+ {
+  "w": 157,
+  "word": "line",
+  "onset_s": 54.961,
+  "end_s": 55.221
+ },
+ {
+  "w": 158,
+  "word": "by",
+  "onset_s": 55.281,
+  "end_s": 55.441
+ },
+ {
+  "w": 159,
+  "word": "line.",
+  "onset_s": 55.521,
+  "end_s": 55.781
+ },
+ {
+  "w": 160,
+  "word": "Every",
+  "onset_s": 56.521,
+  "end_s": 56.801
+ },
+ {
+  "w": 161,
+  "word": "single",
+  "onset_s": 56.901,
+  "end_s": 57.141
+ },
+ {
+  "w": 162,
+  "word": "charge",
+  "onset_s": 57.181,
+  "end_s": 57.501
+ },
+ {
+  "w": 163,
+  "word": "and",
+  "onset_s": 57.541,
+  "end_s": 57.621
+ },
+ {
+  "w": 164,
+  "word": "he",
+  "onset_s": 57.641,
+  "end_s": 57.681
+ },
+ {
+  "w": 165,
+  "word": "gave",
+  "onset_s": 57.761,
+  "end_s": 58.001
+ },
+ {
+  "w": 166,
+  "word": "the",
+  "onset_s": 58.041,
+  "end_s": 58.121
+ },
+ {
+  "w": 167,
+  "word": "lot",
+  "onset_s": 58.261,
+  "end_s": 58.461
+ },
+ {
+  "w": 168,
+  "word": "to",
+  "onset_s": 58.541,
+  "end_s": 58.601
+ },
+ {
+  "w": 169,
+  "word": "Claude.",
+  "onset_s": 58.661,
+  "end_s": 59.021
+ },
+ {
+  "w": 170,
+  "word": "Now",
+  "onset_s": 59.421,
+  "end_s": 59.582
+ },
+ {
+  "w": 171,
+  "word": "hospitals",
+  "onset_s": 59.742,
+  "end_s": 60.242
+ },
+ {
+  "w": 172,
+  "word": "bill",
+  "onset_s": 60.302,
+  "end_s": 60.442
+ },
+ {
+  "w": 173,
+  "word": "every",
+  "onset_s": 60.582,
+  "end_s": 60.802
+ },
+ {
+  "w": 174,
+  "word": "service",
+  "onset_s": 60.922,
+  "end_s": 61.222
+ },
+ {
+  "w": 175,
+  "word": "with",
+  "onset_s": 61.242,
+  "end_s": 61.362
+ },
+ {
+  "w": 176,
+  "word": "a",
+  "onset_s": 61.382,
+  "end_s": 61.402
+ },
+ {
+  "w": 177,
+  "word": "code",
+  "onset_s": 61.442,
+  "end_s": 61.742
+ },
+ {
+  "w": 178,
+  "word": "and",
+  "onset_s": 61.802,
+  "end_s": 61.882
+ },
+ {
+  "w": 179,
+  "word": "every",
+  "onset_s": 61.902,
+  "end_s": 62.062
+ },
+ {
+  "w": 180,
+  "word": "code",
+  "onset_s": 62.122,
+  "end_s": 62.362
+ },
+ {
+  "w": 181,
+  "word": "has",
+  "onset_s": 62.362,
+  "end_s": 62.442
+ },
+ {
+  "w": 182,
+  "word": "a",
+  "onset_s": 62.482,
+  "end_s": 62.502
+ },
+ {
+  "w": 183,
+  "word": "price.",
+  "onset_s": 62.562,
+  "end_s": 62.922
+ },
+ {
+  "w": 184,
+  "word": "Claude",
+  "onset_s": 63.362,
+  "end_s": 63.602
+ },
+ {
+  "w": 185,
+  "word": "found",
+  "onset_s": 63.622,
+  "end_s": 63.822
+ },
+ {
+  "w": 186,
+  "word": "the",
+  "onset_s": 63.842,
+  "end_s": 63.902
+ },
+ {
+  "w": 187,
+  "word": "same",
+  "onset_s": 63.942,
+  "end_s": 64.142
+ },
+ {
+  "w": 188,
+  "word": "procedure",
+  "onset_s": 64.282,
+  "end_s": 64.862
+ },
+ {
+  "w": 189,
+  "word": "charged",
+  "onset_s": 65.002,
+  "end_s": 65.442
+ },
+ {
+  "w": 190,
+  "word": "twice",
+  "onset_s": 65.562,
+  "end_s": 65.882
+ },
+ {
+  "w": 191,
+  "word": "and",
+  "onset_s": 65.922,
+  "end_s": 66.002
+ },
+ {
+  "w": 192,
+  "word": "it",
+  "onset_s": 66.022,
+  "end_s": 66.082
+ },
+ {
+  "w": 193,
+  "word": "found",
+  "onset_s": 66.182,
+  "end_s": 66.542
+ },
+ {
+  "w": 194,
+  "word": "other",
+  "onset_s": 67.062,
+  "end_s": 67.222
+ },
+ {
+  "w": 195,
+  "word": "care",
+  "onset_s": 67.282,
+  "end_s": 67.502
+ },
+ {
+  "w": 196,
+  "word": "billed",
+  "onset_s": 67.622,
+  "end_s": 67.902
+ },
+ {
+  "w": 197,
+  "word": "under",
+  "onset_s": 68.022,
+  "end_s": 68.162
+ },
+ {
+  "w": 198,
+  "word": "a",
+  "onset_s": 68.182,
+  "end_s": 68.202
+ },
+ {
+  "w": 199,
+  "word": "more",
+  "onset_s": 68.322,
+  "end_s": 68.502
+ },
+ {
+  "w": 200,
+  "word": "expensive",
+  "onset_s": 68.522,
+  "end_s": 69.202
+ },
+ {
+  "w": 201,
+  "word": "code",
+  "onset_s": 69.342,
+  "end_s": 69.782
+ },
+ {
+  "w": 202,
+  "word": "than",
+  "onset_s": 70.182,
+  "end_s": 70.342
+ },
+ {
+  "w": 203,
+  "word": "the",
+  "onset_s": 70.522,
+  "end_s": 70.582
+ },
+ {
+  "w": 204,
+  "word": "care",
+  "onset_s": 70.662,
+  "end_s": 70.902
+ },
+ {
+  "w": 205,
+  "word": "his",
+  "onset_s": 70.982,
+  "end_s": 71.122
+ },
+ {
+  "w": 206,
+  "word": "brother-in-law",
+  "onset_s": 71.222,
+  "end_s": 71.702
+ },
+ {
+  "w": 207,
+  "word": "actually",
+  "onset_s": 71.842,
+  "end_s": 72.182
+ },
+ {
+  "w": 208,
+  "word": "got.",
+  "onset_s": 72.242,
+  "end_s": 72.422
+ },
+ {
+  "w": 209,
+  "word": "This",
+  "onset_s": 72.882,
+  "end_s": 73.002
+ },
+ {
+  "w": 210,
+  "word": "is",
+  "onset_s": 73.042,
+  "end_s": 73.142
+ },
+ {
+  "w": 211,
+  "word": "horrible.",
+  "onset_s": 73.162,
+  "end_s": 73.462
+ },
+ {
+  "w": 212,
+  "word": "This",
+  "onset_s": 73.482,
+  "end_s": 73.582
+ },
+ {
+  "w": 213,
+  "word": "is",
+  "onset_s": 73.622,
+  "end_s": 73.682
+ },
+ {
+  "w": 214,
+  "word": "like",
+  "onset_s": 73.722,
+  "end_s": 73.922
+ },
+ {
+  "w": 215,
+  "word": "being",
+  "onset_s": 73.942,
+  "end_s": 74.122
+ },
+ {
+  "w": 216,
+  "word": "charged",
+  "onset_s": 74.162,
+  "end_s": 74.582
+ },
+ {
+  "w": 217,
+  "word": "for",
+  "onset_s": 74.642,
+  "end_s": 74.782
+ },
+ {
+  "w": 218,
+  "word": "a",
+  "onset_s": 75.262,
+  "end_s": 75.282
+ },
+ {
+  "w": 219,
+  "word": "really",
+  "onset_s": 75.382,
+  "end_s": 75.602
+ },
+ {
+  "w": 220,
+  "word": "really",
+  "onset_s": 75.662,
+  "end_s": 75.822
+ },
+ {
+  "w": 221,
+  "word": "expensive",
+  "onset_s": 75.862,
+  "end_s": 76.342
+ },
+ {
+  "w": 222,
+  "word": "Michelin",
+  "onset_s": 76.402,
+  "end_s": 76.742
+ },
+ {
+  "w": 223,
+  "word": "star",
+  "onset_s": 76.822,
+  "end_s": 77.122
+ },
+ {
+  "w": 224,
+  "word": "restaurant",
+  "onset_s": 77.702,
+  "end_s": 78.122
+ },
+ {
+  "w": 225,
+  "word": "meal",
+  "onset_s": 78.582,
+  "end_s": 78.782
+ },
+ {
+  "w": 226,
+  "word": "and",
+  "onset_s": 78.882,
+  "end_s": 79.002
+ },
+ {
+  "w": 227,
+  "word": "being",
+  "onset_s": 79.422,
+  "end_s": 79.622
+ },
+ {
+  "w": 228,
+  "word": "served",
+  "onset_s": 79.662,
+  "end_s": 79.882
+ },
+ {
+  "w": 229,
+  "word": "at",
+  "onset_s": 79.902,
+  "end_s": 79.942
+ },
+ {
+  "w": 230,
+  "word": "McDonald's.",
+  "onset_s": 79.942,
+  "end_s": 80.422
+ },
+ {
+  "w": 231,
+  "word": "He",
+  "onset_s": 81.002,
+  "end_s": 81.062
+ },
+ {
+  "w": 232,
+  "word": "sent",
+  "onset_s": 81.802,
+  "end_s": 81.942
+ },
+ {
+  "w": 233,
+  "word": "the",
+  "onset_s": 81.962,
+  "end_s": 82.042
+ },
+ {
+  "w": 234,
+  "word": "hospital",
+  "onset_s": 82.062,
+  "end_s": 82.362
+ },
+ {
+  "w": 235,
+  "word": "this",
+  "onset_s": 82.402,
+  "end_s": 82.522
+ },
+ {
+  "w": 236,
+  "word": "list",
+  "onset_s": 82.582,
+  "end_s": 82.762
+ },
+ {
+  "w": 237,
+  "word": "and",
+  "onset_s": 82.822,
+  "end_s": 82.902
+ },
+ {
+  "w": 238,
+  "word": "he",
+  "onset_s": 82.922,
+  "end_s": 82.962
+ },
+ {
+  "w": 239,
+  "word": "says",
+  "onset_s": 83.202,
+  "end_s": 83.382
+ },
+ {
+  "w": 240,
+  "word": "the",
+  "onset_s": 83.442,
+  "end_s": 83.522
+ },
+ {
+  "w": 241,
+  "word": "bill",
+  "onset_s": 83.622,
+  "end_s": 83.802
+ },
+ {
+  "w": 242,
+  "word": "actually",
+  "onset_s": 84.002,
+  "end_s": 84.302
+ },
+ {
+  "w": 243,
+  "word": "just",
+  "onset_s": 84.342,
+  "end_s": 84.522
+ },
+ {
+  "w": 244,
+  "word": "fell",
+  "onset_s": 84.582,
+  "end_s": 84.782
+ },
+ {
+  "w": 245,
+  "word": "to",
+  "onset_s": 84.842,
+  "end_s": 84.902
+ },
+ {
+  "w": 246,
+  "word": "about",
+  "onset_s": 84.962,
+  "end_s": 85.162
+ },
+ {
+  "w": 247,
+  "word": "33",
+  "onset_s": 85.302,
+  "end_s": 85.322
+ },
+ {
+  "w": 248,
+  "word": "grand",
+  "onset_s": 85.762,
+  "end_s": 86.042
+ },
+ {
+  "w": 249,
+  "word": "which",
+  "onset_s": 86.102,
+  "end_s": 86.242
+ },
+ {
+  "w": 250,
+  "word": "is",
+  "onset_s": 86.282,
+  "end_s": 86.362
+ },
+ {
+  "w": 251,
+  "word": "awesome",
+  "onset_s": 86.542,
+  "end_s": 86.862
+ },
+ {
+  "w": 252,
+  "word": "on",
+  "onset_s": 86.942,
+  "end_s": 87.042
+ },
+ {
+  "w": 253,
+  "word": "their",
+  "onset_s": 87.482,
+  "end_s": 87.622
+ },
+ {
+  "w": 254,
+  "word": "account",
+  "onset_s": 87.662,
+  "end_s": 88.002
+ },
+ {
+  "w": 255,
+  "word": "and",
+  "onset_s": 88.662,
+  "end_s": 88.742
+ },
+ {
+  "w": 256,
+  "word": "that's",
+  "onset_s": 88.742,
+  "end_s": 88.882
+ },
+ {
+  "w": 257,
+  "word": "his",
+  "onset_s": 88.902,
+  "end_s": 89.002
+ },
+ {
+  "w": 258,
+  "word": "side",
+  "onset_s": 89.062,
+  "end_s": 89.262
+ },
+ {
+  "w": 259,
+  "word": "of",
+  "onset_s": 89.282,
+  "end_s": 89.322
+ },
+ {
+  "w": 260,
+  "word": "it.",
+  "onset_s": 89.342,
+  "end_s": 89.402
+ },
+ {
+  "w": 261,
+  "word": "The",
+  "onset_s": 89.442,
+  "end_s": 89.502
+ },
+ {
+  "w": 262,
+  "word": "hospital",
+  "onset_s": 89.542,
+  "end_s": 89.862
+ },
+ {
+  "w": 263,
+  "word": "has",
+  "onset_s": 89.922,
+  "end_s": 90.062
+ },
+ {
+  "w": 264,
+  "word": "not",
+  "onset_s": 90.142,
+  "end_s": 90.262
+ },
+ {
+  "w": 265,
+  "word": "said",
+  "onset_s": 90.322,
+  "end_s": 90.482
+ },
+ {
+  "w": 266,
+  "word": "a",
+  "onset_s": 90.482,
+  "end_s": 90.502
+ },
+ {
+  "w": 267,
+  "word": "word",
+  "onset_s": 90.542,
+  "end_s": 90.802
+ },
+ {
+  "w": 268,
+  "word": "and",
+  "onset_s": 91.582,
+  "end_s": 91.662
+ },
+ {
+  "w": 269,
+  "word": "it's",
+  "onset_s": 91.702,
+  "end_s": 91.822
+ },
+ {
+  "w": 270,
+  "word": "not",
+  "onset_s": 91.862,
+  "end_s": 92.022
+ },
+ {
+  "w": 271,
+  "word": "only",
+  "onset_s": 92.102,
+  "end_s": 92.302
+ },
+ {
+  "w": 272,
+  "word": "hospitals.",
+  "onset_s": 92.382,
+  "end_s": 92.862
+ },
+ {
+  "w": 273,
+  "word": "A",
+  "onset_s": 92.902,
+  "end_s": 92.922
+ },
+ {
+  "w": 274,
+  "word": "tenant",
+  "onset_s": 92.982,
+  "end_s": 93.342
+ },
+ {
+  "w": 275,
+  "word": "reported",
+  "onset_s": 93.462,
+  "end_s": 93.822
+ },
+ {
+  "w": 276,
+  "word": "on",
+  "onset_s": 93.862,
+  "end_s": 93.942
+ },
+ {
+  "w": 277,
+  "word": "Reddit",
+  "onset_s": 93.982,
+  "end_s": 94.242
+ },
+ {
+  "w": 278,
+  "word": "that",
+  "onset_s": 94.362,
+  "end_s": 94.522
+ },
+ {
+  "w": 279,
+  "word": "they",
+  "onset_s": 94.842,
+  "end_s": 94.942
+ },
+ {
+  "w": 280,
+  "word": "had",
+  "onset_s": 94.962,
+  "end_s": 95.042
+ },
+ {
+  "w": 281,
+  "word": "a",
+  "onset_s": 95.062,
+  "end_s": 95.082
+ },
+ {
+  "w": 282,
+  "word": "landlord",
+  "onset_s": 95.162,
+  "end_s": 95.542
+ },
+ {
+  "w": 283,
+  "word": "who",
+  "onset_s": 95.562,
+  "end_s": 95.642
+ },
+ {
+  "w": 284,
+  "word": "kept",
+  "onset_s": 95.722,
+  "end_s": 96.002
+ },
+ {
+  "w": 285,
+  "word": "part",
+  "onset_s": 96.182,
+  "end_s": 96.382
+ },
+ {
+  "w": 286,
+  "word": "of",
+  "onset_s": 96.402,
+  "end_s": 96.462
+ },
+ {
+  "w": 287,
+  "word": "his",
+  "onset_s": 96.482,
+  "end_s": 96.582
+ },
+ {
+  "w": 288,
+  "word": "deposit.",
+  "onset_s": 96.622,
+  "end_s": 97.002
+ },
+ {
+  "w": 289,
+  "word": "So",
+  "onset_s": 97.082,
+  "end_s": 97.142
+ },
+ {
+  "w": 290,
+  "word": "he",
+  "onset_s": 97.442,
+  "end_s": 97.502
+ },
+ {
+  "w": 291,
+  "word": "pasted",
+  "onset_s": 97.562,
+  "end_s": 97.922
+ },
+ {
+  "w": 292,
+  "word": "his",
+  "onset_s": 97.942,
+  "end_s": 98.042
+ },
+ {
+  "w": 293,
+  "word": "old",
+  "onset_s": 98.122,
+  "end_s": 98.302
+ },
+ {
+  "w": 294,
+  "word": "lease",
+  "onset_s": 98.422,
+  "end_s": 98.722
+ },
+ {
+  "w": 295,
+  "word": "into",
+  "onset_s": 99.082,
+  "end_s": 99.223
+ },
+ {
+  "w": 296,
+  "word": "ChatGPT.",
+  "onset_s": 99.283,
+  "end_s": 99.843
+ },
+ {
+  "w": 297,
+  "word": "It",
+  "onset_s": 100.223,
+  "end_s": 100.303
+ },
+ {
+  "w": 298,
+  "word": "spotted",
+  "onset_s": 100.363,
+  "end_s": 100.763
+ },
+ {
+  "w": 299,
+  "word": "that",
+  "onset_s": 100.803,
+  "end_s": 100.963
+ },
+ {
+  "w": 300,
+  "word": "New",
+  "onset_s": 101.543,
+  "end_s": 101.643
+ },
+ {
+  "w": 301,
+  "word": "York",
+  "onset_s": 101.663,
+  "end_s": 101.843
+ },
+ {
+  "w": 302,
+  "word": "caps",
+  "onset_s": 101.963,
+  "end_s": 102.343
+ },
+ {
+  "w": 303,
+  "word": "a",
+  "onset_s": 102.443,
+  "end_s": 102.463
+ },
+ {
+  "w": 304,
+  "word": "deposit",
+  "onset_s": 102.503,
+  "end_s": 102.923
+ },
+ {
+  "w": 305,
+  "word": "at",
+  "onset_s": 102.963,
+  "end_s": 103.023
+ },
+ {
+  "w": 306,
+  "word": "one",
+  "onset_s": 103.223,
+  "end_s": 103.343
+ },
+ {
+  "w": 307,
+  "word": "month's",
+  "onset_s": 103.363,
+  "end_s": 103.603
+ },
+ {
+  "w": 308,
+  "word": "rent",
+  "onset_s": 103.663,
+  "end_s": 103.823
+ },
+ {
+  "w": 309,
+  "word": "and",
+  "onset_s": 103.863,
+  "end_s": 103.943
+ },
+ {
+  "w": 310,
+  "word": "he'd",
+  "onset_s": 103.963,
+  "end_s": 104.103
+ },
+ {
+  "w": 311,
+  "word": "paid",
+  "onset_s": 104.163,
+  "end_s": 104.383
+ },
+ {
+  "w": 312,
+  "word": "more.",
+  "onset_s": 104.543,
+  "end_s": 104.763
+ },
+ {
+  "w": 313,
+  "word": "Took",
+  "onset_s": 105.003,
+  "end_s": 105.143
+ },
+ {
+  "w": 314,
+  "word": "the",
+  "onset_s": 105.163,
+  "end_s": 105.223
+ },
+ {
+  "w": 315,
+  "word": "landlord",
+  "onset_s": 105.263,
+  "end_s": 105.563
+ },
+ {
+  "w": 316,
+  "word": "to",
+  "onset_s": 105.583,
+  "end_s": 105.643
+ },
+ {
+  "w": 317,
+  "word": "court,",
+  "onset_s": 105.723,
+  "end_s": 105.963
+ },
+ {
+  "w": 318,
+  "word": "won.",
+  "onset_s": 106.443,
+  "end_s": 106.583
+ },
+ {
+  "w": 319,
+  "word": "So",
+  "onset_s": 106.683,
+  "end_s": 106.743
+ },
+ {
+  "w": 320,
+  "word": "never",
+  "onset_s": 106.803,
+  "end_s": 107.003
+ },
+ {
+  "w": 321,
+  "word": "pick",
+  "onset_s": 107.143,
+  "end_s": 107.283
+ },
+ {
+  "w": 322,
+  "word": "a",
+  "onset_s": 107.323,
+  "end_s": 107.343
+ },
+ {
+  "w": 323,
+  "word": "paperwork",
+  "onset_s": 107.483,
+  "end_s": 107.903
+ },
+ {
+  "w": 324,
+  "word": "fight",
+  "onset_s": 107.963,
+  "end_s": 108.183
+ },
+ {
+  "w": 325,
+  "word": "with",
+  "onset_s": 108.203,
+  "end_s": 108.323
+ },
+ {
+  "w": 326,
+  "word": "someone",
+  "onset_s": 108.363,
+  "end_s": 108.603
+ },
+ {
+  "w": 327,
+  "word": "who",
+  "onset_s": 108.623,
+  "end_s": 108.683
+ },
+ {
+  "w": 328,
+  "word": "has",
+  "onset_s": 108.723,
+  "end_s": 108.823
+ },
+ {
+  "w": 329,
+  "word": "a",
+  "onset_s": 108.863,
+  "end_s": 108.883
+ },
+ {
+  "w": 330,
+  "word": "chatbot",
+  "onset_s": 108.943,
+  "end_s": 109.363
+ },
+ {
+  "w": 331,
+  "word": "and",
+  "onset_s": 109.663,
+  "end_s": 109.743
+ },
+ {
+  "w": 332,
+  "word": "a",
+  "onset_s": 109.763,
+  "end_s": 109.783
+ },
+ {
+  "w": 333,
+  "word": "free",
+  "onset_s": 109.843,
+  "end_s": 110.003
+ },
+ {
+  "w": 334,
+  "word": "evening.",
+  "onset_s": 110.063,
+  "end_s": 110.343
+ },
+ {
+  "w": 335,
+  "word": "This",
+  "onset_s": 110.463,
+  "end_s": 110.603
+ },
+ {
+  "w": 336,
+  "word": "is",
+  "onset_s": 110.663,
+  "end_s": 110.783
+ },
+ {
+  "w": 337,
+  "word": "the",
+  "onset_s": 111.063,
+  "end_s": 111.123
+ },
+ {
+  "w": 338,
+  "word": "new",
+  "onset_s": 111.163,
+  "end_s": 111.283
+ },
+ {
+  "w": 339,
+  "word": "tools",
+  "onset_s": 111.343,
+  "end_s": 111.623
+ },
+ {
+  "w": 340,
+  "word": "that",
+  "onset_s": 111.683,
+  "end_s": 111.783
+ },
+ {
+  "w": 341,
+  "word": "we",
+  "onset_s": 111.823,
+  "end_s": 111.883
+ },
+ {
+  "w": 342,
+  "word": "all",
+  "onset_s": 111.943,
+  "end_s": 112.023
+ },
+ {
+  "w": 343,
+  "word": "have",
+  "onset_s": 112.083,
+  "end_s": 112.243
+ },
+ {
+  "w": 344,
+  "word": "in",
+  "onset_s": 112.263,
+  "end_s": 112.303
+ },
+ {
+  "w": 345,
+  "word": "our",
+  "onset_s": 112.343,
+  "end_s": 112.423
+ },
+ {
+  "w": 346,
+  "word": "hands.",
+  "onset_s": 112.463,
+  "end_s": 112.763
+ },
+ {
+  "w": 347,
+  "word": "So",
+  "onset_s": 112.903,
+  "end_s": 112.983
+ },
+ {
+  "w": 348,
+  "word": "why",
+  "onset_s": 113.283,
+  "end_s": 113.563
+ },
+ {
+  "w": 349,
+  "word": "are",
+  "onset_s": 113.783,
+  "end_s": 113.963
+ },
+ {
+  "w": 350,
+  "word": "chatbots",
+  "onset_s": 114.263,
+  "end_s": 114.723
+ },
+ {
+  "w": 351,
+  "word": "so",
+  "onset_s": 114.743,
+  "end_s": 114.803
+ },
+ {
+  "w": 352,
+  "word": "good",
+  "onset_s": 114.923,
+  "end_s": 115.043
+ },
+ {
+  "w": 353,
+  "word": "at",
+  "onset_s": 115.043,
+  "end_s": 115.103
+ },
+ {
+  "w": 354,
+  "word": "this?",
+  "onset_s": 115.143,
+  "end_s": 115.323
+ },
+ {
+  "w": 355,
+  "word": "And",
+  "onset_s": 115.423,
+  "end_s": 115.543
+ },
+ {
+  "w": 356,
+  "word": "this",
+  "onset_s": 115.783,
+  "end_s": 115.903
+ },
+ {
+  "w": 357,
+  "word": "is",
+  "onset_s": 115.943,
+  "end_s": 116.023
+ },
+ {
+  "w": 358,
+  "word": "the",
+  "onset_s": 116.063,
+  "end_s": 116.143
+ },
+ {
+  "w": 359,
+  "word": "bit",
+  "onset_s": 116.183,
+  "end_s": 116.343
+ },
+ {
+  "w": 360,
+  "word": "I",
+  "onset_s": 116.623,
+  "end_s": 116.643
+ },
+ {
+  "w": 361,
+  "word": "love",
+  "onset_s": 116.683,
+  "end_s": 116.823
+ },
+ {
+  "w": 362,
+  "word": "it's",
+  "onset_s": 116.883,
+  "end_s": 116.963
+ },
+ {
+  "w": 363,
+  "word": "very",
+  "onset_s": 117.003,
+  "end_s": 117.163
+ },
+ {
+  "w": 364,
+  "word": "simple.",
+  "onset_s": 117.243,
+  "end_s": 117.563
+ },
+ {
+  "w": 365,
+  "word": "An",
+  "onset_s": 118.223,
+  "end_s": 118.303
+ },
+ {
+  "w": 366,
+  "word": "old",
+  "onset_s": 118.423,
+  "end_s": 118.603
+ },
+ {
+  "w": 367,
+  "word": "bill",
+  "onset_s": 118.683,
+  "end_s": 118.863
+ },
+ {
+  "w": 368,
+  "word": "cannot",
+  "onset_s": 119.463,
+  "end_s": 119.683
+ },
+ {
+  "w": 369,
+  "word": "argue",
+  "onset_s": 119.763,
+  "end_s": 120.043
+ },
+ {
+  "w": 370,
+  "word": "back.",
+  "onset_s": 120.063,
+  "end_s": 120.303
+ },
+ {
+  "w": 371,
+  "word": "It",
+  "onset_s": 120.743,
+  "end_s": 120.823
+ },
+ {
+  "w": 372,
+  "word": "says",
+  "onset_s": 120.883,
+  "end_s": 121.043
+ },
+ {
+  "w": 373,
+  "word": "what",
+  "onset_s": 121.083,
+  "end_s": 121.203
+ },
+ {
+  "w": 374,
+  "word": "it",
+  "onset_s": 121.223,
+  "end_s": 121.283
+ },
+ {
+  "w": 375,
+  "word": "says",
+  "onset_s": 121.363,
+  "end_s": 121.663
+ },
+ {
+  "w": 376,
+  "word": "and",
+  "onset_s": 121.943,
+  "end_s": 122.043
+ },
+ {
+  "w": 377,
+  "word": "the",
+  "onset_s": 122.063,
+  "end_s": 122.123
+ },
+ {
+  "w": 378,
+  "word": "rules",
+  "onset_s": 122.203,
+  "end_s": 122.483
+ },
+ {
+  "w": 379,
+  "word": "it",
+  "onset_s": 122.583,
+  "end_s": 122.663
+ },
+ {
+  "w": 380,
+  "word": "should",
+  "onset_s": 122.683,
+  "end_s": 122.823
+ },
+ {
+  "w": 381,
+  "word": "have",
+  "onset_s": 122.823,
+  "end_s": 122.923
+ },
+ {
+  "w": 382,
+  "word": "followed",
+  "onset_s": 122.943,
+  "end_s": 123.223
+ },
+ {
+  "w": 383,
+  "word": "are",
+  "onset_s": 123.243,
+  "end_s": 123.323
+ },
+ {
+  "w": 384,
+  "word": "written",
+  "onset_s": 123.323,
+  "end_s": 123.523
+ },
+ {
+  "w": 385,
+  "word": "down.",
+  "onset_s": 123.563,
+  "end_s": 123.803
+ },
+ {
+  "w": 386,
+  "word": "So",
+  "onset_s": 124.823,
+  "end_s": 124.903
+ },
+ {
+  "w": 387,
+  "word": "AI",
+  "onset_s": 125.283,
+  "end_s": 125.543
+ },
+ {
+  "w": 388,
+  "word": "goes",
+  "onset_s": 125.583,
+  "end_s": 125.903
+ },
+ {
+  "w": 389,
+  "word": "through",
+  "onset_s": 126.123,
+  "end_s": 126.303
+ },
+ {
+  "w": 390,
+  "word": "every",
+  "onset_s": 126.343,
+  "end_s": 126.503
+ },
+ {
+  "w": 391,
+  "word": "line",
+  "onset_s": 126.583,
+  "end_s": 126.843
+ },
+ {
+  "w": 392,
+  "word": "against",
+  "onset_s": 127.303,
+  "end_s": 127.603
+ },
+ {
+  "w": 393,
+  "word": "those",
+  "onset_s": 127.623,
+  "end_s": 127.803
+ },
+ {
+  "w": 394,
+  "word": "rules",
+  "onset_s": 127.843,
+  "end_s": 128.083
+ },
+ {
+  "w": 395,
+  "word": "without",
+  "onset_s": 128.483,
+  "end_s": 128.743
+ },
+ {
+  "w": 396,
+  "word": "getting",
+  "onset_s": 128.803,
+  "end_s": 129.023
+ },
+ {
+  "w": 397,
+  "word": "bored,",
+  "onset_s": 129.043,
+  "end_s": 129.303
+ },
+ {
+  "w": 398,
+  "word": "without",
+  "onset_s": 129.403,
+  "end_s": 129.683
+ },
+ {
+  "w": 399,
+  "word": "needing",
+  "onset_s": 129.723,
+  "end_s": 129.963
+ },
+ {
+  "w": 400,
+  "word": "a",
+  "onset_s": 129.963,
+  "end_s": 129.983
+ },
+ {
+  "w": 401,
+  "word": "coffee.",
+  "onset_s": 130.043,
+  "end_s": 130.363
+ },
+ {
+  "w": 402,
+  "word": "So",
+  "onset_s": 131.123,
+  "end_s": 131.163
+ },
+ {
+  "w": 403,
+  "word": "if",
+  "onset_s": 131.223,
+  "end_s": 131.283
+ },
+ {
+  "w": 404,
+  "word": "you",
+  "onset_s": 131.323,
+  "end_s": 131.423
+ },
+ {
+  "w": 405,
+  "word": "ask",
+  "onset_s": 131.523,
+  "end_s": 131.723
+ },
+ {
+  "w": 406,
+  "word": "AI",
+  "onset_s": 131.823,
+  "end_s": 132.063
+ },
+ {
+  "w": 407,
+  "word": "about",
+  "onset_s": 132.103,
+  "end_s": 132.343
+ },
+ {
+  "w": 408,
+  "word": "next",
+  "onset_s": 132.463,
+  "end_s": 132.723
+ },
+ {
+  "w": 409,
+  "word": "year",
+  "onset_s": 132.763,
+  "end_s": 132.943
+ },
+ {
+  "w": 410,
+  "word": "it's",
+  "onset_s": 133.383,
+  "end_s": 133.543
+ },
+ {
+  "w": 411,
+  "word": "kind",
+  "onset_s": 133.943,
+  "end_s": 134.143
+ },
+ {
+  "w": 412,
+  "word": "of",
+  "onset_s": 134.143,
+  "end_s": 134.183
+ },
+ {
+  "w": 413,
+  "word": "guessing",
+  "onset_s": 134.283,
+  "end_s": 134.663
+ },
+ {
+  "w": 414,
+  "word": "same",
+  "onset_s": 134.823,
+  "end_s": 135.023
+ },
+ {
+  "w": 415,
+  "word": "as",
+  "onset_s": 135.043,
+  "end_s": 135.103
+ },
+ {
+  "w": 416,
+  "word": "the",
+  "onset_s": 135.123,
+  "end_s": 135.183
+ },
+ {
+  "w": 417,
+  "word": "rest",
+  "onset_s": 135.223,
+  "end_s": 135.383
+ },
+ {
+  "w": 418,
+  "word": "of",
+  "onset_s": 135.403,
+  "end_s": 135.463
+ },
+ {
+  "w": 419,
+  "word": "us.",
+  "onset_s": 135.503,
+  "end_s": 135.663
+ },
+ {
+  "w": 420,
+  "word": "But",
+  "onset_s": 136.383,
+  "end_s": 136.463
+ },
+ {
+  "w": 421,
+  "word": "if",
+  "onset_s": 136.483,
+  "end_s": 136.543
+ },
+ {
+  "w": 422,
+  "word": "you",
+  "onset_s": 136.563,
+  "end_s": 136.643
+ },
+ {
+  "w": 423,
+  "word": "ask",
+  "onset_s": 136.703,
+  "end_s": 136.843
+ },
+ {
+  "w": 424,
+  "word": "it",
+  "onset_s": 136.883,
+  "end_s": 136.943
+ },
+ {
+  "w": 425,
+  "word": "about",
+  "onset_s": 136.943,
+  "end_s": 137.123
+ },
+ {
+  "w": 426,
+  "word": "last",
+  "onset_s": 137.183,
+  "end_s": 137.443
+ },
+ {
+  "w": 427,
+  "word": "year",
+  "onset_s": 137.483,
+  "end_s": 137.623
+ },
+ {
+  "w": 428,
+  "word": "it's",
+  "onset_s": 137.663,
+  "end_s": 137.783
+ },
+ {
+  "w": 429,
+  "word": "reading,",
+  "onset_s": 137.923,
+  "end_s": 138.223
+ },
+ {
+  "w": 430,
+  "word": "it's",
+  "onset_s": 138.263,
+  "end_s": 138.363
+ },
+ {
+  "w": 431,
+  "word": "analysing.",
+  "onset_s": 138.403,
+  "end_s": 138.884
+ },
+ {
+  "w": 432,
+  "word": "So",
+  "onset_s": 139.104,
+  "end_s": 139.164
+ },
+ {
+  "w": 433,
+  "word": "AI",
+  "onset_s": 139.284,
+  "end_s": 139.484
+ },
+ {
+  "w": 434,
+  "word": "makes",
+  "onset_s": 139.524,
+  "end_s": 139.704
+ },
+ {
+  "w": 435,
+  "word": "a",
+  "onset_s": 139.744,
+  "end_s": 139.764
+ },
+ {
+  "w": 436,
+  "word": "terrible",
+  "onset_s": 139.944,
+  "end_s": 140.304
+ },
+ {
+  "w": 437,
+  "word": "fortune",
+  "onset_s": 140.324,
+  "end_s": 140.684
+ },
+ {
+  "w": 438,
+  "word": "teller",
+  "onset_s": 140.704,
+  "end_s": 140.964
+ },
+ {
+  "w": 439,
+  "word": "like",
+  "onset_s": 141.164,
+  "end_s": 141.384
+ },
+ {
+  "w": 440,
+  "word": "most",
+  "onset_s": 142.204,
+  "end_s": 142.424
+ },
+ {
+  "w": 441,
+  "word": "of",
+  "onset_s": 142.444,
+  "end_s": 142.504
+ },
+ {
+  "w": 442,
+  "word": "us",
+  "onset_s": 142.544,
+  "end_s": 142.704
+ },
+ {
+  "w": 443,
+  "word": "and",
+  "onset_s": 142.844,
+  "end_s": 142.984
+ },
+ {
+  "w": 444,
+  "word": "a",
+  "onset_s": 143.084,
+  "end_s": 143.104
+ },
+ {
+  "w": 445,
+  "word": "really,",
+  "onset_s": 143.224,
+  "end_s": 143.444
+ },
+ {
+  "w": 446,
+  "word": "really",
+  "onset_s": 143.684,
+  "end_s": 143.884
+ },
+ {
+  "w": 447,
+  "word": "good",
+  "onset_s": 143.964,
+  "end_s": 144.124
+ },
+ {
+  "w": 448,
+  "word": "auditor.",
+  "onset_s": 144.224,
+  "end_s": 144.504
+ },
+ {
+  "w": 449,
+  "word": "And",
+  "onset_s": 144.584,
+  "end_s": 144.704
+ },
+ {
+  "w": 450,
+  "word": "every",
+  "onset_s": 144.764,
+  "end_s": 144.964
+ },
+ {
+  "w": 451,
+  "word": "line",
+  "onset_s": 145.064,
+  "end_s": 145.284
+ },
+ {
+  "w": 452,
+  "word": "it",
+  "onset_s": 145.304,
+  "end_s": 145.384
+ },
+ {
+  "w": 453,
+  "word": "flags",
+  "onset_s": 145.444,
+  "end_s": 145.864
+ },
+ {
+  "w": 454,
+  "word": "is",
+  "onset_s": 145.964,
+  "end_s": 146.044
+ },
+ {
+  "w": 455,
+  "word": "a",
+  "onset_s": 146.084,
+  "end_s": 146.104
+ },
+ {
+  "w": 456,
+  "word": "lead.",
+  "onset_s": 146.164,
+  "end_s": 146.364
+ },
+ {
+  "w": 457,
+  "word": "So",
+  "onset_s": 146.404,
+  "end_s": 146.464
+ },
+ {
+  "w": 458,
+  "word": "a",
+  "onset_s": 146.524,
+  "end_s": 146.544
+ },
+ {
+  "w": 459,
+  "word": "person",
+  "onset_s": 146.604,
+  "end_s": 146.904
+ },
+ {
+  "w": 460,
+  "word": "can",
+  "onset_s": 146.944,
+  "end_s": 147.064
+ },
+ {
+  "w": 461,
+  "word": "check",
+  "onset_s": 147.124,
+  "end_s": 147.304
+ },
+ {
+  "w": 462,
+  "word": "on",
+  "onset_s": 147.364,
+  "end_s": 147.424
+ },
+ {
+  "w": 463,
+  "word": "it",
+  "onset_s": 147.464,
+  "end_s": 147.524
+ },
+ {
+  "w": 464,
+  "word": "before",
+  "onset_s": 147.564,
+  "end_s": 147.864
+ },
+ {
+  "w": 465,
+  "word": "anyone",
+  "onset_s": 147.924,
+  "end_s": 148.244
+ },
+ {
+  "w": 466,
+  "word": "gets",
+  "onset_s": 148.424,
+  "end_s": 148.624
+ },
+ {
+  "w": 467,
+  "word": "any",
+  "onset_s": 148.664,
+  "end_s": 148.784
+ },
+ {
+  "w": 468,
+  "word": "angry",
+  "onset_s": 148.864,
+  "end_s": 149.084
+ },
+ {
+  "w": 469,
+  "word": "letters.",
+  "onset_s": 149.144,
+  "end_s": 149.524
+ },
+ {
+  "w": 470,
+  "word": "And",
+  "onset_s": 149.924,
+  "end_s": 150.004
+ },
+ {
+  "w": 471,
+  "word": "your",
+  "onset_s": 150.004,
+  "end_s": 150.104
+ },
+ {
+  "w": 472,
+  "word": "business",
+  "onset_s": 150.124,
+  "end_s": 150.424
+ },
+ {
+  "w": 473,
+  "word": "works",
+  "onset_s": 150.484,
+  "end_s": 150.704
+ },
+ {
+  "w": 474,
+  "word": "the",
+  "onset_s": 150.724,
+  "end_s": 150.804
+ },
+ {
+  "w": 475,
+  "word": "same",
+  "onset_s": 150.844,
+  "end_s": 151.044
+ },
+ {
+  "w": 476,
+  "word": "way.",
+  "onset_s": 151.084,
+  "end_s": 151.204
+ },
+ {
+  "w": 477,
+  "word": "Your",
+  "onset_s": 151.524,
+  "end_s": 151.644
+ },
+ {
+  "w": 478,
+  "word": "rules",
+  "onset_s": 151.684,
+  "end_s": 151.904
+ },
+ {
+  "w": 479,
+  "word": "are",
+  "onset_s": 151.924,
+  "end_s": 152.004
+ },
+ {
+  "w": 480,
+  "word": "in",
+  "onset_s": 152.004,
+  "end_s": 152.064
+ },
+ {
+  "w": 481,
+  "word": "your",
+  "onset_s": 152.104,
+  "end_s": 152.204
+ },
+ {
+  "w": 482,
+  "word": "contracts",
+  "onset_s": 152.224,
+  "end_s": 152.704
+ },
+ {
+  "w": 483,
+  "word": "and",
+  "onset_s": 152.744,
+  "end_s": 152.824
+ },
+ {
+  "w": 484,
+  "word": "in",
+  "onset_s": 152.824,
+  "end_s": 152.884
+ },
+ {
+  "w": 485,
+  "word": "your",
+  "onset_s": 152.904,
+  "end_s": 153.024
+ },
+ {
+  "w": 486,
+  "word": "price",
+  "onset_s": 153.044,
+  "end_s": 153.324
+ },
+ {
+  "w": 487,
+  "word": "list.",
+  "onset_s": 153.344,
+  "end_s": 153.544
+ },
+ {
+  "w": 488,
+  "word": "So",
+  "onset_s": 153.584,
+  "end_s": 153.664
+ },
+ {
+  "w": 489,
+  "word": "give",
+  "onset_s": 154.044,
+  "end_s": 154.204
+ },
+ {
+  "w": 490,
+  "word": "AI",
+  "onset_s": 154.264,
+  "end_s": 154.564
+ },
+ {
+  "w": 491,
+  "word": "last",
+  "onset_s": 154.964,
+  "end_s": 155.244
+ },
+ {
+  "w": 492,
+  "word": "year's",
+  "onset_s": 155.284,
+  "end_s": 155.564
+ },
+ {
+  "w": 493,
+  "word": "invoices,",
+  "onset_s": 155.764,
+  "end_s": 156.324
+ },
+ {
+  "w": 494,
+  "word": "subscriptions",
+  "onset_s": 156.404,
+  "end_s": 157.004
+ },
+ {
+  "w": 495,
+  "word": "and",
+  "onset_s": 157.024,
+  "end_s": 157.124
+ },
+ {
+  "w": 496,
+  "word": "contracts",
+  "onset_s": 157.164,
+  "end_s": 157.704
+ },
+ {
+  "w": 497,
+  "word": "and",
+  "onset_s": 158.064,
+  "end_s": 158.164
+ },
+ {
+  "w": 498,
+  "word": "watch",
+  "onset_s": 158.204,
+  "end_s": 158.424
+ },
+ {
+  "w": 499,
+  "word": "it",
+  "onset_s": 158.464,
+  "end_s": 158.544
+ },
+ {
+  "w": 500,
+  "word": "find",
+  "onset_s": 158.704,
+  "end_s": 159.064
+ },
+ {
+  "w": 501,
+  "word": "things",
+  "onset_s": 159.904,
+  "end_s": 160.224
+ },
+ {
+  "w": 502,
+  "word": "that",
+  "onset_s": 160.304,
+  "end_s": 160.444
+ },
+ {
+  "w": 503,
+  "word": "don't",
+  "onset_s": 160.524,
+  "end_s": 160.704
+ },
+ {
+  "w": 504,
+  "word": "make",
+  "onset_s": 160.744,
+  "end_s": 160.984
+ },
+ {
+  "w": 505,
+  "word": "full",
+  "onset_s": 161.204,
+  "end_s": 161.424
+ },
+ {
+  "w": 506,
+  "word": "sense.",
+  "onset_s": 161.484,
+  "end_s": 161.824
+ },
+ {
+  "w": 507,
+  "word": "But",
+  "onset_s": 162.324,
+  "end_s": 162.424
+ },
+ {
+  "w": 508,
+  "word": "here's",
+  "onset_s": 162.464,
+  "end_s": 162.644
+ },
+ {
+  "w": 509,
+  "word": "the",
+  "onset_s": 162.684,
+  "end_s": 162.744
+ },
+ {
+  "w": 510,
+  "word": "twist.",
+  "onset_s": 162.804,
+  "end_s": 163.164
+ },
+ {
+  "w": 511,
+  "word": "If",
+  "onset_s": 163.284,
+  "end_s": 163.364
+ },
+ {
+  "w": 512,
+  "word": "you're",
+  "onset_s": 163.404,
+  "end_s": 163.544
+ },
+ {
+  "w": 513,
+  "word": "a",
+  "onset_s": 163.544,
+  "end_s": 163.564
+ },
+ {
+  "w": 514,
+  "word": "business",
+  "onset_s": 163.664,
+  "end_s": 164.124
+ },
+ {
+  "w": 515,
+  "word": "then",
+  "onset_s": 164.744,
+  "end_s": 164.864
+ },
+ {
+  "w": 516,
+  "word": "to",
+  "onset_s": 164.944,
+  "end_s": 165.004
+ },
+ {
+  "w": 517,
+  "word": "your",
+  "onset_s": 165.084,
+  "end_s": 165.244
+ },
+ {
+  "w": 518,
+  "word": "customers",
+  "onset_s": 165.304,
+  "end_s": 165.824
+ },
+ {
+  "w": 519,
+  "word": "you",
+  "onset_s": 165.944,
+  "end_s": 166.084
+ },
+ {
+  "w": 520,
+  "word": "are",
+  "onset_s": 166.284,
+  "end_s": 166.344
+ },
+ {
+  "w": 521,
+  "word": "the",
+  "onset_s": 166.344,
+  "end_s": 166.424
+ },
+ {
+  "w": 522,
+  "word": "hospital.",
+  "onset_s": 166.484,
+  "end_s": 166.944
+ },
+ {
+  "w": 523,
+  "word": "They",
+  "onset_s": 167.364,
+  "end_s": 167.464
+ },
+ {
+  "w": 524,
+  "word": "can",
+  "onset_s": 167.524,
+  "end_s": 167.644
+ },
+ {
+  "w": 525,
+  "word": "paste",
+  "onset_s": 167.724,
+  "end_s": 168.044
+ },
+ {
+  "w": 526,
+  "word": "your",
+  "onset_s": 168.184,
+  "end_s": 168.364
+ },
+ {
+  "w": 527,
+  "word": "invoices",
+  "onset_s": 168.404,
+  "end_s": 168.964
+ },
+ {
+  "w": 528,
+  "word": "into",
+  "onset_s": 169.344,
+  "end_s": 169.524
+ },
+ {
+  "w": 529,
+  "word": "a",
+  "onset_s": 169.584,
+  "end_s": 169.604
+ },
+ {
+  "w": 530,
+  "word": "chatbot",
+  "onset_s": 169.664,
+  "end_s": 170.084
+ },
+ {
+  "w": 531,
+  "word": "and",
+  "onset_s": 170.164,
+  "end_s": 170.284
+ },
+ {
+  "w": 532,
+  "word": "check",
+  "onset_s": 170.464,
+  "end_s": 170.704
+ },
+ {
+  "w": 533,
+  "word": "them",
+  "onset_s": 170.824,
+  "end_s": 171.004
+ },
+ {
+  "w": 534,
+  "word": "against",
+  "onset_s": 171.064,
+  "end_s": 171.384
+ },
+ {
+  "w": 535,
+  "word": "the",
+  "onset_s": 171.404,
+  "end_s": 171.484
+ },
+ {
+  "w": 536,
+  "word": "price",
+  "onset_s": 171.524,
+  "end_s": 171.824
+ },
+ {
+  "w": 537,
+  "word": "you",
+  "onset_s": 171.884,
+  "end_s": 171.984
+ },
+ {
+  "w": 538,
+  "word": "agreed.",
+  "onset_s": 172.024,
+  "end_s": 172.364
+ },
+ {
+  "w": 539,
+  "word": "But",
+  "onset_s": 172.604,
+  "end_s": 172.724
+ },
+ {
+  "w": 540,
+  "word": "think",
+  "onset_s": 172.764,
+  "end_s": 172.924
+ },
+ {
+  "w": 541,
+  "word": "about",
+  "onset_s": 172.964,
+  "end_s": 173.164
+ },
+ {
+  "w": 542,
+  "word": "whose",
+  "onset_s": 173.204,
+  "end_s": 173.424
+ },
+ {
+  "w": 543,
+  "word": "mistake",
+  "onset_s": 173.464,
+  "end_s": 173.924
+ },
+ {
+  "w": 544,
+  "word": "Claude",
+  "onset_s": 174.284,
+  "end_s": 174.564
+ },
+ {
+  "w": 545,
+  "word": "found",
+  "onset_s": 174.604,
+  "end_s": 174.864
+ },
+ {
+  "w": 546,
+  "word": "in",
+  "onset_s": 174.904,
+  "end_s": 174.984
+ },
+ {
+  "w": 547,
+  "word": "that",
+  "onset_s": 175.004,
+  "end_s": 175.164
+ },
+ {
+  "w": 548,
+  "word": "hospital",
+  "onset_s": 175.224,
+  "end_s": 175.624
+ },
+ {
+  "w": 549,
+  "word": "bill",
+  "onset_s": 175.664,
+  "end_s": 175.804
+ },
+ {
+  "w": 550,
+  "word": "I",
+  "onset_s": 175.884,
+  "end_s": 175.904
+ },
+ {
+  "w": 551,
+  "word": "just",
+  "onset_s": 175.924,
+  "end_s": 176.104
+ },
+ {
+  "w": 552,
+  "word": "talked",
+  "onset_s": 176.124,
+  "end_s": 176.344
+ },
+ {
+  "w": 553,
+  "word": "about.",
+  "onset_s": 176.384,
+  "end_s": 176.604
+ },
+ {
+  "w": 554,
+  "word": "It",
+  "onset_s": 176.664,
+  "end_s": 176.744
+ },
+ {
+  "w": 555,
+  "word": "was",
+  "onset_s": 176.764,
+  "end_s": 176.884
+ },
+ {
+  "w": 556,
+  "word": "the",
+  "onset_s": 176.944,
+  "end_s": 177.024
+ },
+ {
+  "w": 557,
+  "word": "hospital's.",
+  "onset_s": 177.084,
+  "end_s": 177.584
+ },
+ {
+  "w": 558,
+  "word": "Claude",
+  "onset_s": 177.924,
+  "end_s": 178.244
+ },
+ {
+  "w": 559,
+  "word": "did",
+  "onset_s": 178.825,
+  "end_s": 178.965
+ },
+ {
+  "w": 560,
+  "word": "not",
+  "onset_s": 179.045,
+  "end_s": 179.205
+ },
+ {
+  "w": 561,
+  "word": "care",
+  "onset_s": 179.265,
+  "end_s": 179.485
+ },
+ {
+  "w": 562,
+  "word": "whose",
+  "onset_s": 179.545,
+  "end_s": 179.885
+ },
+ {
+  "w": 563,
+  "word": "closet",
+  "onset_s": 180.025,
+  "end_s": 180.325
+ },
+ {
+  "w": 564,
+  "word": "it",
+  "onset_s": 180.365,
+  "end_s": 180.425
+ },
+ {
+  "w": 565,
+  "word": "was",
+  "onset_s": 180.465,
+  "end_s": 180.565
+ },
+ {
+  "w": 566,
+  "word": "opening.",
+  "onset_s": 180.625,
+  "end_s": 180.945
+ },
+ {
+  "w": 567,
+  "word": "And",
+  "onset_s": 181.485,
+  "end_s": 181.585
+ },
+ {
+  "w": 568,
+  "word": "it",
+  "onset_s": 181.665,
+  "end_s": 181.745
+ },
+ {
+  "w": 569,
+  "word": "will",
+  "onset_s": 181.865,
+  "end_s": 181.985
+ },
+ {
+  "w": 570,
+  "word": "not",
+  "onset_s": 182.025,
+  "end_s": 182.145
+ },
+ {
+  "w": 571,
+  "word": "care",
+  "onset_s": 182.205,
+  "end_s": 182.385
+ },
+ {
+  "w": 572,
+  "word": "when",
+  "onset_s": 182.405,
+  "end_s": 182.485
+ },
+ {
+  "w": 573,
+  "word": "it",
+  "onset_s": 182.505,
+  "end_s": 182.565
+ },
+ {
+  "w": 574,
+  "word": "opens",
+  "onset_s": 182.605,
+  "end_s": 182.945
+ },
+ {
+  "w": 575,
+  "word": "yours",
+  "onset_s": 182.985,
+  "end_s": 183.205
+ },
+ {
+  "w": 576,
+  "word": "either.",
+  "onset_s": 183.285,
+  "end_s": 183.545
+ },
+ {
+  "w": 577,
+  "word": "Sholto",
+  "onset_s": 183.945,
+  "end_s": 184.245
+ },
+ {
+  "w": 578,
+  "word": "David",
+  "onset_s": 184.345,
+  "end_s": 184.705
+ },
+ {
+  "w": 579,
+  "word": "is",
+  "onset_s": 184.785,
+  "end_s": 184.865
+ },
+ {
+  "w": 580,
+  "word": "a",
+  "onset_s": 184.905,
+  "end_s": 184.925
+ },
+ {
+  "w": 581,
+  "word": "scientist",
+  "onset_s": 184.965,
+  "end_s": 185.545
+ },
+ {
+  "w": 582,
+  "word": "who",
+  "onset_s": 185.705,
+  "end_s": 185.785
+ },
+ {
+  "w": 583,
+  "word": "hunts",
+  "onset_s": 185.865,
+  "end_s": 186.065
+ },
+ {
+  "w": 584,
+  "word": "for",
+  "onset_s": 186.105,
+  "end_s": 186.185
+ },
+ {
+  "w": 585,
+  "word": "faked",
+  "onset_s": 186.285,
+  "end_s": 186.585
+ },
+ {
+  "w": 586,
+  "word": "pictures",
+  "onset_s": 186.745,
+  "end_s": 187.085
+ },
+ {
+  "w": 587,
+  "word": "in",
+  "onset_s": 187.105,
+  "end_s": 187.165
+ },
+ {
+  "w": 588,
+  "word": "research.",
+  "onset_s": 187.225,
+  "end_s": 187.605
+ },
+ {
+  "w": 589,
+  "word": "He",
+  "onset_s": 187.925,
+  "end_s": 187.985
+ },
+ {
+  "w": 590,
+  "word": "used",
+  "onset_s": 188.085,
+  "end_s": 188.245
+ },
+ {
+  "w": 591,
+  "word": "software",
+  "onset_s": 188.265,
+  "end_s": 188.605
+ },
+ {
+  "w": 592,
+  "word": "called",
+  "onset_s": 188.625,
+  "end_s": 188.805
+ },
+ {
+  "w": 593,
+  "word": "ImageTwin",
+  "onset_s": 188.865,
+  "end_s": 189.385
+ },
+ {
+  "w": 594,
+  "word": "on",
+  "onset_s": 189.445,
+  "end_s": 189.545
+ },
+ {
+  "w": 595,
+  "word": "old",
+  "onset_s": 189.765,
+  "end_s": 189.925
+ },
+ {
+  "w": 596,
+  "word": "papers",
+  "onset_s": 190.005,
+  "end_s": 190.385
+ },
+ {
+  "w": 597,
+  "word": "from",
+  "onset_s": 190.445,
+  "end_s": 190.645
+ },
+ {
+  "w": 598,
+  "word": "a",
+  "onset_s": 190.765,
+  "end_s": 190.785
+ },
+ {
+  "w": 599,
+  "word": "company",
+  "onset_s": 190.825,
+  "end_s": 191.025
+ },
+ {
+  "w": 600,
+  "word": "called",
+  "onset_s": 191.045,
+  "end_s": 191.225
+ },
+ {
+  "w": 601,
+  "word": "Dana-Farber",
+  "onset_s": 191.325,
+  "end_s": 191.945
+ },
+ {
+  "w": 602,
+  "word": "which",
+  "onset_s": 191.965,
+  "end_s": 192.105
+ },
+ {
+  "w": 603,
+  "word": "is",
+  "onset_s": 192.145,
+  "end_s": 192.205
+ },
+ {
+  "w": 604,
+  "word": "a",
+  "onset_s": 192.245,
+  "end_s": 192.265
+ },
+ {
+  "w": 605,
+  "word": "famous",
+  "onset_s": 192.345,
+  "end_s": 192.725
+ },
+ {
+  "w": 606,
+  "word": "cancer",
+  "onset_s": 192.785,
+  "end_s": 193.125
+ },
+ {
+  "w": 607,
+  "word": "center.",
+  "onset_s": 193.165,
+  "end_s": 193.525
+ },
+ {
+  "w": 608,
+  "word": "Some",
+  "onset_s": 197.085,
+  "end_s": 197.225
+ },
+ {
+  "w": 609,
+  "word": "of",
+  "onset_s": 197.245,
+  "end_s": 197.285
+ },
+ {
+  "w": 610,
+  "word": "these",
+  "onset_s": 197.305,
+  "end_s": 197.465
+ },
+ {
+  "w": 611,
+  "word": "papers",
+  "onset_s": 197.485,
+  "end_s": 197.925
+ },
+ {
+  "w": 612,
+  "word": "went",
+  "onset_s": 198.025,
+  "end_s": 198.185
+ },
+ {
+  "w": 613,
+  "word": "back",
+  "onset_s": 198.325,
+  "end_s": 198.505
+ },
+ {
+  "w": 614,
+  "word": "to",
+  "onset_s": 198.545,
+  "end_s": 198.605
+ },
+ {
+  "w": 615,
+  "word": "1999",
+  "onset_s": 199.365,
+  "end_s": 199.385
+ },
+ {
+  "w": 616,
+  "word": "and",
+  "onset_s": 199.585,
+  "end_s": 199.685
+ },
+ {
+  "w": 617,
+  "word": "dozens",
+  "onset_s": 199.745,
+  "end_s": 200.105
+ },
+ {
+  "w": 618,
+  "word": "of",
+  "onset_s": 200.125,
+  "end_s": 200.185
+ },
+ {
+  "w": 619,
+  "word": "them",
+  "onset_s": 200.225,
+  "end_s": 200.365
+ },
+ {
+  "w": 620,
+  "word": "ended",
+  "onset_s": 200.525,
+  "end_s": 200.725
+ },
+ {
+  "w": 621,
+  "word": "up",
+  "onset_s": 200.765,
+  "end_s": 200.865
+ },
+ {
+  "w": 622,
+  "word": "getting",
+  "onset_s": 200.985,
+  "end_s": 201.225
+ },
+ {
+  "w": 623,
+  "word": "pulled",
+  "onset_s": 201.305,
+  "end_s": 201.545
+ },
+ {
+  "w": 624,
+  "word": "up",
+  "onset_s": 201.605,
+  "end_s": 201.705
+ },
+ {
+  "w": 625,
+  "word": "or",
+  "onset_s": 201.885,
+  "end_s": 201.985
+ },
+ {
+  "w": 626,
+  "word": "correct.",
+  "onset_s": 202.225,
+  "end_s": 202.565
+ },
+ {
+  "w": 627,
+  "word": "Dana-Farber",
+  "onset_s": 202.585,
+  "end_s": 203.105
+ },
+ {
+  "w": 628,
+  "word": "said",
+  "onset_s": 203.185,
+  "end_s": 203.365
+ },
+ {
+  "w": 629,
+  "word": "a",
+  "onset_s": 203.985,
+  "end_s": 204.005
+ },
+ {
+  "w": 630,
+  "word": "mistake",
+  "onset_s": 204.065,
+  "end_s": 204.445
+ },
+ {
+  "w": 631,
+  "word": "in",
+  "onset_s": 204.445,
+  "end_s": 204.505
+ },
+ {
+  "w": 632,
+  "word": "a",
+  "onset_s": 204.545,
+  "end_s": 204.565
+ },
+ {
+  "w": 633,
+  "word": "picture",
+  "onset_s": 204.605,
+  "end_s": 204.885
+ },
+ {
+  "w": 634,
+  "word": "isn't",
+  "onset_s": 204.905,
+  "end_s": 205.085
+ },
+ {
+  "w": 635,
+  "word": "proof",
+  "onset_s": 205.145,
+  "end_s": 205.385
+ },
+ {
+  "w": 636,
+  "word": "that",
+  "onset_s": 205.425,
+  "end_s": 205.505
+ },
+ {
+  "w": 637,
+  "word": "anyone",
+  "onset_s": 205.545,
+  "end_s": 205.805
+ },
+ {
+  "w": 638,
+  "word": "meant",
+  "onset_s": 205.805,
+  "end_s": 205.945
+ },
+ {
+  "w": 639,
+  "word": "to",
+  "onset_s": 205.985,
+  "end_s": 206.045
+ },
+ {
+  "w": 640,
+  "word": "cheat",
+  "onset_s": 206.145,
+  "end_s": 206.405
+ },
+ {
+  "w": 641,
+  "word": "on",
+  "onset_s": 206.485,
+  "end_s": 206.565
+ },
+ {
+  "w": 642,
+  "word": "this",
+  "onset_s": 206.585,
+  "end_s": 206.745
+ },
+ {
+  "w": 643,
+  "word": "stuff.",
+  "onset_s": 206.805,
+  "end_s": 207.045
+ },
+ {
+  "w": 644,
+  "word": "But",
+  "onset_s": 207.145,
+  "end_s": 207.305
+ },
+ {
+  "w": 645,
+  "word": "someone",
+  "onset_s": 208.225,
+  "end_s": 208.485
+ },
+ {
+  "w": 646,
+  "word": "outside",
+  "onset_s": 208.525,
+  "end_s": 208.905
+ },
+ {
+  "w": 647,
+  "word": "the",
+  "onset_s": 208.925,
+  "end_s": 208.985
+ },
+ {
+  "w": 648,
+  "word": "building",
+  "onset_s": 209.065,
+  "end_s": 209.405
+ },
+ {
+  "w": 649,
+  "word": "found",
+  "onset_s": 209.485,
+  "end_s": 209.745
+ },
+ {
+  "w": 650,
+  "word": "it",
+  "onset_s": 209.785,
+  "end_s": 209.865
+ },
+ {
+  "w": 651,
+  "word": "before",
+  "onset_s": 209.925,
+  "end_s": 210.205
+ },
+ {
+  "w": 652,
+  "word": "anyone",
+  "onset_s": 210.225,
+  "end_s": 210.465
+ },
+ {
+  "w": 653,
+  "word": "inside",
+  "onset_s": 210.505,
+  "end_s": 210.905
+ },
+ {
+  "w": 654,
+  "word": "did.",
+  "onset_s": 210.925,
+  "end_s": 211.085
+ },
+ {
+  "w": 655,
+  "word": "And",
+  "onset_s": 211.325,
+  "end_s": 211.405
+ },
+ {
+  "w": 656,
+  "word": "your",
+  "onset_s": 211.445,
+  "end_s": 211.565
+ },
+ {
+  "w": 657,
+  "word": "newest",
+  "onset_s": 211.665,
+  "end_s": 211.985
+ },
+ {
+  "w": 658,
+  "word": "skeleton",
+  "onset_s": 212.045,
+  "end_s": 212.525
+ },
+ {
+  "w": 659,
+  "word": "might",
+  "onset_s": 212.605,
+  "end_s": 212.825
+ },
+ {
+  "w": 660,
+  "word": "be",
+  "onset_s": 212.965,
+  "end_s": 213.065
+ },
+ {
+  "w": 661,
+  "word": "your",
+  "onset_s": 213.485,
+  "end_s": 213.665
+ },
+ {
+  "w": 662,
+  "word": "own",
+  "onset_s": 213.785,
+  "end_s": 213.945
+ },
+ {
+  "w": 663,
+  "word": "AI",
+  "onset_s": 214.045,
+  "end_s": 214.285
+ },
+ {
+  "w": 664,
+  "word": "chat.",
+  "onset_s": 214.365,
+  "end_s": 214.645
+ },
+ {
+  "w": 665,
+  "word": "Krafton",
+  "onset_s": 214.805,
+  "end_s": 215.285
+ },
+ {
+  "w": 666,
+  "word": "is",
+  "onset_s": 215.385,
+  "end_s": 215.485
+ },
+ {
+  "w": 667,
+  "word": "a",
+  "onset_s": 215.545,
+  "end_s": 215.565
+ },
+ {
+  "w": 668,
+  "word": "games",
+  "onset_s": 215.605,
+  "end_s": 215.845
+ },
+ {
+  "w": 669,
+  "word": "company",
+  "onset_s": 215.905,
+  "end_s": 216.205
+ },
+ {
+  "w": 670,
+  "word": "that",
+  "onset_s": 216.265,
+  "end_s": 216.365
+ },
+ {
+  "w": 671,
+  "word": "bought",
+  "onset_s": 216.445,
+  "end_s": 216.685
+ },
+ {
+  "w": 672,
+  "word": "a",
+  "onset_s": 216.805,
+  "end_s": 216.825
+ },
+ {
+  "w": 673,
+  "word": "game",
+  "onset_s": 216.865,
+  "end_s": 217.085
+ },
+ {
+  "w": 674,
+  "word": "studio",
+  "onset_s": 217.145,
+  "end_s": 217.485
+ },
+ {
+  "w": 675,
+  "word": "behind",
+  "onset_s": 217.845,
+  "end_s": 218.146
+ },
+ {
+  "w": 676,
+  "word": "a",
+  "onset_s": 218.166,
+  "end_s": 218.186
+ },
+ {
+  "w": 677,
+  "word": "Subnautica.",
+  "onset_s": 218.246,
+  "end_s": 218.746
+ },
+ {
+  "w": 678,
+  "word": "It",
+  "onset_s": 219.066,
+  "end_s": 219.126
+ },
+ {
+  "w": 679,
+  "word": "owed",
+  "onset_s": 219.186,
+  "end_s": 219.346
+ },
+ {
+  "w": 680,
+  "word": "that",
+  "onset_s": 219.366,
+  "end_s": 219.526
+ },
+ {
+  "w": 681,
+  "word": "studio's",
+  "onset_s": 219.586,
+  "end_s": 220.026
+ },
+ {
+  "w": 682,
+  "word": "founders",
+  "onset_s": 220.086,
+  "end_s": 220.446
+ },
+ {
+  "w": 683,
+  "word": "a",
+  "onset_s": 220.466,
+  "end_s": 220.486
+ },
+ {
+  "w": 684,
+  "word": "huge",
+  "onset_s": 220.586,
+  "end_s": 220.886
+ },
+ {
+  "w": 685,
+  "word": "bonus.",
+  "onset_s": 220.906,
+  "end_s": 221.306
+ },
+ {
+  "w": 686,
+  "word": "And",
+  "onset_s": 221.726,
+  "end_s": 221.806
+ },
+ {
+  "w": 687,
+  "word": "its",
+  "onset_s": 221.846,
+  "end_s": 221.926
+ },
+ {
+  "w": 688,
+  "word": "boss",
+  "onset_s": 222.046,
+  "end_s": 222.326
+ },
+ {
+  "w": 689,
+  "word": "asked",
+  "onset_s": 222.466,
+  "end_s": 222.666
+ },
+ {
+  "w": 690,
+  "word": "ChatGPT",
+  "onset_s": 222.666,
+  "end_s": 223.206
+ },
+ {
+  "w": 691,
+  "word": "how",
+  "onset_s": 223.406,
+  "end_s": 223.546
+ },
+ {
+  "w": 692,
+  "word": "to",
+  "onset_s": 223.586,
+  "end_s": 223.666
+ },
+ {
+  "w": 693,
+  "word": "get",
+  "onset_s": 223.746,
+  "end_s": 223.886
+ },
+ {
+  "w": 694,
+  "word": "out",
+  "onset_s": 223.966,
+  "end_s": 224.106
+ },
+ {
+  "w": 695,
+  "word": "of",
+  "onset_s": 224.106,
+  "end_s": 224.146
+ },
+ {
+  "w": 696,
+  "word": "paying",
+  "onset_s": 224.206,
+  "end_s": 224.506
+ },
+ {
+  "w": 697,
+  "word": "it.",
+  "onset_s": 224.526,
+  "end_s": 224.626
+ },
+ {
+  "w": 698,
+  "word": "The",
+  "onset_s": 224.986,
+  "end_s": 225.066
+ },
+ {
+  "w": 699,
+  "word": "chats",
+  "onset_s": 225.126,
+  "end_s": 225.466
+ },
+ {
+  "w": 700,
+  "word": "came",
+  "onset_s": 225.546,
+  "end_s": 225.746
+ },
+ {
+  "w": 701,
+  "word": "out",
+  "onset_s": 225.746,
+  "end_s": 225.866
+ },
+ {
+  "w": 702,
+  "word": "in",
+  "onset_s": 225.886,
+  "end_s": 225.946
+ },
+ {
+  "w": 703,
+  "word": "court.",
+  "onset_s": 226.006,
+  "end_s": 226.246
+ },
+ {
+  "w": 704,
+  "word": "The",
+  "onset_s": 226.286,
+  "end_s": 226.366
+ },
+ {
+  "w": 705,
+  "word": "judge",
+  "onset_s": 226.426,
+  "end_s": 226.646
+ },
+ {
+  "w": 706,
+  "word": "quoted",
+  "onset_s": 226.706,
+  "end_s": 227.006
+ },
+ {
+  "w": 707,
+  "word": "them",
+  "onset_s": 227.026,
+  "end_s": 227.106
+ },
+ {
+  "w": 708,
+  "word": "in",
+  "onset_s": 227.126,
+  "end_s": 227.166
+ },
+ {
+  "w": 709,
+  "word": "the",
+  "onset_s": 227.186,
+  "end_s": 227.246
+ },
+ {
+  "w": 710,
+  "word": "ruling",
+  "onset_s": 227.306,
+  "end_s": 227.586
+ },
+ {
+  "w": 711,
+  "word": "and",
+  "onset_s": 227.606,
+  "end_s": 227.706
+ },
+ {
+  "w": 712,
+  "word": "Krafton",
+  "onset_s": 227.866,
+  "end_s": 228.286
+ },
+ {
+  "w": 713,
+  "word": "lost.",
+  "onset_s": 228.366,
+  "end_s": 228.666
+ },
+ {
+  "w": 714,
+  "word": "If",
+  "onset_s": 229.826,
+  "end_s": 229.906
+ },
+ {
+  "w": 715,
+  "word": "you",
+  "onset_s": 229.926,
+  "end_s": 230.006
+ },
+ {
+  "w": 716,
+  "word": "run",
+  "onset_s": 230.046,
+  "end_s": 230.146
+ },
+ {
+  "w": 717,
+  "word": "a",
+  "onset_s": 230.186,
+  "end_s": 230.206
+ },
+ {
+  "w": 718,
+  "word": "business",
+  "onset_s": 230.266,
+  "end_s": 230.586
+ },
+ {
+  "w": 719,
+  "word": "whatever",
+  "onset_s": 230.626,
+  "end_s": 230.926
+ },
+ {
+  "w": 720,
+  "word": "you",
+  "onset_s": 230.966,
+  "end_s": 231.046
+ },
+ {
+  "w": 721,
+  "word": "type",
+  "onset_s": 231.126,
+  "end_s": 231.426
+ },
+ {
+  "w": 722,
+  "word": "into",
+  "onset_s": 231.506,
+  "end_s": 231.706
+ },
+ {
+  "w": 723,
+  "word": "an",
+  "onset_s": 231.766,
+  "end_s": 231.826
+ },
+ {
+  "w": 724,
+  "word": "AI",
+  "onset_s": 231.866,
+  "end_s": 232.066
+ },
+ {
+  "w": 725,
+  "word": "today",
+  "onset_s": 232.106,
+  "end_s": 232.426
+ },
+ {
+  "w": 726,
+  "word": "is",
+  "onset_s": 232.526,
+  "end_s": 232.646
+ },
+ {
+  "w": 727,
+  "word": "basically",
+  "onset_s": 232.906,
+  "end_s": 233.346
+ },
+ {
+  "w": 728,
+  "word": "tomorrow's",
+  "onset_s": 233.386,
+  "end_s": 233.866
+ },
+ {
+  "w": 729,
+  "word": "old",
+  "onset_s": 233.946,
+  "end_s": 234.066
+ },
+ {
+  "w": 730,
+  "word": "paperwork.",
+  "onset_s": 234.126,
+  "end_s": 234.606
+ },
+ {
+  "w": 731,
+  "word": "So",
+  "onset_s": 234.946,
+  "end_s": 234.986
+ },
+ {
+  "w": 732,
+  "word": "type",
+  "onset_s": 235.086,
+  "end_s": 235.346
+ },
+ {
+  "w": 733,
+  "word": "it",
+  "onset_s": 235.366,
+  "end_s": 235.446
+ },
+ {
+  "w": 734,
+  "word": "like",
+  "onset_s": 235.506,
+  "end_s": 235.666
+ },
+ {
+  "w": 735,
+  "word": "a",
+  "onset_s": 235.666,
+  "end_s": 235.706
+ },
+ {
+  "w": 736,
+  "word": "judge",
+  "onset_s": 235.766,
+  "end_s": 236.006
+ },
+ {
+  "w": 737,
+  "word": "might",
+  "onset_s": 236.026,
+  "end_s": 236.206
+ },
+ {
+  "w": 738,
+  "word": "read",
+  "onset_s": 236.226,
+  "end_s": 236.386
+ },
+ {
+  "w": 739,
+  "word": "it.",
+  "onset_s": 236.426,
+  "end_s": 236.506
+ },
+ {
+  "w": 740,
+  "word": "So",
+  "onset_s": 237.186,
+  "end_s": 237.286
+ },
+ {
+  "w": 741,
+  "word": "money",
+  "onset_s": 238.586,
+  "end_s": 238.826
+ },
+ {
+  "w": 742,
+  "word": "or",
+  "onset_s": 238.826,
+  "end_s": 238.906
+ },
+ {
+  "w": 743,
+  "word": "skeletons?",
+  "onset_s": 238.946,
+  "end_s": 239.566
+ },
+ {
+  "w": 744,
+  "word": "AI",
+  "onset_s": 239.846,
+  "end_s": 240.086
+ },
+ {
+  "w": 745,
+  "word": "finds",
+  "onset_s": 240.186,
+  "end_s": 240.506
+ },
+ {
+  "w": 746,
+  "word": "both.",
+  "onset_s": 240.586,
+  "end_s": 240.826
+ },
+ {
+  "w": 747,
+  "word": "So",
+  "onset_s": 241.046,
+  "end_s": 241.126
+ },
+ {
+  "w": 748,
+  "word": "the",
+  "onset_s": 241.326,
+  "end_s": 241.406
+ },
+ {
+  "w": 749,
+  "word": "real",
+  "onset_s": 241.466,
+  "end_s": 241.626
+ },
+ {
+  "w": 750,
+  "word": "question",
+  "onset_s": 241.686,
+  "end_s": 242.066
+ },
+ {
+  "w": 751,
+  "word": "is",
+  "onset_s": 242.106,
+  "end_s": 242.206
+ },
+ {
+  "w": 752,
+  "word": "who",
+  "onset_s": 242.246,
+  "end_s": 242.326
+ },
+ {
+  "w": 753,
+  "word": "reads",
+  "onset_s": 242.506,
+  "end_s": 242.826
+ },
+ {
+  "w": 754,
+  "word": "that",
+  "onset_s": 243.106,
+  "end_s": 243.266
+ },
+ {
+  "w": 755,
+  "word": "list",
+  "onset_s": 243.306,
+  "end_s": 243.506
+ },
+ {
+  "w": 756,
+  "word": "first?",
+  "onset_s": 243.566,
+  "end_s": 243.906
+ },
+ {
+  "w": 757,
+  "word": "If",
+  "onset_s": 244.666,
+  "end_s": 244.746
+ },
+ {
+  "w": 758,
+  "word": "there's",
+  "onset_s": 244.786,
+  "end_s": 244.946
+ },
+ {
+  "w": 759,
+  "word": "anything",
+  "onset_s": 244.966,
+  "end_s": 245.346
+ },
+ {
+  "w": 760,
+  "word": "you've",
+  "onset_s": 245.526,
+  "end_s": 245.686
+ },
+ {
+  "w": 761,
+  "word": "brushed",
+  "onset_s": 245.746,
+  "end_s": 246.046
+ },
+ {
+  "w": 762,
+  "word": "under",
+  "onset_s": 246.086,
+  "end_s": 246.246
+ },
+ {
+  "w": 763,
+  "word": "the",
+  "onset_s": 246.266,
+  "end_s": 246.346
+ },
+ {
+  "w": 764,
+  "word": "carpet",
+  "onset_s": 246.386,
+  "end_s": 246.766
+ },
+ {
+  "w": 765,
+  "word": "for",
+  "onset_s": 246.786,
+  "end_s": 246.886
+ },
+ {
+  "w": 766,
+  "word": "10",
+  "onset_s": 246.986,
+  "end_s": 247.006
+ },
+ {
+  "w": 767,
+  "word": "years",
+  "onset_s": 247.146,
+  "end_s": 247.406
+ },
+ {
+  "w": 768,
+  "word": "your",
+  "onset_s": 247.906,
+  "end_s": 248.026
+ },
+ {
+  "w": 769,
+  "word": "customer",
+  "onset_s": 248.046,
+  "end_s": 248.466
+ },
+ {
+  "w": 770,
+  "word": "may",
+  "onset_s": 248.526,
+  "end_s": 248.646
+ },
+ {
+  "w": 771,
+  "word": "find",
+  "onset_s": 248.746,
+  "end_s": 249.026
+ },
+ {
+  "w": 772,
+  "word": "it",
+  "onset_s": 249.066,
+  "end_s": 249.146
+ },
+ {
+  "w": 773,
+  "word": "before",
+  "onset_s": 249.226,
+  "end_s": 249.526
+ },
+ {
+  "w": 774,
+  "word": "you",
+  "onset_s": 249.566,
+  "end_s": 249.666
+ },
+ {
+  "w": 775,
+  "word": "do.",
+  "onset_s": 249.706,
+  "end_s": 249.786
+ },
+ {
+  "w": 776,
+  "word": "This",
+  "onset_s": 250.366,
+  "end_s": 250.506
+ },
+ {
+  "w": 777,
+  "word": "week",
+  "onset_s": 250.566,
+  "end_s": 250.766
+ },
+ {
+  "w": 778,
+  "word": "I'm",
+  "onset_s": 250.966,
+  "end_s": 251.026
+ },
+ {
+  "w": 779,
+  "word": "going",
+  "onset_s": 251.046,
+  "end_s": 251.166
+ },
+ {
+  "w": 780,
+  "word": "to",
+  "onset_s": 251.166,
+  "end_s": 251.206
+ },
+ {
+  "w": 781,
+  "word": "put",
+  "onset_s": 251.226,
+  "end_s": 251.406
+ },
+ {
+  "w": 782,
+  "word": "my",
+  "onset_s": 251.506,
+  "end_s": 251.646
+ },
+ {
+  "w": 783,
+  "word": "last",
+  "onset_s": 251.706,
+  "end_s": 251.966
+ },
+ {
+  "w": 784,
+  "word": "year's",
+  "onset_s": 252.006,
+  "end_s": 252.206
+ },
+ {
+  "w": 785,
+  "word": "invoices",
+  "onset_s": 252.246,
+  "end_s": 252.706
+ },
+ {
+  "w": 786,
+  "word": "through",
+  "onset_s": 252.806,
+  "end_s": 253.106
+ },
+ {
+  "w": 787,
+  "word": "the",
+  "onset_s": 253.306,
+  "end_s": 253.366
+ },
+ {
+  "w": 788,
+  "word": "AI",
+  "onset_s": 253.446,
+  "end_s": 253.706
+ },
+ {
+  "w": 789,
+  "word": "my",
+  "onset_s": 253.826,
+  "end_s": 253.926
+ },
+ {
+  "w": 790,
+  "word": "company",
+  "onset_s": 253.966,
+  "end_s": 254.286
+ },
+ {
+  "w": 791,
+  "word": "already",
+  "onset_s": 254.346,
+  "end_s": 254.546
+ },
+ {
+  "w": 792,
+  "word": "pays",
+  "onset_s": 254.606,
+  "end_s": 254.846
+ },
+ {
+  "w": 793,
+  "word": "for",
+  "onset_s": 254.906,
+  "end_s": 255.066
+ },
+ {
+  "w": 794,
+  "word": "and",
+  "onset_s": 255.466,
+  "end_s": 255.566
+ },
+ {
+  "w": 795,
+  "word": "I've",
+  "onset_s": 255.626,
+  "end_s": 255.706
+ },
+ {
+  "w": 796,
+  "word": "already",
+  "onset_s": 255.746,
+  "end_s": 255.986
+ },
+ {
+  "w": 797,
+  "word": "picked",
+  "onset_s": 256.226,
+  "end_s": 256.606
+ },
+ {
+  "w": 798,
+  "word": "who",
+  "onset_s": 256.726,
+  "end_s": 256.806
+ },
+ {
+  "w": 799,
+  "word": "sees",
+  "onset_s": 256.966,
+  "end_s": 257.186
+ },
+ {
+  "w": 800,
+  "word": "my",
+  "onset_s": 257.266,
+  "end_s": 257.386
+ },
+ {
+  "w": 801,
+  "word": "list",
+  "onset_s": 257.446,
+  "end_s": 257.646
+ },
+ {
+  "w": 802,
+  "word": "first.",
+  "onset_s": 257.706,
+  "end_s": 258.087
+ },
+ {
+  "w": 803,
+  "word": "And",
+  "onset_s": 258.827,
+  "end_s": 258.907
+ },
+ {
+  "w": 804,
+  "word": "it's",
+  "onset_s": 258.927,
+  "end_s": 259.027
+ },
+ {
+  "w": 805,
+  "word": "me.",
+  "onset_s": 259.067,
+  "end_s": 259.147
+ },
+ {
+  "w": 806,
+  "word": "Better",
+  "onset_s": 259.687,
+  "end_s": 259.887
+ },
+ {
+  "w": 807,
+  "word": "I",
+  "onset_s": 259.987,
+  "end_s": 260.007
+ },
+ {
+  "w": 808,
+  "word": "find",
+  "onset_s": 260.067,
+  "end_s": 260.307
+ },
+ {
+  "w": 809,
+  "word": "my",
+  "onset_s": 260.347,
+  "end_s": 260.427
+ },
+ {
+  "w": 810,
+  "word": "own",
+  "onset_s": 260.467,
+  "end_s": 260.567
+ },
+ {
+  "w": 811,
+  "word": "skeletons",
+  "onset_s": 260.607,
+  "end_s": 261.087
+ },
+ {
+  "w": 812,
+  "word": "before",
+  "onset_s": 261.127,
+  "end_s": 261.407
+ },
+ {
+  "w": 813,
+  "word": "someone",
+  "onset_s": 261.427,
+  "end_s": 261.647
+ },
+ {
+  "w": 814,
+  "word": "else",
+  "onset_s": 261.667,
+  "end_s": 261.827
+ },
+ {
+  "w": 815,
+  "word": "does.",
+  "onset_s": 261.847,
+  "end_s": 262.087
+ },
+ {
+  "w": 816,
+  "word": "The",
+  "onset_s": 262.847,
+  "end_s": 262.927
+ },
+ {
+  "w": 817,
+  "word": "full",
+  "onset_s": 262.987,
+  "end_s": 263.167
+ },
+ {
+  "w": 818,
+  "word": "story",
+  "onset_s": 263.267,
+  "end_s": 263.587
+ },
+ {
+  "w": 819,
+  "word": "is",
+  "onset_s": 263.767,
+  "end_s": 263.847
+ },
+ {
+  "w": 820,
+  "word": "at",
+  "onset_s": 263.887,
+  "end_s": 263.967
+ },
+ {
+  "w": 821,
+  "word": "makeyourmindup.ai",
+  "onset_s": 264.027,
+  "end_s": 265.127
+ }
+]

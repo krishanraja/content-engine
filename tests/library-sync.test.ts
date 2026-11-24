@@ -281,7 +281,8 @@ describe('the Heartside library in the same sync', () => {
 
   it('keeps its own clone up to date, as the recordings lane does', () => {
     expect(sync).toContain("$SourceFolderName = 'library-source'")
-    expect(sync).toContain('pull --ff-only --quiet')
+    // Fast-forward, healed after a rewrite of main, by the shared Update-HomeCopy (tests/home-copy.test.ts).
+    expect(sync).toContain('$copy = Update-HomeCopy $git.Source $RepoRoot')
   })
 })
 

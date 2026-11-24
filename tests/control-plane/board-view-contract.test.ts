@@ -5,7 +5,7 @@ import { approval, approvedAll } from './_approvals'
 import { parseManifest, pressesOf, signOffsView } from '../../apps/control-plane/api/board/_signOffs'
 import { buildView, type ViewInputs } from '../../apps/control-plane/api/board/_view'
 import { JOBS, type JobName } from '../../apps/control-plane/api/board/_run'
-import { VIEW_CONTRACT_VERSION, notModified, viewEtag } from '../../apps/control-plane/api/board/_viewContract'
+import { VIEW_CONTRACT_VERSION, notModified, stableJson, viewEtag } from '../../apps/control-plane/api/board/_viewContract'
 import { LIVE_BOARD_URL, liveBoardUrl } from '../../apps/control-plane/api/board/_liveBoard'
 import { SCHEMA_PATH, compare, judge, validate } from '../../scripts/check-view-contract'
 import { assetsOf, type DriveFile } from '../../apps/control-plane/api/board/_drivePosts'
@@ -394,6 +394,23 @@ describe('the Publish Board view contract', () => {
     expect(notModified(viewEtag(a), viewEtag(b))).toBe(true)
     expect(notModified(`W/${viewEtag(a)}, "x"`, viewEtag(a))).toBe(true)
     expect(notModified(undefined, viewEtag(a))).toBe(false)
+  })
+
+  it('gives the same tag whatever order the view\'s keys were filled in, and a new tag for new content', () => {
+    const run = (job: string) => ({ job, workflow: `${job}.yml`, state: 'done', started_at: 'a', updated_at: 'b', url: `u/${job}`, event: 'push' })
+    const base = served(full())
+    const one = { ...base, runs: { 'make-piece': run('make-piece'), 'offday-revise': run('offday-revise') } }
+    const two = { ...base, runs: { 'offday-revise': run('offday-revise'), 'make-piece': run('make-piece') } }
+    expect(JSON.stringify(one)).not.toBe(JSON.stringify(two))
+    expect(viewEtag(one)).toBe(viewEtag(two))
+    // Nested key order inside one run does not count either.
+    const reordered = { ...base, runs: { 'make-piece': Object.fromEntries(Object.entries(run('make-piece')).reverse()), 'offday-revise': run('offday-revise') } }
+    expect(viewEtag(reordered)).toBe(viewEtag(one))
+    // A real change does.
+    const changed = { ...base, runs: { 'make-piece': { ...run('make-piece'), state: 'failed' }, 'offday-revise': run('offday-revise') } }
+    expect(viewEtag(changed)).not.toBe(viewEtag(one))
+    // Array order is content and still counts.
+    expect(stableJson({ a: [1, 2] })).not.toBe(stableJson({ a: [2, 1] }))
   })
 
   it('names one live board, the same in config/boards.json, and every link carries the week and the day', () => {

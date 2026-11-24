@@ -285,6 +285,11 @@ def inputs_from_props(props: dict) -> dict:
     # boxFor('caption') in apps/renderer/src/engine/geometry.ts, using
     # HOUSE.caption in apps/renderer/src/house/geometry.ts; round outwards.
     region = (60, 1090, 800, 217) if aspect == '9:16' else (260, 773, 1400, 187)  # house/geometry.ts HOUSE.caption
+    if props.get('captionTheme'):
+        # A caption style draws in its own band at its placement (captions/kit.ts REGIONS), never the house band: the
+        # 20 Nov recipe samples' seam and upper captions were read where nothing was drawn.
+        from . import keepout  # noqa: PLC0415
+        region = keepout.theme_bands()[aspect][props.get('captionPlacement') or 'lower']
     stem = props['audio']['stem']
     # The stem is already assembled. Source-take trims in props.segments must
     # never be applied to it; compare each beat at its position in this master.
@@ -300,6 +305,8 @@ def inputs_from_props(props: dict) -> dict:
     from . import qc_faces
     pages = []
     style = props.get('captionStyle') or 'house'
+    from . import qc_captions as qc_captions_art, plainframes as _pf
+    art_theme = props.get('captionTheme') == _pf.config()['caption_over_content']['art_directed']['theme'] and style != 'word'
     for original in caption_pages_shown(props):
         page = dict(_moved(original, props, 'fromFrame', 'toFrame'),
                     words=[_moved(w, props, 'atFrame') for w in original.get('words') or []])
@@ -314,6 +321,11 @@ def inputs_from_props(props: dict) -> dict:
         width, height = (1080, 1920) if aspect == '9:16' else (1920, 1080)
         left, top = max(0, x - 12), max(0, y - 12)
         page['region'] = (left, top, min(width, x + w + 12) - left, min(height, y + h + 12) - top)
+        if art_theme and not page.get('split'):
+            # The art-directed stack hangs above the house box by the cut's tallest page: read it where it is drawn, once
+            # settled, judged in order (qc_captions.art_view, in_order; 19 Nov 2026, the habits short).
+            view = qc_captions_art.art_view(props['captions'], props['captions'].index(original), aspect, props.get('fps', 30))
+            page['region'], page['art'] = view['region'], {'extras': view['extras'], 'settle': view['settle']}
         pages.append(page)
     # The plate's frame under file frame F of a beat is F - the beat's shift + the segment's trim.
     return dict(pages=pages, beats=beats, aspect=aspect, events=events, slots=slots,
@@ -323,6 +335,30 @@ def inputs_from_props(props: dict) -> dict:
                 plate_video=(props.get('segments') or [{}])[0].get('src') if len(props.get('segments') or []) == 1 else None,
                 plate_offset=int((props.get('segments') or [{}])[0].get('trimBeforeFrames', 0)),
                 opening=opening_view(props))
+
+
+def title_window_s(props: dict | None, fps: float = 30) -> tuple[float, float] | None:
+    """The title lockup's own seconds: its pulsing bars are its design, never a smeared picture."""
+    title = (props or {}).get('titleMoment') or {}
+    if 'fromFrame' not in title or 'toFrame' not in title:
+        return None
+    rate = float((props or {}).get('fps') or fps)
+    return title['fromFrame'] / rate, title['toFrame'] / rate
+
+
+def without_title_bars(row: dict, props: dict | None) -> dict:
+    """The title lockup's pulsing bars are its design, never a smeared picture: a stripe band wholly inside the title's
+    own seconds is left out (the 20 Nov recipe samples, where the lockup built in the panel read as a smear)."""
+    title = title_window_s(props)
+    if not title or not isinstance(row.get('value'), list):
+        return row
+    kept = [m for m in row['value'] if not (m.get('from_s', -1) >= title[0] - 0.5 and m.get('to_s', 1e9) <= title[1] + 0.5)]
+    if len(kept) == len(row['value']):
+        return row
+    out = dict(row, value=kept, title_bars_left_out=len(row['value']) - len(kept))
+    if row.get('pass') is False and not kept:
+        out['pass'] = True
+    return out
 
 
 def picture_smeared(path: str, publish_day: str | None = None) -> dict:
@@ -346,6 +382,14 @@ def picture_smeared(path: str, publish_day: str | None = None) -> dict:
         row['status'] = 'advisory'
         row['note'] = f"binds pieces published from {rules['binds_from']} (config/ve/onscreen-checks.json picture)"
     return row
+
+
+def _excerpt_s(props: dict | None, fps: float) -> float | None:
+    """A proof excerpt's own length in seconds (its stem starts part-way into the premix), else None (a whole cut)."""
+    stem = ((props or {}).get('audio') or {}).get('stem') or {}
+    if int(stem.get('trimBeforeFrames') or 0) > 0 and (props or {}).get('durationFrames'):
+        return int(props['durationFrames']) / float((props or {}).get('fps') or fps)
+    return None
 
 
 def run_qc(path: str, format_id: str, targets: dict | None = None, *,
@@ -403,7 +447,7 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
          lambda: qc_sync.av_xcorr(path, dialogue_master, edl)),
         ('joins.decoder', joins is not None, lambda: qc_joins.decoder(path, joins)),
         ('audio.bed', dialogue_master is not None, lambda: qc_audio.bed(dialogue_master)),
-        ('audio.bed_continuity', dialogue_master is not None, lambda: qc_audio.continuity(path, dialogue_master)),
+        ('audio.bed_continuity', dialogue_master is not None, lambda: qc_audio.continuity(path, dialogue_master, excerpt_s=_excerpt_s(frame_props, fps))),
         ('captions.ocr', pages is not None and region is not None, lambda: qc_captions.ocr(path, pages, region)),
         # The wide cut wears the mark tile; the vertical cut must not (Ruling, Krish, 2026-11-11). From the logo rule's
         # date (props bodyLogo false; Ruling, Krish, 2026-11-17: the logo only on the title frame and the close) the
@@ -422,7 +466,7 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
          lambda: qc_gates.captions_render(path, pages, region, caption_ocr)),
         ('captions.off_face', bool(pages) and aspect is not None,
          lambda: qc_faces.off_face(path, pages, style=caption_style, aspect=aspect, region=region, fps=fps,
-                                   detector=face_detector, beats=beats)),
+                                   detector=face_detector, beats=beats, props=frame_props)),
         # Krish, 18 Nov 2026: his head is never cut off. On a SPLIT take beat the whole head sits in the camera band.
         ('plate.head_in_band', aspect == '9:16' and any(b.get('layout') == 'SPLIT' for b in beats or []),
          lambda: qc_faces.head_in_band(path, beats, seam=qc_composition.split_seam(), aspect=aspect, fps=fps,
@@ -526,8 +570,14 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
         checks.update(qc_frames.rows(path, frame_props, publish_day, beats=beats, aspect=aspect, fps=fps, diffs=diffs,
                                      heard=heard, kept_restarts=kept_restarts, face_detector=face_detector,
                                      read=onscreen_reader, lead=opening_lead(frame_props)))
+        # The panel's object fills its region, measured on the frames (shot grammar step 5; velib/qc_fill.py): band and
+        # stage cuts drawn by the grammar.
+        if (frame_props.get('layout') or {}).get('grammar'):
+            from . import qc_fill
+            checks['panel.fill'] = qc_fill.row(path, frame_props, to_file=lambda f: to_file(f, frame_props))
     # A picture smeared into stripes (8 Nov, the proactive-AI opening's plate): every cut, advisory before its own date.
     checks['picture.smeared'] = picture_smeared(path, publish_day)
+    checks['picture.smeared'] = without_title_bars(checks['picture.smeared'], frame_props)
     # A tall meme is centred on the screen (Ruling, Krish, 2026-11-15: tall memes are centred; scripts/layout_centre.py,
     # the bars in config/brand-palette.json formats.meme_tall).
     if 'meme' in str(format_id) and aspect == '9:16':

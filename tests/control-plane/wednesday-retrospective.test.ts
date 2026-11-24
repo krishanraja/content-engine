@@ -21,7 +21,10 @@ describe('Krish-approved Wednesday retrospective exception', () => {
   })
   test('cannot carry to another article, an unspecified piece or an edited body', () => {
     for (const [text, id] of [[body, undefined], [body, 'another-piece'], [body + '\nChanged.', piece]] as const) {
-      assert.equal(publishChecks(text, facts, undefined, id).filter(c => ids.has(c.id) && !c.ok).length, 3)
+      // Since 19 November no piece needs a prediction (Ruling, Krish, 2026-11-19), so the waiver's own words stay on
+      // this piece alone; a piece Krish asked a prediction of still has to carry one.
+      for (const c of publishChecks(text, facts, undefined, id).filter(c => ids.has(c.id))) assert.doesNotMatch(c.detail, /no future prediction or confidence is asserted/)
+      assert.equal(publishChecks(text, facts, undefined, id, { predictionWanted: true }).filter(c => ids.has(c.id) && !c.ok).length, 3)
     }
   })
 })

@@ -1,0 +1,721 @@
+{
+ "_about": "Records of the Tue 17 / Thu 19 habits voiceover short (piece 701a2c55, branch claude/brave-wright-yxkxqq, docs/plans/2026-11-17-tue-habits/ve/props.short.json and qc.short.json): its first eight caption pages and what its QC read on them. No media, no paths.",
+ "aspect": "9:16",
+ "fps": 30,
+ "captionTheme": "art-directed",
+ "captionStyle": "house",
+ "captions_all_heights_from": "all 67 pages, as tallest_page_height",
+ "captions": [
+  {
+   "fromFrame": 0,
+   "toFrame": 33,
+   "words": [
+    {
+     "text": "Firing",
+     "atFrame": 0
+    },
+    {
+     "text": "your",
+     "atFrame": 15
+    },
+    {
+     "text": "AI",
+     "atFrame": 23
+    }
+   ],
+   "swipeIndex": null
+  },
+  {
+   "fromFrame": 33,
+   "toFrame": 64,
+   "words": [
+    {
+     "text": "is",
+     "atFrame": 33
+    },
+    {
+     "text": "going",
+     "atFrame": 46
+    },
+    {
+     "text": "to",
+     "atFrame": 52
+    },
+    {
+     "text": "be",
+     "atFrame": 52
+    },
+    {
+     "text": "harder",
+     "atFrame": 57
+    }
+   ],
+   "swipeIndex": null
+  },
+  {
+   "fromFrame": 64,
+   "toFrame": 108,
+   "words": [
+    {
+     "text": "than",
+     "atFrame": 64
+    },
+    {
+     "text": "firing",
+     "atFrame": 70
+    },
+    {
+     "text": "your",
+     "atFrame": 81
+    },
+    {
+     "text": "people.",
+     "atFrame": 88
+    }
+   ],
+   "swipeIndex": 3
+  },
+  {
+   "fromFrame": 108,
+   "toFrame": 138,
+   "words": [
+    {
+     "text": "So",
+     "atFrame": 108
+    },
+    {
+     "text": "when",
+     "atFrame": 109
+    },
+    {
+     "text": "AI",
+     "atFrame": 119
+    },
+    {
+     "text": "screws",
+     "atFrame": 128
+    }
+   ],
+   "swipeIndex": null
+  },
+  {
+   "fromFrame": 138,
+   "toFrame": 158,
+   "words": [
+    {
+     "text": "up",
+     "atFrame": 138
+    },
+    {
+     "text": "a",
+     "atFrame": 145
+    },
+    {
+     "text": "job,",
+     "atFrame": 148
+    }
+   ],
+   "swipeIndex": null
+  },
+  {
+   "fromFrame": 158,
+   "toFrame": 203,
+   "words": [
+    {
+     "text": "who's",
+     "atFrame": 158
+    },
+    {
+     "text": "going",
+     "atFrame": 165
+    },
+    {
+     "text": "to",
+     "atFrame": 169
+    },
+    {
+     "text": "get",
+     "atFrame": 173
+    },
+    {
+     "text": "the",
+     "atFrame": 177
+    },
+    {
+     "text": "boot?",
+     "atFrame": 182
+    }
+   ],
+   "swipeIndex": null
+  },
+  {
+   "fromFrame": 203,
+   "toFrame": 231,
+   "words": [
+    {
+     "text": "Probably",
+     "atFrame": 203
+    },
+    {
+     "text": "you.",
+     "atFrame": 212
+    }
+   ],
+   "swipeIndex": 1
+  },
+  {
+   "fromFrame": 231,
+   "toFrame": 259,
+   "words": [
+    {
+     "text": "Because",
+     "atFrame": 231
+    },
+    {
+     "text": "I",
+     "atFrame": 238
+    },
+    {
+     "text": "hear",
+     "atFrame": 251
+    }
+   ],
+   "swipeIndex": null
+  }
+ ],
+ "ocr_reads": [
+  {
+   "page": 0,
+   "frame": 28,
+   "text": "FIRING ©\nVOIR Ai",
+   "agreement": 0.6666666666666667
+  },
+  {
+   "page": 1,
+   "frame": 61,
+   "text": "IS GOING TO BE\nHARDER",
+   "agreement": 1.0
+  },
+  {
+   "page": 2,
+   "frame": 98,
+   "text": "THAN FIRING YOUR.\nDENDIE —",
+   "agreement": 0.75
+  },
+  {
+   "page": 3,
+   "frame": 133,
+   "text": "SO WHEN-Al\n-.- SADEWS",
+   "agreement": 0.75
+  },
+  {
+   "page": 4,
+   "frame": 153,
+   "text": "UP A =\nnk",
+   "agreement": 0.6666666666666667
+  },
+  {
+   "page": 5,
+   "frame": 193,
+   "text": ">» WHO'S\nGOING T0 GET THE ROOT?",
+   "agreement": 0.7142857142857143
+  },
+  {
+   "page": 6,
+   "frame": 222,
+   "text": "PROBABLY, 7 =\nVilly -",
+   "agreement": 0.5
+  },
+  {
+   "page": 7,
+   "frame": 255,
+   "text": "",
+   "agreement": 0.0
+  }
+ ],
+ "render_reads": [
+  {
+   "page": 0,
+   "fromFrame": 0,
+   "text": "Firing your AI",
+   "change_frame": 1,
+   "frame": 27,
+   "read": "FIRING =~\nVole Al",
+   "score": 0.6667
+  },
+  {
+   "page": 1,
+   "fromFrame": 33,
+   "text": "is going to be harder",
+   "change_frame": 33,
+   "frame": 60,
+   "read": "IS GOING TO BE\nHARDER",
+   "score": 1.0
+  },
+  {
+   "page": 2,
+   "fromFrame": 64,
+   "text": "than firing your people.",
+   "change_frame": 64,
+   "frame": 88,
+   "read": "THAN FIRING YOUR.",
+   "score": 0.75
+  },
+  {
+   "page": 3,
+   "fromFrame": 108,
+   "text": "So when AI screws",
+   "change_frame": 108,
+   "frame": 131,
+   "read": "SO WHEN-Al\n~<- SCREWS",
+   "score": 1.0
+  },
+  {
+   "page": 4,
+   "fromFrame": 138,
+   "text": "up a job,",
+   "change_frame": 138,
+   "frame": 150,
+   "read": "UP A =",
+   "score": 0.6667
+  },
+  {
+   "page": 5,
+   "fromFrame": 158,
+   "text": "who's going to get the boot?",
+   "change_frame": 158,
+   "frame": 184,
+   "read": "=» WHO'S\nGOING TO GET THE BOOT?",
+   "score": 1.0
+  },
+  {
+   "page": 6,
+   "fromFrame": 203,
+   "text": "Probably you.",
+   "change_frame": 203,
+   "frame": 212,
+   "read": "PROBABLY,",
+   "score": 0.5
+  },
+  {
+   "page": 7,
+   "fromFrame": 231,
+   "text": "Because I hear",
+   "change_frame": 231,
+   "frame": 253,
+   "read": "BECAUSE",
+   "score": 0.3333
+  }
+ ],
+ "composition": {
+  "b14": {
+   "fill_pct": {
+    "pass": true,
+    "value": 100.0
+   },
+   "small_text": {
+    "pass": true,
+    "value": []
+   },
+   "caption_zone": {
+    "pass": false,
+    "value": [
+     {
+      "text": "JUI",
+      "conf": 75.448013,
+      "x": 502,
+      "y": 1099,
+      "w": 113,
+      "h": 80
+     }
+    ]
+   },
+   "platform_zone": {
+    "pass": true,
+    "value": []
+   },
+   "edges": {
+    "pass": true,
+    "value": []
+   }
+  },
+  "b17": {
+   "fill_pct": {
+    "pass": true,
+    "value": 100.0
+   },
+   "small_text": {
+    "pass": true,
+    "value": []
+   },
+   "caption_zone": {
+    "pass": true,
+    "value": []
+   },
+   "platform_zone": {
+    "pass": false,
+    "value": [
+     {
+      "text": "a»",
+      "conf": 92.980087,
+      "x": 931,
+      "y": 892,
+      "w": 48,
+      "h": 24
+     }
+    ]
+   },
+   "edges": {
+    "pass": true,
+    "value": []
+   }
+  },
+  "b3": {
+   "fill_pct": {
+    "pass": true,
+    "value": 98.48
+   },
+   "small_text": {
+    "pass": true,
+    "value": []
+   },
+   "caption_zone": {
+    "pass": true,
+    "value": []
+   },
+   "platform_zone": {
+    "pass": false,
+    "value": [
+     {
+      "text": "making",
+      "conf": 95.653442,
+      "x": 120,
+      "y": 1634,
+      "w": 163,
+      "h": 63
+     },
+     {
+      "text": "really",
+      "conf": 96.815796,
+      "x": 304,
+      "y": 1631,
+      "w": 122,
+      "h": 63
+     },
+     {
+      "text": "stupid",
+      "conf": 96.661835,
+      "x": 444,
+      "y": 1629,
+      "w": 138,
+      "h": 63
+     },
+     {
+      "text": "mistakes",
+      "conf": 96.831642,
+      "x": 603,
+      "y": 1627,
+      "w": 201,
+      "h": 51
+     }
+    ]
+   },
+   "edges": {
+    "pass": true,
+    "value": []
+   }
+  },
+  "ending": {
+   "small_text": {
+    "pass": false,
+    "value": [
+     {
+      "text": "SUBSCRIBE",
+      "conf": 96.493744,
+      "x": 121,
+      "y": 1069,
+      "w": 154,
+      "h": 17
+     },
+     {
+      "text": "FREE",
+      "conf": 96.493744,
+      "x": 299,
+      "y": 1069,
+      "w": 65,
+      "h": 17
+     }
+    ]
+   },
+   "platform_zone": {
+    "pass": true,
+    "value": []
+   },
+   "edges": {
+    "pass": true,
+    "value": []
+   }
+  }
+ },
+ "objects": [
+  {
+   "obj": "plate-b1",
+   "device": "photo_plate",
+   "fromFrame": 0,
+   "toFrame": 108,
+   "params": {
+    "image": true,
+    "generated": true
+   }
+  },
+  {
+   "obj": "plate-b4",
+   "device": "photo_plate",
+   "fromFrame": 378,
+   "toFrame": 482,
+   "params": {
+    "image": true,
+    "generated": true
+   }
+  },
+  {
+   "obj": "plate-b5",
+   "device": "photo_plate",
+   "fromFrame": 482,
+   "toFrame": 648,
+   "params": {
+    "image": true,
+    "generated": true
+   }
+  },
+  {
+   "obj": "plate-b8",
+   "device": "photo_plate",
+   "fromFrame": 803,
+   "toFrame": 845,
+   "params": {
+    "image": true,
+    "generated": true
+   }
+  },
+  {
+   "obj": "plate-b10a",
+   "device": "photo_plate",
+   "fromFrame": 888,
+   "toFrame": 1079,
+   "params": {
+    "image": true,
+    "generated": true
+   }
+  },
+  {
+   "obj": "plate-b18",
+   "device": "photo_plate",
+   "fromFrame": 1870,
+   "toFrame": 1973,
+   "params": {
+    "image": true,
+    "generated": true
+   }
+  },
+  {
+   "obj": "plate-b23",
+   "device": "photo_plate",
+   "fromFrame": 2395,
+   "toFrame": 2592,
+   "params": {
+    "image": true,
+    "generated": true
+   }
+  },
+  {
+   "obj": "plate-b2",
+   "device": "photo_plate",
+   "fromFrame": 108,
+   "toFrame": 231,
+   "params": {
+    "image": true,
+    "generated": true
+   }
+  },
+  {
+   "obj": "plate-b6",
+   "device": "photo_plate",
+   "fromFrame": 648,
+   "toFrame": 750,
+   "params": {
+    "image": true,
+    "generated": true
+   }
+  },
+  {
+   "obj": "plate-b15",
+   "device": "photo_plate",
+   "fromFrame": 1625,
+   "toFrame": 1785,
+   "params": {
+    "image": true,
+    "generated": true
+   }
+  },
+  {
+   "obj": "plate-b17",
+   "device": "photo_plate",
+   "fromFrame": 1785,
+   "toFrame": 1870,
+   "params": {
+    "image": true,
+    "generated": true
+   }
+  },
+  {
+   "obj": "plate-b11",
+   "device": "photo_plate",
+   "fromFrame": 1079,
+   "toFrame": 1140,
+   "params": {
+    "image": true,
+    "generated": true
+   }
+  },
+  {
+   "obj": "plate-b14",
+   "device": "photo_plate",
+   "fromFrame": 1456,
+   "toFrame": 1625,
+   "params": {
+    "image": true,
+    "generated": true
+   }
+  },
+  {
+   "obj": "excuse",
+   "device": "stamp",
+   "fromFrame": 958,
+   "toFrame": 1079,
+   "params": {
+    "at": {
+     "x": 140,
+     "y": 640,
+     "w": 800,
+     "h": 380
+    }
+   }
+  },
+  {
+   "obj": "screen-posts",
+   "device": "photo_plate",
+   "fromFrame": 231,
+   "toFrame": 378,
+   "params": {
+    "video": true
+   }
+  },
+  {
+   "obj": "screen-ibm",
+   "device": "photo_plate",
+   "fromFrame": 1140,
+   "toFrame": 1340,
+   "params": {
+    "video": true
+   }
+  },
+  {
+   "obj": "screen-accountable",
+   "device": "photo_plate",
+   "fromFrame": 1340,
+   "toFrame": 1368,
+   "params": {
+    "video": true,
+    "generated": true
+   }
+  },
+  {
+   "obj": "screen-overrule",
+   "device": "photo_plate",
+   "fromFrame": 1368,
+   "toFrame": 1456,
+   "params": {
+    "video": true,
+    "generated": true
+   }
+  },
+  {
+   "obj": "screen-forward",
+   "device": "photo_plate",
+   "fromFrame": 1973,
+   "toFrame": 2125,
+   "params": {
+    "video": true,
+    "generated": true
+   }
+  },
+  {
+   "obj": "screen-resign",
+   "device": "photo_plate",
+   "fromFrame": 2125,
+   "toFrame": 2287,
+   "params": {
+    "video": true,
+    "generated": true
+   }
+  },
+  {
+   "obj": "yours",
+   "device": "stamp",
+   "fromFrame": 1753,
+   "toFrame": 1785,
+   "params": {
+    "at": {
+     "x": 140,
+     "y": 600,
+     "w": 800,
+     "h": 380
+    }
+   }
+  },
+  {
+   "obj": "allin",
+   "device": "stamp",
+   "fromFrame": 2448,
+   "toFrame": 2479,
+   "params": {
+    "at": {
+     "x": 140,
+     "y": 600,
+     "w": 800,
+     "h": 380
+    }
+   }
+  },
+  {
+   "obj": "crash",
+   "device": "photo_plate",
+   "fromFrame": 750,
+   "toFrame": 803,
+   "params": {
+    "video": true
+   }
+  },
+  {
+   "obj": "driver",
+   "device": "photo_plate",
+   "fromFrame": 845,
+   "toFrame": 888,
+   "params": {
+    "video": true
+   }
+  },
+  {
+   "obj": "plate-b22",
+   "device": "photo_plate",
+   "fromFrame": 2287,
+   "toFrame": 2395,
+   "params": {
+    "video": true,
+    "generated": true
+   }
+  }
+ ],
+ "tallest_page_height": 345.91999999999996
+}

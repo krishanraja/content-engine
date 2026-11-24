@@ -80,6 +80,9 @@ its summary, so GET /api/library/recordings/lane reads it with no new key.
 In -Loop it brings its own copy of the repository up to date (git pull
 --ff-only) before each pass, when that copy is the dedicated recordings-source
 clone, and ends when this script has changed so the task starts the new one.
+When the pull fails because main's history was rewritten, the copy heals
+itself (scripts\home-copy.ps1: a local backup branch, then reset to
+origin/main); engine_pull_failed is reported only when that heal fails too.
 A fix pushed to main reaches both machines without Krish doing anything.
 scripts/install-recordings-upload.ps1 registers the task.
 #>
@@ -100,6 +103,12 @@ Set-StrictMode -Version Latest
 $WindowlessScript = Join-Path $PSScriptRoot 'windowless.ps1'
 if (Test-Path -LiteralPath $WindowlessScript -PathType Leaf) { . $WindowlessScript }
 $script:Windows = $null
+
+# The one way this machine's own copies (recordings-source, library-source) are pulled, and healed when main's history
+# was rewritten (scripts\home-copy.ps1, Update-HomeCopy). Krish, 2026-11-20: "We need to ensure this can never happen
+# again in the future."
+$HomeCopyScript = Join-Path $PSScriptRoot 'home-copy.ps1'
+. $HomeCopyScript
 
 $RepoRoot = [System.IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 $SourceFolderName = 'recordings-source'
@@ -1232,16 +1241,11 @@ function Update-Source {
   if ((Split-Path -Leaf $RepoRoot) -ne $SourceFolderName) { return }
   $git = Get-Command git.exe -ErrorAction SilentlyContinue
   if ($null -eq $git) { Write-Log 'git is not on this machine; this copy is not updated'; return }
-  # git writes progress to stderr; Windows PowerShell would treat that as an
-  # error under Stop, so this one call runs under Continue.
-  $previous = $ErrorActionPreference
-  $ErrorActionPreference = 'Continue'
-  try {
-    $output = @(& $git.Source -C $RepoRoot pull --ff-only --quiet 2>&1)
-    $code = $LASTEXITCODE
-  } finally { $ErrorActionPreference = $previous }
-  if ($code -ne 0) { Write-Log "git pull did not finish ($($output -join ' ')); this pass runs on the copy as it is" }
-  Set-PullProblem 'engine_pull_failed' ($code -ne 0)
+  # Fast-forward, and when that fails (main's history rewritten) a heal: backup branch, then reset to origin/main.
+  # engine_pull_failed only when both failed, so a stale copy is never silent.
+  $copy = Update-HomeCopy $git.Source $RepoRoot
+  if ($copy.line) { Write-Log $copy.line }
+  Set-PullProblem 'engine_pull_failed' (-not $copy.ok)
 }
 
 function Update-LibrarySource {
@@ -1250,21 +1254,17 @@ function Update-LibrarySource {
   # so a change to the library lane (Krish, 2026-11-03: "Why don't you
   # duplicate that Python script for Heartside then?") reaches the machine
   # without anyone running git pull. The library sync notices its script
-  # changed and its scheduled task starts the new one. Fast-forward only;
-  # nothing else is touched.
+  # changed and its scheduled task starts the new one. Fast-forward, healed
+  # by Update-HomeCopy when main's history was rewritten; nothing else is
+  # touched.
   if ((Split-Path -Leaf $RepoRoot) -ne $SourceFolderName) { return }
   $library = Join-Path (Split-Path -Parent $RepoRoot) 'library-source'
   if (-not (Test-Path -LiteralPath (Join-Path $library '.git'))) { return }
   $git = Get-Command git.exe -ErrorAction SilentlyContinue
   if ($null -eq $git) { return }
-  $previous = $ErrorActionPreference
-  $ErrorActionPreference = 'Continue'
-  try {
-    $output = @(& $git.Source -C $library pull --ff-only --quiet 2>&1)
-    $code = $LASTEXITCODE
-  } finally { $ErrorActionPreference = $previous }
-  if ($code -ne 0) { Write-Log "git pull of library-source did not finish ($($output -join ' '))" }
-  Set-PullProblem 'library_source_pull_failed' ($code -ne 0)
+  $copy = Update-HomeCopy $git.Source $library
+  if ($copy.line) { Write-Log $copy.line }
+  Set-PullProblem 'library_source_pull_failed' (-not $copy.ok)
 }
 
 # ---- one pass, or a pass every few minutes -----------------------------------
@@ -1297,6 +1297,7 @@ try {
   function Get-SourceStamp {
     $stamp = Get-Sha256 $scriptPath
     if (Test-Path -LiteralPath $WindowlessScript -PathType Leaf) { $stamp += Get-Sha256 $WindowlessScript }
+    if (Test-Path -LiteralPath $HomeCopyScript -PathType Leaf) { $stamp += Get-Sha256 $HomeCopyScript }
     return $stamp
   }
   $scriptSha = Get-SourceStamp
@@ -1305,7 +1306,7 @@ try {
     try { Update-Source } catch { Write-Log "the update check failed: $($_.Exception.Message)" }
     try { Update-LibrarySource } catch { Write-Log "the library-source update failed: $($_.Exception.Message)" }
     if ((Get-SourceStamp) -ne $scriptSha) {
-      Write-Log 'recordings-upload.ps1 or windowless.ps1 has changed; ending so the scheduled task starts the new version'
+      Write-Log 'recordings-upload.ps1, windowless.ps1 or home-copy.ps1 has changed; ending so the scheduled task starts the new version'
       exit 0
     }
     try { [void](Invoke-Pass) }

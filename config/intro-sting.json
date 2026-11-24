@@ -1,7 +1,52 @@
 {
   "schema_version": 2,
   "status": "retired",
-  "about": "The makeyourmindup intro sting, retired for good (Ruling, Krish, 2026-11-12: \"Nothing before the hook, ever. Remove the sting exception for good.\"). No cut, wide or tall, series or off day, carries anything before its hook: the first frame of every cut is the hook (house rule HOOK_IS_THE_INTRO). The six clips he saw on the Intro Sting page stay in the library and are named here for the record only; intro.py gives no cut a sting, refuses an approval of this config, and refuses any status but \"retired\" on it. Its history keeps every word he said about it.",
+  "about": "The makeyourmindup intro sting, retired for good (Ruling, Krish, 2026-11-12: \"Nothing before the hook, ever. Remove the sting exception for good.\"). No cut, wide or tall, series or off day, carries anything before its hook: the first frame of every cut is the hook (house rule HOOK_IS_THE_INTRO). The six clips he saw on the Intro Sting page stay in the library and are named here for the record only; intro.py gives no cut a sting, refuses an approval of this config, and refuses any status but \"retired\" on it. Its history keeps every word he said about it. Since 20 Nov 2026 the same six clips are the series close's plate, never an opening: the \"close\" block below (Ruling, Krish, 2026-11-19 and 2026-11-20).",
+  "close": {
+    "status": "approved",
+    "about": "The series close: the sting plays at the END of the cut, after his last word, and nothing changes at the start (the opening stays retired: nothing before the hook, ever). Tall (9:16): the sting's frames 1 to 44 at 1.5x, then its settled band (frame 48) holds while the whole plate lifts 330 px, \"Built to help you\" (Anton) and \"decide.\" (Fraunces italic) land under it in ink, then an ink \"Subscribe free\" pill beside makeyourmindup.ai; exactly 2.0 s, every word inside the tall core box. Wide (16:9): the sting in full, then an ink ground wipes in from the right on its band frame, the band shrinks into the masthead slot, the line and the days row land, settled by 2.75 s, the right 44% left clear for YouTube's end-screen elements, then held to 6 s. Drawn by apps/renderer/src/engine/chrome/EndingBand.tsx from props.ending.sting (compile.close_sting_props); config/brand-palette.json closes sting_beat and sting_card.",
+    "shapes": [
+      "9x16",
+      "16x9"
+    ],
+    "applies_from": "2026-11-23",
+    "applies_from_why": "Pieces of the week of 16 Nov are made on engines frozen at their storyboards (F33); every series piece from Mon 23 Nov closes on the sting.",
+    "tall": {
+      "frames": 60,
+      "speed": 1.5,
+      "plays": [
+        1,
+        44
+      ],
+      "hold_frame": 48,
+      "lift_px": 330
+    },
+    "wide": {
+      "band_frame": 48,
+      "settled_s": 2.75,
+      "end_screen_clear": [
+        1100,
+        150,
+        1800,
+        880
+      ]
+    },
+    "off_days": "No sting exists for an off day (only follow_the_money, under_the_hood and mind_the_gap), so an off-day cut keeps the mint statement close with no series days until Krish decides on a mint sting (polish spec of 20 Nov, section B).",
+    "rulings": [
+      {
+        "on": "2026-11-19",
+        "by": "Krish",
+        "relayed": true,
+        "means": "the tall close is the 9:16 intro sting with \"Built to help you decide.\" layered on, at most 2 s; the wide close holds for YouTube's end-screen elements"
+      },
+      {
+        "on": "2026-11-20",
+        "by": "Krish",
+        "picked": "Direction A (tall: the band lifts, the line lands under it; wide: the sting resolves into the statement card)",
+        "words": "A, with Built to help you decide, and then Subscribe free at makeyourmindup.ai"
+      }
+    ]
+  },
   "frames": 56,
   "fps": 30,
   "seconds": 1.8667,

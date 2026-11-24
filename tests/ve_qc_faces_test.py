@@ -28,6 +28,19 @@ class OffFace(unittest.TestCase):
         # On the chest, its box ending above y 1320 where Instagram's handle starts (Krish, 2026-11-11).
         self.assertEqual((g['centerY'], g['size'], g['width']), (1250, 88, 1080))
 
+    def test_top_placed_captions_are_measured_where_they_are_drawn(self):
+        """20 Nov 2026 recipe samples: upper captions failed wrongly against the house band over his chest."""
+        props = {'aspect': '9:16', 'captionTheme': 'receipt-chip', 'captionPlacement': 'upper', 'captionStyle': 'house'}
+        beats = [{'fromFrame': 0, 'toFrame': 30, 'layout': 'P1', 'plate': {'source': 'take'}}]
+        chest_face = (390, 1100, 300, 300)   # where the house band would be, far below the upper band (y 290 to 520)
+        report = qc_faces.off_face('cut.mp4', [page('upper')], style='house', aspect='9:16', region=(60, 1090, 800, 217),
+                                   detector=lambda _rgb: [chest_face], grab=lambda _f: BLANK, beats=beats, props=props)
+        self.assertTrue(report['pass'], report)
+        high_face = (390, 300, 300, 200)
+        report = qc_faces.off_face('cut.mp4', [page('upper')], style='house', aspect='9:16', region=(60, 1090, 800, 217),
+                                   detector=lambda _rgb: [high_face], grab=lambda _f: BLANK, beats=beats, props=props)
+        self.assertFalse(report['pass'], report)
+
     def test_a_word_at_chest_height_under_the_face_passes(self):
         report = run([page('training')], (390, 500, 300, 380))
         self.assertTrue(report['pass'], report)

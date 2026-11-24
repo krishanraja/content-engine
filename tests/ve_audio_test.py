@@ -107,6 +107,16 @@ class QcRowTest(unittest.TestCase):
         self.assertFalse(qc_audio.bed(self.sidecar(mode='ducked', bed_in_pauses_db=-10.0, duck_depth_db=8.0))['pass'])
         self.assertFalse(qc_audio.bed(self.sidecar(duration_s=324.0))['pass'])
 
+    def test_a_swell_inside_the_tolerance_passes_and_says_so(self):
+        # Ruling (Krish, 2026-11-19): no approvals during production; Thu 19's 3.4 LU against 3.0 never stops the engine.
+        self.assertTrue(qc_audio.swing_row(2.9)['pass'])
+        self.assertNotIn('note', qc_audio.swing_row(2.9))
+        row = qc_audio.swing_row(3.4)
+        self.assertTrue(row['pass'])
+        self.assertIn('within tolerance', row['note'])
+        self.assertFalse(qc_audio.swing_row(3.6)['pass'])
+        self.assertFalse(qc_audio.swing_row(None)['pass'])
+
     def test_missing_numbers_are_not_run_never_a_pass(self):
         result = qc_audio.bed(str(ROOT / 'tests' / 'no-such-stem.wav'))
         self.assertIsNone(result['pass'])
@@ -229,6 +239,15 @@ class EpisodeBedTest(unittest.TestCase):
         short = self.root / 'short.wav'
         subprocess.run([ffmpeg(), '-v', 'error', '-y', '-i', str(self.out), '-t', '50', str(short)], check=True)
         self.assertFalse(qc_audio.continuity(str(short), str(self.out))['pass'])
+
+    def test_a_proof_excerpt_is_measured_as_its_own_window(self):
+        # Fri 20 Nov: an 8 s proof was failed for not running as long as the whole cut.
+        clip = self.root / 'excerpt.wav'
+        subprocess.run([ffmpeg(), '-v', 'error', '-y', '-ss', '20', '-i', str(self.out), '-t', '8', str(clip)], check=True)
+        self.assertFalse(qc_audio.continuity(str(clip), str(self.out))['pass'], 'as a whole cut it is too short')
+        row = qc_audio.continuity(str(clip), str(self.out), excerpt_s=8.0)
+        self.assertTrue(row['pass'], row)
+        self.assertFalse(qc_audio.continuity(str(clip), str(self.out), excerpt_s=12.0)['pass'], 'the wrong window length fails')
 
     def test_dialogue_shorter_than_the_cut_is_padded_and_the_bed_runs_to_the_end(self):
         voice, out = self.root / 'voice40.wav', self.root / 'audio.pad.wav'

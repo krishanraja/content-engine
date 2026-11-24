@@ -11,7 +11,10 @@
     "motion.event_cadence",
     "motion.carry",
     "motion.reading_time",
-    "motion.layout_variety"
+    "grammar.staging",
+    "grammar.face_runs",
+    "grammar.region",
+    "grammar.repeat"
   ],
   "qc": [
     "qc_motion.change_density",

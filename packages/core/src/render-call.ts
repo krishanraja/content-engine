@@ -14,7 +14,7 @@ import { loadJobV2, pinnedConfigPathV2 } from './job-store-v2.js'
 import { loadBoundProductionBriefV2 } from './production-brief.js'
 
 // The call card on a makeyourmindup Short shows the piece's dated prediction:
-// the publication's promise ("every call scored in public"). A wrong date or
+// a call Krish asked for on the piece (no call is promised; Ruling, Krish, 2026-11-19). A wrong date or
 // percentage on it is a factual error in public, so the Studio takes the call
 // from the approved text of the job's production brief (readPieceCall) and
 // refuses a render whose call is missing or differs from it by a character.

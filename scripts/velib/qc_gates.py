@@ -86,8 +86,16 @@ def captions_clock(pages, heard: dict, drawn_by: str, fps: float = 30) -> dict:
     aligners, captions, _, settings, _ = _cutgates()
     by, independent = aligners.independent_of(drawn_by, heard)
     result = captions.clock_truth(pages, heard[by], fps=fps, drew=drawn_by, heard_by=by, independent=independent)
-    return _gate_row(result, f"each page's first frame within {result['tolerance_frames']} frames of its first word as heard",
-                     captions.summary)
+    row = _gate_row(result, f"each page's first frame within {result['tolerance_frames']} frames of its first word as heard",
+                    captions.summary)
+    # The tolerance is a placeholder until measured (config/gates.json captions.clock_tolerance_status). A placeholder
+    # never fails a cut: the row is measured and shown, and counts once the tolerance is measured (Krish, 2026-11-19:
+    # "either measure the tolerance as its comment says or keep the row advisory until it is measured"; the habits short
+    # failed on 17 of 67 pages at 3 to 8 frames against the unmeasured 2).
+    if row.get('status') == 'measured' and 'placeholder' in str(result.get('tolerance_status') or '').lower():
+        row.update(status='advisory', shadow=True,
+                   note='tolerance not measured yet (config/gates.json captions.clock_tolerance_status): shown, not counted')
+    return row
 
 
 def captions_render(path: str, pages, region, ocr=None) -> dict:

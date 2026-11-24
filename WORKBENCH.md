@@ -1,5 +1,9 @@
 # Workbench: where we are and what's next
 
+## Start here if you are picking up the video-production work (20 Nov 2026)
+
+`docs/ve/handoff-2026-11-20/HANDOFF.md` is the full handoff: why this week failed, Krish's rulings, what is built, what is open, how the first piece (Mon 23 Nov) must run, what it has to prove, and how to stabilise and lock down after it. `PLAN.md` beside it is the approved plan.
+
 ## Next for a Control Center session: three cover styles must keep clear of logos under the headline (10 Nov)
 
 The approved cover standard (`docs/production/COVER-STANDARD.md`, Krish 2026-11-09: "approve the cover standard as

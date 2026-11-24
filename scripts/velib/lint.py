@@ -223,11 +223,16 @@ def caption_steady_problems(spec: dict) -> list[str]:
     lands somewhere else from page to page. Krish, 2026-11-18, of the Tue 17 short in art-directed: "They are really
     jolty, and each word moving from left to right is really hard to look at and stressful. We can't have each new word
     appear somewhere else on the screen, and we need the previous word to stick around for a tiny bit longer." The styles
-    that do it are measured in real Chromium (scripts/audit-caption-steady.ts, config/ve/caption-steady.json)."""
+    that do it are measured in real Chromium (scripts/audit-caption-steady.ts, config/ve/caption-steady.json).
+
+    Only a cut with no picked caption style is measured: a picked style (style.captions.theme) turns word mode off in
+    compile (word_mode), so its one-word pages are never drawn and measuring them refused a layout nobody sees."""
     day = spec.get('publish_day')
     if not day or day < STEADY_FROM or (spec.get('brand') or {}).get('captions') != 'word':
         return []
-    chosen = ((spec.get('style') or {}).get('captions') or {}).get('theme') or (spec.get('brand') or {}).get('caption_theme')
+    if ((spec.get('style') or {}).get('captions') or {}).get('theme'):
+        return []
+    chosen = (spec.get('brand') or {}).get('caption_theme')
     measured = (load_json(CONFIG / 'caption-steady.json').get('styles') or {}).get(chosen)
     if not measured or not measured.get('anchor_moves'):
         return []
@@ -244,10 +249,17 @@ def motion_lints(spec: dict) -> list[str]:
     if spec['signature']['hero']['device'] == 'stamp':
         out.append('motion.stamp_not_hero signature.hero.device: the stamp draws fixed 30 px mono text; it labels, it is '
                    'never the hero (docs/ve/MOTION_STANDARD.md)')
+    # No captions.word_default: it forced brand.captions "word" on face-with-proof while compile turns word mode off the
+    # moment a caption style is picked (compile.py, word_mode), so it refused specs for a build that is never drawn.
     day = spec.get('publish_day')
-    if spec['format'] == 'face-with-proof' and spec['brand'].get('captions') != 'word' and not (day and day < REFERENCE_FROM):
-        out.append('captions.word_default brand.captions: face-with-proof uses the word caption build, one word at a time '
-                   'off the face (signed by Krish, 3 Nov 2026, docs/ve/MOTION_STANDARD.md)')
+    picked = ((spec.get('style') or {}).get('captions') or {}).get('theme')
+    if (spec['format'] == 'face-with-proof' and spec['brand'].get('captions') != 'word' and not picked
+            and not (day and day < REFERENCE_FROM)):
+        # A picked caption style draws its own phrase pages (compile turns word mode off), so the rule asks only of a cut
+        # with none: there the word build is the signed default.
+        out.append('captions.word_default brand.captions: face-with-proof with no caption style picked uses the word caption '
+                   'build, one word at a time off the face (signed by Krish, 3 Nov 2026, docs/ve/MOTION_STANDARD.md); '
+                   'set brand.captions "word" or pick a style (style.captions.theme)')
     out.extend(caption_steady_problems(spec))
     out.extend(f'motion.required {problem}' for problem in motion_style_problems(spec))
     out.extend(motion_not_drawable(spec))
@@ -287,13 +299,19 @@ def palette_lints(spec: dict) -> list[str]:
         if not shape:
             continue
         sting = 'none'
+        # The series close plays the intro sting at the end from its own date (Ruling, Krish, 2026-11-20); the tall one
+        # carries no days row (EndingBand.tsx).
+        closes_on_sting = kind == 'series' and ve_compile._intro().close_wanted(shape, series, when)
+        ids = ('sting_card', 'sting_beat') if closes_on_sting else ('statement_card', 'statement_beat')
         record = {'date': when, 'format': 'long_cut' if shape == '16x9' else 'short_cut', 'shape': shape, 'kind': kind,
                   'opening': 'hook', 'sting': sting,
-                  'close': {'id': 'statement_card' if shape == '16x9' else 'statement_beat',
+                  'close': {'id': ids[0] if shape == '16x9' else ids[1], 'sting': bool(closes_on_sting),
                             'seconds': getattr(ve_compile, 'ENDING_FRAMES_BY_ASPECT', {}).get(cut.get('aspect'), ve_compile.ENDING_FRAMES)
-                            / ve_compile.FPS, 'days_row': kind == 'series'}}
+                            / ve_compile.FPS, 'days_row': kind == 'series' and not (closes_on_sting and shape == '9x16')}}
         out += [f'brand.palette cuts.{cut_id}: {p}' for p in brand_palette.check(record, palette)]
-    return out
+    # The accent kit (Krish, 2026-11-20): big moments, gradients and duotone cut-outs on series days only.
+    from . import accent_kit  # noqa: PLC0415
+    return out + accent_kit.accent_problems(spec)
 
 
 TITLE_MOMENT_FROM = '2026-11-16'
@@ -648,8 +666,13 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
         if whole and roles.count('payoff') != 1:
             out.append(f'story.one_payoff {where}: exactly one payoff beat (found {roles.count("payoff")})')
         from . import guards  # noqa: PLC0415
-        if whole and spec['brand']['series'] == 'mind.the.gap' and 'call' not in roles and not guards.off_day(spec):
-            out.append(f'story.call {where}: mind.the.gap ends on a call beat carrying the dated call')
+        # No cut needs a dated call (Ruling, Krish, 2026-11-19: "If I want to predict something in a particular piece
+        # I will"; and earlier that day: "I hate this prediction format. I think we just scrap it."). spec.call is set only when he asked for a prediction on the piece; then a whole cut ends on its call
+        # beat, and a call beat never stands without one.
+        if whole and spec.get('call') and 'call' not in roles and not guards.off_day(spec):
+            out.append(f'story.call {where}: Krish asked for a prediction on this piece: end on a call beat carrying spec.call')
+        if 'call' in roles and not spec.get('call'):
+            out.append(f'story.call {where}: a call beat with no spec.call; a cut carries a prediction only when Krish asked for one on the piece')
         run_role, run_len = None, 0
         for index, role in enumerate(roles):
             run_len = run_len + 1 if role == run_role else 1
@@ -657,10 +680,8 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
             if role in ('anchor', 'bridge') and run_len == 3:
                 out.append(f'story.alternation {where}.beats.{index}: three {role} beats in a row; alternate anchor and bridge')
         # creative, motion, sound
-        layouts = set()
         for index, beat in enumerate(beats):
             at = f'{where}.beats.{index}'
-            layouts.add(beat['layout'])
             words = beat['span']['to_w'] - beat['span']['from_w'] + 1
             if index and not beat.get('override_reason'):
                 prev = beats[index - 1]
@@ -693,13 +714,8 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
         for obj_id, (word, verb) in first_verb.items():
             if verb != 'enter' and not ((verb, objects.get(obj_id, {}).get('device')) in {('draw', 'scribble'), ('stamp', 'stamp')}):
                 out.append(f'motion.enters {where}: {obj_id} first acts with "{verb}" at word {word}; an object enters before anything else happens to it, or it never appears')
-        if cut['aspect'] == '9:16' and whole:
-            minutes = max(1.0, (beats[-1]['span']['to_w'] - beats[0]['span']['from_w']) / (WORDS_PER_SECOND * 60))
-            need = math.ceil(fmt['qc'].get('layout_types_per_min_tall', 1) * min(minutes, 1.0))
-            # Krish may waive variety for a piece in his own words (an exception approval), as for Thursday 5 Nov:
-            # "This Thursday video should be the simplest to produce and feature my face minimally".
-            if len(layouts) < need and not any(a['gate'] == 'exception' and a.get('scope') != 'engine' for a in spec['approvals']):
-                out.append(f'motion.layout_variety {where}: {len(layouts)} layout types, the format needs at least {need} a minute')
+        # No layout-variety rule: it forced switching (Ruling, Krish, 2026-11-20: one staging per cut; the shot grammar,
+        # velib/grammar.py, holds the body to one staging instead).
 
     bed_mode = spec['audio']['bed']['mode']
     if spec['audio']['master'] == 'vo' and bed_mode not in ('continuous', 'ducked', 'episode_bed'):
@@ -788,6 +804,9 @@ def lint(spec_path: Path) -> tuple[dict | None, list[str]]:
     from .verdict import ve_dir  # noqa: PLC0415
     guards.set_bind_day(showgate.effective_day(spec, ve_dir(spec_path)))
     try:
-        return spec, crew_lints(spec) + title_line_lints(spec, spec_path) + guards.pre_critic_lints(spec, spec_path)
+        from . import floor, grammar, piece_guards  # noqa: PLC0415
+        return spec, (crew_lints(spec) + title_line_lints(spec, spec_path) + guards.pre_critic_lints(spec, spec_path)
+                      + piece_guards.lints(spec, guards.bind_day(spec), Path(spec_path).parent)
+                      + floor.lints(spec, Path(spec_path)) + grammar.lints(spec, Path(spec_path)))
     finally:
         guards.set_bind_day(None)

@@ -795,7 +795,7 @@ describe('makeyourmindup house style', () => {
     expect(candidate.publication?.house_style?.channels).toEqual({
       follow_the_money: { day: 'Mondays', sticker: 'Bring a calculator', promise: 'No added sermons', question: 'Where does the money move, and who ends up better or worse off?' },
       under_the_hood: { day: 'Wednesdays', sticker: 'Screwdriver included', promise: 'Free from jargon', question: 'What actually goes together in a shipped thing, and why did this one work?' },
-      mind_the_gap: { day: 'Fridays', sticker: 'The headliner', promise: 'Every call scored in public', question: 'What is the pattern, and what does it mean is coming?' },
+      mind_the_gap: { day: 'Fridays', sticker: 'The headliner', promise: "What's coming, before it's obvious", question: 'What is the pattern, and what does it mean is coming?' },
     })
     const report = publicationLegibilityReport(candidate)
     expect(report.failures).toEqual([])
@@ -824,7 +824,7 @@ describe('makeyourmindup house style', () => {
     const props = houseProps(live)
     const house = props.branding.publication?.house
     expect(props.branding.typography).toEqual({ structure: 'Archivo', claim: 'Anton', body: 'Archivo', data: 'IBM Plex Mono' })
-    expect(house).toMatchObject({ tokens: { ink: '#0C1512', cream: '#F4EFE4', mint: '#7EF0C0', section: '#FF6A4D' }, day: 'Fridays', promise: 'Every call scored in public', site: 'makeyourmindup.ai', tile: { size: 136, markWidth: 96, shadowPx: 10 }, band: { topPx: 1060, heightPx: 408, logoWidth: 520 } })
+    expect(house).toMatchObject({ tokens: { ink: '#0C1512', cream: '#F4EFE4', mint: '#7EF0C0', section: '#FF6A4D' }, day: 'Fridays', promise: "What's coming, before it's obvious", site: 'makeyourmindup.ai', tile: { size: 136, markWidth: 96, shadowPx: 10 }, band: { topPx: 1060, heightPx: 408, logoWidth: 520 } })
     const opening = props.shots.find((shot) => shot.shotId === 'shot-main')!.brandCues!
     const ending = props.shots.find((shot) => shot.shotId === 'shot-late')!.brandCues!
     expect(opening.every((cue) => cue.mode === 'mindmake_only')).toBe(true)
@@ -836,7 +836,7 @@ describe('makeyourmindup house style', () => {
     expect(houseMarkModel(props.branding, ending[0])).toBeNull()
     const band = houseBandModel(props.branding, ending[0], props.safeZones, 3_000)
     expect(band).toMatchObject({ top: 1060, insets: { left: 72, right: 72 }, logoWidth: 520, day: 'Fridays', site: 'makeyourmindup.ai', pill: { label: 'mind.the.gap', background: '#FF6A4D', color: '#0C1512' }, background: '#0C1512' })
-    expect(band!.ticker.items.slice(0, 4)).toEqual(['Every call scored in public', '*', 'Fridays', '*'])
+    expect(band!.ticker.items.slice(0, 4)).toEqual(["What's coming, before it's obvious", '*', 'Fridays', '*'])
     // Still until the band has arrived, then the ticker moves (and only it).
     expect(houseBandModel(props.branding, ending[0], props.safeZones, 2_200)!.ticker.offsetPx).toBe(0)
     expect(houseBandModel(props.branding, ending[0], props.safeZones, 3_900)!.ticker.offsetPx).toBeGreaterThan(0)

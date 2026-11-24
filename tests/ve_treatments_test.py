@@ -71,7 +71,8 @@ class RuleTest(unittest.TestCase):
         beats = plan_cut(spec(), 'short', self.bank)['beats']
         self.assertEqual([e['treatment'] for e in beats['b1']], ['subject-lift', 'hook-hit'])
         self.assertEqual([e['treatment'] for e in beats['b2']], ['number-glow'])
-        self.assertEqual([e['treatment'] for e in beats['b3']], ['receipt-paper', 'pivot-split'])
+        # pivot-split is retired: a break on the turn reads as a layout change (Ruling, Krish, 2026-11-20: one staging per cut).
+        self.assertEqual([e['treatment'] for e in beats['b3']], ['receipt-paper'])
         self.assertEqual(beats['b4'], [])
 
     def test_never_more_than_the_cap_on_a_beat(self):

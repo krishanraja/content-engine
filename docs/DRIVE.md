@@ -292,6 +292,10 @@ there, reads it back and replies "Done" with the link (`config/failures.json` F2
 - A cloud session reaches Drive through the Google Drive connector, which can
   create files and folders, rename and move them. It cannot see the H: mount;
   only the home computers can.
+- The connector downloads nothing over 10 MB. To watch a bigger video Krish points at (a long cut, a take), run
+  `python3 scripts/post-pack/drive_review.py <Drive link>`: the engine copies it read only into a private review area
+  (`POST /api/library/drive-review`), and the script downloads it and writes a contact sheet and `ve pace` beside it.
+  Nothing is filed or placed (Krish, 2026-11-19: "you need to figure out how to watch the long video").
 - The connector takes a file's bytes only inline, so it cannot file a picture or
   a video. For those, a cloud session uses the n8n workflow "Drive file uploader
   (cloud sessions)" (Krish, 2026-11-09: "make sure this N8N uploader is the

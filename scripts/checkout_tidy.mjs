@@ -14,6 +14,12 @@
 //   - Anything else (tracked changes, unmerged commits, a local main ahead of origin, a merge or rebase in progress)
 //     touches nothing: one plain line says what is there and the exact commands to keep it, and the case is recorded
 //     in the ignored .scratch/checkout-tidy.jsonl.
+//   - A local main both ahead of and behind origin/main because origin/main was rewritten (every local-only commit's
+//     patch already on origin/main, or more than 200 of them) is held too, never reset: the line names which and
+//     prints the three commands that keep the old main on a backup branch and realign it (git branch backup/...,
+//     git checkout main, git reset --hard origin/main). Krish, 2026-11-20, after main's history was rewritten:
+//     "We need to ensure this can never happen again in the future." Machine-owned copies heal themselves instead
+//     (scripts/home-copy.ps1).
 //   - It skips a linked worktree (.claude/worktrees, .worktrees), a cloud container (CLAUDE_CODE_REMOTE), CI, and a
 //     checkout another live session holds (the lock below).
 //
@@ -140,6 +146,32 @@ function alreadyOnMain(git, upstream) {
   return null
 }
 
+// Over this many commits only on local main, with main also behind, the copy is on an old history rather than ahead
+// with work of its own (on 20 Nov 2026 each home copy was 2,292 ahead and 2,494 behind).
+export const REWRITE_AHEAD = 200
+
+function stamp(now = new Date()) {
+  const p = (n) => String(n).padStart(2, '0')
+  return `${now.getFullYear()}${p(now.getMonth() + 1)}${p(now.getDate())}-${p(now.getHours())}${p(now.getMinutes())}${p(now.getSeconds())}`
+}
+
+// Has origin/main been rewritten under this local main? Only when main is both ahead of origin/main and behind it,
+// and either every local-only commit's patch is already on origin/main (by patch-id, git's --cherry-pick), or the
+// local-only commits are more than REWRITE_AHEAD. Null otherwise: then local main holds work of its own.
+function rewrittenOrigin(git) {
+  const ahead = Number(git.out(['rev-list', '--count', 'origin/main..main']) || 0)
+  const behind = Number(git.out(['rev-list', '--count', 'main..origin/main']) || 0)
+  if (!ahead || !behind) return null
+  const unmatched = git.out(['rev-list', '--count', '--cherry-pick', '--right-only', '--no-merges', 'origin/main...main'], { timeout: 120_000 })
+  if (unmatched !== null && Number(unmatched) === 0) {
+    return { kind: 'patch-id', why: `every one of its ${ahead} local-only commit(s) is already on origin/main by patch`, ahead, behind }
+  }
+  if (ahead > REWRITE_AHEAD) {
+    return { kind: 'count', why: `${ahead} local-only commit(s), more than ${REWRITE_AHEAD}, with main also ${behind} behind`, ahead, behind }
+  }
+  return null
+}
+
 function inProgress(gitDir) {
   return ['MERGE_HEAD', 'rebase-merge', 'rebase-apply', 'CHERRY_PICK_HEAD', 'REVERT_HEAD', 'BISECT_LOG']
     .find((name) => existsSync(join(gitDir, name))) || null
@@ -211,6 +243,20 @@ function tidyCheckout(git, top, gitDir, log) {
   const mainExists = git.ok(['show-ref', '--verify', '--quiet', 'refs/heads/main'])
   if (mainExists && !git.ok(['merge-base', '--is-ancestor', 'main', 'origin/main'])) {
     const ahead = git.out(['rev-list', '--count', 'origin/main..main'])
+    const rewritten = rewrittenOrigin(git)
+    if (rewritten) {
+      // origin/main was rewritten (a history scrub, 18 to 20 Nov 2026): this copy is not ahead with work of its own,
+      // it is on the old history. Never reset here (a person's copy); say the three commands that keep the old main
+      // and realign it. Krish, 2026-11-20: "We need to ensure this can never happen again in the future."
+      const backup = `backup/main-before-realign-${stamp()}`
+      return hold(
+        `local main has diverged from origin/main because origin/main was rewritten (${rewritten.why}): ` +
+          `${rewritten.ahead} commit(s) only here, ${rewritten.behind} only on origin/main. ` +
+          `Keep the old main on a backup branch and realign: \`git branch ${backup} main\`, \`git checkout main\`, ` +
+          '`git reset --hard origin/main`. Untracked files stay; the backup branch keeps every old commit.',
+        { branch, rewritten: rewritten.kind, ahead: rewritten.ahead, behind: rewritten.behind, backup },
+      )
+    }
     return hold(`local main has ${ahead} commit(s) that are not on origin/main. Push them on a branch and open a pull request, then run this again.`, { branch })
   }
 

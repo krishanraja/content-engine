@@ -1465,6 +1465,13 @@ simultaneously and should have a rock-hard repository for everything it's drawin
 inspiration for that day or if I put a research corpus in as supporting material, that should never be lost again. Even
 if I ran four separate sessions on one piece of content, it would know where everything was."
 
+**Roles the piece sheet reads (19 Nov 2026).** Control Centre's piece sheet (control-center `src/surfaces/content/board/sheetSections.ts`) puts every filed thing in one section by its role, then its name: `article` and `written_edition` in Article, `script` in Scripts, `krish_notes` and `notes` in Notes, the narrative lock in Story, `production_plan`, `plan_scene`, `proof`, `ve_asset` and `krish_got` in Proofs & mocks, `cover`, `thumbnail` and `final` in Final assets, everything else in Research; the newest of each is kept and every superseded one moves to Archive, never deleted. So file the article with `--role article` (make-piece step 6): an article filed with no role is found only by its name (Krish, 2026-11-19: "I can't ever just see the Substack article draft anywhere, at any stage of the production flow").
+
+**Roles and lessons in every prompt (Ruling, Krish, 2026-11-23).** The same instruction says who does what (`ROLES`: Codex
+generates the visual assets from cards; Claude writes the words, arbitrates the standards and checks what Codex returns) and
+where a lesson goes (`LEARNING_RULE`: a failure, defect or best practice goes to `record_harness_observation` for the
+internal-auditor; only his preference or inspiration goes to `report_to_taste_engine`).
+
 **What a copied prompt says.** Every Claude and Growth prompt on the view ends with one instruction
 (`apps/control-plane/api/board/_writeBack.ts`, `writeBack`; a Perplexity prompt does not, it is not a session). It names
 the piece (or the week and the day when there is no piece yet) and the step, and tells the session to: see what is on
@@ -1569,7 +1576,7 @@ patch that brings `gates`. ve reads them there.
 | Sign storyboard | The storyboard and the expectations sheet (at most 6 lines, `ve expect`) | `gates.storyboard {by, at, sha256}`; sha256 of canonical `{"expect", "storyboard"}`, LF line ends (`scripts/velib/gates.py` `storyboard_sha`) | Recording |
 | Pick a style | The style mocks side by side on his take, each with its name, one-line how, Pick and "Not for us"; "None of these" needs his words | `gates.style {by, at, sha256, module, reason?, verdicts}`; sha256 of the styles.json bytes; `module` null for None of these; `verdicts` `[{module, verdict: picked, seen or not_for_us, sha256}]`, which the engine's verdict writer folds into `config/style-references.json` (the server never edits that file) | `style.motion` |
 | Approve or Reject proof | The moving proof beside the reference cards its spec names (`brand.references`) | `gates.proof {by, at, sha256, verdict, words?, cut?}`; sha256 the clip's; Reject needs his words | The full render |
-| Approve cut (from the making record's cuts with their `sha256`) | Both cuts, each with its download | `gates.final {by, at, sha256, cuts}`; one cut: its file hash; both: sha256 of canonical `cuts` | Filing |
+| Approve cut (from the making record's cuts with their `sha256`) | Both cuts, each with its download | `gates.final {by, at, sha256, cuts}`; one cut: its file hash; both: sha256 of canonical `cuts` | Publishing only: filing to his post folder never waits on it (Ruling, Krish, 2026-11-19) |
 
 His words on a Rejected proof or on None of these go to his taste ledger as `krish_words` with where and when.
 
@@ -1757,6 +1764,12 @@ What was retired and where it lived: `docs/history/2026-11-13-old-boards-retired
 with every section on the old pages: `docs/history/2026-11-13-PUBLISH_BOARDS-before-retirement.md`.
 
 
+## Every week's ideas board: Saturday's good news, the meme templates, and nothing already in work (Krish, 19 Nov 2026)
+
+- **Saturday is good-news carousels only** (Krish: "We should find good news that's not medical stuff"; "Sat should just be good news carousels - 5 great things AI is doing for people (ideally things that make people smarter or better or happier or more successful)"; "Can mix if no1 is implemented properly"): the Sunday run's gate refuses a Saturday option that is not a good-news carousel, a story that does not say who it helps and how, two options led by one theme or carrying one story, a lead of the four Saturdays before, a medicine-led carousel after a month of medical stories, and any other carousel with more than one medical story (`config/good-news.json`, `idea_checks.goodnews_findings`, code `goodnews`). The board holds one that slips through, with the reason (`apps/control-plane/api/board/_goodNews.ts`); his approval is never held.
+- **Every week carries the meme templates** (Krish: "every week's ideas board should include the meme templates feature as well"): a template he has not answered on last week's board is carried onto this week's Tuesday and Thursday, marked `carried_from`, until he answers it; one he answered, one approved into an item and one this week already offers by its clip's page is never carried (`_carryTemplates.ts`). From 30 Nov the Sunday run writes 6 to 10 of its own each week (`TEMPLATE_FROM`).
+- **Nothing approved or in work is offered again** (Krish: "no suggestions approved duplicated. right now I seem to get pieces I am already working on show up as suggestions for following weeks"): an idea that is a piece or post already approved, in production or scheduled, on any earlier board or dated on any later week, leaves the ideas board, said once in its repeats line ("Already in work: ..."), matched by its piece id, its item, its source or its hook, never a title alone (`repeatOf`, `recentOutOf` in `_weekModel.ts`; the view reads pieces in work up to nine weeks ahead). What went out still counts within its 14 days.
+
 ## His notes at any stage, for the Perplexity or the Claude prompt, never lost (contract 1.33.0)
 
 Krish, 19 Nov: "I should also be able to add notes at this point that either load into the Perplexity prompt or the Claude production prompt. It's at this point I'm likely to want to push the idea further. I should be able to save that note to this board, and it never disappears ever again."
@@ -1765,3 +1778,12 @@ Krish, 19 Nov: "I should also be able to add notes at this point that either loa
 - **Never lost:** each prompt's `notes.saved` lists every note he saved on the item that feeds it, up to 100 (`SAVED_NOTES_SHOWN`), each with its `for`; the prompt text carries the newest 10. Notes are kept by the piece (or an off-day post's item key), and the view reads them from every week (`crossWeekNotes`), so a note follows its piece through Move to… into another week and is never dropped by the week's own 200 comments. Each note is also filed on the piece as a material (role `krish_notes`).
 - **Every card, every stage, many notes:** each model item carries `notes {save, saved}` (`modelItem.notes`): the save press of its prompts, or the same `claude_notes` press made for it when it carries no prompt (a post that is scheduled or live), and every note he saved on it, newest first. Each save is a new comment document (its id ends `{t}`), so nothing is overwritten (Krish, 2026-11-19: "Should be able to save notes in this step too"; "Should be able to save multiple notes in all instances"). A post's notes key carries its day (`off-thu-x`), so the key is matched without it (`noteItemKey`) and a post keeps its notes when moved to another day.
 - **Held by:** `tests/control-plane/board-notes-research.test.ts`.
+
+## The research corpus before the lock (Krish, 2026-11-19)
+
+Krish: "at this stage of every piece, I need to be able to drag and drop multiple files in (the perplexity repsonse and accompanying files images etc). It should save all of that to the right place in Drive, file it in the board properly, and then the Claude production prompt should be able to refer to it as the corpus by which we are going to flesh out the full narrative arc and story, ensuring we trace everything back with the 5 Whys and also make the narrative incredibly fun to consume".
+
+- **Filed:** Control Centre's read sheet takes many files, a pasted answer or a link in one drop (or its file picker), each filed on the piece through the store with role `research`.
+- **Drive:** every material filed as research (images and PDFs included, by their role) is copied at once into `makeyourmindup > 6 Research library` (`RESEARCH_LIBRARY_FOLDER_ID`), in the week's folder and the piece's own folder, with a row in `00 Index` (`_researchLibrary.ts` `inLibrary`, `placeOf`); the hourly sweep copies anything the write missed. Nothing for a session to do by hand.
+- **The corpus:** until the piece's lock is signed, every Claude prompt for it carries `corpusLines` (`apps/control-plane/api/board/_corpus.ts`, the one place): every research item on file by id and title, read whole with `read_piece_material` first; the full narrative arc built from it; every claim traced with the 5 Whys to its root cause, each step citing the item it rests on; nothing the corpus does not hold; made incredibly fun to consume within the house voice rules; then filed as the narrative lock for his signature. Control Centre's "Re-run the narrative" copies that same prompt. With nothing on file, it says so and asks him for the research first.
+- **Tests:** `tests/control-plane/board-corpus.test.ts`.

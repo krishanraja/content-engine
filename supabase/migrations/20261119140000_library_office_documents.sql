@@ -1,0 +1,35 @@
+-- Word, PowerPoint and Excel files can be filed on any piece (Krish, 2026-11-19:
+-- "I need to be able to file Docx files, PDFs, MD files in every piece!").
+-- The bucket's types are exactly libraryMimeTypes() in apps/control-plane/api/library/_library.ts.
+update storage.buckets set allowed_mime_types = array[
+  'application/json',
+  'application/msword',
+  'application/pdf',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/x-subrip',
+  'application/zip',
+  'audio/mp4',
+  'audio/mpeg',
+  'audio/wav',
+  'font/otf',
+  'font/ttf',
+  'font/woff',
+  'font/woff2',
+  'image/gif',
+  'image/jpeg',
+  'image/png',
+  'image/svg+xml',
+  'image/webp',
+  'text/css',
+  'text/csv',
+  'text/html',
+  'text/javascript',
+  'text/markdown',
+  'text/plain',
+  'text/vtt',
+  'video/mp4',
+  'video/quicktime',
+  'video/webm'
+] where id = 'content-library';

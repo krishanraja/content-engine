@@ -118,5 +118,35 @@ export function photoPlateState(object: EngineObject, events: readonly EngineEve
     moves,
     region,
     drawn: region && mark ? Math.min(1, progress(frame - mark.atFrame, DRAW)) : 0,
+    loops: loopMarks(params, fired, frame),
   }
+}
+
+/** The loops on a recording (markStyle 'loop'): each named region's loop from its own mark, the latest only unless
+ *  keepMarks; drawn on in 8 frames on the utility curve, its 3 px echo 3 frames later; 'none' clears them. */
+export const LOOP = { drawFrames: 8, echoDelay: 3, stroke: 9, echo: 3, echoTurnDegrees: 4 } as const
+const UTILITY = (t: number) => { // cubic-bezier(0.2, 0, 0, 1)
+  if (t <= 0) return 0
+  if (t >= 1) return 1
+  let lo = 0, hi = 1
+  for (let i = 0; i < 30; i++) {
+    const m = (lo + hi) / 2, x = 3 * (1 - m) ** 2 * m * 0.2 + m ** 3
+    if (x < t) lo = m; else hi = m
+  }
+  const m = (lo + hi) / 2
+  return 3 * (1 - m) * m ** 2 + m ** 3
+}
+function loopMarks(params: ReturnType<typeof ParamsSchema.parse>, fired: readonly EngineEvent[], frame: number) {
+  if (params.markStyle !== 'loop') return []
+  const marks = fired.filter(event => event.verb === 'mark')
+  const cleared = marks.findLastIndex(event => event.toState === 'none')
+  const live = marks.slice(cleared + 1)
+  return (params.keepMarks ? live : live.slice(-1)).map(event => {
+    const region = params.regions[event.toState]
+    if (!region) throw new Error('photo_plate mark needs a named region or none')
+    const since = frame - event.atFrame
+    const clamp = (v: number) => Math.min(1, Math.max(0, v))
+    return { name: event.toState, region, drawn: UTILITY(clamp(since / LOOP.drawFrames)),
+      echo: UTILITY(clamp((since - LOOP.echoDelay) / LOOP.drawFrames)) }
+  })
 }

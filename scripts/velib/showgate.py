@@ -60,18 +60,18 @@ def shown(directory: Path, spec: dict | None = None) -> bool:
                for a in (spec or {}).get('approvals') or [])
 
 
-def binds(spec: dict, rule_from: str | None, directory: Path | None = None) -> bool:
-    """Does a rule with this binds_from hold this piece? By its publish day as always; and, when config bind_unshown is on, any
-    piece not yet shown to Krish too, so a cut meets every rule that exists on the day it is shown."""
-    if rule_from is None or str(spec.get('publish_day') or '') >= rule_from:
-        return True
-    return bool(config()['bind_unshown']['enabled'] and directory is not None and not shown(directory, spec))
-
-
 def effective_day(spec: dict, directory: Path | None) -> str | None:
-    """The day the rules bind as of: today, when bind_unshown is on and this piece has not yet been shown to Krish; else None
-    (the piece's own publish_day, as before). A piece already shown or approved is never changed mid-piece (F33)."""
-    return datetime.now(timezone.utc).date().isoformat() if binds(spec, '9999-12-31', directory) else None
+    """Always None now: a piece's rules bind as of its own publish_day. bind_unshown, which held a cut not yet shown to Krish
+    to every rule existing on the day it was shown, is gone (Ruling, Krish, 2026-11-19: rules and the engine freeze at Sign
+    storyboard; a new rule or fix binds from the next piece). The freeze itself is the pin: a piece whose rule files moved on
+    main runs on the commit recorded at ve expect (guards.engine_route)."""
+    return None
+
+
+def binds(spec: dict, rule_from: str | None, directory: Path | None = None) -> bool:
+    """Does a rule with this binds_from hold this piece? By its publish day, as always. A rule that lands after the piece's
+    Sign storyboard never reaches it, because the piece then proofs and renders on its pinned commit (guards.engine_route)."""
+    return rule_from is None or str(spec.get('publish_day') or '') >= rule_from
 
 
 # ------------------------------------------------------------------------------------------ evaluation

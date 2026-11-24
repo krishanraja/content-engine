@@ -64,6 +64,10 @@ python3 scripts/post-pack/creative_direction.py hash SCRIPT.md        # what his
 - `max_face_share`: his face is at most this share of a cut's beats (0.6 by default; Krish, 2026-10-23: "not have my
   face in absolutely everything"). A voiceover take has none.
 - `article.visuals`: each article figure's point, the reader's question it answers, and its source.
+  Each names its picture form (`config/article-figures.json` forms: a real source page, a scale drawn to the true
+  ratio, a timeline, a ledger, a map or a comparison), never a card of words that restates the article, and an inline
+  Substack figure carries no brand mark: the post already carries the brand (Krish, 2026-11-19: "these dont look visually
+  good enough and they have the wrong brand mark"). `scripts/pages/figure_check.py` holds all three before anyone sees it.
 - `production_choices`: the choices Krish put under test, to be judged on real engagement (`docs/production/THE_BAR.md`,
   "Under test"; the defaults and options live in `config/reference-cuts.json` `under_test`, and the template starts from
   them). `opening` (`hook_is_intro`, the hook on every cut, the only option since 12 Nov 2026); `lead_picture`, with a `series_picture` and a

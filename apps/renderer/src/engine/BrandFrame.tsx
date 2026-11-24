@@ -23,8 +23,9 @@ import type { EngineBeat, EngineRenderProps } from './props'
 export interface BrandFrameProps { props: EngineRenderProps; beat: EngineBeat; frame: number }
 
 export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.ReactElement {
-  const call = beat.role === 'call'
-  if (call && !props.call) throw new Error('ve: call beat without props.call')
+  // The dated call card only when the piece writes a call; with none the call beat is a closing beat like any other
+  // (Ruling, Krish, 2026-11-19: "I hate this prediction format. I think we just scrap it.").
+  const call = beat.role === 'call' && !!props.call
   const ending = !!props.ending && frame >= props.ending.fromFrame
   // vertical-captions: lead captions replace the house captions for that style only.
   const lead = resolveMotion(props.motion)?.captions
@@ -45,10 +46,10 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
     </>}
     {/* The title holds over every face-alone beat, a STAGE beat on the take included (the georgia_la build);
         graphics own the top of SPLIT and of a STAGE beat with no plate. */}
-    {props.captionStyle === 'word' && !call && !isStaging(props.layout?.mode) && beat.layout !== 'SPLIT' && !(beat.layout === 'STAGE' && beat.plate?.source !== 'take') && <HeldTitle props={props} frame={frame} />}
+    {props.captionStyle === 'word' && !call && !isStaging(props.layout?.mode, props.aspect) && beat.layout !== 'SPLIT' && !(beat.layout === 'STAGE' && beat.plate?.source !== 'take') && <HeldTitle props={props} frame={frame} />}
     {ending ? <EndingBand props={house} frame={frame} />
       : call ? <CallCard props={house} frame={frame} />
-        : props.captionTheme ? (onFullPlate(props, beat) || props.captionTheme === 'rack-focus'
+        : props.captionTheme ? (onFullPlate(props, beat) || props.captionTheme === 'rack-focus' || overTake(beat)
           ? <div data-caption-halo style={{ position: 'absolute', inset: 0, filter: onFullPlate(props, beat) ? CAPTION_HALO : TAKE_HALO }}><ThemedCaption props={props} theme={props.captionTheme} frame={frame} /></div>
           : <ThemedCaption props={props} theme={props.captionTheme} frame={frame} />)
         : lead?.mode === 'lead' ? <LeadCaption props={props} frame={frame} perCard={lead.wordsPerCard} />
@@ -86,4 +87,10 @@ export function SplitCaptionTrack({ props, frame }: { props: EngineRenderProps; 
     ...caption.props.style, ...SPLIT_CAPTION_ZONE, height,
     padding: `10px ${HOUSE.caption.paddingX}px`,
   } })
+}
+
+/** Any caption style drawn over his take wears the take halo, not only rack-focus (Ruling, Krish, 2026-11-19: "Halo + frame
+ *  me higher"; his 18 Nov "Approve halo"): art-directed words sat white on his light wall, unreadable. */
+export function overTake(beat: { plate?: { source?: string | undefined } | undefined } | undefined): boolean {
+  return beat?.plate?.source === 'take'
 }

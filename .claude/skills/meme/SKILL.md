@@ -56,4 +56,5 @@ one line in the record and in the report to Krish; keep the ones he likes by wri
 1. Read his caption and the clip's page; confirm the joke reads cold, in one look.
 2. Build on the ve route (memes) or as a Codex card of kind `meme` (statics); make both shapes.
 3. Verify: the receipt, `layout_centre.py`, the safe areas, a full watch with sound; a separate reviewer watches it.
+   Then the antislop PASS/FAIL report (`.agents/skills/antislop/ADAPTER.md` first, then the skills it names) on the caption and the frame: fix each FAIL no house rule overrules.
 4. File through `send.py` to the day's `3 Posts` folder, report on the board, send it to Krish, record his words.

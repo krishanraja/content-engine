@@ -1,0 +1,4 @@
+[
+ {"severity": "note", "area": "short hook strike", "text": "Check on a rendered frame that the underline (200,340) to (690,330) crosses the digits of $195,000."},
+ {"severity": "note", "area": "kinetic_stat", "text": "Check on a rendered frame that the counter is cream on the dark ground after the renderer fix."}
+]

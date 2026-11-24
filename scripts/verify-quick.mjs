@@ -49,7 +49,7 @@ const ALWAYS_TS = [
 const ALWAYS_TS_PATTERN = /^tests\/control-plane\/board-[^/]*(contract|schema)[^/]*\.test\.ts$/
 const ALWAYS_PY = [
   'tests/copy_lint_test.py', 'tests/floor_blocking_test.py', 'tests/floor_bar_test.py', 'tests/floor_rulings_test.py',
-  'tests/publish_figures_test.py', 'tests/taste_backstop_test.py',
+  'tests/publish_figures_test.py', 'tests/taste_backstop_test.py', 'tests/article_figure_test.py',
 ]
 
 // A file name this common names nothing in particular.

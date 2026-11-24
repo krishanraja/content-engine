@@ -17,7 +17,10 @@ nudges a small set every second reads as "changing" too. This measures what he n
 
 The numbers describe; they are never a target (THE_BAR: cut counts, rates and levels are not the bar). `compare`
 places a cut among the references he keeps (config/style-references.json, `ve pace --refs`) and says where it falls
-below every one of them, for the Critic and the session to watch at speed, never as a refusal.
+below every one of them, for the Critic and the session to watch at speed. `ve pace` itself never refuses; the floor
+does, in readiness (velib/floor.py; Krish, 2026-11-19: "make sure that this can never happen again"): a cut below every
+reference on any measure is held by ve status and refused by ve file. The bottom of his references is a floor; rates
+above it are never a target.
 """
 from __future__ import annotations
 
@@ -70,12 +73,26 @@ def _onsets(signal: np.ndarray, floor: float) -> list[int]:
     return hits
 
 
-def measure(path: str | Path, seconds: float | None = None) -> dict:
+def measure(path: str | Path, seconds: float | None = None, exclude: list[tuple[float, float]] | None = None) -> dict:
+    """`exclude`: windows in seconds left out of the measure (the floor measures the body only: the end card and the
+    full-frame title lockup are fixed moments, not the cut's pace; coordinator's 20 Nov recipe samples, where the 6 s
+    house close alone held every 16:9 cut). The windows are cut out and the frames either side are never compared."""
     f = frames(path, seconds)
+    joins = np.zeros(max(len(f) - 1, 0), dtype=bool)
+    if exclude:
+        t = np.arange(len(f)) / SAMPLE_FPS
+        keep = np.ones(len(f), dtype=bool)
+        for a, b in exclude:
+            keep &= ~((t >= a) & (t < b))
+        idx = np.flatnonzero(keep)
+        f = f[idx]
+        joins = np.diff(idx) > 1 if len(idx) > 1 else np.zeros(0, dtype=bool)
     if len(f) < SAMPLE_FPS:
         raise ValueError(f'{path}: under a second of picture decoded')
     duration = len(f) / SAMPLE_FPS
     d = np.abs(np.diff(f, axis=0))                       # [n-1, H, W]
+    if joins.any():
+        d[joins] = 0                                     # a cut-out window is no change of the cut's own
     whole = d.mean(axis=(1, 2))                          # change over the frame
     tile_d = _tiles(d).mean(axis=3)                      # [n-1, 16, 9]
     # events: onsets on the whole frame, and in each tile (an element arriving somewhere small)
@@ -148,7 +165,8 @@ def write(card: dict, out: str | Path) -> Path:
 def beside_references(video: str | Path, table: str | Path = TABLE, measure_fn=None) -> str:
     """One line for what ve styles, ve lab and ve packet print (audit ve-10, 14 Nov 2026): the cut's pace beside the
     references he keeps, each measure as cut (references min .. median .. max), the ones below every reference named.
-    A measurement only: it never holds a cut back, and a cut it cannot measure says why instead of failing the command."""
+    The line itself never holds a cut back (the floor does, velib/floor.py), and a cut it cannot measure says why instead
+    of failing the command."""
     try:
         card = (measure_fn or measure)(video)
         card['file'] = Path(video).name
@@ -160,4 +178,4 @@ def beside_references(video: str | Path, table: str | Path = TABLE, measure_fn=N
              for key, row in verdict['rows'].items()]
     low = [SHORT.get(k, k) for k in verdict['below_all']]
     tail = f"; below every reference on {', '.join(low)}" if low else ''
-    return f"pace: {'; '.join(parts)}{tail} (against {verdict['references']} reference cuts; a measurement, never a gate)"
+    return f"pace: {'; '.join(parts)}{tail} (against {verdict['references']} reference cuts; a measurement, never a target; below every reference, the floor holds the cut)"

@@ -147,6 +147,7 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/learning/script-audit`
 - `/api/learning/spoken-rules`
 - `/api/library/confirm`
+- `/api/library/drive-review`
 - `/api/library/file`
 - `/api/library/find`
 - `/api/library/pending`
@@ -1302,6 +1303,7 @@ The making record: where one piece is on its way from the workroom to
 - `type MakingAuditPair`
 - `interface MakingScriptAudit`
 - `interface Making`
+- `interface MakingFinalReviewLine`
 - `const PREFLIGHT_CHECKS`
 - `interface MakingPreflight`
 - `function preflightKey(p: Pick<MakingPreflight, 'check' | 'format' | 'name'>): string`
@@ -1660,6 +1662,9 @@ The mechanical checks a piece must pass before it can be approved or
 - `function articleSubscribeAsks(body: string): { ok: boolean; detail: string }`
 - `function articleFormat(body: string): string[]`
 - `function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, now: Date = new Date(), pieceId?…`
+- `const PREDICTION_CHECKS: readonly string[]`
+- `const NO_PREDICTION_NEEDED`
+- `function predictionWanted(meta: unknown): boolean`
 - `function publishStatus(checks: Check[]): { ok: boolean; reason: string | null; failing: Check[] }`
 
 ### `apps/control-plane/api/_publishWatch.ts`
@@ -2313,6 +2318,12 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `function dayDocuments(ticks: Body[], docs: Body[], from: Day, to: Day, fromWeek: string): Doc[]`
 - `async function carryDay(db: SupabaseClient, toWeek: string, raw: unknown): Promise<{ status: number; body: Body }>`
 
+### `apps/control-plane/api/board/_carryTemplates.ts`
+
+Every week's ideas board carries the meme templates (Ruling, Krish, 2026-11-19: "every week's ideas board should include
+
+- `function carryTemplates(ideas: Body | null, lastWeek: string, lastIdeas: Body | null, lastQueue: Array<{ doc_id: string…`
+
 ### `apps/control-plane/api/board/_contracts.ts`
 
 - `const collections`
@@ -2388,6 +2399,14 @@ ISO-week helpers for the Content Engine v2 lifecycle (docs/CONTENT-ENGINE-V2-SPE
 - `type Manifest`
 - `function fileSpec(week: string, v: unknown, html = false): v is BoardFile`
 - `function validManifest(week: string, v: unknown): v is Manifest`
+
+### `apps/control-plane/api/board/_corpus.ts`
+
+The corpus a piece's narrative is built from (Ruling, Krish, 2026-11-19: "at this stage of every piece, I need to be ab…
+
+- `interface CorpusItem`
+- `function corpusOf(materials: Array<{ id?: unknown; title?: unknown; kind?: unknown; role?: unknown }>): CorpusItem[]`
+- `function corpusLines(corpus: CorpusItem[]): string`
 
 ### `apps/control-plane/api/board/_cuts.ts`
 
@@ -2494,6 +2513,14 @@ Krish's decisions on a piece, read live from the records, so no session asks him
 - `const HELD_CHANGED`
 - `function gatePieces(week: string, pieces: Body[], approvals: Approval[] | null, ideas: Body | null)`
 - `function cutSoWhat(v: unknown): string`
+
+### `apps/control-plane/api/board/_goodNews.ts`
+
+Saturday is good-news carousels only (Krish, 2026-11-19, of Sat 28's ideas board: "These are still all just one idea,
+
+- `const GOOD_NEWS_FROM: string`
+- `function isGoodNews(o: Body): boolean`
+- `function saturdayHold(week: string, day: string, o: Body, approved: boolean): string | null`
 
 ### `apps/control-plane/api/board/_growthPlacement.ts`
 
@@ -2866,6 +2893,7 @@ Every board button starts the machine that does the work (Krish, 2026-11-09: "Ab
 - `async function dispatchJob(job: JobName, input: Record<string, unknown>, env: Record<string, string | undefined> = proc…`
 - `type RunState = 'queued' | 'running' | 'done' | 'failed' | 'cancelled'`
 - `interface RunInfo`
+- `const RUNS_TTL_MS`
 - `async function readRuns(env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fetch as unknown as F…`
 
 ### `apps/control-plane/api/board/_seriesMoves.ts`
@@ -3099,6 +3127,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 ### `apps/control-plane/api/board/_viewContract.ts`
 
 - `const VIEW_CONTRACT_VERSION`
+- `function stableJson(value: unknown): string`
 - `function viewEtag(view: Record<string, unknown>): string`
 - `function notModified(ifNoneMatch: string | string[] | undefined, etag: string): boolean`
 
@@ -3210,6 +3239,8 @@ What every prompt the board copies out says about reporting back, and what the b
 - `const WALLS_SCHEDULE`
 - `const CLOSE_LOOP`
 - `const APPROVAL_RULE`
+- `const ROLES`
+- `const LEARNING_RULE`
 - `interface WriteBackTarget`
 - `function stepKey(raw: string | null | undefined): string`
 - `function writeBack(t: WriteBackTarget): string`
@@ -3800,6 +3831,8 @@ What the compiler looks for, as pure functions.
 - `const LANE_PREFIX`
 - `const LANE_PROBLEMS: Readonly<Record<string, string>>`
 - `const LANE_REPORT_FRESH_HOURS`
+- `const PULL_PROBLEMS: Readonly<Record<string, string>>`
+- `const PULL_STALE_HOURS`
 - `interface WatchHealth`
 - `interface WindowsHealth`
 - `const PREFLIGHT_CHECKS: readonly string[]`
@@ -3814,9 +3847,14 @@ What the compiler looks for, as pure functions.
 - `function parseOvernightHealth(value: unknown): OvernightHealth | undefined`
 - `function overnightReadiness(reports: readonly LaneReport[], now: number): { primary: { machine: string; ok: boolean; at…`
 - `function parseLaneReport(value: unknown, now: string): LaneReport | null`
+- `function carryPullSince(previous: LaneReport | null, report: LaneReport): LaneReport`
+- `interface StaleCopy`
+- `function staleCopies(reports: readonly LaneReport[], now: number): StaleCopy[]`
+- `function staleCopyLine(stale: StaleCopy): string`
 - `function laneKey(machine: string): string`
 - `function lanePlainProblems(reports: readonly LaneReport[], now: number): string[]`
 - `async function writeLaneReport(bucket: string, report: LaneReport): Promise<boolean>`
+- `async function readLaneReport(bucket: string, machine: string): Promise<LaneReport | null>`
 - `async function readLaneReports(bucket: string): Promise<{ reports: LaneReport[]; error: boolean }>`
 
 ### `apps/control-plane/api/library/_library.ts`
@@ -3917,6 +3955,14 @@ Takes place themselves (Wave 2, W2.3): once the Inbox job has copied a take
 
 ### `apps/control-plane/api/library/confirm.ts`
 
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
+
+### `apps/control-plane/api/library/drive-review.ts`
+
+- `const REVIEW_TYPES: Record<string, string>`
+- `interface DriveMeta`
+- `type ReviewPlan`
+- `function planDriveReview(fileId: unknown, meta: DriveMeta | null, allowedTypes: readonly string[]): ReviewPlan`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/library/file.ts`
@@ -4860,12 +4906,17 @@ Run a Vercel serverless handler locally against the real environment.
 - `const CAPTION_HALO`
 - `const TAKE_HALO`
 - `function SplitCaptionTrack({ props, frame }: { props: EngineRenderProps; frame: number })`
+- `function overTake(beat: { plate?: { source?: string | undefined } | undefined } | undefined): boolean`
 
 ### `apps/renderer/src/engine/FormatMaster.tsx`
 
 - `function backdropFocus(beats: readonly EngineBeat[], beat: EngineBeat, frame: number): number`
+- `function anchorScrim(staging: { region: Box } | undefined, beat: EngineBeat, mode: string | undefined, tokens: EngineRe…`
+- `function realImage(object: EngineObject | undefined): boolean`
+- `function anchorSlots(uses: readonly string[], isProp: (id: string) => boolean, staging: { region: Box; props?: Box[] | …`
 - `function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean })`
-- `function titleSafe(aspect: string, width: number, height: number)`
+- `const FACE_LIFT`
+- `function faceLift(aspect: string, windowed: number): number`
 
 ### `apps/renderer/src/engine/VeCut.tsx`
 
@@ -4892,7 +4943,7 @@ Run a Vercel serverless handler locally against the real environment.
 - `type Page = EngineRenderProps['captions'][number]`
 - `type Aspect = EngineRenderProps['aspect']`
 - `type Box = { left: number; top: number; width: number; height: number }`
-- `const REGIONS: Record<Aspect, { lower: Box; upper: Box; centre: Box }>`
+- `const REGIONS: Record<Aspect, { lower: Box; upper: Box; centre: Box; seam: Box; chin: Box }>`
 - `function band(props: Pick<EngineRenderProps, 'aspect' | 'captionPlacement'>): Box`
 - `const scale = (aspect: Aspect) =>`
 - `const F`
@@ -5022,9 +5073,16 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 - `const ENDING_SETTLED_S`
 - `const ENDING_TIMING_TALL`
 - `const ENDING_SETTLED_TALL_S`
+- `const SHAPE`
 - `function statementLines(aspect: EngineRenderProps['aspect'], tagline: string = ENDING_TAGLINE): string[]`
 - `function endingBandLayout(props: Pick<EngineRenderProps, 'aspect' | 'brand' | 'series' | 'ending'>)`
 - `function endingBandModel(props: EngineRenderProps, frame: number)`
+- `const STING_CLOSE`
+- `const CAP_HEIGHT`
+- `const STING_CLOSE_SETTLED`
+- `function stingCloseFrame(aspect: EngineRenderProps['aspect'], since: number): number`
+- `function stingCloseModel(props: EngineRenderProps, frame: number)`
+- `function StingClose({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
 - `function EndingBand({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
 
 ### `apps/renderer/src/engine/chrome/LeadCaption.tsx`
@@ -5089,6 +5147,13 @@ An off day wears no tag, however its label is spelled (Ruling, Krish, 2026-11-18
 - `function drift(frame: number, fromFrame: number, toFrame: number, pct: number = MOTION.driftPct): number`
 - `function onTwos(frame: number, fromFrame: number): number`
 - `function typingProgress(frame: number, cue: EngineEvent, durationFrames: number, leadFrames: number): number`
+
+### `apps/renderer/src/engine/depth/DepthLayer.tsx`
+
+- `type DepthItem`
+- `function behind(item: DepthItem): boolean`
+- `function liveItems(items: readonly DepthItem[] | undefined, frame: number, back: boolean): DepthItem[]`
+- `function DepthLayer({ items, frame, tokens, width, height, back }: { items: readonly DepthItem[]; frame: number; tokens…`
 
 ### `apps/renderer/src/engine/devices/agent_swarm/index.tsx`
 
@@ -5343,6 +5408,12 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 - `function kineticLayout(box: Box, text: string, unit: string, producerLabel: string, aspect: DeviceProps['aspect'], ghos…`
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
 
+### `apps/renderer/src/engine/devices/kinetic_stat/money.ts`
+
+A sourced amount as a viewer reads it: 195 "THOUSAND DOLLARS" is "$195,000", never "195" over a unit line (the
+
+- `function formatAmount(value: number, unit: string): { text: string; unit: string }`
+
 ### `apps/renderer/src/engine/devices/kinetic_stat/schema.ts`
 
 - `const ParamsSchema`
@@ -5429,11 +5500,12 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 
 ### `apps/renderer/src/engine/devices/marquee/index.tsx`
 
-- `function Device({ object, events, tokens, frame }: DeviceProps)`
+- `function Device(props: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/marquee/schema.ts`
 
 - `const ParamsSchema`
+- `const TAPE`
 
 ### `apps/renderer/src/engine/devices/marquee/state.ts`
 
@@ -5503,6 +5575,7 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 
 ### `apps/renderer/src/engine/devices/photo_plate/index.tsx`
 
+- `const FRAMED_SOURCE`
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/photo_plate/schema.ts`
@@ -5514,6 +5587,7 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 - `function coverCrop(picture: Picture, box: Size, focus = CENTRE, push = 0, zoom = 1): Box`
 - `function photoPlateCrop(box: Size, state: ReturnType<typeof photoPlateState>): Box`
 - `function photoPlateState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+- `const LOOP`
 
 ### `apps/renderer/src/engine/devices/pixel_stage/index.tsx`
 
@@ -5807,21 +5881,27 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 ### `apps/renderer/src/engine/devices/unit_field/grid.tsx`
 
 - `function dotGridPosition(index: number, columns: number, pitch = 64)`
-- `function UnitMark({ kind, weight, colour, soft }: { kind: 'dot' | 'block'; weight: number; colour: string; soft: string…`
+- `const BADGE`
+- `const BADGE_PITCH`
+- `function badgeGridPosition(index: number, columns: number)`
+- `function UnitMark({ kind, weight, colour, soft, stripe = 0, stripeColour, shadow }: { kind: 'dot' | 'block' | 'badge'; …`
 
 ### `apps/renderer/src/engine/devices/unit_field/index.tsx`
 
 - `export { dotGridPosition, UnitMark } from './grid'`
-- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+- `const BOARD`
+- `function Device(props: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/unit_field/schema.ts`
 
 - `const ParamsSchema`
+- `const PLANE`
 
 ### `apps/renderer/src/engine/devices/unit_field/state.ts`
 
 - `const CHANGE_FRAMES`
 - `const COPY_STEP_FRAMES`
+- `function scatterRank(ids: readonly number[], total: number): number[]`
 - `function unitFieldState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
 ### `apps/renderer/src/engine/devices/upload_flood/hatch.ts`
@@ -5841,7 +5921,8 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 
 ### `apps/renderer/src/engine/devices/video_wall/index.tsx`
 
-- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+- `const TILES`
+- `function Device(props: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/video_wall/schema.ts`
 
@@ -5888,7 +5969,16 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 
 ### `apps/renderer/src/engine/kit/Scribble.tsx`
 
-- `function Scribble({ d, colour, tokens, sinceFrames, exiting = false }: { d: string; colour: 'cream' | 'mint'; tokens: E…`
+- `function Scribble({ d, colour, tokens, sinceFrames, exiting = false }: { d: string; colour: 'cream' | 'mint' | 'channel…`
+
+### `apps/renderer/src/engine/kit/accentKit.ts`
+
+- `type AccentRole = 'big_moment' | 'gradient' | 'duotone_cutout'`
+- `const ACCENT_COLOURS`
+- `const ACCENT_ROLES`
+- `function accentKit(seriesDay: boolean)`
+- `function accentGradient(name: 'moment' | 'title', seriesDay: boolean): string | null`
+- `function duotoneEmber(seriesDay: boolean): Array<{ colour: string; at: number }> | null`
 
 ### `apps/renderer/src/engine/kit/beatMotion.ts`
 
@@ -5911,6 +6001,21 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 - `interface Camera`
 - `class Cam`
 - `function lerpCam(a: Camera, b: Camera, t: number): Cam`
+
+### `apps/renderer/src/engine/kit/depth.ts`
+
+- `const IN_WORLD`
+- `const ANTON_CAP`
+- `const CHAPTER_ARRANGEMENTS`
+- `type ChapterArrangement = typeof CHAPTER_ARRANGEMENTS[number]`
+- `type Head`
+- `type InWorld`
+- `function inWorldLayout(text: string, width: number, height: number, head: Head): InWorld`
+- `function inWorldShare(text: string, width: number, height: number): number`
+- `function slam(frame: number, at: number, to: number): { scale: number; opacity: number }`
+- `type ChapterPlace`
+- `function chapterPlace(arrangement: ChapterArrangement, width: number, height: number, head: Head): ChapterPlace`
+- `function titleBox(width: number, height: number, head: Head): Box`
 
 ### `apps/renderer/src/engine/kit/flags.tsx`
 
@@ -6029,11 +6134,14 @@ Direct port of ref/H/build.py: eight unknowns, h22 fixed at one.
 - `const EngineLayoutSchema`
 - `type EngineLayout = z.infer<typeof EngineLayoutSchema>`
 - `const MAX_GROW`
+- `const GRAMMAR_GROW`
 - `const isRegion = (box: Box): boolean =>`
+- `const regionGrow = (box: Box): number =>`
 - `const markRegion`
+- `const fillsWidth = (box: Box): boolean =>`
 - `function freeRegion(aspect: Aspect, placement: Placement, themed: boolean): Box`
 - `function layoutSlots(layout: EngineLayout | undefined, aspect: Aspect, placement: Placement, themed: boolean, count: nu…`
-- `function regionSlots(region: Box, count: number): Box[]`
+- `function regionSlots(region: Box, count: number, grow: number = MAX_GROW, fill = false): Box[]`
 
 ### `apps/renderer/src/engine/kit/lock.ts`
 
@@ -6140,10 +6248,11 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 
 - `const STAGINGS`
 - `type Staging = typeof STAGINGS[number]`
-- `const isStaging = (mode: string | undefined): mode is Staging =>`
+- `const isStaging = (mode: string | undefined, aspect?: string): mode is Staging =>`
 - `interface StagingGeometry`
-- `function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placement, themed: boolean): StagingGeometry`
-- `function staged(beat: { layout: string; plate?: { source: string } | undefined }): boolean`
+- `const PILLAR_TAKE_WIDTH`
+- `function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placement, themed: boolean, cutout = false): Staging…`
+- `function staged(beat: { layout: string; plate?: { source: string } | undefined; shot?: string | undefined }, grammar?: …`
 - `function trayRise(frame: number, from: number): { scale: number; ty: number; opacity: number }`
 - `function boxStyle(box: Box): CSSProperties`
 
@@ -6248,8 +6357,15 @@ Spot inks, paper and shadow. All still colour values live here, including device
 
 - `type TitleWord = { text: string; atFrame: number }`
 - `type Box = { left: number; top: number; width: number; height: number }`
+- `type TitleImage = { src: string; pixelWidth: number; pixelHeight: number }`
 - `type TitleMomentProps`
-- `function titleLayout(words: TitleWord[], stage: Box, aspect: TitleMomentProps['aspect'])`
+- `function lockupParts(words: TitleWord[]): { a: number[]; connector: number | null; b: number[] }`
+- `type LockupBand`
+- `type LockupGeometry`
+- `function lockupGeometry(words: TitleWord[], width: number, height: number, aspect: TitleMomentProps['aspect'], wordmark…`
+- `function lockupOpacity(frame: number, fromFrame: number, toFrame: number): number`
+- `function inPanel(panel: Box | undefined, fullFrom: number | undefined, frame: number): panel is Box`
+- `function behindTile(width: number, aspect: TitleMomentProps['aspect'], wordmark?: TitleImage): { width: number; height:…`
 - `function TitleMoment(props: TitleMomentProps): JSX.Element | null`
 
 ### `apps/renderer/src/engine/transport.ts`
@@ -6794,6 +6910,8 @@ Artifact-bound user confirmation references.
 - `const VE_NOTHING_BEFORE_HOOK`
 - `const VeAspectSchema`
 - `const VeLayoutSchema`
+- `const VE_SHOTS`
+- `const VE_STAGING_MODES`
 - `const VeRoleSchema`
 - `const VeVerbSchema`
 - `const VeTransitionSchema`

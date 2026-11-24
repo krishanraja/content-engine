@@ -74,6 +74,11 @@ class Mirror(unittest.TestCase):
         self.assertEqual((a['key_size'], a['support_size'], a['line_height'], a['gap'], a['row_gap']),
                          (int(m.group(1)), int(m.group(2)), float(m.group(4)), int(m.group(5)), int(m.group(6))))
         self.assertIn(f"anton: {{ upper: {a['char_em']}", KIT_TS)
+        # The entry, ghost and echo numbers the caption read uses (qc_captions.art_view, 19 Nov 2026).
+        self.assertIn(f"enterSeconds: {a['enter_seconds']}, enterRisePx: {a['enter_rise_px']},", ART_TSX)
+        self.assertRegex(ART_TSX, rf"ghostGap: {a['ghost_gap']}\b")
+        self.assertIn(f"top: props.aspect === '9:16' ? {a['echo']['9:16']['top']} : {a['echo']['16:9']['top']}", ART_TSX)
+        self.assertIn(f"fontSize: {a['echo']['9:16']['size']}, lineHeight: 1", ART_TSX)
 
     def test_theme_regions_are_the_renderers(self):
         kit = (ROOT / 'apps/renderer/src/engine/captions/kit.ts').read_text(encoding='utf-8')
@@ -215,6 +220,43 @@ class WholeFile(unittest.TestCase):
         self.assertEqual((result['pass'], result['status']), (None, 'not_run'))
         self.assertIn('not sendable', pf.refusal_lines(result)[0])
 
+    def test_a_page_starting_on_the_files_last_frame_is_not_sampled(self):
+        # Fri 20 Nov: a 240-frame proof ended exactly where the next caption page starts; reading frame 240 read nothing.
+        props = props_with([{'fromFrame': 90, 'toFrame': 150, 'words': [{'text': 'which', 'atFrame': 90}, {'text': 'habits', 'atFrame': 100}], 'swipeIndex': 1}])
+        end = props['durationFrames']
+        props['captions'] = props['captions'] + [{'fromFrame': end, 'toFrame': end + 30, 'words': [{'text': 'next', 'atFrame': end}, {'text': 'page', 'atFrame': end + 5}], 'swipeIndex': 1}]
+        asked = []
+        def grab(path, f, fps, size):
+            asked.append(f)
+            if f >= end:
+                raise ValueError('cannot reshape array of size 0')
+            return screen_frame(content_bottom=900, below='ui', cream_box=(70, 1100, 800, 200))
+        result = pf.check_frames('x.mp4', props, grab=grab)
+        self.assertEqual(result['status'], 'ok', result)
+        self.assertTrue(all(f < end for f in asked))
+
+    def test_the_palettes_own_close_card_is_not_a_plain_band(self):
+        # Fri 20 Nov: the guard refused the flat ink close the brand palette requires (config/brand-palette.json closes).
+        props = props_with([{'fromFrame': 90, 'toFrame': 150, 'words': [{'text': 'which', 'atFrame': 90}, {'text': 'habits', 'atFrame': 100}], 'swipeIndex': 1}])
+        end = props['durationFrames']
+        close_from = end - 54
+        props['beats'][-1]['toFrame'] = end
+        good = screen_frame(content_bottom=900, below='ui', cream_box=(70, 1100, 800, 200))
+        ink = np.full((H, W, 3), 12, np.uint8)
+        asked = []
+        def grab(path, f, fps, size):
+            asked.append(f)
+            return ink if f >= close_from else good
+        props['ending'] = {'fromFrame': close_from}
+        result = pf.check_frames('x.mp4', props, grab=grab)
+        self.assertTrue(any(f >= close_from for f in asked), 'the close must be sampled for the test to mean anything')
+        self.assertIs(result['pass'], True, result)
+        # the same ink before the close is still refused
+        props['ending'] = {'fromFrame': end}
+        refused = pf.check_frames('x.mp4', props, grab=lambda path, f, fps, size: ink if f >= close_from else good)
+        self.assertIs(refused['pass'], False)
+        self.assertEqual({p['check'] for p in refused['problems']}, {'plain_dark'})
+
 
 def real_clip(path, colour, seconds=10):
     subprocess.run([ffmpeg(), '-y', '-v', 'error', '-f', 'lavfi', '-i', f'color=c={colour}:s=1080x1920:d={seconds}:r=30', '-preset', 'ultrafast', '-pix_fmt', 'yuv420p', str(path)], check=True)
@@ -230,6 +272,7 @@ class CompareWithApproved(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.dir = Path(self.tmp.name) / 've'
         self.dir.mkdir()
+        t.guards.freeze(self.dir, now=t.FROZEN_BEFORE_THE_FLOOR)  # the real lock, so ve proof stays on this engine
         self.spec = copy.deepcopy(t.FIXTURE)
         self.write_spec(self.spec)
         (self.dir / f'props.{t.CUT}.json').write_text(json.dumps(props_with(t.props_for(self.spec)['captions'])), encoding='utf-8')
@@ -312,6 +355,34 @@ class CompareWithApproved(unittest.TestCase):
         sheet = self.dir / 'proof' / self.record()['compare']['sheet']
         sheet.write_bytes(sheet.read_bytes() + b'0')
         self.assertEqual(ve.cmd_proof(self.args(compared='every beat at full size beside the approved proof and notes, all clear here')), 1)
+
+
+class FrameSeekAtTheEnd(unittest.TestCase):
+    """Tue 17 Nov: a seek at durationFrames - 1 read nothing, the empty read became not_run and held the show gate. The
+    seek is clamped inside the clip, so the clip's last frame is read; a frame well past the end is still an error."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.temp = tempfile.TemporaryDirectory()
+        cls.clip = str(Path(cls.temp.name) / 'clip.mp4')
+        subprocess.run([ffmpeg(), '-y', '-v', 'error', '-f', 'lavfi', '-i', 'color=c=red:s=108x192:d=1:r=30', '-preset', 'ultrafast',
+                        '-pix_fmt', 'yuv420p', cls.clip], check=True)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.temp.cleanup()
+
+    def test_the_last_frame_is_read(self):
+        from velib.qc_faces import frame_at
+        for frame in (29, 30):  # durationFrames - 1, and the frame a proof window ends on
+            rgb = frame_at(self.clip, frame, 30, (108, 192))
+            self.assertEqual(rgb.shape, (192, 108, 3))
+            self.assertGreater(int(rgb[..., 0].mean()), 200)  # red: the clip's own frame, not a blank
+
+    def test_a_frame_well_past_the_end_is_an_error(self):
+        from velib.qc_faces import frame_at
+        with self.assertRaises(ValueError):
+            frame_at(self.clip, 300, 30, (108, 192))
 
 
 if __name__ == '__main__':

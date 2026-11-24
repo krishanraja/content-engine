@@ -2,6 +2,96 @@
   "_about": "Say nothing twice. Krish, 2026-10-17: \"Asa, everything I say to you, whether it's feedback or ideas, you should always be thinking about why I'm saying it and what that means for the future. I want a \\\"say nothing twice\\\" policy in this engine, where you understand me, how we work, and how we iterate.\" Every piece of feedback or idea he gives becomes one entry: his exact words (an excerpt, never a transcript), why he said it, what it means from now on, and where it is now enforced, each place with a marker that must stay there. scripts/check_failures.py (run first in every session) fails when a marker is gone, and lists the learnings still open. A failure he raised goes in config/failures.json; everything else he says goes here.",
   "learnings": [
     {
+      "id": "protected-baselines-walkthrough-and-unit-chart",
+      "on": "2026-11-20",
+      "krish": "Just make sure that we don't lose the character.ai top half of the screen style ... integrate it into future videos, particularly where I deep dive into an actual platform.",
+      "why": "He named two looks to keep as they are: the Character.ai top half (wordmark header, UI wall, two-tone headline, event tape, loops on the recording) and the additive badge-grid unit chart from the Anthropic jobs piece (\"this visual was really nice in how it explained additively what I was saying in the Anthropic jobs video\"). Their devices could not draw them as he saw them.",
+      "means": "The platform walkthrough look is the default recipe for a piece about one platform, and the badge grid the default for any share or count on follow.the.money; the devices carry what they were missing (marquee tape, a channel-colour scribble bound to a region of a recording, video_wall tiles from his grabs, a per-word tone on headline, and on unit_field a badge mark, a striped subset, a 3D plane, greying from the end and a bound counter).",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "config/ve/recipes/character-ai-receipts.json",
+          "contains": "\"deep_dive\": true",
+          "how": "the default for a platform walkthrough"
+        },
+        {
+          "file": "config/ve/recipes/data-story.json",
+          "contains": "\"protected_default\"",
+          "how": "the badge grid first for a share or a count"
+        },
+        {
+          "file": "apps/renderer/src/engine/devices/unit_field/schema.ts",
+          "contains": "'badge'",
+          "how": "the badge mark and its options"
+        },
+        {
+          "file": ".agents/skills/motion-designer/SKILL.md",
+          "contains": "Protected baselines",
+          "how": "the planner picks them first"
+        }
+      ]
+    },
+    {
+      "id": "accent-kit-big-moments-only",
+      "on": "2026-11-20",
+      "krish": "approved the polish board of 20 Nov: ember, ember deep, plum, plum deep and peach join the kit for big moments, gradients and duotone cut-outs on Monday, Wednesday and Friday only",
+      "why": "The floor (F12, F77) holds every asset to ink, cream, mint and the channel colours; the polish spec proposed five warm tokens for the full-frame moment, its gradients and the duotone cut-out, and he approved them for series days only.",
+      "means": "The five tokens live in config/ve/brand-tokens.json accent_kit and config/brand-palette.json colour.accent, each scoped to its roles; nothing on an off day (Tue, Thu, Sat, Sun) wears them, and no other device colour changes.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "config/ve/brand-tokens.json",
+          "contains": "\"accent_kit\"",
+          "how": "the values, their roles and their days"
+        },
+        {
+          "file": "config/brand-palette.json",
+          "contains": "\"accent\"",
+          "how": "the palette names them and where they may appear"
+        },
+        {
+          "file": "scripts/velib/accent_kit.py",
+          "contains": "def accent_problems",
+          "how": "ve lint refuses an accent token outside its roles or on an off day"
+        }
+      ]
+    },
+    {
+      "id": "series-close-is-the-sting",
+      "on": "2026-11-20",
+      "krish": "A, with Built to help you decide, and then Subscribe free at makeyourmindup.ai",
+      "why": "He ruled on 19 Nov that the tall close is the 9:16 intro sting with \"Built to help you decide.\" layered on, and picked direction A of the polish board on 20 Nov; the palette still made the tall close an ink card and its retired list would have refused a close named after the sting.",
+      "means": "A series cut from Mon 23 Nov closes on its own series sting at the END (tall: 1.5x, the band lifts, the line lands under it, exactly 2.0 s; wide: the full sting resolves into the statement card, settled by 2.75 s, the right 44% clear for the end screen). Nothing goes before the hook still. Off days keep the mint statement close until he decides on a mint sting.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "config/brand-palette.json",
+          "contains": "\"sting_close\"",
+          "how": "the close ids, their date and the one copy of the words"
+        },
+        {
+          "file": "config/intro-sting.json",
+          "contains": "\"close\": {",
+          "how": "the clips approved as the close, never an opening"
+        },
+        {
+          "file": "scripts/brand_palette.py",
+          "contains": "def sting_clip",
+          "how": "the guard refuses the ink card on a series day and a close with no or the wrong sting"
+        },
+        {
+          "file": "apps/renderer/src/engine/chrome/EndingBand.tsx",
+          "contains": "export function StingClose",
+          "how": "ve draws it"
+        },
+        {
+          "file": "scripts/velib/compile.py",
+          "contains": "def ending_problems",
+          "how": "ve render refuses a series cut that closes on ink"
+        }
+      ]
+    },
+    {
       "id": "titles-after-recording",
       "on": "2026-10-17",
       "krish": "the fact that I need to approve/sign off on titles and headers and thumbnail headings and whatnot after recording is an important distinction because only after recording do I really feel like I've got a message. Usually I change or understand a fair bit more after reading a script out loud than I do creating a script.",
@@ -682,7 +772,7 @@
       "on": "2026-10-19",
       "krish": "I changed the prediction to 95% by the end of this year, 2026 ... I'm done with sitting on the fence and putting predictions a year away: 55%. There's no point in that. Given how this article reads it's pretty obvious someone's going to shift their price again in the next month.",
       "why": "House rule SHARP_PREDICTION told writers to avoid the obvious outcome and give a bolder call a lower number, so calls drifted to long shots a year out at 15 to 55%, which read as fence-sitting and help no reader decide anything.",
-      "means": "Every prediction is what we believe happens next, due within about three months (92 days) and backed at 80% or more. Both are blocking publish checks.",
+      "means": "When a piece carries a prediction (only when Krish asked for one on it, since 19 Nov 2026: see no-required-predictions), it is what we believe happens next, due within about three months (92 days) and backed at 80% or more. Both are blocking publish checks on such a piece.",
       "status": "encoded",
       "encoded": [
         {
@@ -698,7 +788,42 @@
         {
           "file": "apps/control-plane/api/_houseRules.ts",
           "contains": "A near-term prediction we back, that a reader can check",
-          "how": "house rule SHARP_PREDICTION, read by the writers"
+          "how": "house rule SHARP_PREDICTION, read by the publish check only (no writer or judge since 19 Nov 2026)"
+        }
+      ]
+    },
+    {
+      "id": "no-required-predictions",
+      "on": "2026-11-19",
+      "krish": "remove all traces that require predictions in every article, I am starting to really hate the prediction format, it's baseless, lame and has no value, and the predictions are dull and vanilla. If I want to predict something in a particular piece I will",
+      "why": "House rule CALL made every piece end on a dated prediction, and the writers, the judges, the final pass, the publish checks (CALL, CALL_HORIZON, CLEAR_STANCE) and ve's mind.the.gap schema all enforced it, so every article and script carried one whether or not the piece had anything worth predicting. The result was calls he calls baseless, dull and vanilla.",
+      "means": "No check, gate, prompt, template, skill or default requires or invites a prediction. A piece carries one only when Krish asks for it on that piece: meta.prediction ({ wanted: true, said: his words, on }) on the piece, or, in a ve spec he signs, spec.call. A body or spec that carries a prediction is still held to the old standard (a date within 92 days, 80% or more, a call beat), so a weak one cannot slip through. Scripts end on the answer and the close, never a call.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "apps/control-plane/api/_publishChecks.ts",
+          "contains": "export const NO_PREDICTION_NEEDED",
+          "how": "CALL, CALL_HORIZON and CLEAR_STANCE pass a piece that carries no prediction and was not asked for one"
+        },
+        {
+          "file": "apps/control-plane/api/_publishChecks.ts",
+          "contains": "export function predictionWanted",
+          "how": "the opt-in, meta.prediction, read by the approval and fact-check routes"
+        },
+        {
+          "file": "apps/control-plane/api/_houseRules.ts",
+          "contains": "A prediction only when Krish asks for one on the piece",
+          "how": "house rule CALL, publish check only; CLEAR_STANCE and SHARP_PREDICTION no longer reach a writer or judge"
+        },
+        {
+          "file": "scripts/velib/lint.py",
+          "contains": "a cut carries a prediction only when Krish asked for one on the piece",
+          "how": "ve lint story.call: a call beat only with spec.call; the schema no longer requires a call on mind.the.gap"
+        },
+        {
+          "file": "tests/control-plane/no-required-prediction.test.ts",
+          "contains": "no piece needs a prediction (Ruling, Krish, 2026-11-19)",
+          "how": "a piece with no prediction passes; one he asked for still must carry one; no writer or judge rule asks for one"
         }
       ]
     },
@@ -2658,7 +2783,7 @@
       "on": "2026-11-16",
       "krish": "apply 1 to 6 from the next piece you make this week",
       "why": "The newest article asked for the subscription only in the navigation, the sidebar and after the sources and comments at the very end. New organic subscribers were 1 and 0 in the weeks of 2 and 9 Nov.",
-      "means": "Every article asks twice inside its body: a plain paragraph before the first heading, for a reader who is not yet a subscriber, and one right after the three actions of \"3 things you can do tomorrow\". Each says what the reader gets (\"Three pieces a week on what AI changes in your business, each ending on a dated call\") and links the subscribe page. It never promises a public scorecard until makeyourmindup.ai shows a live one: the brief's suggested words (\"every call dated and scored, misses included\") are not true on the site yet. The publish check reads both, not blocking until Krish has seen pieces carry it.",
+      "means": "Every article asks twice inside its body: a plain paragraph before the first heading, for a reader who is not yet a subscriber, and one right after the three actions of \"3 things you can do tomorrow\". Each says what the reader gets (\"Three pieces a week on what AI changes in your business\") and links the subscribe page. It never promises predictions, calls or a scorecard of them (amended 19 Nov 2026: no piece needs a prediction, see no-required-predictions). The publish check reads both, not blocking until Krish has seen pieces carry it.",
       "status": "encoded",
       "brief": {
         "material": "cbb90470-7d90-4f54-8d98-cf6ec704b5f2",
@@ -2697,7 +2822,7 @@
       "on": "2026-11-16",
       "krish": "Record each of its nine changes through your learning route. Relayed by the brief, 16 Nov: \"some of it is about my content itself ... you need to ensure my content-engine understands what needs to be improved from a content production POV.\"",
       "why": "\"Every call dated and scored in public\" is the publication's most distinctive promise, but makeyourmindup.ai shows an \"Example board\". A live board gives a leader a reason to come back and to subscribe.",
-      "means": "Not content-engine's to build: the scorecard page belongs to the makeyourmindup site's repository. Content-engine already holds its side: every article carries a dated call with a confidence (publish checks CALL, CALL_HORIZON and CLEAR_STANCE block without one), and from 16 Nov its subscribe asks never promise the scorecard until it is live (ARTICLE_SUBSCRIBE_ASK). Open until the site shows a live board; then the asks may name it.",
+      "means": "Not content-engine's to build: the scorecard page belongs to the makeyourmindup site's repository. Amended 19 Nov 2026 (no-required-predictions): no article carries a dated call unless Krish asked for one on that piece, so there is no stream of calls to score, and the subscribe asks never promise one. Krish decides whether the site's scorecard and its promise stay.",
       "status": "open",
       "brief": {
         "material": "cbb90470-7d90-4f54-8d98-cf6ec704b5f2",
@@ -2778,6 +2903,131 @@
           "file": "tests/control-plane/board-every-card.test.ts",
           "contains": "no card builder is added without being listed here",
           "how": "the test that holds every card builder to the shared rules"
+        }
+      ]
+    },
+    {
+      "id": "no-approvals-mid-production",
+      "on": "2026-11-19",
+      "krish": "We need to eliminate the 4 million approvals like this that I'm required to make. It basically means I have to sit there for 7 hours waiting for the next stupid fucking approval to give and the engine refuses to move on even though it's just going to lead to more errors anyway.",
+      "why": "This week's three videos asked him for about 30 typed approvals between them: engine hashes, waivers, proofs and \"final approve <sha>\" before a cut could even be filed. Each one stopped the engine while he was away, and none made the cut better.",
+      "means": "Between Sign storyboard and the final review the engine never waits for him. The only asks are lock, scripts and storyboard, final and publish (config/ve/asks.json). The engine and rules are pinned at Sign storyboard, so no hash is ever put to him; filing to his post folder needs no approval; anything he might change lands as one line on the final review.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "config/ve/asks.json",
+          "contains": "The only moments a production session may ask Krish anything",
+          "how": "the four allowed asks"
+        },
+        {
+          "file": "scripts/validate-skills.py",
+          "contains": "def no_ask_problems(",
+          "how": "refuses a production skill that waits for an approval mid-production"
+        },
+        {
+          "file": "scripts/velib/guards.py",
+          "contains": "rules_changed",
+          "how": "engine and rules pinned at Sign storyboard, never a hash to approve"
+        }
+      ]
+    },
+    {
+      "id": "recipes-rated-before-use",
+      "on": "2026-11-19",
+      "krish": "the card generates over my face, the captions are awful, and the generated animations are tacky and not art directed well within the space at all",
+      "why": "The generated animations and the free caption picks were not art directed within the space. The default staging and caption combination was never rated by him, and a session picked styles piece by piece.",
+      "means": "Ruling (Krish, 2026-11-19): recipes plus one named experiment slot proven before Sign storyboard. A recipe in config/ve/recipes/ carries his rating (rated, null until he rates it); from pieces frozen at ve expect on or after 23 Nov 2026, ve lint refuses a style that is not a recipe he rated 9 or more unless the spec names its one experiment (style.experiment), and captions and generated assets come only from the recipe.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/velib/floor.py",
+          "contains": "def recipe_lints(",
+          "how": "ve lint refuses an unrated recipe, a caption style or a generated asset outside it, from 23 Nov 2026"
+        },
+        {
+          "file": "config/ve/recipes/data-story.json",
+          "contains": "\"rated\": {",
+          "how": "the recipe's rating field, written only by ve recipe rate with his words (null until he rates it; approved 20 Nov 2026)"
+        }
+      ]
+    },
+    {
+      "id": "floor-not-target",
+      "on": "2026-11-19",
+      "krish": "they are so poor that I can't even bring myself to publish them. I refuse to. They're just the worst. Visually, motion, post-production, and everything is a zero out of ten. I'm going to need you to make sure that this can never happen again.",
+      "why": "THE_BAR says rates are not the bar, so ve pace only flagged; a cut below every one of his references was still filed.",
+      "means": "The bottom of his own references is a floor; rates above it are never a target. ve pace stays a description; the floor lives in readiness (scripts/velib/floor.py).",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "docs/ve/INGREDIENTS.md",
+          "contains": "The bottom of his own references is a floor, and rates above it are never a target",
+          "how": "THE_BAR wording for the pace floor"
+        }
+      ]
+    },
+    {
+      "id": "style-recipes-approved",
+      "on": "2026-11-20",
+      "krish": "They're all approved. I don't actually think these are the problem. I think how we integrate title cards and real-world images and motion animation is the issue.",
+      "why": "From 23 Nov ve lint uses only a recipe Krish rated 9 or more; he approved all ten style combinations on the style board without a number, and no recipe could pass the floor on an approval.",
+      "means": "An approval in his words passes the recipe floor like a rating of 9 or more and records no invented score (ve recipe rate <id> --approved --words). The ten combinations are recipe files in config/ve/recipes/. What he named as the problem is integration: title cards, real-world images and motion, not the styles.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/velib/floor.py",
+          "contains": "all ten style combinations on the style board are approved",
+          "how": "floor.rated accepts his approval with his words"
+        },
+        {
+          "file": "scripts/velib/recipes.py",
+          "contains": "--approved",
+          "how": "ve recipe rate records a score or his approval, always with his words"
+        }
+      ]
+    },
+    {
+      "id": "one-staging-per-cut",
+      "on": "2026-11-20",
+      "krish": "how we integrate title cards and real-world images and motion animation is the issue",
+      "why": "Measured: every good cut keeps one staging for its body (face on screen 91% to 97.5%, 0 to 1 face switches); the rejected ones switched 14 to 18 times. His rulings that day: one staging per cut, generated imagery only as an art-directed metaphor (corrected the same day from \"never\"), the shot grammar approved.",
+      "means": "Each cut picks band, stage or anchor at the lock with the recipe and keeps it for the whole body; only the title, a chapter mark, the end card and, on anchor, a plate break from it. Nothing generated in a cut.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "docs/ve/INGREDIENTS.md",
+          "contains": "## Shot grammar (20 Nov 2026)",
+          "how": "the grammar, its numbers and its never-list"
+        },
+        {
+          "file": "config/ve/shot-grammar.json",
+          "contains": "\"body_shots\"",
+          "how": "every number, once, with its measurement"
+        }
+      ]
+    },
+    {
+      "id": "gpu-matte-trial-before-wiring",
+      "on": "2026-11-20",
+      "krish": "yes, to one GPU matte comparison run on RunPod costing about $0.10 (relayed by the session that asked him; an observation, not his typed words)",
+      "why": "Words behind him, the depth recipe and duotone cut-outs all stand on a subject matte, and the engine's only matte is a CPU candidate (MediaPipe selfie segmentation) never checked on his hair, hands or fast movement.",
+      "means": "A GPU matte is tried on his real take beside the CPU matte, at full size on the hard moments, before anything is wired into a render; the models are pinned by commit and weights sha256, permissively licensed or run on the pod as a separate tool, and the spend goes through the RunPod runner's cap, typed confirmation and terminate-on-every-path.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/velib/matte_pod.py",
+          "contains": "Nothing here is wired into a render; that waits for his read.",
+          "how": "the runner names the trial and keeps it out of renders"
+        },
+        {
+          "file": ".github/workflows/matte-trial.yml",
+          "contains": "nothing here feeds a render",
+          "how": "the hand-only workflow with the typed confirmation"
+        },
+        {
+          "file": "tests/ve_matte_pod_test.py",
+          "contains": "def test_a_model_without_a_pin_is_refused_before_any_spend",
+          "how": "no unpinned model, no spend without his yes, the pod terminated on every path"
         }
       ]
     }

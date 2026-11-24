@@ -13,7 +13,10 @@ gate they bind a whole cut of a piece published from creative_direction.MOTION_F
   - `opening_problems(spec)`: nothing before the hook on any cut, ever: a spec naming a sting (brand.intro_sting) or
     an episode card where the sting was (brand.opening_exception) is refused (Ruling, Krish, 12 Nov: "Nothing before the
     hook, ever. Remove the sting exception for good.").
-  - `freeze(directory)` / `engine_problems(...)`: the engine the storyboard was signed on draws its proof and cut.
+  - `freeze(directory)` / `engine_route(...)` / `engine_problems(...)`: the engine and the rules freeze at Sign storyboard
+    (ve expect). Proof and render run on the commit pinned there by themselves; a fix on main reaches the piece only under
+    Krish's standing engine-follows-main yes or when the house golden test passes on it, and nothing asks him to approve
+    an engine hash (Ruling, Krish, 2026-11-19). A rule binds a piece only from a binds_from on or before its freeze day.
   - `record_render(...)` / `loop_problems(...)`: two full renders of a cut per press from Krish, then he sees it.
   - `type_treatments(props)` / `type_note(...)`: the type treatments a cut shows, listed on its proof for Krish to
     judge moving (advisory since his answer of 4 Nov; `type_problems` refuses only if config sets a limit mode).
@@ -22,6 +25,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import subprocess
 from datetime import date, datetime, timezone
@@ -42,13 +46,16 @@ _BIND_DAY: list[str | None] = [None]
 
 
 def set_bind_day(day: str | None) -> None:
-    """The day the rules bind as of for the checks that follow (showgate.effective_day): None means the piece's own publish_day."""
+    """Kept for lint's call (showgate.effective_day, which is now always None): None means the piece's own publish_day."""
     _BIND_DAY[0] = day
 
 
 def bind_day(spec: dict) -> str:
-    """The day a rule's binds_from is compared with: the piece's publish_day, or, for a cut not yet shown to Krish when
-    config/ve/show-gate.json bind_unshown is on, the day it is shown (showgate.binds)."""
+    """The day a rule's binds_from is compared with: the piece's publish_day, as always. Rules freeze at Sign storyboard by
+    the pin, not by a date: a piece whose rule files moved on main since ve expect proofs and renders on its pinned commit,
+    whose rules are the ones it froze with, and among those a rule binds by its binds_from as it always did (Ruling, Krish,
+    2026-11-19). bind_unshown, which held a cut not yet shown to Krish to every rule existing on the day it was shown, is
+    gone."""
     own = str(spec.get('publish_day') or '')
     return max(own, _BIND_DAY[0]) if _BIND_DAY[0] else own
 
@@ -64,26 +71,41 @@ def bound(spec: dict) -> bool:
     return whole and str(spec.get('publish_day') or '') >= motion_from()
 
 
-def _exception(spec: dict, sha: str, directory: Path | None = None) -> dict | None:
-    """Krish's exception approval bound to this exact hash, or None. Beside the spec's approvals, an engine approval
-    may sit in the piece's ve folder (ENGINE_EXCEPTIONS), so it binds even before the spec is written (Krish,
-    2026-11-10: "approve the engine change for Wednesday")."""
+def _approvals(spec: dict, directory: Path | None = None) -> list:
+    """The spec's approvals and, beside them, those in the piece's ve folder (ENGINE_EXCEPTIONS), which bind even before
+    the spec is written (Krish, 2026-11-10: "approve the engine change for Wednesday")."""
     extra = []
     if directory is not None and (Path(directory) / ENGINE_EXCEPTIONS).is_file():
         extra = load_json(Path(directory) / ENGINE_EXCEPTIONS).get('approvals') or []
-    for a in [*(spec.get('approvals') or []), *extra]:
+    return [*(spec.get('approvals') or []), *extra]
+
+
+def _exception(spec: dict, sha: str, directory: Path | None = None) -> dict | None:
+    """Krish's exception approval bound to this exact hash, or None. An engine approval already given is honoured; nothing
+    asks for a new one (Ruling, Krish, 2026-11-19)."""
+    for a in _approvals(spec, directory):
         if isinstance(a, dict) and a.get('gate') == 'exception' and a.get('by') == 'Krish' and a.get('artifact_hash') == sha:
             return a
     return None
 
 
 ENGINE_EXCEPTIONS = 'engine-exceptions.json'
+FOLLOWS_MAIN = 'engine-follows-main'
+
+
+def follows_main(spec: dict, directory: Path | None = None) -> dict | None:
+    """Krish's standing yes for this piece to take the engine on main as it moves (scope engine-follows-main, in the
+    spec's approvals or the piece's engine-exceptions.json), bound to no hash; or None."""
+    for a in _approvals(spec, directory):
+        if isinstance(a, dict) and a.get('gate') == 'exception' and a.get('by') == 'Krish' and a.get('scope') == FOLLOWS_MAIN:
+            return a
+    return None
 
 
 def engine_only(approval: dict) -> bool:
     """An exception that approves an engine change and nothing else: it never waives a lint check or counts as a press
     on a cut."""
-    return isinstance(approval, dict) and approval.get('scope') == 'engine'
+    return isinstance(approval, dict) and approval.get('scope') in ('engine', FOLLOWS_MAIN)
 
 
 def canonical_sha(value) -> str:
@@ -305,18 +327,33 @@ def spec_lints(spec: dict) -> list[str]:
 # ---------------------------------------------------------------- 3. freeze the engine during a piece
 
 
-def engine_files() -> dict[str, str]:
-    rules = config()['engine']
+def _hash_files(paths: list[str], skip: list[str], root: Path) -> dict[str, str]:
+    """name -> sha256 of every file under the given paths (a file, a folder, or a glob such as config/ve/*.json)."""
     files = {}
-    for rel in rules['paths']:
-        base = ROOT / rel
-        paths = [base] if base.is_file() else sorted(p for p in base.rglob('*') if p.is_file())
-        for path in paths:
-            name = path.relative_to(ROOT).as_posix()
-            if any(name.endswith(s) for s in rules['skip_suffixes']):
+    for rel in paths:
+        if any(c in rel for c in '*?['):
+            found = sorted(p for p in root.glob(rel) if p.is_file())
+        else:
+            base = root / rel
+            found = [base] if base.is_file() else sorted(p for p in base.rglob('*') if p.is_file())
+        for path in found:
+            name = path.relative_to(root).as_posix()
+            if any(name.endswith(s) for s in skip):
                 continue
             files[name] = hashlib.sha256(path.read_bytes()).hexdigest()
     return files
+
+
+def engine_files(root: Path | None = None) -> dict[str, str]:
+    rules = config()['engine']
+    return _hash_files(rules['paths'], rules['skip_suffixes'], Path(root) if root is not None else ROOT)
+
+
+def rules_files(root: Path | None = None) -> dict[str, str]:
+    """The rules a piece is held to (production-guards.json rules.paths: lint, the piece guards, config/ve/*.json and the
+    brand palette), hashed at Sign storyboard beside the engine."""
+    rules = config()['rules']
+    return _hash_files(rules['paths'], rules.get('skip_suffixes') or [], Path(root) if root is not None else ROOT)
 
 
 def engine_sha(files: dict[str, str] | None = None) -> str:
@@ -337,14 +374,118 @@ def head_commit() -> str | None:
 
 
 def freeze(directory: Path, now: str | None = None) -> dict:
-    """Record the engine as it is when the storyboard sheet is written (ve expect): what his Sign storyboard sees."""
-    files = engine_files()
-    record = {'schema': 've-engine/1', 'sha256': engine_sha(files), 'at': now or _now(), 'files': files, 'commit': head_commit()}
+    """Record the engine and the rules as they are when the storyboard sheet is written (ve expect): what his Sign storyboard
+    sees. Both freeze there (Ruling, Krish, 2026-11-19: rules and the engine freeze at Sign storyboard; a new rule or fix
+    binds from the next piece)."""
+    files, rules = engine_files(), rules_files()
+    record = {'schema': 've-engine/1', 'sha256': engine_sha(files), 'at': now or _now(), 'files': files, 'commit': head_commit(),
+              'rules': {'sha256': canonical_sha(rules), 'files': rules}}
     write_json(lock_path(directory), record)
     return record
 
 
-def engine_problems(spec: dict, cut: str, directory: Path) -> list[str]:
+def _changed(old: dict, new: dict) -> list[str]:
+    return sorted(n for n in set(old) | set(new) if old.get(n) != new.get(n))
+
+
+def rules_changed(directory: Path, root: Path | None = None) -> list[str]:
+    """The rule files that differ from the ones frozen at Sign storyboard (they bind the next piece, never this one). A piece
+    frozen before the rules were recorded (no rules in engine.json) has nothing to compare with and is never moved by them."""
+    if not lock_path(directory).is_file():
+        return []
+    frozen = (load_json(lock_path(directory)).get('rules') or {}).get('files')
+    if not frozen:
+        return []
+    return _changed(frozen, rules_files(root))
+
+
+# The house golden test (apps/renderer/src/engine/houseGolden.test.ts) proves a renderer change draws every house frame
+# exactly as before. It covers the renderer's source only, so only a change confined to it may follow main by it.
+GOLDEN_TEST = 'apps/renderer/src/engine/houseGolden.test.ts'
+GOLDEN_COVERS = ('apps/renderer/src/',)
+# The test's own expected frames. A change that rewrites them passes the test by construction and proves nothing, so a
+# change touching any of them never follows main by the golden test (it stays on its pin).
+GOLDEN_EXPECTED = ('apps/renderer/src/engine/houseGolden.json', GOLDEN_TEST)
+
+
+def golden_can_prove(changed: list[str]) -> bool:
+    """Can the house golden test prove these engine changes draw every house frame as before? Only when every changed file
+    is the renderer's source and neither the test nor its expected frames moved (nor any other golden or snapshot file)."""
+    def expected(name: str) -> bool:
+        low = name.lower()
+        return name in GOLDEN_EXPECTED or 'golden' in low.rsplit('/', 1)[-1] or low.endswith('.snap') or '/__snapshots__/' in low
+    return bool(changed) and all(n.startswith(GOLDEN_COVERS) and not expected(n) for n in changed)
+
+
+def golden_cache(sha: str) -> Path:
+    return ROOT / '.cache' / 've' / 'golden' / f'{sha}.json'
+
+
+def golden_passes(sha: str) -> bool:
+    """Does the house golden test pass on the engine in this checkout (sha)? Run once per engine and remembered in
+    .cache/ve/golden; False when it cannot run (VE_GOLDEN=off, no node), so the piece stays on its pin."""
+    if os.environ.get('VE_GOLDEN') == 'off':
+        return False
+    cache = golden_cache(sha)
+    if cache.is_file():
+        return bool(load_json(cache).get('pass'))
+    try:
+        out = subprocess.run(['npx', 'vitest', 'run', GOLDEN_TEST], cwd=ROOT, capture_output=True, text=True, timeout=900)
+    except (OSError, subprocess.SubprocessError):
+        return False
+    ok = out.returncode == 0
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    write_json(cache, {'sha256': sha, 'pass': ok, 'at': _now()})
+    return ok
+
+
+def _frozen_rules_sha(lock: dict) -> str | None:
+    """The rules' hash ve expect recorded (None for a piece frozen before the rules were recorded)."""
+    return (lock.get('rules') or {}).get('sha256') or None
+
+
+def engine_route(spec: dict, directory: Path, golden=None) -> dict:
+    """Where this piece's proof runs, decided by rule and never asked of Krish (Ruling, Krish, 2026-11-19): `here` when the
+    engine and the rules are the ones frozen at ve expect, or when he gave the piece a standing engine-follows-main yes, or
+    when the rules are unchanged and every changed engine file is the renderer's source, its golden frames untouched, and
+    the house golden test passes on it; otherwise `pin`, the commit recorded at ve expect, which holds both."""
+    path = lock_path(directory)
+    if not path.is_file():
+        return {'route': 'here', 'why': 'no engine record'}
+    lock = load_json(path)
+    files = engine_files()
+    now = engine_sha(files)
+    changed = _changed(lock.get('files') or {}, files) if now != lock.get('sha256') else []
+    rules = rules_changed(directory)
+    if not changed and not rules:
+        return {'route': 'here', 'why': 'the engine and the rules are the ones frozen at Sign storyboard'}
+    if follows_main(spec, directory) or (not rules and _exception(spec, now, directory)):
+        return {'route': 'here', 'why': "Krish's standing yes for this piece to follow main", 'changed': changed + rules}
+    if not rules and golden_can_prove(changed) and (golden or golden_passes)(now):
+        return {'route': 'here', 'why': 'the house golden test passes on the engine on main', 'changed': changed}
+    return {'route': 'pin', 'commit': lock.get('commit'), 'sha256': lock.get('sha256'), 'rules_sha256': _frozen_rules_sha(lock),
+            'changed': changed + rules}
+
+
+def _shown_files(changed: list[str]) -> str:
+    return ', '.join(changed[:5]) + (f' and {len(changed) - 5} more' if len(changed) > 5 else '')
+
+
+def pin_line(route: dict) -> str:
+    """One line for a run that is not on the pinned engine: where it runs instead. Never a request for an approval."""
+    changed = f" ({_shown_files(route['changed'])})" if route.get('changed') else ''
+    since = route.get('since', 'the storyboard was signed')
+    where = route.get('where', 'the commit pinned at ve expect')
+    if not route.get('commit'):
+        return (f'the engine changed since {since}{changed} and no commit was recorded to pin it to: run ve expect again '
+                'from a git checkout of the engine the storyboard was signed on')
+    return (f'the engine changed since {since}{changed}: this piece runs on {where} ({route["commit"][:12]}), and ve proof '
+            'and ve render go there by themselves (run them through ve)')
+
+
+def engine_problems(spec: dict, cut: str, directory: Path, golden=None) -> list[str]:
+    """Why this cut cannot run on the engine in this checkout. Never a request for Krish to approve a hash: a piece whose
+    engine moved runs on its pinned commit, which ve proof and ve render do by themselves."""
     from .proof import required  # noqa: PLC0415
     if cut not in (spec.get('cuts') or {}) or not required(spec, cut):
         return []
@@ -352,16 +493,72 @@ def engine_problems(spec: dict, cut: str, directory: Path) -> list[str]:
     if not path.is_file():
         return [f'no engine record for this piece: run ve expect <spec> when the storyboard goes to Krish; it records the '
                 f'engine his signature stands for ({path.name})']
-    lock = load_json(path)
+    route = engine_route(spec, directory, golden)
+    return [] if route['route'] == 'here' else [pin_line(route)]
+
+
+def render_route(spec: dict, cut: str, directory: Path, golden=None) -> dict:
+    """Where a whole cut renders: on the engine its approved proof was drawn on (the proof record's engine_sha256 and
+    engine_commit), so what he approved is what renders; a proof that recorded no engine renders by engine_route."""
+    from .proof import record_path  # noqa: PLC0415
+    path = record_path(directory, cut)
+    want = (load_json(path) if path.is_file() else {}).get('engine_sha256')
+    if not want:
+        return engine_route(spec, directory, golden)
+    record = load_json(path)
     files = engine_files()
-    now = engine_sha(files)
-    if now == lock.get('sha256') or _exception(spec, now, directory):
+    rules = rules_changed(directory)
+    if engine_sha(files) == want and not rules:
+        return {'route': 'here', 'why': 'the engine the approved proof was drawn on, and the rules frozen at Sign storyboard'}
+    lock = load_json(lock_path(directory)) if lock_path(directory).is_file() else {}
+    commit = record.get('engine_commit') or (lock.get('commit') if lock.get('sha256') == want else None)
+    changed = _changed(lock.get('files') or {}, files) if lock.get('sha256') == want else []
+    return {'route': 'pin', 'commit': commit, 'sha256': want, 'rules_sha256': _frozen_rules_sha(lock), 'changed': changed + rules,
+            'since': 'his approved proof was drawn', 'where': 'the engine its approved proof was drawn on'}
+
+
+def render_engine_problems(spec: dict, cut: str, directory: Path, golden=None) -> list[str]:
+    """A whole cut renders only on the engine of the proof he approved (ve proof stamps engine_sha256 on it)."""
+    from .proof import record_path, required  # noqa: PLC0415
+    if cut not in (spec.get('cuts') or {}) or not required(spec, cut):
         return []
-    old = lock.get('files') or {}
-    changed = sorted(n for n in set(old) | set(files) if old.get(n) != files.get(n))
-    shown_files = ', '.join(changed[:5]) + (f' and {len(changed) - 5} more' if len(changed) > 5 else '')
-    return [f'the engine changed since the storyboard was signed ({shown_files}): render on the engine he signed for (ve pin shows how to keep it, a git worktree at the recorded commit), or '
-            f'Krish approves the change (an exception approval bound to engine sha256 {now})']
+    path = record_path(directory, cut)
+    if not (load_json(path) if path.is_file() else {}).get('engine_sha256'):
+        return engine_problems(spec, cut, directory, golden)
+    route = render_route(spec, cut, directory, golden)
+    return [] if route['route'] == 'here' else [pin_line(route)]
+
+
+PINS = ROOT / '.cache' / 've-pins'
+
+
+def pin_checkout(commit: str, sha: str, rules_sha: str | None = None) -> Path:
+    """A git worktree of the engine at the pinned commit (made once, under .cache/ve-pins), with this checkout's node_modules
+    linked in, and checked to hold exactly the frozen engine (sha) and, when given, the frozen rules (rules_sha). Raises
+    ValueError when it cannot."""
+    path = PINS / commit[:12]
+    if not (path / '.git').exists():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        out = subprocess.run(['git', '-C', str(ROOT), 'worktree', 'add', '--detach', str(path), commit],
+                             capture_output=True, text=True, timeout=300)
+        if out.returncode != 0:
+            raise ValueError(f'the pinned commit {commit[:12]} could not be checked out: {(out.stderr or out.stdout).strip()[:200]}')
+    for here in [ROOT, *ROOT.glob('*'), *ROOT.glob('*/*')]:
+        modules = here / 'node_modules'
+        if modules.is_dir() and '.cache' not in here.relative_to(ROOT).parts:
+            target = path / modules.relative_to(ROOT)
+            if target.parent.is_dir() and not target.exists():
+                target.symlink_to(modules, target_is_directory=True)
+    got = engine_sha(engine_files(path))
+    if got != sha:
+        raise ValueError(f'the pinned commit {commit[:12]} holds engine {got[:12]}, not the frozen {sha[:12]} (it was not '
+                         'committed when ve expect ran): run ve expect again from a clean checkout')
+    if rules_sha:
+        got = canonical_sha(rules_files(path))
+        if got != rules_sha:
+            raise ValueError(f'the pinned commit {commit[:12]} holds rules {got[:12]}, not the frozen {rules_sha[:12]} (they were '
+                             'not committed when ve expect ran): run ve expect again from a clean checkout')
+    return path
 
 
 # ---------------------------------------------------------------- 4. two loops, then Krish
@@ -400,8 +597,10 @@ def last_press(spec: dict, gates: dict) -> datetime | None:
     """The latest press of any gate by Krish, on the record or in the spec's approvals."""
     times = [_when(row.get('at')) for rows in (gates or {}).values() for row in (rows if isinstance(rows, list) else [rows])
              if isinstance(row, dict) and row.get('by') == 'Krish']
-    times += [_when(a.get('on')) for a in spec.get('approvals') or [] if isinstance(a, dict) and a.get('by') == 'Krish'
-              and not engine_only(a)]
+    # An approval's `at` is the moment he pressed. An older record carries only its date (`on`) and is still read as that
+    # day's midnight, as before; a press recorded with its time counts against renders made earlier the same day.
+    times += [_when(a.get('at') or a.get('on')) for a in spec.get('approvals') or [] if isinstance(a, dict)
+              and a.get('by') == 'Krish' and not engine_only(a)]
     times = [t for t in times if t is not None]
     return max(times) if times else None
 

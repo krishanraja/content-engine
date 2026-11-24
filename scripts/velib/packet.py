@@ -244,7 +244,8 @@ def reference_lines(spec, cut, directory, stage):
 
 
 def readiness(spec, cut, directory) -> dict:
-    """What `ve status` and `ve file` both ask of a cut: mechanical, design and Krish's final approval of the file."""
+    """What `ve status` and `ve file` read of a cut: mechanical, design and Krish's final approval of the file. Filing
+    asks only the machine checks; `final` gates publishing, never filing (Ruling, Krish, 2026-11-19)."""
     try:
         reasons, _qc, video, digest = mechanical(spec, cut, directory)
         compile_file = Path(directory) / f'compile.{cut}.json'
@@ -260,8 +261,14 @@ def readiness(spec, cut, directory) -> dict:
         # share of the art direction on the piece's own ledger (velib/codex_minimum.py, config/codex-minimum.json).
         from . import codex_minimum
         codex = codex_minimum.problems(spec, cut, Path(directory))
+        # The quality floor (Krish, 2026-11-19: "make sure that this can never happen again"): any `ve pace` measure
+        # below every reference he keeps holds the cut, so ve status never says READY and ve file refuses it.
+        from . import floor
+        held = floor.held_problems(video, digest, Path(directory), cut) if not reasons else []
     except (OSError, ValueError, KeyError, TypeError) as error:
-        return {'mechanical': [str(error)], 'design': ['design could not be checked'], 'final': [], 'codex': [],
+        # Never empty here: an empty `final` reads as his approval, and nothing was checked.
+        return {'mechanical': [str(error)], 'design': ['design could not be checked'],
+                'final': ['his approval could not be checked'], 'codex': [], 'floor': [],
                 'video': None, 'digest': None}
-    return {'mechanical': reasons, 'design': design_reasons, 'final': final, 'codex': codex, 'video': video,
+    return {'mechanical': reasons, 'design': design_reasons, 'final': final, 'codex': codex, 'floor': held, 'video': video,
             'digest': digest}

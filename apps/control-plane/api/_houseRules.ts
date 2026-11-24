@@ -245,18 +245,18 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
     stages: ['write', 'judge_draft', 'final_pass', 'publish_check'],
   },
   {
-    id: 'CALL', name: 'Every piece makes a dated prediction',
-    text: 'Every piece ends with our prediction: what will happen, a date to check it by, and how sure we are as a percentage. It is ruled right, wrong or too close to call in public on that date, and the wrong ones go up as big as the right ones. Write it as a last section headed "## OUR PREDICTION": one paragraph that opens with the date ("By 30 June 2027, ..."), then a line on its own, "How sure we are: 75%." The Short shows that call word for word, so give one date and one whole percentage.',
-    said: 'I want these to be signature bulletproof formats that can run across any article FYI, if they are going in, they need to go in for everything.',
-    on: '2026-09-25', source: 'docs/CREATIVE_IDENTITY_UPGRADE.md (P6); makeyourmindup.ai, "Every piece makes a call. We keep score."', status: 'live',
-    stages: ['judge_idea', 'judge_draft', 'write', 'final_pass', 'publish_check'],
+    id: 'CALL', name: 'A prediction only when Krish asks for one on the piece',
+    text: 'A prediction is made only when Krish asks for it on that piece. When he does, the piece ends with it: what will happen, a date to check it by, and how sure we are as a percentage. It is ruled right, wrong or too close to call in public on that date, and the wrong ones go up as big as the right ones. Write it as a last section headed "## OUR PREDICTION": one paragraph that opens with the date ("By 30 June 2027, ..."), then a line on its own, "How sure we are: 75%." The Short shows that call word for word, so give one date and one whole percentage. Since 19 November 2026 no piece needs one: a piece carries a prediction only when Krish asks for it on that piece (meta.prediction, his own words), and no writer, judge or prompt invites one otherwise (Ruling, Krish, 2026-11-19: "If I want to predict something in a particular piece I will").',
+    said: 'remove all traces that require predictions in every article, I am starting to really hate the prediction format, it\'s baseless, lame and has no value, and the predictions are dull and vanilla. If I want to predict something in a particular piece I will. (2026-11-19; it replaces, of 2026-09-25: "I want these to be signature bulletproof formats that can run across any article FYI, if they are going in, they need to go in for everything.")',
+    on: '2026-11-19', source: 'chat, 19 November 2026; the publish check reads meta.prediction (apps/control-plane/api/_publishChecks.ts predictionWanted)', status: 'live',
+    stages: ['publish_check'],
   },
   {
     id: 'CLEAR_STANCE', name: 'Take a clear stance',
-    text: 'Our prediction takes a clear stance. Back the outcome we believe with a confident number, 80% or more; anything lower reads as sitting on the fence, and the publish check refuses it (Krish, 2026-10-19).',
+    text: 'Only when Krish asks for a prediction on the piece: it takes a clear stance. Back the outcome we believe with a confident number, 80% or more; anything lower reads as sitting on the fence, and the publish check refuses it (Krish, 2026-10-19). A piece with no prediction needs none (Ruling, Krish, 2026-11-19).',
     said: "In general I think I'd rather take a clearer stance than sit on the fence all the time and say 60%.",
     on: '2026-09-26', source: 'setting piece 2 at 75% instead of the 60% proposed', status: 'live',
-    stages: ['write', 'judge_draft', 'final_pass', 'publish_check'],
+    stages: ['publish_check'],
   },
   {
     id: 'NO_SERMONS', name: 'Show the working, no sermons',
@@ -517,10 +517,10 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'SHARP_PREDICTION', name: 'A near-term prediction we back, that a reader can check',
-    text: 'Every prediction names one specific event that a reader can check on a stated date no more than about three months away (92 days; the publish check CALL_HORIZON refuses a later one). It is what we believe will happen next, given the piece\'s own evidence, backed at 80% or more (CLEAR_STANCE refuses less). It must not already have happened. Never a long shot pushed a year out to look bold, and never a middling number. A vague trend ("more deals", "more options") is never a prediction.',
+    text: 'Only when Krish asks for a prediction on the piece (no piece needs one; Ruling, Krish, 2026-11-19): it names one specific event that a reader can check on a stated date no more than about three months away (92 days; the publish check CALL_HORIZON refuses a later one). It is what we believe will happen next, given the piece\'s own evidence, backed at 80% or more (CLEAR_STANCE refuses less). It must not already have happened. Never a long shot pushed a year out to look bold, and never a middling number. A vague trend ("more deals", "more options") is never a prediction.',
     said: 'The current one feels pretty obvious that its going to happen in hindsight. (2026-10-12.) Then, 2026-10-19, after changing Monday\'s call to 95% by the end of 2026 as he recorded it: "I\'m done with sitting on the fence and putting predictions a year away: 55%. There\'s no point in that. Given how this article reads it\'s pretty obvious someone\'s going to shift their price again in the next month."',
     on: '2026-10-19', source: 'chat, on Monday\'s prediction (Universal or Sony make a deal with Suno by 31 December 2027, 70%)', status: 'live',
-    stages: ['write', 'judge_draft', 'final_pass'],
+    stages: ['publish_check'],
   },
   {
     id: 'TITLE_EARNS_THE_CLICK', name: 'Every title earns the click, from the piece, never from nothing',
@@ -653,7 +653,7 @@ export const HOUSE_RULES: readonly HouseRule[] = Object.freeze([
   },
   {
     id: 'ARTICLE_SUBSCRIBE_ASK', name: 'Every article asks for the subscription twice, inside the piece',
-    text: 'Every article asks the reader to subscribe twice inside its body: once near the top, before the first heading, for a reader who is not yet a subscriber, and once right after the key takeaway, as the last paragraph under "3 things you can do tomorrow". Each ask is one plain sentence saying what the reader gets, then the subscribe link, such as "Three pieces a week on what AI changes in your business, each ending on a dated call. Subscribe free." It promises only what is true today: a public scorecard of every call is promised only once makeyourmindup.ai shows a live one. The spoken scripts never ask (SCRIPT_CLOSE).',
+    text: 'Every article asks the reader to subscribe twice inside its body: once near the top, before the first heading, for a reader who is not yet a subscriber, and once right after the key takeaway, as the last paragraph under "3 things you can do tomorrow". Each ask is one plain sentence saying what the reader gets, then the subscribe link, such as "Three pieces a week on what AI changes in your business. Subscribe free." It promises only what is true today, and never predictions, calls or a scorecard of them: no piece needs a prediction (Ruling, Krish, 2026-11-19). The spoken scripts never ask (SCRIPT_CLOSE).',
     said: 'apply 1 to 6 from the next piece you make this week (2026-11-16, of Growth\'s audience brief, change 6, "Put a subscribe ask inside every article").',
     on: '2026-11-16', source: 'Growth\'s audience brief of 16 Nov 2026, change 6 (the newest article asked only in the navigation, the sidebar and after the sources and comments at the very end); checked by apps/control-plane/api/_publishChecks.ts (ARTICLE_SUBSCRIBE_ASK; not blocking until Krish has seen pieces carry it, as THREE_THINGS_TOMORROW)', status: 'live',
     stages: ['write', 'publish_check'],

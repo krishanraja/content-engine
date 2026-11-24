@@ -62,6 +62,9 @@ CONTENT_TYPES = {
     'mp4': 'video/mp4', 'mov': 'video/quicktime', 'webm': 'video/webm',
     'mp3': 'audio/mpeg', 'm4a': 'audio/mp4', 'wav': 'audio/wav',
     'srt': 'application/x-subrip', 'vtt': 'text/vtt', 'zip': 'application/zip',
+    'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'doc': 'application/msword',
+    'pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 }
 
 WINDOWS_UNSAFE = re.compile(r'[<>:"\\|?*]')

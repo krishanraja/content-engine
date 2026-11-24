@@ -58,8 +58,11 @@ def _outside_clip(spec: dict) -> bool:
 
 
 def lines(spec: dict, directory: Path | None = None) -> list[str]:
-    from . import qc_channel
+    from . import keepout, qc_channel
     out = []
+    face = keepout.missing_line(spec, directory)
+    if face:
+        out.append(face)
     if _sfx_missing(spec, directory):
         out.append('No sound effects: the sfx kit is not built, so every marked hit is silent and ve status holds the cut.')
     if any(c['aspect'] == '9:16' for c in spec['cuts'].values()) and qc_channel.ADVISORY:

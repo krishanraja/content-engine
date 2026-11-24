@@ -157,6 +157,100 @@ def board_rule_self_test() -> list[str]:
     return failures
 
 
+# The no-ask guard (Ruling, Krish, 2026-11-19: no approvals during production). config/ve/asks.json lists the only
+# moments a production session may ask Krish anything; a production skill that tells a session to wait for his
+# approval anywhere else is refused. The rule itself is written once, under the skill's "Allowed asks" heading,
+# so the phrases it refuses may appear there and nowhere else in the skill.
+ASKS = ROOT / "config" / "ve" / "asks.json"
+HEADING = re.compile(r"^(#{1,6})\s+(.*)$")
+
+
+def asks_config(path: Path = ASKS) -> dict:
+    import json
+
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def mid_production_waits(text: str, config: dict) -> list[str]:
+    """Each line of a skill that tells a session to wait for Krish's approval outside its allowed-asks section. A
+    phrase wrapped onto the next line is caught too: each line is read joined to the one after it (unless that one
+    is a heading), and the hit is reported on the line where it starts."""
+    phrases = [re.compile(p, re.IGNORECASE) for p in config.get("refused_phrases") or []]
+    section = (config.get("allowed_section") or "Allowed asks").lower()
+    lines = text.splitlines()
+    found: list[str] = []
+    inside_level = 0
+    for number, line in enumerate(lines, 1):
+        heading = HEADING.match(line)
+        if heading:
+            level = len(heading.group(1))
+            if section in heading.group(2).lower():
+                inside_level = level
+                continue
+            if inside_level and level <= inside_level:
+                inside_level = 0
+        if inside_level:
+            continue
+        after = lines[number] if number < len(lines) else ""
+        window = line if not after.strip() or HEADING.match(after) else f"{line} {after.strip()}"
+        for phrase in phrases:
+            hit = phrase.search(window)
+            if hit and hit.start() < len(line):
+                found.append(f"line {number}: \"{hit.group(0)}\"")
+                break
+    return found
+
+
+def no_ask_problems(skill: Path, config: dict | None = None) -> list[str]:
+    """A production skill (config/ve/asks.json "skills") has an allowed-asks section and never tells a session to
+    wait for Krish's approval between Sign storyboard and the final review outside it."""
+    config = asks_config() if config is None else config
+    if skill.name not in (config.get("skills") or []):
+        return []
+    text = (skill / "SKILL.md").read_text(encoding="utf-8")
+    section = config.get("allowed_section") or "Allowed asks"
+    problems: list[str] = []
+    if not any(section.lower() in m.group(2).lower() for m in map(HEADING.match, text.splitlines()) if m):
+        problems.append(f"has no \"{section}\" section naming the only moments it may ask Krish (config/ve/asks.json)")
+    for hit in mid_production_waits(text, config):
+        problems.append(f"tells a session to wait for Krish mid-production, outside its \"{section}\" section ({hit}): "
+                        "decide, record a final-review line, carry on (config/ve/asks.json)")
+    return problems
+
+
+def no_ask_self_test() -> list[str]:
+    """Proves no_ask_problems can fail: a production skill that waits for his yes mid-production, or has no
+    allowed-asks section, is refused; the same words under the allowed-asks heading pass."""
+    import tempfile
+
+    config = asks_config()
+    name = (config.get("skills") or ["make-piece"])[0]
+    allowed = "## Allowed asks\n\nNever wait for his yes between Sign storyboard and final.\n\n## Making it\n\nDecide and record.\n"
+    cases = [
+        ("a wait for his yes mid-production", allowed + "Render the proof, then wait for his yes.\n", 1),
+        ("approve engine in a step", allowed + "Type approve engine before the render.\n", 1),
+        ("a final approve typed in chat", allowed + "File it after he types final approve long.\n", 1),
+        ("a wait wrapped onto the next line", allowed + "A paid fact check goes only on\nKrish's words, immediately before.\n", 1),
+        ("no allowed-asks section", "## Making it\n\nDecide and record.\n", 1),
+        ("the rule quoted under its own heading", allowed, 0),
+    ]
+    failures: list[str] = []
+    with tempfile.TemporaryDirectory() as tmp:
+        skill = Path(tmp) / name
+        skill.mkdir()
+        for what, text, want in cases:
+            (skill / "SKILL.md").write_text(text, encoding="utf-8")
+            got = no_ask_problems(skill, config)
+            if len(got) != want:
+                failures.append(f"no-ask self-test, {what}: wanted {want} problem(s), got {got}")
+        other = Path(tmp) / "not-a-production-skill"
+        other.mkdir()
+        (other / "SKILL.md").write_text("Wait for his yes.\n", encoding="utf-8")
+        if no_ask_problems(other, config):
+            failures.append("no-ask self-test: a skill outside production was held to the rule")
+    return failures
+
+
 def local_validate(skill: Path) -> bool:
     source = (skill / "SKILL.md").read_text(encoding="utf-8")
     problems: list[str] = []
@@ -298,20 +392,22 @@ def main() -> int:
     if sys.argv[1:] == ["--sync-claude"]:
         return sync_claude()
     if sys.argv[1:] == ["--self-test"]:
-        failures = board_rule_self_test()
+        failures = board_rule_self_test() + no_ask_self_test()
         for failure in failures:
             print(failure, file=sys.stderr)
         if not failures:
             print("board rule self-test: an item with no closes_on and a close are each caught; a clean skill passes")
+            print("no-ask self-test: a mid-production wait and a missing allowed-asks section are each caught")
         return 1 if failures else 0
     if sys.argv[1:]:
         print("usage: python scripts/validate-skills.py [--sync-claude | --self-test]", file=sys.stderr)
         return 2
     # The board rule proves it can fail before it passes the real skills.
     failed = False
-    for failure in board_rule_self_test():
+    for failure in board_rule_self_test() + no_ask_self_test():
         print(failure, file=sys.stderr)
         failed = True
+    asks = asks_config()
     for skill in sorted(SKILLS.iterdir()):
         if not skill.is_dir():
             continue
@@ -320,7 +416,7 @@ def main() -> int:
             failed = failed or not valid
         else:
             failed = failed or not local_validate(skill)
-        for problem in description_problems(skill) + board_item_problems(skill):
+        for problem in description_problems(skill) + board_item_problems(skill) + no_ask_problems(skill, asks):
             print(f"{skill.name}: {problem}", file=sys.stderr)
             failed = True
     for problem in claude_copy_problems() + coverage_problems():

@@ -34,6 +34,7 @@
   python scripts/ve.py sfx approve --id <id> --words "<his words>" --on <date> --audition <ve>/sfx-audition.json | sfx stage --assets-dir <dir>
   python scripts/ve.py brief <piece> [--cut <cut>]   one brief per plate, with card fields; never dispatches
   python scripts/ve.py file <piece> --subject <text>  READY cuts to the archive and the post's 3 Video folder
+  python scripts/ve.py judge <piece> --cut <cut> [--record scores.json --by ve-critic]   the blind judge's packet, then its score
   python scripts/ve.py lock draft|check|show|freeze|retire|rules-only  design locks (only Krish's Gate 2 freezes one; retire deletes a lock's key frames for good on his words; rules-only drops the picture-matching on his words)
   python scripts/ve.py golden show|check|fill        interim golden frames he names
   python scripts/ve.py signoff check|stills|gate2|add|apply   the three sign-offs as review cards on his board
@@ -449,6 +450,49 @@ def cmd_pace(args) -> int:
         return 1
 
 
+def cmd_recipe(args) -> int:
+    """Krish's rating of a style recipe in his own words (velib/recipes.py): a score 0 to 10, or --approved with no number."""
+    from velib import recipes
+    try:
+        block = recipes.rate(args.id, args.score, approved=args.approved, words=args.words, on=args.on)
+    except ValueError as error:
+        print(f've recipe rate: {error}', file=sys.stderr)
+        return 1
+    print(f've recipe rate: {args.id} rated {json.dumps(block, ensure_ascii=False)}')
+    return 0
+
+
+def cmd_judge(args) -> int:
+    """The blind overall judge (velib/judge.py): assemble the cut beside his references under letters, or record the scores
+    the ve-critic agent gave them. The model call is the session's; this only assembles, records and is enforced by ve status."""
+    from velib import judge, verdict
+    from velib.common import sha256_file
+    try:
+        _spec_file, spec, directory = _ve_dir(args.piece)
+        if args.cut not in spec['cuts']:
+            raise ValueError(f'no cut {args.cut} in the spec')
+        video = verdict.video_path(verdict.read(directory / f'qc.{args.cut}.json'), directory)
+        if not video.is_file():
+            raise ValueError(f'no rendered cut for {args.cut} (its qc.{args.cut}.json names {video})')
+        digest = sha256_file(video)
+        if args.record:
+            given = load_json(args.record)
+            value = judge.record(directory, args.cut, digest, given.get('scores') or {}, by=args.by, notes=given.get('notes'))
+            held = value['score'] < judge.PASS
+            print(f"ve judge: {args.cut} scored {value['score']}/10 beside {value['references_scored']} reference clips"
+                  + (f' (held: below {judge.PASS})' if held else ''))
+            return 1 if held else 0
+        made = judge.assemble(directory, args.cut, video, digest, refs_dir=Path(args.refs_dir) if args.refs_dir else None)
+        print(f"ve judge: blind packet {made['packet']} ({len(made['letters'])} clips, letters only)")
+        if made['missing']:
+            print(f"ve judge: not on disk, so not in the packet: {', '.join(made['missing'])}")
+        print('ve judge: hand the packet folder to the ve-critic agent ("The blind judge"), then record its scores with --record')
+        return 0
+    except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:
+        print(f've judge: {error}', file=sys.stderr)
+        return 1
+
+
 def cmd_beats(args) -> int:
     """Where the beat is in a bed: tempo, bars, drops and how sure (velib.beats). It only measures; nothing snaps to it.
     --grid reads ledger tracks from MINDMAKE_MUSIC_ROOT on the machine that holds the music; --write keeps each grid in
@@ -833,13 +877,22 @@ def cmd_status(args) -> int:
     for cut in spec['cuts']:
         state = packet.readiness(spec, cut, directory)
         mechanical, design, final = state['mechanical'], state['design'], state['final']
+        if state.get('floor'):
+            # Held means rebuild, never patch (Krish, 2026-11-19): one line, never a list of fixes.
+            from velib import floor
+            print(floor.held_line(cut, state['floor']))
+            ready = False
+            continue
         print(f'{cut}:')
         print('  mechanical: ' + ('INVALID (' + '; '.join(mechanical) + ')' if mechanical else 'VALID'))
         print('  design: ' + ('NOT APPROVED (' + '; '.join(design) + ')' if design else 'APPROVED'))
         codex = state.get('codex', [])
         if codex:
             print('  codex: ' + '; '.join(codex))
-        reasons = mechanical + design + final + codex
+        # His final approval gates publishing only, never filing (Ruling, Krish, 2026-11-19): shown, not held.
+        print('  publish: ' + ('APPROVED' if not final else
+                               'awaits his Approve for publish on the board (' + '; '.join(final) + ')'))
+        reasons = mechanical + design + codex
         print(f"{cut}: {'READY' if not reasons else 'NOT READY (' + '; '.join(reasons) + ')'}")
         # Done means in the post's 3 Posts folder, read back from the library, never from the receipt alone
         # (Ruling, Krish, 2026-11-03: "everything ready for post goes in the posts folder, not the growth folder").
@@ -907,8 +960,11 @@ def cmd_ingest(args) -> int:
                             aligner_a=args.aligner_a, aligner_b=args.aligner_b,
                             script_text=Path(args.teleprompter).read_text(encoding='utf-8-sig') if args.teleprompter else None)
         record = takes.load_take(directory, args.take)
+        frame = record['media'].get('frame')
+        size = f"{frame['width']}x{frame['height']} measured" if frame else 'no picture size measured'
         print(f"ve ingest: {args.take} ({record['media']['duration_s']} s; {len(record['aligners']['a']['words'])} words from "
-              f"{record['aligners']['a']['name']}, {len(record['aligners']['b']['words'])} from {record['aligners']['b']['name']}) -> {path}")
+              f"{record['aligners']['a']['name']}, {len(record['aligners']['b']['words'])} from {record['aligners']['b']['name']}; "
+              f"frame {size}) -> {path}")
         _script_audit(directory, spec, args.take, path)
         return 0
     except (OSError, ValueError, KeyError, TypeError) as error:
@@ -1004,7 +1060,7 @@ def cmd_faces(args) -> int:
             return 1
         found = faceflags.flags(scanned)
         out = write_json(faceflags.faces_path(directory, args.take), {'take': args.take, 'media_sha256': record['media']['sha256'],
-                                                                      **found})
+                                                                      **found, 'boxes': faceflags.boxes(scanned)})
         counts = {kind: sum(1 for w in found['windows'] if w['kind'] == kind) for kind in faceflags.KINDS}
         print(f"ve faces: {found['with_face']} of {found['samples']} samples see his face; "
               + ', '.join(f'{n} {kind.replace("_", " ")}' for kind, n in counts.items()) + ' window(s); advisory, uncalibrated')
@@ -1498,6 +1554,13 @@ def cmd_brief(args) -> int:
                 print(finding)
             print(f"ve brief: {args.plate} candidates {'pass' if report['pass'] else 'FAIL'}; OCR {report['ocr']}")
             return 0 if report['pass'] else 1
+        # A generated plate is a metaphor or nothing (Ruling, Krish, 2026-11-20: generated imagery, photoreal included, is allowed
+        # when art-directed and clearly a metaphor; stand-ins for real documents, signs, places or people are refused).
+        from velib import grammar
+        refusal = grammar.generation_refusal(spec, directory)
+        if refusal and brief.build_briefs(spec, cut=cut, script=script, words=words, beats=args.beat, moves=moves):
+            print(f've brief: refused, {refusal}', file=sys.stderr)
+            return 1
         paths = brief.write_briefs(spec, directory, cut=cut, script=script, words=words, beats=args.beat, moves=moves)
         if not paths:
             print('ve brief: no plate slots (no beat uses a generated asset; name one with --beat)')
@@ -1742,7 +1805,16 @@ def cmd_compile(args) -> int:
     if isinstance(words, dict):
         words = words['words']
     report = {}
-    props = compile_cut(spec, args.cut, words, args.assets_dir, report=report, edl=edl)
+    from velib import takes, verdict
+    frame_source, take_frame = takes.cut_frame(spec, args.cut, verdict.ve_dir(Path(args.spec)))
+    from velib import keepout
+    ve = verdict.ve_dir(Path(args.spec))
+    faces = {take: found for take in (sorted(edl['takes']) if edl is not None else [spec['cuts'][args.cut]['take']])
+             if (found := keepout.track(ve, take)) is not None}
+    props = compile_cut(spec, args.cut, words, args.assets_dir, report=report, edl=edl, take_frame=take_frame, faces=faces)
+    if not faces:
+        print('ve compile: no face track for this cut\'s take: nothing was kept off his face (run ve faces)')
+    report['take_frame'] = {'source': frame_source, **(take_frame or {})}
     # The piece id is a directory name, never an arbitrary output path.
     piece = spec['piece_id']
     if not re.fullmatch(r'[a-zA-Z0-9][a-zA-Z0-9_-]*', piece):
@@ -1894,9 +1966,9 @@ def render_refusal(spec, spec_file, props, call=None) -> list[str]:
     directory = verdict.ve_dir(Path(spec_file))
     found = gates.load(directory, spec, call)
     reasons = proof.problems(spec, cut, directory, found['gates'], props)
-    # The Thursday 5 Nov guards (docs/learning/2026-11-04-thursday-killed.md): the engine he signed for, two full
-    # renders per press, one type system.
-    reasons += guards.engine_problems(spec, cut, directory) + guards.loop_problems(spec, cut, directory, found['gates'])
+    # The Thursday 5 Nov guards (docs/learning/2026-11-04-thursday-killed.md): the engine of the proof he approved, two
+    # full renders per press, one type system. The one engine gate is here: ve proof runs on the pinned engine by itself.
+    reasons += guards.render_engine_problems(spec, cut, directory) + guards.loop_problems(spec, cut, directory, found['gates'])
     reasons += guards.type_problems(spec, props)
     if reasons and found['source'] != 'record':
         reasons.append(f"the piece's making record was {found['source']}; only the spec's approvals were read")
@@ -1904,6 +1976,16 @@ def render_refusal(spec, spec_file, props, call=None) -> list[str]:
 
 
 def cmd_render(args) -> int:
+    try:
+        # Before lint: a frozen piece is held to the rules and the engine it froze with, so when either moved on main the
+        # whole command runs on its pinned commit, lint included (Ruling, Krish, 2026-11-19). A whole cut renders on the
+        # engine its approved proof was drawn on; no engine hash is ever put to Krish.
+        pinned = _pin_first(args.spec, 've render', getattr(args, 'props', None))
+    except ValueError as error:
+        print(f've render: {error}', file=sys.stderr)
+        return 1
+    if pinned is not None:
+        return pinned
     from velib.lint import lint
     spec, problems = lint(Path(args.spec))
     if problems or spec is None:
@@ -1941,6 +2023,13 @@ def cmd_render(args) -> int:
         # sting exception for good."; config/intro-sting.json, retired).
         print('ve render: refused, the cut must open on its hook:')
         print('\n'.join(f'  - {reason}' for reason in opening))
+        return 1
+    from velib.compile import ending_problems
+    closing = ending_problems(props, spec)
+    if closing:
+        # The series close is the intro sting at the end (Ruling, Krish, 2026-11-20); never the plain ink card in its place.
+        print('ve render: refused, the cut must close on its palette close:')
+        print('\n'.join(f'  - {reason}' for reason in closing))
         return 1
     render(args.props, args.out, args.scale)
     from velib import guards, plainframes
@@ -2024,8 +2113,52 @@ def cmd_defect(args) -> int:
         return 1
 
 
+_ARGV: list[str] | None = None  # this run's own arguments (main sets it), so a pinned run can repeat them
+
+
+def _exec_pinned(checkout: Path, argv: list[str]) -> int:
+    """Run ve with these arguments from the pinned checkout's own scripts, in this same folder (the piece's files stay
+    where they are; only the engine and the rules are the frozen ones)."""
+    env = {**os.environ, 'VE_PINNED': '1'}
+    return subprocess.run([sys.executable, str(checkout / 'scripts' / 've.py'), *argv], env=env).returncode
+
+
+def _run_pinned(route: dict, label: str) -> int | None:
+    """When the engine here is not the one this piece runs on (guards.engine_route, render_route), run this same command
+    on the pinned commit and return its exit code; None means run here. Nothing is asked of Krish: the piece stays on the
+    engine frozen at Sign storyboard (Ruling, Krish, 2026-11-19). Raises ValueError when the pin cannot be made."""
+    from velib import guards
+    if route.get('route') != 'pin' or os.environ.get('VE_PINNED') == '1' or not route.get('commit') or _ARGV is None:
+        return None
+    checkout = guards.pin_checkout(route['commit'], route['sha256'], route.get('rules_sha256'))
+    argv = [str(Path(a).resolve()) if not a.startswith('-') and Path(a).exists() else a for a in _ARGV]
+    print(f"{label}: the engine moved on main since this piece froze; running on its pinned engine {route['sha256'][:12]} "
+          f"(commit {route['commit'][:12]}, {checkout})")
+    return _exec_pinned(checkout, argv)
+
+
+def _pin_first(spec_path, label: str, props_path=None) -> int | None:
+    """Decide from the raw spec (no lint: lint is a rule, and a frozen piece's rules are its pinned commit's) whether this
+    command runs here or on the pinned commit, and run it there if so. None means run here. A piece with no engine record
+    (not frozen yet) reads nothing here, so lint still refuses before anything is read (test_lint_refuses_before_read_or_write)."""
+    from velib import guards, verdict
+    directory = verdict.ve_dir(Path(spec_path))
+    if os.environ.get('VE_PINNED') == '1' or not guards.lock_path(directory).is_file():
+        return None
+    try:
+        raw = load_json(Path(spec_path))
+        cut = load_json(Path(props_path)).get('cutId') if props_path else None
+    except (OSError, ValueError, AttributeError):
+        return None
+    if not isinstance(raw, dict):
+        return None
+    route = guards.render_route(raw, cut, directory) if cut else guards.engine_route(raw, directory)
+    return _run_pinned(route, label)
+
+
 def cmd_pin(args) -> int:
-    """`ve pin <piece>`: record the commit the engine was frozen at and say how to keep rendering on it."""
+    """`ve pin <piece>`: make (or show) the checkout of the commit the engine was frozen at. ve proof and ve render use it
+    by themselves whenever the engine here has moved; this only makes it ahead of time."""
     from velib import guards
     try:
         _spec_file, _spec, directory = _ve_dir(args.piece)
@@ -2033,12 +2166,11 @@ def cmd_pin(args) -> int:
         if not lock.is_file():
             raise ValueError('no engine record: run ve expect first')
         record = load_json(lock)
-        commit = guards.head_commit()
-        record['commit'] = record.get('commit') or commit
-        write_json(lock, record)
-        print(f've pin: engine {record["sha256"][:12]} frozen at commit {record["commit"]}')
-        print('  a merge that touches no engine file changes nothing; to render on exactly this engine whatever main does:')
-        print(f'  git worktree add ../ve-{args.piece[:8]} {record["commit"]} && cd ../ve-{args.piece[:8]}')
+        if not record.get('commit'):
+            raise ValueError('ve expect recorded no commit for this engine: run ve expect again from a git checkout')
+        checkout = guards.pin_checkout(record['commit'], record['sha256'], (record.get('rules') or {}).get('sha256'))
+        print(f've pin: engine {record["sha256"][:12]} frozen at commit {record["commit"]}, checked out at {checkout}')
+        print('  ve proof and ve render run there by themselves whenever the engine here differs; nothing to approve')
         return 0
     except (OSError, ValueError, KeyError) as error:
         print(f've pin: {error}', file=sys.stderr)
@@ -2051,12 +2183,23 @@ def cmd_proof(args, render_fn=None) -> int:
     from velib.lint import lint
     from velib.render import check_asset_hashes, render
     try:
+        # Before lint: the proof runs on the engine and the rules frozen at Sign storyboard, here or on its pinned commit by
+        # itself, lint included. The one engine gate is at render (render_refusal), and nothing asks Krish to approve an
+        # engine hash (Ruling, Krish, 2026-11-19).
+        pinned = _pin_first(args.spec, 've proof')
+        if pinned is not None:
+            return pinned
         spec, problems = lint(Path(args.spec))
         if problems or spec is None:
             print('\n'.join(problems[:20]) or 'the spec does not pass its schema')
             return 1
         if args.cut not in spec['cuts']:
             raise ValueError(f'{args.cut} is not a cut in the spec')
+        if getattr(args, 'title_looked', None):
+            from velib import guards as _guards
+            proof.record_title_looked(verdict.ve_dir(Path(args.spec)), args.cut, args.title_looked, _guards._now())
+            print(f've proof: recorded what you saw on the title frame for {args.cut}')
+            return 0
         if getattr(args, 'compared', None):
             from velib import guards as _guards
             proof.record_compared(verdict.ve_dir(Path(args.spec)), args.cut, args.compared, _guards._now())
@@ -2070,7 +2213,7 @@ def cmd_proof(args, render_fn=None) -> int:
         directory = verdict.ve_dir(Path(args.spec))
         props = load_json(_props_for(args.spec, args.cut, args.props))
         from velib import guards
-        held = guards.engine_problems(spec, args.cut, directory) + guards.type_problems(spec, props)
+        held = guards.type_problems(spec, props)
         if held:
             print('ve proof: refused (the Thursday guards, docs/learning/2026-11-04-thursday-killed.md):')
             print('\n'.join(f'  - {reason}' for reason in held))
@@ -2213,9 +2356,75 @@ def cmd_expect(args) -> int:
     path = expect.write(spec, directory)
     print(path.read_text(encoding='utf-8').rstrip())
     print(f've expect: {path}')
-    # The storyboard sheet freezes the engine: ve proof and ve render refuse a whole cut drawn on a different one.
+    # The storyboard sheet freezes the engine and the rules (Ruling, Krish, 2026-11-19): proof and render run on this
+    # commit by themselves, and a rule dated after today binds the next piece.
     lock = guards.freeze(directory)
-    print(f"ve expect: engine {lock['sha256'][:12]} recorded ({len(lock['files'])} files); a change needs Krish's yes")
+    print(f"ve expect: engine {lock['sha256'][:12]} and rules {lock['rules']['sha256'][:12]} frozen at commit "
+          f"{lock.get('commit') or 'none'} ({len(lock['files'])} engine files, {len(lock['rules']['files'])} rule files); "
+          'proof and render run on it by themselves, nothing to approve')
+    return 0
+
+
+def cmd_shots(args) -> int:
+    """Write every beat's shot type from its cut's one staging and draw the shot table on the storyboard document
+    (Ruling, Krish, 2026-11-20: the shot grammar is approved; one staging per cut)."""
+    from velib import grammar, shots, verdict
+    spec_path = Path(args.spec)
+    spec = load_json(spec_path)
+    directory = verdict.ve_dir(spec_path)
+    try:
+        changed = shots.plan(spec, directory)
+    except ValueError as error:
+        print(f've shots: {error}', file=sys.stderr)
+        return 1
+    for line in changed:
+        print(f've shots: {line}')
+    found = grammar.check(spec, directory)
+    if args.dry_run:
+        print(shots.table_md(spec, directory))
+    else:
+        write_json(spec_path, spec)
+        board = directory / 'storyboard.md'
+        shots.write_storyboard(board, shots.table_md(spec, directory))
+        print(f've shots: {spec_path} and the shot table in {board}')
+    for line in found:
+        print(f'  - {line}')
+    print(f've shots: {len(found)} grammar finding(s); ve lint holds them for a piece frozen from 2026-11-23')
+    return 1 if found else 0
+
+
+def cmd_matte(args) -> int:
+    """The subject matte of a cut's picture, cached by its sha256 (velib/matte.py; shot grammar step 5): offline, MediaPipe's
+    bundled model, nothing generated or spent. Writes matte.<cut>.json beside the spec, which ve lint (grammar.depth)
+    reads; compile finds the cached subject by the picture's bytes."""
+    from velib import matte, takes, verdict
+    spec_path = Path(args.spec)
+    spec = load_json(spec_path)
+    directory = verdict.ve_dir(spec_path)
+    cuts = [args.cut] if args.cut else list(spec['cuts'])
+    for cut_id in cuts:
+        if cut_id not in spec['cuts']:
+            print(f've matte: no cut {cut_id}', file=sys.stderr)
+            return 1
+        picture = Path(args.picture) if args.picture else None
+        if picture is None:
+            try:
+                record = takes.load_take(directory, spec['cuts'][cut_id]['take'])
+            except (OSError, ValueError) as error:
+                print(f've matte: {error}; give --picture (the file the cut plays)', file=sys.stderr)
+                return 1
+            picture = Path(record['media']['path'])
+        try:
+            found = matte.run_ensure(picture)
+        except (ImportError, RuntimeError, ValueError, OSError) as error:
+            print(f've matte: {error}', file=sys.stderr)
+            return 1
+        note = {'cut': cut_id, 'picture': str(picture), 'picture_sha256': found['take_sha256'],
+                'subject_sha256': found['subject_sha256'], 'model_sha256': found['model_sha256'], 'frames': found['frames'],
+                'mean_edge_confidence': found['mean_edge_confidence'], 'status': found['status']}
+        out = write_json(directory / f'matte.{cut_id}.json', note)
+        print(f"ve matte: {cut_id}: {found['frames']} frames, {'cached' if found.get('cached') else 'made'}, subject "
+              f"{found['subject_sha256'][:16]} -> {out}")
     return 0
 
 
@@ -2282,6 +2491,18 @@ def main() -> int:
     p.add_argument('video', nargs='?'); p.add_argument('--out'); p.add_argument('--seconds', type=float)
     p.add_argument('--refs', action='store_true'); p.add_argument('--dir', default=str(ROOT / '.cache' / 'references'))
     p.set_defaults(fn=cmd_pace)
+    p = sub.add_parser('recipe', help="record Krish's rating of a style recipe, in his words")
+    rsub = p.add_subparsers(dest='action', required=True)
+    a = rsub.add_parser('rate', help='rate <id> <score 0-10> --words "..." or rate <id> --approved --words "..."')
+    a.add_argument('id'); a.add_argument('score', nargs='?', type=float)
+    a.add_argument('--approved', action='store_true', help='his approval with no number: records no score')
+    a.add_argument('--words', required=True, help='his exact typed words'); a.add_argument('--on', help='YYYY-MM-DD, default today')
+    p.set_defaults(fn=cmd_recipe)
+    p = sub.add_parser('judge', help='the blind overall judge: the cut beside his references under letters, then its score')
+    p.add_argument('piece'); p.add_argument('--cut', required=True); p.add_argument('--refs-dir')
+    p.add_argument('--record', help='the judge JSON: {"scores": {letter: 0-10}, "notes": {...}}')
+    p.add_argument('--by', default='ve-critic')
+    p.set_defaults(fn=cmd_judge)
     p = sub.add_parser('beats', help='tempo, bars, drops and a confidence for a music bed; measured, never snapped to')
     p.add_argument('audio', nargs='?'); p.add_argument('--out')
     p.add_argument('--grid', nargs='?', const='', help='a ledger track id (or --all) read from MINDMAKE_MUSIC_ROOT')
@@ -2394,12 +2615,13 @@ def main() -> int:
     p.add_argument('piece'); p.add_argument('action', choices=('add', 'count'))
     p.add_argument('--words'); p.add_argument('--where'); p.add_argument('--row', help='the checklist row it should have been caught by')
     p.set_defaults(fn=cmd_defect)
-    p = sub.add_parser('pin', help='record the commit the engine was frozen at, and how to keep rendering on it')
+    p = sub.add_parser('pin', help='check out the commit the engine was frozen at (ve proof and ve render use it by themselves)')
     p.add_argument('piece'); p.set_defaults(fn=cmd_pin)
     p = sub.add_parser('proof', help="render only the cut's hardest beat from his take; a whole cut waits for his approval of it")
     p.add_argument('spec'); p.add_argument('--cut', required=True); p.add_argument('--beat', help='prove this beat instead')
     p.add_argument('--props', help='default <ve dir>/props.<cut>.json'); p.add_argument('--assets-dir')
     p.add_argument('--scale', type=float, default=1.0); p.add_argument('--no-qc', action='store_true')
+    p.add_argument('--title-looked', metavar='WORDS', help="record what you saw on the proof's title frame at full size (Ruling, Krish, 2026-11-19); renders nothing")
     p.add_argument('--compared', metavar='WORDS', help="record what you compared (every beat change at full size, beside the proof he approved and his standing notes); renders nothing")
     p.set_defaults(fn=cmd_proof)
     p = sub.add_parser('styles', help='render the proof window once per shortlisted motion style, for his pick')
@@ -2407,6 +2629,12 @@ def main() -> int:
     p.add_argument('--points', help='comma list of point types; default from the spec'); p.add_argument('--props')
     p.add_argument('--scale', type=float, default=1.0)
     p.set_defaults(fn=cmd_styles)
+    p = sub.add_parser('shots', help="write each beat's shot type from its cut's one staging and the shot table on the storyboard")
+    p.add_argument('spec'); p.add_argument('--dry-run', action='store_true', help='print the shot table; write nothing')
+    p.set_defaults(fn=cmd_shots)
+    p = sub.add_parser('matte', help="the subject matte of a cut's picture, cached by its sha256 (offline; shot grammar step 5)")
+    p.add_argument('spec'); p.add_argument('--cut'); p.add_argument('--picture', help='the file the cut plays (default: its take)')
+    p.set_defaults(fn=cmd_matte)
     p = sub.add_parser('expect', help='write expect.md: at most six lines of what this cut will and will not do')
     p.add_argument('spec'); p.set_defaults(fn=cmd_expect)
     p = sub.add_parser('ledger', help='report or append piece usage against budget caps',
@@ -2567,6 +2795,8 @@ def main() -> int:
     p.set_defaults(fn=cmd_signoff)
     p = sub.add_parser('stills'); p.add_argument('rest', nargs='*'); p.set_defaults(fn=not_yet('stills'))
     args = parser.parse_args()
+    global _ARGV
+    _ARGV = list(sys.argv[1:])
     return args.fn(args)
 
 

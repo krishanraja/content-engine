@@ -22,7 +22,7 @@ import { webResearch } from '../../_enrich.js'
 import {
   classifyAnthropicFailure, isModelUnavailable, ModelUnavailableError, recordAnthropicFailure, refusesEveryCall, type ProviderFailure,
 } from '../../_modelProvider.js'
-import { publishChecks, publishStatus } from '../../_publishChecks.js'
+import { predictionWanted, publishChecks, publishStatus } from '../../_publishChecks.js'
 import { receipts } from '../../_receipts.js'
 import { failureAnswer } from '../../_stream.js'
 import { UTILITY_MODEL } from '../../_models.js'
@@ -385,7 +385,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const nextRun = factLedgerCoverage(body, ledger, sourceHash, sourcePartHashes(meta))
     // The whole pre-publish checklist rides along, so Control Center can show
     // Krish every house rule this exact version passes or fails in one place.
-    const checks = publishChecks(body, gate, new Date(), id)
+    const checks = publishChecks(body, gate, new Date(), id, { predictionWanted: predictionWanted(meta) })
     // Receipts: the source's own words behind each checked claim, for a Short,
     // a carousel or a web edition to show on screen (api/_receipts.ts). Only
     // for the exact version that passed.

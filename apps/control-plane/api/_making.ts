@@ -218,6 +218,10 @@ export interface Making {
    *  read. Written by scripts/floor.py, check_failures.py and preflight.py; merged by check, format and name. ve brief
    *  and ve render read it (scripts/velib/preflight.py), and every engine_incidents row carries it as it stood. */
   preflight?: MakingPreflight[]
+  /** What the session decided for Krish between Sign storyboard and the final review, one line each, so he can change
+   *  any of it there in one press (config/ve/asks.json; Ruling, Krish, 2026-11-19: no approvals during production).
+   *  Merged by key: a newer line on the same choice replaces the older. Never a question and never a gate. */
+  for_final_review?: MakingFinalReviewLine[]
   /** Retired on 2026-10-12, when Descript was (Krish: "Descript is
    *  permanently gone"). Records written before then still hold it; it is
    *  kept as it is, so they still parse, and nothing reads it. */
@@ -225,6 +229,13 @@ export interface Making {
   updated_at: string
   by: string
 }
+
+/** One line for the final review (config/ve/asks.json): what the session chose (`key`, such as thumbnail or title)
+ *  and the choice it made, in one line. */
+export interface MakingFinalReviewLine { key: string; line: string; at: string; by: string }
+const FINAL_REVIEW_KEY = /^[a-z][a-z0-9_]{0,39}$/
+const MAX_FINAL_REVIEW_LINE = 300
+const MAX_FINAL_REVIEW = 40
 
 export const PREFLIGHT_CHECKS = ['floor', 'failures', 'skill', 'taste'] as const
 export interface MakingPreflight { check: (typeof PREFLIGHT_CHECKS)[number]; format?: string; name?: string; version_or_hash: string; at: string; by: string }
@@ -763,6 +774,20 @@ export function parseMakingPatch(body: unknown, now: string): { patch: MakingPat
     const t = parseThumbnailOptions(body.thumbnail_options, problems)
     if (t) patch.thumbnail_options = t
   }
+  if (body.for_final_review !== undefined) {
+    const v = body.for_final_review
+    const list = Array.isArray(v) ? v : [v]
+    const lines: MakingFinalReviewLine[] = []
+    const by = str(body.by, 60) || 'Claude Code'
+    for (const item of list.slice(0, MAX_FINAL_REVIEW)) {
+      const line = isObj(item) ? str(item.line, MAX_FINAL_REVIEW_LINE) : null
+      if (!isObj(item) || typeof item.key !== 'string' || !FINAL_REVIEW_KEY.test(item.key)) problems.push('for_final_review: each line has a key, such as thumbnail or title (lower case, digits and underscores)')
+      else if (!line || /[\r\n]/.test(line)) problems.push(`for_final_review.${item.key}: the line is one line of at most ${MAX_FINAL_REVIEW_LINE} characters`)
+      else lines.push({ key: item.key, line, at: when(item.at, now), by })
+    }
+    if (!list.length) problems.push('for_final_review needs at least one line')
+    else if (lines.length === Math.min(list.length, MAX_FINAL_REVIEW)) patch.for_final_review = lines
+  }
   if (body.rounds !== undefined) {
     const n = count(body.rounds)
     if (n === null || n > 99) problems.push('rounds is how many full renders went to Krish before he approved the cut: a whole number, 0 to 99')
@@ -853,6 +878,12 @@ export function mergeMaking(prev: Making | null | undefined, patch: MakingPatch,
     const held = new Map<string, MakingPreflight>((Array.isArray(base.preflight) ? base.preflight : []).filter(isObj).map(p => [preflightKey(p), p]))
     for (const p of patch.preflight) { held.delete(preflightKey(p)); held.set(preflightKey(p), p) }
     next.preflight = [...held.values()].slice(-MAX_PREFLIGHT)
+  }
+  if (patch.for_final_review) {
+    // Line by line, keyed by the choice: a newer line on the thumbnail replaces the older, the title's stays.
+    const held = new Map<string, MakingFinalReviewLine>((Array.isArray(base.for_final_review) ? base.for_final_review : []).filter(isObj).map(l => [l.key, l]))
+    for (const l of patch.for_final_review) { held.delete(l.key); held.set(l.key, l) }
+    next.for_final_review = [...held.values()].slice(-MAX_FINAL_REVIEW)
   }
   if (patch.gates) {
     // Gate by gate: his press on the proof keeps his signed storyboard and his style pick.

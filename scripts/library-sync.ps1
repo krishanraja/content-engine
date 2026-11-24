@@ -57,6 +57,10 @@ $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
 $RepoRoot = [System.IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
+# The one way this copy is pulled, and healed when main's history was rewritten (scripts\home-copy.ps1,
+# Update-HomeCopy). Krish, 2026-11-20: "We need to ensure this can never happen again in the future."
+$HomeCopyScript = Join-Path $PSScriptRoot 'home-copy.ps1'
+. $HomeCopyScript
 $TopFolders = @('1 Brand kit (permanent)', '2 Channel art (permanent)', '3 Posts')
 # A second library (Krish, 2026-11-03: "Why don't you duplicate that Python
 # script for Heartside then? We're going to need to do a lot more of this type
@@ -760,17 +764,15 @@ function Update-Source {
   # Brings the dedicated library-source clone up to date, so a fix on main
   # reaches the machine without anyone running git pull (as recordings-upload.ps1
   # does for its own clone). Never the runner's checkout, never a session's copy.
+  # When main's history was rewritten the copy heals itself (Update-HomeCopy:
+  # a local backup branch, then reset to origin/main); the problem is
+  # reported only when that heal fails too.
   if ((Split-Path -Leaf $RepoRoot) -ne $SourceFolderName) { return }
   $git = Get-Command git.exe -ErrorAction SilentlyContinue
   if ($null -eq $git) { Write-Log 'git is not on this machine; this copy is not updated'; return }
-  $previous = $ErrorActionPreference
-  $ErrorActionPreference = 'Continue'
-  try {
-    $output = @(& $git.Source -C $RepoRoot pull --ff-only --quiet 2>&1)
-    $code = $LASTEXITCODE
-  } finally { $ErrorActionPreference = $previous }
-  if ($code -ne 0) { Write-Log "git pull did not finish ($($output -join ' ')); this pass runs on the copy as it is" }
-  Set-PullProblem 'library_source_pull_failed' ($code -ne 0)
+  $copy = Update-HomeCopy $git.Source $RepoRoot
+  if ($copy.line) { Write-Log $copy.line }
+  Set-PullProblem 'library_source_pull_failed' (-not $copy.ok)
 }
 
 # ---- one pass, or a pass every few minutes -----------------------------------
@@ -805,7 +807,8 @@ try {
   # window opens each time. When this script changes (a git pull), it ends, and
   # the task's next trigger starts the new one.
   $scriptPath = $PSCommandPath
-  $scriptSha = Get-Sha256 $scriptPath
+  function Get-SourceStamp { return ((Get-Sha256 $scriptPath) + (Get-Sha256 $HomeCopyScript)) }
+  $scriptSha = Get-SourceStamp
   Write-Log "library sync started: a pass every $EveryMinutes minutes"
   while ($true) {
     $script:Problems.Clear()
@@ -815,8 +818,8 @@ try {
     Send-LaneReport $ok
     Start-Sleep -Seconds ($EveryMinutes * 60)
     try { Update-Source } catch { Write-Log "the update check failed: $($_.Exception.Message)" }
-    if ((Get-Sha256 $scriptPath) -ne $scriptSha) {
-      Write-Log 'library-sync.ps1 has changed; ending so the scheduled task starts the new version'
+    if ((Get-SourceStamp) -ne $scriptSha) {
+      Write-Log 'library-sync.ps1 or home-copy.ps1 has changed; ending so the scheduled task starts the new version'
       exit 0
     }
   }

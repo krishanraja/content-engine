@@ -1,15 +1,15 @@
 ---
 name: thumbnail-designer
-description: "Design a piece's video thumbnails, wide 16:9 and tall 9:16, once the packaging round has settled the thumbnail words after Krish records: a short brief first, two or three options in the week's one skin as the Receipt, the channel and title checks on each, a mock of his Instagram grid beside the last five posted covers, a verdict from a separate critic bound to each file's sha256, then one question on his list and his pick recorded in his own words. Use when produce-video step 5 calls it, or when Krish asks for a recorded piece's thumbnails or covers to be designed again. Not for the working thumbnails drawn before he records (make-piece, the Visual gate row), carousel cards, memes or Notes images."
+description: "Design a piece's video thumbnails, wide 16:9 and tall 9:16, once the packaging round has settled the thumbnail words after Krish records: a short brief first, two or three options in the week's one skin as the Receipt, the channel and title checks on each, a mock of his Instagram grid beside the last five posted covers, a verdict from a separate critic bound to each file's sha256, then the set on his final review and his pick recorded in his own words. Use when produce-video step 5 calls it, or when Krish asks for a recorded piece's thumbnails or covers to be designed again. Not for the working thumbnails drawn before he records (make-piece, the Visual gate row), carousel cards, memes or Notes images."
 model: opus
 ---
 
 # Design the thumbnails
 
-The one job: once his words for the thumbnail are settled (house rule TITLES_AFTER_RECORDING: they are picked in the
-packaging round, after he records), draw two or three options, judge them with a reader that did not draw them, show
-them to Krish in a mock of his grid, and record his pick in his words. Nothing is filed as the thumbnail before he
-answers.
+The one job: once the words for the thumbnail are settled (house rule TITLES_AFTER_RECORDING: they are chosen in the
+packaging round, after he records), draw two or three options, judge them with a reader that did not draw them, and
+put them in a mock of his grid on his final review, where his pick is recorded in his words. Nothing is filed as
+the thumbnail before he answers there.
 
 Every option is held to these, and none of them is the session's to relax:
 
@@ -33,8 +33,8 @@ Every option is held to these, and none of them is the session's to relax:
 1. `python3 scripts/check_failures.py --piece <piece>`, `python3 scripts/floor.py --format thumbnail --piece <piece>`
    and `--format cover`, then `python3 scripts/preflight.py <piece> --skill thumbnail-designer`. Read Krish's approved
    taste for makeyourmindup (`get_approved_taste`) where the connector offers it.
-2. The words are his picks: each line on a thumbnail has his `picked` verdict for the piece
-   (`title_check.py verdict ... --surface thumbnail` or `tall_cover`); the drawer refuses any other.
+2. The words are the packaging round's: his `picked` verdict, else its top-ranked line as the default
+   (`title_check.py verdict ... --surface thumbnail` or `tall_cover`). A drawer refusal: "Allowed asks".
 3. Read `.agents/skills/thumbnail-designer/references/drawing.md` (the facts, the logos, the machine) and
    `.agents/skills/thumbnail-designer/references/reference-library.md` (the inspiration cards) before the brief, and
    read his thumbnail reference set as it says (`GET /api/inspiration/candidates?role=thumbnail`) before drawing.
@@ -89,27 +89,28 @@ drawer never judges its own options.
 
 When the verdict blocks every option, or the best one fails a check, change the facts (a crop, a layout) and draw a
 new set; a new set needs a new verdict. At most two rounds of repair. Then hold: record the set and its verdict
-(`making.py <piece> thumbnails WORK/thumbs`, no `--ask`), report it blocked with the reason
-(`board_session.py <piece> blocked ...`), and say why in your reply. Never put options below the bar to him.
+(`making.py <piece> thumbnails WORK/thumbs`, no `--ask`), record the reason as a final-review line, and
+carry on with the cuts. Never put options below the bar to him.
 
-## 6. Before Krish
+## 6. On the final review
 
-Follow `.agents/skills/thumbnail-designer/references/board-pick.md` whole: it files the review copies in Drive, records
-the set with their Drive ids so his board shows every option with Pick and Not this (view contract 1.16.0; Ruling,
-Krish, 2026-11-15, approved with the specialists plan: thumbnail options carry a pick press on the Content board),
-files them on the piece, asks him once, and reads his answer back. In short:
+Follow `.agents/skills/thumbnail-designer/references/board-pick.md` for the filing: it files the review copies in
+Drive and records the set with their Drive ids so his board shows every option with Pick and Not this (view contract
+1.16.0; Ruling, Krish, 2026-11-15, approved with the specialists plan: thumbnail options carry a pick press on the
+Content board). In short:
 
 1. `python3 scripts/pages/thumb_options.py drive WORK/thumbs a:wide=ID a:tall=ID ... mock=ID`, after filing each in
    Inbox from My AI.
 2. `python3 scripts/post-pack/making.py <piece> thumbnails WORK/thumbs` (the set, its verdict and those ids, by sha256).
 3. `python3 scripts/post-pack/board_session.py <piece> add ...` for each file and the grid mock.
-4. Ask once: `python3 scripts/post-pack/making.py <piece> thumbnails WORK/thumbs --ask "$(python3 scripts/post-pack/live_board.py <Monday> <day>)"`.
-5. His Pick on the board is on the record by itself; his Not this sends you back to step 5 with his words. An answer in
-   a session: `making.py <piece> thumbnails WORK/thumbs --picked b --krish-words "Krish, YYYY-MM-DD: his words"`.
+4. One final-review line, the critic's best as the default (never `--ask`):
+   `python3 scripts/post-pack/making.py <piece> final-review thumbnail "Option B, the critic's best"`.
+5. His Pick at the final review is on the record by itself; his Not this sends you back to step 5 with his words. An
+   answer in a session: `making.py <piece> thumbnails WORK/thumbs --picked b --krish-words "Krish, YYYY-MM-DD: his words"`.
 
 Until his pick is on the record nothing is the thumbnail: `making.py video` refuses an option's file he has not
-picked, and no option is filed, posted or put in the manifest. A run no one is in (the Sunday-night run) leaves the
-question on his list for Monday; the cuts render and archive, and reach the library with his pick.
+picked, and no option is filed, posted or put in the manifest. The cuts never wait: they render, archive and file,
+and reach the library with his pick.
 
 ## 7. After his pick
 
@@ -122,7 +123,12 @@ every shape matches what he picked. Each video channel's cover in the piece mani
 
 None open. `visual_gate.py` follows the cover standard: at most three logos, only of companies the piece names, and
 `config/hook-playbook.json` describes the Receipt: at most 7 words over a real proof, no face (Rulings, Krish,
-2026-11-15). A new difference between the standard and a gate goes to Krish once; never settle it yourself.
+2026-11-15). A new difference between the standard and a gate is a final-review line; never settle it yourself.
+
+## Allowed asks
+
+Only the four in `config/ve/asks.json` (Ruling, Krish, 2026-11-19: no approvals during production). Never ask before
+the final review: decide, record, carry on (`.agents/skills/ve/references/allowed-asks.md`, drawer refusals too).
 
 ## Walls
 

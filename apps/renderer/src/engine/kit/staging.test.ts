@@ -32,8 +32,7 @@ describe('stagings (kit/staging.ts)', () => {
     const band = stagingGeometry('band', '9:16', 'lower', true)
     expect(band.take.top).toBe(band.panel.top + band.panel.height)
     const stage = stagingGeometry('stage', '9:16', 'lower', true)
-    expect(stage.take.top).toBeLessThan(stage.panel.height)
-    expect(stage.take.top + stage.take.height).toBeGreaterThan(stage.panel.height)
+    expect(stage.take.top + stage.take.height).toBe(1920)
     const tray = stagingGeometry('tray', '9:16', 'upper', true)
     expect(tray.take).toMatchObject({ left: 0, top: 0, width: 1080, height: 1920 })
     expect(tray.panel.top).toBeGreaterThanOrEqual(900)
@@ -50,5 +49,55 @@ describe('stagings (kit/staging.ts)', () => {
     expect(trayRise(0, 0).scale).toBeCloseTo(0.6)
     expect(trayRise(9, 0)).toEqual({ scale: 1, ty: 0, opacity: 1 })
     expect(trayRise(40, 0)).toEqual({ scale: 1, ty: 0, opacity: 1 })
+  })
+})
+
+describe('the pillar staging (Krish, 19 Nov 2026: "Pillar: whole take on the right")', () => {
+  it('draws a vertical take whole at the wide frame\'s full height, the panel beside it, nothing overlapping', () => {
+    const g = stagingGeometry('pillar', '16:9', 'lower', true)
+    expect(g.take.height).toBe(1080)
+    expect(Math.abs(g.take.width / g.take.height - 1080 / 1920)).toBeLessThan(0.002)
+    expect(g.take.left + g.take.width).toBe(1920)
+    expect(g.panel.left + g.panel.width).toBe(g.take.left)
+    expect(g.region.left + g.region.width).toBeLessThanOrEqual(g.take.left)
+  })
+  it('never stages a tall cut: a pillar piece\'s 9:16 cut draws exactly as fill', () => {
+    expect(isStaging('pillar', '9:16')).toBe(false)
+    expect(isStaging('pillar', '16:9')).toBe(true)
+    expect(isStaging('band', '9:16')).toBe(true)
+  })
+})
+
+describe('the stage and anchor fixes (shot grammar step 5, 20 Nov 2026)', () => {
+  it('stage: the ink panel is the whole frame, no cream band, him large bottom right', () => {
+    for (const aspect of ['9:16', '16:9'] as const) {
+      const [w, h] = aspect === '9:16' ? [1080, 1920] : [1920, 1080]
+      for (const cutout of [false, true]) {
+        const g = stagingGeometry('stage', aspect, 'seam', true, cutout)
+        expect(g.under).toBeUndefined()
+        expect(g.panel).toMatchObject({ left: 0, top: 0, width: w, height: h })
+        expect(g.take.left + g.take.width).toBe(w)
+        expect(g.take.top + g.take.height).toBe(h)
+        expect(g.take.radius).toBe(cutout ? 0 : 44)
+        expect(g.cutout).toBe(cutout)
+      }
+    }
+    // As a window the region ends above his take; cut out by the matte it reaches down to his head.
+    const window = stagingGeometry('stage', '9:16', 'lower', false, false)
+    expect(window.region.top + window.region.height).toBeLessThanOrEqual(740 - 24)
+    const cut = stagingGeometry('stage', '9:16', 'seam', true, true)
+    expect(cut.region.top + cut.region.height).toBe(REGIONS['9:16'].seam.top - 24)
+    expect(cut.region.height).toBeGreaterThan(window.region.height)
+    // His corner's edge runs below the top of his head (near y 1175 as drawn on his takes), so his head crosses it.
+    expect(cut.corner!.top).toBeGreaterThan(1175)
+    expect(cut.corner!.left + cut.corner!.width).toBe(1080)
+  })
+
+  it('anchor: graphics only above his head, a prop box beside him, nothing on his chest', () => {
+    const g = stagingGeometry('anchor', '9:16', 'chin', true)
+    expect(g.region).toMatchObject({ left: 60, top: 280, width: 960, height: 220 })
+    expect(g.region.top + g.region.height).toBeLessThanOrEqual(512)
+    expect(g.props).toEqual([{ left: 40, top: 860, width: 320, height: 252 }])
+    expect(REGIONS['9:16'].chin.top).toBeGreaterThan(g.region.top + g.region.height)
   })
 })

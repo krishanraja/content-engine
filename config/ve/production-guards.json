@@ -17,7 +17,7 @@
     "overlap": 0.6
   },
   "engine": {
-    "why": "The engine a storyboard was signed on is the engine that draws its proof and its cut: Thursday's key-frame checks failed by construction while the background, chrome, caption height and colour, chat card width and headline ground changed mid-piece. A change needs Krish's exception approval bound to the new engine hash. The cut's picture and sound paths (conform, takes, words, voice, audio, the quick-edit episode and words gate ve reads, and the voice chain) are in it too, so a mid-piece change to how his take is cut or heard is seen (asked by the predictability session, 4 Nov). The sfx kits and lint.py are left out on purpose: approving a sound during a piece writes the kit and would refuse that piece's own proof and cut, and a cut naming no sound cannot be changed by it; lint cannot change a cut's picture or sound. A path that does not exist yet is simply empty. The render script (apps/renderer/scripts/ve-render.mjs) sets the encoder and colour range every cut is written with, so it is frozen too (the predictability session measured about 0.7 L* between BT.601 full range and BT.709 on his take).",
+    "why": "The engine a storyboard was signed on is the engine that draws its proof and its cut: Thursday's key-frame checks failed by construction while the background, chrome, caption height and colour, chat card width and headline ground changed mid-piece. A piece proofs and renders on the commit pinned at ve expect, by itself; a fix on main reaches it only under Krish's standing engine-follows-main yes or when every changed file is the renderer's and the house golden test passes on it, and nothing asks him to approve an engine hash (Ruling, Krish, 2026-11-19). The cut's picture and sound paths (conform, takes, words, voice, audio, the quick-edit episode and words gate ve reads, and the voice chain) are in it too, so a mid-piece change to how his take is cut or heard is seen (asked by the predictability session, 4 Nov). The sfx kits and lint.py are left out on purpose: approving a sound during a piece writes the kit and would refuse that piece's own proof and cut, and a cut naming no sound cannot be changed by it; lint cannot change a cut's picture or sound. A path that does not exist yet is simply empty. The render script (apps/renderer/scripts/ve-render.mjs) sets the encoder and colour range every cut is written with, so it is frozen too (the predictability session measured about 0.7 L* between BT.601 full range and BT.709 on his take).",
     "paths": [
       "apps/renderer/src",
       "scripts/velib/compile.py",
@@ -48,6 +48,20 @@
       ".test.ts",
       ".test.tsx",
       ".md"
+    ]
+  },
+  "rules": {
+    "why": "Ruling (Krish, 2026-11-19): rules and the engine freeze at Sign storyboard; a new rule or fix binds from the next piece. ve expect hashes these files beside the engine (engine.json rules). When any of them differs on main, ve proof and ve render run the piece on its pinned commit, before lint, so the rules it is held to are exactly the ones it froze with; among those, a rule binds by its binds_from against the publish_day as always (guards.engine_route, guards.bind_day). A piece frozen before rules were recorded is never moved by them. The records ve commands write during a piece (the sign-off manifest, the style samples, the lab) are left out: they are not rules, and leaving them in would move a piece onto its pin by its own work.",
+    "paths": [
+      "scripts/velib/lint.py",
+      "scripts/velib/piece_guards.py",
+      "config/ve/*.json",
+      "config/brand-palette.json"
+    ],
+    "skip_suffixes": [
+      "config/ve/sign-offs.json",
+      "config/ve/style-samples.json",
+      "config/ve/lab.json"
     ]
   },
   "loops": {

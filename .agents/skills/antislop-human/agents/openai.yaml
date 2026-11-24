@@ -1,0 +1,4 @@
+interface:
+  display_name: "Check contrast and access"
+  short_description: "antislop contrast, keyboard and state rules on finished work"
+  default_prompt: "Use $antislop-human with .agents/skills/antislop/ADAPTER.md to check contrast and access on this work."

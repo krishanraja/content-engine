@@ -18,7 +18,7 @@ const rule = (id: string) => {
 
 const ARTICLE = `Disney is paying Character.AI to put its films inside a chatbot.
 
-Three pieces a week on what AI changes in your business, each ending on a dated call. Subscribe free.
+Three pieces a week on what AI changes in your business. Subscribe free.
 
 ## What happened
 
@@ -30,7 +30,7 @@ Fans chat with the heroes, and Disney gets paid each time.
 - List the characters fans already talk to.
 - Price one chat against one survey reply.
 
-Three pieces a week on what AI changes in your business, each ending on a dated call. Subscribe free.
+Three pieces a week on what AI changes in your business. Subscribe free.
 `
 
 describe('Growth\'s audience brief of 16 Nov: changes 1 to 6 are enforced from the next piece', () => {
@@ -68,8 +68,10 @@ describe('Growth\'s audience brief of 16 Nov: changes 1 to 6 are enforced from t
     }
   })
 
-  test('the subscribe ask promises no public scorecard before makeyourmindup.ai shows a live one (change 6, with 7 open)', () => {
-    assert.match(rule('ARTICLE_SUBSCRIBE_ASK').text, /public scorecard of every call is promised only once makeyourmindup\.ai shows a live one/)
+  test('the subscribe ask promises no calls and no scorecard (change 6, with 7 open; Ruling, Krish, 2026-11-19)', () => {
+    const text = rule('ARTICLE_SUBSCRIBE_ASK').text
+    assert.match(text, /never predictions, calls or a scorecard of them/)
+    assert.doesNotMatch(text, /dated call/)
   })
 
   test('an article that asks near the top and right after its three actions passes; each missing ask is named (change 6)', () => {
@@ -106,7 +108,7 @@ describe('Growth\'s audience brief of 16 Nov: changes 1 to 6 are enforced from t
       'except wb.BoardError as e:', "    print('held' if 'ONE_CONCRETE_THING' in str(e) else str(e))"].join('\n')
     const run = spawnSync(py, ['-c', py3], { encoding: 'utf8' })
     assert.equal(run.status, 0, run.stderr)
-    assert.deepEqual(run.stdout.trim().split('\n'), ["['sat', 'thu', 'tue']", 'held'])
+    assert.deepEqual(run.stdout.trim().split(/\r?\n/), ["['sat', 'thu', 'tue']", 'held']) // Python prints CRLF on Windows
   })
 
   test('ve lint holds a vertical from 16 Nov to SHORT_CUT and to its first event by the second word (changes 1 and 2)', () => {

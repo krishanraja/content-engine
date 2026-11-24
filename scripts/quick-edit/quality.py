@@ -191,7 +191,10 @@ def delivery_problems(video, receipt, target=None):
             sys.path.append(str(Path(__file__).resolve().parents[1]))
         import bed_shape
         bed_problems = bed_shape.receipt_problems(video)
-        required = ('heard','sync','loudness','visuals','full_review')
+        # Krish's full review is not asked before filing (Ruling, Krish, 2026-11-19: filing to his own post folder
+        # needs no approval; his one Approve for publish press, bound to the file shas, gates publishing only). The
+        # receipt still records it when he gave it.
+        required = ('heard','sync','loudness','visuals')
         # A check either ran and wrote what it measured, or the receipt names it under `missing` with the reason
         # (plan W2.4): no receipt carries a placeholder status, and a missing check holds the cut.
         missing = report.get('missing') if isinstance(report.get('missing'), dict) else {}

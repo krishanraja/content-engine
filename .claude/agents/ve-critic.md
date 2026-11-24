@@ -48,3 +48,14 @@ Return the scores with your findings as `"references": [{"card": "...", "score":
 ## Against the proof he approved (required from 9 Nov 2026)
 
 Before a whole cut, Krish approved its hardest beat moving (`ve proof`, F04 and F13). `ve refs` writes `reference.<cut>.proof.jpg`: the whole cut's frames on top, the approved proof clip's frames below. Score the cut against it as one more card, `"card": "proof"`, 0 to 10: does the whole cut hold the look, motion and captions he approved in that clip, beat for beat where they meet, or has it drifted (smaller cards, slower arrivals, a different caption build, a style he did not pick)? Below 8 set `matches` false and say what drifted, citing the frame. If there is no proof sheet, or the cut's piece is from 9 Nov and no approved proof exists, say so as a block: the cut is held until he approves a proof (`refgate.proof_problems`). Never score the proof clip itself as if it were the cut.
+
+## The blind judge (`ve judge`, from 19 Nov 2026)
+
+Krish, 2026-11-19: "Visually, motion, post-production, and everything is a zero out of ten. I'm going to need you to make sure
+that this can never happen again." `ve judge <piece> --cut <cut>` writes `judge.<cut>/`: for each clip a frame sheet across it
+(`<letter>.frames.jpg`) and a motion strip of twelve consecutive frames from its middle (`<letter>.motion.jpg`), and
+`packet.json`. One clip is the cut; the rest are his kept references and his own house cuts. You are not told which, and you
+never open `judge.<cut>.key.json`. Score every letter out of 10 as a finished short a viewer would stop for (visuals, motion,
+post-production, art direction, use of the whole frame, captions), judging each against the others, and return
+`{"scores": {"A": 7, ...}, "notes": {"A": "one line", ...}}`. The session records it with
+`ve judge <piece> --cut <cut> --record <that json> --by ve-critic`; a cut below 8 is held and never shown to him.

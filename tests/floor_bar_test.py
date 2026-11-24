@@ -73,6 +73,8 @@ ANSWERS = {
     11: "Only the big moment",
     12: "Yes, that's the floor",
     13: "I think it should go at the start of the longer wide videos 100%,",
+    14: ("give me a title card failure report, as I expect the title card to enter as I am talking, and the title of the piece "
+         "is woven in to my script at the start. This is a good example of what actually was a good build for the title card."),
 }
 PICKED = (9, 11, 12)  # options he picked, recorded as Krish picked: "<option>"
 # The floor he confirmed on 29 October, word for word and in his order: the list's words, then the question's own wording.
@@ -691,8 +693,9 @@ class TheBar(unittest.TestCase):
             self.assertIn('never targets', text)
             self.assertIn('Not a reference yet: the long cut (voiceover)', text)
             self.assertTrue(text.endswith(floor_only(maker)), 'the floor after the bar is unchanged')
-            # Short: the page holds the rest, the reference files and what the studies measured included.
-            self.assertLess(len(printed(maker).splitlines()), 76, maker)
+            # Short: the page holds the rest, the reference files and what the studies measured included. 78 since
+            # 19 Nov 2026: his title-card ruling (14) prints one aim line, and the count includes the every-maker block.
+            self.assertLess(len(printed(maker).splitlines()), 78, maker)
             self.assertIn('are named in config/reference-cuts.json', flat(text))
             self.assertNotIn('board week', printed(maker))
 

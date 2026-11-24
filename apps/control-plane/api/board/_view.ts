@@ -1,3 +1,4 @@
+import { carryTemplates } from './_carryTemplates.js'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { createHash } from 'node:crypto'
 import { wordsBody, asWritten, wordsDocId, takenBackAt } from './_contracts.js'
@@ -132,13 +133,17 @@ export async function crossWeekNotes(db: SupabaseClient, week: string, pieceIds:
   const ids = [...new Set(pieceIds.filter(x => /^[0-9a-f-]{36}$/i.test(x)).map(x => x.toLowerCase()))]
   const keys = [...new Set(itemKeys.filter(Boolean))]
   const reads: Array<PromiseLike<unknown[]>> = []
+  // Building a read can throw too (a client without one of these filters); that read gives none, as promised above.
+  const read = (build: () => PromiseLike<{ error: unknown; data: unknown[] | null }>): void => {
+    try { reads.push(build().then(r => (r.error ? [] : r.data || []), () => [])) } catch { /* none */ }
+  }
   const base = () => db.from('board_documents').select('doc_id,body,updated_by,updated_at,week').eq('collection', 'comments').neq('week', week)
     .eq('body->>use', 'claude_notes')
-  if (ids.length) reads.push(base().in('body->>piece_id', ids).limit(500).then(r => (r.error ? [] : r.data || []), () => []))
+  if (ids.length) read(() => base().in('body->>piece_id', ids).limit(500))
   // A post's notes key carries its day (off-thu-x); one moved keeps its option id, so it is matched without the day.
   for (const k of keys.slice(0, 40)) {
     const id = noteItemKey(k)?.replace(/^off-/, '')
-    if (id && /^[A-Za-z0-9_-]{1,120}$/.test(id)) reads.push(base().like('body->>item', `off-%-${id}`).limit(200).then(r => (r.error ? [] : r.data || []), () => []))
+    if (id && /^[A-Za-z0-9_-]{1,120}$/.test(id)) read(() => base().like('body->>item', `off-%-${id}`).limit(200))
   }
   const rows = (await Promise.all(reads)).flat() as Array<Body & { week?: string }>
   const seen = new Set<string>()
@@ -1378,9 +1383,10 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   const signOffs = Promise.all([readSignOffSources(fetcher, mainSha), readSignOffPresses(db).catch(() => null)])
     .then(([s, p]) => signOffsView(s.manifest, p ?? [], s.configs)).catch(() => null)
   const [approvals, items, allItems, recentPieces, ...beside] = await Promise.all([readApprovals(db, week), readItems(db, week), readItemsIn(db, ['offered', 'approved', 'later']),
-    // The series pieces of the 14 days before the week, with their source, so an idea that retells one leaves the board.
+    // The series pieces of the 14 days before the week and those in work for the weeks after it, with their source, so an
+    // idea that retells one, or is one, leaves the board (Ruling, Krish, 2026-11-19).
     db.from('content_ideas').select('id, idea, thesis, scheduled_for, state, buried_at, source_url, canonical_url')
-      .gte('scheduled_for', shiftYmd(week, -14)).lt('scheduled_for', week).in('state', ['drafting', 'review', 'approved', 'published'])
+      .gte('scheduled_for', shiftYmd(week, -14)).lt('scheduled_for', shiftYmd(week, 63)).in('state', ['drafting', 'review', 'approved', 'published'])
       .then(r => (r.error ? [] : r.data || []), () => []),
     ...[-7, 7].map(n => readWeekIdeas(shiftYmd(week, n), env, fetcher).catch(() => null))])
   let formats: ViewInputs['formats'] = { script: [], production: [] }
@@ -1402,6 +1408,14 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   const noteRows = await crossWeekNotes(db, week, (pieces as Body[]).map(p => String(p.id || '')), (items ?? []).map(x => (x.day ? `off-${x.day}-${x.option_id}` : '')))
   let ideas: Body | null = null
   try { ideas = ideasText ? JSON.parse(ideasText) : null } catch { ideas = null }
+  // Last week's meme templates he has not answered stay on offer this week (Ruling, Krish, 2026-11-19; _carryTemplates.ts).
+  {
+    const last = shiftYmd(week, -7)
+    const lastQueue = await db.from('board_documents').select('doc_id,body').eq('week', last).eq('collection', 'queue')
+      .then(r => (r.error ? [] : (r.data || []) as Array<{ doc_id: string; body: unknown }>), () => [])
+    const approvedIds = new Set(((allItems || []) as Array<{ option_id?: string; state?: string }>).filter(x => x.state === 'approved').map(x => String(x.option_id)))
+    ideas = carryTemplates(ideas, last, (beside[0] ?? null) as Body | null, lastQueue, approvedIds)
+  }
   let north: { current: number; target: number; measured?: number } | null = null
   const m = nowText ? /<!-- north-star-state (\{.*?\}) -->/.exec(nowText) : null
   try { if (m) { const s = JSON.parse(m[1]); north = { current: Number(s.current), target: Number(s.week_target) } } } catch { north = null }

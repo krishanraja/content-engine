@@ -31,7 +31,9 @@ export function jitter(seed: number, n: number): number {
 /** Text devices whose words sit on a card of their own; under a dark ground they invert unless the style keeps cards. */
 export const CARD_DEVICES: readonly string[] = ['typing_bubble', 'query_chip', 'evidence_card', 'quote_card', 'record_card', 'thread_card']
 /** Text devices that draw their words straight on the ground: on a dark ground they always invert so they read. */
-export const GROUND_TEXT_DEVICES: readonly string[] = ['headline', 'kinetic_stat', 'stat_strip', 'marquee']
+// kinetic_stat draws its figure in cream already, so inverting it on a dark ground painted the figure ink on ink (the
+// Fri 20 Nov short's $195,000, 19 Nov 2026: the number was all but invisible on the ai-music-slam stage).
+export const GROUND_TEXT_DEVICES: readonly string[] = ['headline', 'stat_strip', 'marquee']
 
 /** Whether the active style lays its dark ground (ink_deep) under every graphic beat. */
 export function darkGround(profile: MotionProfile | undefined): boolean {

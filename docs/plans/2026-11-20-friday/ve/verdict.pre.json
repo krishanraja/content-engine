@@ -1,0 +1,32 @@
+{
+  "schema": "ve-pre-critic/1",
+  "piece": "c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
+  "spec_sha256": "5797a35092ce2cd96bf59cfd3aedb1c53e70daee1e2e0849d4aa531cdaccbd62",
+  "cards": [],
+  "reviewer": "reviewer-subagent-opus",
+  "reviewed_at": "2026-11-19T14:34:28.131246+00:00",
+  "answers": {
+    "one_idea": {
+      "pass": true,
+      "line": "Yes. The auditor opening old pages and finding money or a skeleton carries both cuts. Real pages are held still with no marks. The short hook is the $195,000 from frame 0, with the line on 'fraction' (w18). The code slams (BILLED, EXPENSIVE, BROTHER-IN-LAW) and hindsight slams are his words on the words he says. act and l_act, now anchor, still end on his own invoices and his skeletons, so the role change adds no second idea."
+    },
+    "no_invented_numbers": {
+      "pass": true,
+      "line": "No invented figure. The counters show only bill-billed and bill-after (195,000 and 33,000) with their producer line 'Tom's Hardware, 29 Oct 2025 (the family's account)', and the ghost waits for a finished count. No slam word or tape has a digit. The real-page figures in l_tenant and l_krafton are on their own pages with no marks. The role change touches no figure."
+    }
+  },
+  "findings": [
+    {
+      "severity": "note",
+      "area": "short hook strike",
+      "text": "Check on a rendered frame that the underline (200,340) to (690,330) crosses the digits of $195,000."
+    },
+    {
+      "severity": "note",
+      "area": "kinetic_stat",
+      "text": "Check on a rendered frame that the counter is cream on the dark ground after the renderer fix."
+    }
+  ],
+  "mechanical": [],
+  "blocking": false
+}

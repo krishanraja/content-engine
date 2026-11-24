@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { withApprovals } from './_approvals'
 import { buildView, lockSigned, postingStarted, viewProblems, type ViewInputs } from '../../apps/control-plane/api/board/_view'
-import { JOBS, dispatchJob, readRuns, type JobName } from '../../apps/control-plane/api/board/_run'
+import { JOBS, RUNS_TTL_MS, dispatchJob, readRuns, type JobName } from '../../apps/control-plane/api/board/_run'
 
 // The live board (docs/plans/2026-11-09-board-desk/PLAN.md). Krish, 2026-11-09: "I should always open it with
 // something to do for each piece or for the week, unless the day or the week is complete", "Absolutely everything that
@@ -164,6 +164,35 @@ describe('every board button starts a real machine', () => {
     const runs = await readRuns({}, fetcher as never, ['make-piece', 'offday-revise'])
     expect(runs['make-piece']?.state).toBe('running')
     expect(runs['offday-revise']?.state).toBe('failed')
+  })
+
+  it('fills the runs in the jobs\' order whatever order GitHub answers in, and reuses one read for a few seconds', async () => {
+    const body = (url: string) => JSON.stringify({ workflow_runs: [{ status: 'completed', conclusion: 'success', run_started_at: 'a', updated_at: 'b', html_url: url, event: 'push' }] })
+    // make-piece answers last on the first read and first on the second.
+    const slowFirst = (slow: string) => async (url: string) => {
+      await new Promise(r => setTimeout(r, url.includes(slow) ? 15 : 0))
+      return { status: 200, text: async () => body(url) }
+    }
+    const jobs: JobName[] = ['make-piece', 'offday-revise', 'repair-round']
+    const a = await readRuns({}, slowFirst('make-piece') as never, jobs)
+    const b = await readRuns({}, slowFirst('offday-revise') as never, jobs)
+    expect(Object.keys(a)).toEqual(jobs)
+    expect(JSON.stringify(a)).toBe(JSON.stringify(b))
+
+    let calls = 0
+    const counting = async (url: string) => { calls++; return { status: 200, text: async () => body(url) } }
+    let t = 1_000_000
+    await readRuns({}, counting as never, jobs, () => t)
+    t += RUNS_TTL_MS - 1
+    await readRuns({}, counting as never, jobs, () => t)
+    expect(calls).toBe(jobs.length)
+    t += 2
+    await readRuns({}, counting as never, jobs, () => t)
+    expect(calls).toBe(jobs.length * 2)
+    // A job the board sends empties the cache, so its run shows on the next read.
+    await dispatchJob('make-piece', { piece_id: MON }, { OFFDAY_REVISE_DISPATCH_TOKEN: 'x' }, (async () => ({ status: 204, text: async () => '' })) as never)
+    await readRuns({}, counting as never, jobs, () => t)
+    expect(calls).toBe(jobs.length * 3)
   })
 
   it('has a repository_dispatch type in every workflow the board can start, named as the job', () => {

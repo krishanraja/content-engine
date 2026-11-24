@@ -1,0 +1,223 @@
+{
+  "_about": "Saturday's good news, as rows (Krish, 2026-11-19, of Sat 28's ideas board: \"We also need to significantly improve the good news suggestions. These are still all just one idea, mostly, and they're not good news carousels. Some of them are memes that are sneaking through, and the only actual uplifting carousel is about AI in hospital again, which is all we post about. We should find good news that's not medical stuff.\"). Then (Krish, 2026-11-19, answering the questions on content-engine#923): \"Sat should just be good news carousels - 5 great things AI is doing for people (ideally things that make people smarter or better or happier or more successful).\" and \"Can mix if no1 is implemented properly.\" So a carousel may mix topics; its lead theme, when three or more of its stories share one, is what repeats and medical limits read. Read by scripts/post-pack/idea_checks.py goodnews_findings (the Sunday run's gate, code goodnews) and apps/control-plane/api/board/_goodNews.ts (the ideas board holds a Saturday option that is not a good-news carousel, with the reason). A new kind of good news, a limit or a keyword is a row here, never code.",
+  "from": "2026-11-23",
+  "saturday_kinds": [
+    "good_news"
+  ],
+  "min_options": 3,
+  "stories": 5,
+  "bar": {
+    "words": "five great things AI is doing for people, ideally making them smarter, better, happier or more successful",
+    "helps": [
+      "smarter",
+      "better",
+      "happier",
+      "more successful"
+    ]
+  },
+  "lead_stories": 3,
+  "repeat_weeks": 4,
+  "medical": [
+    "health"
+  ],
+  "medical_stories_max": 1,
+  "medical_recent_max": 2,
+  "why_medical_wins": "Health and hospital stories dominate search results for 'AI good news', so a search that is not steered returns them first every week. Search each domain on its own, and choose the topic where five strong stories meet outside medicine.",
+  "topics": [
+    {
+      "kind": "health",
+      "label": "Health and medicine",
+      "keywords": [
+        "hospital",
+        "hospitals",
+        "doctor",
+        "doctors",
+        "patient",
+        "patients",
+        "clinic",
+        "clinical",
+        "medical",
+        "medicine",
+        "health",
+        "healthcare",
+        "cancer",
+        "disease",
+        "diagnosis",
+        "nurse",
+        "nurses",
+        "surgery",
+        "drug",
+        "drugs",
+        "nhs",
+        "stroke",
+        "heart"
+      ]
+    },
+    {
+      "kind": "climate",
+      "label": "Climate, energy and nature",
+      "keywords": [
+        "climate",
+        "energy",
+        "solar",
+        "wind",
+        "grid",
+        "emissions",
+        "carbon",
+        "wildfire",
+        "flood",
+        "weather",
+        "forest",
+        "ocean",
+        "wildlife",
+        "species",
+        "nature",
+        "farm",
+        "farmers",
+        "crops"
+      ]
+    },
+    {
+      "kind": "science",
+      "label": "Science and discovery",
+      "keywords": [
+        "science",
+        "scientists",
+        "discovery",
+        "maths",
+        "math",
+        "proof",
+        "physics",
+        "chemistry",
+        "space",
+        "astronomy",
+        "telescope",
+        "protein",
+        "materials"
+      ]
+    },
+    {
+      "kind": "learning",
+      "label": "Education and learning",
+      "keywords": [
+        "school",
+        "schools",
+        "teacher",
+        "teachers",
+        "students",
+        "pupils",
+        "classroom",
+        "learning",
+        "tutor",
+        "reading",
+        "university",
+        "education"
+      ]
+    },
+    {
+      "kind": "people",
+      "label": "Accessibility and everyday life",
+      "keywords": [
+        "blind",
+        "deaf",
+        "disability",
+        "accessibility",
+        "sign language",
+        "elderly",
+        "carers",
+        "family",
+        "families",
+        "community",
+        "volunteers",
+        "language",
+        "translation"
+      ]
+    },
+    {
+      "kind": "business",
+      "label": "Small business and work",
+      "keywords": [
+        "small business",
+        "small firms",
+        "shop",
+        "shops",
+        "startup",
+        "founder",
+        "revenue",
+        "customers",
+        "hired",
+        "jobs",
+        "workers",
+        "employees",
+        "productivity"
+      ]
+    },
+    {
+      "kind": "money",
+      "label": "Money and savings",
+      "keywords": [
+        "saved",
+        "savings",
+        "bills",
+        "costs",
+        "cheaper",
+        "refund",
+        "fraud",
+        "scam",
+        "pension",
+        "tax"
+      ]
+    },
+    {
+      "kind": "creative",
+      "label": "Culture and creativity",
+      "keywords": [
+        "music",
+        "art",
+        "artist",
+        "artists",
+        "film",
+        "museum",
+        "archive",
+        "language revival",
+        "game",
+        "games",
+        "writer",
+        "writers"
+      ]
+    },
+    {
+      "kind": "safety",
+      "label": "Public services and safety",
+      "keywords": [
+        "council",
+        "government",
+        "public service",
+        "police",
+        "fire service",
+        "rescue",
+        "road",
+        "roads",
+        "transport",
+        "safety",
+        "flooding",
+        "emergency"
+      ]
+    },
+    {
+      "kind": "lab",
+      "label": "AI lab news",
+      "keywords": []
+    },
+    {
+      "kind": "work",
+      "label": "Work made better",
+      "keywords": []
+    },
+    {
+      "kind": "other",
+      "label": "Other good news",
+      "keywords": []
+    }
+  ]
+}

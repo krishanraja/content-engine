@@ -20,7 +20,7 @@ export const EngineImageSchema = z.object({ src: z.string().min(1), pixelWidth: 
 export const EngineEventSchema = z.object({
   id: z.string().min(1),
   obj: z.string().min(1),
-  verb: z.enum(['enter', 'move', 'mark', 'fill', 'stamp', 'count_to', 'highlight', 'carry', 'exit', 'draw', 'bounce', 'sulk', 'wave', 'add', 'chip', 'type', 'send', 'pick', 'drop', 'grey', 'multiply', 'dim', 'thin', 'grow', 'light', 'connect', 'rest_on']),
+  verb: z.enum(['enter', 'move', 'mark', 'fill', 'stamp', 'count_to', 'highlight', 'carry', 'exit', 'draw', 'bounce', 'sulk', 'wave', 'add', 'chip', 'type', 'send', 'pick', 'drop', 'grey', 'multiply', 'dim', 'thin', 'grow', 'light', 'connect', 'rest_on', 'stripe']),
   toState: z.string().min(1),
   atFrame: Frame,
   sfx: z.string().optional(),
@@ -45,9 +45,14 @@ export const EngineBeatSchema = z.object({
   id: z.string().min(1),
   role: z.enum(['hook', 'anchor', 'bridge', 'pivot', 'payoff', 'call']),
   layout: z.enum(['P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SPLIT', 'WINDOW']),
+  /** The beat's shot type under the shot grammar (spec beat.shot; docs/ve/INGREDIENTS.md, "Shot grammar"). */
+  shot: z.enum(['band', 'stage', 'anchor', 'plate', 'number', 'chapter', 'title', 'end']).optional(),
   face: z.enum(['full', 'window', 'off']).optional(),
   plate: z.object({ source: z.string().min(1), crop: z.string().min(1).optional() }).strict().optional(),
   backdrop: z.object({ src: z.string().min(1) }).strict().optional(),
+  /** The box his face takes in the frame on this beat, from the take's face track (compile, velib/keepout.py; Krish,
+   *  2026-11-19: "the card generates over my face"). Nothing is drawn over it. */
+  faceKeepOut: z.object({ left: z.number(), top: z.number(), width: z.number(), height: z.number() }).strict().optional(),
   fromFrame: Frame,
   toFrame: Frame,
   uses: z.array(z.string()),
@@ -125,7 +130,7 @@ export const EngineRenderPropsSchema = z.object({
   /** Where a caption theme sits, chosen with it and apart from the motion style (spec style.captions.placement;
    *  Krish, 2026-11-13: "the captions should be decoupled from the animation styles"): the lower band (the default),
    *  the centre of the frame, or the upper strip. Every place is inside every channel's safe area (captions/kit.ts). */
-  captionPlacement: z.enum(['lower', 'centre', 'upper']).optional(),
+  captionPlacement: z.enum(['lower', 'centre', 'upper', 'seam', 'chin']).optional(),
   title: z.string().min(1).optional(),
   /** The episode title moment (spec title_moment; Krish, 2026-11-17: "seamlessly flowing out of the captions and back
    *  in to them again"): the words he says as the title, each on its spoken frame. The captions leave these words out,
@@ -137,8 +142,31 @@ export const EngineRenderPropsSchema = z.object({
     release: z.enum(['captions', 'fade']).optional(),
     /** The title lands on a card that slams in over the caption band (spec title_moment.card; Krish, 18 Nov 2026). */
     card: z.boolean().optional(),
+    /** The title is one full-frame lockup with the wordmark inside it (Ruling, Krish, 2026-11-19): compile always says so,
+     *  so ve qc can refuse a cut rendered before the lockup. */
+    lockup: z.literal(true).optional(),
+    /** Under the shot grammar (Ruling, Krish, 2026-11-20): the lockup builds inside the staging's panel as he says the
+     *  line and goes full frame only from this frame, his last title word, for at most 2 s (compile caps toFrame). */
+    fullFrom: z.number().int().nonnegative().optional(),
+    /** Depth (shot grammar step 5): on an anchor cut with a subject matte, the lockup builds in this box on his wall,
+     *  behind his head, while he talks (title/TitleMoment.tsx `behind`); no full-frame hold. */
+    behind: z.object({ left: z.number(), top: z.number(), width: z.number().positive(), height: z.number().positive() }).strict().optional(),
     words: z.array(z.object({ text: z.string().min(1), atFrame: z.number().int().nonnegative() }).strict()).min(1),
   }).strict().optional(),
+  /** The subject matte of his take (velib/matte.py, `ve matte`): his take with the clipped matte as alpha, frame for frame
+   *  with the take, so type can sit behind him and he can be cut out over the panel (shot grammar step 5). */
+  matte: z.object({ src: z.string().min(1), sha256: z.string().regex(/^[0-9a-f]{64}$/), takeSha256: z.string().regex(/^[0-9a-f]{64}$/) }).strict().optional(),
+  /** Type in his world (kit/depth.ts, depth/DepthLayer.tsx): the in-world number behind him and the chapter marks. */
+  depth: z.array(z.object({
+    kind: z.enum(['number', 'chapter']),
+    text: z.string().min(1).max(12),
+    label: z.string().min(1).max(16).optional(),
+    arrangement: z.enum(['beside_left', 'beside_right', 'rotated', 'behind']).optional(),
+    accent: z.enum(['mint', 'channel']).optional(),
+    behind: z.boolean().optional(),
+    fromFrame: Frame, atFrame: Frame, toFrame: z.number().int().positive(),
+    head: z.object({ top: z.number(), left: z.number(), right: z.number(), centreY: z.number() }).strict(),
+  }).strict()).optional(),
   beats: z.array(EngineBeatSchema).min(1),
   objects: z.array(EngineObjectSchema),
   events: z.array(EngineEventSchema),
@@ -146,7 +174,11 @@ export const EngineRenderPropsSchema = z.object({
   // The house close (chrome/EndingBand.tsx, docs/production/CLOSING.md). `ticker` is kept for old props and drawn by nothing.
   ending: z.object({ fromFrame: Frame, url: z.string().min(1), ticker: z.boolean().default(true),
     tagline: z.string().min(1).optional(), cta: z.string().min(1).optional(),
-    days: z.array(z.object({ day: z.string().min(1), colour: z.string().min(1) }).strict()).optional() }).strict().optional(),
+    days: z.array(z.object({ day: z.string().min(1), colour: z.string().min(1) }).strict()).optional(),
+    /** The series close on the intro sting (Ruling, Krish, 2026-11-20; config/intro-sting.json close): the clip of this
+     *  cut's shape, byte for byte the one he saw, played at the END of the cut inside the close (EndingBand.tsx). Never
+     *  an opening. ve-render refuses a file whose sha256 is not this one. */
+    sting: EngineStingSchema.omit({ atFrame: true }).optional() }).strict().optional(),
   /** The motion style Krish picked (spec style.motion) and its profile; absent means the house motion, unchanged. */
   motion: EngineMotionSchema.optional(),
   /** The transitions, camera and energy chosen per piece (spec style.transitions, style.camera, style.energy;
@@ -167,6 +199,14 @@ export const EngineRenderPropsSchema = z.object({
   const ruling = 'nothing goes before the hook (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good.")'
   if (props.sting && !(props.sting.atFrame ?? 0)) context.addIssue({ code: 'custom', path: ['sting'], message: `a sting in front of the cut: ${ruling}` })
   if (props.opening) context.addIssue({ code: 'custom', path: ['opening'], message: `an episode card in front of the cut: ${ruling}` })
+  // The close's sting is the series' own clip, and an off day (no series days) has none (config/intro-sting.json close).
+  const close = props.ending?.sting
+  if (close && close.series !== props.series.label.replaceAll('.', '_')) {
+    context.addIssue({ code: 'custom', path: ['ending', 'sting'], message: `the ${close.series} sting cannot close the ${props.series.label} cut` })
+  }
+  if (close && props.ending?.days && props.ending.days.length === 0) {
+    context.addIssue({ code: 'custom', path: ['ending', 'sting'], message: 'an off-day cut closes on the mint statement card, never a series sting' })
+  }
   if (!props.sting) return
   // Only the 16:9 long cut of a weekly series piece wears it: the 9:16 short opens straight on its hook
   // (HOOK_IS_THE_INTRO), a proof excerpt (no ending band) is never a whole cut, and an off day wears no sting.

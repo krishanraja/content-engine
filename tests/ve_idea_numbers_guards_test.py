@@ -214,6 +214,48 @@ class PreCritic(unittest.TestCase):
         self.assertFalse(ok)
         self.assertIn('stale', why)
 
+    def test_an_audio_target_or_a_crop_edit_keeps_the_verdict(self):
+        # Fri 20 Nov: bound to the whole spec, every audio target or counter edit made it stale (61 runs on one piece).
+        precritic.write(self.spec, self.spec_file, 'a fresh reviewer', self.pass_, [], [])
+        tuned = copy.deepcopy(self.spec)
+        tuned['audio'].setdefault('targets', {})['integrated_lufs'] = -13
+        tuned['audio']['bed']['under_vo_lu'] = -22
+        first_cut = next(iter(tuned['cuts'].values()))
+        first_cut['beats'][0].setdefault('plate', {})['crop'] = '50% 16%'
+        ok, why = precritic.state(tuned, self.spec_file)
+        self.assertTrue(ok, why)
+
+    def test_a_beat_edit_makes_it_stale(self):
+        precritic.write(self.spec, self.spec_file, 'a fresh reviewer', self.pass_, [], [])
+        moved = copy.deepcopy(self.spec)
+        beat = next(iter(moved['cuts'].values()))['beats'][0]
+        beat['layout'] = 'SPLIT' if beat.get('layout') != 'SPLIT' else 'STAGE'
+        ok, why = precritic.state(moved, self.spec_file)
+        self.assertFalse(ok)
+        self.assertIn('stale', why)
+        dropped = copy.deepcopy(self.spec)
+        next(iter(dropped['cuts'].values()))['beats'].pop()
+        self.assertFalse(precritic.state(dropped, self.spec_file)[0])
+
+    def test_a_figure_changed_after_the_review_makes_it_stale(self):
+        # Q2 judged the figures: one added or changed afterwards is not what the reviewer read.
+        precritic.write(self.spec, self.spec_file, 'a fresh reviewer', self.pass_, [], [])
+        changed = copy.deepcopy(self.spec)
+        changed['datasets'][0]['rows'][0]['value'] = 72
+        ok, why = precritic.state(changed, self.spec_file)
+        self.assertFalse(ok)
+        self.assertIn('stale', why)
+        worded = copy.deepcopy(self.spec)
+        worded['objects'][0].setdefault('params', {})['label'] = '9 in 10 chiefs'
+        self.assertFalse(precritic.state(worded, self.spec_file)[0])
+
+    def test_an_object_layout_number_keeps_the_verdict(self):
+        precritic.write(self.spec, self.spec_file, 'a fresh reviewer', self.pass_, [], [])
+        nudged = copy.deepcopy(self.spec)
+        nudged['objects'][0]['params']['push'] = 0.09
+        nudged['datasets'][0]['retrieved_at'] = '2026-11-19'
+        self.assertTrue(precritic.state(nudged, self.spec_file)[0])
+
     def test_his_approvals_do_not_make_it_stale(self):
         precritic.write(self.spec, self.spec_file, 'a fresh reviewer', self.pass_, [], [])
         signed = copy.deepcopy(self.spec)

@@ -235,17 +235,27 @@ take, a screen recording, the real artifact, footage), with the graphics laid ov
 
 **Why.** The layout gave graphics the space, but the frame stayed mostly empty ground (26% used). In each of his three
 style cuts his take and the graphics share the frame in a staging ve could not draw (each study card's `gaps`). Now it
-can, on every beat that shows his take (`kit/staging.ts`). SPLIT and WINDOW beats keep their own locks, and a
-graphics-only beat in a staged piece becomes a full-frame takeover that fills as under `fill`.
+can, on every beat that shows his take (`kit/staging.ts`). SPLIT and WINDOW beats keep their own locks. A graphics-only
+beat in a staged piece became a full-frame takeover that fills as under `fill`; under the shot grammar (below, 20 Nov
+2026) that default is retired for band and stage cuts: their graphics-only beats stay in the panel with his face on
+screen, and only an anchor cut's plate takes the whole frame.
 
 | Staging | From | 9:16 geometry | The graphics region |
 |---|---|---|---|
 | `band` | Character.ai | ink panel y 0 to 1000 with a 10 px series-colour hairline; his take as a band y 1000 to 1920 | x 60 to 860, y 280 to 960, clear of the captions |
-| `stage` | AI music | ink stage y 0 to 1236 with rounded bottom corners on a cream band; his take in a rounded, cream-edged window (x 600, y 980, 420 by 700) crossing the stage edge | x 60 to 860, y 280 to 956 |
+| `stage` | AI music | ink stage y 0 to 1236 with rounded bottom corners on a cream band; his take large and unframed bottom right (x 430, y 765, 650 by 1155, to the frame's right edge and bottom: on his Friday 20 Nov take his face centre lands near x 0.72, about 0.2 of the frame wide, his head on the stage edge), his head crossing the stage edge (20 Nov 2026; it was a small cream-edged window above an empty cream band) | x 60 to 860, y 280 to 741, above his take |
+| `anchor` | The Athletic, eating its own jobs' face beats (20 Nov 2026) | his take is the frame; graphics only in the chest band (y 1240 to 1620, 0.65 to 0.84, cut clear of the captions: The Athletic measured 0.60 to 0.80, and his own takes sit his face lower, so the band starts under it; compile still refuses it wherever it meets his face); a graphics-only beat is a full-frame plate | the chest band; 9:16 only |
 | `tray` | eating its own jobs | his take full frame; a cream tray with a hard ink drop rises from bottom left (9 frames, a slight overshoot) | the tray, x 60 to 660, y 900 to 1500, over his chest; captions go upper |
+| `pillar` | a vertical take on a 16:9 cut (Krish, 19 Nov 2026: "Pillar: whole take on the right") | not staged: a pillar piece's tall cut draws exactly as `fill` | as `fill` |
 
-16:9 has its own geometry: band is a side panel with his take on the right, stage a wide stage with his window bottom
-right, and tray a lower-left tray.
+16:9 has its own geometry: band is a side panel with his take as the 608 px face column on the right (0.32 of the
+frame, as the good wide Character.ai cut measured; it was 768 px before 20 Nov), stage a wide stage to y 875 (0.81)
+with him large bottom right (x 1360, y 380, 560 by 700), anchor is refused, tray a lower-left tray, and pillar draws a vertical take whole as a 608 px full-height panel on the right with
+a series-colour hairline and the ink graphics panel on the left (x 96 to 1256). A vertical take on a 16:9 cut must use it
+(`config/ve/piece-guards.json` take_orientation); a WINDOW or SPLIT beat keeps its own lock and is still refused there.
+The take's frame is never typed: `ve ingest` measures its size and rotation with ffprobe and writes it on the take record
+(`media.frame`), and with no `style.layout.mode` named, compile stages a 16:9 cut over a vertical take as `pillar` by
+itself. Lint refuses a 16:9 cut only once ingest has run and found no frame; an older spec's typed asset frame still works.
 
 - Each staged beat's devices get the staging's region and may grow into it (`isRegion`); several devices share it top
   to bottom.
@@ -274,6 +284,183 @@ Watched at speed. What the frames showed was fixed before these numbers:
 These checks used stand-in brand marks because the brand kit's marks are not reachable from a cloud session; the
 stagings were judged on geometry and pace, not on the brand chrome. `stage` sits at the bottom of his range because
 these beats carry one device each; its cut leans on real clips (`video_wall`, below).
+
+## Shot grammar (20 Nov 2026)
+
+Krish, 2026-11-20, of the week's rejected cuts: "how we integrate title cards and real-world images and motion
+animation is the issue". The study measured his good cuts (Character.ai tall and wide, eating its own jobs tall, AI music
+tall) and The Athletic's "8 facts about Man United's finances" against the rejected Tue 17 short, Wed 18 long and the
+9 s long, every 0.5 s with a face detector and a hand shot log. His rulings that day: **one staging per cut**, picked at
+the lock with the recipe; **the shot grammar is approved**; and, correcting that morning's "generated imagery never"
+the same day, **generated imagery, photoreal included, is allowed when art-directed and clearly a metaphor; generated
+stand-ins for real documents, signs, places or people are refused** (his words: "we actually do use AI to generate a lot of
+striking imagery that comes in and out of our pieces ... The AI music video is a really good example"). Every number below
+lives once, in `config/ve/shot-grammar.json`; `ve lint` checks them as `grammar.*` (`scripts/velib/grammar.py`) for a
+piece frozen at `ve expect` from 23 Nov 2026, and `ve shots` (`scripts/velib/shots.py`) writes the plan.
+
+**What the good cuts share, and the rejected ones broke.**
+
+| Measure | Good cuts | Rejected |
+|---|---|---|
+| Body layouts | 1 (Jobs: 2, face and full graphic) | Tue 17 four or more, Wed 18 three |
+| His face on screen | 91% to 97.5% (Jobs 48%) | Tue 17 56%, Wed 18 63% |
+| Face switches | 0 to 1 (Jobs 4, 3.5 a minute) | Tue 17 14 (9.9 a minute), Wed 18 18 |
+| Shortest run without his face | 4 s (Jobs) | Tue 17 1 s, four times |
+| Real image size | fills its panel; about 0.55 of the wide frame | Wed 18 0.13 to 0.27 on blur |
+| Generated imagery | metaphor only, inside the staging (AI music: generated animations beside real footage) | Wed 18 11 full-frame stills in his place, 100 s (33%); Tue 17 a generated plaque and town sign |
+| Empty panel | none | Wed 18 60 s or more of blur; 9 s cut 4.5 of 9 s |
+| Full-frame title | AI music 2 s, in the panel first | Wed 18 6 s, detached from his line |
+
+**The three stagings** (one for a cut's whole body; `style.layout.mode`, or `style.layout.cuts.<cut>` for a cut of its own):
+
+| Staging | 9:16 | 16:9 |
+|---|---|---|
+| Band (Character.ai) | panel y 0 to 0.52; face band 0.52 to 1.0, face 0.45 to 0.55 of the width, centred | the 608 px face column on the right (0.32), panel the rest; `pillar` is the same for a vertical take |
+| Stage (AI music) | the ink panel is the whole frame but his corner (no cream band); him large bottom right, face centre x 0.78, about 0.21 wide, cut out of his wall by the matte (else a rounded window); the region above and beside him | the panel fills the frame but his corner, him bottom right |
+| Anchor (The Athletic) | his face is the frame; graphics only above his head (y 280 to 500, on an ink scrim), a number, chapter mark or the title behind him through the matte, a real image or document a prop beside him at his scale; captions under his chin (`chin`, y 1150 to 1320) | refused until a good wide face-as-frame cut is measured |
+
+**The shot types** (`beat.shot`):
+
+1. `band`, `stage`, `anchor`: the cut's body, in its one staging. Real images and motion live only in the staging's
+   region, enter and leave there, and fill it.
+2. `plate`: a full-frame graphic with no face, anchor cuts only (Jobs' blocks): a data device, a quote or a real
+   document; at least 4 s; a crossfade to and from his face.
+3. `number`: a hero number or word at head height (The Athletic's giant 8), 1 to 6 s. In the panel on band and stage;
+   on anchor the in-world number behind him through the matte (`world: {text, at_w}`; below, "Depth").
+4. `chapter`: a numeral or label beside or behind him, at most 1.5 s, him on screen (`chapter: {mark, arrangement}`).
+5. `title`: the beat that carries the title line. The lockup builds in the panel as he says the line, then holds full
+   frame at most 2 s from his last title word, then the cut is back on its staging (compile caps it on every staged cut,
+   `compile.grammar_title`; the renderer's `TitleMoment` `panel` and `fullFrom`). No captions while it holds. On an anchor
+   cut it builds instead on his wall above and behind his head while he talks, at most 6 s, never a box on his chest
+   (`titleMoment.behind`). It starts on his spoken title words within the opening 30 s (`grammar.title_timing`).
+6. `end`: the end card, full frame, 3.5 to 5 s, the last beat.
+
+**The transition matrix** (from, then what it may hand to):
+
+| From | To |
+|---|---|
+| the staging | the staging (a dissolve or whip inside the panel; the face never cuts), number, chapter, title, end; plate only on anchor (crossfade) |
+| plate | anchor, plate (crossfade), end; never number, chapter or title |
+| title | back to the same staging only |
+| number, chapter | the staging, end |
+
+**The sequencing rules**, each a check:
+
+| Check | Rule | Measured from |
+|---|---|---|
+| `grammar.staging` | one staging for the body; every beat has its shot type; no SPLIT or WINDOW; the matrix above; a title shot only on the line he says | Tue 17's 14 switches; Wed 18's detached 6 s title |
+| `grammar.face_runs` | his face on 90% of the body on band and stage, 90% of an anchor cut's anchor beats and 45% overall with plates; every run with or without his face at least 4 s; at most 4 switches a minute; chapter at most 1.5 s; end card 3.5 to 5 s | the good cuts 91% to 97.5%, Jobs 48% and 3.5 a minute |
+| `grammar.region` | every device in the staging's region, a device that grows to fill it (`fills_region`; a grammar panel lets it grow 6 times, `GRAMMAR_GROW`), never a full-frame picture in his place, the panel never empty past 0.5 s | Wed 18's blur; the 20 Nov recipe samples' small number in a large dark field |
+| `grammar.evidence_size` | a real image at least 0.55 of the frame wide or filling its region, alone in it but for a stamp or a mark; words 40 px or more | the good wide cut 0.55; Wed 18 0.13 to 0.27 |
+| `grammar.generated` | every generated picture declares `depicts`: `metaphor` (art-directed, allowed, inside the staging) or `real` (a stand-in for a real document, sign, place or person, refused); undeclared is refused until declared; `ve brief` writes a plate brief only for metaphors; voice and sound are not pictures | Wed 18's 11 stills in his place; Tue 17's plaque and sign |
+| `grammar.repeat` | a device at most 3 times a cut, never twice running without a new state | Tue 17's box, five times |
+| `grammar.caption_zone` | one caption zone a cut, the same y on every beat within 0.02 | Character.ai's pill at y 0.50 to 0.53; Tue 17's captions moved |
+| `grammar.depth` | an in-world number on anchor has its word (`world.text`) standing 0.4 to 0.6 of the frame tall, 1 to 6 s, slamming in on a word of its beat, and a subject matte; a world word only on anchor; each chapter mark in a different arrangement; a mark behind him and an anchor title need the matte | The Athletic's 8 and Fact N; the #950 anchor's cards on his chest |
+| `grammar.title_timing` | a whole cut of a titled piece names its spoken title span, starting on the first word of his title line, within the opening 30 s | Krish, 2026-11-20: "The title slide comes in as I say the words of the title within the opening 30 seconds" |
+
+**Retired by it:** `motion.layout_variety` and `layout_types_per_min_tall` (3 layout types a minute forced the
+switching), the dead `face_share_max: 0.6` (below every good cut; nothing read it), the full-frame takeover for a
+graphics-only beat on a band or stage cut, the P and F slots over a full-frame take on a staged cut (a grammar cut puts
+every device in the staging's region), and the `pivot-split` treatment.
+
+**The never-list.** Never a second staging in a cut's body; never a card or device over his face; never his face cut
+away for under 4 s; never real evidence shrunk onto blur; never an empty or
+blur-only panel past 0.5 s; never a title card detached from his line or held full frame past 2 s; never captions that
+move from beat to beat; never one device back again with nothing new; never a generated stand-in for a real document,
+sign, place or person, and never a generated picture in his place on band or stage; never a card on his torso, arms or
+hands; never an empty cream block beside him.
+
+**How a session uses it.** At the lock pick the staging with the recipe (`style.layout`); the motion-designer skill
+plans each beat; `python scripts/ve.py shots <spec>` writes every beat's shot type and the shot table into
+`storyboard.md` (between its markers, the rest of the document kept), so Krish signs the shots with the storyboard;
+`ve lint` holds the grammar.
+
+**Engine fixes the 20 Nov recipe samples found, built with it** (each in `config/failures.json`
+`recipe-samples-staged-faults`):
+- the stage staging draws him large and unframed bottom right with his head on the stage edge (it was a small framed
+  window above an empty cream band);
+- every staged cut's title builds in the panel, laid out at the panel's own size, and holds full frame at most 2 s
+  (it held 4 to 8 s and tripped the plain-dark-band guard);
+- a device in a staged panel may grow 6 times (`GRAMMAR_GROW`, was 3), so a number or a checklist fills its region;
+- `kinetic_stat` writes money and thousands as a viewer reads them: 195 "THOUSAND DOLLARS" is "$195,000"
+  (`devices/kinetic_stat/money.ts`);
+- a `seam` caption placement puts band's caption pill on the seam (9:16 y 900 to 1050; 16:9 in the panel's foot), so
+  the panel keeps its height and nothing sits on the face band;
+- the pace floor measures the body only: the end card and the full-frame title are left out (`floor.fixed_moments`,
+  `pace.measure(exclude=...)`), since the 6 s 16:9 close alone held every wide cut;
+- `captions.off_face` reads where a caption style really draws (its band at its placement), not the house band;
+- a vertical take may stage as band or stage on 16:9 as well as pillar (`config/ve/piece-guards.json`), and the
+  take-orientation guard reads the cut's own staging.
+
+**Reference renders (20 Nov 2026)**, one per staging, on his Friday 20 Nov take (the recipe-sample specs: the bill
+story, its sourced figures), each planned by `ve shots`, clean of every `grammar.*` lint, compiled with his face track
+(compile's keep-out refused nothing) and rendered whole; the render frame guard (`plainframes.check_frames`: no plain dark band, no caption over bright content) passes on all five. Pace is the body only (`floor.fixed_moments`); "held" means a
+body measure is below every reference he keeps (`config/ve/pace-references.json`, events from 2.87 a second).
+
+| Staging | Cut | Recipe | sha256 (first 16) | Events a second | Longest gap | Frame used | Floor |
+|---|---|---|---|---|---|---|---|
+| band | 9:16 | character-ai-receipts, receipt-chip on the seam | 6b34bd73de5c9adb | 3.57 | 0.93 s | 0.62 | passes |
+| stage | 9:16 | ai-music-slam, mint-word on the seam | c907e5668f316b44 | 3.91 | 1.20 s | 0.56 | passes |
+| anchor | 9:16 | ai-music-slam, mint-word upper | 9f29c491b92b228c | 4.39 | 0.53 s | 0.58 | passes |
+| band (pillar) | 16:9 | ai-music-slam motion, receipt-chip on the seam | ece89d1ffb6916c1 | 2.89 | 1.07 s | 0.32 | passes |
+| stage | 16:9 | ai-music-slam, mint-word upper | fb2b790c7f553610 | 2.81 | 1.33 s | 0.32 | held: events a second |
+
+What the frames showed at full size, and was fixed before these numbers: stage's devices ran under the corner of his
+take (its region now ends above it); the wide seam band sat on stage's cream band with no scrim (stage at 16:9 takes the
+upper band); the band 16:9 receipts plan measured 2.67 events a second, under the floor, so the wide band reference uses
+the slam recipe. Still open: stage at 16:9 is held at 2.81 events a second on this take; the anchor staging's title builds
+in the small chest band; `evidence.readable` and `figures.shown` flag record_card labels at 26 px and a ghosted figure,
+which are the devices' own type, not the grammar's. The renders are not committed (media never is); a golden test of them
+does not fit `houseGolden` (it reads props from `docs/plans`, and these props point at a scratch take).
+
+**Inferred, not measured.** The 16:9 rules rest on one good wide cut; anchor at 16:9 is unmeasured. (Step 5, below,
+built the matte, the in-world number, the chapter marks, the cut-out stage and the after-render fill check.)
+
+### Depth and the staging fixes (step 5, 20 Nov 2026)
+
+Krish's verdict on the #950 references: band clearly better (kept); stage left an empty cream block beside him (9:16) and
+a cream band (16:9, held by the pace floor at 2.81 events a second); anchor not ready, its cards on his chest and arms and
+its title a small box over his torso. What changed:
+
+- **The matte** (`ve matte`, `scripts/velib/matte.py`): MediaPipe's bundled selfie model on every frame of the picture
+  the cut plays, offline, cached by its sha256. The subject is his take with the matte as alpha, clipped by confidence
+  (a probability under 0.45 is not him, over 0.80 is, eroded one pixel), so a fast hand's soft halo never carries the
+  wall over the type; the type sits at head and torso height where the matte is surest. Edge quality on hair and hands
+  stays an operator gate (`status: unverified`).
+- **Depth in the renderer**: his take, then the type behind him (`depth/DepthLayer.tsx`, `kit/depth.ts`), then the
+  subject over it, frame for frame (the same box, crop and face lift), mounted only while such type is on screen.
+- **The in-world number** (study shot 5): ink type with a mint drop, its glyphs 0.4 to 0.6 of the frame tall (one or two
+  characters: `NO`, `AI`, `8`), centred at his eyes on the side of his head with more wall, slamming in on its word.
+- **The chapter mark** (study shot 6): a numeral at most 1.5 s, beside him left or right at the frame's edge, rotated a
+  quarter turn, or huge behind him; with a matte every mark stands behind him, so his head crosses it and it never crosses
+  his face; the arrangement changes each time.
+- **Anchor rebuilt**: graphics only above his head on an ink scrim; a real image or document a prop beside him; the
+  number, chapter and title behind him; captions under his chin; compile refuses any box his silhouette fills more than
+  2% of (`body.keep_out`, from the matte). The face keep-out now reads the face lift the render applies (it sat 80 px low).
+- **Stage fixed**: the panel is the whole frame but his corner; cut out by the matte he stands on the panel and the
+  devices' region reaches down to his head; `kinetic_stat` in a region sets its figure to the region's width (its source
+  line had held it to half the panel).
+- **`panel.fill`** (ve qc, `scripts/velib/qc_fill.py`): on a band or stage cut the drawn extent of the region, sampled
+  10 times a second past each beat's entrance and outside the title, end card and chapter marks, fails under 0.85 of the
+  region's width for more than 0.5 s.
+
+**Reference renders after the fixes (20 Nov 2026)**, on the same Friday 20 Nov take and recipe-sample specs as #950, each
+planned by `ve shots` with zero `grammar.*` findings (`grammar.depth` and `grammar.title_timing` included, on the aligned
+words), compiled with his face track and the matte (the face and body keep-outs refused nothing), rendered whole and passed
+by the render frame guard. Pace is the body only.
+
+| Staging | Cut | sha256 (first 16) | Events a second | Longest gap | Frame used | Floor | panel.fill |
+|---|---|---|---|---|---|---|---|
+| anchor (number NO, chapters 1 and 2, the title behind him) | 9:16 | 31846f8468b1fb36 | 4.42 | 0.53 s | 0.57 | passes | not a panel staging |
+| stage (cut out, larger, his corner) | 9:16 | 1ab0d67811a7e989 | 3.76 | 0.93 s | 0.51 | passes | passes (median 1.0) |
+| stage (cut out, his corner) | 16:9 | 8c2494d3b8d086ec | 2.81 | 1.07 s | 0.28 | held: events a second | passes (median 1.0) |
+
+What still falls short, seen at full size: the anchor's space above his head holds small devices on a dark scrim that
+reads as a band at the top of the frame, and the title's second band runs behind his head, so "skeletons" is hidden on
+some frames; stage 16:9 is still held at 2.81 events a second (device events on his words merge with the one-word
+captions' changes, so more of them did not move the measure; an in-panel move off the word grid is the next lever); on
+stage 9:16 one caption page (31.2 s) meets his face box's 10% margin after render though compile's face-track keep-out
+passed it, and the mint-word captions measure under Instagram's action rail on the seam band (as on #950's stage).
 
 ## Sound on handovers and hits (14 Nov 2026)
 
@@ -306,8 +493,13 @@ It places each number among two sets in `config/ve/pace-references.json`:
   `python3 scripts/quick-edit/references.py fetch`);
 - his three cuts above (`house`).
 
-A number below every one of them prints BELOW EVERY REFERENCE. It flags and never refuses, because THE_BAR says rates
-are not the bar.
+A number below every one of them prints BELOW EVERY REFERENCE. `ve pace` itself only describes, because THE_BAR says
+rates are not the bar. **The bottom of his own references is a floor, and rates above it are never a target** (Krish,
+2026-11-19: "make sure that this can never happen again", of a long that measured 2.21 events a second and 5% of the
+frame active, below every reference on both). The floor lives in readiness, not in `ve pace`: a cut with any measure
+below every reference is held, so `ve status` never says READY for it and prints one line ("held: below the floor
+..."), and `ve file` refuses it (`scripts/velib/floor.py`). A held cut is re-rendered once on a proven recipe, never
+patched beat by beat; if it is still held, Krish gets one line and nothing is filed.
 
 | Measured on 13 Nov 2026 | Events a second | Longest gap | Frame used |
 |---|---|---|---|
@@ -340,10 +532,30 @@ the production suite knows that this is the moment to make it feel like the titl
   settle, a light sweep and a brief glow, and holds until the beat that carries it ends. It flows back into the caption
   line when it hands straight to them; where the captions already took his next words while it held, it fades where it
   stands (`release: fade`).
+- Rebuilt 19 Nov 2026 as one full-frame lockup (Ruling, Krish, 2026-11-19: "I expect the title card to enter as I am
+  talking, and the title of the piece is woven in to my script at the start. This is a good example of what actually
+  was a good build for the title card", of Wed 11's "AI MUSIC or HUMAN MUSIC?"; `config/failures.json`
+  `title-card-split-logo-and-squeezed`). Wed 18's title sat in his 608 px panel or an 800 x 420 box (about 70 px type)
+  with the wordmark a separate layer that came and went on its own. Now the title takes the whole frame, over his face
+  panel on a wide cut and over the band on a short: an ink ground with bars moving behind, two angled bands that slam in
+  from opposite sides as he says each part (a hatched ink band in cream, then a mint band in ink), the connector word
+  ("or", "vs", "and") in mint between them, a light sweep once the last word lands, and the stacked wordmark
+  (`props.brand.stacked`, from `config/brand-palette.json`) centred underneath as part of the same picture, on the
+  lockup's own opacity. A title with no connector splits into two bands of equal width; one word is one band; a long
+  band takes a second line before its type shrinks. Each word still lands on the frame he says it, and the captions stay
+  away while it holds. ve qc measures it on the settled title frame (`title.lockup`, `title.lockup_frame`: type size,
+  centring, full width, the wordmark inside and only while the title holds; numbers in `config/ve/frame-checks.json`
+  `title_lockup`), and every proof renders the title frame and is not sendable until someone has looked at it at full
+  size (`ve proof --title-looked`).
 - The title question itself is the spec's `title_line` (one string, the question his intro speaks; `making.py scripts`
   records the same line as `script_check.title_line`, and `ve lint` `title.line` refuses a `title_line` the script never
   says). The title animation is keyed to `title_line`: it flows out of the captions as he says it and back into them
   (Krish, 2026-11-17: "treated visually as such, seamlessly flowing out of the captions and back in to them again").
+
+- Tightened 20 Nov 2026 by the shot grammar: on every staged cut the lockup builds inside the staging's panel as he says
+  the line, laid out at the panel's size, then cuts to the full frame on his last title word and holds there at most 2 s
+  (`compile.grammar_title`, `TITLE_FULL_MAX_FRAMES`; `TitleMoment` `panel` and `fullFrom`), then the cut is back on its
+  staging. One title code, tightened; nothing duplicated.
 
 ## The exit leads the entrance, the living drift, focus and blur from speed (15 Nov 2026)
 

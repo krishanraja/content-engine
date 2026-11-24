@@ -4,7 +4,7 @@ import { guardVideoStudioRunner } from '../../_videoStudioAuth.js'
 import { VIDEO_STUDIO_CONTROL_SCHEMA_VERSION, sendVideoStudioError } from '../../video-studio/_contracts.js'
 import { enforceVideoStudioRateLimit } from '../../video-studio/_data.js'
 import { configuredLibraryStore } from '../_library.js'
-import { overnightReadiness, parseLaneReport, readLaneReports, writeLaneReport } from '../_lanes.js'
+import { carryPullSince, overnightReadiness, parseLaneReport, readLaneReport, readLaneReports, writeLaneReport } from '../_lanes.js'
 import { RECORDINGS_SENDER } from '../_recordings.js'
 
 // POST /api/library/recordings/lane, on the runner bearer.
@@ -15,7 +15,9 @@ import { RECORDINGS_SENDER } from '../_recordings.js'
 // says it is healthy. preflight is the last Saturday overnight preflight that
 // machine ran (scripts/overnight/preflight.ps1), sent again with every pass.
 // The Inbox job reads these and fails, naming the machine, while a fresh
-// report holds a problem (api/library/_lanes.ts says why). overnight is that
+// report holds a problem (api/library/_lanes.ts says why). A failed pull of
+// main keeps the time it was first reported (pull_since), and once held for
+// more than two hours it leads the job's error with the machine and the fix. overnight is that
 // machine's overnight run (scripts/overnight/overnight.py): codes and times only.
 //
 // GET /api/library/recordings/lane, on the engine key: every machine's last
@@ -34,11 +36,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json({ ok: true, reports, overnight: overnightReadiness(reports, Date.now()) })
   }
   if (guardVideoStudioRunner(req, res, ['POST'])) return
-  const report = parseLaneReport(req.body, new Date().toISOString())
-  if (!report) return sendVideoStudioError(res, 400, 'invalid_lane_report')
+  const parsed = parseLaneReport(req.body, new Date().toISOString())
+  if (!parsed) return sendVideoStudioError(res, 400, 'invalid_lane_report')
   if (await enforceVideoStudioRateLimit(res, 'library:recordings', RECORDINGS_SENDER, 120, 60)) return
   const store = await configuredLibraryStore()
   if (!store.config) return sendVideoStudioError(res, 503, store.error || 'library_store_unavailable')
+  // How long a failed pull of main has been held is the engine's to keep, from the machine's last report, so a copy
+  // stale for more than two hours is named with its fix (api/library/_lanes.ts, staleCopies).
+  const report = carryPullSince(await readLaneReport(store.config.bucket, parsed.machine), parsed)
   if (!(await writeLaneReport(store.config.bucket, report))) return sendVideoStudioError(res, 503, 'library_store_unavailable')
   return res.status(200).json({ ok: true, schema_version: VIDEO_STUDIO_CONTROL_SCHEMA_VERSION, problems: report.problems.length })
 }

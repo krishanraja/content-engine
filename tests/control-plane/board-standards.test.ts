@@ -115,7 +115,8 @@ describe('the standards page', () => {
 
   it('refuses a reword without his words, a proposal that is not a group, and a second decision', async () => {
     expect((await call('krish', 'POST', { id: id(2), decision: 'corrected' })).out).toMatchObject({ error: 'corrected_needs_his_words' })
-    const stranger = await call('krish', 'POST', { id: id(77), decision: 'approved' })
+    // One past the last group, so it stays a stranger however many groups the floor grows to.
+    const stranger = await call('krish', 'POST', { id: id(groups.length), decision: 'approved' })
     expect(stranger.status).toBe(404)
     expect(stranger.writes).toHaveLength(0)
     const again = await call('krish', 'POST', { id: id(0), decision: 'approved' })

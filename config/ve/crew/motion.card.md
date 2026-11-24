@@ -12,7 +12,7 @@ The per-beat plan, written into the spec before Sign storyboard, follows the mot
 | Reused visuals | A chart reused for a new measure needs its own title and producer (the 2.7% GAP failure). |
 | Timing tokens | Enter in 4 to 7 frames, ease-out (the signed `docs/ve/MOTION_STANDARD.md`; the piece's motion style sets the rest in `apps/renderer/src/engine/kit/motion-profiles.json`); exit 200 ms; stagger 3 frames; slap 5 frames; drop 8 frames. |
 | Reading time | `hold_s = max(1.5, 0.6 + 0.33 × words)`, plus 1.5 s with digits, capped at 6 s. |
-| Variety | At least 3 layout types a minute in 9:16 (4 for voice-led-pictures). |
+| One staging | One staging per cut, band, stage or anchor, for the whole body; only the title, a chapter mark, the end card and, on an anchor cut, a plate break from it (Ruling, Krish, 2026-11-20; the shot grammar, `docs/ve/INGREDIENTS.md`). The layout-variety rule is retired. |
 | Loops | No frame-modulo animation. An annotation draws once, on its cue, and stays. |
 
 Corpus: sections 1b, 5 and 14. Failures: R09, R12, R15, F05, F06.

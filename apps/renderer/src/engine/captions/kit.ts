@@ -12,11 +12,17 @@ export type Box = { left: number; top: number; width: number; height: number }
 /** Where caption type may sit. 9:16 is inside every platform's safe area (config/channel-safe-zones.json): clear of the
  *  270 px top band, of the action rail from x 880 below y 520, and of the bottom band from y 1320. `lower` is the
  *  talking-head caption band under the face; `upper` is the full-width strip above the rail. 16:9 is title-safe. */
-export const REGIONS: Record<Aspect, { lower: Box; upper: Box; centre: Box }> = {
+/** `seam`: the band staging's caption pill on the seam between panel and face (the Character.ai cut's y 0.50 to 0.55;
+ *  shot grammar, 20 Nov 2026), so the panel above keeps its height and nothing sits on the face band. */
+/** `chin`: under his chin on an anchor cut (The Athletic's captions at y 0.63 to 0.72; his takes sit his chin near y 0.54,
+ *  so 0.59 to 0.68, inside the action rail and the handle band with the theme's padding), the space above his head kept for graphics (shot grammar step 5). */
+export const REGIONS: Record<Aspect, { lower: Box; upper: Box; centre: Box; seam: Box; chin: Box }> = {
   '9:16': { lower: { left: 70, top: 990, width: 800, height: 330 }, upper: { left: 70, top: 290, width: 940, height: 230 },
-    centre: { left: 70, top: 700, width: 800, height: 420 } },
+    centre: { left: 70, top: 700, width: 800, height: 420 }, seam: { left: 70, top: 900, width: 800, height: 150 },
+    chin: { left: 70, top: 1136, width: 786, height: 168 } },
   '16:9': { lower: { left: 192, top: 760, width: 1536, height: 266 }, upper: { left: 192, top: 108, width: 1536, height: 240 },
-    centre: { left: 192, top: 380, width: 1536, height: 320 } },
+    centre: { left: 192, top: 380, width: 1536, height: 320 }, seam: { left: 192, top: 860, width: 1000, height: 166 },
+    chin: { left: 192, top: 760, width: 1536, height: 266 } },
 }
 
 /** The band a caption style draws in: the piece's own placement (props.captionPlacement, spec style.captions.placement),

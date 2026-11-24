@@ -26,6 +26,9 @@ from velib.common import sha256_file  # noqa: E402
 
 FIXTURE = json.loads((ROOT / 'fixtures/ve/my-test-19s/spec.json').read_text(encoding='utf-8'))
 CUT = 'proof-tall'
+# The fixture names no recipe, so it stands for a piece frozen before the recipe floor (velib.floor.RECIPE_FROM). A lock
+# written "now" would turn the suite red on a date; binding by date is tested in ve_quality_floor_test.py.
+FROZEN_BEFORE_THE_FLOOR = '2026-11-19T00:00:00Z'
 
 
 def whole(spec=None, day='2026-11-13'):
@@ -202,7 +205,8 @@ class RenderRefusal(unittest.TestCase):
         self.spec = whole()
         self.props = props_for(self.spec)
         self.spec_file = self.dir / 'spec.json'
-        guards.freeze(self.dir)  # the engine his storyboard signature stands for (ve expect writes it)
+        # the engine his storyboard signature stands for (ve expect writes it)
+        guards.freeze(self.dir, now=FROZEN_BEFORE_THE_FLOOR)
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -283,6 +287,70 @@ class RenderRefusal(unittest.TestCase):
         self.assertTrue(set(record) >= {'beat', 'start', 'end', 'sha256', 'spec_sha256', 'style_module'})
         window = json.loads((self.dir / 'proof' / f'props.{CUT}.json').read_text(encoding='utf-8'))
         self.assertLessEqual(window['durationFrames'], 450)
+
+
+class TitleInProof(unittest.TestCase):
+    """Ruling, Krish, 2026-11-19: Wed 18's proofs covered the hook, the title came at 0:34 and 0:21, and a long render went
+    ahead on "as long as the title card frame in each is strong" with nobody having looked at the title. The title frame is
+    always in the proof, and a condition about it is met only when the title frame was looked at and recorded."""
+    CONDITION = 'Approved as long as the title card frame in each is strong'
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.dir = Path(self.tmp.name) / 've'
+        self.dir.mkdir()
+        self.spec = whole()
+        self.props = props_for(self.spec)
+        # The title early in the cut, far from the hardest beat (the last one), as on Wed 18.
+        self.props['titleMoment'] = {'fromFrame': 40, 'toFrame': 100, 'release': 'captions', 'card': True, 'lockup': True,
+                                     'words': [{'text': 'Build', 'atFrame': 40}, {'text': 'or', 'atFrame': 50}, {'text': 'buy', 'atFrame': 60}]}
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def approved(self, sha, words):
+        spec = copy.deepcopy(self.spec)
+        spec['approvals'].append({'gate': 'proof', 'by': 'Krish', 'said': words, 'on': '2026-11-19', 'artifact_hash': sha})
+        return gates.load(self.dir, spec)['gates'], spec
+
+    def test_a_proof_whose_window_misses_the_title_renders_the_title_beside_it(self):
+        record = proof.make(self.spec, CUT, self.dir, self.props, fake_render())
+        self.assertFalse(record['title']['in_main'])
+        clip = proof.title_clip_path(self.dir, CUT)
+        self.assertTrue(clip.is_file())
+        self.assertEqual(record['title']['sha256'], sha256_file(clip))
+        window = json.loads((self.dir / 'proof' / f'props.{CUT}.title.json').read_text(encoding='utf-8'))
+        self.assertIn('titleMoment', window)
+
+    def test_a_proof_with_no_title_frame_is_refused(self):
+        record = proof.make(self.spec, CUT, self.dir, props_for(self.spec), fake_render())
+        proof.write_json(proof.record_path(self.dir, CUT), record)
+        found, spec = self.approved(record['sha256'], 'yes')
+        reasons = proof.problems(spec, CUT, self.dir, found, self.props)
+        self.assertTrue(any('never shows the title frame' in r for r in reasons), reasons)
+
+    def test_it_is_not_sendable_until_the_title_frame_is_looked_at(self):
+        record = proof.make(self.spec, CUT, self.dir, self.props, fake_render())
+        proof.write_json(proof.record_path(self.dir, CUT), record)
+        self.assertTrue(any('looked at the title frame' in r for r in proof.sendable_problems(record)))
+        with self.assertRaises(ValueError):
+            proof.record_title_looked(self.dir, CUT, 'looks fine', '2026-11-19T10:00:00Z')
+        looked = proof.record_title_looked(self.dir, CUT, 'Opened the title clip at full size: both bands fill the frame, '
+                                           'the wordmark sits centred under them and the words land as he says them', '2026-11-19T10:00:00Z')
+        self.assertFalse(any('title' in r for r in proof.sendable_problems(looked)))
+
+    def test_an_approval_on_a_title_condition_holds_until_the_title_is_looked_at(self):
+        record = proof.make(self.spec, CUT, self.dir, self.props, fake_render())
+        proof.write_json(proof.record_path(self.dir, CUT), record)
+        found, spec = self.approved(record['sha256'], self.CONDITION)
+        reasons = proof.problems(spec, CUT, self.dir, found, self.props)
+        self.assertTrue(any('names the title' in r for r in reasons), reasons)
+        proof.record_title_looked(self.dir, CUT, 'Opened the title clip at full size: both bands fill the frame, the wordmark '
+                                  'sits centred under them and the words land as he says them', '2026-11-19T10:00:00Z')
+        self.assertFalse(any('title' in r for r in proof.problems(spec, CUT, self.dir, found, self.props)))
+        # A plain yes is not a condition about the title.
+        found, spec = self.approved(record['sha256'], 'yes that moves')
+        self.assertFalse(any('names the title' in r for r in proof.problems(spec, CUT, self.dir, found, self.props)))
 
 
 class BoardContract(unittest.TestCase):
