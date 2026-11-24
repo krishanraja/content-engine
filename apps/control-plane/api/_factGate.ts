@@ -21,11 +21,12 @@
 //
 // A mechanical sweep backs up the model that lists the claims: every sentence
 // is either checked or set aside as an opinion, analogy, scenario or labelled
-// inference, and a sentence with a number is never set aside on a model's word.
-// A piece makes no prediction (Ruling, Krish, 2026-11-24: "the signature format
-// is the 5 Whys; get rid of everything that suggests predictions, calls, dated,
-// odds or scores"), so a sentence that reads as a forecast is flagged and
-// checked like any other, never waved through as the piece's own prediction.
+// inference, and a sentence with a number is set aside only when it is a
+// labelled scenario, guess or inference, and then flagged. A piece makes no
+// prediction (Ruling, Krish, 2026-11-24: "the signature format is the 5 Whys;
+// get rid of everything that suggests predictions, calls, dated, odds or
+// scores"), so a forecast on the piece's own account is checked like any other
+// claim, never waved through as the piece's own prediction.
 //
 // The gate is honest about its limit. Two checkers that agree can both be
 // wrong, so the claim table goes to Krish with each verdict, its quote and
@@ -242,11 +243,55 @@ export function sectionOf(body: string, sentence: string): string {
  *  the forward-looking word list, kept as an honesty check. A piece makes no
  *  prediction (Ruling, Krish, 2026-11-24), so a sentence this reads as a
  *  forecast is flagged in the reason it is set aside with, and one with a
- *  number in it is checked as a claim: it is never set aside as the piece's
- *  own prediction. House rule R1 tells every writer "A guess is marked as a
+ *  number in it is checked as a claim unless it is labelled (labelledAside):
+ *  it is never set aside as the piece's own prediction. House rule R1 tells every writer "A guess is marked as a
  *  guess", so "our guess" is a label here too. */
 export function readsAsForecast(sentence: string): boolean {
   return /\b(will|would|could|might|may|if|bet|call|forecast|predict|scenario|inference|guess|guesses|guessing|we think|our read|going to|\w+['’]ll|by (?:\d{1,2} )?(?:january|february|march|april|may|june|july|august|september|october|november|december)?\s*\d{4})\b/i.test(sentence)
+}
+
+/** A label written into the sentence itself ("Scenario one:", "Our guess:",
+ *  "our read", "an inference"), the way house rule R1 asks a guess to be
+ *  marked. Every word here is also in readsAsForecast. */
+const LABEL = /\b(scenario|guess|guesses|guessing|inference|our read)\b/i
+/** The reasons the lister and the second look give a labelled sentence. */
+const LABEL_REASON = /\b(scenarios?|label+ed[_ ]inference)\b/i
+/** A heading that marks its whole section as scenarios or labelled guesses:
+ *  TIMELINE's forks and the "Where it goes" scenarios _judges/expand.ts asks for. */
+const LABEL_SECTION = /\b(scenarios?|forks?|possible futures?|guess(?:es)?|inference|where (?:it|this) (?:goes|could go))\b/i
+
+/** Whether a set-aside sentence is a labelled scenario, guess or inference,
+ *  as R1, TIMELINE and _judges/expand.ts ask the writers for: labelled in its
+ *  own words, or given a scenario or labelled_inference reason under a
+ *  heading that labels the section. Such a sentence may carry a number and
+ *  still be set aside, flagged. A forecast made on the piece's own account
+ *  ("By 30 June 2027, X happens.") carries no label, so its number is checked
+ *  as a claim. */
+export function labelledAside(sentence: string, reason = '', section = ''): boolean {
+  return LABEL.test(String(sentence || '')) || (LABEL_REASON.test(String(reason || '')) && LABEL_SECTION.test(String(section || '')))
+}
+
+/** What every set-aside reason with a number or a forecast in it carries, so
+ *  the claim table flags it, and so the ledger can tell a set-aside settled
+ *  under the 2026-11-24 rule from one settled before it. */
+export const NO_PREDICTION_MARK = 'a piece makes no prediction'
+
+/** The flag a set-aside sentence's reason starts with, or '' when it needs none. */
+export function asideFlag(sentence: string): string {
+  if (readsAsForecast(sentence)) return `reads as a forecast, and ${NO_PREDICTION_MARK}; `
+  if (/\d/.test(sentence)) return `labelled, with a number in it, and ${NO_PREDICTION_MARK}; `
+  return ''
+}
+
+/** A ledger entry settled before the 2026-11-24 rule that the rule would not
+ *  settle the same way: set aside as a prediction, or a set-aside forecast
+ *  with a number in it whose reason carries no flag. Such a sentence is read
+ *  again, as if the ledger did not hold it. */
+export function staleAside(sentence: string, entry: LedgerEntry | undefined): boolean {
+  if (!entry || entry.status !== 'set_aside') return false
+  const reason = String(entry.reason || '')
+  if (reason.includes(NO_PREDICTION_MARK)) return false
+  return /\bprediction\b/i.test(reason) || (/\d/.test(sentence) && readsAsForecast(sentence))
 }
 
 /** The numbers in a text, by value: "$900 million" -> "900", "$150.00" ->
@@ -434,14 +479,17 @@ export function quoteHolds(quote: string | null, sourcesText: string, claim: str
 
 /** The sweep's leftovers after a second look. A sentence the second look
  *  finds claims in is checked claim by claim. One it finds none in is set
- *  aside with its reason, but only when it has no digits: a number is never
- *  waved through on a model's word, and since 2026-11-24 not as a forecast
- *  either. A set-aside sentence that reads as a forecast says so in its
- *  reason, so the claim table flags it. Anything the second look did not
- *  answer stays a claim, so a failed call fails closed. */
+ *  aside with its reason when it has no digits, or when it is a labelled
+ *  scenario, guess or inference (labelledAside): a number is never waved
+ *  through on a model's word, and since 2026-11-24 never as the piece's own
+ *  forecast. A set-aside sentence that reads as a forecast or carries a
+ *  number says so in its reason (asideFlag), so the claim table flags it.
+ *  Anything the second look did not answer stays a claim, so a failed call
+ *  fails closed. */
 export function resolveLeftovers(
   leftovers: Claim[],
   answers: Array<{ i: number; claims: Array<{ claim: string; kind: string }>; reason: string }>,
+  body = '',
 ): { claims: Claim[]; setAside: Array<{ sentence: string; reason: string }> } {
   const claims: Claim[] = []
   const setAside: Array<{ sentence: string; reason: string }> = []
@@ -453,9 +501,8 @@ export function resolveLeftovers(
       for (const c of found) claims.push({ sentence: l.sentence, claim: c.claim.trim(), kind: (KIND_SET.has(c.kind) ? c.kind : 'other') as ClaimKind })
       return
     }
-    if (/\d/.test(l.sentence)) { claims.push(l); return }
-    const flag = readsAsForecast(l.sentence) ? 'reads as a forecast, and a piece makes no prediction; ' : ''
-    setAside.push({ sentence: l.sentence, reason: `second look: ${flag}${String(a.reason || 'no factual claim').slice(0, 80)}` })
+    if (/\d/.test(l.sentence) && !labelledAside(l.sentence, a.reason, body ? sectionOf(body, l.sentence) : '')) { claims.push(l); return }
+    setAside.push({ sentence: l.sentence, reason: `second look: ${asideFlag(l.sentence)}${String(a.reason || 'no factual claim').slice(0, 80)}` })
   })
   return { claims, setAside }
 }
@@ -474,9 +521,10 @@ export function sweep(body: string, claims: Claim[], setAside: Array<{ sentence:
     const n = norm(s)
     return list.some(c => { const m = norm(c.sentence); return m.length >= 12 && (n.includes(m) || m.includes(n)) })
   }
-  // A set-aside with a number in it is never honoured: it is read again as a
-  // claim of its own, forecast or not.
-  const honoured = setAside.filter(a => !/\d/.test(a.sentence))
+  // A set-aside with a number in it is honoured only when it is a labelled
+  // scenario, guess or inference; an unlabelled one, a forecast on the piece's
+  // own account included, is read again as a claim of its own.
+  const honoured = setAside.filter(a => !/\d/.test(a.sentence) || labelledAside(a.sentence, a.reason, sectionOf(body, a.sentence)))
   const extra: Claim[] = []
   for (const s of sentences(body)) {
     if (covered(s, claims) || covered(s, honoured)) continue
@@ -607,6 +655,13 @@ function overlapping(sentence: string, bodySentences: string[]): string[] {
   })
 }
 
+/** The ledger's entry for a body sentence, or undefined when it holds none or
+ *  holds one the 2026-11-24 rule would not settle the same way (staleAside). */
+function entryFor(ledger: FactLedger, sentence: string): LedgerEntry | undefined {
+  const entry = ledger.sentences[sentenceKey(sentence)]
+  return entry && !staleAside(sentence, entry) ? entry : undefined
+}
+
 function usable(ledger: FactLedger | null | undefined, hash: string, parts?: string[]): ledger is FactLedger {
   if (!ledger || ledger.version !== FACT_GATE_VERSION || !ledger.sentences) return false
   if (ledger.sources_hash === hash) return true
@@ -635,7 +690,7 @@ export function factLedgerCoverage(
   const bodySentences = sentences(body)
   const ledgerUsable = usable(ledger, hash, parts)
   const reusable = ledgerUsable
-    ? bodySentences.filter(s => !!ledger.sentences[sentenceKey(s)]).length
+    ? bodySentences.filter(s => !!entryFor(ledger, s)).length
     : 0
   return {
     ledger_usable: ledgerUsable,
@@ -667,7 +722,7 @@ export function carryForward(
   const done = new Set<string>()
   for (const c of claims) {
     const over = overlapping(c.sentence, bodySentences)
-    const entries = over.map(s => ({ s, key: sentenceKey(s), entry: ledger.sentences[sentenceKey(s)] }))
+    const entries = over.map(s => ({ s, key: sentenceKey(s), entry: entryFor(ledger, s) }))
     if (!entries.length || entries.some(e => !e.entry)) { toCheck.push(c); continue }
     for (const { s, key, entry } of entries) {
       if (done.has(key)) continue
@@ -702,7 +757,7 @@ export function settledLeftovers(
   const open: Claim[] = []
   for (const l of leftovers) {
     const over = overlapping(l.sentence, bodySentences)
-    if (over.length && over.every(s => !!ledger.sentences[sentenceKey(s)])) settled.push(l)
+    if (over.length && over.every(s => !!entryFor(ledger, s))) settled.push(l)
     else open.push(l)
   }
   return { settled, open }
@@ -750,9 +805,12 @@ export function splitFresh<T>(toCheck: T[], max: number): { now: T[]; later: num
  *  failing claim is not added. */
 export function settle(body: string, result: FactCheck, prior: FactLedger | null | undefined, hash: string, parts?: string[]): FactLedger {
   const bodySentences = sentences(body)
-  const keys = new Set(bodySentences.map(sentenceKey))
   const out: Record<string, LedgerEntry> = {}
-  if (usable(prior, hash, parts)) for (const [k, v] of Object.entries(prior.sentences)) if (keys.has(k)) out[k] = v
+  // A stale set-aside (staleAside) is not carried, so this run settles it afresh.
+  if (usable(prior, hash, parts)) for (const s of bodySentences) {
+    const v = entryFor(prior, s)
+    if (v) out[sentenceKey(s)] = v
+  }
   for (const s of bodySentences) {
     const key = sentenceKey(s)
     if (out[key]) continue

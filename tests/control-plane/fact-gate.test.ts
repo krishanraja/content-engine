@@ -2,9 +2,9 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { describe, expect, test } from 'vitest'
 import {
-  bodyHash, combine, datedContext, EXTRACT_SYSTEM, gateStatus, inOrder, leftoversOf, norm, numbersIn, numbersNotOnFile, primaryText, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
+  bodyHash, combine, datedContext, EXTRACT_SYSTEM, gateStatus, inOrder, leftoversOf, norm, numbersIn, numbersNotOnFile, primaryText, quoteHolds, quotesFail, readsAsForecast, labelledAside, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
   SECOND_LOOK_SYSTEM, sourcesText, splitFresh, summarise, sweep, signOff, stillBlocking, carrySignOffs,
-  type CheckedClaim, ENTAIL_SYSTEM, INDEPENDENT_SYSTEM, ON_FILE_SYSTEM, carryForward, countRun, factLedgerCoverage, rerunCeiling, settle, settledLeftovers, sentenceKey, sourcePartHashes, sourcesHash, type FactCheck, FACT_GATE_VERSION,
+  type CheckedClaim, ENTAIL_SYSTEM, INDEPENDENT_SYSTEM, ON_FILE_SYSTEM, carryForward, countRun, factLedgerCoverage, rerunCeiling, settle, settledLeftovers, sentenceKey, sourcePartHashes, sourcesHash, type FactCheck, type FactLedger, FACT_GATE_VERSION,
 } from '../../apps/control-plane/api/_factGate.js'
 
 // The fact gate (Krish, 2026-09-25). The cases below are the real ones: the
@@ -139,6 +139,39 @@ describe('the second look at what the sweep caught', () => {
     assert.match(out.setAside[0].reason, /reads as a forecast, and a piece makes no prediction/)
     assert.doesNotMatch(resolveLeftovers([ice], [{ i: 0, claims: [], reason: 'analogy' }]).setAside[0].reason, /forecast/)
   })
+  test('a labelled scenario or guess with a number is set aside, and flagged', () => {
+    // R1 asks for labelled guesses and labelled inference; TIMELINE and _judges/expand.ts ask for labelled scenarios.
+    const scenario = left('Scenario one: if half of firms switch by 2027, the vendor loses 40% of its revenue.')
+    const guess = left('Our guess: the bill rises about 30% next year.')
+    const out = resolveLeftovers([scenario, guess], [{ i: 0, claims: [], reason: 'scenario' }, { i: 1, claims: [], reason: 'labelled_inference' }])
+    assert.equal(out.claims.length, 0)
+    assert.deepEqual(out.setAside.map(a => a.sentence), [scenario.sentence, guess.sentence])
+    for (const a of out.setAside) assert.match(a.reason, /reads as a forecast, and a piece makes no prediction/)
+  })
+  test('a numbered scenario labelled only by its section heading is set aside too, and only under such a heading', () => {
+    const line = left('Half of firms switch, and the vendor loses 40% of its revenue.')
+    const body = `## WHAT IT IS NOW
+
+GPT-5 became the default.
+
+## THE FORKS
+
+${line.sentence}`
+    const out = resolveLeftovers([line], [{ i: 0, claims: [], reason: 'scenario' }], body)
+    assert.equal(out.claims.length, 0)
+    assert.match(out.setAside[0].reason, /labelled, with a number in it, and a piece makes no prediction/)
+    const plain = resolveLeftovers([line], [{ i: 0, claims: [], reason: 'scenario' }], `## WHAT IT IS NOW
+
+${line.sentence}`)
+    assert.equal(plain.claims.length, 1)
+  })
+  test('an unlabelled dated forecast stays a claim, whatever reason the second look gives', () => {
+    const dated = left('By 30 June 2027, X happens.')
+    for (const reason of ['forecast', 'scenario', 'labelled_inference']) {
+      assert.equal(resolveLeftovers([dated], [{ i: 0, claims: [], reason }]).claims.length, 1, reason)
+    }
+    assert.equal(labelledAside(dated.sentence, 'scenario'), false)
+  })
   test('a sentence the second look did not answer stays a claim', () => {
     const out = resolveLeftovers([ice, cnbc], [])
     assert.equal(out.claims.length, 2)
@@ -176,6 +209,24 @@ describe('nothing with a number or a quotation goes unchecked', () => {
     const out = sweep(body, [], [{ sentence: 'By 30 September 2027, at least two labs make routing the default.', reason: 'prediction' }])
     assert.equal(out.claims.some(c => c.sentence.includes('2027')), true)
     assert.equal(out.setAside.length, 0)
+  })
+  test('a labelled scenario or guess with a number is honoured, for the second look to read', () => {
+    const scenario = 'Scenario one: if half of firms switch by 2027, the vendor loses 40% of its revenue.'
+    const guess = 'Our guess: the bill rises about 30% next year.'
+    const out = sweep(`${body}
+
+${scenario} ${guess}`, [], [{ sentence: scenario, reason: 'scenario' }, { sentence: guess, reason: 'labelled_inference' }])
+    assert.deepEqual(out.setAside.map(a => a.sentence), [scenario, guess])
+    assert.equal(out.claims.some(c => c.sentence === scenario || c.sentence === guess), false)
+    assert.ok(leftoversOf(out).some(l => l.sentence === scenario))
+  })
+  test('an unlabelled dated forecast set aside as a scenario is still a claim', () => {
+    const line = 'By 30 June 2027, X happens.'
+    const out = sweep(`${body}
+
+${line}`, [], [{ sentence: line, reason: 'scenario' }])
+    assert.equal(out.setAside.length, 0)
+    assert.ok(out.claims.some(c => c.sentence === line))
   })
   test('a set-aside with no number in it is still honoured, for the second look to read', () => {
     const line = 'Then the rest followed, one by one.'
@@ -548,6 +599,25 @@ describe('a checked sentence keeps its result until it changes (walk log F52)', 
     expect(settledLeftovers(BODY, leftovers, null, hash).open).toHaveLength(3)
     expect(settledLeftovers(BODY.replace('0.90', '0.91'), [{ sentence: A.replace('0.90', '0.91'), claim: 'x', kind: 'unclassified' }], ledger, hash).settled).toHaveLength(0)
     expect(settledLeftovers(BODY, leftovers, ledger, 'another-sources-hash').settled).toHaveLength(0)
+  })
+
+  test('a dated forecast set aside before 2026-11-24 is read again under the new rule', () => {
+    // A ledger from before the ruling: the dated forecast was set aside as the piece's own prediction.
+    const E = 'By 30 June 2027, Koa leads CRM Bench.'
+    const body = `${BODY}
+
+${E}`
+    const old: FactLedger = { ...ledger, sentences: { ...ledger.sentences, [sentenceKey(E)]: { status: 'set_aside', at: run1.ran_at, reason: 'prediction' } } }
+    const leftovers = [D, E].map(sentence => ({ sentence, claim: sentence, kind: 'unclassified' as const }))
+    const split = settledLeftovers(body, leftovers, old, hash)
+    expect(split.settled.map(l => l.sentence)).toEqual([D])
+    expect(split.open.map(l => l.sentence)).toEqual([E])
+    expect(carryForward(body, [{ sentence: E, claim: E, kind: 'other' }], [], old, hash).toCheck.map(c => c.sentence)).toEqual([E])
+    expect(factLedgerCoverage(body, old, hash).reusable_sentences).toBe(3)
+    expect(settle(body, { ...run1, claims: [], set_aside: [] }, old, hash).sentences[sentenceKey(E)]).toBeUndefined()
+    // A set-aside settled under the new rule carries the flag, and is kept.
+    const flagged: FactLedger = { ...old, sentences: { ...old.sentences, [sentenceKey(E)]: { status: 'set_aside', at: run1.ran_at, reason: 'second look: reads as a forecast, and a piece makes no prediction; scenario' } } }
+    expect(settledLeftovers(body, leftovers, flagged, hash).settled.map(l => l.sentence)).toEqual([D, E])
   })
 
   test('a claim across two sentences carries only when both are settled', () => {

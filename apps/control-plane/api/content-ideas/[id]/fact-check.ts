@@ -318,7 +318,7 @@ async function check(run: GateRun, body: string, meta: Record<string, any>): Pro
   // so only the open ones are read again (G4).
   const leftovers = settledLeftovers(body, leftoversOf(swept), ledger, hash, parts)
   const second = await secondLook(run, leftovers.open, body)
-  const looked = resolveLeftovers(leftovers.open, second.answers)
+  const looked = resolveLeftovers(leftovers.open, second.answers, body)
   const all = [...swept.claims.filter(c => c.kind !== 'unclassified'), ...looked.claims, ...leftovers.settled]
   const carry = carryForward(body, all, looked.setAside, ledger, hash, parts)
   const fresh = splitFresh(carry.toCheck, MAX_CLAIMS)
