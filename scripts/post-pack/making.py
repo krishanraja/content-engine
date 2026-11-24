@@ -668,6 +668,17 @@ LOCK_GLOB = '*/narrative-lock-*.md'
 # useful, and fun to consume").
 LOCK_PARTS = ('Surface story', 'Deeper story', 'Arc', 'The fun', 'The use', 'His close', 'Facts to check', 'Outline',
               'Style recipe', 'Music bed')
+# The why-ladder (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests
+# predictions, calls, dated, odds or scores). A lock carries "## The Whys": one Why per beat, in order, each line
+# "Why N: the question? the answer [evidence: corpus ids or source links]". A Why with no evidence is refused, except
+# an open question that ends the ladder (the contract's open rung: never climbed past). Only a lock signed from
+# WHYS_FROM, or not signed yet, needs it: a lock he signed before was signed in the old shape, and adding the part
+# now would change the words his signature binds (the drift rule), so it keeps standing as signed.
+WHYS_FROM = '2026-11-25'
+WHYS_MAX = 7
+WHY_LINE = re.compile(r'^[\s>*_#-]*(?:\d+[.)]\s*)?\**\s*Why\s+(\d+)\b', re.I)
+WHY_EVIDENCE = re.compile(r'[\[(]\s*(?:evidence|sources?|corpus)\b[^\])]*[A-Za-z0-9][^\])]*[\])]|https?://\S+|\b(?:evidence|sources?|corpus)\s*:\s*\S', re.I)
+WHY_OPEN = re.compile(r'\bopen question\b|\(open\)|\bopen\s*:', re.I)
 # His signature binds the words he signed: the sha256 of everything above it (lock_body_hash), so a lock edited after
 # he signed no longer stands under the same signature (the drift rule). This catches a change by accident or habit;
 # a session that recomputes the hash after editing still gets through, which only a press of his own would stop.
@@ -767,6 +778,45 @@ def signature_problems(text):
     return []
 
 
+def whys_required(text):
+    """Whether the lock must carry "## The Whys": every lock not yet signed, and every lock signed from WHYS_FROM."""
+    signed = lock_signature(text)
+    return not (signed and signed[1] < WHYS_FROM)
+
+
+def whys_problems(text):
+    """Why the lock's "## The Whys" part does not stand, [] when it does: one "Why N" line per beat, numbered 1 up in
+    order, at most WHYS_MAX, each citing the evidence it rests on ([evidence: ...], a corpus id or a source link). The
+    last Why may be an open question with no evidence: the ladder ends there."""
+    body = _part(lock_parts(text), 'The Whys')
+    if not body:
+        return ['parts missing or empty: The Whys (a "## The Whys" heading: one Why per beat, each line "Why N: the question? '
+                'the answer [evidence: corpus ids or source links]")']
+    whys = []
+    for line in body.splitlines():
+        m = WHY_LINE.match(line)
+        if m:
+            whys.append([int(m.group(1)), line])
+        elif whys and line.strip():
+            whys[-1][1] += '\n' + line
+    if not whys:
+        return ['The Whys holds no "Why N:" line: one Why per beat, each line "Why N: the question? the answer [evidence: ...]"']
+    out = []
+    numbers = [n for n, _ in whys]
+    if len(whys) > WHYS_MAX:
+        out.append(f'The Whys climbs {len(whys)} Whys: merge sub-steps so it climbs {WHYS_MAX} at most (five is the target)')
+    if numbers != list(range(1, len(numbers) + 1)):
+        out.append('The Whys are numbered ' + ', '.join(map(str, numbers)) + f': number them 1 to {len(numbers)} in order')
+    for k, (n, words) in enumerate(whys):
+        if WHY_EVIDENCE.search(words):
+            continue
+        if k == len(whys) - 1 and WHY_OPEN.search(words):
+            continue
+        out.append(f'Why {n} cites no evidence: add [evidence: the corpus ids or source links it rests on], or, if it is the last '
+                   'Why and nothing backs it, mark it an open question so the ladder ends there')
+    return out
+
+
 def narrative_problems(text, piece_id, drafts_on=None):
     """Why a narrative lock does not stand for this piece yet, [] when it does: it names the piece and the day it
     publishes, holds every part with words under it, its outline has one spine (spine_check), and its last line is
@@ -795,6 +845,8 @@ def body_problems(text, piece_id, drafts_on=None):
         why = [w for w in spine_check.outline_problems(lock_outline(text)) if not w.startswith('not approved')]
         if why:
             out.append('its outline: ' + '; '.join(why))
+    if whys_required(text):
+        out.extend(whys_problems(text))
     return out
 
 

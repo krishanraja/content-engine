@@ -58,6 +58,9 @@ Answer: <its one-line answer>
 1. <SECTION HEADING> | proves: <the part of the answer it proves>
 ## Style recipe
 ## Music bed
+## The Whys
+Why 1: <the question>? <the answer> [evidence: <corpus ids or source links>]
+Why 2: <the question>? <the answer> [evidence: <corpus ids or source links>]
 
 Signed by Krish: "<his words>", <YYYY-MM-DD>, lock sha256 <the hash making.py printed>
 ```
@@ -67,6 +70,11 @@ Signed by Krish: "<his words>", <YYYY-MM-DD>, lock sha256 <the hash making.py pr
 - The use is the one thing a business leader does differently on Monday, from his answer; it is new, never an
   action a recent piece already gave (step 10's checks).
 - Each fact to check is `- <the claim> | <its source, linked> | <checked on YYYY-MM-DD, or to check>`.
+- The Whys is the why-ladder the piece climbs (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys), one
+  Why per beat, in order, from the why-ladder in the research (`meta.whys`). Every Why cites the evidence it rests on;
+  the last may be an open question with no evidence, which ends the ladder. Five is the target, never padded; seven at
+  most. It lands on what this shows and an open question for the viewer, never a verdict, a forecast or a lesson.
+  `making.py` refuses a lock signed from 2026-11-25 (or not signed yet) without it; locks signed before keep standing.
 - `Publishes` is the day it goes live, and the piece's dated drafts carry that date
   (`docs/plans/<that date>-draft-script.md` and `-draft-script-90s.md`).
 - **The signature binds his words.** Before he signs, `python3 scripts/post-pack/making.py <uuid> narrative
