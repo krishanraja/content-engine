@@ -7,6 +7,9 @@ import { publishChecks, publishStatus } from '../../apps/control-plane/api/_publ
 import { HOUSE_RULES } from '../../apps/control-plane/api/_houseRules.js'
 import { PACKAGING_RULES } from '../../apps/control-plane/api/_packaging.js'
 import { EXTRACT_SYSTEM, SECOND_LOOK_SYSTEM } from '../../apps/control-plane/api/_factGate.js'
+import { SCRIPT_STORY, VIDEO_FORMATS } from '../../apps/control-plane/api/_video.js'
+import { SPINE_SYSTEM } from '../../apps/control-plane/api/_spine.js'
+import { rubricFor, subchannelRubric } from '../../apps/control-plane/api/_finalPass.js'
 
 // Ruling (Krish, 2026-11-24): "the signature format is the 5 Whys; get rid of everything that suggests predictions,
 // calls, dated, odds or scores." Learning why-ladder-close, which supersedes near-term-backed-predictions and
@@ -68,10 +71,37 @@ describe('no prediction check, rule or prompt line remains (why-ladder-close)', 
     }
   })
 
+  test('the video-script writers carry no opt-in and no verdict beat', () => {
+    // Both video-script routes (content-ideas/[id]/video-script.ts, briefs/[week]/video-script.ts) send these.
+    const optIn = /unless Krish asked|2026-11-19/
+    assert.doesNotMatch(SCRIPT_STORY, optIn)
+    assert.match(SCRIPT_STORY, /an open question handed to the viewer/)
+    for (const f of VIDEO_FORMATS) {
+      assert.doesNotMatch(f.shape, optIn, f.id)
+      assert.doesNotMatch(f.shape, /verdict|forward-looking|hard read of what it means/i, f.id)
+    }
+  })
+
+  test('the spine check judges the landing, never a prediction section', () => {
+    assert.doesNotMatch(SPINE_SYSTEM, /prediction|a call about/i)
+    assert.match(SPINE_SYSTEM, /the landing is a YES when it says what the ladder shows/)
+    assert.doesNotMatch(readFileSync('apps/control-plane/api/_spine.ts', 'utf8'), /The prediction is the piece/)
+  })
+
+  test('no final-pass rubric accepts a prediction, and the no-prediction rule wins over the mandate\'s close', () => {
+    assert.doesNotMatch(readFileSync('apps/control-plane/api/_finalPass.ts', 'utf8'), /Bold predictions are allowed/)
+    assert.match(rubricFor('investigation').evidenceBar, /No prediction or forecast/)
+    const live = subchannelRubric({ slug: 'follow_the_money', label: 'follow.the.money', mandate: 'THE CLOSE is a verdict.' })
+    assert.match(live.mustHave.join(' '), /where the mandate asks for a verdict or what is coming, it lands on what the evidence shows/)
+  })
+
   test('the writers are told the piece makes none, and the mandate\'s old close never reaches them', () => {
     const draft = readFileSync('apps/control-plane/api/content-ideas/[id]/draft.ts', 'utf8')
     assert.match(draft, /export const NO_PREDICTION_LINE = 'The piece makes no prediction: no call, no dated forecast, no odds and no confidence number\./)
     assert.doesNotMatch(draft, /make none|predictionWanted|guardConfidence/)
+    const override = /This wins over any close the mandate asks for, including a verdict or what is coming\./
+    assert.match(draft, override)
+    assert.match(readFileSync('apps/control-plane/api/_revisePrompt.ts', 'utf8'), override)
     assert.doesNotMatch(readFileSync('apps/control-plane/api/_revisePrompt.ts', 'utf8'), /dated prediction/)
     assert.match(readFileSync('apps/control-plane/api/_subchannels.ts', 'utf8'), /mandate: mandateWithoutCall\(row\.mandate\)/)
   })

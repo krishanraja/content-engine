@@ -90,7 +90,7 @@ export { curationBlock }
 
 /** What the drafter is told about the close, whatever any mandate says
  *  (Ruling, Krish, 2026-11-24). */
-export const NO_PREDICTION_LINE = 'The piece makes no prediction: no call, no dated forecast, no odds and no confidence number. It lands on what the evidence shows and an open question handed to the reader, never a verdict on what will happen.'
+export const NO_PREDICTION_LINE = 'The piece makes no prediction: no call, no dated forecast, no odds and no confidence number. It lands on what the evidence shows and an open question handed to the reader, never a verdict on what will happen. This wins over any close the mandate asks for, including a verdict or what is coming.'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const started = Date.now()
