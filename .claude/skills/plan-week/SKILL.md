@@ -582,7 +582,8 @@ after his presses, by 10:00.
    the day it publishes, then Surface story, Deeper story, Arc, The fun, The
    use (the one thing a business leader does differently on Monday), His
    close, Facts to check, Outline (one spine, at most six sections, house
-   rule ONE_SPINE), Style recipe and Music bed. **Three checks before it
+   rule ONE_SPINE), Style recipe, Music bed and The Whys (one Why per
+   beat, each citing its evidence: the why-ladder). **Three checks before it
    goes to him**, on its Answer, The use, His close and any test it runs,
    the same checks the backlog's Narrative step makes (`make-piece`), and
    say in the room what each found:
