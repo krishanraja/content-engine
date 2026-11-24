@@ -213,21 +213,34 @@ export function loopTarget(rung: Pick<WhyRung, 'answer'>): number | null {
 }
 
 // The landing never reads as a verdict, a forecast, odds, a confidence number or a lesson for leaders (the
-// makeyourmindup kill list blocks those under preach_pattern, which is unappealable).
+// makeyourmindup kill list blocks those under preach_pattern, which is unappealable). The patterns name stated odds and
+// stated confidence, never the bare nouns: "consumer confidence fell" and "the likelihood of a recall" are facts a
+// landing may carry.
 export const WHY_LANDING_VETO: ReadonlyArray<{ kind: string; pattern: RegExp }> = [
   { kind: 'a forecast', pattern: /\b(?:predict(?:s|ed|ion|ions)?|forecast(?:s|ed|ing)?|(?:is|are) (?:going|set|poised|likely|expected|bound) to|will (?:soon|likely|probably|eventually|inevitably|definitely|certainly|replace|kill|win|lose|collapse|dominate|disappear|overtake|become)|by (?:the end of )?(?:19|20)\d\d\b|in the (?:next|coming) (?:few )?(?:\d+ )?(?:days|weeks|months|years|decades?))/i },
-  { kind: 'odds', pattern: /\b(?:odds|long shot|sure thing|chances? (?:are|of|that)|probabilit(?:y|ies)|likelihood)\b|\d{1,3}(?:\.\d+)?\s?(?:%|per ?cent)\s*(?:chance|likely|probability)/i },
-  { kind: 'a confidence number', pattern: /\b(?:how sure|confidence|confident|certainty|we(?:'re| are) (?:sure|certain))\b|\d{1,3}(?:\.\d+)?\s?(?:%|per ?cent)\s*(?:sure|confident|certain)/i },
-  { kind: 'a verdict or a lesson', pattern: /\b(?:lessons? for (?:leaders|executives|ceos|founders|boards|managers|business(?:es)?)|the real question for leaders|(?:leaders|executives|ceos|founders|businesses|companies|you) (?:should|must|need to|have to|ought to)|(?:the|our) verdict|our call|the call is|the takeaway|the bottom line)\b/i },
+  { kind: 'odds', pattern: /\b(?:(?:the )?odds (?:are|favou?rs?)|long shot|sure thing|chances are|(?:high|low|good|slim|strong|real|even) (?:probability|likelihood|chance) (?:of|that))\b|\d{1,3}(?:\.\d+)?\s?(?:%|per ?cent)\s*(?:chance|likely|likelihood|probability)/i },
+  { kind: 'a confidence number', pattern: /\b(?:how sure|how confident|confidence (?:level|score|rating|number|interval)|(?:with|at) (?:high|low|medium|moderate|full) confidence|(?:we|i)(?:'re|'m| are| am) (?:sure|certain|confident))\b|\d{1,3}(?:\.\d+)?\s?(?:%|per ?cent)\s*(?:sure|confident|certain)/i },
+  { kind: 'a verdict or a lesson', pattern: /\b(?:lessons? for (?:leaders|executives|ceos|founders|boards|managers|business(?:es)?)|the real question for leaders|(?:the|our) verdict|our call|the call is|the (?:key )?takeaway (?:is|here)|takeaway:|the bottom line is|bottom line:)/i },
 ]
+
+// Telling someone what to do. It applies to what the landing shows, and to an open question only when it is not a
+// question: "What would you need to see before you trusted it again?" hands the viewer a question, it does not preach.
+const WHY_LANDING_INSTRUCTION = /\b(?:leaders|executives|ceos|founders|boards|managers|businesses|companies|you) (?:should|must|need to|have to|ought to)\b/i
 
 /** The words in a landing that read as a verdict, forecast, odds, confidence or a lesson: [{ kind, said }]. */
 export function landingVetoes(landing: WhyLanding): Array<{ kind: string; said: string }> {
-  const text = `${landing.shows || ''}\n${landing.open_question || ''}`
+  const shows = String(landing.shows || '').trim()
+  const question = String(landing.open_question || '').trim()
+  const text = `${shows}\n${question}`
   const out: Array<{ kind: string; said: string }> = []
   for (const v of WHY_LANDING_VETO) {
     const m = v.pattern.exec(text)
     if (m) out.push({ kind: v.kind, said: m[0].trim() })
+  }
+  if (!out.some(v => v.kind === 'a verdict or a lesson')) {
+    const asked = /\?["'”’)]*$/.test(question)
+    const m = WHY_LANDING_INSTRUCTION.exec(shows) || (asked ? null : WHY_LANDING_INSTRUCTION.exec(question))
+    if (m) out.push({ kind: 'a verdict or a lesson', said: m[0].trim() })
   }
   return out
 }
@@ -281,8 +294,9 @@ export function checkWhyLadder(l: WhyLadder): { rung: number | null; problem: st
     for (const p of sourceProblems(r.evidence || [], `Why ${n}`)) add(n, p)
     const followed = r.branch && r.branch.answers[r.branch.followed]
     if (r.strength !== 'open') {
-      // A split Why is backed by the branch it follows; one that does not split, by its own sources.
-      for (const p of backingProblems(n, [...(r.evidence || []), ...(followed ? followed.evidence : [])], '')) add(n, p)
+      // A split Why is backed by the branch it follows (checked once, below); one that does not split, by its own
+      // sources. A branch that follows an answer it does not have falls back to the rung's own sources.
+      if (!r.branch || !followed) for (const p of backingProblems(n, r.evidence || [], '')) add(n, p)
       const c = r.counter || {}
       if (!str(c.text) && !str(c.none_found_scope)) add(n, `Why ${n} needs its strongest counter-evidence, or "none found" with the scope searched`)
     } else if (!isLast && !r.branch) {

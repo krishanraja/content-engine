@@ -179,6 +179,14 @@ describe('checkWhyLadder: where a ladder falls short, rung by rung', () => {
     ])
   })
 
+  it('a branched rung short of sources is named once, for the branch it follows', () => {
+    const one = { answer: 'Labels bought the catalogue.', evidence: [ev('sec.gov')] }
+    const other = { answer: 'Fans paid more.', evidence: [] }
+    const l = ladder()
+    l.rungs[2] = rung(3, { evidence: [], branch: { join: 'OR', answers: [one, other], followed: 0 } })
+    expect(problemsOf(l).filter(p => /source/.test(p))).toEqual(['Why 3 needs a second source for the branch it follows'])
+  })
+
   it('an AND branch needs a source for both causes, and a branch is two answers at most', () => {
     const a = { answer: 'Chips got scarce.', evidence: [ev('tsmc.com'), ev('reuters.com')] }
     const and = ladder()
@@ -218,6 +226,28 @@ describe('checkWhyLadder: where a ladder falls short, rung by rung', () => {
     }
     expect(landingVetoes({ shows: 'The fact is fine.', open_question: 'What is the real question for leaders here?' }).map(v => v.kind)).toEqual(['a verdict or a lesson'])
     expect(landingVetoes({ shows: 'The price follows ownership, as it did in 2019.', open_question: 'What would you check first?' })).toEqual([])
+  })
+
+  it('an open question may talk to "you", and a landing may name confidence as a fact', () => {
+    const fine = [
+      { shows: 'The outage broke the habit, not the tool.', open_question: 'What would you need to see before you trusted it again?' },
+      { shows: 'The margin rests on one supplier.', open_question: 'What do you have to believe for that to keep working?' },
+      { shows: 'Consumer confidence in the tool fell after the outage.', open_question: 'Who noticed first?' },
+      { shows: 'The recall cut into the bottom line within a quarter.', open_question: 'Who paid for it?' },
+      { shows: 'The likelihood of a recall was in the filing all along.', open_question: 'Who read it?' },
+    ]
+    for (const landing of fine) {
+      expect(landingVetoes(landing), landing.shows).toEqual([])
+      expect(checkWhyLadder(ladder({ landing })), landing.shows).toEqual([])
+    }
+    const still = [
+      [{ shows: 'Leaders should act now.', open_question: 'Who owns the work you make?' }, 'a verdict or a lesson'],
+      [{ shows: 'The labels hold the masters.', open_question: 'You need to own your masters.' }, 'a verdict or a lesson'],
+      [{ shows: 'We are 70% confident the labels hold.', open_question: 'Who owns the work you make?' }, 'a confidence number'],
+      [{ shows: 'The labels hold, 70% confident.', open_question: 'Who owns the work you make?' }, 'a confidence number'],
+      [{ shows: 'The bottom line is that labels win.', open_question: 'Who owns the work you make?' }, 'a verdict or a lesson'],
+    ] as const
+    for (const [landing, kind] of still) expect(landingVetoes(landing).map(v => v.kind), landing.shows).toContain(kind)
   })
 
   it('is exported from the contracts package', () => {
