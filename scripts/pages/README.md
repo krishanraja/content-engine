@@ -24,7 +24,7 @@ or it writes neither (the rule in `editions/README.md`).
 
 | File | What it is |
 |---|---|
-| `page.html` | The piece in the makeyourmindup look, in its subchannel's colour: masthead, headline, deck and byline (makeyourmindup, the date and the minutes: no author and no face, house rule NO_NAME), the body with its source links and images, opinion labelled ("Our read:"), the choices as cards, the dated call with how sure we are, the sources and the subscribe band. One file: the fonts and images are inside it. |
+| `page.html` | The piece in the makeyourmindup look, in its subchannel's colour: masthead, headline, deck and byline (makeyourmindup, the date and the minutes: no author and no face, house rule NO_NAME), the body with its source links and images, opinion labelled ("Our read:"), the choices as cards, the piece's whys (when the facts carry them), the sources and the subscribe band. One file: the fonts and images are inside it. |
 | `substack.html` | The same words in one column, ready for Substack. Copy buttons for the title, the subtitle and the post. The post is headings, paragraphs, lists, quotes, links and images, nothing else, because Substack's editor drops layout and crashes on pasted side-by-side blocks. The images are inside the copy, in place, so they paste with the words. |
 | `phone-images.png` | Every image in the post at the width a phone shows it (358 pixels). Look at it before publishing: a word you cannot read there, a reader on a phone cannot read either. |
 | `cover-1200x630.png` | With `--cover`: the cover to upload in Substack's post settings, at the 1200 x 630 (1.91:1) its upload box asks for. |
@@ -110,7 +110,7 @@ One JSON file. Paths are relative to the file (or to `--assets DIR`).
 | `sources` | `{"id": ["Title, date", "https://..."]}` (or `{"title", "url"}`). Listed at the end in the order they are first linked; any never linked come last, and the build mentions them. |
 | `links` | `[["exact words in the body", "source id"], ...]`. Each phrase is linked where it first appears, in reading order. Headings are never linked. |
 | `whys` | The piece's why-ladder, the `why-ladder/1` object kept in the piece's `meta.whys` (`packages/contracts/src/whys.ts`): `{"schema": "why-ladder/1", "question", "rungs": [{"n", "question", "answer", "evidence": [{"url", "domain", "date", "quote"}], "strength"}], "landing": {"shows", "open_question"}}`. The page shows it as The Whys after the body: each rung's question, its answer and a source line (each source's domain and date, linked), marked documented, inferred or open question, then where the ladder lands: what this shows and the open question handed to the reader. The Substack copy keeps the same words. Without it the page has no ladder section; a ladder that is there but cannot be read stops the build. The signature format is the 5 Whys (Ruling, Krish, 2026-11-24): there is no call, meter, odds or due date anywhere on the page. |
-| `opinion_labels` | More labels to mark as opinion, beside the built-in "Our read:", "Our read, in plain English:", "Our bet:", "Our guess:", "Our view:" and "Here's our guess, and it is a guess:". |
+| `opinion_labels` | More labels to mark as opinion, beside the built-in "Our read:", "Our read, in plain English:", "Our guess:" and "Our view:". |
 | `endnote` | The line under the sources. Defaults to the fact-check line. |
 
 What the tool reads from the body itself:
@@ -118,11 +118,12 @@ What the tool reads from the body itself:
 - `##` and `###` headings, paragraphs, `-` and `1.` lists, `>` quotes,
   `**bold**`, `*italic*` and `[links](url)`.
 - A run of paragraphs that start "Guess one.", "Guess two." (or Future,
-  Scenario, Option, Outcome) becomes a row of cards. If the next paragraph
-  says "Our bet: guess two", that card is the one marked.
+  Scenario, Option, Outcome) becomes a row of cards, all alike: no card is
+  ever marked as the one that happens.
 - A prediction section (a heading `OUR PREDICTION`, `OUR CALL`, `THE CALL`
-  or `PREDICTION`) or a confidence line ("How sure we are: 70%.") stops the
-  build: the signature format is the 5 Whys (Ruling, Krish, 2026-11-24: "get
+  or `PREDICTION`), a line that picks a scenario ("Our bet: guess two", "Our
+  pick: future one", "Our call: option three") or a confidence line ("How
+  sure we are: 70%.") stops the build: the signature format is the 5 Whys (Ruling, Krish, 2026-11-24: "get
   rid of everything that suggests predictions, calls, dated, odds or
   scores"). The piece's whys come from the facts' `whys`, never the body.
 

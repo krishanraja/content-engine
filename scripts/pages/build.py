@@ -83,7 +83,9 @@ import copy_lint  # noqa: E402  the name rule (no_name), for the page's own self
 import card  # noqa: E402
 
 CHOICE = re.compile(r'^(Guess|Future|Scenario|Option|Outcome) (one|two|three|four|five)\. (.+)$', re.S)
-BET = re.compile(r'\bOur (?:bet|pick|call): (?:guess|future|scenario|option|outcome) (one|two|three|four|five)\b', re.I)
+# A line that picks one of the scenario cards ("Our bet: guess two") says which future happens, so it is a prediction
+# and is refused with the rest. The cards stay; none of them is marked.
+PICK = re.compile(r'\bOur (?:bet|pick|call): (?:guess|future|scenario|option|outcome) (?:one|two|three|four|five)\b', re.I)
 # The signature format is the why-ladder (Ruling, Krish, 2026-11-24: "the signature format is the 5 Whys; get rid of
 # everything that suggests predictions, calls, dated, odds or scores"). The page's "Our call." band, its How-sure meter
 # and its due date are gone. A body that still carries a prediction section or a confidence line is refused, and the
@@ -92,7 +94,7 @@ PREDICTION_HEADING = re.compile(r'^(?:our prediction|our call|the call|predictio
 PREDICTION_LINE = re.compile(r'^\s*(?:how sure we are|confidence)\s*:\s*\d', re.I | re.M)
 WHY_STRENGTH_WORDS = {'documented': 'Documented', 'inferred': 'Inferred', 'open': 'Open question'}
 # Opinion is labelled so it never passes for fact. Longest first.
-LABELS = ["Here's our guess, and it is a guess:", 'Our read, in plain English:', 'Our read:', 'Our bet:', 'Our guess:', 'Our view:']
+LABELS = ['Our read, in plain English:', 'Our read:', 'Our guess:', 'Our view:']
 ENDNOTE = ('Every fact in this piece was checked against its source before it went out. '
            'Made in public: corrections are welcome in the Substack comments.')
 
@@ -279,9 +281,13 @@ def load_facts(path, body_override, assets):
 
 
 def prediction_problems(body):
-    """Why a body cannot be built: a prediction heading or a confidence line (Ruling, Krish, 2026-11-24)."""
-    problems = [f'a prediction section: "## {plain(val).strip()}"' for kind, val in parse_blocks(body)
+    """Why a body cannot be built: a prediction heading, a line that picks a scenario, or a confidence line
+    (Ruling, Krish, 2026-11-24)."""
+    blocks = parse_blocks(body)
+    problems = [f'a prediction section: "## {plain(val).strip()}"' for kind, val in blocks
                 if kind in ('h2', 'h3') and PREDICTION_HEADING.match(plain(val).strip())]
+    problems += [f'a pick among the scenarios: "{m.group(0)}"' for kind, val in blocks
+                 if kind in ('p', 'quote') for m in [PICK.search(plain(val))] if m]
     problems += [f'a confidence line: "{m.group(0).strip()}"' for m in PREDICTION_LINE.finditer(plain(body))]
     return problems
 
@@ -363,23 +369,18 @@ def build(facts, base, body, sources):
             continue
         if kind == 'p' and CHOICE.match(val):
             # A run of choices ("Guess one. ...", "Guess two. ...") becomes a row
-            # of cards; the paragraph after it may name the one we bet on.
+            # of cards, all alike: the page never marks the one that happens.
             run = []
             while i < len(blocks) and blocks[i][0] == 'p' and CHOICE.match(blocks[i][1]):
                 run.append(blocks[i][1])
                 i += 1
-            nxt = blocks[i][1] if i < len(blocks) and blocks[i][0] == 'p' else ''
-            bet = BET.search(plain(nxt))
-            bet = bet.group(1).lower() if bet else None
             cards = []
             for text in run:
                 m = CHOICE.match(text)
                 head = f'{m.group(1)} {m.group(2)}'
                 ph, sh = both(m.group(3))
-                on = m.group(2) == bet
-                sticker = '<span class="sticker">Our bet</span>' if on else ''
-                cards.append(f'<div class="guess{" bet" if on else ""}"><div class="guess-head">'
-                             f'<span class="label">{esc(head)}</span>{sticker}</div><p>{ph}</p></div>')
+                cards.append(f'<div class="guess"><div class="guess-head">'
+                             f'<span class="label">{esc(head)}</span></div><p>{ph}</p></div>')
                 sub.append(f'<p><strong>{esc(head)}.</strong> {sh}</p>')
             page.append(f'<div class="guesses n{min(len(cards), 3)}">{"".join(cards)}</div>')
             for text in run:
@@ -498,7 +499,6 @@ figure.vis figcaption { font-family: var(--mono); font-size: 12px; line-height: 
 .guesses.n2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .guesses.n1 { grid-template-columns: 1fr; }
 @media (max-width: 680px) { .guesses, .guesses.n2 { grid-template-columns: 1fr; } }
 .guess { background: var(--paper); border: 2px solid var(--ink); padding: 16px; display: flex; flex-direction: column; gap: 10px; }
-.guess.bet { background: var(--accent); box-shadow: var(--shadow); }
 .guess-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 30px; }
 .guess p { font-size: 16px !important; line-height: 1.5 !important; margin: 0 !important; }
 .whys { background: var(--ink); color: var(--cream); padding-block: clamp(40px, 7vw, 72px); padding-inline: 16px; margin-top: 40px; }
@@ -730,9 +730,9 @@ def render_substack(facts, r):
         for index, rung in enumerate(r['whys']['rungs'], 1):
             parts.append(f'<h3>Why {esc(str(rung.get("n", index)))}: {esc(rung["question"])}</h3>')
             parts.append(f'<p>{esc(rung["answer"])}</p>')
-            sources = ', '.join(f'<a href="{attr(url)}">{esc(label)}</a>' if url else esc(label) for label, url in why_sources(rung.get('evidence')))
-            if sources:
-                parts.append(f'<p><em>Source: {sources}</em></p>')
+            rung_sources = ', '.join(f'<a href="{attr(url)}">{esc(label)}</a>' if url else esc(label) for label, url in why_sources(rung.get('evidence')))
+            if rung_sources:
+                parts.append(f'<p><em>Source: {rung_sources}</em></p>')
         parts.append(f'<h2>{esc(copy.get("landing_kicker", "What this shows").upper())}</h2>')
         parts.append(f'<p>{esc(r["whys"]["landing"]["shows"])}</p>')
         parts.append(f'<p><em>{esc(r["whys"]["landing"]["open_question"])}</em></p>')
@@ -1098,6 +1098,17 @@ def self_test():
             sub_copy = render_substack(laddered, r)
             check('the Substack copy keeps the whys and the landing',
                   [w in sub_copy for w in ('THE WHYS', 'Why 1: Why did Warner settle?', 'The fight became a fee.')], [True] * 3)
+            # The ladder ends on an open rung with no evidence; the piece's own Sources must survive it.
+            sourced = render_substack(laddered, build(laddered, tmp, words, {'s1': ('Warner and Suno settle', 'https://example.net/settle')}))
+            check('the Substack copy keeps the piece\'s Sources after a ladder whose last rung is open',
+                  ('<h2>SOURCES</h2>' in sourced, 'https://example.net/settle' in sourced), (True, True))
+            check('the page never marks a scenario card', [w in page for w in ('Our bet', 'guess bet')], [False, False])
+            picked = words + '\n\nGuess one. Suno pays.\n\nGuess two. Suno folds.\n\nOur bet: guess two, because the money says so.'
+            try:
+                build(article, tmp, picked, {})
+                check('an "Our bet: guess two" body is refused', False, True)
+            except SystemExit as stop:
+                check('an "Our bet: guess two" body is refused', ('carries a prediction' in str(stop), 'Our bet: guess two' in str(stop)), (True, True))
             try:
                 build(dict(article, whys={'schema': 'why-ladder/1', 'rungs': [], 'landing': {}}), tmp, words, {})
                 check('an unreadable ladder stops the build', False, True)
