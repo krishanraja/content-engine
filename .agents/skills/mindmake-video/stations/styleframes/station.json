@@ -6,7 +6,7 @@
   "purpose": "Show exact phone-size compositions before motion and full rendering consume production time.",
   "instruction_path": ".agents/skills/mindmake-video/stations/styleframes/STATION.md",
   "implementation_owners": ["packages/core/src/visual-plan.ts", "packages/core/src/virtual-camera.ts", "packages/core/src/render-landing.ts"],
-  "contract_owners": ["packages/contracts/src/v2.ts", "packages/contracts/src/call.ts"],
+  "contract_owners": ["packages/contracts/src/v2.ts", "packages/contracts/src/whys.ts"],
   "prerequisites": { "extract": ["visual_plan", "assets"], "solo": ["visual_plan", "assets"], "short_native": ["visual_plan", "assets"] },
   "consumes": ["visual_plan_artifact", "asset_stage_artifact", "approved_production_brief"],
   "produces": ["styleframe_review_packet"],

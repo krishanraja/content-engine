@@ -1665,7 +1665,8 @@ The mechanical checks a piece must pass before it can be approved or
 - `function threeThingsTomorrow(body: string): { ok: boolean; detail: string }`
 - `function articleSubscribeAsks(body: string): { ok: boolean; detail: string }`
 - `function articleFormat(body: string): string[]`
-- `function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }): Check[]`
+- `function whyLadderCheck(whys: unknown): Check`
+- `function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, whys?: unknown): Check[]`
 - `function publishStatus(checks: Check[]): { ok: boolean; reason: string | null; failing: Check[] }`
 
 ### `apps/control-plane/api/_publishWatch.ts`

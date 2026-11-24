@@ -36,7 +36,7 @@ describe('no prediction check, rule or prompt line remains (why-ladder-close)', 
       const checks = publishChecks(body, facts)
       for (const id of PREDICTION_IDS) assert.equal(checks.find(c => c.id === id), undefined, id)
     }
-    assert.equal(publishChecks.length, 2, 'publishChecks(body, factGate): no date, piece id or prediction opt-in')
+    assert.equal(publishChecks.length, 3, 'publishChecks(body, factGate, whys): the why-ladder, never a date, piece id or prediction opt-in')
     for (const name of ['predictionWanted', 'PREDICTION_CHECKS', 'NO_PREDICTION_NEEDED', 'callHorizon', 'confidenceOf', 'predictionCheck', 'CLEAR_STANCE_AT', 'CALL_HORIZON_DAYS']) {
       assert.equal(name in checksModule, false, `${name} is still exported`)
     }

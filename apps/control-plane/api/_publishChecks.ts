@@ -6,6 +6,7 @@
 
 import { notXYConstructions } from './_judges/deterministic.js'
 import { copyLint } from './_copyLint.js'
+import { checkWhyLadder, type WhyLadder } from '../../../packages/contracts/src/whys.js'
 
 // ── Mechanical checks before approval or publication ────────────────────────
 
@@ -233,9 +234,28 @@ export function articleFormat(body: string): string[] {
   return found
 }
 
+/** The WHY_LADDER check on the piece's why-ladder, meta.whys as board/_whys.ts files it ({ ladder, problems }).
+ *  A filed ladder blocks until every Why stands (checkWhyLadder, rerun here so a ladder edited after filing is read as
+ *  it is now); a block that would not parse blocks too, with the reasons the parser gave. A piece with no ladder on
+ *  file does not block: pieces drafted before the switch (Ruling, Krish, 2026-11-24) must still ship, so it shows as
+ *  advisory until research files one. */
+export function whyLadderCheck(whys: unknown): Check {
+  const name = 'The 5 Whys stand'
+  const w = (whys && typeof whys === 'object' ? whys : null) as { ladder?: WhyLadder | null; problems?: unknown } | null
+  const ladder = w?.ladder && typeof w.ladder === 'object' ? w.ladder : null
+  if (!w) return { id: 'WHY_LADDER', name, blocking: false, ok: false, detail: 'No why-ladder on file yet. Paste research that carries the 5 Whys block, or press Research it now.' }
+  const filed = Array.isArray(w.problems) ? w.problems.map(p => String((p as { problem?: unknown })?.problem ?? p)) : []
+  const problems = ladder ? checkWhyLadder(ladder).map(p => p.problem) : (filed.length ? filed : ['The research carried no readable why-ladder'])
+  const all = [...new Set(problems)]
+  return {
+    id: 'WHY_LADDER', name, blocking: true, ok: all.length === 0,
+    detail: all.length ? `${all.slice(0, 3).join('. ')}${all.length > 3 ? `, and ${all.length - 3} more` : ''}.` : `${ladder?.rungs?.length ?? 0} Whys, each sourced, landing on what this shows and an open question.`,
+  }
+}
+
 /** Every mechanical check a piece must pass before it can be approved or
- *  published. `factGate` is the fact gate's own verdict for this exact text. */
-export function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }): Check[] {
+ *  published. `factGate` is the fact gate's own verdict for this exact text; `whys` is the piece's meta.whys. */
+export function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, whys?: unknown): Check[] {
   const text = String(body || '')
   const checks: Check[] = []
   checks.push({ id: 'FACTS', name: 'Every fact checked twice', blocking: true, ok: factGate.ok, detail: factGate.ok ? 'This exact version passed the fact check.' : (factGate.reason || 'The facts have not passed yet.') })
@@ -274,6 +294,7 @@ export function publishChecks(body: string, factGate: { ok: boolean; reason: str
   // Ruling (Krish, 2026-11-24): "the signature format is the 5 Whys; get rid of everything that suggests predictions,
   // calls, dated, odds or scores." No check here reads a prediction, a date to check by or a confidence. The signature
   // format's own blocking check, WHY_LADDER, takes this place: after the reading age, before the advisory checks.
+  checks.push(whyLadderCheck(whys))
   // One entry per word: "token" and "tokens" are the same thing to fix.
   const jargon = [...new Set((text.match(JARGON) || []).map(w => w.toLowerCase().replace(/s$/, '')))]
     .map(w => /^(api|llm|gpu|rag)$/.test(w) ? w.toUpperCase() : w)

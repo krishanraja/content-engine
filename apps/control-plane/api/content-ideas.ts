@@ -473,7 +473,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // before approval or publication, every blocking check must pass. Review
       // is where he reads a piece, so these checks do not block it.
       if (updates.state === 'approved' || updates.state === 'published') {
-        const checks = publishChecks(effective, gate)
+        const checks = publishChecks(effective, gate, jsonRecord(current.meta).whys)
         const status = publishStatus(checks)
         if (!status.ok) return res.status(409).json({ ok: false, reason: 'publish_gate', error: status.reason, checks: status.failing })
       }
