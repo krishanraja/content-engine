@@ -165,12 +165,60 @@ class WhyLadderDeck(unittest.TestCase):
     LADDER = [{'q': f'Why does step {n} happen?', 'a': f'Because cause {n} came first, the filings show.',
                'source': f'Anthropic engineering blog, 2026-11-0{n}'} for n in range(1, 6)]
 
-    @staticmethod
-    def deck(whys):
-        deck = json.loads(json.dumps(FOLLOWABLE))
-        deck['schema'] = 'carousel-deck/2'
+    # The worked why-ladder deck: FOLLOWABLE's story, landing on what it shows and an open question, with no "do" card.
+    LANDED = json.loads(json.dumps(FOLLOWABLE))
+    LANDED['schema'] = 'carousel-deck/2'
+    LANDED['cards'][7] = {'headline': 'Every step where AI work waits for a person to say yes is where the jam now forms.',
+                          'line': 'The hold-up moved from doing the work to checking it.',
+                          'picture': 'a map with one red bottleneck'}
+    LANDED['cards'][8] = {'headline': 'Where in your own work does AI already wait for a person to say yes?',
+                          'cta': 'Follow for more', 'picture': 'the wordmark centred under it'}
+    LANDED['arc'] = {'what': 1, 'happened': [1, 2], 'why': 3, 'so_what': [5, 6, 7], 'landing': [8, 9]}
+    for reader in LANDED['read_back']:
+        reader['answers'].pop('do')
+        reader['answers']['landing'] = 'The jam sits wherever a person has to say yes, so where is that for me?'
+
+    @classmethod
+    def deck(cls, whys):
+        deck = json.loads(json.dumps(cls.LANDED))
         deck['five_whys'] = whys
         return deck
+
+    def test_the_ladder_lands_on_an_open_question_with_no_do_card(self):
+        deck = self.deck(self.LADDER)
+        self.assertNotIn('do', deck['arc'])
+        self.assertEqual(carousel_check.problems(deck), [])
+
+    def test_a_landing_that_tells_business_people_what_to_do_fails(self):
+        deck = self.deck(self.LADDER)
+        deck['cards'][7]['headline'] = 'Find the steps where AI work waits for a person to say yes.'
+        found = ' | '.join(carousel_check.problems(deck))
+        self.assertIn('card 8: the landing tells business people what to do ("Find")', found)
+        deck = self.deck(self.LADDER)
+        deck['cards'][8]['headline'] = 'Business leaders should check every piece of AI work by how risky it is.'
+        found = ' | '.join(carousel_check.problems(deck))
+        self.assertIn('card 9: the landing tells business people what to do ("leaders should")', found)
+        self.assertIn('the landing hands the viewer no open question', found)
+
+    def test_a_ladder_deck_keeps_no_do_step_and_its_readers_answer_the_landing(self):
+        old = self.deck(self.LADDER)
+        old['arc'] = dict(FOLLOWABLE['arc'])
+        found = ' | '.join(carousel_check.problems(old))
+        self.assertIn('name the card "landing" in the arc, not "do"', found)
+        self.assertIn('no card says what this shows, ending on the open question', found)
+        unread = self.deck(self.LADDER)
+        for reader in unread['read_back']:
+            reader['answers'].pop('landing')
+        self.assertIn('what it shows and the question it leaves them with (0 given)',
+                      ' | '.join(carousel_check.problems(unread)))
+
+    def test_the_stop_is_one_of_the_contract_stops_and_ends_the_ladder(self):
+        bad = self.deck(self.LADDER[:1] + [dict(self.LADDER[1], stop='gave_up')])
+        self.assertIn('Why 2\'s stop is "gave_up", not one of evidence_exhausted', ' | '.join(carousel_check.problems(bad)))
+        early = self.deck([dict(self.LADDER[0], stop='cap')] + self.LADDER[1:3])
+        self.assertIn('Why 1 stops the ladder (cap) but Why 2 climbs past it', ' | '.join(carousel_check.problems(early)))
+        for stop in carousel_check.LADDER_STOPS:
+            self.assertEqual(carousel_check.problems(self.deck(self.LADDER[:1] + [dict(self.LADDER[1], stop=stop)])), [], stop)
 
     def test_a_source_on_every_why_passes(self):
         self.assertEqual(carousel_check.problems(self.deck(self.LADDER)), [])

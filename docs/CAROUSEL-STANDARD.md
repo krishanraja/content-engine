@@ -277,9 +277,16 @@ makes to this standard.
 get rid of everything that suggests predictions, calls, dated, odds or scores). The same file climbing the ladder the
 piece's research found (`packages/contracts/src/whys.ts`): `five_whys` holds `{"q", "a", "source"}` for every Why, where
 `source` is who said it, dated, or its link (or `{"label", "url"}`). It climbs 3 to 7 Whys, five the target and never
-padded; fewer than 3 only when the last carries the `"stop"` that ended the ladder (`evidence_exhausted`,
-`out_of_scope` and so on). `carousel_check.py` refuses a Why with no source on a `/2` deck. A `carousel-deck/1` deck
-keeps its five whys with no source each and still validates.
+padded; fewer than 3 only when the last carries the `"stop"` that ended the ladder, one of `evidence_exhausted`,
+`motive_not_mechanism`, `restatement`, `abstraction_drift`, `out_of_scope` or `cap`, and never on a Why before the
+last. A `/2` deck lands instead of telling anyone what to do: its arc's last step is `"landing"` in place of `"do"`
+(`"arc": {"what": 1, "happened": [1, 2], "why": 3, "so_what": [5, 6, 7], "landing": [8, 9]}`), the card (or cards)
+for what this shows, ending on the open question handed to the viewer ("?"), never a lesson or an action for
+business people (no "should" or "must", no sentence that opens on an order such as "Find" or "Check"). The last
+card's headline is the landing, then the palette's close. Each fresh reader answers `"landing"` (what it shows and the
+question it leaves them with) in place of `"do"`. `carousel_check.py` refuses a Why with no source, a stop outside
+that list, a `"do"` step and a landing with no question or with an order on a `/2` deck. A `carousel-deck/1` deck
+keeps its five whys with no source each, its `"do"` step, and still validates.
 
 ## The cover and the page (Ruling, Krish, 15 November 2026)
 
