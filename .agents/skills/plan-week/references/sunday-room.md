@@ -127,3 +127,15 @@ yet). The room sends exactly those approved words through the Teleprompter conne
   `speed`, `alignment` or `timedSpeed`.
 - Run each `record` line it prints, then `get_script` each cut and check its text is the approved words (the
   readback).
+
+## Why Sunday is an interview (Krish, 2026-10-28)
+
+"on a Sunday, Claude Code proactively brings me ideas", and then "Claude
+interviews me on all three ideas to nail down the narrative arc, make it
+really powerful, useful, and fun to consume, and really find the deeper story
+beneath the surface story." That retires both halves of the rule of 11
+October (Monday's piece only, and never asking him anything else on a
+Sunday). The publish board is the one surface (his answer: "Publish board");
+Control Center's #/week only tracks it. Still never ask him what
+`docs/CADENCE.md` already answers (a 5-minute video and a 90-second cut, every
+piece; Substack and YouTube, then Shorts, TikTok and Instagram).

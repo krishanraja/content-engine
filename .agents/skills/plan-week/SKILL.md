@@ -45,15 +45,8 @@ November it is the week of 9 November, whose pieces go live on Monday 9,
 Wednesday 11 and Friday 13 November. The backlog is not this loop's: Monday
 26, Wednesday 28 and Friday 30 October go live on 2, 4 and 6 November.
 
-"on a Sunday, Claude Code proactively brings me ideas", and then "Claude
-interviews me on all three ideas to nail down the narrative arc, make it
-really powerful, useful, and fun to consume, and really find the deeper story
-beneath the surface story." That retires both halves of the rule of 11
-October (Monday's piece only, and never asking him anything else on a
-Sunday). The publish board is the one surface (his answer: "Publish board");
-Control Center's #/week only tracks it. Still never ask him what
-`docs/CADENCE.md` already answers (a 5-minute video and a 90-second cut, every
-piece; Substack and YouTube, then Shorts, TikTok and Instagram).
+On Sunday Claude brings the ideas and interviews him for the deeper story
+(`references/sunday-room.md`). Never ask what `docs/CADENCE.md` answers.
 
 **Zero Claude routines** (Ruling, Krish, 2026-10-29: "FYI, I want zero
 Claude routines. No Claude schedules of any kind in this architecture"; then
@@ -126,18 +119,9 @@ opinion of their own." Every idea passes six tests before it reaches him:
    calls back to the hook. An idea that cannot be chained is not ready.
 6. **One named thing, for a leader.** One concrete thing, its business stake next (ONE_CONCRETE_THING, FOR_THE_LEADER).
 
-**The beat** (Krish, 2026-11-24, 20:18Z: "we need to ensure the engine brings
-the best of stories and ideas that I want to move towards, as opposed to
-governance, data breaches etc. I really liked the AI Music piece, it got good
-response the way it was broken down. we can still keep a focus on the
-economics of AI but in these focus sectors"). The focus sectors, the avoid
-list, the tone and the model piece ("a Reiki master wrote a UK number two": a
-hit traced back to the people and tools behind it, money included) are rows
-in `config/beat.json`; read it, never copy it. Media, entertainment, arts,
-music and creator tech, the economics of AI inside them, with a positive
-spin. Not governance, regulation, security, privacy or breaches, and not
-enterprise productivity with no creative angle: `board_feed.py gate` refuses
-such an option (`off_beat`) from the 30 Nov board.
+**The beat** (Krish, 2026-11-24): creative sectors and the economics of AI in
+them, never governance or breaches. Rows: `config/beat.json` (read, never
+copy); his words and the `off_beat` gate: `references/beat.md`.
 
 **His asks.** Every card he typed words on in the 45 days before the week
 (`why_here`, a typed `why_like`, `would_do`), dismissed, style-only or
