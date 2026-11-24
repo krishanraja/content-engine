@@ -589,6 +589,23 @@ def vetoes_findings(ideas, vetoes):
 SOURCE_TAGS = ('his_ask', 'his_card', 'his_idea', 'his_press', 'his_queue', 'inspo_card', 'newsletter', 'instagram', 'creator',
                'engine_research', 'radar', 'trade_press')
 SHAPE_FROM = '2026-11-23'  # the first board the Wave 1 shape holds; earlier boards keep the shape they were made in
+# The research prompt asks for the 5 Whys (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of
+# everything that suggests predictions, calls, dated, odds or scores): from the 30 Nov board, the first gathered after
+# the ruling, each research_prompt names the 5 Whys (or the why-ladder) as well as running 150 characters or more.
+WHYS_FROM = '2026-11-30'
+ASKS_WHYS = re.compile(r'\b(?:5|five)\s+whys?\b|\bwhy-ladder\b', re.I)
+
+
+def research_prompt_problems(rp, week):
+    """Why a research_prompt is not ready to paste into deep research, [] when it is: 150 characters or more, and from
+    WHYS_FROM it asks for the 5 Whys (one sourced answer per Why)."""
+    if not (isinstance(rp, str) and len(rp.strip()) >= 150):
+        return ['no ready research prompt (research_prompt, ready to paste into deep research, 150 characters or more)']
+    if str(week) >= WHYS_FROM and not ASKS_WHYS.search(rp):
+        return ['the research prompt does not ask for the 5 Whys (one sourced answer per Why, two sources on two domains, '
+                'the counter-evidence, an honest stop and a landing with an open question): from '
+                f'{WHYS_FROM} every research_prompt asks for them']
+    return []
 
 
 def question_problems(question):
@@ -629,9 +646,7 @@ def shape_findings(ideas, week):
                 out.append({'code': 'pitch', 'ref': ref, 'line': f'{ref}: no pitch; from {SHAPE_FROM} every option is a full pitch that opens on its plain question'})
             else:
                 out += [{'code': 'question', 'ref': ref, 'line': f'{ref}: pitch {p}'} for p in question_problems(pitch.get('question'))]
-            rp = o.get('research_prompt')
-            if not (isinstance(rp, str) and len(rp.strip()) >= 150):
-                out.append({'code': 'research_prompt', 'ref': ref, 'line': f'{ref}: no ready research prompt (research_prompt, ready to paste into deep research, 150 characters or more)'})
+            out += [{'code': 'research_prompt', 'ref': ref, 'line': f'{ref}: {p}'} for p in research_prompt_problems(o.get('research_prompt'), week)]
             if o.get('source_tag') not in SOURCE_TAGS:
                 out.append({'code': 'source_tag', 'ref': ref, 'line': f'{ref}: source_tag is one of {", ".join(SOURCE_TAGS)}'})
     offdays = (ideas or {}).get('offdays') if isinstance((ideas or {}).get('offdays'), dict) else {}
