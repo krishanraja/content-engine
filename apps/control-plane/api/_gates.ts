@@ -599,7 +599,6 @@ export function groundClaim(claimText: string, quote: string, sourceText: string
 
 export const MIN_VERIFIABILITY = 2
 export const FALSIFIER_JACCARD_CEILING = 0.6
-export const FALSIFIER_HORIZON_DAYS = 90
 
 export const SOURCE_CLASSES = [
   'filing', 'transcript', 'pricing page', 'pricing', 'job board', 'job postings',
@@ -705,11 +704,10 @@ export function gateInterest(input: InterestInput): InterestResult {
   }
 }
 
-/** The falsifier as a product: when it comes due against the corrections log. */
-export function falsifierDueOn(from = new Date(), days = FALSIFIER_HORIZON_DAYS): string {
-  const d = new Date(from.getTime() + days * 86_400_000)
-  return d.toISOString().slice(0, 10)
-}
+// The falsifier stays a research-quality field, "what would break this Why",
+// and is never dated, scored or ruled held or broke (Ruling, Krish, 2026-11-24:
+// "get rid of everything that suggests predictions, calls, dated, odds or
+// scores"). Until then falsifierDueOn gave each one a due date 90 days out.
 
 // ═══════════════════════════════════════════════════════════════════════════
 // G4. WHY-LADDER DESCENT. The stopping rule as code.

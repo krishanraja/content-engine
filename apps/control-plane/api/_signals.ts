@@ -1,6 +1,6 @@
 // Signals: the free public sources and the keyed readers the engine reads on
 // a timer or on demand. Pure fetchers with no database access, so the crons
-// in api/signals/*, the scoreboard routes and a test can all call them.
+// in api/signals/* and a test can all call them.
 //
 // Krish, 2026-10-09: "Prepare and harden the entire engine as though all of
 // this exists permanently and can be used thoughtfully, ingeniously, and
@@ -9,10 +9,6 @@
 //
 // What lives here, and why each one is additive (docs/ENGINE_100X.md):
 //
-// - Prediction markets (Polymarket, Kalshi; keyless). Every piece ends on a
-//   dated Call with a confidence. These read what traders pay for the same
-//   outcome, so the scoreboard shows our call beside the market's and tracks
-//   both to the due date. Nobody else in this lane does it.
 // - GDELT (keyless). The world's news by subject and hour: how fast a story is
 //   moving, and the headlines behind the news-wall picture. GDELT allows one
 //   request every five seconds per IP and answers a burst with a plain-text
@@ -26,8 +22,9 @@
 // BRAVE_API_KEY inside webResearch, as the fallbacks behind Perplexity.
 //
 // Everything a reader returns is data, never a claim. A number from here still
-// goes through the fact gate before a piece uses it, and the market's odds are
-// shown as the market's, never as ours.
+// goes through the fact gate before a piece uses it. The prediction-market
+// readers (Polymarket, Kalshi) went on 2026-11-24 with the scoreboard they fed:
+// a piece makes no prediction, call or odds (Ruling, Krish, 2026-11-24).
 
 const UA = 'Mindmake content engine (krish@krishraja.com)'
 const TIMEOUT_MS = 20_000
@@ -56,138 +53,6 @@ async function getJson(url: string, headers: Record<string, string> = {}): Promi
 function num(v: unknown): number | null {
   const n = typeof v === 'number' ? v : typeof v === 'string' ? Number(v) : NaN
   return Number.isFinite(n) ? n : null
-}
-
-// ── Prediction markets ───────────────────────────────────────────────────
-
-export type MarketSource = 'polymarket' | 'kalshi'
-
-export interface MarketOdds {
-  source: MarketSource
-  /** The Polymarket slug or the Kalshi ticker. */
-  key: string
-  question: string | null
-  /** The market's implied probability of "Yes", 0 to 1, or null when unreadable. */
-  probability: number | null
-  volume_usd: number | null
-  end_date: string | null
-  url: string | null
-}
-
-/** Polymarket's Gamma API returns `outcomes` and `outcomePrices` as JSON
- *  strings inside JSON. The probability is the price of the "Yes" outcome
- *  (or the first, when the outcomes are not Yes/No). */
-export function polymarketProbability(market: { outcomes?: unknown; outcomePrices?: unknown }): number | null {
-  const parse = (v: unknown): unknown[] => {
-    if (Array.isArray(v)) return v
-    if (typeof v === 'string') { try { const j = JSON.parse(v); return Array.isArray(j) ? j : [] } catch { return [] } }
-    return []
-  }
-  const outcomes = parse(market.outcomes).map(o => String(o).toLowerCase())
-  const prices = parse(market.outcomePrices)
-  if (!prices.length) return null
-  const yes = outcomes.indexOf('yes')
-  const p = num(prices[yes >= 0 ? yes : 0])
-  if (p === null || p < 0 || p > 1) return null
-  return Math.round(p * 10_000) / 10_000
-}
-
-function polymarketRow(m: any): MarketOdds {
-  return {
-    source: 'polymarket',
-    key: String(m?.slug || ''),
-    question: m?.question ? String(m.question) : null,
-    probability: polymarketProbability(m || {}),
-    volume_usd: num(m?.volume),
-    end_date: m?.endDate ? String(m.endDate) : null,
-    url: m?.slug ? `https://polymarket.com/market/${m.slug}` : null,
-  }
-}
-
-export async function polymarketBySlug(slug: string): Promise<MarketOdds | null> {
-  const rows = await getJson(`https://gamma-api.polymarket.com/markets?slug=${encodeURIComponent(slug)}`)
-  const m = Array.isArray(rows) ? rows[0] : null
-  return m ? polymarketRow(m) : null
-}
-
-/** A finder: Polymarket's `/markets` endpoint ignores a search term (it hands
- *  back sports spreads for "OpenAI"), so this reads `/public-search`, which
- *  returns events with their markets. Still a finder, never a pin: a real
- *  Call is pinned by slug after a person has read the market's question. */
-export async function polymarketSearch(query: string, limit = 6): Promise<MarketOdds[]> {
-  const q = new URLSearchParams({ q: query, limit_per_type: String(limit) })
-  const j = await getJson(`https://gamma-api.polymarket.com/public-search?${q}`)
-  const out: MarketOdds[] = []
-  for (const event of Array.isArray(j?.events) ? j.events : []) {
-    for (const m of Array.isArray(event?.markets) ? event.markets : []) {
-      if (m?.closed === true) continue
-      const row = polymarketRow(m)
-      if (!row.question) row.question = event?.title ? String(event.title) : null
-      out.push(row)
-      if (out.length >= limit) return out
-    }
-  }
-  return out
-}
-
-/** Kalshi quotes in cents. The midpoint of the yes bid and ask when both are
- *  there, else the last traded price. */
-export function kalshiProbability(market: { yes_bid?: unknown; yes_ask?: unknown; last_price?: unknown }): number | null {
-  const bid = num(market.yes_bid)
-  const ask = num(market.yes_ask)
-  const last = num(market.last_price)
-  const cents = bid !== null && ask !== null && bid > 0 && ask > 0 ? (bid + ask) / 2 : last
-  if (cents === null || cents < 0 || cents > 100) return null
-  return Math.round(cents * 100) / 10_000
-}
-
-export async function kalshiByTicker(ticker: string): Promise<MarketOdds | null> {
-  const j = await getJson(`https://api.elections.kalshi.com/trade-api/v2/markets/${encodeURIComponent(ticker)}`)
-  const m = j?.market
-  if (!m) return null
-  return {
-    source: 'kalshi',
-    key: String(m.ticker || ticker),
-    question: m.title ? String(m.title) : null,
-    probability: kalshiProbability(m),
-    volume_usd: num(m.volume_fp ?? m.volume),
-    end_date: m.close_time ? String(m.close_time) : null,
-    url: m.ticker ? `https://kalshi.com/markets/${String(m.ticker).toLowerCase()}` : null,
-  }
-}
-
-export async function marketOdds(source: MarketSource, key: string): Promise<MarketOdds | null> {
-  if (source === 'polymarket') return polymarketBySlug(key)
-  if (source === 'kalshi') return kalshiByTicker(key)
-  return null
-}
-
-/** The record a piece keeps beside its Call, in content_ideas.meta.call_market. */
-export interface CallMarketRecord {
-  source: MarketSource
-  key: string
-  question: string | null
-  url: string | null
-  probability: number | null
-  read_at: string
-  set_at: string
-  /** At most ninety daily readings, oldest first. */
-  history: Array<{ at: string; p: number | null }>
-}
-
-export function nextCallMarket(prev: Partial<CallMarketRecord> | null | undefined, odds: MarketOdds, now = new Date()): CallMarketRecord {
-  const at = now.toISOString()
-  const history = [...(Array.isArray(prev?.history) ? prev!.history : []), { at, p: odds.probability }].slice(-90)
-  return {
-    source: odds.source,
-    key: odds.key,
-    question: odds.question,
-    url: odds.url,
-    probability: odds.probability,
-    read_at: at,
-    set_at: prev?.set_at || at,
-    history,
-  }
 }
 
 // ── GDELT: news velocity ─────────────────────────────────────────────────
