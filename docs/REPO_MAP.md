@@ -654,6 +654,10 @@ The fact gate.
 - `function sentences(body: string): string[]`
 - `function sectionOf(body: string, sentence: string): string`
 - `function readsAsForecast(sentence: string): boolean`
+- `function labelledAside(sentence: string, reason = '', section = ''): boolean`
+- `const NO_PREDICTION_MARK`
+- `function asideFlag(sentence: string): string`
+- `function staleAside(sentence: string, entry: LedgerEntry | undefined): boolean`
 - `function numbersIn(s: string): string[]`
 - `function numbersNotOnFile(body: string, meta: Record<string, any>): Array<{ sentence: string; numbers: string[] }>`
 - `const SOURCE_MARK`
@@ -1327,6 +1331,12 @@ The making record: where one piece is on its way from the workroom to
 - `function makingSteps(row: { id?: string; state?: string | null; body?: string | null; meta?: Record<string, any> | null…`
 - `interface PieceState`
 - `function pieceVerdict(piece: PieceState, closesOn: string, steps: MakingStep[] = makingSteps(piece)): 'done' | 'moot' |…`
+
+### `apps/control-plane/api/_mandate.ts`
+
+A subchannel mandate with its old prediction close taken out.
+
+- `function mandateWithoutCall(mandate: string): string`
 
 ### `apps/control-plane/api/_mediaQuality.ts`
 
