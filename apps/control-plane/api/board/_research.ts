@@ -3,6 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import { meterScope, perplexityCall } from '../_meter.js'
 import { readMaterials, type Material } from '../_content.js'
 import { StoreError, addToWorkingSet, type StoreDb } from '../_pieceStore.js'
+import { saveWhys, whysFromResearch, whysSummary } from './_whys.js'
 
 // The live board's Research step (Krish, 2026-11-09: "use sonar-pro for research now"). "Research it now" runs the
 // piece's research brief (_prompts.researchPrompt) through Perplexity sonar-pro, the model the engine already uses and
@@ -12,6 +13,7 @@ import { StoreError, addToWorkingSet, type StoreDb } from '../_pieceStore.js'
 
 export const MAX_MATERIAL = 400_000
 const MODEL = 'sonar-pro'
+export const MAX_TOKENS = 8000
 
 type Fetcher = (url: string, init: { method: string; headers: Record<string, string>; body: string; signal?: AbortSignal }) => Promise<{ ok: boolean; json(): Promise<unknown> }>
 
@@ -28,10 +30,12 @@ export async function runResearch(prompt: string, env: Record<string, string | u
       body: JSON.stringify({
         model: MODEL,
         messages: [
-          { role: 'system', content: 'You are a precise research assistant. Cite every fact, date every figure, mark estimates, never speculate. Answer in Markdown.' },
+          { role: 'system', content: 'You are a precise research assistant. Cite every fact, date every figure, mark estimates, never speculate. '
+            + 'Answer as the prompt asks: the piece_id line, then the fenced why-ladder JSON block, one sourced answer per Why, then the narrative in Markdown.' },
           { role: 'user', content: prompt },
         ],
-        temperature: 0.2, max_tokens: 4000,
+        // A ladder of five sourced Whys, its JSON and the narrative under it runs past 4,000 tokens; 8,000 is sonar-pro's ceiling.
+        temperature: 0.2, max_tokens: MAX_TOKENS,
       }),
     })
     const j = (await r.json().catch(() => ({}))) as { usage?: unknown; citations?: unknown; choices?: Array<{ message?: { content?: string } }> }
@@ -47,7 +51,6 @@ export async function runResearch(prompt: string, env: Record<string, string | u
 
 export class MaterialError extends Error { constructor(public status: number, message: string) { super(message) } }
 
-/** File one piece of research on the piece (meta.materials), as Krish's. Returns what was filed, without its text. */
 /** What his Paste research press files as: research, which the research library copies into his Drive, unless a session
  *  filed a storyboard through it. It was 'file' until 17 Nov 2026, which the library never copies (Krish, 2026-11-17: "was
  *  the research i gave you auto logged to this piece too?"). */
@@ -55,8 +58,12 @@ export function pastedKind(role: unknown): 'file' | 'research' {
   return role === 'storyboard' ? 'file' : 'research'
 }
 
+/** File one piece of research on the piece (meta.materials), as Krish's. Returns what was filed, without its text. Research
+ *  that carries a why-ladder block (the research prompt asks for one) also has its ladder read, checked rung by rung and
+ *  kept on the piece as meta.whys (_whys.ts), and the answer says how many Whys it read and what each still needs;
+ *  research with no ladder is filed as Markdown exactly as before. */
 export async function fileMaterial(db: SupabaseClient, pieceId: string, m: { kind: 'file' | 'research'; title: string; content: string; by: string })
-  : Promise<{ id: string; title: string; bytes: number; at: string }> {
+  : Promise<{ id: string; title: string; bytes: number; at: string; whys?: { rungs: number; problems: string[]; saved: boolean } }> {
   const content = String(m.content || '')
   if (!content.trim()) throw new MaterialError(400, 'empty_material')
   if (content.length > MAX_MATERIAL) throw new MaterialError(413, 'material_too_large')
@@ -70,7 +77,10 @@ export async function fileMaterial(db: SupabaseClient, pieceId: string, m: { kin
     throw e
   }
   if (added.ok === false) throw new MaterialError(added.reason === 'materials_full' ? 409 : 503, added.reason === 'materials_full' ? 'materials_full' : 'board_store_unavailable')
-  return { id: material.id, title: material.title || '', bytes: material.bytes || 0, at }
+  const filed = { id: material.id, title: material.title || '', bytes: material.bytes || 0, at }
+  const whys = m.kind === 'research' ? whysFromResearch(content, at, material.id) : null
+  if (!whys) return filed
+  return { ...filed, whys: whysSummary(whys, await saveWhys(db as unknown as StoreDb, pieceId, whys)) }
 }
 
 export interface LookPick { production: string; experiment: string | null; inspiration: string[]; by: string; at: string }

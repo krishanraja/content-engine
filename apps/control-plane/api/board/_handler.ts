@@ -487,8 +487,9 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
             const name = String(body.title || 'Research').slice(0, 180)
             // A storyboard the session made is filed with its role in the title, so the day knows one is on file.
             const title = body.role === 'storyboard' && !/^Storyboard:/.test(name) ? `Storyboard: ${name}` : name
-            const filed = await fileMaterial(db, pieceId, { kind: pastedKind(body.role), title, content: String(body.content || ''), by: 'Krish' })
-            return res.status(201).json({ ok: true, material: filed })
+            // Research with a why-ladder block also keeps its ladder on the piece (meta.whys, _whys.ts); the answer says what it read.
+            const { whys, ...filed } = await fileMaterial(db, pieceId, { kind: pastedKind(body.role), title, content: String(body.content || ''), by: 'Krish' })
+            return res.status(201).json({ ok: true, material: filed, ...(whys ? { whys } : {}) })
           }
           if (op === 'research') {
             if (await recentResearch(db, pieceId)) throw new MaterialError(409, 'research_just_ran')
@@ -498,8 +499,8 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
               pieceId, idea: String(row.data.idea || ''), materials: [], lock: null })
             const found = await researchForPiece(pieceId, prompt)
             if (!found.text) throw new MaterialError(502, 'research_failed')
-            const filed = await fileMaterial(db, pieceId, { kind: 'research', title: `Engine research (sonar-pro), ${new Date().toISOString().slice(0, 10)}`, content: found.text, by: 'Krish' })
-            return res.status(201).json({ ok: true, material: filed, sources: found.sources.length })
+            const { whys, ...filed } = await fileMaterial(db, pieceId, { kind: 'research', title: `Engine research (sonar-pro), ${new Date().toISOString().slice(0, 10)}`, content: found.text, by: 'Krish' })
+            return res.status(201).json({ ok: true, material: filed, sources: found.sources.length, ...(whys ? { whys } : {}) })
           }
           if (op === CUT_OP) {
             // His answer on one cut, kept append only on the piece (meta.cut_verdicts). It never changes the cut. A Not

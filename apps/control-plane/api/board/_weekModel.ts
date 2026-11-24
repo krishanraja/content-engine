@@ -1,6 +1,7 @@
 import { SERIES_DAYS, type PostedDay } from './_posted.js'
 import { writeBack } from './_writeBack.js'
 import { corpusLines, corpusOf, type CorpusItem } from './_corpus.js'
+import { whysView, type ModelWhys } from './_whys.js'
 import { bufferUrl, channelWords, placementFor } from './_growthPlacement.js'
 import { asWritten, backDocId, takenBackAt, wordsBody, wordsDocId } from './_contracts.js'
 import { spokenTitle, type FiledScript, type PieceDecisions } from './_decisions.js'
@@ -113,6 +114,9 @@ export interface ModelRead {
   research: string[]
   /** His words on it, or a session's, said as whose they are. */
   said: string | null
+  /** The piece's why-ladder from its research, checked rung by rung (meta.whys, _whys.ts; contract 1.34.0). Absent when
+   *  no research on file carries one. */
+  whys?: ModelWhys
 }
 /** One next action: the engine's own press or run, a link to do it, or the one Claude prompt. */
 export type ModelAction = Action
@@ -415,6 +419,7 @@ function readOf(raw: Body | null, extra: { title?: string; text?: string | null;
   if (!sources.length && extra.source) add(sourceOf(extra.source))
   const story = str(raw?.story) ?? (extra.row ? str(extra.row.idea) : null)
   const text = pitch ? [str(pitch.see), str(pitch.lands)].filter(Boolean).join(' ') || null : str(raw?.copy) ?? extra.text ?? null
+  const whys = extra.row ? whysView(extra.row.meta) : null
   return {
     so_what: str(raw?.so_what) ?? (extra.row ? str(extra.row.thesis) : null),
     story: story ? cut(story, 4000) : null,
@@ -424,6 +429,7 @@ function readOf(raw: Body | null, extra: { title?: string; text?: string | null;
     sources,
     research: [...new Set(extra.research || [])].slice(0, 40),
     said: extra.said ?? null,
+    ...(whys ? { whys } : {}),
   }
 }
 

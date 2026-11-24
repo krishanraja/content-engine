@@ -190,6 +190,23 @@ class ShapeTest(unittest.TestCase):
                  'offdays': {'tue': [{'id': 'x', 'source_tag': 'his_card'}]}}
         self.assertEqual(ic.shape_findings(whole, '2026-11-23'), [])
 
+    def test_from_the_30_nov_board_the_research_prompt_asks_for_the_5_whys(self):
+        # Ruling (Krish, 2026-11-24): the signature format is the 5 Whys; get rid of everything that suggests predictions,
+        # calls, dated, odds or scores. The 150-character rule stays; from WHYS_FROM the prompt also asks for the Whys.
+        plain = 'Find every primary source since 17 Nov 2026 on who pays when AI does the work, dated and linked. ' * 2
+        whys = ('Research it with the 5 Whys: one sourced answer per Why, two primary sources on different domains, '
+                'the strongest counter-evidence, an honest stop and a landing with an open question.')
+        option = lambda rp: {'days': {'mon': [main_option(pitch={'question': 'Who pays when AI does the work?'}, research_prompt=rp, source_tag='engine_research')]}}
+        self.assertEqual(ic.shape_findings(option(plain), '2026-11-23'), [])
+        found = ic.shape_findings(option(plain), '2026-11-30')
+        self.assertEqual([f['code'] for f in found], ['research_prompt'])
+        self.assertIn('does not ask for the 5 Whys', found[0]['line'])
+        self.assertEqual(ic.shape_findings(option(whys), '2026-11-30'), [])
+        self.assertEqual(ic.shape_findings(option('Climb the why-ladder. ' + plain), '2026-11-30'), [])
+        short = ic.shape_findings(option('Use the 5 Whys.'), '2026-11-30')
+        self.assertIn('150 characters or more', short[0]['line'])
+        self.assertEqual(ic.research_prompt_problems(None, '2026-11-30')[0][:26], 'no ready research prompt (')
+
 
 class VetoTest(unittest.TestCase):
     def test_the_board_lists_exactly_the_vetoes_that_stand_with_his_words(self):

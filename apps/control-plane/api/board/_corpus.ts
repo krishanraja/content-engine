@@ -8,6 +8,10 @@
 // StoryState.corpus), and Control Centre's "Re-run the narrative" copies that same prompt. What counts as research is the
 // research library's own rule (_researchLibrary.ts inLibrary: the research kinds, or a research role), so what the prompt
 // names is what Drive's `6 Research library` holds.
+//
+// The narrative climbs the why-ladder (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of
+// everything that suggests predictions, calls, dated, odds or scores): the lock gains "## The Whys", one Why per beat,
+// each citing the evidence it rests on, and scripts/post-pack/making.py refuses a lock whose Whys are missing or unsourced.
 import { LIBRARY_KINDS, LIBRARY_ROLES } from '../_researchLibrary.js'
 
 export interface CorpusItem { id: string; title: string; kind: string }
@@ -36,8 +40,10 @@ export function corpusLines(corpus: CorpusItem[]): string {
   return 'The corpus. Everything filed on this piece as research is what the narrative is built from, and nothing else is a source. '
     + 'Read every item whole before you write a word, with read_piece_material on the Control Center connector (or board_session.py PIECE read <id>):\n'
     + `${list}\n`
-    + 'Build the full narrative arc from it: the hook, the turn, what is at stake, the payoff, and the one thing a reader does next. '
-    + 'Trace every claim back with the 5 Whys: ask why it matters, then why again, until you reach the root cause, and note beside each step the corpus item it rests on, by id. '
+    + 'Build the full narrative arc from it on the 5 Whys: the hook is the question, each beat climbs one Why, and it lands on what this shows and an open question handed to the viewer, never a verdict, a forecast or a lesson. '
+    + 'Start from the why-ladder at the top of the research where there is one (its fenced why-ladder block, which the board checks rung by rung). '
+    + 'Trace every claim back with the 5 Whys: ask why it matters, then why again, until you reach the root cause or the evidence runs out (never pad to five), and note beside each step the corpus item it rests on, by id. '
+    + 'The lock carries them as "## The Whys": one Why per beat, in order, each line "Why N: the question? the answer [evidence: corpus ids or source links]"; a Why with no evidence is an open question that ends the ladder. '
     + 'A claim the corpus does not hold is left out or named as a question for Krish. '
     + 'Make it incredibly fun to consume: open straight on the hook, keep the tension, humour where it is earned, plain words a 12-year-old can follow, and the house voice rules (AGENTS.md). '
     + 'Then write it as the narrative lock and file it for his signature; never sign it for him.\n\n'

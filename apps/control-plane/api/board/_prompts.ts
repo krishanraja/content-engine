@@ -10,6 +10,8 @@
 // arc, freedom (make the craft calls, ask only what only Krish can answer, in one message), and the one thing to show
 // him at the end. tests/control-plane/board-desk.test.ts holds every prompt to that shape.
 
+import { whysResearchPrompt } from './_researchPrompt.js'
+
 export interface PieceBrief {
   week: string
   day: string
@@ -28,7 +30,8 @@ export interface PieceBrief {
 
 const REPO = 'krishanraja/content-engine'
 export const ARC = 'Aim for one arc a listener can follow hearing it once. Open straight on the hook. Every line earns its picture and every '
-  + 'picture proves a line. Build to the one moment it clicks, and close on the one thing a leader would do on Monday.'
+  + 'picture proves a line. Climb the Whys a rung at a time, build to the one moment it clicks, and land on what this shows and the open '
+  + 'question it hands the viewer, never a verdict, a forecast or a lesson.'
 export const FREEDOM = 'Work freely. Make the craft calls yourself and do not stop for permission. Take creative liberties wherever they make '
   + 'the point land faster. Ask Krish only what only he can answer, all in one short message, and only if the story truly needs it.'
 
@@ -49,16 +52,14 @@ function context(p: PieceBrief): string {
     + `Where everything lives:\n${where}`
 }
 
-/** The research brief, for Perplexity by hand or the engine's own run (sonar-pro). */
+/** The research brief, for Perplexity by hand or the engine's own run (sonar-pro): the one research prompt, the 5 Whys
+ *  (_researchPrompt.ts whysResearchPrompt), built from what the day card knows. */
 export function researchPrompt(p: PieceBrief): string {
-  return `You are researching one piece for Make Your Mind Up, Krish Raja's publication about what AI is really doing to business. `
-    + 'Find out what is true and what is surprising.\n\n'
-    + `The piece: ${p.dayName} ${p.date}, the ${p.series} series.\nThe idea: ${p.idea}${p.story ? `\nThe story so far: ${p.story}` : ''}`
-    + `${p.brief ? `\nKrish's words: "${p.brief}"` : ''}\n\n`
-    + 'Use primary sources: filings, earnings, regulators, rating agencies and the companies\' own pages. Date every figure and '
-    + 'mark every estimate as one. Write one Markdown file with: a one-paragraph answer; the ten most surprising facts, each sourced; '
-    + 'a table of the main players and the numbers that matter; what the sceptics and the believers each say; and the open questions. '
-    + 'Follow the evidence where it goes, and if the real story differs from the idea, say so first.'
+  return whysResearchPrompt({
+    pieceId: p.pieceId, title: p.idea, when: [p.dayName, p.date].filter(Boolean).join(' '), series: p.series || null,
+    story: [p.story ? `The story so far: ${p.story}` : '', p.brief ? `Krish's own words on it: "${p.brief}"` : ''],
+    lock: null, sources: [], onFile: p.materials.map(m => `- ${m}`), notes: [],
+  })
 }
 
 /** Settle the story and write the narrative lock: a short back-and-forth with Krish. */
@@ -66,7 +67,10 @@ export function storyPrompt(p: PieceBrief): string {
   return `${context(p)}\n\nThe job: find the deeper story under the news, with Krish, and write the narrative lock he signs. `
     + 'Read the research whole first. Then put to him, in one message, the two or three questions that decide the story, each with your '
     + `best guess, so he can answer in a line. Write the lock to docs/plans/${p.week}-week/narrative-lock-${p.day}.md (its surface story, `
-    + `deeper story, arc, the fun, the use, his close), and take his signature.\n\n${ARC}\n\n${FREEDOM}`
+    + 'deeper story, arc, the fun, the use, his close, and "## The Whys": one Why per beat, in order, each line "Why N: the question? '
+    + 'the answer [evidence: the research\'s source links or corpus ids]", taken from the why-ladder in the research; a Why with no '
+    + 'evidence is an open question that ends the ladder, never padded; making.py refuses a lock whose Whys are missing or unsourced), '
+    + `and take his signature.\n\n${ARC}\n\n${FREEDOM}`
 }
 
 /** Storyboard and script, together, before he records (Krish, 2026-11-09). */

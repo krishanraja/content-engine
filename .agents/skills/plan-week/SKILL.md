@@ -580,9 +580,12 @@ after his presses, by 10:00.
    `docs/plans/<Monday>-week/narrative-lock-<day>.md`, in exactly the shape
    `.agents/skills/plan-week/references/sunday-room.md` gives: its piece and
    the day it publishes, then Surface story, Deeper story, Arc, The fun, The
-   use (the one thing a business leader does differently on Monday), His
+   use (what the viewer can now see that they could not before: the
+   landing, what this shows plus the open question handed to them, never
+   an action or a lesson for leaders), His
    close, Facts to check, Outline (one spine, at most six sections, house
-   rule ONE_SPINE), Style recipe and Music bed. **Three checks before it
+   rule ONE_SPINE), Style recipe, Music bed and The Whys (one Why per
+   beat, each citing its evidence: the why-ladder). **Three checks before it
    goes to him**, on its Answer, The use, His close and any test it runs,
    the same checks the backlog's Narrative step makes (`make-piece`), and
    say in the room what each found:
@@ -590,7 +593,7 @@ after his presses, by 10:00.
      before he signs: a line the evidence does not hold changes here, never
      later.
    - *Against the series' recent pieces* (read in step 9). A takeaway or a
-     Monday action a recent piece already landed is never the Answer or The
+     landing a recent piece already gave is never the Answer or The
      use again; the lock says what is new (Krish, 2026-10-26: "we've already
      done that message takeaway with the Muse versus Grok piece"; learning
      `no-repeat-contract-takeaway`: never "check your contract" again unless

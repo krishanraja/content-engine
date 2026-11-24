@@ -2864,6 +2864,7 @@ Every prompt the live board copies out (docs/plans/2026-11-09-board-desk/PLAN.md
 ### `apps/control-plane/api/board/_research.ts`
 
 - `const MAX_MATERIAL`
+- `const MAX_TOKENS`
 - `async function runResearch(prompt: string, env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fe…`
 - `class MaterialError`
 - `function pastedKind(role: unknown): 'file' | 'research'`
@@ -2878,6 +2879,10 @@ Every prompt the live board copies out (docs/plans/2026-11-09-board-desk/PLAN.md
 - `const PERPLEXITY_LABEL`
 - `const RESEARCH_NOTES_HEADING`
 - `interface ResearchContext`
+- `const WHY_ONE: Readonly<Record<'follow_the_money' | 'under_the_hood' | 'mind_the_gap', { name: string; asks: string }>>`
+- `function seriesKey(series: string | null | undefined): keyof typeof WHY_ONE | null`
+- `interface WhysPromptInput`
+- `function whysResearchPrompt(c: WhysPromptInput): string`
 - `function researchPromptFor(c: ResearchContext): string`
 - `function withResearchPrompts(model: WeekModel, contextOf: (day: string, item: ModelItem) => Omit<ResearchContext, 'item…`
 
@@ -3228,6 +3233,17 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function recentOutOf(m: Pick<ModelInputs, 'week' | 'ideas' | 'plans' | 'pieces'>, _days: DayView[], items: OffdayItem[]…`
 - `function weekModel(days: DayView[], m: ModelInputs): WeekModel`
 - `function modelProblems(model: WeekModel, days: DayView[]): string[]`
+
+### `apps/control-plane/api/board/_whys.ts`
+
+- `interface WhysProblem`
+- `interface PieceWhys`
+- `function whysFromResearch(content: string, at: string, materialId?: string): PieceWhys | null`
+- `async function saveWhys(db: StoreDb, pieceId: string, whys: PieceWhys): Promise<boolean>`
+- `function whysSummary(whys: PieceWhys, saved: boolean): { rungs: number; problems: string[]; saved: boolean }`
+- `interface ModelWhyRung`
+- `interface ModelWhys`
+- `function whysView(meta: unknown): ModelWhys | null`
 
 ### `apps/control-plane/api/board/_writeBack.ts`
 
@@ -6805,6 +6821,7 @@ Artifact-bound user confirmation references.
 - `export * from './control-plane-v1.js'`
 - `export * from './drive-discovery-v1.js'`
 - `export * from './session-v1.js'`
+- `export * from './whys.js'`
 - `export * from './confirmation-v1.js'`
 - `export * from './editorial-v1.js'`
 - `export * from './art-director-v1.js'`
@@ -7089,6 +7106,33 @@ Artifact-bound user confirmation references.
 - `type ExperimentV2 = z.infer<typeof ExperimentV2Schema>`
 - `const ConfigChangeProposalV1Schema`
 - `type ConfigChangeProposalV1 = z.infer<typeof ConfigChangeProposalV1Schema>`
+
+### `packages/contracts/src/whys.ts`
+
+The why-ladder: the signature format of every makeyourmindup piece (Ruling, Krish, 2026-11-24: the signature format
+
+- `const WHY_LADDER_SCHEMA`
+- `type WhyStrength = 'documented' | 'inferred' | 'open'`
+- `type WhyStop`
+- `interface WhyEvidence`
+- `interface WhyBranch`
+- `interface WhyRung`
+- `interface WhyLanding`
+- `interface WhyLadder`
+- `const WHY_STRENGTHS: readonly WhyStrength[]`
+- `const WHY_STOPS: readonly WhyStop[]`
+- `const WHY_LADDER_TARGET`
+- `const WHY_LADDER_MIN`
+- `const WHY_LADDER_MAX`
+- `const WHY_ANSWER_MAX_WORDS`
+- `const NO_WHY_LADDER`
+- `function domainOf(url: string): string`
+- `function siteOf(domain: string): string`
+- `function parseWhyLadder(text: string): { ladder: WhyLadder | null; problems: string[] }`
+- `function loopTarget(rung: Pick<WhyRung, 'answer'>): number | null`
+- `const WHY_LANDING_VETO: ReadonlyArray<{ kind: string; pattern: RegExp }>`
+- `function landingVetoes(landing: WhyLanding): Array<{ kind: string; said: string }>`
+- `function checkWhyLadder(l: WhyLadder): { rung: number | null; problem: string }[]`
 
 ### `packages/core/src/analytics.ts`
 
