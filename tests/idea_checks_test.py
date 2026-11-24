@@ -1016,5 +1016,64 @@ class SaturdayGateTest(unittest.TestCase):
             week_plan.read_offdays({'tue': [dict(o, kind='podcast') for o in own]}, week='2026-11-30')
 
 
+class OffBeatTest(unittest.TestCase):
+    """Ruling (Krish, 2026-11-24): the engine brings stories in his focus sectors (media, entertainment, content, arts,
+    music, creator tech, with the economics of AI inside them) and not governance, regulation, security or data
+    breaches. config/beat.json holds the words; an option whose topic is on the avoid list and carries no focus-sector
+    angle fails the run from its from date. Every option here is invented."""
+
+    WEEK = ic.BEAT_FROM
+
+    def board(self, *mains, off=()):
+        return {'week_start': self.WEEK, 'days': {'mon': list(mains)}, 'offdays': {'tue': list(off)}}
+
+    def codes(self, ideas, week=None):
+        return [f for f in ic.offbeat_findings(ideas, week or self.WEEK)]
+
+    def test_the_config_is_read_and_the_code_fails_the_run(self):
+        self.assertIn('off_beat', ic.GATE_CODES)
+        self.assertEqual(ic.BEAT['from'], ic.BEAT_FROM)
+        self.assertTrue(ic.BEAT['avoid'] and ic.BEAT['focus_sectors'])
+
+    def test_governance_and_breaches_are_refused_with_a_plain_reason(self):
+        found = self.codes(self.board(main_option(pitch={'question': 'What does the EU AI Act vote change?'}),
+                                      off=[{'id': 'breach', 'title': 'Data breach at AI firm', 'hook': 'Millions of records.'}]))
+        self.assertEqual([f['ref'] for f in found], ['mon-1', 'off-tue-breach'])
+        self.assertTrue(found[0]['line'].startswith('off_beat: mon-1 (22222222) is about "EU AI Act"'), found[0]['line'])
+        self.assertIn('no focus-sector angle', found[0]['line'])
+        self.assertIn('governance', found[0]['line'])
+        self.assertIn('security', found[1]['line'])
+
+    def test_a_focus_sector_angle_keeps_it(self):
+        # The avoid word is in the topic, and the option is about music: Krish's beat, so it stays.
+        found = self.codes(self.board(main_option(pitch={'question': 'Who gets paid now the EU AI Act labels AI songs?'},
+                                                  so_what='Labels re-price every royalty deal.')))
+        self.assertEqual(found, [])
+        self.assertEqual(self.codes(self.board(off=[{'id': 'album', 'title': 'Artist releases AI album', 'hook': 'It charted.'}])), [])
+        self.assertEqual(self.codes(self.board(off=[{'id': 'suno', 'title': 'Label partners with Suno', 'hook': 'The deal.'}])), [])
+
+    def test_enterprise_productivity_needs_a_creative_angle(self):
+        plain = {'id': 'copilot', 'title': 'Enterprise rolls out Copilot to staff', 'hook': 'Every desk, by March.'}
+        self.assertEqual([f['ref'] for f in self.codes(self.board(off=[plain]))], ['off-tue-copilot'])
+        studio = dict(plain, hook='Every designer in the studio, by March.')
+        self.assertEqual(self.codes(self.board(off=[studio])), [])
+
+    def test_the_exception_phrases_are_read_first(self):
+        self.assertIsNone(ic.off_beat('AI and the job security of session musicians'))
+        self.assertIsNone(ic.off_beat('AI and the job security of call centre staff'))
+        self.assertIsNotNone(ic.off_beat('A state of the art model and the new AI policy'))
+
+    def test_only_from_the_beat_date_and_never_the_weekly_good_news(self):
+        ideas = self.board(main_option(pitch={'question': 'What does the EU AI Act vote change?'}))
+        self.assertEqual(self.codes(ideas, '2026-11-23'), [])
+        weekly = {'week_start': self.WEEK, 'offdays': {'sat': [{'id': 'goodnews', 'weekly': 'good_news', 'title': 'Privacy wins'}]}}
+        self.assertEqual(self.codes(weekly), [])
+
+    def test_the_gate_names_it_and_a_days_rerun_can_remake_it(self):
+        line = self.codes(self.board(main_option(pitch={'question': 'What does the EU AI Act vote change?'})))[0]['line']
+        self.assertTrue(board_feed.remakeable(line, ['mon']))
+        self.assertFalse(board_feed.remakeable(line, ['wed']))
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -70,12 +70,19 @@ export interface RelevanceVerdict {
 export const DEFAULT_MUTED_VERTICALS = [
   'finance',            // traditional finance, markets, banking, personal finance, fintech-as-vertical
   'tax',
-  'law',                // legal / litigation / regulation-as-news (not AI governance)
+  'law',                // legal / litigation / regulation-as-news
   'crypto',             // web3 / blockchain / tokens / DeFi / NFTs
   'healthcare',         // health / biotech / pharma
   'climate_energy',     // climate / energy / cleantech
   'real_estate',        // real estate / proptech
   'geopolitics_defense', // geopolitics / defense / public-sector
+  // Ruling (Krish, 2026-11-24): the engine brings stories in his focus sectors
+  // (media, entertainment, content, arts, music, creator tech, with the
+  // economics of AI inside them) and not governance, regulation, security or
+  // data breaches. Muted even through an AI lens (see the prompt); the words of
+  // the beat are rows in config/beat.json.
+  'governance_regulation', // AI governance / regulation / compliance / policy / EU AI Act / executive orders
+  'security_breach',       // security / privacy / surveillance / data leaks / breaches / deepfake fraud
 ] as const
 
 export interface ClassifyOpts {
@@ -107,9 +114,10 @@ function policyPrompt(muted: readonly string[], surface: string): string {
     ``,
     `You are filtering ${subject}. For each item return one verdict:`,
     ``,
-    `- "keep": on-brand. ANYTHING about AI / agents / LLMs, the economics of AI, the builder economy, AI-native operating, platform / marketplace / VC dynamics, OR AI regulation & governance. Consumer, retail, DTC, advertising and adtech are IN-BOUNDS — keep them.`,
+    `- "keep": on-brand. ANYTHING about AI / agents / LLMs, the economics of AI, the builder economy, AI-native operating, or platform / marketplace / VC dynamics. Consumer, retail, DTC, advertising and adtech are IN-BOUNDS: keep them.`,
+    `- "keep", first of all: AI in media, entertainment, arts, music and creator tech, including their economics (who gets paid, royalties, licensing, what a studio, label, publisher or creator earns or spends). These are Krish's focus sectors.`,
     ``,
-    `- "off_vertical": the item is PRIMARILY about one of these domains on its OWN terms, NOT through an AI / agent lens — ${muted.join(', ')}. (finance = traditional finance, markets, banking, personal finance, fintech-as-a-vertical; law = legal / litigation / regulation-as-news, but NOT AI governance; crypto = web3 / blockchain / tokens.) If the SAME topic is framed as an AI / agents story, KEEP it instead.`,
+    `- "off_vertical": the item is PRIMARILY about one of these domains on its OWN terms, NOT through an AI / agent lens: ${muted.join(', ')}. (finance = traditional finance, markets, banking, personal finance, fintech-as-a-vertical; law = legal / litigation / regulation-as-news; crypto = web3 / blockchain / tokens.) If the SAME topic is framed as an AI / agents story, KEEP it instead, with two exceptions: governance_regulation (AI governance, regulation, compliance, policy, the EU AI Act, executive orders) and security_breach (security, privacy, surveillance, data leaks, breaches, deepfake fraud) are off_vertical even when the story is about AI, unless it is mainly a media, entertainment, arts, music or creator story, such as a copyright or licensing fight over AI music.`,
     ``,
     `- "too_technical": low-level engineering / infrastructure / devops with no strategic angle — cloud-ops (AWS / GCP / Azure), Kubernetes, database internals, framework release notes, library changelogs. BUT keep builder-economy "how we built X with agents" strategic-technical pieces.`,
     ``,

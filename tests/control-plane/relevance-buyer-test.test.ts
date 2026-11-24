@@ -68,6 +68,37 @@ describe('the buyer test reaches the model', () => {
   })
 })
 
+// Ruling (Krish, 2026-11-24): the engine brings stories in his focus sectors
+// (media, entertainment, content, arts, music, creator tech, with the economics
+// of AI inside them) and not governance, regulation, security or data breaches.
+describe('the creative beat reaches the model', () => {
+  it('no longer keeps AI regulation and governance', async () => {
+    const { classifyRelevance } = await load()
+    await classifyRelevance([{ id: '1', title: 'x' }], { apiKey: 'k' })
+    const system: string = sent[0].system
+    expect(system).not.toContain('OR AI regulation & governance')
+    expect(system).not.toContain('NOT AI governance')
+  })
+
+  it('mutes governance and security, even through an AI lens', async () => {
+    const { classifyRelevance, DEFAULT_MUTED_VERTICALS } = await load()
+    expect(DEFAULT_MUTED_VERTICALS).toContain('governance_regulation')
+    expect(DEFAULT_MUTED_VERTICALS).toContain('security_breach')
+    await classifyRelevance([{ id: '1', title: 'x' }], { apiKey: 'k' })
+    const system: string = sent[0].system
+    expect(system).toContain('governance_regulation')
+    expect(system).toContain('security_breach')
+    expect(system).toContain('off_vertical even when the story is about AI')
+  })
+
+  it('keeps media, entertainment, arts, music and creator tech, their economics included', async () => {
+    const { classifyRelevance } = await load()
+    await classifyRelevance([{ id: '1', title: 'x' }], { apiKey: 'k' })
+    const system: string = sent[0].system
+    expect(system).toContain('AI in media, entertainment, arts, music and creator tech, including their economics')
+  })
+})
+
 describe('parsing', () => {
   it('accepts not_interesting', async () => {
     const { classifyRelevance } = await load()

@@ -126,6 +126,19 @@ opinion of their own." Every idea passes six tests before it reaches him:
    calls back to the hook. An idea that cannot be chained is not ready.
 6. **One named thing, for a leader.** One concrete thing, its business stake next (ONE_CONCRETE_THING, FOR_THE_LEADER).
 
+**The beat** (Krish, 2026-11-24, 20:18Z: "we need to ensure the engine brings
+the best of stories and ideas that I want to move towards, as opposed to
+governance, data breaches etc. I really liked the AI Music piece, it got good
+response the way it was broken down. we can still keep a focus on the
+economics of AI but in these focus sectors"). The focus sectors, the avoid
+list, the tone and the model piece ("a Reiki master wrote a UK number two": a
+hit traced back to the people and tools behind it, money included) are rows
+in `config/beat.json`; read it, never copy it. Media, entertainment, arts,
+music and creator tech, the economics of AI inside them, with a positive
+spin. Not governance, regulation, security, privacy or breaches, and not
+enterprise productivity with no creative angle: `board_feed.py gate` refuses
+such an option (`off_beat`) from the 30 Nov board.
+
 **His asks.** Every card he typed words on in the 45 days before the week
 (`why_here`, a typed `why_like`, `would_do`), dismissed, style-only or
 already a piece included, is in `sources.json` `asks` (newest first, his
@@ -307,8 +320,10 @@ he ticks: `references/inspiration-piece.md`.
 2. Flesh out what Krish dropped in first: an idea of his is never ranked below
    an equal one of the engine's.
 3. For each publishing day, find at least four real options. Prefer existing
-   rows. Check each against the series mandate; Krish's ruling of 6 October
-   (fascinating and aspirational, never dull enterprise subjects); freshness
+   rows. At least one option a day is from a focus sector of the beat
+   (`config/beat.json`). Check each against the series mandate; Krish's ruling of 6 October
+   (fascinating and aspirational, never dull enterprise subjects); the beat
+   (on-beat sector, or refused); freshness
    (the dated event is inside two weeks); overlap with what was published and
    with the other days; and whether its numbers can be sourced verbatim for
    the fact gate. Run an adversarial pass that tries to refute each option
