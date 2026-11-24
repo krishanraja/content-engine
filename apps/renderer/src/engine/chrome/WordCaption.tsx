@@ -4,6 +4,7 @@ import { HOUSE_FONTS } from '../../house/geometry'
 import type { EngineRenderProps } from '../props'
 import { SPLIT_SEAM_Y } from '../layouts/splitGeometry'
 import { captionPageAt } from './CaptionTrack'
+import { landingBeatAt } from './LandingCard'
 
 /** The word build (Krish, 2026-11-03: "its the georgia subtitles build"; inspiration card instagram_DePHDr_jRed):
  *  one word at a time in white, on the split seam, at chest height on face beats, or at 66% on graphics, the emphasized word in the serif, and the piece's title held at the top.
@@ -21,7 +22,7 @@ const SHADOW = '0 3px 14px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.6)'
 
 export function WordCaption({ props, frame }: { props: EngineRenderProps; frame: number }) {
   if ((props.ending && frame >= props.ending.fromFrame)
-    || (!!props.call && props.beats.some((beat) => beat.role === 'call' && frame >= beat.fromFrame && frame < beat.toFrame))) return null
+    || !!landingBeatAt(props, frame)) return null
   const page = captionPageAt(props.captions, frame)
   const word = page?.words[0]
   if (!page || !word || word.atFrame > frame) return null

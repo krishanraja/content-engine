@@ -220,13 +220,16 @@ const RenderSourceV2BaseSchema=z.object({source_id:IdentifierV1Schema,path:z.str
 export const VisualRenderSourceV2Schema=RenderSourceV2BaseSchema.extend({kind:z.enum(['video','screen_recording']),width:z.number().int().positive(),height:z.number().int().positive(),fps:z.number().positive(),audio_hz:z.number().int().positive().nullable()}).strict()
 export const AudioOnlyRenderSourceV2Schema=RenderSourceV2BaseSchema.extend({kind:z.literal('audio'),width:z.null(),height:z.null(),fps:z.null(),audio_hz:z.number().int().positive()}).strict()
 export const RenderSourceV2Schema=z.union([VisualRenderSourceV2Schema,AudioOnlyRenderSourceV2Schema])
-/** The piece's call: the dated prediction a Short shows as its call card
- *  (makeyourmindup house style, approved mock 2026-09-28). Nothing upstream
- *  marks which beat carries it, so the manifest names it. Optional: a piece
- *  without a call, and every manifest made before it, has none. */
-export const RenderCallV1Schema=z.object({beat_id:IdentifierV1Schema,statement:z.string().min(12).max(400),due:z.string().regex(/^\d{4}-\d{2}-\d{2}$/),confidence_percent:z.number().int().min(1).max(99)}).strict()
-export type RenderCallV1=z.infer<typeof RenderCallV1Schema>
-export const RenderManifestV2Schema=z.object({schema_version:z.literal(2),manifest_id:IdentifierV1Schema,job_id:IdentifierV1Schema,candidate_id:IdentifierV1Schema,candidate_hash:Sha256V1Schema,visual_plan_artifact_hash:Sha256V1Schema,storyboard_artifact_hash:Sha256V1Schema.optional(),series:SeriesV2Schema,treatment_id:IdentifierV1Schema,treatment_lane:TreatmentLaneV1Schema,target_platform:VideoPlatformV1Schema,output:PlatformOutputV1Schema,duration_ms:z.number().int().positive(),sources:z.array(RenderSourceV2Schema).min(1).max(32),shot_directives:z.array(ShotDirectiveV1Schema).min(1),assets:z.array(VisualAssetV1Schema),generated_shots:z.array(GeneratedShotV1Schema),captions:z.array(CaptionCueV2Schema),caption_provenance:z.object({transcript_hash:Sha256V1Schema,verified:z.literal(true),exact_word_fidelity:z.literal(true),source_token_count:z.number().int().nonnegative(),caption_token_count:z.number().int().nonnegative()}).strict(),audio_plan:AudioPlanV1Schema,branding:z.object({mode:z.enum(['series','none']),theme_id:IdentifierV1Schema.optional(),theme_version:z.number().int().positive().optional(),theme_hash:Sha256V1Schema.optional(),wordmark_hashes:z.array(Sha256V1Schema).default([])}).strict(),disclosures:z.array(DisclosureDecisionV1Schema),fixed_seed:z.string().min(16),call:RenderCallV1Schema.optional()}).strict().superRefine((v,c)=>{
+/** Where the piece's why-ladder lands, as a Short shows it on its landing card
+ *  (Ruling, Krish, 2026-11-24: "the signature format is the 5 Whys; get rid of
+ *  everything that suggests predictions, calls, dated, odds or scores"): what
+ *  this shows and the open question handed to the viewer, word for word the
+ *  landing of the ladder in the approved text (packages/contracts/src/whys.ts
+ *  WhyLanding). Nothing upstream marks which beat carries it, so the manifest
+ *  names it. Optional: a Short without one ends on its last beat. */
+export const RenderLandingV1Schema=z.object({beat_id:IdentifierV1Schema,shows:z.string().min(12).max(300),open_question:z.string().min(8).max(200)}).strict()
+export type RenderLandingV1=z.infer<typeof RenderLandingV1Schema>
+export const RenderManifestV2Schema=z.object({schema_version:z.literal(2),manifest_id:IdentifierV1Schema,job_id:IdentifierV1Schema,candidate_id:IdentifierV1Schema,candidate_hash:Sha256V1Schema,visual_plan_artifact_hash:Sha256V1Schema,storyboard_artifact_hash:Sha256V1Schema.optional(),series:SeriesV2Schema,treatment_id:IdentifierV1Schema,treatment_lane:TreatmentLaneV1Schema,target_platform:VideoPlatformV1Schema,output:PlatformOutputV1Schema,duration_ms:z.number().int().positive(),sources:z.array(RenderSourceV2Schema).min(1).max(32),shot_directives:z.array(ShotDirectiveV1Schema).min(1),assets:z.array(VisualAssetV1Schema),generated_shots:z.array(GeneratedShotV1Schema),captions:z.array(CaptionCueV2Schema),caption_provenance:z.object({transcript_hash:Sha256V1Schema,verified:z.literal(true),exact_word_fidelity:z.literal(true),source_token_count:z.number().int().nonnegative(),caption_token_count:z.number().int().nonnegative()}).strict(),audio_plan:AudioPlanV1Schema,branding:z.object({mode:z.enum(['series','none']),theme_id:IdentifierV1Schema.optional(),theme_version:z.number().int().positive().optional(),theme_hash:Sha256V1Schema.optional(),wordmark_hashes:z.array(Sha256V1Schema).default([])}).strict(),disclosures:z.array(DisclosureDecisionV1Schema),fixed_seed:z.string().min(16),landing:RenderLandingV1Schema.optional()}).strict().superRefine((v,c)=>{
  if(v.output.platform!==v.target_platform)c.addIssue({code:'custom',path:['output','platform'],message:'output platform must match render target'})
  if(v.duration_ms>v.output.maximum_duration_ms)c.addIssue({code:'custom',path:['duration_ms'],message:'render exceeds platform duration'})
  const sources=v.sources.map(x=>x.source_id)
@@ -256,7 +259,7 @@ export const RenderManifestV2Schema=z.object({schema_version:z.literal(2),manife
  if(dialogueCoveredUntil<v.duration_ms)c.addIssue({code:'custom',path:['audio_plan','dialogue_edits'],message:`dialogue timeline ends at ${dialogueCoveredUntil} ms before render duration ${v.duration_ms} ms`})
  v.captions.forEach((x,i)=>{if(x.end_ms>v.duration_ms)c.addIssue({code:'custom',path:['captions',i,'end_ms'],message:'caption exceeds duration'})})
  const assetHashes=new Set(v.assets.map(x=>x.sha256));v.generated_shots.forEach((x,i)=>{if(!assetHashes.has(x.output_hash))c.addIssue({code:'custom',path:['generated_shots',i,'output_hash'],message:'generated output missing from exact asset ledger'})})
- if(v.call&&!v.shot_directives.some(x=>x.beat_id===v.call!.beat_id))c.addIssue({code:'custom',path:['call','beat_id'],message:'the call names a beat no shot carries'})
+ if(v.landing&&!v.shot_directives.some(x=>x.beat_id===v.landing!.beat_id))c.addIssue({code:'custom',path:['landing','beat_id'],message:'the landing names a beat no shot carries'})
 })
 export type RenderManifestV2=z.infer<typeof RenderManifestV2Schema>
 

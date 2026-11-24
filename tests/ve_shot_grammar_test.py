@@ -158,7 +158,7 @@ class FaceRunsTest(unittest.TestCase):
         b = s['cuts']['short']['beats']
         last = b[-1]['span']['to_w']
         b.append(beat('ch', last + 1, last + words(3), 'chapter'))
-        b.append(beat('end', last + words(3) + 1, last + words(3) + words(1.5), 'end', role='call'))
+        b.append(beat('end', last + words(3) + 1, last + words(3) + words(1.5), 'end', role='landing'))
         got = found(s, 'grammar.face_runs')
         self.assertTrue(any('a chapter mark holds' in f for f in got), got)
         self.assertTrue(any('the end card holds' in f for f in got), got)

@@ -118,8 +118,8 @@ import {
   readWindowsCredential,
   recordApprovalV2,
   requireRunnerSourceProvenance,
-  boundRenderCallIssuesV2,
-  renderCallFromBriefV2,
+  boundRenderLandingIssuesV2,
+  renderLandingFromBriefV2,
   renderStoryV2,
   prepareMagicEditCandidate,
   publishRunnerProject,
@@ -765,10 +765,10 @@ async function loadReviewManifest(job: JobManifestV2, manifestPath: string, stor
   if (hashValue(manifest.assets) !== hashValue(assetArtifact.payload.assets) || hashValue(manifest.generated_shots) !== hashValue(assetArtifact.payload.generated_shots)) throw new Error('render manifest is not bound to the exact approved asset ledger')
   const readiness = validateV2RenderReadiness(manifest, storyboardHash === undefined ? 'styleframe' : 'none')
   if (readiness.length) throw new Error(`hard block: V2 render readiness failed: ${readiness.join('; ')}`)
-  // A Short in the house style shows the piece's call; it must be the call
-  // the job's approved production brief states, exactly.
-  const callIssues = await boundRenderCallIssuesV2(manifest)
-  if (callIssues.length) throw new Error(`hard block: the call gate failed: ${callIssues.join('; ')}`)
+  // A Short in the house style that shows a landing card shows the landing of
+  // the why-ladder the job's approved production brief states, exactly.
+  const landingIssues = await boundRenderLandingIssuesV2(manifest)
+  if (landingIssues.length) throw new Error(`hard block: the landing gate failed: ${landingIssues.join('; ')}`)
   return { manifest, manifestHash }
 }
 
@@ -1793,18 +1793,18 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
       context.out({ job_id: options.job, artifact_hash: artifact.artifact_hash, verified_asset_hashes: verdict.verified_hashes, generated_shot_hashes: approvedShots.map((shot) => shot.output_hash) })
     })
 
-  v2.command('call')
-    .description("Print the piece's call from the job's approved production brief, ready to paste into a render manifest as \"call\"")
+  v2.command('landing')
+    .description("Print where the piece's why-ladder lands, from the job's approved production brief, ready to paste into a render manifest as \"landing\"")
     .requiredOption('--job <jobId>')
-    .requiredOption('--beat <beatId>', 'the beat that carries the call card')
+    .requiredOption('--beat <beatId>', 'the beat that carries the landing card')
     .action(async (options) => {
       const job = await loadJobV2(options.job)
       const brief = await loadBoundProductionBriefV2(job)
-      if (!brief) throw new Error(`job ${job.job_id} has no production brief bound to it, and a call comes only from the approved text of the job's production brief`)
-      let call
-      try { call = renderCallFromBriefV2(brief, options.beat) }
+      if (!brief) throw new Error(`job ${job.job_id} has no production brief bound to it, and a landing comes only from the approved text of the job's production brief`)
+      let landing
+      try { landing = renderLandingFromBriefV2(brief, options.beat) }
       catch (error) { throw new Error(`hard block: ${error instanceof Error ? error.message : String(error)}`) }
-      context.out({ job_id: job.job_id, brief_id: brief.brief_id, call })
+      context.out({ job_id: job.job_id, brief_id: brief.brief_id, landing })
     })
 
   const styleframes = v2.command('styleframes')

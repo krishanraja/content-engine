@@ -470,7 +470,7 @@ const HouseChannelCopyV1Schema = z.object({
 /** The makeyourmindup house style (brand book v1.4), as Krish approved it in
  *  the Studio mock on 2026-09-28 ("yes, approved"). The renderer draws the
  *  mock's own geometry; this holds what a job must pin: the colours, the
- *  copy each channel carries and the fixed lines around the call. */
+ *  copy each channel carries and the fixed lines around the why-ladder. */
 export const BrandHouseStyleV1Schema = z.object({
   tokens: z.object({
     ink: HexColourSchema,
@@ -486,11 +486,22 @@ export const BrandHouseStyleV1Schema = z.object({
   }).strict(),
   copy: z.object({
     site: z.literal('makeyourmindup.ai'),
-    call_kicker: z.string().min(3).max(40),
-    call_headline: z.string().min(3).max(40),
-    call_footnote: z.string().min(12).max(200),
+    // The lines around the why-ladder (Ruling, Krish, 2026-11-24: "the signature format is the 5 Whys; get rid of
+    // everything that suggests predictions, calls, dated, odds or scores"): the kicker over the rungs on the page,
+    // the kicker over the landing on the page and the Short's landing card, and the cover's sticker. Optional, so a
+    // theme a job pinned before 24 Nov 2026 (which has none of them) still parses; every reader falls back to the
+    // live wording ("What this shows" for the landing kicker).
+    whys_kicker: z.string().min(3).max(40).optional(),
+    landing_kicker: z.string().min(3).max(40).optional(),
     question_kicker: z.string().min(3).max(40),
-    cover_call_sticker: z.string().min(3).max(40),
+    cover_whys_sticker: z.string().min(3).max(40).optional(),
+    // Retired on 24 Nov 2026 with the call (same ruling): the live theme no longer carries them and nothing reads
+    // them. Kept optional only so a theme a job pinned before then still parses and hashes as it did, as
+    // thumbnail_call_sticker was on 15 Nov.
+    call_kicker: z.string().min(3).max(40).optional(),
+    call_headline: z.string().min(3).max(40).optional(),
+    call_footnote: z.string().min(12).max(200).optional(),
+    cover_call_sticker: z.string().min(3).max(40).optional(),
     // Retired on 15 Nov 2026 with the sticker thumbnail (a Short's cover is the Receipt, receiptCoverV2): the live
     // theme no longer carries it and nothing reads it. Kept optional only so a theme a job pinned before then still
     // parses and hashes as it did.

@@ -385,7 +385,7 @@
             "under_the_hood": { "day": "Wednesdays", "sticker": "Screwdriver included", "promise": "Free from jargon", "question": "What actually goes together in a shipped thing, and why did this one work?" },
             "mind_the_gap": { "day": "Fridays", "sticker": "The headliner", "promise": "What's coming, before it's obvious", "question": "What is the pattern, and what does it mean is coming?" }
           },
-          "copy": { "site": "makeyourmindup.ai", "call_kicker": "The call", "call_headline": "Our call.", "call_footnote": "One view, made only when it is worth making. You make your mind up.", "question_kicker": "The question", "cover_call_sticker": "Swipe for the call" }
+          "copy": { "site": "makeyourmindup.ai", "whys_kicker": "Why, five times", "landing_kicker": "What this shows", "question_kicker": "The question", "cover_whys_sticker": "Swipe for the whys" }
         }
       }
     }
