@@ -819,7 +819,7 @@ function runtimeHouse(staged: StagedPublicationMarks, moments: HouseMomentsV2 | 
     tile: { size: lockup.anchor.plate_width, markWidth: lockup.anchor.mark_width, shadowPx: lockup.anchor.shadow_px ?? 0 },
     band: { topPx: lockup.identity.top_px, heightPx: lockup.identity.height_px, logoWidth: lockup.identity.logo_width },
     ...(moments?.sticker ? { sticker: moments.sticker } : {}),
-    ...(moments?.landing ? { landing: { startMs: moments.landing.startMs, endMs: moments.landing.endMs, kicker: house.copy.landing_kicker, shows: moments.landing.shows, openQuestion: moments.landing.openQuestion } } : {}),
+    ...(moments?.landing ? { landing: { startMs: moments.landing.startMs, endMs: moments.landing.endMs, kicker: house.copy.landing_kicker ?? 'What this shows', shows: moments.landing.shows, openQuestion: moments.landing.openQuestion } } : {}),
   }
 }
 
