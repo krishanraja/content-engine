@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.33.0",
+ "contract_version": "1.34.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -118,7 +118,7 @@
      "unread": 3
     },
     "prompts": {
-     "research": "You are researching one piece for Make Your Mind Up, Krish Raja's publication about what AI is really doing to business. Find out what is true and what is surprising.\n\nThe piece: Monday 2026-11-16, the follow.the.money series.\nThe idea: Pie…",
+     "research": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, written for leaders who must decide what to do about it. You have no other context: everything you need is b…",
      "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
      "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
      "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
@@ -3067,7 +3067,7 @@
      "unread": 3
     },
     "prompts": {
-     "research": "You are researching one piece for Make Your Mind Up, Krish Raja's publication about what AI is really doing to business. Find out what is true and what is surprising.\n\nThe piece: Wednesday 2026-11-18, the under.the.hood series.\nThe idea: Wh…",
+     "research": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, written for leaders who must decide what to do about it. You have no other context: everything you need is b…",
      "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
      "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
      "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
@@ -6164,7 +6164,7 @@
      "unread": 3
     },
     "prompts": {
-     "research": "You are researching one piece for Make Your Mind Up, Krish Raja's publication about what AI is really doing to business. Find out what is true and what is surprising.\n\nThe piece: Friday 2026-11-20, the mind.the.gap series.\nThe idea: Piece b…",
+     "research": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, written for leaders who must decide what to do about it. You have no other context: everything you need is b…",
      "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
      "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
      "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
@@ -7665,7 +7665,7 @@
     {
      "kind": "prompt",
      "label": "Copy Perplexity prompt",
-     "prompt": "You are researching one piece for Make Your Mind Up, Krish Raja's publication about what AI is really doing to business. Find out what is true and what is surprising.\n\nThe piece: Friday 2026-11-20, the mind.the.gap series.\nThe idea: Piece b…"
+     "prompt": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, written for leaders who must decide what to do about it. You have no other context: everything you need is b…"
     },
     {
      "kind": "press",
@@ -9175,7 +9175,44 @@
         "Screen grab two",
         "Oracle research corpus"
        ],
-       "said": "Claude Code, 2026-11-16 08:50 UTC (working, board): Drafting the 90-second script"
+       "said": "Claude Code, 2026-11-16 08:50 UTC (working, board): Drafting the 90-second script",
+       "whys": {
+        "question": "Why did the cheap model get dearer?",
+        "rungs": [
+         {
+          "n": 1,
+          "question": "Why 1?",
+          "strength": "documented",
+          "status": "ok",
+          "problems": [],
+          "stop": null
+         },
+         {
+          "n": 2,
+          "question": "Why 2?",
+          "strength": "documented",
+          "status": "needs_work",
+          "problems": [
+           "Why 2 needs a second source"
+          ],
+          "stop": null
+         },
+         {
+          "n": 3,
+          "question": "Why 3?",
+          "strength": "open",
+          "status": "ok",
+          "problems": [],
+          "stop": "evidence_exhausted"
+         }
+        ],
+        "landing": {
+         "shows": "The price follows who owns the meter.",
+         "open_question": "Which of your tools is metered by someone else?"
+        },
+        "problems": [],
+        "checked_at": "2026-11-15T09:30:00Z"
+       }
       },
       "piece_id": "8287846b-6618-4a19-9fb8-23ad4eca2718",
       "item": null,
