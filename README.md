@@ -46,8 +46,8 @@ them by hand. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 | see every plausible way a tool could make the content far better | `docs/ENGINE_100X.md` |
 | run the week: record the whole week on Sunday and go live the Monday after; the Sunday ideas board, the interview, the Monday final board; the standing answers (two cuts, the channels) | `docs/CADENCE.md` |
 | see what a finished post needs on each channel (Growth-MakeYourMindUp posts it; read `docs/GROWTH-HANDOFF.md` first) | `docs/AMPLIFICATION.md` |
-| read a free public signal: prediction-market odds, news velocity, Hacker News, SEC filings | `scripts/signals/README.md` |
-| pin a Call to a prediction market, or read the scoreboard feed | `docs/CONTENT_ENGINE.md`, `/api/content-ideas/[id]/call-market` and `/api/calls` |
+| read a free public signal: news velocity, Hacker News, SEC filings | `scripts/signals/README.md` |
+| build a piece as a why-ladder, the signature format (no calls, odds or scores since 24 Nov 2026) | `docs/FIVE-WHYS.md` |
 | treat Spotify as a channel: the show, the audio editions, the sizes | `docs/SPOTIFY.md` |
 | learn from the videos Krish likes, or apply a style recipe to a piece | `docs/STYLE_REFERENCES.md` |
 | design or prove a new video look, use a lab style (The Ladder, The Living Screen and three more) or a move | `lab/styles/README.md`, `lab/moves/README.md`; how a look reaches ve: `lab/styles/README.md`, "From the lab to ve" |

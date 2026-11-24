@@ -79,7 +79,7 @@ needs a yes; nothing generated goes near the fact gate as a source.
 | # | Stage | Idea | Status | First test |
 |---|---|---|---|---|
 | R1 | cut | **Sound design in one pass.** A sound effect for the receipt tearing, the till, the scoop; a 20-second music bed under the cold open and outro, at low volume, in the house's tone. The launch videos had no sound but Krish's voice; every video now carries a licensed bed from `config/music-library.json` (house rule MUSIC_BED), so this row is about effects and a Runway bed. | theorised | Friday: two effects and one bed, in `quick-edit`'s mix. |
-| R2 | cut | **Remove the background** from a recording so the house ink and mint can sit behind him for the call card. | theorised | The call beat on one video. |
+| R2 | cut | **Remove the background** from a recording so the house ink and mint can sit behind him for the landing card. | theorised | The landing beat on one video. |
 | R3 | cut | **The same clip in another market.** `localize_ad` and dubbing for an eventual Spanish or Hindi edition. | theorised | Not before an audience asks. |
 | R4 | cut | **Multi-shot explainer** from a storyboard the Studio already writes, for the one-off main-channel scripts that have no recording. | theorised | One one-off script as a test. |
 | R5 | picture | **Image generation and upscaling** for explainers, as with H3. One of the two tools gets picked after a side-by-side on the same brief. | theorised | Same brief to Higgsfield and Runway, Krish picks. |
@@ -102,14 +102,14 @@ cannot be mistaken for evidence.
 | # | Stage | Idea | Status | First test |
 |---|---|---|---|---|
 | D1 | picture | **The interactive, generated from a brief.** The plan slider for Friday (drag between $20, $100 and $200 and watch two bars) is exactly what it generates; `scripts/pages` then places it on the page in the house style. | theorised | Friday's slider. |
-| D2 | picture | **A library of house components**: the receipt, the timeline, the fork, the scoreboard tile, each a component with the brand tokens, so every piece's visuals come from the same kit and look like one publication. | theorised | After the second interactive. |
+| D2 | picture | **A library of house components**: the receipt, the timeline, the ladder rail, the evidence plates, each a component with the brand tokens, so every piece's visuals come from the same kit and look like one publication. | theorised | After the second interactive. |
 | D3 | cut | **Video blocks for motion graphics**: the receipt tearing as an animation, exported for quick-edit. | theorised | One graphic. |
 
 ## Canva (designs, brand kits, templates, autofill)
 
 | # | Stage | Idea | Status | First test |
 |---|---|---|---|---|
-| C1 | picture | **Brand templates with autofill.** A Substack cover, a 1200 x 630 preview, a LinkedIn card and a five-card carousel as templates with fields; the engine fills the headline, the call and the pictures and exports PNGs. Replaces the by-hand 1200 x 630 and gives the carousel a home. The edge and phone checks still run on the export. | theorised | Friday: the 1200 x 630 and the carousel. |
+| C1 | picture | **Brand templates with autofill.** A Substack cover, a 1200 x 630 preview, a LinkedIn card and a five-card carousel as templates with fields; the engine fills the headline, the landing and the pictures and exports PNGs. Replaces the by-hand 1200 x 630 and gives the carousel a home. The edge and phone checks still run on the export. | theorised | Friday: the 1200 x 630 and the carousel. |
 | C2 | ship | **Krish edits in Canva** when a cover needs his hand; the engine reads the design back and re-runs the checks. | theorised | When he first wants to. |
 
 ## Brandfetch (logos, colours, fonts of any company)
@@ -135,7 +135,7 @@ allowed for code execution, otherwise the page references the URL directly.
 | # | Stage | Idea | Status | First test |
 |---|---|---|---|---|
 | N1 | find | **The daily sweep as a workflow**: Apify news and Reddit runs on a timer, results into the database, a line on the board when a subject's headline count doubles in a day (velocity alert). | theorised | After A1 and A4 are tried by hand. |
-| N2 | ship | **The publish checklist as a workflow** that fires when Krish marks a post published: pack sent, library written, scoreboard set to "Not due yet", LinkedIn copy ready. | theorised | After one more post by hand. |
+| N2 | ship | **The publish checklist as a workflow** that fires when Krish marks a post published: pack sent, library written, LinkedIn copy ready. | theorised | After one more post by hand. |
 | N3 | cut | **ElevenLabs through n8n**: a scratch voiceover of the script in a stock voice so Krish hears the script's rhythm before he records, and the story check gets an ear. Never published. | theorised | Friday's script. |
 | N4 | learn | **The 7-day results pull** (A6) on a timer. | theorised | After three posts. |
 
@@ -214,7 +214,7 @@ Cost bands: **free**, **pennies** (under $10 a month for us), **tens**
 | Firecrawl | Turn any page into clean text when the reader refuses it (walk log F72), including browser-rendered pricing pages the Higgsfield piece had to cut | pennies per page; plans $0 to $599 a month |
 | Jina reader | Already used; the free route the filer tries first | free tier |
 | X API | What the labs' own staff and critics post the hour it happens; pay-per-use is the only door for new accounts and reads cost about $5 per 1,000; full-archive search is enterprise, five figures a month | pennies for reads at our volume; thousands for archive |
-| Polymarket and Kalshi public APIs | **The market's odds on our dated calls.** When we say 75%, show what traders say, and track both to the due date. Read-only, no account | free |
+| Polymarket and Kalshi public APIs | Retired 24 Nov 2026: the odds were read against our dated calls, and calls, odds and scores are gone (Ruling, Krish, 2026-11-24) | free |
 | Crunchbase, PitchBook, Similarweb | Funding and traffic; useful, pricey, and Apify covers most of it for pennies | hundreds to thousands |
 | Glassdoor, Indeed, LinkedIn jobs (via Apify) | Hiring as the revealed layer; already how the LinkedIn work runs | pennies to tens |
 | BuiltWith, Wappalyzer | The live tech stack of a company we write about; historical, so cross-check (Krish's own rule) | tens to hundreds |
@@ -271,8 +271,8 @@ Cost bands: **free**, **pennies** (under $10 a month for us), **tens**
 
 ### The five to try first, in order
 
-1. **Polymarket and Kalshi** (free): the market's odds beside every dated
-   call, on the scoreboard. Nobody else in this lane does it.
+1. **Polymarket and Kalshi** (free): retired on 24 Nov 2026 with the dated
+   call and the scoreboard they served (Ruling, Krish, 2026-11-24).
 2. **GDELT plus Hacker News** (free): the news wall and the velocity alert
    without scraping.
 3. **Firecrawl** (pennies): the pricing pages the fact gate keeps having to
