@@ -664,8 +664,9 @@ OUTLINE_FROM = '2026-10-09'  # dated drafts from here on need an approved outlin
 NARRATIVE_FROM = '2026-11-09'
 PLANS = HERE.parents[1] / 'docs' / 'plans'
 LOCK_GLOB = '*/narrative-lock-*.md'
-# "The use" is what makes it useful, the one thing a business leader does differently on Monday (his "powerful,
-# useful, and fun to consume").
+# "The use" is what makes it useful (his "powerful, useful, and fun to consume"): what the viewer can now see that
+# they could not before, the landing (what this shows plus the open question handed to them), never an action or a
+# lesson for leaders. Only the heading is read here, so its guidance can change without touching a signed lock.
 LOCK_PARTS = ('Surface story', 'Deeper story', 'Arc', 'The fun', 'The use', 'His close', 'Facts to check', 'Outline',
               'Style recipe', 'Music bed')
 # The why-ladder (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests
@@ -2813,7 +2814,7 @@ def self_test():
         """A lock for the piece; the signature gets the sha256 of the words above it unless it carries one or is empty."""
         parts = {'Surface story': 'Three firms cut prices in one week.', 'Deeper story': 'The price is the bait.',
                  'Arc': '- Open on the cut\n- Turn on who pays\n- Close on the bill', 'The fun': 'The receipt prints forever.',
-                 'The use': 'On Monday, ask which of your tools moved to usage pricing.',
+                 'The use': 'Usage pricing moves the bill to whoever uses the tool most. Who is that where you work?',
                  'His close': 'Check what you pay for before Monday.', 'Facts to check': '- The price cut | https://example.org | to check',
                  'Outline': 'Spine: Who pays for the cheap model?\nAnswer: You do, later.\n'
                             '1. THE CUT | proves: the price fell\n2. THE BILL | proves: you pay later',
@@ -2872,7 +2873,7 @@ def self_test():
         check('narrative: a lock changed under his signature is never handed a new hash', (code, any('lock sha256' in line for line in lines)),
               (1, False))
         lock_path.write_text(lock_text(pid, drop='The use'), encoding='utf-8')
-        check('narrative: the use (his Monday action) is a part he signs', 'The use' in refused(paths, pid, [plans]), True)
+        check('narrative: the use (what the viewer can now see) is a part he signs', 'The use' in refused(paths, pid, [plans]), True)
         lock_path.write_text(lock_text(pid, drop='Music bed'), encoding='utf-8')
         check('narrative: a missing part is named', 'Music bed' in refused(paths, pid, [plans]), True)
         lock_path.write_text(lock_text(pid).replace('Spine: Who pays for the cheap model?', 'Spine: Who pays.'), encoding='utf-8')
