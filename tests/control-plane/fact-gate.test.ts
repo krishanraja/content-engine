@@ -1,14 +1,11 @@
 import assert from 'node:assert/strict'
-import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { describe, expect, test } from 'vitest'
 import {
-  bodyHash, combine, datedContext, gateStatus, inOrder, isConfidenceLine, leftoversOf, norm, numbersIn, numbersNotOnFile, primaryText, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
-  sourcesText, splitFresh, summarise, sweep, signOff, stillBlocking, carrySignOffs,
+  bodyHash, combine, datedContext, EXTRACT_SYSTEM, gateStatus, inOrder, leftoversOf, norm, numbersIn, numbersNotOnFile, primaryText, quoteHolds, quotesFail, readsAsForecast, resolveLeftovers, sectionOf, sentences, SOURCE_MARK,
+  SECOND_LOOK_SYSTEM, sourcesText, splitFresh, summarise, sweep, signOff, stillBlocking, carrySignOffs,
   type CheckedClaim, ENTAIL_SYSTEM, INDEPENDENT_SYSTEM, ON_FILE_SYSTEM, carryForward, countRun, factLedgerCoverage, rerunCeiling, settle, settledLeftovers, sentenceKey, sourcePartHashes, sourcesHash, type FactCheck, FACT_GATE_VERSION,
 } from '../../apps/control-plane/api/_factGate.js'
-import { sanitizeVoice } from '../../apps/control-plane/api/_content.js'
-import { readPieceCall } from '../../packages/contracts/src/call.js'
 
 // The fact gate (Krish, 2026-09-25). The cases below are the real ones: the
 // engine's first draft of piece 2 turned Cisco's "$900 million annually" into
@@ -128,6 +125,20 @@ describe('the second look at what the sweep caught', () => {
     assert.equal(out.claims.length, 1)
     assert.equal(out.setAside.length, 0)
   })
+  test('a forecast with a number in it is checked as a claim, never set aside as the piece\'s own prediction', () => {
+    // Ruling (Krish, 2026-11-24): "get rid of everything that suggests predictions, calls, dated, odds or scores".
+    const dated = left('By 30 September 2027, at least two labs make routing the default.')
+    const out = resolveLeftovers([dated], [{ i: 0, claims: [], reason: 'prediction' }])
+    assert.equal(out.claims.length, 1)
+    assert.equal(out.setAside.length, 0)
+  })
+  test('a forecast with no number is set aside, and its reason flags it', () => {
+    const soon = left('Soon everyone will route by default.')
+    const out = resolveLeftovers([soon], [{ i: 0, claims: [], reason: 'forecast' }])
+    assert.equal(out.claims.length, 0)
+    assert.match(out.setAside[0].reason, /reads as a forecast, and a piece makes no prediction/)
+    assert.doesNotMatch(resolveLeftovers([ice], [{ i: 0, claims: [], reason: 'analogy' }]).setAside[0].reason, /forecast/)
+  })
   test('a sentence the second look did not answer stays a claim', () => {
     const out = resolveLeftovers([ice, cnbc], [])
     assert.equal(out.claims.length, 2)
@@ -161,10 +172,16 @@ describe('nothing with a number or a quotation goes unchecked', () => {
     const out = sweep(body, [{ sentence: "Cisco's product chief did the sums: $900 million a year.", claim: 'x', kind: 'number' }], [])
     assert.ok(out.claims.some(c => c.kind === 'unclassified' && c.sentence.includes('Anthropic sold one model in 2024')))
   })
-  test('a forecast may be set aside', () => {
+  test('a dated forecast is never set aside: it is read again as a claim of its own', () => {
     const out = sweep(body, [], [{ sentence: 'By 30 September 2027, at least two labs make routing the default.', reason: 'prediction' }])
-    assert.equal(out.claims.some(c => c.sentence.includes('2027')), false)
-    assert.equal(out.setAside.length, 1)
+    assert.equal(out.claims.some(c => c.sentence.includes('2027')), true)
+    assert.equal(out.setAside.length, 0)
+  })
+  test('a set-aside with no number in it is still honoured, for the second look to read', () => {
+    const line = 'Then the rest followed, one by one.'
+    const out = sweep(`${body}\n\n${line}`, [], [{ sentence: line, reason: 'opinion' }])
+    assert.deepEqual(out.setAside, [{ sentence: line, reason: 'opinion' }])
+    assert.ok(leftoversOf(out).some(l => l.sentence === line))
   })
   test('a fact with no number and no quotation is caught too', () => {
     const out = sweep('Over at Anthropic it worked the same way: a small one, a middle one and a big one, and you picked.', [], [])
@@ -274,129 +291,41 @@ describe('the gate', () => {
   })
 })
 
-describe('the confidence line is never a claim', () => {
-  // Piece 2, run 13 (2026-09-26): the extractor listed "How sure we are: 75%."
-  // as a claim and it failed against the sources; on run 11 the same line
-  // happened to pass. It is Krish's judgement, so it is never checked.
-  test('the line, bare or with the placeholder, is recognised; other sentences are not', () => {
-    assert.equal(isConfidenceLine('How sure we are: 75%.'), true)
-    assert.equal(isConfidenceLine('  How sure we are: 60%'), true)
-    assert.equal(isConfidenceLine('How sure we are: [Krish to set]'), true)
-    assert.equal(isConfidenceLine('How sure we are: [to set]'), true)
-    assert.equal(isConfidenceLine('How sure we are: 75%, because Cisco said so.'), false)
-    assert.equal(isConfidenceLine('Glean estimated that 95% of usage runs on the priciest models.'), false)
+// Until 2026-11-24 the gate read "How sure we are: N%" and the call's "Confidence: N%" as Krish's judgement: never a
+// claim, never hashed by its number. A piece makes no prediction now (Ruling, Krish, 2026-11-24: "the signature
+// format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores"), so a
+// confidence line is text like any other.
+describe('no confidence line is special any more', () => {
+  test('the gate exports no confidence reader', async () => {
+    const gate = await import('../../apps/control-plane/api/_factGate.js')
+    for (const name of ['isConfidenceLine', 'withoutConfidence', 'UNSET']) assert.equal(name in gate, false, name)
   })
-
-  test('the sweep never turns it into a leftover, whether the extractor listed it or not', () => {
-    // Piece 2, run 15: the extractor left the line out, and the sweep sent it
-    // to the second look as an unclassified sentence with a number in it.
-    const body = 'On 7 August 2025, OpenAI made GPT-5 the default in ChatGPT.\n\n## OUR PREDICTION\n\nBy 30 September 2027, two of three labs will route by default.\n\nHow sure we are: 75%.'
+  test('its number is hashed as written, so changing it breaks a passed check', () => {
+    const body = 'Cisco did the sums, $900 million a year.\n\nHow sure we are: 75%.'
+    assert.notEqual(bodyHash(body.replace('75%', '60%')), bodyHash(body))
+    assert.notEqual(bodyHash(body.replace('75%.', '[to set]')), bodyHash(body))
+    const fc = summarise([checked('verified')], [], body, 'perplexity:sonar-pro')
+    assert.equal(gateStatus({ fact_check: fc }, body.replace('75%', '60%')).ok, false)
+  })
+  test('the sweep reads it like any other sentence', () => {
+    const body = 'On 7 August 2025, OpenAI made GPT-5 the default in ChatGPT.\n\nHow sure we are: 75%.'
     const claim = { sentence: 'On 7 August 2025, OpenAI made GPT-5 the default in ChatGPT.', claim: 'GPT-5 became the default on 7 August 2025', kind: 'date' as const }
-    const forecast = { sentence: 'By 30 September 2027, two of three labs will route by default.', reason: 'prediction' }
-    const unlisted = sweep(body, [claim], [forecast])
-    assert.ok(!unlisted.claims.some(c => /How sure we are/.test(c.sentence)), 'an unlisted confidence line is not a leftover')
-    const listed = sweep(body, [claim], [forecast, { sentence: 'How sure we are: 75%.', reason: 'prediction' }])
-    assert.ok(!listed.claims.some(c => /How sure we are/.test(c.sentence)), 'a listed confidence line is not a leftover either')
-    // Runs 16 and 17: the route re-reads every set-aside at the second look,
-    // which turns a sentence with a number into a claim. It must never get there.
-    for (const swept of [unlisted, listed]) assert.ok(!leftoversOf(swept).some(l => /How sure we are/.test(l.sentence)), 'never re-read')
-    assert.ok(leftoversOf(listed).some(l => l.sentence === forecast.sentence), 'real set-asides are still re-read')
-    // Whatever reaches it, the line is never handed to the second look.
-    const slipped = { claims: [{ sentence: 'How sure we are: 75%.', claim: 'How sure we are: 75%.', kind: 'unclassified' as const }], setAside: [{ sentence: 'How sure we are: 75%.', reason: 'prediction' }] }
-    assert.deepEqual(leftoversOf(slipped), [])
+    const swept = sweep(body, [claim], [{ sentence: 'How sure we are: 75%.', reason: 'prediction' }])
+    assert.ok(swept.claims.some(c => /How sure we are/.test(c.sentence)))
+    assert.ok(leftoversOf(swept).some(l => /How sure we are/.test(l.sentence)))
   })
-
-  test('the route drops it from the claims and sets it aside before any check runs', () => {
+  test('the route keeps every listed claim and sets nothing aside as a prediction', () => {
     const src = readFileSync('apps/control-plane/api/content-ideas/[id]/fact-check.ts', 'utf8')
-    assert.match(src, /const claims = listed\.filter\(c => !isConfidenceLine\(c\.sentence\)\)/)
+    assert.doesNotMatch(src, /isConfidenceLine|reason: 'prediction'/)
     assert.match(src, /const leftovers = settledLeftovers\(body, leftoversOf\(swept\), ledger, hash, parts\)/)
-    assert.ok(src.indexOf('isConfidenceLine(c.sentence)') < src.indexOf('async function onFile'), 'the filter runs inside extract, before the checks')
   })
-})
-
-// Walk log F41 (2026-09-28). Only "How sure we are:" on a line of its own was
-// exempt, and piece 1 writes its call as one paragraph that ends "Confidence:
-// 70%.". Re-setting that number would have thrown a passed check away, and
-// the sentence itself was a claim on every run, one that can only fail.
-// Krish, 2026-09-26: a confidence no longer forces a fact re-check. The
-// exemption now reads both labels with the Studio's call reader, and takes out
-// the number alone.
-describe('Krish\'s confidence under either label', () => {
-  const PIECE_1 = [
-    'Amazon blocked Muse on Sunday 20 September 2026.',
-    '## Who gets paid',
-    'Amazon made $68.6 billion from advertising, and Consumer confidence: 62% in August, per the survey.',
-    '**The Call.** By 30 June 2027, Amazon opens an authorised route for shopping agents, and that route still shows them sponsored listings. Confidence: 70%.',
-  ].join('\n\n')
-  const at = (n: string) => PIECE_1.replace('Confidence: 70%', `Confidence: ${n}`)
-  const verified = (): CheckedClaim => checked('verified')
-
-  test('changing or setting the number on the call\'s "Confidence:" keeps a passed check', () => {
-    assert.deepEqual(readPieceCall(PIECE_1), { ok: true, call: { statement: 'By 30 June 2027, Amazon opens an authorised route for shopping agents, and that route still shows them sponsored listings.', due: '2027-06-30', confidence_percent: 70 } })
-    assert.equal(bodyHash(at('65%')), bodyHash(PIECE_1))
-    assert.equal(bodyHash(at('[Krish to set]')), bodyHash(PIECE_1))
-    assert.equal(bodyHash(at('[to set]')), bodyHash(PIECE_1))
-    const fc = summarise([verified()], [], PIECE_1, 'perplexity:sonar-pro')
-    assert.equal(gateStatus({ fact_check: fc }, at('65%')).ok, true)
-  })
-
-  test('"How sure we are:" inside the call\'s paragraph is exempt the same way', () => {
-    const call = 'It shipped late in 2026, and the price held.\n\n**Our prediction.** By 1 March 2028, the price halves. How sure we are: 80%'
-    assert.equal(readPieceCall(call).ok, true)
-    assert.equal(bodyHash(call.replace('80%', '85%')), bodyHash(call))
-  })
-
-  test('only the number: every other change to the text still breaks the check', () => {
-    const base = bodyHash(PIECE_1)
-    assert.notEqual(bodyHash(PIECE_1.replace('30 June 2027', '30 June 2028')), base, 'the call\'s date')
-    assert.notEqual(bodyHash(PIECE_1.replace('still shows them', 'shows them')), base, 'the call\'s words')
-    assert.notEqual(bodyHash(PIECE_1.replace('Confidence: 70%.', 'Confidence: 70%, because Amazon said so.')), base, 'words after the number')
-    assert.notEqual(bodyHash(PIECE_1.replace('Confidence: 70%.', 'Certainty: 70%.')), base, 'the label')
-    assert.notEqual(bodyHash(PIECE_1.replace('$68.6 billion', '$68.7 billion')), base, 'a fact elsewhere')
-    // A labelled number outside the call is a fact like any other.
-    assert.notEqual(bodyHash(PIECE_1.replace('Consumer confidence: 62%', 'Consumer confidence: 65%')), base, 'a labelled number outside the call')
-    const fc = summarise([verified()], [], PIECE_1, 'perplexity:sonar-pro')
-    assert.equal(gateStatus({ fact_check: fc }, PIECE_1.replace('30 June 2027', '30 June 2028')).ok, false)
-  })
-
-  test('every check stored before this change still matches its text', () => {
-    // The hash as it was taken until 2026-09-28, for texts it already read.
-    const legacy = (body: string) => createHash('sha256').update(
-      sanitizeVoice(body).replace(/^([ \t]*How sure we are:)[ \t]*(?:\d{1,3}%\.?|\[Krish to set\])[ \t]*$/gim, '$1 [Krish to set]').trim(),
-    ).digest('hex')
-    const edition = readFileSync('editions/2026-09-who-picks-your-ai/body.md', 'utf8')
-    for (const body of [edition, edition.replace('75%.', '[Krish to set]'), 'Cisco did the sums, $900 million a year.', PIECE_1.replace('Confidence: 70%.', '')]) {
-      assert.equal(bodyHash(body), legacy(body))
+  test('neither prompt treats the piece\'s own prediction as a set-aside', () => {
+    for (const prompt of [EXTRACT_SYSTEM, SECOND_LOOK_SYSTEM]) {
+      assert.doesNotMatch(prompt, /own prediction or bet/)
+      assert.match(prompt, /The piece makes no prediction/)
+      assert.match(prompt, /so it is flagged/)
     }
-  })
-
-  test('the new placeholder hashes as the old one and the number did, so every stored passed check holds', () => {
-    // Until 2026-10-29 drafts carried "[Krish to set]", which named him (Krish,
-    // 2026-10-28: "Remember, no content refers to Krish, ever."). Drafts now
-    // carry "[to set]"; the hash still reads both as the old one.
-    const edition = readFileSync('editions/2026-09-who-picks-your-ai/body.md', 'utf8')
-    const hashes = ['75%.', '[Krish to set]', '[to set]'].map(c => bodyHash(edition.replace('75%.', c)))
-    assert.deepEqual(new Set(hashes).size, 1)
-    assert.equal(hashes[0], JSON.parse(readFileSync('editions/2026-09-who-picks-your-ai/edition.json', 'utf8')).fact_check.body_hash)
-    assert.notEqual(bodyHash(edition.replace('75%.', '[to sort]')), hashes[0], 'any other bracket is text')
-    // A confidence line outside any call is read by the line rule alone.
-    const bare = (c: string) => `Cisco did the sums, $900 million a year.\n\nHow sure we are: ${c}`
-    const stored = createHash('sha256').update(bare('[Krish to set]')).digest('hex')
-    for (const c of ['75%.', '[Krish to set]', '[to set]']) assert.equal(bodyHash(bare(c)), stored, c)
-  })
-
-  test('the sentence "Confidence: 70%." is never a claim, and a sentence with more in it still is', () => {
-    assert.equal(isConfidenceLine('Confidence: 70%.'), true)
-    assert.equal(isConfidenceLine('Confidence: [Krish to set].'), true)
-    assert.equal(isConfidenceLine('Confidence: [to set].'), true)
-    assert.equal(isConfidenceLine('Confidence: 70%, because Amazon said so.'), false)
-    assert.equal(isConfidenceLine('Consumer confidence: 62% in August, per the survey.'), false)
-    assert.equal(isConfidenceLine('Consumer confidence: 62%.'), false)
-    const call = '**The Call.** By 30 June 2027, Amazon opens an authorised route for shopping agents, and that route still shows them sponsored listings.'
-    const swept = sweep(PIECE_1, [], [{ sentence: call, reason: 'prediction' }])
-    assert.ok(!swept.claims.some(c => /^Confidence:/.test(c.sentence)), 'not a leftover')
-    assert.ok(!leftoversOf(swept).some(l => /^Confidence:/.test(l.sentence)), 'never re-read')
-    assert.ok(swept.claims.some(c => /Consumer confidence/.test(c.sentence)), 'the survey sentence is still checked')
+    assert.doesNotMatch(EXTRACT_SYSTEM, /\(prediction, scenario/)
   })
 })
 
@@ -728,8 +657,11 @@ describe('numbersNotOnFile', () => {
     expect(numbersNotOnFile('Glean says 96% of usage runs on frontier models.', meta))
       .toEqual([{ sentence: 'Glean says 96% of usage runs on frontier models.', numbers: ['96'] }])
   })
-  test('forecasts and the confidence line are left to the gate, as the gate leaves them', () => {
-    expect(numbersNotOnFile('By 30 June 2027, OpenAI will make thinking the default.\n\nHow sure we are: 35%.', meta)).toEqual([])
+  test('a forecast and a confidence line are read like any other sentence, as the gate reads them', () => {
+    expect(numbersNotOnFile('By 30 June 2027, OpenAI will make thinking the default.\n\nHow sure we are: 35%.', meta)).toEqual([
+      { sentence: 'By 30 June 2027, OpenAI will make thinking the default.', numbers: ['30', '2027'] },
+      { sentence: 'How sure we are: 35%.', numbers: ['35'] },
+    ])
   })
   test('headings are not sentences', () => {
     expect(numbersNotOnFile('## GPT-5 IN 2031\n\nCisco has 90,000 employees.', meta)).toEqual([])

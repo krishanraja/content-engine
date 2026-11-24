@@ -9,7 +9,7 @@ import { buildRevisePrompt, REVISE_MODES } from '../../_revisePrompt.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import { guardEngine } from '../../_auth.js'
 import { loadSubchannel } from '../../_subchannels.js'
-import { guardConfidence, selfCheck } from '../../_selfCheck.js'
+import { selfCheck } from '../../_selfCheck.js'
 import { passageReplacement, spliceSelection } from '../../_selection.js'
 import { loadTasteBlock } from '../../_taste.js'
 
@@ -183,11 +183,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     },
   })
 
-  // How sure we are is Krish's to set: the rewrite keeps the source's, label
-  // and number, and gets it back if the model dropped it (walk log F43).
-  const confidence = guardConfidence(inPlace ? spliceSelection(sourceText, b.selection as string, checked.text) : checked.text, sourceText)
-  const revised = confidence.text
-  const self_check = { ...checked.self_check, confidence_restored: confidence.restored }
+  const revised = inPlace ? spliceSelection(sourceText, b.selection as string, checked.text) : checked.text
+  const self_check = checked.self_check
 
   // Append history (non-destructive; body is only changed when the user accepts).
   const meta = (idea?.meta || {}) as any

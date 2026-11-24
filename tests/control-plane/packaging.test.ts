@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs'
 import { describe, test } from 'vitest'
 import {
   characters, DESCRIPTION_MAX, failures, FEED_CUT, firstSentence, HOOK_MAX, lintAnswer, lintPackage, lintSubstack,
-  MAX_HASHTAGS, PACKAGING_RULES, packagingCorrection, packagingRequest, packagingRulesBlock, predictionDate, READ_LINE,
+  MAX_HASHTAGS, PACKAGING_RULES, packagingCorrection, packagingRequest, packagingRulesBlock, READ_LINE,
   readAnswer, RULE_GROUPS, ruleText, SUBTITLE_AIM, SUBTITLE_LINE, TITLE_AIM, TITLE_MAX, watchLabel, WORKED_EXAMPLE as EX,
 } from '../../apps/control-plane/api/_packaging.js'
 import { HOUSE_RULES, houseRulesBlock, rulesFor } from '../../apps/control-plane/api/_houseRules.js'
@@ -24,10 +24,11 @@ import { emDashes } from '../../apps/control-plane/api/_publishChecks.js'
 
 const PIECE_1 = readFileSync('tests/fixtures/control-plane/piece1-v13-scoped-fixes.md', 'utf8')
 // The description in the house shape: Krish's own opening paragraph from
-// YouTube Studio, the piece's call as the piece states it, and the line.
+// YouTube Studio, then the line. Since 2026-11-24 it carries no prediction
+// (Ruling, Krish, 2026-11-24: "get rid of everything that suggests predictions,
+// calls, dated, odds or scores").
 const DESCRIPTION = [
   EX.opening,
-  'Our prediction: by 30 June 2027, Amazon opens an authorised route for shopping agents, and that route still shows them sponsored listings. How sure we are: 70%.',
   READ_LINE,
 ].join('\n\n')
 const lint = (over: { title?: string; description?: string; thumbnailText?: string | null } = {}) =>
@@ -99,7 +100,7 @@ describe('the title and description, checked the way the chat reasoned', () => {
     assert.deepEqual(rulesBroken(l), ['NUMBERS'])
     assert.match(l.problems[0]!.detail, /does not state: 500\./)
     assert.equal(lint({ title: "Amazon's $68.6 billion is why it blocked Meta's AI agent" }).passed, true)
-    const desc = lint({ description: DESCRIPTION.replace('How sure we are: 70%.', 'How sure we are: 85%.') })
+    const desc = lint({ description: DESCRIPTION.replace(READ_LINE, `It cost Amazon $500 million.\n\n${READ_LINE}`) })
     assert.deepEqual(rulesBroken(desc), ['NUMBERS'])
     assert.equal(desc.problems[0]!.field, 'description')
   })
@@ -108,11 +109,10 @@ describe('the title and description, checked the way the chat reasoned', () => {
     const l = lint({ description: DESCRIPTION.replace(READ_LINE, '') })
     assert.equal(l.passed, false)
     assert.deepEqual(rulesBroken(l), ['READ_LINE'])
-    // Krish's opening paragraph on its own: the line and the call are missing.
+    // Krish's opening paragraph on its own: the line is missing, and nothing asks for a prediction.
     const bare = lint({ description: EX.opening })
     assert.deepEqual(rulesBroken(bare), ['READ_LINE'])
-    assert.deepEqual(rulesBroken(bare, 'warn'), ['PREDICTION'])
-    assert.match(bare.problems.find(p => p.rule === 'PREDICTION')!.detail, /by 30 June 2027/)
+    assert.deepEqual(rulesBroken(bare, 'warn'), [])
   })
 
   test('the house\'s own constructions fail: "Not X, Y", a robot, a banned phrase, an exclamation mark, American spelling', () => {
@@ -385,9 +385,10 @@ describe('the writer\'s answer, and its one correction', () => {
     assert.match(packagingRequest({ idea: null, thesis: null, source: PIECE_1, thumbnailText: null, watch: null, hint: null }), /No thumbnail text was given/)
   })
 
-  test('the piece\'s prediction date is read by the shared call reader', () => {
-    assert.equal(predictionDate(PIECE_1), '30 June 2027')
-    assert.equal(predictionDate('No call here.'), null)
+  test('no packaging rule asks for a prediction, and a piece that still carries one is not asked to repeat it', () => {
+    assert.ok(!PACKAGING_RULES.some(r => r.id === 'PREDICTION'))
+    for (const r of PACKAGING_RULES) assert.doesNotMatch(r.text, /prediction/i, r.id)
+    assert.ok(!lint({ description: EX.opening + '\n\n' + READ_LINE }).problems.some(p => p.rule === 'PREDICTION'))
   })
 })
 

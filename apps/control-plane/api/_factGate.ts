@@ -20,9 +20,12 @@
 //      and with none of the three the gate cannot pass at all.
 //
 // A mechanical sweep backs up the model that lists the claims: every sentence
-// with a digit or a quotation mark is either checked or explicitly set aside
-// as a prediction, scenario or labelled inference, and a set-aside is only
-// honoured when the sentence reads like one.
+// is either checked or set aside as an opinion, analogy, scenario or labelled
+// inference, and a sentence with a number is never set aside on a model's word.
+// A piece makes no prediction (Ruling, Krish, 2026-11-24: "the signature format
+// is the 5 Whys; get rid of everything that suggests predictions, calls, dated,
+// odds or scores"), so a sentence that reads as a forecast is flagged and
+// checked like any other, never waved through as the piece's own prediction.
 //
 // The gate is honest about its limit. Two checkers that agree can both be
 // wrong, so the claim table goes to Krish with each verdict, its quote and
@@ -31,9 +34,6 @@
 import { createHash } from 'node:crypto'
 import { readMaterials, sanitizeVoice } from './_content.js'
 import { stripMarkdownLinks } from './_text.js'
-// The one reader of a piece's call, shared with the publish checks and the
-// Studio. Imported by its relative path, as api/_publishChecks.ts does.
-import { callSectionOf, labelledConfidences } from '../../../packages/contracts/src/call.js'
 
 export type ClaimKind = 'number' | 'date' | 'quote' | 'attribution' | 'event' | 'name' | 'other' | 'unclassified'
 export type OnFileVerdict = 'supported' | 'contradicted' | 'not_found'
@@ -190,79 +190,14 @@ export function effectiveBlocking(meta: Record<string, any>): CheckedClaim[] {
 }
 export const PASSING: ReadonlySet<ClaimVerdict> = new Set(['verified', 'verified_on_file', 'verified_web'])
 
-/** Krish's confidence in the piece's own prediction is his judgement, never a
- *  checked fact, so setting it must not put a passed check out of date (he set
- *  piece 2's to 75% on 2026-09-26 and it would otherwise have cost a full
- *  re-check; his ruling that day: a confidence no longer forces a fact
- *  re-check). A line that is only "How sure we are:" and a bare percentage or
- *  the placeholder is the form this first read, and is still read the same
- *  way, so every check stored before 2026-09-28 still matches its text. The
- *  placeholder is read in both spellings, the old one and UNSET. */
-const CONFIDENCE_LINE = /^([ \t]*How sure we are:)[ \t]*(?:\d{1,3}%\.?|\[(?:Krish )?to set\])[ \t]*$/gim
-/** Where Krish's confidence goes until he sets it. The writers put it in a
- *  first draft (api/_selfCheck.ts, guardConfidence). Until 2026-10-29 it was
- *  "[Krish to set]", which named him in the draft (Krish, 2026-10-28:
- *  "Remember, no content refers to Krish, ever."; house rule NO_NAME). */
-export const UNSET = '[to set]'
-/** The placeholder every stored hash was taken over. The hash still reads
- *  each confidence as this, so every passed fact check stored before the
- *  placeholder changed still matches its text. Never written into a draft. */
-const HASHED_UNSET = '[Krish to set]'
-/** Either spelling of the placeholder after a label, inside the call. */
-const LABELLED_UNSET = /((?:How sure we are|Confidence):[ \t]*)\[(?:Krish )?to set\]/gi
-
-/** Each number the shared label reader (labelledConfidences in
- *  packages/contracts/src/call.ts) finds after "How sure we are:" or
- *  "Confidence:" becomes the placeholder, and so does either spelling of the
- *  placeholder. The number alone: the label and every other character stay as
- *  written. */
-function unsetLabelled(text: string): string {
-  let out = text
-  for (const m of labelledConfidences(text).reverse()) {
-    const at = text.indexOf(`${m.value}%`, m.index)
-    if (at >= 0) out = out.slice(0, at) + HASHED_UNSET + out.slice(at + m.value.length + 1)
-  }
-  return out.replace(LABELLED_UNSET, `$1${HASHED_UNSET}`)
-}
-
-/** The text with Krish's confidence taken out, as the hash reads it. First the
- *  line form above, exactly as before. Then the confidence inside the call,
- *  under either label: piece 1 writes its call as one paragraph that ends
- *  "Confidence: 70%.", which only the first step's label missed, so re-setting
- *  it would have thrown a passed check away (walk log F41). Only the number on
- *  a labelled line inside the call (callSectionOf, the reader CALL and the
- *  Studio use) is taken out. The call's words, its date, anything written
- *  after the number, and a labelled number anywhere else in the piece
- *  ("Consumer confidence: 62% in August") are hashed as written. */
-export function withoutConfidence(text: string): string {
-  const lined = String(text ?? '').replace(CONFIDENCE_LINE, `$1 ${HASHED_UNSET}`)
-  const section = callSectionOf(lined)
-  if (!section) return lined
-  const start = lined.indexOf(section)
-  if (start < 0) return lined
-  return lined.slice(0, start) + unsetLabelled(section) + lined.slice(start + section.length)
-}
-
-/** Nothing but a confidence: a label, the placeholder, a full stop at most. */
-const ONLY_CONFIDENCE = /^(?:How sure we are|Confidence):[ \t]*\[(?:Krish )?to set\]\.?$/i
-
-/** Whether a sentence is only Krish's confidence, "How sure we are: 75%." or
- *  "Confidence: 70%.". The extractor sometimes lists it as a claim; checked
- *  against the sources it can only fail, and on 2026-09-26 it blocked piece 2
- *  once while passing on the run before. Piece 1's "Confidence: 70%." was
- *  never recognised, so it would have been a claim on every run (walk log
- *  F41). A sentence with anything else in it is checked like any other. */
-export function isConfidenceLine(sentence: string): boolean {
-  const s = String(sentence ?? '').trim()
-  return ONLY_CONFIDENCE.test(unsetLabelled(s.replace(new RegExp(CONFIDENCE_LINE.source, 'im'), `$1 ${HASHED_UNSET}`)))
-}
-
 /** The hash a check is pinned to. It is taken over the text as save-draft
  *  will store it (sanitizeVoice only swaps dashes for commas), so a checked
  *  draft stays checked through that save, and any change to a word or a
- *  number breaks the match, except the number of the confidence Krish sets. */
+ *  number breaks the match. Until 2026-11-24 it read the number after "How
+ *  sure we are:" as a placeholder; a piece makes no prediction now, so every
+ *  number is hashed as written. */
 export function bodyHash(body: string): string {
-  const text = withoutConfidence(sanitizeVoice(String(body ?? ''))).trim()
+  const text = sanitizeVoice(String(body ?? '')).trim()
   return createHash('sha256').update(text).digest('hex')
 }
 
@@ -303,13 +238,13 @@ export function sectionOf(body: string, sentence: string): string {
   return before.length ? before[before.length - 1].replace(/^\s*#{1,6}\s*/, '').trim() : ''
 }
 
-/** Reads like something that has not happened yet, or like a labelled guess.
- *  House rule R1 tells every writer "A guess is marked as a guess", so "our
- *  guess" is a label here too: on 2026-09-30 piece 1's "Here's our guess, in
- *  full: Amazon's real worry is the $68.6 billion." was set aside by the
- *  lister and then checked as a fact because this list did not know the word.
- *  The lister still has to set the sentence aside itself, and a number in it is
- *  still checked wherever the piece states it as fact. */
+/** Reads like something that has not happened yet, or like a labelled guess:
+ *  the forward-looking word list, kept as an honesty check. A piece makes no
+ *  prediction (Ruling, Krish, 2026-11-24), so a sentence this reads as a
+ *  forecast is flagged in the reason it is set aside with, and one with a
+ *  number in it is checked as a claim: it is never set aside as the piece's
+ *  own prediction. House rule R1 tells every writer "A guess is marked as a
+ *  guess", so "our guess" is a label here too. */
 export function readsAsForecast(sentence: string): boolean {
   return /\b(will|would|could|might|may|if|bet|call|forecast|predict|scenario|inference|guess|guesses|guessing|we think|our read|going to|\w+['’]ll|by (?:\d{1,2} )?(?:january|february|march|april|may|june|july|august|september|october|november|december)?\s*\d{4})\b/i.test(sentence)
 }
@@ -331,13 +266,12 @@ export function numbersIn(s: string): string[] {
  *  by the web check, and on 13 and 14 October 59 paid runs went round the
  *  same loop: run, learn a number was not on file as written, fix, run again.
  *  This reads no model and changes no verdict: the gate itself is untouched,
- *  so a session can fix or file before it pays for a run. Forecasts and
- *  Krish's confidence line are left out, as the gate leaves them out. */
+ *  so a session can fix or file before it pays for a run. A sentence that
+ *  reads as a forecast is read like any other, as the gate reads it. */
 export function numbersNotOnFile(body: string, meta: Record<string, any>): Array<{ sentence: string; numbers: string[] }> {
   const onFile = new Set(numbersIn(stripMarkdownLinks(sourcesText(meta || {}))))
   const out: Array<{ sentence: string; numbers: string[] }> = []
   for (const s of sentences(body)) {
-    if (isConfidenceLine(s) || readsAsForecast(s)) continue
     const missing = [...new Set(numbersIn(stripMarkdownLinks(s)).filter(n => !onFile.has(n)))]
     if (missing.length) out.push({ sentence: s, numbers: missing })
   }
@@ -500,9 +434,11 @@ export function quoteHolds(quote: string | null, sourcesText: string, claim: str
 
 /** The sweep's leftovers after a second look. A sentence the second look
  *  finds claims in is checked claim by claim. One it finds none in is set
- *  aside with its reason, but only when it has no digits or reads as a
- *  forecast: a number is never waved through on a model's word. Anything the
- *  second look did not answer stays a claim, so a failed call fails closed. */
+ *  aside with its reason, but only when it has no digits: a number is never
+ *  waved through on a model's word, and since 2026-11-24 not as a forecast
+ *  either. A set-aside sentence that reads as a forecast says so in its
+ *  reason, so the claim table flags it. Anything the second look did not
+ *  answer stays a claim, so a failed call fails closed. */
 export function resolveLeftovers(
   leftovers: Claim[],
   answers: Array<{ i: number; claims: Array<{ claim: string; kind: string }>; reason: string }>,
@@ -517,8 +453,9 @@ export function resolveLeftovers(
       for (const c of found) claims.push({ sentence: l.sentence, claim: c.claim.trim(), kind: (KIND_SET.has(c.kind) ? c.kind : 'other') as ClaimKind })
       return
     }
-    if (!/\d/.test(l.sentence) || readsAsForecast(l.sentence)) setAside.push({ sentence: l.sentence, reason: `second look: ${String(a.reason || 'no factual claim').slice(0, 80)}` })
-    else claims.push(l)
+    if (/\d/.test(l.sentence)) { claims.push(l); return }
+    const flag = readsAsForecast(l.sentence) ? 'reads as a forecast, and a piece makes no prediction; ' : ''
+    setAside.push({ sentence: l.sentence, reason: `second look: ${flag}${String(a.reason || 'no factual claim').slice(0, 80)}` })
   })
   return { claims, setAside }
 }
@@ -537,11 +474,11 @@ export function sweep(body: string, claims: Claim[], setAside: Array<{ sentence:
     const n = norm(s)
     return list.some(c => { const m = norm(c.sentence); return m.length >= 12 && (n.includes(m) || m.includes(n)) })
   }
-  const honoured = setAside.filter(a => readsAsForecast(a.sentence) && !isConfidenceLine(a.sentence))
+  // A set-aside with a number in it is never honoured: it is read again as a
+  // claim of its own, forecast or not.
+  const honoured = setAside.filter(a => !/\d/.test(a.sentence))
   const extra: Claim[] = []
   for (const s of sentences(body)) {
-    // Krish's confidence is never a leftover to check, listed or not.
-    if (isConfidenceLine(s)) continue
     if (covered(s, claims) || covered(s, honoured)) continue
     extra.push({ sentence: s, claim: s, kind: 'unclassified' })
   }
@@ -550,13 +487,12 @@ export function sweep(body: string, claims: Claim[], setAside: Array<{ sentence:
 
 /** What the second look reads: the sweep's unclassified sentences and the
  *  lister's set-asides, read again so waving a sentence through takes two
- *  readings that agree. Never Krish's confidence line: the second look turns
- *  any sentence with a number into a claim (piece 2, runs 15 to 17). */
+ *  readings that agree. */
 export function leftoversOf(swept: { claims: Claim[]; setAside: Array<{ sentence: string; reason: string }> }): Claim[] {
   return [
     ...swept.claims.filter(c => c.kind === 'unclassified'),
     ...swept.setAside.map(a => ({ sentence: a.sentence, claim: a.sentence, kind: 'unclassified' as ClaimKind })),
-  ].filter(l => !isConfidenceLine(l.sentence))
+  ]
 }
 
 /** One source is enough only when it is the source's own words. The engine's
@@ -696,7 +632,7 @@ export function factLedgerCoverage(
   hash: string,
   parts?: string[],
 ): FactLedgerCoverage {
-  const bodySentences = sentences(body).filter(s => !isConfidenceLine(s))
+  const bodySentences = sentences(body)
   const ledgerUsable = usable(ledger, hash, parts)
   const reusable = ledgerUsable
     ? bodySentences.filter(s => !!ledger.sentences[sentenceKey(s)]).length
@@ -819,7 +755,7 @@ export function settle(body: string, result: FactCheck, prior: FactLedger | null
   if (usable(prior, hash, parts)) for (const [k, v] of Object.entries(prior.sentences)) if (keys.has(k)) out[k] = v
   for (const s of bodySentences) {
     const key = sentenceKey(s)
-    if (out[key] || isConfidenceLine(s)) continue
+    if (out[key]) continue
     const mine = result.claims.filter(c => overlapping(c.sentence, [s]).length > 0)
     if (mine.length) {
       if (mine.every(c => PASSING.has(c.verdict))) out[key] = { status: 'passed', at: result.ran_at, claims: mine }
@@ -840,7 +776,8 @@ export const EXTRACT_SYSTEM = [
   // Krish, 2026-10-13 (Wednesday's Muse scorecard): "I would literally do flash
   // comparisons of it against other tools on different criteria and rate them".
   'The writer\'s own scores, ratings, rankings and totals ("I give Muse a nine", "my scorecard", "I have Claude on 39") are opinion, never claims: set them aside with reason opinion. The facts quoted to justify a score are still claims.',
-  'Not claims: opinions, jokes, analogies, labelled inference or guesses, predictions, scenarios, and the piece\'s own prediction or bet. List any such sentence that contains a number or a quotation under "set_aside" with its reason (prediction, scenario, labelled_inference, opinion, analogy), so nothing with a number goes unaccounted for.',
+  'Not claims: opinions, jokes, analogies, labelled inference or guesses, and scenarios. List any such sentence that contains a number or a quotation under "set_aside" with its reason (scenario, labelled_inference, opinion, analogy), so nothing with a number goes unaccounted for.',
+  'The piece makes no prediction. A sentence that says what will happen is a claim when it reports what a named person or company said; one that forecasts on its own account goes under "set_aside" with reason forecast, so it is flagged.',
   'Return JSON only: {"claims":[{"sentence":"...","claim":"the single fact, stated plainly","kind":"number|date|quote|attribution|event|name|other"}],"set_aside":[{"sentence":"...","reason":"..."}]}',
 ].join('\n')
 
@@ -858,11 +795,11 @@ export const ON_FILE_SYSTEM = [
 ].join('\n')
 
 export const SECOND_LOOK_SYSTEM = [
-  'These sentences come from a piece of writing, and nobody has listed a factual claim in them yet. Each comes with the heading of the section it sits in: a sentence in a section about possible futures, scenarios or a forecast describes a possible future unless it states something that has already happened.',
+  'These sentences come from a piece of writing, and nobody has listed a factual claim in them yet. Each comes with the heading of the section it sits in: a sentence in a section about possible futures or scenarios describes a possible future unless it states something that has already happened.',
   'For each sentence, list every factual claim a reader could check as true or false: a number, a date, a quotation or who said something, what a company or person did, a definition presented as fact. One claim per fact, stated plainly.',
   'The writer\'s own score or rating of something ("I give it a nine", "my totals") is an opinion, never a claim.',
   'A scare quote, an analogy, a joke, a made-up example line, an opinion, a hypothetical or a description of a possible future is not a claim; for such a sentence return no claims and give the reason in a few words.',
-  'The piece\'s own prediction or bet (what the writers say will happen, often with a future date) is never a claim: it cannot be checked until its date. What a company or person SAID they will do is a claim about what they said.',
+  'What a company or person SAID they will do is a claim about what they said. A sentence that forecasts on its own account is not a claim: return no claims and give the reason forecast, so it is flagged. The piece makes no prediction.',
   'Return JSON only: {"answers":[{"i":0,"claims":[{"claim":"...","kind":"number|date|quote|attribution|event|name|other"}],"reason":"..."}]}',
 ].join('\n')
 
