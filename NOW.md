@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-23","week_target":20,"current":2,"current_as_of":"2026-11-23","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (0 published, and 2 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (10% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 2, against 20 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
+- The habits voiceover short (piece 701a2c55, moved by Krish to Thu 19 Nov) is made and filed: 3 Posts/2026-11-19 Thu off.day - Which of your habits will cost you your job holds the final 9:16 cut (3 Video, Drive sha256 matches), the brand cover he picked (option 2, tall and wide), his face cover and a caption for each of eight channels, with the draft manifest in 0 Publish. The board's Thu card leads with Approve for publish bound to that manifest. The cut was rendered on the engine he approved for v9 (main's later caption engine regressed it) and filed with the cloud Drive uploader by his ruling, past the library gate, whose QC false readings are with another session. (2026-11-19)
 - The standards check-in of 2026-11-23 grouped the new floor standards; config/floor-groups.json holds 78 groups, each new one seeded as a proposal for Krish on the pinned check-in page. (2026-11-23)
 - The standards page test no longer breaks when the floor reaches 78 groups, so the floor pull requests held since 20 November can pass verify. (2026-11-23)
 - Every Claude and Growth prompt the Content Board copies now says that Codex generates the visual assets, Claude arbitrates the standards and checks what Codex returns, failures and best practices go to record_harness_observation for the internal-auditor, and only preference and inspiration go to the taste engine. (2026-11-23)
@@ -44,26 +45,21 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 - The premium title slide (direction A) is queued to Codex as card ve-title-premium-a on gpt-6.2-astra, set on this card only; the engine's default model pin is unchanged. (2026-11-20)
 - Everything the next session needs is in docs/ve/handoff-2026-11-20/ (HANDOFF.md, the approved PLAN.md, the audit evidence, the shot study, the polish spec and generators, and Krish's ten recipe verdicts); WORKBENCH.md points to it. All the week's engine work is merged to main (#941 to #956); the title slide card is queued to Codex. (2026-11-20)
 - ve shot grammar step 5 built. `ve matte` makes an offline subject matte of a cut's picture, cached by its sha256; compile writes `props.matte`, the in-world number and chapter marks with his head, the anchor title behind his head and a body keep-out; the renderer lays type between his take and the matted subject and cuts him out over a whole-frame stage panel. Anchor graphics sit only above his head on an ink scrim, captions under his chin. `grammar.depth`, `grammar.title_timing` (the title on his spoken words within 30 s) and the after-render `panel.fill` row hold it. Generated imagery is allowed as an art-directed metaphor and refused as a stand-in for a real thing (`depicts`). Reference renders on the Fri 20 take: anchor 9:16, stage 9:16, stage 16:9 (docs/ve/INGREDIENTS.md, "Depth and the staging fixes"). (2026-11-20)
-- The GPU matte trial's second run (44739662276) rented one RTX A4000 for 216 s ($0.0102) and decoded no frames: the pod's ffmpeg 4.4 has no -fps_mode. Fixed to -vsync passthrough with a guard test. The spend approval's two runs are used, so the comparison was made on the local CPU instead (same pinned models, same clip). (2026-11-20)
-- The GPU matte runner now speaks Runpod's REST API v2 (api.runpod.io/v2): v1 (rest.runpod.io) was retired on 15 Nov and no longer resolves, so the first matte-trial run died before making a pod, at no cost. It reads the live GPU catalog and tries each affordable card in stock, cheapest first. scripts/velib/maxine_pod.py still calls v1 and is broken the same way. (2026-11-20)
-- A GPU subject matte trial runner is built (scripts/velib/matte_pod.py, the hand-only matte-trial.yml workflow): BiRefNet HR matting (MIT) and RobustVideoMatting (GPL-3.0, run on the pod only) pinned by commit and weights sha256, on one RunPod pod under the Maxine runner's guards. Nothing feeds a render. (2026-11-20)
 - **StyleStill covers: 47 of 48 passed a separate review and are filed and recorded for the board's style pickers** (`config/ve/style-samples.json`). Eight came from Codex's second pass, 24 from its third, and 15 of the 16 held back from its fourth, after the reviewer's five named faults were fixed (`82360c9b`: line-boil passes too thick to read as three lines, receipt and living-ui labels ink on ink, the data story's chart now the sourced monthly sales indexed 100 to 107, flip-hinge sampled with its key word lit). slot-roll stays held: its uneven word gap is in the caption theme itself (`c631e0ac`). (2026-11-16)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3**, at 0 of 3 counted cuts (`docs/ve/STATUS.md`, "Phase 3 count", last moved 2026-11-18). Procedure: `docs/ve/ENGINE.md` and `docs/ve/RUNBOOK.md`; `ve render` refuses a whole cut until he presses Approve proof. (2026-11-19)
 
 ## What changed recently
 
-- 2026-11-23 The test's made-up group id was fixed at 77, which became a real group once the floor grew to 78. It now uses one past the last group.
-- 2026-11-23 The roles and learning routes were only in AGENTS.md, so 16 of this week's 18 Claude prompts never named Codex and none said where a lesson goes.
-- 2026-11-23 Krish ruled that the taste system holds only preference and inspiration.
-Older lines: `docs/history/2026-11-23-NOW-moved-1.md` (it names every earlier move) and `LOG.md`.
+- 2026-11-19 scripts/pages/receipt.py (tall Receipt clear of the Reel UI), tests, config/title-verdicts.json, docs/plans/2026-11-17-tue-habits/, docs/ve/cards/habits/
+Older lines: `docs/history/2026-11-24-NOW-moved-1.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-23): Krish answers the new items on the standards check-in page.
+- Next (2026-11-19): Krish presses Approve for publish on the Thu 19 card; Growth's go-live then schedules the posts in Buffer.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
-- North Star check (2026-11-23): holds.
+- North Star check (2026-11-19): holds.
 
 ## Read next
 
