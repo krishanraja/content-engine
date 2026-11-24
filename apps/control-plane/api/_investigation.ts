@@ -937,8 +937,8 @@ export function buildManifest(m: ManifestInput): string {
     m.terminalStatement,
     `(reason: ${m.terminalReason})`,
     '',
-    '### Claims with their falsifiers',
-    ...m.survivingClaims.slice(0, 5).map((c, i) => `${i + 1}. ${c.text}\n   quote: "${c.quote.slice(0, 200)}"\n   falsified if: ${c.falsifier}`),
+    '### What would break each claim',
+    ...m.survivingClaims.slice(0, 5).map((c, i) => `${i + 1}. ${c.text}\n   quote: "${c.quote.slice(0, 200)}"\n   would break if: ${c.falsifier}`),
     '',
     quarantined.length ? `### Harnesses that returned nothing: ${[...new Set(quarantined)].join(', ')}. Do not fill these gaps with inference.` : '',
   ].filter(Boolean).join('\n')

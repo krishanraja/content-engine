@@ -1624,11 +1624,13 @@ The one Anthropic price table.
 - `type ProductionSeries = typeof PRODUCTION_SERIES_VALUES[number]`
 - `type ProductionFormat`
 - `interface ContentRevisionInput`
+- `interface ProductionLanding`
 - `interface ProductionApprovalV1`
 - `interface ProductionBriefV1`
 - `function jsonRecord(value: unknown): JsonRecord`
 - `function productionBriefHash(value: unknown): string`
 - `function contentRevisionHash(input: ContentRevisionInput): string`
+- `function productionLanding(meta: unknown): ProductionLanding | null`
 - `function productionSeries(input: Pick<ContentRevisionInput, 'lane' | 'lane_slot'>): ProductionSeries | null`
 - `function seriesHasFormats(series: ProductionSeries): boolean`
 - `function createProductionApproval(input: ContentRevisionInput, approvedAt: string): ProductionApprovalV1`

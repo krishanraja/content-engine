@@ -619,14 +619,13 @@ export const SOURCE_CLASSES = [
 //      "fewer than three") were invisible to a digit-only pattern.
 //   3. The artifact list held only SEC's four main forms, so Form D, a
 //      registry, a portfolio page and an investor deck all read as vague.
-// The tautology, source-class and horizon checks are unchanged, so a vacuous
-// falsifier still fails on those.
+// The tautology and source-class checks are unchanged, so a vacuous falsifier
+// still fails on those. (The horizon check was removed 2026-11-24.)
 const NUMWORD = '(?:\\d|zero|one|two|three|four|five|six|seven|eight|nine|ten|no\\b)'
 const OBSERVABLE_NUM = new RegExp(
   `\\b(above|below|under|over|at least|at most|fewer than|more than|less than|greater than|no more than|<|>)\\s*[$£€]?\\s*${NUMWORD}`, 'i')
 const OBSERVABLE_ARTIFACT = /\b(10-k|10-q|8-k|s-1|form d|form 4|13f|earnings call|headcount|job postings?|pricing page|changelog|api docs|arr|churn|prospectus|docket|annual report|corporate filings?|registry|portfolio page|investor deck|cap table|company website|press release|dataset|database)\b/i
 const OBSERVABLE_DATED = /\b(by|before|after|within|as of)\s+(q[1-4]\s*20\d{2}|20\d{2}|\d{1,2}\s+(months|weeks|quarters|days)|(january|february|march|april|may|june|july|august|september|october|november|december)\s+20\d{2})\b/i
-const HORIZON_RE = /\b(q[1-4]\s*20\d{2}|20\d{2}-\d{2}-\d{2}|20\d{2}|\d{1,2}\s*(days|weeks|months|quarters|years)|next (quarter|year|earnings))\b/i
 
 export const TAUTOLOGY_BLACKLIST = [
   'if it turns out', 'if this is wrong', 'if the trend does not continue',
@@ -644,7 +643,7 @@ export interface FalsifierResult {
 }
 
 /** Deterministic, or the model emits "this would be falsified if it turned out
- *  not to be true". Four requirements, all checkable in code.
+ *  not to be true". Three requirements, all checkable in code.
  *  falsifier_jaccard is logged as an observed value even when it passes, so
  *  well-formed-but-vacuous drift is visible over months. */
 export function falsifierIsWellFormed(claimText: string, falsifier: string): FalsifierResult {
@@ -666,10 +665,11 @@ export function falsifierIsWellFormed(claimText: string, falsifier: string): Fal
   const notTautological = tautology.length === 0 && jac < FALSIFIER_JACCARD_CEILING
   checks.push(check('falsifier_not_tautological', notTautological, { blacklist_hits: tautology, jaccard: Number(jac.toFixed(3)) }, `no blacklisted phrasing and jaccard vs the claim < ${FALSIFIER_JACCARD_CEILING}`))
 
-  const horizon = HORIZON_RE.test(f)
-  checks.push(check('falsifier_horizon', horizon, horizon ? (f.match(HORIZON_RE) || [])[0] : null, 'a date, quarter, or duration'))
-
-  return { ok: observable && classHits.length > 0 && notTautological && horizon, jaccard: jac, checks }
+  // No horizon check (Ruling, Krish, 2026-11-24: "get rid of everything that
+  // suggests predictions, calls, dated, odds or scores"). A falsifier states
+  // what evidence would knock the answer down; it carries no date, deadline or
+  // forecast horizon, so the old falsifier_horizon requirement is gone.
+  return { ok: observable && classHits.length > 0 && notTautological, jaccard: jac, checks }
 }
 
 export interface InterestInput {

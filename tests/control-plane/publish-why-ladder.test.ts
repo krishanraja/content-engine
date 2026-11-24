@@ -39,8 +39,35 @@ describe('WHY_LADDER publish check', () => {
     expect(status.failing.map(f => f.id)).toContain('WHY_LADDER')
   })
 
-  it('rereads the ladder as it is now, not the problems filed with it', () => {
+  it('rereads the ladder as it is now, not the check problems filed with it', () => {
+    // An untagged filed problem is checkWhyLadder's from filing time: the rerun replaces it, so one fixed since no
+    // longer blocks.
     expect(why({ ladder: ladder(), problems: [{ rung: 3, problem: 'Why 3 needs a second source on a different domain' }] })?.ok).toBe(true)
+  })
+
+  it('keeps a parse problem filed with the ladder, though the stored ladder no longer shows it', () => {
+    // Rung 3 has no "n": the parser reads it as 3, so the stored ladder stands on its own, and only the problem filed
+    // with it (tagged source: 'parse') says the block was malformed.
+    const raw = ladder() as unknown as { rungs: Array<Record<string, unknown>> }
+    delete raw.rungs[2].n
+    const filed = whysFromResearch(`Research.\n\n\`\`\`why-ladder\n${JSON.stringify(raw)}\n\`\`\`\n`, '2026-11-24T21:00:00Z')
+    expect(filed?.ladder?.rungs[2].n).toBe(3)
+    expect(filed?.problems).toEqual([expect.objectContaining({ rung: 3, source: 'parse' })])
+    const c = whyLadderCheck(filed)
+    expect(c).toMatchObject({ blocking: true, ok: false })
+    expect(c.detail).toMatch(/"n" is missing/)
+    // Untagged, as a filing older than the tags stored it, the same problem does not outlive the rerun.
+    expect(whyLadderCheck({ ...filed, problems: filed!.problems.map(({ source: _s, ...p }) => p) }).ok).toBe(true)
+  })
+
+  it('reports a tagged parse problem and the rerun\'s problems together, once each', () => {
+    const thin = ladder({ rungs: [rung(1), rung(2), rung(3, { evidence: [ev('sec.gov')] }), rung(4), rung(5)] })
+    const c = whyLadderCheck({ ladder: thin, problems: [
+      { rung: 1, problem: 'Why 1: "strength" is "sure", not documented, inferred or open; read as open', source: 'parse' },
+      { rung: 3, problem: 'Why 3 needs a second source on a different domain' },
+    ] })
+    expect(c.ok).toBe(false)
+    expect(c.detail).toMatch(/^Why 1: "strength" is "sure".*Why 3 needs a second source/)
   })
 
   it('blocks a landing that makes a forecast', () => {

@@ -306,9 +306,10 @@
     },
     {
       "key": "bold_predictions",
-      "title": "Bold, checkable predictions",
-      "never_beneath": "A prediction names real companies, commits to a clear near-term call that is not already happening, and only appears where that day's close format calls for one; no doomsaying opener.",
-      "check": "Named entities; dated and checkable; not already true; matches the agreed close.",
+      "title": "No predictions: an insight and an open question",
+      "never_beneath": "No piece makes a prediction: no call, dated forecast, odds, confidence number or score. A piece lands on an insight and an open question.",
+      "check": "Read the close and every line: no call, date, odds, confidence number or score anywhere; the piece lands on an insight and an open question.",
+      "ruling": "Ruling (Krish, 2026-11-24): the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores. His amendment of 24 Nov (taste_floor_group_amendments).",
       "members": [
         "s9c6d02148a",
         "s1949b94c5f",
@@ -589,9 +590,10 @@
     },
     {
       "key": "predictions_committed",
-      "title": "Committed predictions and fairly chosen examples (adds to Bold, checkable predictions)",
-      "never_beneath": "A prediction commits to a bold, near-term call with a deliberately set confidence, never a hedged coin flip far in the future; and examples stay neutral, with Chinese flags or DeepSeek imagery only where the example is a Chinese AI.",
-      "check": "Find the prediction's date and confidence: within a year and deliberately set; scan the examples for China-specific imagery that is not about a Chinese AI.",
+      "title": "No predictions, and fairly chosen examples (adds to No predictions: an insight and an open question)",
+      "never_beneath": "No piece makes a prediction: no call, dated forecast, odds, confidence number or score. A piece lands on an insight and an open question.",
+      "check": "Read the close and every line: no call, date, odds, confidence number or score anywhere; the piece lands on an insight and an open question; scan the examples for China-specific imagery that is not about a Chinese AI.",
+      "ruling": "Ruling (Krish, 2026-11-24): the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores. His amendment of 24 Nov (taste_floor_group_amendments).",
       "members": [
         "sedf0fc1d56",
         "s70ba0b553c"
@@ -763,9 +765,10 @@
     },
     {
       "key": "bold_predictions_e261119",
-      "title": "Bold, checkable predictions (evolution, week of 2026-11-19)",
-      "never_beneath": "A prediction names real companies, commits to a clear near-term call that is not already happening, and only appears where that day's close format calls for one; no doomsaying opener.",
-      "check": "Named entities; dated and checkable; not already true; matches the agreed close.",
+      "title": "No predictions: an insight and an open question (evolution, week of 2026-11-19)",
+      "never_beneath": "No piece makes a prediction: no call, dated forecast, odds, confidence number or score. A piece lands on an insight and an open question.",
+      "check": "Read the close and every line: no call, date, odds, confidence number or score anywhere; the piece lands on an insight and an open question.",
+      "ruling": "Ruling (Krish, 2026-11-24): the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores. His amendment of 24 Nov (taste_floor_group_amendments).",
       "members": [
         "secddf8b1ab"
       ],
@@ -888,9 +891,10 @@
     },
     {
       "key": "bold_predictions_e261123",
-      "title": "Bold, checkable predictions (evolution, week of 2026-11-23)",
-      "never_beneath": "A prediction names real companies, commits to a clear near-term call that is not already happening, and only appears where that day's close format calls for one; no doomsaying opener.",
-      "check": "Named entities; dated and checkable; not already true; matches the agreed close.",
+      "title": "No predictions: an insight and an open question (evolution, week of 2026-11-23)",
+      "never_beneath": "No piece makes a prediction: no call, dated forecast, odds, confidence number or score. A piece lands on an insight and an open question.",
+      "check": "Read the close and every line: no call, date, odds, confidence number or score anywhere; the piece lands on an insight and an open question.",
+      "ruling": "Ruling (Krish, 2026-11-24): the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores. His amendment of 24 Nov (taste_floor_group_amendments).",
       "members": [
         "s08e19e659c",
         "s10bd03a730",

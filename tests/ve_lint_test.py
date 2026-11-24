@@ -108,12 +108,22 @@ class FridayFailuresAreRefused(unittest.TestCase):
     def test_the_landing_never_forecasts_or_scores(self):
         for shows, question in (('By 2027 every country will fund its own model.', 'Who pays for it?'),
                                 ('We are 80% sure the rule changes next.', 'Who wrote the rule?'),
-                                ('The rule came first.', 'What are the odds it changes?'),
+                                ('The odds are the rule changes.', 'Who wrote the rule?'),
+                                ("There's a 70% chance labels fold.", 'Who wrote the rule?'),
                                 ('The rule came first, and that is the lesson for leaders.', 'Who wrote the rule?'),
                                 ('The rule came first.', 'Who wrote the rule')):
             def landing(s, shows=shows, question=question):
                 s['cuts']['proof-tall']['beats'][4].update(role='landing', landing={'shows': shows, 'open_question': question})
             self.assertRefused(mutate(landing), 'story.landing')
+
+    def test_the_landing_may_carry_a_share_or_the_bare_nouns(self):
+        # The lint refuses what packages/contracts/src/whys.ts landingVetoes refuses: stated odds and stated confidence,
+        # never a share, "confidence" or "likelihood" as facts.
+        for shows in ("Spotify now keeps 30% of every AI track's royalties.",
+                      'Consumer confidence fell after the recall, and the likelihood of a second recall was in the filing.'):
+            def landing(s, shows=shows):
+                s['cuts']['proof-tall']['beats'][4].update(role='landing', landing={'shows': shows, 'open_question': 'Who wrote the rule?'})
+            self.assertNotIn('story.landing', codes_for(mutate(landing)), shows)
 
     def test_R46_generated_picture_used_as_evidence(self):
         asset = {'id': 'fake-shot', 'kind': 'screenshot', 'origin': 'generated', 'path': 'x.png', 'sha256': '0' * 64,

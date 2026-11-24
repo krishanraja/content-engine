@@ -9,7 +9,11 @@ import { patchMeta, type StoreDb } from '../_pieceStore.js'
 // kept and shown as a problem ("Why 3 needs a second source"), never dropped; research with no ladder is filed as
 // Markdown exactly as before and leaves meta.whys alone. The read sheet shows it as read.whys (view contract 1.34.0).
 
-export interface WhysProblem { rung: number | null; problem: string }
+/** One thing short on a ladder. source 'parse' marks what the parser said about the block itself (it would not read, a
+ *  rung was malformed): parseWhyLadder normalises what it reads, so the stored ladder no longer shows that fault, and
+ *  the WHY_LADDER publish check keeps these as filed. Problems with no source are checkWhyLadder's, rerun on the stored
+ *  ladder whenever it is checked (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys). */
+export interface WhysProblem { rung: number | null; problem: string; source?: 'parse' }
 export interface PieceWhys {
   ladder: WhyLadder | null
   problems: WhysProblem[]
@@ -23,7 +27,7 @@ export function whysFromResearch(content: string, at: string, materialId?: strin
   const parsed = parseWhyLadder(content)
   if (!parsed.ladder && parsed.problems.length === 1 && parsed.problems[0] === NO_WHY_LADDER) return null
   const problems: WhysProblem[] = [
-    ...parsed.problems.map(problem => ({ rung: rungNamed(problem), problem })),
+    ...parsed.problems.map(problem => ({ rung: rungNamed(problem), problem, source: 'parse' as const })),
     ...(parsed.ladder ? checkWhyLadder(parsed.ladder) : []),
   ]
   return { ladder: parsed.ladder, problems, checked_at: at, ...(materialId ? { material_id: materialId } : {}) }

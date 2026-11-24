@@ -50,8 +50,10 @@ with logo paths relative to the JSON file, and each CARD one of:
              {"text": "Now they'll pay to be picked.", "tone": "answer"}],
    "note": "An assistant gives you one answer, not a list"}
    (a card with "chapter" is a chapter divider: centred lines at 104px. Any other statement takes the one header
-   with its "title", the other lines under it, and an optional "meter": {"value": 85, "tone": "answer"|"dim"}
-   drawn as a 0 to 100 bar.)
+   with its "title" and the other lines under it. The confidence meter and the call note are gone: a card that
+   carries "meter" or "callnote", or whose kicker or title reads as a call, a prediction or a confidence number,
+   is refused (Ruling, Krish, 2026-11-24: "the signature format is the 5 Whys; get rid of everything that
+   suggests predictions, calls, dated, odds or scores").)
   {"file": "panels.png", "kind": "panels", "kicker": ..., "title": ..., "subject": {"logos": [...], "text": "..."},
    "panels": [{"title": "Cost per task, US dollars, lower is cheaper", "max": 6.5, "dim": false,
                "rows": [{"name": "Low effort", "value": 0.55, "label": "$0.55", "hi": false}, ...],
@@ -93,6 +95,7 @@ import datetime as dt
 import html
 import io
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -155,14 +158,8 @@ body.chapter .k { white-space: normal; }
 .logos { display: flex; align-items: center; gap: 40px; }
 body.chapter .logos img { height: 56px; width: auto; max-width: 360px; object-fit: contain; }
 
-/* a call: its lines under the header, and a 0 to 100 meter */
+/* a statement: its lines under the header */
 .say { font: 400 88px/1.02 'Anton', sans-serif; text-transform: uppercase; text-wrap: balance; }
-.meter { display: flex; flex-direction: column; gap: 10px; }
-.meter .track { height: 34px; background: var(--ink-soft); border: 2px solid var(--line); position: relative; }
-.meter .track i { position: absolute; inset: 0 auto 0 0; background: var(--bar); }
-.meter.answer .track i { background: var(--mint); }
-.meter .ends { display: flex; justify-content: space-between; font: 500 22px/1 'IBM Plex Mono', monospace; color: var(--muted); }
-.callnote { font: 500 30px/1.35 'Archivo', sans-serif; color: var(--cream); text-wrap: pretty; }
 
 /* bars */
 .rows { display: flex; flex-direction: column; gap: 14px; }
@@ -399,6 +396,25 @@ def shot_stacks(card):
     return [[{k: card[k] for k in ('image', 'crop', 'mark', 'marks') if k in card}]]
 
 
+# The call card is retired (Ruling, Krish, 2026-11-24): no meter, no call note, and no kicker or title that reads as
+# a call, a prediction or a confidence number.
+RULING_5_WHYS = ('Ruling, Krish, 2026-11-24: "the signature format is the 5 Whys; get rid of everything that suggests '
+                 'predictions, calls, dated, odds or scores"')
+CALL_WORDS = re.compile(r'our call|the call|our prediction|how sure|\d+\s*%\s*(?:sure|chance|likely)', re.I)
+
+
+def call_problem(card):
+    """Why a card still reads as the retired call, or None."""
+    gone = [k for k in ('meter', 'callnote') if k in card]
+    if gone:
+        return f'it carries {" and ".join(chr(34) + k + chr(34) for k in gone)}; the call card and its confidence meter are retired'
+    for key in ('kicker', 'title'):
+        hit = CALL_WORDS.search(str(card.get(key) or ''))
+        if hit:
+            return f'its {key} says "{hit.group(0)}", which reads as a call, a prediction or a confidence number'
+    return None
+
+
 def check_spec(spec):
     series = spec.get('series')
     if series not in TERRITORY:
@@ -406,6 +422,9 @@ def check_spec(spec):
     others = [w for s, words in TERRITORY.items() if s != series for w in words]
     for card in spec['cards']:
         name = card.get('file', '?')
+        called = call_problem(card)
+        if called:
+            fail(f'{name}: {called}; a piece lands on what this shows and an open question ({RULING_5_WHYS})')
         kicker = (card.get('kicker') or '').lower()
         hit = next((w for w in others if w in kicker), None)
         if hit:
@@ -871,16 +890,9 @@ def body_of(card, base):
         out.append(timeline_body(card))
     elif kind == 'dots':
         out.append(dots_body(card))
-    else:  # a statement that is not a chapter divider: the lines after the heading, then a meter
+    else:  # a statement that is not a chapter divider: the lines after the heading
         for l in card.get('lines', [])[1:]:
             out.append(f'<div class="say" style="color:{TONES.get(l.get("tone", "plain"), TONES["plain"])}">{e(l["text"])}</div>')
-        if card.get('meter'):
-            m = card['meter']
-            v = max(0, min(100, float(m['value'])))
-            out.append(f'<div class="meter {e(m.get("tone", "dim"))}"><div class="track"><i style="width:{v:.1f}%"></i></div>'
-                       f'<div class="ends"><span>0</span><span>{e(m.get("label", "how sure, out of 100"))}</span><span>100</span></div></div>')
-        if card.get('callnote'):
-            out.append(f'<div class="callnote">{e(card["callnote"])}</div>')
     out.append(foot(card))
     return ''.join(out)
 
@@ -1152,12 +1164,29 @@ def self_test():
         chapter = {'file': 'ch.png', 'kind': 'statement', 'kicker': 'Chapter 2 of 8', 'chapter': 'Why?', 'logos': ['aa.svg'],
                    'lines': [{'text': 'Why?'}]}
         check('a chapter divider keeps its centred template', '<body class="chapter">' in page(chapter, tmp, accent))
+        said = {'file': 'said.png', 'kind': 'statement', 'kicker': 'K', 'title': 'T', 'logos': ['aa.svg'],
+                'lines': [{'text': 'T'}, {'text': 'Shops paid to be seen.', 'tone': 'answer'}]}
+        doc = page(said, tmp, accent)
+        check('any other statement takes the one header, logos on the kicker line', '<div class="hd">' in doc and 'alt="aa"' in doc.split('<h1>')[0])
+        check('a statement draws no meter and no call note (the call card is retired)',
+              'class="meter' not in doc and 'callnote' not in doc and 'callnote' not in CSS and '.meter' not in CSS)
+        # Ruling, Krish, 2026-11-24: the 'OUR CALL' card and its confidence meter are refused at load, quoting the ruling.
         call = {'file': 'call.png', 'kind': 'statement', 'kicker': 'OUR CALL', 'title': 'By mid-2027, X', 'logos': ['aa.svg'],
                 'lines': [{'text': 'By mid-2027, X'}, {'text': 'About 85%', 'tone': 'answer'}], 'meter': {'value': 85, 'tone': 'answer'}}
-        doc = page(call, tmp, accent)
-        check('any other statement takes the one header, logos on the kicker line', '<div class="hd">' in doc and 'alt="aa"' in doc.split('<h1>')[0])
-        check('a call draws its meter', 'width:85.0%' in doc)
-        for kind_card in (cols, bars, shot, call):
+        for label, card in (('an OUR CALL card with a meter', call),
+                            ('a call note', {**said, 'callnote': 'We will mark it on the day.'}),
+                            ('an OUR CALL kicker', {**said, 'kicker': 'OUR CALL'}),
+                            ('a "how sure" title', {**said, 'title': 'How sure are we?'}),
+                            ('an "85% sure" title', {**said, 'title': 'We are 85% sure'}),
+                            ('a "30% chance" kicker', {**said, 'kicker': '30 % chance'})):
+            try:
+                check_spec({'series': 'under_the_hood', 'cards': [card]})
+                check(f'{label} is refused', False)
+            except SystemExit as stop:
+                check(f'{label} is refused quoting the ruling', 'the signature format is the 5 Whys' in str(stop.code))
+        check('a card that is not a call is not taken for one', call_problem(said) is None
+              and call_problem({**said, 'title': 'Spotify keeps 30% of every AI track'}) is None)
+        for kind_card in (cols, bars, shot, said):
             doc = page(kind_card, tmp, accent)
             check(f'{kind_card["kind"]}: the heading is one size, Anton 72px, under the kicker', doc.count('<h1>') == 1 and 'font: 400 72px/1.0' in doc)
         check('statement lines and source lines are balanced, so no word sits alone on a line',

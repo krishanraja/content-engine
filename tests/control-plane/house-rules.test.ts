@@ -887,7 +887,8 @@ describe('this week\'s unrecorded scripts keep every gate but the new close and 
       assert.ok(found.some(l => /NO_NAME/.test(l)), `${file}: v5 opens on a series line that says his name`)
       // Ruling (Krish, 2026-11-16), Growth's audience brief: the first sentence names one concrete thing
       // (ONE_CONCRETE_THING) and the short cut runs to SHORT_CUT (TWO_CUTS); v5 predates all three.
-      const later = cut === 'short' ? /SCRIPT_CLOSE|NO_NAME|ONE_CONCRETE_THING|TWO_CUTS/ : /SCRIPT_CLOSE|NO_NAME|ONE_CONCRETE_THING/
+      // The 5 Whys (Ruling, Krish, 2026-11-24): the October Friday scripts' "85% sure" and dated close are now refused too.
+      const later = cut === 'short' ? /SCRIPT_CLOSE|NO_NAME|ONE_CONCRETE_THING|TWO_CUTS|the signature format is the 5 Whys/ : /SCRIPT_CLOSE|NO_NAME|ONE_CONCRETE_THING|the signature format is the 5 Whys/
       for (const line of found) assert.match(line, later, `${file}: ${line}`)
     }
   })

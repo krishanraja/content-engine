@@ -76,6 +76,13 @@ export const ProductionBriefV1Schema = z.object({
     approved_text: z.string().min(12).max(30_000),
     audience: z.string().min(3).max(600),
     intended_payoff: z.string().min(12).max(1200),
+    // Where the piece's checked why-ladder lands (meta.whys.ladder.landing), bound into the brief when the ladder
+    // stands (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys). Optional and additive: a brief made
+    // before it, or for a piece with no standing ladder, has none. The landing card takes it word for word.
+    landing: z.object({
+      shows: z.string().min(1).max(600),
+      open_question: z.string().min(1).max(600),
+    }).strict().optional(),
   }).strict(),
   claims: z.array(z.object({
     claim_id: IdentifierV1Schema,

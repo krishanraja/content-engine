@@ -1800,7 +1800,7 @@ export function registerV2Commands(program: Command, context: V2CliContext): voi
     .action(async (options) => {
       const job = await loadJobV2(options.job)
       const brief = await loadBoundProductionBriefV2(job)
-      if (!brief) throw new Error(`job ${job.job_id} has no production brief bound to it, and a landing comes only from the approved text of the job's production brief`)
+      if (!brief) throw new Error(`job ${job.job_id} has no production brief bound to it, and a landing comes only from the job's production brief, bound from the piece's checked why-ladder`)
       let landing
       try { landing = renderLandingFromBriefV2(brief, options.beat) }
       catch (error) { throw new Error(`hard block: ${error instanceof Error ? error.message : String(error)}`) }

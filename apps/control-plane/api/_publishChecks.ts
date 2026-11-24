@@ -236,16 +236,24 @@ export function articleFormat(body: string): string[] {
 
 /** The WHY_LADDER check on the piece's why-ladder, meta.whys as board/_whys.ts files it ({ ladder, problems }).
  *  A filed ladder blocks until every Why stands (checkWhyLadder, rerun here so a ladder edited after filing is read as
- *  it is now); a block that would not parse blocks too, with the reasons the parser gave. A piece with no ladder on
- *  file does not block: pieces drafted before the switch (Ruling, Krish, 2026-11-24) must still ship, so it shows as
- *  advisory until research files one. */
+ *  it is now); a block that would not parse blocks too, with the reasons the parser gave. The parser's problems are
+ *  kept as filed (tagged source: 'parse'), because parseWhyLadder normalises what it reads and the stored ladder no
+ *  longer shows the fault; the rerun's problems replace every untagged one, so a fault fixed since filing no longer
+ *  blocks. A filing older than the tags has its parse problems untagged: when its ladder is gone, every filed problem
+ *  stands. A piece with no ladder on file does not block: pieces drafted before the switch (Ruling, Krish, 2026-11-24)
+ *  must still ship, so it shows as advisory until research files one. */
 export function whyLadderCheck(whys: unknown): Check {
   const name = 'The 5 Whys stand'
   const w = (whys && typeof whys === 'object' ? whys : null) as { ladder?: WhyLadder | null; problems?: unknown } | null
   const ladder = w?.ladder && typeof w.ladder === 'object' ? w.ladder : null
   if (!w) return { id: 'WHY_LADDER', name, blocking: false, ok: false, detail: 'No why-ladder on file yet. Paste research that carries the 5 Whys block, or press Research it now.' }
-  const filed = Array.isArray(w.problems) ? w.problems.map(p => String((p as { problem?: unknown })?.problem ?? p)) : []
-  const problems = ladder ? checkWhyLadder(ladder).map(p => p.problem) : (filed.length ? filed : ['The research carried no readable why-ladder'])
+  const filedList = Array.isArray(w.problems) ? w.problems : []
+  const filedText = (p: unknown) => String((p as { problem?: unknown })?.problem ?? p)
+  const filed = filedList.map(filedText)
+  const parseFiled = filedList.filter(p => (p as { source?: unknown })?.source === 'parse').map(filedText)
+  const problems = ladder
+    ? [...parseFiled, ...checkWhyLadder(ladder).map(p => p.problem)]
+    : (filed.length ? filed : ['The research carried no readable why-ladder'])
   const all = [...new Set(problems)]
   return {
     id: 'WHY_LADDER', name, blocking: true, ok: all.length === 0,

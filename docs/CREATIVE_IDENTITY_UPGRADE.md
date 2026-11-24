@@ -314,7 +314,8 @@ from.
 - **Panel:** the draft panel's run on the approved revision: its median, the
   sharpest objection (judge, verdict reference, the judge's own words), and
   Krish's answer to it in his words.
-- **The Whys:** the piece's `why-ladder/1` record (`meta.whys`): each rung's
+- **The Whys:** the piece's `why-ladder/1` object (`meta.whys.ladder`; `meta.whys`
+  keeps it with the problems found and when it was checked): each rung's
   question, answer, evidence, strength and counter, and the landing (P6; it
   replaced the Call's statement, due date and confidence on 24 November 2026).
 - **Evidence assets:** approved screenshots and images with their hashes and

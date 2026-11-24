@@ -194,9 +194,16 @@ predictions, dated calls and how sure we are (Ruling, Krish, 2026-11-24: the
 signature format is the 5 Whys; get rid of everything that suggests
 predictions, calls, dated, odds or scores). A Short ends on the landing card
 of the piece's why-ladder: what this shows, and the open question handed to
-the viewer, taken from the approved ladder (`meta.whys`, read by
-`parseWhyLadder` in `packages/contracts/src/whys.ts`) and never rewritten on
-the way. The landing card follows the call card's placement rules: it never
+the viewer, taken from the production brief's `content.landing` and never
+rewritten on the way. The control plane binds it when it builds the brief
+(`buildProductionBrief` in `apps/control-plane/api/_productionBrief.ts`), from
+the piece's checked why-ladder (`meta.whys.ladder.landing`), and only when
+`checkWhyLadder` in `packages/contracts/src/whys.ts` finds nothing short on the
+ladder. The landing is part of the approved revision hash, so a landing changed
+after approval retires the approval; a piece with no standing ladder keeps the
+hash it had. `studio v2 landing --job <job> --beat <beat_id>` prints it. A brief
+made before `content.landing` falls back to a why-ladder block in its approved
+text (`parseWhyLadder`). The landing card follows the call card's placement rules: it never
 covers the face, runs into the platform's lower safe zone or shares the
 screen with the ending band. The parts of the ladder on screen (rail, step
 card, evidence plates, recap stack, landing card) are in `docs/FIVE-WHYS.md`.

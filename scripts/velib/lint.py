@@ -164,10 +164,50 @@ def beat_sequence_problem(lock: dict, fmt: str, ids: list) -> str | None:
 # handed to the viewer, never a verdict, a forecast, odds, a confidence number or a lesson for leaders. The dated call,
 # its beat and its card are gone; a spec that still carries one is refused.
 WHY_STRENGTHS = ('documented', 'inferred', 'open')
-LANDING_REFUSED = re.compile(
-    r"\b(?:predict\w*|forecast\w*|odds|bets?|wager\w*|verdicts?|our call|the call|how sure|sure we are|confiden\w*|"
-    r"probab\w*|likelihood|percent sure|lessons? for leaders|real question for leaders|leaders (?:should|must|need to))\b"
-    r"|\d+\s*%|\bby (?:the end of )?(?:(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\w* )?20\d\d\b", re.I)
+# Ported from WHY_LANDING_VETO, WHY_LANDING_INSTRUCTION and landingVetoes in packages/contracts/src/whys.ts, so this lint
+# refuses exactly what the contract refuses: stated odds and stated confidence, never the bare nouns. "Spotify now keeps
+# 30% of every AI track's royalties" and "consumer confidence fell" are facts a landing may carry; "a 70% chance" is not.
+# Keep the two in step.
+LANDING_VETO = (
+    ('a forecast', re.compile(
+        r"\b(?:predict(?:s|ed|ion|ions)?|forecast(?:s|ed|ing)?|(?:is|are) (?:going|set|poised|likely|expected|bound) to|"
+        r"will (?:soon|likely|probably|eventually|inevitably|definitely|certainly|replace|kill|win|lose|collapse|dominate|"
+        r"disappear|overtake|become)|by (?:the end of )?(?:19|20)\d\d\b|in the (?:next|coming) (?:few )?(?:\d+ )?"
+        r"(?:days|weeks|months|years|decades?))", re.I)),
+    ('odds', re.compile(
+        r"\b(?:(?:the )?odds (?:are|favou?rs?)|long shot|sure thing|chances are|(?:high|low|good|slim|strong|real|even) "
+        r"(?:probability|likelihood|chance) (?:of|that))\b|\d{1,3}(?:\.\d+)?\s?(?:%|per ?cent)\s*(?:chance|likely|likelihood|probability)",
+        re.I)),
+    ('a confidence number', re.compile(
+        r"\b(?:how sure|how confident|confidence (?:level|score|rating|number|interval)|(?:with|at) (?:high|low|medium|moderate|full) "
+        r"confidence|(?:we|i)(?:'re|'m| are| am) (?:sure|certain|confident))\b|\d{1,3}(?:\.\d+)?\s?(?:%|per ?cent)\s*(?:sure|confident|certain)",
+        re.I)),
+    ('a verdict or a lesson', re.compile(
+        r"\b(?:lessons? for (?:leaders|executives|ceos|founders|boards|managers|business(?:es)?)|the real question for leaders|"
+        r"(?:the|our) verdict|our call|the call is|the (?:key )?takeaway (?:is|here)|takeaway:|the bottom line is|bottom line:)", re.I)),
+)
+# Telling someone what to do: in what the landing shows, and in the open question only when it is not a question.
+LANDING_INSTRUCTION = re.compile(
+    r"\b(?:leaders|executives|ceos|founders|boards|managers|businesses|companies|you) (?:should|must|need to|have to|ought to)\b", re.I)
+
+
+def landing_vetoes(landing: dict) -> list[tuple[str, str]]:
+    """The words in a landing that read as a verdict, forecast, odds, confidence or a lesson: [(kind, said)].
+    The same reading as landingVetoes in packages/contracts/src/whys.ts."""
+    shows = str(landing.get('shows') or '').strip()
+    question = str(landing.get('open_question') or '').strip()
+    text = f'{shows}\n{question}'
+    out = []
+    for kind, rx in LANDING_VETO:
+        m = rx.search(text)
+        if m:
+            out.append((kind, m.group(0).strip()))
+    if not any(kind == 'a verdict or a lesson' for kind, _ in out):
+        asked = re.search(r"\?[\"'”’)]*$", question) is not None
+        m = LANDING_INSTRUCTION.search(shows) or (None if asked else LANDING_INSTRUCTION.search(question))
+        if m:
+            out.append(('a verdict or a lesson', m.group(0).strip()))
+    return out
 
 
 def why_ladder_problems(where: str, beats: list) -> list[str]:
@@ -205,11 +245,9 @@ def why_ladder_problems(where: str, beats: list) -> list[str]:
             else:
                 if not landing['open_question'].rstrip().endswith('?'):
                     out.append(f'story.landing {at}.landing.open_question: the landing hands the viewer an open question; end it on a question mark')
-                for key in ('shows', 'open_question'):
-                    hit = LANDING_REFUSED.search(landing[key])
-                    if hit:
-                        out.append(f'story.landing {at}.landing.{key}: "{hit.group(0)}" reads as a verdict, forecast, odds or a lesson; '
-                                   'the ladder lands on what this shows and an open question (Ruling, Krish, 2026-11-24)')
+                for kind, said in landing_vetoes(landing):
+                    out.append(f'story.landing {at}.landing: "{said}" reads as {kind}; '
+                               'the ladder lands on what this shows and an open question (Ruling, Krish, 2026-11-24)')
         elif landing is not None:
             out.append(f'story.landing {at}.landing: only a landing beat carries the landing')
     return out

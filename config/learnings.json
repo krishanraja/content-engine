@@ -1431,13 +1431,13 @@
       "id": "his-call-in-his-words",
       "on": "2026-10-23",
       "krish": "It's more, yes, if you don't care about where your data ends up going ... It's kind of like the supply chain issue ... similar things will happen in AI. It just increases the need to not have overreliance on one supplier.",
-      "why": "Asked for his own view before the call beat was written, he gave a sharper take than the drafted one, and its supply-chain comparison became the piece's best line and its last action.",
-      "means": "The beat where he gives his call is built from his own words, asked for in one question before it is written; a drafted call is only a placeholder until he answers.",
+      "why": "Asked for his own view before the beat where he gives it was written, he gave a sharper take than the drafted one, and its supply-chain comparison became the piece's best line and its last action.",
+      "means": "The beat where he gives his view is built from his own words, asked for in one question before it is written; a drafted view is only a placeholder until he answers.",
       "status": "encoded",
       "encoded": [
         {
           "file": ".agents/skills/make-piece/SKILL.md",
-          "contains": "ask him for his view in his own words",
+          "contains": "ask him for it in his own words",
           "how": "the Scripts step, beside dry wit"
         }
       ]

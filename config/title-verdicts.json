@@ -714,7 +714,12 @@
    "why": "Set A and its listed treatment approved after recording.",
    "krish": "Approve set A and the listed treatment",
    "on": "2026-10-19",
-   "piece": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092"
+   "piece": "5b5bfadc-a60c-4d0a-be8e-b2e9bf43d092",
+   "superseded": {
+    "on": "2026-11-24",
+    "by": "Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; \"get rid of everything that suggests predictions, calls, dated, odds or scores\"",
+    "means": "Kept as the record of what he picked for that piece on 19 Oct; never taught as a title to imitate. title_check.py lessons leaves it out."
+   }
   },
   {
    "title": "Keep the freedom to switch",

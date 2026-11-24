@@ -49,7 +49,8 @@ describe('V2 CLI', () => {
       await program.parseAsync(['node', 'studio', 'v2', ...args])
       return outputs[0] as Record<string, unknown>
     }
-    // The signature format is the why-ladder (Ruling, Krish, 2026-11-24); the approved text carries it as a fenced block.
+    // The signature format is the why-ladder (Ruling, Krish, 2026-11-24). The control plane binds the landing of the
+    // piece's checked ladder (meta.whys) into the brief as content.landing; the approved text is the piece body.
     const evidence = (domain: string) => ({ url: `https://${domain}/report`, domain, date: '2026-11-20', quote: 'The platform now sets the default model.' })
     const rung = (n: number, question: string, answer: string) => ({ n, question, answer, evidence: [evidence('example.com'), evidence('example.org')],
       strength: 'documented', counter: { none_found_scope: 'vendor documentation and trade press, November 2026' }, stop: null })
@@ -58,9 +59,11 @@ describe('V2 CLI', () => {
         rung(2, 'Why do the platforms route it?', 'Because routing lowers what each answer costs them.'),
         rung(3, 'Why does the cost matter now?', 'Because the price of an answer became the thing they compete on.')],
       landing: { shows: 'The platform, not the business that buys it, now sets which brain answers.', open_question: 'Who in your business would notice if the brain behind your tools changed tomorrow?' } }
-    const edition = `Who picks your AI? The software that picks the brain for you is becoming the default.\n\n\`\`\`why-ladder\n${JSON.stringify(ladder, null, 2)}\n\`\`\`\n`
+    const body = 'Who picks your AI? The software that picks the brain for you is becoming the default.'
+    // A brief made before content.landing carried the ladder in its approved text, and is still read.
+    const edition = `${body}\n\n\`\`\`why-ladder\n${JSON.stringify(ladder, null, 2)}\n\`\`\`\n`
     const revision = 'e'.repeat(64)
-    const brief = (briefId: string, approvedText: string) => ({
+    const brief = (briefId: string, approvedText: string, landing?: { shows: string; open_question: string }) => ({
       schema_version: 1,
       brief_id: briefId,
       content_idea_id: '904658db-4df2-4537-a0ed-ebe93e081db7',
@@ -68,14 +71,14 @@ describe('V2 CLI', () => {
       series: 'mind_the_gap',
       production_kinds: ['video'],
       source_mode: 'short_native',
-      content: { title: 'Who picks your AI?', thesis: 'The software that picks the brain for you is becoming the default.', approved_text: approvedText, audience: 'Leaders who buy AI.', intended_payoff: 'Know who picks the brain behind your AI, and when to check.' },
+      content: { title: 'Who picks your AI?', thesis: 'The software that picks the brain for you is becoming the default.', approved_text: approvedText, audience: 'Leaders who buy AI.', intended_payoff: 'Know who picks the brain behind your AI, and when to check.', ...(landing ? { landing } : {}) },
       claims: [],
       visual_opportunities: [],
       hard_gates: { truth: 'passed', rights: 'passed', confidentiality: 'passed', meaning: 'passed', naming: 'passed' },
       editorial_approval: { approved_by: 'Krish', approved_at: '2026-09-28T12:00:00.000Z', approval_revision_hash: revision },
     })
     const briefPath = join(root, 'brief.json')
-    await writeFile(briefPath, JSON.stringify(brief('brief_cli_landing', edition)), 'utf8')
+    await writeFile(briefPath, JSON.stringify(brief('brief_cli_landing', body, ladder.landing)), 'utf8')
     const imported = await run('production-brief', 'import', '--input', briefPath)
     const jobId = imported.job_id as string
 
@@ -92,18 +95,24 @@ describe('V2 CLI', () => {
     expect((await run('landing', '--job', jobId, '--beat', 'beat-hook')).landing).toEqual({ ...(printed.landing as object), beat_id: 'beat-hook' })
     await expect(run('landing', '--job', jobId, '--beat', 'not a beat id')).rejects.toThrow(/cannot go on a landing card: beat_id/)
 
-    // A brief whose approved text has no why-ladder.
+    // An older brief, made before content.landing, whose approved text carries the ladder.
+    const olderPath = join(root, 'older.json')
+    await writeFile(olderPath, JSON.stringify(brief('brief_cli_older', edition)), 'utf8')
+    const older = await run('production-brief', 'import', '--input', olderPath)
+    expect((await run('landing', '--job', older.job_id as string, '--beat', 'beat-landing')).landing).toEqual(printed.landing)
+
+    // A brief with no landing, for a piece with no standing why-ladder.
     const unsetPath = join(root, 'unset.json')
-    await writeFile(unsetPath, JSON.stringify(brief('brief_cli_unset', 'Who picks your AI? The software that picks the brain for you is becoming the default.')), 'utf8')
+    await writeFile(unsetPath, JSON.stringify(brief('brief_cli_unset', body)), 'utf8')
     const unset = await run('production-brief', 'import', '--input', unsetPath)
     const refusal = await run('landing', '--job', unset.job_id as string, '--beat', 'beat-landing').then(() => null, (error: unknown) => error)
-    expect((refusal as Error).message).toMatch(/^hard block: production brief brief_cli_unset has no why-ladder the Studio can read in its approved text: /)
+    expect((refusal as Error).message).toMatch(/^hard block: production brief brief_cli_unset carries no landing from a checked why-ladder, and its approved text has none the Studio can read: /)
     expect(classifyError(refusal).exitCode).toBe(20)
 
     // A job with no production brief has no landing to print.
     const created = await run('job', 'create', '--series', 'mind_the_gap', '--mode', 'short_native', '--techniques', join(process.cwd(), 'config', 'techniques.json'), '--no-identity')
     const createdId = (created.job as { job_id: string }).job_id
-    await expect(run('landing', '--job', createdId, '--beat', 'beat-landing')).rejects.toThrow(`job ${createdId} has no production brief bound to it, and a landing comes only from the approved text of the job's production brief`)
+    await expect(run('landing', '--job', createdId, '--beat', 'beat-landing')).rejects.toThrow(`job ${createdId} has no production brief bound to it, and a landing comes only from the job's production brief, bound from the piece's checked why-ladder`)
   }, 30_000)
 
   it('names the archive by the production brief\'s title, or without one the package\'s first title', async () => {

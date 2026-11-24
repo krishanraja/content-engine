@@ -224,8 +224,8 @@ export const RenderSourceV2Schema=z.union([VisualRenderSourceV2Schema,AudioOnlyR
  *  (Ruling, Krish, 2026-11-24: "the signature format is the 5 Whys; get rid of
  *  everything that suggests predictions, calls, dated, odds or scores"): what
  *  this shows and the open question handed to the viewer, word for word the
- *  landing of the ladder in the approved text (packages/contracts/src/whys.ts
- *  WhyLanding). Nothing upstream marks which beat carries it, so the manifest
+ *  production brief's content.landing, bound from the piece's checked
+ *  why-ladder (meta.whys; packages/contracts/src/whys.ts WhyLanding). Nothing upstream marks which beat carries it, so the manifest
  *  names it. Optional: a Short without one ends on its last beat. */
 export const RenderLandingV1Schema=z.object({beat_id:IdentifierV1Schema,shows:z.string().min(12).max(300),open_question:z.string().min(8).max(200)}).strict()
 export type RenderLandingV1=z.infer<typeof RenderLandingV1Schema>

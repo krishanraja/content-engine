@@ -114,7 +114,9 @@ def propose(floor, groups, db_groups, week_of):
     parent's key. Deterministic: sorted by standard id, ties broken by group key."""
     standards = floor.get('standards') or {}
     where = placed(groups)
-    loose = sorted(ref for ref in standards if ref not in where)
+    # A retired standard (config/floor-rulings.json "retired": the 2026-11-24 no-prediction ruling) is never proposed.
+    gone = floor_group.retired_ids(floor)
+    loose = sorted(ref for ref in standards if ref not in where and ref not in gone)
     if not loose:
         return [], {}
     stamp = dt.date.fromisoformat(week_of).strftime('%y%m%d')

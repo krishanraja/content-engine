@@ -89,7 +89,8 @@ PICK = re.compile(r'\bOur (?:bet|pick|call): (?:guess|future|scenario|option|out
 # The signature format is the why-ladder (Ruling, Krish, 2026-11-24: "the signature format is the 5 Whys; get rid of
 # everything that suggests predictions, calls, dated, odds or scores"). The page's "Our call." band, its How-sure meter
 # and its due date are gone. A body that still carries a prediction section or a confidence line is refused, and the
-# page shows the piece's whys instead when its facts carry them ("whys": the why-ladder/1 object kept in meta.whys).
+# page shows the piece's whys instead when its facts carry them ("whys": the why-ladder/1 object, which the piece keeps
+# at meta.whys.ladder; the whole meta.whys record is taken too, and its "ladder" read).
 PREDICTION_HEADING = re.compile(r'^(?:our prediction|our call|the call|prediction)\.?$', re.I)
 PREDICTION_LINE = re.compile(r'^\s*(?:how sure we are|confidence)\s*:\s*\d', re.I | re.M)
 WHY_STRENGTH_WORDS = {'documented': 'Documented', 'inferred': 'Inferred', 'open': 'Open question'}
@@ -293,17 +294,25 @@ def prediction_problems(body):
 
 
 def whys_of(facts):
-    """The piece's why-ladder from its facts ("whys", the why-ladder/1 object kept in meta.whys), or None. A ladder
-    that is there but cannot be read stops the build rather than being dropped."""
+    """The piece's why-ladder from its facts ("whys": the why-ladder/1 object, which the piece keeps at
+    meta.whys.ladder), or None. The stored record itself (meta.whys = {ladder, problems, checked_at}) is taken too: its
+    "ladder" is read, and a null ladder is no ladder. A ladder that is there but cannot be read stops the build rather
+    than being dropped. An open rung (strength "open") may have no answer: the evidence ran out there, as
+    checkWhyLadder allows (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys)."""
     whys = facts.get('whys')
+    if isinstance(whys, dict) and 'schema' not in whys and 'ladder' in whys \
+            and (whys['ladder'] is None or isinstance(whys['ladder'], dict)):
+        whys = whys['ladder']
     if whys is None:
         return None
     if not isinstance(whys, dict) or whys.get('schema') != 'why-ladder/1' or not isinstance(whys.get('rungs'), list) \
             or not whys['rungs'] or not isinstance(whys.get('landing'), dict):
         brand.fail('"whys" is a why-ladder/1 object: schema, question, rungs and landing (README.md)')
     for index, rung in enumerate(whys['rungs'], 1):
-        if not isinstance(rung, dict) or not str(rung.get('question') or '').strip() or not str(rung.get('answer') or '').strip():
-            brand.fail(f'"whys" rung {index} needs its question and its answer')
+        if not isinstance(rung, dict) or not str(rung.get('question') or '').strip():
+            brand.fail(f'"whys" rung {index} needs its question')
+        if rung.get('strength') != 'open' and not str(rung.get('answer') or '').strip():
+            brand.fail(f'"whys" rung {index} needs its answer (only an open rung may have none)')
     landing = whys['landing']
     if not str(landing.get('shows') or '').strip() or not str(landing.get('open_question') or '').strip():
         brand.fail('"whys" landing needs "shows" and "open_question"')
@@ -583,9 +592,11 @@ def whys_band(whys, hs):
     for index, rung in enumerate(whys['rungs'], 1):
         strength = rung.get('strength') if rung.get('strength') in WHY_STRENGTH_WORDS else 'open'
         sources = ', '.join(f'<a href="{attr(url)}">{esc(label)}</a>' if url else esc(label) for label, url in why_sources(rung.get('evidence')))
+        answer = str(rung.get('answer') or '').strip()  # an open rung may have none: no empty paragraph then
         rungs.append(f'<li class="rung {strength}"><div class="rung-head"><span class="label">Why {esc(str(rung.get("n", index)))}</span>'
                      f'<span class="label dim">{esc(WHY_STRENGTH_WORDS[strength])}</span></div>'
-                     f'<p class="q">{esc(rung["question"])}</p><p class="a">{esc(rung["answer"])}</p>'
+                     f'<p class="q">{esc(rung["question"])}</p>'
+                     + (f'<p class="a">{esc(answer)}</p>' if answer else '')
                      + (f'<p class="src label dim">Source: {sources}</p>' if sources else '') + '</li>')
     landing = whys['landing']
     return f"""<section class="whys" aria-labelledby="whys-h">
@@ -729,7 +740,11 @@ def render_substack(facts, r):
             parts.append(f'<p><em>{esc(r["whys"]["question"])}</em></p>')
         for index, rung in enumerate(r['whys']['rungs'], 1):
             parts.append(f'<h3>Why {esc(str(rung.get("n", index)))}: {esc(rung["question"])}</h3>')
-            parts.append(f'<p>{esc(rung["answer"])}</p>')
+            answer = str(rung.get('answer') or '').strip()
+            if answer:
+                parts.append(f'<p>{esc(answer)}</p>')
+            elif rung.get('strength') == 'open':
+                parts.append(f'<p><em>{esc(WHY_STRENGTH_WORDS["open"])}</em></p>')
             rung_sources = ', '.join(f'<a href="{attr(url)}">{esc(label)}</a>' if url else esc(label) for label, url in why_sources(rung.get('evidence')))
             if rung_sources:
                 parts.append(f'<p><em>Source: {rung_sources}</em></p>')
@@ -1114,6 +1129,25 @@ def self_test():
                 check('an unreadable ladder stops the build', False, True)
             except SystemExit as stop:
                 check('an unreadable ladder stops the build', 'why-ladder/1' in str(stop), True)
+            # An open rung may carry no answer (checkWhyLadder allows it): it shows its "Open question" label and no
+            # empty answer paragraph. A rung that is not open still needs its answer.
+            unanswered = dict(ladder, rungs=[ladder['rungs'][0], dict(ladder['rungs'][1], answer='')])
+            opened = dict(article, whys=unanswered)
+            r_open = build(opened, tmp, words, {})
+            page_open = render_page(opened, tmp, words, r_open, False)
+            sub_open = render_substack(opened, r_open)
+            check('an open rung with no answer shows its question and its label, and no empty answer',
+                  ('Why does a licence pay more?' in page_open, 'Open question' in page_open, '<p class="a"></p>' in page_open,
+                   'Why 2: Why does a licence pay more?' in sub_open, '<p></p>' in sub_open), (True, True, False, True, False))
+            try:
+                build(dict(article, whys=dict(unanswered, rungs=[dict(ladder['rungs'][0], answer='')])), tmp, words, {})
+                check('a rung that is not open still needs its answer', False, True)
+            except SystemExit as stop:
+                check('a rung that is not open still needs its answer', 'rung 1 needs its answer' in str(stop), True)
+            # The record as the piece stores it (meta.whys) is read for its ladder; a null ladder is no ladder.
+            stored = dict(article, whys={'ladder': ladder, 'problems': [], 'checked_at': '2026-11-24T21:00:00Z'})
+            check('the stored meta.whys record is read for its ladder', whys_of(stored) is ladder, True)
+            check('a stored record with no ladder is no ladder', whys_of(dict(article, whys={'ladder': None, 'problems': []})), None)
             try:
                 refuse_author({'author': 'Krish Raja'}, 'facts.json')
                 check('a facts file that names an author is refused', False, True)

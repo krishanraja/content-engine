@@ -984,9 +984,11 @@ describe('retired series render exactly as before', () => {
 // 2026-11-24: "the signature format is the 5 Whys; get rid of everything that
 // suggests predictions, calls, dated, odds or scores"). No Short needs one.
 // When a render carries one, it must be the landing Krish approved, to the
-// character: the Studio reads it from the why-ladder in the approved text of
-// the job's production brief (parseWhyLadder) and refuses a house style
-// render for a live subchannel whose landing differs.
+// character: the Studio reads it from the job's production brief, whose
+// content.landing the control plane binds from the piece's checked why-ladder
+// (meta.whys), and refuses a house style render for a live subchannel whose
+// landing differs. A brief made before that field falls back to a why-ladder
+// block in its approved text (parseWhyLadder).
 const EVIDENCE = (domain: string) => ({ url: `https://${domain}/report`, domain, date: '2026-11-20', quote: 'The platform now sets the default model.' })
 const RUNG = (n: number, question: string, answer: string) => ({ n, question, answer, evidence: [EVIDENCE('example.com'), EVIDENCE('example.org')],
   strength: 'documented', counter: { none_found_scope: 'vendor documentation and trade press, November 2026' }, stop: null })
@@ -999,7 +1001,11 @@ const PLAIN_TEXT = 'Who picks your AI? The software that picks the brain for you
 const LADDER_TEXT = `${PLAIN_TEXT}\n\n\`\`\`why-ladder\n${JSON.stringify(LADDER, null, 2)}\n\`\`\`\n`
 const REVISION = 'e'.repeat(64)
 
-function briefFor(series: ProductionBriefV1['series'], approvedText: string = LADDER_TEXT, briefId = `brief_landing_${series}`): ProductionBriefV1 {
+const BOUND_LANDING = { shows: SHOWS, open_question: OPEN_QUESTION }
+// A brief whose piece has no standing why-ladder: no landing, and a body with none.
+const NO_LADDER = { landing: null }
+
+function briefFor(series: ProductionBriefV1['series'], { approvedText = PLAIN_TEXT, landing = BOUND_LANDING as { shows: string; open_question: string } | null, briefId = `brief_landing_${series}` } = {}): ProductionBriefV1 {
   return ProductionBriefV1Schema.parse({
     schema_version: 1,
     brief_id: briefId,
@@ -1014,6 +1020,7 @@ function briefFor(series: ProductionBriefV1['series'], approvedText: string = LA
       approved_text: approvedText,
       audience: 'Leaders who buy AI for their businesses.',
       intended_payoff: 'Know who chooses the brain behind your AI, and what to ask about it.',
+      ...(landing ? { landing } : {}),
     },
     claims: [],
     visual_opportunities: [],
@@ -1025,12 +1032,20 @@ function briefFor(series: ProductionBriefV1['series'], approvedText: string = LA
 const APPROVED_LANDING = { beat_id: 'beat-main', shows: SHOWS, open_question: OPEN_QUESTION }
 
 describe('the landing on screen is the landing Krish approved', () => {
-  it('reads the landing from the brief, ready for the manifest, and refuses a text without a why-ladder', () => {
+  it('reads the landing from the brief, ready for the manifest, and refuses a brief without one', () => {
     expect(renderLandingFromBriefV2(briefFor('mind_the_gap'), 'beat-main')).toEqual(APPROVED_LANDING)
-    expect(() => renderLandingFromBriefV2(briefFor('mind_the_gap', PLAIN_TEXT), 'beat-main')).toThrow(/production brief brief_landing_mind_the_gap has no why-ladder the Studio can read in its approved text: /)
+    expect(() => renderLandingFromBriefV2(briefFor('mind_the_gap', NO_LADDER), 'beat-main')).toThrow(/production brief brief_landing_mind_the_gap carries no landing from a checked why-ladder, and its approved text has none the Studio can read: /)
   })
 
-  it('passes a landing that matches the approved text exactly', () => {
+  it('takes the brief\'s bound landing over a ladder in the approved text, and reads an older brief\'s text when it has none', () => {
+    // An older brief (made before content.landing) still reads the ladder in its approved text.
+    expect(renderLandingFromBriefV2(briefFor('mind_the_gap', { approvedText: LADDER_TEXT, landing: null }), 'beat-main')).toEqual(APPROVED_LANDING)
+    // The bound landing wins: the body is the piece, never the source of the landing.
+    const bound = { shows: 'The platform decides which brain answers, and the buyer rarely sees it.', open_question: 'Who in your business would notice the change?' }
+    expect(renderLandingFromBriefV2(briefFor('mind_the_gap', { approvedText: LADDER_TEXT, landing: bound }), 'beat-main')).toEqual({ beat_id: 'beat-main', ...bound })
+  })
+
+  it('passes a landing that matches the brief\'s landing exactly', () => {
     const { theme } = publicationBrandFixture()
     const live = liveTwoShotManifest(2_000, 'mind_the_gap', theme, { landing: APPROVED_LANDING })
     expect(renderLandingIssuesV2(live, theme, briefFor('mind_the_gap'))).toEqual([])
@@ -1042,21 +1057,21 @@ describe('the landing on screen is the landing Krish approved', () => {
     const issues = (landing: Partial<typeof APPROVED_LANDING>) => renderLandingIssuesV2(liveTwoShotManifest(2_000, 'mind_the_gap', theme, { landing: { ...APPROVED_LANDING, ...landing } }), theme, brief)
     // One character: the full stop.
     expect(issues({ shows: SHOWS.slice(0, -1) })).toEqual([
-      `the landing's "what this shows" differs from production brief brief_landing_mind_the_gap's approved text, which says: ${JSON.stringify(SHOWS)}`,
+      `the landing's "what this shows" differs from production brief brief_landing_mind_the_gap's landing, which says: ${JSON.stringify(SHOWS)}`,
       'print the exact landing with studio v2 landing --job job-render-v2 --beat beat-main',
     ])
-    expect(issues({ open_question: 'Who decides which brain answers your customers?' })[0]).toBe(`the landing's open question differs from production brief brief_landing_mind_the_gap's approved text, which says: ${JSON.stringify(OPEN_QUESTION)}`)
+    expect(issues({ open_question: 'Who decides which brain answers your customers?' })[0]).toBe(`the landing's open question differs from production brief brief_landing_mind_the_gap's landing, which says: ${JSON.stringify(OPEN_QUESTION)}`)
     expect(issues({ shows: SHOWS.slice(0, -1), open_question: 'Who decides which brain answers your customers?' })).toHaveLength(3)
   })
 
   it('requires no landing and no prediction: a house style render with no landing passes', () => {
     const { theme } = publicationBrandFixture()
     expect(renderLandingIssuesV2(liveTwoShotManifest(2_000, 'mind_the_gap', theme), theme, briefFor('mind_the_gap'))).toEqual([])
-    expect(renderLandingIssuesV2(liveTwoShotManifest(2_000, 'mind_the_gap', theme), theme, briefFor('mind_the_gap', PLAIN_TEXT))).toEqual([])
-    // A landing with no why-ladder in the approved text cannot render.
-    const [issue, ...rest] = renderLandingIssuesV2(liveTwoShotManifest(2_000, 'mind_the_gap', theme, { landing: APPROVED_LANDING }), theme, briefFor('mind_the_gap', PLAIN_TEXT))
+    expect(renderLandingIssuesV2(liveTwoShotManifest(2_000, 'mind_the_gap', theme), theme, briefFor('mind_the_gap', NO_LADDER))).toEqual([])
+    // A landing on a brief that carries none, from a piece with no standing why-ladder, cannot render.
+    const [issue, ...rest] = renderLandingIssuesV2(liveTwoShotManifest(2_000, 'mind_the_gap', theme, { landing: APPROVED_LANDING }), theme, briefFor('mind_the_gap', NO_LADDER))
     expect(rest).toEqual([])
-    expect(issue).toMatch(/^production brief brief_landing_mind_the_gap has no why-ladder the Studio can read in its approved text: .*take "landing" out of the manifest, or approve a text with its why-ladder\.$/)
+    expect(issue).toMatch(/^production brief brief_landing_mind_the_gap carries no landing from a checked why-ladder, and its approved text has none the Studio can read: .*take "landing" out of the manifest, or file a why-ladder that stands on the piece and make its production brief again\.$/)
   })
 
   it('leaves the retired series, unbranded renders, other themes and briefless jobs exactly as they were', () => {
@@ -1094,7 +1109,7 @@ describe('the landing on screen is the landing Krish approved', () => {
       expect(await boundRenderLandingIssuesV2(forJob({ landing: APPROVED_LANDING }))).toEqual([])
       expect(await boundRenderLandingIssuesV2(forJob())).toEqual([])
       const drifted = { ...APPROVED_LANDING, open_question: 'Who decides which brain answers your customers?' }
-      expect((await boundRenderLandingIssuesV2(forJob({ landing: drifted })))[0]).toMatch(/^the landing's open question differs from production brief brief_landing_mind_the_gap's approved text/)
+      expect((await boundRenderLandingIssuesV2(forJob({ landing: drifted })))[0]).toMatch(/^the landing's open question differs from production brief brief_landing_mind_the_gap's landing/)
       await expect(renderStoryV2(process.cwd(), forJob({ landing: drifted }), { profile: 'preview' })).rejects.toThrow(/^hard block: the landing gate failed: the landing's open question differs/)
       await expect(renderV2Styleframes(process.cwd(), forJob({ landing: drifted }), [0, 1_000, 3_000])).rejects.toThrow(/^hard block: the landing gate failed: the landing's open question differs/)
 

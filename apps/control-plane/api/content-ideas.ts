@@ -504,6 +504,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         body: typeof updates.body === 'string' ? updates.body : current.body,
         lane: current.lane,
         lane_slot: typeof updates.lane_slot === 'string' ? updates.lane_slot : current.lane_slot,
+        // The why-ladder's landing is part of the approved revision (Ruling, Krish, 2026-11-24: the signature format
+        // is the 5 Whys). This route never edits meta.whys, so the piece's own stands.
+        meta: current.meta,
       }
       const meta = jsonRecord(current.meta)
       const revisionChanged = contentRevisionHash(effectiveRevision) !== contentRevisionHash(current)
