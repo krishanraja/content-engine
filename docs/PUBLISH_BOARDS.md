@@ -1467,6 +1467,11 @@ if I ran four separate sessions on one piece of content, it would know where eve
 
 **Roles the piece sheet reads (19 Nov 2026).** Control Centre's piece sheet (control-center `src/surfaces/content/board/sheetSections.ts`) puts every filed thing in one section by its role, then its name: `article` and `written_edition` in Article, `script` in Scripts, `krish_notes` and `notes` in Notes, the narrative lock in Story, `production_plan`, `plan_scene`, `proof`, `ve_asset` and `krish_got` in Proofs & mocks, `cover`, `thumbnail` and `final` in Final assets, everything else in Research; the newest of each is kept and every superseded one moves to Archive, never deleted. So file the article with `--role article` (make-piece step 6): an article filed with no role is found only by its name (Krish, 2026-11-19: "I can't ever just see the Substack article draft anywhere, at any stage of the production flow").
 
+**Roles and lessons in every prompt (Ruling, Krish, 2026-11-23).** The same instruction says who does what (`ROLES`: Codex
+generates the visual assets from cards; Claude writes the words, arbitrates the standards and checks what Codex returns) and
+where a lesson goes (`LEARNING_RULE`: a failure, defect or best practice goes to `record_harness_observation` for the
+internal-auditor; only his preference or inspiration goes to `report_to_taste_engine`).
+
 **What a copied prompt says.** Every Claude and Growth prompt on the view ends with one instruction
 (`apps/control-plane/api/board/_writeBack.ts`, `writeBack`; a Perplexity prompt does not, it is not a session). It names
 the piece (or the week and the day when there is no piece yet) and the step, and tells the session to: see what is on

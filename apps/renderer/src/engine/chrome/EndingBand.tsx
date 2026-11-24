@@ -1,5 +1,5 @@
 import React from 'react'
-import { Easing, interpolate } from 'remotion'
+import { Easing, Freeze, OffthreadVideo, interpolate } from 'remotion'
 import { Grain, HouseLogo } from '../../house/components'
 import { HOUSE_FONTS } from '../../house/geometry'
 import { textWidth } from '../../house/metrics'
@@ -109,8 +109,153 @@ export function endingBandModel(props: EngineRenderProps, frame: number) {
 
 const rise = (p: number): React.CSSProperties => ({ opacity: p, transform: `translateY(${(1 - p) * 34}px)` })
 
-/** Full-frame ink with the statement; nothing of the last beat shows through. */
+/** The series close on the intro sting (Ruling, Krish, 2026-11-20: "A, with Built to help you decide, and then Subscribe
+ *  free at makeyourmindup.ai"; config/intro-sting.json close, config/brand-palette.json sting_beat and sting_card). All
+ *  timings in frames from the close's first frame, at 30 fps, on the house curves (config/ve/brand-tokens.json motion). */
+const HERO = Easing.bezier(0.16, 1, 0.3, 1)
+const UTILITY = Easing.bezier(0.2, 0, 0, 1)
+export const STING_CLOSE = {
+  tall: {
+    /** c 0 to 29: the sting's frames 1 to 44 at 1.5x; then its settled band, frame 48, held. */
+    playFrames: 30, firstFrame: 1, lastPlayed: 44, holdFrame: 48,
+    /** The band lifts 450 px (the mock's 330 left the lower core box empty): the wordmark then sits at y 334 to 572, just
+     *  inside the tall core box, and the line block fills the box below it down to y 1180. */
+    lift: { start: 30, dur: 12, px: 450 },
+    line: { start: 34, dur: 10, travel: 500 }, accent: { start: 40, dur: 10, travel: 500 },
+    action: { start: 46, dur: 8, rise: 14 },
+    /** Left-aligned on the wordmark's own left edge (x 122 in every 9:16 clip's frame 48), to the core box's right edge.
+     *  "BUILT TO HELP YOU" at 100 px is 683 px wide, about the wordmark's 730. */
+    box: { left: 122, width: 698, lineTop: 735, accentTop: 812, pillTop: 1012, urlTop: 1108 },
+    sizes: { line: 100, accent: 190, pill: 56, url: 58 },
+  },
+  wide: {
+    /** The full sting, then on its band frame the ink ground wipes in from the right and the band takes the masthead slot. */
+    bandFrame: 48, wipe: { start: 48, dur: 12 }, line: { start: 54, dur: 12, travel: 300 }, action: { start: 66, dur: 10 },
+    /** The band as the sting draws it on its settled frame (measured from the 16:9 clips, every series alike). */
+    band: [[0, 444], [1920, 310], [1920, 711], [0, 846]] as const,
+    masthead: { dx: -80, dy: -110, scale: 0.5 },
+    box: { left: 120, lineTop: 400, lineWidth: 920, daysTop: 720, actionTop: 790, urlTop: 892 },
+    sizes: { line: 120, accent: 180, pill: 56, url: 58, days: 44 },
+    /** YouTube's end-screen elements: nothing of the close is drawn here once it has settled. */
+    endScreen: { left: 1100, top: 150, right: 1800, bottom: 880 },
+  },
+} as const
+/** Words on screen are at least 40 px (config/ve/shot-grammar.json evidence.words_min_px), and the action's pill and
+ *  address at least 40 px of cap height: the faces' cap heights as a share of their size. */
+export const CAP_HEIGHT = { display: 0.86, structure: 0.72, data: 0.7, dek: 0.7 } as const
+/** Settled frames: the tall beat at its action's end (well inside its 60), the wide card by 2.75 s. */
+export const STING_CLOSE_SETTLED = { tall: STING_CLOSE.tall.action.start + STING_CLOSE.tall.action.dur,
+  wide: STING_CLOSE.wide.action.start + STING_CLOSE.wide.action.dur } as const
+
+/** The sting's own frame shown at the close's frame `since`. */
+export function stingCloseFrame(aspect: EngineRenderProps['aspect'], since: number): number {
+  const t = STING_CLOSE.tall
+  if (aspect === '9:16') {
+    return since < t.playFrames ? t.firstFrame + Math.round(since * (t.lastPlayed - t.firstFrame) / (t.playFrames - 1)) : t.holdFrame
+  }
+  return Math.min(Math.max(0, since), STING_CLOSE.wide.bandFrame)
+}
+
+const clamp01 = (v: number) => Math.max(0, Math.min(1, v))
+const phase = (since: number, part: { start: number; dur: number }, easing = HERO) => easing(clamp01((since - part.start) / part.dur))
+/** Speed blur: a half-frame shutter, capped at 18 px (kit/ingredients.ts MAX_BLUR_PX). */
+const speedBlur = (since: number, part: { start: number; dur: number; travel: number }) =>
+  Math.min(18, Math.abs((1 - phase(since + 0.5, part)) * part.travel - (1 - phase(since - 0.5, part)) * part.travel) * 0.5)
+
+export function stingCloseModel(props: EngineRenderProps, frame: number) {
+  if (!props.ending?.sting || frame < props.ending.fromFrame || frame >= props.durationFrames) return null
+  const since = frame - props.ending.fromFrame
+  if (props.aspect === '9:16') {
+    const t = STING_CLOSE.tall
+    return { tall: true as const, since, stingFrame: stingCloseFrame('9:16', since), lift: phase(since, t.lift) * t.lift.px,
+      line: phase(since, t.line), lineBlur: speedBlur(since, t.line), accent: phase(since, t.accent), accentBlur: speedBlur(since, t.accent),
+      action: phase(since, t.action, UTILITY), settled: since >= STING_CLOSE_SETTLED.tall }
+  }
+  const w = STING_CLOSE.wide
+  return { tall: false as const, since, stingFrame: stingCloseFrame('16:9', since), wipe: phase(since, w.wipe),
+    line: phase(since, { ...w.line }), action: phase(since, w.action, UTILITY), settled: since >= STING_CLOSE_SETTLED.wide }
+}
+
+function StingPlate({ src, at, style }: { src: string; at: number; style?: React.CSSProperties }) {
+  return <Freeze frame={at}><OffthreadVideo src={src} muted style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', objectFit: 'cover', ...style }} /></Freeze>
+}
+
+/** Krish's pick of 20 Nov, direction A. Tall: the band lifts and the line lands under it in ink, inside the tall core box.
+ *  Wide: the sting resolves into the statement card, the right 44% clear for the end screen. */
+export function StingClose({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null {
+  const model = stingCloseModel(props, frame)
+  const sting = props.ending?.sting
+  if (!model || !sting || !props.ending) return null
+  const tokens = props.brandTokens ?? props.tokens
+  const url = props.ending.url
+  const cta = props.ending.cta ?? ENDING_CTA
+  const pill = (size: number, onInk: boolean, p: number, rise: number): React.ReactElement => (
+    <span style={{ fontFamily: HOUSE_FONTS.structure, fontStretch: '62%', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em',
+      fontSize: size, lineHeight: 1.1, whiteSpace: 'nowrap', background: onInk ? tokens.mint : tokens.ink, color: onInk ? tokens.ink : tokens.cream,
+      display: 'inline-block', padding: `${Math.round(size * 0.22)}px ${Math.round(size * 0.5)}px`, borderRadius: 60, opacity: p, transform: `translateY(${(1 - p) * rise}px)` }}>{cta}</span>
+  )
+  const mono: React.CSSProperties = { fontFamily: HOUSE_FONTS.data, fontWeight: 500, letterSpacing: '0.06em', whiteSpace: 'nowrap' }
+  const accent: React.CSSProperties = { fontFamily: HOUSE_FONTS.dek, fontStyle: 'italic', fontWeight: 560, letterSpacing: '-0.01em',
+    lineHeight: 1.02, fontVariationSettings: '"opsz" 144, "SOFT" 60, "WONK" 0', whiteSpace: 'nowrap' }
+  const display: React.CSSProperties = { fontFamily: HOUSE_FONTS.display, textTransform: 'uppercase', lineHeight: 0.88, letterSpacing: '0.005em', whiteSpace: 'nowrap' }
+  const [tagHead, tagLast] = (() => {
+    const words = (props.ending.tagline ?? ENDING_TAGLINE).split(/\s+/).filter(Boolean)
+    return [words.slice(0, -1).join(' '), words[words.length - 1] ?? '']
+  })()
+  if (model.tall) {
+    const t = STING_CLOSE.tall
+    return (
+      <div data-close="sting-beat" style={{ position: 'absolute', zIndex: 920, left: 0, top: 0, width: 1080, height: 1920, overflow: 'hidden', background: tokens.channel, pointerEvents: 'none' }}>
+        <StingPlate src={sting.src} at={model.stingFrame} style={{ height: 1920, top: -model.lift }} />
+        <div style={{ ...display, position: 'absolute', left: t.box.left, top: t.box.lineTop, color: tokens.ink, fontSize: t.sizes.line,
+          opacity: model.line > 0 ? 1 : 0, transform: `translateX(${(1 - model.line) * t.line.travel}px)`, filter: `blur(${model.lineBlur}px)` }}>{tagHead}</div>
+        <div style={{ ...accent, position: 'absolute', left: t.box.left - 4, top: t.box.accentTop, color: tokens.ink, fontSize: t.sizes.accent,
+          opacity: model.accent > 0 ? 1 : 0, transform: `translateX(${(1 - model.accent) * t.accent.travel}px)`, filter: `blur(${model.accentBlur}px)` }}>{tagLast}</div>
+        <div style={{ position: 'absolute', left: t.box.left, top: t.box.pillTop, opacity: model.action, transform: `translateY(${(1 - model.action) * t.action.rise}px)` }}>
+          {pill(t.sizes.pill, false, 1, 0)}
+        </div>
+        <div style={{ ...mono, position: 'absolute', left: t.box.left, top: t.box.urlTop, fontSize: t.sizes.url, lineHeight: 1.1, color: tokens.ink,
+          opacity: model.action, transform: `translateY(${(1 - model.action) * t.action.rise}px)` }}>{url}</div>
+      </div>
+    )
+  }
+  const w = STING_CLOSE.wide
+  const days = props.ending.days ?? ENDING_DAYS
+  const band = `polygon(${w.band.map(([x, y]) => `${x}px ${y}px`).join(', ')})`
+  if (model.since < w.bandFrame) {
+    return <div data-close="sting-card" style={{ position: 'absolute', zIndex: 920, inset: 0, width: 1920, height: 1080, background: tokens.ink, pointerEvents: 'none' }}>
+      <StingPlate src={sting.src} at={model.stingFrame} />
+    </div>
+  }
+  const m = w.masthead
+  return (
+    <div data-close="sting-card" style={{ position: 'absolute', zIndex: 920, left: 0, top: 0, width: 1920, height: 1080, overflow: 'hidden', background: tokens.channel, color: tokens.cream, pointerEvents: 'none' }}>
+      <div style={{ position: 'absolute', inset: 0, background: tokens.ink, clipPath: `inset(0 0 0 ${(1 - model.wipe) * 1920}px)` }}><Grain /></div>
+      <div style={{ position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, transformOrigin: '0 0',
+        transform: `translate(${m.dx * model.wipe}px, ${m.dy * model.wipe}px) scale(${1 - (1 - m.scale) * model.wipe})`, clipPath: band }}>
+        <StingPlate src={sting.src} at={w.bandFrame} />
+      </div>
+      <div style={{ position: 'absolute', left: w.box.left, top: w.box.lineTop, width: w.box.lineWidth, opacity: model.line, transform: `translateX(${(1 - model.line) * w.line.travel}px)` }}>
+        <div style={{ ...display, fontSize: w.sizes.line, color: tokens.cream }}>{tagHead}</div>
+        <div style={{ ...accent, fontSize: w.sizes.accent, color: tokens.channel, marginTop: -10 }}>{tagLast}</div>
+      </div>
+      <div style={{ position: 'absolute', left: w.box.left, top: w.box.actionTop, opacity: model.action }}>{pill(w.sizes.pill, true, 1, 0)}</div>
+      {/* The address on its own line under the pill: at 58 px it would run past x 1100 beside it. */}
+      <div style={{ ...mono, position: 'absolute', left: w.box.left, top: w.box.urlTop, fontSize: w.sizes.url, lineHeight: 1.1, color: tokens.cream, opacity: model.action }}>{url}</div>
+      {/* The days row on a line of its own above the action, so nothing of the close reaches x 1100, where YouTube draws
+          its end-screen elements (the mock ran it on the action's line into that area). */}
+      {days.length > 0 && <div style={{ position: 'absolute', left: w.box.left, top: w.box.daysTop, ...mono, fontSize: w.sizes.days, letterSpacing: '0.12em',
+        textTransform: 'uppercase', opacity: model.action }}>
+        {days.map((d, i) => <React.Fragment key={d.day}>{i > 0 && <span style={{ color: tokens.cream, opacity: 0.5 }}> · </span>}<span style={{ color: d.colour }}>{d.day}</span></React.Fragment>)}
+      </div>}
+    </div>
+  )
+}
+
+/** Full-frame ink with the statement; nothing of the last beat shows through. With props.ending.sting it is the series
+ *  close on the intro sting (StingClose) instead. */
 export function EndingBand({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null {
+  if (props.ending?.sting) return <StingClose props={props} frame={frame} />
   const model = endingBandModel(props, frame)
   if (!model || !props.ending) return null
   const tall = props.aspect === '9:16'

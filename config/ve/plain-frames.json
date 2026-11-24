@@ -24,8 +24,8 @@
       "key_size": 168, "support_size": 92, "line_height": 0.96, "gap": 22, "row_gap": 4, "char_em": 0.47, "key_min_size": 72,
       "enter_seconds": 0.1, "enter_rise_px": 10, "ghost_gap": 10, "echo": {"9:16": {"top": 700, "size": 430}, "16:9": {"top": 300, "size": 430}},
       "mirrors": "apps/renderer/src/engine/chrome/ArtDirectedCaption.tsx (ART_REGION, ART, artLayout, cutHeight); tests/ve_plain_frames_test.py holds this copy to those numbers"},
-    "theme_regions": {"9:16": {"lower": {"left": 70, "top": 990, "width": 800, "height": 330}, "upper": {"left": 70, "top": 290, "width": 940, "height": 230}, "centre": {"left": 70, "top": 700, "width": 800, "height": 420}},
-      "16:9": {"lower": {"left": 192, "top": 760, "width": 1536, "height": 266}, "upper": {"left": 192, "top": 108, "width": 1536, "height": 240}, "centre": {"left": 192, "top": 380, "width": 1536, "height": 320}}},
+    "theme_regions": {"9:16": {"lower": {"left": 70, "top": 990, "width": 800, "height": 330}, "upper": {"left": 70, "top": 290, "width": 940, "height": 230}, "centre": {"left": 70, "top": 700, "width": 800, "height": 420}, "seam": {"left": 70, "top": 900, "width": 800, "height": 150}, "chin": {"left": 70, "top": 1136, "width": 786, "height": 168}},
+      "16:9": {"lower": {"left": 192, "top": 760, "width": 1536, "height": 266}, "upper": {"left": 192, "top": 108, "width": 1536, "height": 240}, "centre": {"left": 192, "top": 380, "width": 1536, "height": 320}, "seam": {"left": 192, "top": 860, "width": 1000, "height": 166}, "chin": {"left": 192, "top": 760, "width": 1536, "height": 266}}},
     "why": "A caption's drawn box (the art-directed stack as the renderer measures it, else the theme's region) must not sit over bright content. The frame behind a caption is read from the margins either side of the box on the same rows and from the box's own pixels that are not the caption's ink; a captions-off render of the same frame, when given, is read instead."
   },
   "compare": {

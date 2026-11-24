@@ -5,7 +5,7 @@ import { ACTIVE_CANVAS, SCRIBBLE } from './lock'
 import { BoilFilter, boilSeed, seedOf } from './overlays'
 
 export function Scribble({ d, colour, tokens, sinceFrames, exiting = false }: {
-  d: string; colour: 'cream' | 'mint'; tokens: EngineTokens; sinceFrames: number; exiting?: boolean
+  d: string; colour: 'cream' | 'mint' | 'channel'; tokens: EngineTokens; sinceFrames: number; exiting?: boolean
 }) {
   const dash = exiting ? 0 : 1 - progress(sinceFrames, SCRIBBLE.draw_on_frames, ENTER)
   const opacity = exiting ? 1 - progress(sinceFrames, MOTION.exitFrames, EXIT) : 1

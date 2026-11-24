@@ -23,6 +23,11 @@ def lint_lines(spec: dict, with_words: bool = False) -> list[str]:
     with tempfile.TemporaryDirectory() as temp:
         path = Path(temp) / 'spec.json'
         path.write_text(json.dumps(spec), encoding='utf-8')
+        # The proof fixture froze before the recipe floor (velib.floor.RECIPE_FROM, 2026-11-23); without a
+        # lock it would freeze "today" and the suite would turn red on a date. Binding is tested in
+        # ve_quality_floor_test.py.
+        (Path(temp) / 've').mkdir()
+        (Path(temp) / 've' / 'engine.json').write_text(json.dumps({'at': '2026-11-19T00:00:00Z'}), encoding='utf-8')
         if with_words:
             (Path(temp) / 'script.words.json').write_text(json.dumps({'text': FIXTURE_WORDS_TEXT}), encoding='utf-8')
         _, problems = lint(path)

@@ -116,10 +116,6 @@
         { "primitive": "highlight-sweep", "params": { "width_pct": 12, "intensity": 0.35, "frames": 18 } }
       ]
     },
-    "pivot-split": {
-      "for": "the turn in the story",
-      "recipe": [{ "primitive": "channel-split", "params": { "px": 4, "frames": 3 } }]
-    },
     "payoff-glow": {
       "for": "the payoff beat",
       "recipe": [
@@ -150,7 +146,7 @@
         "hook": ["hook-hit"],
         "anchor": [],
         "bridge": [],
-        "pivot": ["pivot-split"],
+        "pivot": [],
         "payoff": ["payoff-glow"],
         "call": []
       },

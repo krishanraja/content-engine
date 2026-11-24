@@ -26,6 +26,9 @@ from velib.common import sha256_file  # noqa: E402
 
 FIXTURE = json.loads((ROOT / 'fixtures/ve/my-test-19s/spec.json').read_text(encoding='utf-8'))
 CUT = 'proof-tall'
+# The fixture names no recipe, so it stands for a piece frozen before the recipe floor (velib.floor.RECIPE_FROM). A lock
+# written "now" would turn the suite red on a date; binding by date is tested in ve_quality_floor_test.py.
+FROZEN_BEFORE_THE_FLOOR = '2026-11-19T00:00:00Z'
 
 
 def whole(spec=None, day='2026-11-13'):
@@ -202,7 +205,8 @@ class RenderRefusal(unittest.TestCase):
         self.spec = whole()
         self.props = props_for(self.spec)
         self.spec_file = self.dir / 'spec.json'
-        guards.freeze(self.dir)  # the engine his storyboard signature stands for (ve expect writes it)
+        # the engine his storyboard signature stands for (ve expect writes it)
+        guards.freeze(self.dir, now=FROZEN_BEFORE_THE_FLOOR)
 
     def tearDown(self):
         self.tmp.cleanup()

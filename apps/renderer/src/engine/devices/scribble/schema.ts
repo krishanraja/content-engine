@@ -3,7 +3,8 @@ import { z } from 'zod'
 const num = z.number().finite()
 const point = z.tuple([num, num])
 const target = z.object({ x: num, y: num, w: num.positive(), h: num.positive() }).strict()
-const common = { colour: z.enum(['cream', 'mint']), seed: z.string() }
+// 'channel', the series colour, for the platform walkthrough's loops (Krish, 2026-11-20: keep the Character.ai top half as it is).
+const common = { colour: z.enum(['cream', 'mint', 'channel']), seed: z.string() }
 const loop = z.object({ ...common, shape: z.literal('loop'), cx: num.optional(), cy: num.optional(),
   u: point.optional(), v: point.optional(), target: target.optional(), turns: num.positive().max(4).optional(),
   sq: num.positive().optional(), perspective: z.object({ u: point, v: point }).strict().optional() }).strict()

@@ -131,12 +131,18 @@ function walk(dir: string, out: string[] = []): string[] {
   return out
 }
 
+/** The antislop rulebook, vendored unmodified from miqdadbadjuber/anti-slop (`.agents/skills/antislop/VENDORED.md`):
+ *  third-party text no script is written from, whose own prose says "deep-dives". Its local adjustments live in
+ *  ADAPTER.md, which is ours and stays in scope. */
+const VENDORED = /^\.(?:agents|claude)\/skills\/antislop[^/]*\/(?!ADAPTER\.md$)/
+
 /** The files rule 3 reads: what tells a writer, a judge or a lint what a script or a caption says. */
 export function scopeFiles(): string[] {
   const dirs = ['.agents/skills', '.claude/skills', 'apps', 'packages', 'scripts/post-pack', 'scripts/quick-edit', 'scripts/velib', 'scripts/ve', 'scripts/voice']
   const docs = ['AGENTS.md', 'CLAUDE.md', 'docs/AGENTS-REFERENCE.md', 'docs/AMPLIFICATION.md', 'docs/CADENCE.md', 'docs/CONTENT_ENGINE.md',
     'docs/PUBLISH_BOARDS.md', 'docs/GROWTH-HANDOFF.md', 'docs/CAROUSEL-STANDARD.md', 'docs/ve/ENGINE.md', 'docs/ve/RUNBOOK.md', 'config/golden-examples.json']
   return [...dirs.flatMap(d => walk(d)), ...docs].map(f => relative(ROOT, join(ROOT, f)).split('\\').join('/'))
+    .filter(f => !VENDORED.test(f))
 }
 
 export async function check(): Promise<string[]> {

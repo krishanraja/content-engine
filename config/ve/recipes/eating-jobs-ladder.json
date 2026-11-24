@@ -32,8 +32,11 @@
     "9:16": "band",
     "16:9": "pillar"
   },
-  "generated_kinds": [],
-  "generated_note": "Generated (AI-made) imagery never appears in a cut (Krish, 2026-11-20), so no recipe names a generated kind and ve lint refuses any generated asset (floor.recipe_generated).",
+  "generated_kinds": [
+    "illustration",
+    "broll"
+  ],
+  "generated_note": "Generated stills (illustration) and animation (broll) may come in and out of a cut when art-directed and clearly a metaphor (depicts: metaphor), inside its one staging; never a stand-in for a real document, sign, place or person (Ruling, Krish, 2026-11-20: generated imagery, photoreal included, is allowed when art-directed and clearly a metaphor; generated stand-ins for real documents, signs, places or people are refused). Its source cut measured no generated picture; the ruling lets a metaphor in, inside the staging.",
   "source": "Krish's own cut Eating its own jobs, Mon 2 Nov 2026 (config/reference-cuts.json mon02-tall, sha256 2cdff09a); docs/ve/styles/eating-jobs-ladder.card.json",
   "staging_note": "His cut anchors him with real plates beside the object; the engine has no anchor staging yet, and the tray covered his face on the Fri 20 Nov take (compile face.keep_out), so the sample draws the object on the band panel."
 }

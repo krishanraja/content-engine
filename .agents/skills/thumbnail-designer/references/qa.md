@@ -21,5 +21,8 @@ records this file's sha256, so a changed list needs a new verdict. The names in 
 7. **The promise matches the piece** (`promise_matches`). What the thumbnail promises is the brief's promise, the
    piece supports it, and it makes none of the claims the brief says to avoid.
 
+Before the critic, run the antislop PASS/FAIL report (`.agents/skills/antislop/ADAPTER.md` first, then the skills it names) on each option: fix each FAIL no house rule overrules (the
+brand book, the Receipt and these seven checks win); his picked words are never changed for it.
+
 A failed check comes with a finding that says why, in one line, marked `block` (it cannot go to Krish like this) or
 `fix` (it can be repaired in the next round). An option with a `block` finding blocks.

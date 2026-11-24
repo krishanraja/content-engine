@@ -30,8 +30,18 @@ export type TitleMomentProps = {
   /** Accepted for older props; the lockup always fades where it stands, over the whole frame. */
   release?: 'captions' | 'fade'
   card?: boolean
+  /** Shot grammar (Ruling, Krish, 2026-11-20): the lockup builds inside this box (the staging's panel) while he says the
+   *  line, and goes full frame from `fullFrom` (his last title word) over 6 frames. Absent: full frame throughout. */
+  panel?: Box | undefined
+  fullFrom?: number | undefined
   stage?: Box
   captionBox?: Box
+  /** Depth (shot grammar step 5, an anchor cut with a subject matte): the lockup builds in this box on his wall, above
+   *  and behind his head, while he talks (The Athletic's title over the presenter), never a full-frame card and never a
+   *  box on his chest. No ink ground and no bars: his wall is the ground and the matted take is laid over it. */
+  behind?: Box | undefined
+  /** Inside a behind box: draw bare (set by TitleMoment itself). */
+  bare?: boolean
 }
 
 const unit = (v: number) => Math.max(0, Math.min(1, v))
@@ -68,7 +78,7 @@ export type LockupGeometry = { bands: LockupBand[]; connector: { index: number; 
 /** Where everything sits, pure: the bands span 92% of the frame, the type fills its band (up to 17% of a tall frame's width
  *  or 18% of a wide frame's height, Wed 11's sizes; a long band takes a second line before its type shrinks), the lockup is
  *  centred, and the wordmark sits inside its box. */
-export function lockupGeometry(words: TitleWord[], width: number, height: number, aspect: TitleMomentProps['aspect'], wordmark?: TitleImage): LockupGeometry {
+export function lockupGeometry(words: TitleWord[], width: number, height: number, aspect: TitleMomentProps['aspect'], wordmark?: TitleImage, bare = false): LockupGeometry {
   const tall = aspect === '9:16'
   const parts = lockupParts(words)
   const bandWidth = width * 0.92
@@ -92,13 +102,14 @@ export function lockupGeometry(words: TitleWord[], width: number, height: number
   const shapes = [shape(parts.a, 1), ...(two ? [shape(parts.b, 0.86)] : [])]
   // A very long title shrinks to fit above the wordmark, never off the top of the frame.
   const tallest = shapes.reduce((s, sh) => s + sh.size * (1.15 * sh.lines.length + 0.1), 0) + (two ? shapes[0]!.size * 0.9 : 0)
-  const room = height * (tall ? 0.62 : 0.66)
+  // Bare (behind him, in its own box on his wall): the bands take the whole box under the wordmark tile.
+  const room = bare ? height * 0.78 : height * (tall ? 0.62 : 0.66)
   if (tallest > room) for (const sh of shapes) sh.size *= room / tallest
   const heights = shapes.map(sh => sh.size * (1.15 * sh.lines.length + 0.1))
   const connectorSize = shapes[0]!.size * 0.7
   const between = two ? (parts.connector === null ? shapes[0]!.size * 0.25 : connectorSize * 1.25) : 0
   const stack = heights.reduce((s, h) => s + h, 0) + between
-  const centre = tall ? height * 0.44 : height * 0.43
+  const centre = bare ? height * 0.58 : tall ? height * 0.44 : height * 0.43
   let y = centre - stack / 2
   const bands: LockupBand[] = shapes.map((sh, k) => {
     const h = heights[k]!, top = y
@@ -138,11 +149,52 @@ export function lockupOpacity(frame: number, fromFrame: number, toFrame: number)
   return Math.min(fadeIn, 1 - unit((frame - (toFrame - out)) / out))
 }
 
+/** Whether the lockup is still building in the panel: from its first word until `fullFrom` (his last title word). It is
+ *  laid out for the panel's own size there (never a full-frame picture shrunk into it), then cuts to the full frame. */
+export function inPanel(panel: Box | undefined, fullFrom: number | undefined, frame: number): panel is Box {
+  return !!panel && fullFrom !== undefined && panel.width > 0 && panel.height > 0 && frame < fullFrom
+}
+
+/** The wordmark's tile over a lockup built behind him: 0.3 of a tall frame's width (0.14 of a wide one). */
+export function behindTile(width: number, aspect: TitleMomentProps['aspect'], wordmark?: TitleImage): { width: number; height: number; pad: number } | null {
+  if (!wordmark) return null
+  const w = width * (aspect === '9:16' ? 0.3 : 0.14), pad = 22
+  return { width: w + 2 * pad, height: w * wordmark.pixelHeight / wordmark.pixelWidth + 1.2 * pad, pad }
+}
+
 /** Cut-clock only; deliberately no Remotion context, clocks, random values or persistent state. */
 export function TitleMoment(props: TitleMomentProps): JSX.Element | null {
   const { words, frame, fromFrame, toFrame, width, height, tokens } = props
   if (frame < fromFrame || frame >= toFrame || !words.length || width <= 0 || height <= 0) return null
-  const geo = lockupGeometry(words, width, height, props.aspect, props.wordmark)
+  if (props.behind && !props.bare) {
+    // The wordmark sits on its own ink tile at the head of the box, and the bands build under it: one lockup, entering
+    // and leaving together (lockupOpacity), never a wordmark on its own.
+    const box = props.behind
+    const Image = props.Image ?? 'img'
+    const tile = behindTile(box.width, props.aspect, props.wordmark)
+    const ink = tokens.ink ?? tokens.background ?? 'black'
+    return <div data-title-behind="" style={{ position: 'absolute', left: box.left, top: box.top, width: box.width, height: box.height,
+      pointerEvents: 'none' }}>
+      {tile && props.wordmark ? <div data-title-wordmark-tile="" style={{ position: 'absolute', left: (box.width - tile.width) / 2, top: 0,
+        width: tile.width, height: tile.height, background: ink, borderRadius: 18, opacity: lockupOpacity(frame, fromFrame, toFrame) }}>
+        <Image data-title-wordmark="" src={props.wordmark.src} style={{ position: 'absolute', left: tile.pad, top: tile.pad * 0.6,
+          width: tile.width - 2 * tile.pad, height: tile.height - 1.2 * tile.pad }} />
+      </div> : null}
+      <div style={{ position: 'absolute', left: 0, top: (tile?.height ?? 0) + 12, width: box.width, height: box.height - (tile?.height ?? 0) - 12 }}>
+        <TitleMoment {...props} width={box.width} height={box.height - (tile?.height ?? 0) - 12} panel={undefined} fullFrom={undefined} bare />
+      </div>
+    </div>
+  }
+  if (inPanel(props.panel, props.fullFrom, frame)) {
+    const box = props.panel!
+    return <div data-title-in-panel="" style={{ position: 'absolute', left: box.left, top: box.top, width: box.width, height: box.height,
+      overflow: 'hidden', pointerEvents: 'none' }}>
+      <TitleMoment {...props} width={box.width} height={box.height} panel={undefined} fullFrom={undefined} />
+    </div>
+  }
+  const bare = !!props.bare
+  // Bare (behind him): the wordmark sits on its own small ink tile at the lockup's head, so it stays part of the lockup.
+  const geo = lockupGeometry(words, width, height, props.aspect, bare ? undefined : props.wordmark, bare)
   const opacity = lockupOpacity(frame, fromFrame, toFrame)
   const cream = tokens.cream ?? tokens.text ?? 'white'
   const ink = tokens.ink ?? tokens.background ?? 'black'
@@ -187,7 +239,7 @@ export function TitleMoment(props: TitleMomentProps): JSX.Element | null {
   const c = geo.connector
   const connector = c && frame >= words[c.index]!.atFrame ? <span key="connector" data-title-word={c.index} data-title-connector=""
     style={{ position: 'absolute', left: 0, width, top: c.cy - c.size * 0.6, textAlign: 'center', fontFamily: HOUSE_FONTS.display,
-      fontSize: c.size, lineHeight: 1.15, color: mint, textTransform: 'lowercase',
+      fontSize: c.size, lineHeight: 1.15, color: bare ? ink : mint, textTransform: 'lowercase',
       opacity: ease((frame - words[c.index]!.atFrame + 1) / 6), transform: `scale(${mix(1.4, 1, (frame - words[c.index]!.atFrame) / 8).toFixed(4)})` }}>
     {words[c.index]!.text}</span> : null
   // The light sweep crosses both bands once the last word lands.
@@ -197,8 +249,8 @@ export function TitleMoment(props: TitleMomentProps): JSX.Element | null {
       style={{ position: 'absolute', left: geo.wordmark.left, top: geo.wordmark.top, width: geo.wordmark.width, height: geo.wordmark.height }} />
     : null
   return <div data-title-moment="" data-title-lockup="" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity }}>
-    <div data-title-ground="" style={{ position: 'absolute', inset: 0, background: ink }} />
-    {bars}
+    {bare ? null : <div data-title-ground="" style={{ position: 'absolute', inset: 0, background: ink }} />}
+    {bare ? null : bars}
     {bandsDrawn}
     {connector}
     <div data-title-sweep="" style={{ position: 'absolute', inset: 0,

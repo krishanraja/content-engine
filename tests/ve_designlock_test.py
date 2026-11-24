@@ -5,6 +5,7 @@ import copy
 import io
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -321,7 +322,14 @@ class DesignLockTest(unittest.TestCase):
                               env=os.environ | {'PYTHONDONTWRITEBYTECODE': '1'}, capture_output=True, text=True)
 
     def test_cli_legacy_lint(self):
-        result = self.cli('lint', 'fixtures/ve/my-test-19s/spec.json')
+        # The fixture names no recipe, so a copy of it freezes before the recipe floor (velib.floor.RECIPE_FROM); with no
+        # lock it would freeze "today" and turn red on a date. Binding is tested in ve_quality_floor_test.py.
+        with tempfile.TemporaryDirectory() as temp:
+            piece = Path(temp) / 'piece'
+            shutil.copytree(ROOT / 'fixtures/ve/my-test-19s', piece)
+            (piece / 've').mkdir()
+            (piece / 've' / 'engine.json').write_text(json.dumps({'at': '2026-11-19T00:00:00Z'}), encoding='utf-8')
+            result = self.cli('lint', str(piece / 'spec.json'))
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn('is legacy: composition and design approval are enforced at packet time', result.stdout)
 

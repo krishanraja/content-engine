@@ -4536,6 +4536,197 @@
           "test": "npx vitest run tests/checkout-tidy.test.ts"
         }
       ]
+    },
+    {
+      "id": "layout-thrash-cards-and-cutaways",
+      "on": "2026-11-20",
+      "krish": "how we integrate title cards and real-world images and motion animation is the issue",
+      "what": "The rejected Tue 17 short switched layout 14 times (9.9 a minute) with four 1 s runs without his face and full-frame photos in his place; Wed 18's long cut to 11 generated full-frame stills (100 s) and shrank real headlines to 0.13 to 0.27 of the frame on blur, with a 6 s title card detached from his line. Every good cut keeps his face in one place for the whole body and puts real images and motion inside one region, filling it.",
+      "symptom": "Cuts that thrashed between layouts, cut his face away for a second at a time, and showed evidence too small to read.",
+      "cause": "motion.layout_variety demanded 3 layout types a minute in 9:16 (4 in voice-led-pictures), a graphics-only beat became a full-frame takeover by default, and nothing checked staging, face runs, evidence size or repeats.",
+      "status": "guarded",
+      "mode": "layout-thrash",
+      "guard_level": "lint_refuse",
+      "surface": "ve lint (grammar.*) and ve shots on every ve piece frozen from 2026-11-23; the renderer's stagings",
+      "guards": [
+        {
+          "file": "scripts/velib/grammar.py",
+          "contains": "def staging_lints(",
+          "how": "grammar.staging: one staging for a cut's body (band, stage or anchor), every beat's shot from it, the transition matrix",
+          "test": "python3 tests/ve_shot_grammar_test.py"
+        },
+        {
+          "file": "scripts/velib/grammar.py",
+          "contains": "def face_run_lints(",
+          "how": "grammar.face_runs: face share 0.90 (0.45 with plates), runs of at least 4 s, at most 4 switches a minute",
+          "test": "python3 tests/ve_shot_grammar_test.py"
+        },
+        {
+          "file": "scripts/velib/grammar.py",
+          "contains": "def evidence_size_lints(",
+          "how": "grammar.evidence_size and grammar.region: a real image fills its region, words 40 px, the panel never empty past 0.5 s"
+        },
+        {
+          "file": "scripts/velib/lint.py",
+          "contains": "No layout-variety rule: it forced switching",
+          "how": "the variety rule is retired, so nothing demands a layout change"
+        },
+        {
+          "file": "scripts/velib/shots.py",
+          "contains": "def plan_cut(",
+          "how": "ve shots writes every beat's shot type from the cut's one staging and the shot table on the storyboard he signs"
+        }
+      ]
+    },
+    {
+      "id": "generated-imagery-in-cut",
+      "on": "2026-11-20",
+      "krish": "how we integrate title cards and real-world images and motion animation is the issue; then, correcting the same day: \"we actually do use AI to generate a lot of striking imagery that comes in and out of our pieces ... The AI music video is a really good example of world-class treatment of video footage and social media videos being integrated really nicely alongside generated animations.\"",
+      "what": "Wed 18's long carried 11 generated full-frame stills, 100 s (33%) of the cut, none carrying a fact; Tue 17 showed suspected generated stand-ins for real photos (a plaque, a town sign).",
+      "symptom": "Generated pictures stood in for real evidence (a plaque, a town sign) and filled the frame in his place.",
+      "cause": "Nothing asked what a generated picture stands for, and nothing kept it inside the staging. The first fix refused every generated picture; Krish corrected it: a generated metaphor is allowed, a stand-in for a real thing is not.",
+      "status": "guarded",
+      "mode": "generated-imagery",
+      "guard_level": "lint_refuse",
+      "surface": "ve lint and ve brief on every ve piece frozen from 2026-11-23",
+      "guards": [
+        {
+          "file": "scripts/velib/grammar.py",
+          "contains": "def generated_lints(",
+          "how": "grammar.generated: every generated picture declares depicts; metaphor is allowed, real (a stand-in for a real document, sign, place or person) is refused, and an undeclared one is refused until declared; voice and sound are not pictures",
+          "test": "python3 tests/ve_shot_grammar_test.py"
+        },
+        {
+          "file": "scripts/velib/grammar.py",
+          "contains": "if shot in STAGED_SHOTS and source.startswith('asset:')",
+          "how": "grammar.region: a generated picture lives inside the staging, never a full-frame picture in his place on band or stage"
+        },
+        {
+          "file": "scripts/ve.py",
+          "contains": "grammar.generation_refusal(spec, directory)",
+          "how": "ve brief writes a plate brief only when every generated picture is declared depicts: metaphor"
+        }
+      ],
+      "ruling": "Ruling, Krish, 2026-11-20: generated imagery, photoreal included, is allowed when art-directed and clearly a metaphor; generated stand-ins for real documents, signs, places or people are refused"
+    },
+    {
+      "id": "recipe-samples-staged-faults",
+      "on": "2026-11-20",
+      "krish": "how we integrate title cards and real-world images and motion animation is the issue",
+      "what": "The 20 Nov recipe samples on his Friday take: the stage staging drew him in a small framed window above an empty cream band; the full-frame title lockup held 4 to 8 s and tripped the plain-dark-band guard; a number sat small in a large dark field and \"195\" printed over \"THOUSAND DOLLARS\"; the 6 s 16:9 close alone put every wide cut below the pace floor; captions.off_face measured the house band, not top-placed captions.",
+      "symptom": "Every recipe sample was held or looked unfinished for faults of the engine, not of the piece.",
+      "cause": "Staging geometry, the title hold, device growth, money formatting and the pace window were never measured against his good cuts.",
+      "status": "guarded",
+      "mode": "staged-engine-faults",
+      "guard_level": "gate",
+      "surface": "the renderer (kit/staging.ts, title/TitleMoment.tsx, kinetic_stat, kit/layout.ts), compile, the pace floor and ve qc",
+      "guards": [
+        {
+          "file": "apps/renderer/src/engine/kit/staging.ts",
+          "contains": "if (mode === 'stage') {",
+          "how": "stage draws him large bottom right on an ink panel that is the whole frame but his corner, cut out of his wall by the matte when the take has one (step 5: no cream band beside him)",
+          "test": "python3 tests/ve_quality_floor_test.py"
+        },
+        {
+          "file": "scripts/velib/compile.py",
+          "contains": "TITLE_FULL_MAX_FRAMES = 60",
+          "how": "on every staged cut the title builds in the panel and holds full frame at most 2 s",
+          "test": "python3 tests/ve_shot_grammar_test.py"
+        },
+        {
+          "file": "scripts/velib/floor.py",
+          "contains": "def fixed_moments(",
+          "how": "the pace floor measures the body only, leaving out the end card and the full-frame title",
+          "test": "python3 tests/ve_shot_grammar_test.py"
+        },
+        {
+          "file": "apps/renderer/src/engine/devices/kinetic_stat/money.ts",
+          "contains": "export function formatAmount(",
+          "how": "money and thousands are written as a viewer reads them ($195,000)",
+          "test": "npx vitest run apps/renderer/src/engine/devices/kinetic_stat/money.test.ts"
+        },
+        {
+          "file": "scripts/velib/qc_faces.py",
+          "contains": "if props is not None and props.get('captionTheme'):",
+          "how": "captions.off_face reads where a caption style really draws",
+          "test": "python3 tests/ve_qc_faces_test.py"
+        }
+      ]
+    },
+    {
+      "id": "anchor-cards-on-chest-and-stage-cream-block",
+      "on": "2026-11-20",
+      "krish": "Band 9:16 and 16:9: clearly better. Keep. (#950 reference verdict, relayed: stage left an empty cream block beside him; anchor not ready, cards on his chest and arms, the title a small box over his torso)",
+      "what": "The #950 shot grammar references: stage 9:16 drew an empty cream block beside him and stage 16:9 a cream band (held by the pace floor at 2.81 events a second); anchor put flat cards on his chest and arms and shrank the title into a box over his torso.",
+      "symptom": "Empty ground beside him; cards over his body; a title too small to read.",
+      "cause": "The stage panel stopped above his take on a cream ground; anchor's only graphics region was his chest band; ve had no matte, so nothing could sit behind him; no after-render check measured how much of the panel the object filled.",
+      "status": "guarded",
+      "mode": "staging",
+      "guard_level": "lint_refuse",
+      "surface": "ve compile, ve lint and ve qc on every grammar cut",
+      "guards": [
+        {
+          "file": "scripts/velib/depth.py",
+          "contains": "def body_keepout(",
+          "how": "compile refuses a box his silhouette (torso, arms, hands, from the matte) fills more than 2% of on an anchor cut or a cut-out stage",
+          "test": "python3 tests/ve_depth_test.py"
+        },
+        {
+          "file": "scripts/velib/grammar.py",
+          "contains": "def depth_lints(",
+          "how": "grammar.depth: an in-world number, a chapter mark behind him or an anchor title need the subject matte; the number stands 0.4 to 0.6 of the frame tall"
+        },
+        {
+          "file": "apps/renderer/src/engine/kit/staging.ts",
+          "contains": "{ left: 60, top: 280, width: 960, height: 220 }",
+          "how": "anchor's graphics only above his head"
+        },
+        {
+          "file": "scripts/velib/qc_fill.py",
+          "contains": "def row(",
+          "how": "ve qc panel.fill fails a band or stage cut whose panel object fills under 0.85 of its region's width for more than 0.5 s"
+        }
+      ]
+    },
+    {
+      "id": "title-not-on-his-words",
+      "on": "2026-11-20",
+      "krish": "a good looking title slide, and a good looking outro are hugely important. The title slide comes in as I say the words of the title within the opening 30 seconds.",
+      "what": "A title card can be drawn detached from the words he says (Wed 18's 6 s card at 34 to 39 s) or late in the cut.",
+      "symptom": "The title arrives on its own, not as he says it, or after the opening.",
+      "cause": "title.moment checked the span was in the first three beats, not that it started on his spoken title words or how many seconds in.",
+      "status": "guarded",
+      "mode": "title",
+      "guard_level": "lint_refuse",
+      "surface": "ve lint on every ve piece frozen from 2026-11-23",
+      "guards": [
+        {
+          "file": "scripts/velib/grammar.py",
+          "contains": "def title_timing_lints(",
+          "how": "grammar.title_timing: a whole cut of a titled piece names its spoken title span, starting on the first word of his title line, within the opening 30 s",
+          "test": "python3 tests/ve_depth_test.py"
+        }
+      ]
+    },
+    {
+      "id": "board-prompts-no-roles-or-learning",
+      "on": "2026-11-23",
+      "krish": "does every prompt generated by the Content Board explicitly make it clear that Codex is to be used for asset generation, with Claude arbitrating standards and acting as overviewer, ensuring that failures and best practices of any kind that are learnt are logged and sent to the internal-auditor (23 Nov 2026, Claude Code session)",
+      "what": "Only 2 of the 18 Claude prompts on the board for the week of 23 Nov named Codex, and none said where a failure or best practice goes.",
+      "symptom": "A session started from the board has to infer who builds the assets and leaves what it learned in its own chat.",
+      "cause": "The roles and the learning routes lived in AGENTS.md and the make routes; the one block every copied prompt carries (writeBack) said neither.",
+      "status": "guarded",
+      "mode": "handoff",
+      "guard_level": "gate",
+      "surface": "every Claude and Growth prompt the Content Board copies",
+      "guards": [
+        {
+          "file": "apps/control-plane/api/board/_writeBack.ts",
+          "contains": "export const LEARNING_RULE",
+          "how": "writeBack carries ROLES and LEARNING_RULE in every session prompt, and the board-sessions test fails if either is missing",
+          "test": "npx vitest run tests/control-plane/board-sessions.test.ts"
+        }
+      ]
     }
   ]
 }

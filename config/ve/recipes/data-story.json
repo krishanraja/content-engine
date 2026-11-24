@@ -11,7 +11,10 @@
   "caption_themes": [
     "podcast"
   ],
-  "generated_kinds": [],
+  "generated_kinds": [
+    "illustration",
+    "broll"
+  ],
   "saved_from": {
     "piece_id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
     "title": "Who trains your 2030 seniors (Monday 2 Nov 2026)",
@@ -93,6 +96,27 @@
     "9:16": "band",
     "16:9": "pillar"
   },
-  "generated_note": "Generated (AI-made) imagery never appears in a cut (Krish, 2026-11-20), so no recipe names a generated kind and ve lint refuses any generated asset (floor.recipe_generated).",
+  "generated_note": "Generated stills (illustration) and animation (broll) may come in and out of a cut when art-directed and clearly a metaphor (depicts: metaphor), inside its one staging; never a stand-in for a real document, sign, place or person (Ruling, Krish, 2026-11-20: generated imagery, photoreal included, is allowed when art-directed and clearly a metaphor; generated stand-ins for real documents, signs, places or people are refused). Its source cut measured no generated picture; the ruling lets a metaphor in, inside the staging.",
+  "protected_default": {
+    "for": "any share or count on a follow.the.money piece",
+    "device": "unit_field",
+    "params": {
+      "mark": "badge",
+      "columns": 10,
+      "plane": true,
+      "greyScope": "striped",
+      "counter": {
+        "of": "striped",
+        "suffix": "%"
+      }
+    },
+    "events": "one per spoken claim, each on the word that names it: enter (the whole), stripe (the subset), grey (the subset greys from the end of the grid)",
+    "ratios": {
+      "9:16": "band panel, grid about 60%, numeral 230 px top left",
+      "16:9": "pillar panel, grid about 72%, numeral 260 px"
+    },
+    "words": "Krish, 2026-11-20: \"this visual was really nice in how it explained additively what I was saying in the Anthropic jobs video.\"",
+    "not_carried": "the series pill and the wordmark his screenshot shows in the body: a short's body carries neither since 16 Nov (config/brand-palette.json logo_rule)"
+  },
   "source": "Krish's favourite cut, Who trains your 2030 seniors, Mon 2 Nov 2026 (config/reference-cuts.json mon02-wide, mon02-tall)"
 }

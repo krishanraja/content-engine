@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it, vi } from 'vitest'
@@ -5,7 +6,9 @@ import { describe, expect, it, vi } from 'vitest'
 // Remotion's Img reads the frame for premounting, which needs a composition; a plain img renders the same markup here.
 vi.mock('remotion', async (importOriginal) => {
   const actual = await importOriginal<typeof import('remotion')>()
-  return { ...actual, Img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => React.createElement('img', props) }
+  return { ...actual, Img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => React.createElement('img', props),
+    Freeze: ({ children }: { children: React.ReactNode }) => children,
+    OffthreadVideo: (props: React.VideoHTMLAttributes<HTMLVideoElement>) => React.createElement('video', props) }
 })
 import { houseDueLine } from '../../house/geometry'
 import { EngineRenderPropsSchema, type EngineRenderProps } from '../props'
@@ -30,6 +33,9 @@ function fixture(aspect: EngineRenderProps['aspect']): EngineRenderProps {
 describe('the statement close', () => {
   it('says exactly the tagline, broken only between words, the last word alone', () => {
     expect(ENDING_TAGLINE).toBe('Built to help you decide.')
+    // The one copy of the close's words is config/brand-palette.json close_copy; this fallback must say the same.
+    const palette = JSON.parse(readFileSync(new URL('../../../../../config/brand-palette.json', import.meta.url), 'utf8'))
+    expect(ENDING_TAGLINE).toBe(palette.close_copy.tagline)
     expect(statementLines('9:16')).toEqual(['Built to', 'help you', 'decide.'])
     expect(statementLines('16:9')).toEqual(['Built to help you', 'decide.'])
   })
@@ -141,5 +147,74 @@ describe('the close card clears the small-text floor (Krish, 2026-11-19)', () =>
     const { SHAPE } = await import('./EndingBand')
     // ve qc measured 17 px of glyph height at 24 px (0.71 of the size); the floor is 18 px.
     for (const shape of Object.values(SHAPE)) expect(Math.floor(shape.kick * 17 / 24)).toBeGreaterThanOrEqual(18)
+  })
+})
+
+describe('the series close on the intro sting (Ruling, Krish, 2026-11-20)', () => {
+  const sha = '09da1e77bcd128b1bf53e022ace6056588448bde9bc6711716b8ce01ede57ed8'
+  const withSting = (aspect: EngineRenderProps['aspect']) => { const base = fixture(aspect)
+    return EngineRenderPropsSchema.parse({ ...base, ending: { ...base.ending, days: [...ENDING_DAYS], sting: { src: 'sting.mp4', series: 'follow_the_money', frames: 56, sha256: sha } } }) }
+
+  it('tall: the sting at 1.5x for 30 frames, its band held, the line and the action landing inside the 2 s beat', async () => {
+    const { STING_CLOSE, STING_CLOSE_SETTLED, stingCloseFrame, stingCloseModel } = await import('./EndingBand')
+    expect([stingCloseFrame('9:16', 0), stingCloseFrame('9:16', 29), stingCloseFrame('9:16', 30), stingCloseFrame('9:16', 59)]).toEqual([1, 44, 48, 48])
+    expect(STING_CLOSE_SETTLED.tall).toBeLessThanOrEqual(60)
+    const props = withSting('9:16')
+    const start = props.ending!.fromFrame
+    expect(stingCloseModel(props, start + 10)!.lift).toBe(0)
+    const settled = stingCloseModel(props, start + 59)!
+    expect(settled.tall && [settled.lift, settled.line, settled.accent, settled.action]).toEqual([STING_CLOSE.tall.lift.px, 1, 1, 1])
+    // every word inside the tall core box x 120 to 820, y 330 to 1180 (config/brand-palette.json safe.tall_core)
+    const box = STING_CLOSE.tall.box
+    expect(box.left).toBeGreaterThanOrEqual(120); expect(box.left + box.width).toBeLessThanOrEqual(820)
+    expect(box.lineTop).toBeGreaterThanOrEqual(330); expect(box.urlTop + STING_CLOSE.tall.sizes.url * 1.1).toBeLessThanOrEqual(1180)
+    // the wordmark lifted with the band stays inside the core box too (frame 48: y 784 to 1022)
+    expect(784 - STING_CLOSE.tall.lift.px).toBeGreaterThanOrEqual(330)
+    const markup = renderToStaticMarkup(React.createElement(EndingBand, { props, frame: start + 59 }))
+    for (const text of ['Built to help you', 'decide.', 'Subscribe free', 'makeyourmindup.ai', 'sting-beat']) expect(markup).toContain(text)
+    expect(markup).not.toContain('Mondays') // no days row on the tall close
+  })
+
+  it('wide: the full sting, then the ink wipes in, settled by 2.75 s and the end-screen area left clear', async () => {
+    const { STING_CLOSE, STING_CLOSE_SETTLED, stingCloseModel } = await import('./EndingBand')
+    expect(STING_CLOSE_SETTLED.wide / 30).toBeLessThanOrEqual(2.75)
+    const props = withSting('16:9')
+    const start = props.ending!.fromFrame
+    expect(stingCloseModel(props, start + 30)!.stingFrame).toBe(30)
+    const settled = stingCloseModel(props, start + STING_CLOSE_SETTLED.wide)!
+    expect(!settled.tall && [settled.wipe, settled.line, settled.action]).toEqual([1, 1, 1])
+    const w = STING_CLOSE.wide
+    expect(w.box.left + w.box.lineWidth).toBeLessThanOrEqual(w.endScreen.left)
+    const markup = renderToStaticMarkup(React.createElement(EndingBand, { props, frame: start + 120 }))
+    for (const text of ['Built to help you', 'decide.', 'Subscribe free', 'Mondays', 'sting-card']) expect(markup).toContain(text)
+  })
+
+  it('refuses another series\' sting, and any sting on an off day', () => {
+    const base = withSting('9:16')
+    expect(() => EngineRenderPropsSchema.parse({ ...base, ending: { ...base.ending, sting: { ...base.ending!.sting!, series: 'mind_the_gap' } } })).toThrow()
+    expect(() => EngineRenderPropsSchema.parse({ ...base, ending: { ...base.ending, days: [] } })).toThrow()
+  })
+})
+
+describe('every word of the sting close is legible (config/ve/shot-grammar.json evidence.words_min_px)', () => {
+  it('each size is at least words_min_px, and the pill and the address at least 40 px of cap height, on both shapes', async () => {
+    const { STING_CLOSE, CAP_HEIGHT } = await import('./EndingBand')
+    const grammar = JSON.parse(readFileSync(new URL('../../../../../config/ve/shot-grammar.json', import.meta.url), 'utf8'))
+    const min = grammar.evidence.words_min_px as number
+    expect(min).toBe(40)
+    for (const shape of [STING_CLOSE.tall, STING_CLOSE.wide]) {
+      for (const size of Object.values(shape.sizes)) expect(size).toBeGreaterThanOrEqual(min)
+      expect(shape.sizes.pill * CAP_HEIGHT.structure).toBeGreaterThanOrEqual(40)
+      expect(shape.sizes.url * CAP_HEIGHT.data).toBeGreaterThanOrEqual(40)
+    }
+  })
+
+  it('the wide close keeps every word left of the end-screen area', async () => {
+    const { STING_CLOSE } = await import('./EndingBand')
+    const { textWidth } = await import('../../house/metrics')
+    const w = STING_CLOSE.wide
+    expect(w.box.left + textWidth('mono', 'makeyourmindup.ai', w.sizes.url, 0.06)).toBeLessThanOrEqual(w.endScreen.left)
+    expect(w.box.left + textWidth('mono', 'MONDAYS · WEDNESDAYS · FRIDAYS', w.sizes.days, 0.12)).toBeLessThanOrEqual(w.endScreen.left)
+    expect(w.box.left + textWidth('anton', 'BUILT TO HELP YOU', w.sizes.line, 0.005)).toBeLessThanOrEqual(w.endScreen.left)
   })
 })

@@ -50,6 +50,21 @@ export const CLOSE_LOOP = 'Close the loop as you go, not only at the end: every 
 export const APPROVAL_RULE = 'When Krish approves the narrative lock or the scripts in this session, file his exact typed words at once, '
   + 'with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file.'
 
+/** Who does what, said in every copied prompt so a session never has to infer it from AGENTS.md (Ruling, Krish, 2026-11-23:
+ *  Codex generates the assets, Claude arbitrates the standards and oversees; the split itself is his of 2026-11-15). */
+export const ROLES = 'Who does what: Codex generates the visual assets from cards (devices, plates, and carousel, meme and Notes images: '
+  + 'python3 scripts/ve.py card, then ve dispatch or ve lane queue). Claude writes the words and the creative direction, makes the article '
+  + 'figures, arbitrates the standards (python3 scripts/check_failures.py, python3 scripts/floor.py --format <maker>, get_approved_taste) and '
+  + 'checks everything Codex returns before it counts. Codex\'s own report is never proof. A step with no visual asset needs no card.'
+
+/** Where a lesson goes (Ruling, Krish, 2026-11-23: engine failures and best practices reach the internal-auditor; the taste
+ *  system holds only preference and inspiration). */
+export const LEARNING_RULE = 'Send what you learn to the right place as you find it. An engine failure or defect (something broke, misfired, '
+  + 'was wrong or had to be repeated) or a best practice worth reusing: call record_harness_observation once per lesson, redacted (kind failure, '
+  + 'repeated_manual_step or successful_pattern), and the internal-auditor reviews it for an engine upgrade. Only Krish\'s preference or '
+  + 'inspiration goes to report_to_taste_engine, in his exact words; a defect never does. If one correction holds both, send each part to its '
+  + 'place. If the observation tool is not connected, put the lesson in your done report.'
+
 export interface WriteBackTarget { pieceId: string | null; week: string; day: string; step: string; decisions?: PieceDecisions | null; schedule?: boolean }
 
 const STEP = /^[a-z][a-z0-9_-]{0,40}$/
@@ -80,6 +95,8 @@ export function writeBack(t: WriteBackTarget): string {
     + (t.pieceId ? `5. ${APPROVAL_RULE} The script: board_session.py ${cli} approve lock|scripts (docs/PUBLISH_BOARDS.md, "His typed approval")\n` : '')
     + `${t.pieceId ? 6 : 5}. ${t.schedule ? WALLS_SCHEDULE : WALLS}\n`
     + `${t.pieceId ? 7 : 6}. ${CLOSE_LOOP}\n`
+    + `${t.pieceId ? 8 : 7}. ${ROLES}\n`
+    + `${t.pieceId ? 9 : 8}. ${LEARNING_RULE}\n`
     + 'Nothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, '
     + 'and the script uses the engine key this machine already holds.'
 }

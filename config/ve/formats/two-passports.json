@@ -29,7 +29,6 @@
   "qc": {
     "change_density_min": 0.75,
     "longest_still_s": 3,
-    "layout_types_per_min_tall": 1,
     "caption_ocr_min": 0.98
   },
   "fps": 30,

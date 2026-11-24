@@ -3239,6 +3239,8 @@ What every prompt the board copies out says about reporting back, and what the b
 - `const WALLS_SCHEDULE`
 - `const CLOSE_LOOP`
 - `const APPROVAL_RULE`
+- `const ROLES`
+- `const LEARNING_RULE`
 - `interface WriteBackTarget`
 - `function stepKey(raw: string | null | undefined): string`
 - `function writeBack(t: WriteBackTarget): string`
@@ -4909,6 +4911,9 @@ Run a Vercel serverless handler locally against the real environment.
 ### `apps/renderer/src/engine/FormatMaster.tsx`
 
 - `function backdropFocus(beats: readonly EngineBeat[], beat: EngineBeat, frame: number): number`
+- `function anchorScrim(staging: { region: Box } | undefined, beat: EngineBeat, mode: string | undefined, tokens: EngineRe…`
+- `function realImage(object: EngineObject | undefined): boolean`
+- `function anchorSlots(uses: readonly string[], isProp: (id: string) => boolean, staging: { region: Box; props?: Box[] | …`
 - `function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean })`
 - `const FACE_LIFT`
 - `function faceLift(aspect: string, windowed: number): number`
@@ -4938,7 +4943,7 @@ Run a Vercel serverless handler locally against the real environment.
 - `type Page = EngineRenderProps['captions'][number]`
 - `type Aspect = EngineRenderProps['aspect']`
 - `type Box = { left: number; top: number; width: number; height: number }`
-- `const REGIONS: Record<Aspect, { lower: Box; upper: Box; centre: Box }>`
+- `const REGIONS: Record<Aspect, { lower: Box; upper: Box; centre: Box; seam: Box; chin: Box }>`
 - `function band(props: Pick<EngineRenderProps, 'aspect' | 'captionPlacement'>): Box`
 - `const scale = (aspect: Aspect) =>`
 - `const F`
@@ -5072,6 +5077,12 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 - `function statementLines(aspect: EngineRenderProps['aspect'], tagline: string = ENDING_TAGLINE): string[]`
 - `function endingBandLayout(props: Pick<EngineRenderProps, 'aspect' | 'brand' | 'series' | 'ending'>)`
 - `function endingBandModel(props: EngineRenderProps, frame: number)`
+- `const STING_CLOSE`
+- `const CAP_HEIGHT`
+- `const STING_CLOSE_SETTLED`
+- `function stingCloseFrame(aspect: EngineRenderProps['aspect'], since: number): number`
+- `function stingCloseModel(props: EngineRenderProps, frame: number)`
+- `function StingClose({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
 - `function EndingBand({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
 
 ### `apps/renderer/src/engine/chrome/LeadCaption.tsx`
@@ -5136,6 +5147,13 @@ An off day wears no tag, however its label is spelled (Ruling, Krish, 2026-11-18
 - `function drift(frame: number, fromFrame: number, toFrame: number, pct: number = MOTION.driftPct): number`
 - `function onTwos(frame: number, fromFrame: number): number`
 - `function typingProgress(frame: number, cue: EngineEvent, durationFrames: number, leadFrames: number): number`
+
+### `apps/renderer/src/engine/depth/DepthLayer.tsx`
+
+- `type DepthItem`
+- `function behind(item: DepthItem): boolean`
+- `function liveItems(items: readonly DepthItem[] | undefined, frame: number, back: boolean): DepthItem[]`
+- `function DepthLayer({ items, frame, tokens, width, height, back }: { items: readonly DepthItem[]; frame: number; tokens…`
 
 ### `apps/renderer/src/engine/devices/agent_swarm/index.tsx`
 
@@ -5390,6 +5408,12 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 - `function kineticLayout(box: Box, text: string, unit: string, producerLabel: string, aspect: DeviceProps['aspect'], ghos…`
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
 
+### `apps/renderer/src/engine/devices/kinetic_stat/money.ts`
+
+A sourced amount as a viewer reads it: 195 "THOUSAND DOLLARS" is "$195,000", never "195" over a unit line (the
+
+- `function formatAmount(value: number, unit: string): { text: string; unit: string }`
+
 ### `apps/renderer/src/engine/devices/kinetic_stat/schema.ts`
 
 - `const ParamsSchema`
@@ -5476,11 +5500,12 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 
 ### `apps/renderer/src/engine/devices/marquee/index.tsx`
 
-- `function Device({ object, events, tokens, frame }: DeviceProps)`
+- `function Device(props: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/marquee/schema.ts`
 
 - `const ParamsSchema`
+- `const TAPE`
 
 ### `apps/renderer/src/engine/devices/marquee/state.ts`
 
@@ -5550,6 +5575,7 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 
 ### `apps/renderer/src/engine/devices/photo_plate/index.tsx`
 
+- `const FRAMED_SOURCE`
 - `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/photo_plate/schema.ts`
@@ -5561,6 +5587,7 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 - `function coverCrop(picture: Picture, box: Size, focus = CENTRE, push = 0, zoom = 1): Box`
 - `function photoPlateCrop(box: Size, state: ReturnType<typeof photoPlateState>): Box`
 - `function photoPlateState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
+- `const LOOP`
 
 ### `apps/renderer/src/engine/devices/pixel_stage/index.tsx`
 
@@ -5854,21 +5881,27 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 ### `apps/renderer/src/engine/devices/unit_field/grid.tsx`
 
 - `function dotGridPosition(index: number, columns: number, pitch = 64)`
-- `function UnitMark({ kind, weight, colour, soft }: { kind: 'dot' | 'block'; weight: number; colour: string; soft: string…`
+- `const BADGE`
+- `const BADGE_PITCH`
+- `function badgeGridPosition(index: number, columns: number)`
+- `function UnitMark({ kind, weight, colour, soft, stripe = 0, stripeColour, shadow }: { kind: 'dot' | 'block' | 'badge'; …`
 
 ### `apps/renderer/src/engine/devices/unit_field/index.tsx`
 
 - `export { dotGridPosition, UnitMark } from './grid'`
-- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+- `const BOARD`
+- `function Device(props: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/unit_field/schema.ts`
 
 - `const ParamsSchema`
+- `const PLANE`
 
 ### `apps/renderer/src/engine/devices/unit_field/state.ts`
 
 - `const CHANGE_FRAMES`
 - `const COPY_STEP_FRAMES`
+- `function scatterRank(ids: readonly number[], total: number): number[]`
 - `function unitFieldState(object: EngineObject, events: readonly EngineEvent[], frame: number)`
 
 ### `apps/renderer/src/engine/devices/upload_flood/hatch.ts`
@@ -5888,7 +5921,8 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 
 ### `apps/renderer/src/engine/devices/video_wall/index.tsx`
 
-- `function Device({ object, events, box, tokens, aspect, frame }: DeviceProps)`
+- `const TILES`
+- `function Device(props: DeviceProps)`
 
 ### `apps/renderer/src/engine/devices/video_wall/schema.ts`
 
@@ -5935,7 +5969,16 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 
 ### `apps/renderer/src/engine/kit/Scribble.tsx`
 
-- `function Scribble({ d, colour, tokens, sinceFrames, exiting = false }: { d: string; colour: 'cream' | 'mint'; tokens: E…`
+- `function Scribble({ d, colour, tokens, sinceFrames, exiting = false }: { d: string; colour: 'cream' | 'mint' | 'channel…`
+
+### `apps/renderer/src/engine/kit/accentKit.ts`
+
+- `type AccentRole = 'big_moment' | 'gradient' | 'duotone_cutout'`
+- `const ACCENT_COLOURS`
+- `const ACCENT_ROLES`
+- `function accentKit(seriesDay: boolean)`
+- `function accentGradient(name: 'moment' | 'title', seriesDay: boolean): string | null`
+- `function duotoneEmber(seriesDay: boolean): Array<{ colour: string; at: number }> | null`
 
 ### `apps/renderer/src/engine/kit/beatMotion.ts`
 
@@ -5958,6 +6001,21 @@ The hand-drawn geometry is the shared move's geometry, used by SVG and canvas al
 - `interface Camera`
 - `class Cam`
 - `function lerpCam(a: Camera, b: Camera, t: number): Cam`
+
+### `apps/renderer/src/engine/kit/depth.ts`
+
+- `const IN_WORLD`
+- `const ANTON_CAP`
+- `const CHAPTER_ARRANGEMENTS`
+- `type ChapterArrangement = typeof CHAPTER_ARRANGEMENTS[number]`
+- `type Head`
+- `type InWorld`
+- `function inWorldLayout(text: string, width: number, height: number, head: Head): InWorld`
+- `function inWorldShare(text: string, width: number, height: number): number`
+- `function slam(frame: number, at: number, to: number): { scale: number; opacity: number }`
+- `type ChapterPlace`
+- `function chapterPlace(arrangement: ChapterArrangement, width: number, height: number, head: Head): ChapterPlace`
+- `function titleBox(width: number, height: number, head: Head): Box`
 
 ### `apps/renderer/src/engine/kit/flags.tsx`
 
@@ -6076,11 +6134,14 @@ Direct port of ref/H/build.py: eight unknowns, h22 fixed at one.
 - `const EngineLayoutSchema`
 - `type EngineLayout = z.infer<typeof EngineLayoutSchema>`
 - `const MAX_GROW`
+- `const GRAMMAR_GROW`
 - `const isRegion = (box: Box): boolean =>`
+- `const regionGrow = (box: Box): number =>`
 - `const markRegion`
+- `const fillsWidth = (box: Box): boolean =>`
 - `function freeRegion(aspect: Aspect, placement: Placement, themed: boolean): Box`
 - `function layoutSlots(layout: EngineLayout | undefined, aspect: Aspect, placement: Placement, themed: boolean, count: nu…`
-- `function regionSlots(region: Box, count: number): Box[]`
+- `function regionSlots(region: Box, count: number, grow: number = MAX_GROW, fill = false): Box[]`
 
 ### `apps/renderer/src/engine/kit/lock.ts`
 
@@ -6190,8 +6251,8 @@ Copied from config/ve/design-lock.json; kit.test.ts prevents drift.
 - `const isStaging = (mode: string | undefined, aspect?: string): mode is Staging =>`
 - `interface StagingGeometry`
 - `const PILLAR_TAKE_WIDTH`
-- `function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placement, themed: boolean): StagingGeometry`
-- `function staged(beat: { layout: string; plate?: { source: string } | undefined }): boolean`
+- `function stagingGeometry(mode: Staging, aspect: Aspect, placement: Placement, themed: boolean, cutout = false): Staging…`
+- `function staged(beat: { layout: string; plate?: { source: string } | undefined; shot?: string | undefined }, grammar?: …`
 - `function trayRise(frame: number, from: number): { scale: number; ty: number; opacity: number }`
 - `function boxStyle(box: Box): CSSProperties`
 
@@ -6303,6 +6364,8 @@ Spot inks, paper and shadow. All still colour values live here, including device
 - `type LockupGeometry`
 - `function lockupGeometry(words: TitleWord[], width: number, height: number, aspect: TitleMomentProps['aspect'], wordmark…`
 - `function lockupOpacity(frame: number, fromFrame: number, toFrame: number): number`
+- `function inPanel(panel: Box | undefined, fullFrom: number | undefined, frame: number): panel is Box`
+- `function behindTile(width: number, aspect: TitleMomentProps['aspect'], wordmark?: TitleImage): { width: number; height:…`
 - `function TitleMoment(props: TitleMomentProps): JSX.Element | null`
 
 ### `apps/renderer/src/engine/transport.ts`
@@ -6847,6 +6910,8 @@ Artifact-bound user confirmation references.
 - `const VE_NOTHING_BEFORE_HOOK`
 - `const VeAspectSchema`
 - `const VeLayoutSchema`
+- `const VE_SHOTS`
+- `const VE_STAGING_MODES`
 - `const VeRoleSchema`
 - `const VeVerbSchema`
 - `const VeTransitionSchema`

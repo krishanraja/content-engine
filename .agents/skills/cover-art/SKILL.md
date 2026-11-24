@@ -81,7 +81,8 @@ account type matches; ask him once if it fits neither.
    scene); copy them into the card's worktree; write one `ve card` of kind `cover` (`scripts/velib/cards.py`; fields:
    `channel`, `photos`, `date`, `references`) and dispatch it to Codex (`python scripts/ve.py dispatch <card> --wait`).
 4. **Check it yourself:** look at every file at full size, rerun `channel_safe.py`, and confirm no photo edge shows.
-   Codex's own report is never proof.
+   Codex's own report is never proof. Then the antislop PASS/FAIL report (`.agents/skills/antislop/ADAPTER.md` first, then the skills it names) on each file: fix each FAIL no house rule
+   overrules.
 5. **Separate critic:** the `thumbnail-critic` agent, given each file's full sha256.
 6. **His pick:** send him the options (`SendUserFile`) and record his choice in his own words. Report his words on the
    design to `report_to_taste_engine`.

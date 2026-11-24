@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { createHash } from 'node:crypto'
 import { withApprovals } from './_approvals'
 import { buildView, type ViewInputs } from '../../apps/control-plane/api/board/_view'
-import { WALLS, WRITE_BACK_HEAD, attachOverlay, stepKey, withWriteBack, writeBack } from '../../apps/control-plane/api/board/_writeBack'
+import { LEARNING_RULE, ROLES, WALLS, WRITE_BACK_HEAD, attachOverlay, stepKey, withWriteBack, writeBack } from '../../apps/control-plane/api/board/_writeBack'
 import { StoreError, addText, confirmFile, listing, parseReport, parseScope, writerOf, type StoreDb } from '../../apps/control-plane/api/_pieceStore'
 import { createSessionsHandler } from '../../apps/control-plane/api/content-ideas/sessions'
 
@@ -33,6 +33,9 @@ describe('every copied prompt carries how to report back, with no key in it', ()
         expect(a.prompt).toContain(d.piece_id ? `piece_id ${d.piece_id}` : `week ${WEEK} and day ${d.day}`)
         expect(a.prompt).toMatch(/report_board_session/)
         expect(a.prompt).toMatch(/scripts\/post-pack\/board_session\.py/)
+        // Ruling (Krish, 2026-11-23): every session prompt says who makes what and where a lesson goes.
+        expect(a.prompt).toContain(ROLES)
+        expect(a.prompt).toContain(LEARNING_RULE)
         expect(a.prompt).not.toMatch(/Bearer|ENGINE_OPERATOR_TOKEN|hmcp1_|eyJ[A-Za-z0-9]/)
       }
       if (d.path) {
@@ -58,6 +61,8 @@ describe('every copied prompt carries how to report back, with no key in it', ()
     // The walls ride in every copied prompt (Ruling, Krish, 2026-11-11): the one place, the archive, and only his Approve places an idea.
     expect(writeBack({ pieceId: MON, week: WEEK, day: 'mon', step: 'board' })).toContain(WALLS)
     expect(WALLS).toMatch(/only place to put the work[\s\S]*retired and redirect here[\s\S]*Never post or publish[\s\S]*only Krish's Approve places it/)
+    expect(ROLES).toMatch(/Codex generates the visual assets[\s\S]*Claude writes the words[\s\S]*arbitrates the standards[\s\S]*Codex's own report is never proof/)
+    expect(LEARNING_RULE).toMatch(/record_harness_observation[\s\S]*internal-auditor[\s\S]*Only Krish's preference or inspiration goes to report_to_taste_engine[\s\S]*a defect never does/)
   })
 })
 

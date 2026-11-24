@@ -17,6 +17,59 @@
     "answer": "mint marks the answer, the brand and the next action only",
     "type_on_colour": "type on a colour block is always ink"
   },
+  "accent_kit": {
+    "ruled": "Krish approved on 2026-11-20 (the polish board): ember, ember_deep, plum, plum_deep and peach join the brand kit, scoped to big moments, gradients and duotone cut-outs on Monday, Wednesday and Friday only; off days are unchanged (mint, never coral).",
+    "colours": {
+      "ember": "#E2551F",
+      "ember_deep": "#B8321C",
+      "plum": "#3B1232",
+      "plum_deep": "#1E0918",
+      "peach": "#FFB48F",
+      "peach_light": "#FFE3D1"
+    },
+    "roles": {
+      "big_moment": "the ground and the number of a full-frame moment: plum Anton on the moment gradient, at most 2 s, at most once a cut",
+      "gradient": "the moment gradient and the title variant below, nothing else",
+      "duotone_cutout": "a person or object cut out of a story's photo, its luminance mapped through duotone_ember; never his face in a cut (subject-lift owns that)"
+    },
+    "role_keys": {
+      "ground": "big_moment",
+      "gradient": "gradient",
+      "duotone": "duotone_cutout"
+    },
+    "days": [
+      "monday",
+      "wednesday",
+      "friday"
+    ],
+    "off_days": "unchanged: mint and the house tones, never an accent colour (config/brand-palette.json colour.off)",
+    "gradients": {
+      "moment": [
+        ["plum_deep", 0],
+        ["plum", 12],
+        ["ember_deep", 30],
+        ["#FF6A4D", 46],
+        ["ember", 62],
+        ["#8E2A22", 82],
+        ["plum_deep", 100]
+      ],
+      "moment_glow": "a 35% peach radial at the number's height, and grain 0.09",
+      "title": [
+        ["#FF7A52", 0],
+        ["#FF6A4D", 22],
+        ["ember", 50],
+        ["#8E2A22", 74],
+        ["plum", 90],
+        ["plum_deep", 100]
+      ]
+    },
+    "duotone_ember": [
+      ["#2A0C24", 0],
+      ["ember_deep", 45],
+      ["#FF8A5C", 80],
+      ["peach_light", 100]
+    ]
+  },
   "type_roles": {
     "display": "Anton (headlines, single big numbers)",
     "structure": "Archivo (structure, quoted answers, captions at 900 w112)",
