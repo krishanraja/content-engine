@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { guardCronRoute } from '../_auth.js'
 import { supabase } from '../_supabase.js'
 import { fetchPoolDays, poolConfigured } from '../_pool.js'
-import { onTeardownBeat, poolCategoryOffBeat } from '../_beat.js'
+import { inFocusSector, onTeardownBeat, poolCategoryOffBeat } from '../_beat.js'
 import { purgeBoundary } from '../_weeks.js'
 import { withContentRun } from '../_runs.js'
 import { recordObservations, type ObservationInput } from '../_observations.js'
@@ -123,11 +123,14 @@ async function handler(req: VercelRequest, res: VercelResponse) {
     for (const s of stories) {
       const titleNorm = norm(s.headline)
       if ((s.url && seenUrls.has(s.url)) || seenTitles.has(titleNorm)) { observe(s, false, 'duplicate'); continue }
-      // The pool's own governance and security lanes are off the beat whatever
-      // the headline says (Ruling, Krish, 2026-11-24: his focus sectors, "as
-      // opposed to governance, data breaches etc."; config/beat.json
-      // pool_categories_off_beat). Logged in trend_observations like any drop.
-      if (poolCategoryOffBeat(s.category)) { offBeat++; observe(s, false, 'off_beat'); continue }
+      // The pool's own governance and security lanes are off the beat unless the
+      // headline has a focus-sector angle (Ruling, Krish, 2026-11-24: his focus
+      // sectors, "as opposed to governance, data breaches etc."; config/beat.json
+      // pool_categories_off_beat). The pool files copyright and licensing rows
+      // under governance, and those stay on the beat, so the lane alone never
+      // drops a music, film or creator story; the headline gate below still
+      // reads it. Logged in trend_observations like any drop.
+      if (poolCategoryOffBeat(s.category) && !inFocusSector(s.headline)) { offBeat++; observe(s, false, 'off_beat'); continue }
       // `say` is the pool's one-line reading of the story, which is the number
       // sentence the gate's middle tier is built to be rescued by.
       if (!onTeardownBeat(s.headline, s.say)) { offBeat++; observe(s, false, 'off_beat'); continue }

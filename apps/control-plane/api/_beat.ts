@@ -141,7 +141,8 @@ export function neverBeat(headline: string): boolean {
 
 /** The CTRL pool's own lanes that are off the beat (config/beat.json
  *  pool_categories_off_beat: governance and security). feed/ingest drops a
- *  pool story in one of them as off_beat before it reads the headline. */
+ *  pool story in one of them as off_beat unless its headline is in a focus
+ *  sector (the pool files copyright and licensing under governance). */
 export function poolCategoryOffBeat(category: string | null | undefined): boolean {
   if (!category) return false
   return (beat.pool_categories_off_beat as readonly string[]).includes(category.trim().toLowerCase())

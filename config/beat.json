@@ -56,12 +56,17 @@
       "keywords": ["media", "entertainment", "journalis*", "newsroom*", "magazine*", "broadcast*", "advertising creative"]
     },
     {
+      "sector": "creative_tools",
+      "label": "Creative tools and platforms",
+      "keywords": ["youtube", "tiktok", "instagram", "netflix", "disney", "midjourney", "runway", "sora", "veo", "elevenlabs", "adobe", "firefly", "canva", "pika", "kling", "audiobook*", "voice actor*"]
+    },
+    {
       "sector": "rights",
       "label": "Licensing and rights, the money of creative work",
       "keywords": ["licens*", "licence*", "copyright*", "residuals"]
     }
   ],
-  "focus_not_when": ["state of the art", "art of", "game changer", "game theory", "org chart", "flow chart", "white label", "white-label", "ai studio", "copilot studio", "chip design", "chip designs", "streaming tokens", "token streaming"],
+  "focus_not_when": ["state of the art", "art of", "game changer", "game theory", "org chart", "flow chart", "white label", "white-label", "ai studio", "copilot studio", "chip design", "chip designs", "streaming tokens", "token streaming", "cash runway", "financial runway", "runway to", "months of runway", "years of runway"],
   "avoid": [
     {
       "kind": "governance",
@@ -78,7 +83,7 @@
   "enterprise": {
     "label": "Enterprise productivity with no creative angle",
     "rule": "refused unless the same text carries a focus-sector keyword",
-    "keywords": ["enterprise", "enterprises", "productivity", "copilot", "rolls out", "rolled out", "roll out", "rolling out", "workplace", "office workers", "back office", "knowledge worker*"]
+    "keywords": ["enterprise", "enterprises", "productivity", "copilot", "workplace", "office workers", "back office", "knowledge worker*"]
   },
   "pool_categories_off_beat": ["governance", "security"]
 }

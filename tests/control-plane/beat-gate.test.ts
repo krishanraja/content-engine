@@ -143,6 +143,23 @@ describe('the creative beat (config/beat.json)', () => {
     expect(onTeardownBeat('Authors win copyright case against AI lab')).toBe(true)
   })
 
+  it('keeps a creative tool or platform launch, and a rollout is not enterprise by itself', () => {
+    for (const headline of [
+      'Adobe rolls out Firefly Video to Premiere Pro',
+      'Midjourney rolls out its first video model',
+      'ElevenLabs rolls out voice cloning for audiobooks',
+      'Midjourney launches V8',
+      'Runway unveils Gen-5',
+      'OpenAI releases Sora 3',
+      'Google debuts Veo 4 for YouTube Shorts',
+    ]) {
+      expect(onTeardownBeat(headline), headline).toBe(true)
+    }
+    // A finance runway is not the video tool.
+    expect(inFocusSector('Lab launches with 18 months of runway')).toBe(false)
+    expect(onTeardownBeat('Lab launches with 18 months of runway')).toBe(false)
+  })
+
   it('drops the pool lanes that are off the beat', () => {
     expect(poolCategoryOffBeat('governance')).toBe(true)
     expect(poolCategoryOffBeat('security')).toBe(true)

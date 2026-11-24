@@ -1063,6 +1063,17 @@ class OffBeatTest(unittest.TestCase):
         self.assertIsNone(ic.off_beat('AI and the job security of call centre staff'))
         self.assertIsNotNone(ic.off_beat('A state of the art model and the new AI policy'))
 
+    def test_a_passing_focus_word_in_the_body_does_not_rescue_the_topic(self):
+        # The angle is read from the topic alone: a so-what that mentions design or media in passing keeps it refused.
+        governance = main_option(pitch={'question': 'EU AI Act deadline: what changes on 2 August'},
+                                 so_what='Compliance teams are rewriting their product design docs before the deadline.')
+        breach = {'id': 'breach', 'title': 'Data breach at an AI firm exposes 2m users',
+                  'hook': 'Millions of records.', 'idea': 'The breach hit users of a social media app.'}
+        found = self.codes(self.board(governance, off=[breach]))
+        self.assertEqual([f['ref'] for f in found], ['mon-1', 'off-tue-breach'])
+        self.assertIsNotNone(ic.off_beat('EU AI Act deadline: what changes on 2 August'))
+        self.assertIsNotNone(ic.off_beat('Data breach at an AI firm exposes 2m users'))
+
     def test_only_from_the_beat_date_and_never_the_weekly_good_news(self):
         ideas = self.board(main_option(pitch={'question': 'What does the EU AI Act vote change?'}))
         self.assertEqual(self.codes(ideas, '2026-11-23'), [])

@@ -3,9 +3,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 // feed/ingest and the beat (Ruling, Krish, 2026-11-24: the engine brings stories
 // in his focus sectors and not governance, regulation, security or data
 // breaches). The CTRL pool files every story in one of nine lanes, two of them
-// governance and security; a story in either lane is dropped as off_beat before
-// its headline is read, and lands in trend_observations with that reason like
-// every other drop. The database, the pool and the archive are fakes that
+// governance and security; a story in either lane with no focus-sector angle in
+// its headline is dropped as off_beat, and lands in trend_observations with that
+// reason like every other drop. A copyright or licensing story in a creative
+// sector, which the pool files under governance, stays on the beat. The database, the pool and the archive are fakes that
 // record what they are handed. Every headline is invented.
 
 type Row = Record<string, any>
@@ -71,11 +72,12 @@ beforeEach(() => {
 })
 
 describe('feed/ingest drops the pool lanes that are off the beat', () => {
-  it('drops a governance or security story as off_beat, whatever its headline says', async () => {
+  it('drops a governance or security story with no focus-sector angle as off_beat', async () => {
     pool = [
-      // A headline the gate would keep: the lane alone drops it.
-      story('Record labels price AI licences per song', 'governance', 1),
-      story('Studio royalties rise as AI dubbing spreads', 'security', 2),
+      // Headlines with no avoid word and no event word: the headline gate would
+      // keep them, so the lane alone drops them.
+      story('New AI oversight board formed', 'governance', 1),
+      story('Banks weigh AI fraud costs per customer', 'security', 2),
       story('Artist releases AI album', 'product', 3),
       story('Label partners with Suno', 'economics', 4),
     ]
@@ -85,6 +87,20 @@ describe('feed/ingest drops the pool lanes that are off the beat', () => {
     expect(inserted.map(x => x.idea)).toEqual(['Artist releases AI album', 'Label partners with Suno'])
     const dropped = observed.filter(o => !o.surfaced)
     expect(dropped.map(o => [o.category, o.dropReason])).toEqual([['governance', 'off_beat'], ['security', 'off_beat']])
+  })
+
+  it('keeps a focus-sector story the pool filed under governance or security', async () => {
+    pool = [
+      // Licensing is the money of creative work: the pool files it under
+      // governance, and the beat keeps it.
+      story('Record labels price AI licences per song', 'governance', 1),
+      story('Studio royalties rise as AI dubbing spreads', 'security', 2),
+      // A focus word does not rescue an avoid-list headline: the gate still reads it.
+      story('Music streaming data breach exposes 2m users', 'security', 3),
+    ]
+    const r = await run()
+    expect(r.body.off_beat).toBe(1)
+    expect(inserted.map(x => x.idea)).toEqual(['Record labels price AI licences per song', 'Studio royalties rise as AI dubbing spreads'])
   })
 
   it('still reads the headline in every other lane', async () => {

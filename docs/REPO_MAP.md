@@ -375,6 +375,15 @@ _beat — the MYMU: Teardown beat gate (G0).
 - `const OFF_BEAT`
 - `const NEVER_BEAT`
 - `const ON_BEAT`
+- `function keywordRegex(rows: readonly BeatRow[], flags = 'i'): RegExp`
+- `const AVOID_BEAT`
+- `const FOCUS_BEAT`
+- `const ENTERPRISE_BEAT`
+- `function onAvoidList(text: string): boolean`
+- `function inFocusSector(text: string): boolean`
+- `function neverBeat(headline: string): boolean`
+- `function poolCategoryOffBeat(category: string | null | undefined): boolean`
+- `function beatPromptBlock(): string`
 - `function onTeardownBeat(headline: string, numberSentence?: string | null): boolean`
 
 ### `apps/control-plane/api/_briefNotes.ts`
@@ -561,6 +570,7 @@ How a creator's post is identified, and how close to it Krish's version is
 - `interface CreatorMove`
 - `interface CreatorYieldRow`
 - `interface CreatorMoveCtx`
+- `function buildSystem(ctx: CreatorMoveCtx, creators: CreatorRow[]): string`
 - `async function extractCreatorMoves( posts: CreatorPost[], ctx: CreatorMoveCtx, ): Promise<CreatorMove[]>`
 - `function knownPillar(id: string | null, pillars: { id: string }[]): string | null`
 

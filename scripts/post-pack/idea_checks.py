@@ -1917,11 +1917,12 @@ BEAT_FOCUS = keyword_pattern([k for row in BEAT['focus_sectors'] for k in row.ge
 BEAT_FOCUS_EXCEPT = keyword_pattern(BEAT.get('focus_not_when'))
 
 
-def off_beat(topic, text=''):
-    """(what the avoid list calls it, the word that matched) when a topic is on the beat's avoid list and neither it nor
-    the option's other words carry a focus-sector angle, else None. The exception phrases are read first: 'job security'
-    is not a security story and 'state of the art' is not an art story."""
-    if BEAT_FOCUS.search(BEAT_FOCUS_EXCEPT.sub(' ', f'{topic or ""} {text or ""}')):
+def off_beat(topic):
+    """(what the avoid list calls it, the word that matched) when a topic is on the beat's avoid list and carries no
+    focus-sector angle of its own, else None. Only the topic is read, never the option's whole body: one passing
+    'design' or 'media' in a so-what would otherwise rescue a governance or breach option. The exception phrases are
+    read first: 'job security' is not a security story and 'state of the art' is not an art story."""
+    if BEAT_FOCUS.search(BEAT_FOCUS_EXCEPT.sub(' ', str(topic or ''))):
         return None
     bare = BEAT_AVOID_EXCEPT.sub(' ', str(topic or ''))
     for label, pattern in BEAT_AVOID:
@@ -1933,7 +1934,7 @@ def off_beat(topic, text=''):
 
 def option_topic(o, main):
     """What an option is about, in its own words: its title and hook, its plain question and headline, and its story's
-    first sentence. The rest of its words may carry a focus-sector angle but never put it on the avoid list."""
+    first sentence. Both the avoid list and the focus-sector angle are read here and nowhere else in the option."""
     pitch = o.get('pitch') if isinstance(o.get('pitch'), dict) else {}
     parts = [o.get('title'), o.get('hook')]
     if main:
@@ -1951,7 +1952,7 @@ def offbeat_findings(ideas, week):
     for ref, day, main, o in board_raw(ideas):
         if o.get('weekly'):
             continue
-        hit = off_beat(option_topic(o, main), option_text_main(o) if main else option_text_off(o))
+        hit = off_beat(option_topic(o, main))
         if hit:
             label = f'{ref} ({str(o.get("id") or "")[:8]})' if main else ref
             out.append({'code': 'off_beat', 'ref': ref, 'line': f'off_beat: {label} is about "{hit[1]}" ({hit[0].lower()}) with no '
