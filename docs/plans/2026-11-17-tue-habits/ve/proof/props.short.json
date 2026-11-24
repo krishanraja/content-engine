@@ -1,0 +1,435 @@
+{
+  "pieceId": "701a2c55-7400-4dc8-99cb-d6001147ae16",
+  "cutId": "short",
+  "format": "voice-led-pictures",
+  "aspect": "9:16",
+  "fps": 30,
+  "durationFrames": 240,
+  "tokens": {
+    "ink": "#0C1512",
+    "inkDeep": "#070D0B",
+    "inkSoft": "#16221D",
+    "cream": "#F4EFE4",
+    "mint": "#7EF0C0",
+    "channel": "#7EF0C0"
+  },
+  "series": {
+    "label": "off.day",
+    "day": "Thursday",
+    "promise": "makeyourmindup.ai",
+    "site": "makeyourmindup.ai"
+  },
+  "brand": {
+    "mark": {
+      "src": "/home/user/content-engine/.scratch/ve/habits/assets/src/assets/brand/makeyourmindup/makeyourmindup-mark.png",
+      "pixelWidth": 831,
+      "pixelHeight": 740
+    },
+    "logo": {
+      "src": "/home/user/content-engine/.scratch/ve/habits/assets/src/assets/brand/makeyourmindup/makeyourmindup-horizontal.png",
+      "pixelWidth": 1200,
+      "pixelHeight": 141
+    },
+    "stacked": {
+      "src": "/home/user/content-engine/.scratch/ve/habits/assets/src/assets/brand/makeyourmindup/makeyourmindup-stacked.png",
+      "pixelWidth": 2415,
+      "pixelHeight": 740
+    }
+  },
+  "bodyLogo": false,
+  "segments": [],
+  "audio": {
+    "stem": {
+      "src": "/home/user/content-engine/.scratch/ve/habits/assets/audio.short.wav",
+      "trimBeforeFrames": 1234
+    },
+    "sfx": []
+  },
+  "captions": [
+    {
+      "fromFrame": 0,
+      "toFrame": 16,
+      "words": [
+        {
+          "text": "skill",
+          "atFrame": 0
+        },
+        {
+          "text": "matters",
+          "atFrame": 0
+        },
+        {
+          "text": "the",
+          "atFrame": 0
+        },
+        {
+          "text": "most",
+          "atFrame": 3
+        },
+        {
+          "text": "right",
+          "atFrame": 9
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 16,
+      "toFrame": 66,
+      "words": [
+        {
+          "text": "now",
+          "atFrame": 16
+        },
+        {
+          "text": "and",
+          "atFrame": 28
+        },
+        {
+          "text": "71%",
+          "atFrame": 35
+        }
+      ],
+      "swipeIndex": 2
+    },
+    {
+      "fromFrame": 66,
+      "toFrame": 106,
+      "words": [
+        {
+          "text": "said",
+          "atFrame": 66
+        },
+        {
+          "text": "the",
+          "atFrame": 80
+        },
+        {
+          "text": "same",
+          "atFrame": 84
+        },
+        {
+          "text": "thing.",
+          "atFrame": 90
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 106,
+      "toFrame": 156,
+      "words": [
+        {
+          "text": "Accountability.",
+          "atFrame": 106
+        },
+        {
+          "text": "Check",
+          "atFrame": 134
+        },
+        {
+          "text": "the",
+          "atFrame": 139
+        },
+        {
+          "text": "AI's",
+          "atFrame": 146
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 156,
+      "toFrame": 196,
+      "words": [
+        {
+          "text": "work",
+          "atFrame": 156
+        },
+        {
+          "text": "and",
+          "atFrame": 162
+        },
+        {
+          "text": "overrule",
+          "atFrame": 177
+        }
+      ],
+      "swipeIndex": 2
+    },
+    {
+      "fromFrame": 196,
+      "toFrame": 222,
+      "words": [
+        {
+          "text": "it",
+          "atFrame": 196
+        },
+        {
+          "text": "when",
+          "atFrame": 200
+        },
+        {
+          "text": "it's",
+          "atFrame": 204
+        },
+        {
+          "text": "wrong.",
+          "atFrame": 212
+        }
+      ],
+      "swipeIndex": null
+    },
+    {
+      "fromFrame": 222,
+      "toFrame": 240,
+      "words": [
+        {
+          "text": "Then",
+          "atFrame": 222
+        },
+        {
+          "text": "they",
+          "atFrame": 228
+        },
+        {
+          "text": "asked",
+          "atFrame": 238
+        },
+        {
+          "text": "the",
+          "atFrame": 240
+        },
+        {
+          "text": "staff",
+          "atFrame": 240
+        }
+      ],
+      "swipeIndex": null
+    }
+  ],
+  "captionStyle": "house",
+  "captionTheme": "art-directed",
+  "beats": [
+    {
+      "id": "b12",
+      "role": "anchor",
+      "layout": "STAGE",
+      "fromFrame": 0,
+      "toFrame": 106,
+      "uses": [
+        "screen-ibm"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": true,
+      "plate": {
+        "source": "none"
+      },
+      "keyFrame": 66
+    },
+    {
+      "id": "b13a",
+      "role": "pivot",
+      "layout": "STAGE",
+      "fromFrame": 106,
+      "toFrame": 134,
+      "uses": [
+        "screen-accountable"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
+      "keyFrame": 128
+    },
+    {
+      "id": "b13",
+      "role": "bridge",
+      "layout": "STAGE",
+      "fromFrame": 134,
+      "toFrame": 222,
+      "uses": [
+        "screen-overrule"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
+      "keyFrame": 204
+    },
+    {
+      "id": "b14",
+      "role": "anchor",
+      "layout": "STAGE",
+      "fromFrame": 222,
+      "toFrame": 240,
+      "uses": [
+        "plate-b14"
+      ],
+      "transitionOut": "cut",
+      "sectionBeat": false,
+      "plate": {
+        "source": "none"
+      },
+      "keyFrame": 239
+    }
+  ],
+  "objects": [
+    {
+      "obj": "plate-b14",
+      "device": "photo_plate",
+      "meaning": "the generated picture on b14",
+      "fromFrame": 222,
+      "toFrame": 240,
+      "variants": {},
+      "params": {
+        "image": {
+          "src": "/home/user/content-engine/.scratch/ve/habits/assets/gen/b14-stampers.png",
+          "pixelWidth": 941,
+          "pixelHeight": 1672
+        },
+        "push": 0.06,
+        "generated": true,
+        "regions": {
+          "stamps": {
+            "x": 0.25,
+            "y": 0.4,
+            "w": 0.7,
+            "h": 0.35
+          }
+        }
+      }
+    },
+    {
+      "obj": "screen-ibm",
+      "device": "photo_plate",
+      "meaning": "IBM's own release, the 71% clause highlighted as he says it",
+      "fromFrame": 0,
+      "toFrame": 106,
+      "variants": {},
+      "params": {
+        "video": {
+          "src": "/home/user/content-engine/.scratch/ve/habits/assets/screens/b11-ibm.mp4",
+          "pixelWidth": 1080,
+          "pixelHeight": 1920,
+          "trimBeforeFrames": 45
+        },
+        "push": 0
+      }
+    },
+    {
+      "obj": "screen-accountable",
+      "device": "photo_plate",
+      "meaning": "IBM's clause knocked back as ACCOUNTABILITY slams in: the one skill 71% named",
+      "fromFrame": 106,
+      "toFrame": 134,
+      "variants": {},
+      "params": {
+        "video": {
+          "src": "/home/user/content-engine/.scratch/ve/habits/assets/screens/b13a-accountable.mp4",
+          "pixelWidth": 1080,
+          "pixelHeight": 1920,
+          "trimBeforeFrames": 0
+        },
+        "push": 0,
+        "generated": true
+      }
+    },
+    {
+      "obj": "screen-overrule",
+      "device": "photo_plate",
+      "meaning": "an AI's wrong figure struck out and overruled",
+      "fromFrame": 134,
+      "toFrame": 222,
+      "variants": {},
+      "params": {
+        "video": {
+          "src": "/home/user/content-engine/.scratch/ve/habits/assets/screens/b13-overrule.mp4",
+          "pixelWidth": 1080,
+          "pixelHeight": 1920,
+          "trimBeforeFrames": 0
+        },
+        "push": 0,
+        "generated": true
+      }
+    }
+  ],
+  "events": [
+    {
+      "id": "b12-0",
+      "obj": "screen-ibm",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 0
+    },
+    {
+      "id": "b13a-0",
+      "obj": "screen-accountable",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 106
+    },
+    {
+      "id": "b13-0",
+      "obj": "screen-overrule",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 134
+    },
+    {
+      "id": "b14-0",
+      "obj": "plate-b14",
+      "verb": "enter",
+      "toState": "visible",
+      "atFrame": 222
+    }
+  ],
+  "motion": {
+    "style": "swiss-kinetic-type",
+    "profile": {
+      "entrance": {
+        "kind": "slide",
+        "frames": 5,
+        "easing": "enter",
+        "distancePx": 48,
+        "overshootPct": 3
+      },
+      "stagger": {
+        "frames": 3,
+        "unit": "word"
+      },
+      "exitFrames": 5,
+      "onTwos": false,
+      "camera": {
+        "kind": "none",
+        "scaleTo": 1,
+        "dimOthers": false,
+        "easing": "hero"
+      },
+      "transition": "cut",
+      "typeReveal": {
+        "kind": "word"
+      },
+      "ground": {
+        "kind": "house",
+        "sweepFrames": 0,
+        "texture": "none"
+      },
+      "driftPct": 1,
+      "countFrames": 18,
+      "type": {
+        "font": "house",
+        "hero": true
+      },
+      "note": "type is the picture: the beat's key phrase (its text device's words, else the clause he is saying) set in Anton at the largest size the channel safe area takes, words sliding in on the six-column grid with the house enter bezier, stagger 3 frames; mint only as the fill behind the answer word; never scaled past 105%"
+    }
+  },
+  "ingredients": {
+    "energy": "high",
+    "transition": "cut",
+    "camera": "none",
+    "hits": false
+  }
+}

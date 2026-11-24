@@ -176,9 +176,15 @@ class SeriesSkinsTest(unittest.TestCase):
 
     def test_every_skin_is_drawn_on_every_series_day_tall_and_wide_with_nothing_on_the_words(self):
         drawn, refused, house = self.draw_every_skin(('tall', 'wide'))
-        self.assertEqual(refused, [])
+        # 18 Nov: the tall thumbnail's words keep clear of the Reel's caption and like rail (its safe box is
+        # x 72 to 880, y 270 to 1320). Memphis's shapes then leave the long title with logos too little room for its
+        # proof on the tall shape alone, so that piece moves on to the next skin and says why (Krish, 2026-11-05:
+        # "Yeah just move on automatically"). Any other refusal is a fault.
+        memphis = [f'memphis {day} tall (logos, long title)' for day in ('mon', 'wed', 'fri')]
+        self.assertEqual(sorted(r.split(':')[0] for r in refused), sorted(memphis))
+        self.assertTrue(all('"small_proof": true' in r for r in refused), refused)
         self.assertEqual(house, [], 'the plain Receipt draws every fixture on both thumbnails')
-        self.assertEqual(len(drawn), 54 * len(VARIANTS))
+        self.assertEqual(len(drawn), 54 * len(VARIANTS) - len(memphis))
 
     def test_every_skin_is_drawn_on_every_series_day_on_every_cover_shape_with_nothing_on_the_words(self):
         # Krish, 2026-11-05: "Skin the covers too". The five cover shapes, each in the closer thumbnail's design.
