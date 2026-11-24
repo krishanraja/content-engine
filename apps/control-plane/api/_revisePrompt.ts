@@ -74,7 +74,7 @@ export function buildReviseSystem(ctx: ReviseContext, r: Pick<ReviseRequest, 'va
   // to the house "hard verdict", which the under.the.hood mandate forbids.
   const mandate = ctx.mandate?.text?.trim()
   const mandateBlock = mandate
-    ? `=== THE MANDATE FOR ${ctx.mandate!.label.toUpperCase()} ===\n${mandate}\n\nThe mandate is the test this piece must pass. Keep the rewrite inside it. Where the voice notes disagree with the mandate about the question the piece asks, its structure or how it closes, the mandate wins. Krish's house rules win over both: every piece still ends with a dated prediction.`
+    ? `=== THE MANDATE FOR ${ctx.mandate!.label.toUpperCase()} ===\n${mandate}\n\nThe mandate is the test this piece must pass. Keep the rewrite inside it. Where the voice notes disagree with the mandate about the question the piece asks, its structure or how it closes, the mandate wins. Krish's house rules win over both: the piece makes no prediction, call, dated forecast, odds or confidence number.`
     : ''
   return [
     `You are Cleo, rewriting a draft for makeyourmindup in the voice below: founder-practitioner, two gears, compression${mandate ? '' : ', hard-verdict endings'}. An article and its title, subtitle and description speak as the publication, "we"; a video script he speaks keeps "I". The piece never names or describes its maker (house rule NO_NAME).`,
