@@ -488,13 +488,13 @@ export const BrandHouseStyleV1Schema = z.object({
     site: z.literal('makeyourmindup.ai'),
     // The lines around the why-ladder (Ruling, Krish, 2026-11-24: "the signature format is the 5 Whys; get rid of
     // everything that suggests predictions, calls, dated, odds or scores"): the kicker over the rungs on the page,
-    // the kicker over the landing on the page and the Short's landing card, and the cover's sticker. Optional, so a
+    // the kicker over the landing on the page and the Short's landing card. No cover sticker: socials carry no badges and
+    // stickers are not a default (look session, 24 Nov 2026). Optional, so a
     // theme a job pinned before 24 Nov 2026 (which has none of them) still parses; every reader falls back to the
     // live wording ("What this shows" for the landing kicker).
     whys_kicker: z.string().min(3).max(40).optional(),
     landing_kicker: z.string().min(3).max(40).optional(),
     question_kicker: z.string().min(3).max(40),
-    cover_whys_sticker: z.string().min(3).max(40).optional(),
     // Retired on 24 Nov 2026 with the call (same ruling): the live theme no longer carries them and nothing reads
     // them. Kept optional only so a theme a job pinned before then still parses and hashes as it did, as
     // thumbnail_call_sticker was on 15 Nov.
