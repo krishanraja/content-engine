@@ -227,9 +227,9 @@ From `.agents/skills/mindmake-video/stations/registry.json`; each station's inst
 | `claims` | v1 | active | Separate facts, inferences and judgments and bind consequential claims to evidence. | `packages/core/src/evidence.ts`, `packages/core/src/editorial.ts` |
 | `visual_plan` | v2 | active | Convert the approved argument into viewer-attention, camera, proof and fallback decisions. | `packages/core/src/visual-plan.ts`, `packages/core/src/art-director.ts` |
 | `assets` | v1 | active | Acquire and approve exact visual evidence, owned media and clearly labelled illustrations. | `packages/core/src/evidence.ts`, `packages/core/src/brand-assets.ts` |
-| `styleframes` | v1 | active | Show exact phone-size compositions before motion and full rendering consume production time. | `packages/core/src/visual-plan.ts`, `packages/core/src/virtual-camera.ts`, `packages/core/src/render-call.ts` |
+| `styleframes` | v1 | active | Show exact phone-size compositions before motion and full rendering consume production time. | `packages/core/src/visual-plan.ts`, `packages/core/src/virtual-camera.ts`, `packages/core/src/render-landing.ts` |
 | `animatic` | v1 | active | Test the timed visual argument, reading load and attention flow before final treatment. | `packages/core/src/visual-plan.ts` |
-| `treatment` | v1 | active | Compile the approved story into deterministic platform render manifests and treatment rules. | `packages/core/src/treatment.ts`, `packages/core/src/render-lineage-v2.ts`, `packages/core/src/render-call.ts` |
+| `treatment` | v1 | active | Compile the approved story into deterministic platform render manifests and treatment rules. | `packages/core/src/treatment.ts`, `packages/core/src/render-lineage-v2.ts`, `packages/core/src/render-landing.ts` |
 | `render` | v1 | active | Render only exact manifests into deterministic platform masters and measurable media outputs. | `packages/core/src/render-v2.ts`, `apps/renderer/src` |
 | `qa` | v1 | active | Independently test technical, editorial, brand, rights and lineage requirements on each master. | `packages/core/src/qa.ts` |
 | `package` | v1 | active | Bind approved masters, copy, covers, captions, ledgers and delivery settings into one artifact. | `packages/core/src/package.ts`, `packages/core/src/youtube.ts` |
@@ -5044,14 +5044,6 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 - `function cutHeight(captions: readonly Page[], aspect: EngineRenderProps['aspect']): number`
 - `function ArtDirectedCaption({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
 
-### `apps/renderer/src/engine/chrome/CallCard.tsx`
-
-- `interface CallCardProps`
-- `const ENDING_SAFE`
-- `function callCardLayout(aspect: EngineRenderProps['aspect'], statement: string)`
-- `function callCardModel(props: EngineRenderProps, frame: number)`
-- `function CallCard({ props, frame }: CallCardProps): React.ReactElement | null`
-
 ### `apps/renderer/src/engine/chrome/CaptionTrack.tsx`
 
 - `type CaptionPage = EngineRenderProps['captions'][number]`
@@ -5085,6 +5077,16 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 - `function StingClose({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
 - `function EndingBand({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
 
+### `apps/renderer/src/engine/chrome/LandingCard.tsx`
+
+- `interface LandingCardProps`
+- `const LANDING_KICKER`
+- `const ENDING_SAFE`
+- `function landingCardLayout(aspect: EngineRenderProps['aspect'], shows: string, openQuestion: string)`
+- `function landingBeatAt(props: EngineRenderProps, frame: number): LandingBeat | null`
+- `function landingCardModel(props: EngineRenderProps, frame: number)`
+- `function LandingCard({ props, frame }: LandingCardProps): React.ReactElement | null`
+
 ### `apps/renderer/src/engine/chrome/LeadCaption.tsx`
 
 - `interface LeadWord`
@@ -5107,6 +5109,16 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 
 - `export { REGIONS as THEME_REGION } from '../captions/kit'`
 - `function ThemedCaption({ props, theme, frame = 0 }: { props: EngineRenderProps; theme: CaptionThemeName; frame?: number…`
+
+### `apps/renderer/src/engine/chrome/WhyStep.tsx`
+
+- `interface WhyStepProps`
+- `const WHY_STEP_HOLD_S`
+- `type WhyStrength = NonNullable<EngineBeat['why']>['strength']`
+- `function whyStrengthMarker(strength: WhyStrength, ink: string): React.CSSProperties`
+- `const WHY_STRENGTH_WORDS: Record<WhyStrength, string>`
+- `function whyStepModel(props: EngineRenderProps, beat: EngineBeat, frame: number)`
+- `function WhyStep({ props, beat, frame }: WhyStepProps): React.ReactElement | null`
 
 ### `apps/renderer/src/engine/chrome/WordCaption.tsx`
 
@@ -6425,13 +6437,12 @@ JSON-value transport: escape values only; keys retain their original spelling.
 - `function houseStickerSize(text: string, sizePx: number = HOUSE.sticker.size, paddingX: number = HOUSE.sticker.paddingX,…`
 - `function houseShortStickerFrame(text: string, safe: HouseSafeZones)`
 - `function houseCaptionFrame(safe: HouseSafeZones, bounds?: { x: number; y: number; width: number }): { left: number; top…`
-- `function houseCallFrame(statement: string, safe: HouseSafeZones)`
+- `function houseLandingHeight(shows: string, openQuestion: string, width: number)`
+- `function houseLandingFrame(shows: string, openQuestion: string, safe: HouseSafeZones)`
 - `function houseBandInsets(safe: HouseSafeZones): { left: number; right: number }`
 - `function houseTickerCycleWidth(promise: string, day: string): number`
 - `function houseTickerOffset(promise: string, day: string, msSinceArrival: number): number`
 - `function houseSwipeIndex(text: string, emphasis: readonly string[]): number`
-- `function houseLastWordIndex(text: string): number`
-- `function houseDueLine(due: string, confidencePercent: number): { due: string; sure: string }`
 
 ### `apps/renderer/src/house/metrics.ts`
 
@@ -6539,12 +6550,12 @@ Fitting type into a box, as a pure function of a width measurer, so the
 - `function houseBandModel(branding: RuntimeBranding, cue: RuntimeBrandCue | undefined, safeZones: V2RenderProps['safeZone…`
 - `function houseCaptionModel(branding: RuntimeBranding, cue: RuntimeCaption, safeZones: V2RenderProps['safeZones'], bound…`
 - `function houseStickerModel(branding: RuntimeBranding, safeZones: V2RenderProps['safeZones'], atMs: number)`
-- `function houseCallModel(branding: RuntimeBranding, safeZones: V2RenderProps['safeZones'], atMs: number)`
+- `function houseLandingModel(branding: RuntimeBranding, safeZones: V2RenderProps['safeZones'], atMs: number)`
 - `function houseCaptionHidden(branding: RuntimeBranding, cue: RuntimeBrandCue | undefined, safeZones: V2RenderProps['safe…`
 - `function HouseMark({ branding, cue, resolve }: { branding: RuntimeBranding; cue: RuntimeBrandCue | undefined; resolve: …`
 - `function HouseCaption({ cue, branding, safeZones, bounds }: { cue: RuntimeCaption; branding: RuntimeBranding; safeZones…`
 - `function HouseSticker({ branding, safeZones, atMs }: { branding: RuntimeBranding; safeZones: V2RenderProps['safeZones']…`
-- `function HouseCall({ branding, safeZones, atMs }: { branding: RuntimeBranding; safeZones: V2RenderProps['safeZones']; a…`
+- `function HouseLanding({ branding, safeZones, atMs }: { branding: RuntimeBranding; safeZones: V2RenderProps['safeZones']…`
 - `function HouseBand({ branding, cue, safeZones, atMs, resolve }: { branding: RuntimeBranding; cue: RuntimeBrandCue | und…`
 
 ### `apps/renderer/src/v2/MindmakeStory.tsx`
@@ -6913,6 +6924,8 @@ Artifact-bound user confirmation references.
 - `const VE_SHOTS`
 - `const VE_STAGING_MODES`
 - `const VeRoleSchema`
+- `const VeWhyStepSchema`
+- `const VeLandingSchema`
 - `const VeVerbSchema`
 - `const VeTransitionSchema`
 - `const VeFinishSchema`
@@ -6928,7 +6941,6 @@ Artifact-bound user confirmation references.
 - `const VeAssetSchema`
 - `const VeAudioSchema`
 - `const VeApprovalSchema`
-- `const VeCallSchema`
 - `const VeReferenceSchema`
 - `const VeCharacterCueSchema`
 - `const VeCharacterSchema`
@@ -6937,6 +6949,8 @@ Artifact-bound user confirmation references.
 - `type ProductionSpecV2 = z.infer<typeof ProductionSpecV2Schema>`
 - `type VeBeat = z.infer<typeof VeBeatSchema>`
 - `type VeEvent = z.infer<typeof VeEventSchema>`
+- `type VeWhyStep = z.infer<typeof VeWhyStepSchema>`
+- `type VeLanding = z.infer<typeof VeLandingSchema>`
 
 ### `packages/contracts/src/series.ts`
 
@@ -7068,8 +7082,8 @@ Artifact-bound user confirmation references.
 - `const VisualRenderSourceV2Schema`
 - `const AudioOnlyRenderSourceV2Schema`
 - `const RenderSourceV2Schema`
-- `const RenderCallV1Schema`
-- `type RenderCallV1 = z.infer<typeof RenderCallV1Schema>`
+- `const RenderLandingV1Schema`
+- `type RenderLandingV1 = z.infer<typeof RenderLandingV1Schema>`
 - `const RenderManifestV2Schema`
 - `type RenderManifestV2 = z.infer<typeof RenderManifestV2Schema>`
 - `const DraftPackageV2Schema`
@@ -7413,7 +7427,7 @@ Where a finished video is filed: one folder per piece, whose name says the
 - `export * from './qa.js'`
 - `export * from './radar.js'`
 - `export * from './render.js'`
-- `export * from './render-call.js'`
+- `export * from './render-landing.js'`
 - `export * from './render-v2.js'`
 - `export * from './render-lineage-v2.js'`
 - `export * from './review-bindings.js'`
@@ -7627,12 +7641,12 @@ The producer supplies work. An independently provisioned reviewer signs evidence
 - `async function fetchRadarFeed(url: string, token: string): Promise<RadarFeedV1>`
 - `function sourceReferenceHash(value: string): string`
 
-### `packages/core/src/render-call.ts`
+### `packages/core/src/render-landing.ts`
 
-- `function drawsHouseCallV2(manifest: RenderManifestV2, theme: BrandThemeV1 | undefined): boolean`
-- `function renderCallFromBriefV2(brief: ProductionBriefV1, beatId: string): RenderCallV1`
-- `function renderCallIssuesV2(manifest: RenderManifestV2, theme: BrandThemeV1 | undefined, brief: ProductionBriefV1 | und…`
-- `async function boundRenderCallIssuesV2(manifest: RenderManifestV2, registry?: TreatmentRegistryV1): Promise<string[]>`
+- `function drawsHouseLandingV2(manifest: RenderManifestV2, theme: BrandThemeV1 | undefined): boolean`
+- `function renderLandingFromBriefV2(brief: ProductionBriefV1, beatId: string): RenderLandingV1`
+- `function renderLandingIssuesV2(manifest: RenderManifestV2, theme: BrandThemeV1 | undefined, brief: ProductionBriefV1 | …`
+- `async function boundRenderLandingIssuesV2(manifest: RenderManifestV2, registry?: TreatmentRegistryV1): Promise<string[]>`
 
 ### `packages/core/src/render-lineage-v2.ts`
 

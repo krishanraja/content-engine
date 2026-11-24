@@ -10,7 +10,7 @@ status: active
 Compile approved editorial and visual decisions into exact platform manifests. Own parameter choices, not new story ideas.
 
 ## Inputs
-Use the approved animatic, active treatment preset, exact brand theme, captions, assets, crop decisions and platform contracts. For a Short in the makeyourmindup house style on a live subchannel, also the piece's call from the job's approved production brief: `studio v2 call --job <job> --beat <beat_id>` prints it ready to paste as the manifest's `call`.
+Use the approved animatic, active treatment preset, exact brand theme, captions, assets, crop decisions and platform contracts. For a Short in the makeyourmindup house style on a live subchannel that ends on its landing card, also the landing of the why-ladder in the job's approved production brief: `studio v2 landing --job <job> --beat <beat_id>` prints it ready to paste as the manifest's `landing`. No Short carries a call, date, odds or confidence (Ruling, Krish, 2026-11-24).
 
 ## Outputs
 Produce immutable render manifests with every trim, crop, caption, overlay, cue, asset, audio decision and fixed seed.
