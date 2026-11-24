@@ -84,9 +84,6 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/briefs/[week]/video-script`
 - `/api/briefs/assemble`
 - `/api/briefs/notes`
-- `/api/calls`
-- `/api/claims/resolve`
-- `/api/claims/rule`
 - `/api/content-creators`
 - `/api/content-decisions/[id]`
 - `/api/content-decisions/[id]/likely-reasons`
@@ -95,7 +92,6 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/content-engine/ping`
 - `/api/content-engine/runs/replay`
 - `/api/content-ideas`
-- `/api/content-ideas/[id]/call-market`
 - `/api/content-ideas/[id]/challenge`
 - `/api/content-ideas/[id]/channel-cut`
 - `/api/content-ideas/[id]/chat`
@@ -171,7 +167,6 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/shifts/[id]/write`
 - `/api/shifts/detect`
 - `/api/signals/news`
-- `/api/signals/odds`
 - `/api/trends/entities`
 - `/api/trends/metrics`
 - `/api/triage/sweep`
@@ -654,14 +649,15 @@ The fact gate.
 - `function activeManualReviews(meta: Record<string, any>): ManualFactReview[]`
 - `function effectiveBlocking(meta: Record<string, any>): CheckedClaim[]`
 - `const PASSING: ReadonlySet<ClaimVerdict>`
-- `const UNSET`
-- `function withoutConfidence(text: string): string`
-- `function isConfidenceLine(sentence: string): boolean`
 - `function bodyHash(body: string): string`
 - `function norm(s: string): string`
 - `function sentences(body: string): string[]`
 - `function sectionOf(body: string, sentence: string): string`
 - `function readsAsForecast(sentence: string): boolean`
+- `function labelledAside(sentence: string, reason = '', section = ''): boolean`
+- `const NO_PREDICTION_MARK`
+- `function asideFlag(sentence: string): string`
+- `function staleAside(sentence: string, entry: LedgerEntry | undefined): boolean`
 - `function numbersIn(s: string): string[]`
 - `function numbersNotOnFile(body: string, meta: Record<string, any>): Array<{ sentence: string; numbers: string[] }>`
 - `const SOURCE_MARK`
@@ -807,7 +803,6 @@ _gates: the investigation double-check gate set. Pure module: no I/O, no
 - `function groundClaim(claimText: string, quote: string, sourceText: string): GroundingResult`
 - `const MIN_VERIFIABILITY`
 - `const FALSIFIER_JACCARD_CEILING`
-- `const FALSIFIER_HORIZON_DAYS`
 - `const SOURCE_CLASSES`
 - `const TAUTOLOGY_BLACKLIST`
 - `interface FalsifierResult`
@@ -815,7 +810,6 @@ _gates: the investigation double-check gate set. Pure module: no I/O, no
 - `interface InterestInput`
 - `interface InterestResult`
 - `function gateInterest(input: InterestInput): InterestResult`
-- `function falsifierDueOn(from = new Date(), days = FALSIFIER_HORIZON_DAYS): string`
 - `const MAX_RUNGS`
 - `const MECHANISM_TYPES`
 - `type MechanismType = typeof MECHANISM_TYPES[number]`
@@ -1338,6 +1332,12 @@ The making record: where one piece is on its way from the workroom to
 - `interface PieceState`
 - `function pieceVerdict(piece: PieceState, closesOn: string, steps: MakingStep[] = makingSteps(piece)): 'done' | 'moot' |…`
 
+### `apps/control-plane/api/_mandate.ts`
+
+A subchannel mandate with its old prediction close taken out.
+
+- `function mandateWithoutCall(mandate: string): string`
+
 ### `apps/control-plane/api/_mediaQuality.ts`
 
 - `export { MEDIA_STANDARD, MEDIA_STANDARD_HASH }`
@@ -1491,7 +1491,6 @@ The YouTube title and description for a piece's video, and the title and
 - `interface PackageContext`
 - `function namesIn(title: string, source: string): string[]`
 - `function repeatsThumbnail(title: string, thumbnail: string | null | undefined): 'same' | 'mostly' | null`
-- `function predictionDate(source: string): string | null`
 - `function lintTitle(input: PackageContext & { title: string }): PackageLint`
 - `function lintPackage(input: PackageContext & { title: string; description: string }): PackageLint`
 - `function lintSubstack(input: PackageContext & { substackTitle: string; substackSubtitle: string }): PackageLint`
@@ -1652,19 +1651,11 @@ The mechanical checks a piece must pass before it can be approved or
 - `function americanSpellings(body: string): Array<{ found: string; use: string }>`
 - `function emDashes(body: string): string[]`
 - `function exclamationMarks(body: string): string[]`
-- `const CLEAR_STANCE_AT`
-- `const CALL_HORIZON_DAYS`
-- `function callHorizon(body: string, now: Date = new Date(), pieceId?: string): { ok: boolean; detail: string } | null`
-- `function confidenceOf(body: string): number | null`
-- `function predictionCheck(body: string): { ok: boolean; detail: string }`
 - `function bareScores(body: string): Array<{ number: string; sentence: string }>`
 - `function threeThingsTomorrow(body: string): { ok: boolean; detail: string }`
 - `function articleSubscribeAsks(body: string): { ok: boolean; detail: string }`
 - `function articleFormat(body: string): string[]`
-- `function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, now: Date = new Date(), pieceId?…`
-- `const PREDICTION_CHECKS: readonly string[]`
-- `const NO_PREDICTION_NEEDED`
-- `function predictionWanted(meta: unknown): boolean`
+- `function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }): Check[]`
 - `function publishStatus(checks: Check[]): { ok: boolean; reason: string | null; failing: Check[] }`
 
 ### `apps/control-plane/api/_publishWatch.ts`
@@ -1915,8 +1906,6 @@ The writer's self-check (walk log F42).
 - `function correctionFor(text: string, hits: SelfCheckHit[], answer: string): string`
 - `interface SelfChecked`
 - `async function selfCheck(opts: { /** The writer's first answer, cleaned (sanitizeVoice and the rest). */ first: string …`
-- `const UNSET_CONFIDENCE`
-- `function guardConfidence(text: string, source: string | null): { text: string; restored: boolean }`
 
 ### `apps/control-plane/api/_ships.ts`
 
@@ -1927,16 +1916,6 @@ The writer's self-check (walk log F42).
 
 Signals: the free public sources and the keyed readers the engine reads on
 
-- `type MarketSource = 'polymarket' | 'kalshi'`
-- `interface MarketOdds`
-- `function polymarketProbability(market: { outcomes?: unknown; outcomePrices?: unknown }): number | null`
-- `async function polymarketBySlug(slug: string): Promise<MarketOdds | null>`
-- `async function polymarketSearch(query: string, limit = 6): Promise<MarketOdds[]>`
-- `function kalshiProbability(market: { yes_bid?: unknown; yes_ask?: unknown; last_price?: unknown }): number | null`
-- `async function kalshiByTicker(ticker: string): Promise<MarketOdds | null>`
-- `async function marketOdds(source: MarketSource, key: string): Promise<MarketOdds | null>`
-- `interface CallMarketRecord`
-- `function nextCallMarket(prev: Partial<CallMarketRecord> | null | undefined, odds: MarketOdds, now = new Date()): CallMa…`
 - `interface NewsArticle`
 - `function gdeltSeenToIso(seen: string): string`
 - `async function gdeltArticles(query: string, days = 2, max = 25): Promise<NewsArticle[]>`
@@ -3317,28 +3296,6 @@ One yes anywhere (Ruling, Krish, 2026-11-02): his answer for each day, read from
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
-### `apps/control-plane/api/calls.ts`
-
-- `interface ScoreboardCall`
-- `function toScoreboardCall(row: { id: string; idea: string | null; lane_slot: string | null; body: string | null; publis…`
-- `default async function handler(req: VercelRequest, res: VercelResponse)`
-
-### `apps/control-plane/api/claims/_notice.ts`
-
-The came_due notices the claim sweep (resolve.ts) writes: one per claim, ever.
-
-- `interface Notice`
-- `interface NoticeDb`
-- `async function recordNotices(db: NoticeDb, rows: Notice[]): Promise<number>`
-
-### `apps/control-plane/api/claims/resolve.ts`
-
-- `export default withContentRun('claims_resolve', handler)`
-
-### `apps/control-plane/api/claims/rule.ts`
-
-- `default async function handler(req: VercelRequest, res: VercelResponse)`
-
 ### `apps/control-plane/api/content-creators.ts`
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
@@ -3395,10 +3352,6 @@ What this deployment needs before it can do its job.
 - `const PIECE_COLUMNS`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
-### `apps/control-plane/api/content-ideas/[id]/call-market.ts`
-
-- `default async function handler(req: VercelRequest, res: VercelResponse)`
-
 ### `apps/control-plane/api/content-ideas/[id]/challenge.ts`
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
@@ -3427,6 +3380,7 @@ What this deployment needs before it can do its job.
 ### `apps/control-plane/api/content-ideas/[id]/draft.ts`
 
 - `export { curationBlock }`
+- `const NO_PREDICTION_LINE`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 - `const config`
 
@@ -4109,10 +4063,6 @@ A copy of every row the Monday purge is about to hard-delete.
 ### `apps/control-plane/api/signals/news.ts`
 
 - `export default withContentRun('signals_news', handler)`
-
-### `apps/control-plane/api/signals/odds.ts`
-
-- `export default withContentRun('signals_odds', handler)`
 
 ### `apps/control-plane/api/trends/_entities.ts`
 
@@ -6639,22 +6589,6 @@ Fitting type into a box, as a pure function of a width measurer, so the
 - `const ArtDirectorRepertoireV1Schema`
 - `type ArtDirectorRepertoireV1 = z.infer<typeof ArtDirectorRepertoireV1Schema>`
 
-### `packages/contracts/src/call.ts`
-
-The piece's call: the dated prediction every makeyourmindup piece ends on
-
-- `const CALL_MISSING`
-- `interface PieceCallV1`
-- `type PieceCallReadingV1`
-- `interface CallDateMentionV1`
-- `interface CallConfidenceMentionV1`
-- `function callSectionOf(text: string): string | null`
-- `function callDateMentions(text: string): CallDateMentionV1[]`
-- `function labelledConfidences(text: string): CallConfidenceMentionV1[]`
-- `function withoutBrackets(text: string): string`
-- `function hasPercentage(text: string): boolean`
-- `function readPieceCall(approvedText: string): PieceCallReadingV1`
-
 ### `packages/contracts/src/confirmation-v1.ts`
 
 Artifact-bound user confirmation references.
@@ -6827,7 +6761,6 @@ Artifact-bound user confirmation references.
 - `export * from './art-director-v1.js'`
 - `export * from './station-harness-v1.js'`
 - `export * from './series.js'`
-- `export * from './call.js'`
 - `const SCHEMA_VERSION`
 - `const SeriesSchema`
 - `type Series = z.infer<typeof SeriesSchema>`

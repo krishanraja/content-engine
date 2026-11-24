@@ -11,9 +11,8 @@ import { operatorAttribution, sha256 } from '../../_editEvents.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import { loadSubchannel } from '../../_subchannels.js'
 import { subchannelRulesBlock } from '../../_houseRules.js'
-import { predictionWanted } from '../../_publishChecks.js'
 import { guardEngine } from '../../_auth.js'
-import { guardConfidence, selfCheck } from '../../_selfCheck.js'
+import { selfCheck } from '../../_selfCheck.js'
 
 // POST /api/content-ideas/:id/draft
 //   body: { instruction?: string }   Krish's direction for this draft, up to 1600 chars
@@ -33,7 +32,9 @@ import { guardConfidence, selfCheck } from '../../_selfCheck.js'
 // ── WHAT IT READS, AND WHY EACH ONE ─────────────────────────────────────
 //
 // The mandate comes from venture_formats, live, never a copy: it is the test
-// the piece must pass, and it decides the structure and the close. Everything
+// the piece must pass, and it decides the structure and the close. Its old
+// prediction close is taken out as it is read (api/_mandate.ts, by loadSubchannel) until the rows are
+// rewritten; a piece makes no prediction (Ruling, Krish, 2026-11-24). Everything
 // curation produced goes in, because it was produced to be used here and until
 // now nothing read it: the angle the panel judged (not the raw seed), the
 // counter-case (meta.contrarian), the dated sources (meta.adjacent_stories),
@@ -53,11 +54,9 @@ import { guardConfidence, selfCheck } from '../../_selfCheck.js'
 // The publish gate's mechanical checks read the draft before it is written,
 // and one more call fixes what they find (api/_selfCheck.ts). Piece 3's first
 // draft, 2026-09-30, broke R2 three times and read at about age 13.5. The
-// response says what the saved draft still breaks, as `self_check`. The
-// draft's confidence is always "How sure we are: [to set]": the number
-// is Krish's, and that draft wrote 78% on its own. Since 19 November a draft
-// carries a prediction only when Krish asked for one on the piece
-// (meta.prediction; Ruling, Krish, 2026-11-19).
+// response says what the saved draft still breaks, as `self_check`. A draft
+// carries no prediction, call, dated forecast, odds or confidence number
+// (Ruling, Krish, 2026-11-24), so nothing here puts one back.
 
 const MAX_DRAFTS = 10
 // The time a request has for both calls: maxDuration (below), less 15
@@ -89,6 +88,10 @@ const strings = (v: unknown, cap = 20): string[] =>
 // Re-exported for tests/control-plane/draft-context.test.ts.
 export { curationBlock }
 
+/** What the drafter is told about the close, whatever any mandate says
+ *  (Ruling, Krish, 2026-11-24). */
+export const NO_PREDICTION_LINE = 'The piece makes no prediction: no call, no dated forecast, no odds and no confidence number. It lands on what the evidence shows and an open question handed to the reader, never a verdict on what will happen. This wins over any close the mandate asks for, including a verdict or what is coming.'
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const started = Date.now()
   if (guardEngine(req, res)) return
@@ -118,7 +121,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const [voice, corpus, taste] = await Promise.all([loadVoiceBlock(), loadCorpus(), loadTasteBlock(['voice', 'strategy'])])
   const system = [
     `You are drafting one piece for makeyourmindup, in the voice below, for the subchannel ${sub.label}. The article and its title, subtitle and description speak as the publication, "we", and never name or describe its maker (house rule NO_NAME).`,
-    `=== THE MANDATE FOR ${sub.label.toUpperCase()} ===\n${sub.mandate}\n\nThe mandate is the test this piece must pass. It governs the question the piece asks, its structure and how it closes. Where the voice notes below disagree with the mandate about structure or the close, the mandate wins. Krish's house rules win over both. No piece needs a prediction; write one only when Krish asked for one on this piece${predictionWanted(row.meta) ? ' (he has: end with it)' : ' (he has not: make none)'}.`,
+    `=== THE MANDATE FOR ${sub.label.toUpperCase()} ===\n${sub.mandate}\n\nThe mandate is the test this piece must pass. It governs the question the piece asks, its structure and how it closes. Where the voice notes below disagree with the mandate about structure or the close, the mandate wins. Krish's house rules win over both. ${NO_PREDICTION_LINE}`,
     subchannelRulesBlock('write', sub.slug),
     voice ? `=== VOICE ===\n${voice}` : '',
     taste ? `=== HOW KRISH LIKES IT (approved by him, form only) ===\n${taste}` : '',
@@ -178,11 +181,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     },
   })
   if (checked.chose === 'retry' && second.out) out = { ...out, ...second.out }
-  // How sure we are is Krish's to set. A first draft carries the placeholder,
-  // whatever either call wrote (walk log F43).
-  const confidence = guardConfidence(checked.text, null)
-  const body = confidence.text
-  const self_check = { ...checked.self_check, confidence_restored: confidence.restored }
+  const body = checked.text
+  const self_check = checked.self_check
 
   const words = body.split(/\s+/).filter(Boolean).length
   const entry = {

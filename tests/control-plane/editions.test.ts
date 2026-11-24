@@ -9,6 +9,11 @@ import { bodyHash } from '../../apps/control-plane/api/_factGate.js'
 const ROOT = 'editions'
 const dirs = readdirSync(ROOT).filter(d => existsSync(join(ROOT, d, 'edition.json')))
 
+// The archive's stored hashes were taken while the fact gate read the number after "How sure we are:" as a
+// placeholder. That reading went on 2026-11-24 with every prediction (Ruling, Krish, 2026-11-24), and the editions
+// stay as archive, so their hashes are read the way they were taken.
+const asHashedThen = (body: string): string => body.replace(/^([ 	]*How sure we are:)[ 	]*\d{1,3}%\.?[ 	]*$/gim, '$1 [Krish to set]')
+
 function pageText(html: string): string {
   // A link or a label inside a sentence is part of it, so its tags go without
   // a gap ("Perplexity</a>," reads "Perplexity,"); any other tag is a break.
@@ -25,7 +30,7 @@ describe('every web edition says only what the fact gate checked', () => {
       // Windows checks text out with CRLF; the engine hashed the text with LF.
       const body = readFileSync(join(ROOT, d, 'body.md'), 'utf8').replace(/\r\n/g, '\n')
       assert.equal(ed.fact_check?.passed, true)
-      assert.equal(bodyHash(body.trim()), ed.fact_check.body_hash)
+      assert.equal(bodyHash(asHashedThen(body.trim())), ed.fact_check.body_hash)
     })
     test(`${d}: every sentence of body.md is on the page`, () => {
       const page = pageText(readFileSync(join(ROOT, d, 'index.html'), 'utf8'))

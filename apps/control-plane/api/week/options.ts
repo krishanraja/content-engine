@@ -7,6 +7,7 @@ import { buildCorrections, buildHindsight, buildInspiration, CORRECTION_DAYS, FE
 import { CUE_COLS, cuesFrom } from '../_feedbackCues.js'
 import { TASTE_VENTURE } from '../_taste.js'
 import { HOUSE_RULES } from '../_houseRules.js'
+import { mandateWithoutCall } from '../_mandate.js'
 import { buildOffdayVerdicts, offdayWeeksBefore } from './_offdayVerdicts.js'
 
 // GET  /api/week/options?week_start=YYYY-MM-DD
@@ -89,7 +90,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const mine = all.filter(r => r.lane_slot === f.slug)
       const score = (r: Record<string, any>) => Number(r.meta?.ladder?.final?.score ?? r.meta?.ladder?.score ?? -1)
       return {
-        slug: f.slug, label: f.label, cadence: f.cadence_label, mandate: f.mandate,
+        slug: f.slug, label: f.label, cadence: f.cadence_label, mandate: f.mandate ? mandateWithoutCall(f.mandate) : f.mandate,
         options: all.filter(r => r.meta?.week_option?.week_start === week && r.meta?.week_option?.series === f.slug)
           .map(r => ({ id: r.id, idea: r.idea, state: r.state, ...r.meta.week_option })).sort((a, b) => a.rank - b.rank),
         in_flight: mine.filter(r => ['drafting', 'review', 'approved'].includes(r.state)).map(r => ({ id: r.id, idea: r.idea, state: r.state, scheduled_for: r.scheduled_for })),

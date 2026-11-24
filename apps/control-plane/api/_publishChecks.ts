@@ -4,13 +4,8 @@
 // published refuses until every blocking check passes; Control Center shows
 // the list as a checklist. Pure: no database, no network.
 
-import { createHash } from 'node:crypto'
 import { notXYConstructions } from './_judges/deterministic.js'
 import { copyLint } from './_copyLint.js'
-// The one reader of a piece's call, shared with the Studio. Imported by its
-// relative path, as video-studio/_runnerContracts.ts explains; the file has no
-// dependencies of its own.
-import { callSectionOf, labelledConfidences, readPieceCall } from '../../../packages/contracts/src/call.js'
 
 // ── Mechanical checks before approval or publication ────────────────────────
 
@@ -116,101 +111,6 @@ export function emDashes(body: string): string[] {
  *  A quotation keeps its source's punctuation. */
 export function exclamationMarks(body: string): string[] {
   return String(body || '').replace(/"[^"\n]*"|“[^”\n]*”/g, '').match(/[A-Za-z0-9)\]'’]!/g) || []
-}
-
-/** Where a confidence starts to read as a clear stance. Krish, 2026-09-26, set
- *  it at 70; on 2026-10-19 he raised it and made it hold the piece: "I'm done
- *  with sitting on the fence and putting predictions a year away: 55%. There's
- *  no point in that." */
-export const CLEAR_STANCE_AT = 80
-
-/** The furthest a prediction's date may sit from the day it is checked, in days
- *  (about three months; Krish, 2026-10-19, same words). */
-export const CALL_HORIZON_DAYS = 92
-
-// Ruling (Krish, 2026-10-19): "Keep the approved forecast; allow an exception
-// for this piece". Friday's approved call predates the 92-day rule. Match the
-// piece and the complete prediction (including confidence and falsifier), not
-// its date alone. This cannot waive an expired call or any other publish check.
-const FRIDAY_HORIZON_EXCEPTION = {
-  pieceId: '904658db-4df2-4537-a0ed-ebe93e081db7',
-  predictionSha256: 'cb74e0e6ec1e99739ae57c03c9d998313278d9a364025e550f0ec66b5367f744',
-  detail: 'Krish approved an exception on 19 October 2026 for this unchanged prediction, due 2027-06-30 at 85% confidence.',
-} as const
-
-// Ruling (Krish, 2026-10-22): "Approve the final fact check with a $1 cap
-// and the retrospective exception for this article." Exact approved body;
-// this does not assert a prediction or waive the fact gate or other rules.
-const WEDNESDAY_RETROSPECTIVE_EXCEPTION = {
-  pieceId: 'd7a20885-7001-4661-b444-9d7ca1043416',
-  bodySha256: '1c88a1fa452feb791893e71d22f779daf42ee68ab190d43d8a0fcaa83e8ba208',
-  detail: 'Exempt by Krish on 22 October 2026: this exact retrospective comparison has a recommendation and three actions; no future prediction or confidence is asserted.',
-} as const
-
-// Ruling (Krish, 2026-10-26), of Friday's piece: "I think this one doesnt need
-// a prediction, I am kind of bored of making predictions. I think we need to
-// find a more professional and likeable and helpful way of closing this out";
-// then, of Wednesday's: "lets give weds the same treatment as friday". Each
-// closes on his own story, a question and a word to one reader instead. The
-// exception holds only while the body makes no prediction at all: a body with
-// a prediction section or a stated confidence is checked as any other, and no
-// other check is waived.
-const NO_PREDICTION_PIECES: Readonly<Record<string, string>> = {
-  'c00cd4e0-e1bb-4c60-b36f-cea92897e38c': 'Exempt by Krish on 19 November 2026 ("I hate this prediction format. I think we just scrap it."): the AI auditor piece closes on his own invoices and who reads his list first, and makes no prediction.',
-  '9a0c97af-f0d6-4d12-a7ce-773c622d4b67': 'Exempt by Krish on 26 October 2026 ("I think this one doesnt need a prediction"): this piece closes on his own story, a question and a word to juniors, and makes no prediction.',
-  'b63d2507-dbb4-449d-bce4-f21e859ee2ad': 'Exempt by Krish on 26 October 2026 ("lets give weds the same treatment as friday"): this piece closes on his own first job, a question and a word to IT, and makes no prediction.',
-}
-
-function noPredictionException(body: string, pieceId?: string): string | null {
-  if (!pieceId || !Object.hasOwn(NO_PREDICTION_PIECES, pieceId)) return null
-  if (callSectionOf(body) !== null || labelledConfidences(body).length > 0) return null
-  return NO_PREDICTION_PIECES[pieceId]
-}
-
-function approvedHorizonException(body: string, pieceId?: string): boolean {
-  if (pieceId !== FRIDAY_HORIZON_EXCEPTION.pieceId) return false
-  const section = callSectionOf(body)
-  return section !== null && createHash('sha256').update(section.trim()).digest('hex') === FRIDAY_HORIZON_EXCEPTION.predictionSha256
-}
-
-/** Whether the call's date falls inside the horizon: after today, and no more
- *  than CALL_HORIZON_DAYS away. Null when the piece has no readable call. */
-export function callHorizon(body: string, now: Date = new Date(), pieceId?: string): { ok: boolean; detail: string } | null {
-  const reading = readPieceCall(String(body || ''))
-  if ('reason' in reading) return null
-  const due = new Date(`${reading.call.due}T00:00:00Z`)
-  const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
-  const days = Math.round((due.getTime() - today.getTime()) / 86_400_000)
-  if (days < 1) return { ok: false, detail: `The prediction's date, ${reading.call.due}, has already passed. Name an event still to come.` }
-  if (days > CALL_HORIZON_DAYS && approvedHorizonException(body, pieceId)) return { ok: true, detail: FRIDAY_HORIZON_EXCEPTION.detail }
-  if (days > CALL_HORIZON_DAYS) return { ok: false, detail: `The prediction is due ${reading.call.due}, ${days} days away. Name what you believe happens within about three months (${CALL_HORIZON_DAYS} days at most), not a year away.` }
-  return { ok: true, detail: `Due ${reading.call.due}, ${days} days away.` }
-}
-
-/** The confidence in the prediction, as a number, or null when unset. Reads
- *  "How sure we are: 75%" and piece 1's "Confidence: 70%", with the same
- *  label reader the Studio uses for the call (readPieceCall). It once read
- *  only the first, so piece 1's 70% came back as unset and CLEAR_STANCE showed
- *  green over a detail saying "No confidence set yet" (walk log F35). */
-export function confidenceOf(body: string): number | null {
-  const first = labelledConfidences(String(body || '')).find(m => m.whole)
-  return first ? first.percent : null
-}
-
-/** The prediction section: a heading, a date to check by, and a confidence.
- *  Either a section ("## OUR PREDICTION") or a paragraph that opens with a
- *  bold label ("**The Call.** By 30 June 2027 ... Confidence: 70%."), found by
- *  the same reader the Studio uses. This check asks only that a date and a
- *  percentage are there; the Studio's readPieceCall also asks that each is
- *  unambiguous before it puts the call on screen. */
-export function predictionCheck(body: string): { ok: boolean; detail: string } {
-  // The Studio's own reader: a piece passes only with a call a Short can show
-  // word for word (one dated paragraph, a real date, one labelled whole
-  // percentage). The looser check it replaced let a piece be approved with a
-  // call the Studio then refused (walk log H32).
-  const reading = readPieceCall(String(body || ''))
-  if ('reason' in reading) return { ok: false, detail: reading.reason }
-  return { ok: true, detail: 'Has a date to check by and a confidence.' }
 }
 
 // ── A score with nothing to measure it against (house rule PLAIN_SCORES) ───
@@ -335,7 +235,7 @@ export function articleFormat(body: string): string[] {
 
 /** Every mechanical check a piece must pass before it can be approved or
  *  published. `factGate` is the fact gate's own verdict for this exact text. */
-export function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, now: Date = new Date(), pieceId?: string, opts: { predictionWanted?: boolean } = {}): Check[] {
+export function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }): Check[] {
   const text = String(body || '')
   const checks: Check[] = []
   checks.push({ id: 'FACTS', name: 'Every fact checked twice', blocking: true, ok: factGate.ok, detail: factGate.ok ? 'This exact version passed the fact check.' : (factGate.reason || 'The facts have not passed yet.') })
@@ -371,25 +271,9 @@ export function publishChecks(body: string, factGate: { ok: boolean; reason: str
         ? `Reads at about age ${(grade + 5).toFixed(1)}, a little above 12. Shorten the longest sentences.`
         : `Reads at about age ${(grade + 5).toFixed(1)}. Above 13 cannot be approved: shorten sentences and swap long words for short ones.`,
   })
-  const call = predictionCheck(text)
-  checks.push({ id: 'CALL', name: 'A dated prediction with a confidence', blocking: true, ok: call.ok, detail: call.detail })
-  const horizon = callHorizon(text, now, pieceId)
-  checks.push({ id: 'CALL_HORIZON', name: 'A prediction due within about three months', blocking: true, ok: horizon?.ok ?? false, detail: horizon?.detail ?? 'No readable prediction date yet.' })
-  // A block since 2026-10-19 (Krish: "I'm done with sitting on the fence"):
-  // the call is what we believe will happen, backed at 80% or more.
-  // Green only on a number it has read. A confidence it cannot read is not a
-  // clear stance, whatever CALL makes of the section.
-  const sure = confidenceOf(text)
-  checks.push({
-    id: 'CLEAR_STANCE', name: 'Take a clear stance', blocking: true,
-    ok: sure !== null && sure >= CLEAR_STANCE_AT,
-    detail: sure === null
-      ? (call.ok
-        ? 'The prediction has a percentage this check cannot read as its confidence. Write it as "How sure we are: 85%".'
-        : 'No confidence set yet.')
-      : sure >= CLEAR_STANCE_AT ? `${sure}% is a clear stance.`
-      : `${sure}% reads as sitting on the fence. Back the outcome we believe with a clearer number.`,
-  })
+  // Ruling (Krish, 2026-11-24): "the signature format is the 5 Whys; get rid of everything that suggests predictions,
+  // calls, dated, odds or scores." No check here reads a prediction, a date to check by or a confidence. The signature
+  // format's own blocking check, WHY_LADDER, takes this place: after the reading age, before the advisory checks.
   // One entry per word: "token" and "tokens" are the same thing to fix.
   const jargon = [...new Set((text.match(JARGON) || []).map(w => w.toLowerCase().replace(/s$/, '')))]
     .map(w => /^(api|llm|gpu|rag)$/.test(w) ? w.toUpperCase() : w)
@@ -403,55 +287,7 @@ export function publishChecks(body: string, factGate: { ok: boolean; reason: str
   const subscribe = articleSubscribeAsks(text)
   checks.push({ id: 'ARTICLE_SUBSCRIBE_ASK', name: 'Asks for the subscription twice, inside the article', blocking: false, ok: subscribe.ok, detail: subscribe.detail })
   checks.push({ id: 'R6', name: 'Plain words', blocking: false, ok: jargon.length === 0, detail: jargon.length ? `Make sure each is explained where it first appears: ${jargon.join(', ')}.` : 'No listed jargon found.' })
-  if (pieceId === WEDNESDAY_RETROSPECTIVE_EXCEPTION.pieceId
-      && createHash('sha256').update(text).digest('hex') === WEDNESDAY_RETROSPECTIVE_EXCEPTION.bodySha256) {
-    for (const check of checks) {
-      if (['CALL', 'CALL_HORIZON', 'CLEAR_STANCE'].includes(check.id)) {
-        check.ok = true
-        check.name = `Retrospective exception: ${check.name}`
-        check.detail = WEDNESDAY_RETROSPECTIVE_EXCEPTION.detail
-      }
-    }
-  }
-  const noCall = noPredictionException(text, pieceId)
-  if (noCall) {
-    for (const check of checks) {
-      if (['CALL', 'CALL_HORIZON', 'CLEAR_STANCE'].includes(check.id)) {
-        check.ok = true
-        check.name = `No prediction, by Krish's word: ${check.name}`
-        check.detail = noCall
-      }
-    }
-  }
-  // Ruling (Krish, 2026-11-19): "remove all traces that require predictions in every article, I am starting to really
-  // hate the prediction format, it's baseless, lame and has no value, and the predictions are dull and vanilla. If I
-  // want to predict something in a particular piece I will". No piece needs a prediction. The three checks hold only a
-  // piece that carries one: one he asked for on that piece (meta.prediction, predictionWanted) or a body that has a
-  // prediction section or a stated confidence, which is then held to the same standard as before.
-  if (!opts.predictionWanted && callSectionOf(text) === null && labelledConfidences(text).length === 0) {
-    for (const check of checks) {
-      if (PREDICTION_CHECKS.includes(check.id) && !check.ok) {
-        check.ok = true
-        check.detail = NO_PREDICTION_NEEDED
-      }
-    }
-  }
   return checks
-}
-
-/** The three checks that hold a prediction, when a piece carries one. */
-export const PREDICTION_CHECKS: readonly string[] = ['CALL', 'CALL_HORIZON', 'CLEAR_STANCE']
-
-export const NO_PREDICTION_NEEDED = 'No prediction, and none is needed: a piece carries one only when Krish asks for it on that piece (Ruling, Krish, 2026-11-19).'
-
-/** Whether Krish asked for a prediction on this piece: meta.prediction, written
- *  only from his own words on that piece ({ wanted: true, said, on }). Nothing
- *  else turns it on, and no default does (Ruling, Krish, 2026-11-19). */
-export function predictionWanted(meta: unknown): boolean {
-  if (!meta || typeof meta !== 'object') return false
-  const p = (meta as Record<string, unknown>).prediction
-  return !!p && typeof p === 'object' && (p as Record<string, unknown>).wanted === true
-    && typeof (p as Record<string, unknown>).said === 'string' && String((p as Record<string, unknown>).said).trim().length > 0
 }
 
 /** Whether the blocking checks all pass, and the reason when they do not. */
