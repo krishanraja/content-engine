@@ -12,7 +12,8 @@ import { HOUSE_MOTION, MOTION, useEngineFrame } from './clock'
 import { DEVICES } from './devices/registry'
 import { chromeZone } from './geometry'
 import { LandingCard } from './chrome/LandingCard'
-import { WhyStep } from './chrome/WhyStep'
+import { WhyStep, whyStepModel } from './chrome/WhyStep'
+import { HeldTitle } from './chrome/WordCaption'
 import { EndingBand } from './chrome/EndingBand'
 import { CaptionTrack } from './chrome/CaptionTrack'
 import { ChannelPill } from './chrome/ChannelPill'
@@ -201,6 +202,18 @@ describe('BrandFrame landing, why and ending routing', () => {
     const step = elements(BrandFrame({ props, beat: why, frame: 30 }))
     expect(step.filter((node) => node.type === WhyStep)).toHaveLength(1)
     expect(step.some((node) => node.type === CaptionTrack)).toBe(true)
+    // In the word build the step's card sits where the held title sits, so the title gives way while the step is up
+    // and comes back once it has gone: the two are never drawn together.
+    const word = { ...props, captionStyle: 'word' as const, title: 'Who checks the work?', beats: [why] }
+    const face = { ...why, layout: 'F1' as const, fromFrame: 0, toFrame: 120 }
+    const shown = (frame: number) => {
+      const nodes = elements(BrandFrame({ props: word, beat: face, frame }))
+      const stepped = nodes.some((node) => node.type === WhyStep) && !!whyStepModel(word, face, frame)
+      return { stepped, title: nodes.some((node) => node.type === HeldTitle) }
+    }
+    expect(shown(10)).toEqual({ stepped: true, title: false })
+    expect(shown(100)).toEqual({ stepped: false, title: true })
+    for (let frame = 0; frame < 120; frame += 1) expect(shown(frame).stepped && shown(frame).title).toBe(false)
   })
 
   it('reads an archived cut\'s call beat as a closing beat with nothing drawn for it (Ruling, Krish, 2026-11-24)', () => {

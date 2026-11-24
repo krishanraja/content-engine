@@ -4,7 +4,7 @@ import { HOUSE } from '../house/geometry'
 import { SPLIT_CAPTION_ZONE } from './layouts/splitGeometry'
 import { Grain } from '../house/components'
 import { LandingCard, landingBeatAt } from './chrome/LandingCard'
-import { WhyStep } from './chrome/WhyStep'
+import { WhyStep, whyStepModel } from './chrome/WhyStep'
 import { EndingBand } from './chrome/EndingBand'
 import { CaptionTrack } from './chrome/CaptionTrack'
 import { ChannelPill } from './chrome/ChannelPill'
@@ -43,6 +43,9 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
   // A why beat's step sits over the captions, which keep running under it. Every other beat keeps the chrome's tree
   // exactly as before (houseGolden.test.ts).
   const step = beat.role === 'why' && beat.why && !ending ? <WhyStep props={house} beat={beat} frame={frame} /> : null
+  // The held title gives way while the step is up: the step's card sits where the title sits in the word build
+  // (ENDING_SAFE top against WORD_CAPTION titleTop), and the title comes back when the step has gone.
+  const stepUp = !!step && !!whyStepModel(house, beat, frame)
   return <>
     <Grain />
     {/* SPLIT keeps the mark tile and series pill of every face-with-proof beat: the horizontal logo is drawn for ink
@@ -58,7 +61,7 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
     </>}
     {/* The title holds over every face-alone beat, a STAGE beat on the take included (the georgia_la build);
         graphics own the top of SPLIT and of a STAGE beat with no plate. */}
-    {props.captionStyle === 'word' && !landing && !isStaging(props.layout?.mode, props.aspect) && beat.layout !== 'SPLIT' && !(beat.layout === 'STAGE' && beat.plate?.source !== 'take') && <HeldTitle props={props} frame={frame} />}
+    {props.captionStyle === 'word' && !landing && !stepUp && !isStaging(props.layout?.mode, props.aspect) && beat.layout !== 'SPLIT' && !(beat.layout === 'STAGE' && beat.plate?.source !== 'take') && <HeldTitle props={props} frame={frame} />}
     {step ? <>{step}{chrome}</> : chrome}
   </>
 }
