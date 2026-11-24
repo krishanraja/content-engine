@@ -48,20 +48,20 @@ export const VIDEO_FORMATS: VideoFormat[] = [
   {
     id: '30s', label: '30 seconds', seconds: 30, words: 80,
     shape: [
-      'Claim, proof, verdict. Three beats, roughly even.',
+      'Claim, proof, landing. Three beats, roughly even.',
       'The claim lands in the first five seconds and is arguable, not descriptive.',
-      'The proof is ONE specific artifact: a number, a named company, a dated event. One only; a second proof at this length costs the verdict.',
-      'The verdict is forward-looking and hands the viewer something reusable.',
+      'The proof is ONE specific artifact: a number, a named company, a dated event. One only; a second proof at this length costs the landing.',
+      'The landing says what the proof shows and hands the viewer an open question to take away; no prediction, call, dated forecast, odds or confidence number (Ruling, Krish, 2026-11-24).',
     ].join(' '),
   },
   {
     id: '60s', label: '60 second reel', seconds: 60, words: 160,
     shape: [
-      'Hook, proof, turn, verdict.',
+      'Hook, proof, turn, landing.',
       'The hook is the surprising claim, inside ten seconds, with no throat-clearing.',
       'The proof grounds it in named specifics.',
       'The turn is the part the viewer did not see coming: the second-order effect, the counter-reading, the part that inverts the obvious take.',
-      'The verdict is hard and forward-looking and answers the hook. No summary, no question. Then the close (STORY_OUTRO).',
+      'The landing answers the hook with what the proof and the turn show, then hands the viewer one open question; no summary, and no prediction, call, dated forecast, odds or confidence number (Ruling, Krish, 2026-11-24). Then the close (STORY_OUTRO).',
     ].join(' '),
   },
   {
@@ -80,11 +80,11 @@ export const VIDEO_FORMATS: VideoFormat[] = [
   {
     id: '5min', label: '5 minutes', seconds: 300, words: 750,
     shape: [
-      'Hook (one plain question the whole script answers), then three beats, then verdict, then the close.',
+      'Hook (one plain question the whole script answers), then three beats, then the landing, then the close.',
       'Each beat makes ONE point and carries its own evidence. A beat that restates the one above it is cut.',
       'Beats escalate: the third should be the one that would not have been believed at the start.',
       'Mark the beats explicitly so the edit has cut points.',
-      'The verdict answers the hook\'s question. It is a hard read of what it means and never a recap of the three beats; no prediction unless Krish asked for one on this piece (Ruling, Krish, 2026-11-19). The close follows it (STORY_OUTRO).',
+      'The landing answers the hook\'s question with what the three beats show, never a recap of them: it lands on what this shows and an open question handed to the viewer; the script makes no prediction, call, dated forecast, odds or confidence number (Ruling, Krish, 2026-11-24). The close follows it (STORY_OUTRO).',
     ].join(' '),
   },
   {
@@ -95,7 +95,7 @@ export const VIDEO_FORMATS: VideoFormat[] = [
       'Each of the four sections advances the argument and ends on a hook into the next. A section that could be reordered freely is a list, not an argument.',
       'Pick ONE analogy and carry it the whole way, including through the part where it breaks, and say out loud where it stops working.',
       'Hold one genuine counterpoint, in full, before answering it.',
-      'The close answers the cold open\'s question, gives a hard verdict plus the specific thing to watch next, then the close (STORY_OUTRO).',
+      'The landing answers the cold open\'s question with what the sections show and hands the viewer the open question they leave; no prediction, call, dated forecast, odds or confidence number (Ruling, Krish, 2026-11-24). Then the close (STORY_OUTRO).',
     ].join(' '),
   },
   {
@@ -106,7 +106,7 @@ export const VIDEO_FORMATS: VideoFormat[] = [
       'One analogy, carried the whole way, broken honestly where it stops mapping.',
       'Hold the strongest counterpoint in its best form, not a straw version, and answer it or concede it.',
       'Say plainly where the knowable record ends rather than papering over it.',
-      'Close by answering the question the cold open asked, then a hard verdict and the terminal question the evidence actually leaves open, then the close (STORY_OUTRO).',
+      'Land by answering the question the cold open asked with what the evidence shows, then hand the viewer the question the evidence actually leaves open; no prediction, call, dated forecast, odds or confidence number (Ruling, Krish, 2026-11-24). Then the close (STORY_OUTRO).',
       'At this length the viewer will forgive slowness but not padding: every section must move the argument or come out.',
     ].join(' '),
   },
@@ -134,8 +134,8 @@ export const SCRIPT_STORY = [
   '2. Every beat sets that question up or answers it, and follows from the beat before. A beat that could be moved anywhere is a list item: cut it or connect it.',
   '3. Every claim is set up before it is judged: say what was claimed and why it matters before calling it real or theatre.',
   '4. Every takeaway follows from a beat already told. Name the beat it comes from in your head; if there is none, cut the takeaway.',
-  '5. The ending answers the opening question, then the close (STORY_OUTRO); no prediction unless Krish asked for one on this piece (Ruling, Krish, 2026-11-19). Never end on the number.',
-  '6. It sounds like Krish, with opinion (VOICE_ON_CAMERA): at least three of a dry self-deprecating line, a sarcastic line at the hype, an exaggeration obvious by its size, an analogy a twelve-year-old gets, and an opinion said as opinion ("my bet", "I think"). No joke inside a checked fact. Put a second option for each joke in "notes", never inside "say", so Krish can swap or cut.',
+  '5. The ending answers the opening question: it lands on what this shows and an open question handed to the viewer; the script makes no prediction, call, dated forecast, odds or confidence number (Ruling, Krish, 2026-11-24). Then the close (STORY_OUTRO). Never end on the number.',
+  '6. It sounds like Krish, with opinion (VOICE_ON_CAMERA): at least three of a dry self-deprecating line, a sarcastic line at the hype, an exaggeration obvious by its size, an analogy a twelve-year-old gets, and an opinion said as opinion ("I reckon", "I think"). No joke inside a checked fact. Put a second option for each joke in "notes", never inside "say", so Krish can swap or cut.',
   'And it must make sense out loud: say what the thing is before taking it apart, explain each number as it is said, and never speak an article heading or a label the listener has not heard explained.',
   STORY_OUTRO,
 ].join('\n')
