@@ -26,7 +26,21 @@ export const VeLayoutSchema = z.enum(['P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SP
 export const VE_SHOTS = ['band', 'stage', 'anchor', 'plate', 'number', 'chapter', 'title', 'end'] as const
 /** The stagings a cut's body may use under the shot grammar; pillar is band's 16:9 form for a vertical take. */
 export const VE_STAGING_MODES = ['house', 'fill', 'stack', 'band', 'stage', 'tray', 'pillar', 'anchor'] as const
-export const VeRoleSchema = z.enum(['hook', 'anchor', 'bridge', 'pivot', 'payoff', 'call'])
+/** The signature format is the why-ladder (Ruling, Krish, 2026-11-24: "the signature format is the 5 Whys; get rid of
+ *  everything that suggests predictions, calls, dated, odds or scores"): a `why` beat is one rung of it and a `landing`
+ *  beat is where it lands, what this shows plus an open question handed to the viewer, never a verdict or a forecast. */
+export const VeRoleSchema = z.enum(['hook', 'anchor', 'bridge', 'pivot', 'payoff', 'why', 'landing'])
+/** The rung a `why` beat climbs, in the why-ladder's own names (packages/contracts/src/whys.ts WhyRung, WhyStrength). */
+export const VeWhyStepSchema = z.object({
+  n: z.number().int().min(1).max(7),
+  question: z.string().min(8).max(160),
+  strength: z.enum(['documented', 'inferred', 'open']),
+}).strict()
+/** Where the ladder lands (packages/contracts/src/whys.ts WhyLanding): what this shows, and the open question. */
+export const VeLandingSchema = z.object({
+  shows: z.string().min(12).max(300),
+  open_question: z.string().min(8).max(200),
+}).strict()
 // The same verbs as the renderer's EngineEventSchema (apps/renderer/src/engine/props.ts), so a spec can name every
 // verb a library device accepts (config/ve/devices.json); compile still refuses a verb its device does not list.
 export const VeVerbSchema = z.enum(['enter', 'move', 'mark', 'fill', 'stamp', 'count_to', 'highlight', 'carry', 'exit', 'draw', 'bounce', 'sulk', 'wave', 'add', 'chip', 'type', 'send', 'pick', 'drop', 'grey', 'multiply', 'dim', 'thin', 'grow', 'light', 'connect', 'rest_on', 'stripe'])
@@ -72,6 +86,9 @@ export const VeBeatSchema = z.object({
   // One real picture under the beat's graphics, fitted by cover: the panel above his face on a staged beat, the whole
   // frame on a graphics-only beat (Krish, 2026-11-18: "making actual use of the full screen when it isn't my face").
   backdrop: z.string().regex(/^asset:[a-z0-9][a-z0-9_-]*$/).optional(),
+  // A `why` beat names its rung and a `landing` beat its landing; no other beat carries either (ve lint story.why).
+  why: VeWhyStepSchema.optional(),
+  landing: VeLandingSchema.optional(),
   uses: z.array(z.string().min(1)).default([]),
   events: z.array(VeEventSchema).default([]),
   transition_out: VeTransitionSchema.default('cut'),
@@ -106,7 +123,7 @@ export const VeCutSchema = z.object({
   aspect: VeAspectSchema,
   take: z.string().min(1),
   max_s: z.number().positive(),
-  /** A proof excerpt (Gate 2) skips the whole-cut story rules: one payoff, the call beat, the face runs. */
+  /** A proof excerpt (Gate 2) skips the whole-cut story rules: one payoff, the face runs. */
   excerpt: z.boolean().default(false),
   edit: z.object({
     remove: z.array(z.object({ from_w: WordSchema, to_w: WordSchema, why: z.string().min(3) }).strict()).default([]),
@@ -223,12 +240,6 @@ export const VeApprovalSchema = z.object({
   artifact_hash: Sha256V1Schema,
 }).strict()
 
-export const VeCallSchema = z.object({
-  statement: z.string().min(12),
-  due: DateSchema,
-  confidence_percent: z.number().int().min(1).max(99),
-}).strict()
-
 // A card on Krish's inspiration board that this piece is held to (Krish, 2026-11-03: "I even gave literal inspiration in
 // the inspiration board on the quality I expect, and also the subtitle builds we could have"). `card` is the board's
 // own name for the clip (its file stem, instagram_DePHDr_jRed); `drive_id` is where its video lives, read at packet
@@ -264,7 +275,7 @@ export const VeCharacterSchema = z.object({
 
 // The day each series publishes on (Monday follow.the.money, Wednesday under.the.hood, Friday mind.the.gap; the
 // house channels in config/studio.json). A piece published on any other day is an off-day piece: it wears no series
-// promise and carries no dated call card (velib/guards.off_day). Since 19 November no day needs one (Ruling, Krish, 2026-11-19).
+// promise (velib/guards.off_day).
 const VE_SERIES_WEEKDAY: Record<string, number> = { 'follow.the.money': 1, 'under.the.hood': 3, 'mind.the.gap': 5 }
 
 export function veOffDay(spec: { publish_day?: string | undefined, brand: { series: string } }): boolean {
@@ -302,7 +313,6 @@ export const ProductionSpecV2Schema = z.object({
     // card where the sting was. Kept in the shape only so the refusal below can name it; any value is refused.
     opening_exception: z.unknown().optional(),
   }).strict(),
-  call: VeCallSchema.optional(),
   signature: VeSignatureSchema,
   datasets: z.array(VeDatasetSchema).default([]),
   objects: z.array(VeObjectSchema).default([]),
@@ -359,8 +369,6 @@ export const ProductionSpecV2Schema = z.object({
     card: z.boolean().optional(),
   }).strict().optional(),
 }).strict().superRefine((spec, c) => {
-  // No cut needs a dated call (Ruling, Krish, 2026-11-19: "If I want to predict something in a particular piece I will"):
-  // spec.call is set only when Krish asked for a prediction on the piece, and then a whole cut ends on its call beat (lint story.call).
   if (spec.brand.intro_sting !== undefined && spec.brand.intro_sting !== VE_NO_STING && spec.brand.intro_sting !== VE_NO_STING_BEFORE) {
     c.addIssue({ code: 'custom', path: ['brand', 'intro_sting'], message: `nothing goes before the hook (Ruling, Krish, 2026-11-12: "${VE_NOTHING_BEFORE_HOOK}"): brand.intro_sting is "${VE_NO_STING}", or unset` })
   }
@@ -399,6 +407,10 @@ export const ProductionSpecV2Schema = z.object({
       lastEnd = b.span.to_w
       if (b.plate.source.startsWith('asset:') && !assets.has(b.plate.source.slice(6))) c.addIssue({ code: 'custom', path: [...at, 'plate', 'source'], message: `unknown asset ${b.plate.source.slice(6)}` })
       if (b.backdrop && !assets.has(b.backdrop.slice(6))) c.addIssue({ code: 'custom', path: [...at, 'backdrop'], message: `unknown asset ${b.backdrop.slice(6)}` })
+      if (b.role === 'why' && !b.why) c.addIssue({ code: 'custom', path: [...at, 'why'], message: 'a why beat names its rung: why { n, question, strength }' })
+      if (b.role !== 'why' && b.why) c.addIssue({ code: 'custom', path: [...at, 'why'], message: 'only a why beat names a rung' })
+      if (b.role === 'landing' && !b.landing) c.addIssue({ code: 'custom', path: [...at, 'landing'], message: 'a landing beat carries its landing: landing { shows, open_question }' })
+      if (b.role !== 'landing' && b.landing) c.addIssue({ code: 'custom', path: [...at, 'landing'], message: 'only a landing beat carries the landing' })
       b.events.forEach((e, j) => {
         if (!objects.has(e.obj)) c.addIssue({ code: 'custom', path: [...at, 'events', j, 'obj'], message: `unknown object ${e.obj}` })
         if (e.at_w < b.span.from_w || e.at_w > b.span.to_w) c.addIssue({ code: 'custom', path: [...at, 'events', j, 'at_w'], message: 'an event fires on a word inside its beat' })
@@ -410,3 +422,5 @@ export const ProductionSpecV2Schema = z.object({
 export type ProductionSpecV2 = z.infer<typeof ProductionSpecV2Schema>
 export type VeBeat = z.infer<typeof VeBeatSchema>
 export type VeEvent = z.infer<typeof VeEventSchema>
+export type VeWhyStep = z.infer<typeof VeWhyStepSchema>
+export type VeLanding = z.infer<typeof VeLandingSchema>

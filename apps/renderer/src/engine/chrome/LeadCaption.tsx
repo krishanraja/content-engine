@@ -3,6 +3,7 @@ import { HOUSE_FONTS } from '../../house/geometry'
 import { textWidth } from '../../house/metrics'
 import { SPLIT_SEAM_Y } from '../layouts/splitGeometry'
 import { WORD_CAPTION } from './WordCaption'
+import { landingBeatAt } from './LandingCard'
 import { SAFE_TALL, SAFE_WIDE } from '../kit/focus'
 import type { EngineBeat, EngineRenderProps } from '../props'
 
@@ -70,7 +71,7 @@ export function leadBox(card: LeadCard, beat: EngineBeat | undefined, aspect: '9
 
 export function LeadCaption({ props, frame, perCard }: { props: EngineRenderProps; frame: number; perCard: number }) {
   if ((props.ending && frame >= props.ending.fromFrame)
-    || (!!props.call && props.beats.some((beat) => beat.role === 'call' && frame >= beat.fromFrame && frame < beat.toFrame))) return null
+    || !!landingBeatAt(props, frame)) return null
   const card = leadCards(props.captions, props.beats, perCard).find(c => c.from <= frame && frame < c.to)
   if (!card) return null
   const beat = props.beats.find(b => b.fromFrame <= frame && frame < b.toFrame)

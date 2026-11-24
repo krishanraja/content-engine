@@ -18,7 +18,7 @@ import {
   type VisualAssetV1,
 } from '@mindmake/contracts'
 import type { V2RenderProps } from '../../../apps/renderer/src/v2/props.js'
-import { houseCallFrame, houseShortStickerFrame, type HouseBox } from '../../../apps/renderer/src/house/geometry.js'
+import { houseLandingFrame, houseShortStickerFrame, type HouseBox } from '../../../apps/renderer/src/house/geometry.js'
 import { brandThemeRefusal, brandWordmarkLegibilityReport, officialSeriesMark, publicationLegibilityReport, runtimeTypography, stageOfficialWordmarks, stagePublicationMarks, type BrandLockupMode, type StagedBrandWordmarks, type StagedPublicationMarks } from './brand-assets.js'
 import { remotionLicenceEligible } from './doctor.js'
 import { hashFile, hashPath, hashValue } from './hash.js'
@@ -26,7 +26,7 @@ import { loadJobV2, pinnedConfigPathV2, readStageArtifactV2 } from './job-store-
 import { jobPath, studioPaths } from './paths.js'
 import { assertProductionBrief } from './media-delivery.js'
 import { run } from './process.js'
-import { boundRenderCallIssuesV2 } from './render-call.js'
+import { boundRenderLandingIssuesV2 } from './render-landing.js'
 
 const REMOTION_VERSION = '4.0.518'
 const COMPOSITION_ID = 'MindmakeStoryV2'
@@ -130,14 +130,14 @@ export interface BrandTimelineResolutionV2 {
   identity_cue?: BrandCueV2
   /** The house style's timed elements: the channel sticker on the second
    *  beat (left out where it would cover the presenter or a directed layer)
-   *  and the call card on the beat the manifest names. */
+   *  and the landing card on the beat the manifest names. */
   house?: HouseMomentsV2
   issues: string[]
 }
 
 export interface HouseMomentsV2 {
   sticker?: { text: string; startMs: number; endMs: number }
-  call?: { startMs: number; endMs: number; statement: string; due: string; confidencePercent: number }
+  landing?: { startMs: number; endMs: number; shows: string; openQuestion: string }
 }
 
 export interface BrandGeometryContextV2 {
@@ -350,7 +350,7 @@ function layerVisibleAt(
 function collidingBrandLayers(shot: RenderManifestV2['shot_directives'][number], bounds: NormalizedBounds, startMs: number, endMs: number, options: { ignoreCaptions?: boolean } = {}): string[] {
   return shot.layers.filter((layer) => {
     if (layer.kind === 'branding' || !layerVisibleDuring(layer, shot, startMs, endMs)) return false
-    // The house style's band and call card take the caption's place.
+    // The house style's band and landing card take the caption's place.
     if (options.ignoreCaptions && layer.kind === 'caption') return false
     if ((layer.kind === 'source' || layer.kind === 'background') && !layer.protected) return false
     return boundsOverlap(bounds, layer.bounds || fallbackBounds(layer.anchor))
@@ -631,11 +631,11 @@ export function beatWindowsV2(manifest: RenderManifestV2): BeatWindowV2[] {
 
 const MINIMUM_HOUSE_MOMENT_MS = 500
 
-/** The house style's sticker and call card, placed on the beats that carry
- *  them and checked like the mark: never over the presenter's face, a
+/** The house style's sticker and landing card, placed on the beats that
+ *  carry them and checked like the mark: never over the presenter's face, a
  *  directed layer or the platform's interface. Both give way to the ending
  *  band. The sticker is decoration, so where it cannot sit clear it is left
- *  out; the call is the piece's content, so where it cannot, the render
+ *  out; the landing is the piece's content, so where it cannot, the render
  *  stops and says why. */
 function resolveHouseMoments(manifest: RenderManifestV2, theme: BrandThemeV1, identityCue: BrandCueV2, cues: BrandCueV2[], context: BrandGeometryContextV2): { moments: HouseMomentsV2; issues: string[] } {
   const house = theme.publication!.house_style!
@@ -665,20 +665,20 @@ function resolveHouseMoments(manifest: RenderManifestV2, theme: BrandThemeV1, id
     if (!overMark && !clearOver(second, stickerSpan, bounds, false).length) moments.sticker = { text: copy.sticker, ...stickerSpan }
   }
 
-  if (manifest.call) {
-    const call = manifest.call
-    const beat = beats.find((window) => window.beatId === call.beat_id)
+  if (manifest.landing) {
+    const landing = manifest.landing
+    const beat = beats.find((window) => window.beatId === landing.beat_id)
     const span = beat ? beforeBand(beat) : undefined
-    if (!beat) issues.push(`the call names beat ${call.beat_id}, which no shot carries`)
-    else if (!span) issues.push(`the call card on beat ${call.beat_id} would share the screen with the ending band; give the call a beat of its own before the ending`)
+    if (!beat) issues.push(`the landing names beat ${landing.beat_id}, which no shot carries`)
+    else if (!span) issues.push(`the landing card on beat ${landing.beat_id} would share the screen with the ending band; give the landing a beat of its own before the ending`)
     else {
-      const frame = houseCallFrame(call.statement, safe)
-      const callIssues: string[] = []
-      if (frame.top + frame.height > manifest.output.height - safe.bottomPx) callIssues.push(`the call card on beat ${call.beat_id} runs into the ${manifest.target_platform} safe zone at the foot of the frame; shorten its statement`)
+      const frame = houseLandingFrame(landing.shows, landing.open_question, safe)
+      const landingIssues: string[] = []
+      if (frame.top + frame.height > manifest.output.height - safe.bottomPx) landingIssues.push(`the landing card on beat ${landing.beat_id} runs into the ${manifest.target_platform} safe zone at the foot of the frame; shorten what it shows or its open question`)
       const collisions = clearOver(beat, span, normal(frame.box), true)
-      if (collisions.length) callIssues.push(`the call card on beat ${call.beat_id} would cover ${[...new Set(collisions)].join(', ')}`)
-      if (callIssues.length) issues.push(...callIssues)
-      else moments.call = { ...span, statement: call.statement, due: call.due, confidencePercent: call.confidence_percent }
+      if (collisions.length) landingIssues.push(`the landing card on beat ${landing.beat_id} would cover ${[...new Set(collisions)].join(', ')}`)
+      if (landingIssues.length) issues.push(...landingIssues)
+      else moments.landing = { ...span, shows: landing.shows, openQuestion: landing.open_question }
     }
   }
   return { moments, issues }
@@ -819,7 +819,7 @@ function runtimeHouse(staged: StagedPublicationMarks, moments: HouseMomentsV2 | 
     tile: { size: lockup.anchor.plate_width, markWidth: lockup.anchor.mark_width, shadowPx: lockup.anchor.shadow_px ?? 0 },
     band: { topPx: lockup.identity.top_px, heightPx: lockup.identity.height_px, logoWidth: lockup.identity.logo_width },
     ...(moments?.sticker ? { sticker: moments.sticker } : {}),
-    ...(moments?.call ? { call: { startMs: moments.call.startMs, endMs: moments.call.endMs, kicker: house.copy.call_kicker, headline: house.copy.call_headline, statement: moments.call.statement, due: moments.call.due, confidencePercent: moments.call.confidencePercent } } : {}),
+    ...(moments?.landing ? { landing: { startMs: moments.landing.startMs, endMs: moments.landing.endMs, kicker: house.copy.landing_kicker, shows: moments.landing.shows, openQuestion: moments.landing.openQuestion } } : {}),
   }
 }
 
@@ -1244,8 +1244,8 @@ export async function renderStoryV2(repoRoot: string, manifestInput: RenderManif
   const settings = profileSettings(options, manifest)
   const readinessIssues = validateV2RenderReadiness(manifest, settings.overlay)
   if (readinessIssues.length) throw new Error(`V2 render readiness failed: ${readinessIssues.join('; ')}`)
-  const callIssues = await boundRenderCallIssuesV2(manifest, pinnedRegistry)
-  if (callIssues.length) throw new Error(`hard block: the call gate failed: ${callIssues.join('; ')}`)
+  const landingIssues = await boundRenderLandingIssuesV2(manifest, pinnedRegistry)
+  if (landingIssues.length) throw new Error(`hard block: the landing gate failed: ${landingIssues.join('; ')}`)
   if (mediaQualityEnforced()) await assertProductionBrief(join(jobPath(manifest.job_id), 'media-brief.json'), settings.profile === 'master', manifest.job_id)
   const brandGeometry = await loadExactBrandGeometryContextV2(manifest)
   if (!await remotionLicenceEligible(repoRoot)) throw new Error('Remotion licence eligibility is not confirmed. Run studio doctor.')
@@ -1306,8 +1306,8 @@ export async function renderV2Styleframes(repoRoot: string, manifestInput: Rende
   if (times.some((time) => time < 0 || time >= manifest.duration_ms)) throw new Error('styleframe time is outside the render duration')
   const readinessIssues = validateV2RenderReadiness(manifest, 'styleframe')
   if (readinessIssues.length) throw new Error(`V2 styleframe readiness failed: ${readinessIssues.join('; ')}`)
-  const callIssues = await boundRenderCallIssuesV2(manifest, pinnedRegistry)
-  if (callIssues.length) throw new Error(`hard block: the call gate failed: ${callIssues.join('; ')}`)
+  const landingIssues = await boundRenderLandingIssuesV2(manifest, pinnedRegistry)
+  if (landingIssues.length) throw new Error(`hard block: the landing gate failed: ${landingIssues.join('; ')}`)
   const brandGeometry = await loadExactBrandGeometryContextV2(manifest)
   if (!await remotionLicenceEligible(repoRoot)) throw new Error('Remotion licence eligibility is not confirmed. Run studio doctor.')
   const rendererHash = await rendererImplementationHashV2(repoRoot)
