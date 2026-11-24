@@ -24,6 +24,12 @@ DECK.json (schema carousel-deck/1) is the deck's words as the cards carry them, 
    "read_back": [{"reader": "...", "answers": {"what": "...", "happened": "...", "why": "...", "so_what": "...", "do": "..."}}],
    "explains": {"git": "the tool programmers use to save code"}}
 
+carousel-deck/2 is the same file climbing the why-ladder (Ruling, Krish, 2026-11-24: the signature format is the 5
+Whys; get rid of everything that suggests predictions, calls, dated, odds or scores): every Why names its source,
+  "five_whys": [{"q": "Why ...?", "a": "...", "source": "who said it, dated, or its link"}, ...]
+3 to 7 of them (five is the target, never padded); fewer than 3 only when the last carries the "stop" that ended the
+ladder (evidence_exhausted, out_of_scope and so on). A carousel-deck/1 deck keeps its five whys with no source each.
+
 What it refuses (each is what a Git deck of 12 or 13 Nov got wrong; docs/CAROUSEL-STANDARD.md, "The ten-second swipe"):
   - no five whys asked before writing, or no card for what it is, what happened, why, the wider trend or what to do,
     or those steps out of order;
@@ -62,6 +68,8 @@ ARC_SAYS = {'what': 'what the thing is, in plain words', 'happened': 'what happe
             'so_what': 'the wider trend it points to, with evidence from outside the story', 'do': 'what a business person should do'}
 LINE_WORDS = 20
 READERS = 2
+SCHEMAS = ('carousel-deck/1', 'carousel-deck/2')
+LADDER_WHYS = (3, 7)      # carousel-deck/2: the why-ladder's 3 to 7 rungs, five the target (packages/contracts/src/whys.ts)
 
 
 def words(text: str) -> list[str]:
@@ -154,10 +162,40 @@ def close_problems(deck: dict, cards: list) -> list:
     return out
 
 
+def _sourced(source) -> bool:
+    """A Why's source: its words (who said it, dated) or its link, or {"label"/"url": ...}."""
+    if isinstance(source, dict):
+        return any(str(source.get(k) or '').strip() for k in ('label', 'url', 'name'))
+    return bool(str(source or '').strip())
+
+
+def ladder_problems(deck: dict) -> list[str]:
+    """carousel-deck/2: the why-ladder before any card, every Why with its question, its answer and its source; 3 to 7
+    of them, fewer than 3 only when the last says why the ladder stopped (its "stop"), never padded to five."""
+    whys = [w for w in (deck.get('five_whys') or []) if isinstance(w, dict)]
+    if not whys:
+        return [f'climb the Whys before writing a card ("five_whys": {LADDER_WHYS[0]} to {LADDER_WHYS[1]} of '
+                '{"q", "a", "source"}; five is the target)']
+    out = []
+    if len(whys) > LADDER_WHYS[1]:
+        out.append(f'{len(whys)} Whys: merge sub-steps so the ladder climbs {LADDER_WHYS[1]} at most (five is the target)')
+    if len(whys) < LADDER_WHYS[0] and not str(whys[-1].get('stop') or '').strip():
+        out.append(f'{len(whys)} Whys: fewer than {LADDER_WHYS[0]} needs the "stop" that ended the ladder on the last one '
+                   '(evidence_exhausted, out_of_scope and so on), never padding')
+    for n, w in enumerate(whys, 1):
+        if not str(w.get('q') or '').strip():
+            out.append(f'Why {n} has no question ("q")')
+        if len(words(str(w.get('a') or ''))) < 4:
+            out.append(f'Why {n} has no answer of at least 4 words ("a")')
+        if not _sourced(w.get('source')):
+            out.append(f'Why {n} names no source: on a carousel-deck/2 every Why carries its "source"')
+    return out
+
+
 def problems(deck: dict) -> list[str]:
     out: list[str] = []
-    if deck.get('schema') != 'carousel-deck/1':
-        out.append('not a carousel-deck/1 file')
+    if deck.get('schema') not in SCHEMAS:
+        out.append('not a carousel-deck/1 or carousel-deck/2 file')
     cards = deck.get('cards')
     if not isinstance(cards, list) or len(cards) < 2:
         return out + ['a deck needs a cover and at least one card after it']
@@ -166,9 +204,12 @@ def problems(deck: dict) -> list[str]:
     # The story route (Krish, 2026-11-13: "Nobody knows what Git is. No one knows why Anthropic did this. No one knows
     # why it's important to basic people or what could change as a result ... Ask why five times"; "the 'so what' is
     # missing ... That's where the gold dust lies"): five whys first, then a card for each step, in order.
-    whys = [w for w in (deck.get('five_whys') or []) if isinstance(w, dict) and str(w.get('q') or '').strip() and len(words(str(w.get('a') or ''))) >= 4]
-    if len(whys) < 5:
-        out.append(f'ask why five times before writing a card ("five_whys": five questions with their answers; {len(whys)} given)')
+    if deck.get('schema') == 'carousel-deck/2':
+        out.extend(ladder_problems(deck))
+    else:
+        whys = [w for w in (deck.get('five_whys') or []) if isinstance(w, dict) and str(w.get('q') or '').strip() and len(words(str(w.get('a') or ''))) >= 4]
+        if len(whys) < 5:
+            out.append(f'ask why five times before writing a card ("five_whys": five questions with their answers; {len(whys)} given)')
     arc = deck.get('arc') if isinstance(deck.get('arc'), dict) else {}
     placed = []
     for step in ARC:

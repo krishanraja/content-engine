@@ -157,5 +157,53 @@ class TenSecondSwipe(unittest.TestCase):
         self.assertEqual(carousel_check.problems(deck), [])
 
 
+class WhyLadderDeck(unittest.TestCase):
+    """carousel-deck/2 (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that
+    suggests predictions, calls, dated, odds or scores): the why-ladder before any card, every Why with its source.
+    A carousel-deck/1 deck keeps its five whys with no source each."""
+
+    LADDER = [{'q': f'Why does step {n} happen?', 'a': f'Because cause {n} came first, the filings show.',
+               'source': f'Anthropic engineering blog, 2026-11-0{n}'} for n in range(1, 6)]
+
+    @staticmethod
+    def deck(whys):
+        deck = json.loads(json.dumps(FOLLOWABLE))
+        deck['schema'] = 'carousel-deck/2'
+        deck['five_whys'] = whys
+        return deck
+
+    def test_a_source_on_every_why_passes(self):
+        self.assertEqual(carousel_check.problems(self.deck(self.LADDER)), [])
+        linked = [dict(w, source={'label': 'Faros AI', 'url': 'https://faros.ai/report'}) for w in self.LADDER[:3]]
+        self.assertEqual(carousel_check.problems(self.deck(linked)), [])
+
+    def test_a_why_without_its_source_fails(self):
+        whys = json.loads(json.dumps(self.LADDER))
+        whys[2]['source'] = ''
+        del whys[4]['source']
+        found = ' | '.join(carousel_check.problems(self.deck(whys)))
+        self.assertIn('Why 3 names no source', found)
+        self.assertIn('Why 5 names no source', found)
+        self.assertNotIn('Why 1 names no source', found)
+
+    def test_three_to_seven_whys_and_an_honest_stop(self):
+        self.assertEqual(carousel_check.problems(self.deck(self.LADDER[:3])), [])
+        self.assertIn('fewer than 3 needs the "stop"', ' | '.join(carousel_check.problems(self.deck(self.LADDER[:2]))))
+        stopped = self.deck(self.LADDER[:1] + [dict(self.LADDER[1], stop='evidence_exhausted')])
+        self.assertEqual(carousel_check.problems(stopped), [])
+        self.assertIn('8 Whys: merge sub-steps', ' | '.join(carousel_check.problems(self.deck(self.LADDER + self.LADDER[:3]))))
+        self.assertIn('climb the Whys before writing a card', ' | '.join(carousel_check.problems(self.deck([]))))
+        thin = self.deck([dict(w, a='Yes.') for w in self.LADDER])
+        self.assertIn('Why 1 has no answer of at least 4 words', ' | '.join(carousel_check.problems(thin)))
+
+    def test_a_carousel_deck_1_still_validates_without_sources(self):
+        self.assertEqual(FOLLOWABLE['schema'], 'carousel-deck/1')
+        self.assertTrue(all('source' not in w for w in FOLLOWABLE['five_whys']))
+        self.assertEqual(carousel_check.problems(FOLLOWABLE), [])
+        deck = json.loads(json.dumps(FOLLOWABLE))
+        deck['schema'] = 'carousel-deck/3'
+        self.assertIn('not a carousel-deck/1 or carousel-deck/2 file', carousel_check.problems(deck))
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -42,7 +42,7 @@ headless model run or a template engine. The Studio's old carousel commands are 
 1. **Claude writes the deck: the story, the words and the creative direction.** The story route is "The ten-second
    swipe" below: ask why five times, find the wider trend and prove it with an outside source, tell it in order, every
    card after the cover one full plain sentence of 8 to 20 words a stranger can follow, and at most 10 cards, ending on
-   the palette's close: the takeaway, then "Follow for more" with the wordmark centred under it. The words live in a `carousel-deck/1` file
+   the palette's close: the takeaway, then "Follow for more" with the wordmark centred under it. The words live in a `carousel-deck/2` file (the why-ladder, a source per Why; a `carousel-deck/1` file still validates)
    and `python3 scripts/carousel_check.py DECK.json` passes before anything is drawn. Everything follows this
    standard, the brand palette (`config/brand-palette.json`, `docs/production/BRAND_PALETTE.md`) and the rejection
    floor (`python3 scripts/floor.py --format carousel`).
@@ -272,6 +272,14 @@ five-card redraw of 13 Nov with no "so what", and the Git deck of 13 Nov
 months.", "So Anthropic built one for AI.", "Doing got faster. Checking didn't."). The worked example is now the
 synthetic FOLLOWABLE deck in that test, written in the shape he asked for. Growth runs the check on every carousel it
 makes to this standard.
+
+**`carousel-deck/2`: the why-ladder, a source per Why** (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys;
+get rid of everything that suggests predictions, calls, dated, odds or scores). The same file climbing the ladder the
+piece's research found (`packages/contracts/src/whys.ts`): `five_whys` holds `{"q", "a", "source"}` for every Why, where
+`source` is who said it, dated, or its link (or `{"label", "url"}`). It climbs 3 to 7 Whys, five the target and never
+padded; fewer than 3 only when the last carries the `"stop"` that ended the ladder (`evidence_exhausted`,
+`out_of_scope` and so on). `carousel_check.py` refuses a Why with no source on a `/2` deck. A `carousel-deck/1` deck
+keeps its five whys with no source each and still validates.
 
 ## The cover and the page (Ruling, Krish, 15 November 2026)
 
