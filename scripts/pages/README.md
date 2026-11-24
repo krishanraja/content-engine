@@ -108,8 +108,8 @@ One JSON file. Paths are relative to the file (or to `--assets DIR`).
 | `figures` | The piece's images: `{"after": "words in the body", "image": "img/1.png", "alt": "what it shows", "caption": "optional"}`. Each goes after the paragraph that holds its `after` words. `alt` is required. |
 | `pull_quotes` | `{"after": "...", "quote": "...", "cite": "who said it"}`. The quote must be words from the body, exactly. |
 | `sources` | `{"id": ["Title, date", "https://..."]}` (or `{"title", "url"}`). Listed at the end in the order they are first linked; any never linked come last, and the build mentions them. |
-| `links` | `[["exact words in the body", "source id"], ...]`. Each phrase is linked where it first appears, in reading order. Headings and the prediction are never linked. |
-| `call_heading` | The body heading that starts the prediction, if it is not `OUR PREDICTION`, `OUR CALL`, `THE CALL` or `PREDICTION`. |
+| `links` | `[["exact words in the body", "source id"], ...]`. Each phrase is linked where it first appears, in reading order. Headings are never linked. |
+| `whys` | The piece's why-ladder, the `why-ladder/1` object kept in the piece's `meta.whys` (`packages/contracts/src/whys.ts`): `{"schema": "why-ladder/1", "question", "rungs": [{"n", "question", "answer", "evidence": [{"url", "domain", "date", "quote"}], "strength"}], "landing": {"shows", "open_question"}}`. The page shows it as The Whys after the body: each rung's question, its answer and a source line (each source's domain and date, linked), marked documented, inferred or open question, then where the ladder lands: what this shows and the open question handed to the reader. The Substack copy keeps the same words. Without it the page has no ladder section; a ladder that is there but cannot be read stops the build. The signature format is the 5 Whys (Ruling, Krish, 2026-11-24): there is no call, meter, odds or due date anywhere on the page. |
 | `opinion_labels` | More labels to mark as opinion, beside the built-in "Our read:", "Our read, in plain English:", "Our bet:", "Our guess:", "Our view:" and "Here's our guess, and it is a guess:". |
 | `endnote` | The line under the sources. Defaults to the fact-check line. |
 
@@ -120,10 +120,11 @@ What the tool reads from the body itself:
 - A run of paragraphs that start "Guess one.", "Guess two." (or Future,
   Scenario, Option, Outcome) becomes a row of cards. If the next paragraph
   says "Our bet: guess two", that card is the one marked.
-- The section under the prediction heading becomes the call: "By 30 June
-  2027, ..." is the claim and its due date, "How sure we are: 70%." is the
-  meter, and "Winners: ...", "Losers: ..." or "First sign: ..." are rows. The
-  Substack copy keeps that section word for word.
+- A prediction section (a heading `OUR PREDICTION`, `OUR CALL`, `THE CALL`
+  or `PREDICTION`) or a confidence line ("How sure we are: 70%.") stops the
+  build: the signature format is the 5 Whys (Ruling, Krish, 2026-11-24: "get
+  rid of everything that suggests predictions, calls, dated, odds or
+  scores"). The piece's whys come from the facts' `whys`, never the body.
 
 ## What Substack does to your artwork
 

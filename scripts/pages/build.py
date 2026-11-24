@@ -12,8 +12,9 @@ has every field), and writes two self-contained files into OUTDIR:
 
   page.html      the piece in the makeyourmindup look, coloured by its
                  subchannel: masthead, headline and deck, the body with its
-                 source links, images and opinion labels, the dated call, the
-                 sources, the subscribe band. Fonts and images are inlined.
+                 source links, images and opinion labels, the piece's whys
+                 (when the facts carry its why-ladder), the sources, the
+                 subscribe band. Fonts and images are inlined.
   substack.html  the same text in one column that pastes into Substack's editor:
                  headings, paragraphs, lists, quotes, links and images (as
                  data URIs, in place) and nothing else. A Copy post button puts
@@ -83,7 +84,13 @@ import card  # noqa: E402
 
 CHOICE = re.compile(r'^(Guess|Future|Scenario|Option|Outcome) (one|two|three|four|five)\. (.+)$', re.S)
 BET = re.compile(r'\bOur (?:bet|pick|call): (?:guess|future|scenario|option|outcome) (one|two|three|four|five)\b', re.I)
-CALL_HEADINGS = ('OUR PREDICTION', 'OUR CALL', 'THE CALL', 'PREDICTION')
+# The signature format is the why-ladder (Ruling, Krish, 2026-11-24: "the signature format is the 5 Whys; get rid of
+# everything that suggests predictions, calls, dated, odds or scores"). The page's "Our call." band, its How-sure meter
+# and its due date are gone. A body that still carries a prediction section or a confidence line is refused, and the
+# page shows the piece's whys instead when its facts carry them ("whys": the why-ladder/1 object kept in meta.whys).
+PREDICTION_HEADING = re.compile(r'^(?:our prediction|our call|the call|prediction)\.?$', re.I)
+PREDICTION_LINE = re.compile(r'^\s*(?:how sure we are|confidence)\s*:\s*\d', re.I | re.M)
+WHY_STRENGTH_WORDS = {'documented': 'Documented', 'inferred': 'Inferred', 'open': 'Open question'}
 # Opinion is labelled so it never passes for fact. Longest first.
 LABELS = ["Here's our guess, and it is a guess:", 'Our read, in plain English:', 'Our read:', 'Our bet:', 'Our guess:', 'Our view:']
 ENDNOTE = ('Every fact in this piece was checked against its source before it went out. '
@@ -227,7 +234,7 @@ def page_text(h):
 def missing_sentences(body, h):
     """The rule from tests/control-plane/editions.test.ts: every sentence of
     the body is on the page; a labelled row only needs the words after its
-    label, and the confidence line is shown as a meter."""
+    label."""
     page = page_text(h).lower()
     missing = []
     for para in body.replace('\r\n', '\n').split('\n\n'):
@@ -237,9 +244,7 @@ def missing_sentences(body, h):
             continue
         for raw in re.split(r'(?<=[.!?"])\s+(?=[A-Z"])', text):
             s = re.sub(r'\s+', ' ', raw).strip()
-            lab = re.match(r'^(Winners|Losers|First sign|How sure we are): (.+)$', s)
-            if lab and lab.group(1) == 'How sure we are':
-                continue
+            lab = re.match(r'^(Winners|Losers|First sign): (.+)$', s)
             need = re.sub(r'^\[|\]$', '', lab.group(2)) if lab else re.sub(r'\.$', '', s)
             if need.lower() not in page:
                 missing.append(s)
@@ -273,6 +278,45 @@ def load_facts(path, body_override, assets):
     return facts, base, body_path.read_text(encoding='utf-8').replace('\r\n', '\n'), sources
 
 
+def prediction_problems(body):
+    """Why a body cannot be built: a prediction heading or a confidence line (Ruling, Krish, 2026-11-24)."""
+    problems = [f'a prediction section: "## {plain(val).strip()}"' for kind, val in parse_blocks(body)
+                if kind in ('h2', 'h3') and PREDICTION_HEADING.match(plain(val).strip())]
+    problems += [f'a confidence line: "{m.group(0).strip()}"' for m in PREDICTION_LINE.finditer(plain(body))]
+    return problems
+
+
+def whys_of(facts):
+    """The piece's why-ladder from its facts ("whys", the why-ladder/1 object kept in meta.whys), or None. A ladder
+    that is there but cannot be read stops the build rather than being dropped."""
+    whys = facts.get('whys')
+    if whys is None:
+        return None
+    if not isinstance(whys, dict) or whys.get('schema') != 'why-ladder/1' or not isinstance(whys.get('rungs'), list) \
+            or not whys['rungs'] or not isinstance(whys.get('landing'), dict):
+        brand.fail('"whys" is a why-ladder/1 object: schema, question, rungs and landing (README.md)')
+    for index, rung in enumerate(whys['rungs'], 1):
+        if not isinstance(rung, dict) or not str(rung.get('question') or '').strip() or not str(rung.get('answer') or '').strip():
+            brand.fail(f'"whys" rung {index} needs its question and its answer')
+    landing = whys['landing']
+    if not str(landing.get('shows') or '').strip() or not str(landing.get('open_question') or '').strip():
+        brand.fail('"whys" landing needs "shows" and "open_question"')
+    return whys
+
+
+def why_sources(evidence):
+    """A rung's source line: each source's domain and date, linked to it."""
+    out = []
+    for item in evidence or []:
+        if not isinstance(item, dict):
+            continue
+        label = ' · '.join(x for x in (item.get('domain') or '', item.get('date') or '') if x)
+        if not label:
+            continue
+        out.append((label, item.get('url')))
+    return out
+
+
 def resolve(base, rel):
     p = Path(rel)
     return p if p.is_absolute() else base / p
@@ -282,7 +326,7 @@ def resolve(base, rel):
 
 def build(facts, base, body, sources):
     """The body as page HTML and as Substack HTML, block by block, with the
-    images, pull quotes and source links in their places, and the call apart."""
+    images, pull quotes and source links in their places, and the piece's whys from its facts."""
     labels = sorted(set(LABELS + facts.get('opinion_labels', [])), key=len, reverse=True)
     linker = Linker(facts.get('links', []), sources)
     figures = [dict(f, placed=False) for f in facts.get('figures', [])]
@@ -295,7 +339,11 @@ def build(facts, base, body, sources):
         words = re.sub(r'\s+', ' ', q['quote']).strip(' ."“”').lower()
         if words not in flat_body:
             brand.fail(f'a pull quote must repeat the body word for word: {q["quote"]!r}')
-    call_heads = [facts['call_heading'].upper()] if facts.get('call_heading') else list(CALL_HEADINGS)
+    found = prediction_problems(body)
+    if found:
+        brand.fail('the body carries a prediction, and the page has no place for one (Ruling, Krish, 2026-11-24: '
+                   '"the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, '
+                   'odds or scores"); take it out of the body and give the facts its "whys":\n  ' + '\n  '.join(found))
 
     def both(md):
         """One block of text: links decided once, labels styled per output."""
@@ -304,17 +352,10 @@ def build(facts, base, body, sources):
                 mark_labels(h, labels, lambda t: f'<strong>{t}</strong>'))
 
     blocks = parse_blocks(body)
-    page, sub, call = [], [], None
+    page, sub = [], []
     i = 0
     while i < len(blocks):
         kind, val = blocks[i]
-        if kind == 'h2' and plain(val).strip().upper().rstrip('.') in call_heads:
-            call = {'heading': val, 'blocks': []}
-            i += 1
-            while i < len(blocks) and blocks[i][0] != 'h2':
-                call['blocks'].append(blocks[i])
-                i += 1
-            continue
         if kind in ('h2', 'h3'):
             page.append(f'<{kind}>{inline(val)}</{kind}>')
             sub.append(f'<{kind}>{inline(val)}</{kind}>')
@@ -358,14 +399,14 @@ def build(facts, base, body, sources):
         place_after(raw, figures, pulls, page, sub, base)
         i += 1
 
-    problems = [f'link phrase not found in the body text (headings and the prediction are never linked): {p!r}' for p, _ in linker.pending]
+    problems = [f'link phrase not found in the body text (headings are never linked): {p!r}' for p, _ in linker.pending]
     problems += [f'image anchor not found in the body: {f["after"]!r}' for f in figures if not f['placed']]
     problems += [f'pull quote anchor not found in the body: {q["after"]!r}' for q in pulls if not q['placed']]
     if problems:
         brand.fail('\n  '.join(['the page facts do not match the body:'] + problems))
     order = linker.used + [k for k in sources if k not in linker.used]
     return {
-        'page_body': '\n'.join(page), 'sub_body': '\n'.join(sub), 'call': call,
+        'page_body': '\n'.join(page), 'sub_body': '\n'.join(sub), 'whys': whys_of(facts),
         'sources': [sources[k] for k in order], 'unlinked': [k for k in sources if k not in linker.used],
         'images': len(figures), 'linked': len(linker.used), 'links': len(facts.get('links', [])),
     }
@@ -460,22 +501,23 @@ figure.vis figcaption { font-family: var(--mono); font-size: 12px; line-height: 
 .guess.bet { background: var(--accent); box-shadow: var(--shadow); }
 .guess-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 30px; }
 .guess p { font-size: 16px !important; line-height: 1.5 !important; margin: 0 !important; }
-.call { background: var(--ink); color: var(--cream); padding-block: clamp(40px, 7vw, 72px); padding-inline: 16px; margin-top: 40px; }
-.call-in { max-width: 860px; margin: 0 auto; display: grid; gap: 22px; }
-.call h2 { font-family: var(--anton); font-weight: 400; text-transform: uppercase; font-size: clamp(48px, 9vw, 104px); line-height: .9; margin: 0; color: var(--accent); }
-.call .claim { font-size: clamp(22px, 3vw, 32px); font-weight: 700; line-height: 1.25; margin: 0; text-wrap: balance; }
-.call .crow { display: grid; gap: 6px; }
-.call .crow p, .call .more { font-size: 19px; line-height: 1.5; font-weight: 500; margin: 0; }
-.call .meta { display: flex; flex-wrap: wrap; gap: 18px 36px; align-items: end; }
-.meter { flex: 1 1 260px; display: grid; gap: 8px; }
-.meter .bar { height: 22px; border: 2px solid var(--cream); background: var(--ink-soft); position: relative; }
-.meter .fill { position: absolute; inset: 0 auto 0 0; background: var(--accent); }
-.meter .ticks { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: #AEAEA5; }
-.meter .ticks b { color: var(--accent); font-weight: 600; }
-.call .label.dim { color: #AEAEA5; }
-.due { display: grid; gap: 6px; }
-.big { font-family: var(--anton); font-size: 44px; line-height: 1; color: var(--cream); }
-.call .foot { font-family: var(--serif); font-style: italic; font-size: 18px; color: #D1CEC4; margin: 0; }
+.whys { background: var(--ink); color: var(--cream); padding-block: clamp(40px, 7vw, 72px); padding-inline: 16px; margin-top: 40px; }
+.whys-in { max-width: 860px; margin: 0 auto; display: grid; gap: 22px; }
+.whys h2 { font-family: var(--serif); font-weight: 600; font-size: clamp(32px, 5vw, 48px); line-height: 1.1; margin: 0; color: var(--cream); }
+.whys .ask { font-family: var(--serif); font-style: italic; font-size: clamp(20px, 2.6vw, 26px); line-height: 1.35; margin: 0; color: #D1CEC4; }
+.whys .label.dim { color: #AEAEA5; }
+.rungs { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
+.rung { border-left: 4px solid var(--accent); padding: 4px 0 4px 18px; display: grid; gap: 8px; }
+.rung.inferred { border-left-style: double; }
+.rung.open { border-left-style: dashed; }
+.rung-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.rung .q { font-family: var(--serif); font-size: clamp(20px, 2.6vw, 26px); line-height: 1.3; margin: 0; }
+.rung .a { font-size: 19px; line-height: 1.5; font-weight: 500; margin: 0; }
+.rung .src { margin: 0; text-transform: none; letter-spacing: .02em; }
+.rung .src a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.landing { border-top: 2px solid var(--cream); padding-top: 18px; display: grid; gap: 10px; }
+.landing .shows { font-size: clamp(22px, 3vw, 30px); font-weight: 700; line-height: 1.25; margin: 0; text-wrap: balance; }
+.landing .open { font-family: var(--serif); font-style: italic; font-size: clamp(20px, 2.6vw, 26px); line-height: 1.35; margin: 0; color: #D1CEC4; }
 .sources { max-width: 720px; margin: 0 auto; padding: 48px 16px 24px; }
 .sources h2 { margin: 0; }
 .sources ol { margin: 14px 0 0; padding-left: 1.6em; font-family: var(--mono); font-size: 13px; line-height: 1.6; color: var(--muted); }
@@ -531,36 +573,31 @@ def hero_art(facts, base):
             + '</div>')
 
 
-def call_band(call, hs):
-    if not call:
+def whys_band(whys, hs):
+    """The Whys: each rung's question, its answer and its source line, then where the ladder lands: what this shows
+    and the open question handed to the reader. No verdict, meter, odds or date."""
+    if not whys:
         return ''
     copy = hs['copy']
-    claim, due, conf, rows, more = None, None, None, [], []
-    for kind, val in call['blocks']:
-        text = plain(val) if isinstance(val, str) else ' '.join(plain(v) for v in val)
-        m_conf = re.match(r'^How sure we are: (\d+)%\.?$', text.strip())
-        m_row = re.match(r'^([A-Z][A-Za-z ]{1,24}): (.+)$', text.strip())
-        if m_conf:
-            conf = int(m_conf.group(1))
-        elif claim is None:
-            claim = inline(val) if isinstance(val, str) else esc(text)
-            m_due = re.match(r'^By (.+?\d{4}), ', text)
-            due = m_due.group(1) if m_due else None
-        elif m_row:
-            rows.append(f'<div class="crow"><span class="label dim">{esc(m_row.group(1))}</span><p>{esc(m_row.group(2))}</p></div>')
-        else:
-            more.append(f'<p class="more">{inline(val) if isinstance(val, str) else esc(text)}</p>')
-    meter = (f'<div class="meter" aria-label="How sure we are: {conf}%"><span class="label dim">How sure we are</span>'
-             f'<div class="bar"><div class="fill" style="width:{conf}%"></div></div>'
-             f'<div class="ticks"><span>0%</span><b>{conf}%</b><span>100%</span></div></div>') if conf is not None else ''
-    due_html = f'<div class="due"><span class="label dim">Due</span><span class="big">{esc(due)}</span></div>' if due else ''
-    return f"""<section class="call" aria-labelledby="call-h">
-  <div class="call-in">
-    <h2 id="call-h">{esc(copy.get('call_headline', 'Our call.'))}</h2>
-    {f'<p class="claim">{claim}</p>' if claim else ''}
-    {''.join(rows)}{''.join(more)}
-    {f'<div class="meta">{meter}{due_html}</div>' if meter or due_html else ''}
-    <p class="foot">{esc(copy.get('call_footnote', ''))}</p>
+    rungs = []
+    for index, rung in enumerate(whys['rungs'], 1):
+        strength = rung.get('strength') if rung.get('strength') in WHY_STRENGTH_WORDS else 'open'
+        sources = ', '.join(f'<a href="{attr(url)}">{esc(label)}</a>' if url else esc(label) for label, url in why_sources(rung.get('evidence')))
+        rungs.append(f'<li class="rung {strength}"><div class="rung-head"><span class="label">Why {esc(str(rung.get("n", index)))}</span>'
+                     f'<span class="label dim">{esc(WHY_STRENGTH_WORDS[strength])}</span></div>'
+                     f'<p class="q">{esc(rung["question"])}</p><p class="a">{esc(rung["answer"])}</p>'
+                     + (f'<p class="src label dim">Source: {sources}</p>' if sources else '') + '</li>')
+    landing = whys['landing']
+    return f"""<section class="whys" aria-labelledby="whys-h">
+  <div class="whys-in">
+    <span class="label dim">{esc(copy.get('whys_kicker', 'Why, five times'))}</span>
+    <h2 id="whys-h">The Whys</h2>
+    {f'<p class="ask">{esc(whys["question"])}</p>' if whys.get('question') else ''}
+    <ol class="rungs">{''.join(rungs)}</ol>
+    <div class="landing"><span class="label">{esc(copy.get('landing_kicker', 'What this shows'))}</span>
+      <p class="shows">{esc(landing['shows'])}</p>
+      <p class="open">{esc(landing['open_question'])}</p>
+    </div>
   </div>
 </section>"""
 
@@ -600,7 +637,7 @@ def render_page(facts, base, body, r, refresh):
 <main class="col">
 {r['page_body']}
 </main>
-{call_band(r['call'], hs)}
+{whys_band(r['whys'], hs)}
 {f'<section class="sources" aria-labelledby="src-h"><h2 id="src-h" class="label">Sources</h2><ol>{sources}</ol></section>' if sources else ''}
 <p class="endnote">{esc(facts.get('endnote', ENDNOTE))}</p>
 <footer class="sub">
@@ -684,14 +721,24 @@ def render_substack(facts, r):
     hs = brand.house()
     ch = brand.channel(hs, facts['subchannel'])
     sources = ''.join(f'<li><a href="{attr(u)}">{esc(t)}</a></li>' for t, u in r['sources'])
-    call = ''
-    if r['call']:
-        call = f'<h2>{inline(r["call"]["heading"])}</h2>\n' + '\n'.join(
-            f'<p>{inline(v)}</p>' if k == 'p' else f'<{k}>' + ''.join(f'<li>{inline(x)}</li>' for x in v) + f'</{k}>'
-            if k in ('ul', 'ol') else f'<{k}>{inline(v)}</{k}>' if k in ('h2', 'h3') else f'<blockquote><p>{inline(v)}</p></blockquote>'
-            for k, v in r['call']['blocks'])
+    whys = ''
+    if r['whys']:
+        copy = brand.house()['copy']
+        parts = ['<h2>THE WHYS</h2>']
+        if r['whys'].get('question'):
+            parts.append(f'<p><em>{esc(r["whys"]["question"])}</em></p>')
+        for index, rung in enumerate(r['whys']['rungs'], 1):
+            parts.append(f'<h3>Why {esc(str(rung.get("n", index)))}: {esc(rung["question"])}</h3>')
+            parts.append(f'<p>{esc(rung["answer"])}</p>')
+            sources = ', '.join(f'<a href="{attr(url)}">{esc(label)}</a>' if url else esc(label) for label, url in why_sources(rung.get('evidence')))
+            if sources:
+                parts.append(f'<p><em>Source: {sources}</em></p>')
+        parts.append(f'<h2>{esc(copy.get("landing_kicker", "What this shows").upper())}</h2>')
+        parts.append(f'<p>{esc(r["whys"]["landing"]["shows"])}</p>')
+        parts.append(f'<p><em>{esc(r["whys"]["landing"]["open_question"])}</em></p>')
+        whys = '\n'.join(parts)
     post = '\n'.join(filter(None, [
-        r['sub_body'], call,
+        r['sub_body'], whys,
         f'<h2>SOURCES</h2>\n<ol>{sources}</ol>' if sources else '',
         f'<p><em>{esc(facts.get("endnote", ENDNOTE))}</em></p>',
     ]))
@@ -1017,7 +1064,7 @@ def self_test():
             # only, for assets and the video format."): the byline is the publication, with no face (Krish
             # picked "Drop it", 29 Oct).
             article = {'subchannel': 'follow.the.money', 'headline': 'Who gets paid?', 'deck': 'Two answers to one agent.', 'date': '2026-10-12'}
-            words = 'Warner sued Suno. Now it takes a cut of every song.\n\nHow sure we are: 70%.'
+            words = 'Warner sued Suno. Now it takes a cut of every song.'
             page = render_page(article, tmp, words, build(article, tmp, words, {}), False)
             byline = re.search(r'<div class="byline">(.*?)</div>', page).group(1)
             check('the byline is the publication, the date and the minutes, with no face',
@@ -1025,6 +1072,37 @@ def self_test():
             check('the page says "By " nowhere and never names him',
                   ('By ' in page_text(page), [h['match'] for h in copy_lint.copy_lint(page_text(page), 'article_body') if h['id'] == 'no_name']), (False, []))
             check('the page has no long dashes', [ch for ch in page if ch in '\u2013\u2014'], [])
+            # The signature format is the why-ladder (Ruling, Krish, 2026-11-24): no prediction anywhere on the page.
+            check('the page has no call band, meter or due date', [w for w in ('Our call', 'How sure', 'meter', '>Due<') if w in page], [])
+            for predicted in (words + '\n\n## OUR PREDICTION\n\nBy 30 June 2027, Suno pays everyone.', words + '\n\nHow sure we are: 70%.'):
+                try:
+                    build(article, tmp, predicted, {})
+                    check('a body with a prediction is refused', False, True)
+                except SystemExit as stop:
+                    check('a body with a prediction is refused', 'carries a prediction' in str(stop), True)
+            ladder = {'schema': 'why-ladder/1', 'question': 'Why does Warner now take a cut of every song?',
+                      'rungs': [{'n': 1, 'question': 'Why did Warner settle?', 'answer': 'Because a licence pays more than a lawsuit.',
+                                 'evidence': [{'url': 'https://example.com/a', 'domain': 'example.com', 'date': '2026-11-20', 'quote': 'q'},
+                                              {'url': 'https://example.org/b', 'domain': 'example.org', 'date': '2026-11-21', 'quote': 'q'}],
+                                 'strength': 'documented', 'counter': {}, 'stop': None},
+                                {'n': 2, 'question': 'Why does a licence pay more?', 'answer': 'We could not find out yet.',
+                                 'evidence': [], 'strength': 'open', 'counter': {}, 'stop': 'evidence_exhausted'}],
+                      'landing': {'shows': 'The fight became a fee.', 'open_question': 'Who else will turn a lawsuit into a licence?'}}
+            laddered = dict(article, whys=ladder)
+            r = build(laddered, tmp, words, {})
+            page = render_page(laddered, tmp, words, r, False)
+            check('the whys show each question, answer and source line, then the landing',
+                  [w in page for w in ('The Whys', 'Why 1', 'Why did Warner settle?', 'Because a licence pays more than a lawsuit.',
+                                       'example.com · 2026-11-20', 'Open question', 'What this shows', 'The fight became a fee.',
+                                       'Who else will turn a lawsuit into a licence?')], [True] * 9)
+            sub_copy = render_substack(laddered, r)
+            check('the Substack copy keeps the whys and the landing',
+                  [w in sub_copy for w in ('THE WHYS', 'Why 1: Why did Warner settle?', 'The fight became a fee.')], [True] * 3)
+            try:
+                build(dict(article, whys={'schema': 'why-ladder/1', 'rungs': [], 'landing': {}}), tmp, words, {})
+                check('an unreadable ladder stops the build', False, True)
+            except SystemExit as stop:
+                check('an unreadable ladder stops the build', 'why-ladder/1' in str(stop), True)
             try:
                 refuse_author({'author': 'Krish Raja'}, 'facts.json')
                 check('a facts file that names an author is refused', False, True)
@@ -1036,7 +1114,7 @@ def self_test():
     # The page check every build runs.
     check('markdown blocks', parse_blocks('## A head\n\nOne line\nand more.\n\n- a\n- b\n\n> said'),
           [('h2', 'A head'), ('p', 'One line and more.'), ('ul', ['a', 'b']), ('quote', 'said')])
-    body = 'The first sentence is here. The second one follows.\n\nHow sure we are: 70%.'
+    body = 'The first sentence is here. The second one follows.'
     check('every sentence on the page passes', missing_sentences(body, '<p>The first sentence is here. The second one follows.</p>'), [])
     check('a lost sentence is named', missing_sentences(body, '<p>The first sentence is here.</p>'), ['The second one follows.'])
     check('cover facts alone are not page facts', page_ready({'subchannel': 'x', 'headline': 'H', 'date': '2026-10-12'}, Path('.'), None), False)
@@ -1109,8 +1187,8 @@ def main():
           f'{r["links"]} link phrase(s) linked to {r["linked"]} source(s); {len(r["sources"])} under Sources')
     if r['unlinked']:
         print(f'  note: listed under Sources but linked from no phrase: {", ".join(r["unlinked"])}')
-    if not r['call']:
-        print('  note: no prediction section found, so the page has no call band')
+    if not r['whys']:
+        print('  note: the facts carry no "whys", so the page has no ladder section')
     phone_images(facts, base, out)
     pictures_off(sub_html, out)
     if facts.get('cover') and not a.cover:
