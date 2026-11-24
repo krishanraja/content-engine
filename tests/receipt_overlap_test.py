@@ -66,8 +66,9 @@ class ReceiptOverlapTest(unittest.TestCase):
         self.assertEqual(fit['over'], ['deco'])
 
     def test_a_decoration_on_the_logo_plate_is_refused(self):
-        # The plate sits at the foot of the safe box on tall (y 1660 is the safe box's floor), on the column's left edge.
-        shot, fit, _ = self.draw('left:60px;top:1610px;width:120px;height:40px;background:#000')
+        # The plate sits at the foot of the safe box on tall (y 1320 is the safe box's floor since 18 Nov, clear of the
+        # Reel's caption), on the column's left edge.
+        shot, fit, _ = self.draw('left:60px;top:1270px;width:120px;height:40px;background:#000')
         self.assertIsNone(shot)
         self.assertFalse(fit['ok'])
         self.assertEqual(fit['over'], ['deco'])

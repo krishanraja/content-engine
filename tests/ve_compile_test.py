@@ -11,6 +11,7 @@ import hashlib
 from argparse import Namespace
 from contextlib import redirect_stderr, redirect_stdout
 import json
+import re
 import os
 from pathlib import Path
 import shutil
@@ -120,7 +121,8 @@ class CompileTest(unittest.TestCase):
             caption_words = []
             swiped = []
             for page in props['captions']:
-                self.assertTrue(2 <= len(page['words']) <= 5)
+                n = len(page['words'])
+                self.assertTrue(2 <= n <= 5 or (n == 6 and re.search(r'[.!?]["\')]*$', page['words'][-1]['text'])), page)
                 caption_words.extend(page['words'])
                 if page['swipeIndex'] is not None:
                     swiped.append(page['words'][page['swipeIndex']]['atFrame'])
@@ -281,6 +283,17 @@ class CompileTest(unittest.TestCase):
         self.assertFalse([p for p in got if 'myself.' in p and not p.endswith('myself.')], got)
         for page in pages('really cool features and really helpful but a bit dangerous because once they\'re connected')[:-1]:
             self.assertNotIn(page.split()[-1], {'a', 'the', 'but', 'once'}, page)
+
+    def test_caption_pages_pass_qc_phrase_breaks(self):
+        # Habits short, 18 Nov 2026: ve qc failed 12 pages such as "Firing your AI is going | to be harder than" and
+        # "we don't put | the car on trial". The pager reads QC's own lists, so what it makes, QC passes.
+        from velib.qc_onscreen import phrase_breaks
+        text = ("Firing your AI is going to be harder than firing your people. Because I hear loads of people just "
+                "blaming AI for being rubbish right now. And we don't put the car on trial. The only way AI doesn't "
+                "replace you is if you own its mistakes like they're yours.")
+        rows = [{'w': i, 'text': t, 'atFrame': i * 9} for i, t in enumerate(text.split())]
+        pages = [{'fromFrame': g[0]['atFrame'], 'words': g} for g in _caption_groups(rows)]
+        self.assertEqual(phrase_breaks({'captions': pages}), [], [' '.join(r['text'] for r in g['words']) for g in pages])
 
     def test_word_captions_are_one_word_a_page_under_the_title(self):
         # Krish, 2026-11-03: "its the georgia subtitles build".

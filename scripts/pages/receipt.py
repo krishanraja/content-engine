@@ -66,7 +66,11 @@ SHAPES = {
     'vertical': {'w': 1080, 'h': 1920, 'layout': 'stack', 'safe': (96, 286, 984, 1444), 'lines': 5, 'heads': range(136, 42, -2)},
     'wide':     {'w': 1280, 'h': 720,  'layout': 'side',  'safe': (56, 40, 1224, 680), 'lines': 4, 'heads': range(112, 50, -2), 'proofw': '50%', 'tag_on_proof': True,
                  'clear': [("YouTube's video length, bottom right", (968, 548, 1280, 720))]},
-    'tall':     {'w': 1080, 'h': 1920, 'layout': 'stack', 'safe': (72, 260, 1008, 1660), 'lines': 5, 'heads': range(150, 42, -2)},
+    # The tall thumbnail is a Reel's cover as well as a grid tile: its words keep clear of every cover_tall zone in
+    # config/channel-safe-zones.json (the account row above y 270, the like rail right of x 880, the caption below
+    # y 1320), which tests/channel_safe_test.py holds it to. It was drawn for the grid tile alone (y 260 to 1660,
+    # x to 1008), so every tall Receipt put its proof under the Reel's caption and rail (cover-pick-9nov.md; 18 Nov).
+    'tall':     {'w': 1080, 'h': 1920, 'layout': 'stack', 'safe': (72, 270, 880, 1320), 'lines': 5, 'heads': range(150, 42, -2)},
 }
 
 CSS = """
