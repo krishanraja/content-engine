@@ -118,7 +118,7 @@
      "unread": 3
     },
     "prompts": {
-     "research": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, written for leaders who must decide what to do about it. You have no other context: everything you need is b…",
+     "research": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, one Why at a time. You have no other context: everything you need is b…",
      "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
      "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
      "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
@@ -3067,7 +3067,7 @@
      "unread": 3
     },
     "prompts": {
-     "research": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, written for leaders who must decide what to do about it. You have no other context: everything you need is b…",
+     "research": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, one Why at a time. You have no other context: everything you need is b…",
      "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
      "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
      "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
@@ -6164,7 +6164,7 @@
      "unread": 3
     },
     "prompts": {
-     "research": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, written for leaders who must decide what to do about it. You have no other context: everything you need is b…",
+     "research": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, one Why at a time. You have no other context: everything you need is b…",
      "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
      "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
      "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
@@ -7665,7 +7665,7 @@
     {
      "kind": "prompt",
      "label": "Copy Perplexity prompt",
-     "prompt": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, written for leaders who must decide what to do about it. You have no other context: everything you need is b…"
+     "prompt": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, one Why at a time. You have no other context: everything you need is b…"
     },
     {
      "kind": "press",
@@ -9964,7 +9964,7 @@
         "kind": "prompt",
         "label": "Perplexity research prompt",
         "tool": "perplexity",
-        "prompt": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, written for leaders who must decide what to do about it. You have no other context: everything you need is b…",
+        "prompt": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, one Why at a time. You have no other context: everything you need is b…",
         "notes": {
          "ask": "Your notes for Claude: what to change, or what you think the next step is",
          "heading": "Krish's latest notes, in his own words (typed on the board just now). They come first: research what they ask before anything else.",
@@ -10357,7 +10357,7 @@
         "kind": "prompt",
         "label": "Perplexity research prompt",
         "tool": "perplexity",
-        "prompt": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, written for leaders who must decide what to do about it. You have no other context: everything you need is b…",
+        "prompt": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, one Why at a time. You have no other context: everything you need is b…",
         "notes": {
          "ask": "Your notes for Claude: what to change, or what you think the next step is",
          "heading": "Krish's latest notes, in his own words (typed on the board just now). They come first: research what they ask before anything else.",

@@ -91,7 +91,7 @@ export function whysResearchPrompt(c: WhysPromptInput): string {
   const fence = '```'
   return [
     'You are doing deep research for one piece of Make Your Mind Up, Krish Raja\'s publication about what AI is really doing to '
-      + 'business, written for leaders who must decide what to do about it. You have no other context: everything you need is below.',
+      + 'business, one Why at a time. You have no other context: everything you need is below.',
     `The piece: "${c.title}", published ${c.when}${c.series ? ` in the ${c.series} series` : ''}.${c.where ? ` Where it stands: ${c.where}` : ''}`,
     c.story.filter(Boolean).join('\n'),
     lock ? `The story Krish signed, which the research must serve (its claims need evidence; if the evidence says otherwise, say so first):\n\n${lock}` : '',

@@ -66,7 +66,7 @@ describe('one research prompt: the 5 Whys', () => {
   it('never asks for a forecast, odds, confidence or a lesson: the landing hands the viewer a question', () => {
     const p = researchPromptFor(context as never)
     expect(p).toContain('Never a verdict, a forecast, odds, how sure anyone is, or a lesson for leaders.')
-    expect(p).not.toMatch(/what would change the story|five findings|predict|how sure we are|confidence/i)
+    expect(p).not.toMatch(/what would change the story|five findings|predict|how sure we are|confidence|decide what to do/i)
   })
 
   it('biases Why 1 by series', () => {
