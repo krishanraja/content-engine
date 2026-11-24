@@ -60,7 +60,7 @@ describe('one research prompt: the 5 Whys', () => {
     expect(p).toMatch(/You have no other context/)
     expect(p).toContain('The arc.')
     expect(p).toContain('Who owns the masters?')
-    expect(p).not.toMatch(/—|–/)
+    expect(p).not.toMatch(/\u2014|\u2013/)
   })
 
   it('never asks for a forecast, odds, confidence or a lesson: the landing hands the viewer a question', () => {
