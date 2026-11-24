@@ -24,7 +24,7 @@ The story check (Krish, 2026-10-06, walk log F75: "they need to actually make se
 2. Every beat sets that question up or answers it.
 3. Every claim is set up before it is judged; no term the listener has not heard explained.
 4. Each takeaway follows from a beat already told.
-5. The ending answers the opening question out loud, then the call, then, for a script of a minute or more, a short spoken outro: what this was, where the full piece is, and Krish signing off. It never ends on the number.
+5. The ending answers the opening question out loud, then the landing (what the why-ladder shows and the open question it hands the listener, `docs/FIVE-WHYS.md`; never a call, forecast or confidence number), then, for a script of a minute or more, a short spoken outro: what this was, where the full piece is, and Krish signing off. It never ends on the number.
 
 Never read the article's headings or stamps aloud (REAL, THEATRE, "One: the billion."). `storyArcIssues` in `packages/core/src/editorial.ts` refuses a short-native script that misses the parts a rule can see (points 1 and 5, spoken stamps, unchecked facts); points 2 to 4 need a reader, so read the script aloud once before handing it on. The same rule is the content engine's house rules FOR_THE_EAR and STORY_ARC and the post pack's `story_check.py`.
 

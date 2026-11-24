@@ -36,9 +36,9 @@ A replaced take invalidates only media-dependent descendants. CI rejects drift b
 
 Never substitute chat agreement for the recorded approval.
 
-## The call on a Short
+## The landing on a Short
 
-A Short in the makeyourmindup house style for a live subchannel shows the piece's call (its dated prediction and how sure we are), when the piece has one because Krish asked for it (Ruling, Krish, 2026-11-19), on a card, on the beat its render manifest names. The call comes only from the approved text of the job's production brief: run `studio v2 call --job <job> --beat <beat_id>` and paste its `call` into every manifest for the job, from the styleframes review manifest to the treatment manifests. The Studio refuses a manifest without it, or with a statement, date or percentage that differs from the approved text, at `styleframes create`, `animatic create`, `treatment register` and every render. The retired series and unbranded renders carry no call card.
+A Short in the makeyourmindup house style for a live subchannel is a why-ladder (`docs/FIVE-WHYS.md`): the title question as the hook, a step card and evidence plate per Why, the recap stack, then the landing card: what this shows, and the open question handed to the viewer. The landing comes only from the piece's approved why-ladder, word for word. No Short carries a call, a prediction, a date to check it by or a confidence number (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores); the call card and `studio v2 call` are retired. The retired series and unbranded renders are left as they were.
 
 ## Shared output contract
 
