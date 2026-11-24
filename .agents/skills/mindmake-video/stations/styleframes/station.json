@@ -11,7 +11,7 @@
   "consumes": ["visual_plan_artifact", "asset_stage_artifact", "approved_production_brief"],
   "produces": ["styleframe_review_packet"],
   "approval_gate": "storyboard",
-  "hard_gates": ["Frames must bind exact assets, safe zones, protected faces, captions and brand identities.", "A house style review manifest that carries a landing card carries the landing of the why-ladder its approved production brief states, exactly."],
+  "hard_gates": ["Frames must bind exact assets, safe zones, protected faces, captions and brand identities.", "A house style review manifest for a live subchannel carries no call, date to check by or confidence number, and its landing matches the approved why-ladder word for word."],
   "soft_gates": ["Hierarchy, legibility, rhythm and emotional tone should survive a phone-size preview."],
   "invalidates_on_change": {
     "extract": ["animatic", "treatment", "render", "qa", "package"],

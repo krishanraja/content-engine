@@ -16,7 +16,7 @@ Use the visual plan, exact approved assets, source analysis, captions, brand the
 Produce phone-size review frames bound to the current plan and assets.
 
 ## Quality gates
-Hard-block face collisions, unreadable proof, truncated text, unsafe captions, fake wordmarks and asset substitution. Hard-block a house style manifest for a live subchannel with no call, or with a call that differs from the approved text by a character. Soft-block flat hierarchy, generic layout and weak series character.
+Hard-block face collisions, unreadable proof, truncated text, unsafe captions, fake wordmarks and asset substitution. Hard-block a house style manifest for a live subchannel that carries a call, a date to check by or a confidence number, or whose landing differs from the approved why-ladder. Soft-block flat hierarchy, generic layout and weak series character.
 
 ## Failure and fallback
 Return to visual planning or asset selection with the precise collision or hierarchy failure.

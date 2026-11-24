@@ -16,7 +16,7 @@ Use the approved animatic, active treatment preset, exact brand theme, captions,
 Produce immutable render manifests with every trim, crop, caption, overlay, cue, asset, audio decision and fixed seed.
 
 ## Quality gates
-Hard-block missing approvals, unsupported operations, hidden asset changes and transcript-word violations. Hard-block a house style manifest for a live subchannel with no call, or with a statement, date or percentage that differs from the approved text. Paste the call from the command above. Soft-block platform adaptations that add complexity without audience benefit.
+Hard-block missing approvals, unsupported operations, hidden asset changes and transcript-word violations. Hard-block a house style manifest for a live subchannel that carries a call, a date to check by or a confidence number, or whose landing differs from the approved why-ladder. Soft-block platform adaptations that add complexity without audience benefit.
 
 ## Failure and fallback
 Use a previously approved conservative preset when eligible, or return the novel treatment for review.
