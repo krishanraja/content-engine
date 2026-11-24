@@ -87,26 +87,36 @@ class CropTest(unittest.TestCase):
         self.assertEqual(qc_captions.page_lines(long, True), 2)
 
 
-class CallBeatTest(unittest.TestCase):
-    props = {'beats': [{'id': 'a', 'role': 'anchor', 'fromFrame': 0, 'toFrame': 100},
-                       {'id': 'call', 'role': 'call', 'fromFrame': 100, 'toFrame': 200}],
+class LandingBeatTest(unittest.TestCase):
+    """The landing card replaces the captions on the landing beat (Ruling, Krish, 2026-11-24: the signature format is
+    the 5 Whys; no dated call card is drawn any more)."""
+    props = {'beats': [{'id': 'a', 'role': 'why', 'fromFrame': 0, 'toFrame': 100,
+                        'why': {'n': 1, 'question': 'Why did the country fund its own model?', 'strength': 'documented'}},
+                       {'id': 'landing', 'role': 'landing', 'fromFrame': 100, 'toFrame': 200,
+                        'landing': {'shows': 'Countries now fund their own models to keep control.', 'open_question': 'Who controls the model you use?'}}],
              'captions': [{'fromFrame': 80, 'toFrame': 110, 'words': []},
                           {'fromFrame': 100, 'toFrame': 150, 'words': []},
                           {'fromFrame': 150, 'toFrame': 200, 'words': []},
-                          {'fromFrame': 190, 'toFrame': 260, 'words': [{'text': 'x', 'atFrame': 195}]}],
-             'call': {'statement': 'One more country will fund its own AI.', 'due': '2026-12-31', 'confidencePercent': 90}}
+                          {'fromFrame': 190, 'toFrame': 260, 'words': [{'text': 'x', 'atFrame': 195}]}]}
 
-    def test_pages_inside_the_call_beat_are_not_expected(self):
+    def test_pages_inside_the_landing_beat_are_not_expected(self):
         shown = qc.caption_pages_shown(self.props)
         # a page is judged at the frame OCR samples; the one that starts in the card but is sampled after it is expected
         self.assertEqual([page['fromFrame'] for page in shown], [80, 190])
-        without = {key: value for key, value in self.props.items() if key != 'call'}
-        self.assertEqual(len(qc.caption_pages_shown(without)), 4)
+        bare = dict(self.props, beats=[self.props['beats'][0], {k: v for k, v in self.props['beats'][1].items() if k != 'landing'}])
+        self.assertEqual(len(qc.caption_pages_shown(bare)), 4)
+        # An archived cut's dated call no longer hides any caption.
+        archived = dict(bare, call={'statement': 'One more country will fund its own AI.', 'due': '2026-12-31', 'confidencePercent': 90})
+        self.assertEqual(len(qc.caption_pages_shown(archived)), 4)
 
-    def test_call_card_text_is_allowed_in_the_caption_zone_of_the_call_beat_only(self):
-        tokens = qc_composition.call_card_tokens(self.props, self.props['beats'][1])
-        self.assertTrue({'our', 'call', 'country', '2026', '90', 'sure'} <= tokens)
-        self.assertEqual(qc_composition.call_card_tokens(self.props, self.props['beats'][0]), set())
+    def test_landing_and_why_text_is_allowed_only_on_their_own_beats(self):
+        tokens = qc_composition.landing_card_tokens(self.props, self.props['beats'][1])
+        self.assertTrue({'what', 'shows', 'countries', 'controls', 'model'} <= tokens)
+        self.assertFalse({'sure', '2026', 'call'} & tokens)
+        self.assertEqual(qc_composition.landing_card_tokens(self.props, self.props['beats'][0]), set())
+        step = qc_composition.why_step_tokens(self.props, self.props['beats'][0])
+        self.assertTrue({'why', '1', 'country', 'documented'} <= step)
+        self.assertEqual(qc_composition.why_step_tokens(self.props, self.props['beats'][1]), set())
 
 
 if __name__ == '__main__':

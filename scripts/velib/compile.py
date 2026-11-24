@@ -617,6 +617,10 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
             raise ValueError(f'beat {beat["id"]} has no positive frame interval')
         beats.append({'id': beat['id'], 'role': beat['role'], 'layout': beat['layout'],
                       **({'shot': beat['shot']} if beat.get('shot') else {}),
+                      # A why beat's rung and a landing beat's landing, as the spec names them (chrome/WhyStep.tsx,
+                      # chrome/LandingCard.tsx; Ruling, Krish, 2026-11-24: the signature format is the 5 Whys).
+                      **({'why': {k: beat['why'][k] for k in ('n', 'question', 'strength')}} if beat.get('why') else {}),
+                      **({'landing': {k: beat['landing'][k] for k in ('shows', 'open_question')}} if beat.get('landing') else {}),
                       'fromFrame': start, 'toFrame': end, 'uses': list(beat.get('uses', [])),
                       **({'face': beat['face']} if 'face' in beat else {}),
                       'transitionOut': beat.get('transition_out', 'cut'), 'sectionBeat': index == 0,
@@ -837,9 +841,6 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     if sting:
         # Never: sting_props gives no cut one (Ruling, Krish, 2026-11-12), and sting_problems refuses props that carry one.
         props['sting'] = sting
-    if spec.get('call'):
-        call = spec['call']
-        props['call'] = {'statement': call['statement'], 'due': call['due'], 'confidencePercent': call['confidence_percent']}
     motion = motion_props(spec)
     if motion is not None:
         props['motion'] = motion

@@ -27,7 +27,7 @@ def spec(energy=None, treatments=None):
                 {'id': 'b1', 'role': 'hook', 'face': 'full', 'uses': ['c']},
                 {'id': 'b2', 'role': 'anchor', 'uses': ['n']},
                 {'id': 'b3', 'role': 'pivot', 'uses': ['r']},
-                {'id': 'b4', 'role': 'call', 'uses': []}]}}}
+                {'id': 'b4', 'role': 'landing', 'uses': []}]}}}
 
 
 class BankTest(unittest.TestCase):
@@ -46,7 +46,7 @@ class BankTest(unittest.TestCase):
     def test_a_broken_bank_is_refused(self):
         bad = copy.deepcopy(self.bank)
         bad['treatments']['hook-hit']['recipe'].append({'primitive': 'lens-flare'})
-        del bad['rules']['video']['by_role']['call']
+        del bad['rules']['video']['by_role']['landing']
         faults = check_bank(bad)
         self.assertTrue(any('lens-flare' in f for f in faults))
         self.assertTrue(any('by_role' in f for f in faults))
