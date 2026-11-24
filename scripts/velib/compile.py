@@ -815,8 +815,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                              'duration_frames': edl.get('duration_frames'),
                              'picture_short_frames': max(0, duration - int(edl.get('duration_frames') or 0))}
     # Every whole cut closes on the ending band (one calm close, held long enough to read: config/ve/formats
-    # intro_outro; Krish, 2026-11-03: "We fucking have standards for intro, background audio and outro"), not only a
-    # cut that carries a dated call; the call card still needs a call.
+    # intro_outro; Krish, 2026-11-03: "We fucking have standards for intro, background audio and outro").
     if not cut.get('excerpt', False):
         props['ending'] = {'fromFrame': duration, 'url': props['series']['site'], 'tagline': ENDING_TAGLINE, 'cta': ENDING_CTA,
                            'days': [{'day': house['channels'][c]['day'], 'colour': publication['channel_colors'][c]}
