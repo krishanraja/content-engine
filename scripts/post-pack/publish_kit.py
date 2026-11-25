@@ -120,7 +120,11 @@ def load_subscribe_route(path=SUBSCRIBE_SPEC, sha256=SUBSCRIBE_SPEC_SHA256):
 
 ROUTE = load_subscribe_route()
 SUBSCRIBE_PAGE = ROUTE['page']
-SUBSCRIBE_ASK = 'Get the next one in your inbox'
+# The weekly edition (Ruling, Krish, 2026-11-25): one email a week, every Saturday; the pieces go up on the web without
+# an email of their own (growth-makeyourmindup docs/plans/2026-11-25-weekly-edition/). So the ask promises that email.
+SUBSCRIBE_ASK = "Get the week's pieces and the news that matters, in one email every Saturday"
+# Substack's own label for the box that sends a post by email (Help Centre article 360037831771, read 25 Nov 2026).
+WEB_ONLY_BOX = 'Send via email and Substack app inbox'
 UTM_CONTENT = re.compile(ROUTE['utm_content_pattern'])
 
 
@@ -273,9 +277,9 @@ def steps(p):
     paste_post = f'Open {copy_page}, press Copy post, and paste it into the text under the video.'
     out = [
         {
-            'where': 'Substack', 'tag': 'The home: one post, one email',
-            'why': f'One post holds the {long_name} at the top and the whole article under it, so subscribers get one email '
-                   'and every other channel points to one link.',
+            'where': 'Substack', 'tag': 'The home: one post, on the web',
+            'why': f'One post holds the {long_name} at the top and the whole article under it, so every other channel points '
+                   'to one link. It goes up without an email: subscribers get it in the weekly edition on Saturday.',
             'files': [long_video, wide_thumb, cover, copy_page],
             'do': wait + [
                 f'Create, then choose Video (not Article). Upload the {long_name} (wide, 16:9).',
@@ -285,7 +289,11 @@ def steps(p):
                 f'In the post\'s settings, use the cover, {cover}, as the cover image.',
                 'Settings, before you publish: YouTube upload on, with the Substack watermark off. '
                 'Shorts clips off and LinkedIn clips off (you post your own 90-second cut in steps 3 to 5).',
-                f'Publish and send to everyone. Then paste the post\'s link into the Article link box {link_box}.',
+                f'Press Publish, then untick "{WEB_ONLY_BOX}" so the piece goes up on the web without an email. Once the '
+                'section for readers who want every piece exists, choose Advanced, "Only send to a specific audience '
+                'segment", and pick its readers instead. If the box is not on the screen, stop and ask Krish before you '
+                'publish.',
+                f'Then paste the post\'s link into the Article link box {link_box}.',
             ],
             'copy': [('Title', p.get('title')), ('Subtitle', p.get('subtitle'))],
         },
@@ -497,6 +505,15 @@ def self_test():
         failures.append('the subscribe page and schema come from the vendored route')
     if content_of('Engine:2026-11-09:Gitbroke-threads') != 'engine-2026-11-09-gitbroke-threads' or content_of('__-X') != 'x':
         failures.append('content_of follows Growth: lower case, runs become one -, no leading - or _')
+    # The weekly edition (Ruling, Krish, 2026-11-25): the piece goes up on the web only, and the ask promises Saturday.
+    substack = next(x for x in steps(sample) if x['where'] == 'Substack')
+    said = ' '.join(substack['do']) + ' ' + substack['why']
+    if 'send to everyone' in said.lower() or 'one email' in substack['tag'].lower():
+        failures.append('the Substack step must not send the piece to everyone: the weekly edition is the one email')
+    if f'untick "{WEB_ONLY_BOX}"' not in said:
+        failures.append('the Substack step must say to untick the email box')
+    if 'Get the next one in your inbox' in SUBSCRIBE_ASK or 'every Saturday' not in SUBSCRIBE_ASK:
+        failures.append('the subscribe line promises the Saturday email, never the retired line')
     if subscribe_url('x', {'piece_id': 'P1'}, cut='short') != f'{SUBSCRIBE_PAGE}?utm_source=twitter&utm_medium=social&utm_campaign=growth&utm_content=p1-short-x':
         failures.append('a pinned channel takes its utm_source from the route (x is twitter)')
     if subscribe_url('instagram', {}, 'bio') != f'{SUBSCRIBE_PAGE}?utm_source=instagram&utm_medium=social&utm_content=bio':
