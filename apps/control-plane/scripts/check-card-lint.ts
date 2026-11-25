@@ -27,7 +27,7 @@ const GOOD: Card = {
   what_changed: "Cisco's 350M-parameter model beats GPT-5.5 on security tasks at 172x lower cost. Microsoft swapped frontier models for its own MAI models inside Office and said cost was the reason. Bridgewater reported 84.7% accuracy from a tuned Qwen3 against roughly 50% from the frontier three.",
   why_now: 'Three buyers published cost comparisons in the same quarter, which had not happened before.',
   the_opening: 'There is a repricing window here for anyone selling per-seat AI features on frontier margins, and nobody has taken the cheap-and-good position in publishing yet.',
-  where_this_goes: 'By the end of 2027 the premium tier is a compliance and support product rather than a capability one, and the capability gap stops carrying the price.',
+  where_this_goes: 'What this shows: the premium tier is already sold on compliance and support, not capability, so the capability gap no longer carries the price. Which part of your own AI bill is still priced for a gap that has closed?',
   reader_decision: 'Whether to keep pricing your AI features against frontier costs, or reprice now and take share while competitors are still paying the old rate.',
 }
 
@@ -68,17 +68,29 @@ const GOOD: Card = {
 {
   // "too opinion based and not enough analysis + prediction"
   if (!rules({ ...GOOD, where_this_goes: '' }).includes('required')) {
-    bad('a card with no forward claim is accepted')
+    bad('a card with no landing is accepted')
   }
   // "not just a linear 'the open web is dying'": continuation is not a claim.
   if (!rules({ ...GOOD, where_this_goes: 'This trend will continue as more buyers move down-market.' })
       .includes('continuation_not_claim')) {
-    bad('a restatement of the current direction passes as a forward claim')
+    bad('a restatement of the current direction passes as a landing')
   }
-  // A forward claim nobody could ever check is not falsifiable.
-  if (!rules({ ...GOOD, where_this_goes: 'The market eventually reshapes around cheaper models.' })
-      .includes('not_falsifiable')) {
-    bad('a forward claim with no number and no timeframe is accepted')
+  // The landing (Ruling, Krish, 2026-11-24: the 5 Whys; no predictions, calls, dated, odds or scores): a forecast to a
+  // date, stated odds or confidence are refused, and the landing ends on an open question.
+  if (!rules({ ...GOOD, where_this_goes: 'By the end of 2027 the premium tier is a compliance product. Who pays then?' })
+      .includes('forecast')) {
+    bad('a forecast to a date passes as a landing')
+  }
+  if (!rules({ ...GOOD, where_this_goes: "There's a 70% chance the premium tier becomes a compliance product. Who pays?" })
+      .includes('forecast')) {
+    bad('stated odds pass as a landing')
+  }
+  if (!rules({ ...GOOD, where_this_goes: 'The premium tier is sold on compliance, not capability.' })
+      .includes('no_open_question')) {
+    bad('a landing with no open question is accepted')
+  }
+  if (rules(GOOD).some(r => r === 'forecast' || r === 'no_open_question')) {
+    bad('a plain landing with a share and a question is refused')
   }
   // "so what? ... I dont understand why it matters or who it matters to"
   if (!rules({ ...GOOD, reader_decision: '' }).includes('required')) {
