@@ -1,3 +1,0 @@
-Status: Story-arc cards make no prediction: where_this_goes now holds the landing, what the arc shows plus one open question ending in a question mark (compose prompt, card lint and arc score), and the lint refuses a forecast to a date, stated odds or confidence, and a landing with no question (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores). The score's forward_claim component is now landing, same weight; stored cards keep the field name and still read.
-Next: none; the next composed arcs land on a question.
-North Star check (2026-11-25): holds.
