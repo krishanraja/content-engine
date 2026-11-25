@@ -711,7 +711,9 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     # A picked caption style (style.captions; Krish, 2026-11-13: "the captions should be decoupled from the animation
     # styles") draws ve's phrase pages itself: one word a page would undo it (rack-focus racks focus along the phrase), so
     # the word build applies to the house caption only (18 Nov 2026, Wed 18, his rack-focus pick of 17 Nov).
-    picked_theme = (((spec.get('style') or {}).get('captions') or {}).get('theme'))
+    picked_theme = (((spec.get('style') or {}).get('captions') or {}).get('theme')
+                    or spec['brand'].get('caption_theme')
+                    or ('house-v5' if spec['brand'].get('captions') != 'word' else None))
     word_mode = spec['brand'].get('captions') == 'word' and not picked_theme
     moment = title_moment_props(spec, cut_id, rows, duration)
     # The captions step aside for the title's words, so they appear once (docs/ve/INGREDIENTS.md, the episode title moment).
@@ -777,7 +779,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
             {'src': take, 'trimBeforeFrames': 0, 'fromFrame': 0, 'durationFrames': duration}],
         'audio': {'stem': {'src': resolve_source(f'audio.{cut_id}.wav'), 'trimBeforeFrames': 0}, 'sfx': []},
         'captions': captions, 'captionStyle': 'word' if word_mode else 'house',
-        **({'captionTheme': spec['brand']['caption_theme']} if spec['brand'].get('caption_theme') else {}),
+        **({'captionTheme': picked_theme} if picked_theme else {}),
         **caption_props(spec),
         **({'title': spec['brand']['title']} if spec['brand'].get('title') else {}),
         # The title is one full-frame lockup with the wordmark inside it (Ruling, Krish, 2026-11-19); 'lockup' tells ve qc
@@ -822,7 +824,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                              'picture_short_frames': max(0, duration - int(edl.get('duration_frames') or 0))}
     # Every whole cut closes on the ending band (one calm close, held long enough to read: config/ve/formats
     # intro_outro; Krish, 2026-11-03: "We fucking have standards for intro, background audio and outro").
-    if not cut.get('excerpt', False):
+    if not cut.get('excerpt', False) and spec['format'] != 'why-ladder-v5':
         props['ending'] = {'fromFrame': duration, 'url': props['series']['site'], 'tagline': ENDING_TAGLINE, 'cta': ENDING_CTA,
                            'days': [{'day': house['channels'][c]['day'], 'colour': publication['channel_colors'][c]}
                                     for c in house['channels'] if c in publication['channel_colors']] if not off else []}

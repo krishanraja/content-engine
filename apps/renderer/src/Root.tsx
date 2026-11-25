@@ -1,3 +1,4 @@
+import {V5Previews} from './engine/v5/Previews'
 import retiredStyles from '../../../config/retired-styles.json'
 import React from 'react'
 import { SplitKeyFrame, SplitKeyFrameSchema } from './engine/stills/split/SplitKeyFrame'
@@ -79,6 +80,7 @@ function TransportVeCut(props: EngineRenderProps) {
 export function RemotionRoot() {
   return (
     <>
+      <V5Previews/>
       <Composition id="SplitKeyFrame" component={SplitKeyFrame} width={1080} height={1920} fps={30} durationInFrames={1} schema={SplitKeyFrameSchema} defaultProps={{variant: 'slam', beat: 'hook', plateSrc: '', series: 'under.the.hood'}} />
       <Composition id="StyleStill" component={StyleStill} width={1080} height={1920} fps={30} durationInFrames={1} schema={StyleStillSchema} defaultProps={{layer: 'motion', id: 'ai-music-slam'}} />
       <Composition

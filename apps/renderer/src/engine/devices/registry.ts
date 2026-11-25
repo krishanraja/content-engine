@@ -34,6 +34,7 @@ import { Device as SlamWord } from './slam_word'
 import { Device as UnitField } from './unit_field'
 import { Device as VideoWall } from './video_wall'
 import { Device as ThroughLine } from './through_line'
+import {cardDevice} from '../v5/Cards'
 import type { DeviceRegistry } from './types'
 import { TestGrid } from './test_grid'
 import { Device as RecordCard } from './record_card'
@@ -56,6 +57,16 @@ import { Device as ReceiptPrint } from './receipt_print'
 /** Device id (the spec's object.device, config/techniques.json render_adapter) -> component.
  *  Each device card adds exactly one line here. FormatMaster refuses an object whose device is missing. */
 export const DEVICES: DeviceRegistry = {
+  v5_title: cardDevice,
+  v5_why: cardDevice,
+  v5_evidence: cardDevice,
+  v5_callout: cardDevice,
+  v5_challenger: cardDevice,
+  v5_recap: cardDevice,
+  v5_landing: cardDevice,
+  v5_close: cardDevice,
+  v5_rail: cardDevice,
+  v5_source: cardDevice,
   scene_plate: ScenePlate,
   facility_block: FacilityBlock,
   credit_meter: CreditMeter,

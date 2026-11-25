@@ -23,6 +23,7 @@ import { FOCUS_SCALE, LEAD_AFTER, TRANSITION_FRAMES, cameraAt, cameraStyle, flas
 import { GRAMMAR_GROW, regionSlots } from './kit/layout'
 import { boxStyle, isStaging, staged, stagingGeometry, trayRise } from './kit/staging'
 import { layoutSlots } from './kit/layout'
+import {LadderSequence} from './v5/Sequence'
 import { EngineAudio } from './audio'
 import { GradedBackdrop } from './treatments/Grade'
 import { band } from './captions/kit'
@@ -146,6 +147,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
     }
   }
   const frame = useEngineFrame()
+  if (props.format === 'why-ladder-v5') return <LadderSequence props={props} frame={frame} stem={stem}/>
   const objects = new Map(props.objects.map((object) => [object.obj, object]))
   const width = props.aspect === '9:16' ? 1080 : 1920
   const height = props.aspect === '9:16' ? 1920 : 1080

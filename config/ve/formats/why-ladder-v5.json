@@ -1,0 +1,34 @@
+{
+  "id": "why-ladder-v5",
+  "status": "trial",
+  "purpose": "A sourced question climbs three rungs and lands on what the evidence shows.",
+  "layouts": [
+    "STAGE"
+  ],
+  "devices": [
+    "v5_title",
+    "v5_why",
+    "v5_evidence",
+    "v5_callout",
+    "v5_challenger",
+    "v5_recap",
+    "v5_landing",
+    "v5_close",
+    "v5_rail",
+    "v5_source"
+  ],
+  "fps": 30,
+  "aspects": [
+    "9:16",
+    "16:9"
+  ],
+  "crew": [
+    "story",
+    "brand",
+    "motion",
+    "provenance"
+  ],
+  "qc": {
+    "caption_ocr_min": 0.98
+  }
+}

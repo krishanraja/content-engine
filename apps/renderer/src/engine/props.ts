@@ -116,7 +116,7 @@ export const EngineRenderPropsSchema = z.object({
   }).strict().optional(),
   pieceId: z.string().min(1),
   cutId: z.string().min(1),
-  format: z.enum(['face-with-proof', 'scoreboard-test', 'voice-led-pictures', 'hand-held-screen', 'two-passports']),
+  format: z.enum(['face-with-proof', 'scoreboard-test', 'voice-led-pictures', 'hand-held-screen', 'two-passports', 'why-ladder-v5']),
   aspect: z.enum(['9:16', '16:9']),
   fps: z.literal(30),
   durationFrames: z.number().int().positive(),
