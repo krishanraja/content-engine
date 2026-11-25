@@ -106,7 +106,7 @@ FEATURE_SPOTIFY = f'Spotify (the {FEATURE_NAME})'
 # piece's board item id for one cut is <piece_id>-<cut> (long, short or feature), so Control Center binds a sent post
 # to its item by exact match. A change to the rules changes Growth's file first; this copy follows with its new hash.
 SUBSCRIBE_SPEC = Path(__file__).resolve().parents[2] / 'vendor' / 'makeyourmindup' / 'subscribe-route.json'
-SUBSCRIBE_SPEC_SHA256 = '9927b32dbae962a97a3dc8223b08105833197a1e6e5d2ee1a3f2fb3519a5c639'
+SUBSCRIBE_SPEC_SHA256 = '01f74de9a258897237f8f1ce243f9fbe07b8ff62c42ce5dbf9e4f5dd4153aadb'
 
 
 def load_subscribe_route(path=SUBSCRIBE_SPEC, sha256=SUBSCRIBE_SPEC_SHA256):

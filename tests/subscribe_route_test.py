@@ -12,7 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = ROOT / 'vendor' / 'makeyourmindup' / 'subscribe-route.json'
-SHA256 = '9927b32dbae962a97a3dc8223b08105833197a1e6e5d2ee1a3f2fb3519a5c639'
+SHA256 = '01f74de9a258897237f8f1ce243f9fbe07b8ff62c42ce5dbf9e4f5dd4153aadb'
 sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
 import publish_kit  # noqa: E402
 
