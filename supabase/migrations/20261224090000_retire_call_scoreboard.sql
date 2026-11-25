@@ -5,7 +5,7 @@
 -- falsifier sweep (/api/claims/resolve), the ruling route (/api/claims/rule), the public scoreboard (/api/calls) and
 -- the daily odds cron (/api/signals/odds).
 --
--- Written, not applied: it runs only on Krish's yes. Both views came from control-center migrations
+-- Applied 2026-11-25 on Krish's yes ("Merge and apply"). Both views came from control-center migrations
 -- (2026-08-05-techonomic-investigations.sql and 20260922120000_a_falsifier_that_is_never_checked.sql).
 --
 -- Nothing is deleted from any table. investigation_claims keeps every row and every column, falsifier included, which

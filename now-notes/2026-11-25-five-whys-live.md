@@ -1,0 +1,4 @@
+Status: The 5 Whys is live (PR 970; Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores). The three venture_formats mandates are why-ladder mandates with THE BEAT, the claim_scoreboard and claims_due views are dropped, and control-center's pillar:creative_economy is live with the shared avoid list on all six pillars; all applied 2026-11-25 on Krish's yes and checked on the live rows.
+Changed: the call, its checks, odds, the scoreboard routes and crons are gone; research files a sourced why-ladder (meta.whys), WHY_LADDER blocks approval on a filed ladder, and the Short ends on the landing card bound from it.
+Next: update the Studio runner on Krish's PC to this release before any brief carries a landing.
+North Star check (2026-11-25): holds.
