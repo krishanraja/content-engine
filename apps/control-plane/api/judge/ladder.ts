@@ -4,6 +4,7 @@ import { guardCronRoute } from '../_auth.js'
 import { supabase } from '../_supabase.js'
 import { callClaude, isFiledSource, loadCorpus, loadVoiceBlock, corpusForChannel, materialOwner, readMaterials, sanitizeVoice, type ClaudeCall } from '../_content.js'
 import { houseRulesBlock } from '../_houseRules.js'
+import { mandateWithoutCall } from '../_mandate.js'
 import { webResearch } from '../_enrich.js'
 import { isDeferred } from '../_judges/deferred.js'
 import { UTILITY_MODEL, JUDGE_MODEL } from '../_models.js'
@@ -599,7 +600,7 @@ export async function runLadder(
     // three on 2026-09-24; a copy in code would already be wrong.
     const mandates = (mandateRows || [])
       .filter(m => ['follow_the_money', 'under_the_hood', 'mind_the_gap'].includes(m.slug as string))
-      .map(m => ({ slug: m.slug as string, label: m.label as string, mandate: m.mandate as string }))
+      .map(m => ({ slug: m.slug as string, label: m.label as string, mandate: mandateWithoutCall(m.mandate as string) }))
     if (mandates.length !== 3) throw new Error(`expected 3 live subchannel mandates, found ${mandates.length}`)
 
     // Everything unjudged, whoever wrote it and however far it got.

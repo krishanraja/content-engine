@@ -31,7 +31,14 @@ what kind of thing doesn't fly with me, rather than implement incredibly specifi
   amount of research"), after step 2 and before step 3. For every publishing-day option and every return, first use your own web search to
   find the newest sources and answer each question he asked, then write `research_prompt`: one ready prompt he can paste
   into deep research (Perplexity or another), naming the plain question, what to find, the date range from his press,
-  and that every claim comes with its source and date.
+  and that every claim comes with its source and date. It is 150 characters or more, and it asks for **the 5 Whys**
+  (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests predictions,
+  calls, dated, odds or scores): starting from the plain question, one answer per Why backed by two primary sources on
+  different domains, dated, with a verbatim quote; the strongest counter-evidence or "none found" with the scope
+  searched; a stop where the evidence runs out, never padded to five; and a landing of what this shows plus an open
+  question, never a forecast. Why 1 starts by series: who pays and why the price moved (follow.the.money), how it is
+  built and what broke (under.the.hood), where the claim and the reality part (mind.the.gap). `idea_checks.py` refuses
+  one that does not name the 5 Whys from the 30 Nov board (`WHYS_FROM`).
 - **Read what he refused and the house rules first** (in step 1, after the gather): `sources.json` `outcomes` (his answers on the eight
   boards before), `unvetoed` (the subjects he gave back) and `house_rules` (BIG_PICTURE and STORY_ARC, in full). Say in
   your reply how many answers of each kind it holds and which subjects stand refused.

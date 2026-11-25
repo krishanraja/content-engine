@@ -1,40 +1,12 @@
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { describe, test } from 'vitest'
-import {
-  gdeltSeenToIso, kalshiProbability, nextCallMarket, polymarketProbability, signalsQueryFor, velocity, type NewsArticle,
-} from '../../apps/control-plane/api/_signals.js'
+import * as signals from '../../apps/control-plane/api/_signals.js'
+import { gdeltSeenToIso, signalsQueryFor, velocity, type NewsArticle } from '../../apps/control-plane/api/_signals.js'
 
 // The outside signals (docs/ENGINE_100X.md): the pure parts, held to the
 // shapes the public endpoints actually return (read live on 2026-10-09), so a
-// change in how a market or a feed is read fails here before it reaches the
-// scoreboard.
-
-describe('prediction-market odds', () => {
-  test('Polymarket prices arrive as JSON strings inside JSON, Yes first', () => {
-    assert.equal(polymarketProbability({ outcomes: '["Yes","No"]', outcomePrices: '["0.205","0.795"]' }), 0.205)
-    assert.equal(polymarketProbability({ outcomes: '["No","Yes"]', outcomePrices: '["0.3","0.7"]' }), 0.7)
-    assert.equal(polymarketProbability({ outcomePrices: ['0.5'] }), 0.5)
-    assert.equal(polymarketProbability({}), null)
-    assert.equal(polymarketProbability({ outcomePrices: 'not json' }), null)
-    assert.equal(polymarketProbability({ outcomePrices: '["1.7"]' }), null)
-  })
-  test('Kalshi quotes in cents: the bid-ask midpoint, else the last trade', () => {
-    assert.equal(kalshiProbability({ yes_bid: 40, yes_ask: 44 }), 0.42)
-    assert.equal(kalshiProbability({ last_price: 63 }), 0.63)
-    assert.equal(kalshiProbability({ yes_bid: 0, yes_ask: 0, last_price: 12 }), 0.12)
-    assert.equal(kalshiProbability({}), null)
-  })
-  test('a pinned Call keeps at most ninety readings and its first set_at', () => {
-    const odds = { source: 'polymarket' as const, key: 'k', question: 'q', probability: 0.5, volume_usd: 1, end_date: null, url: null }
-    let rec = nextCallMarket(null, odds, new Date('2026-10-09T00:00:00Z'))
-    assert.equal(rec.set_at, '2026-10-09T00:00:00.000Z')
-    for (let i = 1; i <= 100; i++) rec = nextCallMarket(rec, odds, new Date(Date.UTC(2026, 9, 9 + i)))
-    assert.equal(rec.history.length, 90)
-    assert.equal(rec.set_at, '2026-10-09T00:00:00.000Z')
-    assert.equal(rec.history[rec.history.length - 1].p, 0.5)
-  })
-})
+// change in how a feed is read fails here.
 
 describe('news velocity', () => {
   test('GDELT stamps become ISO', () => {
@@ -60,24 +32,22 @@ describe('news velocity', () => {
   })
 })
 
-describe('the scoreboard feed', () => {
-  test('a published piece with a call becomes one row, not due yet until its date, with its pinned market', async () => {
-    process.env.SUPABASE_URL ||= 'http://127.0.0.1:9'
-    process.env.SUPABASE_SERVICE_ROLE_KEY ||= 'not-a-key'
-    const { toScoreboardCall } = await import('../../apps/control-plane/api/calls.js')
-    const body = readFileSync('editions/2026-09-who-picks-your-ai/body.md', 'utf8')
-    const row = {
-      id: 'abc', idea: 'Who picks your AI?', lane_slot: 'mind_the_gap', body, published_at: '2026-10-09T08:00:00Z',
-      meta: { call_market: { source: 'polymarket', key: 'some-slug', question: 'Will labs route by default?', url: 'https://polymarket.com/market/some-slug', probability: 0.61, read_at: '2026-10-09T06:45:00Z' } },
+// Ruling (Krish, 2026-11-24): "the signature format is the 5 Whys; get rid of everything that suggests predictions,
+// calls, dated, odds or scores." The prediction-market readers, the pinned-market route, the daily odds cron, the
+// public scoreboard and the falsifier sweep all went with it.
+describe('no odds, no scoreboard', () => {
+  test('the signals module reads no prediction market', () => {
+    for (const name of ['polymarketProbability', 'kalshiProbability', 'marketOdds', 'nextCallMarket', 'polymarketBySlug', 'kalshiByTicker']) {
+      assert.equal(name in signals, false, `${name} is still exported`)
     }
-    const call = toScoreboardCall(row, '2026-10-09')
-    assert.ok(call)
-    assert.equal(call.due, '2027-09-30')
-    assert.equal(call.confidence_percent, 75)
-    assert.equal(call.status, 'not_due_yet')
-    assert.equal(call.market?.probability, 0.61)
-    assert.equal(toScoreboardCall(row, '2027-10-01')?.status, 'due')
-    assert.equal(toScoreboardCall({ ...row, body: 'No call here.' }), null)
-    assert.equal(toScoreboardCall({ ...row, meta: {} })?.market, null)
+    assert.doesNotMatch(readFileSync('apps/control-plane/api/_signals.ts', 'utf8'), /polymarket\.com|kalshi\.com|call_market/i)
+  })
+  test('the scoreboard, odds and claim-ruling routes are gone, and so are their crons', () => {
+    for (const route of ['calls.ts', 'content-ideas/[id]/call-market.ts', 'signals/odds.ts', 'claims/resolve.ts', 'claims/_notice.ts', 'claims/rule.ts']) {
+      assert.equal(existsSync(`apps/control-plane/api/${route}`), false, `api/${route} still exists`)
+    }
+    const crons = (JSON.parse(readFileSync('apps/control-plane/vercel.json', 'utf8')).crons || []).map((c: { path: string }) => c.path)
+    assert.ok(!crons.includes('/api/claims/resolve'))
+    assert.ok(!crons.includes('/api/signals/odds'))
   })
 })

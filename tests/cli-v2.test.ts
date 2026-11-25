@@ -28,7 +28,7 @@ describe('V2 CLI', () => {
     const program = new Command().exitOverride()
     registerV2Commands(program, { repoRoot: '.', configPath: 'config.json', skillPaths: [], out: () => undefined })
     const v2 = program.commands.find((command) => command.name() === 'v2')!
-    expect(v2.commands.map((command) => command.name())).toEqual(expect.arrayContaining(['production-brief', 'identity', 'job', 'ingest', 'transcribe', 'candidates', 'recording-brief', 'source', 'visual-plan', 'assets', 'call', 'styleframes', 'animatic', 'treatment', 'render', 'qa', 'approve', 'feedback', 'package', 'publish', 'analytics', 'experiment']))
+    expect(v2.commands.map((command) => command.name())).toEqual(expect.arrayContaining(['production-brief', 'identity', 'job', 'ingest', 'transcribe', 'candidates', 'recording-brief', 'source', 'visual-plan', 'assets', 'landing', 'styleframes', 'animatic', 'treatment', 'render', 'qa', 'approve', 'feedback', 'package', 'publish', 'analytics', 'experiment']))
     const publish = v2.commands.find((command) => command.name() === 'publish')!
     expect(publish.commands.map((command) => command.name())).toEqual(['youtube'])
     expect(() => assertYoutubePrivateOnly('youtube_shorts', 'private')).not.toThrow()
@@ -37,8 +37,8 @@ describe('V2 CLI', () => {
     try { assertYoutubePrivateOnly('linkedin', 'private') } catch (error) { expect(classifyError(error).exitCode).toBe(20) }
   })
 
-  it('prints the call from the job\'s approved production brief, ready to paste, and nothing else', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'mindmake-cli-call-'))
+  it('prints the landing from the job\'s approved production brief, ready to paste, and nothing else', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'mindmake-cli-landing-'))
     roots.push(root)
     process.env.MINDMAKE_RUNTIME_ROOT = join(root, 'runtime')
     const configPath = join(process.cwd(), 'config', 'studio.json')
@@ -49,9 +49,21 @@ describe('V2 CLI', () => {
       await program.parseAsync(['node', 'studio', 'v2', ...args])
       return outputs[0] as Record<string, unknown>
     }
-    const edition = await readFile('editions/2026-09-who-picks-your-ai/body.md', 'utf8')
+    // The signature format is the why-ladder (Ruling, Krish, 2026-11-24). The control plane binds the landing of the
+    // piece's checked ladder (meta.whys) into the brief as content.landing; the approved text is the piece body.
+    const evidence = (domain: string) => ({ url: `https://${domain}/report`, domain, date: '2026-11-20', quote: 'The platform now sets the default model.' })
+    const rung = (n: number, question: string, answer: string) => ({ n, question, answer, evidence: [evidence('example.com'), evidence('example.org')],
+      strength: 'documented', counter: { none_found_scope: 'vendor documentation and trade press, November 2026' }, stop: null })
+    const ladder = { schema: 'why-ladder/1', question: 'Why does the software now pick the brain for you?',
+      rungs: [rung(1, 'Why does the software pick the brain?', 'Because the platforms route each request to the model they choose.'),
+        rung(2, 'Why do the platforms route it?', 'Because routing lowers what each answer costs them.'),
+        rung(3, 'Why does the cost matter now?', 'Because the price of an answer became the thing they compete on.')],
+      landing: { shows: 'The platform, not the business that buys it, now sets which brain answers.', open_question: 'Who in your business would notice if the brain behind your tools changed tomorrow?' } }
+    const body = 'Who picks your AI? The software that picks the brain for you is becoming the default.'
+    // A brief made before content.landing carried the ladder in its approved text, and is still read.
+    const edition = `${body}\n\n\`\`\`why-ladder\n${JSON.stringify(ladder, null, 2)}\n\`\`\`\n`
     const revision = 'e'.repeat(64)
-    const brief = (briefId: string, approvedText: string) => ({
+    const brief = (briefId: string, approvedText: string, landing?: { shows: string; open_question: string }) => ({
       schema_version: 1,
       brief_id: briefId,
       content_idea_id: '904658db-4df2-4537-a0ed-ebe93e081db7',
@@ -59,45 +71,48 @@ describe('V2 CLI', () => {
       series: 'mind_the_gap',
       production_kinds: ['video'],
       source_mode: 'short_native',
-      content: { title: 'Who picks your AI?', thesis: 'The software that picks the brain for you is becoming the default.', approved_text: approvedText, audience: 'Leaders who buy AI.', intended_payoff: 'Know who picks the brain behind your AI, and when to check.' },
+      content: { title: 'Who picks your AI?', thesis: 'The software that picks the brain for you is becoming the default.', approved_text: approvedText, audience: 'Leaders who buy AI.', intended_payoff: 'Know who picks the brain behind your AI, and when to check.', ...(landing ? { landing } : {}) },
       claims: [],
       visual_opportunities: [],
       hard_gates: { truth: 'passed', rights: 'passed', confidentiality: 'passed', meaning: 'passed', naming: 'passed' },
       editorial_approval: { approved_by: 'Krish', approved_at: '2026-09-28T12:00:00.000Z', approval_revision_hash: revision },
     })
     const briefPath = join(root, 'brief.json')
-    await writeFile(briefPath, JSON.stringify(brief('brief_cli_call', edition)), 'utf8')
+    await writeFile(briefPath, JSON.stringify(brief('brief_cli_landing', body, ladder.landing)), 'utf8')
     const imported = await run('production-brief', 'import', '--input', briefPath)
     const jobId = imported.job_id as string
 
-    const printed = await run('call', '--job', jobId, '--beat', 'beat-call')
+    const printed = await run('landing', '--job', jobId, '--beat', 'beat-landing')
     expect(printed).toEqual({
       job_id: jobId,
-      brief_id: 'brief_cli_call',
-      call: {
-        beat_id: 'beat-call',
-        statement: 'By 30 September 2027, at least two of OpenAI, Anthropic and Google will have their software pick the brain automatically, by default, for businesses that build apps on their AI.',
-        due: '2027-09-30',
-        confidence_percent: 75,
-      },
+      brief_id: 'brief_cli_landing',
+      landing: { beat_id: 'beat-landing', shows: ladder.landing.shows, open_question: ladder.landing.open_question },
     })
+    // No prediction anywhere: no statement, date or percentage is printed.
+    expect(JSON.stringify(printed)).not.toMatch(/confidence|due|statement|% sure/)
 
-    // The same call for any beat; the manifest refuses a beat no shot carries.
-    expect((await run('call', '--job', jobId, '--beat', 'beat-hook')).call).toEqual({ ...(printed.call as object), beat_id: 'beat-hook' })
-    await expect(run('call', '--job', jobId, '--beat', 'not a beat id')).rejects.toThrow(/cannot go on a call card: beat_id/)
+    // The same landing for any beat; the manifest refuses a beat no shot carries.
+    expect((await run('landing', '--job', jobId, '--beat', 'beat-hook')).landing).toEqual({ ...(printed.landing as object), beat_id: 'beat-hook' })
+    await expect(run('landing', '--job', jobId, '--beat', 'not a beat id')).rejects.toThrow(/cannot go on a landing card: beat_id/)
 
-    // A brief whose approved text has no readable call.
+    // An older brief, made before content.landing, whose approved text carries the ladder.
+    const olderPath = join(root, 'older.json')
+    await writeFile(olderPath, JSON.stringify(brief('brief_cli_older', edition)), 'utf8')
+    const older = await run('production-brief', 'import', '--input', olderPath)
+    expect((await run('landing', '--job', older.job_id as string, '--beat', 'beat-landing')).landing).toEqual(printed.landing)
+
+    // A brief with no landing, for a piece with no standing why-ladder.
     const unsetPath = join(root, 'unset.json')
-    await writeFile(unsetPath, JSON.stringify(brief('brief_cli_unset', edition.replace('How sure we are: 75%.', 'How sure we are: [Krish to set]'))), 'utf8')
+    await writeFile(unsetPath, JSON.stringify(brief('brief_cli_unset', body)), 'utf8')
     const unset = await run('production-brief', 'import', '--input', unsetPath)
-    const refusal = await run('call', '--job', unset.job_id as string, '--beat', 'beat-call').then(() => null, (error: unknown) => error)
-    expect((refusal as Error).message).toBe('hard block: production brief brief_cli_unset has no call the Studio can read in its approved text: The prediction has no confidence yet. Krish sets how sure we are, as a percentage.')
+    const refusal = await run('landing', '--job', unset.job_id as string, '--beat', 'beat-landing').then(() => null, (error: unknown) => error)
+    expect((refusal as Error).message).toMatch(/^hard block: production brief brief_cli_unset carries no landing from a checked why-ladder, and its approved text has none the Studio can read: /)
     expect(classifyError(refusal).exitCode).toBe(20)
 
-    // A job with no production brief has no call to print.
+    // A job with no production brief has no landing to print.
     const created = await run('job', 'create', '--series', 'mind_the_gap', '--mode', 'short_native', '--techniques', join(process.cwd(), 'config', 'techniques.json'), '--no-identity')
     const createdId = (created.job as { job_id: string }).job_id
-    await expect(run('call', '--job', createdId, '--beat', 'beat-call')).rejects.toThrow(`job ${createdId} has no production brief bound to it, and a call comes only from the approved text of the job's production brief`)
+    await expect(run('landing', '--job', createdId, '--beat', 'beat-landing')).rejects.toThrow(`job ${createdId} has no production brief bound to it, and a landing comes only from the job's production brief, bound from the piece's checked why-ladder`)
   }, 30_000)
 
   it('names the archive by the production brief\'s title, or without one the package\'s first title', async () => {
@@ -155,13 +170,13 @@ describe('V2 CLI', () => {
     expect(at('await archiveSubjectV2(manifest, packageArtifact.payload.packages)')).toBeLessThan(copy)
   })
 
-  it('checks the call wherever a review or treatment manifest is taken in', async () => {
+  it('checks the landing wherever a review or treatment manifest is taken in', async () => {
     // styleframes create, animatic create and treatment register all read
-    // their manifest through loadReviewManifest; the call gate is its last step.
+    // their manifest through loadReviewManifest; the landing gate is its last step.
     const source = await readFile('packages/cli/src/v2.ts', 'utf8')
     const body = source.slice(source.indexOf('async function loadReviewManifest('), source.indexOf('function exactAssetHashes('))
-    expect(body.indexOf('await boundRenderCallIssuesV2(manifest)')).toBeGreaterThan(body.indexOf('validateV2RenderReadiness(manifest'))
-    expect(body.indexOf('await boundRenderCallIssuesV2(manifest)')).toBeLessThan(body.indexOf('return { manifest, manifestHash }'))
+    expect(body.indexOf('await boundRenderLandingIssuesV2(manifest)')).toBeGreaterThan(body.indexOf('validateV2RenderReadiness(manifest'))
+    expect(body.indexOf('await boundRenderLandingIssuesV2(manifest)')).toBeLessThan(body.indexOf('return { manifest, manifestHash }'))
     expect(source.match(/loadReviewManifest\(job, /g)).toHaveLength(3)
   })
 

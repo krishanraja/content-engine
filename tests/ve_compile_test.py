@@ -207,7 +207,7 @@ class CompileTest(unittest.TestCase):
         ENDING = ENDING_FRAMES_BY_ASPECT[whole['aspect']]
         self.assertEqual(ENDING_FRAMES_BY_ASPECT, {'16:9': 180, '9:16': 60})
         self.assertEqual(whole['durationFrames'], base + ENDING)
-        # The ending is the statement card (compile.py): where it starts, the site, the tagline, the call and the days.
+        # The ending is the statement card (compile.py): where it starts, the site, the tagline and the days.
         self.assertEqual({k: whole['ending'][k] for k in ('fromFrame', 'url')}, {'fromFrame': base, 'url': whole['series']['site']})
         self.assertEqual(list(whole['ending']), ['fromFrame', 'url', 'tagline', 'cta', 'days'])
         self.assertEqual(whole['captions'][-1]['toFrame'], base)
@@ -216,10 +216,17 @@ class CompileTest(unittest.TestCase):
         self.assertEqual(excerpt['beats'][-1]['toFrame'], base)
         self.assertTrue(all(o['toFrame'] == base + ENDING for o in whole['objects'] if o['toFrame'] > base - 1
                             and o['toFrame'] >= excerpt['beats'][-1]['fromFrame']))
-        # Every whole cut closes on the ending band, with or without a dated call (Krish, 2026-11-03: "We fucking
-        # have standards for intro, background audio and outro").
-        del spec['call']
-        self.assertEqual({k: compile_cut(spec, 'proof-tall', words, FIXTURE)['ending'][k] for k in ('fromFrame', 'url')}, {'fromFrame': base, 'url': whole['series']['site']})
+        # Every whole cut closes on the ending band (Krish, 2026-11-03: "We fucking have standards for intro, background
+        # audio and outro"), and no cut carries a dated call (Ruling, Krish, 2026-11-24: "the signature format is the 5 Whys").
+        self.assertNotIn('call', whole)
+        # A landing beat and a why beat carry their landing and rung into the props, word for word.
+        spec['cuts']['proof-tall']['beats'][3].update(role='why', why={'n': 1, 'question': 'Why was the first answer refused?', 'strength': 'documented'})
+        spec['cuts']['proof-tall']['beats'][4].update(role='landing', landing={'shows': 'The refusal came from the rule, not the model.', 'open_question': 'Who wrote the rule your tools follow?'})
+        laddered = compile_cut(spec, 'proof-tall', words, FIXTURE)
+        self.assertEqual(laddered['beats'][3]['why'], {'n': 1, 'question': 'Why was the first answer refused?', 'strength': 'documented'})
+        self.assertEqual(laddered['beats'][4]['landing'], {'shows': 'The refusal came from the rule, not the model.', 'open_question': 'Who wrote the rule your tools follow?'})
+        self.assertNotIn('call', laddered)
+        self.assertEqual({k: laddered['ending'][k] for k in ('fromFrame', 'url')}, {'fromFrame': base, 'url': whole['series']['site']})
 
     def test_motion_style_passes_through(self):
         spec = load_json(FIXTURE / 'spec.json')

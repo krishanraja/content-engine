@@ -3,7 +3,8 @@ import React from 'react'
 import { HOUSE } from '../house/geometry'
 import { SPLIT_CAPTION_ZONE } from './layouts/splitGeometry'
 import { Grain } from '../house/components'
-import { CallCard } from './chrome/CallCard'
+import { LandingCard, landingBeatAt } from './chrome/LandingCard'
+import { WhyStep, whyStepModel } from './chrome/WhyStep'
 import { EndingBand } from './chrome/EndingBand'
 import { CaptionTrack } from './chrome/CaptionTrack'
 import { ChannelPill } from './chrome/ChannelPill'
@@ -23,14 +24,28 @@ import type { EngineBeat, EngineRenderProps } from './props'
 export interface BrandFrameProps { props: EngineRenderProps; beat: EngineBeat; frame: number }
 
 export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.ReactElement {
-  // The dated call card only when the piece writes a call; with none the call beat is a closing beat like any other
-  // (Ruling, Krish, 2026-11-19: "I hate this prediction format. I think we just scrap it.").
-  const call = beat.role === 'call' && !!props.call
+  // The landing card on the landing beat that carries the ladder's landing; a landing beat without one is a closing
+  // beat like any other (Ruling, Krish, 2026-11-24: "the signature format is the 5 Whys").
+  const landing = beat.role === 'landing' && !!beat.landing && !!landingBeatAt(props, frame)
   const ending = !!props.ending && frame >= props.ending.fromFrame
   // vertical-captions: lead captions replace the house captions for that style only.
   const lead = resolveMotion(props.motion)?.captions
   // His brand marks keep the house colours when the cut is drawn in a style's own palette (props.brandTokens).
   const house = props.brandTokens ? { ...props, tokens: props.brandTokens } : props
+  const chrome = ending ? <EndingBand props={house} frame={frame} />
+    : landing ? <LandingCard props={house} frame={frame} />
+      : props.captionTheme ? (onFullPlate(props, beat) || props.captionTheme === 'rack-focus' || overTake(beat)
+        ? <div data-caption-halo style={{ position: 'absolute', inset: 0, filter: onFullPlate(props, beat) ? CAPTION_HALO : TAKE_HALO }}><ThemedCaption props={props} theme={props.captionTheme} frame={frame} /></div>
+        : <ThemedCaption props={props} theme={props.captionTheme} frame={frame} />)
+      : lead?.mode === 'lead' ? <LeadCaption props={props} frame={frame} perCard={lead.wordsPerCard} />
+      : props.captionStyle === 'word' ? <WordCaption props={props} frame={frame} />
+      : beat.layout === 'SPLIT' ? <SplitCaptionTrack props={props} frame={frame} /> : <CaptionTrack props={props} frame={frame} />
+  // A why beat's step sits over the captions, which keep running under it. Every other beat keeps the chrome's tree
+  // exactly as before (houseGolden.test.ts).
+  const step = beat.role === 'why' && beat.why && !ending ? <WhyStep props={house} beat={beat} frame={frame} /> : null
+  // The held title gives way while the step is up: the step's card sits where the title sits in the word build
+  // (ENDING_SAFE top against WORD_CAPTION titleTop), and the title comes back when the step has gone.
+  const stepUp = !!step && !!whyStepModel(house, beat, frame)
   return <>
     <Grain />
     {/* SPLIT keeps the mark tile and series pill of every face-with-proof beat: the horizontal logo is drawn for ink
@@ -46,15 +61,8 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
     </>}
     {/* The title holds over every face-alone beat, a STAGE beat on the take included (the georgia_la build);
         graphics own the top of SPLIT and of a STAGE beat with no plate. */}
-    {props.captionStyle === 'word' && !call && !isStaging(props.layout?.mode, props.aspect) && beat.layout !== 'SPLIT' && !(beat.layout === 'STAGE' && beat.plate?.source !== 'take') && <HeldTitle props={props} frame={frame} />}
-    {ending ? <EndingBand props={house} frame={frame} />
-      : call ? <CallCard props={house} frame={frame} />
-        : props.captionTheme ? (onFullPlate(props, beat) || props.captionTheme === 'rack-focus' || overTake(beat)
-          ? <div data-caption-halo style={{ position: 'absolute', inset: 0, filter: onFullPlate(props, beat) ? CAPTION_HALO : TAKE_HALO }}><ThemedCaption props={props} theme={props.captionTheme} frame={frame} /></div>
-          : <ThemedCaption props={props} theme={props.captionTheme} frame={frame} />)
-        : lead?.mode === 'lead' ? <LeadCaption props={props} frame={frame} perCard={lead.wordsPerCard} />
-        : props.captionStyle === 'word' ? <WordCaption props={props} frame={frame} />
-        : beat.layout === 'SPLIT' ? <SplitCaptionTrack props={props} frame={frame} /> : <CaptionTrack props={props} frame={frame} />}
+    {props.captionStyle === 'word' && !landing && !stepUp && !isStaging(props.layout?.mode, props.aspect) && beat.layout !== 'SPLIT' && !(beat.layout === 'STAGE' && beat.plate?.source !== 'take') && <HeldTitle props={props} frame={frame} />}
+    {step ? <>{step}{chrome}</> : chrome}
   </>
 }
 

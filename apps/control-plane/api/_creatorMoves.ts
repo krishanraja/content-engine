@@ -83,7 +83,8 @@ const intIn = (v: unknown, lo: number, hi: number): number | null => {
   return Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : null
 }
 
-function buildSystem(ctx: CreatorMoveCtx, creators: CreatorRow[]): string {
+/** Exported for its test (tests/control-plane/creator-moves-pillar.test.ts). */
+export function buildSystem(ctx: CreatorMoveCtx, creators: CreatorRow[]): string {
   const creatorsBlock = creators
     .map(c => `- ${c.name}${c.linkedin_slug ? ` (${c.linkedin_slug})` : ''}: ${c.why}`)
     .join('\n')
@@ -114,7 +115,7 @@ function buildSystem(ctx: CreatorMoveCtx, creators: CreatorRow[]): string {
     'Declarative and specific. Real numbers, real artifacts, one sharp thought per piece. Plain English, no buzzwords. Never use em dashes anywhere.',
     '',
     '## HARD RULES',
-    '- Borrow the structure, never the wording. krish_angle must be Krish\'s own claim, grounded in his world: AI advisory, building an agentic operating system in public, the economics of AI. A restatement or paraphrase of the post is a REJECT: set is_move=false and rejection_reason="paraphrase".',
+    '- Borrow the structure, never the wording. krish_angle must be Krish\'s own claim, grounded in his world: AI advisory, building an agentic operating system in public, the economics of AI, AI in media, entertainment, arts and music. A restatement or paraphrase of the post is a REJECT: set is_move=false and rejection_reason="paraphrase".',
     '- Two channels only. lane_slot is "money_of_ai" (second-order economics of AI: pricing, margins, labour, positioning, unit economics; never the launch or benchmark itself) or "built_with_ai" (someone actually built and shipped something).',
     `- Score brand_fit_score 1-10 against the pillar bar. Below ${ctx.minBrandFit} is a REJECT: is_move=false, rejection_reason="low_fit".`,
     '- temporal_class: ephemeral (dies in days), developing (weeks), durable (evergreen). expires_in_days only for ephemeral or developing.',

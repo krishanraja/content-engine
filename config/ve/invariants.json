@@ -33,9 +33,9 @@
       "enforced_by": "schema VeAssetSchema; lint provenance.*"
     },
     {
-      "id": "INV-DATED-CALL",
-      "rule": "No cut needs a dated call; a cut carries one only when Krish asked for a prediction on the piece, and then it ends on its call beat (Ruling, Krish, 2026-11-19)",
-      "enforced_by": "lint story.call; renderer CallCard only with props.call"
+      "id": "INV-WHY-LADDER",
+      "rule": "The signature format is the why-ladder: a why beat names its rung (n, question, strength) and the rungs climb in order; at most one landing beat closes the climb with what this shows and an open question handed to the viewer, never a verdict, forecast, odds, confidence or date. No cut carries a dated call (Ruling, Krish, 2026-11-24: \"the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores\")",
+      "enforced_by": "schema VeBeatSchema why/landing; lint story.why, story.landing, story.no_call; renderer WhyStep and LandingCard only with beat.why and beat.landing"
     },
     {
       "id": "INV-NUMBERS-NAMED",

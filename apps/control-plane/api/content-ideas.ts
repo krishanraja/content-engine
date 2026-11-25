@@ -1,5 +1,5 @@
 import { gateStatus } from './_factGate.js'
-import { predictionWanted, publishChecks, publishStatus } from './_publishChecks.js'
+import { publishChecks, publishStatus } from './_publishChecks.js'
 import { LIVE_SUBCHANNELS } from './_subchannels.js'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { supabase } from './_supabase.js'
@@ -471,9 +471,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (!gate.ok) return res.status(409).json({ ok: false, reason: 'fact_gate', error: gate.reason })
       // Krish's house rules that a machine can check (api/_publishChecks.ts):
       // before approval or publication, every blocking check must pass. Review
-      // is where he reads a piece, so a missing confidence does not block it.
+      // is where he reads a piece, so these checks do not block it.
       if (updates.state === 'approved' || updates.state === 'published') {
-        const checks = publishChecks(effective, gate, new Date(), id, { predictionWanted: predictionWanted(jsonRecord(current.meta)) })
+        const checks = publishChecks(effective, gate, jsonRecord(current.meta).whys)
         const status = publishStatus(checks)
         if (!status.ok) return res.status(409).json({ ok: false, reason: 'publish_gate', error: status.reason, checks: status.failing })
       }
@@ -504,6 +504,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         body: typeof updates.body === 'string' ? updates.body : current.body,
         lane: current.lane,
         lane_slot: typeof updates.lane_slot === 'string' ? updates.lane_slot : current.lane_slot,
+        // The why-ladder's landing is part of the approved revision (Ruling, Krish, 2026-11-24: the signature format
+        // is the 5 Whys). This route never edits meta.whys, so the piece's own stands.
+        meta: current.meta,
       }
       const meta = jsonRecord(current.meta)
       const revisionChanged = contentRevisionHash(effectiveRevision) !== contentRevisionHash(current)

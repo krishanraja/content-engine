@@ -36,9 +36,9 @@ A replaced take invalidates only media-dependent descendants. CI rejects drift b
 
 Never substitute chat agreement for the recorded approval.
 
-## The call on a Short
+## The landing on a Short
 
-A Short in the makeyourmindup house style for a live subchannel shows the piece's call (its dated prediction and how sure we are), when the piece has one because Krish asked for it (Ruling, Krish, 2026-11-19), on a card, on the beat its render manifest names. The call comes only from the approved text of the job's production brief: run `studio v2 call --job <job> --beat <beat_id>` and paste its `call` into every manifest for the job, from the styleframes review manifest to the treatment manifests. The Studio refuses a manifest without it, or with a statement, date or percentage that differs from the approved text, at `styleframes create`, `animatic create`, `treatment register` and every render. The retired series and unbranded renders carry no call card.
+No Short carries a prediction, a call, a date, odds or a confidence number (Ruling, Krish, 2026-11-24: "the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores"). A Short in the makeyourmindup house style for a live subchannel may end on its landing card, on the beat its render manifest names: where the piece's why-ladder lands, what this shows and the open question handed to the viewer. The landing comes only from the job's production brief: its landing, which the control plane binds from the piece's checked why-ladder (`meta.whys`) when it builds the brief, and only when every Why stands (a brief made before that field falls back to a why-ladder block in its approved text). Run `studio v2 landing --job <job> --beat <beat_id>` and paste its `landing` into every manifest for the job that ends on it, from the styleframes review manifest to the treatment manifests. The Studio refuses a landing whose words differ from the brief's at `styleframes create`, `animatic create`, `treatment register` and every render. No Short needs a landing; the retired series and unbranded renders carry no landing card.
 
 ## Shared output contract
 

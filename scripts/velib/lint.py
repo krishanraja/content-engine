@@ -94,8 +94,8 @@ def no_name_pattern() -> re.Pattern:
 
 def public_strings(spec: dict):
     """The spec's words that reach the screen: device params (never a src, id or path), each dataset's producer
-    label, unit and row labels, and the dated call. Records such as signed.by, licence and take_edits.why name
-    him by right and are never read."""
+    label, unit and row labels, each why beat's question and each landing beat's landing. Records such as signed.by,
+    licence and take_edits.why name him by right and are never read."""
     for index, obj in enumerate(spec.get('objects', [])):
         for path, text in _strings(obj.get('params', {}), f'objects.{index}.params'):
             if path.rsplit('.', 1)[-1] not in NOT_PUBLIC:
@@ -107,9 +107,15 @@ def public_strings(spec: dict):
         for row, entry in enumerate(dataset.get('rows', [])):
             if isinstance(entry.get('label'), str):
                 yield f'datasets.{index}.rows.{row}.label', entry['label']
-    statement = (spec.get('call') or {}).get('statement')
-    if isinstance(statement, str):
-        yield 'call.statement', statement
+    for cut_id, cut in (spec.get('cuts') or {}).items():
+        for index, beat in enumerate(cut.get('beats') or []):
+            question = (beat.get('why') or {}).get('question')
+            if isinstance(question, str):
+                yield f'cuts.{cut_id}.beats.{index}.why.question', question
+            for key in ('shows', 'open_question'):
+                text = (beat.get('landing') or {}).get(key)
+                if isinstance(text, str):
+                    yield f'cuts.{cut_id}.beats.{index}.landing.{key}', text
 
 
 def pending_devices_error(format_id: str, fmt: dict | None = None) -> str | None:
@@ -136,7 +142,7 @@ def locked_beat_ids(lock: dict, fmt: str) -> tuple[list[str], dict[str, list[str
 
 def beat_sequence_problem(lock: dict, fmt: str, ids: list) -> str | None:
     """A cut is the format's locked beats, in lock order and complete, plus any extra beats the story needs
-    (hook, stats, call, close) and the beats of a module format (for example two-passports) in that module's
+    (hook, stats, the why rungs, the landing, close) and the beats of a module format (for example two-passports) in that module's
     order. A beat id the lock does not name has no golden frame: it is composition-checked only."""
     own, modules = locked_beat_ids(lock, fmt)
     if not ids:
@@ -150,6 +156,101 @@ def beat_sequence_problem(lock: dict, fmt: str, ids: list) -> str | None:
     if len(set(ids)) != len(ids):
         return 'beat ids must be unique'
     return None
+
+
+# The signature format is the why-ladder (Ruling, Krish, 2026-11-24: "the signature format is the 5 Whys; get rid of
+# everything that suggests predictions, calls, dated, odds or scores"). A why beat climbs one rung (why: n, question,
+# strength) and a landing beat is where the ladder lands (landing: shows, open_question): an insight and an open question
+# handed to the viewer, never a verdict, a forecast, odds, a confidence number or a lesson for leaders. The dated call,
+# its beat and its card are gone; a spec that still carries one is refused.
+WHY_STRENGTHS = ('documented', 'inferred', 'open')
+# Ported from WHY_LANDING_VETO, WHY_LANDING_INSTRUCTION and landingVetoes in packages/contracts/src/whys.ts, so this lint
+# refuses exactly what the contract refuses: stated odds and stated confidence, never the bare nouns. "Spotify now keeps
+# 30% of every AI track's royalties" and "consumer confidence fell" are facts a landing may carry; "a 70% chance" is not.
+# Keep the two in step.
+LANDING_VETO = (
+    ('a forecast', re.compile(
+        r"\b(?:predict(?:s|ed|ion|ions)?|forecast(?:s|ed|ing)?|(?:is|are) (?:going|set|poised|likely|expected|bound) to|"
+        r"will (?:soon|likely|probably|eventually|inevitably|definitely|certainly|replace|kill|win|lose|collapse|dominate|"
+        r"disappear|overtake|become)|by (?:the end of )?(?:19|20)\d\d\b|in the (?:next|coming) (?:few )?(?:\d+ )?"
+        r"(?:days|weeks|months|years|decades?))", re.I)),
+    ('odds', re.compile(
+        r"\b(?:(?:the )?odds (?:are|favou?rs?)|long shot|sure thing|chances are|(?:high|low|good|slim|strong|real|even) "
+        r"(?:probability|likelihood|chance) (?:of|that))\b|\d{1,3}(?:\.\d+)?\s?(?:%|per ?cent)\s*(?:chance|likely|likelihood|probability)",
+        re.I)),
+    ('a confidence number', re.compile(
+        r"\b(?:how sure|how confident|confidence (?:level|score|rating|number|interval)|(?:with|at) (?:high|low|medium|moderate|full) "
+        r"confidence|(?:we|i)(?:'re|'m| are| am) (?:sure|certain|confident))\b|\d{1,3}(?:\.\d+)?\s?(?:%|per ?cent)\s*(?:sure|confident|certain)",
+        re.I)),
+    ('a verdict or a lesson', re.compile(
+        r"\b(?:lessons? for (?:leaders|executives|ceos|founders|boards|managers|business(?:es)?)|the real question for leaders|"
+        r"(?:the|our) verdict|our call|the call is|the (?:key )?takeaway (?:is|here)|takeaway:|the bottom line is|bottom line:)", re.I)),
+)
+# Telling someone what to do: in what the landing shows, and in the open question only when it is not a question.
+LANDING_INSTRUCTION = re.compile(
+    r"\b(?:leaders|executives|ceos|founders|boards|managers|businesses|companies|you) (?:should|must|need to|have to|ought to)\b", re.I)
+
+
+def landing_vetoes(landing: dict) -> list[tuple[str, str]]:
+    """The words in a landing that read as a verdict, forecast, odds, confidence or a lesson: [(kind, said)].
+    The same reading as landingVetoes in packages/contracts/src/whys.ts."""
+    shows = str(landing.get('shows') or '').strip()
+    question = str(landing.get('open_question') or '').strip()
+    text = f'{shows}\n{question}'
+    out = []
+    for kind, rx in LANDING_VETO:
+        m = rx.search(text)
+        if m:
+            out.append((kind, m.group(0).strip()))
+    if not any(kind == 'a verdict or a lesson' for kind, _ in out):
+        asked = re.search(r"\?[\"'”’)]*$", question) is not None
+        m = LANDING_INSTRUCTION.search(shows) or (None if asked else LANDING_INSTRUCTION.search(question))
+        if m:
+            out.append(('a verdict or a lesson', m.group(0).strip()))
+    return out
+
+
+def why_ladder_problems(where: str, beats: list) -> list[str]:
+    """A cut's why rungs climb in order, each beat that climbs one names it, at most one landing closes the climb, and
+    the landing hands the viewer an open question without a verdict, forecast, odds or confidence."""
+    out: list[str] = []
+    last_n = 0
+    landing_at = None
+    for index, beat in enumerate(beats):
+        at = f'{where}.beats.{index}'
+        role = beat.get('role')
+        if role == 'call':
+            out.append(f'story.no_call {at}: the dated call beat is retired; the ladder lands on a landing beat instead '
+                       '(Ruling, Krish, 2026-11-24: "the signature format is the 5 Whys")')
+            continue
+        why, landing = beat.get('why'), beat.get('landing')
+        if role == 'why':
+            if not isinstance(why, dict) or not isinstance(why.get('n'), int) or not str(why.get('question') or '').strip() \
+                    or why.get('strength') not in WHY_STRENGTHS:
+                out.append(f'story.why {at}.why: a why beat names its rung: n, question and strength ({", ".join(WHY_STRENGTHS)})')
+            else:
+                if why['n'] <= last_n:
+                    out.append(f'story.why {at}.why.n: the rungs climb in order; Why {why["n"]} comes after Why {last_n}')
+                last_n = max(last_n, why['n'])
+                if landing_at is not None:
+                    out.append(f'story.why {at}: a rung after the landing; the ladder lands once, at the top of the climb')
+        elif why is not None:
+            out.append(f'story.why {at}.why: only a why beat names a rung')
+        if role == 'landing':
+            if landing_at is not None:
+                out.append(f'story.landing {at}: one landing per cut')
+            landing_at = index
+            if not isinstance(landing, dict) or not str(landing.get('shows') or '').strip() or not str(landing.get('open_question') or '').strip():
+                out.append(f'story.landing {at}.landing: a landing beat carries what this shows and the open question (landing: shows, open_question)')
+            else:
+                if not landing['open_question'].rstrip().endswith('?'):
+                    out.append(f'story.landing {at}.landing.open_question: the landing hands the viewer an open question; end it on a question mark')
+                for kind, said in landing_vetoes(landing):
+                    out.append(f'story.landing {at}.landing: "{said}" reads as {kind}; '
+                               'the ladder lands on what this shows and an open question (Ruling, Krish, 2026-11-24)')
+        elif landing is not None:
+            out.append(f'story.landing {at}.landing: only a landing beat carries the landing')
+    return out
 
 
 # Krish, 2026-11-03: "I even gave literal inspiration in the inspiration board on the quality I expect, and also the
@@ -665,14 +766,7 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
         whole = not cut.get('excerpt')
         if whole and roles.count('payoff') != 1:
             out.append(f'story.one_payoff {where}: exactly one payoff beat (found {roles.count("payoff")})')
-        from . import guards  # noqa: PLC0415
-        # No cut needs a dated call (Ruling, Krish, 2026-11-19: "If I want to predict something in a particular piece
-        # I will"; and earlier that day: "I hate this prediction format. I think we just scrap it."). spec.call is set only when he asked for a prediction on the piece; then a whole cut ends on its call
-        # beat, and a call beat never stands without one.
-        if whole and spec.get('call') and 'call' not in roles and not guards.off_day(spec):
-            out.append(f'story.call {where}: Krish asked for a prediction on this piece: end on a call beat carrying spec.call')
-        if 'call' in roles and not spec.get('call'):
-            out.append(f'story.call {where}: a call beat with no spec.call; a cut carries a prediction only when Krish asked for one on the piece')
+        out.extend(why_ladder_problems(where, beats))
         run_role, run_len = None, 0
         for index, role in enumerate(roles):
             run_len = run_len + 1 if role == run_role else 1
@@ -693,7 +787,7 @@ def crew_lints(spec: dict, history: list[dict] | None = None) -> list[str]:
                 if not devices & DATA_DEVICES:
                     out.append(f'creative.decision_engine {at}: the point carries a number, so a data device shows it (kinetic_stat, bar_compare, test_grid, record_card) or give override_reason')
             needed = max(1, math.ceil(words / (WORDS_PER_SECOND * 3)))
-            if beat['role'] not in ('call',) and len(beat['events']) < needed and not beat.get('override_reason'):
+            if beat['role'] not in ('landing',) and len(beat['events']) < needed and not beat.get('override_reason'):
                 out.append(f'motion.event_cadence {at}: {words} words need at least {needed} events (one every 3 s), found {len(beat["events"])}')
             for j, event in enumerate(beat['events']):
                 obj = objects.get(event['obj'])

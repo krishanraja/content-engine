@@ -1,5 +1,15 @@
 import { describe, it, expect } from 'vitest'
-import { knownPillar } from '../../apps/control-plane/api/_creatorMoves.js'
+import { buildSystem, knownPillar } from '../../apps/control-plane/api/_creatorMoves.js'
+
+// Ruling (Krish, 2026-11-24): the engine brings stories in his focus sectors
+// (media, entertainment, content, arts, music, creator tech, with the economics
+// of AI inside them), so a creator's move may be grounded there too.
+describe('the grounding line', () => {
+  it('names AI in media, entertainment, arts and music', () => {
+    const system = buildSystem({ pillars: [], recentAngles: [], minBrandFit: 6 } as any, [])
+    expect(system).toContain('the economics of AI, AI in media, entertainment, arts and music')
+  })
+})
 
 // The creator scout failed its whole run on 2026-10-20 because the model
 // returned a pillar id that is not in content_pillars, and the insert's foreign

@@ -321,7 +321,7 @@
     },
     {
       "id": "move-6",
-      "role": "call",
+      "role": "landing",
       "layout": "STAGE",
       "fromFrame": 450,
       "toFrame": 540,

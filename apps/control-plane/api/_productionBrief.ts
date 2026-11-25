@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto'
 import { FACE } from './_mission.js'
+import { checkWhyLadder, type WhyLadder } from '../../../packages/contracts/src/whys.js'
 
 export const PRODUCTION_BRIEF_SCHEMA_VERSION = 1 as const
 export const PRODUCTION_KIND_VALUES = ['video', 'carousel'] as const
@@ -30,7 +31,11 @@ export interface ContentRevisionInput {
   body: string | null
   lane: string | null
   lane_slot: string | null
+  /** The piece's meta, read only for its checked why-ladder (meta.whys.ladder): see productionLanding. */
+  meta?: unknown
 }
+
+export interface ProductionLanding { shows: string; open_question: string }
 
 export interface ProductionApprovalV1 {
   schema_version: 1
@@ -54,6 +59,8 @@ export interface ProductionBriefV1 {
     approved_text: string
     audience: string
     intended_payoff: string
+    /** Present only when the piece's why-ladder (meta.whys.ladder) stands: see productionLanding. */
+    landing?: ProductionLanding
   }
   claims: Array<{
     claim_id: string
@@ -131,6 +138,7 @@ export function productionBriefHash(value: unknown): string {
  * derivatives: those can change without changing the approved argument.
  */
 export function contentRevisionHash(input: ContentRevisionInput): string {
+  const landing = productionLanding(input.meta)
   return hash({
     schema_version: 1,
     title: normalizedText(input.idea),
@@ -138,7 +146,30 @@ export function contentRevisionHash(input: ContentRevisionInput): string {
     approved_text: normalizedText(input.body),
     lane: normalizedText(input.lane),
     lane_slot: normalizedText(input.lane_slot),
+    // The landing is part of what Krish approves (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys), so
+    // a ladder whose landing changes after approval retires the approval. The key is added only when a standing
+    // ladder lands, so every piece without one keeps the hash it always had.
+    ...(landing ? { landing } : {}),
   })
+}
+
+const LANDING_MAX = 600
+
+/** Where the piece's why-ladder lands, as a production brief carries it: { shows, open_question } from
+ *  meta.whys.ladder.landing, only when a ladder is on file and checkWhyLadder finds nothing short on it (Ruling, Krish,
+ *  2026-11-24: the signature format is the 5 Whys). Null otherwise, and when either part is empty or longer than the
+ *  brief contract takes. Read defensively: meta.whys is stored data. */
+export function productionLanding(meta: unknown): ProductionLanding | null {
+  const whys = jsonRecord(jsonRecord(meta).whys)
+  const ladder = whys.ladder
+  if (!ladder || typeof ladder !== 'object' || Array.isArray(ladder)) return null
+  if (!Array.isArray((ladder as JsonRecord).rungs)) return null
+  if (checkWhyLadder(ladder as WhyLadder).length) return null
+  const landing = jsonRecord((ladder as JsonRecord).landing)
+  const shows = typeof landing.shows === 'string' ? landing.shows.trim() : ''
+  const openQuestion = typeof landing.open_question === 'string' ? landing.open_question.trim() : ''
+  if (!shows || !openQuestion || shows.length > LANDING_MAX || openQuestion.length > LANDING_MAX) return null
+  return { shows, open_question: openQuestion }
 }
 
 /** The Studio series for a piece: its subchannel as stored. A piece on a
@@ -250,6 +281,7 @@ export function buildProductionBrief(input: {
       : FACE)
   const payoff = textFrom(candidate, 'honest_payoff', thesis)
   const visual = textFrom(candidate, 'visual_proof', textFrom(meta, 'visual_suggestion'))
+  const landing = productionLanding(row.meta)
 
   const briefIdentity = {
     content_idea_id: row.id,
@@ -276,6 +308,9 @@ export function buildProductionBrief(input: {
       approved_text: normalizedText(row.body).slice(0, 30_000),
       audience: audience.slice(0, 600),
       intended_payoff: payoff.slice(0, 1200),
+      // The landing the Studio's landing card shows word for word: bound from the piece's checked why-ladder
+      // (meta.whys), never read from the body, which carries no ladder. Absent, never null, when no ladder stands.
+      ...(landing ? { landing } : {}),
     },
     claims: [{
       claim_id: identifier('claim', { revisionHash, thesis }),

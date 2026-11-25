@@ -170,9 +170,10 @@ def _renderer_layouts() -> dict:
 
 
 def caption_pages_shown(props: dict) -> list:
-    """Caption pages the renderer draws at the frame OCR samples. The dated call card replaces the captions for the
-    whole call beat (CaptionTrack returns null there), so a page sampled inside it is not on screen."""
-    calls = [(b['fromFrame'], b['toFrame']) for b in props['beats'] if b.get('role') == 'call'] if props.get('call') else []
+    """Caption pages the renderer draws at the frame OCR samples. The landing card replaces the captions for the
+    whole landing beat that carries its landing (CaptionTrack returns null there), so a page sampled inside it is not
+    on screen."""
+    landings = [(b['fromFrame'], b['toFrame']) for b in props['beats'] if b.get('role') == 'landing' and b.get('landing')]
 
     def sampled(page):  # the same frame qc_captions.ocr reads
         first, last = page['fromFrame'], page['toFrame']
@@ -180,7 +181,7 @@ def caption_pages_shown(props: dict) -> list:
         return (revealed + last - 1) // 2
 
     return [page for page in props['captions']
-            if not any(start <= sampled(page) < end for start, end in calls)]
+            if not any(start <= sampled(page) < end for start, end in landings)]
 
 
 def lead_frames(props: dict | None) -> int:

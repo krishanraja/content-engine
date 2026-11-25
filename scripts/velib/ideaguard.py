@@ -58,8 +58,8 @@ def _strings(value):
 
 
 def allowed_numbers(spec: dict, spec_dir: Path | None = None, supplied=()) -> set[str]:
-    """The numbers the piece owns: its datasets (every figure names its producer), the words of its real artifacts, the call,
-    the words he spoke (words.*.json beside the spec) and any the card says it supplies."""
+    """The numbers the piece owns: its datasets (every figure names its producer), the words of its real artifacts, its
+    why rungs and landing, the words he spoke (words.*.json beside the spec) and any the card says it supplies."""
     texts: list[str] = []
     for dataset in spec.get('datasets') or []:
         texts += [s for key, v in dataset.items() if key != 'source_url' for s in _strings(v)]
@@ -68,7 +68,9 @@ def allowed_numbers(spec: dict, spec_dir: Path | None = None, supplied=()) -> se
     for asset in spec.get('assets') or []:
         if asset.get('origin') != 'generated' and asset.get('kind') in REAL_KINDS:
             texts += [s for key in ('holds', 'title', 'label', 'words', 'text') for s in _strings(asset.get(key))]
-    texts += list(_strings(spec.get('call') or {}))
+    for cut in (spec.get('cuts') or {}).values():
+        for beat in cut.get('beats') or []:
+            texts += list(_strings(beat.get('why') or {})) + list(_strings(beat.get('landing') or {}))
     if spec_dir is not None:
         for words in sorted(Path(spec_dir).glob('words*.json')):
             try:
