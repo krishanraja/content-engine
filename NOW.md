@@ -1,8 +1,8 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-23
-head: 6bbfa12
+as_of: 2026-11-25
+head: 96c840a
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -36,21 +36,16 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 - The habits voiceover short (piece 701a2c55, moved by Krish to Thu 19 Nov) is made and filed: 3 Posts/2026-11-19 Thu off.day - Which of your habits will cost you your job holds the final 9:16 cut (3 Video, Drive sha256 matches), the brand cover he picked (option 2, tall and wide), his face cover and a caption for each of eight channels, with the draft manifest in 0 Publish. The board's Thu card leads with Approve for publish bound to that manifest. The cut was rendered on the engine he approved for v9 (main's later caption engine regressed it) and filed with the cloud Drive uploader by his ruling, past the library gate, whose QC false readings are with another session. (2026-11-19)
 - The standards check-in of 2026-11-23 grouped the new floor standards; config/floor-groups.json holds 78 groups, each new one seeded as a proposal for Krish on the pinned check-in page. (2026-11-23)
-- The standards page test no longer breaks when the floor reaches 78 groups, so the floor pull requests held since 20 November can pass verify. (2026-11-23)
 - Every Claude and Growth prompt the Content Board copies now says that Codex generates the visual assets, Claude arbitrates the standards and checks what Codex returns, failures and best practices go to record_harness_observation for the internal-auditor, and only preference and inspiration go to the taste engine. (2026-11-23)
 - Migration 20261207090000_defects_leave_taste is written and not applied. It adds engine_standards and production_floor and marks where defects moved from. (2026-11-23)
-- main's red verify is fixed in tests and fixtures only. Fixtures that name no recipe now freeze before the recipe floor's start date, and three Windows-only test failures (CRLF in a test's output, CRLF on Growth's vendored mix, a 5-second default timeout) are fixed. No rule for real pieces changed. (2026-11-23)
 - The antislop guardrail (miqdadbadjuber/anti-slop at 7f6a03d) is vendored unmodified in .agents/skills/antislop*, with ADAPTER.md putting Krish's own rules above it; its PASS/FAIL report runs in the check steps of meme and cover-art, in the references the make-piece, thumbnail-designer and motion-designer checks read, and in docs/CAROUSEL-STANDARD.md for carousels (the cores sit at their byte caps), and the copy lint carries four antislop_ patterns (emoji bullets, capitals shouting in prose, hype phrases, rounded "N+ users" counts). (2026-11-23)
-- The tall and wide sting closes and the Character.ai recording layout carry their size and fill fixes (every close size at least 40 px, the tall band lifted 450 px, the wide close clear of x 1100, the recording filling its panel with its source line beneath); these missed the first merge of the outro pull request. (2026-11-20)
 - The premium title slide (direction A) is queued to Codex as card ve-title-premium-a on gpt-6.2-astra, set on this card only; the engine's default model pin is unchanged. (2026-11-20)
 - Everything the next session needs is in docs/ve/handoff-2026-11-20/ (HANDOFF.md, the approved PLAN.md, the audit evidence, the shot study, the polish spec and generators, and Krish's ten recipe verdicts); WORKBENCH.md points to it. All the week's engine work is merged to main (#941 to #956); the title slide card is queued to Codex. (2026-11-20)
-- ve shot grammar step 5 built. `ve matte` makes an offline subject matte of a cut's picture, cached by its sha256; compile writes `props.matte`, the in-world number and chapter marks with his head, the anchor title behind his head and a body keep-out; the renderer lays type between his take and the matted subject and cuts him out over a whole-frame stage panel. Anchor graphics sit only above his head on an ink scrim, captions under his chin. `grammar.depth`, `grammar.title_timing` (the title on his spoken words within 30 s) and the after-render `panel.fill` row hold it. Generated imagery is allowed as an art-directed metaphor and refused as a stand-in for a real thing (`depicts`). Reference renders on the Fri 20 take: anchor 9:16, stage 9:16, stage 16:9 (docs/ve/INGREDIENTS.md, "Depth and the staging fixes"). (2026-11-20)
-- **StyleStill covers: 47 of 48 passed a separate review and are filed and recorded for the board's style pickers** (`config/ve/style-samples.json`). Eight came from Codex's second pass, 24 from its third, and 15 of the 16 held back from its fourth, after the reviewer's five named faults were fixed (`82360c9b`: line-boil passes too thick to read as three lines, receipt and living-ui labels ink on ink, the data story's chart now the sourced monthly sales indexed 100 to 107, flip-hinge sampled with its key word lit). slot-roll stays held: its uneven word gap is in the caption theme itself (`c631e0ac`). (2026-11-16)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3**, at 0 of 3 counted cuts (`docs/ve/STATUS.md`, "Phase 3 count", last moved 2026-11-18). Procedure: `docs/ve/ENGINE.md` and `docs/ve/RUNBOOK.md`; `ve render` refuses a whole cut until he presses Approve proof. (2026-11-19)
 
 ## What changed recently
 
-- 2026-11-19 scripts/pages/receipt.py (tall Receipt clear of the Reel UI), tests, config/title-verdicts.json, docs/plans/2026-11-17-tue-habits/, docs/ve/cards/habits/
+- 2026-11-24 The habits short (piece 701a2c55) landed on main as one squashed commit (`00856806`): `check:ruling-linked`, added on 19 Nov, reads each commit message on its own, and its seven rulings sat in earlier commits with no link. It also keeps the tall Receipt's words clear of the Reel caption zone.
 Older lines: `docs/history/2026-11-24-NOW-moved-1.md` (it names every earlier move) and `LOG.md`.
 
 
