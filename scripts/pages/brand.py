@@ -7,7 +7,7 @@ copied into this folder that could drift:
     the house style in `config/studio.json` (the same values the Studio renders
     with). When the schedule changes, that file changes, and every page,
     banner and pill follows.
-  * The four faces (Anton, Archivo, Fraunces italic, IBM Plex Mono) come from
+  * The four faces (Anton, Archivo, Fraunces italic, DM Mono) come from
     the repository's own pinned font packages in `node_modules/@fontsource*`,
     installed by `npm ci`. They are the same files, byte for byte, that the
     first hand-built pages used (fetched then from Google Fonts).
@@ -138,7 +138,7 @@ def house():
     """The publication's house style from config/studio.json: tokens, the page
     copy (the ladder's kickers), and the three subchannels in the order of the week."""
     cfg = json.loads((ROOT / 'config' / 'studio.json').read_text(encoding='utf-8'))
-    themes = [t for t in cfg.get('brand_themes', []) if (t.get('publication') or {}).get('house_style')]
+    themes = [t for t in cfg.get('brand_themes', []) if t['theme_id'] == cfg['default_brand_theme']]
     if not themes:
         fail('config/studio.json has no brand theme with publication.house_style')
     style = themes[0]['publication']['house_style']
@@ -151,7 +151,7 @@ def house():
         channels.append({
             'id': sid,
             'name': series['public_name'],
-            'accent': series['accent'],
+            'accent': style['tokens']['cream'],
             'day': day,
             'days': ch['day'],
             'short': day[:3],
@@ -186,14 +186,10 @@ FONT_FILES = [
     ('Anton', 'normal', '400', '@fontsource/anton/files/anton-latin-400-normal.woff2'),
     ('Archivo', 'normal', '100 900', '@fontsource-variable/archivo/files/archivo-latin-wght-normal.woff2'),
     ('Fraunces', 'italic', '100 900', '@fontsource-variable/fraunces/files/fraunces-latin-opsz-italic.woff2'),
-    ('IBM Plex Mono', 'normal', '400', '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2'),
-    ('IBM Plex Mono', 'normal', '500', '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-500-normal.woff2'),
-    # No 600 on purpose: the approved pages and banner had none, so a 600
-    # label drew at 700, and the 600 file's taller line box would make every
-    # pill and label taller than the ones Krish saw.
-    ('IBM Plex Mono', 'normal', '700', '@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-700-normal.woff2'),
+    ('DM Mono', 'normal', '400', 'assets/fonts/makeyourmindup/DMMono-Regular.ttf'),
+    ('DM Mono', 'normal', '500', 'assets/fonts/makeyourmindup/DMMono-Medium.ttf'),
 ]
-SERIF_FILE = ('Source Serif 4', 'normal', '200 900', '@fontsource-variable/source-serif-4/files/source-serif-4-latin-wght-normal.woff2')
+SERIF_FILE = ('Fraunces', 'normal', '100 900', 'assets/fonts/makeyourmindup/Fraunces-Upright-Variable.ttf')
 LATIN = ('U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, '
          'U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD')
 
@@ -202,12 +198,13 @@ def font_css(extra=()):
     """@font-face rules with every face inlined, so a page needs no network."""
     out = []
     for family, style, weight, rel in [*FONT_FILES, *extra]:
-        path = ROOT / 'node_modules' / rel
+        path = ROOT / rel if rel.startswith('assets/') else ROOT / 'node_modules' / rel
+        fmt, mime = ('truetype', 'ttf') if path.suffix == '.ttf' else ('woff2', 'woff2')
         if not path.exists():
             fail(f'font file missing: node_modules/{rel}. Run `npm ci` in the repository first.')
         data = base64.b64encode(path.read_bytes()).decode()
         out.append(f"@font-face {{ font-family: '{family}'; font-style: {style}; font-weight: {weight}; font-display: block; "
-                   f"src: url(data:font/woff2;base64,{data}) format('woff2'); unicode-range: {LATIN}; }}")
+                   f"src: url(data:font/{mime};base64,{data}) format('{fmt}'); unicode-range: {LATIN}; }}")
     return '\n'.join(out)
 
 

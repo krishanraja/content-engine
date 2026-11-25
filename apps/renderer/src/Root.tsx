@@ -1,3 +1,4 @@
+import retiredStyles from '../../../config/retired-styles.json'
 import React from 'react'
 import { SplitKeyFrame, SplitKeyFrameSchema } from './engine/stills/split/SplitKeyFrame'
 import { StyleStill, StyleStillSchema } from './engine/stills/StyleStill'
@@ -133,14 +134,14 @@ export function RemotionRoot() {
         calculateMetadata={({ props }) => ({ durationInFrames: Math.max(1, Math.ceil(props.durationMs / 1000 * 30)) })}
       />
       {/* The story intro and outro (the stand-off), silent: the music is mixed elsewhere. */}
-      <Composition id="StoryIntroStandoffWide" component={StoryIntroStandoff} width={1920} height={1080} fps={30}
-        durationInFrames={STORY_INTRO_FRAMES} schema={StoryStandoffPropsSchema} defaultProps={mondayStandoffProps('16x9')} />
-      <Composition id="StoryIntroStandoffTall" component={StoryIntroStandoff} width={1080} height={1920} fps={30}
-        durationInFrames={STORY_INTRO_FRAMES} schema={StoryStandoffPropsSchema} defaultProps={mondayStandoffProps('9x16')} />
-      <Composition id="StoryOutroStandoffWide" component={StoryOutroStandoff} width={1920} height={1080} fps={30}
-        durationInFrames={STORY_OUTRO_FRAMES} schema={StoryStandoffPropsSchema} defaultProps={mondayStandoffProps('16x9')} />
-      <Composition id="StoryOutroStandoffTall" component={StoryOutroStandoff} width={1080} height={1920} fps={30}
-        durationInFrames={STORY_OUTRO_FRAMES} schema={StoryStandoffPropsSchema} defaultProps={mondayStandoffProps('9x16')} />
+      {!retiredStyles.some(row => row.kind === 'composition' && row.id === 'StoryIntroStandoffWide') && <Composition id="StoryIntroStandoffWide" component={StoryIntroStandoff} width={1920} height={1080} fps={30}
+        durationInFrames={STORY_INTRO_FRAMES} schema={StoryStandoffPropsSchema} defaultProps={mondayStandoffProps('16x9')} />}
+      {!retiredStyles.some(row => row.kind === 'composition' && row.id === 'StoryIntroStandoffTall') && <Composition id="StoryIntroStandoffTall" component={StoryIntroStandoff} width={1080} height={1920} fps={30}
+        durationInFrames={STORY_INTRO_FRAMES} schema={StoryStandoffPropsSchema} defaultProps={mondayStandoffProps('9x16')} />}
+      {!retiredStyles.some(row => row.kind === 'composition' && row.id === 'StoryOutroStandoffWide') && <Composition id="StoryOutroStandoffWide" component={StoryOutroStandoff} width={1920} height={1080} fps={30}
+        durationInFrames={STORY_OUTRO_FRAMES} schema={StoryStandoffPropsSchema} defaultProps={mondayStandoffProps('16x9')} />}
+      {!retiredStyles.some(row => row.kind === 'composition' && row.id === 'StoryOutroStandoffTall') && <Composition id="StoryOutroStandoffTall" component={StoryOutroStandoff} width={1080} height={1920} fps={30}
+        durationInFrames={STORY_OUTRO_FRAMES} schema={StoryStandoffPropsSchema} defaultProps={mondayStandoffProps('9x16')} />}
     </>
   )
 }

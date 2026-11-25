@@ -19,7 +19,10 @@
       "Krish, 2026-11-10, of the wide cut's mark tile: \"I don't get why that icon even appears ... Get rid of it.\"",
       "Krish, 2026-11-17: \"we decided to eliminate all logos from everywhere other than the final animated close card and the title frame that animates as I introduce the title of the piece (like we did in the ai-music video) so we can have focuson the hook in the opening seconds\"; then \"yes, change the brand rules\""
     ],
-    "logo_on": ["title_frame", "close"],
+    "logo_on": [
+      "title_frame",
+      "close"
+    ],
     "title_frame": "The one full-frame title in the pause after he says the piece's title, the stacked logo underneath it (Wed 11 Nov, AI music: docs/plans/2026-11-11-wednesday/short-composite/brand_frames.py title_full). Never before the hook, and never a second intro.",
     "from": "2026-11-16",
     "from_why": "Krish, 2026-11-18: \"we have a strict NO ICONS, ONLY THE WORDMARK DURING THE TITLE FRAME AND THE CLOSING FRAME\", after the icon tile still appeared on this week's cuts. The earlier date of 23 Nov kept the tile on every piece of the week of 16 Nov; that carve-out is gone: the rule binds every piece from the palette's own start, Mon 16 Nov, and Fri 13 Nov (a frozen engine, F33) is the only older piece."
@@ -72,23 +75,34 @@
     }
   },
   "colour": {
-    "series": "the series' own colour (config/studio.json house_style; follow.the.money #FFD84D, under.the.hood #B7A6FF, mind.the.gap #FF6A4D), never another's",
-    "off": "house mint #7EF0C0 and the house tones; never butter, lilac or coral, and no series name, pill or days row",
-    "accent": {
-      "ruled": "Krish approved on 2026-11-20 (the polish board): ember #E2551F, ember_deep #B8321C, plum #3B1232, plum_deep #1E0918 and peach #FFB48F to #FFE3D1 join the kit, for big moments, gradients and duotone cut-outs on series days only.",
-      "colours": "config/ve/brand-tokens.json accent_kit (the values, once)",
-      "roles": [
-        "big_moment",
-        "gradient",
-        "duotone_cutout"
+    "v5": {
+      "ink": "#0C1512",
+      "cream": "#F4EFE4",
+      "mint": "#7EF0C0",
+      "climb": [
+        "#FF6A4D",
+        "#FFD84D",
+        "#B7A6FF"
       ],
-      "days": [
-        "monday",
-        "wednesday",
-        "friday"
-      ],
-      "never": "on an off day, as type on its own, as a status colour, or anywhere but those three roles; ve lint refuses it (scripts/velib/accent_kit.py)"
-    }
+      "grain_on_ink": 0.07,
+      "grain_on_colour": 0.12,
+      "fraunces_axes": {
+        "SOFT": 50,
+        "WONK": 0
+      },
+      "ease": "cubic-bezier(0.22, 1, 0.36, 1)",
+      "fps": 25,
+      "entry_frames": [
+        6,
+        12
+      ]
+    },
+    "climb": [
+      "#FF6A4D",
+      "#FFD84D",
+      "#B7A6FF"
+    ],
+    "answer": "#7EF0C0"
   },
   "marks": {
     "icon": {

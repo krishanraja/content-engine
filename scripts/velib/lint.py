@@ -120,6 +120,9 @@ def public_strings(spec: dict):
 
 def pending_devices_error(format_id: str, fmt: dict | None = None) -> str | None:
     """A format becomes usable only when all its pending devices are registered."""
+    from .retirement import registry
+    if ('format_look', format_id) in registry():
+        return f'format {format_id!r} is retired by the v5 ruling'
     if fmt is None:
         fmt = load_json(CONFIG / 'formats' / f'{format_id}.json')
     pending = fmt.get('pending_devices', [])
@@ -899,7 +902,8 @@ def lint(spec_path: Path) -> tuple[dict | None, list[str]]:
     guards.set_bind_day(showgate.effective_day(spec, ve_dir(spec_path)))
     try:
         from . import floor, grammar, piece_guards  # noqa: PLC0415
-        return spec, (crew_lints(spec) + title_line_lints(spec, spec_path) + guards.pre_critic_lints(spec, spec_path)
+        from .retirement import problems as retired_choices
+        return spec, (retired_choices(spec) + crew_lints(spec) + title_line_lints(spec, spec_path) + guards.pre_critic_lints(spec, spec_path)
                       + piece_guards.lints(spec, guards.bind_day(spec), Path(spec_path).parent)
                       + floor.lints(spec, Path(spec_path)) + grammar.lints(spec, Path(spec_path)))
     finally:

@@ -149,22 +149,15 @@
     "ground": "ink",
     "reading": "cream",
     "answer": "mint",
-    "channel": "identity only: pill, stickers, swipe, marquee, verdict stamps",
+    "channel": "Coral, butter and lilac in climb order.",
     "type_on_colour_block": "ink",
     "mint_type": "never; never on cream without its ink keyline",
     "channel_as_status": "never a country, a warning or a failure",
-    "failure_shown_as": "an absence (bare pole, parted thread) plus a cream outline stamp"
+    "failure_shown_as": "Show the missing evidence or the change in the object."
   },
   "kit": [
-    "brutal_card",
-    "sticker",
-    "section_pill",
-    "swipe",
-    "stamp",
     "leader",
-    "receipt",
-    "marquee",
-    "scribble"
+    "receipt"
   ],
   "scribble": {
     "shapes": [
@@ -190,15 +183,19 @@
     "enter_ms": 400,
     "exit_ms": 200,
     "stagger_frames": 3,
-    "slap_frames": 5,
     "hero_bezier": [
-      0.16,
+      0.22,
       1,
-      0.3,
+      0.36,
       1
     ],
     "ambient_drift_pct": 1.5,
-    "tokens_source": "config/ve/brand-tokens.json"
+    "tokens_source": "config/ve/brand-tokens.json",
+    "entry_frames": [
+      6,
+      12
+    ],
+    "fps": 25
   },
   "plates": {
     "source": "ChatGPT Images via a Codex imagegen card",
@@ -492,5 +489,18 @@
         540
       ]
     }
+  },
+  "retired": {
+    "kit": [
+      "brutal_card",
+      "sticker",
+      "swipe",
+      "stamp",
+      "scribble",
+      "slap_frames",
+      "section_pill",
+      "marquee"
+    ],
+    "ruling": "Ruling (Krish, 2026-11-25): \"s3h is great, lock v5\""
   }
 }

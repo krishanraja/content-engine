@@ -29,13 +29,6 @@ export const STAGE_TEXT = {
   slam: { face: 'SINGING STILL IN Grammys reportedly', proof: 'No. 2 Official Charts Nov 2026 CHART FACTS Peak position Weeks on chart Label' },
   receipt: { face: 'NOW IT’S BANKRUPT CHAPTER 11 12 OCT 2026 COURT FILING', proof: 'GOOGLE 2024 LICENSING DEAL $2.7B REPORTED WIRED REBUILT RECEIPT' },
 }
-// Resolve the approved channel tokens from the palette's canonical colour rule.
-const channelToken = (name: string) => {
-  const value = palette.colour.series.match(new RegExp(name.replaceAll('.', '\\.') + ' (#[0-9A-Fa-f]{6})'))?.[1]
-  if (!value) throw new Error(`Missing approved channel token: ${name}`)
-  return value
-}
-const seriesColour = { 'under.the.hood': channelToken('under.the.hood'), 'follow.the.money': channelToken('follow.the.money'), 'mind.the.gap': channelToken('mind.the.gap') }
 const forbidden = /proactive ai is coming|it doesn't spend my money|amazon for your groceries|ibiza|no spending|no sending/i
 const defaults = { slam: { face: 'Human voice.', proof: 'People chose to listen.' }, receipt: { face: 'Who keeps the money?', proof: 'The founders walked away.' } }
 /** Assets are supplied in Remotion's public directory by the rendering operator.
@@ -50,7 +43,7 @@ export function SplitKeyFrame(input: SplitKeyFrameProps) {
   if (caption && forbidden.test(caption)) throw new Error('Caption violates the card contract')
   const full = beat === 'hook' || beat === 'close'
   const seam = variant === 'slam' ? 1236 : 1000
-  const c = seriesColour[series]
+  const c = palette.colour.v5.cream
   const cap = full ? undefined : caption ?? defaults[variant][beat as 'face' | 'proof']
   const stageWords = full ? '' : STAGE_TEXT[variant][beat as 'face' | 'proof']
   if (cap && captionTokens(cap).some(w => captionTokens(stageWords).includes(w))) throw new Error('Caption repeats stage words')

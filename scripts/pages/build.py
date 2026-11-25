@@ -550,7 +550,7 @@ def root_css(hs, accent):
             f'--cream: {t["cream"]}; --paper: #FBF8F1; --rule: #D9D3C4; --muted: #5B615C; --mint: {t["mint"]}; --mint-deep: #2F6B5C; '
             f'--butter: {PALETTE["butter"]}; --lilac: {PALETTE["lilac"]}; --coral: {PALETTE["coral"]}; --accent: {accent}; '
             '--anton: "Anton", Impact, "Arial Narrow", sans-serif; --sans: "Archivo", "Helvetica Neue", Arial, sans-serif; '
-            '--serif: "Fraunces", Georgia, "Times New Roman", serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace; '
+            '--serif: "Fraunces", Georgia, "Times New Roman", serif; --mono: "DM Mono", ui-monospace, Menlo, Consolas, monospace; '
             '--shadow: 6px 6px 0 var(--ink); }')
 
 
@@ -667,7 +667,7 @@ def render_page(facts, base, body, r, refresh):
 
 SUB_CSS = """
 :root { color-scheme: dark; --ink: #0C1512; --ink-soft: #16221D; --line: #363C38; --cream: #F4EFE4; --cream-2: #D1CEC4; --muted: #AEAEA5; --mint: #7EF0C0; --on: #07110C; --link: #0B5E43; --accent: ACCENT;
-  --anton: "Anton", Impact, sans-serif; --sans: "Archivo", "Helvetica Neue", Arial, sans-serif; --serif: "Source Serif 4", Georgia, serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
+  --anton: "Anton", Impact, sans-serif; --sans: "Archivo", "Helvetica Neue", Arial, sans-serif; --serif: "Fraunces", Georgia, serif; --mono: "DM Mono", ui-monospace, Menlo, monospace; }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--ink); color: var(--cream); font-family: var(--sans); }
 .wrap { max-width: 46rem; margin: 0 auto; padding-inline: 16px; padding-block: 28px 72px; display: flex; flex-direction: column; gap: 22px; }

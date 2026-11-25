@@ -540,6 +540,10 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     conformed clock and the picture is the conformed take, rendered from the same graph as the dialogue.
     take_frame is the take's frame as ve ingest measured it (velib.takes.cut_frame); a typed asset frame is the
     fallback, so an older spec still compiles."""
+    from .retirement import problems
+    retired = problems(spec)
+    if retired:
+        raise ValueError('; '.join(retired))
     pending_error = pending_devices_error(spec['format'])
     if pending_error:
         raise ValueError(pending_error)
@@ -695,7 +699,9 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                                    'producerLabel': dataset['producer_label'], 'rows': dataset['rows']}
         objects.append(compiled)
 
-    theme = next(t for t in load_json(ROOT / 'config' / 'studio.json')['brand_themes'] if t['theme_id'] == spec['theme'])
+    studio = load_json(ROOT / 'config' / 'studio.json')
+    theme_id = studio['default_brand_theme'] if spec['theme'] == 'makeyourmindup-video-v1' else spec['theme']
+    theme = next(t for t in studio['brand_themes'] if t['theme_id'] == theme_id)
     publication = theme['publication']
     house = publication['house_style']
     tokens = house['tokens']
@@ -760,7 +766,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         'series': {'label': spec['brand']['series'] if _series_day(identity['day'], spec.get('publish_day')) == identity['day']
                    else 'off.day', 'day': _series_day(identity['day'], spec.get('publish_day')),
                    'promise': house['copy']['site'] if off else identity['promise'], 'site': house['copy']['site']},
-        'brand': {key: {'src': resolve_source(publication[key]['source_path']), 'pixelWidth': publication[key]['pixel_width'],
+        'brand': {key: {'src': (source(publication[key]['source_path'], ROOT) if theme['theme_id'] == 'makeyourmindup-v5' else resolve_source(publication[key]['source_path'])), 'pixelWidth': publication[key]['pixel_width'],
                         'pixelHeight': publication[key]['pixel_height']} for key in ('mark', 'logo', 'stacked')},
         # The logo only on the title frame and the close (Ruling, Krish, 2026-11-17; config/brand-palette.json logo_rule):
         # from its date the body carries no mark tile and no header logo. Absent for older pieces, so their props hold.

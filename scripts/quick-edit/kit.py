@@ -850,6 +850,9 @@ def style_for(subchannel, date=None):
 
 
 def template(name):
+    retired = json.loads((Path(__file__).resolve().parents[2] / 'config/retired-styles.json').read_text(encoding='utf-8'))
+    if any(row['kind'] == 'brand_asset' and row['id'] == name for row in retired):
+        raise ValueError(f'{name} is retired under the v5 publication look')
     return string.Template((TEMPLATES / name).read_text(encoding='utf-8'))
 
 

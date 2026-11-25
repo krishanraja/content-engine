@@ -15,7 +15,7 @@ export const HOUSE_FONTS = {
   display: '"MYMU Anton", "Arial Narrow", sans-serif',
   structure: '"MYMU Archivo", system-ui, sans-serif',
   dek: '"MYMU Fraunces", Georgia, serif',
-  data: '"MYMU Plex Mono", ui-monospace, monospace',
+  data: '"DM Mono", ui-monospace, monospace',
 } as const
 
 /** The CSS family names the house faces register under (fonts.css). */
@@ -23,7 +23,7 @@ export const HOUSE_FONT_FAMILIES = {
   display: 'MYMU Anton',
   structure: 'MYMU Archivo',
   dek: 'MYMU Fraunces',
-  data: 'MYMU Plex Mono',
+  data: 'DM Mono',
 } as const
 
 /** Fractal noise, printed at 7% over every dark block (brand book p. 12). */
