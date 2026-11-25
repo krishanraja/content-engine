@@ -1,6 +1,5 @@
--- NOT APPLIED. Applying this migration waits on Krish's yes; until then the
--- mandates are unchanged and the beat lives in config/beat.json and the code
--- that reads it.
+-- Applied 2026-11-25 on Krish's yes ("Merge and apply"), then superseded the same
+-- day by 20261225090000_mandates_five_whys.sql, whose texts carry these sentences.
 --
 -- The three mandates name the beat.
 --

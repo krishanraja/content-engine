@@ -1,10 +1,9 @@
 # Proposal: the three subchannel mandates as why-ladder mandates (24 Nov 2026)
 
-Status: Draft, waiting on Krish's yes. Nothing here is in the database. `venture_formats.mandate` still holds the three
-rows as they stood on 23 Nov, each ending in the old prediction close; until a yes, every reader takes that close out as
-it reads the row (`apps/control-plane/api/_mandate.ts`, `mandateWithoutCall`). On a yes, the three texts below replace
-the rows word for word, in one migration, and the sanitiser stays as a guard. Each text already carries its
-subchannel's THE BEAT sentence from the beat migration, so the two compose in either order (see below).
+Status: Applied 2026-11-25 on Krish's yes ("Merge and apply"), as
+`supabase/migrations/20261225090000_mandates_five_whys.sql` after the beat migration. A check on the live rows found
+each with exactly one THE BEAT sentence, THE LADDER, and no THE CALL, OUR PREDICTION or How sure we are. The sanitiser
+(`apps/control-plane/api/_mandate.ts`) stays as a guard.
 
 ## The ask
 
