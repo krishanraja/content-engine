@@ -1971,7 +1971,7 @@ def offbeat_findings(ideas, week):
         if hit:
             label = f'{ref} ({str(o.get("id") or "")[:8]})' if main else ref
             out.append({'code': 'off_beat', 'ref': ref, 'line': f'off_beat: {label} is about "{hit[1]}" ({hit[0].lower()}) with no '
-                        'focus-sector angle; the beat is AI in media, entertainment, arts, music and creator tech, their economics '
+                        'focus-sector angle; the beat is AI in media, entertainment, arts, music, sports and creator tech, their economics '
                         'included (Ruling, Krish, 2026-11-24; config/beat.json). Find the creative angle or replace it'})
     return out
 

@@ -123,6 +123,9 @@ const SUPPORT_TERMS: string[] = [
   // term here.
   'royalt', 'licensing', 'musician', 'songwriter', 'record label', 'artist', 'album',
   'film', 'studio', 'streaming', 'creator', 'publisher', 'theatre', 'performer', 'designer',
+  // Sports joined the focus sectors (Ruling, Krish, 2026-11-25). Whole words
+  // only, since 'sport' alone would match 'transport' and 'passport'.
+  'sports', 'athlete', 'football', 'stadium', 'olympic', 'premier league',
 ]
 
 const SATURATION = 5 // weighted-hit total at which fit saturates to 1.0
@@ -160,5 +163,6 @@ export function lensThemeQueries(): string[] {
     'AI in film and TV production: what it costs, who it pays and what studios save',
     'creator tools and how creators monetise AI: income, audiences and the businesses behind them',
     'AI art and design markets: what artists and designers earn and who buys the work',
+    'AI in sport: what clubs, leagues, athletes and broadcasters earn, spend and own',
   ]
 }
