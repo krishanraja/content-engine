@@ -418,7 +418,7 @@ describe('motion styles in the composition', () => {
 
   it('draws a cut with no style, or a style that needs a device, exactly as before', () => {
     const house = drawn(staged())
-    expect(() => drawn(staged({ style: 'toy-3d' }))).toThrow(/retired/)
+    expect(() => drawn({ ...staged({ style: 'toy-3d' }), renderTheme: 'makeyourmindup-v5' })).toThrow(/retired/)
     expect(house.flatMap(([, style]) => String(style).includes('scale(') ? [style] : [])).toEqual([])
     expect(house.some(([, style]) => String(style).includes('radial-gradient(ellipse at center'))).toBe(false)
     expect({ ...MOTION }).toEqual(HOUSE_MOTION)
@@ -431,7 +431,7 @@ describe('motion styles in the composition', () => {
     expect(keynote.some(([, style]) => String(style).includes(`"background":"${fixture.tokens.inkDeep}"`))).toBe(true)
     expect(keynote.some(([, style]) => /"transform":"scale\(1\.0\d+\)"/.test(String(style)))).toBe(true)
     // A style on twos steps its graphics: frame 75 is the fifteenth of the beat, so devices hold frame 74.
-    expect(() => FormatMaster(staged({ style: 'paper-cutout' }))).toThrow(/retired/)
+    expect(() => FormatMaster({ ...staged({ style: 'paper-cutout' }), renderTheme: 'makeyourmindup-v5' })).toThrow(/retired/)
     // living-ui dims everything but the proof (towards 40%) once the camera is on it; the proof stays whole.
     const living = elements(FormatMaster(staged({ style: 'living-ui' })))
     const wrappers = living.filter(n => isValidElement(n.props.children) && (n.props.children as ReactElement).type === DEVICES['fixture-device'])
@@ -557,8 +557,9 @@ it('keeps one presenter layer above WINDOW plates and uses the signed window geo
   })).toBe(true)
 })
 
-it('parses historical device and caption ids and refuses to render them', () => {
+it('replays archived device and caption ids and refuses them on a new v5 render', () => {
   const props = EngineRenderPropsSchema.parse(fixture)
-  expect(() => FormatMaster({ ...props, captionTheme: 'pop' })).toThrow(/pop.*retired/)
-  expect(() => FormatMaster({ ...props, objects: [{ ...props.objects[0]!, device: 'stamp' }] })).toThrow(/stamp.*retired/)
+  expect(() => FormatMaster({ ...props, captionTheme: 'pop' })).not.toThrow()
+  expect(() => FormatMaster({ ...props, renderTheme: 'makeyourmindup-v5', captionTheme: 'pop' })).toThrow(/pop.*retired/)
+  expect(() => FormatMaster({ ...props, renderTheme: 'makeyourmindup-v5', objects: [{ ...props.objects[0]!, device: 'stamp' }] })).toThrow(/stamp.*retired/)
 })

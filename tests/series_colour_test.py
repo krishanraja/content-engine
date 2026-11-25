@@ -67,14 +67,12 @@ class SeriesColourTest(unittest.TestCase):
                         page = receipt.page(facts, facts['cover'], base, 'tall')
                     found = {h.upper() for h in re.findall(r'#[0-9A-Fa-f]{6}', page)}
                     shown = {n for n in names if n in page}
-                    if day == own_day:
-                        self.assertIn(colour, found, f'{name} wears its colour on its own day')
-                        self.assertFalse(found & (brand.series_colours(self.hs) - {colour}), f'{name} wears another series colour')
-                        self.assertEqual(shown, {name}, f'{name} names itself only')
-                    else:
-                        self.assertFalse(found & brand.series_colours(self.hs), f'{name} on {day} is not the piece and wears a series colour')
-                        self.assertFalse(shown, f'{name} on {day} is not the piece and names {shown}')
-                        self.assertIn(receipt.GROUND_STOPS[1].upper(), found, 'anything else keeps the house sage')
+                    self.assertIn(colour, found)
+                    self.assertFalse(found & {'#FFD84D', '#FF6A4D', '#B7A6FF'},
+                                     f'{name} is not the piece and wears a series colour' if day != own_day else name)
+                    self.assertFalse(shown, f'{name} on {day} printed a retired series label')
+                    self.assertIn('class="wmp"', page)
+                    self.assertIn('class="proof"', page)
                     self.assertNotIn('#FF6B57', found, 'the old coral tag and ring are gone')
 
     def test_nothing_may_sit_on_the_words(self):
@@ -98,64 +96,46 @@ class SeriesSkinRotationTest(unittest.TestCase):
     def look(self, subchannel, date):
         return brand.series_look(self.hs, subchannel, date)
 
-    def test_nine_weeks_in_a_row_wear_all_nine_skins_once_in_order(self):
+    def test_nine_weeks_in_a_row_use_the_same_v5_skin(self):
         import datetime as dt
         first = dt.date(2026, 11, 9)
         worn = [self.skins.pick({'date': str(first + dt.timedelta(weeks=k))}, self.look('follow.the.money', str(first + dt.timedelta(weeks=k))))
                 for k in range(9)]
-        self.assertEqual(worn, list(self.skins.ORDER))
-        self.assertEqual(sorted(worn), sorted(set(worn)), 'each skin once')
-        self.assertEqual(len(self.skins.ORDER), 9)
-        self.assertEqual(worn[:2], ['neon', 'sunburst'], 'the week of 9 November wears neon, the week of 16 November sunburst')
-        tenth = str(first + dt.timedelta(weeks=9))
-        self.assertEqual(self.skins.pick({'date': tenth}, self.look('follow.the.money', tenth)), 'neon', 'the tenth week starts again')
+        self.assertEqual(worn, ['v5_feed'] * 9)
+        self.assertEqual(self.skins.ORDER, ('v5_feed',))
 
     def test_the_weeks_monday_wednesday_and_friday_pieces_share_one_skin(self):
         import datetime as dt
-        for monday, want in (('2026-11-09', 'neon'), ('2026-11-16', 'sunburst'), ('2026-12-28', 'brandbook'), ('2027-01-04', 'memphis')):
+        for monday in ('2026-11-09', '2026-11-16', '2026-12-28', '2027-01-04'):
             m = dt.date.fromisoformat(monday)
             days = {'follow.the.money': m, 'under.the.hood': m + dt.timedelta(days=2), 'mind.the.gap': m + dt.timedelta(days=4)}
             worn = {name: self.skins.pick({'date': str(d)}, self.look(name, str(d))) for name, d in days.items()}
-            self.assertEqual(set(worn.values()), {want}, worn)
+            self.assertEqual(set(worn.values()), {'v5_feed'}, worn)
 
-    def test_the_weeks_before_9_november_wear_none_unless_a_piece_names_one(self):
-        # The rotation starts in the week of 9 November. Before it the modulo would hand out a skin nobody chose
-        # (Mon 2, Wed 4 and Fri 6 Nov all memphis, Mon 26 Oct brandbook): they wear none unless their facts name one.
-        for name, date in (('follow.the.money', '2026-11-02'), ('under.the.hood', '2026-11-04'), ('mind.the.gap', '2026-11-06'),
-                           ('follow.the.money', '2026-10-26')):
-            look = self.look(name, date)
-            self.assertTrue(look['series'], date)
-            self.assertIsNone(self.skins.pick({'date': date}, look), date)
-            self.assertIsNone(self.skins.for_shape({'date': date}, look, 'tall'), date)
-            self.assertEqual(self.skins.pick({'date': date, 'skin': 'papercut'}, look), 'papercut', 'a skin a piece names is worn')
-        self.assertEqual(self.skins.pick({'date': '2026-11-09'}, self.look('follow.the.money', '2026-11-09')), 'neon')
+    def test_new_covers_for_earlier_dates_use_v5(self):
+        for date in ('2026-11-02', '2026-11-04', '2026-11-06', '2026-10-26'):
+            facts = {'date': date}
+            self.assertEqual(self.skins.pick(facts, {}), 'v5_feed')
+            self.assertEqual(self.skins.for_shape(facts, {}, 'tall'), 'v5_feed')
 
-    def test_an_undated_series_piece_is_refused_never_given_the_days_skin(self):
-        # brand.series_look counts an undated piece as the series piece; its week cannot be told, so the drawer
-        # stops rather than reading the skin off the day it happens to be drawn.
+    def test_undated_series_pieces_use_the_same_skin(self):
         look = self.look('mind.the.gap', None)
         self.assertTrue(look['series'])
-        with self.assertRaises(SystemExit) as stop:
-            self.skins.pick({}, look)
-        self.assertIn('needs its "date"', str(stop.exception))
-        with self.assertRaises(SystemExit):
-            self.skins.for_shape({'date': ''}, look, 'wide')
-        with self.assertRaises(SystemExit):
-            self.skins.for_shape({}, look, 'cover')   # a cover wears the skin too (Krish, 2026-11-05: "Skin the covers too"), so it needs its date
-        self.assertEqual(self.skins.pick({'skin': 'bauhaus'}, look), 'bauhaus', 'one it names needs no date')
+        self.assertEqual(self.skins.pick({}, look), 'v5_feed')
+        for shape in ('wide', 'cover'):
+            self.assertEqual(self.skins.for_shape({}, look, shape), 'v5_feed')
 
-    def test_a_piece_may_name_another_skin_and_an_unknown_one_is_refused(self):
+    def test_only_the_v5_skin_may_be_named(self):
         look = self.look('under.the.hood', WEEK['Wednesday'])
-        self.assertEqual(self.skins.pick({'date': WEEK['Wednesday'], 'skin': 'memphis'}, look), 'memphis')
-        with self.assertRaises(SystemExit):
-            self.skins.pick({'date': WEEK['Wednesday'], 'skin': 'glitter'}, look)
+        self.assertEqual(self.skins.pick({'skin': 'v5_feed'}, look), 'v5_feed')
+        for name in ('memphis', 'glitter'):
+            with self.assertRaises(SystemExit):
+                self.skins.pick({'skin': name}, look)
 
-    def test_an_off_day_and_anything_that_is_not_the_piece_wear_no_skin(self):
-        for name, (own_day, _) in {c['name']: (c['day'], c['accent']) for c in self.hs['channels']}.items():
-            for day, date in WEEK.items():
-                facts = {'date': date, 'skin': 'neon'}
-                worn = self.skins.pick(facts, self.look(name, date))
-                self.assertEqual(worn is not None, day == own_day, f'{name} on {day}')
+    def test_off_day_and_weekly_covers_both_use_v5(self):
+        for channel in self.hs['channels']:
+            for date in WEEK.values():
+                self.assertEqual(self.skins.pick({'date': date}, self.look(channel['name'], date)), 'v5_feed')
 
     def test_every_shape_wears_the_skin_each_in_the_closer_thumbnails_design(self):
         # Krish, 2026-11-05: "Skin the covers too", so a series piece looks the same everywhere.
@@ -168,11 +148,8 @@ class SeriesSkinRotationTest(unittest.TestCase):
         self.assertEqual((self.skins.GEO['tall']['grid'], self.skins.GEO['wide']['badge']), ([0, 240, 1080, 1680], [968, 548, 1280, 720]))
         look = self.look('follow.the.money', WEEK['Monday'])
         for shape in receipt.SHAPES:
-            self.assertEqual(self.skins.for_shape({'date': WEEK['Monday']}, look, shape), 'neon', shape)
-        html = '<html><style></style><div id="card"></div></html>'
-        off = self.look('follow.the.money', WEEK['Tuesday'])
-        self.assertEqual(self.skins.apply(html, {'date': WEEK['Tuesday']}, 'tall', (1080, 1920), off), (html, None),
-                         'an off-day page is left exactly as it is')
+            self.assertEqual(self.skins.for_shape({'date': WEEK['Monday']}, look, shape), 'v5_feed', shape)
+            self.assertEqual(self.skins.for_shape({'date': WEEK['Tuesday']}, self.look('follow.the.money', WEEK['Tuesday']), shape), 'v5_feed')
 
     def test_what_moved_a_piece_on_is_said_in_plain_words(self):
         # Krish, 2026-11-05: "Yeah just move on automatically"; the record and the drawer say which skin and why.
@@ -195,7 +172,7 @@ class SeriesSkinRotationTest(unittest.TestCase):
     def test_every_skin_is_a_module_with_the_contract(self):
         for skin_id in self.skins.ORDER:
             module = self.skins.load(skin_id)
-            self.assertTrue(callable(getattr(module, 'skin', None)), skin_id)
+            self.assertTrue(callable(getattr(module, 'page', None)), skin_id)
             self.assertIsInstance(getattr(module, 'PLACE_JS', ''), str, skin_id)
         from skins import _kit
         t = self.hs['tokens']

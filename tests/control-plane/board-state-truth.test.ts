@@ -325,7 +325,7 @@ describe('his production pick on every piece before recording: the look, the mot
     pieces: [piece(MON, '2026-11-16', 'follow_the_money', monMeta), piece(WED, '2026-11-18', 'under_the_hood'), piece(TUE, '2026-11-17', 'mind_the_gap')],
     picks: [], queue: [], history: [], runs: {}, north_star: null,
     ideas: { days: {
-      mon: [{ id: MON, so_what: 'x', style: { production: 'face-with-proof', motion: 'character-ai-receipts', captions: 'receipt-chip' } }],
+      mon: [{ id: MON, so_what: 'x', style: { production: 'face-with-proof', motion: 'character-ai-receipts', captions: 'house-v5' } }],
       wed: [{ id: WED, so_what: 'x', style: { production: 'fry-talking-head' } }],
       fri: [{ id: TUE, so_what: 'x', style: { production: 'face-with-proof', motion: 'ladder', captions: 'art-directed' } }],
     } },
@@ -354,7 +354,7 @@ describe('his production pick on every piece before recording: the look, the mot
     expect(labels(picks[0])).toEqual(['Receipts on the ink desk (recommended)', 'Swiss grid', 'The Ladder (not ready yet)'])
     expect((picks[0] as any).body).toEqual({ piece_id: MON })
     expect(labels(picks[1])[0]).toMatch(/\(recommended\)$/)
-    expect((picks[1] as any).choose.options[0].value).toBe('receipt-chip')
+    expect((picks[1] as any).choose.options[0].value).toBe('house-v5')
     // Each option carries its one line for the picker (1.17.0); a still only once one is recorded.
     expect((picks[0] as any).choose.options[0].line).toEqual(expect.any(String))
     // A recommended option says why (1.18.0), so the board offers the three as one recommended set; the others do not.

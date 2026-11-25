@@ -120,9 +120,6 @@ def public_strings(spec: dict):
 
 def pending_devices_error(format_id: str, fmt: dict | None = None) -> str | None:
     """A format becomes usable only when all its pending devices are registered."""
-    from .retirement import registry
-    if ('format_look', format_id) in registry():
-        return f'format {format_id!r} is retired by the v5 ruling'
     if fmt is None:
         fmt = load_json(CONFIG / 'formats' / f'{format_id}.json')
     pending = fmt.get('pending_devices', [])

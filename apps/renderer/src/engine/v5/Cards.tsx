@@ -2,7 +2,7 @@ import React, { type CSSProperties } from 'react'
 import { Easing, Img } from 'remotion'
 import brand from '../../../../../config/ve/brand-tokens.json'
 import { v5Params, type V5Id, type SourceImage } from '../../../../../packages/contracts/src/why-ladder-v5'
-import { HOUSE_FONTS as fonts } from '../../house/geometry'
+import { HOUSE_FONTS as fonts, V5_DATA_FONT } from '../../house/geometry'
 import { ladderCaptionBand } from './HouseCaptions'
 import type { DeviceComponent } from '../devices/types'
 
@@ -12,7 +12,7 @@ export const enter = (frame: number, duration: number) => ease(Math.min(1, Math.
 const mark4 = new URL('../../../../../assets/brand/makeyourmindup/v5/v4.svg', import.meta.url).href
 const mark10 = new URL('../../../../../assets/brand/makeyourmindup/v5/v10.svg', import.meta.url).href
 const fill: CSSProperties = { position: 'absolute', inset: 0 }
-const mono: CSSProperties = { fontFamily: fonts.data, fontSize: 32 }
+const mono: CSSProperties = { fontFamily: V5_DATA_FONT, fontSize: 32 }
 const grain =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23fff' filter='url(%23n)' d='M0 0h160v160H0z'/%3E%3C/svg%3E\")"
 function Photo({

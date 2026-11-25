@@ -381,7 +381,10 @@ def render(b, facts, c, base, shape, jpeg=None, skin=...):
     # A thumbnail option that names its proof's width is drawn at that width or not at all, so two options never
     # quietly settle on the same layout.
     widths = ([c['proofw']] if c.get('proofw') else [spec.get('proofw', '58%'), '50%', '44%']) if spec['layout'] == 'side' else ['100%']
-    fit = pg.evaluate(FIT_JS, [list(spec['heads']), min(3, spec['lines']), LONE_WORD_MAX, list(spec['safe']), spec.get('clear', []), PROOF_MIN.get(shape, PROOF_MIN[spec['layout']]),
+    words_px, fine_px = card.needed(W)
+    heads = [max(words_px, head) for head in spec['heads']]
+    pg.add_style_tag(content=f'.proof .tag {{ font-size: max(1em, {fine_px}px) }}')
+    fit = pg.evaluate(FIT_JS, [heads, min(3, spec['lines']), LONE_WORD_MAX, list(spec['safe']), spec.get('clear', []), PROOF_MIN.get(shape, PROOF_MIN[spec['layout']]),
                                widths])
     if skin_id:
         fit = place_skin(pg, skin_id, shape, fit)

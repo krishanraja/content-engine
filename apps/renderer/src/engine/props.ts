@@ -114,6 +114,7 @@ export const EngineRenderPropsSchema = z.object({
     images: z.record(z.string(), z.object({ closed: z.string(), open: z.string(), blink: z.string() }).strict()),
     seed: z.string(),
   }).strict().optional(),
+  renderTheme: z.literal('makeyourmindup-v5').optional(),
   pieceId: z.string().min(1),
   cutId: z.string().min(1),
   format: z.enum(['face-with-proof', 'scoreboard-test', 'voice-led-pictures', 'hand-held-screen', 'two-passports', 'why-ladder-v5']),

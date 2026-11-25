@@ -883,11 +883,11 @@ def page_endcard(st, shape, masthead, fonts):
     lines = statement_lines(shape)
     statement = ''.join(f'<span class="ln"><span style="animation-delay: {0.1 + 0.14 * i:.2f}s">{html.escape(line)}</span></span>'
                         for i, line in enumerate(lines))
-    day_names = [f'<span style="color:{c["accent"]}">{html.escape(c.get("days") or c["day"] + "s")}</span>'
+    day_names = [f'<span>{html.escape(c.get("days") or c["day"] + "s")}</span>'
                  for c in st['house']['channels']]
     days = '' if st.get('off') else f'<div class="days a" style="animation-delay: 1.5s">{"<b> · </b>".join(day_names)}</div>'
     tall = shape == '9x16'
-    return template('endcard.html').substitute(fonts=fonts, W=W, H=H, ink=st['ink'], cream=st['cream'], mint=st['mint'],
+    return template('v5-close.html').substitute(fonts=fonts, W=W, H=H, ink=st['ink'], cream=st['cream'], mint=st['mint'],
                                                accent=st['accent'], shape='tall' if tall else 'wide', masthead=masthead,
                                                statement=statement, lines=len(lines), cta=html.escape(CTA),
                                                order_days=days if tall else '', order_days_after='' if tall else days,
@@ -896,7 +896,7 @@ def page_endcard(st, shape, masthead, fonts):
 
 def page_frame16(st, subject, wordmark, fonts):
     sticker = st['channel'].get('sticker')
-    return template('frame16.html').substitute(
+    return template('v5-frame.html').substitute(mint=st['mint'],
         fonts=fonts, ink=st['ink'], cream=st['cream'], accent=st['accent'], shadow=st['shadow'],
         channel=html.escape(st['channel']['name']), subject=html.escape(subject),
         sticker=f'<span class="sticker">{html.escape(sticker)}</span>' if sticker else '',
@@ -907,7 +907,7 @@ def page_panel(st, shape, picture, facts, fonts):
     w, h = facts['size']
     g = panel_geometry(shape, w, h)
     L = PANEL_LAYOUT[shape]
-    return template('panel.html').substitute(
+    return template('v5-panel.html').substitute(
         fonts=fonts, W=g['W'], H=g['H'], ink=st['ink'], cream=st['cream'], accent=st['accent'], shadow=st['shadow'],
         pad=L['pad'], top=g['pill_top'], pill=L['pill'], x=g['picture_left'], y=g['picture_top'], w=w, h=h,
         picture_bg=facts['background'], picture=png_uri(picture), channel=html.escape(st['channel']['name']),
@@ -1185,7 +1185,10 @@ def make_kit(post_path, cut, recording, out, roots=(), force=False, drawer=None,
     warnings += allowed
     out.mkdir(parents=True, exist_ok=True)
     fonts = brand.font_css()
-    logos = logos or {'masthead': brand.brand_uri('masthead', full=True), 'wordmark': brand.brand_uri('wordmark', full=True)}
+    if logos is None:
+        mark = (Path(__file__).resolve().parents[2] / 'assets/brand/makeyourmindup/v5/v4.svg').read_bytes()
+        uri = 'data:image/svg+xml;base64,' + base64.b64encode(mark).decode('ascii')
+        logos = {'masthead': uri, 'wordmark': uri}
     own = drawer is None
     drawer = drawer or default_drawer()
 
@@ -1495,9 +1498,9 @@ def self_test():
     check('the end card says exactly his tagline, broken only between words, the last word alone',
           (TAGLINE, statement_lines('9x16'), statement_lines('16x9')),
           ('Built to help you decide.', ['Built to', 'help you', 'decide.'], ['Built to help you', 'decide.']))
-    check('the end card carries the series colour, the days and one close, with no old tagline',
+    check('the v5 end card retires day colours and preserves the days and the single close',
           ('#FFD84D' in docs[0], '>Mondays</span>' in docs[0], docs[0].count('class="url'), 'You make your mind up' in docs[0] + docs[1]),
-          (True, True, 1, False))
+          (False, True, 1, False))
     check('the frame never splits a word', ('break-word' in docs[2], 'keep-all' in docs[2]), (False, True))
     # Vertical video carries no wordmark or series tag (Ruling, Krish, 2026-11-11): no dress template, and the tall panel
     # hides its series pill; the wide panel keeps it.

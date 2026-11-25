@@ -1,3 +1,4 @@
+import { setHouseDataFace } from '../house/geometry'
 import retiredStyles from '../../../../config/retired-styles.json'
 import { CharacterLayer } from './character'
 import { Fragment, type ReactElement } from 'react'
@@ -138,7 +139,9 @@ export function anchorSlots(uses: readonly string[], isProp: (id: string) => boo
 }
 
 export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean }) {
-  for (const {kind, id} of retiredStyles) {
+  const v5 = props.renderTheme === 'makeyourmindup-v5' || props.format === 'why-ladder-v5'
+  setHouseDataFace(v5)
+  for (const {kind, id} of (v5 ? retiredStyles : [])) {
     if ((kind === 'motion_style' && props.motion?.style === id) ||
         (kind === 'format_look' && props.format === id) ||
         (kind === 'caption_theme' && props.captionTheme === id) ||

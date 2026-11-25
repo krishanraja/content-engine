@@ -700,8 +700,12 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         objects.append(compiled)
 
     studio = load_json(ROOT / 'config' / 'studio.json')
-    theme_id = studio['default_brand_theme'] if spec['theme'] == 'makeyourmindup-video-v1' else spec['theme']
-    theme = next(t for t in studio['brand_themes'] if t['theme_id'] == theme_id)
+    theme_id = spec['theme']
+    theme = next((entry for entry in studio['brand_themes'] if entry['theme_id'] == theme_id), None)
+    if not theme or not theme.get('publication'):
+        raise ValueError(f'unknown publication theme {theme_id!r}')
+    if theme_id != studio['default_brand_theme']:
+        raise ValueError(f'publication theme {theme_id!r} is retired for new compiles')
     publication = theme['publication']
     house = publication['house_style']
     tokens = house['tokens']
@@ -756,6 +760,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                          f'Krish, 2026-11-12: "{NOTHING_BEFORE_HOOK}"); remove it from the spec')
     sting = sting_props(cut, channel, off, opening)
     props = {
+        **({'renderTheme': theme_id} if theme_id == 'makeyourmindup-v5' else {}),
         'pieceId': spec['piece_id'], 'cutId': cut_id, 'format': spec['format'], 'aspect': cut['aspect'],
         'fps': FPS, 'durationFrames': duration,
         # A style may bring its own colours (style.palette, config/ve/style-palettes.json; Ruling, Krish,
@@ -824,6 +829,10 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                              'picture_short_frames': max(0, duration - int(edl.get('duration_frames') or 0))}
     # Every whole cut closes on the ending band (one calm close, held long enough to read: config/ve/formats
     # intro_outro; Krish, 2026-11-03: "We fucking have standards for intro, background audio and outro").
+    if not cut.get('excerpt', False) and spec['format'] == 'why-ladder-v5':
+        close_ids = {obj['obj'] for obj in spec['objects'] if obj['device'] == 'v5_close'}
+        if not close_ids.intersection(cut['beats'][-1]['uses']):
+            raise ValueError('a whole v5 ladder must finish on its close card')
     if not cut.get('excerpt', False) and spec['format'] != 'why-ladder-v5':
         props['ending'] = {'fromFrame': duration, 'url': props['series']['site'], 'tagline': ENDING_TAGLINE, 'cta': ENDING_CTA,
                            'days': [{'day': house['channels'][c]['day'], 'colour': publication['channel_colors'][c]}

@@ -269,9 +269,10 @@ export function dayStyle(i: StyleInputs): DayStyle {
   const recommended = planned ? new Map([[planned, plannedWhy(motionPlan[0]!, planned, motionName, motionNo)]])
     : new Map(ranked.map(x => [x.m.id, motionWhy(x.m, x.hits)]))
   const motionIds = new Set(motionOptions.map(m => m.id))
-  const gateModule = i.gate?.state === 'picked' && i.gate.module && motionIds.has(i.gate.module) && !mine.rejected.motion.includes(i.gate.module) ? i.gate.module : null
+  const recordedMotion = (id: string) => motionIds.has(id) || retiredStyle('motion_style', id)
+  const gateModule = i.gate?.state === 'picked' && i.gate.module && recordedMotion(i.gate.module) && !mine.rejected.motion.includes(i.gate.module) ? i.gate.module : null
   const specMotion = signed && isObj(signed.style) && isObj(signed.style.motion) && typeof signed.style.motion.module === 'string' ? signed.style.motion.module : null
-  const motionPick: Pick<StyleLayer, 'picked' | 'picked_by' | 'picked_at'> = mine.motion && motionIds.has(mine.motion) ? { picked: mine.motion, picked_by: 'Krish', picked_at: mine.at }
+  const motionPick: Pick<StyleLayer, 'picked' | 'picked_by' | 'picked_at'> = mine.motion && recordedMotion(mine.motion) ? { picked: mine.motion, picked_by: 'Krish', picked_at: mine.at }
     : gateModule ? { picked: gateModule, picked_by: 'Krish', picked_at: i.gate?.at ?? null }
     : specMotion && MOTION_ID.test(specMotion) && !mine.rejected.motion.includes(specMotion) ? { picked: specMotion, picked_by: 'spec', picked_at: signedOn }
     : { picked: null, picked_by: null, picked_at: null }
@@ -289,8 +290,9 @@ export function dayStyle(i: StyleInputs): DayStyle {
 
   // Captions: the one with his reason recommended, unless he said "Not this" to it here.
   const specCaption = signed && isObj(signed.brand) && typeof signed.brand.caption_theme === 'string' ? signed.brand.caption_theme : null
-  const captionPick: Pick<StyleLayer, 'picked' | 'picked_by' | 'picked_at'> = mine.captions && CAPTION_IDS.has(mine.captions) ? { picked: mine.captions, picked_by: 'Krish', picked_at: mine.at }
-    : specCaption && CAPTION_IDS.has(specCaption) && !mine.rejected.captions.includes(specCaption) ? { picked: specCaption, picked_by: 'spec', picked_at: signedOn }
+  const recordedCaption = (id: string) => CAPTION_IDS.has(id) || retiredStyle('caption_theme', id)
+  const captionPick: Pick<StyleLayer, 'picked' | 'picked_by' | 'picked_at'> = mine.captions && recordedCaption(mine.captions) ? { picked: mine.captions, picked_by: 'Krish', picked_at: mine.at }
+    : specCaption && recordedCaption(specCaption) && !mine.rejected.captions.includes(specCaption) ? { picked: specCaption, picked_by: 'spec', picked_at: signedOn }
     : { picked: null, picked_by: null, picked_at: null }
   const captionNo = (id: string) => !CAPTION_IDS.has(id) ? 'is not a caption style' : mine.rejected.captions.includes(id) ? 'is one you said Not this to' : ''
   const captionPlan = i.recommendedCaptions ? [i.recommendedCaptions, ...(i.captionsAlternatives ?? [])] : []

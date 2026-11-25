@@ -33,9 +33,12 @@ describe('approved treatment registry', () => {
     expect(resolveApprovedTreatmentPreset(config.approved_treatments, 'built_with_ai', 'solo', undefined, false)).toBeUndefined()
   })
 
-  it('pins the current Mindmake design contract as the active video theme', async () => {
+  it('defaults to v5 and preserves the pinned historical Mindmake contract', async () => {
     const config = await registry()
-    const theme = resolveBrandTheme(config.brand_themes, config.default_brand_theme)
+    const current = resolveBrandTheme(config.brand_themes, config.default_brand_theme)
+    expect(current?.theme_id).toBe('makeyourmindup-v5')
+    expect(current?.typography.data).toBe('DM Mono')
+    const theme = resolveBrandTheme(config.brand_themes, config.default_brand_theme, 'mindmake-video-v1')
     expect(theme?.theme_id).toBe('mindmake-video-v1')
     expect(theme?.version).toBe(6)
     expect(theme?.source).toEqual({
