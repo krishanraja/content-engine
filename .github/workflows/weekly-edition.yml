@@ -14,7 +14,8 @@ name: Weekly edition
 # qualifying rules, open and read each primary source, write in the publication's voice, check, render and package.
 #
 # When: Friday afternoon New York, so the draft is on the Saturday card long before 08:00 Saturday. GitHub's cron fires
-# hours late, so it fires twice, at 17:17 and 23:47 UTC (12:17 and 18:47 New York in winter), and the guard
+# hours late, so it fires twice, at 20:17 and 23:47 UTC (15:17 and 18:47 New York in winter), after Friday's piece
+# usually goes live (about 12:30 New York), and the guard
 # (scripts/weekly_edition.py check) makes a firing do nothing once the week's edition draft is on the board. Run
 # workflow by hand any time; "force" drafts it again, and a new draft needs his Approve for send again.
 #
@@ -35,7 +36,7 @@ name: Weekly edition
 
 on:
   schedule:
-    - cron: '17 17 * * 5'
+    - cron: '17 20 * * 5'
     - cron: '47 23 * * 5'
   repository_dispatch:
     types: [weekly-edition]
@@ -127,7 +128,10 @@ jobs:
           prompt: |
             The weekly edition, "makeyourmindup weekly", for the week starting Monday ${{ steps.guard.outputs.monday }}:
             it sends on Saturday ${{ steps.guard.outputs.saturday }} at 08:00 New York, once Krish presses Approve for
-            send. Started by .github/workflows/weekly-edition.yml; no one reads this run's chat.
+            send. Started by .github/workflows/weekly-edition.yml (this run: ${{ github.event.schedule || github.event_name }});
+            no one reads this run's chat. The earlier scheduled run is '17 20 * * 5': in that run only, if gather's
+            not_live lists a day with a piece_id (a piece picked for this week that is not live yet), hold as the
+            skill's step 1 says and package nothing, so the 23:47 UTC run drafts the edition with that piece in it.
 
             Run python3 scripts/check_failures.py and python3 scripts/floor.py first. Then follow
             .agents/skills/weekly-edition/SKILL.md exactly, for this week. Its folder is

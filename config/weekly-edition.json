@@ -11,8 +11,8 @@
   },
   "draft_run": {
     "workflow": ".github/workflows/weekly-edition.yml",
-    "crons_utc": ["17 17 * * 5", "47 23 * * 5"],
-    "why": "Friday 12:17 and 18:47 New York in winter: GitHub's schedule runs hours late, so it fires twice and the guard (scripts/weekly_edition.py) makes the second firing do nothing once the week's edition draft is on the board."
+    "crons_utc": ["17 20 * * 5", "47 23 * * 5"],
+    "why": "Friday 15:17 and 18:47 New York in winter, after Friday's piece usually goes live (about 12:30): GitHub's schedule runs hours late, so it fires twice and the guard (scripts/weekly_edition.py) makes the second firing do nothing once the week's edition draft is on the board."
   },
   "news_window": {
     "days": 7,

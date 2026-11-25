@@ -402,7 +402,7 @@ class TheFridayRun(unittest.TestCase):
 
     def test_the_workflow_fires_twice_on_friday_writes_records_only_and_is_fenced(self):
         crons = re.findall(r"cron: '([^']+)'", WORKFLOW)
-        self.assertEqual(crons, ['17 17 * * 5', '47 23 * * 5'])
+        self.assertEqual(crons, ['17 20 * * 5', '47 23 * * 5'])
         self.assertIn('repository_dispatch:\n    types: [weekly-edition]', WORKFLOW)
         self.assertRegex(WORKFLOW, r'workflow_dispatch:\n\s+inputs:\n\s+week:')
         self.assertIn('python3 scripts/weekly_edition.py "$@" >> "$GITHUB_OUTPUT"', WORKFLOW)

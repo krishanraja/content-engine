@@ -3,7 +3,7 @@
 
 Krish, 2026-11-25 (growth-makeyourmindup docs/plans/2026-11-25-weekly-edition/DESIGN.md, section 4): the edition is
 drafted on Friday afternoon New York, so it is on the Saturday card long before its 08:00 send. GitHub's schedule runs
-hours late, so the run fires twice on Friday (17:17 and 23:47 UTC); this guard makes the second firing do nothing once
+hours late, so the run fires twice on Friday (20:17 and 23:47 UTC, after Friday's piece usually goes live); this guard makes the second firing do nothing once
 the first has put the week's edition draft on the board. Zero Claude routines (Ruling, Krish, 2026-10-29): GitHub
 Actions is the scheduler and Claude Code runs inside the job on his subscription.
 
