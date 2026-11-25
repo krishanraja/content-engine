@@ -217,6 +217,41 @@ public social posts. Its existing private uploads and publish boards do not
 make it a second social scheduler. Creative acceptance and publication
 approval remain distinct and tied to exact asset/payload identities.
 
+### The weekly edition package (contract of 25 Nov 2026)
+
+Krish, 2026-11-25 (growth-makeyourmindup `docs/plans/2026-11-25-weekly-edition/DESIGN.md`, approved with every
+recommendation): subscribers get one email a week, **makeyourmindup weekly**, every Saturday at 08:00 New York.
+Content-engine drafts it; Growth's Substack step (Codex on the worker, Substack's editor only, never Buffer: his answer
+of 25 Nov) builds the Substack draft from it and schedules it on his press. "Growth adds no article": Growth writes
+none of it.
+
+1. **The package.** One JSON file, `content-engine-edition/1`: `schema`, `edition_date` (the Saturday), `week_of`,
+   `name`, `subject`, `preview_text`, `sections` (opener, contents, one to three pieces in day order, news in topic
+   groups, pass_it_on, close) and `checks` (`voice`, `kill_list`, `sources`: pass; `words`). UTF-8, keys sorted,
+   two-space indent, a trailing newline; its sha256 is over those exact bytes. Every news item carries `source_name`,
+   `source_url` (the primary source exactly as published, untagged), the `quote` that supports it and `checked_at`.
+   Written and checked by `scripts/edition/edition.py` (`check`, `package`); every setting is a row in
+   `config/weekly-edition.json`.
+2. **Where it is.** The library, like a post: `3 Posts/<edition_date> Sat edition - makeyourmindup weekly/0 Publish/
+   edition.draft.json`, with `edition.preview.html` beside it (structure only: the v5 Library's
+   `newsletter-weekly-edition` template is not approved, so nothing of it is drawn). The library's sync puts both in
+   his Drive.
+3. **Reading it.** The week's view (`GET /api/board/<Monday>/view`) carries it on Saturday as `edition` (contract
+   1.35.0), and `GET /api/board/<Monday>/edition` returns the same item on Growth's own key. The exact bytes are at
+   `GET /api/board/<Monday>/edition/draft` (with `X-Content-SHA256`) and the preview at `/edition/preview`, on the same
+   key. Build from those bytes and hash what you got.
+4. **His press.** **Approve for send** on the Saturday card, `picks/sat-edition` (kind `approve_send`), bound to
+   `edition_sha256`. Schedule only when the item's `state` is `approved` and its `sha256` and `approved_sha256` both
+   equal the sha256 of the bytes you built from. Anything else holds: no press, a changed edition (`state: changed`, his
+   press binds another draft), or no edition on the card. The board refuses a press bound to another sha256 (409
+   `edition_changed`), so a press can never cover words he did not see.
+5. **The links.** Every link of the edition's own carries the four tags of growth's `edition` route in
+   `specs/subscribe-route.json`: `utm_source=newsletter`, `utm_medium=email`, `utm_campaign=weekly`,
+   `utm_content=edition-<edition_date>-<place>` (`forward`, `piece-mon` and the rest); the Pass it on link goes to the
+   one subscribe page. Made by `python3 scripts/edition/edition.py link`, checked by `check`.
+6. **Not built yet.** Growth reporting the edition scheduled and sent back to the board (the Scheduled and Sent steps of
+   the Saturday card), and a board press that starts the Friday run by hand (`run` job `weekly-edition`).
+
 ## Tick the board when a post goes out
 
 Krish, 2026-10-29: "Now that the growth repo takes care of more or less ALL posting, we need the growth repo to keep

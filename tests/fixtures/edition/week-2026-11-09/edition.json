@@ -1,0 +1,163 @@
+{
+  "_about": "A fixture draft of the weekly edition (content-engine-edition/1) for Saturday 14 Nov 2026, the dry run's week (decision 10), written by hand for tests/edition_test.py. The three pieces are the week's real ones, summarised here in our own words from the repository's records; every news item, source, address and quote is invented (example.org), never a real report. Not a package: _about is not a key of the contract, so the tests drop it first.",
+  "schema": "content-engine-edition/1",
+  "edition_date": "2026-11-14",
+  "week_of": "2026-11-09",
+  "name": "makeyourmindup weekly",
+  "subject": "Who got paid when an AI app went bust, and a UK number two",
+  "preview_text": "The week's three pieces, then the creative news worth knowing, each item checked against its source.",
+  "sections": [
+    {
+      "kind": "opener",
+      "text": "This week we followed the money in three places: an AI app that went bust, a hit song with AI in its credits, and a workplace that ranked staff by how much AI they used. Below are the three pieces, then the news from the creative industries, each item checked against its source."
+    },
+    {
+      "kind": "contents",
+      "lines": [
+        "Monday: who walked away with the money when an AI app millions loved went bust.",
+        "Wednesday: how a Reiki master came to write a UK number two with an AI music app.",
+        "Friday: what happened when staff were ranked by how much AI they used.",
+        "Also: music, film and TV, games, creators, art and design, and three pieces of good news."
+      ]
+    },
+    {
+      "kind": "piece",
+      "day": "mon",
+      "label": "Monday: who gets paid when an AI app goes bust",
+      "title": "When an AI app millions of people loved goes bust, who walks away with the money?",
+      "summary": "Character.AI went bust on 12 October. Google had already paid a reported $2.7 billion to use its technology and had hired its founders, and Disney is now offering jobs to some of its staff. The lawsuits stay with what is left of the company. The piece follows each payment in turn and shows who walked away with the money, and who was left holding the claims.",
+      "url": "https://example.org/makeyourmindup/p/who-walks-away-with-the-money?utm_source=newsletter&utm_medium=email&utm_campaign=weekly&utm_content=edition-2026-11-14-piece-mon",
+      "video_url": "https://example.org/video/mon-5-minutes?utm_source=newsletter&utm_medium=email&utm_campaign=weekly&utm_content=edition-2026-11-14-video-mon",
+      "cover": {
+        "url": "https://example.org/makeyourmindup/covers/mon.png",
+        "alt": "The Monday cover: the app's logo on an empty office chair."
+      }
+    },
+    {
+      "kind": "piece",
+      "day": "wed",
+      "label": "Wednesday: who really wrote the song",
+      "title": "A Reiki master wrote a UK number two, and it's both AI and human",
+      "summary": "Movin' To The Sun reached number two in the UK singles chart this year. One of its writers, a Reiki master living in England, started with her own lyrics and an AI music app, and the first voices on her early songs were generated. Strangers found the song under short videos before the charts did. The piece traces how it was made, layer by layer, and why \"AI or human\" no longer fits.",
+      "url": "https://example.org/makeyourmindup/p/a-reiki-master-wrote-a-uk-number-two?utm_source=newsletter&utm_medium=email&utm_campaign=weekly&utm_content=edition-2026-11-14-piece-wed",
+      "video_url": "https://example.org/video/wed-5-minutes?utm_source=newsletter&utm_medium=email&utm_campaign=weekly&utm_content=edition-2026-11-14-video-wed",
+      "cover": {
+        "url": "https://example.org/makeyourmindup/covers/wed.png",
+        "alt": "The Wednesday cover: a chart position, number two, over a phone playing a short video."
+      }
+    },
+    {
+      "kind": "piece",
+      "day": "fri",
+      "label": "Friday: what you count is what you get",
+      "title": "Meta staff were ranked by AI use. They gamed it.",
+      "summary": "At some of the biggest companies in tech, staff were ranked by how much AI they used, and they quickly used more of it, a lot of it on nothing. The piece goes back to a rat bounty in Hanoi in 1902 to show why a count becomes the goal, and sets out what a business can measure instead to see whether AI helps its people do better work.",
+      "url": "https://example.org/makeyourmindup/p/staff-ranked-by-ai-use?utm_source=newsletter&utm_medium=email&utm_campaign=weekly&utm_content=edition-2026-11-14-piece-fri",
+      "video_url": null,
+      "cover": {
+        "url": "https://example.org/makeyourmindup/covers/fri.png",
+        "alt": "The Friday cover: a leaderboard of names beside a rat's tail."
+      }
+    },
+    {
+      "kind": "news",
+      "groups": [
+        {
+          "topic": "Music",
+          "items": [
+            {
+              "text": "Example Records agreed to licence its back catalogue to an AI music app, and is paid on every track the app makes in the label's style. The label says this is the first deal of its kind it has signed, and that its artists share the fee.",
+              "source_name": "Example Records",
+              "source_url": "https://example.org/records/news/ai-licence",
+              "quote": "We have licensed our catalogue to an AI music app, paid on every track it makes in our style.",
+              "checked_at": "2026-11-13T15:10:00Z"
+            }
+          ]
+        },
+        {
+          "topic": "Film, TV and streaming",
+          "items": [
+            {
+              "text": "Sample Animation says an AI tool cut the time it takes to storyboard one episode from ten days to seven. Its own artists still draw over every board before it goes to the director.",
+              "source_name": "Sample Animation",
+              "source_url": "https://example.org/sample-animation/storyboards",
+              "quote": "Storyboarding an episode now takes seven days, down from ten.",
+              "checked_at": "2026-11-13T15:20:00Z"
+            }
+          ]
+        },
+        {
+          "topic": "Games",
+          "items": [
+            {
+              "text": "Demo Games shipped a game whose minor characters speak with AI voices made from actors who licensed them for it. Each actor is paid a fee for every line, at rates the studio published in its announcement.",
+              "source_name": "Demo Games",
+              "source_url": "https://example.org/demo-games/voices",
+              "quote": "Every actor is paid for every line their licensed voice speaks.",
+              "checked_at": "2026-11-13T15:30:00Z"
+            }
+          ]
+        },
+        {
+          "topic": "Creators and creator tech",
+          "items": [
+            {
+              "text": "Specimen Press, a newsletter platform, will pay its writers when their archives are used to train AI, at a rate set out in its new terms. Writers who would rather not take part can switch it off in their settings.",
+              "source_name": "Specimen Press",
+              "source_url": "https://example.org/specimen-press/terms",
+              "quote": "Writers are paid when their archive is used for training, and can opt out at any time.",
+              "checked_at": "2026-11-13T15:40:00Z"
+            }
+          ]
+        },
+        {
+          "topic": "Art and design",
+          "items": [
+            {
+              "text": "The Placeholder Gallery sold every print in its show of AI-assisted work by twelve illustrators, its sales note says. Each artist kept the rights to their own images, and the gallery took its usual share.",
+              "source_name": "The Placeholder Gallery",
+              "source_url": "https://example.org/placeholder-gallery/show",
+              "quote": "Every print in the show has sold. The artists keep all rights to their images.",
+              "checked_at": "2026-11-13T15:50:00Z"
+            }
+          ]
+        },
+        {
+          "topic": "Good news",
+          "items": [
+            {
+              "text": "Volunteers used an AI translation app to run a weekly reading club for refugee children in five languages, the charity behind it says. Forty children now come each week.",
+              "source_name": "Example Reading Trust",
+              "source_url": "https://example.org/reading-trust/clubs",
+              "quote": "Our weekly reading club now runs in five languages, and forty children come each week.",
+              "checked_at": "2026-11-13T16:00:00Z"
+            },
+            {
+              "text": "A small bakery planned its orders with an AI assistant and threw away a fifth less bread in three months, according to its own figures.",
+              "source_name": "Example Bakery",
+              "source_url": "https://example.org/bakery/results",
+              "quote": "In three months we threw away 20 per cent less bread.",
+              "checked_at": "2026-11-13T16:05:00Z"
+            },
+            {
+              "text": "Three village choirs used an AI tool to keep time while they rehearsed together over video calls, and sang their first joint concert in November.",
+              "source_name": "Example Choirs",
+              "source_url": "https://example.org/choirs/valley",
+              "quote": "Three choirs rehearsed together online and sang as one in November.",
+              "checked_at": "2026-11-13T16:10:00Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "pass_it_on",
+      "text": "If someone in your industry would find this useful, forward it to them, and they can subscribe here.",
+      "url": "https://home.makeyourmindup.ai/subscribe?utm_source=newsletter&utm_medium=email&utm_campaign=weekly&utm_content=edition-2026-11-14-forward"
+    },
+    {
+      "kind": "close",
+      "text": "That is the week, and the next edition lands on Saturday 21 November."
+    }
+  ]
+}

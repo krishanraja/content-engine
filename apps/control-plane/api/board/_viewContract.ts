@@ -11,7 +11,7 @@ import { createHash } from 'node:crypto'
 // not know. tests/control-plane/board-view-contract.test.ts validates every view built against the schema, and
 // scripts/check-view-contract.ts (npm run check:view-contract) fails a breaking change that is not a major bump.
 
-export const VIEW_CONTRACT_VERSION = '1.34.0'
+export const VIEW_CONTRACT_VERSION = '1.35.0'
 
 /** JSON with every object's keys sorted, so the same content always serialises the same (arrays keep their order). */
 export function stableJson(value: unknown): string {

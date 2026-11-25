@@ -48,7 +48,9 @@ CORE_CAPS = {'make-piece': 63_000, 'plan-week': 49_000, 'produce-video': 60_000,
              # antislop and its family (23 Nov 2026): vendored unmodified from miqdadbadjuber/anti-slop, each its size that
              # day with about a tenth of headroom; a larger upstream release is a new vendoring decision, not a quiet growth.
              'antislop': 59_000, 'antislop-copywriting': 31_000, 'antislop-ui': 33_500, 'antislop-layoutmobile': 18_000,
-             'antislop-human': 17_500, 'antislop-code': 10_000}
+             'antislop-human': 17_500, 'antislop-code': 10_000,
+             # weekly-edition (25 Nov 2026): its size that day with about a tenth of headroom.
+             'weekly-edition': 11_200}
 
 
 def cap_problems(skills=SKILLS, caps=CORE_CAPS) -> list[str]:
