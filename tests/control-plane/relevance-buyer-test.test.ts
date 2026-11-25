@@ -91,11 +91,11 @@ describe('the creative beat reaches the model', () => {
     expect(system).toContain('off_vertical even when the story is about AI')
   })
 
-  it('keeps media, entertainment, arts, music and creator tech, their economics included', async () => {
+  it('keeps media, entertainment, arts, music, sports and creator tech, their economics included', async () => {
     const { classifyRelevance } = await load()
     await classifyRelevance([{ id: '1', title: 'x' }], { apiKey: 'k' })
     const system: string = sent[0].system
-    expect(system).toContain('AI in media, entertainment, arts, music and creator tech, including their economics')
+    expect(system).toContain('AI in media, entertainment, arts, music, sports and creator tech, including their economics')
   })
 })
 
