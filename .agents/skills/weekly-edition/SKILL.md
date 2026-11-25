@@ -39,7 +39,11 @@ folder, the press); the topic heads are the focus sectors of `config/beat.json`,
    feed pool, each already placed under a topic head, inside the news window (the seven days to Friday 12:00 New York)
    and off the avoid list. Say the counts and what it left out. When `send_holds` is true (no piece went live this
    week), the edition holds: report `blocked` with "No piece went live this week, so the edition holds and waits for
-   Krish." and stop. A week with one or two live pieces sends with what went live.
+   Krish." and stop. A week with one or two live pieces sends with what went live. In the earlier scheduled run
+   (the prompt names it, `17 20 * * 5`) only: when `not_live` lists a day with a `piece_id` (a piece picked for this
+   week that is not live yet, usually Friday's), report `blocked` with "The <day> piece is not live yet, so the 23:47
+   UTC run drafts the edition with it." and stop without packaging. The later run, a run by hand, and any run where
+   no picked piece is waiting go on with what is live.
 
 2. **Read the other sources, in this order** (DESIGN.md section 3): the pool candidates in `gathered.json`; the good-news
    stories (the good-news group, at most three); the ideas Krish filed for later or saved as a trend
