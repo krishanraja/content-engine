@@ -1,0 +1,14 @@
+{
+  "_about": "A fixture of GET /api/content-ideas?id=<piece> for Wednesday 11 Nov 2026, written by hand from the repository's own record of the piece (docs/plans/2026-11-11-wednesday/article.md), shortened.",
+  "ok": true,
+  "piece": {
+    "id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+    "state": "published",
+    "lane_slot": "under_the_hood",
+    "scheduled_for": "2026-11-11",
+    "idea": "A Reiki master wrote a UK number two, and it's both AI and human",
+    "thesis": "Movin' To The Sun reached number two in the UK. One of its writers started with her lyrics and an AI music app; strangers found the song under short videos before the charts did.",
+    "body": "If you've opened TikTok or Instagram this year, you've heard Movin' To The Sun.",
+    "updated_at": "2026-11-11T17:30:00Z"
+  }
+}

@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.34.0",
+ "contract_version": "1.35.0",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -118,7 +118,7 @@
      "unread": 3
     },
     "prompts": {
-     "research": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, one Why at a time. You have no other context: everything you need is b…",
+     "research": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, one Why at a time. You have no other context: everything you need is below.\n\nThe piece: \"Piece 8287. It says…",
      "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
      "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
      "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
@@ -1806,6 +1806,7 @@
     },
     "why": null
    },
+   "edition": null,
    "media": [
     {
      "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -2468,6 +2469,7 @@
     }
    ],
    "manifest": null,
+   "edition": null,
    "media": [],
    "thumbs": null,
    "pieces": [],
@@ -3067,7 +3069,7 @@
      "unread": 3
     },
     "prompts": {
-     "research": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, one Why at a time. You have no other context: everything you need is b…",
+     "research": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, one Why at a time. You have no other context: everything you need is below.\n\nThe piece: \"Why it matters\", pu…",
      "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
      "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
      "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
@@ -4597,6 +4599,7 @@
     }
    ],
    "manifest": null,
+   "edition": null,
    "media": [],
    "thumbs": null,
    "pieces": [
@@ -4905,6 +4908,7 @@
     }
    ],
    "manifest": null,
+   "edition": null,
    "media": [],
    "thumbs": null,
    "pieces": [],
@@ -6164,7 +6168,7 @@
      "unread": 3
     },
     "prompts": {
-     "research": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, one Why at a time. You have no other context: everything you need is b…",
+     "research": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, one Why at a time. You have no other context: everything you need is below.\n\nThe piece: \"Piece b019. It says…",
      "story": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
      "storyboard": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…",
      "mock": "You are picking up one piece of the Make Your Mind Up content engine with no prior context. The repository is krishanraja/content-engine: read AGENTS.md and CLAUDE.md once for the house rules, then trust your judgement.\n\nThe piece: piece_id…"
@@ -7665,7 +7669,7 @@
     {
      "kind": "prompt",
      "label": "Copy Perplexity prompt",
-     "prompt": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, one Why at a time. You have no other context: everything you need is b…"
+     "prompt": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, one Why at a time. You have no other context: everything you need is below.\n\nThe piece: \"Piece b019. It says…"
     },
     {
      "kind": "press",
@@ -7710,6 +7714,7 @@
     }
    ],
    "manifest": null,
+   "edition": null,
    "media": [],
    "thumbs": {
     "set_sha256": "b46b01af2ca8e96a0e9fb16c01685bebd75768dbd28cf58150d1bef1f4ed1d8e",
@@ -8093,6 +8098,24 @@
    "next": "This week's good news is in: 5 stories. Growth makes the post, and its mock comes back for your yes",
    "actions": [
     {
+     "kind": "press",
+     "label": "Approve for send",
+     "collection": "picks",
+     "id": "sat-edition",
+     "revision": 0,
+     "body": {
+      "kind": "approve_send",
+      "day": "sat",
+      "edition_date": "2026-11-21",
+      "approved": true,
+      "edition_sha256": "e79b03c3a849d5b9ab64d4151cd41830391943b4452cb4ea16e4e5c1c638f389"
+     },
+     "stamp": [
+      "at"
+     ],
+     "done": "Approved for send: exactly this edition (\"The cheap model got dearer, and who pays for it\"). Growth's Substack step schedules it for 08:00 New York on Saturday; nothing else is sent."
+    },
+    {
      "kind": "open",
      "label": "Read the stories",
      "href": "/board/2026-11-16#options-sat"
@@ -8224,6 +8247,73 @@
     }
    ],
    "manifest": null,
+   "edition": {
+    "kind": "edition",
+    "edition_date": "2026-11-21",
+    "name": "makeyourmindup weekly",
+    "subject": "The cheap model got dearer, and who pays for it",
+    "preview_text": "The week's piece, then the creative news, checked.",
+    "sha256": "e79b03c3a849d5b9ab64d4151cd41830391943b4452cb4ea16e4e5c1c638f389",
+    "checks": {
+     "voice": "pass",
+     "kill_list": "pass",
+     "sources": "pass",
+     "words": 312
+    },
+    "contents": [
+     "Monday: who pays when the cheap model gets dearer.",
+     "Also: music."
+    ],
+    "pieces": [
+     {
+      "day": "mon",
+      "label": "Monday: who pays",
+      "title": "Piece 8287. It says one thing."
+     }
+    ],
+    "news": {
+     "items": 1,
+     "topics": [
+      "Music"
+     ]
+    },
+    "sources": [
+     {
+      "label": "Example Records",
+      "href": "https://example.org/records"
+     }
+    ],
+    "files": {
+     "draft": "/api/board/2026-11-16/edition/draft",
+     "preview": "/api/board/2026-11-16/edition/preview"
+    },
+    "library": {
+     "draft": "3 Posts/2026-11-21 Sat edition - makeyourmindup weekly/0 Publish/edition.draft.json",
+     "preview": "3 Posts/2026-11-21 Sat edition - makeyourmindup weekly/0 Publish/edition.preview.html"
+    },
+    "state": "waiting",
+    "approved_at": null,
+    "approved_sha256": null,
+    "press": {
+     "kind": "press",
+     "label": "Approve for send",
+     "collection": "picks",
+     "id": "sat-edition",
+     "revision": 0,
+     "body": {
+      "kind": "approve_send",
+      "day": "sat",
+      "edition_date": "2026-11-21",
+      "approved": true,
+      "edition_sha256": "e79b03c3a849d5b9ab64d4151cd41830391943b4452cb4ea16e4e5c1c638f389"
+     },
+     "stamp": [
+      "at"
+     ],
+     "done": "Approved for send: exactly this edition (\"The cheap model got dearer, and who pays for it\"). Growth's Substack step schedules it for 08:00 New York on Saturday; nothing else is sent."
+    },
+    "why": null
+   },
    "media": [],
    "thumbs": null,
    "pieces": [],
@@ -8642,6 +8732,32 @@
      },
      "stamp": [],
      "done": "Picked. A session files it with the cuts."
+    }
+   ]
+  },
+  {
+   "key": "sat-edition:2026-11-21",
+   "day": "sat",
+   "label": "Sat 21",
+   "next": "Drafted: 1 piece and 1 news item, each checked against its primary source. Read the preview, then Approve for send; nothing is sent until you do.",
+   "actions": [
+    {
+     "kind": "press",
+     "label": "Approve for send",
+     "collection": "picks",
+     "id": "sat-edition",
+     "revision": 0,
+     "body": {
+      "kind": "approve_send",
+      "day": "sat",
+      "edition_date": "2026-11-21",
+      "approved": true,
+      "edition_sha256": "e79b03c3a849d5b9ab64d4151cd41830391943b4452cb4ea16e4e5c1c638f389"
+     },
+     "stamp": [
+      "at"
+     ],
+     "done": "Approved for send: exactly this edition (\"The cheap model got dearer, and who pays for it\"). Growth's Substack step schedules it for 08:00 New York on Saturday; nothing else is sent."
     }
    ]
   }
@@ -9067,6 +9183,10 @@
    {
     "key": "piece",
     "label": "The piece"
+   },
+   {
+    "key": "edition",
+    "label": "Weekly edition"
    }
   ],
   "piece_path": [
@@ -9964,7 +10084,7 @@
         "kind": "prompt",
         "label": "Perplexity research prompt",
         "tool": "perplexity",
-        "prompt": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, one Why at a time. You have no other context: everything you need is b…",
+        "prompt": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, one Why at a time. You have no other context: everything you need is below.\n\nThe piece: \"Piece 5b72. It says…",
         "notes": {
          "ask": "Your notes for Claude: what to change, or what you think the next step is",
          "heading": "Krish's latest notes, in his own words (typed on the board just now). They come first: research what they ask before anything else.",
@@ -10357,7 +10477,7 @@
         "kind": "prompt",
         "label": "Perplexity research prompt",
         "tool": "perplexity",
-        "prompt": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, one Why at a time. You have no other context: everything you need is b…",
+        "prompt": "You are doing deep research for one piece of Make Your Mind Up, Krish Raja's publication about what AI is really doing to business, one Why at a time. You have no other context: everything you need is below.\n\nThe piece: \"Piece db9f. It says…",
         "notes": {
          "ask": "Your notes for Claude: what to change, or what you think the next step is",
          "heading": "Krish's latest notes, in his own words (typed on the board just now). They come first: research what they ask before anything else.",
@@ -11845,11 +11965,136 @@
        },
        "saved": []
       }
+     },
+     {
+      "key": "edition:2026-11-21",
+      "type": "post",
+      "day": "sat",
+      "date": "2026-11-21",
+      "kind": "edition",
+      "kind_label": "Weekly edition",
+      "title": "The cheap model got dearer, and who pays for it",
+      "approved": null,
+      "stage": {
+       "key": "drafted",
+       "label": "Drafted"
+      },
+      "path": [
+       {
+        "key": "drafted",
+        "label": "Drafted",
+        "state": "done",
+        "when": null
+       },
+       {
+        "key": "approved",
+        "label": "Approved for send",
+        "state": "current",
+        "when": null
+       },
+       {
+        "key": "scheduled",
+        "label": "Scheduled",
+        "state": "todo",
+        "when": null
+       },
+       {
+        "key": "sent",
+        "label": "Sent",
+        "state": "todo",
+        "when": null
+       }
+      ],
+      "missed": false,
+      "line": "Drafted: 1 piece and 1 news item, each checked against its primary source. Read the preview, then Approve for send; nothing is sent until you do.",
+      "next": {
+       "kind": "press",
+       "label": "Approve for send",
+       "collection": "picks",
+       "id": "sat-edition",
+       "revision": 0,
+       "body": {
+        "kind": "approve_send",
+        "day": "sat",
+        "edition_date": "2026-11-21",
+        "approved": true,
+        "edition_sha256": "e79b03c3a849d5b9ab64d4151cd41830391943b4452cb4ea16e4e5c1c638f389"
+       },
+       "stamp": [
+        "at"
+       ],
+       "done": "Approved for send: exactly this edition (\"The cheap model got dearer, and who pays for it\"). Growth's Substack step schedules it for 08:00 New York on Saturday; nothing else is sent."
+      },
+      "decision": true,
+      "others": [
+       {
+        "kind": "open",
+        "label": "Read the preview",
+        "href": "/api/board/2026-11-16/edition/preview"
+       }
+      ],
+      "read": {
+       "so_what": "The week's piece, then the creative news, checked.",
+       "story": "The cheap model got dearer, and who pays for it",
+       "why_now": null,
+       "fact": null,
+       "text": "Monday: who pays when the cheap model gets dearer. Also: music.",
+       "sources": [
+        {
+         "label": "Example Records",
+         "href": "https://example.org/records"
+        }
+       ],
+       "research": [],
+       "said": null
+      },
+      "piece_id": null,
+      "item": null,
+      "supports": null,
+      "move": null,
+      "links": [
+       {
+        "label": "Read the preview",
+        "href": "https://controlcenter.krishraja.com/api/board/2026-11-16/edition/preview"
+       },
+       {
+        "label": "The draft, its exact words",
+        "href": "https://controlcenter.krishraja.com/api/board/2026-11-16/edition/draft"
+       }
+      ],
+      "stories": null,
+      "stories_planned": null,
+      "notes": {
+       "save": {
+        "kind": "press",
+        "label": "Save your note",
+        "collection": "comments",
+        "id": "desk-sat-notes-{t}",
+        "revision": 0,
+        "body": {
+         "thread_id": "{id}",
+         "anchor": "desk:sat:notes",
+         "use": "claude_notes",
+         "title": "The cheap model got dearer, and who pays for it",
+         "item": "edition:2026-11-21"
+        },
+        "words": {
+         "path": "text",
+         "ask": "Your note",
+         "required": true
+        },
+        "stamp": [
+         "at"
+        ],
+        "done": "Saved on the board, with the piece for good."
+       },
+       "saved": []
+      }
      }
     ],
-    "decisions": 0,
+    "decisions": 1,
     "ideas": 0,
-    "line": "One item in progress."
+    "line": "One decision for you."
    }
   ],
   "ideas": [

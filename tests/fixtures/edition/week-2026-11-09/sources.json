@@ -1,0 +1,28 @@
+{
+  "_about": "A fixture of GET /api/week/options?week_start=2026-11-16&include=sources, cut to the pool the edition reads (sources.series[].pool and sources.unassigned). Every candidate here is invented for tests/edition_test.py: the names, the addresses (example.org) and the claims are synthetic, never a real report. Each row tests one rule: on the beat in the window, off the beat (the avoid list, enterprise with no creative angle, in no focus sector), outside the window, a repeat of the same address, and one of the week's own pieces.",
+  "ok": true,
+  "sources": {
+    "series": [
+      {"slug": "follow_the_money", "pool": [
+        {"id": "a1000000-0000-4000-8000-000000000001", "idea": "Example Records licenses its back catalogue to an AI music app, paid per track", "thesis": "The label is paid on every track the app makes in its style.", "source_type": "pool_headline", "source_kind": "engine", "source_url": "https://example.org/records/news/ai-licence", "created_at": "2026-11-10T09:00:00Z"},
+        {"id": "a1000000-0000-4000-8000-000000000002", "idea": "Lawmakers debate a new AI regulation bill", "thesis": "A committee hears evidence on the bill.", "source_type": "pool_headline", "source_kind": "engine", "source_url": "https://example.org/parliament/bill", "created_at": "2026-11-10T10:00:00Z"},
+        {"id": "a1000000-0000-4000-8000-000000000003", "idea": "Example Records signs a second AI licence for its classical recordings", "thesis": "An older deal, outside the week.", "source_type": "pool_headline", "source_kind": "engine", "source_url": "https://example.org/records/news/classical", "created_at": "2026-11-02T09:00:00Z"}
+      ]},
+      {"slug": "under_the_hood", "pool": [
+        {"id": "a1000000-0000-4000-8000-000000000004", "idea": "Sample Animation cuts storyboard time for each episode with an AI tool", "thesis": "Its artists still draw over every board.", "source_type": "pool_headline", "source_kind": "engine", "source_url": "https://example.org/sample-animation/storyboards", "created_at": "2026-11-09T12:00:00Z"},
+        {"id": "a1000000-0000-4000-8000-000000000005", "idea": "Data breach at a streaming service exposes customer emails", "thesis": "A security incident.", "source_type": "pool_headline", "source_kind": "engine", "source_url": "https://example.org/streaming/breach", "created_at": "2026-11-11T08:00:00Z"},
+        {"id": "a1000000-0000-4000-8000-000000000006", "idea": "Demo Games ships a game voiced by licensed AI voices of its actors", "thesis": "Each actor is paid a fee per line.", "source_type": "pool_headline", "source_kind": "engine", "source_url": "https://example.org/demo-games/voices", "created_at": "2026-11-11T16:00:00Z"}
+      ]},
+      {"slug": "mind_the_gap", "pool": [
+        {"id": "a1000000-0000-4000-8000-000000000007", "idea": "Enterprise copilot lifts office productivity, a vendor says", "thesis": "Knowledge workers save time on email.", "source_type": "pool_headline", "source_kind": "engine", "source_url": "https://example.org/vendor/copilot", "created_at": "2026-11-12T09:00:00Z"},
+        {"id": "36886e0b-4b32-473b-be72-b0aef31fccef", "idea": "A Reiki master wrote a UK number two", "thesis": "The week's own Wednesday piece.", "source_type": "pool_headline", "source_kind": "engine", "source_url": "https://example.org/makeyourmindup/p/a-reiki-master-wrote-a-uk-number-two", "created_at": "2026-11-11T17:30:00Z"}
+      ]}
+    ],
+    "unassigned": [
+      {"id": "a1000000-0000-4000-8000-000000000008", "idea": "Specimen Press will pay newsletter writers when their archives train AI", "thesis": "Writers can opt out in their settings.", "source_type": "pool_headline", "source_kind": "engine", "source_url": "https://example.org/specimen-press/terms", "created_at": "2026-11-12T11:00:00Z"},
+      {"id": "a1000000-0000-4000-8000-000000000009", "idea": "Example Records licenses its back catalogue to an AI music app", "thesis": "The same story from another feed.", "source_type": "pool_headline", "source_kind": "engine", "source_url": "https://example.org/records/news/ai-licence", "created_at": "2026-11-10T11:00:00Z"},
+      {"id": "a1000000-0000-4000-8000-000000000010", "idea": "The Placeholder Gallery sells out a show of AI-assisted prints by twelve illustrators", "thesis": "Each artist keeps the rights.", "source_type": "pool_headline", "source_kind": "engine", "source_url": "https://example.org/placeholder-gallery/show", "created_at": "2026-11-08T14:00:00Z"},
+      {"id": "a1000000-0000-4000-8000-000000000011", "idea": "Quarterly earnings beat forecasts at a chip maker", "thesis": "Nothing creative in it.", "source_type": "pool_headline", "source_kind": "engine", "source_url": "https://example.org/chips/earnings", "created_at": "2026-11-12T13:00:00Z"}
+    ]
+  }
+}
