@@ -30,7 +30,7 @@ const CARD: Card = {
   what_changed: "Cisco's 350M-parameter model beats GPT-5.5 on security tasks at 172x lower cost. Microsoft swapped frontier models for its own MAI models inside Office and said cost was the reason. Bridgewater reported 84.7% accuracy from a tuned Qwen3 against roughly 50% from the frontier three.",
   why_now: 'Three buyers published cost comparisons in the same quarter, which had not happened before.',
   the_opening: 'There is a repricing window here for anyone selling per-seat AI features on frontier margins, and nobody has taken the cheap-and-good position in publishing yet.',
-  where_this_goes: 'By the end of 2027 the premium tier is a compliance and support product rather than a capability one, and the capability gap stops carrying the price.',
+  where_this_goes: 'What this shows: the premium tier is already sold on compliance and support, not capability, so the capability gap no longer carries the price. Which part of your own AI bill is still priced for a gap that has closed?',
   reader_decision: 'Whether to keep pricing your AI features against frontier costs, or reprice now and take share while competitors are still paying the old rate.',
 }
 
@@ -45,7 +45,7 @@ const ARC: Arc = {
 {
   const sum = Object.values(WEIGHTS).reduce((a, b) => a + b, 0)
   if (Math.abs(sum - 1) > 1e-9) bad(`weights sum to ${sum}, not 1`)
-  const expected = { arc_maturity: 0.25, reader_consequence: 0.25, forward_claim: 0.20, legibility: 0.15, non_obviousness: 0.15 }
+  const expected = { arc_maturity: 0.25, reader_consequence: 0.25, landing: 0.20, legibility: 0.15, non_obviousness: 0.15 }
   for (const [k, v] of Object.entries(expected)) {
     if ((WEIGHTS as Record<string, number>)[k] !== v) bad(`weight ${k} is ${(WEIGHTS as Record<string, number>)[k]}, brief says ${v}`)
   }
