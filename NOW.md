@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-23
+as_of: 2026-11-24
 head: 6bbfa12
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -30,10 +30,12 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-23)
+## Where it is right now (as of 2026-11-24)
 
 <!-- north-star-state {"week_of":"2026-11-23","week_target":20,"current":1,"current_as_of":"2026-11-25","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (0 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (5% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 20 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
+- The control plane carries no prediction machinery (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores). The CALL, CALL_HORIZON and CLEAR_STANCE checks, the 19 Nov opt-in, the confidence guard, the fact gate's forecast set-asides, packages/contracts/src/call.ts, the scoreboard, the call-market and odds routes and the claims sweep and its two crons are gone, and every reader of venture_formats.mandate drops the old prediction close as it reads the row. (2026-11-24)
+- The creative beat is in code. config/beat.json holds Krish's focus sectors (media, entertainment, arts, music, creator tech, their economics included), the avoid list (governance, regulation, security, privacy, breaches, enterprise productivity with no creative angle), his 24 Nov words and the model piece. The headline gate (_beat.ts), the feed ingest (pool governance and security lanes dropped as off_beat unless the headline is in a focus sector), the relevance classifier, the lens radar's searches, the editorial radar's prompt, the creator moves grounding, the Sunday gate (off_beat, from the 30 Nov board) and the plan-week skill read it. Creative tools and platforms (YouTube, Midjourney, Runway, Sora, Veo, ElevenLabs, Adobe and others) are a focus row, a rollout verb is not enterprise by itself, and the Sunday gate reads the focus angle from the topic alone. The mandates migration is written and not applied. (2026-11-24)
 - The habits voiceover short (piece 701a2c55, moved by Krish to Thu 19 Nov) is made and filed: 3 Posts/2026-11-19 Thu off.day - Which of your habits will cost you your job holds the final 9:16 cut (3 Video, Drive sha256 matches), the brand cover he picked (option 2, tall and wide), his face cover and a caption for each of eight channels, with the draft manifest in 0 Publish. The board's Thu card leads with Approve for publish bound to that manifest. The cut was rendered on the engine he approved for v9 (main's later caption engine regressed it) and filed with the cloud Drive uploader by his ruling, past the library gate, whose QC false readings are with another session. (2026-11-19)
 - The standards check-in of 2026-11-23 grouped the new floor standards; config/floor-groups.json holds 78 groups, each new one seeded as a proposal for Krish on the pinned check-in page. (2026-11-23)
 - The standards page test no longer breaks when the floor reaches 78 groups, so the floor pull requests held since 20 November can pass verify. (2026-11-23)
@@ -50,16 +52,18 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-24 Learning why-ladder-close supersedes near-term-backed-predictions and no-required-predictions. The three subchannel mandates are drafted as why-ladder mandates in docs/proposals/2026-11-24-five-whys-mandates.md, and supabase/migrations/20261224090000_retire_call_scoreboard.sql retires the claim_scoreboard and claims_due views; neither is applied.
+- 2026-11-24 config/beat.json, apps/control-plane/api/_beat.ts, _relevance.ts, feed/ingest.ts, _judgmentLens.ts, _editorialRadar.ts, _creatorMoves.ts, scripts/post-pack/idea_checks.py, board_feed.py, .agents/skills/plan-week (and the .claude copy), docs/prompts/sunday-ideas-tab.md, supabase/migrations/20261224091000_mandates_creative_beat.sql (not applied), tests
 - 2026-11-19 scripts/pages/receipt.py (tall Receipt clear of the Reel UI), tests, config/title-verdicts.json, docs/plans/2026-11-17-tue-habits/, docs/ve/cards/habits/
 Older lines: `docs/history/2026-11-24-NOW-moved-1.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-19): Krish presses Approve for publish on the Thu 19 card; Growth's go-live then schedules the posts in Buffer.
+- Next (2026-11-24): Krish says yes or no to the three drafted mandates and the scoreboard migration; the database writes wait on that yes.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
-- North Star check (2026-11-19): holds.
+- North Star check (2026-11-24): holds.
 
 ## Read next
 
