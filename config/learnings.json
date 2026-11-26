@@ -2258,27 +2258,27 @@
         {
           "file": "scripts/pages/skins/__init__.py",
           "contains": "def pick(facts, look):",
-          "how": "the nine series skins (Krish, 2026-11-05: \"keep all of them and rotate them all at will over the coming weeks\"): one per week in rotation from neon in the week of 9 Nov, shared by the week's Monday, Wednesday and Friday pieces, another by \"skin\" in the facts, none on anything that is not a weekly series piece; nothing before that week unless a piece names one, and an undated series piece is refused; receipt.py puts it on every cover and video thumbnail (Krish, 2026-11-05: \"Skin the covers too\"), each cover in the closer thumbnail's design (DESIGN), and checks the words, the logos, the safe box and the proof again after it, and the visual gate refuses a series cover or thumbnail with no skin from the week of 9 Nov, telling an old record's series piece from the piece itself, and covers and thumbnails that wear different skins"
+          "how": "The archive drawer permits v5_feed on a series piece and refuses the nine retired skins."
         },
         {
           "file": "tests/series_skins_test.py",
-          "contains": "test_every_skin_is_drawn_on_every_series_day_tall_and_wide_with_nothing_on_the_words",
-          "how": "CI's browser job draws all nine skins on Monday, Wednesday and Friday, tall and wide, alone, with logo rows and a strip, and under a long title (162), and proves none touches the words or the logos or carries words"
+          "contains": "test_the_nine_are_retired_and_refused_by_name",
+          "how": "The v5 lock retired the nine-skin rotation. Each of the nine is refused by name."
         },
         {
           "file": "tests/series_skins_test.py",
-          "contains": "test_every_skin_is_drawn_on_every_series_day_on_every_cover_shape_with_nothing_on_the_words",
-          "how": "the same on the five cover shapes (405), the long title the plain Receipt cannot fit on the 3:2 and 1200 x 630 covers held to the house, never the skin"
+          "contains": "test_every_shape_of_a_series_piece_wears_v5_feed_on_the_archive_path",
+          "how": "Every series day and shape selects v5_feed on the archive route."
         },
         {
-          "file": "scripts/pages/receipt.py",
-          "contains": "def settle(b, facts, base, cs, need):",
-          "how": "Krish, 2026-11-05: \"Yeah just move on automatically\": a skin refused on any one of the piece's seven shapes moves the whole piece on to the next in the rotation, wrapping round, a named one first; the drawer prints and records which and why (skin_week, skin_tried, skin_note); none of the nine, the plain series Receipt; never a stop"
+          "file": "tests/image_led_covers_test.py",
+          "contains": "test_rotation_and_licence",
+          "how": "The live cover system chooses a permitted family for each aspect and checks portrait rights."
         },
         {
-          "file": "tests/series_skins_test.py",
-          "contains": "test_when_none_of_the_nine_can_be_drawn_the_piece_wears_the_plain_series_receipt",
-          "how": "a placement forced to fail on one shape moves every shape on to the next skin, with the reason recorded; a named skin wraps round; all nine forced to fail give the plain series Receipt, which the visual gate accepts"
+          "file": "tests/v5_retirement_test.py",
+          "contains": "test_drawer_refuses_before_accessing_assets",
+          "how": "New pieces go to make_covers.py. The retired drawer refuses them before reading assets or falling back to a series skin."
         }
       ]
     },

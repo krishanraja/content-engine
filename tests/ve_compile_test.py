@@ -70,7 +70,7 @@ def timed_words():
 
 class CompileTest(unittest.TestCase):
     def test_undrawn_verb_refused(self):
-        spec = load_json(FIXTURE / 'spec.json')
+        spec = load_json(FIXTURE / 'spec-v5.json')
         beat = spec['cuts']['proof-tall']['beats'][0]
         event = beat['events'][0]
         obj = next(obj for obj in spec['objects'] if obj['obj'] == event['obj'])
@@ -82,7 +82,7 @@ class CompileTest(unittest.TestCase):
             self.assertIn(name, str(caught.exception))
 
     def test_undeclared_device_refused(self):
-        spec = load_json(FIXTURE / 'spec.json')
+        spec = load_json(FIXTURE / 'spec-v5.json')
         event = spec['cuts']['proof-tall']['beats'][0]['events'][0]
         obj = next(obj for obj in spec['objects'] if obj['obj'] == event['obj'])
         obj['device'] = 'undeclared_device'
@@ -90,7 +90,7 @@ class CompileTest(unittest.TestCase):
             compile_cut(spec, 'proof-tall', timed_words(), FIXTURE)
 
     def test_fixture(self):
-        spec = load_json(FIXTURE / 'spec.json')
+        spec = load_json(FIXTURE / 'spec-v5.json')
         words = timed_words()
         source = load_json(FIXTURE / 'script.words.json')['words']
         self.assertEqual(len(words), len(source))
@@ -135,7 +135,7 @@ class CompileTest(unittest.TestCase):
             self.assertEqual(props['tokens']['channel'], house['channel_colors'][spec['brand']['series'].replace('.', '_')])
 
     def test_schemas(self):
-        spec = load_json(FIXTURE / 'spec.json')
+        spec = load_json(FIXTURE / 'spec-v5.json')
         words = timed_words()
         code = (NODE_TYPESCRIPT +
                 "const { ProductionSpecV2Schema } = require('./packages/contracts/src/production-spec.ts'); "
@@ -153,7 +153,7 @@ class CompileTest(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
     def test_word_validation(self):
-        spec = load_json(FIXTURE / 'spec.json')
+        spec = load_json(FIXTURE / 'spec-v5.json')
         words = timed_words()
         for invalid in ([], words[:-1], [dict(words[0], onset_s=-1), *words[1:]],
                         [dict(words[0], onset_s=float('nan')), *words[1:]],
@@ -175,7 +175,7 @@ class CompileTest(unittest.TestCase):
                 self.assertEqual(output.getvalue().splitlines(), ['first finding', 'second finding'])
 
     def test_unused_object_ignored(self):
-        spec = load_json(FIXTURE / 'spec.json')
+        spec = load_json(FIXTURE / 'spec-v5.json')
         spec['objects'].append({'obj': 'unused', 'persist': {'from_beat': 'absent', 'to_beat': 'absent'}})
         props = compile_cut(spec, 'proof-tall', timed_words(), FIXTURE)
         self.assertNotIn('unused', [obj['obj'] for obj in props['objects']])
@@ -184,7 +184,7 @@ class CompileTest(unittest.TestCase):
             compile_cut(spec, 'proof-tall', timed_words(), FIXTURE)
 
     def test_end_s_required_for_every_word(self):
-        spec = load_json(FIXTURE / 'spec.json')
+        spec = load_json(FIXTURE / 'spec-v5.json')
         for value in (None, '1.2', True, -1.0, float('nan'), float('inf')):
             words = timed_words()
             words[0]['end_s'] = value
@@ -194,7 +194,7 @@ class CompileTest(unittest.TestCase):
             compile_cut(spec, 'proof-tall', load_json(FIXTURE / 'words.frames.json'), FIXTURE)
 
     def test_duration_and_ending(self):
-        spec = load_json(FIXTURE / 'spec.json')
+        spec = load_json(FIXTURE / 'spec-v5.json')
         words = timed_words()
         words[-1]['end_s'] += 0.8
         base = round(words[-1]['end_s'] * 30) + 12
@@ -229,7 +229,7 @@ class CompileTest(unittest.TestCase):
         self.assertEqual({k: laddered['ending'][k] for k in ('fromFrame', 'url')}, {'fromFrame': base, 'url': whole['series']['site']})
 
     def test_motion_style_passes_through(self):
-        spec = load_json(FIXTURE / 'spec.json')
+        spec = load_json(FIXTURE / 'spec-v5.json')
         words = timed_words()
         house = compile_cut(spec, 'proof-tall', words, FIXTURE)
         self.assertNotIn('motion', house, 'no style.motion: the cut renders with the house motion, unchanged')
@@ -239,7 +239,8 @@ class CompileTest(unittest.TestCase):
         self.assertEqual(styled['motion'], {'style': 'dark-keynote', 'profile': table['profiles']['dark-keynote']})
         self.assertEqual({k: v for k, v in styled.items() if k != 'motion'}, house, 'the style changes nothing else')
         spec['style']['motion']['module'] = 'toy-3d'
-        self.assertEqual(compile_cut(spec, 'proof-tall', words, FIXTURE)['motion'], {'style': 'toy-3d'})
+        with self.assertRaisesRegex(ValueError, 'toy-3d.*retired'):
+            compile_cut(spec, 'proof-tall', words, FIXTURE)
         spec['style']['motion']['module'] = 'no-such-style'
         with self.assertRaisesRegex(ValueError, 'not a motion style'):
             compile_cut(spec, 'proof-tall', words, FIXTURE)
@@ -255,7 +256,7 @@ class CompileTest(unittest.TestCase):
     def test_first_word_entrances_land_on_frame_zero(self):
         # Krish, 2026-11-03: "We fucking have standards for intro, background audio and outro". An entrance on the
         # cut's first word is on screen from frame 0; later events keep their word's frame.
-        spec = load_json(FIXTURE / 'spec.json')
+        spec = load_json(FIXTURE / 'spec-v5.json')
         words = timed_words()
         first = spec['cuts']['proof-tall']['beats'][0]
         entrances = [e for e in first['events'] if e['verb'] == 'enter' and e['at_w'] == first['span']['from_w']]
@@ -304,7 +305,7 @@ class CompileTest(unittest.TestCase):
 
     def test_word_captions_are_one_word_a_page_under_the_title(self):
         # Krish, 2026-11-03: "its the georgia subtitles build".
-        spec = load_json(FIXTURE / 'spec.json')
+        spec = load_json(FIXTURE / 'spec-v5.json')
         spec['brand'] = {**spec['brand'], 'captions': 'word', 'title': 'Give your AI two rules'}
         cut_id = next(iter(spec['cuts']))
         props = compile_cut(spec, cut_id, timed_words(), FIXTURE)
@@ -316,7 +317,7 @@ class CompileTest(unittest.TestCase):
 
     def test_a_picked_caption_style_keeps_phrase_pages(self):
         # Krish, 2026-11-13: "the captions should be decoupled from the animation styles"; rack-focus picked 17 Nov.
-        spec = load_json(FIXTURE / 'spec.json')
+        spec = load_json(FIXTURE / 'spec-v5.json')
         spec['brand'] = {**spec['brand'], 'captions': 'word'}
         spec.setdefault('style', {})['captions'] = {'theme': 'rack-focus', 'placement': 'lower', 'reason': 'picked'}
         props = compile_cut(spec, next(iter(spec['cuts'])), timed_words(), FIXTURE)
@@ -327,7 +328,7 @@ class CompileTest(unittest.TestCase):
         # Under test (Krish, 29 Oct 2026, "Let's go with number one for now."): the first beat, the hook, owns
         # frame 0 even when the first word comes later; no story card or logo sting is compiled ahead of it, and the
         # one close is the ending band.
-        spec = load_json(FIXTURE / 'spec.json')
+        spec = load_json(FIXTURE / 'spec-v5.json')
         spec['cuts']['proof-tall']['excerpt'] = False
         words = [dict(word, onset_s=word['onset_s'] + 1.0, end_s=word['end_s'] + 1.0) for word in timed_words()]
         props = compile_cut(spec, 'proof-tall', words, FIXTURE)
@@ -340,7 +341,7 @@ class CompileTest(unittest.TestCase):
         self.assertEqual(list(props['ending']), ['fromFrame', 'url', 'tagline', 'cta', 'days'])
 
     def test_caption_widths_and_long_words(self):
-        spec = load_json(FIXTURE / 'spec.json')
+        spec = load_json(FIXTURE / 'spec-v5.json')
         for cut in spec['cuts']:
             props = compile_cut(spec, cut, timed_words(), FIXTURE)
             for page in props['captions']:
@@ -374,7 +375,7 @@ class CompileTest(unittest.TestCase):
             self.assertGreaterEqual(next(r for r in timed if r['text'] == following[0])['atFrame'] - last, 6, pages)
 
     def test_caption_renderer_parity(self):
-        spec = load_json(FIXTURE / 'spec.json')
+        spec = load_json(FIXTURE / 'spec-v5.json')
         for cut in spec['cuts']:
             props = compile_cut(spec, cut, timed_words(), FIXTURE)
             code = (NODE_TYPESCRIPT +
@@ -390,7 +391,7 @@ class CompileTest(unittest.TestCase):
             self.assertEqual(json.loads(result.stdout), expected)
 
     def test_asset_plates_and_generated_params_refused(self):
-        spec = load_json(FIXTURE / 'spec.json')
+        spec = load_json(FIXTURE / 'spec-v5.json')
         spec['cuts']['proof-tall']['beats'][0]['plate']['source'] = 'asset:picture'
         with self.assertRaisesRegex(ValueError, 'asset plates arrive in Phase 2'):
             compile_cut(spec, 'proof-tall', timed_words(), FIXTURE)
@@ -411,7 +412,7 @@ class CompileTest(unittest.TestCase):
         self.assertEqual(generated_plate_problem(asset, 'scene_plate'), '')
 
     def test_sfx_kit_present_and_absent(self):
-        spec = load_json(FIXTURE / 'spec.json')
+        spec = load_json(FIXTURE / 'spec-v5.json')
         real_load = load_json
         names = {e['sfx'] for b in spec['cuts']['proof-tall']['beats'] for e in b['events'] if e.get('sfx')}
         kit = {name: {'path': f'sfx/{name}.wav', 'gain_db': -6} for name in names}
@@ -446,7 +447,7 @@ class CompileTest(unittest.TestCase):
         self.assertEqual(report['sfx_missing'], [e['id'] for e in sounded])
 
     def test_compile_report_persisted(self):
-        spec = load_json(FIXTURE / 'spec.json')
+        spec = load_json(FIXTURE / 'spec-v5.json')
         # Intercept writes so tests never create a plan folder.
         writes = {}
         def write(path, value):
@@ -489,7 +490,7 @@ class CompileTest(unittest.TestCase):
             draw.assert_not_called()
 
     def test_status_blocks_missing_sfx(self):
-        spec = load_json(FIXTURE / 'spec.json')
+        spec = load_json(FIXTURE / 'spec-v5.json')
         report = {'sfx_missing': ['event'], 'blocking': False, 'file': 'missing',
                   'sha256': 'hash', 'measured_pass': True, 'complete': True}
         # ve status and ve file share packet.readiness, which reads compile.<cut>.json through verdict.read.
@@ -541,17 +542,17 @@ class StingTest(unittest.TestCase):
         return Path(tempfile.mkdtemp(dir=self.work, prefix='empty-'))
 
     def wide(self, day='2026-10-23'):
-        spec = load_json(FIXTURE / 'spec.json')
+        spec = load_json(FIXTURE / 'spec-v5.json')
         spec['publish_day'] = day
         spec['cuts']['proof-wide']['excerpt'] = False
         return spec
 
     def test_no_cut_opens_on_a_sting_even_an_approved_one(self):
-        tall = load_json(FIXTURE / 'spec.json')
+        tall = load_json(FIXTURE / 'spec-v5.json')
         tall['cuts']['proof-tall']['excerpt'] = False
         cases = (('the 16:9 whole cut of a series piece on its own day', self.wide(), 'proof-wide'),
                  ('the 9:16 whole cut', tall, 'proof-tall'),
-                 ('a 16:9 proof excerpt', load_json(FIXTURE / 'spec.json'), 'proof-wide'),
+                 ('a 16:9 proof excerpt', load_json(FIXTURE / 'spec-v5.json'), 'proof-wide'),
                  ('a 16:9 whole cut on an off day (a mind.the.gap piece on a Thursday)', self.wide('2026-10-22'), 'proof-wide'))
         for config in (self.approved, self.work / 'no-such-sting.json'):
             for name, spec, cut in cases:
@@ -654,7 +655,7 @@ class StingCloseTest(unittest.TestCase):
         return patch.dict(os.environ, {intro.CONFIG_ENV: str(self.config), intro.CLIPS_ENV: str(clips or self.clips)})
 
     def spec(self, day, cut):
-        spec = load_json(FIXTURE / 'spec.json')
+        spec = load_json(FIXTURE / 'spec-v5.json')
         spec['publish_day'] = day
         spec['cuts'][cut]['excerpt'] = False
         return spec

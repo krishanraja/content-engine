@@ -1,0 +1,98 @@
+{
+  "SPOT": {
+    "name": "Spotify",
+    "subsector": "music"
+  },
+  "UMG.AS": {
+    "name": "Universal Music Group",
+    "subsector": "music"
+  },
+  "WMG": {
+    "name": "Warner Music Group",
+    "subsector": "music"
+  },
+  "SONY": {
+    "name": "Sony Group",
+    "subsector": "music"
+  },
+  "RSVR": {
+    "name": "Reservoir Media",
+    "subsector": "music"
+  },
+  "SIRI": {
+    "name": "Sirius XM",
+    "subsector": "music"
+  },
+  "LYV": {
+    "name": "Live Nation Entertainment",
+    "subsector": "music"
+  },
+  "DIS": {
+    "name": "The Walt Disney Company",
+    "subsector": "film_tv"
+  },
+  "NFLX": {
+    "name": "Netflix",
+    "subsector": "film_tv"
+  },
+  "CMCSA": {
+    "name": "Comcast",
+    "subsector": "film_tv"
+  },
+  "IMAX": {
+    "name": "IMAX Corporation",
+    "subsector": "film_tv"
+  },
+  "CNK": {
+    "name": "Cinemark",
+    "subsector": "film_tv"
+  },
+  "TTWO": {
+    "name": "Take-Two Interactive",
+    "subsector": "gaming"
+  },
+  "RBLX": {
+    "name": "Roblox Corporation",
+    "subsector": "gaming"
+  },
+  "UBI.PA": {
+    "name": "Ubisoft",
+    "subsector": "gaming"
+  },
+  "NTDOY": {
+    "name": "Nintendo",
+    "subsector": "gaming"
+  },
+  "TKO": {
+    "name": "TKO Group Holdings",
+    "subsector": "sport"
+  },
+  "MANU": {
+    "name": "Manchester United",
+    "subsector": "sport"
+  },
+  "DKNG": {
+    "name": "DraftKings",
+    "subsector": "sport"
+  },
+  "ADBE": {
+    "name": "Adobe",
+    "subsector": "art_design"
+  },
+  "FIG": {
+    "name": "Figma",
+    "subsector": "art_design"
+  },
+  "NYT": {
+    "name": "The New York Times Company",
+    "subsector": "publishing_media"
+  },
+  "NWSA": {
+    "name": "News Corp",
+    "subsector": "publishing_media"
+  },
+  "VIV.PA": {
+    "name": "Vivendi",
+    "subsector": "publishing_media"
+  }
+}

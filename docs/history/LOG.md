@@ -5,6 +5,14 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-11-26
+
+- reconciled at `f03dcbc`: NOW.md re-stamped from `6bbfa12`; sessions had folded their own closeout notes through `f03dcbc` (234 non-steward commits) and none was left to fold. The NOW.md audit failed `where_too_many` (9 bullets in "Where it is right now", limit 8; this run counted 11 in the working tree). Three bullets moved here: the standards check-in bullet (2026-11-23, a done event whose record is `config/floor-groups.json`), the StyleStill covers bullet (2026-11-16, the oldest, and history of how the covers got there) and the standards page test bullet (2026-11-23, a fix that says how the floor pull requests got unblocked, not where things are). The creative beat bullet said its mandates migration was not applied; `699bb736` applied it on 2026-11-25, and the bullet now says so. The digest's stale stamps were left as they are: their bodies were not rechecked in this run.
+- rolled from NOW.md, verbatim:
+  The standards check-in of 2026-11-23 grouped the new floor standards; config/floor-groups.json holds 78 groups, each new one seeded as a proposal for Krish on the pinned check-in page. (2026-11-23)
+  **StyleStill covers: 47 of 48 passed a separate review and are filed and recorded for the board's style pickers** (`config/ve/style-samples.json`). Eight came from Codex's second pass, 24 from its third, and 15 of the 16 held back from its fourth, after the reviewer's five named faults were fixed (`82360c9b`: line-boil passes too thick to read as three lines, receipt and living-ui labels ink on ink, the data story's chart now the sourced monthly sales indexed 100 to 107, flip-hinge sampled with its key word lit). slot-roll stays held: its uneven word gap is in the caption theme itself (`c631e0ac`). (2026-11-16)
+  The standards page test no longer breaks when the floor reaches 78 groups, so the floor pull requests held since 20 November can pass verify. (2026-11-23)
+
 ## 2026-11-19
 
 - reconciled at `6bbfa12`: NOW.md carried `head: b0ca88d`, which is no longer a commit after the 18 Nov history scrub (`053d6b3c`), so the strict validator could not run on the way in; `head` moved to `6bbfa12`. Sessions had folded their own closeout notes through it and none was left to fold. The 2026-11-19 "What changed recently" bullet was a list of files and now carries the why from `25ee9d2c`. The NOW.md audit's `old_dated_claims` warning (the ve and Phase 3 bullet, dated 2026-11-04) is fixed by restating it against `docs/ve/STATUS.md` ("Phase 3 count": 0 of 3); its earlier detail is below.

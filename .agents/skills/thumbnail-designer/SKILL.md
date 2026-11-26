@@ -1,6 +1,6 @@
 ---
 name: thumbnail-designer
-description: "Design a piece's video thumbnails, wide 16:9 and tall 9:16, once the packaging round has settled the thumbnail words after Krish records: a short brief first, two or three options in the week's one skin as the Receipt, the channel and title checks on each, a mock of his Instagram grid beside the last five posted covers, a verdict from a separate critic bound to each file's sha256, then the set on his final review and his pick recorded in his own words. Use when produce-video step 5 calls it, or when Krish asks for a recorded piece's thumbnails or covers to be designed again. Not for the working thumbnails drawn before he records (make-piece, the Visual gate row), carousel cards, memes or Notes images."
+description: "Design a piece's video thumbnails, wide 16:9 and tall 9:16, once the packaging round has settled the thumbnail words after Krish records: a short brief first, two or three options rendered by the approved image-led cover systems (scripts/covers/make_covers.py), the channel and title checks on each, a mock of his Instagram grid beside the last five posted covers, a verdict from a separate critic bound to each file's sha256, then the set on his final review and his pick recorded in his own words. Use when produce-video step 5 calls it, or when Krish asks for a recorded piece's thumbnails or covers to be designed again. Not for the working thumbnails drawn before he records (make-piece, the Visual gate row), carousel cards, memes or Notes images."
 model: opus
 ---
 
@@ -15,8 +15,20 @@ Every option is held to these, and none of them is the session's to relax:
 
 - **THUMBNAIL_EVERY_SIZE** (Krish, 2026-10-12: "I always want a video thumbnail for all video sizes produced as an
   asset every time"): wide 1280 x 720 for the long cut, tall 1080 x 1920 for the short cut, both or neither.
-- **THE_RECEIPT** (Krish, 2026-11-02: "inviolable"): a real proof from one of the piece's checked sources, the
-  wordmark and the real logos, drawn by `scripts/pages/build.py`; never his face, never a frame from a take.
+- **THE COVER SYSTEMS** (Ruling, Krish, 2026-11-26: "I approve the new cover thumbnail systems, go"). Every option is
+  rendered by `python3 scripts/covers/make_covers.py <piece> --out DIR`, which writes the wide and tall thumbnails in
+  the same run as the Substack cover, the vertical cover and the carousel first slide, with a `covers.json` receipt.
+  The wide system walks portrait, evidence, number and object; the vertical system walks portrait window, receipt and
+  figure; each takes the first family the piece's facts support that differs from the previous published piece's.
+  Read `docs/ve/cards/library/COVERS-PLAYBOOK.md` and `ART-DIRECTION.md` first. The old Library cover templates
+  (`cover-receipt-*`, `cover-face-*`, `cover-scene-*`) and the old drawer (`scripts/pages/build.py --thumbs`, the skins)
+  are retired; the drawer refuses without `--legacy`, which is only for an archived piece.
+- **Words.** Wide: Fraunces sentence case, `image_led.wide_headline.youtube`, else the piece's title. Vertical:
+  `thumbs.headline` as one Anton kicker.
+- **The proof** (THE_RECEIPT, Krish, 2026-11-02: "inviolable") is the evidence and receipt families: the piece's
+  checked proof named in its facts, the wordmark and the real logos. A portrait is only a licensed Commons photo of a
+  person named in their own story, never beside an accusation against their company, always credited. Never his face
+  on a brand cover, never a frame from a take.
   On his own accounts (TikTok, X, LinkedIn, Threads, Substack Notes) and the face arm of the YouTube test, the cover is
   face-led instead: his cutout headshot large, drawn by Codex from a `ve card` of kind `cover`, never a frame from a take
   (Ruling, Krish, 2026-11-17: "yes to the face plan"; `docs/production/COVER-STANDARD.md`, "Face-led covers").
@@ -25,8 +37,7 @@ Every option is held to these, and none of them is the session's to relax:
   companies the headline or the picture names; no badges; a quiet series label; bright over dark; checked where it is
   seen; two or three options, never one. Its 15 Nov ruling: every posted video carries its designed cover, and a tall
   cover's words never use "they", "it" or "this" for a name.
-- **The week's one skin.** A weekly series piece's options all wear the skin its covers wear (`receipt.settle`); an
-  option that cannot be drawn in it is refused and named, never drawn in a second skin.
+- **No skins.** The weekly skins and v5_feed are retired (`config/retired-styles.json`); a Library record wears none.
 
 ## Before anything
 
@@ -49,28 +60,26 @@ the ones drawn.
 
 ## 2. Two or three options
 
-Declare them in the cover facts as `"thumb_options"`: each `{"id": "a", "note": "what it tries", ...}`, differing in
-the proof's crop or picture (`"proof"`) and the layout (`"proof_width"`, `"proof_first"`, `"logos_under"`), nothing
-else. Then:
+Each option is one render. Write each option's facts (a copy of the cover facts that differs only in the words his
+packaging round allows, `thumbs.headline` for the kicker and `image_led.wide_headline`, or the companies it shows)
+and render it:
 
 ```
-python3 scripts/pages/build.py docs/plans/PLAN/cover-facts.json --thumbs --options 3 --brief WORK/thumbs/brief.json [--past COVER ...] --out WORK/thumbs
+python3 scripts/covers/make_covers.py WORK/thumbs/options/<id>/cover-facts.json --out WORK/thumbs/options/<id>
 ```
 
-It writes each option's two files and `thumbs.json` in `WORK/thumbs/options/<id>/`, the set in
-`WORK/thumbs/thumb-options.json` and the grid mock in `WORK/thumbs/grid-mock.png`, or none of them.
+Each writes the option's files and its `covers.json` receipt under `WORK/thumbs/options/<id>/`. A held receipt (a
+160 px gate or safe-area failure) keeps that option out. The old `--options` drawer wrote `thumb-options.json` and the
+grid mock; it is retired, and `thumb_options.py` does not yet read cover receipts, so until it does, write the set by
+hand and hold the grid mock as a final-review line.
 `--past` is each of the last five posted covers, newest first, read on this machine (`references/drawing.md`, "The
 last five posts"); with none, the mock shows the options alone and says so. Never fake a past post.
 
 ## 3. Check each option
 
-- `python3 scripts/channel_safe.py WORK/thumbs/options/<id>/thumb-tall-1080x1920.jpg --shape cover_tall` (F43: the
-  grid crop and the account row). Exit 2 means it did not run (no tesseract): say so; it is never a pass.
-- `python3 scripts/post-pack/title_check.py "THE WORDS" --surface thumbnail --source <the piece's body or script>`,
-  and again with `--surface tall_cover`.
-- `python3 scripts/pages/thumb_options.py show WORK/thumbs`: the words, the parts and any logo the brief does not name.
-- Look at every file at full size, and at the grid mock, yourself, against the QA list
-  (`.agents/skills/thumbnail-designer/references/qa.md`).
+Run the channel, title and options checks on every option and look at every file at full size and in the grid
+mock yourself, as `.agents/skills/thumbnail-designer/references/qa.md` lists ("The checks on each option").
+`channel_safe.py` exit 2 means it did not run: say so; it is never a pass.
 
 ## 4. The critic
 
@@ -87,43 +96,28 @@ drawer never judges its own options.
 
 ## 5. Repair, at most twice, then hold
 
-When the verdict blocks every option, or the best one fails a check, change the facts (a crop, a layout) and draw a
-new set; a new set needs a new verdict. At most two rounds of repair. Then hold: record the set and its verdict
-(`making.py <piece> thumbnails WORK/thumbs`, no `--ask`), record the reason as a final-review line, and
-carry on with the cuts. Never put options below the bar to him.
+A blocked verdict or a failed check means new facts and a new set with a new verdict, at most two rounds; then
+hold and record why (`references/qa.md`, "Repair"). Never put options below the bar to him.
 
 ## 6. On the final review
 
-Follow `.agents/skills/thumbnail-designer/references/board-pick.md` for the filing: it files the review copies in
-Drive and records the set with their Drive ids so his board shows every option with Pick and Not this (view contract
-1.16.0; Ruling, Krish, 2026-11-15, approved with the specialists plan: thumbnail options carry a pick press on the
-Content board). In short:
-
-1. `python3 scripts/pages/thumb_options.py drive WORK/thumbs a:wide=ID a:tall=ID ... mock=ID`, after filing each in
-   Inbox from My AI.
-2. `python3 scripts/post-pack/making.py <piece> thumbnails WORK/thumbs` (the set, its verdict and those ids, by sha256).
-3. `python3 scripts/post-pack/board_session.py <piece> add ...` for each file and the grid mock.
-4. One final-review line, the critic's best as the default (never `--ask`):
-   `python3 scripts/post-pack/making.py <piece> final-review thumbnail "Option B, the critic's best"`.
-5. His Pick at the final review is on the record by itself; his Not this sends you back to step 5 with his words. An
-   answer in a session: `making.py <piece> thumbnails WORK/thumbs --picked b --krish-words "Krish, YYYY-MM-DD: his words"`.
-
-Until his pick is on the record nothing is the thumbnail: `making.py video` refuses an option's file he has not
-picked, and no option is filed, posted or put in the manifest. The cuts never wait: they render, archive and file,
-and reach the library with his pick.
+File the options as `.agents/skills/thumbnail-designer/references/board-pick.md` says: review copies in Drive,
+the set recorded with their Drive ids by sha256, one final-review line with the critic's best as the default (never
+`--ask`). His Pick is on the record by itself; his Not this sends you back to step 5 with his words. Until his
+pick is on the record nothing is the thumbnail, and the cuts never wait.
 
 ## 7. After his pick
 
 His option's folder is the thumbnail set: `WORK/thumbs/options/<his pick>/` wherever produce-video steps 6 to 9 say
-`WORK/thumbs/`. Write his option's `proof` and layout into the cover facts and draw the covers with `--cover`, so
-every shape matches what he picked. Each video channel's cover in the piece manifest is his tall (tall cut) or wide
+`WORK/thumbs/`. Write his option's words and companies into the cover facts and render the set again with
+`make_covers.py`, so every shape matches what he picked; set `cover_set` in the post manifest to its `covers.json`. Each video channel's cover in the piece manifest is his tall (tall cut) or wide
 (wide cut) file.
 
 ## Where the standard and the gates differ
 
 None open. `visual_gate.py` follows the cover standard: at most three logos, only of companies the piece names, and
 `config/hook-playbook.json` describes the Receipt: at most 7 words over a real proof, no face (Rulings, Krish,
-2026-11-15). A new difference between the standard and a gate is a final-review line; never settle it yourself.
+2026-11-15). The 160 px gate (`docs/ve/cards/library/thumb_gate.py`) runs inside `make_covers.py`. A new difference between the standard and a gate is a final-review line; never settle it yourself.
 
 ## Allowed asks
 

@@ -1,0 +1,20 @@
+{
+  "path": "docs/ve/cards/why-ladder/ve-look-why-ladder-a.md",
+  "card_id": "ve-look-why-ladder-a",
+  "kind": "code",
+  "title": "Why-ladder look concept: six 9:16 scenes (Load-Bearing), HTML render plus play mode",
+  "goal": "Build the concept-stage mock of the new makeyourmindup premium-news look, exactly as docs/ve/cards/why-ladder/SPEC.md describes: six 1080x1920 scenes (cover, step card, document evidence plate, challenger beat, recap stack, landing card) for the sample piece in docs/ve/cards/why-ladder/piece.json, with every colour, size, stroke and ease read from docs/ve/cards/why-ladder/tokens.json. Write one self-contained HTML page (docs/ve/cards/why-ladder/render/ladder.html, with its CSS and JS inline) that draws a scene from a ?scene=N query and, with ?play=1, plays all six in order with the decelerating motion in SPEC.md. Write docs/ve/cards/why-ladder/render/render.py, which uses Python Playwright (already installed; launch chromium headless, file:// only) to load the page per scene at 1080x1920, device scale 1, wait for fonts (document.fonts.ready), and save .scratch/why-ladder/out/scene-{1..6}.png, then a contact sheet .scratch/why-ladder/out/contact.png (six scenes side by side at 1/3 scale). Images and fonts load by relative file paths from the repository root; the page may read tokens.json and piece.json by fetch over file:// only if render.py serves them inline instead (render.py may inject both JSON files into the page before load).",
+  "contract": "Fraunces from assets/fonts/makeyourmindup/ only (SOFT 0, WONK 0, tnum and lnum); no other font, no system font fallback visible. No colour, size, word or ease typed into ladder.html or render.py: all come from tokens.json and piece.json. Flat fills only: no gradients, shadows, blur, glow, rounded pills, badges, emoji or arrows. Never alter, recolour or redraw the screenshots, photos, headshot or wordmark: scale, crop and position only. The wordmark is .scratch/why-ladder/assets/wordmark.png, 170 px wide, bottom-right, on graphite only. One accent-coloured element per scene. Every element inside x90-990, y200-1500 except full-bleed images; on the cover keep key items inside y240-1680. No word overlaps another; nothing is cut off at the frame edge. Do not edit tokens.json, piece.json or SPEC.md; if one is wrong or ambiguous, say so in open_questions.",
+  "acceptance": "python docs/ve/cards/why-ladder/render/render.py\npython -c \"from PIL import Image; import sys; [sys.exit(1) for n in range(1,7) if Image.open(f'.scratch/why-ladder/out/scene-{n}.png').size!=(1080,1920)]\"\npython -c \"import re,sys; t=open('docs/ve/cards/why-ladder/render/ladder.html',encoding='utf-8').read()+open('docs/ve/cards/why-ladder/render/render.py',encoding='utf-8').read(); sys.exit(1 if re.search(r'#[0-9A-Fa-f]{6}\\b|gradient|box-shadow|drop-shadow|blur\\(', t) else 0)\"",
+  "write_allow": [
+    "docs/ve/cards/why-ladder/render/ladder.html",
+    "docs/ve/cards/why-ladder/render/render.py",
+    ".scratch/why-ladder/out/*"
+  ],
+  "read": "docs/ve/cards/why-ladder/SPEC.md, docs/ve/cards/why-ladder/tokens.json, docs/ve/cards/why-ladder/piece.json, assets/fonts/makeyourmindup/Fraunces-Upright-Variable.ttf, assets/fonts/makeyourmindup/Fraunces-Italic-Variable.ttf, .scratch/why-ladder/assets/*",
+  "model": "gpt-6.2-astra",
+  "effort": "high",
+  "max_minutes": 45,
+  "max_calls": 60,
+  "cwd": "C:\\Users\\krish\\dev\\mindmake\\ce-cards\\look-why-ladder-concept"
+}

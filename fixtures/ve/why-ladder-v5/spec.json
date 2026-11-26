@@ -1,0 +1,1277 @@
+{
+  "schema_version": 2,
+  "piece_id": "why-did-pop-songs-get-shorter",
+  "format": "why-ladder-v5",
+  "theme": "makeyourmindup-v5",
+  "brand": {
+    "series": "mind.the.gap",
+    "captions": "house",
+    "title": "Why did pop songs get shorter?",
+    "caption_theme": "house-v5",
+    "body_logo": false
+  },
+  "signature": {
+    "hero": {
+      "device": "v5_evidence",
+      "status": "trial"
+    },
+    "opening_break": "The spoken question rises over the Library cover photograph.",
+    "finish_pack": "house_grain",
+    "sound_palette": "house-v1"
+  },
+  "objects": [
+    {
+      "obj": "title",
+      "device": "v5_title",
+      "params": {
+        "lines": [
+          "Why did pop songs",
+          "get shorter?"
+        ],
+        "image": {
+          "src": "evo-cover.png"
+        }
+      },
+      "persist": {
+        "from_beat": "title",
+        "to_beat": "title"
+      },
+      "meaning": "Why did pop songs get shorter?"
+    },
+    {
+      "obj": "why1",
+      "device": "v5_why",
+      "params": {
+        "lines": [
+          "When does a stream count?"
+        ],
+        "rung": 1,
+        "image": {
+          "src": "evo-specimens.png"
+        }
+      },
+      "persist": {
+        "from_beat": "why1",
+        "to_beat": "why1"
+      },
+      "meaning": "When does a stream count?"
+    },
+    {
+      "obj": "evidence1",
+      "device": "v5_evidence",
+      "params": {
+        "image": {
+          "src": "doc-spotify-streams.png",
+          "crop": {
+            "left": 145,
+            "top": 862,
+            "width": 875,
+            "height": 150,
+            "sourceWidth": 1800,
+            "sourceHeight": 3000
+          }
+        },
+        "note": "A play counts after 30 seconds.",
+        "source": "Spotify for Artists · How your streams are counted",
+        "kind": "document",
+        "rung": 1,
+        "keyLine": 0.24,
+        "strength": "documented",
+        "extract": {
+          "logo": {
+            "left": 87,
+            "top": 17,
+            "width": 249,
+            "height": 70,
+            "sourceWidth": 1800,
+            "sourceHeight": 3000
+          },
+          "lines": [
+            {
+              "left": 157,
+              "top": 896,
+              "width": 423,
+              "height": 41,
+              "sourceWidth": 1800,
+              "sourceHeight": 3000
+            },
+            {
+              "left": 580,
+              "top": 896,
+              "width": 366,
+              "height": 41,
+              "sourceWidth": 1800,
+              "sourceHeight": 3000
+            },
+            {
+              "left": 157,
+              "top": 940,
+              "width": 345,
+              "height": 37,
+              "sourceWidth": 1800,
+              "sourceHeight": 3000
+            }
+          ]
+        }
+      },
+      "persist": {
+        "from_beat": "evidence1",
+        "to_beat": "evidence1"
+      },
+      "meaning": "A play counts after 30 seconds."
+    },
+    {
+      "obj": "rail1",
+      "device": "v5_rail",
+      "params": {
+        "current": 1,
+        "rows": [
+          {
+            "label": "Stream counts",
+            "strength": "documented"
+          },
+          {
+            "label": "Shorter hits",
+            "strength": "documented"
+          },
+          {
+            "label": "Writing incentives",
+            "strength": "inferred"
+          }
+        ]
+      },
+      "persist": {
+        "from_beat": "evidence1",
+        "to_beat": "evidence1"
+      },
+      "meaning": "The three questions so far"
+    },
+    {
+      "obj": "why2",
+      "device": "v5_why",
+      "params": {
+        "lines": [
+          "Did hits actually get shorter?"
+        ],
+        "rung": 2,
+        "image": {
+          "src": "doc-spotify-streams.png"
+        }
+      },
+      "persist": {
+        "from_beat": "why2",
+        "to_beat": "why2"
+      },
+      "meaning": "Did hits actually get shorter?"
+    },
+    {
+      "obj": "evidence2",
+      "device": "v5_evidence",
+      "params": {
+        "image": {
+          "src": "doc-fortune.png",
+          "crop": {
+            "left": 210,
+            "top": 2540,
+            "width": 1450,
+            "height": 160,
+            "sourceWidth": 1800,
+            "sourceHeight": 3000
+          }
+        },
+        "note": "Hot 100 songs lost 20 seconds in five years.",
+        "source": "Chris Morris · Fortune · 17 January 2019",
+        "kind": "document",
+        "rung": 2,
+        "keyLine": 0.24,
+        "strength": "documented"
+      },
+      "persist": {
+        "from_beat": "evidence2",
+        "to_beat": "evidence2"
+      },
+      "meaning": "Hot 100 songs lost 20 seconds in five years."
+    },
+    {
+      "obj": "rail2",
+      "device": "v5_rail",
+      "params": {
+        "current": 2,
+        "rows": [
+          {
+            "label": "Stream counts",
+            "strength": "documented"
+          },
+          {
+            "label": "Shorter hits",
+            "strength": "documented"
+          },
+          {
+            "label": "Writing incentives",
+            "strength": "inferred"
+          }
+        ]
+      },
+      "persist": {
+        "from_beat": "evidence2",
+        "to_beat": "evidence2"
+      },
+      "meaning": "The three questions so far"
+    },
+    {
+      "obj": "why3",
+      "device": "v5_why",
+      "params": {
+        "lines": [
+          "Why might length affect plays?"
+        ],
+        "rung": 3,
+        "image": {
+          "src": "still-timer.png"
+        }
+      },
+      "persist": {
+        "from_beat": "why3",
+        "to_beat": "why3"
+      },
+      "meaning": "Why might length affect plays?"
+    },
+    {
+      "obj": "evidence3",
+      "device": "v5_evidence",
+      "params": {
+        "image": {
+          "src": "doc-fortune.png",
+          "crop": {
+            "left": 210,
+            "top": 2720,
+            "width": 1470,
+            "height": 230,
+            "sourceWidth": 1800,
+            "sourceHeight": 3000
+          }
+        },
+        "note": "More short tracks can fit into an hour.",
+        "source": "Chris Morris · Fortune · 17 January 2019",
+        "kind": "document",
+        "rung": 3,
+        "keyLine": 0.24,
+        "strength": "inferred"
+      },
+      "persist": {
+        "from_beat": "evidence3",
+        "to_beat": "evidence3"
+      },
+      "meaning": "More short tracks can fit into an hour."
+    },
+    {
+      "obj": "rail3",
+      "device": "v5_rail",
+      "params": {
+        "current": 3,
+        "rows": [
+          {
+            "label": "Stream counts",
+            "strength": "documented"
+          },
+          {
+            "label": "Shorter hits",
+            "strength": "documented"
+          },
+          {
+            "label": "Writing incentives",
+            "strength": "inferred"
+          }
+        ]
+      },
+      "persist": {
+        "from_beat": "evidence3",
+        "to_beat": "evidence3"
+      },
+      "meaning": "The three questions so far"
+    },
+    {
+      "obj": "challenger",
+      "device": "v5_challenger",
+      "params": {
+        "image": {
+          "src": "doc-goldfish-claim.png",
+          "crop": {
+            "left": 170,
+            "top": 280,
+            "width": 1460,
+            "height": 240,
+            "sourceWidth": 1800,
+            "sourceHeight": 3000
+          }
+        },
+        "note": "Could attention spans explain it?",
+        "source": "Kevin McSpadden · TIME · 14 May 2015",
+        "kind": "document",
+        "rung": 3,
+        "keyLine": 0.24,
+        "strength": "open",
+        "ending": "parked",
+        "question": "Did the study measure how long people listened to songs?"
+      },
+      "persist": {
+        "from_beat": "challenger",
+        "to_beat": "challenger"
+      },
+      "meaning": "The attention study did not measure song length."
+    },
+    {
+      "obj": "recap",
+      "device": "v5_recap",
+      "params": {
+        "rows": [
+          {
+            "label": "Stream counts",
+            "strength": "documented"
+          },
+          {
+            "label": "Shorter hits",
+            "strength": "documented"
+          },
+          {
+            "label": "Writing incentives",
+            "strength": "inferred"
+          }
+        ],
+        "images": [
+          {
+            "src": "doc-spotify-streams.png",
+            "crop": {
+              "left": 145,
+              "top": 862,
+              "width": 875,
+              "height": 150,
+              "sourceWidth": 1800,
+              "sourceHeight": 3000
+            }
+          },
+          {
+            "src": "doc-fortune.png",
+            "crop": {
+              "left": 210,
+              "top": 2540,
+              "width": 1450,
+              "height": 160,
+              "sourceWidth": 1800,
+              "sourceHeight": 3000
+            }
+          },
+          {
+            "src": "doc-goldfish-claim.png",
+            "crop": {
+              "left": 170,
+              "top": 280,
+              "width": 1460,
+              "height": 240,
+              "sourceWidth": 1800,
+              "sourceHeight": 3000
+            }
+          },
+          {
+            "src": "doc-spotify-streams.png",
+            "crop": {
+              "left": 74,
+              "top": 474,
+              "width": 785,
+              "height": 204,
+              "sourceWidth": 1800,
+              "sourceHeight": 3000
+            }
+          }
+        ]
+      },
+      "persist": {
+        "from_beat": "recap",
+        "to_beat": "recap"
+      },
+      "meaning": "The count and the chart are documented. The incentive is inferred."
+    },
+    {
+      "obj": "landing",
+      "device": "v5_landing",
+      "params": {
+        "insight": "Spotify counts a play after 30 seconds.",
+        "question": "What would tell us why a songwriter cut a verse?"
+      },
+      "persist": {
+        "from_beat": "landing",
+        "to_beat": "landing"
+      },
+      "meaning": "Spotify counts a play after 30 seconds. What would tell us why a songwriter cut a verse?"
+    },
+    {
+      "obj": "close",
+      "device": "v5_close",
+      "params": {
+        "takeaway": "A stream count can tell us when a play qualified."
+      },
+      "persist": {
+        "from_beat": "close",
+        "to_beat": "close"
+      },
+      "meaning": "A stream count can tell us when a play qualified."
+    },
+    {
+      "obj": "threshold",
+      "device": "v5_callout",
+      "params": {
+        "label": "30 seconds",
+        "x": 0.49,
+        "y": 0.35
+      },
+      "meaning": "Locate the counting threshold",
+      "persist": {
+        "from_beat": "evidence1",
+        "to_beat": "evidence1"
+      }
+    },
+    {
+      "obj": "rival-source",
+      "device": "v5_source",
+      "params": {
+        "source": "TIME · 14 May 2015"
+      },
+      "meaning": "Date the rival attention claim",
+      "persist": {
+        "from_beat": "challenger",
+        "to_beat": "challenger"
+      }
+    }
+  ],
+  "assets": [
+    {
+      "id": "doc-spotify-streams",
+      "kind": "document",
+      "origin": "source",
+      "path": "doc-spotify-streams.png",
+      "source_url": "https://support.spotify.com/us/artists/article/how-your-streams-are-counted/",
+      "licence": "Source capture for internal renderer fixture",
+      "sha256": "cfbe9cfbb8a1cc7fa535dae5f1e95693603cc4d7b1f4496e4dd650fb9275a2bd"
+    },
+    {
+      "id": "doc-fortune",
+      "kind": "document",
+      "origin": "source",
+      "path": "doc-fortune.png",
+      "source_url": "https://fortune.com/2019/01/17/shorter-songs-spotify/",
+      "licence": "Source capture for internal renderer fixture",
+      "sha256": "03a9e8dd1dcb9dcf7eb5999a49827c4027a5c62c165633f1fc60b00a1c8f7ad3"
+    },
+    {
+      "id": "doc-goldfish-claim",
+      "kind": "document",
+      "origin": "source",
+      "path": "doc-goldfish-claim.png",
+      "source_url": "https://time.com/3858309/attention-spans-goldfish/",
+      "licence": "Source capture for internal renderer fixture",
+      "sha256": "de0883ed32b4f9e76cb81361cc81eeada68f6601ea640b4456f6b13f16fe7322"
+    },
+    {
+      "id": "evo-cover",
+      "kind": "illustration",
+      "origin": "source",
+      "path": "evo-cover.png",
+      "sha256": "da97bf60792fbd094c0c72487050f24a5abdd3d7387e74ab2e967f181bf4e6e6",
+      "licence": "Approved Library still for local renderer checks"
+    },
+    {
+      "id": "evo-specimens",
+      "kind": "illustration",
+      "origin": "source",
+      "path": "evo-specimens.png",
+      "sha256": "eb74798a5ed14a6900e7b1e86a64c308018284e07145ddd37ea5e12f94baac90",
+      "licence": "Approved Library still for local renderer checks"
+    },
+    {
+      "id": "still-timer",
+      "kind": "illustration",
+      "origin": "source",
+      "path": "still-timer.png",
+      "sha256": "29a1fd0757db50f58e8c5728eb734aada6d55f6e044bfb50c2cc68dd21f900b5",
+      "licence": "Approved Library still for local renderer checks"
+    }
+  ],
+  "audio": {
+    "master": "vo",
+    "bed": {
+      "ledger_id": "no-curves-instrumental",
+      "mode": "episode_bed"
+    },
+    "sfx_kit": "house-v1"
+  },
+  "cuts": {
+    "short": {
+      "aspect": "9:16",
+      "take": "narration.wav",
+      "max_s": 89,
+      "edit": {},
+      "captions": {},
+      "beats": [
+        {
+          "id": "title",
+          "role": "hook",
+          "point": "Why did pop songs get shorter?",
+          "span": {
+            "from_w": 0,
+            "to_w": 5
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "title"
+          ],
+          "events": [
+            {
+              "at_w": 0,
+              "obj": "title",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            }
+          ]
+        },
+        {
+          "id": "why1",
+          "role": "why",
+          "point": "When does a stream count?",
+          "span": {
+            "from_w": 6,
+            "to_w": 10
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "why1"
+          ],
+          "events": [
+            {
+              "at_w": 6,
+              "obj": "why1",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            }
+          ],
+          "why": {
+            "n": 1,
+            "question": "When does a stream count?",
+            "strength": "documented"
+          }
+        },
+        {
+          "id": "evidence1",
+          "role": "anchor",
+          "point": "A play counts after 30 seconds.",
+          "span": {
+            "from_w": 11,
+            "to_w": 16
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "evidence1",
+            "rail1",
+            "threshold"
+          ],
+          "events": [
+            {
+              "at_w": 11,
+              "obj": "evidence1",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            },
+            {
+              "at_w": 13,
+              "obj": "rail1",
+              "verb": "enter",
+              "to_state": "show the completed rungs",
+              "silent": true
+            },
+            {
+              "at_w": 14,
+              "obj": "threshold",
+              "verb": "enter",
+              "to_state": "Locate the counting threshold",
+              "silent": true
+            }
+          ],
+          "override_reason": "The margin bar identifies the number in the original source."
+        },
+        {
+          "id": "why2",
+          "role": "why",
+          "point": "Did hits actually get shorter?",
+          "span": {
+            "from_w": 17,
+            "to_w": 21
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "why2"
+          ],
+          "events": [
+            {
+              "at_w": 17,
+              "obj": "why2",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            }
+          ],
+          "why": {
+            "n": 2,
+            "question": "Did hits actually get shorter?",
+            "strength": "documented"
+          }
+        },
+        {
+          "id": "evidence2",
+          "role": "anchor",
+          "point": "Hot 100 songs lost 20 seconds in five years.",
+          "span": {
+            "from_w": 22,
+            "to_w": 30
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "evidence2",
+            "rail2"
+          ],
+          "events": [
+            {
+              "at_w": 22,
+              "obj": "evidence2",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            },
+            {
+              "at_w": 24,
+              "obj": "rail2",
+              "verb": "enter",
+              "to_state": "show the completed rungs",
+              "silent": true
+            }
+          ],
+          "override_reason": "The margin bar identifies the number in the original source."
+        },
+        {
+          "id": "why3",
+          "role": "why",
+          "point": "Why might length affect plays?",
+          "span": {
+            "from_w": 31,
+            "to_w": 35
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "why3"
+          ],
+          "events": [
+            {
+              "at_w": 31,
+              "obj": "why3",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            }
+          ],
+          "why": {
+            "n": 3,
+            "question": "Why might length affect plays?",
+            "strength": "inferred"
+          }
+        },
+        {
+          "id": "evidence3",
+          "role": "anchor",
+          "point": "More short tracks can fit into an hour.",
+          "span": {
+            "from_w": 36,
+            "to_w": 43
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "evidence3",
+            "rail3"
+          ],
+          "events": [
+            {
+              "at_w": 36,
+              "obj": "evidence3",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            },
+            {
+              "at_w": 38,
+              "obj": "rail3",
+              "verb": "enter",
+              "to_state": "show the completed rungs",
+              "silent": true
+            }
+          ],
+          "override_reason": "The margin bar identifies the number in the original source."
+        },
+        {
+          "id": "challenger",
+          "role": "bridge",
+          "point": "The attention study did not measure song length.",
+          "span": {
+            "from_w": 44,
+            "to_w": 51
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "challenger",
+            "rival-source"
+          ],
+          "events": [
+            {
+              "at_w": 44,
+              "obj": "challenger",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            },
+            {
+              "at_w": 47,
+              "obj": "rival-source",
+              "verb": "enter",
+              "to_state": "Date the rival attention claim",
+              "silent": true
+            }
+          ]
+        },
+        {
+          "id": "recap",
+          "role": "bridge",
+          "point": "The count and the chart are documented. The incentive is inferred.",
+          "span": {
+            "from_w": 52,
+            "to_w": 62
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "recap"
+          ],
+          "events": [
+            {
+              "at_w": 52,
+              "obj": "recap",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            }
+          ],
+          "override_reason": "The three rows enter three frames apart within the recap device."
+        },
+        {
+          "id": "landing",
+          "role": "landing",
+          "point": "Spotify counts a play after 30 seconds. What would tell us why a songwriter cut a verse?",
+          "span": {
+            "from_w": 63,
+            "to_w": 79
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "landing"
+          ],
+          "events": [
+            {
+              "at_w": 63,
+              "obj": "landing",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            }
+          ],
+          "landing": {
+            "shows": "Spotify counts a play after 30 seconds.",
+            "open_question": "What would tell us why a songwriter cut a verse?"
+          },
+          "override_reason": "The landing restates the threshold the source card established."
+        },
+        {
+          "id": "close",
+          "role": "payoff",
+          "point": "A stream count can tell us when a play qualified.",
+          "span": {
+            "from_w": 80,
+            "to_w": 89
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "close"
+          ],
+          "events": [
+            {
+              "at_w": 80,
+              "obj": "close",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            }
+          ],
+          "override_reason": "Hold the takeaway long enough to read the follow line."
+        }
+      ]
+    },
+    "wide": {
+      "aspect": "16:9",
+      "take": "narration.wav",
+      "max_s": 89,
+      "edit": {},
+      "captions": {},
+      "beats": [
+        {
+          "id": "title",
+          "role": "hook",
+          "point": "Why did pop songs get shorter?",
+          "span": {
+            "from_w": 0,
+            "to_w": 5
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "title"
+          ],
+          "events": [
+            {
+              "at_w": 0,
+              "obj": "title",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            }
+          ]
+        },
+        {
+          "id": "why1",
+          "role": "why",
+          "point": "When does a stream count?",
+          "span": {
+            "from_w": 6,
+            "to_w": 10
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "why1"
+          ],
+          "events": [
+            {
+              "at_w": 6,
+              "obj": "why1",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            }
+          ],
+          "why": {
+            "n": 1,
+            "question": "When does a stream count?",
+            "strength": "documented"
+          }
+        },
+        {
+          "id": "evidence1",
+          "role": "anchor",
+          "point": "A play counts after 30 seconds.",
+          "span": {
+            "from_w": 11,
+            "to_w": 16
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "evidence1",
+            "rail1",
+            "threshold"
+          ],
+          "events": [
+            {
+              "at_w": 11,
+              "obj": "evidence1",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            },
+            {
+              "at_w": 13,
+              "obj": "rail1",
+              "verb": "enter",
+              "to_state": "show the completed rungs",
+              "silent": true
+            },
+            {
+              "at_w": 14,
+              "obj": "threshold",
+              "verb": "enter",
+              "to_state": "Locate the counting threshold",
+              "silent": true
+            }
+          ],
+          "override_reason": "The margin bar identifies the number in the original source."
+        },
+        {
+          "id": "why2",
+          "role": "why",
+          "point": "Did hits actually get shorter?",
+          "span": {
+            "from_w": 17,
+            "to_w": 21
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "why2"
+          ],
+          "events": [
+            {
+              "at_w": 17,
+              "obj": "why2",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            }
+          ],
+          "why": {
+            "n": 2,
+            "question": "Did hits actually get shorter?",
+            "strength": "documented"
+          }
+        },
+        {
+          "id": "evidence2",
+          "role": "anchor",
+          "point": "Hot 100 songs lost 20 seconds in five years.",
+          "span": {
+            "from_w": 22,
+            "to_w": 30
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "evidence2",
+            "rail2"
+          ],
+          "events": [
+            {
+              "at_w": 22,
+              "obj": "evidence2",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            },
+            {
+              "at_w": 24,
+              "obj": "rail2",
+              "verb": "enter",
+              "to_state": "show the completed rungs",
+              "silent": true
+            }
+          ],
+          "override_reason": "The margin bar identifies the number in the original source."
+        },
+        {
+          "id": "why3",
+          "role": "why",
+          "point": "Why might length affect plays?",
+          "span": {
+            "from_w": 31,
+            "to_w": 35
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "why3"
+          ],
+          "events": [
+            {
+              "at_w": 31,
+              "obj": "why3",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            }
+          ],
+          "why": {
+            "n": 3,
+            "question": "Why might length affect plays?",
+            "strength": "inferred"
+          }
+        },
+        {
+          "id": "evidence3",
+          "role": "anchor",
+          "point": "More short tracks can fit into an hour.",
+          "span": {
+            "from_w": 36,
+            "to_w": 43
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "evidence3",
+            "rail3"
+          ],
+          "events": [
+            {
+              "at_w": 36,
+              "obj": "evidence3",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            },
+            {
+              "at_w": 38,
+              "obj": "rail3",
+              "verb": "enter",
+              "to_state": "show the completed rungs",
+              "silent": true
+            }
+          ],
+          "override_reason": "The margin bar identifies the number in the original source."
+        },
+        {
+          "id": "challenger",
+          "role": "bridge",
+          "point": "The attention study did not measure song length.",
+          "span": {
+            "from_w": 44,
+            "to_w": 51
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "challenger",
+            "rival-source"
+          ],
+          "events": [
+            {
+              "at_w": 44,
+              "obj": "challenger",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            },
+            {
+              "at_w": 47,
+              "obj": "rival-source",
+              "verb": "enter",
+              "to_state": "Date the rival attention claim",
+              "silent": true
+            }
+          ]
+        },
+        {
+          "id": "recap",
+          "role": "bridge",
+          "point": "The count and the chart are documented. The incentive is inferred.",
+          "span": {
+            "from_w": 52,
+            "to_w": 62
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "recap"
+          ],
+          "events": [
+            {
+              "at_w": 52,
+              "obj": "recap",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            }
+          ],
+          "override_reason": "The three rows enter three frames apart within the recap device."
+        },
+        {
+          "id": "landing",
+          "role": "landing",
+          "point": "Spotify counts a play after 30 seconds. What would tell us why a songwriter cut a verse?",
+          "span": {
+            "from_w": 63,
+            "to_w": 79
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "landing"
+          ],
+          "events": [
+            {
+              "at_w": 63,
+              "obj": "landing",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            }
+          ],
+          "landing": {
+            "shows": "Spotify counts a play after 30 seconds.",
+            "open_question": "What would tell us why a songwriter cut a verse?"
+          },
+          "override_reason": "The landing restates the threshold the source card established."
+        },
+        {
+          "id": "close",
+          "role": "payoff",
+          "point": "A stream count can tell us when a play qualified.",
+          "span": {
+            "from_w": 80,
+            "to_w": 89
+          },
+          "viewer_task": "locate_story",
+          "layout": "STAGE",
+          "face": "off",
+          "plate": {
+            "source": "none"
+          },
+          "uses": [
+            "close"
+          ],
+          "events": [
+            {
+              "at_w": 80,
+              "obj": "close",
+              "verb": "enter",
+              "to_state": "show the source and question",
+              "silent": true
+            }
+          ],
+          "override_reason": "Hold the takeaway long enough to read the follow line."
+        }
+      ]
+    }
+  },
+  "title_line": "Why did pop songs get shorter?",
+  "title_moment": {
+    "title": "Why did pop songs get shorter?",
+    "line": "Why did pop songs get shorter?",
+    "spans": {
+      "short": {
+        "from_w": 0,
+        "to_w": 5
+      },
+      "wide": {
+        "from_w": 0,
+        "to_w": 5
+      }
+    }
+  },
+  "style": {
+    "recipe": "why-ladder-v5",
+    "experiment": {
+      "name": "Why ladder v5",
+      "reason": "Exercise the unsigned format and recipe with real source captures."
+    },
+    "layout": {
+      "mode": "stage",
+      "reason": "Each sourced card fills the stage in both cuts."
+    }
+  }
+}

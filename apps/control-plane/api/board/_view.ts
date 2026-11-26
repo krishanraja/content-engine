@@ -23,7 +23,7 @@ import { dayComments, dayPieces, dayPosted, dayYes, ideaLines, materialPress, of
 import { HELD_CHANGED, HELD_TITLE, approvedLabel, approvedWhen, asSentence, cutSoWhat, dayShort, dayWords, gatePieces, goes, optionSha, readApprovals, type Approval, type Held } from './_gate.js'
 import { attachOverlay, readOverlay, withWriteBack, workByScope, type Overlay, type ViewMaterial, type ViewSession } from './_writeBack.js'
 import { lockRead, newestScripts, pieceDecisions, scriptSection, scriptsChanged, type FiledScript, type LockState, type PieceDecisions, type ScriptsState } from './_decisions.js'
-import { dayStyle, motionBank, type DayStyle, type MotionModule } from './_style.js'
+import { dayStyle, motionBank, retiredStyle, type DayStyle, type MotionModule } from './_style.js'
 import { liveByDay, liveLine, livePress, postsFor, publishedNow, todayNY, type LivePost } from './_itsLive.js'
 import { ownerDriveToken, weekPosts, type DrivePost, type PostAsset } from './_drivePosts.js'
 import { dayManifest, readDrafts, type Draft, type ViewManifest } from './_manifest.js'
@@ -1396,7 +1396,7 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
     motion = motionBank(styles)
     const f = styles ? styles.formats : null
     const list = (xs: unknown) => (Array.isArray(xs) ? xs : []).filter(isObj).map(x => ({ id: String(x.id), name: String(x.name || x.id), pitch: String(x.pitch || ''), status: String(x.status || '') }))
-    formats = { script: list(f?.script), production: list(f?.production) }
+    formats = { script: list(f?.script), production: list(f?.production).filter(x => !retiredStyle('format_look', x.id)) }
   } catch { /* the look step then offers the recommendation by id only */ }
   const noted = notedRows as Array<{ id: string; name: string; why_like: string | null; drive_created_at: string | null }>
   const inspiration = {

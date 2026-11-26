@@ -602,9 +602,49 @@ def lints(spec: dict, spec_path: Path | None = None, *, today: str | None = None
     return check(spec, directory)
 
 
+def ladder_lints(spec: dict, cut_id: str) -> list[str]:
+    """The v5 stage carries one full-frame card with annotations in front of it."""
+    recipe = load_json(CONFIG / 'recipes' / 'why-ladder-v5.json')
+    objects = {obj['obj']: obj for obj in spec['objects']}
+    sources = {a['path'] for a in spec['assets'] if a['origin'] != 'generated'}
+    overlays = {'v5_callout', 'v5_rail', 'v5_source'}
+    stack = []
+    out = []
+    for i, beat in enumerate(spec['cuts'][cut_id]['beats']):
+        where = f'grammar.ladder cuts.{cut_id}.beats.{i}'
+        layers = [objects.get(key, {}) for key in beat['uses']]
+        devices = [layer.get('device') for layer in layers]
+        if not devices or devices[0] in overlays or any(d not in overlays for d in devices[1:]):
+            out.append(f'{where}: put one full-frame card first, followed only by annotations')
+            continue
+        card = layers[0]
+        stack.append(card.get('device'))
+        if not card:
+            out.append(f'{where}: unknown card object')
+            continue
+        params = card['params']
+        if card['device'] == 'v5_title' and ' '.join(params['lines']) != spec.get('title_moment', {}).get('title'):
+            out.append(f'{where}: title lines must spell the spoken title')
+        images = params.get('images', []) if card['device'] == 'v5_recap' else []
+        if card['device'] in ('v5_evidence', 'v5_challenger'):
+            images = [params['image']]
+        if any(img['src'] not in sources for img in images):
+            out.append(f'{where}: evidence needs the image of a named, non-generated source asset')
+    required = [step for step in recipe['sequence'] if isinstance(step, str)]
+    complete = [step if isinstance(step, str) else step['optional'] for step in recipe['sequence']]
+    if not spec['cuts'][cut_id].get('excerpt') and stack not in (required, complete):
+        out.append(f'grammar.ladder cuts.{cut_id}: use the v5 recipe order, with or without the challenger')
+    return out
+
+
 def check(spec: dict, directory: Path | None = None) -> list[str]:
     out = generated_lints(spec)
     for cut_id, cut in spec['cuts'].items():
+        if spec.get('format') == 'why-ladder-v5':
+            out += ladder_lints(spec, cut_id)
+            out += title_timing_lints(spec, cut_id, directory)
+            out += caption_zone_lints(spec, cut_id)
+            continue
         mode = staging(spec, cut_id, directory)
         found = staging_lints(spec, cut_id, mode)
         out += found

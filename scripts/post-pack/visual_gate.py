@@ -70,6 +70,9 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / 'scripts'))
+from covers import cover_outputs
+
 REGISTRY = ROOT / 'config' / 'logo-registry.json'
 VOLUME = re.compile(r"\b(so many|every few (?:weeks|months)|keeps? growing|more than a dozen|a flood of|pile[sd]? up|one after another|"
                     r"launch(?:es|ed)? (?:every|each)|dozens of|fourteen|\d{2,} (?:models|versions|releases|launches))\b", re.I)
@@ -212,6 +215,8 @@ def not_receipt(r, post=None):
     a real proof from one of the piece's sources, the wordmark and the logos, and never his face. A weekly
     series piece's covers and thumbnails wear a series skin, and nothing else wears one (Krish, 2026-11-05: "keep
     all of them and rotate them all at will over the coming weeks", and "Skin the covers too"; scripts/pages/skins)."""
+    if r.get('template') == 'library':
+        return not_library(r)
     if r.get('template') != 'receipt':
         return 'is not in the Receipt (scripts/pages/receipt.py): draw it again with "proof" in the cover facts'
     proof = r.get('proof') or {}
@@ -220,6 +225,24 @@ def not_receipt(r, post=None):
     if r.get('portrait'):
         return 'carries a face: the Receipt never does'
     return not_skinned(r, post)
+
+
+def not_library(r):
+    """Why a Library record (scripts/library/make_piece.py) is not a cover or thumbnail filled from an approved Library
+    template, or None. The Library replaced the skins and the old Receipt drawer for production (config/retired-styles.json,
+    the v5_feed skin and the receipt cover path), so it wears no skin; it still names the piece's checked proof and never
+    carries his face."""
+    items = [r.get('library_item')] + [f.get('library_item') for f in r.get('files') or [] if isinstance(f, dict)]
+    if not any(isinstance(i, str) and i for i in items) or not r.get('pack'):
+        return 'names no Library template or pack: fill it again with scripts/library/make_piece.py'
+    proof = r.get('proof') or {}
+    if not any(proof.get(k) for k in ('image', 'pdf', 'page', 'html')):
+        return 'names no proof: give the cover facts a "proof" from one of the checked sources of the piece and fill it again'
+    if r.get('portrait'):
+        return 'carries a face: the Receipt never does'
+    if r.get('skin') is not None:
+        return f'says it wears the retired "{r["skin"]}" skin: a Library template wears none'
+    return None
 
 
 def not_skinned(r, post=None):
@@ -265,6 +288,15 @@ def before_rotation(date, first_week):
         return dt.date.fromisoformat(str(date)[:10]) < first_week
     except (TypeError, ValueError):
         return False
+
+
+def image_led_problems(source, fmt, logos=()):
+    path = source.with_name('covers.json')
+    try:
+        cover_outputs.validate_file(source, fmt, cover_outputs.receipt(path), logos)
+        return []
+    except (ValueError, OSError, KeyError, TypeError) as exc:
+        return [str(exc)]
 
 
 def problems(post, planned, body, base, reg=None):
@@ -322,6 +354,10 @@ def problems(post, planned, body, base, reg=None):
     worn = {}   # the series skin each record says it wears, to hold the piece to one
     for c in [p for p in planned if p.get('kind') in COVER_RECEIPTS]:
         src = Path(str(c.get('source', '')))
+        if src.with_name('covers.json').is_file():
+            fmt = {'substack-cover': 'substack', 'vertical-cover': 'vertical'}.get(c['kind'])
+            found += image_led_problems(src, fmt, c.get('logos') or []) if fmt else [f'Unexpected image-led cover kind {c["kind"]}']
+            continue
         what, name = COVER_RECEIPTS[c['kind']]
         receipt = src.with_name(name)
         if not receipt.is_file():
@@ -346,6 +382,9 @@ def problems(post, planned, body, base, reg=None):
     for t in thumbs:
         src = Path(str(t.get('source', '')))
         shape = t.get('shape', '')
+        if src.with_name('covers.json').is_file():
+            found += image_led_problems(src, 'youtube' if shape == 'wide' else 'tall', t.get('logos') or [])
+            continue
         receipt = src.with_name('thumbs.json')
         if not receipt.is_file():
             found.append(f'the {shape} thumbnail {src.name} was not drawn by the house drawer (no thumbs.json beside it): draw it with '
@@ -575,26 +614,29 @@ def self_test():
         (t / 'thumbs' / 'thumb-wide-1280x720.jpg').write_bytes(wide_jpg)
         check('the tall picture packed as the wide thumbnail fails',
               any('is the drawer\'s tall thumbnail, packed as the wide one' in x for x in problems({}, full + [thumbs[1] | {'shape': 'wide'}], body, t, reg)), True)
-        # The series skins (Krish, 2026-11-05: "keep all of them and rotate them all at will over the coming weeks").
+        # The series skins (Krish, 2026-11-05: "keep all of them and rotate them all at will over the coming weeks"). The v5
+        # lock retired the nine (config/retired-styles.json): the archive drawer knows one, so a record in any of the nine
+        # fails, and with nothing to move on to, a piece either wears it or wears the plain series Receipt.
         order, _, _ = series_skins()
+        retired = 'neon'
+        assert retired not in order
         series = {'series_look': {'series': True, 'owner': 'follow.the.money'}}
         monday, early, tuesday = ({'subchannel': 'follow.the.money', 'date': d} for d in ('2026-11-09', '2026-11-02', '2026-11-10'))
-        moved_t = {'skin': order[2], 'skin_week': order[1], 'skin_tried': [{'skin': order[1], 'shape': 'tall', 'why': 'touching the words'}]}
         none_t = {'skin': None, 'skin_week': order[0], 'skin_tried': [{'skin': k, 'shape': 'wide', 'why': 'touching the words'} for k in order]}
         for label, post_, record, want in [
                 ('a weekly series piece\'s thumbnails in the week\'s skin pass', {}, series | {'skin': order[0]}, None),
                 ('a weekly series piece\'s thumbnails in no skin fail', {}, series | {'skin': None}, 'wears no series skin'),
                 ('a weekly series piece\'s thumbnails in an unknown skin fail', {}, series | {'skin': 'glitter'}, 'wears no series skin'),
                 ('a weekly series piece\'s thumbnails drawn before the skins fail, asking for a redraw', {}, series, 'redraw it with scripts/pages/build.py'),
-                ('anything that is not a weekly series piece in a skin fails', {}, {'series_look': {'series': False}, 'skin': order[1]}, 'is not a weekly series piece'),
+                ('anything that is not a weekly series piece in a skin fails', {}, {'series_look': {'series': False}, 'skin': order[0]}, 'is not a weekly series piece'),
                 ('anything that is not a weekly series piece, in no skin, passes', {}, {'series_look': {'series': False}, 'skin': None}, None),
                 # Records from before the drawer wrote series_look: the piece itself says whether they are a series piece's.
                 ('an old thumbs.json (no series_look) of a series piece in the week of 9 Nov fails, asking for a redraw', monday, {}, 'drawn before the series skins'),
                 ('an old thumbs.json (no series_look) of a Tuesday asset passes', tuesday, {}, None),
                 ('an old thumbs.json of a series piece dated before 9 Nov passes: the rotation starts that week', early, {}, None),
                 ('a series piece dated before 9 Nov passes in no skin', early, series | {'skin': None}, None),
-                ('a series piece dated before 9 Nov passes in a skin it names', early, series | {'skin': order[3]}, None),
-                ('a weekly series piece\'s thumbnails in the skin they moved on to pass', {}, series | moved_t, None),
+                ('a series piece dated before 9 Nov passes in a skin it names', early, series | {'skin': order[0]}, None),
+                ('a weekly series piece\'s thumbnails in a retired weekly skin fail', {}, series | {'skin': retired}, 'wears no series skin'),
                 ('thumbnails that tried all nine skins and wore the plain series Receipt pass', {}, series | none_t, None),
         ]:
             (t / 'thumbs' / 'thumbs.json').write_text(json.dumps(thumbs_receipt | record))
@@ -603,8 +645,6 @@ def self_test():
         # The covers wear it too (Krish, 2026-11-05: "Skin the covers too"), and a piece may have moved on to the next skin
         # when its week's could not be drawn, or to the plain series Receipt when none of the nine could ("Yeah just move
         # on automatically").
-        moved = {'skin': order[1], 'skin_week': order[0], 'skin_tried': [{'skin': order[0], 'shape': 'square', 'why': 'touching the logos'}],
-                 'skin_note': f'{order[0]} could not be drawn on the square cover without touching the logos; wore {order[1]}, next in the rotation'}
         none_drew = {'skin': None, 'skin_week': order[0], 'skin_tried': [{'skin': k, 'shape': 'cover', 'why': 'touching the words'} for k in order],
                      'skin_note': 'none of the nine series skins could be drawn on every shape (...); wore the plain series Receipt'}
         for label, post_, record, want in [
@@ -613,9 +653,9 @@ def self_test():
                 ('a weekly series piece\'s cover from 9 Nov drawn before the cover skins (no "skin") fails, asking for a --cover redraw', monday,
                  series | {'shape': 'cover'}, 'redraw it with scripts/pages/build.py --cover'),
                 ('a weekly series piece\'s cover dated before 9 Nov passes in no skin', early, series | {'shape': 'cover', 'skin': None}, None),
-                ('a weekly series piece\'s cover in the skin it moved on to passes', monday, series | {'shape': 'cover'} | moved, None),
+                ('a weekly series piece\'s cover in a retired weekly skin fails', monday, series | {'shape': 'cover', 'skin': retired}, 'cover but wears no series skin'),
                 ('a cover that tried all nine skins and wore the plain series Receipt passes', monday, series | {'shape': 'cover'} | none_drew, None),
-                ('a cover that tried some skins and wore none fails', monday, series | {'shape': 'cover'} | none_drew | {'skin_tried': none_drew['skin_tried'][:3]},
+                ('a cover that tried no skins and wore none fails', monday, series | {'shape': 'cover'} | none_drew | {'skin_tried': []},
                  'cover but wears no series skin'),
                 ('an off-day cover in a skin fails', tuesday, {'series_look': {'series': False}, 'shape': 'cover', 'skin': order[0]}, 'is not a weekly series piece'),
         ]:
@@ -623,9 +663,9 @@ def self_test():
             found = [x for x in problems(post_, full, body, t, reg) if 'the cover' in x]
             check(label, (not found) if want is None else any(want in x for x in found), True)
         # One piece, one skin: covers and thumbnails that wear different ones fail; the same one passes.
-        (t / 'thumbs' / 'thumbs.json').write_text(json.dumps(thumbs_receipt | series | moved))
-        for label, skin, want in [('covers and thumbnails in the same skin pass', order[1], False),
-                                  ('covers and thumbnails in different skins fail', order[0], True)]:
+        (t / 'thumbs' / 'thumbs.json').write_text(json.dumps(thumbs_receipt | series | {'skin': order[0]}))
+        for label, skin, want in [('covers and thumbnails in the same skin pass', order[0], False),
+                                  ('covers and thumbnails in different skins fail', retired, True)]:
             (t / 'cover.json').write_text(json.dumps(good_receipt | series | {'shape': 'cover', 'skin': skin}))
             check(label, any('wear different series skins' in x for x in problems(monday, full + thumbs, body, t, reg)), want)
         (t / 'thumbs' / 'thumbs.json').write_text(json.dumps(thumbs_receipt))

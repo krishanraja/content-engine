@@ -39,21 +39,18 @@ class PaletteRulesTest(unittest.TestCase):
 class SpecTest(unittest.TestCase):
     def test_a_spec_names_a_palette_on_file_or_none(self):
         self.assertEqual(palettes.spec_problems({'style': {}}), [])
-        self.assertEqual(palettes.spec_problems({'style': {'palette': 'riso-pop'}}), [])
+        self.assertIn('retired', palettes.spec_problems({'style': {'palette': 'riso-pop'}})[0])
         self.assertTrue(palettes.spec_problems({'style': {'palette': 'neon-rainbow'}})[0].startswith('palette.unknown'))
 
-    def test_the_cut_is_drawn_in_the_palette_and_his_marks_keep_the_house_colours(self):
-        spec = load_json(FIXTURE / 'spec.json')
+    def test_compile_refuses_the_retired_palette(self):
+        spec = dict(load_json(FIXTURE / 'spec.json'), format='face-with-proof')
         cut_id = next(iter(spec['cuts']))
         house = compile_cut(spec, cut_id, timed_words(), FIXTURE)
         self.assertNotIn('brandTokens', house, 'no palette, no second set')
         styled = copy.deepcopy(spec)
         styled.setdefault('style', {})['palette'] = 'riso-pop'
-        props = compile_cut(styled, cut_id, timed_words(), FIXTURE)
-        riso = palettes.load()['riso-pop']['colours']
-        self.assertEqual((props['tokens']['ink'], props['tokens']['mint']), (riso['ink'], riso['mint']))
-        self.assertEqual(props['brandTokens'], house['tokens'], 'the mark tile, pill, call card and ending keep the house colours')
-        self.assertEqual(props['tokens']['channel'], house['tokens']['channel'])
+        with self.assertRaisesRegex(ValueError, 'riso-pop.*retired'):
+            compile_cut(styled, cut_id, timed_words(), FIXTURE)
 
 
 class TheLogoOnlyOnTheTitleFrameAndTheClose(unittest.TestCase):
@@ -61,7 +58,7 @@ class TheLogoOnlyOnTheTitleFrameAndTheClose(unittest.TestCase):
     logo_rule). From its date compile tells the renderer the body carries no logo; before it the props are unchanged."""
 
     def compiled(self, day):
-        spec = copy.deepcopy(load_json(FIXTURE / 'spec.json'))
+        spec = dict(copy.deepcopy(load_json(FIXTURE / 'spec.json')), format='face-with-proof')
         spec['publish_day'] = day
         return {cut: compile_cut(spec, cut, timed_words(), FIXTURE) for cut in spec['cuts']}
 
@@ -73,7 +70,7 @@ class TheLogoOnlyOnTheTitleFrameAndTheClose(unittest.TestCase):
                     self.assertIs(props.get('bodyLogo'), False)
 
     def test_an_undated_spec_carries_none_either(self):
-        spec = copy.deepcopy(load_json(FIXTURE / 'spec.json'))
+        spec = dict(copy.deepcopy(load_json(FIXTURE / 'spec.json')), format='face-with-proof')
         spec.pop('publish_day', None)
         for cut in spec['cuts']:
             with self.subTest(cut=cut):

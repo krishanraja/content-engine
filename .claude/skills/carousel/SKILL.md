@@ -6,6 +6,14 @@ model: opus
 
 # Make a carousel
 
+**Every carousel is filled from an approved Library carousel set**, never drawn freehand: `python3
+scripts/library/make_piece.py docs/plans/<plan> --set <set>` (sets: piece, good-news, simple-advice, how-to, explainer,
+quiz, meme; `docs/ve/cards/library/library.json`, `carousel_sets`). Read `docs/ve/cards/library/ART-DIRECTION.md`
+first, then `LIBRARY-GUIDE.md`, `PRODUCTION-PLAYBOOK.md` and `CAROUSEL-FORMAT.md`. The piece supplies every slot's
+words in its cover facts (`"library": {"<template id>": {"<slot>": "words"}}`) and its pictures (`"images"`, made per
+piece as IMAGERY.md says); make_piece refuses a slot the piece did not fill, and a template whose data device still
+carries the Library's sample numbers. The floor below still applies to what it renders.
+
 Krish, 2026-11-17: "we essentially need one skill the system uses by guarantee to meet minimum standards but can still
 use its creative freedom to improve upon and experiment with." So this skill has two halves. **The floor** is every
 lesson a past carousel paid for; each item names the check that enforces it, and no carousel ships with one unmet.
@@ -30,27 +38,11 @@ light speed and needs to be able to follow the story within 10 seconds. This can
 5. Off-day carousels give real utility at the level of his Instagram inspo sheet: a scroll-stopping headline and cover,
    cards the reader can use the same day (`aim: utility`, the ideas gate). Copy, branding and imagery are always ours.
 
-**Imagery: never bland**
+**Imagery and cover (checks 6 to 10)**
 
-6. Every card shows its point as a picture of real size (at least 12% of the card), never type on plain ground; the
-   page is used centrally, no empty band over 12%, nothing outside the safe box. `carousel_check.py --cards`.
-7. An original visual idea per story, real-world texture over a headline on a square. Real logos only for companies
-   the card names, monochrome or on a light tile when dark. Real people in a generated picture recognisable, from
-   their real photos as references; a generated robot is only the house felt robot (`cover_scene.py check`).
-8. Body type at least 35 px of ink on the 1080 card. `carousel_check.py --cards`.
-
-**Cover: grabs the thumb** (15 Nov: "the front cover card does not look like a front cover")
-
-9. The house look (Krish, 18 Nov; `docs/CAROUSEL-STANDARD.md`, "The house carousel look"): the cover as the Git and
-   homework covers (a photoreal scene in the top 60%, the real company wordmark, a huge two-line Anton headline in cream
-   then mint, one subline), every body card image-led as the Erdős deck's, real-world images before generated ones.
-   The cover is sensational: a real person in an absurd, funny moment, a real screenshot, or a photo-grade generated
-   image (Krish, 18 Nov). Body type: mono kicker, mint rule, Archivo Black with the key figure in mint.
-   Card 1 is a full-bleed scene of one funny, specific moment that carries the idea at a glance; never a headline on
-   plain ground, a logo row or a chart. Its headline at least 1.3 times the body cards' and its layout different in
-   two of three ways. `carousel_check.py --cards`.
-10. Card 1 says in plain words what happened and why it matters; nothing cryptic. Before showing Krish, look at it at
-    phone size beside the last approved covers: if it would not stop a thumb, it is not ready.
+Read `.agents/skills/carousel/references/imagery-and-cover.md` before sourcing pictures or drawing card 1.
+Apply its safe box, picture and type measurements to every card with `carousel_check.py --cards`. Compare
+the cover with the last approved covers at phone size before showing Krish.
 
 **Brand and close**
 
@@ -81,7 +73,8 @@ experiment with the floor itself; if an experiment needs a floor line broken, as
 3. Pictures for every card, real-world first: a real photo, screen or document the story names; else one photoreal
    scene per card on Higgsfield (`gpt_image_2_6`, 4:3, about 0.25 credits each, the house robot's photos as references
    when it appears; say the cost first). The company's official wordmark from Brandfetch when the story names one.
-4. Write the Codex card (`ve card`, kind `carousel`, with `references`, `date`, `deck`), the scenes and wordmarks copied
-   into its worktree and its goal carrying the house look's exact layout, and dispatch it.
+4. Fill the set: `python3 scripts/library/make_piece.py docs/plans/<plan> --set <set> --out <work folder>` with the
+   deck's words and the pictures in the cover facts' `"library"` block. It writes `carousel/slide-NN.png` and
+   `post-pack-files.json`. Codex makes only the per-piece pictures the slots take (a `ve card` for the plates).
 5. Verify: `carousel_check.py --cards`, the judges, a full-size and phone-size look. Fix and recheck the whole arc.
 6. File through `send.py` to `3 Posts`, report on the board, send Krish the cards, and record his words.

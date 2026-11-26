@@ -362,7 +362,7 @@ export const TreatmentStyleV1Schema = z.object({
 export type TreatmentStyleV1 = z.infer<typeof TreatmentStyleV1Schema>
 
 export const BrandWordmarkAssetV1Schema = z.object({
-  source_path: z.string().regex(/^src\/assets\/[a-zA-Z0-9._/-]+\.(?:png|svg)$/).refine((value) => !value.split('/').includes('..'), { message: 'brand asset path cannot traverse directories' }),
+  source_path: z.string().regex(/^(?:src\/assets\/[a-zA-Z0-9._/-]+\.(?:png|svg)|assets\/brand\/makeyourmindup\/v5\/[a-z0-9-]+\.svg)$/).refine((value) => !value.split('/').includes('..'), { message: 'brand asset path cannot traverse directories' }),
   sha256: z.string().regex(/^[a-f0-9]{64}$/),
   pixel_width: z.number().positive(),
   pixel_height: z.number().positive(),
@@ -472,6 +472,14 @@ const HouseChannelCopyV1Schema = z.object({
  *  mock's own geometry; this holds what a job must pin: the colours, the
  *  copy each channel carries and the fixed lines around the why-ladder. */
 export const BrandHouseStyleV1Schema = z.object({
+  v5: z.object({
+    ink: HexColourSchema, cream: HexColourSchema, mint: HexColourSchema,
+    climb: z.array(HexColourSchema).length(3),
+    grain_on_ink: z.literal(0.07), grain_on_colour: z.literal(0.12),
+    fraunces_axes: z.object({ SOFT: z.literal(50), WONK: z.literal(0) }),
+    ease: z.literal('cubic-bezier(0.22, 1, 0.36, 1)'), fps: z.literal(25),
+    entry_frames: z.tuple([z.literal(6), z.literal(12)]),
+  }).optional(),
   tokens: z.object({
     ink: HexColourSchema,
     ink_deep: HexColourSchema,
@@ -560,7 +568,7 @@ export const BrandPublicationLockupV1Schema = z.object({
   // The primary lockup, set on ink in the ending band (house style only).
   stacked: BrandWordmarkAssetV1Schema.optional(),
   channel_label: z.object({
-    typeface: z.literal('IBM Plex Mono'),
+    typeface: z.enum(['IBM Plex Mono', 'DM Mono']),
     // 500 on the version 1 plate; the house style's section pill is 600.
     weight: z.union([z.literal(500), z.literal(600)]),
     letter_case: z.literal('lower'),
@@ -639,7 +647,7 @@ export const HouseTypographyV1Schema = z.object({
   display: z.literal('Anton'),
   structure: z.literal('Archivo'),
   dek: z.literal('Fraunces'),
-  data: z.literal('IBM Plex Mono'),
+  data: z.enum(['IBM Plex Mono', 'DM Mono']),
 }).strict()
 export type HouseTypographyV1 = z.infer<typeof HouseTypographyV1Schema>
 

@@ -1,0 +1,128 @@
+{
+  "title": "Why did pop songs get shorter?",
+  "day": "fri",
+  "series": "mind.the.gap",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "When does a song start earning?",
+      "label": "paid at 0:30",
+      "plate": {
+        "type": "document",
+        "image": ".scratch/why-ladder/assets/m-spotify.png",
+        "crop": {
+          "x0": 0,
+          "y0": 520,
+          "x1": 1080,
+          "y1": 1470
+        },
+        "focus_rows": {
+          "y0": 984,
+          "y1": 1090
+        },
+        "note": "Paid at 0:30. Not a second sooner.",
+        "thumb_crop": {
+          "x0": 40,
+          "y0": 960,
+          "x1": 1040,
+          "y1": 1095
+        },
+        "callout": {
+          "descriptor": "the small print",
+          "tag": "DOCUMENTED"
+        }
+      },
+      "source": "Spotify for Artists help page, Nov 2026",
+      "strength": "documented"
+    },
+    {
+      "n": 2,
+      "connector": "because",
+      "question": "So why cut the intro?",
+      "label": "intros: 20 s to 5 s",
+      "plate": {
+        "type": "chart",
+        "ground": ".scratch/why-ladder/assets/still-record-phone.png",
+        "series_label": "Average intro, US top-10 hits",
+        "points": [
+          {
+            "x": "1986",
+            "y": 20,
+            "text": "20 s+"
+          },
+          {
+            "x": "2015",
+            "y": 5,
+            "text": "5 s"
+          }
+        ],
+        "note": "A quarter of the wait",
+        "callout": {
+          "descriptor": "the receipts",
+          "tag": "DOCUMENTED"
+        }
+      },
+      "source": "Musicae Scientiae, 2018",
+      "strength": "documented",
+      "challenger": {
+        "text": "We all became goldfish.",
+        "image": ".scratch/why-ladder/assets/m-time.png",
+        "crop": {
+          "x0": 0,
+          "y0": 130,
+          "x1": 1560,
+          "y1": 700
+        },
+        "source": "TIME, May 2015",
+        "outcome": "parked",
+        "strength": "open",
+        "callout": {
+          "descriptor": "the goldfish theory",
+          "tag": "OPEN"
+        },
+        "connector": "or",
+        "recap_label": "goldfish theory, parked"
+      }
+    },
+    {
+      "n": 3,
+      "connector": "because",
+      "question": "Songs, or just intros?",
+      "label": "then whole songs",
+      "plate": {
+        "type": "document",
+        "image": ".scratch/why-ladder/assets/m-fortune.png",
+        "crop": {
+          "x0": 0,
+          "y0": 640,
+          "x1": 1080,
+          "y1": 1070
+        },
+        "note": "Hot 100 average: 3:30"
+      },
+      "source": "Fortune, Jan 2019",
+      "strength": "inferred",
+      "loop_to": 1,
+      "loop_label": "more plays, more pay"
+    }
+  ],
+  "landing": {
+    "image": ".scratch/why-ladder/assets/evo-specimens.png",
+    "insight": "Songs didn't lose their attention span. They got a stopwatch.",
+    "question": "If streams paid by the minute, how fast would the guitar solo come back?",
+    "label": "what this shows"
+  },
+  "cover": {
+    "image": ".scratch/why-ladder/assets/evo-cover.png",
+    "callout": {
+      "detail_xy": [
+        300,
+        495
+      ],
+      "descriptor": "the new producer",
+      "tag": "0:30"
+    }
+  },
+  "step_card_ground": ".scratch/why-ladder/assets/evo-topdown.png",
+  "section_label": "mind.the.gap"
+}
