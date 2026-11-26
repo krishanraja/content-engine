@@ -6,6 +6,8 @@ Story id: 08442c41-534a-4523-9818-0884e2fc985a
 What happened: On 23 November 2026 TikTok made Likeness Detection available worldwide to eligible creators and public officials: they verify their ID through a third-party partner (Jumio in the US test) and are told about videos that may use their likeness. A second tool lets anyone, with no account, check whether a video, image or audio was made or edited with AI features in TikTok, CapCut, Dreamina, Hypic or Pippit, by reading Content Credentials and invisible watermarks.
 Sources:
 https://digitalmusicnews.com/2026/11/23/tiktok-likeness-detection-release
+https://thenextweb.com/news/tiktok-ai-checker-likeness-detection-global
+https://www.rte.ie/news/business/2026/1120/1599945-tiktok-deep-fakes/
 
 1. Read each source. Follow a link from a source only when it is the primary record the source cites (a filing, a
    company's own announcement, a court document, the study itself). Do not search the open web for other takes.

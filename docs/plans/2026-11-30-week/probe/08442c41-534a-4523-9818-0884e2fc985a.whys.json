@@ -1,36 +1,140 @@
 {
   "schema": "why-ladder/1",
-  "question": "Why did TikTok release Likeness Detection and an AI content check worldwide in November 2026?",
+  "question": "Why did TikTok take Likeness Detection global and open a public AI checker on 23 November 2026?",
   "rungs": [
-    {"n": 1, "question": "Why did TikTok release these two AI detection tools now?",
-     "answer": "The one source places the release amid growing pushback against AI slop and deepfakes, and notes TikTok has labelled about five billion AI uploads. TikTok's own stated reason is not quoted in the source.",
-     "evidence": [
-       {"url": "https://digitalmusicnews.com/2026/11/23/tiktok-likeness-detection-release", "domain": "digitalmusicnews.com", "date": "2026-11-23", "quote": "The short-form mainstay just recently rolled out the fresh AI identification features, which arrive amid seemingly intensifying pushback against machine-generated slop."},
-       {"url": "https://digitalmusicnews.com/2026/11/23/tiktok-likeness-detection-release", "domain": "digitalmusicnews.com", "date": "2026-11-23", "quote": "TikTok says it’s labeled a staggering five billion or so artificial intelligence uploads to date."}
-     ],
-     "strength": "inferred",
-     "counter": {"text": "The same source says Likeness Detection is framed as building on existing deepfake-reporting and takedown options, which reads as continuity rather than a reaction: \"framed as building on an extensive collection of existing deepfake-reporting and -takedown options\"."},
-     "mechanism_type": null, "stop": null},
-    {"n": 2, "question": "Why does the pushback land on TikTok in particular?",
-     "answer": "TikTok's owner makes AI creation tools itself: CapCut, Dreamina, Hypic and Pippit. The check tool is aimed at content made with that same suite, so TikTok is both a maker and a host of the AI content it now labels.",
-     "evidence": [
-       {"url": "https://digitalmusicnews.com/2026/11/23/tiktok-likeness-detection-release", "domain": "digitalmusicnews.com", "date": "2026-11-23", "quote": "the tool aims to detect AI from across the TikTok/ByteDance product suite – referring to the video-sharing giant itself as well as CapCut, Dreamina, Hypic, and Pippit."}
-     ],
-     "strength": "inferred",
-     "counter": {"text": "none found; scope: the one source article, which gives no figure for how much AI content on TikTok comes from outside ByteDance's tools."},
-     "mechanism_type": null, "stop": null},
-    {"n": 3, "question": "Why can the check tool recognise content from ByteDance's own tools?",
-     "answer": "It reads marks those tools leave in the file: Content Credentials metadata and invisible watermarks. No visible watermark is needed. Whether it reads marks left by other companies' tools is not said in the source.",
-     "evidence": [
-       {"url": "https://digitalmusicnews.com/2026/11/23/tiktok-likeness-detection-release", "domain": "digitalmusicnews.com", "date": "2026-11-23", "quote": "the feature is said to zero in on “Content Credentials” metadata and “invisible watermarks” – meaning the physical watermarks needn’t be present – en route to identifying the use of the relevant models."}
-     ],
-     "strength": "inferred",
-     "counter": {"text": "none found; scope: the one source article. It does not link TikTok's own announcement, so the exact technical limits of the check were not read."},
-     "mechanism_type": "the model: detection by embedded provenance metadata and invisible watermarks",
-     "stop": "evidence_exhausted"}
+    {
+      "n": 1,
+      "question": "Why did TikTok open Likeness Detection to creators and public officials worldwide?",
+      "answer": "The sources say the tool lets people find videos that may use their face or likeness without consent and report them for removal. It needs ID verification through a third-party partner and had been tested with US creators since July before this wider release.",
+      "evidence": [
+        {
+          "url": "https://digitalmusicnews.com/2026/11/23/tiktok-likeness-detection-release",
+          "domain": "digitalmusicnews.com",
+          "date": "2026-11-23",
+          "quote": "designed to help creators find and remove videos “that may use their likeness without their consent.”"
+        },
+        {
+          "url": "https://thenextweb.com/news/tiktok-ai-checker-likeness-detection-global",
+          "domain": "thenextweb.com",
+          "date": "2026-11-23",
+          "quote": "giving them a way to find AI-generated videos that use their face without consent"
+        },
+        {
+          "url": "https://thenextweb.com/news/tiktok-ai-checker-likeness-detection-global",
+          "domain": "thenextweb.com",
+          "date": "2026-11-23",
+          "quote": "Likeness Detection has been in testing with US creators since July"
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Digital Music News notes that celebrity deepfake scams \"sometimes slip by the appropriate teams and find victims\", so the sources describe a reporting tool, not a record of what it has caught. Searched: the three source pages only."
+      },
+      "mechanism_type": null,
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why does TikTok frame the tool around politicians and public figures?",
+      "answer": "RTE, carrying AFP, ties it to European elections next year in Italy, France and Greece, and quotes TikTok's elections lead saying it helps politicians spot AI content shared without consent. The Next Web confirms political accounts are eligible but does not mention elections, so the election reason rests on one site.",
+      "evidence": [
+        {
+          "url": "https://www.rte.ie/news/business/2026/1120/1599945-tiktok-deep-fakes/",
+          "domain": "rte.ie",
+          "date": "2026-11-20",
+          "quote": "the social media platform seeks to curb AI-generated disinformation ahead of a wave of European elections next year"
+        },
+        {
+          "url": "https://www.rte.ie/news/business/2026/1120/1599945-tiktok-deep-fakes/",
+          "domain": "rte.ie",
+          "date": "2026-11-20",
+          "quote": "\"Protecting the integrity of the elections is one of the most critical responsibilities that we have at TikTok,\""
+        },
+        {
+          "url": "https://thenextweb.com/news/tiktok-ai-checker-likeness-detection-global",
+          "domain": "thenextweb.com",
+          "date": "2026-11-23",
+          "quote": "public figures and political accounts included"
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "Digital Music News frames the launch around creators and AI scams aimed at their followers, with no mention of elections. Searched: the three source pages only."
+      },
+      "mechanism_type": null,
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why can the public checker only say whether a clip was made with TikTok's own tools?",
+      "answer": "It does not judge whether content looks artificial. It reads markers that TikTok and its sister apps attach when their AI features are used: C2PA Content Credentials metadata, which can be stripped on download or edit, and an invisible watermark TikTok calls VeraDura.",
+      "evidence": [
+        {
+          "url": "https://digitalmusicnews.com/2026/11/23/tiktok-likeness-detection-release",
+          "domain": "digitalmusicnews.com",
+          "date": "2026-11-23",
+          "quote": "the feature is said to zero in on “Content Credentials” metadata and “invisible watermarks”"
+        },
+        {
+          "url": "https://thenextweb.com/news/tiktok-ai-checker-likeness-detection-global",
+          "domain": "thenextweb.com",
+          "date": "2026-11-23",
+          "quote": "it looks for the markers TikTok attaches to AI content made with its own tools"
+        },
+        {
+          "url": "https://thenextweb.com/news/tiktok-ai-checker-likeness-detection-global",
+          "domain": "thenextweb.com",
+          "date": "2026-11-23",
+          "quote": "but those can be stripped when a clip is downloaded or edited"
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "The claim that the watermark survives editing comes from TikTok itself: The Next Web says it is a watermark \"which it says is far harder to remove\". No source reports an independent test. Searched: the three source pages only."
+      },
+      "mechanism_type": "detection model: provenance metadata plus invisible watermark, checked against TikTok/ByteDance tools only",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why does TikTok mark its AI content with these labels at all?",
+      "answer": "The sources show TikTok has required creators to label realistic AI content for several years, adopted C2PA in 2024 and says it has labelled over 5 billion AI videos. RTE adds that EU rules since August require deepfakes to be labelled. No source says outright that the EU rule is why TikTok labels.",
+      "evidence": [
+        {
+          "url": "https://www.rte.ie/news/business/2026/1120/1599945-tiktok-deep-fakes/",
+          "domain": "rte.ie",
+          "date": "2026-11-20",
+          "quote": "TikTok has required content creators to label realistic AI-generated images, audio and video for several years."
+        },
+        {
+          "url": "https://www.rte.ie/news/business/2026/1120/1599945-tiktok-deep-fakes/",
+          "domain": "rte.ie",
+          "date": "2026-11-20",
+          "quote": "including a requirement for deepfakes and other AI-generated content to be labelled"
+        },
+        {
+          "url": "https://thenextweb.com/news/tiktok-ai-checker-likeness-detection-global",
+          "domain": "thenextweb.com",
+          "date": "2026-11-23",
+          "quote": "C2PA Content Credentials, an industry standard it adopted in 2024"
+        },
+        {
+          "url": "https://digitalmusicnews.com/2026/11/23/tiktok-likeness-detection-release",
+          "domain": "digitalmusicnews.com",
+          "date": "2026-11-23",
+          "quote": "TikTok says it’s labeled a staggering five billion or so artificial intelligence uploads to date"
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "The labelling predates the EU rules that began in August, by RTE's own account, so the rule cannot be the whole reason. Searched: the three source pages only. Why the EU chose a labelling rule, and why TikTok chose labels before it, is not answered in anything read."
+      },
+      "mechanism_type": "rule: platform labelling policy alongside EU AI transparency labelling requirement",
+      "stop": "evidence_exhausted"
+    }
   ],
   "landing": {
-    "shows": "The one readable source shows TikTok's check tool works by reading the provenance marks its owner's own AI tools embed, so it confirms ByteDance-made AI content, while Likeness Detection relies on creators verifying their ID with a third party such as Jumio. The source gives no stated motive from TikTok and links no primary announcement.",
-    "open_question": "If a check can only read the marks a company's own tools leave, what does a clean result say about a video made anywhere else?"
+    "shows": "The ladder shows two different tools resting on one idea: TikTok can vouch for content it marks itself. Likeness Detection relies on ID-verified people reporting matches, and the checker reads only the credentials and watermark TikTok's own apps leave. The election and EU framing comes from one site, and the labelling began before the EU rule.",
+    "open_question": "When the checker finds no TikTok marker on a clip made with someone else's AI tool, what does that result tell the person who uploaded it?"
   }
 }

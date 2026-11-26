@@ -6,6 +6,8 @@ Story id: 972b7721-4e4e-477f-b5cf-20164fd8260c
 What happened: Suno launched Visuals on 17 November 2026: it makes lyric videos, album art and clips of up to 15 seconds for songs made on Suno, which users can extend, edit and re-prompt. Its FAQ says it runs on H3 Move, a model based on MiniMax's H3 video model, and Suno says it added filters that block uploads and prompts depicting specific artists, public figures or copyrighted works.
 Sources:
 https://www.musicbusinessworldwide.com/5-things-to-know-about-sunos-move-into-ai-video-the-distrokid-documents-and-the-fight-over-v6/
+https://karlobag.eu/en/music/suno-visuals-links-ai-generated-music-with-images-and-15-second-videos-as-copyri-swdxb/
+https://thenextweb.com/news/suno-visuals-ai-video-lyric-videos-album-art
 
 1. Read each source. Follow a link from a source only when it is the primary record the source cites (a filing, a
    company's own announcement, a court document, the study itself). Do not search the open web for other takes.

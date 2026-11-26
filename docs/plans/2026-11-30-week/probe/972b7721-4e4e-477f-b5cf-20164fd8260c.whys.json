@@ -1,11 +1,11 @@
 {
   "schema": "why-ladder/1",
-  "question": "Why did Suno launch Visuals on a MiniMax-based model, with filters that block artists, public figures and copyrighted works?",
+  "question": "Why did Suno launch Visuals on a MiniMax-based model with filters that block artists, public figures and copyrighted works?",
   "rungs": [
     {
       "n": 1,
-      "question": "Why did Suno launch Visuals, a video tool, in November 2026?",
-      "answer": "Suno's product chief says video was always the next step after music and spoken audio, but it was too slow and too costly for anyone but large companies until a new generation of video models made it cheap enough to offer to ordinary users.",
+      "question": "Why did Suno add video to a music app at all?",
+      "answer": "Suno's product chief says video was always the next step after music and October's Speech tool, but until recently it was too slow and costly for anyone but large companies. Suno says a new generation of video models has changed that.",
       "evidence": [
         {
           "url": "https://suno.com/blog/introducing-visuals",
@@ -17,20 +17,57 @@
           "url": "https://www.musicbusinessworldwide.com/5-things-to-know-about-sunos-move-into-ai-video-the-distrokid-documents-and-the-fight-over-v6/",
           "domain": "musicbusinessworldwide.com",
           "date": "2026-11-23",
-          "quote": "“Video had always been the logical next step in our vision, but until recently video generation was slow and too expensive for anyone to create but enterprises,” wrote Jack Brody, Suno’s Chief Product Officer, in a blog post."
+          "quote": "“A new generation of models changes that and opens video generation up to creative entertainment for everyone.”"
+        },
+        {
+          "url": "https://thenextweb.com/news/suno-visuals-ai-video-lyric-videos-album-art",
+          "domain": "thenextweb.com",
+          "date": "2026-11-17",
+          "quote": "It follows Suno’s Speech tool, launched in October for spoken audio such as poems and meditations."
         }
       ],
       "strength": "documented",
       "counter": {
-        "text": "Both sources rest on the same statement by Suno itself; MBW repeats the blog post rather than checking the cost claim. MBW also places the launch four days after UMG and Sony opposed Suno's bid to pause their second lawsuit, a timing it reports without linking the two."
+        "text": "The cost reason rests on Suno's own statement; MBW quotes the blog post and does not test it. MBW also notes the launch came four days after Universal and Sony opposed Suno's bid to pause their second lawsuit, without linking the two."
       },
       "mechanism_type": "the cost of the model",
       "stop": null
     },
     {
       "n": 2,
-      "question": "Why does Visuals run on a model based on MiniMax's H3 rather than one Suno built itself?",
-      "answer": "Suno's FAQ says the model, H3 Move, is based on MiniMax's H3, which Suno optimised, added safeguards to and hosts itself, sharing no data with MiniMax. The sources point to an outside model as the 'new generation of models' that made video affordable, but none says why MiniMax was chosen.",
+      "question": "Why does Visuals block prompts and uploads that work on other video tools?",
+      "answer": "Suno says it built Visuals like its music tools, for original creation, and added text and visual filters on top of its music safeguards to stop people using or creating images of specific artists, public figures and copyrighted works. It says prompts that work elsewhere may fail on Suno by design.",
+      "evidence": [
+        {
+          "url": "https://suno.com/blog/introducing-visuals",
+          "domain": "suno.com",
+          "date": "2026-11-17",
+          "quote": "We’ve adopted a suite of new text and visual filters intended to block uploads and prompts that try to use or create visual representations of specific artists, public figures, copyrighted works and IP. This means that prompts that work on other video platforms may not work on Suno and that’s by design."
+        },
+        {
+          "url": "https://thenextweb.com/news/suno-visuals-ai-video-lyric-videos-album-art",
+          "domain": "thenextweb.com",
+          "date": "2026-11-17",
+          "quote": "New filters will block prompts and uploads that try to show specific artists, public figures or copyrighted characters, Suno says."
+        },
+        {
+          "url": "https://karlobag.eu/en/music/suno-visuals-links-ai-generated-music-with-images-and-15-second-videos-as-copyri-swdxb/",
+          "domain": "karlobag.eu",
+          "date": "2026-11-18",
+          "quote": "According to the company, text and visual filters are intended to block prompts and uploaded files aimed at depicting specific performers, public figures, protected characters, copyrighted works and other intellectual property."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Every account of the reason traces back to Suno's own blog post. TNW notes ByteDance added similar guardrails to its Seedance video tool in March, so the filters are not unique to Suno. Karlobag says how well they work depends on how reliably they catch attempts to get round them."
+      },
+      "mechanism_type": "the rule",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why would a model built on MiniMax's H3 need extra safeguards added?",
+      "answer": "Suno's FAQ says H3 Move is MiniMax's H3, optimised and given extra protections, self-hosted with no data shared. MBW and Karlobag place this beside a studio lawsuit alleging MiniMax's Hailuo service generates their characters, which a judge refused to dismiss on 22 May 2026. No source says the lawsuit is why the safeguards were added.",
       "evidence": [
         {
           "url": "https://help.suno.com/en/articles/14661249",
@@ -42,52 +79,33 @@
           "url": "https://www.musicbusinessworldwide.com/5-things-to-know-about-sunos-move-into-ai-video-the-distrokid-documents-and-the-fight-over-v6/",
           "domain": "musicbusinessworldwide.com",
           "date": "2026-11-23",
-          "quote": "H3 Move is based on H3, a video model from Shanghai-based AI company MiniMax."
+          "quote": "The studios allege that MiniMax’s Hailuo AI service generates images and videos of their characters, including Darth Vader and the Minions, from text prompts."
         },
         {
-          "url": "https://suno.com/blog/introducing-visuals",
-          "domain": "suno.com",
-          "date": "2026-11-17",
-          "quote": "We’ve optimized the model behind Visuals to complement your music."
+          "url": "https://karlobag.eu/en/music/suno-visuals-links-ai-generated-music-with-images-and-15-second-videos-as-copyri-swdxb/",
+          "domain": "karlobag.eu",
+          "date": "2026-11-18",
+          "quote": "The case is relevant to Suno because of the model on which H3 Move is based, but the technological connection does not mean that Suno is a party to that lawsuit or that the court's decision concerns Visuals."
         }
       ],
       "strength": "inferred",
       "counter": {
-        "text": "MBW reports that Disney, Universal and Warner Bros. Discovery are suing MiniMax over its Hailuo service generating their characters, and that a judge refused to dismiss the case on 22 May 2026, so the base model carries its own legal dispute. Searched: the MBW article, Suno's blog post and its five Visuals help pages."
+        "text": "Karlobag reports, citing a court document, that the plaintiffs voluntarily dismissed their claims against MiniMax without prejudice because MiniMax is a name SXJT operates under, leaving SXJT and Nanonoble as defendants; MBW still describes the studios as suing MiniMax. Karlobag also says Suno has not published more technical detail about the model, so what the added safeguards change in H3 is not shown."
       },
       "mechanism_type": "the model",
       "stop": null
     },
     {
-      "n": 3,
-      "question": "Why did Suno add filters that block prompts and uploads depicting specific artists, public figures and copyrighted works?",
-      "answer": "Suno says it built Visuals the way it built its music tools, for original creation, with extra safeguards to protect artists from unauthorised use of their likenesses or works. It says this means prompts that work on other video platforms may fail on Suno by design.",
-      "evidence": [
-        {
-          "url": "https://suno.com/blog/introducing-visuals",
-          "domain": "suno.com",
-          "date": "2026-11-17",
-          "quote": "We’ve built Visuals the same way, with additional safeguards to protect artists from unauthorized use of their likenesses or works, on top of the ones we already have in place for music."
-        },
-        {
-          "url": "https://www.musicbusinessworldwide.com/5-things-to-know-about-sunos-move-into-ai-video-the-distrokid-documents-and-the-fight-over-v6/",
-          "domain": "musicbusinessworldwide.com",
-          "date": "2026-11-23",
-          "quote": "“We’ve adopted a suite of new text and visual filters intended to block uploads and prompts that try to use or create visual representations of specific artists, public figures, copyrighted works and IP,” Brody added. “This means that prompts that work on other video platforms may not work on Suno and that’s by design.”"
-        }
-      ],
-      "strength": "documented",
-      "counter": {
-        "text": "The stated reason comes only from Suno. The labels and other rightsholders suing Suno allege its music tools already copied their recordings and, in the Elvis Presley case, a recognisable voice, despite the guardrails Suno describes for music."
-      },
-      "mechanism_type": "the rule",
-      "stop": null
-    },
-    {
       "n": 4,
-      "question": "Why would protecting likenesses and copyrighted works matter so much to Suno at this point?",
-      "answer": "MBW shows Suno fighting many suits over copying and likeness, with fair use as its main defence and market harm a contested question, and MiniMax being sued over generated characters. The sources set the filters beside this but do not say the lawsuits drove them, and Suno gives only its principles as the reason.",
+      "question": "Why would blocking likenesses and copyrighted works matter to Suno itself right now?",
+      "answer": "Suno is fighting several suits: the Presley estate alleges it generates songs in a voice listeners recognise as his, and the labels contest market harm under its fair use defence. TNW reads the guardrails against these suits and a push to look more legitimate. Suno itself cites only its principles, so the sources show the setting, not the motive.",
       "evidence": [
+        {
+          "url": "https://thenextweb.com/news/suno-visuals-ai-video-lyric-videos-album-art",
+          "domain": "thenextweb.com",
+          "date": "2026-11-17",
+          "quote": "Those guardrails come as Suno fights fresh legal battles. Last week, Elvis Presley’s music owners and Eminem’s publisher sued Suno, and the Presley suit claims it misused his voice."
+        },
         {
           "url": "https://www.musicbusinessworldwide.com/5-things-to-know-about-sunos-move-into-ai-video-the-distrokid-documents-and-the-fight-over-v6/",
           "domain": "musicbusinessworldwide.com",
@@ -95,28 +113,22 @@
           "quote": "Their complaint, which relies in part on Tennessee’s ELVIS Act, alleges that Suno trained its AI on Presley’s recordings and generates songs in a voice listeners recognize as his."
         },
         {
-          "url": "https://www.musicbusinessworldwide.com/5-things-to-know-about-sunos-move-into-ai-video-the-distrokid-documents-and-the-fight-over-v6/",
-          "domain": "musicbusinessworldwide.com",
-          "date": "2026-11-23",
-          "quote": "The data bears on Suno’s main defense, fair use, under which a court weighs, among other factors, whether a use harms the market for the original works."
-        },
-        {
           "url": "https://suno.com/blog/introducing-visuals",
           "domain": "suno.com",
           "date": "2026-11-17",
-          "quote": "Earlier this year we shared our principles for building the future of music responsibly."
+          "quote": "From the beginning, we deliberately designed Suno to enable original creation, with guardrails to keep our tools from being used in ways that don’t conform to our principles."
         }
       ],
       "strength": "inferred",
       "counter": {
-        "text": "Suno ties the filters to principles it says it has held from the beginning, not to any case. Searched: the MBW article, Suno's blog post and its five Visuals help pages; none links a lawsuit to the Visuals filters."
+        "text": "Suno frames the filters as continuing principles it says it has held from the start, and a Suno spokesperson told MBW it already blocks prompts for specific artists' names and songs in music. Searched: the three source articles, Suno's launch post and its Visuals FAQ; none ties a particular lawsuit to the Visuals filters."
       },
-      "mechanism_type": "the rule",
+      "mechanism_type": null,
       "stop": "motive_not_mechanism"
     }
   ],
   "landing": {
-    "shows": "Suno says cheaper new video models let it extend from music into video, and its own FAQ names the model as an optimised, self-hosted version of MiniMax's H3. It describes the likeness and copyright filters as part of its original-creation principles. The trade press places the launch amid lawsuits against both Suno and MiniMax, but no source connects those suits to the filters.",
-    "open_question": "If Suno's video runs on a model whose maker is being sued for generating studio characters, how much of the protection rests on Suno's own filters rather than on the model underneath?"
+    "shows": "Suno says cheaper new video models let it move from music and speech into video. Its own FAQ names the model as a self-hosted, modified version of MiniMax's H3, and its launch post describes the likeness and copyright filters as part of an original-creation stance. The press sets both beside lawsuits against Suno and against the Hailuo service, but no source links those suits to the filters.",
+    "open_question": "If the video model's base comes from a company whose Hailuo service is accused of generating studio characters, how much of what Visuals refuses to make rests on Suno's added filters rather than on the model underneath?"
   }
 }

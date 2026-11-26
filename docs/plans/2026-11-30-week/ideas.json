@@ -82,6 +82,14 @@
      {
       "label": "Music Business Worldwide, 23 Nov 2026, on the fiscal 2027 guidance",
       "url": "https://www.musicbusinessworldwide.com/5-things-to-know-about-sunos-move-into-ai-video-the-distrokid-documents-and-the-fight-over-v6/"
+     },
+     {
+      "label": "Digital Music News, 6 Aug 2026",
+      "url": "https://www.digitalmusicnews.com/?p=350487"
+     },
+     {
+      "label": "Warner Music Group Q3 2026 earnings call transcript, 6 Aug 2026",
+      "url": "https://www.fool.com/earnings/call-transcripts/2026/08/13/warner-music-group-wmg-q3-2026-earnings-call-transcript/"
      }
     ],
     "beats": [
@@ -186,7 +194,17 @@
      "pattern": "tool-unlock",
      "beats": "https://www.instagram.com/evolving.ai/p/DftxXqrgIE4/",
      "our_take": "The post listed what a free trial gives you; we show what the free trial is for, from the seller's side."
-    }
+    },
+    "sources": [
+     {
+      "label": "ExchangeWire, 14 Oct 2026",
+      "url": "https://www.exchangewire.com/blog/2026/10/14/digest-apple-wins-early-access-to-openai-evidence-tencent-raises-5-7bn-in-bond-sale/"
+     },
+     {
+      "label": "Magnite press release, 9 Oct 2025",
+      "url": "https://www.magnite.com/press/itv-launches-genai-ads-manager-powered-by-magnites-streamr-ai/"
+     }
+    ]
    },
    {
     "id": "80baed3f-3833-4bce-9afd-040a4868e562",
@@ -387,7 +405,17 @@
      "pattern": "made-in-hours",
      "beats": "https://www.instagram.com/evolving.ai/p/DfuWseGgGfl/",
      "our_take": "The post marvelled at what a model can make; we show which model is inside the button."
-    }
+    },
+    "sources": [
+     {
+      "label": "Karlobag, 18 Nov 2026",
+      "url": "https://karlobag.eu/en/music/suno-visuals-links-ai-generated-music-with-images-and-15-second-videos-as-copyri-swdxb/"
+     },
+     {
+      "label": "The Next Web, 17 Nov 2026",
+      "url": "https://thenextweb.com/news/suno-visuals-ai-video-lyric-videos-album-art"
+     }
+    ]
    },
    {
     "id": "08442c41-534a-4523-9818-0884e2fc985a",
@@ -446,7 +474,17 @@
      "pattern": "creator-hands-over",
      "beats": "https://www.instagram.com/evolving.ai/p/Dc_4Sy7gGi5/",
      "our_take": "The post was a creator giving his face to an AI on purpose; we show what a creator can do when someone else does it for them."
-    }
+    },
+    "sources": [
+     {
+      "label": "The Next Web, 23 Nov 2026",
+      "url": "https://thenextweb.com/news/tiktok-ai-checker-likeness-detection-global"
+     },
+     {
+      "label": "RTE, 20 Nov 2026",
+      "url": "https://www.rte.ie/news/business/2026/1120/1599945-tiktok-deep-fakes/"
+     }
+    ]
    },
    {
     "id": "8c6c717d-00b4-4d26-b837-06b89709220a",
@@ -514,7 +552,17 @@
      "pattern": "ai-backfires",
      "beats": "https://www.instagram.com/evolving.ai/p/DfwzCiPgM8u/",
      "our_take": "The post was an AI telling on a student; we show a claim machine telling on itself."
-    }
+    },
+    "sources": [
+     {
+      "label": "IBTimes UK, 17 Nov 2026",
+      "url": "https://www.ibtimes.co.uk/youtube-restores-bre-petrunko-recording-1832778"
+     },
+     {
+      "label": "Gadget Review, 17 Nov 2026",
+      "url": "https://www.gadgetreview.com/?p=430528"
+     }
+    ]
    }
   ],
   "fri": [
@@ -575,7 +623,17 @@
      "beats": "https://www.instagram.com/evolving.ai/p/Dcno5uwADrV/",
      "our_take": "The post covered a rule written down; we cover a rule nobody wrote down, made by a form."
     },
-    "recommended": true
+    "recommended": true,
+    "sources": [
+     {
+      "label": "GamingBolt, 26 Nov 2026",
+      "url": "https://gamingbolt.com/ubisoft-encourages-the-use-of-generative-ai-asks-devs-to-justify-not-using-it-rumor"
+     },
+     {
+      "label": "MMOs.com, 26 Nov 2026",
+      "url": "https://mmos.com/news/industry/ubisoft-generative-ai-pitch-justification-report"
+     }
+    ]
    },
    {
     "id": "5d55e729-43fd-433b-b4e5-056f5329cb05",
@@ -699,7 +757,17 @@
      "pattern": "made-in-hours",
      "beats": "https://www.instagram.com/evolving.ai/p/DfuWseGgGfl/",
      "our_take": "The post marvelled at what AI made; we count the people the poster leaves out."
-    }
+    },
+    "sources": [
+     {
+      "label": "TheWrap, 5 Nov 2026",
+      "url": "https://www.thewrap.com/industry-news/tech/ai-film-gods-dont-give-gifts-youtube-grimes-gossip-goblin/"
+     },
+     {
+      "label": "Screen Daily, 22 Oct 2026",
+      "url": "https://www.screendaily.com/news/agc-to-launch-sales-on-ai-rendered-sci-fi-from-youtuber-gossip-goblin/5221672.article"
+     }
+    ]
    },
    {
     "id": "ac13c2b0-5426-4018-aaeb-eed82b9d0a6c",
