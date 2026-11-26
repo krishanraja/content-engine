@@ -5,7 +5,12 @@ const number = z.number().nullable()
 const index = z.object({ day_pct: number, month_pct: number, series: z.array(z.number()) })
 const video = z.object({ id: z.string(), url: z.url(), posted_at: z.string().nullable() }).nullable()
 const image = z.object({ kind: z.enum(['person','company','generated']).nullable(), url: z.url().nullable(),
-  credit: z.string().optional(), file_page: z.url().optional(), brief: z.string().optional() })
+  credit: z.string().optional(), file_page: z.url().optional(), brief: z.string().optional() }).refine(photo => {
+    if (photo.kind === null) return photo.url === null
+    if (photo.kind === 'generated') return !!(photo.url || photo.brief)
+    return !!photo.credit?.trim() && !!photo.file_page?.startsWith('https://commons.wikimedia.org/wiki/File:') &&
+      !!photo.url?.startsWith('https://upload.wikimedia.org/wikipedia/commons/')
+  })
 const sector = z.string().refine(s => sectors.some(row => row.key === s))
 const shape = z.object({
   ok: z.literal(true), version: z.literal(1), generated_at: z.iso.datetime(), edition_date: z.iso.date(),

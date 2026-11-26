@@ -14,6 +14,21 @@ type Group = { sector: string; members: Candidate[] }
 const direct = (row: Candidate) => new URL(row.url).hostname !== 'news.google.com'
 const ai = /\b(?:AI|artificial intelligence|machine learning|generative|ChatGPT|Suno|Midjourney)\b/i
 
+export function outletCount(rows: Candidate[]): number {
+  const outlets: Set<string>[] = []
+  for (const row of rows) {
+    const keys = new Set(['host:' + row.domain, 'name:' + row.outlet.trim().toLowerCase()])
+    for (let i = outlets.length - 1; i >= 0; i--) {
+      if ([...keys].some(key => outlets[i].has(key))) {
+        for (const key of outlets[i]) keys.add(key)
+        outlets.splice(i,1)
+      }
+    }
+    outlets.push(keys)
+  }
+  return outlets.length
+}
+
 export function shortlist(rows: Candidate[]) {
   const groups: Candidate[][] = []
   const byKey = new Map<string, Candidate[]>()
@@ -99,7 +114,7 @@ async function writeGroup(group: Group): Promise<Draft | null> {
     if (organisations.some(c => c.name === e.name) && typeof e.ticker === 'string' && Object.hasOwn(stocks,e.ticker) && !tickers.includes(e.ticker)) tickers.push(e.ticker)
   }
   return { item: { id, subsector: group.sector, date: row.date.slice(0,10), source: row.outlet, url: article.url, headline, dek, why,
-    companies: organisations.map(e => e.name), tickers, coverage: new Set(group.members.map(c => c.domain)).size, image: { kind: null,url: null } },
+    companies: organisations.map(e => e.name), tickers, coverage: outletCount(group.members), image: { kind: null,url: null } },
     organisations, people, accusation: raw.accusation !== false || /\b(?:accus\w*|alleg\w*|lawsuit|su(?:e[ds]?|ing)|complaint|investigat\w*|misconduct|fraud)\b/i.test([body,row.title,article.text].join(' ')),
     subject: typeof raw.subject === 'string' ? raw.subject.trim().slice(0,250) : '' }
 }

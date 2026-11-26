@@ -66,19 +66,19 @@ export function wikiClient(deadline = Infinity) {
     return data?.query?.pages || []
   }
   async function image(entity: Entity, kind: 'person' | 'company', accusation = false) {
-    const [page] = await query('en.wikipedia.org', { titles: entity.wiki_title, prop: 'pageimages|pageprops' + (kind === 'company' ? '|images' : ''),
+    const [found] = await query('en.wikipedia.org', { titles: entity.wiki_title, prop: 'pageimages|pageprops' + (kind === 'company' ? '|images' : ''),
       piprop: 'name', pilicense: 'free', imlimit: '40' })
-    if (!page || page.missing || page.ns !== 0 || page.pageprops?.disambiguation !== undefined) return null
+    const page = found && !found.missing && found.ns === 0 && found.pageprops?.disambiguation === undefined ? found : null
     if (kind === 'person') {
-      const id = page.pageprops?.wikibase_item
+      const id = page?.pageprops?.wikibase_item
       if (!/^Q\d+$/.test(id || '')) return null
       const data = await json('https://www.wikidata.org/w/api.php?' + new URLSearchParams({
         action: 'wbgetclaims', format: 'json', entity: id, property: 'P31' }))
       if (!data.claims?.P31?.some((c: any) => c.mainsnak?.datavalue?.value?.id === 'Q5')) return null
     }
-    const names: string[] = page.pageimage ? ['File:' + page.pageimage] : []
+    const names: string[] = page?.pageimage ? ['File:' + page.pageimage] : []
     if (kind === 'company') {
-      names.push(...(page.images || []).map((im: any) => String(im.title)).filter((t: string) =>
+      names.push(...(page?.images || []).map((im: any) => String(im.title)).filter((t: string) =>
         /headquarter|head.office|building|campus|stadium|office|exterior/i.test(t)).slice(0,8))
     }
     const properties = { prop: 'imageinfo', iiprop: 'url|mime|extmetadata' }
@@ -88,10 +88,12 @@ export function wikiClient(deadline = Infinity) {
       const result = commonsImage(file?.imageinfo?.[0], kind, accusation)
       if (result) return result
     }
-    const companyId = page.pageprops?.wikibase_item
-    if (kind === 'company' && /^Q\d+$/.test(companyId || '')) {
+    if (kind === 'company') {
+      const companyId = page?.pageprops?.wikibase_item
+      const subject = /^Q\d+$/.test(companyId || '') ? 'haswbstatement:P180=' + companyId :
+        'incategory:"' + entity.name.replace(/["|]/g,'') + '"'
       const matches = await query('commons.wikimedia.org', { generator: 'search', gsrnamespace: '6', gsrlimit: '6',
-        gsrsearch: 'haswbstatement:P180=' + companyId + ' filetype:bitmap', ...properties })
+        gsrsearch: subject + ' filetype:bitmap', ...properties })
       for (const file of matches) {
         const photo = commonsImage(file.imageinfo?.[0],kind,accusation)
         if (photo) return photo

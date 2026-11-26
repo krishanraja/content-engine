@@ -86,10 +86,17 @@ export function buildMarkets(now: number, saved: Close[], charts: Record<string,
         if (positive(previous.spark[i])) points.set(day, previous.spark[i])
       })
     }
+    if (previous?.currency === currency && previous?.as_of && positive(previous.price)) {
+      points.set(previous.as_of.slice(0,10),previous.price)
+    }
     for (const row of [...history, ...(chart?.closes ?? [])]) {
       if (positive(row.price) && row.currency === currency) points.set(row.day, row.price)
     }
-    if (chart?.live) points.set(chart.live.day, chart.live.price)
+    if (chart?.live) {
+      const newerObservation = previous?.currency === currency && previous?.as_of?.slice(0,10) === chart.live.day &&
+        previous.as_of > chart.asOf && positive(previous.price)
+      points.set(chart.live.day,newerObservation ? previous.price : chart.live.price)
+    }
     const all = [...points].sort(([a],[b]) => a.localeCompare(b)).map(([day, price]) => ({ day, price }))
     const base = all.filter(p => p.day <= start).at(-1)
     const span = all.filter(p => p.day >= start)

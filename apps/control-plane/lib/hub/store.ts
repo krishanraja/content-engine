@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto'
+import { isDeepStrictEqual } from 'node:util'
 import { supabase } from '../../api/_supabase.js'
 import { readCatalogue } from '../readCatalogue.js'
 import { readSnapshot } from './snapshot.js'
@@ -63,6 +64,6 @@ export async function save(snapshot: Snapshot, revision?: string) {
   const row = { edition_date: snapshot.edition_date, payload: checked, revision: randomUUID() }
   const write = revision ? supabase.from('hub_snapshots').update(row).eq('edition_date',row.edition_date).eq('revision',revision)
     : supabase.from('hub_snapshots').insert(row)
-  const { data,error } = await write.select('revision').single()
-  if (error || data?.revision !== row.revision) throw Error('snapshot_write_failed')
+  const { data,error } = await write.select('revision,payload').single()
+  if (error || data?.revision !== row.revision || !isDeepStrictEqual(readSnapshot(data.payload),checked)) throw Error('snapshot_write_failed')
 }
