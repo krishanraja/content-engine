@@ -29,7 +29,7 @@ unscored. A step that could not run is listed unread and the command exits 2: ne
     python3 scripts/post-pack/story_score.py brief <Monday> [--axes scale,fun_consume,fun_produce]
     python3 scripts/post-pack/story_score.py record <Monday> JUDGE.md
     python3 scripts/post-pack/story_score.py score <Monday> [--floor F] [--probes F] [--write]
-    python3 scripts/post-pack/story_score.py order <Monday> (--status F | --fresh)
+    python3 scripts/post-pack/story_score.py order <Monday> (--status F --before F | --fresh)
     python3 scripts/post-pack/story_score.py council-brief <Monday> --day D
     python3 scripts/post-pack/story_score.py council-record <Monday> --day D COUNCIL.md
     python3 scripts/post-pack/story_score.py ledger [--ledger F]
@@ -649,12 +649,11 @@ def status_key(group, day, o):
     return f'idea:{oid}' if group == 'days' else f'off:{day}:{oid}'
 
 
-def day_open(group, day, opts, status, remake=('open', 'held')):
+def day_open(group, day, opts, status, before=None):
     """Whether a day may be ordered: the board was never shown (status None), or every option on it is unanswered
-    (board_feed option_status, the REMAKE statuses, read as keep_problems reads them)."""
-    if status is None:
-        return True
-    return all(status.get(status_key(group, day, o), 'unknown') in remake for o in opts if isinstance(o, dict))
+    (idea_checks.option_open, as the Sunday gate reads it: open or held in board_feed option_status, or new on a `days`
+    re-run, on neither the status nor the board before it). before: idea_checks.keys_on(the board before the run)."""
+    return all(ic.option_open(status_key(group, day, o), status, before) for o in opts if isinstance(o, dict))
 
 
 def his(o, cfg=None):
@@ -719,10 +718,12 @@ def order_day(opts, scores, keys, council=None, cfg=None):
     return out, call
 
 
-def order_board(ideas, scores, status, council=None, cfg=None):
-    """(new ideas, report). Only open days are ordered; the first movable option is recommended. report: {ordered,
-    kept, close_calls, moved}."""
+def order_board(ideas, scores, status, council=None, cfg=None, before=None):
+    """(new ideas, report). Only open days are ordered; the first movable option is recommended. before: the board as it
+    stood before a `days` re-run (an option on neither it nor the status is new, so open). report: {ordered, kept,
+    close_calls, moved}."""
     cfg = cfg or RUBRIC
+    had = ic.keys_on(before) if before is not None else None
     new = json.loads(json.dumps(ideas))
     report = {'ordered': [], 'kept': [], 'close_calls': [], 'moved': []}
     for group in ('days', 'offdays'):
@@ -730,7 +731,7 @@ def order_board(ideas, scores, status, council=None, cfg=None):
         for day, opts in block.items():
             if not isinstance(opts, list) or not opts:
                 continue
-            if not day_open(group, day, opts, status):
+            if not day_open(group, day, opts, status, had):
                 report['kept'].append(day)
                 continue
             keys = [key_of(day, o) for o in opts]
@@ -1286,7 +1287,11 @@ def cmd_order(a, ideas, ideas_path, plans, cfg):
         print('no scores.json: run story_score.py score first', file=sys.stderr)
         return 2
     council = {d: v for d, v in (load(file_of(a.week, 'council', plans, cfg), {}) or {}).items() if isinstance(v, dict)}
-    new, report = order_board(ideas, doc['options'], status, council, cfg)
+    before = load(a.before) if a.before else None
+    if status is not None and before is None:
+        print('order --status without --before (the ideas.json copied before the run): an option the status does not name '
+              'reads as not known, and its day is kept', file=sys.stderr)
+    new, report = order_board(ideas, doc['options'], status, council, cfg, before)
     if a.write:
         save(ideas_path, new)
     doc['close_calls'] = report['close_calls']
@@ -1372,6 +1377,7 @@ def main(argv=None, *, poster=None, cap=None, read=None, kill=None, plans=None, 
     o = wk(sub.add_parser('order'))
     o.add_argument('--status', nargs='+', help='board_feed status JSON read(s) of the week')
     o.add_argument('--fresh', action='store_true', help='the board was never shown: every day is open')
+    o.add_argument('--before', help='with --status: the ideas.json copied before a days re-run (an option on neither it nor the status is new, so open)')
     o.add_argument('--write', action='store_true', help='write the ordered ideas.json (default: print the report only)')
     cb = wk(sub.add_parser('council-brief'))
     cb.add_argument('--day', required=True)

@@ -76,8 +76,9 @@ go in `docs/plans/<Monday>-week/` (`story/` for the score's own, `probe/` for th
 10. **Score and order.** `python3 scripts/post-pack/story_score.py score <Monday> --floor
     docs/plans/<Monday>-week/story/floor.json`, then `python3 scripts/post-pack/story_score.py order <Monday> --fresh
     --write` on a board he has never seen. On a re-run of some days, order with `--status` and the status file the
-    workflow wrote before the run (the run's prompt names it), never `--fresh`: only a day whose options are all open is
-    ordered, and an answered day keeps its places (its presses name options by place). If the order moved a publishing
+    workflow wrote before the run, and `--before` with the ideas.json it copied then (the run's prompt names both), never
+    `--fresh`: only a day whose options are all open is ordered (an option on neither file is new, so open), and an
+    answered day keeps its places (its presses name options by place). If the order moved a publishing
     day, write that day's options again through `/api/week/options` (core step 4) with `rank` as the new place and
     `recommended` on the first, so the engine and `ideas.json` agree.
 11. **The council, on close calls only.** `order` prints each close call. While `council.cleared` is false in

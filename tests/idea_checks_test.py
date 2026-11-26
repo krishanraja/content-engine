@@ -1239,6 +1239,29 @@ class StoryGateTest(unittest.TestCase):
         self.assertEqual([(f['code'], f['ref']) for f in found], [('story', 'mon-3')], 'only the open unscored option; the day is not ordered')
         self.assertEqual(self.run_(ideas, {f'idea:{A}': 'approved', f'idea:{B}': 'rejected', f'idea:{C}': 'filed'}, probes={}), [])
 
+    def test_a_new_option_on_a_days_rerun_is_ordered_and_gate_checked(self):
+        import story_score as ss
+        before = self.board(main_option(id=A), main_option(id=B))
+        status = {f'idea:{A}': 'open', f'idea:{B}': 'open'}
+        after = self.board(main_option(id=A), main_option(id=B), main_option(id=C))
+        scores = {f'mon/{A}': story(50), f'mon/{B}': story(60), f'mon/{C}': story(90)}
+        scores = {k: dict(v, floored=False, humour_unread=False) for k, v in scores.items()}
+        _new, kept = ss.order_board(after, scores, status)
+        self.assertEqual(kept['kept'], ['mon'], 'without the board before, a new id is not known and its day is kept')
+        new, report = ss.order_board(after, scores, status, before=before)
+        self.assertEqual(report['ordered'], ['mon'])
+        self.assertEqual([o['id'] for o in new['days']['mon']], [C, B, A])
+        self.assertTrue(all('story_score' in o for o in new['days']['mon']))
+        probes = self.probes(A, B, C)
+        self.assertEqual(ic.story_findings(new, self.WEEK, status, probes, before=before), [])
+        unscored = json.loads(json.dumps(new))
+        unscored['days']['mon'][0].pop('story_score')
+        found = ic.story_findings(unscored, self.WEEK, status, probes, before=before)
+        self.assertEqual([(f['code'], f['ref']) for f in found], [('story', 'mon-1')], 'the new option is checked')
+        self.assertEqual(ic.story_findings(unscored, self.WEEK, status, probes), [], 'without before it was skipped')
+        on_before = ic.story_findings(unscored, self.WEEK, {f'idea:{A}': 'open'}, probes, before=after)
+        self.assertEqual(on_before, [], 'an option on the board before that the status does not name is never open')
+
     def test_the_weekly_good_news_is_its_own_series(self):
         ideas = {'week_start': self.WEEK, 'offdays': {'sat': [{'id': 'goodnews', 'weekly': 'good_news', 'title': 'Good news'}]}}
         self.assertEqual(self.run_(ideas), [])

@@ -318,7 +318,8 @@ jobs:
             board_feed.py cover refuses the options, fix them and check again; if it still refuses, stop and say why.
             Score, floor and order every option before the board, as .agents/skills/plan-week/references/story-score.md
             says (step 6d: the floor, the whys probe, the angles, the humour reads, the blind judges, then story_score.py
-            score and order; on a re-run of some days, order with --status ${{ runner.temp }}/status.json, never --fresh).
+            score and order; on a re-run of some days, order with --status ${{ runner.temp }}/status.json and --before
+            ${{ runner.temp }}/ideas-before.json, never --fresh).
             board_feed.py gate must pass before you stop: the workflow runs it again and keeps the week off the live
             board while a subject he refused is offered, a warned option leads its day, a return comes back no
             deeper, an option repeats what went out or another option, or an option lacks its shape, aim, humour or
