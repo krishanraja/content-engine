@@ -1197,11 +1197,16 @@ def save(path, data):
 
 
 def board_checks(ideas, week, kill=None):
-    """The checks that need the whole board or the kill list: template_ok and goodnews_checks."""
+    """The checks that need the whole board or the kill list: template_ok, goodnews_checks and carousel_format (the
+    3-second carousel format, config/carousel-format.json; Krish, 2026-11-26: enforce the carousel format)."""
     out = {}
     gn = ic.goodnews_findings(ideas, week) if week else []
+    cf = ic.carousel_format_findings(ideas, week) if week else []
     for key, day, main, o in board(ideas):
         c = {}
+        if not main and ic.is_carousel_option(o):
+            oid = str(o.get('id') or '')
+            c['carousel_format'] = not any(f.get('ref') == f'off-{day}-{oid}' for f in cf) if oid else None
         if not main and ic.is_template(o):
             c['template_ok'] = not ic.template_problems(o, kill)
         if ic.is_good_news(o) or (not main and day == 'sat'):

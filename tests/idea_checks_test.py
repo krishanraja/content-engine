@@ -909,7 +909,13 @@ class SaturdayTest(unittest.TestCase):
         self.assertIn('no lookalike.json', self.run_(sat(sat_option()), flows=None)[0]['line'])
         long_flow = {'p1': [f'job {n}' for n in range(11)]}
         eleven = sat_option(cards=[{'words': 'a', 'picture': 'b'}] * 11, direction={'look': 'l', 'frames': [{'words': 'a', 'picture': 'b'}] * 11})
-        self.assertIn('4 to 10 cards', self.run_(sat(eleven), flows=long_flow)[0]['line'])
+        # From the 30 Nov board the 3-second format holds a carousel to 4 to 7 (Krish, 2026-11-26: enforce the carousel format).
+        self.assertIn('4 to 7 cards', self.run_(sat(eleven), flows=long_flow)[0]['line'])
+        eight = {'p1': [f'job {n}' for n in range(8)]}
+        cards8 = sat_option(cards=[{'words': 'a', 'picture': 'b'}] * 8, direction={'look': 'l', 'frames': [{'words': 'a', 'picture': 'b'}] * 8})
+        self.assertIn('a Saturday carousel is 4 to 7 cards', self.run_(sat(cards8), flows=eight)[0]['line'])
+        before = ic.saturday_findings(dict(sat(cards8), week_start='2026-11-23'), '2026-11-23', eight, [CAROUSEL_POST], [CAROUSEL_POST])
+        self.assertEqual(before, [], 'a board before the format keeps its 4 to 10')
 
     def test_the_good_news_follows_a_flow_with_room_for_its_stories(self):
         self.assertIn('names a lookalike pattern', self.run_(sat(good_news(pattern=None)))[0]['line'])

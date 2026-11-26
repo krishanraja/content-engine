@@ -7,9 +7,10 @@
     "good_news"
   ],
   "min_options": 3,
-  "stories": 5,
+  "stories": 4,
+  "stories_note": "Four since 26 Nov 2026: the 3-second carousel format's good-news roundup carries 4 items (config/carousel-format.json good_news; the Library's CAROUSEL-FORMAT.md worked example B: five break the 50-word ceiling). Krish, 2026-11-26: \"Tell the Content-engine story intelligence for makeyourmindup v5 session that it is to enforce carousel formatting.\" A fifth story found is a spare, never drawn.",
   "bar": {
-    "words": "five great things AI is doing for people in the creative, arts, music, entertainment, media and sports industries, ideally making them smarter, better, happier or more successful",
+    "words": "four great things AI is doing for people in the creative, arts, music, entertainment, media and sports industries, ideally making them smarter, better, happier or more successful",
     "helps": [
       "smarter",
       "better",

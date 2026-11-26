@@ -1,0 +1,117 @@
+{
+  "_about": "The makeyourmindup 3-second carousel format, as rows. Every carousel content-engine makes is held to these as refusals that fail the run, never warnings. Source: the locked v5 Library's docs/ve/cards/library/CAROUSEL-FORMAT.md (written 26 Nov 2026 from Krish's competitor sheet and his instruction that day: carousels follow \"a really easy-to-understand format that someone can swipe through in 3 seconds and understand but it's also visually stunning\"), its TITLES.md (his cover-title shapes) and library.json (carousel_sets and the carousel-* slot limits). Read by scripts/carousel_format.py (the checker), scripts/carousel_check.py (every deck and every drawn carousel), scripts/carousel_layout.py (the drawn cards' count), scripts/carousel_make.py (the one make route), scripts/post-pack/idea_checks.py (code carousel_format on the board's carousel options and the Saturday card count), scripts/post-pack/week_plan.py and scripts/saturday_goodnews.py (the good-news items), scripts/post-pack/story_score.py (the carousel_format floor) and scripts/post-pack/piece_manifest.py (a carousel that fails is not approvable). When docs/ve/cards/library/library.json is on this checkout the checker reads its slot limits too and takes the stricter of the two; tests/carousel_format_test.py fails if the two disagree. Until then it uses these rows and says so. A number or a word changes here, never in code.",
+  "schema": "content-engine-carousel-format/1",
+  "ruling": {
+    "id": "carousel_format_enforced",
+    "at": "2026-11-26",
+    "said": "Tell the Content-engine story intelligence for makeyourmindup v5 session that it is to enforce carousel formatting.",
+    "and": "Production sessions do not \"just randomly go off piste\": the format is a refusal floor, and a session is creative only above it.",
+    "relayed_by": "the rebrand session, verbatim"
+  },
+  "source": {
+    "format": "docs/ve/cards/library/CAROUSEL-FORMAT.md",
+    "titles": "docs/ve/cards/library/TITLES.md",
+    "registry": "docs/ve/cards/library/library.json",
+    "playbook": "docs/ve/cards/library/PRODUCTION-PLAYBOOK.md",
+    "locked": "library/gates-and-wiring at b0cf8943, 26 Nov 2026 (Krish: \"I approve the new cover thumbnail systems, go\")"
+  },
+  "from": "2026-11-30",
+  "from_note": "The first board the Sunday ideas run gates on these rows (the week of 30 Nov 2026). A deck, a drawn carousel and a manifest are held to them from today.",
+  "absent": "the v5 Library is not on this checkout yet",
+  "absent_detail": "{script} is not on this checkout. It lands with the v5 Library (content-engine branch library/gates-and-wiring). No other renderer makes a carousel: no Codex card, no Growth template, no hand-drawn stand-in. Wait for the Library to reach main, then run again.",
+  "route": {
+    "make": "python scripts/carousel_make.py <piece> --set <set> --deck DECK.json --out <folder>",
+    "covers": ["python", "scripts/covers/make_covers.py", "{piece}", "--out", "{out}"],
+    "carousel": ["python", "scripts/library/make_piece.py", "{piece}", "--set", "{set}", "--out", "{out}"],
+    "first_slide": "carousel/slide-01.png",
+    "first_slide_from": "make_covers.py",
+    "slides_glob": "carousel/slide-*.png",
+    "receipt": "carousel-receipt.json",
+    "rule": "Every carousel is made by make_piece.py --set <set> in the registry's set order, and its first slide comes from make_covers.py. carousel_make.py is the one route: it checks the deck, calls both by path, checks the drawn slides and writes the receipt. Any other carousel maker refuses."
+  },
+  "sets": {
+    "piece": {"cover": "carousel-cover", "inside": ["carousel-chart", "carousel-document", "carousel-why-3", "carousel-why-1"], "close": "carousel-close"},
+    "good-news": {"cover": "carousel-good-news-cover", "inside": ["carousel-good-news-item", "carousel-good-news-item-2", "carousel-good-news-item-3", "carousel-good-news-item-4"], "close": "carousel-good-news-close"},
+    "simple-advice": {"cover": "carousel-simple-advice-cover", "inside": ["carousel-simple-advice-item"], "close": "carousel-simple-advice-close"},
+    "how-to": {"cover": "carousel-howto-cover", "inside": ["carousel-howto-step"], "close": "carousel-simple-advice-close"},
+    "explainer": {"cover": "carousel-cover", "inside": ["carousel-body", "carousel-explainer-step", "carousel-versus"], "close": "carousel-close"},
+    "quiz": {"cover": "carousel-simple-advice-cover", "inside": ["carousel-quiz-question", "carousel-quiz-answer"], "close": "carousel-simple-advice-close"},
+    "meme": {"cover": "carousel-cover", "inside": ["carousel-meme"], "close": "carousel-close"}
+  },
+  "sets_note": "The registry's carousel_sets at b0cf8943, mirrored so the checker works before the Library lands. The inside slides are the set's inside list in order, repeated whole (a one-template list repeats), 3 to 5 of them. tests/carousel_format_test.py fails when library.json is on the checkout and these differ.",
+  "slides": {"min": 4, "max": 7, "inside_min": 3, "inside_max": 5, "why": "4 to 7 slides: the cover, 3 to 5 inside, the close (CAROUSEL-FORMAT.md section 3, Hard numbers)."},
+  "set_slides": {"piece": 6},
+  "set_slides_why": "The piece carousel is 6 slides: cover, chart (slide 2 carries the answer on its own), document, why-3, why-1, close (CAROUSEL-FORMAT.md section 4; PRODUCTION-PLAYBOOK.md).",
+  "good_news": {"items": 4, "found_max": 5, "why": "The good-news roundup defaults to 4 items: five break the 50-word ceiling (CAROUSEL-FORMAT.md worked example B), and the registry's good-news set holds four item templates. A weekly good news may find a fifth story as a spare; the carousel carries four."},
+  "type_floor_px": 34,
+  "type_floor_why": "Nothing below 34 px anywhere at 1080 wide (CAROUSEL-FORMAT.md, Type, absolute floor).",
+  "width_px": 1080,
+  "cover": {
+    "headline_words_max": 10,
+    "headline_chars_max": 50,
+    "headline_px_min": 120,
+    "dek_words_max": 8,
+    "visuals": 1,
+    "wordmark": "V4",
+    "roles": ["headline", "dek", "kicker", "credit"],
+    "required": ["headline"],
+    "title_shapes": ["who_did_what", "statement_twist", "repetition_question", "reveal", "big_binary", "what_next_for_you", "order_with_number", "taken_apart"],
+    "why": "Cover headline 10 words or fewer and 50 characters or fewer, in one of his title shapes (TITLES.md), 120 px or more at 1080 wide; one dominant hero visual plus the wordmark."
+  },
+  "inside": {
+    "glance_words_max": 8,
+    "glance_px_min": 96,
+    "slide_words_max": 15,
+    "inside_words_max": 50,
+    "visual_share_min": 0.5,
+    "visuals": 1,
+    "roles": ["glance", "support", "label", "prompt", "works", "counter", "source", "credit"],
+    "required": ["glance"],
+    "counted": ["glance", "support", "label", "prompt", "works"],
+    "not_counted_why": "The step counter, the source credit, the photo credit and the site do not count (CAROUSEL-FORMAT.md, Words, any inside slide in total).",
+    "question_templates": ["carousel-quiz-question"],
+    "question_templates_why": "Every inside slide is a statement, never a question. The one exception is the Library's own quiz set: its carousel-quiz-question template is the quiz's question, answered on the next slide by carousel-quiz-answer.",
+    "why": "One glance line of 8 words or fewer at 96 px or more; 15 words at most a slide; 50 across all inside slides; one dominant visual filling at least half the slide; every inside slide a statement."
+  },
+  "slide_two": {
+    "vague_openers": ["this", "it", "its", "they", "these", "those", "that", "as above", "here"],
+    "why": "Instagram re-shows an unswiped carousel from slide 2, so slide 2 carries the answer on its own: it names the subject and never opens on \"this\", \"it\" or \"as above\" (CAROUSEL-FORMAT.md, The inside slides)."
+  },
+  "close": {
+    "takeaway_chars_max": 44,
+    "takeaway_words_max": 10,
+    "takeaway_lines_max": 2,
+    "payoff_colour": "mint",
+    "wordmark": "S3h",
+    "site": "makeyourmindup.ai",
+    "roles": ["takeaway", "site", "credit"],
+    "required": ["takeaway", "site"],
+    "why": "The close is the takeaway (44 characters or fewer, two lines, its payoff in mint), the S3h wordmark and the site. Never \"Follow for more\": the follow ask goes in the caption."
+  },
+  "how_to": {
+    "steps_max": 5,
+    "visual_kind": "screenshot",
+    "prompt_words_max": 5,
+    "why": "How-to: one step per slide, 5 at most, the real screenshot as the dominant visual, an overlay prompt of 5 words or fewer."
+  },
+  "never": [
+    {"pattern": "follow for more", "why": "the close never asks to follow; the follow ask goes in the caption"},
+    {"pattern": "swipe", "why": "no swipe cue in words; the picture breaking into slide 2 does that job"},
+    {"pattern": "machine-written", "why": "no badges anywhere (Krish: \"Remove all badges\")"},
+    {"pattern": "panel-checked", "why": "no badges anywhere (Krish: \"Remove all badges\")"},
+    {"pattern": "illustrative", "why": "no badges anywhere (Krish: \"Remove all badges\")"},
+    {"pattern": "krish", "why": "reader-facing copy never names him"},
+    {"pattern": "mind/make", "why": "makeyourmindup never names mind/make"},
+    {"pattern": "mindmake", "why": "makeyourmindup never names Mindmake"},
+    {"pattern": "ctrl", "why": "makeyourmindup never names CTRL"},
+    {"pattern": "ai brain", "why": "makeyourmindup never says \"AI Brain\""},
+    {"pattern": "—", "why": "no em dashes", "literal": true},
+    {"pattern": "!", "why": "no exclamation marks in reader-facing text", "literal": true}
+  ],
+  "library_slots": {
+    "_about": "Which Library slot carries each role, by template, so the checker reads the slot's max_chars, max_lines and min_size_px when library.json is here, and the agreement test compares them with the rows above.",
+    "headline": {"carousel-cover": "headline_1", "carousel-good-news-cover": "headline_1", "carousel-simple-advice-cover": "headline_1", "carousel-howto-cover": "headline_1"},
+    "glance": {"carousel-chart": "headline_1", "carousel-document": "headline_1", "carousel-why-1": "headline_1", "carousel-why-3": "headline_1", "carousel-good-news-item": "headline_1", "carousel-good-news-item-2": "headline_1", "carousel-good-news-item-3": "headline_1", "carousel-good-news-item-4": "headline_1", "carousel-simple-advice-item": "headline_1", "carousel-body": "headline_1", "carousel-explainer-step": "headline_1", "carousel-quiz-question": "headline_1", "carousel-quiz-answer": "headline_1", "carousel-howto-step": "step_1", "carousel-meme": "headline_1", "carousel-versus": "headline_1"},
+    "takeaway": {"carousel-close": "body_1", "carousel-good-news-close": "body_1", "carousel-simple-advice-close": "body_1"}
+  }
+}

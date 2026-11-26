@@ -73,11 +73,16 @@ class DrawnCards(unittest.TestCase):
         return paths
 
     def test_a_deck_drawn_to_the_bars_passes(self):
-        found, cards = carousel_layout.problems(self.deck(['cover', 'good', 'good']))
+        found, cards = carousel_layout.problems(self.deck(['cover', 'good', 'good', 'good']))
         self.assertEqual(found, [], cards)
 
+    def test_the_v5_count_is_four_to_seven_slides(self):
+        # Krish, 2026-11-26: enforce the carousel format (config/carousel-format.json): the cover, 3 to 5 inside, the close.
+        self.assertIn('3 slides drawn: a carousel is 4 to 7', carousel_layout.problems(self.deck(['cover', 'good', 'good']))[0])
+        self.assertIn('8 slides drawn: a carousel is 4 to 7', carousel_layout.problems(self.deck(['cover'] + ['good'] * 7))[0])
+
     def test_a_cover_like_the_cards_after_it_fails(self):
-        found = ' | '.join(carousel_layout.problems(self.deck(['good', 'good', 'good']))[0])
+        found = ' | '.join(carousel_layout.problems(self.deck(['good', 'good', 'good', 'good']))[0])
         self.assertIn('card 1: the cover headline is 1.0x', found)
         self.assertIn('it looks like the rest of the cards', found)
 
@@ -94,7 +99,8 @@ class DrawnCards(unittest.TestCase):
         with contextlib.redirect_stdout(out):
             code = carousel_check.main(['--cards', *self.deck(['good', 'plain'])])
         self.assertEqual(code, 1)
-        self.assertIn('carousel_check: card 1', out.getvalue())
+        self.assertIn('carousel_check: REFUSED card 1', out.getvalue())
+        self.assertIn('2 slides drawn: a carousel is 4 to 7', out.getvalue())
 
     def test_the_safe_box_is_the_palettes(self):
         self.assertEqual(carousel_layout.safe_box(), (80, 80, 1000, 1270))

@@ -1,88 +1,57 @@
 ---
 name: carousel
-description: "Make any makeyourmindup carousel (off-day utility, AI tips, Saturday good news, a series piece's carousel) to a guaranteed floor that every past failure is folded into, with the creative freedom to beat it above that floor. The floor is checked, never trusted: the deck check, the drawn-card check, two cold readers, the 10/10 judges and a full look at phone size. Use whenever a carousel is made, redrawn or reviewed, by any session, Growth's included. Not for covers or thumbnails (cover-art), memes (meme) or Notes images."
+description: "Make any makeyourmindup carousel (off-day utility, AI tips, Saturday good news, a series piece's carousel) from the locked v5 Library, held to the 3-second carousel format as a refusal floor, with creative freedom only above it. The floor is checked, never trusted: the deck check, the one make route, the drawn-slide check, the 10/10 judges and a full look at phone size. Use whenever a carousel is made, redrawn or reviewed, by any session, Growth's included. Not for covers or thumbnails (cover-art), memes (meme) or Notes images."
 model: opus
 ---
 
 # Make a carousel
 
-Krish, 2026-11-17: "we essentially need one skill the system uses by guarantee to meet minimum standards but can still
-use its creative freedom to improve upon and experiment with." So this skill has two halves. **The floor** is every
-lesson a past carousel paid for; each item names the check that enforces it, and no carousel ships with one unmet.
-**The freedom** is everything above it, where each carousel should try something new and say what it tried. The
-full rules and their history are `docs/CAROUSEL-STANDARD.md`; read it once per session, it wins where this differs.
+Krish, 2026-11-26, relayed verbatim: "Tell the Content-engine story intelligence for makeyourmindup v5 session that it
+is to enforce carousel formatting." Sessions do not go off piste. **The floor** is the 3-second format: rows in
+`config/carousel-format.json` (from the Library's `CAROUSEL-FORMAT.md`, `TITLES.md` and `library.json`), each a
+refusal that fails the run, never a warning. **The freedom** is everything above it. The reader and the Library rules
+are `references/reader.md`; read it once per session.
 
-## The floor (guaranteed; each line is checked)
+## The floor (refused by `scripts/carousel_check.py`, never waived)
 
-**Story: understood cold, card by card** (his words, 13 Nov: "a complete layperson is swiping through these cards at
-light speed and needs to be able to follow the story within 10 seconds. This cannot ever happen again").
+1. **4 to 7 slides**: the cover, 3 to 5 inside, the close, in the Library set's registry order (`library.json`
+   `carousel_sets`: piece, good-news, simple-advice, how-to, explainer, quiz, meme). The piece carousel is 6: cover,
+   chart (slide 2 carries the answer on its own), document, why-3, why-1, close. Good news carries 4 items.
+2. **The cover** comes only from `make_covers.py`: a headline of 10 words or fewer and 50 characters or fewer, in one
+   of his title shapes (`TITLES.md`), 120 px or more at 1080 wide; one dominant hero visual plus the wordmark.
+3. **Each inside slide**: one glance line of 8 words or fewer at 96 px or more; 15 words at most on the slide, 50
+   across all inside slides; one dominant visual on at least half the slide; a statement, never a question (the quiz
+   set's question slide is the one exception). Slide 2 stands alone: never opens on "this", "it" or "as above".
+4. **The close**: the takeaway (44 characters or fewer, two lines, its payoff in mint), the S3h wordmark and the site.
+   Never "Follow for more": the follow ask goes in the caption.
+5. **How-to**: one step a slide, 5 at most, the real screenshot as the dominant visual, an overlay prompt of 5 words
+   or fewer.
+6. **Nothing below 34 px anywhere.** No badges, labels, pills or toasts; no em dashes or exclamation marks; never his
+   name, mind/make, Mindmake, CTRL or "AI Brain".
+7. **The Library is the only artwork.** Headlines in Fraunces (Anton only as one cover kicker); imagery in the
+   Library's order: a licensed photo of the named person in their own story, the real thing, then a photoreal still
+   (no generated people, no readable logos or text).
 
-1. Ask why five times and find the wider trend, proved from outside the story; then tell it in order: what the thing is,
-   what happened, why, the trend, what to do this week. `carousel_check.py DECK.json` (five_whys, arc, source).
-2. Every card after the cover is one full plain sentence of 8 to 20 words that a stranger follows **with zero context
-   from any other card**: it names its subject, has a verb, gives a number its unit and cause; no "it", "they" or
-   "this" for a name; no opening on So, But, And, Then, Or, Because; no "12x" (write "12 times"); no fragments; no
-   jargon a layperson lacks (`config/carousel-plain-words.json`). Cover 3 to 12 words; at most 160 in the deck.
-   `carousel_check.py`.
-3. Two fresh readers see only the headlines, once, and say what it is, what happened, why, why it matters and what to
-   do; every stall is fixed before drawing. The deck's `read_back`.
-4. At most 10 cards including cover and close. No card numbers anywhere. `carousel_check.py`.
-5. Off-day carousels give real utility at the level of his Instagram inspo sheet: a scroll-stopping headline and cover,
-   cards the reader can use the same day (`aim: utility`, the ideas gate). Copy, branding and imagery are always ours.
-   Every carousel is the reader's world (`config/beat.json` `offdays`).
+When `docs/ve/cards/library/library.json` is on the checkout the check reads its slot limits too and takes the
+stricter; `tests/carousel_format_test.py` fails if the rows and the Library disagree.
 
-**Imagery: never bland**
+## The freedom (expected, above the floor only)
 
-6. Every card shows its point as a picture of real size (at least 12% of the card), never type on plain ground; the
-   page is used centrally, no empty band over 12%, nothing outside the safe box. `carousel_check.py --cards`.
-7. An original visual idea per story, real-world texture over a headline on a square. Real logos only for companies
-   the card names, monochrome or on a light tile when dark. Real people in a generated picture recognisable, from
-   their real photos as references; a generated robot is only the house felt robot (`cover_scene.py check`).
-8. Body type at least 35 px of ink on the 1080 card. `carousel_check.py --cards`.
-
-**Cover: grabs the thumb** (15 Nov: "the front cover card does not look like a front cover")
-
-9. The house look (Krish, 18 Nov; `docs/CAROUSEL-STANDARD.md`, "The house carousel look"): the cover as the Git and
-   homework covers (a photoreal scene in the top 60%, the real company wordmark, a huge two-line Anton headline in cream
-   then mint, one subline), every body card image-led as the Erdős deck's, real-world images before generated ones.
-   The cover is sensational: a real person in an absurd, funny moment, a real screenshot, or a photo-grade generated
-   image (Krish, 18 Nov). Body type: mono kicker, mint rule, Archivo Black with the key figure in mint.
-   Card 1 is a full-bleed scene of one funny, specific moment that carries the idea at a glance; never a headline on
-   plain ground, a logo row or a chart. Its headline at least 1.3 times the body cards' and its layout different in
-   two of three ways. `carousel_check.py --cards`.
-10. Card 1 says in plain words what happened and why it matters; nothing cryptic. Before showing Krish, look at it at
-    phone size beside the last approved covers: if it would not stop a thumb, it is not ready.
-
-**Brand and close**
-
-11. Colours, type and marks only from `config/brand-palette.json`; no series colour or name unless the carousel
-    carries that week's series piece. The mark is the official file, small in a bottom corner, never type.
-12. The last card is the palette's close: the takeaway, one picture, then "Follow for more" with the wordmark centred
-    under it, no corner mark (Krish, 18 Nov). Saturday good news keeps its own fixed close. `carousel_check.py`.
-13. No footnotes, source strips, dates or tiny URLs on the art; sources go in the caption.
-14. An approved track from its group (`trackGroup`: good news funky house, tips and explainers gym), picked by Krish.
-
-**Proof, not receipts**
-
-15. The 10/10 judges pass it, shown every card (`POST /api/board/<Monday>/judge`). Then a look at every card at full
-    size and at phone size by this session. Codex's own report is never proof.
-16. Read `python3 scripts/floor.py --format carousel` before the brief and check the finished cards against it.
-
-## The freedom (expected, not optional)
-
-Above the floor, each carousel should try one thing the last ones did not: a new visual device, a new card rhythm, a
-bolder cover idea, a different way to show a number, a format borrowed from the inspo sheet and made ours. Name the
-experiment in one line in the deck (`experiment`) and in the report to Krish, with what it is meant to improve. Never
-experiment with the floor itself; if an experiment needs a floor line broken, ask him first.
+Each carousel tries one thing the last ones did not, inside the format: a sharper title shape, a better proof crop, a
+bolder number, a different hero. Name the experiment in one line in the report to Krish. If an idea needs a floor
+line broken, ask him first; a new device goes to the Library first, never into one piece.
 
 ## Steps
 
-1. Read the brief, the standard, the floor and the inspiration cards he ticked (F26).
-2. Write the deck (`carousel-deck/1`), run the cold read, pass `carousel_check.py DECK.json`.
-3. Pictures in the Library's order: a licensed photo of the named person in their own story, the real thing, then a
-   photoreal still (no generated people, no readable logos or text).
-4. Make it only in the v5 Library: `python scripts/library/make_piece.py <piece> --set <set>`, covers from
-   `scripts/covers/make_covers.py`; it wins over lines 6 to 14. Absent from the checkout: stop, say
-   "the v5 Library is not on this checkout yet", never another renderer (`references/reader.md`).
-5. Verify: `carousel_check.py --cards`, the judges, a full-size and phone-size look. Fix and recheck the whole arc.
-6. File through `send.py` to `3 Posts`, report on the board, send Krish the cards, and record his words.
+1. Read the brief, the reader (`references/reader.md`), the inspiration cards he ticked and
+   `python3 scripts/floor.py --format carousel`.
+2. Write the deck as `carousel-deck/3` (the schema is in `scripts/carousel_format.py`); offer him title options in his
+   shapes; pass `python3 scripts/carousel_check.py DECK.json`. The two older deck schemas are retired and refused.
+3. Make it only with `python3 scripts/carousel_make.py <piece> --set <set> --deck DECK.json --out <folder>`: it
+   checks the deck, calls `scripts/library/make_piece.py <piece> --set <set>` and `scripts/covers/make_covers.py`
+   by path, checks the drawn slides and writes `carousel-receipt.json`. Absent Library: stop and say "the v5 Library
+   is not on this checkout yet"; never another renderer, never a Codex carousel card (`ve card` refuses the kind).
+4. Verify: `python3 scripts/carousel_check.py --cards --deck DECK.json <slides>`, the 10/10 judges
+   (`scripts/post-pack/judge_assets.py`), a look at every slide at full size and at phone size.
+5. The manifest draft carries the passing receipt (`carousel_receipt`); a carousel that fails is not approvable.
+   File through `send.py` to `3 Posts`, report on the board and record his words. Nothing is posted without his yes.

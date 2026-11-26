@@ -7,6 +7,7 @@
     {"id": "floor_only", "at": "2026-11-26", "ruling": "His taste is a floor only: his rejections refuse an option, never score it, and the judges stay blind (check-judges.ts section 4, tests/story_wall_test.py)."},
     {"id": "spend_ceiling", "at": "2026-11-26", "ruling": "The blind proof run spends at most $10, through the ledger, after the protocol is committed."},
     {"id": "reader", "at": "2026-11-26", "ruling": "The approved North Star reader line (config/beat.json reader), his words: \"I approve the lines\"."},
+    {"id": "carousel_format_enforced", "at": "2026-11-26", "ruling": "Every carousel holds the 3-second carousel format as a refusal floor (config/carousel-format.json, from the locked Library's CAROUSEL-FORMAT.md), his words relayed verbatim: \"Tell the Content-engine story intelligence for makeyourmindup v5 session that it is to enforce carousel formatting.\" A carousel option that breaks it is under the floor."},
     {"id": "offday_beat", "at": "2026-11-26", "ruling": "The off days are the reader's world too: a good-news carousel, a meme, a short and an off-day carousel each hold the fit floor as a hard floor (config/beat.json offdays), his words: \"Make sure all the good news suggestions and meme suggestions are also aligned to the new positioning, as well as the carousels.\""},
     {"id": "wildcard", "at": "2026-11-26", "ruling": "Every Monday, Wednesday and Friday carries one wildcard option he could pick: a real, dated, primary-sourced story on the beat, far from the obvious takes, its distance checked by the divergence engine, never asserted (the wildcard row below; idea_checks.wildcard_findings), his words: \"Just make sure my Monday, Wednesday, and Friday stories: there's always one completely divergent, strange, obscure, or unexpected story suggestion that I could pick from.\""}
   ],
@@ -232,7 +233,7 @@
     "comic_reading": "The humour engine's comic_reading on the plain fact or the chosen line.",
     "needs_explaining": "The humour engine needs more than one cultural or topical jump, or has missing context.",
     "template_ok": "idea_checks.template_problems is empty and the captions pass the kill list.",
-    "goodnews_checks": "idea_checks.goodnews_findings finds nothing on the option.",
+    "goodnews_checks": "idea_checks.goodnews_findings finds nothing on the option.", "carousel_format": "idea_checks.carousel_format_findings finds nothing on a carousel option (config/carousel-format.json); null when the option is not a carousel.",
     "steps_verifiable": "Every step in the option's steps ([{text, checked: <https vendor document>}]) is checked on the vendor's own documents; null when the option gives no steps.",
     "primary_source_own_domain": "The primary source is the actor's own domain or a filing.",
     "in_edition_week": "Dated inside the edition week."
@@ -284,7 +285,8 @@
       "weights": {"uplift": 2.5, "named_thing": 1.5, "scale": 1.5, "wonder": 1.5, "fun_produce": 1, "fit": 1, "evidence": 1},
       "floors": [
         {"check": "goodnews_checks", "op": "==", "value": true, "reason": "the existing good-news checks stay the floor (config/good-news.json)"},
-        {"axis": "fit", "op": ">=", "value": 4, "reason": "the good news is people in the focus sectors doing, earning or making more with AI (ruling offday_beat)"}
+        {"axis": "fit", "op": ">=", "value": 4, "reason": "the good news is people in the focus sectors doing, earning or making more with AI (ruling offday_beat)"},
+        {"check": "carousel_format", "op": "==", "value": true, "if_read": true, "reason": "a carousel option holds the 3-second carousel format (config/carousel-format.json; ruling carousel_format_enforced)"}
       ]
     },
     "explainer": {
@@ -292,7 +294,8 @@
       "weights": {"utility": 2.5, "mechanism": 1.5, "named_thing": 1.5, "fun_consume": 1.5, "fun_produce": 1, "fit": 1, "absurdity_humour": 1},
       "floors": [
         {"check": "steps_verifiable", "op": "==", "value": true, "if_read": true, "reason": "every step is checked on the vendor's own documents"},
-        {"axis": "fit", "op": ">=", "value": 4, "reason": "an off-day carousel, tip or how-to is for the reader's work: a focus-sector word in what it says (ruling offday_beat)"}
+        {"axis": "fit", "op": ">=", "value": 4, "reason": "an off-day carousel, tip or how-to is for the reader's work: a focus-sector word in what it says (ruling offday_beat)"},
+        {"check": "carousel_format", "op": "==", "value": true, "if_read": true, "reason": "a carousel option holds the 3-second carousel format (config/carousel-format.json; ruling carousel_format_enforced)"}
       ]
     },
     "edition_item": {

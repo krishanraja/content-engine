@@ -4,7 +4,12 @@ future carousel."). The Git deck as it went out on 12 Nov fails, and so does the
 Krish named its cards hard to follow ("12x more code in 4 months" should be something like: "12 times more code is
 being produced per month because of AI doing more coding"; Ruling, Krish, 2026-11-15: a carousel body card carries
 one full plain sentence of 8 to 20 words a stranger can follow). The worked example is now FOLLOWABLE, synthetic, in
-the shape he asked for. The drawn cards are held by --cards (scripts/carousel_layout.py), on synthetic PNGs here."""
+the shape he asked for. The drawn cards are held by --cards (scripts/carousel_layout.py), on synthetic PNGs here.
+
+Retired (Krish, 2026-11-26: "Tell the Content-engine story intelligence for makeyourmindup v5 session that it is to
+enforce carousel formatting"): carousel-deck/1 and /2 break the v5 3-second format (ten cards, 8 to 20 word sentences,
+"Follow for more"), so problems() refuses them by name; these tests hold the history in legacy_problems(). The live
+format is tests/carousel_format_test.py."""
 import json
 import sys
 import tempfile
@@ -52,14 +57,24 @@ AS_SENT = {'schema': 'carousel-deck/1', 'cards': [
     {'headline': 'THE NEXT SOFTWARE YOU BUY IS BUILT FOR ROBOTS TO USE AND PEOPLE TO CHECK.', 'line': 'Ask who your next tool was built for.', 'picture': ''}]}
 
 
+class TheOldDecksAreRetired(unittest.TestCase):
+    def test_problems_refuses_a_deck_1_and_a_deck_2_by_name(self):
+        for schema in ('carousel-deck/1', 'carousel-deck/2'):
+            found = carousel_check.problems(dict(FOLLOWABLE, schema=schema))
+            self.assertEqual(len(found), 1, found)
+            self.assertIn(f'{schema} is retired', found[0])
+            self.assertIn('carousel-deck/3', found[0])
+            self.assertIn('scripts/carousel_make.py', found[0])
+
+
 class TenSecondSwipe(unittest.TestCase):
     def test_the_followable_deck_passes(self):
-        self.assertEqual(carousel_check.problems(FOLLOWABLE), [])
+        self.assertEqual(carousel_check.legacy_problems(FOLLOWABLE), [])
 
     def test_the_redrawn_git_deck_he_criticised_fails(self):
         # Krish, 15 Nov: the cards "assume that people have a working knowledge of what we're talking about and use too
         # few words". Each fault is named on its card.
-        found = ' | '.join(carousel_check.problems(REDRAWN))
+        found = ' | '.join(carousel_check.legacy_problems(REDRAWN))
         self.assertIn('card 2: "12x" is shorthand', found)
         self.assertIn('card 2: the headline has no verb', found)
         self.assertIn('card 4: the headline opens on "So"', found)
@@ -84,14 +99,14 @@ class TenSecondSwipe(unittest.TestCase):
         deck = json.loads(json.dumps(FOLLOWABLE))
         deck['cards'][2]['headline'] = ('Git was built for people who save their work a few times a day and it was '
                                         'never meant for machines that save all night long.')
-        self.assertTrue(any('card 3: the headline has 26 words' in p for p in carousel_check.problems(deck)))
+        self.assertTrue(any('card 3: the headline has 26 words' in p for p in carousel_check.legacy_problems(deck)))
 
     def test_a_deck_without_the_so_what_fails(self):
         # The 13 Nov redraw: five clear cards that never said why it happened, what trend it shows or what to do.
         deck = json.loads(json.dumps(FOLLOWABLE))
         deck['cards'] = deck['cards'][:4] + [deck['cards'][-1]]
         deck.pop('five_whys'); deck['arc'] = {'what': 1, 'happened': 2}
-        found = ' | '.join(carousel_check.problems(deck))
+        found = ' | '.join(carousel_check.legacy_problems(deck))
         self.assertIn('ask why five times', found)
         self.assertIn('the wider trend it points to', found)
         self.assertIn('what a business person should do', found)
@@ -99,7 +114,7 @@ class TenSecondSwipe(unittest.TestCase):
     def test_more_than_ten_cards_or_no_palette_close_fails(self):
         deck = json.loads(json.dumps(FOLLOWABLE))
         deck['cards'] = deck['cards'] + [{'headline': 'One more.', 'picture': 'x'}] * 2
-        found = ' | '.join(carousel_check.problems(deck))
+        found = ' | '.join(carousel_check.legacy_problems(deck))
         self.assertIn('at most 10', found)
         self.assertIn('"Follow for more" with the wordmark', found)
 
@@ -107,33 +122,33 @@ class TenSecondSwipe(unittest.TestCase):
         # Krish, 2026-11-18: "Follow for more" over the centred wordmark, never "an amateur call to action".
         deck = json.loads(json.dumps(FOLLOWABLE))
         deck['cards'][-1]['cta'] = 'Subscribe free (makeyourmindup.ai)'
-        found = ' | '.join(carousel_check.problems(deck))
+        found = ' | '.join(carousel_check.legacy_problems(deck))
         self.assertIn('"Follow for more" with the wordmark', found)
         self.assertIn('not "Subscribe free"', found)
         deck['cards'][-1]['cta'] = 'Follow for more'
-        self.assertEqual(carousel_check.problems(deck), [])
+        self.assertEqual(carousel_check.legacy_problems(deck), [])
 
     def test_the_close_carries_the_takeaway(self):
         deck = json.loads(json.dumps(FOLLOWABLE))
         deck['cards'][-1] = {'cta': 'Follow for more', 'picture': 'the wordmark'}
-        self.assertIn('takeaway', ' | '.join(carousel_check.problems(deck)))
+        self.assertIn('takeaway', ' | '.join(carousel_check.legacy_problems(deck)))
 
     def test_saturday_good_news_keeps_its_fixed_close(self):
         deck = json.loads(json.dumps(FOLLOWABLE))
         deck['good_news'] = True
-        self.assertIn('good-news close', ' | '.join(carousel_check.problems(deck)))
+        self.assertIn('good-news close', ' | '.join(carousel_check.legacy_problems(deck)))
         deck['cards'][-1]['cta'] = ('If this inspires you to MAKE THE WORLD BETTER by combining your ideas + AI, '
                                     'follow for more')
-        self.assertEqual(carousel_check.problems(deck), [])
+        self.assertEqual(carousel_check.legacy_problems(deck), [])
 
     def test_a_trend_without_evidence_fails(self):
         deck = json.loads(json.dumps(FOLLOWABLE))
         for c in deck['cards']:
             c.pop('source', None)
-        self.assertTrue(any('names its evidence' in p for p in carousel_check.problems(deck)))
+        self.assertTrue(any('names its evidence' in p for p in carousel_check.legacy_problems(deck)))
 
     def test_the_git_deck_as_sent_fails_on_each_fault(self):
-        found = ' | '.join(carousel_check.problems(AS_SENT))
+        found = ' | '.join(carousel_check.legacy_problems(AS_SENT))
         self.assertIn('card 2: the headline is not a whole sentence', found)
         self.assertIn('"merged" is jargon', found)
         self.assertIn('card 3: no picture of its point', found)
@@ -145,16 +160,16 @@ class TenSecondSwipe(unittest.TestCase):
         deck['cards'][2]['line'] = ' '.join(['word'] * 21)
         for c in deck['cards'][1:-1]:
             c['headline'] = c['headline'][:-1] + ' because the work that waits for people keeps on growing.'
-        found = ' | '.join(carousel_check.problems(deck))
+        found = ' | '.join(carousel_check.legacy_problems(deck))
         self.assertIn('card 3: the line under the headline has 21 words', found)
         self.assertIn('at most 160, one plain sentence a card', found)
 
     def test_jargon_explained_in_the_deck_passes(self):
         deck = json.loads(json.dumps(FOLLOWABLE))
         deck['cards'][1]['headline'] = 'Anthropic merged 12 times more code each day because AI writes it.'
-        self.assertTrue(any('"merged"' in p for p in carousel_check.problems(deck)))
+        self.assertTrue(any('"merged"' in p for p in carousel_check.legacy_problems(deck)))
         deck['explains']['merged'] = 'saved into the shared copy everyone works from'
-        self.assertEqual(carousel_check.problems(deck), [])
+        self.assertEqual(carousel_check.legacy_problems(deck), [])
 
 
 class WhyLadderDeck(unittest.TestCase):
@@ -187,70 +202,70 @@ class WhyLadderDeck(unittest.TestCase):
     def test_the_ladder_lands_on_an_open_question_with_no_do_card(self):
         deck = self.deck(self.LADDER)
         self.assertNotIn('do', deck['arc'])
-        self.assertEqual(carousel_check.problems(deck), [])
+        self.assertEqual(carousel_check.legacy_problems(deck), [])
 
     def test_a_landing_that_tells_business_people_what_to_do_fails(self):
         deck = self.deck(self.LADDER)
         deck['cards'][7]['headline'] = 'Find the steps where AI work waits for a person to say yes.'
-        found = ' | '.join(carousel_check.problems(deck))
+        found = ' | '.join(carousel_check.legacy_problems(deck))
         self.assertIn('card 8: the landing tells business people what to do ("Find")', found)
         deck = self.deck(self.LADDER)
         deck['cards'][8]['headline'] = 'Business leaders should check every piece of AI work by how risky it is.'
-        found = ' | '.join(carousel_check.problems(deck))
+        found = ' | '.join(carousel_check.legacy_problems(deck))
         self.assertIn('card 9: the landing tells business people what to do ("leaders should")', found)
         self.assertIn('the landing hands the viewer no open question', found)
 
     def test_a_ladder_deck_keeps_no_do_step_and_its_readers_answer_the_landing(self):
         old = self.deck(self.LADDER)
         old['arc'] = dict(FOLLOWABLE['arc'])
-        found = ' | '.join(carousel_check.problems(old))
+        found = ' | '.join(carousel_check.legacy_problems(old))
         self.assertIn('name the card "landing" in the arc, not "do"', found)
         self.assertIn('no card says what this shows, ending on the open question', found)
         unread = self.deck(self.LADDER)
         for reader in unread['read_back']:
             reader['answers'].pop('landing')
         self.assertIn('what it shows and the question it leaves them with (0 given)',
-                      ' | '.join(carousel_check.problems(unread)))
+                      ' | '.join(carousel_check.legacy_problems(unread)))
 
     def test_the_stop_is_one_of_the_contract_stops_and_ends_the_ladder(self):
         bad = self.deck(self.LADDER[:1] + [dict(self.LADDER[1], stop='gave_up')])
-        self.assertIn('Why 2\'s stop is "gave_up", not one of evidence_exhausted', ' | '.join(carousel_check.problems(bad)))
+        self.assertIn('Why 2\'s stop is "gave_up", not one of evidence_exhausted', ' | '.join(carousel_check.legacy_problems(bad)))
         early = self.deck([dict(self.LADDER[0], stop='cap')] + self.LADDER[1:3])
-        self.assertIn('Why 1 stops the ladder (cap) but Why 2 climbs past it', ' | '.join(carousel_check.problems(early)))
+        self.assertIn('Why 1 stops the ladder (cap) but Why 2 climbs past it', ' | '.join(carousel_check.legacy_problems(early)))
         for stop in carousel_check.LADDER_STOPS:
-            self.assertEqual(carousel_check.problems(self.deck(self.LADDER[:1] + [dict(self.LADDER[1], stop=stop)])), [], stop)
+            self.assertEqual(carousel_check.legacy_problems(self.deck(self.LADDER[:1] + [dict(self.LADDER[1], stop=stop)])), [], stop)
 
     def test_a_source_on_every_why_passes(self):
-        self.assertEqual(carousel_check.problems(self.deck(self.LADDER)), [])
+        self.assertEqual(carousel_check.legacy_problems(self.deck(self.LADDER)), [])
         linked = [dict(w, source={'label': 'Faros AI', 'url': 'https://faros.ai/report'}) for w in self.LADDER[:3]]
-        self.assertEqual(carousel_check.problems(self.deck(linked)), [])
+        self.assertEqual(carousel_check.legacy_problems(self.deck(linked)), [])
 
     def test_a_why_without_its_source_fails(self):
         whys = json.loads(json.dumps(self.LADDER))
         whys[2]['source'] = ''
         del whys[4]['source']
-        found = ' | '.join(carousel_check.problems(self.deck(whys)))
+        found = ' | '.join(carousel_check.legacy_problems(self.deck(whys)))
         self.assertIn('Why 3 names no source', found)
         self.assertIn('Why 5 names no source', found)
         self.assertNotIn('Why 1 names no source', found)
 
     def test_three_to_seven_whys_and_an_honest_stop(self):
-        self.assertEqual(carousel_check.problems(self.deck(self.LADDER[:3])), [])
-        self.assertIn('fewer than 3 needs the "stop"', ' | '.join(carousel_check.problems(self.deck(self.LADDER[:2]))))
+        self.assertEqual(carousel_check.legacy_problems(self.deck(self.LADDER[:3])), [])
+        self.assertIn('fewer than 3 needs the "stop"', ' | '.join(carousel_check.legacy_problems(self.deck(self.LADDER[:2]))))
         stopped = self.deck(self.LADDER[:1] + [dict(self.LADDER[1], stop='evidence_exhausted')])
-        self.assertEqual(carousel_check.problems(stopped), [])
-        self.assertIn('8 Whys: merge sub-steps', ' | '.join(carousel_check.problems(self.deck(self.LADDER + self.LADDER[:3]))))
-        self.assertIn('climb the Whys before writing a card', ' | '.join(carousel_check.problems(self.deck([]))))
+        self.assertEqual(carousel_check.legacy_problems(stopped), [])
+        self.assertIn('8 Whys: merge sub-steps', ' | '.join(carousel_check.legacy_problems(self.deck(self.LADDER + self.LADDER[:3]))))
+        self.assertIn('climb the Whys before writing a card', ' | '.join(carousel_check.legacy_problems(self.deck([]))))
         thin = self.deck([dict(w, a='Yes.') for w in self.LADDER])
-        self.assertIn('Why 1 has no answer of at least 4 words', ' | '.join(carousel_check.problems(thin)))
+        self.assertIn('Why 1 has no answer of at least 4 words', ' | '.join(carousel_check.legacy_problems(thin)))
 
     def test_a_carousel_deck_1_still_validates_without_sources(self):
         self.assertEqual(FOLLOWABLE['schema'], 'carousel-deck/1')
         self.assertTrue(all('source' not in w for w in FOLLOWABLE['five_whys']))
-        self.assertEqual(carousel_check.problems(FOLLOWABLE), [])
+        self.assertEqual(carousel_check.legacy_problems(FOLLOWABLE), [])
         deck = json.loads(json.dumps(FOLLOWABLE))
         deck['schema'] = 'carousel-deck/3'
-        self.assertIn('not a carousel-deck/1 or carousel-deck/2 file', carousel_check.problems(deck))
+        self.assertIn('not a carousel-deck/1 or carousel-deck/2 file', carousel_check.legacy_problems(deck))
 
 
 if __name__ == '__main__':

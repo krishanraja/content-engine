@@ -588,19 +588,26 @@ def read_offdays(data, where='ideas.json offdays', whole=False, week=None):
     return out
 
 
-STORY_COUNT = 5  # the weekly good news (Krish, 2026-11-02: "find the actual good news on Sunday ... so that the news items are fresh";
+
+# The 3-second format's good-news roundup (config/carousel-format.json good_news; Krish, 2026-11-26: "Tell the
+# Content-engine story intelligence for makeyourmindup v5 session that it is to enforce carousel formatting"): the
+# carousel carries four items (it held five before); a fifth story found is kept as a spare, never drawn.
+_GOOD_NEWS = json.loads((Path(__file__).resolve().parents[2] / 'config' / 'carousel-format.json').read_text(encoding='utf-8'))['good_news']
+STORY_COUNT = _GOOD_NEWS['items']
+STORIES_FOUND_MAX = _GOOD_NEWS['found_max']
 
 
 def story_problems(stories, short=None):
-    """Why a weekly good-news option's stories are not ready to show, or []: five real stories, each with its headline,
+    """Why a weekly good-news option's stories are not ready to show, or []: four real stories (a fifth a spare), each with its headline,
     what happened, why it matters, its date, its source and its own photo or clip (Krish, 2026-11-02, Improve on the
     7 Nov good news: "I want actual news items and the content we are going to use here - embedded real world images or
     videos"). Fewer than five, never none, when `short` (the option's stories_short) says why: the run found no more on
     the topic in the window and never pads with a story off it (plan-week references/offdays.md); the board's "Find the
     other story" press fills it to five (saturday_goodnews.stories_fresh still counts it short)."""
     have = len(stories) if isinstance(stories, list) else -1
-    if not (have == STORY_COUNT or (_line(short, 2000) and 1 <= have < STORY_COUNT)):
-        return [f'is a list of {STORY_COUNT} stories, or fewer with stories_short saying why']
+    if not (STORY_COUNT <= have <= STORIES_FOUND_MAX or (_line(short, 2000) and 1 <= have < STORY_COUNT)):
+        return [f'is a list of {STORY_COUNT} stories (a fifth found is a spare; the carousel carries {STORY_COUNT}), or '
+                'fewer with stories_short saying why']
     out = []
     for i, st in enumerate(stories, 1):
         st = st if isinstance(st, dict) else {}

@@ -763,6 +763,9 @@ def wave1(ideas, sources, plans=None, p6=None, status=None, before=None):
     # The reader's world on the off days, from the story score's board (Krish, 2026-11-26: "Make sure all the good news
     # suggestions and meme suggestions are also aligned to the new positioning, as well as the carousels").
     found += idea_checks.offday_beat_findings(ideas, week)
+    # The 3-second carousel format on every carousel option (config/carousel-format.json; Krish, 2026-11-26: "Tell the
+    # Content-engine story intelligence for makeyourmindup v5 session that it is to enforce carousel formatting").
+    found += idea_checks.carousel_format_findings(ideas, week)
     # The story score: every open option scored blind, each open day in its order, a hero holding three sourced whys
     # before the pick, and nothing under its floor (the story engine v5 plan; Ruling, Krish, 2026-11-26).
     found += idea_checks.story_findings(ideas, week, status, probes_of(week, plans), before=before)
@@ -1413,7 +1416,7 @@ def cover_self_test():
     gsrc = {'recent_offdays': [{'urls': ['https://e.com/used']}]}
     if goodnews_problems(wk([]), gsrc, date(2026, 11, 3)):
         problems.append('a weekly option before its Sunday may wait for its stories')
-    if not any('stories is a list of 5' in x for x in goodnews_problems(wk([]), gsrc, date(2026, 11, 8))):
+    if not any('stories is a list of 4' in x for x in goodnews_problems(wk([]), gsrc, date(2026, 11, 8))):
         problems.append('a weekly option on its Sunday with no stories is refused')
     if goodnews_problems(wk([stry(n) for n in range(1, 6)]), gsrc, date(2026, 11, 8)):
         problems.append('five fresh stories with sources and pictures pass')

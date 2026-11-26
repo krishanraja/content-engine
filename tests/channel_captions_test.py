@@ -119,7 +119,11 @@ class RecordTest(unittest.TestCase):
     def spec(self):
         return {'piece_id': PIECE, 'qa': {'state': 'passed', 'checked_at': '2026-11-30T07:00:00Z'},
                 'assets': [{'name': n, 'drive_id': c * 25, 'sha256': d * 64} for n, c, d in
-                           (('carousel_slide_1', 'a', '1'), ('carousel_slide_2', 'b', '2'), ('short_video', 'c', '3'), ('vertical_cover', 'd', '4'))],
+                           (('carousel_slide_1', 'a', '1'), ('carousel_slide_2', 'b', '2'), ('carousel_slide_3', 'e', '5'),
+                            ('carousel_slide_4', 'f', '6'), ('short_video', 'c', '3'), ('vertical_cover', 'd', '4'))],
+                # A carousel is approvable only with its passing receipt (Krish, 2026-11-26: enforce the carousel format).
+                'carousel_receipt': {'schema': 'carousel-receipt/1', 'passed': True,
+                                     'slides': [{'sha256': d * 64} for d in '1256']},
                 'channels': {'youtube': {'words': 'placeholder', 'alt_text': None, 'assets': ['short_video'],
                                          'cover': {'asset': 'vertical_cover', 'sha256': '4' * 64, 'cover_offset_ms': 41000}}}}
 

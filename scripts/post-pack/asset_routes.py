@@ -4,12 +4,13 @@
 Ruling (Krish, 2026-11-26): "I believe that growth should move all asset production to Content Engine." Every asset
 kind growth-makeyourmindup used to make is a row in config/asset-routes.json, mapped to the Library command and set that
 makes it now. The Library templates are the only artwork: covers and thumbnails come only from
-scripts/covers/make_covers.py, carousels only from scripts/library/make_piece.py --set <set>. Both land with the v5
+scripts/covers/make_covers.py, carousels only from scripts/library/make_piece.py --set <set>, always through
+scripts/carousel_make.py, which holds the deck and the drawn slides to config/carousel-format.json. Both land with the v5
 Library (content-engine branch library/gates-and-wiring); until they are on the checkout this refuses with the config's
 `absent` words, and never falls back to another renderer.
 
     python3 scripts/post-pack/asset_routes.py list                          every kind, its status and its command
-    python3 scripts/post-pack/asset_routes.py command KIND --piece P --out O   the command, or the refusal (exit 2)
+    python3 scripts/post-pack/asset_routes.py command KIND --piece P --out O [--deck D]  the command, or the refusal (exit 2)
     python3 scripts/post-pack/asset_routes.py run KIND --piece P --out O       run it (local render, no spend)
     python3 scripts/post-pack/asset_routes.py check [--library library.json]  the routes file, against the registry
 
@@ -56,7 +57,7 @@ def library_present(routes, command, root=ROOT):
     return routes['absent'] + ': ' + routes['absent_detail'].format(script=script)
 
 
-def command_for(routes, kind, piece, out, root=ROOT):
+def command_for(routes, kind, piece, out, root=ROOT, deck=None):
     """The argv that makes `kind` for the piece, or Refused: absent Library (2), a gap or a retired kind (3)."""
     row = kind_row(routes, kind)
     status = row['status']
@@ -69,8 +70,11 @@ def command_for(routes, kind, piece, out, root=ROOT):
     refusal = library_present(routes, row['command'], root)
     if refusal:
         raise Refused(refusal, 2)
-    fill = {'piece': str(piece), 'out': str(out), 'set': row.get('set') or ''}
-    return [part.format(**fill) for part in routes['commands'][row['command']]['argv']]
+    fill = {'piece': str(piece), 'out': str(out), 'set': row.get('set') or '', 'deck': str(deck or '<DECK.json>')}
+    # A carousel goes through scripts/carousel_make.py ("via"), which checks the deck against the carousel format before
+    # make_piece.py draws anything (Krish, 2026-11-26: enforce the carousel format); never make_piece.py alone.
+    spec = routes['commands'][row['command']]
+    return [part.format(**fill) for part in spec.get('via') or spec['argv']]
 
 
 def problems(routes, library=None):
@@ -140,6 +144,7 @@ def main(argv=None):
         p.add_argument('kind')
         p.add_argument('--piece', required=True)
         p.add_argument('--out', required=True)
+        p.add_argument('--deck', help='a carousel\'s carousel-deck/3 file (config/carousel-format.json)')
     c = sub.add_parser('check')
     c.add_argument('--library', type=Path, help='a library.json to check the routes against (default: the checkout\'s, when present)')
     a = ap.parse_args(argv)
@@ -160,7 +165,10 @@ def main(argv=None):
         print('ok' if not bad else f'{len(bad)} problem(s)')
         return 1 if bad else 0
     try:
-        argv_out = command_for(routes, a.kind, a.piece, a.out)
+        argv_out = command_for(routes, a.kind, a.piece, a.out, deck=a.deck)
+        if a.cmd == 'run' and kind_row(routes, a.kind).get('command') == 'carousel' and not a.deck:
+            raise Refused(f'{a.kind}: a carousel is made from its deck (--deck, a carousel-deck/3 file); '
+                          'scripts/carousel_make.py checks it before anything is drawn', 1)
     except Refused as r:
         print(str(r), file=sys.stderr)
         return r.code
