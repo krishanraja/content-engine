@@ -497,3 +497,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     fact_check: result, next_run: scope,
   })
 }
+
+/** Check a short edition item against its actual publisher text without creating an idea. */
+export async function checkSourcedBody(body: string, url: string, content: string): Promise<FactCheck> {
+  const materials = [{ kind: 'source', url, content, verbatim: true }]
+  return (await check(new GateRun(), body, { materials })).result
+}
