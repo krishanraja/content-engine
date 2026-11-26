@@ -14,7 +14,7 @@ from PIL import Image
 from playwright.sync_api import sync_playwright
 
 from cover_outputs import OUTPUTS
-from cover_facts import pick, previous_families, read, resolve_stills
+from cover_facts import pick, previous_families, resolve_stills
 from layout import ROOT, credit, document
 
 LIBRARY = ROOT / "docs/ve/cards/library"
@@ -88,7 +88,6 @@ def build(facts_path, out, systems, assets=None, review=None):
     facts_path = facts_path.resolve()
     if facts_path.is_dir():
         facts_path /= "cover-facts.json"
-    facts = read(facts_path)
     base = (assets or facts_path.parent).resolve()
     out = out.resolve()
     out.mkdir(parents=True, exist_ok=True)
@@ -97,8 +96,7 @@ def build(facts_path, out, systems, assets=None, review=None):
         if review == out:
             raise ValueError("Use separate review and post-pack directories.")
         review.mkdir(parents=True, exist_ok=True)
-    record = {"renderer": "scripts/covers/make_covers.py", "piece_id": facts.get("piece_id"),
-              "date": facts["date"], "facts": facts_path.name, "facts_sha256": digest(facts_path),
+    record = {"renderer": "scripts/covers/make_covers.py", "facts": facts_path.name,
               "families": {}, "inputs": {}, "credits": [], "still_briefs": [], "files": [], "issues": []}
     # A consumer verifies this receipt before taking bytes, including during a rerun.
     lock = out / ".covers-running"
@@ -109,7 +107,11 @@ def build(facts_path, out, systems, assets=None, review=None):
     try:
         record["status"] = "rendering"
         write_record(out / "covers.json", record)
-        previous = previous_families(facts, base)
+        facts_bytes = facts_path.read_bytes()
+        record["facts_sha256"] = hashlib.sha256(facts_bytes).hexdigest()
+        facts = json.loads(facts_bytes.decode("utf-8-sig"))
+        record.update(piece_id=facts.get("piece_id"), date=facts["date"])
+        previous = previous_families(facts, facts_path.parent)
         record["previous_published"] = previous
         families = record["families"]
         for system in systems:

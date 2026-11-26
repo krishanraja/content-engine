@@ -165,6 +165,19 @@ class ImageLedCoversTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "held"):
             pack_entries(out / "covers.json")
 
+    def test_unreadable_facts_invalidate_a_passing_receipt(self):
+        out = self.base / "out"
+        out.mkdir()
+        receipt = out / "covers.json"
+        receipt.write_text(json.dumps({"status": "passed"}))
+        (self.base / "cover-facts.json").write_text("{broken")
+        record = make_covers.build(self.base, out, ["wide"])
+        self.assertEqual(record, cover_facts.read(receipt))
+        self.assertEqual(record["status"], "held")
+        self.assertTrue(record["issues"])
+        with self.assertRaisesRegex(ValueError, "held"):
+            pack_entries(receipt)
+
 
 if __name__ == "__main__":
     unittest.main()
