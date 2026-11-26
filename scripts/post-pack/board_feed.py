@@ -708,13 +708,15 @@ def plans_reader(plans=None):
     return (lambda a: find(a) or ''), (lambda a: (lambda t: idea_checks.short_hash(idea_checks.norm(t)) if t else None)(find(a)))
 
 
-def wave1(ideas, sources, plans=None, p6=None):
+def wave1(ideas, sources, plans=None, p6=None, status=None):
     """The ideas quality plan's Wave 1 checks on a week's ideas.json against its sources.json (idea_checks.py): a
     subject he refused, a warned option placed first or shown without his words, a return no deeper, an option that
     calls itself his and points to nothing he typed, the vetoes the board lists, and from the 23 Nov board the shape
     (the plain question first, a research prompt, a source tag) and the house rules read; on every board, no repeat of
     what went out on the last three weeks' boards or of another option (Krish, 2026-11-16), and from the 23 Nov board
-    each option's shape, aim, humour and lookalike. Each finding is {code, ref, line}."""
+    each option's shape, aim, humour and lookalike. From the story score's `from` board, the story score's lines
+    (idea_checks.story_findings; status, when given, leaves his answered options and their days alone). Each finding is
+    {code, ref, line}."""
     week = str((ideas or {}).get('week_start') or (sources or {}).get('week_start') or '')
     shown_text, earlier_text16 = plans_reader(plans)
     opts = idea_checks.board_options(ideas)
@@ -758,7 +760,23 @@ def wave1(ideas, sources, plans=None, p6=None):
         found += idea_checks.goodnews_findings(ideas, week, idea_checks.goodnews_history(sources, earlier_ideas(week, plans)))
     # The beat: his focus sectors, not governance, regulation, security or breaches (Krish, 2026-11-24; config/beat.json).
     found += idea_checks.offbeat_findings(ideas, week)
+    # The story score: every open option scored blind, each open day in its order, a hero holding three sourced whys
+    # before the pick, and nothing under its floor (the story engine v5 plan; Ruling, Krish, 2026-11-26).
+    found += idea_checks.story_findings(ideas, week, status, probes_of(week, plans))
     return found
+
+
+def probes_of(week, plans=None):
+    """{option id: why-ladder/1} from the week's pre-pick whys probes (docs/plans/<Monday>-week/probe/<id>.whys.json,
+    written by the whys-prober subagents; .agents/skills/plan-week/references/story-score.md). {} when there are none."""
+    folder = Path(plans or ROOT / 'docs' / 'plans') / f'{week}-week' / 'probe'
+    out = {}
+    for path in sorted(folder.glob('*.whys.json')) if folder.is_dir() else []:
+        try:
+            out[path.name[:-len('.whys.json')].lower()] = json.loads(path.read_text(encoding='utf-8'))
+        except (OSError, ValueError):
+            continue
+    return out
 
 
 def earlier_ideas(week, plans=None):
@@ -887,11 +905,12 @@ def gate_report(week, ideas_path=None, plans=None, base_path=None, days=None, st
     folder = Path(plans or ROOT / 'docs' / 'plans') / f'{wk}-week'
     sources = json.loads((folder / 'sources.json').read_text(encoding='utf-8'))
     ideas = json.loads(Path(ideas_path or folder / 'ideas.json').read_text(encoding='utf-8'))
-    found = wave1(ideas, sources, plans)
+    found = wave1(ideas, sources, plans, status=status)
     problems = [f['line'] for f in found if f['code'] in idea_checks.GATE_CODES]
     before = []
     if base_path:
-        had = {f['line'] for f in wave1(json.loads(Path(base_path).read_text(encoding='utf-8')), sources, plans) if f['code'] in idea_checks.GATE_CODES}
+        had = {f['line'] for f in wave1(json.loads(Path(base_path).read_text(encoding='utf-8')), sources, plans, status=status)
+               if f['code'] in idea_checks.GATE_CODES}
         # A re-run of some days (sunday-ideas.yml `days`) answers for those days in full: a problem the board already had
         # on one of them still fails, since the run was there to make its open options again. Every other day's
         # problems are the week's own and only reported.
@@ -963,6 +982,31 @@ def presses_from(data, ref_of=None):
     return out
 
 
+SCORE_RANK_RULE = ('Each pick\'s rank by story score total among its day\'s scored options as he first saw them (1 = the highest; '
+                   'equal totals share a rank); None when the pick carries no score. The live measure of the story order.')
+
+
+def score_rank_of_pick(ideas, pick_refs):
+    """({day: rank or None}, the rubric version or None) for the picks (ideas_scorecard pick refs, {day: '<day>-<n>'}): each
+    pick's rank by story_score total among its day's scored options (1 + how many scored higher), so a board ordered by
+    the story score is measured by where his picks fell. Reads the score the board carried, never re-scores."""
+    days = (ideas or {}).get('days') if isinstance((ideas or {}).get('days'), dict) else {}
+    ranks, versions = {}, set()
+    for day, ref in sorted((pick_refs or {}).items()):
+        opts = [o for o in days.get(day) or [] if isinstance(o, dict)]
+        totals = []
+        for o in opts:
+            sc = o.get('story_score') if isinstance(o.get('story_score'), dict) else {}
+            totals.append(sc.get('total') if isinstance(sc.get('total'), (int, float)) else None)
+            if sc.get('rubric_version'):
+                versions.add(str(sc['rubric_version']))
+        m = re.match(rf'^{day}-(\d+)$', str(ref or ''))
+        n = int(m.group(1)) - 1 if m else -1
+        mine = totals[n] if 0 <= n < len(totals) else None
+        ranks[day] = None if mine is None else 1 + sum(1 for t in totals if t is not None and t > mine)
+    return ranks, (sorted(versions)[-1] if versions else None)
+
+
 def scorecard_from(week, data, plans=None, refused_refs=None):
     """(the scorecard, the lines that print each label beside his words) for one board, from what the outcomes route
     answered and the week's files in docs/plans. Writes nothing."""
@@ -983,11 +1027,14 @@ def scorecard_from(week, data, plans=None, refused_refs=None):
     presses = presses_from(data, ref_of)
     card = ideas_scorecard.score(week, ideas, presses, asks, refused_refs)
     card['refused_subject_refs'] = refused_refs
+    card['score_rank_of_pick'], card['rubric_version'] = score_rank_of_pick(ideas, card.get('picks') or {})
     words = {p['doc']: p.get('words') for p in ideas_scorecard.final_presses(presses).values()}
     lines = [f'scorecard for the board of {week} (each count by its rule; he can overrule any label in the Sunday say-back):']
     for k, v in card['counts'].items():
         lines.append(f'  {k}: {v}  [{ideas_scorecard.RULES[k]}]')
     lines += [f'  flag: {f}' for f in card['flags']]
+    if card['rubric_version']:
+        lines.append(f'  score_rank_of_pick: {card["score_rank_of_pick"]}  [{SCORE_RANK_RULE} ({card["rubric_version"]})]')
     for lab in card['labels']:
         said = words.get(lab['doc'])
         lines.append(f'  {lab["doc"]}: {lab["outcome"]}' + (f', {"/".join(lab["parts"])}' if lab['parts'] else '') + (', wasted' if lab['wasted'] else '')

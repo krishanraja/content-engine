@@ -604,10 +604,13 @@ def floored_keys(floor_doc, ideas):
 
 
 def compact(s):
-    """What goes into ideas.json beside the option: the total, the axes, the type and the floors it failed."""
+    """What goes into ideas.json beside the option: the total, the axes, the type and the floors it failed, and the bits
+    the Sunday gate (idea_checks.story_findings) needs to check the order again: floored, humour unread, the close call
+    and the council read that decided a pair."""
     out = {k: s[k] for k in ('total', 'axes', 'type', 'floors_failed', 'rubric_version', 'at')}
-    if s.get('close_call'):
-        out['close_call'] = s['close_call']
+    for k in ('floored', 'humour_unread', 'close_call', 'council'):
+        if s.get(k):
+            out[k] = s[k]
     return out
 
 
@@ -726,6 +729,8 @@ def order_board(ideas, scores, status, council=None, cfg=None):
                         s = dict(s)
                         if call and key_of(day, o) in call['keys'] and call.get('says'):
                             s['close_call'] = call['says']
+                        if call and key_of(day, o) in call['keys'] and call.get('council'):
+                            s['council'] = {'pair': list(call['keys']), 'winner': call['council']}
                         o['story_score'] = compact(s)
             block[day] = ordered
             report['ordered'].append(day)
