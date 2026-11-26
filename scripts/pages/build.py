@@ -1065,7 +1065,12 @@ def main():
     ap.add_argument('--past', action='append', default=[], metavar='COVER', help='with --options: a past posted cover on this machine, newest first (up to five)')
     ap.add_argument('--refresh-brand', action='store_true', help='fetch the logo images again now')
     ap.add_argument('--self-test', action='store_true', help='check that covers and thumbnails are the Receipt, the facts and the page check, with no browser')
+    ap.add_argument('--legacy', action='store_true', help='allow the archived Receipt drawer')
     a = ap.parse_args()
+    if a.cover or a.thumbs:
+        import skins
+        skins.LEGACY = a.legacy
+        skins.require_legacy()
     if a.self_test:
         sys.exit(self_test())
     if not a.facts:

@@ -319,6 +319,7 @@ def proof_of(c, facts, base):
 def page(facts, c, base, shape, skin=...):
     """One shape of the Receipt as a page, before fitting, in the week's series skin (skins.for_shape) or the one
     given (None for the plain Receipt)."""
+    skins.require_legacy()
     spec = SHAPES[shape]
     W, H = spec['w'], spec['h']
     hs = brand.house()
@@ -333,6 +334,9 @@ def page(facts, c, base, shape, skin=...):
     if why:
         brand.fail(f'the words "{lead} {last}" are not ready (house rule TITLE_EARNS_THE_CLICK: the anti-dumb floor, then only words Krish picked): ' + '; '.join(why))
     p = proof_of(c, facts, base)
+    if skin == 'v5_feed' or (skin is ... and facts.get('skin') == 'v5_feed'):
+        return skins.load('v5_feed').page((W, H), spec['safe'], brand.data_uri(p['path'], 2400),
+                                          f'{lead} {last}'.strip(), brand.font_css())
     words_px, fine_px = card.needed(W)
     l, tp, r, b = spec['safe']
     side = spec['layout'] == 'side'
@@ -432,6 +436,7 @@ def place_skin(pg, skin_id, shape, fit):
 def render(b, facts, c, base, shape, jpeg=None, skin=...):
     """Draw one shape in an open browser, in the week's series skin (skin_of) or the one given (None for the plain
     Receipt). Returns (bytes or None, fit, small words)."""
+    skins.require_legacy()
     spec = SHAPES[shape]
     W, H = spec['w'], spec['h']
     skin_id = skin_of(facts, shape) if skin is ... else skin
@@ -552,9 +557,10 @@ def settle(b, facts, base, cs, need):
         shots = {s: draw_plain(s) for s in need}
         return {'skin': None, 'week': None, 'named': False, 'tried': [], 'note': None,
                 'shots': {s: v for s, v in shots.items() if v[0]}, 'unfit': unfit}
-    i = skins.ORDER.index(first)
+    order = ('v5_feed',) if first == 'v5_feed' else skins.ORDER
+    i = order.index(first)
     tried = []
-    for skin_id in skins.ORDER[i:] + skins.ORDER[:i]:
+    for skin_id in order[i:] + order[:i]:
         shots, refused = {}, None
         for shape in cs:
             if shape in unfit:
@@ -631,6 +637,7 @@ def say_skin(settled):
 def draw_covers(facts, base, out, thumb_facts):
     """Every cover shape in the Receipt. Writes all of them or none, each with its receipt json. A weekly series
     piece's covers wear the skin settle() finds for every shape of the piece, its thumbnails' included."""
+    skins.require_legacy()
     out = Path(out)
     cs = every_shape(facts, thumb_facts)
     c = cs['cover']
@@ -669,6 +676,7 @@ def draw_covers(facts, base, out, thumb_facts):
 def draw_thumbs(facts, base, out, thumb_facts, companies_of):
     """Both video thumbnails in the Receipt, under 2 MB, and thumbs.json. Both or neither. A weekly series piece's
     thumbnails wear the skin settle() finds for every shape of the piece, its covers' included."""
+    skins.require_legacy()
     out = Path(out)
     cs = every_shape(facts, thumb_facts)
     c = cs['tall']

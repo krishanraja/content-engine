@@ -1,0 +1,16 @@
+[
+  {
+    "kind": "skin",
+    "id": "v5_feed",
+    "path": "scripts/pages/skins/v5_feed.py",
+    "why": "Archive redraws require --legacy. Produce covers with scripts/covers/make_covers.py.",
+    "ruling": "Ruling (Krish, 2026-11-26): \"I approve the new cover thumbnail systems, go\""
+  },
+  {
+    "kind": "cover_path",
+    "id": "receipt",
+    "path": "scripts/pages/receipt.py",
+    "why": "Archive redraws require --legacy. Produce covers with scripts/covers/make_covers.py.",
+    "ruling": "Ruling (Krish, 2026-11-26): \"I approve the new cover thumbnail systems, go\""
+  }
+]

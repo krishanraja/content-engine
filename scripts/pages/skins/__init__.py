@@ -71,6 +71,15 @@ CHECK_JS = r"""() => {
 }"""
 
 
+LEGACY = False
+COVER_ROUTE = "Use scripts/covers/make_covers.py for production covers. Archive redraws require --legacy."
+
+
+def require_legacy():
+    if not LEGACY:
+        raise SystemExit(COVER_ROUTE)
+
+
 def week_of(facts):
     """The Monday of the piece's week, from its publishing date. A series piece with no date is refused: the
     week's skin is told from the date alone, never from the day it happens to be drawn."""
@@ -91,6 +100,9 @@ def pick(facts, look):
     from Monday 9 November 2026 to the Monday of the piece's date, so Monday, Wednesday and Friday share one.
     A piece dated before the week of 9 November wears none unless its facts name one: the rotation starts there,
     and whether the earlier weeks wear a skin is Krish's call, never the modulo's."""
+    if facts.get('skin') == 'v5_feed':
+        require_legacy()
+        return 'v5_feed'
     if not look.get('series'):
         return None
     named = facts.get('skin')
@@ -107,6 +119,9 @@ def pick(facts, look):
 
 def load(skin_id):
     """The skin's module (skins/<id>.py)."""
+    if skin_id == 'v5_feed':
+        require_legacy()
+        return importlib.import_module(f'{__name__}.v5_feed')
     if skin_id not in ORDER:
         import brand
         brand.fail(f'there is no series skin {skin_id!r}: the skins are {", ".join(ORDER)}')
