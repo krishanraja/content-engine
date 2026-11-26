@@ -90,7 +90,7 @@ TRACK_FIELDS = (
 # group it plays over ('good_news' or 'tips'). Ruling (Krish, 2026-11-17): series music rotates week by week, treated
 # the same way every time; good-news carousels get funky house, advice and tips carousels a gym track.
 # main: the track tried first for every video (main_first; Krish, 2026-11-26).
-OPTIONAL_FIELDS = ('loopable', 'drive_file_id', 'for', 'beats', 'days', 'carousel', 'main')
+OPTIONAL_FIELDS = ('loopable', 'drive_file_id', 'for', 'beats', 'days', 'carousel', 'main', 'note')
 SERIES_DAYS = ('mon', 'wed', 'fri')
 CAROUSEL_GROUPS = ('good_news', 'tips')
 LEVEL_KEYS = ('intro_lufs', 'bed_lufs', 'outro_lufs', 'ramp_down_s', 'ramp_up_s', 'final_integrated_lufs', 'tolerance_lu', 'max_true_peak_dbtp')

@@ -70,8 +70,12 @@
       "approval_words": "Yes I approve that licence track.",
       "drive_file_id": "1dWXsVYqgRnNDk5UFppA70kkVcDB-xRNs",
       "days": [
-        "mon"
-      ]
+        "mon",
+        "wed",
+        "fri"
+      ],
+      "for": "series",
+      "note": "Ruling (Krish, 2026-11-26): one of the two series rotation tracks: \"2 https://drive.google.com/file/d/1lCurob9xnwk7pK2gLbsKdgaaE1UqxqZ4/view?usp=drive_link and  https://drive.google.com/file/d/1C3CKrQSQ_xYqJHVGmhWIY-Mf9D4LQXwD/view?usp=drive_link are good rotations, and the rest are good to go behind carousels (the darker trap/hiphop ones). All are fully licensed\"."
     },
     {
       "id": "seize-it",
@@ -108,16 +112,14 @@
       "intro_cue_s": 0.0,
       "outro_cue_s": null,
       "mood": "happy, hopeful dance (Epidemic's tags), 126 bpm",
-      "for": "wed-2026-11-11",
+      "for": "carousel",
       "status": "approved",
       "approved_by": "Krish",
       "approved_on": "2026-11-09",
       "approval_words": "Happy to go ahead with your pick",
-      "note": "Found by Epidemic's similarity search against HUGEL and Ultra Nate's Movin' To The Sun, for the Wed 11 Nov piece (36886e0b), where it replaces NO CURVES after the cat clip (Krish, 2026-11-09: \"I think that we should forego our usual backing music for this episode\"). Filed to the library at 1 Brand kit (permanent)/Music on 2026-11-09.",
+      "note": "Found by Epidemic's similarity search against HUGEL and Ultra Nate's Movin' To The Sun, for the Wed 11 Nov piece (36886e0b), where it replaces NO CURVES after the cat clip (Krish, 2026-11-09: \"I think that we should forego our usual backing music for this episode\"). Filed to the library at 1 Brand kit (permanent)/Music on 2026-11-09. Moved from the series rotation to carousels (Krish, 2026-11-26: \"2 https://drive.google.com/file/d/1lCurob9xnwk7pK2gLbsKdgaaE1UqxqZ4/view?usp=drive_link and  https://drive.google.com/file/d/1C3CKrQSQ_xYqJHVGmhWIY-Mf9D4LQXwD/view?usp=drive_link are good rotations, and the rest are good to go behind carousels (the darker trap/hiphop ones). All are fully licensed\").",
       "drive_file_id": null,
-      "days": [
-        "wed"
-      ]
+      "carousel": "good_news"
     },
     {
       "id": "goodie-bags",
@@ -323,11 +325,11 @@
       "outro_cue_s": null,
       "mood": "dark, mysterious ambient drone (Epidemic tags), 60 bpm",
       "for": "fri-2026-11-13 (90-second cut)",
-      "status": "approved",
+      "status": "retired",
       "approved_by": "Krish",
       "approved_on": "2026-11-10",
       "approval_words": "yes, voice-3-elevenlabs-your-clone.mp3, captions in the screen shot, Just Got Real.",
-      "note": "The bed of the Fri 13 Nov 90-second cut, on the house shape at the ledger levels.",
+      "note": "The bed of the Fri 13 Nov 90-second cut, on the house shape at the ledger levels. Retired 2026-11-26: its file is not in the Music folder, and Krish named the two series rotation tracks and moved the rest to carousels that day.",
       "days": [
         "fri"
       ]
@@ -368,11 +370,11 @@
       "outro_cue_s": null,
       "mood": "hopeful, laid back minimal techno (Epidemic tags), 120 bpm",
       "for": "fri-2026-11-13 (5-minute cut)",
-      "status": "approved",
+      "status": "retired",
       "approved_by": "Krish",
       "approved_on": "2026-11-11",
       "approval_words": "Drifting Valleys, but a little bit louder and faded in/out properly, and kept consistent volume as much as possible",
-      "note": "The bed of the Fri 13 Nov 5-minute cut, under his exception to the house shape: one flat level at -28 LUFS, 2 s fade in, 3 s fade out (Krish, 11 Nov: \"no curves\").",
+      "note": "The bed of the Fri 13 Nov 5-minute cut, under his exception to the house shape: one flat level at -28 LUFS, 2 s fade in, 3 s fade out (Krish, 11 Nov: \"no curves\"). Retired 2026-11-26: its file is not in the Music folder, and Krish named the two series rotation tracks and moved the rest to carousels that day.",
       "days": [
         "fri"
       ]
@@ -713,15 +715,14 @@
       "intro_cue_s": 0.0,
       "outro_cue_s": null,
       "mood": "old school hip hop beats, laid back (Epidemic's tags), 93 bpm",
-      "for": "series",
+      "for": "carousel",
       "status": "approved",
       "approved_by": "Krish",
       "approved_on": "2026-11-17",
       "approval_words": "i hate mindscape, i like the rest - file the tracks in my music folder as fully licensed",
       "drive_file_id": "1_vQvje3vezyzJpXKJ7iBidkAEqY-c7zr",
-      "days": [
-        "mon"
-      ]
+      "carousel": "tips",
+      "note": "Moved from the series rotation to carousels (Krish, 2026-11-26: \"2 https://drive.google.com/file/d/1lCurob9xnwk7pK2gLbsKdgaaE1UqxqZ4/view?usp=drive_link and  https://drive.google.com/file/d/1C3CKrQSQ_xYqJHVGmhWIY-Mf9D4LQXwD/view?usp=drive_link are good rotations, and the rest are good to go behind carousels (the darker trap/hiphop ones). All are fully licensed\")."
     },
     {
       "id": "mind-bender",
@@ -758,15 +759,14 @@
       "intro_cue_s": 0.0,
       "outro_cue_s": null,
       "mood": "cinematic orchestral hybrid, epic, suspense (Epidemic's tags), 120 bpm",
-      "for": "series",
+      "for": "carousel",
       "status": "approved",
       "approved_by": "Krish",
       "approved_on": "2026-11-17",
       "approval_words": "i hate mindscape, i like the rest - file the tracks in my music folder as fully licensed",
       "drive_file_id": "1WDfa6K59mEEP3yAOa4J-ceBmBX4WMepF",
-      "days": [
-        "wed"
-      ]
+      "carousel": "tips",
+      "note": "Moved from the series rotation to carousels (Krish, 2026-11-26: \"2 https://drive.google.com/file/d/1lCurob9xnwk7pK2gLbsKdgaaE1UqxqZ4/view?usp=drive_link and  https://drive.google.com/file/d/1C3CKrQSQ_xYqJHVGmhWIY-Mf9D4LQXwD/view?usp=drive_link are good rotations, and the rest are good to go behind carousels (the darker trap/hiphop ones). All are fully licensed\")."
     },
     {
       "id": "conclusion",
@@ -803,15 +803,14 @@
       "intro_cue_s": 0.0,
       "outro_cue_s": null,
       "mood": "build, dreamy, mysterious (Epidemic's tags), 112 bpm",
-      "for": "series",
+      "for": "carousel",
       "status": "approved",
       "approved_by": "Krish",
       "approved_on": "2026-11-17",
       "approval_words": "conclusion",
       "drive_file_id": "1KVarSW53UNaXtPWz7mPVdL5g7K_vW7ng",
-      "days": [
-        "fri"
-      ]
+      "carousel": "tips",
+      "note": "Moved from the series rotation to carousels (Krish, 2026-11-26: \"2 https://drive.google.com/file/d/1lCurob9xnwk7pK2gLbsKdgaaE1UqxqZ4/view?usp=drive_link and  https://drive.google.com/file/d/1C3CKrQSQ_xYqJHVGmhWIY-Mf9D4LQXwD/view?usp=drive_link are good rotations, and the rest are good to go behind carousels (the darker trap/hiphop ones). All are fully licensed\")."
     },
     {
       "id": "four-on-the-funky-flour",
@@ -854,8 +853,55 @@
       "approved_on": "2026-11-26",
       "approval_words": "The music folder needs to stay with https://drive.google.com/file/d/1lCurob9xnwk7pK2gLbsKdgaaE1UqxqZ4/view?usp=drive_link being the new main track behind my videos.",
       "drive_file_id": "1lCurob9xnwk7pK2gLbsKdgaaE1UqxqZ4",
-      "days": [],
-      "main": true
+      "days": [
+        "mon",
+        "wed",
+        "fri"
+      ],
+      "note": "Ruling (Krish, 2026-11-26): one of the two series rotation tracks: \"2 https://drive.google.com/file/d/1lCurob9xnwk7pK2gLbsKdgaaE1UqxqZ4/view?usp=drive_link and  https://drive.google.com/file/d/1C3CKrQSQ_xYqJHVGmhWIY-Mf9D4LQXwD/view?usp=drive_link are good rotations, and the rest are good to go behind carousels (the darker trap/hiphop ones). All are fully licensed\"."
+    },
+    {
+      "id": "movie-instrumental",
+      "title": "Movie (Instrumental Version)",
+      "artist": "Nic Hanson",
+      "provider": "Epidemic Sound",
+      "provider_track_id": null,
+      "provider_url": null,
+      "licence_type": "Epidemic Sound subscription; channels safelisted",
+      "licence_id": "epidemic-sound-safelist-2026-10-12",
+      "licensee": "makeyourmindup (Krish Raja)",
+      "licence_file": "config/music-licences/epidemic-sound-safelist-2026-10-12.jpg",
+      "acquired_on": "2026-11-25",
+      "expires_on": null,
+      "platforms": [
+        "youtube",
+        "shorts",
+        "substack",
+        "reels",
+        "tiktok",
+        "linkedin"
+      ],
+      "monetisation_ok": null,
+      "content_id_cleared": true,
+      "attribution": null,
+      "restrictions": "Safelisted on Epidemic Sound (Krish's screenshot, 12 October): YouTube makeyourmindup, Instagram makeyourmind.up, TikTok therealkrisho, Facebook, website makeyourmindup.ai. Every other online platform, LinkedIn included, needs no safelisting: Epidemic's own words on the platform screen, 'All other online platforms are safe to publish on. No safelisting required.' (config/music-licences/epidemic-sound-other-platforms-2026-10-12.jpg). Epidemic Sound issues no per-track licence number; the screenshots are the record.",
+      "file": "ES_Movie (Instrumental Version) - Nic Hanson.mp3",
+      "sha256": "e72c5e9ce6633afece789e77d52980c3dffade29110432769a44cc2b410423fb",
+      "bytes": 4138586,
+      "duration_s": 121.587,
+      "sample_rate": 48000,
+      "measured_lufs": -10.4,
+      "measured_true_peak": 0.4,
+      "intro_cue_s": 0.0,
+      "outro_cue_s": null,
+      "mood": null,
+      "for": "carousel",
+      "status": "approved",
+      "approved_by": "Krish",
+      "approved_on": "2026-11-26",
+      "approval_words": "2 https://drive.google.com/file/d/1lCurob9xnwk7pK2gLbsKdgaaE1UqxqZ4/view?usp=drive_link and  https://drive.google.com/file/d/1C3CKrQSQ_xYqJHVGmhWIY-Mf9D4LQXwD/view?usp=drive_link are good rotations, and the rest are good to go behind carousels (the darker trap/hiphop ones). All are fully licensed",
+      "drive_file_id": "1i1Y3boJgyU__HEeEoHWWM90UWZ0fJJgJ",
+      "carousel": "tips"
     }
   ]
 }

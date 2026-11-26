@@ -119,7 +119,7 @@ There is one brand kit: `makeyourmindup > 1 Brand kit (permanent)` (`1kOCNq1F-MD
 | `Channel art` | see the index | every profile image and the exact profile copy; uploaded to the profiles by hand or a browser session, never by code |
 | `Intro sting` | `1qnaJkMPLKYoXVqVHEeRMfqn3kGQMWpH6` | `config/intro-sting.json` (by path): retired as an opening, the six clips are the series close's plate |
 | `character/krish` | `1D2MfX8-dAftGxILc_uzssCI6-sjElsJa` | `config/ve/character.json` (by path) |
-| `Music` | `1oHyJ9A5et5_uKW7QTq1VHX0NuGwwQVri` | The one home for licensed music and sound (`runtime.music_root`, `config/music-library.json`; approved sound effects in `sfx`, `config/sfx-approved.json`). Four on the Funky Flour is the main track under every video (Krish, 2026-11-26; `main` in the ledger, `music.py` main_first). |
+| `Music` | `1oHyJ9A5et5_uKW7QTq1VHX0NuGwwQVri` | The one home for licensed music and sound (`runtime.music_root`, `config/music-library.json`; approved sound effects in `sfx`, `config/sfx-approved.json`). Four on the Funky Flour and NO CURVES alternate week by week under every series video; the rest go behind carousels (Krish, 2026-11-26). |
 | `Photos` | `1L3tRgeGr4KgmqG2gHF5uQTzOartQpY7V` | headshots and likeness references (`scripts/post-pack/photos.py`); private, never posted as files |
 | `Style references` | `1J4cWCWaAtdUMEEsUs27pdWm3H50jGSPC` | A mirror of `Production Inspo` (`references.py`). Never file a clip here by hand, never publish one. |
 
