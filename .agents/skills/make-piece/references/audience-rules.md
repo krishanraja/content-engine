@@ -87,7 +87,7 @@ The Library is locked (26 Nov 2026; Krish: "I approve the new cover thumbnail sy
 artwork: fill the slots, never move the frame, no per-piece look, no second renderer.
 
 - Covers and thumbnails: `python scripts/covers/make_covers.py <piece> --out <folder>` (writes `covers.json`, which
-  post-pack reads as `cover_set`). `make_piece.py --set covers` and `--set video` are retired.
+  post-pack reads as `cover_set`). make_piece.py's old cover and video sets are retired.
 - Carousels: `python scripts/library/make_piece.py <piece> --set <set>` (piece, good-news, simple-advice, how-to,
   explainer, quiz, meme).
 - Every asset kind Growth used to make, and the command and set that make it now: `config/asset-routes.json`.
