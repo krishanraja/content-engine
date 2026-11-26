@@ -1,5 +1,8 @@
 # Step 6d: the funny lines
 
+Superseded (2026-11-26): step 6d is now `.agents/skills/plan-week/references/story-score.md`, whose step 8 runs
+these humour reads through `story_score.py humour`. Kept for history; do not follow it.
+
 Kept here, not in `.agents/skills/plan-week/SKILL.md`, so the core stays under its byte cap
 (scripts/check_skill_core.py). The core keeps the step and points here.
 
