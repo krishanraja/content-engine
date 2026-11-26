@@ -97,9 +97,11 @@ class Guard(unittest.TestCase):
         self.assertEqual(p['formats']['long_cut']['series']['sting_retired']['words'], 'Nothing before the hook, ever. Remove the sting exception for good.')
         self.assertEqual(json.loads((ROOT / 'config' / 'intro-sting.json').read_text(encoding='utf-8'))['status'], 'retired')
 
-    def test_every_series_cut_ends_on_the_plain_v5_outro_card_from_26_nov(self):
-        # Ruling (Krish, 2026-11-26): "1 agreed", to retiring the sting close and ending on the plain v5 outro card.
+    def test_every_series_cut_ends_on_the_v5_outro_card_from_26_nov(self):
+        # Ruling (Krish, 2026-11-26): "1 agreed", to retiring the sting close and ending on the v5 outro card, the Library's
+        # outro, which shows no days row and no series name (Krish, 2026-11-26: "the sub brands do not need to feature").
         short = dict(copy.deepcopy(GOOD_SHORT), date='2026-11-27', series='mind_the_gap')
+        short['close'] = dict(short['close'], days_row=False)
         self.assertEqual(brand_palette.check(short), [])
         refused = {
             'the sting close': {'id': 'sting_beat', 'seconds': 2.0, 'sting': True, 'days_row': False},
@@ -108,19 +110,23 @@ class Guard(unittest.TestCase):
             'the wide sting clip by its file': dict(short['close'], file='makeyourmindup-sting-16x9-mind_the_gap.mp4'),
             'the 11 Nov held sting': {'id': 'statement_beat', 'seconds': 2.0, 'file': 'sting-9x16-held.mp4'},
             'a 2.5 s beat': dict(short['close'], seconds=2.5),
-            'no days row': dict(short['close'], days_row=False),
+            'the series days row': dict(short['close'], days_row=True),
         }
         for name, close in refused.items():
             with self.subTest(name):
                 self.assertTrue(brand_palette.check(dict(short, close=close)), name)
         long_cut = {'date': '2026-11-30', 'format': 'long_cut', 'kind': 'series', 'series': 'follow_the_money', 'opening': 'hook',
-                    'sting': 'none', 'close': {'id': 'statement_card', 'seconds': 6.0, 'days_row': True}}
+                    'sting': 'none', 'close': {'id': 'statement_card', 'seconds': 6.0, 'days_row': False}}
         self.assertEqual(brand_palette.check(long_cut), [])
+        self.assertTrue(brand_palette.check(dict(long_cut, close=dict(long_cut['close'], days_row=True))))
         self.assertTrue(brand_palette.check(dict(long_cut, close={'id': 'sting_card', 'seconds': 6.0, 'sting': True, 'days_row': True})))
         # Nothing at the start changes: a sting before the hook is still refused.
         self.assertTrue(brand_palette.check(dict(long_cut, sting='before_hook')))
-        # A series piece of the week of 16 Nov keeps the ink close it was signed with (F33).
+        # A series piece of the week of 16 Nov keeps the ink close it was signed with, days row and all (F33).
         self.assertEqual(brand_palette.check(GOOD_SHORT), [])
+        self.assertEqual(brand_palette.check(dict(long_cut, date='2026-11-16',
+                                                  close={'id': 'statement_card', 'seconds': 6.0, 'days_row': True})), [])
+        self.assertTrue(brand_palette.check(dict(GOOD_SHORT, close=dict(GOOD_SHORT['close'], days_row=False))))
         # A series piece dated 23 to 25 Nov was signed with the retired sting close (F33): its close is not checked.
         signed = dict(copy.deepcopy(GOOD_SHORT), date='2026-11-23',
                       close={'id': 'sting_beat', 'seconds': 2.0, 'sting': True, 'days_row': False})
@@ -142,6 +148,14 @@ class Guard(unittest.TestCase):
         self.assertEqual(p['series_close']['words'], '1 agreed')
         self.assertEqual(p['series_close']['from'], '2026-11-26')
         self.assertEqual(p['series_close']['theme'], 'makeyourmindup-v5')
+        # The close is the Library's outro, and neither series close shows the days row (Krish, 2026-11-26).
+        outro = p['series_close']['outro']
+        self.assertEqual((outro['look'], outro['templates'], outro['days_row']),
+                         ('v5_outro', {'16x9': 'video-wide-outro', '9x16': 'video-vertical-outro'}, False))
+        for fmt in ('long_cut', 'short_cut'):
+            self.assertIs(p['formats'][fmt]['series']['days_row'], False)
+            self.assertIs(p['series_close']['before'][fmt]['days_row'], True)
+        self.assertLess(p['series_close']['before']['until'], p['series_close']['unchecked']['from'])
         self.assertEqual(p['close_copy']['tagline'], 'Built to help you decide.')
         self.assertEqual(p['closes']['statement_beat']['seconds_max'], 2.0)
         self.assertNotIn('sting_clip', dir(brand_palette))

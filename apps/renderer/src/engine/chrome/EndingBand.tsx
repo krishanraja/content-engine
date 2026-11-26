@@ -4,11 +4,16 @@ import { Grain, HouseLogo } from '../../house/components'
 import { HOUSE_FONTS } from '../../house/geometry'
 import { textWidth } from '../../house/metrics'
 import type { EngineRenderProps } from '../props'
+import { V5Outro } from './V5Outro'
 
-/** The house close, the plain v5 outro card: one card after his last word, the same card quick-edit's kit films
- *  (scripts/quick-edit/kit/v5-close.html). Every video, series or off day, wide or tall, ends on it (Ruling, Krish,
- *  2026-11-26: "1 agreed"; config/brand-palette.json series_close), drawn in the locked v5 look (props.renderTheme
- *  makeyourmindup-v5: its tokens, its stacked mark). Krish picked this direction, "C: the statement", on 10 Nov 2026,
+/** The house close. Every whole cut dated from 26 Nov, series or off day, wide or tall, ends on the v5 outro card, the
+ *  Library's video-vertical-outro or video-wide-outro (Ruling, Krish, 2026-11-26: "1 agreed"; config/brand-palette.json
+ *  series_close): compile marks its props ending.look 'v5_outro' and V5Outro.tsx draws it, with S3h, "Follow for more",
+ *  the address and the climb bars, and no tagline, days row or series name.
+ *
+ *  The statement card below is the close every cut dated before 26 Nov was signed with, and still renders as it was
+ *  (props with no ending.look). It is the same card quick-edit's kit films (scripts/quick-edit/kit/endcard.html).
+ *  Krish picked this direction, "C: the statement", on 10 Nov 2026,
  *  with the copy "Built to help you decide." (docs/production/CLOSING.md). The tagline is the picture: Anton, each line rising out of its own mask, the
  *  last word in the series colour; then, in reading order, the stacked logo on ink, the three days in their series
  *  colours, "Subscribe free" and the address, whose underline draws on last. Everything arrives fast and settles
@@ -255,10 +260,13 @@ export function StingClose({ props, frame }: { props: EngineRenderProps; frame: 
   )
 }
 
-/** The plain v5 outro card: full-frame ink with the statement; nothing of the last beat shows through. Only the props of
- *  a series cut signed 23 to 25 Nov carry props.ending.sting, and draw the retired sting close (StingClose) instead. */
+/** The close: the v5 outro card (V5Outro) for props compile marked ending.look 'v5_outro', every whole cut dated from
+ *  26 Nov. Otherwise the close the cut was signed with: the retired sting close (StingClose) for a series cut signed 23
+ *  to 25 Nov (props.ending.sting), else the statement card, full-frame ink with the statement, nothing of the last beat
+ *  showing through. */
 export function EndingBand({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null {
   if (props.ending?.sting) return <StingClose props={props} frame={frame} />
+  if (props.ending?.look === 'v5_outro') return <V5Outro props={props} frame={frame} />
   const model = endingBandModel(props, frame)
   if (!model || !props.ending) return null
   const tall = props.aspect === '9:16'

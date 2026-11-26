@@ -28,7 +28,7 @@
     "from_why": "Krish, 2026-11-18: \"we have a strict NO ICONS, ONLY THE WORDMARK DURING THE TITLE FRAME AND THE CLOSING FRAME\", after the icon tile still appeared on this week's cuts. The earlier date of 23 Nov kept the tile on every piece of the week of 16 Nov; that carve-out is gone: the rule binds every piece from the palette's own start, Mon 16 Nov, and Fri 13 Nov (a frozen engine, F33) is the only older piece."
   },
   "series_close": {
-    "ruled": "Ruling (Krish, 2026-11-26): every video, series or off day, wide or tall, ends on the plain v5 outro card, and the intro sting closes no cut. A series cut closes on statement_card (16:9) or statement_beat (9:16), drawn in the locked v5 look (props.renderTheme makeyourmindup-v5), with the series days row.",
+    "ruled": "Ruling (Krish, 2026-11-26): every video, series or off day, wide or tall, ends on the v5 outro card, and the intro sting closes no cut. The card is the Library's outro (outro below): statement_card (16:9) is video-wide-outro and statement_beat (9:16) is video-vertical-outro, drawn in the locked v5 look (props.renderTheme makeyourmindup-v5), with no days row and no series name.",
     "asked": "Every series video still closes on the old intro-sting clips (day colours, the old gift-box wordmark). My recommendation: retire them and end on the plain v5 outro card.",
     "words": "1 agreed",
     "from": "2026-11-26",
@@ -37,12 +37,38 @@
       "long_cut": "statement_card",
       "short_cut": "statement_beat"
     },
-    "drawn_by": "apps/renderer/src/engine/chrome/EndingBand.tsx (EndingBand, the plain card: props.ending with no sting)",
+    "outro": {
+      "look": "v5_outro",
+      "templates": {
+        "16x9": "video-wide-outro",
+        "9x16": "video-vertical-outro"
+      },
+      "library": "docs/ve/cards/library (library.json, lock.json: approved 2026-11-26 by the rebrand session on Krish's delegation)",
+      "shows": "What the two templates show and nothing else: S3h, the one wordmark (assets/brand/makeyourmindup/v5/s3h.svg), \"Follow for more\", makeyourmindup.ai, and the climb bars, coral, butter, lilac and mint, rising along the foot. No tagline, no Subscribe free, no stacked mark (V10 and V6 are retired: S3h replaced them), no days row and no series name.",
+      "one_mark": "Krish, 2026-11-25 (docs/ve/cards/library/ONE-MARK.md): \"there should only be one of these wordmarks on any given artifact or page, and the headline should only appear once on any given medium\"",
+      "no_sub_brands": "Krish, 2026-11-26: \"it should just read like a curated news feed, the sub brands do not need to feature\"",
+      "days_row": false,
+      "tall_box": "the Library's content box for video-vertical-outro, x 145 to 935, y 87 to 1353, in place of the old card's tall core box",
+      "timing": "the template's own motion: 150 Library frames (25 fps) in the wide close's 6 s, settled by 2.4 s; the tall template's 90 frames played inside the 2 s beat, settled by 1.33 s"
+    },
+    "drawn_by": "apps/renderer/src/engine/chrome/V5Outro.tsx (props.ending.look v5_outro, set by ve compile on every whole cut dated from 26 Nov); EndingBand.tsx draws the statement card only for cuts dated before",
     "never": "a sting clip anywhere in a cut dated from 26 Nov: ve compile lays none, ve lint (scripts/velib/guards.py close_problems) refuses a spec naming one, and ve render (scripts/velib/compile.py ending_problems) refuses props carrying one or drawn in another theme",
     "unchecked": {
       "from": "2026-11-23",
       "until": "2026-11-25",
       "why": "A series cut dated 23 to 25 Nov was signed with the retired sting close and keeps it (F33), so this palette does not check its close."
+    },
+    "before": {
+      "until": "2026-11-22",
+      "why": "A series cut dated before Mon 23 Nov closed on the statement card with the series days row and keeps it (F33).",
+      "long_cut": {
+        "close": "statement_card",
+        "days_row": true
+      },
+      "short_cut": {
+        "close": "statement_beat",
+        "days_row": true
+      }
     }
   },
   "days": {
@@ -176,32 +202,34 @@
     "feed_margin_px": 80
   },
   "close_copy": {
-    "about": "The one copy of the close's words, read by ve compile (props.ending), quick-edit's kit (endcard.html) and the renderer's tests: Krish, 10 Nov 2026, \"The copy should read: \"Built to help you decide.\"\"; and 20 Nov 2026, \"A, with Built to help you decide, and then Subscribe free at makeyourmindup.ai\".",
+    "about": "The one copy of the statement card's words, the close of every cut dated before 26 Nov, read by ve compile (props.ending), quick-edit's kit (endcard.html) and the renderer's tests: Krish, 10 Nov 2026, \"The copy should read: \"Built to help you decide.\"\"; and 20 Nov 2026, \"A, with Built to help you decide, and then Subscribe free at makeyourmindup.ai\". From 26 Nov the close is the Library's outro and says only its words, \"Follow for more\" and makeyourmindup.ai (series_close.outro).",
     "tagline": "Built to help you decide.",
     "cta": "Subscribe free",
     "site": "makeyourmindup.ai"
   },
   "closes": {
     "statement_card": {
-      "about": "The plain v5 outro card, wide: every 16:9 cut ends on it, series and off day alike (Ruling, Krish, 2026-11-26: \"1 agreed\"; series_close). One cut to ink, \"Built to help you decide.\" with the last word in the colour, the masthead, Subscribe free and the address, the series days row on a series day, settled by 2.75 s, then held long enough for YouTube's clickable end-screen elements (5 to 20 s, docs/production/CLOSING.md, end_hold_s). Drawn in the locked v5 look. No burned-in click here.",
+      "about": "The v5 outro card, wide: every 16:9 cut dated from 26 Nov ends on it, series and off day alike (Ruling, Krish, 2026-11-26: \"1 agreed\"; series_close). It is the Library's video-wide-outro: the climb bars fill the frame and drop into the staircase, S3h lands, then \"Follow for more\" and makeyourmindup.ai, settled by 2.4 s, then held long enough for YouTube's clickable end-screen elements (5 to 20 s, docs/production/CLOSING.md, end_hold_s). No days row, no series name, no burned-in click. A cut dated before 26 Nov keeps the statement card it was signed with: \"Built to help you decide.\", the masthead, Subscribe free and the address, the series days row on a series day.",
       "shapes": [
         "16x9"
       ],
       "seconds_min": 6,
       "made_by": [
-        "scripts/quick-edit/kit.py page_endcard (endcard-16x9.mp4)",
+        "scripts/quick-edit/kit.py page_endcard (endcard-16x9.mp4, the card of cuts dated before 26 Nov)",
+        "apps/renderer/src/engine/chrome/V5Outro.tsx",
         "apps/renderer/src/engine/chrome/EndingBand.tsx"
       ]
     },
     "statement_beat": {
-      "about": "The plain v5 outro card, tall: every 9:16 cut ends on it, series and off day alike (Ruling, Krish, 2026-11-26: \"1 agreed\"; series_close). One compact end beat of at most 2 s, \"Built to help you decide.\" and one action (Subscribe free, makeyourmindup.ai) with the masthead, the series days row on a series day, every word and mark inside the tall core box. Drawn in the locked v5 look. The only place a wordmark appears on a tall cut but the title frame.",
+      "about": "The v5 outro card, tall: every 9:16 cut dated from 26 Nov ends on it, series and off day alike (Ruling, Krish, 2026-11-26: \"1 agreed\"; series_close). It is the Library's video-vertical-outro played inside one compact end beat of at most 2 s: the climb bars drop into the staircase, S3h lands, then \"Follow for more\" and makeyourmindup.ai, settled by 1.33 s, inside the Library's content box. No days row, no series name. The only place a wordmark appears on a tall cut but the title frame. A cut dated before 26 Nov keeps the ink beat it was signed with, every word inside the tall core box.",
       "shapes": [
         "9x16"
       ],
       "seconds_max": 2.0,
       "box": "tall_core",
       "made_by": [
-        "scripts/quick-edit/kit.py page_endcard (endcard-9x16.mp4)",
+        "scripts/quick-edit/kit.py page_endcard (endcard-9x16.mp4, the card of cuts dated before 26 Nov)",
+        "apps/renderer/src/engine/chrome/V5Outro.tsx",
         "apps/renderer/src/engine/chrome/EndingBand.tsx"
       ]
     },
@@ -274,7 +302,7 @@
           "series_pill": "section_beats"
         },
         "close": "statement_card",
-        "days_row": true,
+        "days_row": false,
         "sting_when_built": "after_hook",
         "sting_retired": {
           "on": "2026-11-12",
@@ -306,7 +334,7 @@
           "series_pill": false
         },
         "close": "statement_beat",
-        "days_row": true
+        "days_row": false
       },
       "off": {
         "opening": "hook",

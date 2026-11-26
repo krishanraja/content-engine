@@ -75,12 +75,16 @@ def expect(date, fmt, kind=None, palette=None):
     rule = palette.get('logo_rule') or {}
     if rule.get('from') and str(date)[:10] < rule['from'] and fmt in (rule.get('before') or {}):
         rules['body'] = {**(rules.get('body') or {}), **rule['before'][fmt]}
-    # Every video ends on the plain v5 outro card (Ruling, Krish, 2026-11-26: "1 agreed"; series_close). A series piece
-    # dated 23 to 25 Nov was signed with the retired sting close and keeps it (F33): its close is not checked here.
+    # Every video ends on the v5 outro card, the Library's outro, with no days row (Ruling, Krish, 2026-11-26: "1 agreed";
+    # series_close). A series piece dated 23 to 25 Nov was signed with the retired sting close and keeps it (F33): its
+    # close is not checked here. One dated before 23 Nov keeps the statement card with the series days row (before).
     window = (palette.get('series_close') or {}).get('unchecked') or {}
+    before = (palette.get('series_close') or {}).get('before') or {}
     if k == 'series' and window.get('from', '9999') <= str(date)[:10] <= window.get('until', ''):
         for key in ('close', 'days_row'):
             rules.pop(key, None)
+    elif k == 'series' and str(date)[:10] <= before.get('until', '') and fmt in before:
+        rules.update(before[fmt])
     return {'kind': k, 'series': d.get('series') if k == 'series' else None, 'shape': palette['formats'][fmt]['shape'], **rules}
 
 
@@ -167,7 +171,7 @@ def check(record, palette=None):
                            f'outro card, {want["close"]} (Ruling, Krish, 2026-11-26: "1 agreed"; series_close)')
             if 'days_row' in close and 'days_row' in want and bool(close['days_row']) != bool(want['days_row']):
                 out.append(f'{say}: the close {"shows" if close["days_row"] else "drops"} the series days; the palette says '
-                           f'{"show" if want["days_row"] else "no series days on an off day"}')
+                           f'{"show" if want["days_row"] else "no series days row (the v5 outro card shows none and no series name, Krish, 2026-11-26; nor does an off day)"}')
     return out
 
 
@@ -178,9 +182,10 @@ def self_test():
                   'opening': 'hook', 'sting': 'none', 'body': {'icon': False, 'wordmark': False, 'series_pill': False},
                   'close': {'id': 'statement_beat', 'seconds': 1.8, 'file': 'endcard-9x16.mp4', 'days_row': True}}
     ok.append(('a short cut built to the palette passes', check(good_short, p), []))
-    # Every video ends on the plain v5 outro card from 26 Nov (Ruling, Krish, 2026-11-26: "1 agreed").
-    v5_short = dict(good_short, date='2026-11-27', series='mind_the_gap')
-    ok.append(('a series short on the plain v5 outro card passes from 26 Nov', check(v5_short, p), []))
+    # Every video ends on the v5 outro card from 26 Nov, with no days row (Ruling, Krish, 2026-11-26: "1 agreed").
+    v5_short = dict(good_short, date='2026-11-27', series='mind_the_gap', close=dict(good_short['close'], days_row=False))
+    ok.append(('a series short on the v5 outro card passes from 26 Nov', check(v5_short, p), []))
+    ok.append(('a series days row on the v5 outro card is refused', bool(check(dict(v5_short, close=good_short['close']), p)), True))
     ok.append(('a series short closing on the sting is refused from 26 Nov',
                bool(check(dict(v5_short, close={'id': 'statement_beat', 'seconds': 2.0, 'sting': True, 'days_row': True}), p)), True))
     ok.append(('the retired sting close is refused by its file', bool(check(dict(v5_short, close={

@@ -14,6 +14,7 @@ import { EngineRenderPropsSchema, type EngineRenderProps } from '../props'
 import { ENDING_SAFE, LANDING_KICKER, LandingCard, landingCardLayout, landingCardModel } from './LandingCard'
 import { WhyStep, whyStepModel } from './WhyStep'
 import { ENDING_DAYS, ENDING_SETTLED_S, ENDING_SETTLED_TALL_S, ENDING_TAGLINE, EndingBand, endingBandModel, statementLines } from './EndingBand'
+import { V5_OUTRO, V5_OUTRO_TRACKS, V5_OUTRO_WORDS, libraryEase, v5OutroBars, v5OutroModel } from './V5Outro'
 
 function fixture(aspect: EngineRenderProps['aspect']): EngineRenderProps {
   const image = { src: 'stacked.svg', pixelWidth: 1040, pixelHeight: 320 }
@@ -172,21 +173,108 @@ describe('the close card clears the small-text floor (Krish, 2026-11-19)', () =>
   })
 })
 
-describe('every video ends on the plain v5 outro card (Ruling, Krish, 2026-11-26: "1 agreed")', () => {
-  it('a v5 series cut with no sting closes on the plain card, wide and tall, with the series days and never a sting plate', () => {
-    for (const aspect of ['16:9', '9:16'] as const) {
-      const base = fixture(aspect)
-      const props = EngineRenderPropsSchema.parse({ ...base, renderTheme: 'makeyourmindup-v5', ending: { ...base.ending, days: [...ENDING_DAYS] } })
-      const markup = renderToStaticMarkup(React.createElement(EndingBand, { props, frame: props.ending!.fromFrame + 59 }))
-      for (const text of [...statementLines(aspect), 'Subscribe free', 'makeyourmindup.ai', 'Mondays']) expect(markup).toContain(text)
-      expect(markup).not.toContain('data-close')
-      expect(markup).not.toContain('<video')
+describe('every video ends on the v5 outro card, the Library\'s outro (Ruling, Krish, 2026-11-26: "1 agreed")', () => {
+  const library = JSON.parse(readFileSync(new URL('../../../../../docs/ve/cards/library/library.json', import.meta.url), 'utf8')) as {
+    items: { id: string; width: number; height: number; wordmarks: number; step_edges?: number[]; scene: { kind: string; rect: number[]; value?: string; slot?: string; color?: string }[]
+      motion: { fps: number; frames: number; hold_from: number; tracks: { element: string; property: string; start: number; duration: number; from: number }[] } }[] }
+  const lock = JSON.parse(readFileSync(new URL('../../../../../docs/ve/cards/library/lock.json', import.meta.url), 'utf8')) as {
+    locked: { id: string; approved_by: string; words: string }[]; pending_approval: string[] }
+  const outro = (aspect: EngineRenderProps['aspect']) => { const base = fixture(aspect)
+    return EngineRenderPropsSchema.parse({ ...base, renderTheme: 'makeyourmindup-v5', durationFrames: base.ending!.fromFrame + V5_OUTRO[aspect].closeFrames,
+      beats: base.beats.map((beat, i) => i === base.beats.length - 1 ? { ...beat, toFrame: base.ending!.fromFrame + V5_OUTRO[aspect].closeFrames } : beat),
+      ending: { ...base.ending, days: [], look: 'v5_outro' } }) }
+
+  it.each(['9:16', '16:9'] as const)('%s: shows what the template shows: S3h, Follow for more, the address, no tagline, days or stacked mark', (aspect) => {
+    const props = outro(aspect)
+    const markup = renderToStaticMarkup(React.createElement(EndingBand, { props, frame: props.durationFrames - 1 }))
+    expect(markup).toContain(`data-template="${V5_OUTRO[aspect].item}"`)
+    expect(markup).toContain('s3h.svg')
+    for (const text of ['Follow for more', 'makeyourmindup.ai']) expect(markup).toContain(text)
+    // One wordmark (ONE-MARK.md): S3h once, never the stacked V10 or V6 it replaced.
+    expect(markup.match(/<img[^>]*s3h\.svg/g)).toHaveLength(1)
+    expect(markup).not.toContain(props.brand.stacked.src)
+    for (const text of [...statementLines(aspect), 'Subscribe free', ...ENDING_DAYS.map((d) => d.day), props.series.promise, 'follow.the.money', 'Follow the money'])
+      expect(markup).not.toContain(text)
+    expect(markup).not.toContain('<video')
+  })
+
+  it.each(['9:16', '16:9'] as const)('%s: its words, mark, bars and motion are the Library template\'s (library.json)', (aspect) => {
+    const shape = V5_OUTRO[aspect]
+    const item = library.items.find((i) => i.id === shape.item)!
+    expect([item.width, item.height, item.wordmarks]).toEqual([shape.width, shape.height, 1])
+    expect(item.scene.filter((op) => op.kind === 'mark').map((op) => op.value)).toEqual(['s3h'])
+    expect(item.scene.filter((op) => op.kind === 'text').map((op) => op.value)).toEqual([V5_OUTRO_WORDS.invitation, V5_OUTRO_WORDS.site])
+    const bars = item.scene.find((op) => op.kind === 'bars')!.rect
+    expect([bars[1], bars[3]]).toEqual([shape.bars.top, shape.bars.height])
+    expect(item.step_edges ?? [0, 0.25, 0.5, 0.75, 1]).toEqual([...shape.bars.edges])
+    expect([item.motion.fps, item.motion.frames, item.motion.hold_from]).toEqual([25, shape.frames, shape.holdFrom])
+    const track = (element: string, property: string) => item.motion.tracks.find((t) => t.element === element && t.property === property)!
+    expect([1, 2, 3, 4].map((n) => { const t = track(`bar-${n}`, 'drop'); return { start: t.start, duration: t.duration } })).toEqual(V5_OUTRO_TRACKS.drop)
+    expect([1, 2, 3, 4].map((n) => track(`bar-${n}`, 'pulse').start)).toEqual(V5_OUTRO_TRACKS.pulse)
+    for (const name of ['make', 'your', 'mind', 'up'] as const) {
+      const t = track(name, 'land')
+      expect({ start: t.start, duration: t.duration }).toEqual(V5_OUTRO_TRACKS[name])
+    }
+    expect({ start: track('disc', 'land').start, duration: track('disc', 'land').duration }).toEqual(V5_OUTRO_TRACKS.disc)
+    expect({ start: track('disc', 'lock').start, duration: track('disc', 'lock').duration }).toEqual(V5_OUTRO_TRACKS.lock)
+    const enter = track('body_1', 'enterY')
+    expect([enter.start, enter.duration, enter.from, track('label_1', 'enterY').from]).toEqual([shape.enter.start, shape.enter.duration, shape.enter.invitation, shape.enter.site])
+    // The settled staircase is the template's: each bar a quarter wide (the wide one stepped), rising a quarter of the foot each.
+    const props = outro(aspect)
+    const settled = v5OutroBars(props, v5OutroModel(props, props.durationFrames - 1)!)
+    settled.forEach((bar, i) => {
+      expect(bar.left).toBeCloseTo(shape.bars.edges[i]! * shape.width)
+      expect(bar.width).toBeCloseTo((shape.bars.edges[i + 1]! - shape.bars.edges[i]!) * shape.width)
+      expect(bar.top).toBeCloseTo(shape.height - shape.bars.height * (i + 1) / 4)
+      expect(bar.colour).toBe(['#FF6A4D', '#FFD84D', '#B7A6FF', '#7EF0C0'][i])
+      expect(bar.pulse).toBe(false)
+    })
+  })
+
+  it('the outro templates are approved in the Library (lock.json), on the delegation and his "1 agreed"', () => {
+    for (const id of ['video-vertical-outro', 'video-wide-outro']) {
+      const row = lock.locked.find((r) => r.id === id)!
+      expect(row.words).toContain('1 agreed')
+      expect(lock.pending_approval).not.toContain(id)
     }
   })
 
-  it('the palette names no sting close: the series close is the plain card on both shapes', () => {
+  it('plays the template\'s motion: four full-height bars on its first frame, settled by 2.4 s wide and 1.33 s tall', () => {
+    for (const aspect of ['16:9', '9:16'] as const) {
+      const props = outro(aspect)
+      const start = props.ending!.fromFrame
+      expect(v5OutroModel(props, start - 1)).toBeNull()
+      const first = v5OutroModel(props, start)!
+      expect(first.snap).toBe(true)
+      expect(v5OutroBars(props, first).map((bar) => [bar.top, bar.height])).toEqual([[0, V5_OUTRO[aspect].height], [0, V5_OUTRO[aspect].height], [0, V5_OUTRO[aspect].height], [0, V5_OUTRO[aspect].height]])
+      expect([first.make, first.your, first.mind, first.up, first.words]).toEqual([0, 0, 0, 0, null])
+      const hold = aspect === '16:9' ? 72 : 40  // Library frame 60 at 25 fps: 2.4 s wide; 60 of its 90 in the 2 s beat tall
+      expect(v5OutroModel(props, start + hold - 1)!.settled).toBe(false)
+      const settled = v5OutroModel(props, start + hold)!
+      expect(settled.settled).toBe(true)
+      expect([settled.make, settled.your, settled.disc, settled.lock, settled.mind, settled.up, settled.words]).toEqual([1, 1, 1, 1, 1, 1, 1])
+      expect(v5OutroModel(props, props.durationFrames)).toBeNull()
+    }
+    expect(libraryEase(0)).toBe(0)
+    expect(libraryEase(1)).toBe(1)
+    expect(libraryEase(0.5)).toBeGreaterThan(0.9)
+  })
+
+  it('a cut with no look keeps the close it was signed with, and the outro carries no days row or sting', () => {
+    const base = fixture('16:9')
+    const signed = renderToStaticMarkup(React.createElement(EndingBand, { props: base, frame: 300 }))
+    expect(signed).toContain('Built to')
+    expect(signed).not.toContain('v5-outro')
+    expect(() => EngineRenderPropsSchema.parse({ ...base, ending: { ...base.ending, days: [...ENDING_DAYS], look: 'v5_outro' } })).toThrow(/no series days row/)
+  })
+
+  it('the palette: no sting close, the series close is the outro on both shapes, and no days row', () => {
     const palette = JSON.parse(readFileSync(new URL('../../../../../config/brand-palette.json', import.meta.url), 'utf8'))
     expect(palette.series_close.close).toEqual({ long_cut: 'statement_card', short_cut: 'statement_beat' })
+    expect(palette.series_close.outro.templates).toEqual({ '16x9': V5_OUTRO['16:9'].item, '9x16': V5_OUTRO['9:16'].item })
+    expect(palette.series_close.outro.look).toBe('v5_outro')
+    expect(palette.formats.long_cut.series.days_row).toBe(false)
+    expect(palette.formats.short_cut.series.days_row).toBe(false)
     expect(palette.closes.sting_beat).toBeUndefined()
     expect(palette.closes.sting_card).toBeUndefined()
   })

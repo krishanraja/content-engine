@@ -601,12 +601,18 @@ sting is retired (`config/intro-sting.json`). Each report records its opening
 (`opening`), always the hook. Read
 `.agents/skills/produce-video/references/opening.md`.
 
-**The close: the plain v5 outro card.** Ruling (Krish, 2026-11-26): "1
-agreed", to retiring the sting close. Every cut, wide and tall, series or off
-day, ends on it (`config/brand-palette.json` `series_close`; ve draws it in
-`EndingBand.tsx`); no intro sting clip goes anywhere in a cut, and ve lint and
-ve render refuse one. Only a series cut dated 23 to 25 Nov keeps the sting
-close it was signed with.
+**The close: the v5 outro card.** Ruling (Krish, 2026-11-26): "1 agreed",
+to retiring the sting close. Every cut dated from 26 Nov, wide and tall,
+series or off day, ends on it (`config/brand-palette.json` `series_close`).
+It is the Library's outro, `video-wide-outro` and `video-vertical-outro`
+(`docs/ve/cards/library`, approved in `lock.json`), drawn by ve's
+`V5Outro.tsx`: S3h, "Follow for more", makeyourmindup.ai and the climb bars.
+No tagline, no stacked mark, no days row and no series name (ONE-MARK: one
+wordmark per artefact; Krish, 26 Nov: "the sub brands do not need to
+feature"). No intro sting clip goes anywhere in a cut, and ve lint and ve
+render refuse one; ve render also refuses a cut from 26 Nov that closes on the
+old statement card. A cut dated before 26 Nov keeps the close it was signed
+with, the sting close for a series cut dated 23 to 25 Nov.
 
 **Then the outro card and the audio treatment: required before the final
 render** (house rule `STORY_INTRO_OUTRO`). Krish, 2026-10-12: "when the
