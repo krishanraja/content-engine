@@ -12,7 +12,7 @@ I selected, and give me the final opportunity to switch something out if it does
 
 The still is real: a frame of his take (--frame, --at seconds) or a real photo, screenshot or post image saved from its
 source (--image, a file; keep its link in the plan). Nothing here generates a picture. The scene is 1080 x 1920, the
-still filling it, the caption in a house face (Anton, Archivo, Fraunces, Plex Mono) in the house white with at most one
+still filling it, the caption in a house face (Anton, Archivo, Fraunces, DM Mono) in the house white with at most one
 marked word in the series' colour (config/caption-themes.json: follow.the.money #FFD84D, under.the.hood #B7A6FF,
 mind.the.gap #FF6A4D, an off-day post house mint #7EF0C0), inside the tall core box (config/brand-palette.json safe).
 It is a mock of the look, not a frame of the cut: ve draws the real one.
@@ -49,7 +49,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 FONTS = ROOT / 'assets' / 'fonts' / 'makeyourmindup'
 FACES = {'anton': 'Anton-Regular.ttf', 'archivo': 'Archivo-Variable.ttf', 'fraunces': 'Fraunces-Upright-Variable.ttf',
-         'mono': 'IBMPlexMono-Bold.ttf'}
+         'mono': 'DMMono-Medium.ttf'}  # the v5 mono (IBM Plex Mono is retired; its files stay for pre-v5 re-renders)
 ACCENT = {'follow_the_money': '#FFD84D', 'under_the_hood': '#B7A6FF', 'mind_the_gap': '#FF6A4D', 'off': '#7EF0C0'}
 W, H = 1080, 1920
 # The tall core box every critical word stays inside (the platform UI covers the edges).

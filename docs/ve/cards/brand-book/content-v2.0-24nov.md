@@ -104,7 +104,7 @@ Body: Exact values for the components already in the video engine, so the placeh
 - Tokens: docs/ve/cards/why-ladder-evo/tokens.json.
 
 ## After you approve
-- The book replaces v1.5 in the Drive folder "1 Brand kit (permanent)", and the surfaces go to "2 Channel art (permanent)", keeping private crops out of shared folders.
+- The book replaces v1.5 in the Drive folder "1 Brand kit (permanent)", and the surfaces go to "1 Brand kit (permanent)/Channel art" ("2 Channel art (permanent)" is retired since 26 Nov 2026), keeping private crops out of shared folders.
 - One cowork prompt per account updates Instagram, TikTok, YouTube, X, LinkedIn, Facebook, Substack, Spotify and Apple, makeyourmindup.ai and the email signature. You run them.
 - Tokens and rulings land in the repos: content-engine first, then growth-makeyourmindup, makeyourmindup and krishraja-site.
 - Nothing has been committed, filed or applied yet.

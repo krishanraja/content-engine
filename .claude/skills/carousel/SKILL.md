@@ -71,8 +71,8 @@ experiment with the floor itself; if an experiment needs a floor line broken, as
 1. Read the brief, the standard, the floor and the inspiration cards he ticked (F26).
 2. Write the deck (`carousel-deck/1`), run the cold read, pass `carousel_check.py DECK.json`.
 3. Pictures for every card, real-world first: a real photo, screen or document the story names; else one photoreal
-   scene per card on Higgsfield (`gpt_image_2_6`, 4:3, about 0.25 credits each, the house robot's photos as references
-   when it appears; say the cost first). The company's official wordmark from Brandfetch when the story names one.
+   scene per card on Higgsfield (`gpt_image_2_6`, 4:3, about 0.25 credits each; say the cost first), never a robot:
+   the felt robot is retired with v5 (`docs/ve/cards/library/FLOOR.md`). The company's official wordmark from Brandfetch when the story names one.
 4. Fill the set: `python3 scripts/library/make_piece.py docs/plans/<plan> --set <set> --out <work folder>` with the
    deck's words and the pictures in the cover facts' `"library"` block. It writes `carousel/slide-NN.png` and
    `post-pack-files.json`. Codex makes only the per-piece pictures the slots take (a `ve card` for the plates).

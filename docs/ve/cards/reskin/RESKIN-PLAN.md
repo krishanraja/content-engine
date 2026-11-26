@@ -1,5 +1,10 @@
 # Reskin plan: every piece published before v5
 
+**Cancelled (26 Nov 2026).** Krish cancelled the reskin of old posts on 26 November: pieces published before v5 keep the
+covers, thumbnails and social images they went out with. Nothing below is to be run on old posts. The plan stays as the
+record of what was proposed. The v5 profile set (the first tier below) is now a separate job: its files are in Drive,
+"1 Brand kit (permanent)/Channel art", and a worker session uploads them.
+
 ## What exists (read 25 Nov 2026; recount from the catalogue before starting)
 - **Substack:** the feed holds 20 posts from 5 Oct to 13 Nov: 13 articles and 7 older "VIDEO:" posts. Each has a cover image (1200 x 630) and a social image.
 - **YouTube:** each long cut has a wide thumbnail, and each Short a cover frame.
@@ -7,7 +12,7 @@
 - **Growth's social posts:** 139 from 5 Oct to 14 Nov, read from Buffer: carousels, memes, off-day posts and clips (docs/reviews/2026-11-16-what-works.md in growth-makeyourmindup).
 - **Profiles:** avatars, banners and highlights on every platform, and the Substack header, wordmark and email header.
 - **The members area:** 10 PNG files from 4 pieces.
-- **Drive:** the v1.x brand kit in "1 Brand kit (permanent)", and old channel art in "2 Channel art (permanent)".
+- **Drive:** the v1.x brand kit in "1 Brand kit (permanent)", and old channel art in "2 Channel art (permanent)". Both old folders' contents now live in the Drive archive, "_Archive/2026-11-26 v4 brand (retired, do not use)" (id 17UTQnHNyaKzuhN-Mc8aEgOljiHsa9VtM); "2 Channel art (permanent)" is retired and refused. The v5 kit is the one folder "1 Brand kit (permanent)" (id 1kOCNq1F-MD3u2SGvF8hoqUKo4DPnyuNi), with the channel art inside it in "Channel art" (id 1FVfcoSMT3DCzvyvsq0KHdSgr8JTzRBIe).
 
 ## Rules for the reskin
 - Never re-upload a published video, and never change a published URL. Both lose views, comments and links.

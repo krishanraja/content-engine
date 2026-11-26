@@ -43,7 +43,8 @@ class SpecTest(unittest.TestCase):
         self.assertTrue(palettes.spec_problems({'style': {'palette': 'neon-rainbow'}})[0].startswith('palette.unknown'))
 
     def test_compile_refuses_the_retired_palette(self):
-        spec = dict(load_json(FIXTURE / 'spec.json'), format='face-with-proof')
+        # The v5 fixture: compile refuses the older fixture's retired theme (makeyourmindup-video-v1) for new compiles.
+        spec = dict(load_json(FIXTURE / 'spec-v5.json'), format='face-with-proof')
         cut_id = next(iter(spec['cuts']))
         house = compile_cut(spec, cut_id, timed_words(), FIXTURE)
         self.assertNotIn('brandTokens', house, 'no palette, no second set')
@@ -58,7 +59,7 @@ class TheLogoOnlyOnTheTitleFrameAndTheClose(unittest.TestCase):
     logo_rule). From its date compile tells the renderer the body carries no logo; before it the props are unchanged."""
 
     def compiled(self, day):
-        spec = dict(copy.deepcopy(load_json(FIXTURE / 'spec.json')), format='face-with-proof')
+        spec = dict(copy.deepcopy(load_json(FIXTURE / 'spec-v5.json')), format='face-with-proof')
         spec['publish_day'] = day
         return {cut: compile_cut(spec, cut, timed_words(), FIXTURE) for cut in spec['cuts']}
 
@@ -70,7 +71,7 @@ class TheLogoOnlyOnTheTitleFrameAndTheClose(unittest.TestCase):
                     self.assertIs(props.get('bodyLogo'), False)
 
     def test_an_undated_spec_carries_none_either(self):
-        spec = dict(copy.deepcopy(load_json(FIXTURE / 'spec.json')), format='face-with-proof')
+        spec = dict(copy.deepcopy(load_json(FIXTURE / 'spec-v5.json')), format='face-with-proof')
         spec.pop('publish_day', None)
         for cut in spec['cuts']:
             with self.subTest(cut=cut):
