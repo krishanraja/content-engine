@@ -10,10 +10,14 @@ proof folder (.cache/proof/story-engine-v5/): results.json holds ids, letters an
     python3 scripts/post-pack/story_proof.py old <Monday> [--picks F]       # the board's lead and his pick, by idea_id
     python3 scripts/post-pack/story_proof.py run <Monday> --arm S|R [--dry] [--budget-usd N]
     python3 scripts/post-pack/story_proof.py pairs                          # what would pair (no key, no sheet)
-    python3 scripts/post-pack/story_proof.py sheet --out FILE [--seed N]     # the sealed key and the answer sheet
+    python3 scripts/post-pack/story_proof.py sheet [--seed N]               # the sealed key and the sheet, in the cache only
     python3 scripts/post-pack/story_proof.py tells [--score GUESSES]        # the blind tells check
+    python3 scripts/post-pack/story_proof.py release --out FILE             # the sheet to his notes, once the tells passed
     python3 scripts/post-pack/story_proof.py record ANSWERS
     python3 scripts/post-pack/story_proof.py reveal
+
+The order holds in code: the sheet is written only to the gitignored cache; release copies it to his notes folder only
+when tells.json passed against the current key's sha256; record and reveal refuse until that release took place.
 
 Arm S selects from the week's whole gather pool (the board's options and every pool story known before the board);
 Arm R re-ranks the old options only. --dry runs every step with fake transports and spends nothing.
@@ -27,6 +31,7 @@ import math
 import random
 import re
 import secrets
+import shutil
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -294,7 +299,8 @@ def engine_changed(sha, cfg=None):
 
 
 class FakePoster:
-    """--dry: a divergent route that answers every op and spends nothing."""
+    """--dry: a divergent route that answers every op and spends nothing. Its judged numbers clear the soundness
+    minimums (config/story-score.json angle.soundness), so the angle path runs."""
 
     def __init__(self):
         self.calls = []
@@ -304,7 +310,9 @@ class FakePoster:
         if body['op'] == 'provoke':
             return 200, {'ok': True, 'runId': 'dry', 'sparks': [{'title': 'A dry-run spark', 'mechanism': 'reversal'}]}
         n = len(body.get('ideas') or [])
-        return 200, {'ok': True, 'results': [{'status': 'novel', 'scores': {'originality': 5, 'usefulness': 5, 'specificity': 5}} for _ in range(n)]}
+        rule = ss.RUBRIC['angle']['soundness']
+        scores = {'originality': 5, 'usefulness': max(5, rule['usefulness_min']), 'specificity': max(5, rule['specificity_min'])}
+        return 200, {'ok': True, 'results': [{'status': 'novel', 'scores': dict(scores)} for _ in range(n)]}
 
 
 def fake_cap():
@@ -318,15 +326,22 @@ def fake_read(_request):
 
 
 def fake_inputs(work, week, ideas, scfg=None):
-    """--dry: the in-session inputs a real run makes (the blind judges and the whys probes), as flat middling numbers,
-    so every step runs. They say nothing about any story."""
+    """--dry: the in-session inputs a real run makes (the blind judges, the whys probes as whys-probe-check.ts output in
+    story/probes.json, and the raw why-ladder/1 probes in probe/<id>.whys.json that the gate reads), as flat middling
+    numbers, so every step runs and a dry-scored copy can go through board_feed.py gate. They say nothing about any
+    story."""
     scfg = scfg or ss.RUBRIC
     story = work / f'{week}-week'
     judged, probes = {}, {}
+    rungs = [{'n': n, 'counted': 'documented' if n <= 3 else 'inferred'} for n in range(1, 6)]
     for key, _day, _main, o in ss.board(ideas):
+        oid = str(o.get('id') or '').lower()
         judged[key] = {a['id']: {'score': 5, 'because': 'dry run'} for a in scfg['axes'] if a['source'] == 'blind_judge'}
-        probes[str(o.get('id') or '').lower()] = {'schema': 'whys-probe/1', 'documented': 3, 'inferred': 2, 'sites': 2, 'mechanism_rungs': 1,
-                                                  'counter_rungs': 1, 'landing_ok': True, 'unreadable': [], 'problems': [], 'rungs': []}
+        probes[oid] = {'schema': 'whys-probe/1', 'documented': 3, 'inferred': 2, 'sites': 2, 'mechanism_rungs': 1,
+                       'counter_rungs': 1, 'landing_ok': True, 'unreadable': [], 'problems': [], 'rungs': [dict(r) for r in rungs]}
+        ev = lambda n: [{'url': f'https://dry.example/{n}', 'domain': 'dry.example', 'quote': 'dry run'}]  # noqa: E731
+        ss.save(story / 'probe' / f'{oid}.whys.json', {'schema': 'why-ladder/1', 'question': 'Why?', 'rungs': [
+            {'n': n, 'question': 'Why?', 'answer': 'dry run', 'evidence': ev(n)} for n in range(1, 4)]})
     ss.save(ss.file_of(week, 'judged', work, scfg), judged)
     ss.save(ss.file_of(week, 'probes', work, scfg), probes)
     return story
@@ -360,6 +375,9 @@ def run(week, arm, *, dry=False, budget_usd=None, plans=None, cache=None, poster
     ideas = candidates(pooldoc, arm)
     work = root / ('dry' if dry else 'live') / f'arm-{arm}'
     folder = work / f'{week}-week'
+    if dry:
+        # A dry run starts clean: nothing a real run paid for is in it, and nothing of an earlier dry run carries over.
+        shutil.rmtree(folder, ignore_errors=True)
     folder.mkdir(parents=True, exist_ok=True)
     save(folder / 'ideas.json', ideas)
     _i, sources, _f, _c = week_files(week, plans)
@@ -583,8 +601,9 @@ def sheet_text(key, rows, digest=None, cfg=None, intro=None, answer_line=True):
     return '\n'.join(lines)
 
 
-def sheet(out, seed=None, cache=None, weeks=None, force=False, cfg=None, allow_dry=False):
-    """Writes the sealed key (gitignored) and the answer sheet. The sheet carries only the key's sha256."""
+def sheet(seed=None, cache=None, weeks=None, force=False, cfg=None, allow_dry=False):
+    """Writes the sealed key and the answer sheet, both in the gitignored cache only (sheet.md). The sheet carries only
+    the key's sha256. It reaches his notes only through release, once the tells check passed on this key."""
     cfg = cfg or CFG
     root = cache_dir(cache, cfg)
     key_path = root / 'key.json'
@@ -592,16 +611,49 @@ def sheet(out, seed=None, cache=None, weeks=None, force=False, cfg=None, allow_d
         raise ProofError(f'{key_path} is already sealed: a new key would unblind the old sheet (use --force only before he answers)')
     if (root / 'answers.json').exists():
         raise ProofError('answers are recorded: the key cannot be made again')
+    if (root / 'release.json').exists():
+        raise ProofError('the sheet was released to his notes: a new key would unblind the one he has')
     rows, not_shown = pairs(weeks, cache, cfg, allow_dry)
     key = seal(rows, not_shown, seed if seed is not None else secrets.randbits(64))
     key['dry'] = bool(allow_dry)
     save(key_path, key)
     digest = sha256_of(key_path)
     text = sheet_text(key, rows, digest, cfg)
-    Path(out).parent.mkdir(parents=True, exist_ok=True)
-    Path(out).write_text(text, encoding='utf-8')
-    save(root / 'sheet.json', {'sha256': digest, 'pairs': [p['pair'] for p in key['pairs']], 'out': str(out), 'made_at': key['made_at']})
+    (root / 'sheet.md').write_text(text, encoding='utf-8')
+    save(root / 'sheet.json', {'sha256': digest, 'pairs': [p['pair'] for p in key['pairs']], 'sheet': str(root / 'sheet.md'), 'made_at': key['made_at']})
     return key, digest
+
+
+def released(root):
+    """Why record and reveal may not run yet, or None: the sheet must have been released on the sealed key."""
+    rel, meta = load(root / 'release.json'), load(root / 'sheet.json')
+    if not rel or not meta:
+        return 'the sheet was never released to his notes (release, after the tells check passed): refused'
+    if rel.get('sha256') != meta.get('sha256') or not (root / 'key.json').exists() or sha256_of(root / 'key.json') != rel.get('sha256'):
+        return 'the released sheet was made on another key: refused'
+    return None
+
+
+def release(out, cache=None, cfg=None):
+    """Copies the sheet to his notes folder, only when tells.json passed against the current key's sha256. Returns the
+    path written."""
+    cfg = cfg or CFG
+    root = cache_dir(cache, cfg)
+    key_path, text_path = root / 'key.json', root / 'sheet.md'
+    if not key_path.exists() or not text_path.exists():
+        raise ProofError('no sealed key or sheet: run sheet first')
+    digest = sha256_of(key_path)
+    t = load(root / 'tells.json')
+    if not t:
+        raise ProofError('no tells check on file: run tells on a fresh reader before he sees the sheet')
+    if t.get('key_sha256') != digest:
+        raise ProofError('the tells check was made on another key: run it again on this sheet')
+    if not t.get('passed'):
+        raise ProofError(f'the tells check did not pass ({t.get("right")} of {t.get("of")} right): change the renderer only, make the sheet again, and check again')
+    Path(out).parent.mkdir(parents=True, exist_ok=True)
+    Path(out).write_text(text_path.read_text(encoding='utf-8'), encoding='utf-8')
+    save(root / 'release.json', {'sha256': digest, 'out': str(out), 'at': now_iso()})
+    return Path(out)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -624,7 +676,9 @@ def bar(rule, n):
 
 def tells(score_file=None, cache=None, docs=None, cfg=None):
     """Without a file: the packet for the blind tells check (cards only). With one (`Pnn: A|B` lines, which card the
-    reader thinks is new): (passed, doc), passed when the reader got fewer right than the protocol allows."""
+    reader thinks is new): (passed, doc), passed only when the reader is near chance on both sides, more than n - below
+    and fewer than below right (a reader who tells the arms apart with the labels swapped has told them apart), and
+    answered every pair. doc carries the key's sha256: release reads it."""
     cfg = cfg or CFG
     root = cache_dir(cache, cfg)
     key = load(root / 'key.json')
@@ -644,7 +698,9 @@ def tells(score_file=None, cache=None, docs=None, cfg=None):
     n = len(key['pairs'])
     right = sum(1 for p in key['pairs'] if guesses.get(p['pair']) == p['new'])
     limit = rule['below'] if n == rule['of'] else math.ceil(rule['below'] * n / rule['of'])
-    doc = {'right': right, 'of': n, 'answered': len(guesses), 'below': limit, 'passed': right < limit and len(guesses) == n}
+    above = n - limit
+    doc = {'right': right, 'of': n, 'answered': len(guesses), 'below': limit, 'above': above,
+           'passed': above < right < limit and len(guesses) == n, 'key_sha256': sha256_of(root / 'key.json')}
     save(root / 'tells.json', doc)
     return doc['passed'], doc
 
@@ -680,6 +736,9 @@ def parse_answers(text):
 def record(answers_file, cache=None, cfg=None):
     cfg = cfg or CFG
     root = cache_dir(cache, cfg)
+    why = released(root)
+    if why:
+        return {}, [why]
     got, problems = parse_answers(Path(answers_file).read_text(encoding='utf-8'))
     if got:
         save(root / 'answers.json', {'at': now_iso(), 'answers': got})
@@ -701,6 +760,9 @@ def reveal(cache=None, docs=None, write=True, cfg=None):
         return None, ['no sealed key or sheet: nothing to reveal']
     if sha256_of(key_path) != meta['sha256']:
         return None, ['the key does not match the sha256 printed on the sheet: refused']
+    why = released(root)
+    if why:
+        return None, [why]
     key = load(key_path)
     missing = [p['pair'] for p in key['pairs'] if p['pair'] not in answers]
     if missing:
@@ -767,11 +829,12 @@ def main(argv=None, *, poster=None, cap=None, read=None, kill=None, call=None, p
     r.add_argument('--budget-usd', type=float)
     sub.add_parser('pairs')
     s = sub.add_parser('sheet')
-    s.add_argument('--out', required=True, help="the answer sheet's path (his notes folder, never the board)")
     s.add_argument('--seed', type=int)
     s.add_argument('--force', action='store_true')
     t = sub.add_parser('tells')
     t.add_argument('--score', help='the blind reader\'s guesses, `Pnn: A|B` lines')
+    rl = sub.add_parser('release')
+    rl.add_argument('--out', required=True, help="the answer sheet's path in his notes folder (never the board), once the tells check passed")
     rc = sub.add_parser('record')
     rc.add_argument('file')
     sub.add_parser('reveal')
@@ -800,9 +863,13 @@ def main(argv=None, *, poster=None, cap=None, read=None, kill=None, call=None, p
                               'not_shown': not_shown, 'shown': len(rows)}, indent=1))
             return 0
         if a.cmd == 'sheet':
-            key, digest = sheet(a.out, a.seed, cache, force=a.force)
+            key, digest = sheet(a.seed, cache, force=a.force)
             print(f'{len(key["pairs"])} pairs ({sum(1 for p in key["pairs"] if p["new"] == "A")} with the new card as A), '
-                  f'{len(key["not_shown"])} not shown; key sealed, sha256 {digest}; sheet at {a.out}')
+                  f'{len(key["not_shown"])} not shown; key sealed, sha256 {digest}; the sheet is in the cache until the tells check '
+                  'passes and release copies it to his notes')
+            return 0
+        if a.cmd == 'release':
+            print(f'released to {release(a.out, cache)}')
             return 0
         if a.cmd == 'tells':
             passed, doc = tells(a.score, cache, docs)

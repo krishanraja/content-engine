@@ -14,7 +14,12 @@
   "scripts/whys-probe-check.ts",
   "config/story-score.json",
   "config/story-floor.json",
-  "config/beat.json"
+  "config/beat.json",
+  "scripts/post-pack/idea_checks.py",
+  "scripts/post-pack/humour_check.py",
+  "scripts/post-pack/divergent.py",
+  "config/style-references.json",
+  "packages/contracts/src/whys.ts"
  ],
  "series_day": {
   "follow_the_money": "mon",
