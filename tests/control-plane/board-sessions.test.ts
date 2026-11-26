@@ -61,7 +61,8 @@ describe('every copied prompt carries how to report back, with no key in it', ()
     // The walls ride in every copied prompt (Ruling, Krish, 2026-11-11): the one place, the archive, and only his Approve places an idea.
     expect(writeBack({ pieceId: MON, week: WEEK, day: 'mon', step: 'board' })).toContain(WALLS)
     expect(WALLS).toMatch(/only place to put the work[\s\S]*retired and redirect here[\s\S]*Never post or publish[\s\S]*only Krish's Approve places it/)
-    expect(ROLES).toMatch(/Codex generates the visual assets[\s\S]*Claude writes the words[\s\S]*arbitrates the standards[\s\S]*Codex's own report is never proof/)
+    expect(ROLES).toMatch(/only from the v5 Library commands[\s\S]*carousel_make\.py[\s\S]*make_covers\.py[\s\S]*Codex builds only a photoreal still[\s\S]*Claude writes the words[\s\S]*arbitrates the standards[\s\S]*never proof/)
+    expect(ROLES).not.toMatch(/ve\.py card/)
     expect(LEARNING_RULE).toMatch(/record_harness_observation[\s\S]*internal-auditor[\s\S]*Only Krish's preference or inspiration goes to report_to_taste_engine[\s\S]*a defect never does/)
   })
 
