@@ -634,11 +634,29 @@ class Spend(unittest.TestCase):
 class Floors(unittest.TestCase):
     def test_an_explainer_with_no_steps_is_not_read_and_one_unchecked_step_fails(self):
         self.assertIsNone(ss.steps_verifiable({'copy': 'How the ad price works.'}))
-        self.assertEqual(ss.floors_failed('explainer', {}, {'steps_verifiable': None}), [], 'no steps: the floor is not read')
+        self.assertEqual(ss.floors_failed('explainer', {'fit': 7}, {'steps_verifiable': None}), [], 'no steps: the floor is not read')
         unchecked = {'steps': [{'text': 'Open settings', 'checked': 'https://help.openai.com/x'}, {'text': 'Turn it off'}]}
         self.assertFalse(ss.steps_verifiable(unchecked))
-        self.assertEqual(len(ss.floors_failed('explainer', {}, {'steps_verifiable': False})), 1)
+        self.assertEqual(len(ss.floors_failed('explainer', {'fit': 7}, {'steps_verifiable': False})), 1)
         self.assertTrue(ss.steps_verifiable({'steps': [{'text': 'Open settings', 'checked': 'https://help.openai.com/x'}]}))
+
+    def test_the_off_days_hold_the_fit_floor_hard(self):
+        # Ruling offday_beat (Krish, 2026-11-26): good news, memes, shorts and off-day carousels are the reader's world.
+        for kind in ('goodnews', 'offday_meme', 'offday_short', 'explainer'):
+            fit = [f for f in RUBRIC['types'][kind]['floors'] if f.get('axis') == 'fit']
+            self.assertEqual(len(fit), 1, kind)
+            self.assertTrue(fit[0].get('hard', True), kind)
+            self.assertTrue(any(fit[0]['reason'] in r for r in ss.floors_failed(kind, {'fit': 1}, {})), kind)
+            self.assertFalse(any(fit[0]['reason'] in r for r in ss.floors_failed(kind, {'fit': 4}, {})), kind)
+        self.assertTrue(any(r['id'] == 'offday_beat' for r in RUBRIC['rulings']))
+
+    def test_an_off_days_fit_reads_its_template_and_cards(self):
+        meme = {'id': 'tpl', 'kind': 'meme', 'hook': 'The dog and the doorbell', 'copy': 'A dog answers every bell.',
+                'template': {'title': 'The dog and the doorbell', 'why_it_works': 'Reversal: every AI tool a record label buys.'}}
+        self.assertEqual(ss.fit_axis(ss.blind_view(meme), False)[0], 4)
+        self.assertEqual(ss.fit_axis(ss.blind_view(dict(meme, template={'title': 'The dog'})), False)[0], 1)
+        cards = {'id': 'c', 'hook': 'Three prompts', 'cards': [{'words': 'A songwriter splits the demo into stems.'}]}
+        self.assertEqual(ss.fit_axis(ss.blind_view(cards), False)[0], 4)
 
     def test_a_note_is_reported_and_never_fails(self):
         checks = {'probe_documented': 3, 'probe_rungs': 5, 'landing_ok': True, 'primary_sources': 0, 'sound_angle': True,
@@ -836,9 +854,14 @@ class DryRun(unittest.TestCase):
         found = ic.story_findings(scored, WEEK, None, ladders, cfg)
         self.assertEqual([f['line'] for f in found if f['code'] == 'story'], [], 'every option scored, every open day in order')
         plan_floors = {f['reason'] for t in ('hero_mon', 'hero_wed', 'hero_fri') for f in RUBRIC['types'][t]['floors']}
-        for f in found:
+        # The 23 Nov board was made for the old reader: an off-day option with no line into the focus sectors is refused
+        # by the off days' fit floor (ruling offday_beat, Krish, 2026-11-26), which is the point of it.
+        beat_floors = {f['reason'] for t in ('goodnews', 'offday_meme', 'offday_short', 'explainer')
+                       for f in RUBRIC['types'][t]['floors'] if f.get('axis') == 'fit'}
+        heroes = [f for f in found if not any(r in f['line'] for r in beat_floors)]
+        for f in heroes:
             self.assertTrue(any(r in f['line'] for r in plan_floors), f'only a series floor the plan names may refuse: {f["line"]}')
-        self.assertLessEqual(len(found), 2, [f['line'] for f in found])
+        self.assertLessEqual(len(heroes), 2, [f['line'] for f in heroes])
         swapped = json.loads(json.dumps(scored))
         day, n = next((d, n) for d in ('mon', 'wed', 'fri') for n in range(len(swapped['days'][d]) - 1)
                       if not swapped['days'][d][n]['story_score']['floors_failed'] and not swapped['days'][d][n + 1]['story_score']['floors_failed']

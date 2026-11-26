@@ -760,6 +760,9 @@ def wave1(ideas, sources, plans=None, p6=None, status=None, before=None):
         found += idea_checks.goodnews_findings(ideas, week, idea_checks.goodnews_history(sources, earlier_ideas(week, plans)))
     # The beat: his focus sectors, not governance, regulation, security or breaches (Krish, 2026-11-24; config/beat.json).
     found += idea_checks.offbeat_findings(ideas, week)
+    # The reader's world on the off days, from the story score's board (Krish, 2026-11-26: "Make sure all the good news
+    # suggestions and meme suggestions are also aligned to the new positioning, as well as the carousels").
+    found += idea_checks.offday_beat_findings(ideas, week)
     # The story score: every open option scored blind, each open day in its order, a hero holding three sourced whys
     # before the pick, and nothing under its floor (the story engine v5 plan; Ruling, Krish, 2026-11-26).
     found += idea_checks.story_findings(ideas, week, status, probes_of(week, plans), before=before)
