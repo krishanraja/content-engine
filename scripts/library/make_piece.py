@@ -132,14 +132,14 @@ def carousel_pack(facts, base, set_name, library, out_dir, evidence):
                 problems.append(f'{item_id} needs its {name} from the piece (library.{item_id}.{name} in the cover facts)')
         for name, rule in (item.get('slots') or {}).items():
             if rule.get('role') == 'document':
-                proof_path = proof_image(facts, base)
-                if proof_path is None:
-                    problems.append(f'{item_id} {name} needs the piece\'s proof (cover.proof)')
-                    continue
                 ink = given.get('proof_ink_px')
                 if not isinstance(ink, (int, float)) or ink <= 0:
                     problems.append('a document slot needs "proof_ink_px" in the facts\' "library" block (the painted height of the '
                                     'proof\'s key line in source pixels), so the reading floor is checked')
+                    continue
+                proof_path = proof_image(facts, base)
+                if proof_path is None:
+                    problems.append(f'{item_id} {name} needs the piece\'s proof (cover.proof)')
                     continue
                 from PIL import Image
                 with Image.open(proof_path) as im:
