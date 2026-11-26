@@ -191,6 +191,16 @@ class RunTest(Folder):
         self.assertNotEqual(summary['new']['sat']['id'], 'goodnews', 'the weekly good news keeps its place')
         self.assertTrue(str(self.cache / 'dry') in str(summary['ledger']) or (self.cache / 'dry').exists())
         self.assertFalse((self.cache / 'spend.jsonl').exists(), 'a dry run never touches the proof ledger')
+        self.assertTrue(any(summary['new'][d]['angle'] for d in ('mon', 'wed', 'fri')), 'the dry fakes reach the angle path')
+        work = self.cache / 'dry' / 'arm-S'
+        scores = json.loads((work / f'{WEEK}-week' / 'scores.json').read_text(encoding='utf-8'))['options']
+        self.assertFalse(any('sound angle' in f for s in scores.values() for f in s['floors_failed']), 'a dry hero has a sound angle')
+        import board_feed
+        import idea_checks as ic
+        probes = board_feed.probes_of(WEEK, work)
+        ordered = json.loads((work / f'{WEEK}-week' / 'ideas.json').read_text(encoding='utf-8'))
+        found = ic.story_findings(ordered, WEEK, None, probes, dict(ic.STORY, **{'from': WEEK}))
+        self.assertFalse([f for f in found if 'whys' in f['line']], 'the gate reads the dry probes as three sourced whys')
 
     def test_pairs_by_idea_id_ties_not_shown(self):
         self.ready()
@@ -236,9 +246,8 @@ class RunTest(Folder):
 class SheetTest(Folder):
     def test_the_sheet_prints_only_the_hash(self):
         self.ready()
-        out = self.tmp / 'notes' / 'sheet.md'
-        key, digest = sp.sheet(out, seed=42, cache=self.cache, cfg=self.cfg, allow_dry=True)
-        text = out.read_text(encoding='utf-8')
+        key, digest = sp.sheet(seed=42, cache=self.cache, cfg=self.cfg, allow_dry=True)
+        text = (self.cache / 'sheet.md').read_text(encoding='utf-8')
         self.assertEqual(digest, hashlib.sha256((self.cache / 'key.json').read_bytes()).hexdigest())
         self.assertIn(f'sha256 {digest}', text)
         for p in key['pairs']:
@@ -254,14 +263,14 @@ class SheetTest(Folder):
     def test_a_second_key_and_a_dry_sheet_are_refused(self):
         self.ready()
         with self.assertRaises(sp.ProofError):
-            sp.sheet(self.tmp / 's.md', seed=1, cache=self.cache, cfg=self.cfg)
-        sp.sheet(self.tmp / 's.md', seed=1, cache=self.cache, cfg=self.cfg, allow_dry=True)
+            sp.sheet(seed=1, cache=self.cache, cfg=self.cfg)
+        sp.sheet(seed=1, cache=self.cache, cfg=self.cfg, allow_dry=True)
         with self.assertRaises(sp.ProofError):
-            sp.sheet(self.tmp / 's.md', seed=2, cache=self.cache, cfg=self.cfg, allow_dry=True)
+            sp.sheet(seed=2, cache=self.cache, cfg=self.cfg, allow_dry=True)
 
     def test_tells(self):
         self.ready()
-        key, _ = sp.sheet(self.tmp / 's.md', seed=3, cache=self.cache, cfg=self.cfg, allow_dry=True)
+        key, _ = sp.sheet(seed=3, cache=self.cache, cfg=self.cfg, allow_dry=True)
         passed, doc = sp.tells(None, self.cache, self.docs, self.cfg)
         packet = Path(doc['packet']).read_text(encoding='utf-8')
         self.assertNotIn('sha256', packet)
@@ -273,10 +282,59 @@ class SheetTest(Folder):
         wrong = self.tmp / 'wrong.txt'
         wrong.write_text('\n'.join(f'{p["pair"]}: {"B" if p["new"] == "A" else "A"}' for p in key['pairs']), encoding='utf-8')
         passed, doc = sp.tells(wrong, self.cache, self.docs, self.cfg)
-        self.assertTrue(passed)
+        self.assertFalse(passed, 'a reader who tells every pair apart with the labels swapped has told them apart')
+        half = self.tmp / 'half.txt'
+        n = len(key['pairs'])
+        half.write_text('\n'.join(f'{p["pair"]}: {p["new"] if k < n // 2 else ("B" if p["new"] == "A" else "A")}'
+                                  for k, p in enumerate(key['pairs'])), encoding='utf-8')
+        passed, doc = sp.tells(half, self.cache, self.docs, self.cfg)
+        self.assertTrue(passed, doc)
+
+    def test_the_tells_bar_is_two_sided(self):
+        th = sp.protocol()['tells']
+        self.assertEqual((th['of'], th['below'], th['above']), (18, 13, 5))
+        sealed(self.cache, KINDS)
+        for right, ok in ((0, False), (2, False), (5, False), (6, True), (9, True), (12, True), (13, False), (18, False)):
+            f = self.tmp / f'g{right}.txt'
+            key = json.loads((self.cache / 'key.json').read_text(encoding='utf-8'))
+            f.write_text('\n'.join(f'{p["pair"]}: {p["new"] if k < right else ("B" if p["new"] == "A" else "A")}'
+                                   for k, p in enumerate(key['pairs'])), encoding='utf-8')
+            passed, doc = sp.tells(f, self.cache, self.docs, self.cfg)
+            self.assertEqual(passed, ok, f'{right} of 18 right')
+
+    def test_the_sheet_reaches_his_notes_only_after_the_tells_passed(self):
+        self.ready()
+        key, digest = sp.sheet(seed=5, cache=self.cache, cfg=self.cfg, allow_dry=True)
+        out = self.tmp / 'notes' / 'sheet.md'
+        with self.assertRaises(sp.ProofError):
+            sp.release(out, self.cache, self.cfg)
+        self.assertFalse(out.exists(), 'no tells check: nothing is released')
+        right = self.tmp / 'right.txt'
+        right.write_text('\n'.join(f'{p["pair"]}: {p["new"]}' for p in key['pairs']), encoding='utf-8')
+        sp.tells(right, self.cache, self.docs, self.cfg)
+        with self.assertRaises(sp.ProofError):
+            sp.release(out, self.cache, self.cfg)
+        self.assertFalse(out.exists(), 'a failed tells check: nothing is released')
+        answers = self.tmp / 'answers.md'
+        answers.write_text(answer(key, 6), encoding='utf-8')
+        got, problems = sp.record(answers, self.cache)
+        self.assertEqual(got, {})
+        self.assertIn('never released', problems[0])
+        self.assertIn('never released', sp.reveal(self.cache, self.docs, write=False)[1][0])
+        n = len(key['pairs'])
+        half = self.tmp / 'half.txt'
+        half.write_text('\n'.join(f'{p["pair"]}: {p["new"] if k < n // 2 else ("B" if p["new"] == "A" else "A")}'
+                                  for k, p in enumerate(key['pairs'])), encoding='utf-8')
+        self.assertTrue(sp.tells(half, self.cache, self.docs, self.cfg)[0])
+        self.assertEqual(sp.release(out, self.cache, self.cfg), out)
+        self.assertIn(f'sha256 {digest}', out.read_text(encoding='utf-8'))
+        got, problems = sp.record(answers, self.cache)
+        self.assertEqual(problems, [])
+        with self.assertRaises(sp.ProofError):
+            sp.sheet(seed=6, cache=self.cache, cfg=self.cfg, allow_dry=True, force=True)
 
 
-def sealed(cache, kinds, refused=()):
+def sealed(cache, kinds, refused=(), released=True):
     """A key of len(kinds) pairs, the sheet's hash beside it, alternating New as A."""
     pairs = []
     for n, kind in enumerate(kinds, 1):
@@ -287,7 +345,10 @@ def sealed(cache, kinds, refused=()):
                       'A': new if a_new else old, 'B': old if a_new else new, '_row': n - 1})
     key = {'proof': 'story-engine-v5', 'seed': 1, 'made_at': 'x', 'pairs': pairs, 'not_shown': []}
     sp.save(cache / 'key.json', key)
-    sp.save(cache / 'sheet.json', {'sha256': sp.sha256_of(cache / 'key.json'), 'pairs': [p['pair'] for p in pairs]})
+    digest = sp.sha256_of(cache / 'key.json')
+    sp.save(cache / 'sheet.json', {'sha256': digest, 'pairs': [p['pair'] for p in pairs]})
+    if released:
+        sp.save(cache / 'release.json', {'sha256': digest, 'out': 'notes', 'at': 'x'})
     return key
 
 
@@ -371,6 +432,11 @@ class RevealTest(unittest.TestCase):
         results, problems = sp.reveal(self.cache, self.docs)
         self.assertIsNone(results)
         self.assertIn('does not match', problems[0])
+        k['pairs'][0]['new'] = 'A'
+        (self.cache / 'key.json').write_text(json.dumps(k), encoding='utf-8')
+        sp.save(self.cache / 'sheet.json', {'sha256': sp.sha256_of(self.cache / 'key.json')})
+        results, problems = sp.reveal(self.cache, self.docs)
+        self.assertIn('another key', problems[0], 'a sheet released on another key is refused')
 
     def test_results_hold_ids_letters_and_counts_only(self):
         results, _ = self.reveal_with(lambda k: answer(k, 13))
