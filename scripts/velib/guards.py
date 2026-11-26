@@ -13,6 +13,8 @@ gate they bind a whole cut of a piece published from creative_direction.MOTION_F
   - `opening_problems(spec)`: nothing before the hook on any cut, ever: a spec naming a sting (brand.intro_sting) or
     an episode card where the sting was (brand.opening_exception) is refused (Ruling, Krish, 12 Nov: "Nothing before the
     hook, ever. Remove the sting exception for good.").
+  - `close_problems(spec)`: every video dated from 26 Nov ends on the plain v5 outro card, so a spec naming an intro
+    sting clip anywhere, or made in another theme, is refused (Ruling, Krish, 26 Nov: "1 agreed").
   - `freeze(directory)` / `engine_route(...)` / `engine_problems(...)`: the engine and the rules freeze at Sign storyboard
     (ve expect). Proof and render run on the commit pinned there by themselves; a fix on main reaches the piece only under
     Krish's standing engine-follows-main yes or when the house golden test passes on it, and nothing asks him to approve
@@ -272,6 +274,29 @@ def opening_problems(spec: dict) -> list[str]:
     return out
 
 
+def close_problems(spec: dict) -> list[str]:
+    """The close of a piece dated from 26 Nov, refused before anything is drawn (Ruling, Krish, 2026-11-26: "1 agreed"):
+    every video, wide or tall, ends on the plain v5 outro card (config/brand-palette.json series_close), so the spec
+    carries none of the intro sting clips anywhere (a path, file name or sha256 of config/intro-sting.json clips, or a
+    path in their library folder), and a piece with a whole cut is made in the locked v5 look that draws that card. A
+    series cut dated 23 to 25 Nov keeps the retired sting close it was signed with (F33); ve compile lays it."""
+    from . import compile as ve_compile  # noqa: PLC0415
+    rule = ve_compile.V5_CLOSE
+    if str(spec.get('publish_day') or '')[:10] < rule['from']:
+        return []
+    out = []
+    hits = ve_compile.carried_stings(spec, ve_compile._sting_marks(ve_compile._intro()), 'spec')
+    if hits:
+        out.append(f'close.v5_outro {hits[0]}: names an intro sting clip ({len(hits)} place{"s" if len(hits) > 1 else ""}), and '
+                   f'the sting closes no cut: every video ends on the plain v5 outro card ({ve_compile.V5_CLOSE_RULING}); '
+                   'remove it')
+    whole = any(not c.get('excerpt', False) for c in (spec.get('cuts') or {}).values())
+    if whole and spec.get('theme') != rule['theme']:
+        out.append(f'close.v5_outro theme: {spec.get("theme")} does not draw the plain v5 outro card; every video ends on it '
+                   f'({ve_compile.V5_CLOSE_RULING}), so the theme is {rule["theme"]}')
+    return out
+
+
 def off_day_beds(rules: dict | None = None) -> list[str]:
     """The tracks the music ledger marks for off days, in ledger order (the rotation)."""
     want = (rules or config()['off_day']).get('off_day_for', 'off-day')
@@ -321,7 +346,7 @@ def spec_lints(spec: dict) -> list[str]:
     from .sfx import style_problems  # noqa: PLC0415
     from . import qc_frames  # noqa: PLC0415
     return (qc_frames.lints(spec) + idea_problems(spec) + one_object_problems(spec) + retype_problems(spec) + offday_problems(spec) + opening_problems(spec)
-            + annotation_lints(spec) + style_problems(spec))
+            + close_problems(spec) + annotation_lints(spec) + style_problems(spec))
 
 
 # ---------------------------------------------------------------- 3. freeze the engine during a piece
