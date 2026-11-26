@@ -18,7 +18,9 @@
  */
 import { createRequire } from 'node:module'
 import { readFileSync, writeFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { CAPTION_THEMES } from '../apps/renderer/src/engine/captions/names'
 import { THEMES } from '../apps/renderer/src/engine/captions/themes'
@@ -26,8 +28,8 @@ import { ArtDirectedCaption } from '../apps/renderer/src/engine/chrome/ArtDirect
 import { EngineRenderPropsSchema } from '../apps/renderer/src/engine/props'
 import fixture from '../fixtures/ve/engine-core/props.json'
 
-const ROOT = fileURLToPath(new URL('..', import.meta.url)).replace(/\/$/, '')
-const require = createRequire(`${ROOT}/package.json`)
+const ROOT = fileURLToPath(new URL('..', import.meta.url))
+const require = createRequire(join(ROOT, 'package.json'))
 let chromium: any
 try { ({ chromium } = require('playwright')) } catch { throw new Error('audit-caption-steady needs Playwright with Chromium (npm i -g playwright, or the cloud container\'s own)') }
 
@@ -39,19 +41,23 @@ const pages = WORDS.map((text, i) => ({ fromFrame: i * PER, toFrame: (i + 1) * P
 const propsFor = (theme: string) => ({ ...base, fps: 30 as const, captionTheme: theme as never, captionPlacement: 'lower' as const, captions: pages })
 const draw = (theme: string, frame: number) => theme === 'art-directed' ? ArtDirectedCaption({ props: propsFor(theme), frame }) : (THEMES as any)[theme](propsFor(theme), frame)
 
-const fontCss = readFileSync(`${ROOT}/apps/renderer/src/house/fonts.css`, 'utf8')
-  .replace(/url\('(@fontsource[^']+)'\)/g, (_m, p) => `url('file://${ROOT}/node_modules/${p}')`)
+const fontDir = join(ROOT, 'apps/renderer/src/house')
+const fontCss = readFileSync(join(fontDir, 'fonts.css'), 'utf8')
+  .replace(/url\('([^']+)'\)/g, (_m, p: string) => {
+    const base = p.startsWith('@fontsource') ? join(ROOT, 'node_modules') : fontDir
+    return `url('${pathToFileURL(join(base, p)).href}')`
+  })
 const html: string[] = []
 for (const theme of CAPTION_THEMES) for (let p = 0; p < WORDS.length; p++) {
   html.push(`<div class="snap" data-theme="${theme}" data-page="${p}" style="position:relative;width:1080px;height:1920px;overflow:hidden;background:#222">${renderToStaticMarkup(draw(theme, p * PER + AFTER) as never)}</div>`)
 }
-const file = `${process.env.TMPDIR ?? '/tmp'}/caption-steady-audit.html`
+const file = join(tmpdir(), 'caption-steady-audit.html')
 writeFileSync(file, `<!doctype html><meta charset="utf-8"><style>${fontCss} body{margin:0} *{box-sizing:border-box}</style>${html.join('')}`)
 
 const browser = await chromium.launch()
 const tab = await browser.newPage({ viewport: { width: 1080, height: 1920 } })
 await tab.addInitScript('window.__name = (f) => f')
-await tab.goto(`file://${file}`)
+await tab.goto(pathToFileURL(file).href)
 await tab.evaluate(() => (document as any).fonts.ready)
 const data: any[] = await tab.evaluate((words: string[]) => {
   const norm = (s: string) => s.toLowerCase().replace(/[^a-z']/g, '')

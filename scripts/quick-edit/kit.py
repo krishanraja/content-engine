@@ -118,7 +118,7 @@ sys.dont_write_bytecode = True  # kit.py writes under --out only
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
-TEMPLATES = HERE / 'kit'
+TEMPLATES = HERE / 'kit-v5'
 _CLOUD_CHROME = Path('/opt/pw-browsers/chromium-1194/chrome-linux/chrome')
 if _CLOUD_CHROME.exists():
     os.environ.setdefault('MYMU_BROWSER', str(_CLOUD_CHROME))
