@@ -172,7 +172,27 @@ describe('the close card clears the small-text floor (Krish, 2026-11-19)', () =>
   })
 })
 
-describe('the series close on the intro sting (Ruling, Krish, 2026-11-20)', () => {
+describe('every video ends on the plain v5 outro card (Ruling, Krish, 2026-11-26: "1 agreed")', () => {
+  it('a v5 series cut with no sting closes on the plain card, wide and tall, with the series days and never a sting plate', () => {
+    for (const aspect of ['16:9', '9:16'] as const) {
+      const base = fixture(aspect)
+      const props = EngineRenderPropsSchema.parse({ ...base, renderTheme: 'makeyourmindup-v5', ending: { ...base.ending, days: [...ENDING_DAYS] } })
+      const markup = renderToStaticMarkup(React.createElement(EndingBand, { props, frame: props.ending!.fromFrame + 59 }))
+      for (const text of [...statementLines(aspect), 'Subscribe free', 'makeyourmindup.ai', 'Mondays']) expect(markup).toContain(text)
+      expect(markup).not.toContain('data-close')
+      expect(markup).not.toContain('<video')
+    }
+  })
+
+  it('the palette names no sting close: the series close is the plain card on both shapes', () => {
+    const palette = JSON.parse(readFileSync(new URL('../../../../../config/brand-palette.json', import.meta.url), 'utf8'))
+    expect(palette.series_close.close).toEqual({ long_cut: 'statement_card', short_cut: 'statement_beat' })
+    expect(palette.closes.sting_beat).toBeUndefined()
+    expect(palette.closes.sting_card).toBeUndefined()
+  })
+})
+
+describe('the retired series close on the intro sting, kept for cuts signed 23 to 25 Nov (Ruling, Krish, 2026-11-20)', () => {
   const sha = '09da1e77bcd128b1bf53e022ace6056588448bde9bc6711716b8ce01ede57ed8'
   const withSting = (aspect: EngineRenderProps['aspect']) => { const base = fixture(aspect)
     return EngineRenderPropsSchema.parse({ ...base, ending: { ...base.ending, days: [...ENDING_DAYS], sting: { src: 'sting.mp4', series: 'follow_the_money', frames: 56, sha256: sha } } }) }
@@ -218,7 +238,7 @@ describe('the series close on the intro sting (Ruling, Krish, 2026-11-20)', () =
   })
 })
 
-describe('every word of the sting close is legible (config/ve/shot-grammar.json evidence.words_min_px)', () => {
+describe('every word of the retired sting close is legible (config/ve/shot-grammar.json evidence.words_min_px)', () => {
   it('each size is at least words_min_px, and the pill and the address at least 40 px of cap height, on both shapes', async () => {
     const { STING_CLOSE, CAP_HEIGHT } = await import('./EndingBand')
     const grammar = JSON.parse(readFileSync(new URL('../../../../../config/ve/shot-grammar.json', import.meta.url), 'utf8'))

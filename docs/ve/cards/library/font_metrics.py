@@ -3,7 +3,7 @@ from PIL import ImageFont
 
 
 def font_metrics(root):
-    fonts=root/'.scratch/tonal-ab'
+    fonts=root/'assets/fonts/makeyourmindup'
     metrics={}
     def measure_face(key,f):
         charset=set(''.join(chr(v) for v in range(32,127))+'“”≤£−’×')

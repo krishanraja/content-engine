@@ -641,9 +641,10 @@ class StingTest(unittest.TestCase):
 
 
 class StingCloseTest(unittest.TestCase):
-    """The series close on the intro sting (Ruling, Krish, 2026-11-20: "A, with Built to help you decide, and then
-    Subscribe free at makeyourmindup.ai"): the clip plays at the END of a whole cut of a series piece dated from
-    config/intro-sting.json close.applies_from, never at the start, and never on an off day. Stand-in clips, never his."""
+    """Every video ends on the plain v5 outro card (Ruling, Krish, 2026-11-26: "1 agreed"), and the intro sting closes no
+    cut dated from 26 Nov. The retired series close on the sting (Ruling, Krish, 2026-11-20) stays only for a series cut
+    dated 23 to 25 Nov, signed with it (F33): the clip at the END of the whole cut, never at the start, never on an off
+    day. Stand-in clips, never his."""
 
     @classmethod
     def setUpClass(cls):
@@ -655,40 +656,78 @@ class StingCloseTest(unittest.TestCase):
     def env(self, clips=None):
         return patch.dict(os.environ, {intro.CONFIG_ENV: str(self.config), intro.CLIPS_ENV: str(clips or self.clips)})
 
-    def spec(self, day, cut):
+    def spec(self, day, cut, series=None):
         spec = load_json(FIXTURE / 'spec-v5.json')
         spec['publish_day'] = day
         spec['cuts'][cut]['excerpt'] = False
+        if series:
+            spec['brand']['series'] = series
         return spec
 
-    def test_a_series_whole_cut_from_23_nov_closes_on_its_own_sting_at_the_end(self):
-        for cut, shape, frames in (('proof-wide', '16x9', ENDING_FRAMES), ('proof-tall', '9x16', 60)):
+    def test_a_series_whole_cut_from_26_nov_ends_on_the_plain_v5_outro_card(self):
+        for cut, frames in (('proof-wide', ENDING_FRAMES), ('proof-tall', 60)):
             with self.subTest(cut), self.env():
                 spec = self.spec('2026-11-27', cut)  # mind.the.gap on a Friday, its own day
                 report = {}
                 props = compile_cut(spec, cut, timed_words(), FIXTURE, report=report)
-                sting = props['ending']['sting']
-                self.assertEqual(sting['series'], 'mind_the_gap')
-                self.assertEqual(sting['sha256'], intro.load(self.config)['clips'][shape]['mind_the_gap']['sha256'])
-                self.assertEqual(report['close'], 'sting')
+                self.assertNotIn('sting', props['ending'])
                 self.assertNotIn('sting', props)  # nothing before the hook: the opening is unchanged
+                self.assertEqual(props['renderTheme'], 'makeyourmindup-v5')
+                self.assertTrue(props['ending']['days'])  # the series days row, as the plain card draws it
+                self.assertEqual(report['close'], 'v5_outro')
                 self.assertEqual(props['durationFrames'] - props['ending']['fromFrame'], frames)
                 self.assertEqual(ve_compile.ending_problems(props, spec), [])
-                inked = copy.deepcopy(props)
-                inked['ending'].pop('sting')
-                self.assertRegex(' '.join(ve_compile.ending_problems(inked, spec)), 'closes on the intro sting')
+                self.assertEqual(ve_compile.carried_stings(props, ve_compile._sting_marks(intro)), [])
 
-    def test_no_sting_close_before_23_nov_or_on_an_off_day(self):
-        for name, day in (('a series piece of the week of 16 Nov', '2026-11-20'), ('an off day', '2026-11-26')):
+    def test_a_sting_clip_anywhere_in_a_cut_from_26_nov_is_refused(self):
+        with self.env():
+            spec = self.spec('2026-11-27', 'proof-tall')
+            props = compile_cut(spec, 'proof-tall', timed_words(), FIXTURE)
+            clip = intro.load()['clips']['16x9']['mind_the_gap']
+            stinged = copy.deepcopy(props)
+            stinged['ending']['sting'] = {'src': 'sting.mp4', 'series': 'mind_the_gap', 'sha256': clip['sha256'], 'frames': 56}
+            self.assertRegex(' '.join(ve_compile.ending_problems(stinged, spec)), 'the sting closes no cut.*1 agreed')
+            for where in ('library', 'sha256'):
+                with self.subTest(where):
+                    hidden = copy.deepcopy(props)
+                    hidden['objects'][0].setdefault('params', {})['src'] = clip[where]
+                    self.assertRegex(' '.join(ve_compile.ending_problems(hidden, spec)), r'props\.objects\.0\.params\.src')
+            pre_v5 = copy.deepcopy(props)
+            pre_v5.pop('renderTheme')
+            self.assertRegex(' '.join(ve_compile.ending_problems(pre_v5, spec)), 'not the locked v5 look')
+            closeless = copy.deepcopy(props)
+            closeless.pop('ending')
+            self.assertRegex(' '.join(ve_compile.ending_problems(closeless, spec)), 'has no close')
+
+    def test_a_series_cut_signed_23_to_25_nov_keeps_its_sting_close(self):
+        for cut, shape, frames in (('proof-wide', '16x9', ENDING_FRAMES), ('proof-tall', '9x16', 60)):
+            with self.subTest(cut), self.env():
+                spec = self.spec('2026-11-25', cut, 'under.the.hood')  # under.the.hood on a Wednesday, its own day
+                report = {}
+                props = compile_cut(spec, cut, timed_words(), FIXTURE, report=report)
+                sting = props['ending']['sting']
+                self.assertEqual(sting['series'], 'under_the_hood')
+                self.assertEqual(sting['sha256'], intro.load(self.config)['clips'][shape]['under_the_hood']['sha256'])
+                self.assertEqual(report['close'], 'sting')
+                self.assertNotIn('sting', props)
+                self.assertEqual(props['durationFrames'] - props['ending']['fromFrame'], frames)
+                self.assertEqual(ve_compile.ending_problems(props, spec), [])
+                plain = copy.deepcopy(props)
+                plain['ending'].pop('sting')
+                self.assertRegex(' '.join(ve_compile.ending_problems(plain, spec)), 'signed with the sting close')
+
+    def test_no_sting_close_before_23_nov_on_an_off_day_or_from_26_nov(self):
+        for name, day in (('a series piece of the week of 16 Nov', '2026-11-20'), ('an off day', '2026-11-26'),
+                          ('a series piece from 26 Nov', '2026-11-27')):
             with self.subTest(name), self.env():
                 spec = self.spec(day, 'proof-tall')
                 props = compile_cut(spec, 'proof-tall', timed_words(), FIXTURE)
                 self.assertNotIn('sting', props['ending'])
                 self.assertEqual(ve_compile.ending_problems(props, spec), [])
 
-    def test_a_missing_clip_closes_on_ink_and_render_is_refused(self):
+    def test_a_missing_clip_for_a_signed_cut_closes_plain_and_render_is_refused(self):
         with self.env(Path(self.temp.name) / 'no-clips-here'):
-            spec = self.spec('2026-11-27', 'proof-tall')
+            spec = self.spec('2026-11-25', 'proof-tall', 'under.the.hood')
             report = {}
             props = compile_cut(spec, 'proof-tall', timed_words(), FIXTURE, report=report)
             self.assertNotIn('sting', props['ending'])

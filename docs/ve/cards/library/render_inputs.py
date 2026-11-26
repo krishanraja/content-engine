@@ -117,7 +117,12 @@ def plan(here, data, html, backend, prior):
         row = photos[key]
         if 'src' in row:
             return here/row['src'] if row['src'] else None
-        return root/row['path'] if row.get('path') else root/'.scratch/why-ladder/assets'/f'{key}.png'
+        path = root/row['path'] if row.get('path') else root/'.scratch/why-ladder/assets'/f'{key}.png'
+        # The page falls back to the committed stand-in (make_samples.py) when the local review file is absent.
+        sample = here/'samples'/(path.stem+'.svg')
+        if not path.is_file() and '.scratch' in path.parts and 'private' not in path.parts and sample.is_file():
+            return sample
+        return path
     # Font metrics can change fitted lines, hence the list of components traversed.
     font_files = [here/url for face in faces for url in re.findall(r"url\(['\"]?([^'\")]+)",face)]
     planner = digest([sha(html.encode()), [file_hash(here/f) for f in scripts],bits,

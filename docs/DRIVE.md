@@ -117,9 +117,9 @@ There is one brand kit: `makeyourmindup > 1 Brand kit (permanent)` (`1kOCNq1F-MD
 |---|---|---|
 | `README.md`, `00 START HERE - v5 brand kit (26 Nov 2026).md`, `logos`, `fonts`, `colours`, `Channel art` | see the index | unpacked from the makeyourmindup kit zip by `scripts/library-sync.ps1`; `config/ve/fonts.json` reads `fonts` by path (DM Mono since v5) |
 | `Channel art` | see the index | every profile image and the exact profile copy; uploaded to the profiles by hand or a browser session, never by code |
-| `Intro sting` | `1qnaJkMPLKYoXVqVHEeRMfqn3kGQMWpH6` | `config/intro-sting.json` (by path): retired as an opening, the six clips are the series close's plate |
+| `Intro sting` | `1qnaJkMPLKYoXVqVHEeRMfqn3kGQMWpH6` | `config/intro-sting.json` (by path): retired as an opening (12 Nov) and as the series close (Ruling, Krish, 2026-11-26: "1 agreed"); every video now ends on the plain v5 outro card. The folder is now unused by any new cut and may move to `_Archive > 2026-11-26 v4 brand (retired, do not use)` (`17UTQnHNyaKzuhN-Mc8aEgOljiHsa9VtM`); only a re-render of a series cut dated 23 to 25 Nov still fetches its clip by this path, so move it after those cuts are final, and update `config/intro-sting.json` `clips` if it moves. |
 | `character/krish` | `1D2MfX8-dAftGxILc_uzssCI6-sjElsJa` | `config/ve/character.json` (by path) |
-| `Music` | `1oHyJ9A5et5_uKW7QTq1VHX0NuGwwQVri` | The one home for licensed music and sound (`runtime.music_root`, `config/music-library.json`; approved sound effects in `sfx`, `config/sfx-approved.json`). Four on the Funky Flour is the main track under every video (Krish, 2026-11-26; `main` in the ledger, `music.py` main_first). |
+| `Music` | `1oHyJ9A5et5_uKW7QTq1VHX0NuGwwQVri` | The one home for licensed music and sound (`runtime.music_root`, `config/music-library.json`; approved sound effects in `sfx`, `config/sfx-approved.json`). Four on the Funky Flour and NO CURVES alternate week by week under every series video; the rest go behind carousels (Krish, 2026-11-26). |
 | `Photos` | `1L3tRgeGr4KgmqG2gHF5uQTzOartQpY7V` | headshots and likeness references (`scripts/post-pack/photos.py`); private, never posted as files |
 | `Style references` | `1J4cWCWaAtdUMEEsUs27pdWm3H50jGSPC` | A mirror of `Production Inspo` (`references.py`). Never file a clip here by hand, never publish one. |
 
