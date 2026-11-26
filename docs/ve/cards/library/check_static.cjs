@@ -213,7 +213,7 @@ const result=vm.runInContext(`(()=>{
       if(op?.value?.startsWith?.('bank-') && !choices.some(([key])=>key===op.value))errors.push(item.id+' review default missing from picker');
     }
   }
-  const bankCard=items.find(i=>i.id==='carousel-cover'), slot='photo_1';
+  const bankCard=items.find(i=>i.id==='carousel-good-news-roundup-cover'), slot='photo_1';
   // The first bank is retired: the picker offers nothing and a retired still is refused.
   if(items.some(item=>Object.keys(item.slots).some(name=>bankChoices(registry,item,name).length)))errors.push('Retired bank still offered');
   for(const retired of ['bank-10','bank-30','bank-09']){
