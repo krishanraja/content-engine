@@ -23,9 +23,8 @@ Every option is held to these, and none of them is the session's to relax:
   Read `docs/ve/cards/library/COVERS-PLAYBOOK.md` and `ART-DIRECTION.md` first. The old Library cover templates
   (`cover-receipt-*`, `cover-face-*`, `cover-scene-*`) and the old drawer (`scripts/pages/build.py --thumbs`, the skins)
   are retired; the drawer refuses without `--legacy`, which is only for an archived piece.
-- **Words.** Wide covers set the headline in Fraunces sentence case: `image_led.wide_headline.youtube` when the
-  packaging round sets one, else the piece's title. The capitals lines in `thumbs.headline` are the vertical cover's
-  single Anton kicker.
+- **Words.** Wide: Fraunces sentence case, `image_led.wide_headline.youtube`, else the piece's title. Vertical:
+  `thumbs.headline` as one Anton kicker.
 - **The proof** (THE_RECEIPT, Krish, 2026-11-02: "inviolable") is the evidence and receipt families: the piece's
   checked proof named in its facts, the wordmark and the real logos. A portrait is only a licensed Commons photo of a
   person named in their own story, never beside an accusation against their company, always credited. Never his face
@@ -78,13 +77,9 @@ last five posts"); with none, the mock shows the options alone and says so. Neve
 
 ## 3. Check each option
 
-- `python3 scripts/channel_safe.py WORK/thumbs/options/<id>/thumb-tall-1080x1920.jpg --shape cover_tall` (F43: the
-  grid crop and the account row). Exit 2 means it did not run (no tesseract): say so; it is never a pass.
-- `python3 scripts/post-pack/title_check.py "THE WORDS" --surface thumbnail --source <the piece's body or script>`,
-  and again with `--surface tall_cover`.
-- `python3 scripts/pages/thumb_options.py show WORK/thumbs`: the words, the parts and any logo the brief does not name.
-- Look at every file at full size, and at the grid mock, yourself, against the QA list
-  (`.agents/skills/thumbnail-designer/references/qa.md`).
+Run the channel, title and options checks on every option and look at every file at full size and in the grid
+mock yourself, as `.agents/skills/thumbnail-designer/references/qa.md` lists ("The checks on each option").
+`channel_safe.py` exit 2 means it did not run: say so; it is never a pass.
 
 ## 4. The critic
 
@@ -101,30 +96,15 @@ drawer never judges its own options.
 
 ## 5. Repair, at most twice, then hold
 
-When the verdict blocks every option, or the best one fails a check, change the facts (a crop, a layout) and draw a
-new set; a new set needs a new verdict. At most two rounds of repair. Then hold: record the set and its verdict
-(`making.py <piece> thumbnails WORK/thumbs`, no `--ask`), record the reason as a final-review line, and
-carry on with the cuts. Never put options below the bar to him.
+A blocked verdict or a failed check means new facts and a new set with a new verdict, at most two rounds; then
+hold and record why (`references/qa.md`, "Repair"). Never put options below the bar to him.
 
 ## 6. On the final review
 
-Follow `.agents/skills/thumbnail-designer/references/board-pick.md` for the filing: it files the review copies in
-Drive and records the set with their Drive ids so his board shows every option with Pick and Not this (view contract
-1.16.0; Ruling, Krish, 2026-11-15, approved with the specialists plan: thumbnail options carry a pick press on the
-Content board). In short:
-
-1. `python3 scripts/pages/thumb_options.py drive WORK/thumbs a:wide=ID a:tall=ID ... mock=ID`, after filing each in
-   Inbox from My AI.
-2. `python3 scripts/post-pack/making.py <piece> thumbnails WORK/thumbs` (the set, its verdict and those ids, by sha256).
-3. `python3 scripts/post-pack/board_session.py <piece> add ...` for each file and the grid mock.
-4. One final-review line, the critic's best as the default (never `--ask`):
-   `python3 scripts/post-pack/making.py <piece> final-review thumbnail "Option B, the critic's best"`.
-5. His Pick at the final review is on the record by itself; his Not this sends you back to step 5 with his words. An
-   answer in a session: `making.py <piece> thumbnails WORK/thumbs --picked b --krish-words "Krish, YYYY-MM-DD: his words"`.
-
-Until his pick is on the record nothing is the thumbnail: `making.py video` refuses an option's file he has not
-picked, and no option is filed, posted or put in the manifest. The cuts never wait: they render, archive and file,
-and reach the library with his pick.
+File the options as `.agents/skills/thumbnail-designer/references/board-pick.md` says: review copies in Drive,
+the set recorded with their Drive ids by sha256, one final-review line with the critic's best as the default (never
+`--ask`). His Pick is on the record by itself; his Not this sends you back to step 5 with his words. Until his
+pick is on the record nothing is the thumbnail, and the cuts never wait.
 
 ## 7. After his pick
 

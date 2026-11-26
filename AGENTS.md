@@ -29,12 +29,16 @@ repository's `docs/CAROUSEL-STANDARD.md`, the rejection floor and the copy
 lint. Content-engine keeps the standard and makes the hero assets: the
 article, both cuts, thumbnails and covers.
 
-Every cover, thumbnail and carousel is filled from the approved makeyourmindup
-Library (`docs/ve/cards/library/`): `python scripts/library/make_piece.py
-<piece folder> --set covers`, `--set video` (the two thumbnails) or `--set
-<carousel set>`, which builds the piece's pack from its `cover-facts.json`,
-renders it with the Library's `render.py --carousel-pack` and writes the files
-under the names `scripts/post-pack/build.py` reads. Read
+Every cover and thumbnail comes from the approved cover systems (Krish, 26 Nov 2026: "I approve the new cover thumbnail systems, go"):
+`python scripts/covers/make_covers.py <piece folder> --out <folder>` writes the
+Substack cover, the YouTube thumbnail, the 9:16 cover, the tall thumbnail and
+the carousel first slide with a `covers.json` receipt that post-pack reads as
+`cover_set` (`docs/ve/cards/library/COVERS-PLAYBOOK.md`). Every carousel is
+filled from the approved makeyourmindup Library (`docs/ve/cards/library/`):
+`python scripts/library/make_piece.py <piece folder> --set <carousel set>`,
+which builds the piece's pack from its `cover-facts.json`, renders it with the
+Library's `render.py --carousel-pack` and writes the files under the names
+`scripts/post-pack/build.py` reads. Read
 `docs/ve/cards/library/ART-DIRECTION.md` first (variety and imagery rules),
 then `LIBRARY-GUIDE.md` and `PRODUCTION-PLAYBOOK.md`. The old drawer
 (`scripts/pages/build.py --cover`/`--thumbs`, the v5_feed skin) is retired in

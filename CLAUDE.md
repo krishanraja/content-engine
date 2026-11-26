@@ -41,18 +41,18 @@ reading it whole. It is about 335 KB (some 80k tokens).
 
 ## Skills: one per job
 
-Covers, thumbnails and carousels are filled from the approved makeyourmindup Library with `python scripts/library/make_piece.py <piece> --set covers|video|<carousel set>`: read `docs/ve/cards/library/ART-DIRECTION.md` first, then `LIBRARY-GUIDE.md` and `PRODUCTION-PLAYBOOK.md` beside it. The old cover drawer (`scripts/pages/build.py --cover`/`--thumbs`, the v5_feed skin) is retired and runs only with `--legacy`, for an archived piece.
+Covers and thumbnails come from the approved cover systems with `python scripts/covers/make_covers.py <piece> --out <folder>` (Krish, 26 Nov 2026: "I approve the new cover thumbnail systems, go"; `docs/ve/cards/library/COVERS-PLAYBOOK.md`), and carousels are filled from the approved makeyourmindup Library with `python scripts/library/make_piece.py <piece> --set <carousel set>`: read `docs/ve/cards/library/ART-DIRECTION.md` first, then `LIBRARY-GUIDE.md` and `PRODUCTION-PLAYBOOK.md` beside it. The old cover drawer (`scripts/pages/build.py --cover`/`--thumbs`, the v5_feed skin) is retired and runs only with `--legacy`, for an archived piece.
 
 | Job | Invoke |
 |---|---|
 | A session that starts `piece_id:`, or a piece Krish picked | `/make-piece` |
 | The Sunday plan, or a re-plan of the week | `/plan-week` |
 | Krish has recorded; cut and file the videos | `/produce-video` |
-| A recorded piece's thumbnails, once his thumbnail words are picked (produce-video step 5 calls it): filled from the Library with `python scripts/library/make_piece.py <piece> --set video` | `/thumbnail-designer` |
+| A recorded piece's thumbnails, once his thumbnail words are picked (produce-video step 5 calls it): rendered by `python scripts/covers/make_covers.py <piece> --out <folder>` | `/thumbnail-designer` |
 | A piece on ve (its spec is `schema_version: 2`), or a ve Codex task card | `/ve` |
 | Any carousel, made, redrawn or reviewed: filled from a Library carousel set with `python scripts/library/make_piece.py <piece> --set <set>` (the guaranteed floor, one named experiment above it) | `/carousel` |
 | Any meme, video or static (the guaranteed floor, one named experiment above it) | `/meme` |
-| A piece's cover art across its channels, filled from the Library with `python scripts/library/make_piece.py <piece> --set covers` (the Library's Receipt templates; the old skins are retired) | `/cover-art` |
+| A piece's cover art across its channels, rendered by `python scripts/covers/make_covers.py <piece> --out <folder>` (the approved image-led systems; the old skins and cover templates are retired) | `/cover-art` |
 | A ve piece's per-beat motion plan, written into its spec before Sign storyboard (the ve skill, step 6, points to it) | `/motion-designer` |
 | Any video script checked against Hannah Fry's teaching craft (make-piece's Scripts step, 3c, points to it) | `/hannah-fry` |
 | An experiment Krish acts out from a shot script, transformed with AI in post (separate from the style pickers) | `/directed-shoot` |

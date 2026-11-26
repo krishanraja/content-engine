@@ -53,38 +53,15 @@ account type matches; ask him once if it fits neither.
 
 ## Rules every face-led cover keeps
 
-1. **The headline leads** (`docs/production/COVER-STANDARD.md`, points 1 to 6): the largest thing, at most 7 words,
-   the quiet series label above it, the series colour, bright over the near-black ground.
-2. **The wordmark is the official file**, `apps/cover/public/brand/wordmark.png` in krishanraja/makeyourmindup (sha256
-   `f896cc62...`, as `config/brand-palette.json` marks it), scaled only, on the near-black only (it disappears on
-   yellow), left-aligned on the headline's edge, under it (Krish, 2026-11-17: "we do need the makeyourmindup wordmark
-   somewhere that looks good and aligned properly").
-3. **His shoulders are never cut off on the colour** (Krish, 2026-11-17: "the fact that my shoulders cut off is
-   unacceptable"). No edge of a photo may show inside the canvas. A cutout touching only its bottom edge (the
-   "Restored portrait with natural shoulders") sits on the canvas bottom; any other cutout is placed so every row
-   where its alpha meets its sides lies below the canvas bottom; a generated headshot is a full-bleed panel whose edges
-   are the canvas edges. The drawing script asserts it.
-4. **His face takes about a third of the frame**; the headline still leads in the 3:4 grid crop.
-5. **Classy:** generous margins, nothing else on the cover. No glow, neon, gradients, arrows, emoji, badges or logos
-   the headline does not name.
-6. **Checked where it is seen:** `python3 scripts/channel_safe.py --shape cover_tall` on every tall file.
+The headline leads; the official wordmark on near-black; his shoulders never cut off and no photo edge inside
+the canvas; his face about a third of the frame; nothing decorative; `channel_safe.py --shape cover_tall` on every
+tall file. The six rules in full, with Krish's words: `.agents/skills/cover-art/references/face-rules.md`.
 
 ## Where his face comes from
 
-- **Real photos:** only the files at the top of his Drive folder "Photos" (`1PQDSg4_kD6zwVerqvxaiQE5Ocjnsd6xB`, in
-  Video Engine > Krish Clone - Assets), never its subfolders, for the cover itself (Krish, 2026-11-17). Its subfolder
-  "All other photos" (never the DO-NOT-USE folder inside it) is for his likeness profile and generated headshots only
-  (`photos.py fetch --references`; krish-clone `clone faceprofile`). The home computers publish them to
-  the library every pass (`scripts/post-pack/photos.py publish`); a cloud session gets them with
-  `python3 scripts/post-pack/photos.py fetch --out <folder>`.
-- **Generated headshots:** made from those references on Higgsfield (`gpt_image_2_6`, about 0.25 credits a still by
-  the connector's `get_cost`; say the cost before generating). A generated headshot of him is used on a cover only
-  once he has approved that still in his own words and krish-clone records it (`clone registry`); until then it is
-  shown to him as an option, never filed. How to close the last 10% of his likeness is krish-clone's
-  `docs/GENERATORS.md`, "His likeness in stills": his words per still, one attribute edited at a time, re-measured
-  with `clone likeness`.
-- **Generated scenes** for a piece: classy editorial stills, no people, no text, no logos, never a fake of a real
-  event or document. Real proof beats a generated scene whenever the piece has one.
+Only the top-level files of his Drive folder "Photos" for the cover itself, generated headshots only once he
+has approved that still in his own words, and generated scenes with no people, text or logos. Read
+`.agents/skills/cover-art/references/face-sources.md` before any face-led cover.
 
 ## Steps
 
