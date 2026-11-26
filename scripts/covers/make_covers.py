@@ -135,8 +135,7 @@ def build(facts_path, out, systems, assets=None, review=None):
             proof = None
             if set(families.values()) & {"receipt", "evidence"}:
                 spec = facts["cover"]["proof"]
-                proof = capture(get_browser,
-                                facts, base, ROOT / ".cache/image-led-proofs")
+                proof = capture(get_browser, facts, base, ROOT / ".cache/image-led-proofs")
                 record["inputs"]["proof"] = {"source": spec, "file": proof.name, "sha256": digest(proof)}
             jobs = []
             for system, family in families.items():
@@ -178,11 +177,13 @@ def build(facts_path, out, systems, assets=None, review=None):
                     target = out / item["file"]
                     target.parent.mkdir(exist_ok=True)
                     (stage / item["file"]).replace(target)
+        record["status"] = "held" if record["issues"] else "passed"
     except Exception as exc:
         # A failed run invalidates the previous receipt even if a browser or converter crashed.
-        record["issues"].append(str(exc) or type(exc).__name__)
+        record["issues"].append((str(exc) or type(exc).__name__).splitlines()[0])
     finally:
-        record["status"] = "held" if record["issues"] else "passed"
+        if record["status"] == "rendering":
+            record["status"] = "held"
         try:
             write_record(out / "covers.json", record)
         finally:

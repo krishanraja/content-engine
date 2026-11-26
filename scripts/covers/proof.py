@@ -3,8 +3,9 @@ import hashlib
 import json
 from pathlib import Path
 import subprocess
-from frame_capture import workspace
 import xml.etree.ElementTree as ET
+
+from frame_capture import workspace
 
 from PIL import Image, ImageDraw
 

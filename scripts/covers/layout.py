@@ -1,5 +1,7 @@
 """Fill the approved fixed-size cover layouts. Only the templates supply markup."""
+import base64
 from datetime import date
+from functools import lru_cache
 from html import escape
 from pathlib import Path
 from string import Template
@@ -10,6 +12,16 @@ from cover_facts import SERIES, lines, read
 ROOT = Path(__file__).resolve().parents[2]
 TEMPLATES = Path(__file__).with_name("templates")
 FONTS = ROOT / "assets/fonts/makeyourmindup"
+
+
+@lru_cache(maxsize=1)
+def stylesheet():
+    css = (TEMPLATES / "cover.css").read_text(encoding="utf-8")
+    for font in FONTS.glob("*.ttf"):
+        token = "$fonts/" + font.name
+        if token in css:
+            css = css.replace(token, "data:font/ttf;base64," + base64.b64encode(font.read_bytes()).decode("ascii"))
+    return css
 
 
 def wordmark(dark):
@@ -85,7 +97,7 @@ def document(facts, base, fmt, family, still=None, proof=None):
         data.update(number=escape(" ".join(number)), figure_caption=escape(fig["caption"]),
                     number_lines="".join(f"<div>{escape(line.upper())}</div>" for line in number))
     body = Template((TEMPLATES / f"{family}-{fmt}.html").read_text(encoding="utf-8")).substitute(data)
-    css = Template((TEMPLATES / "cover.css").read_text(encoding="utf-8")).substitute(fonts=FONTS.as_uri())
+    css = stylesheet()
     ink = family in ("object", "evidence", "receipt") or (family == "portrait" and not wide)
     fit = (TEMPLATES / "fit.js").read_text(encoding="utf-8")
     html = (f'<!doctype html><html><head><meta charset="utf-8"><style>:root{{--W:{width}px;--H:{height}px;'
