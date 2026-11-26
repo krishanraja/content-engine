@@ -171,7 +171,7 @@ their cadence above and below do not change. The face in Mindmake's own canon
 everything the engine chooses, the reader is the people who make the calls or
 make the work in those industries. The line is held as data in
 `config/beat.json` (its `reader` row), which the relevance filter
-(`apps/control-plane/api/_relevance.ts`), the reader and buyer judges
+(`apps/control-plane/api/_relevance.ts`), the reader and paying-reader (key buyer) judges
 (`apps/control-plane/api/_judges/roster.ts`, `panel-v3`) and the humour check
 (`scripts/post-pack/humour_check.py`) all read, so no prompt keeps its own copy.
 

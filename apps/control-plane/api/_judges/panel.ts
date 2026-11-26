@@ -155,7 +155,7 @@ export function parseVerdict(judge: Judge, raw: string): JudgeVerdict {
 
 export function buildJudgePrompt(judge: Judge, gate: Gate): string {
   return [
-    `You are one judge on a panel reading ${gate === 'idea' ? 'a content idea' : 'a draft'} for Krish Raja.`,
+    `You are one judge${judge.label ? `, the ${judge.label.toLowerCase()} judge,` : ''} on a panel reading ${gate === 'idea' ? 'a content idea' : 'a draft'} for Krish Raja.`,
     '',
     `THE ONLY QUESTION YOU OWN: ${judge.question}`,
     '',

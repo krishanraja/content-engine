@@ -1027,6 +1027,107 @@ def score_rank_of_pick(ideas, pick_refs):
     return ranks, (sorted(versions)[-1] if versions else None)
 
 
+JUDGE_RANK_RULE = ("Each judge's rank of his pick among its day's options that judge scored (1 = its highest; equal scores share a rank), "
+                   'with how many it scored ({"rank", "of"}); a judge that did not score the pick has none. The panel\'s judges are '
+                   "read from each option's `judges` ({key: score}) or docs/plans/<Monday>-week/judges.json ({option id: {key: "
+                   "score}}), the story score's blind judges from story_score.axes as story:<axis>. Reported, never acted on: "
+                   'config/story-score.json judges.review.')
+
+
+def judge_scores(ideas, panel=None):
+    """{option id: {judge key: score}} for the publishing days' options: the panel's scores (the option's own `judges`, else
+    panel[option id]) and the story score's blind-judge axes as story:<axis>. Reads what the board carried; never judges."""
+    blind = [a['id'] for a in (idea_checks.STORY.get('axes') or []) if a.get('source') == 'blind_judge']
+    panel = {str(k).lower(): v for k, v in (panel or {}).items() if isinstance(v, dict)}
+    days = (ideas or {}).get('days') if isinstance((ideas or {}).get('days'), dict) else {}
+    out = {}
+    for opts in days.values():
+        for o in opts if isinstance(opts, list) else []:
+            if not isinstance(o, dict) or not o.get('id'):
+                continue
+            oid = str(o['id']).lower()
+            mine = o.get('judges') if isinstance(o.get('judges'), dict) else panel.get(oid) or {}
+            row = {str(k): float(v) for k, v in mine.items() if isinstance(v, (int, float)) and not isinstance(v, bool)}
+            axes = (o.get('story_score') or {}).get('axes') if isinstance(o.get('story_score'), dict) else None
+            for a in blind:
+                v = (axes or {}).get(a)
+                if isinstance(v, (int, float)) and not isinstance(v, bool):
+                    row[f'story:{a}'] = float(v)
+            out[oid] = row
+    return out
+
+
+def judge_rank_of_pick(ideas, pick_refs, panel=None):
+    """{judge key: {day: {"rank", "of"}}}: for each judge, the rank its scoring gave his actual pick among that day's options
+    it scored (1 + how many it scored higher), beside score_rank_of_pick. A judge that never scored the pick is left out of
+    that day. Read only: whether a judge earns its place is judge_review's report, and nothing here retires one."""
+    days = (ideas or {}).get('days') if isinstance((ideas or {}).get('days'), dict) else {}
+    scores = judge_scores(ideas, panel)
+    out = {}
+    for day, ref in sorted((pick_refs or {}).items()):
+        opts = [o for o in days.get(day) or [] if isinstance(o, dict)]
+        m = re.match(rf'^{day}-(\d+)$', str(ref or ''))
+        n = int(m.group(1)) - 1 if m else -1
+        if not 0 <= n < len(opts):
+            continue
+        rows = [scores.get(str(o.get('id') or '').lower()) or {} for o in opts]
+        for judge in sorted({k for r in rows for k in r}):
+            mine = rows[n].get(judge)
+            if mine is None:
+                continue
+            given = [r[judge] for r in rows if judge in r]
+            out.setdefault(judge, {})[day] = {'rank': 1 + sum(1 for v in given if v > mine), 'of': len(given)}
+    return out
+
+
+def judge_labels():
+    """{judge key: label} where config names one (config/beat.json reader.judges: the reader, and the paying reader on key
+    buyer); a story-score axis is labelled by its axis label."""
+    labels = {k: v.get('label') for k, v in ((idea_checks.BEAT.get('reader') or {}).get('judges') or {}).items()
+              if isinstance(v, dict) and v.get('label')}
+    labels.update({f'story:{a["id"]}': f'story score, {a["label"]}' for a in idea_checks.STORY.get('axes') or [] if a.get('source') == 'blind_judge'})
+    return labels
+
+
+def judge_review(cards, cfg=None):
+    """The review lines (config/story-score.json judges.review): after after_weeks scored weeks, a judge whose mean rank of
+    his picks is no better than chance (the mean of (of + 1) / 2 over the same picks) gets the review line. Reported only:
+    nothing auto-retires a judge (Ruling, Krish, 2026-11-26: no judge or rule survives on faith)."""
+    rule = ((cfg or idea_checks.STORY).get('judges') or {}).get('review') or {}
+    after, line = int(rule.get('after_weeks') or 4), str(rule.get('line') or 'retire or rewrite')
+    seen = {}
+    for card in cards or []:
+        for judge, days in ((card or {}).get('judge_rank_of_pick') or {}).items():
+            for d in (days or {}).values():
+                if isinstance(d, dict) and isinstance(d.get('rank'), int) and isinstance(d.get('of'), int) and d['of'] >= 1:
+                    s = seen.setdefault(judge, {'weeks': set(), 'rank': [], 'chance': []})
+                    s['weeks'].add(card.get('week'))
+                    s['rank'].append(d['rank'])
+                    s['chance'].append((d['of'] + 1) / 2)
+    labels, out = judge_labels(), []
+    for judge, s in sorted(seen.items()):
+        if len(s['weeks']) < after:
+            continue
+        mean, chance = sum(s['rank']) / len(s['rank']), sum(s['chance']) / len(s['chance'])
+        if mean >= chance:
+            name = f'{judge} ({labels[judge]})' if judge in labels else judge
+            out.append(f'review: the {name} judge ranked his picks at {mean:.2f} on average over {len(s["weeks"])} scored weeks '
+                       f'({len(s["rank"])} picks), no better than chance ({chance:.2f}): {line}')
+    return out
+
+
+def scorecards(plans=None):
+    """Every board's scorecard.json under docs/plans, oldest first."""
+    root = Path(plans or ROOT / 'docs' / 'plans')
+    out = []
+    for p in sorted(root.glob('*-week/scorecard.json')):
+        try:
+            out.append(json.loads(p.read_text(encoding='utf-8')))
+        except ValueError:
+            continue
+    return out
+
+
 def scorecard_from(week, data, plans=None, refused_refs=None):
     """(the scorecard, the lines that print each label beside his words) for one board, from what the outcomes route
     answered and the week's files in docs/plans. Writes nothing."""
@@ -1048,6 +1149,8 @@ def scorecard_from(week, data, plans=None, refused_refs=None):
     card = ideas_scorecard.score(week, ideas, presses, asks, refused_refs)
     card['refused_subject_refs'] = refused_refs
     card['score_rank_of_pick'], card['rubric_version'] = score_rank_of_pick(ideas, card.get('picks') or {})
+    panel = json.loads((folder / 'judges.json').read_text(encoding='utf-8')) if (folder / 'judges.json').exists() else None
+    card['judge_rank_of_pick'] = judge_rank_of_pick(ideas, card.get('picks') or {}, panel)
     words = {p['doc']: p.get('words') for p in ideas_scorecard.final_presses(presses).values()}
     lines = [f'scorecard for the board of {week} (each count by its rule; he can overrule any label in the Sunday say-back):']
     for k, v in card['counts'].items():
@@ -1055,6 +1158,8 @@ def scorecard_from(week, data, plans=None, refused_refs=None):
     lines += [f'  flag: {f}' for f in card['flags']]
     if card['rubric_version']:
         lines.append(f'  score_rank_of_pick: {card["score_rank_of_pick"]}  [{SCORE_RANK_RULE} ({card["rubric_version"]})]')
+    if card['judge_rank_of_pick']:
+        lines.append(f'  judge_rank_of_pick: {json.dumps(card["judge_rank_of_pick"], sort_keys=True)}  [{JUDGE_RANK_RULE}]')
     for lab in card['labels']:
         said = words.get(lab['doc'])
         lines.append(f'  {lab["doc"]}: {lab["outcome"]}' + (f', {"/".join(lab["parts"])}' if lab['parts'] else '') + (', wasted' if lab['wasted'] else '')
@@ -1072,6 +1177,8 @@ def scorecard(week, call=None, plans=None, write=True):
         path = Path(plans or ROOT / 'docs' / 'plans') / f'{wk}-week' / 'scorecard.json'
         path.write_text(json.dumps(card, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')
         lines.append(f'wrote {path}')
+    # The Monday learn step's judge review (config/story-score.json judges.review): reported, nothing retires itself.
+    lines += judge_review([c for c in scorecards(plans) if c.get('week') != wk] + [card])
     return card, lines
 
 

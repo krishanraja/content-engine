@@ -7,7 +7,8 @@
     {"id": "floor_only", "at": "2026-11-26", "ruling": "His taste is a floor only: his rejections refuse an option, never score it, and the judges stay blind (check-judges.ts section 4, tests/story_wall_test.py)."},
     {"id": "spend_ceiling", "at": "2026-11-26", "ruling": "The blind proof run spends at most $10, through the ledger, after the protocol is committed."},
     {"id": "reader", "at": "2026-11-26", "ruling": "The approved North Star reader line (config/beat.json reader), his words: \"I approve the lines\"."},
-    {"id": "gate_from", "at": "2026-11-26", "said": "Newgate, 30th of November.", "ruling": "The story gate starts on the board of 30 Nov: the Sunday 29 Nov run is the first one gated."}
+    {"id": "gate_from", "at": "2026-11-26", "said": "Newgate, 30th of November.", "ruling": "The story gate starts on the board of 30 Nov: the Sunday 29 Nov run is the first one gated."},
+    {"id": "paying_reader", "at": "2026-11-26", "said": "On questions 1 and 3 I need your judgement in detail. I want a high-quality flexible engine that has learned from all its past mistakes and is upgraded now.", "ruling": "The buyer judge is kept as the paying-reader judge (config/beat.json reader.judges.buyer); every judge's rank of his picks is recorded and reviewed (judges.review)."}
   ],
   "audience_from": "config/beat.json reader.audience_short",
   "blind_view": {
@@ -382,6 +383,17 @@
     "barred_note": "The ai-harness council's When it runs section admits Krish's ask or the strategist only, so until a ruling adds this caller a close call shows as close call, your pick, never a silent pass (commit 0 readiness)."
   },
   "ties": {"his_first": "equal totals only", "his_kinds": ["his", "inspo"]},
+  "judges": {
+    "_about": "Judge accountability (Ruling, Krish, 2026-11-26; rank1_picked was 0 on both scored weeks): no judge or rule survives on faith. Each board's scorecard records, per judge, the rank its scoring gave his actual pick (board_feed.py judge_rank_of_pick: the panel's judges by key, the paying reader on key buyer included, and the story score's blind judges as story:<axis>), beside score_rank_of_pick.",
+    "review": {
+      "after_weeks": 4,
+      "chance": "(of + 1) / 2: the mean rank a judge would give his pick by drawing at random among the options it scored that day, averaged over the same picks",
+      "rule": "After after_weeks scored weeks, a judge whose mean rank of his picks is no better than chance (equal or worse) gets a review line on the Monday learn step (board_feed.py scorecard, judge_review).",
+      "line": "retire or rewrite",
+      "acts": false,
+      "acts_note": "Reported only. Nothing retires or rewrites a judge by itself; that is Krish's call, by a pull request."
+    }
+  },
   "briefs": {
     "_about": "The words of the briefs the blind judges and the council read (story_score.py brief and council-brief). Internal, never published.",
     "judge": [

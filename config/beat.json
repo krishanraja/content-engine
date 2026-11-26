@@ -44,15 +44,21 @@
     },
     "judges": {
       "reader": {
+        "label": "Reader",
         "question": "Will the people this is written for actually read it?",
-        "rubric": "Score reach into the readership: people who make the calls or make the work in the creative, arts, music, entertainment, media and sports industries, from whoever runs the label, studio, publisher, club or league to the musician, artist, writer, performer, athlete or creator whose work it is. 10 means it speaks to something in their work or their money this quarter; 1 means it is for AI practitioners, generalist business readers, or nobody in particular. Do not reward flattery of that reader; reward usefulness to them. Judge the readership only. Whether one of them would pay to read it is the buyer judge and not yours.",
+        "rubric": "Score reach into the readership: people who make the calls or make the work in the creative, arts, music, entertainment, media and sports industries, from whoever runs the label, studio, publisher, club or league to the musician, artist, writer, performer, athlete or creator whose work it is. 10 means it speaks to something in their work or their money this quarter; 1 means it is for AI practitioners, generalist business readers, or nobody in particular. Do not reward flattery of that reader; reward usefulness to them. Judge the readership only. Whether one of them would pay for it is the paying-reader judge and not yours.",
         "evidence": "Name who in those industries this lands with, and the situation they are in."
       },
       "buyer": {
-        "question": "Would someone in these industries pay to read this?",
-        "rubric": "Score paying reach: whether a person who makes the calls or makes the work in the creative, arts, music, entertainment, media or sports industries would pay to keep reading a publication that runs this, because it shows them what AI is doing to how their work makes money. 10 means it lands on money they earn, spend, license or are owed, with something they could not get free elsewhere; 1 means it could run anywhere and nobody would pay for it. Judge paying reach only. Whether the wider readership enjoys it belongs to the reader judge, and the two of you disagreeing on one idea is a finding rather than a fault.",
-        "evidence": "Name the person who would pay, and the money in their work this lands on.",
-        "flag": "Rewritten from the retired thirty-day-build buyer (panel-v2). Whether the buyer judge is rewritten like this or retired is Krish's call; its key stays so calibration still joins."
+        "label": "Paying reader",
+        "question": "Would someone who makes the calls or makes the work in these industries pay for this?",
+        "rubric": "Score paying reach: whether someone who makes the calls or makes the work in the creative, arts, music, entertainment, media or sports industries would pay for this, because it tells them something about how their work makes money that they could not get free elsewhere this week. 10 means they would forward it to their boss; 7 means they would pay to keep reading a publication that runs it; 4 means it is useful, but they could find the same thing free this week; 1 means it is free news they already saw. Judge paying reach only. Whether the wider readership reads it belongs to the reader judge, and the two of you disagreeing on one idea is a finding rather than a fault.",
+        "evidence": "Name the person who would pay, the money in their work this tells them about, and why they could not get it free elsewhere this week.",
+        "ruling": {
+          "at": "2026-11-26",
+          "said": "On questions 1 and 3 I need your judgement in detail. I want a high-quality flexible engine that has learned from all its past mistakes and is upgraded now.",
+          "ruling": "Kept, as the paying-reader judge. The North Star says these industries pay to read and the publication is worth owning on its own; no other judge tests pay-to-read, and the reader judge tests read-for-free. The old buyer (a commercial leader who might hire Krish within thirty days) tested the consultancy's buyer, which leaks across ventures, so it stays retired. The key stays buyer so stored verdicts, calibration and the check-judges invariants still join; every label says Paying reader. Its question is answered in the judges' accountability (config/story-score.json judges.review), never on faith."
+        }
       }
     }
   },
