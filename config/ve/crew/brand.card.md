@@ -12,6 +12,6 @@ Owns the theme, BrandFrame, colour roles, logos and type. Source: `config/ve/bra
 | Numbers | Every digit on screen names whoever produced it (`producer_label`). A test the publication ran is labelled OUR TEST · <date>, never a person's name. |
 | Name | No word on screen names Krish or a handle of his, ever (`brand.no_name`). His face appears; his name does not. |
 | Grain | 7%, behind everything, never over marks. |
-| Ending | Ending band with the spoken URL; a call card before it only when the piece carries a call Krish asked for. |
+| Ending | Ending band with the spoken URL; the landing card before it when the cut has a landing beat (what this shows and the open question; no verdict, odds, meter or date). A why beat carries its step (WHY n, the question, the strength marker). |
 
 Failures: R08, R20, F07.

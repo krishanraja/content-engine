@@ -664,10 +664,22 @@ OUTLINE_FROM = '2026-10-09'  # dated drafts from here on need an approved outlin
 NARRATIVE_FROM = '2026-11-09'
 PLANS = HERE.parents[1] / 'docs' / 'plans'
 LOCK_GLOB = '*/narrative-lock-*.md'
-# "The use" is what makes it useful, the one thing a business leader does differently on Monday (his "powerful,
-# useful, and fun to consume").
+# "The use" is what makes it useful (his "powerful, useful, and fun to consume"): what the viewer can now see that
+# they could not before, the landing (what this shows plus the open question handed to them), never an action or a
+# lesson for leaders. Only the heading is read here, so its guidance can change without touching a signed lock.
 LOCK_PARTS = ('Surface story', 'Deeper story', 'Arc', 'The fun', 'The use', 'His close', 'Facts to check', 'Outline',
               'Style recipe', 'Music bed')
+# The why-ladder (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests
+# predictions, calls, dated, odds or scores). A lock carries "## The Whys": one Why per beat, in order, each line
+# "Why N: the question? the answer [evidence: corpus ids or source links]". A Why with no evidence is refused, except
+# an open question that ends the ladder (the contract's open rung: never climbed past). Only a lock signed from
+# WHYS_FROM, or not signed yet, needs it: a lock he signed before was signed in the old shape, and adding the part
+# now would change the words his signature binds (the drift rule), so it keeps standing as signed.
+WHYS_FROM = '2026-11-25'
+WHYS_MAX = 7
+WHY_LINE = re.compile(r'^[\s>*_#-]*(?:\d+[.)]\s*)?\**\s*Why\s+(\d+)\b', re.I)
+WHY_EVIDENCE = re.compile(r'[\[(]\s*(?:evidence|sources?|corpus)\b[^\])]*[A-Za-z0-9][^\])]*[\])]|https?://\S+|\b(?:evidence|sources?|corpus)\s*:\s*\S', re.I)
+WHY_OPEN = re.compile(r'\bopen question\b|\(open\)|\bopen\s*:', re.I)
 # His signature binds the words he signed: the sha256 of everything above it (lock_body_hash), so a lock edited after
 # he signed no longer stands under the same signature (the drift rule). This catches a change by accident or habit;
 # a session that recomputes the hash after editing still gets through, which only a press of his own would stop.
@@ -767,6 +779,45 @@ def signature_problems(text):
     return []
 
 
+def whys_required(text):
+    """Whether the lock must carry "## The Whys": every lock not yet signed, and every lock signed from WHYS_FROM."""
+    signed = lock_signature(text)
+    return not (signed and signed[1] < WHYS_FROM)
+
+
+def whys_problems(text):
+    """Why the lock's "## The Whys" part does not stand, [] when it does: one "Why N" line per beat, numbered 1 up in
+    order, at most WHYS_MAX, each citing the evidence it rests on ([evidence: ...], a corpus id or a source link). The
+    last Why may be an open question with no evidence: the ladder ends there."""
+    body = _part(lock_parts(text), 'The Whys')
+    if not body:
+        return ['parts missing or empty: The Whys (a "## The Whys" heading: one Why per beat, each line "Why N: the question? '
+                'the answer [evidence: corpus ids or source links]")']
+    whys = []
+    for line in body.splitlines():
+        m = WHY_LINE.match(line)
+        if m:
+            whys.append([int(m.group(1)), line])
+        elif whys and line.strip():
+            whys[-1][1] += '\n' + line
+    if not whys:
+        return ['The Whys holds no "Why N:" line: one Why per beat, each line "Why N: the question? the answer [evidence: ...]"']
+    out = []
+    numbers = [n for n, _ in whys]
+    if len(whys) > WHYS_MAX:
+        out.append(f'The Whys climbs {len(whys)} Whys: merge sub-steps so it climbs {WHYS_MAX} at most (five is the target)')
+    if numbers != list(range(1, len(numbers) + 1)):
+        out.append('The Whys are numbered ' + ', '.join(map(str, numbers)) + f': number them 1 to {len(numbers)} in order')
+    for k, (n, words) in enumerate(whys):
+        if WHY_EVIDENCE.search(words):
+            continue
+        if k == len(whys) - 1 and WHY_OPEN.search(words):
+            continue
+        out.append(f'Why {n} cites no evidence: add [evidence: the corpus ids or source links it rests on], or, if it is the last '
+                   'Why and nothing backs it, mark it an open question so the ladder ends there')
+    return out
+
+
 def narrative_problems(text, piece_id, drafts_on=None):
     """Why a narrative lock does not stand for this piece yet, [] when it does: it names the piece and the day it
     publishes, holds every part with words under it, its outline has one spine (spine_check), and its last line is
@@ -795,6 +846,8 @@ def body_problems(text, piece_id, drafts_on=None):
         why = [w for w in spine_check.outline_problems(lock_outline(text)) if not w.startswith('not approved')]
         if why:
             out.append('its outline: ' + '; '.join(why))
+    if whys_required(text):
+        out.extend(whys_problems(text))
     return out
 
 
@@ -1423,6 +1476,10 @@ def thumb_problem(cut, path):
         got = f'{size[0]} x {size[1]}' if size else 'not a JPEG or PNG this can read'
         return f'{path.name} is {got}, not the {want[0]} x {want[1]} {shape} thumbnail the {cut} cut carries'
     try:
+        if path.with_name('covers.json').is_file():
+            from visual_gate import image_led_problems
+            issues = image_led_problems(path, 'youtube' if shape == 'wide' else 'tall')
+            return '; '.join(issues) or None
         receipt = json.loads((path.parent / THUMB_RECEIPT).read_text(encoding='utf-8'))
     except (OSError, ValueError):
         # A piece-specific treatment Krish approved can use a renderer other
@@ -2761,7 +2818,7 @@ def self_test():
         """A lock for the piece; the signature gets the sha256 of the words above it unless it carries one or is empty."""
         parts = {'Surface story': 'Three firms cut prices in one week.', 'Deeper story': 'The price is the bait.',
                  'Arc': '- Open on the cut\n- Turn on who pays\n- Close on the bill', 'The fun': 'The receipt prints forever.',
-                 'The use': 'On Monday, ask which of your tools moved to usage pricing.',
+                 'The use': 'Usage pricing moves the bill to whoever uses the tool most. Who is that where you work?',
                  'His close': 'Check what you pay for before Monday.', 'Facts to check': '- The price cut | https://example.org | to check',
                  'Outline': 'Spine: Who pays for the cheap model?\nAnswer: You do, later.\n'
                             '1. THE CUT | proves: the price fell\n2. THE BILL | proves: you pay later',
@@ -2820,7 +2877,7 @@ def self_test():
         check('narrative: a lock changed under his signature is never handed a new hash', (code, any('lock sha256' in line for line in lines)),
               (1, False))
         lock_path.write_text(lock_text(pid, drop='The use'), encoding='utf-8')
-        check('narrative: the use (his Monday action) is a part he signs', 'The use' in refused(paths, pid, [plans]), True)
+        check('narrative: the use (what the viewer can now see) is a part he signs', 'The use' in refused(paths, pid, [plans]), True)
         lock_path.write_text(lock_text(pid, drop='Music bed'), encoding='utf-8')
         check('narrative: a missing part is named', 'Music bed' in refused(paths, pid, [plans]), True)
         lock_path.write_text(lock_text(pid).replace('Spine: Who pays for the cheap model?', 'Spine: Who pays.'), encoding='utf-8')

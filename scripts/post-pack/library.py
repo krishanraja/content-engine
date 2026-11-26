@@ -8,7 +8,7 @@ can copy paste, video scripts, etc etc".
 
     makeyourmindup/
         1 Brand kit (permanent)/
-        2 Channel art (permanent)/
+        1 Brand kit (permanent)/Channel art/
         3 Posts/
             2026-10-05 Mon follow.the.money - Who gets paid/
                 READ ME.txt
@@ -39,9 +39,10 @@ import archive  # noqa: E402  the archive naming rule: safe_text, _shorten, file
 import brand  # noqa: E402  the house style: the live subchannels and their days
 
 BRAND_KIT = '1 Brand kit (permanent)'
-CHANNEL_ART = '2 Channel art (permanent)'
+# Channel art lives inside the brand kit since 26 Nov 2026; "2 Channel art (permanent)" is retired and refused.
+CHANNEL_ART = '1 Brand kit (permanent)/Channel art'
 POSTS = '3 Posts'
-TOP_FOLDERS = (BRAND_KIT, CHANNEL_ART, POSTS)
+TOP_FOLDERS = (BRAND_KIT, POSTS)
 PUBLISH, ARTICLE, COVERS, VIDEO, SOCIAL = POST_SECTIONS = ('0 Publish', '1 Article', '2 Covers and images', '3 Video', '4 Social')
 POST_README = 'READ ME.txt'
 PATH_MAX = 180  # the library root on Windows is about 62 characters; Windows stops a path at 260
@@ -82,6 +83,9 @@ class LibraryError(ValueError):
 # An off-day post has no series; its folder carries this label where a series name would go
 # (config/library-paths.cases.json, off_day_label; Krish, 2026-11-03).
 OFF_DAY = json.loads(CASES.read_text(encoding='utf-8'))['off_day_label']
+# The weekly edition is filed like a post, with this label where a series name would go (config/library-paths.cases.json,
+# edition_label; Krish, 2026-11-25: one email a week, "makeyourmindup weekly", every Saturday; config/weekly-edition.json).
+EDITION = json.loads(CASES.read_text(encoding='utf-8'))['edition_label']
 # The days with no series: Tuesday, Thursday and Saturday (Sunday rests; Krish, 2026-11-02).
 OFF_WEEKDAYS = ('Tue', 'Thu', 'Sat')
 
@@ -107,7 +111,7 @@ def utf16_length(text):
 
 
 def _post_folder_pattern():
-    names = '|'.join(re.escape(name) for name in subchannels() + [OFF_DAY])
+    names = '|'.join(re.escape(name) for name in subchannels() + [OFF_DAY, EDITION])
     return re.compile(rf'([0-9]{{4}})-([0-9]{{2}})-([0-9]{{2}}) (?:({"|".join(WEEKDAYS)}) ({names})|Launch) - \S.*', re.S)
 
 
@@ -210,7 +214,7 @@ REFUSALS = {
     'path_part_edge': 'a name starts or ends with a space, or ends with a dot',
     'path_reserved_name': 'a name is one Windows keeps for itself (CON, PRN, AUX, NUL, COM1, LPT1 and the like)',
     'path_part_too_long': f'a name is longer than {PART_MAX} characters',
-    'path_wrong_top_folder': f'it is outside "{BRAND_KIT}", "{CHANNEL_ART}" and "{POSTS}"',
+    'path_wrong_top_folder': f'it is outside "{BRAND_KIT}" and "{POSTS}" (channel art goes in "{CHANNEL_ART}")',
     'path_no_file': 'it names a folder, and a file is needed',
     'path_post_folder_invalid': 'the post folder is not named "YYYY-MM-DD Day subchannel - Subject" (or "YYYY-MM-DD Launch - Subject") with the day the date fell on',
     'path_post_section_invalid': f'inside a post folder a file goes in {", ".join(POST_SECTIONS)}, or is the {POST_README}',
@@ -299,6 +303,7 @@ def check_cases(cases):
     check('content types', CONTENT_TYPES, cases['content_types'])
     check('subchannels', sorted(subchannels()), sorted(cases['subchannels']))
     check('off-day label', OFF_DAY, cases['off_day_label'])
+    check('edition label', EDITION, cases['edition_label'])
     for item in cases['paths']:
         check(f'path: {item["why"]}', refusal(item['path']), item.get('refused'))
     for item in cases['post_folders']:

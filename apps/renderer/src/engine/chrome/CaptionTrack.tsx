@@ -4,6 +4,7 @@ import { textWidth } from '../../house/metrics'
 import { boxFor, WIDE, type Aspect } from '../geometry'
 import type { EngineRenderProps } from '../props'
 import { houseTokens } from './tokens'
+import { landingBeatAt } from './LandingCard'
 
 export type CaptionPage = EngineRenderProps['captions'][number]
 
@@ -42,7 +43,7 @@ export function captionLines(page: CaptionPage, aspect: Aspect): number[][] {
 
 export function CaptionTrack({ props, frame }: { props: EngineRenderProps; frame: number }) {
   if ((props.ending && frame >= props.ending.fromFrame)
-    || (!!props.call && props.beats.some((beat) => beat.role === 'call' && frame >= beat.fromFrame && frame < beat.toFrame))) return null
+    || !!landingBeatAt(props, frame)) return null
   const page = captionPageAt(props.captions, frame)
   if (!page) return null
   const lines = captionLines(page, props.aspect)

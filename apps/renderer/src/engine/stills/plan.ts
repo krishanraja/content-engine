@@ -13,7 +13,7 @@ const beats = [
  'all over TikTok','a Reiki healer','her own lyrics','pressed a button','a whole song','cats and weddings','dads dancing badly',
  'strangers went hunting','a top producer','rebuilt by hand','Ultra Naté','under her voice','still compete for singing',
  'already both','in 1902','afraid of plague','hand in the tail','very much alive','rat farms','Token Legend','Cache Wizard',
- 'the board went dark','unnecessary tasks','three companies backed down','useful queries stayed','nine in ten','sales went up',
+ 'the board went dark','unnecessary tasks','three companies backed down','useful queries stayed','nine in ten','sales went up','When does a stream count?',
 ] as const
 const layouts = ['stage-1236-cream-band','desk-portrait-band','hero-216-object-580','sweep-monolith','zero-axis-diptych','exploded-audio-lanes','locked-terminal','boiling-tail-poster','zoomed-lyrics-field','torn-verdict-collage','offset-print-disc','continuous-causal-route','twelve-column-editorial','vertical-voice-wave',
  'proof-window-triptych','hanoi-panorama','provenance-section','question-portrait-space','chart-race-scoreboard','diagonal-target-crash','long-perforated-bill']
@@ -26,6 +26,6 @@ export function coverPlan(layer:Layer,id:string) {
  if(index<0) throw new Error(`Unknown StyleStill ${layer}/${id}`)
  const caption=index>=21, n=index-21
  return {scene:beats[index]!, beat:beats[index]!, layout:caption?`caption-${id}-backdrop-${n}`:layouts[index]!,
- type:caption?`${id} native caption`:types[index]!, palette:`ink-${index}`,
+ type:caption?`${id} native caption`:types[index]!, palette:id==='house-v5'?'ink-0':`ink-${index}`,
  zones:caption ? [{name:'device',x0:0,y0:0,x1:1080,y1:540},{name:'caption',x0:40,y0:550,x1:1040,y1:1360},{name:'device',x0:0,y0:1400,x1:1080,y1:1920}] : [{name:'device',x0:0,y0:0,x1:1080,y1:1920}] }
 }

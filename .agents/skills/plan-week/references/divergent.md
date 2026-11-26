@@ -31,7 +31,8 @@ For each publishing day's wildcard slot only (never a lookalike option, never hi
 
 It checks the chain cap first and refuses over it. It passes `cliches` (the recent posts' titles and the earlier boards'
 options), the kill list's banned vocabulary and `target: writing`. Pick at most one spark that fits the series mandate
-and Krish's ruling of 6 October, then research it like any option: a dated, sourced fact checked against its source the
+and Krish's ruling of 6 October and is on the beat (a focus sector in `config/beat.json`, nothing on its avoid list; Krish,
+2026-11-24), then research it like any option: a dated, sourced fact checked against its source the
 same day, or leave it out. The option you write from it is the engine's: `source_kind` `engine`, plus
 `"divergent": {"run_id": "<run_id>", "spark": "<the spark's title>"}`; never his, never posed as his. It goes through
 the same adversarial refute pass, the `reviewer` subagent and `board_feed.py gate` as every option. On exit 2, or when

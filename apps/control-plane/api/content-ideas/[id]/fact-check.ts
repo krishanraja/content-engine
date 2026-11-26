@@ -22,14 +22,14 @@ import { webResearch } from '../../_enrich.js'
 import {
   classifyAnthropicFailure, isModelUnavailable, ModelUnavailableError, recordAnthropicFailure, refusesEveryCall, type ProviderFailure,
 } from '../../_modelProvider.js'
-import { predictionWanted, publishChecks, publishStatus } from '../../_publishChecks.js'
+import { publishChecks, publishStatus } from '../../_publishChecks.js'
 import { receipts } from '../../_receipts.js'
 import { failureAnswer } from '../../_stream.js'
 import { UTILITY_MODEL } from '../../_models.js'
 import { randomUUID } from 'node:crypto'
 import { lastFactRunCost, meterScope, perplexityCall } from '../../_meter.js'
 import {
-  activeManualReviews, reviewContradiction, bodyHash, carryForward, carrySignOffs, combine, countRun, rerunCeiling, settledLeftovers, ENTAIL_SYSTEM, filedSourcesCut, numbersNotOnFile, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, isConfidenceLine, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
+  activeManualReviews, reviewContradiction, bodyHash, carryForward, carrySignOffs, combine, countRun, rerunCeiling, settledLeftovers, ENTAIL_SYSTEM, filedSourcesCut, numbersNotOnFile, EXTRACT_SYSTEM, factLedgerCoverage, gateStatus, INDEPENDENT_SYSTEM, leftoversOf, norm, ON_FILE_SYSTEM, primaryText, quotesFail,
   resolveLeftovers, SECOND_LOOK_SYSTEM, sectionOf, settle, signOff, SOURCES_BUDGET, sourcePartHashes, sourcesHash, sourcesText, splitFresh, summarise, sweep,
   type CheckedClaim, type Claim, type ClaimKind, type FactCheck, type FactLedger, type IndependentVerdict, type OnFileVerdict,
 } from '../../_factGate.js'
@@ -95,12 +95,10 @@ async function extract(run: GateRun, body: string): Promise<{ claims: Claim[]; s
   const listed: Claim[] = (Array.isArray(j.claims) ? j.claims : [])
     .filter((c: any) => typeof c?.sentence === 'string' && typeof c?.claim === 'string')
     .map((c: any) => ({ sentence: c.sentence.trim(), claim: c.claim.trim(), kind: (KINDS.has(c.kind) ? c.kind : 'other') as ClaimKind }))
-  // Krish's confidence is his judgement, never a claim, whatever the model says.
-  const claims = listed.filter(c => !isConfidenceLine(c.sentence))
+  const claims = listed
   const setAside = (Array.isArray(j.set_aside) ? j.set_aside : [])
     .filter((a: any) => typeof a?.sentence === 'string')
     .map((a: any) => ({ sentence: a.sentence.trim(), reason: String(a.reason || '').slice(0, 60) }))
-  for (const c of listed) if (isConfidenceLine(c.sentence) && !setAside.some(a => a.sentence === c.sentence)) setAside.push({ sentence: c.sentence, reason: 'prediction' })
   return { claims, setAside }
 }
 
@@ -320,7 +318,7 @@ async function check(run: GateRun, body: string, meta: Record<string, any>): Pro
   // so only the open ones are read again (G4).
   const leftovers = settledLeftovers(body, leftoversOf(swept), ledger, hash, parts)
   const second = await secondLook(run, leftovers.open, body)
-  const looked = resolveLeftovers(leftovers.open, second.answers)
+  const looked = resolveLeftovers(leftovers.open, second.answers, body)
   const all = [...swept.claims.filter(c => c.kind !== 'unclassified'), ...looked.claims, ...leftovers.settled]
   const carry = carryForward(body, all, looked.setAside, ledger, hash, parts)
   const fresh = splitFresh(carry.toCheck, MAX_CLAIMS)
@@ -385,7 +383,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const nextRun = factLedgerCoverage(body, ledger, sourceHash, sourcePartHashes(meta))
     // The whole pre-publish checklist rides along, so Control Center can show
     // Krish every house rule this exact version passes or fails in one place.
-    const checks = publishChecks(body, gate, new Date(), id, { predictionWanted: predictionWanted(meta) })
+    const checks = publishChecks(body, gate, meta.whys)
     // Receipts: the source's own words behind each checked claim, for a Short,
     // a carousel or a web edition to show on screen (api/_receipts.ts). Only
     // for the exact version that passed.
@@ -498,4 +496,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     independent_checker: result.independent_checker, claims: result.claims.length, set_aside: result.set_aside.length, carried: result.carried ?? 0, unchecked: result.unchecked ?? 0,
     fact_check: result, next_run: scope,
   })
+}
+
+/** Check a short edition item against its actual publisher text without creating an idea. */
+export async function checkSourcedBody(body: string, url: string, content: string): Promise<FactCheck> {
+  const materials = [{ kind: 'source', url, content, verbatim: true }]
+  return (await check(new GateRun(), body, { materials })).result
 }

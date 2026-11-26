@@ -42,7 +42,7 @@ function bodyHash(text: string) {
 }
 
 /** A lock for PIECE; signed (by default) with the hash of its words, unsigned with signature ''. */
-function lock(signature: string | null = 'Signed by Krish: "yes, lock it", 2026-11-01', change?: [string, string]) {
+function lock(signature: string | null = 'Signed by Krish: "yes, lock it", 2026-11-01', change?: [string, string], extra: string[] = []) {
   let body = [
     '# Narrative lock: Mon 9 Nov follow.the.money - Cheap models', '',
     `piece_id: ${PIECE}`, 'Publishes: 2026-11-09', '',
@@ -57,6 +57,7 @@ function lock(signature: string | null = 'Signed by Krish: "yes, lock it", 2026-
     '1. THE CUT | proves: the price fell', '2. THE BILL | proves: you pay later', '',
     '## Style recipe', '', 'Script: receipt. Production: statement wall.', '',
     '## Music bed', '', 'The approved follow.the.money bed.', '',
+    ...extra,
   ].join('\n')
   const sha = bodyHash(body)
   if (change) body = body.replace(change[0], change[1])
@@ -116,6 +117,67 @@ describe('the narrative gate in making.py', () => {
     expect(result.status).toBe(1)
     expect(result.stderr).toMatch(/carry no date/)
     expect(result.stderr).not.toMatch(/engine key|Traceback/)
+  })
+
+  // The why-ladder (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests
+  // predictions, calls, dated, odds or scores). A lock signed from 25 Nov 2026, or not signed yet, carries "## The Whys":
+  // one Why per beat, each citing its evidence. A lock he signed before keeps standing (the test above, signed 1 Nov).
+  const WHYS = ['## The Whys', '',
+    'Why 1: Why did the price fall? Because three labs cut it in one week [evidence: r-perplexity, https://example.org/prices]',
+    'Why 2: Why cut it? Because the bill moves to usage later [evidence: r-filing]',
+    'Why 3: Why later? Open question: no source says yet.', '']
+  const signedNow = 'Signed by Krish: "yes, lock it", 2026-11-25'
+  const write = (name: string, text: string) => {
+    const { dir, scripts } = plans(name, '2026-11-30')
+    const path = join(dir, '2026-11-30-week', 'narrative-lock-mon.md')
+    writeFileSync(path, text)
+    return { path, scripts }
+  }
+  // The lock for a piece that publishes on 30 Nov (the drafts' date), signed or not.
+  const lock30 = (signature: string | null, extra: string[] = []) => {
+    const body = lock(null, undefined, extra).replace('Publishes: 2026-11-09', 'Publishes: 2026-11-30')
+    return body + (signature ? `${signature}, lock sha256 ${bodyHash(body)}\n` : '')
+  }
+
+  it('refuses a lock signed from 25 Nov with no "## The Whys"', () => {
+    const { path, scripts } = write('no-whys', lock30(signedNow))
+    const check = making([PIECE, 'narrative', path])
+    expect(check.status).toBe(1)
+    expect(check.stdout + check.stderr).toMatch(/parts missing or empty: The Whys/)
+    const result = making([PIECE, 'scripts', ...scripts])
+    expect(result.status).toBe(1)
+    expect(result.stderr).toMatch(/does not stand yet: .*The Whys/)
+  })
+
+  it('passes a lock signed from 25 Nov whose every Why cites its evidence, the last one an open question', () => {
+    const { path, scripts } = write('whys', lock30(signedNow, WHYS))
+    const check = making([PIECE, 'narrative', path])
+    expect(check.status, check.stdout + check.stderr).toBe(0)
+    const result = making([PIECE, 'scripts', ...scripts])
+    expect(result.stderr).toMatch(/engine key/)
+    expect(result.stderr).not.toMatch(/narrative lock|Traceback/)
+  })
+
+  it('refuses a Why with no evidence, unless it is the open question the ladder ends on', () => {
+    const bare = WHYS.map(l => l.replace(' [evidence: r-filing]', ''))
+    const check = making([PIECE, 'narrative', write('bare-why', lock30(signedNow, bare)).path])
+    expect(check.status).toBe(1)
+    expect(check.stdout + check.stderr).toMatch(/Why 2 cites no evidence/)
+    expect(check.stdout + check.stderr).not.toMatch(/Why 3 cites no evidence/)
+    const openFirst = [WHYS[0]!, '', 'Why 1: Why? Open question: nothing yet.', WHYS[3]!, WHYS[4]!, '']
+    const climbed = making([PIECE, 'narrative', write('open-climbed', lock30(signedNow, openFirst)).path])
+    expect(climbed.stdout + climbed.stderr).toMatch(/Why 1 cites no evidence/)
+    const skipped = making([PIECE, 'narrative', write('numbered', lock30(signedNow, [WHYS[0]!, '', WHYS[3]!, WHYS[4]!, ''])).path])
+    expect(skipped.stdout + skipped.stderr).toMatch(/numbered 2, 3: number them 1 to 2 in order/)
+  })
+
+  it('an unsigned lock is asked for the Whys before he is asked to sign it', () => {
+    const check = making([PIECE, 'narrative', write('unsigned-whys', lock30(null)).path])
+    expect(check.status).toBe(1)
+    expect(check.stdout + check.stderr).toMatch(/The Whys/)
+    expect(check.stdout + check.stderr).not.toMatch(/lock sha256 [0-9a-f]{64}/)
+    const ready = making([PIECE, 'narrative', write('unsigned-ready', lock30(null, WHYS)).path])
+    expect(ready.stdout + ready.stderr).toMatch(/lock sha256 [0-9a-f]{64}/)
   })
 
   it('leaves a piece from before 9 Nov to the outline gate alone', () => {

@@ -92,5 +92,32 @@
    "alt": "Fortune, 9 April 2026: A Meta employee created a dashboard so coworkers can compete to be the company's No. 1 AI token user"
   }
  },
- "video_length": "5:21"
+ "video_length": "5:21",
+ "image_led": {
+  "wide_headline": {"youtube": "They faked AI use."},
+  "still_subject": "A workstation running the token-count leaderboard",
+  "still_position": [
+   62,
+   50
+  ],
+  "figure_position": [
+   60,
+   45
+  ],
+  "figure": {
+   "value": [
+    "60",
+    "trillion"
+   ],
+   "caption": "tokens in 30 days on one Meta staff leaderboard, per Fortune",
+   "source": "s1"
+  },
+  "kicker_accent_line": 1,
+  "proof_caption": "Fortune, 9 April 2026",
+  "stills": {
+   "existing": "cover-assets/scene.jpg"
+  },
+  "proof_capture": "cover-assets/proof.png",
+  "proof_photo_free": true
+ }
 }

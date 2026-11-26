@@ -26,3 +26,20 @@ brand book, the Receipt and these seven checks win); his picked words are never 
 
 A failed check comes with a finding that says why, in one line, marked `block` (it cannot go to Krish like this) or
 `fix` (it can be repaired in the next round). An option with a `block` finding blocks.
+
+## The checks on each option
+
+- `python3 scripts/channel_safe.py WORK/thumbs/options/<id>/thumb-tall-1080x1920.jpg --shape cover_tall` (F43: the
+  grid crop and the account row). Exit 2 means it did not run (no tesseract): say so; it is never a pass.
+- `python3 scripts/post-pack/title_check.py "THE WORDS" --surface thumbnail --source <the piece's body or script>`,
+  and again with `--surface tall_cover`.
+- `python3 scripts/pages/thumb_options.py show WORK/thumbs`: the words, the parts and any logo the brief does not name.
+- Look at every file at full size, and at the grid mock, yourself, against the QA list
+  (`.agents/skills/thumbnail-designer/references/qa.md`).
+
+## Repair, at most twice, then hold
+
+When the verdict blocks every option, or the best one fails a check, change the facts (a crop, a layout) and draw a
+new set; a new set needs a new verdict. At most two rounds of repair. Then hold: record the set and its verdict
+(`making.py <piece> thumbnails WORK/thumbs`, no `--ask`), record the reason as a final-review line, and
+carry on with the cuts. Never put options below the bar to him.

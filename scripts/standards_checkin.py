@@ -65,6 +65,16 @@ def placed(groups):
     return out
 
 
+def plain(text):
+    """Text for a proposed group with no long dash in it, so floor_group.check never refuses the week over one
+    (26 Nov: a new group's check, copied from its first standard, carried an em dash and the check-in stopped with
+    "its check has a long dash", so the floor pull request stayed red). A range of numbers takes "to"; any other long
+    dash becomes a comma."""
+    text = re.sub(r'(?<=\d)\s*[\u2013\u2014]\s*(?=\d)', ' to ', str(text or ''))
+    text = re.sub(r'\s*[\u2013\u2014]+\s*', ', ', text)
+    return re.sub(r',\s*([,.;:!?])', r'\1', text).strip(' ,')
+
+
 def decided_words(group, db_group):
     """The words he decided for a group: his latest amendment, else his correction, else the group's own words."""
     if db_group:
@@ -114,7 +124,9 @@ def propose(floor, groups, db_groups, week_of):
     parent's key. Deterministic: sorted by standard id, ties broken by group key."""
     standards = floor.get('standards') or {}
     where = placed(groups)
-    loose = sorted(ref for ref in standards if ref not in where)
+    # A retired standard (config/floor-rulings.json "retired": the 2026-11-24 no-prediction ruling) is never proposed.
+    gone = floor_group.retired_ids(floor)
+    loose = sorted(ref for ref in standards if ref not in where and ref not in gone)
     if not loose:
         return [], {}
     stamp = dt.date.fromisoformat(week_of).strftime('%y%m%d')
@@ -149,14 +161,14 @@ def propose(floor, groups, db_groups, week_of):
         if b['parent']:
             parent = by_key[b['parent']]
             evolves[key] = b['parent']
-            entry = {'key': key, 'title': f'{parent["title"]} (evolution, week of {week_of})'[:120],
-                     'never_beneath': decided_words(parent, db_groups.get(b['parent'])),
-                     'check': parent['check'], 'members': members, 'evolves': b['parent']}
+            entry = {'key': key, 'title': plain(f'{parent["title"]} (evolution, week of {week_of})')[:120],
+                     'never_beneath': plain(decided_words(parent, db_groups.get(b['parent']))),
+                     'check': plain(parent['check']), 'members': members, 'evolves': b['parent']}
         else:
             theme = str(first.get('theme') or 'other').replace('_', ' ')
-            entry = {'key': key, 'title': f'New: {theme} (week of {week_of})'[:120],
-                     'never_beneath': str(first.get('never_beneath') or '').strip(),
-                     'check': str(first.get('check_before_delivery') or '').strip(), 'members': members}
+            entry = {'key': key, 'title': plain(f'New: {theme} (week of {week_of})')[:120],
+                     'never_beneath': plain(first.get('never_beneath')),
+                     'check': plain(first.get('check_before_delivery')), 'members': members}
             if b.get('near'):
                 entry['near'] = b['near']
         new_groups.append(entry)

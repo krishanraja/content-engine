@@ -23,10 +23,11 @@ import { dayComments, dayPieces, dayPosted, dayYes, ideaLines, materialPress, of
 import { HELD_CHANGED, HELD_TITLE, approvedLabel, approvedWhen, asSentence, cutSoWhat, dayShort, dayWords, gatePieces, goes, optionSha, readApprovals, type Approval, type Held } from './_gate.js'
 import { attachOverlay, readOverlay, withWriteBack, workByScope, type Overlay, type ViewMaterial, type ViewSession } from './_writeBack.js'
 import { lockRead, newestScripts, pieceDecisions, scriptSection, scriptsChanged, type FiledScript, type LockState, type PieceDecisions, type ScriptsState } from './_decisions.js'
-import { dayStyle, motionBank, type DayStyle, type MotionModule } from './_style.js'
+import { dayStyle, motionBank, retiredStyle, type DayStyle, type MotionModule } from './_style.js'
 import { liveByDay, liveLine, livePress, postsFor, publishedNow, todayNY, type LivePost } from './_itsLive.js'
 import { ownerDriveToken, weekPosts, type DrivePost, type PostAsset } from './_drivePosts.js'
 import { dayManifest, readDrafts, type Draft, type ViewManifest } from './_manifest.js'
+import { EDITION_DAY, editionView, readEdition, type EditionRead, type ViewEdition } from './_edition.js'
 import { carriedItems, channelWord, dayLabel, dayOptions, liveOn, readItems, readItemsIn, type GrowthPost, type OffdayItem } from './_offdayItems.js'
 import { ideaStage, lateLine, lateOn, postedStage, truthProblems } from './_stage.js'
 import { modelProblems, offdayHead, offdayKind, recentOutOf, weekModel, type ModelInputs, type WeekModel } from './_weekModel.js'
@@ -224,11 +225,16 @@ export interface DayView {
    *  with his Approve for publish bound to its sha256 while it waits on him, and whether a press of his binds it now or
    *  bound another draft (changed). Null when the piece has no draft manifest. */
   manifest: ViewManifest | null
+  /** Contract 1.35.0 (_edition.ts): on Saturday, the week's edition (makeyourmindup weekly, sent at 08:00 New York): its
+   *  subject, sections in brief, sha256, its draft and preview as same-site paths, and his Approve for send bound to the
+   *  sha256 while it waits on him; whether a press of his binds it now or bound another draft (changed). Null on every
+   *  other day, and on Saturday while no edition is filed for the week. */
+  edition: ViewEdition | null
 }
 /** A post folder of a day, as the view carries it (contract 1.7.0). */
 export interface ViewPost { id: string; name: string; url: string; option: string | null; piece_id: string | null; assets: PostAsset[] }
 /** What a day's next step is built from, before the parts every day carries (media, and 1.2.0's extras). */
-export type DayCore = Omit<DayView, 'media' | 'thumbs' | 'pieces' | 'options' | 'comments' | 'posted' | 'yes' | 'sessions' | 'materials' | 'held' | 'posts' | 'manifest'>
+export type DayCore = Omit<DayView, 'media' | 'thumbs' | 'pieces' | 'options' | 'comments' | 'posted' | 'yes' | 'sessions' | 'materials' | 'held' | 'posts' | 'manifest' | 'edition'>
 export type PathKey = 'research' | 'story' | 'look' | 'board' | 'record' | 'cut'
 export const PATH: Array<{ key: PathKey; label: string }> = [
   { key: 'research', label: 'Research' }, { key: 'story', label: 'Story' }, { key: 'look', label: 'Look' },
@@ -380,6 +386,8 @@ export interface ViewInputs {
   drive_posts?: DrivePost[] | null
   /** Each piece's draft manifest, by piece id (_manifest.ts readDrafts); left out, no day carries one. */
   drafts?: Record<string, Draft>
+  /** Contract 1.35.0: the week's edition as the library holds it (_edition.ts readEdition); left out, Saturday has none. */
+  edition?: EditionRead | null
   /** Contract 1.9.0: the one place an off-day item's day lives (offday_items, _offdayItems.ts): every item on a day of
    *  the week or offered by its plan, or null when it could not be read (the plan's options then show as they are,
    *  and nothing offers a move). Left out, the plan only. */
@@ -937,7 +945,10 @@ export function buildView(i: ViewInputs): WeekView {
     // His Approve for publish, bound to the piece's manifest, leads while it waits on him (1.8.0).
     const manifest = shown ? dayManifest(i.drafts?.[shown], i.picks, d) : null
     if (manifest?.press && core.who !== 'done') core.actions = [manifest.press, ...core.actions.filter(a => !(a.kind === 'press' && a.id === manifest.press!.id))]
-    return { ...core, manifest, media: mediaWithAnswers(piece), thumbs: SERIES_DAYS.includes(d) ? dayThumbs(i.week, piece) : null,
+    // The week's edition on Saturday, his Approve for send first while it waits on him (1.35.0).
+    const edition = d === EDITION_DAY ? editionView(i.edition, i.picks, i.week) : null
+    if (edition?.press) core.actions = [edition.press, ...core.actions.filter(a => !(a.kind === 'press' && a.id === edition.press!.id))]
+    return { ...core, manifest, edition, media: mediaWithAnswers(piece), thumbs: SERIES_DAYS.includes(d) ? dayThumbs(i.week, piece) : null,
       pieces: dayPieces(gate.approved, date, shown, gate.approvalOf, i.now),
       options, held,
       comments: dayComments(i.comments, d), posted: [...dayPosted(i.ticks, d, liveByDay(i.picks)[d] || []), ...growthPosted(i.items, i.week, d)], yes: dayYes(i.picks, d),
@@ -1375,6 +1386,8 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
   // Every day's piece, an off-day piece he records included (Krish, 2026-11-18: once the final assets are made and filed,
   // that is the final state, where he presses Publish).
   const drafts = await readDrafts(db, (pieces as Body[]).filter(p => PUBLISH_DAYS.some(d => p.scheduled_for === dayDate(week, d)))).catch(() => new Map<string, Draft>())
+  // The week's edition (1.35.0), whose sha256 his Approve for send binds; none when the library cannot be read.
+  const edition = await readEdition(db, week).catch(() => null)
   // The approvals that stand now (the ideas gate): null when they cannot be read, and then every piece is held. Beside
   // them, the one place every off-day item's day lives (offday_items).
   // One post, one item (contract 1.10.0): every item of every week on a day or in his Ideas for Later, and the plans of
@@ -1396,7 +1409,7 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
     motion = motionBank(styles)
     const f = styles ? styles.formats : null
     const list = (xs: unknown) => (Array.isArray(xs) ? xs : []).filter(isObj).map(x => ({ id: String(x.id), name: String(x.name || x.id), pitch: String(x.pitch || ''), status: String(x.status || '') }))
-    formats = { script: list(f?.script), production: list(f?.production) }
+    formats = { script: list(f?.script), production: list(f?.production).filter(x => !retiredStyle('format_look', x.id)) }
   } catch { /* the look step then offers the recommendation by id only */ }
   const noted = notedRows as Array<{ id: string; name: string; why_like: string | null; drive_created_at: string | null }>
   const inspiration = {
@@ -1430,7 +1443,7 @@ export async function readView(db: SupabaseClient, week: string, env: Record<str
     research_files: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, Boolean(research[k])])), formats, motion,
     specs: Object.fromEntries(SERIES_DAYS.map((d, k) => [d, specs[k]])), inspiration, overlay, scripts, productionPlans, approvals,
     comments: [...(commentRows as ViewInputs['comments']), ...noteRows] as ViewInputs['comments'], ticks: tickRows as ViewInputs['ticks'], revision: signal as number | null,
-    drive_posts: await drivePosts, drafts: Object.fromEntries(drafts), items, all_items: allItems, recent_pieces: recentPieces as Body[],
+    drive_posts: await drivePosts, drafts: Object.fromEntries(drafts), edition, items, all_items: allItems, recent_pieces: recentPieces as Body[],
     plans: { [shiftYmd(week, -7)]: beside[0] ?? null, [shiftYmd(week, 7)]: beside[1] ?? null }, sign_offs: await signOffs })
 }
 

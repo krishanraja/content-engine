@@ -55,7 +55,7 @@ export interface ArcScore {
 export const WEIGHTS = {
   arc_maturity: 0.25,
   reader_consequence: 0.25,
-  forward_claim: 0.20,
+  landing: 0.20,
   legibility: 0.15,
   non_obviousness: 0.15,
 } as const
@@ -112,13 +112,14 @@ export function scoreArc(arc: Arc, ctx: LintContext = {}): ArcScore {
   const named = /\d|\b[A-Z][a-zA-Z]{2,}\b/.test(rd.replace(/^(\w)/, m => m.toLowerCase()))
   const reader_consequence = clamp01(0.4 + (anchored ? 0.35 : 0) + (named ? 0.25 : 0))
 
-  // forward_claim: a falsifiable claim that is not continuation. The lint has
-  // already rejected continuation and unfalsifiable claims outright, so this
-  // grades how checkable what survives is.
+  // landing (forward_claim until 2026-11-25; Ruling, Krish, 2026-11-24: the 5 Whys, no predictions): what the arc
+  // shows, then an open question. The lint has already refused a forecast and a landing with no question, so this
+  // grades how concrete what survives is: a named thing or a number in it, and a question that asks who, which or what.
   const wtg = arc.card.where_this_goes || ''
-  const hasDate = /\b20\d\d\b|\b(q[1-4]|within|by the end of)\b/i.test(wtg)
-  const hasQuantity = /\d+\s*(%|percent|x|times|million|billion)/i.test(wtg)
-  const forward_claim = clamp01(0.4 + (hasDate ? 0.3 : 0) + (hasQuantity ? 0.3 : 0))
+  const concrete = /\d|\b[A-Z][a-zA-Z]{2,}\b/.test(wtg.replace(/^(\w)/, m => m.toLowerCase()))
+  const question = wtg.slice(wtg.lastIndexOf('.', wtg.lastIndexOf('?')) + 1)
+  const pointed = /\b(who|which|what|whose|how much|where)\b/i.test(question)
+  const landing = clamp01(0.4 + (concrete ? 0.3 : 0) + (pointed ? 0.3 : 0))
 
   // legibility: the gate is pass/fail and has already passed, so this rewards
   // claims that are short as well as clear. A 60-word sentence that happens to
@@ -135,7 +136,7 @@ export function scoreArc(arc: Arc, ctx: LintContext = {}): ArcScore {
   const components: ScoreComponent[] = [
     { name: 'arc_maturity', weight: WEIGHTS.arc_maturity, value: arc_maturity },
     { name: 'reader_consequence', weight: WEIGHTS.reader_consequence, value: reader_consequence },
-    { name: 'forward_claim', weight: WEIGHTS.forward_claim, value: forward_claim },
+    { name: 'landing', weight: WEIGHTS.landing, value: landing },
     { name: 'legibility', weight: WEIGHTS.legibility, value: legibility },
     { name: 'non_obviousness', weight: WEIGHTS.non_obviousness, value: non_obviousness },
   ]

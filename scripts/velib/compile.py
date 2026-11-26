@@ -540,6 +540,10 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     conformed clock and the picture is the conformed take, rendered from the same graph as the dialogue.
     take_frame is the take's frame as ve ingest measured it (velib.takes.cut_frame); a typed asset frame is the
     fallback, so an older spec still compiles."""
+    from .retirement import problems
+    retired = problems(spec)
+    if retired:
+        raise ValueError('; '.join(retired))
     pending_error = pending_devices_error(spec['format'])
     if pending_error:
         raise ValueError(pending_error)
@@ -617,6 +621,10 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
             raise ValueError(f'beat {beat["id"]} has no positive frame interval')
         beats.append({'id': beat['id'], 'role': beat['role'], 'layout': beat['layout'],
                       **({'shot': beat['shot']} if beat.get('shot') else {}),
+                      # A why beat's rung and a landing beat's landing, as the spec names them (chrome/WhyStep.tsx,
+                      # chrome/LandingCard.tsx; Ruling, Krish, 2026-11-24: the signature format is the 5 Whys).
+                      **({'why': {k: beat['why'][k] for k in ('n', 'question', 'strength')}} if beat.get('why') else {}),
+                      **({'landing': {k: beat['landing'][k] for k in ('shows', 'open_question')}} if beat.get('landing') else {}),
                       'fromFrame': start, 'toFrame': end, 'uses': list(beat.get('uses', [])),
                       **({'face': beat['face']} if 'face' in beat else {}),
                       'transitionOut': beat.get('transition_out', 'cut'), 'sectionBeat': index == 0,
@@ -691,7 +699,13 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                                    'producerLabel': dataset['producer_label'], 'rows': dataset['rows']}
         objects.append(compiled)
 
-    theme = next(t for t in load_json(ROOT / 'config' / 'studio.json')['brand_themes'] if t['theme_id'] == spec['theme'])
+    studio = load_json(ROOT / 'config' / 'studio.json')
+    theme_id = spec['theme']
+    theme = next((entry for entry in studio['brand_themes'] if entry['theme_id'] == theme_id), None)
+    if not theme or not theme.get('publication'):
+        raise ValueError(f'unknown publication theme {theme_id!r}')
+    if theme_id != studio['default_brand_theme']:
+        raise ValueError(f'publication theme {theme_id!r} is retired for new compiles')
     publication = theme['publication']
     house = publication['house_style']
     tokens = house['tokens']
@@ -701,7 +715,9 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     # A picked caption style (style.captions; Krish, 2026-11-13: "the captions should be decoupled from the animation
     # styles") draws ve's phrase pages itself: one word a page would undo it (rack-focus racks focus along the phrase), so
     # the word build applies to the house caption only (18 Nov 2026, Wed 18, his rack-focus pick of 17 Nov).
-    picked_theme = (((spec.get('style') or {}).get('captions') or {}).get('theme'))
+    picked_theme = (((spec.get('style') or {}).get('captions') or {}).get('theme')
+                    or spec['brand'].get('caption_theme')
+                    or ('house-v5' if spec['brand'].get('captions') != 'word' else None))
     word_mode = spec['brand'].get('captions') == 'word' and not picked_theme
     moment = title_moment_props(spec, cut_id, rows, duration)
     # The captions step aside for the title's words, so they appear once (docs/ve/INGREDIENTS.md, the episode title moment).
@@ -744,6 +760,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                          f'Krish, 2026-11-12: "{NOTHING_BEFORE_HOOK}"); remove it from the spec')
     sting = sting_props(cut, channel, off, opening)
     props = {
+        **({'renderTheme': theme_id} if theme_id == 'makeyourmindup-v5' else {}),
         'pieceId': spec['piece_id'], 'cutId': cut_id, 'format': spec['format'], 'aspect': cut['aspect'],
         'fps': FPS, 'durationFrames': duration,
         # A style may bring its own colours (style.palette, config/ve/style-palettes.json; Ruling, Krish,
@@ -756,7 +773,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         'series': {'label': spec['brand']['series'] if _series_day(identity['day'], spec.get('publish_day')) == identity['day']
                    else 'off.day', 'day': _series_day(identity['day'], spec.get('publish_day')),
                    'promise': house['copy']['site'] if off else identity['promise'], 'site': house['copy']['site']},
-        'brand': {key: {'src': resolve_source(publication[key]['source_path']), 'pixelWidth': publication[key]['pixel_width'],
+        'brand': {key: {'src': (source(publication[key]['source_path'], ROOT) if theme['theme_id'] == 'makeyourmindup-v5' else resolve_source(publication[key]['source_path'])), 'pixelWidth': publication[key]['pixel_width'],
                         'pixelHeight': publication[key]['pixel_height']} for key in ('mark', 'logo', 'stacked')},
         # The logo only on the title frame and the close (Ruling, Krish, 2026-11-17; config/brand-palette.json logo_rule):
         # from its date the body carries no mark tile and no header logo. Absent for older pieces, so their props hold.
@@ -767,7 +784,7 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
             {'src': take, 'trimBeforeFrames': 0, 'fromFrame': 0, 'durationFrames': duration}],
         'audio': {'stem': {'src': resolve_source(f'audio.{cut_id}.wav'), 'trimBeforeFrames': 0}, 'sfx': []},
         'captions': captions, 'captionStyle': 'word' if word_mode else 'house',
-        **({'captionTheme': spec['brand']['caption_theme']} if spec['brand'].get('caption_theme') else {}),
+        **({'captionTheme': picked_theme} if picked_theme else {}),
         **caption_props(spec),
         **({'title': spec['brand']['title']} if spec['brand'].get('title') else {}),
         # The title is one full-frame lockup with the wordmark inside it (Ruling, Krish, 2026-11-19); 'lockup' tells ve qc
@@ -811,9 +828,12 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                              'duration_frames': edl.get('duration_frames'),
                              'picture_short_frames': max(0, duration - int(edl.get('duration_frames') or 0))}
     # Every whole cut closes on the ending band (one calm close, held long enough to read: config/ve/formats
-    # intro_outro; Krish, 2026-11-03: "We fucking have standards for intro, background audio and outro"), not only a
-    # cut that carries a dated call; the call card still needs a call.
-    if not cut.get('excerpt', False):
+    # intro_outro; Krish, 2026-11-03: "We fucking have standards for intro, background audio and outro").
+    if not cut.get('excerpt', False) and spec['format'] == 'why-ladder-v5':
+        close_ids = {obj['obj'] for obj in spec['objects'] if obj['device'] == 'v5_close'}
+        if not close_ids.intersection(cut['beats'][-1]['uses']):
+            raise ValueError('a whole v5 ladder must finish on its close card')
+    if not cut.get('excerpt', False) and spec['format'] != 'why-ladder-v5':
         props['ending'] = {'fromFrame': duration, 'url': props['series']['site'], 'tagline': ENDING_TAGLINE, 'cta': ENDING_CTA,
                            'days': [{'day': house['channels'][c]['day'], 'colour': publication['channel_colors'][c]}
                                     for c in house['channels'] if c in publication['channel_colors']] if not off else []}
@@ -837,9 +857,6 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
     if sting:
         # Never: sting_props gives no cut one (Ruling, Krish, 2026-11-12), and sting_problems refuses props that carry one.
         props['sting'] = sting
-    if spec.get('call'):
-        call = spec['call']
-        props['call'] = {'statement': call['statement'], 'due': call['due'], 'confidencePercent': call['confidence_percent']}
     motion = motion_props(spec)
     if motion is not None:
         props['motion'] = motion

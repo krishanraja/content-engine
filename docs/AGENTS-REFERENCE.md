@@ -141,7 +141,7 @@ can do tomorrow" at the end of every piece too." So a script has no series line 
 no "I'm Krish" (house rule `SERIES_OPENER`, which retires the lines he
 picked on 2026-10-12; they stay in `SERIES_OPENERS` in
 `apps/control-plane/api/_houseRules.ts` only for records made under them).
-After the call it closes on one short beat saying the one thing he would do,
+After the landing it closes on one short beat saying the one thing he would do,
 in his first person, never a list of orders and never the retired "Here's
 what I'd do with this info if I were you" (Ruling, Krish, 2026-10-31: "the
 last paragraph of all my scripts still sounds a bit bossy and preachy"), and

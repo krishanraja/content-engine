@@ -1,0 +1,44 @@
+{
+  "_about": "A fixture of GET /api/board/2026-11-09/view, cut to what scripts/edition/edition.py gather reads: the week of 9 Nov 2026, the last fully published week (decision 10), its three pieces live and Saturday's good news. Written by hand for tests/edition_test.py from the repository's own records of that week; the links are example addresses, never the live posts, and the good-news stories are invented.",
+  "ok": true,
+  "contract_version": "1.35.0",
+  "week": "2026-11-09",
+  "days": [
+    {
+      "day": "mon", "date": "2026-11-09", "series": "follow.the.money", "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+      "title": "When an AI app millions of people loved goes bust, who walks away with the money?",
+      "pieces": [{"id": "b358e788-209f-427b-a84d-1f79a8ebb430", "title": "When an AI app millions of people loved goes bust, who walks away with the money?", "series": "follow.the.money", "state": "published", "published": true, "on_day": true,
+        "stage": {"state": "live", "label": "Live on Substack and YouTube", "at": "2026-11-09T17:30:00Z", "links": [{"label": "Substack", "href": "https://example.org/makeyourmindup/p/who-walks-away-with-the-money"}, {"label": "YouTube", "href": "https://example.org/video/mon-5-minutes"}]}}],
+      "posted": [{"step": "substack", "label": "Substack", "at": "2026-11-09T17:30:00Z", "href": "https://example.org/makeyourmindup/p/who-walks-away-with-the-money", "by": "growth"}],
+      "options": []
+    },
+    {"day": "tue", "date": "2026-11-10", "series": "", "piece_id": null, "title": "", "pieces": [], "posted": [], "options": []},
+    {
+      "day": "wed", "date": "2026-11-11", "series": "under.the.hood", "piece_id": "36886e0b-4b32-473b-be72-b0aef31fccef",
+      "title": "A Reiki master wrote a UK number two, and it's both AI and human",
+      "pieces": [{"id": "36886e0b-4b32-473b-be72-b0aef31fccef", "title": "A Reiki master wrote a UK number two, and it's both AI and human", "series": "under.the.hood", "state": "published", "published": true, "on_day": true,
+        "stage": {"state": "live", "label": "Live on Substack and YouTube", "at": "2026-11-11T17:30:00Z", "links": [{"label": "Substack", "href": "https://example.org/makeyourmindup/p/a-reiki-master-wrote-a-uk-number-two"}]}}],
+      "posted": [{"step": "youtube", "label": "YouTube", "at": "2026-11-11T17:40:00Z", "href": "https://example.org/video/wed-5-minutes", "by": "growth"}],
+      "options": []
+    },
+    {"day": "thu", "date": "2026-11-12", "series": "", "piece_id": null, "title": "", "pieces": [], "posted": [], "options": []},
+    {
+      "day": "fri", "date": "2026-11-13", "series": "mind.the.gap", "piece_id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+      "title": "Meta staff were ranked by AI use. They gamed it.",
+      "pieces": [{"id": "f3fcd5e1-573e-4692-a413-db7c5823a10e", "title": "Meta staff were ranked by AI use. They gamed it.", "series": "mind.the.gap", "state": "published", "published": true, "on_day": true,
+        "stage": {"state": "live", "label": "Live on Substack", "at": "2026-11-13T17:30:00Z", "links": [{"label": "Substack", "href": "https://example.org/makeyourmindup/p/staff-ranked-by-ai-use"}]}}],
+      "posted": [],
+      "options": []
+    },
+    {
+      "day": "sat", "date": "2026-11-14", "series": "", "piece_id": null, "title": "",
+      "pieces": [], "posted": [],
+      "options": [{"id": "goodnews", "doc_id": "off-sat-goodnews", "title": "Good things AI did this week", "status": "approved", "stories_due": "2026-11-07", "stories_fresh": true,
+        "stories": [
+          {"headline": "A reading club in five languages", "what": "Volunteers used an AI translation app to run a weekly reading club for refugee children in five languages.", "date": "2026-11-06", "source": "Example Reading Trust", "href": "https://example.org/reading-trust/clubs", "media_kind": "photo"},
+          {"headline": "A bakery cut its waste by a fifth", "what": "A small bakery planned its orders with an AI assistant and threw away a fifth less bread in three months.", "date": "2026-11-05", "source": "Example Bakery", "href": "https://example.org/bakery/results", "media_kind": "photo"},
+          {"headline": "Choirs rehearse across a valley", "what": "Three village choirs used an AI tool to keep time while rehearsing together over video calls.", "date": "2026-11-04", "source": "Example Choirs", "href": "https://example.org/choirs/valley", "media_kind": "clip"}
+        ]}]
+    }
+  ]
+}

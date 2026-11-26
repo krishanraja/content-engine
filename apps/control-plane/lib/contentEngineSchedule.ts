@@ -32,6 +32,8 @@ const WEEK = 24 * 7
 const FORTNIGHT = 24 * 14
 
 export const CONTENT_ENGINE_JOBS: ContentEngineJob[] = [
+  { job: 'hub_edition', path: '/api/hub/edition', label: 'Daily creative edition', everyHours: DAY, graceHours: 3 },
+  { job: 'hub_prices', path: '/api/hub/prices', label: 'Creative 24 price refresh', everyHours: DAY, graceHours: 3 },
   { job: 'feed_ingest',      path: '/api/feed/ingest',                   label: 'Feed ingest',           everyHours: DAY,  graceHours: 12 },
   { job: 'editorial_radar',  path: '/api/content-opportunities/refresh', label: 'Editorial radar',       everyHours: DAY,  graceHours: 12 },
   { job: 'triage_sweep',     path: '/api/triage/sweep',                  label: 'Triage sweep',          everyHours: DAY,  graceHours: 12 },
@@ -54,16 +56,14 @@ export const CONTENT_ENGINE_JOBS: ContentEngineJob[] = [
   { job: 'inspiration_scan', path: '/api/inspiration/drive-scan',         label: 'Drive inspiration scan', everyHours: DAY, graceHours: 12 },
   // Fortnightly since 2026-10-15 (odd ISO weeks, AEO-Engine 6041cb5): about $10 a probe run.
   { job: 'aeo_ingest',       path: '/api/aeo/ingest',                    label: 'AEO research',          everyHours: FORTNIGHT, graceHours: DAY, trigger: 'external' },
-  // The trend record's own jobs. Entity tagging and the claim sweep are cheap
-  // and daily; the weekly series is snapshotted on Saturday, after Friday's
-  // detection and brief have already landed in what it counts.
+  // The trend record's own jobs. Entity tagging is cheap and daily; the weekly
+  // series is snapshotted on Saturday, after Friday's detection and brief have
+  // already landed in what it counts.
   { job: 'trend_entities',   path: '/api/trends/entities',               label: 'Entity tagging',        everyHours: DAY,  graceHours: 12 },
-  { job: 'claims_resolve',   path: '/api/claims/resolve',                label: 'Claim falsifier sweep', everyHours: DAY,  graceHours: 12 },
   { job: 'trend_metrics',    path: '/api/trends/metrics',                label: 'Weekly trend series',   everyHours: WEEK, graceHours: DAY },
   // The outside signals (docs/ENGINE_100X.md): news velocity for the pieces
-  // in play, and the market's odds on every pinned Call. Both keyless.
+  // in play. Keyless.
   { job: 'signals_news',     path: '/api/signals/news',                  label: 'News velocity',         everyHours: DAY,  graceHours: 12 },
-  { job: 'signals_odds',     path: '/api/signals/odds',                  label: 'Call odds',             everyHours: DAY,  graceHours: 12 },
   // Hourly, keyless: marks a piece published when its post is live on
   // Substack, and closes the board items that waited on it.
   { job: 'publish_watch',    path: '/api/publish/watch',                 label: 'Publish watcher',       everyHours: DAY,  graceHours: 12 },

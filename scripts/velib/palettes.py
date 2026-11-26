@@ -63,6 +63,9 @@ def spec_problems(spec: dict, path: Path | None = None) -> list[str]:
     if pid is None:
         return []
     table = load(path)
+    from .retirement import registry
+    if ('palette', pid) in registry():
+        return [f'palette {pid!r} is retired']
     if pid not in table:
         return [f'palette.unknown style.palette: {pid} is not in config/ve/style-palettes.json ({", ".join(sorted(table))})']
     return [f'palette.rules {p}' for p in palette_problems(pid, table[pid])]
@@ -73,5 +76,8 @@ def tokens_for(spec: dict, house: dict, path: Path | None = None) -> dict:
     pid = (spec.get('style') or {}).get('palette')
     if not pid:
         return house
+    errors = spec_problems(spec, path)
+    if errors:
+        raise ValueError('; '.join(errors))
     colours = load(path)[pid]['colours']
     return {**house, **colours}

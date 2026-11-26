@@ -85,6 +85,8 @@ def fetch_art(key, table=None):
 def art(concept, day, shape):
     """The generated still for this skin, series day and shape (config/series-art.json "<concept>-<day>-<tall|wide>"),
     fetched and checked, or None when that skin has no still."""
+    if concept == 'painted_scene':
+        raise ValueError('painted_scene is retired under v5')
     key = f'{concept}-{day}-{"tall" if shape != "wide" else "wide"}'
     table = art_table()
     return fetch_art(key, table) if key in table else None

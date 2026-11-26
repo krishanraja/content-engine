@@ -10,6 +10,7 @@ import { LIVE_BOARD_URL, liveBoardUrl } from '../../apps/control-plane/api/board
 import { SCHEMA_PATH, compare, judge, validate } from '../../scripts/check-view-contract'
 import { assetsOf, type DriveFile } from '../../apps/control-plane/api/board/_drivePosts'
 import { parseDraft } from '../../apps/control-plane/api/board/_manifest'
+import { parseEdition, sha256 as editionSha } from '../../apps/control-plane/api/board/_edition'
 import { setDigest, THUMB_CHECKS } from '../../apps/control-plane/api/_thumbOptions'
 
 // The Publish Board view's contract (Ruling, Krish, 2026-11-11: "make sure this is built such that when I make other
@@ -46,6 +47,32 @@ const look = (id: string, name: string) => ({ id, name, pitch: `${name}, pitched
 const motion = (id: string, fits: string, krish_verdict: string, point_types: string[], formats = ['long_video', 'short_video'], ve_route = ['headline']) =>
   ({ id, name: `The ${id} style`, how: `How ${id} moves.`, rules: [`${id} rule one`, `${id} rule two`], point_types, formats, fits, krish_verdict, ve_route })
 
+/** Monday's why-ladder as research filing keeps it (meta.whys, _whys.ts; 1.34.0). */
+const WHYS: Body = {
+  checked_at: '2026-11-15T09:30:00Z', material_id: 'm-research',
+  ladder: { schema: 'why-ladder/1', question: 'Why did the cheap model get dearer?', series: 'follow_the_money',
+    rungs: [1, 2, 3].map(n => ({ n, question: `Why ${n}?`, answer: `Because of cause ${n}.`, strength: n === 3 ? 'open' : 'documented', counter: { text: 'A rival view.' },
+      evidence: n === 3 ? [] : [{ url: 'https://sec.gov/a', domain: 'sec.gov', date: '2026-11-01', quote: 'q' }, ...(n === 2 ? [] : [{ url: 'https://reuters.com/b', domain: 'reuters.com', date: '2026-11-02', quote: 'q' }])],
+      stop: n === 3 ? 'evidence_exhausted' : null })),
+    landing: { shows: 'The price follows who owns the meter.', open_question: 'Which of your tools is metered by someone else?' } },
+  problems: [{ rung: 2, problem: 'Why 2 needs a second source' }],
+}
+
+/** The week's edition (1.35.0), as the Friday run packages it (content-engine-edition/1), cut to one piece and one item. */
+const EDITION: Body = {
+  schema: 'content-engine-edition/1', edition_date: '2026-11-21', week_of: WEEK, name: 'makeyourmindup weekly',
+  subject: 'The cheap model got dearer, and who pays for it', preview_text: 'The week\'s piece, then the creative news, checked.',
+  checks: { kill_list: 'pass', sources: 'pass', voice: 'pass', words: 312 },
+  sections: [
+    { kind: 'opener', text: 'This week we followed one price. Here it is.' },
+    { kind: 'contents', lines: ['Monday: who pays when the cheap model gets dearer.', 'Also: music.'] },
+    { kind: 'piece', day: 'mon', label: 'Monday: who pays', title: 'Piece 8287. It says one thing.', summary: 'A summary.', url: 'https://example.org/p/mon', video_url: null, cover: { url: 'https://example.org/c.png', alt: 'A cover.' } },
+    { kind: 'news', groups: [{ topic: 'Music', items: [{ text: 'A label licensed its catalogue.', source_name: 'Example Records', source_url: 'https://example.org/records', quote: 'We licensed it.', checked_at: '2026-11-20T15:00:00Z' }] }] },
+    { kind: 'pass_it_on', text: 'Forward it to one person.', url: 'https://home.makeyourmindup.ai/subscribe' },
+    { kind: 'close', text: 'That is the week.' },
+  ],
+}
+
 /** Friday's thumbnail options (1.16.0): three options, each file's review copy in Drive, the critic's pick B and C held. */
 function thumbSet() {
   const sha = (s: string) => createHash('sha256').update(s).digest('hex')
@@ -77,7 +104,9 @@ function full(): ViewInputs {
           // 1.4.0: his motion pick and a "Not this" on a caption style.
           style: { motion: 'ladder', captions: null, rejected: { motion: [], captions: ['beast'] }, by: 'Krish', at: '2026-11-15T11:00:00Z' },
           // 1.6.0: his Not this on the long cut, with his words.
-          cut_verdicts: [{ media_id: 'a'.repeat(64), cut: 'long', verdict: 'not_this', words: 'The open drags. Start on the number.', sha256: 'a'.repeat(64), path: '3 Posts/mon/long.mp4', by: 'Krish', at: '2026-11-16T08:40:00Z' }] }),
+          cut_verdicts: [{ media_id: 'a'.repeat(64), cut: 'long', verdict: 'not_this', words: 'The open drags. Start on the number.', sha256: 'a'.repeat(64), path: '3 Posts/mon/long.mp4', by: 'Krish', at: '2026-11-16T08:40:00Z' }],
+          // 1.34.0: the why-ladder read from its research, one rung still short of a second source.
+          whys: WHYS }),
       piece(WED, '2026-11-18', 'under_the_hood', {}, { materials: [{ id: 'm2', title: 'WIRED: a source', kind: 'paste', content: 'x', at: '2026-11-14T10:00:00Z' }] }),
       // 1.16.0: Friday's thumbnail options wait on his pick.
       piece(FRI, '2026-11-20', 'mind_the_gap', { thumbnail_options: thumbSet() }),
@@ -126,6 +155,11 @@ function full(): ViewInputs {
     drafts: { [MON]: parseDraft(Buffer.from(`${JSON.stringify({ schema: 'content-engine-piece-manifest/1', piece_id: MON, qa: { state: 'passed', checked_at: '2026-11-16T07:00:00Z' },
       assets: [{ name: 'short_video', drive_id: DRIVE.long, sha256: '1'.repeat(64), order: 1 }, { name: 'vertical_cover', drive_id: DRIVE.cover, sha256: '2'.repeat(64), order: 2 }],
       channels: { tiktok: { words: 'Synthetic caption.', alt_text: null, assets: ['short_video'] } } }, null, 1)}\n`), MON)! },
+    // 1.35.0: the week's edition on Saturday, waiting on his Approve for send (_edition.ts).
+    edition: (() => {
+      const bytes = Buffer.from(`${JSON.stringify(EDITION, null, 2)}\n`)
+      return { draft: parseEdition(bytes, '2026-11-21')!, bytes, preview: { object_key: 'files/preview.html', sha256: editionSha('preview') } }
+    })(),
     // 1.7.0: the week's posts in Drive: Monday's piece's post, and Tuesday's off-day post with a carousel, a meme video in
     // two versions and its words (_drivePosts.ts).
     drive_posts: [
@@ -303,6 +337,24 @@ describe('the Publish Board view contract', () => {
     expect(validate(SCHEMA, v, SCHEMA, '$', { open: true })).toEqual([])
     // The engine's own views are held to the declared kinds: a new kind is added to the schema with a minor bump.
     expect(validate(SCHEMA, v).join()).toMatch(/teleprompter/)
+  })
+
+  it("shows the piece's why-ladder on its read sheet, each rung ok or what it still needs (1.34.0)", () => {
+    const v = buildView(full())
+    const mon = v.model!.days.find(d => d.day === 'mon')!.items.find(i => i.piece_id === MON)!
+    expect(mon.read.whys).toEqual({
+      question: 'Why did the cheap model get dearer?',
+      rungs: [
+        { n: 1, question: 'Why 1?', strength: 'documented', status: 'ok', problems: [], stop: null },
+        { n: 2, question: 'Why 2?', strength: 'documented', status: 'needs_work', problems: ['Why 2 needs a second source'], stop: null },
+        { n: 3, question: 'Why 3?', strength: 'open', status: 'ok', problems: [], stop: 'evidence_exhausted' },
+      ],
+      landing: { shows: 'The price follows who owns the meter.', open_question: 'Which of your tools is metered by someone else?' },
+      problems: [], checked_at: '2026-11-15T09:30:00Z',
+    })
+    const wed = v.model!.days.find(d => d.day === 'wed')!.items.find(i => i.piece_id === WED)
+    expect(wed?.read.whys).toBeUndefined()
+    expect(validate(SCHEMA, JSON.parse(JSON.stringify({ ok: true, ...v })))).toEqual([])
   })
 
   it('pins a frozen fixture that keeps the schema (UPDATE_VIEW_FIXTURE=1 writes it again)', () => {

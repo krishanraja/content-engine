@@ -14,6 +14,7 @@ import os
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 sys.dont_write_bytecode = True
@@ -23,6 +24,15 @@ sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
 sys.path.insert(0, str(ROOT / 'scripts' / 'pages'))   # first: scripts/pages/build.py, not the pack's build.py
 import build  # noqa: E402
 import thumb_options  # noqa: E402
+
+
+def setUpModule():
+    import skins
+    from unittest.mock import patch
+    legacy = patch.object(skins, "LEGACY", True)
+    legacy.start()
+    unittest.addModuleCleanup(legacy.stop)
+
 
 try:
     from playwright.sync_api import sync_playwright
@@ -52,6 +62,23 @@ def facts_for(date, skin=None):
     if skin:
         facts['skin'] = skin
     return facts
+
+
+# The Receipt drawer and its skins are retired for new pieces (config/retired-styles.json, scripts/library/make_piece.py);
+# these tests keep the archive path, which build.py reaches only with --legacy.
+_LEGACY = None
+
+
+def setUpModule():
+    global _LEGACY
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts' / 'pages'))
+    import skins
+    _LEGACY = patch.object(skins, 'LEGACY', True)
+    _LEGACY.start()
+
+
+def tearDownModule():
+    _LEGACY.stop()
 
 
 @unittest.skipIf(sync_playwright is None, 'Playwright for Python is not installed (CI installs it)')
@@ -94,9 +121,9 @@ class ThumbOptionsDrawTest(unittest.TestCase):
         self.assertEqual(record['grid_mock']['sha256'], hashlib.sha256((out / 'grid-mock.png').read_bytes()).hexdigest())
 
     def test_every_option_wears_the_one_skin_of_a_series_piece(self):
-        # A Monday series piece, its skin named. Option C asks for the picture above the words on the tall shape, which
-        # puts neon's light on the logos there: it is refused in that skin, never drawn in a second one.
-        facts = facts_for('2026-11-16', 'neon')
+        # A Monday series piece: since the v5 lock every option wears the one archive skin, v5_feed, and an option that
+        # cannot be drawn in it is refused, never drawn in a second skin.
+        facts = facts_for('2026-11-16')
         facts['thumb_options'] = [OPTIONS[0], {'id': 'b', 'note': 'the last bar ringed, the proof narrow', 'proof_width': '44%',
                                                'proof': {'ring': [0.62, 0.1, 0.95, 0.9]}}, dict(OPTIONS[1], id='c')]
         out = Path(tempfile.mkdtemp(prefix='thumb-options-', dir=self.base))
@@ -104,11 +131,16 @@ class ThumbOptionsDrawTest(unittest.TestCase):
         self.assertTrue(ok)
         record = json.loads((out / thumb_options.OPTIONS_FILE).read_text(encoding='utf-8'))
         worn = {json.loads((out / 'options' / o['id'] / 'thumbs.json').read_text(encoding='utf-8'))['skin'] for o in record['options']}
-        self.assertEqual(worn, {record['skin']})
-        self.assertEqual(record['skin'], 'neon')
-        self.assertEqual([o['id'] for o in record['options']], ['a', 'b'])
-        self.assertEqual([r['id'] for r in record['refused']], ['c'])
-        self.assertIn('could not be read', record['grid_mock']['note'])
+        self.assertEqual(worn, {'v5_feed'})
+        self.assertEqual(record['skin'], 'v5_feed')
+        self.assertEqual(sorted([o['id'] for o in record['options']] + [r['id'] for r in record.get('refused') or []]), ['a', 'b', 'c'])
+
+    def test_a_retired_skin_is_refused_by_name(self):
+        # The nine weekly skins were retired by the v5 lock (config/retired-styles.json): naming one stops the drawer.
+        facts = facts_for('2026-11-16', 'neon')
+        out = Path(tempfile.mkdtemp(prefix='thumb-options-', dir=self.base))
+        with self.assertRaisesRegex(SystemExit, 'unavailable under v5'):
+            thumb_options.draw(facts, self.base, out, build.thumb_facts, build.companies_of, 2, self.base / 'brief.json', ())
 
     def test_one_option_is_never_enough(self):
         facts = facts_for('2026-11-17')

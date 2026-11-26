@@ -77,7 +77,7 @@ MCP connector in a session, no engine secret).
 
 | Service | How the engine reaches it | Symbolic name | Status |
 |---|---|---|---|
-| Polymarket / Kalshi odds | `api/_signals.ts`, the `signals_odds` cron, `/api/content-ideas/[id]/call-market`, `/api/calls`; `scripts/signals/collect.py odds` and `kalshi` | none | **keyless, live** (tested 2026-10-09) |
+| Polymarket / Kalshi odds | retired from the engine on 24 Nov 2026 with every call, odds reading and score (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores); the `signals_odds` cron, `/api/content-ideas/[id]/call-market` and `/api/calls` are removed | none | **retired** |
 | GDELT news velocity | `api/_signals.ts` and the `signals_news` cron; `scripts/signals/collect.py news` | none | **keyless, live** (one call / 5s per IP, spaced and retried) |
 | Hacker News | `scripts/signals/collect.py hn` | `HN_ALGOLIA_KEY` (public API needs none) | **keyless, live**; the handed value placed in Vercel env, 2026-10-09; ROTATE |
 | SEC EDGAR | `scripts/signals/collect.py sec` | none | **keyless, live** |
@@ -107,7 +107,7 @@ MCP connector in a session, no engine secret).
 
 Built on 2026-10-09 (`docs/ENGINE_100X.md`, "What is live right now"):
 
-1. **Scoreboard odds**: `POST /api/content-ideas/:id/call-market` pins a market to a Call; the `signals_odds` cron reads it daily; `GET /api/calls` serves the scoreboard. Keyless.
+1. **Scoreboard odds**: built on 2026-10-09 and retired on 24 Nov 2026 (Ruling, Krish, 2026-11-24); the routes and the cron are removed.
 2. **News velocity**: the `signals_news` cron sweeps GDELT and Hacker News for the pieces in play and warns on the board when a subject doubles in a day. Keyless.
 3. **Gemini video reader**: `scripts/signals/video.py`, one cheap call per video. Needs `GEMINI_API_KEY` in the environment it runs in.
 4. **Exa, Brave, X**: Exa and Brave were already read by `api/_enrich.ts`; X has a reader in `api/_signals.ts`. All three are also in `scripts/signals/collect.py` for a session or a runner, where the key must be in that environment.

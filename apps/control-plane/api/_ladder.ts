@@ -53,7 +53,7 @@ export function buildDecomposePrompt(headline: string, sourceText: string, pilla
     '- "quote": a VERBATIM span copied from the SOURCE TEXT that carries this claim. Copy it exactly, do not paraphrase, do not fix typos, do not re-punctuate.',
     '- "surprise": 0 to 10. How much this would update the prior of a well-read commercial leader. A press release restating a known strategy is 1.',
     '- "verifiability": 0 to 5. 5 means a named artifact settles it (a filing, a docket, a pricing page). 0 means it is unfalsifiable in principle.',
-    `- "falsifier": the specific observation that would show this claim is WRONG. It MUST name a source class (${SOURCE_CLASSES.slice(0, 9).join(', ')}), MUST contain either a number with a comparator or a named artifact class, and MUST carry a date, quarter or duration. "This would be falsified if it turned out not to be true" is a non-answer and will be rejected by code.`,
+    `- "falsifier": the specific observation that would show this claim is WRONG. It MUST name a source class (${SOURCE_CLASSES.slice(0, 9).join(', ')}), MUST contain either a number with a comparator or a named artifact class, and must NOT carry a date, deadline or forecast horizon: it is not a prediction, it states what evidence would knock this answer down. "This would be falsified if it turned out not to be true" is a non-answer and will be rejected by code.`,
     `- "mechanism_type": if and only if the claim names a mechanism, one of: ${MECHANISM_TYPES.join(', ')}. Otherwise null. Note what is NOT on that list: incentives, culture, strategy, vision. "Because incentives" is not a mechanism. A contract is, because a contract is a document you can cite.`,
     '',
     'Return at most 8 claims. Reply ONLY with JSON: {"claims":[...]}',

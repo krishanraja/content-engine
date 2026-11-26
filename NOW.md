@@ -1,8 +1,8 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-23
-head: 6bbfa12
+as_of: 2026-11-26
+head: f03dcbc
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
 state_doc: docs/STATE.md
@@ -30,36 +30,36 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-23)
+## Where it is right now (as of 2026-11-26)
 
 <!-- north-star-state {"week_of":"2026-11-23","week_target":20,"current":1,"current_as_of":"2026-11-25","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (0 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (5% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 20 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
-- The habits voiceover short (piece 701a2c55, moved by Krish to Thu 19 Nov) is made and filed: 3 Posts/2026-11-19 Thu off.day - Which of your habits will cost you your job holds the final 9:16 cut (3 Video, Drive sha256 matches), the brand cover he picked (option 2, tall and wide), his face cover and a caption for each of eight channels, with the draft manifest in 0 Publish. The board's Thu card leads with Approve for publish bound to that manifest. The cut was rendered on the engine he approved for v9 (main's later caption engine regressed it) and filed with the cloud Drive uploader by his ruling, past the library gate, whose QC false readings are with another session. (2026-11-19)
-- The standards check-in of 2026-11-23 grouped the new floor standards; config/floor-groups.json holds 78 groups, each new one seeded as a proposal for Krish on the pinned check-in page. (2026-11-23)
-- The standards page test no longer breaks when the floor reaches 78 groups, so the floor pull requests held since 20 November can pass verify. (2026-11-23)
-- Every Claude and Growth prompt the Content Board copies now says that Codex generates the visual assets, Claude arbitrates the standards and checks what Codex returns, failures and best practices go to record_harness_observation for the internal-auditor, and only preference and inspiration go to the taste engine. (2026-11-23)
-- Migration 20261207090000_defects_leave_taste is written and not applied. It adds engine_standards and production_floor and marks where defects moved from. (2026-11-23)
-- main's red verify is fixed in tests and fixtures only. Fixtures that name no recipe now freeze before the recipe floor's start date, and three Windows-only test failures (CRLF in a test's output, CRLF on Growth's vendored mix, a 5-second default timeout) are fixed. No rule for real pieces changed. (2026-11-23)
-- The antislop guardrail (miqdadbadjuber/anti-slop at 7f6a03d) is vendored unmodified in .agents/skills/antislop*, with ADAPTER.md putting Krish's own rules above it; its PASS/FAIL report runs in the check steps of meme and cover-art, in the references the make-piece, thumbnail-designer and motion-designer checks read, and in docs/CAROUSEL-STANDARD.md for carousels (the cores sit at their byte caps), and the copy lint carries four antislop_ patterns (emoji bullets, capitals shouting in prose, hype phrases, rounded "N+ users" counts). (2026-11-23)
-- The tall and wide sting closes and the Character.ai recording layout carry their size and fill fixes (every close size at least 40 px, the tall band lifted 450 px, the wide close clear of x 1100, the recording filling its panel with its source line beneath); these missed the first merge of the outro pull request. (2026-11-20)
-- The premium title slide (direction A) is queued to Codex as card ve-title-premium-a on gpt-6.2-astra, set on this card only; the engine's default model pin is unchanged. (2026-11-20)
-- Everything the next session needs is in docs/ve/handoff-2026-11-20/ (HANDOFF.md, the approved PLAN.md, the audit evidence, the shot study, the polish spec and generators, and Krish's ten recipe verdicts); WORKBENCH.md points to it. All the week's engine work is merged to main (#941 to #956); the title slide card is queued to Codex. (2026-11-20)
-- ve shot grammar step 5 built. `ve matte` makes an offline subject matte of a cut's picture, cached by its sha256; compile writes `props.matte`, the in-world number and chapter marks with his head, the anchor title behind his head and a body keep-out; the renderer lays type between his take and the matted subject and cuts him out over a whole-frame stage panel. Anchor graphics sit only above his head on an ink scrim, captions under his chin. `grammar.depth`, `grammar.title_timing` (the title on his spoken words within 30 s) and the after-render `panel.fill` row hold it. Generated imagery is allowed as an art-directed metaphor and refused as a stand-in for a real thing (`depicts`). Reference renders on the Fri 20 take: anchor 9:16, stage 9:16, stage 16:9 (docs/ve/INGREDIENTS.md, "Depth and the staging fixes"). (2026-11-20)
-- **StyleStill covers: 47 of 48 passed a separate review and are filed and recorded for the board's style pickers** (`config/ve/style-samples.json`). Eight came from Codex's second pass, 24 from its third, and 15 of the 16 held back from its fourth, after the reviewer's five named faults were fixed (`82360c9b`: line-boil passes too thick to read as three lines, receipt and living-ui labels ink on ink, the data story's chart now the sourced monthly sales indexed 100 to 107, flip-hinge sampled with its key word lit). slot-roll stays held: its uneven word gap is in the caption theme itself (`c631e0ac`). (2026-11-16)
+- The weekly edition is drafted by the engine (Krish, 2026-11-25: one email a week, "makeyourmindup weekly", every Saturday at 08:00 New York; growth-makeyourmindup DESIGN.md, approved with every recommendation). config/weekly-edition.json holds its settings (topic heads the hub's subsectors, read from config/hub-sources.json by key; at most two items a subsector, in two to four topics as the Library's template lays them out; the link tags of growth's edition route); scripts/edition/edition.py gathers the week (live pieces, good news, and the news candidates from the week's daily hub editions through GET /api/board/<Monday>/edition/news, which reads hub_snapshots; 26 Nov: the edition runs no gathering of its own), checks the draft against content-engine-edition/1 and the copy rules and kill list, renders a structure-only preview (the v5 Library's look is locked, but its newsletter template is wired into render with the v5 Substack branding, so none is drawn yet) and packages the canonical bytes with their sha256; .github/workflows/weekly-edition.yml (Friday 17:17 and 23:47 UTC, guard scripts/weekly_edition.py, Claude Code on his subscription, .agents/skills/weekly-edition/SKILL.md) files it in the library as 3 Posts/<Saturday> Sat edition - makeyourmindup weekly; the view (contract 1.35.0) puts it on Saturday with one press, Approve for send, bound to its sha256 (409 edition_changed otherwise). Ready for merge on 26 Nov; nothing sends without his press. (2026-11-25)
+- The week of 23 Nov has new Thursday and Saturday options on the Ideas tab, made by the v5 story engine as its first live test: four quiz carousels and a meme on Thursday, five good-news carousels on Saturday, each naming its v5 Library set. (2026-11-26)
+- The standards check-in now takes every long dash out of the group title, statement and check it proposes (a number range reads "to", any other becomes a comma), so floor_group.py --check no longer refuses the week over one; on 26 Nov a new group's check carried one and the floor pull request #973 stayed red. (2026-11-26)
+- Drive's makeyourmindup brand lives in one folder, 1 Brand kit (permanent), the v5 kit unpacked from makeyourmindup's brand-kit zip; 2 Channel art (permanent) is retired and the engine, post pack and library sync refuse it (channel art is 1 Brand kit (permanent)/Channel art). Four on the Funky Flour is the main music track under every video (music.py main_first). The video font kit's data face is DM Mono. scripts/pages/brand.py reads the v5 marks from this repository instead of the old site PNGs, and channel-kit refuses to run. (2026-11-26)
+- The 06:00 UTC hub edition now asks makeyourmindup.ai to announce the new edition, the home page and the six desks to IndexNow (Bing, whose index feeds ChatGPT search and Copilot) right after the snapshot saves. The step is additive: it never fails or repeats the edition, and it skips until MAKEYOURMINDUP_INDEXNOW_SECRET is set. (2026-11-26)
+- The hub serves past editions. GET /api/hub/today?date=YYYY-MM-DD returns a published day's edition (404 when none) and ?archive=1 lists every edition date, so makeyourmindup.ai can give each day a permanent, indexable page. (2026-11-26)
+- The week fixture follows the v5 caption choices. The proof and cover guards use the live formats, and a missing FFmpeg reports an advisory error without stopping a cut. (2026-11-26)
+- The makeyourmindup v5 look is locked. The 122-template Library, brand book words, reskin plan and identity studies are here as proposals (draft PR #977). The Library is not agreed with Krish. The engine lock-out is draft PR #976 and its CI is red. The rebrand serves subscriber growth through a clearer front door. Nothing has published. (2026-11-25)
+- Covers, thumbnails and carousels now fill from the approved Library with scripts/library/make_piece.py; the v5_feed skin and the old Receipt cover path are retired behind --legacy. The Library gates still hold open template conflicts (wordmark on colour, why-card caption gaps, the 160 px colour floor) that need Krish's call, and the Receipt covers wait on the image-led cover redesign. (2026-11-26)
+- The image-led renderer keeps the approved artwork. The 160 px gate now measures headline or figure cap height and local contrast on wides and applies the 10% colour floor to 9:16 and carousel covers. The three historical pieces have review HTML. Their exports and pixel checks are pending. (2026-11-26)
+- The v5 why-ladder cards and house captions are wired into the renderer in both aspect ratios. The pop-song fixture uses the original Spotify document. (2026-11-25)
+- The v5 tokens, vector marks, feed cover and retirement gates are in the look/v5-lockout worktree. Cover appearance awaits browser review. (2026-11-25)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3**, at 0 of 3 counted cuts (`docs/ve/STATUS.md`, "Phase 3 count", last moved 2026-11-18). Procedure: `docs/ve/ENGINE.md` and `docs/ve/RUNBOOK.md`; `ve render` refuses a whole cut until he presses Approve proof. (2026-11-19)
 
 ## What changed recently
 
-- 2026-11-19 scripts/pages/receipt.py (tall Receipt clear of the Reel UI), tests, config/title-verdicts.json, docs/plans/2026-11-17-tue-habits/, docs/ve/cards/habits/
-Older lines: `docs/history/2026-11-24-NOW-moved-1.md` (it names every earlier move) and `LOG.md`.
+- 2026-11-26 Thursday and Saturday of the week of 23 Nov remade by the v5 story engine (26 Nov).
+Older lines: `docs/history/2026-11-26-NOW-moved-3.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-19): Krish presses Approve for publish on the Thu 19 card; Growth's go-live then schedules the posts in Buffer.
+- Next (2026-11-25): wire newsletter-weekly-edition into edition.py render as part of the v5 Substack branding, which lands before the first edition sends (the hub's hub_snapshots holds its first row after 06:00 UTC on 27 Nov).
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
-- North Star check (2026-11-19): holds.
+- North Star check (2026-11-26): holds.
 
 ## Read next
 

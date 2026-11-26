@@ -144,10 +144,10 @@ export function openingContractIssues(candidate: CandidateV1, thresholds: Editor
  * launch script: "they need to actually make sense to humans", then "it just ends randomly on 85%, with nothing after
  * that, no outro". These are the parts a rule can see, the same ones `scripts/post-pack/story_check.py` refuses to
  * pack: the script opens on the question it answers, a script of a minute or more ends on a spoken outro after the
- * call, and it never reads a heading or a stamp aloud. Whether every beat follows from the last still needs a reader.
+ * landing, and it never reads a heading or a stamp aloud. Whether every beat follows from the last still needs a reader.
  */
 export const STORY_NO_OPENING_QUESTION = 'the script does not open on a question: say, in the first beat, the one question the script answers, and answer it at the end'
-export const STORY_NO_OUTRO = 'the script stops without a spoken outro: after the call, say what this was, where the full piece is (makeyourmindup.ai) and sign off, so it never ends on the number'
+export const STORY_NO_OUTRO = 'the script stops without a spoken outro: after the landing, say what this was, where the full piece is (makeyourmindup.ai) and sign off, so it never ends on the number'
 export const STORY_SPOKEN_STAMP = 'the script reads a heading or stamp aloud (REAL, THEATRE, "One: the billion."): say what the claim is and why it matters, and leave the stamp to the screen'
 export const STORY_UNCHECKED = 'the script still carries lines marked NOT YET FACT-CHECKED'
 

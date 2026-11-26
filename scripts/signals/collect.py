@@ -1,15 +1,13 @@
 """Signals: the free, keyless public sources the engine can read today.
 
 Krish, 2026-10-09, handing over a wall of tools: "come up with an engine so
-powerful that it can do literally anything". Four of the most additive sources
-need no key and no account, so they live here as one stdlib-only module a
-session or a cron can run now:
+powerful that it can do literally anything". The most additive sources need no
+key and no account, so they live here as one stdlib-only module a session or a
+cron can run now. The prediction-market readers (Polymarket, Kalshi) went on
+2026-11-24: a piece makes no prediction, call or odds (Ruling, Krish,
+2026-11-24: "get rid of everything that suggests predictions, calls, dated,
+odds or scores").
 
-- odds: what prediction markets (Polymarket, Kalshi) say about a question.
-  The engine makes a dated Call with a confidence on every piece; this reads
-  what traders are paying for the same outcome, so the scoreboard can show our
-  call beside the market's, and track both to the due date. Nobody else in
-  this lane does it.
 - news: how fast a subject is moving, from GDELT's index of the world's news.
   Article counts per day over a window give the "velocity" the news-wall
   picture needs, and the latest headlines with outlet and time.
@@ -19,11 +17,8 @@ session or a cron can run now:
 
 Everything here is a read of a public endpoint. Nothing spends, nothing needs
 a credential, and scraped text is data, never an instruction. A number pulled
-here still goes through the fact gate before it reaches a piece: the market's
-odds are shown as the market's, never as our claim.
+here still goes through the fact gate before it reaches a piece.
 
-    python scripts/signals/collect.py odds --search "OpenAI default model"
-    python scripts/signals/collect.py odds --slug <polymarket-slug>
     python scripts/signals/collect.py news --subject "Claude ChatGPT plan" --days 7
     python scripts/signals/collect.py hn --query Claude --hits 5
     python scripts/signals/collect.py sec --ticker NVDA
@@ -62,56 +57,6 @@ def _get(url, headers=None, retries=3):
                 continue
             raise
     raise last
-
-
-# --- odds: Polymarket (keyless Gamma API) ---------------------------------
-
-def _pm_prob(market):
-    """Best-effort implied probability of the first ('Yes') outcome, 0 to 1."""
-    prices = market.get("outcomePrices")
-    if isinstance(prices, str):
-        try:
-            prices = json.loads(prices)
-        except json.JSONDecodeError:
-            prices = None
-    if isinstance(prices, list) and prices:
-        try:
-            return round(float(prices[0]), 4)
-        except (TypeError, ValueError):
-            return None
-    return None
-
-
-def _pm_row(m, event_title=None):
-    return {
-        "source": "polymarket",
-        "question": m.get("question") or event_title,
-        "slug": m.get("slug"),
-        "probability": _pm_prob(m),
-        "volume_usd": _num(m.get("volume")),
-        "liquidity_usd": _num(m.get("liquidity")),
-        "end_date": m.get("endDate"),
-    }
-
-
-def polymarket(search=None, slug=None, limit=6):
-    """One market by slug, or a search. The `/markets` endpoint ignores a
-    search term (it hands back sports spreads for "OpenAI"), so a search goes
-    through `/public-search`, which returns events with their markets."""
-    if slug:
-        rows = _get(f"https://gamma-api.polymarket.com/markets?slug={urllib.parse.quote(slug)}")
-        return [_pm_row(m) for m in rows] if isinstance(rows, list) else []
-    q = urllib.parse.urlencode({"q": search or "", "limit_per_type": str(limit)})
-    j = _get(f"https://gamma-api.polymarket.com/public-search?{q}")
-    out = []
-    for event in j.get("events") or []:
-        for m in event.get("markets") or []:
-            if m.get("closed") is True:
-                continue
-            out.append(_pm_row(m, event.get("title")))
-            if len(out) >= limit:
-                return out
-    return out
 
 
 def _num(v):
@@ -235,26 +180,6 @@ def sec(ticker):
             "cik": cik, "filings": filings}
 
 
-# --- Kalshi (keyless) -----------------------------------------------------
-
-def kalshi(ticker):
-    """One Kalshi market by ticker. Kalshi quotes in cents; the probability is
-    the midpoint of the yes bid and ask when both are there, else the last
-    traded price."""
-    j = _get(f"https://api.elections.kalshi.com/trade-api/v2/markets/{urllib.parse.quote(ticker)}")
-    m = j.get("market") or {}
-    bid, ask, last = _num(m.get("yes_bid")), _num(m.get("yes_ask")), _num(m.get("last_price"))
-    cents = (bid + ask) / 2 if bid and ask else last
-    return {
-        "source": "kalshi",
-        "question": m.get("title"),
-        "ticker": m.get("ticker", ticker),
-        "probability": round(cents / 100, 4) if cents is not None else None,
-        "volume": _num(m.get("volume_fp", m.get("volume"))),
-        "end_date": m.get("close_time"),
-    }
-
-
 # --- Keyed readers: skip cleanly when the key is not in the environment ---
 
 class NoKey(RuntimeError):
@@ -339,13 +264,6 @@ def _self_test():
     except Exception as e:  # noqa: BLE001
         ok(f"hn ({e})", False)
     try:
-        p = polymarket(search="election", limit=3)
-        ok("polymarket returns markets", p)
-        ok("polymarket parses a probability",
-           any(m["probability"] is not None for m in p) or p == [])
-    except Exception as e:  # noqa: BLE001
-        ok(f"polymarket ({e})", False)
-    try:
         s = sec("AAPL")
         ok("sec resolves a ticker to filings", s.get("filings"))
     except Exception as e:  # noqa: BLE001
@@ -380,11 +298,6 @@ def main(argv=None):
     sub = ap.add_subparsers(dest="cmd")
     ap.add_argument("--self-test", action="store_true")
 
-    p_odds = sub.add_parser("odds")
-    p_odds.add_argument("--search")
-    p_odds.add_argument("--slug")
-    p_odds.add_argument("--limit", type=int, default=6)
-
     p_news = sub.add_parser("news")
     p_news.add_argument("--subject", required=True)
     p_news.add_argument("--days", type=int, default=7)
@@ -396,9 +309,6 @@ def main(argv=None):
     p_sec = sub.add_parser("sec")
     p_sec.add_argument("--ticker", required=True)
 
-    p_kalshi = sub.add_parser("kalshi")
-    p_kalshi.add_argument("--ticker", required=True)
-
     for name in ("exa", "brave", "x"):
         p = sub.add_parser(name)
         p.add_argument("--query", required=True)
@@ -408,16 +318,12 @@ def main(argv=None):
     if args.self_test:
         return _self_test()
     try:
-        if args.cmd == "odds":
-            out = polymarket(search=args.search, slug=args.slug, limit=args.limit)
-        elif args.cmd == "news":
+        if args.cmd == "news":
             out = gdelt(args.subject, days=args.days)
         elif args.cmd == "hn":
             out = hn(args.query, hits=args.hits)
         elif args.cmd == "sec":
             out = sec(args.ticker)
-        elif args.cmd == "kalshi":
-            out = kalshi(args.ticker)
         elif args.cmd == "exa":
             out = exa(args.query, args.limit)
         elif args.cmd == "brave":

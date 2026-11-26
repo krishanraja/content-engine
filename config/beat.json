@@ -1,0 +1,89 @@
+{
+  "_about": "The beat: which stories the engine brings Krish and which it leaves out. Ruling (Krish, 2026-11-24): the engine brings stories in his focus sectors (media, entertainment, content, arts, music, creator tech, with the economics of AI inside them) and not governance, regulation, security or data breaches. Read by apps/control-plane/api/_beat.ts (the headline gate for the feed, the radar, investigations, creator posts and shift detection; avoid terms refuse a headline outright, focus terms keep a focus-sector headline that the release, launch or partnership rule would otherwise drop, and an enterprise productivity headline is kept only with a focus-sector angle), apps/control-plane/api/feed/ingest.ts (pool_categories_off_beat), apps/control-plane/api/_editorialRadar.ts (the lens prompt's beat block) and scripts/post-pack/idea_checks.py offbeat_findings (the Sunday gate, code off_beat: a board option on the avoid list with no focus-sector angle is refused). A keyword is a row here, never code. A keyword ending in * matches any ending (royalt* matches royalty and royalties); not_when phrases are taken out of the text before its keywords are read, so 'job security' is not a security story and 'state of the art' is not an art story. Changed only by a pull request carrying his ruling.",
+  "from": "2026-11-30",
+  "his_words": [
+    {
+      "at": "2026-11-24T20:18Z",
+      "said": "dont forget that in the makeyourmindup session, we need to ensure the engine brings the best of stories and ideas that I want to move towards, as opposed to governance, data breaches etc. I really liked the AI Music piece, it got good response the way it was broken down. we can still keep a focus on the economics of AI but in these focus sectors"
+    },
+    {
+      "at": "2026-11-24T14:02Z",
+      "said": "media, entertainment, content, arts, music and creativity; creative technologies, creator technologies, anything helping individuals express themselves better and businesses move ahead using these channels; DoThinkDo-type businesses (theatre actors monetising creativity). Positive spin. Keep the economics of AI inside those sectors.",
+      "note": "his focus sectors as the 24 Nov session recorded them"
+    }
+  ],
+  "tone": "Positive spin: what AI lets makers, performers and the businesses around them do, earn and express. The economics of AI inside these sectors stays in: who gets paid, what it costs, who wins the market.",
+  "model_piece": {
+    "content_idea": "36886e0b-4b32-473b-be72-b0aef31fccef",
+    "title": "a Reiki master wrote a UK number two",
+    "published": "2026-11-11",
+    "why": "A hit traced back to the people and tools behind it, money included. It got a good response for the way it was broken down."
+  },
+  "focus_sectors": [
+    {
+      "sector": "music",
+      "label": "Music",
+      "keywords": ["music", "musician*", "song", "songs", "songwriter*", "singer*", "rapper*", "album", "albums", "chart", "charts", "chart-topping", "uk number", "number one hit", "top 40", "billboard", "label", "labels", "record label*", "royalt*", "spotify", "suno", "udio", "grammy*"]
+    },
+    {
+      "sector": "film_tv",
+      "label": "Film, TV and streaming",
+      "keywords": ["film", "films", "filmmaker*", "movie", "movies", "cinema", "hollywood", "box office", "tv", "television", "studio", "studios", "streaming", "streamer", "streamers", "screenwriter*", "animation", "animator*", "visual effects", "vfx"]
+    },
+    {
+      "sector": "games",
+      "label": "Games",
+      "keywords": ["game", "games", "gaming", "gamer", "gamers", "video game*", "game studio*"]
+    },
+    {
+      "sector": "creators",
+      "label": "Creators and creator tech",
+      "keywords": ["creator", "creators", "creator economy", "creator tool*", "influencer*", "youtuber*", "podcast*", "newsletter*", "publisher", "publishers", "publishing", "author", "authors", "novelist*", "book", "books", "writer", "writers", "content creator*"]
+    },
+    {
+      "sector": "arts_design",
+      "label": "Art and design",
+      "keywords": ["art", "arts", "artist", "artists", "artwork*", "gallery", "galleries", "museum*", "design", "designs", "designer", "designers", "illustrat*", "photograph*", "fashion"]
+    },
+    {
+      "sector": "performance",
+      "label": "Theatre and performance",
+      "keywords": ["theatre", "theater", "broadway", "west end", "performer", "performers", "actor", "actors", "actress*", "dancer*", "comedian*", "comedy", "musical", "live show*"]
+    },
+    {
+      "sector": "media",
+      "label": "Media and entertainment",
+      "keywords": ["media", "entertainment", "journalis*", "newsroom*", "magazine*", "broadcast*", "advertising creative"]
+    },
+    {
+      "sector": "creative_tools",
+      "label": "Creative tools and platforms",
+      "keywords": ["youtube", "tiktok", "instagram", "netflix", "disney", "midjourney", "runway", "sora", "veo", "elevenlabs", "adobe", "firefly", "canva", "pika", "kling", "audiobook*", "voice actor*"]
+    },
+    {
+      "sector": "rights",
+      "label": "Licensing and rights, the money of creative work",
+      "keywords": ["licens*", "licence*", "copyright*", "residuals"]
+    }
+  ],
+  "focus_not_when": ["state of the art", "art of", "game changer", "game theory", "org chart", "flow chart", "white label", "white-label", "ai studio", "copilot studio", "chip design", "chip designs", "streaming tokens", "token streaming", "cash runway", "financial runway", "runway to", "months of runway", "years of runway"],
+  "avoid": [
+    {
+      "kind": "governance",
+      "label": "Governance, regulation, compliance and policy",
+      "keywords": ["governance", "regulat*", "compliance", "policy", "policies", "policymaker*", "eu ai act", "ai act", "executive order", "legislat*", "lawmaker*"]
+    },
+    {
+      "kind": "security",
+      "label": "Security, privacy, surveillance and breaches",
+      "keywords": ["security", "privacy", "surveillance", "data leak*", "breach", "breaches", "breached", "deepfake fraud", "deepfake scam*"]
+    }
+  ],
+  "avoid_not_when": ["job security", "financial security", "income security", "royalty policy", "royalty policies", "pricing policy", "pricing policies", "licensing policy", "licensing policies", "refund policy", "return policy"],
+  "enterprise": {
+    "label": "Enterprise productivity with no creative angle",
+    "rule": "refused unless the same text carries a focus-sector keyword",
+    "keywords": ["enterprise", "enterprises", "productivity", "copilot", "workplace", "office workers", "back office", "knowledge worker*"]
+  },
+  "pool_categories_off_beat": ["governance", "security"]
+}

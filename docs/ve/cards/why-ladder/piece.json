@@ -1,0 +1,105 @@
+{
+  "title": "Why did pop songs get shorter?",
+  "day": "fri",
+  "series": "mind.the.gap",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Who gets paid, and when?",
+      "label": "paid at 0:30",
+      "plate": {
+        "type": "document",
+        "image": ".scratch/why-ladder/assets/m-spotify.png",
+        "crop": {
+          "x0": 0,
+          "y0": 520,
+          "x1": 1080,
+          "y1": 1810
+        },
+        "focus_rows": {
+          "y0": 984,
+          "y1": 1090
+        },
+        "note": "A play counts at 0:30",
+        "thumb_crop": {
+          "x0": 40,
+          "y0": 960,
+          "x1": 1040,
+          "y1": 1095
+        }
+      },
+      "source": "Spotify for Artists help page, Nov 2026",
+      "strength": "documented"
+    },
+    {
+      "n": 2,
+      "connector": "because",
+      "question": "So why cut the intro?",
+      "label": "intros: 20 s to 5 s",
+      "plate": {
+        "type": "chart",
+        "ground": ".scratch/why-ladder/assets/still-record-phone.png",
+        "series_label": "Average intro, US top-10 hits",
+        "points": [
+          {
+            "x": "1986",
+            "y": 20,
+            "text": "20 s+"
+          },
+          {
+            "x": "2015",
+            "y": 5,
+            "text": "5 s"
+          }
+        ],
+        "note": "A quarter of the wait"
+      },
+      "source": "Musicae Scientiae, 2018",
+      "strength": "documented",
+      "challenger": {
+        "text": "Attention spans shrank",
+        "image": ".scratch/why-ladder/assets/m-time.png",
+        "crop": {
+          "x0": 0,
+          "y0": 130,
+          "x1": 1560,
+          "y1": 700
+        },
+        "source": "TIME, May 2015",
+        "outcome": "parked",
+        "strength": "open"
+      }
+    },
+    {
+      "n": 3,
+      "connector": "because",
+      "question": "Songs, or just intros?",
+      "label": "whole songs too",
+      "plate": {
+        "type": "document",
+        "image": ".scratch/why-ladder/assets/m-fortune.png",
+        "crop": {
+          "x0": 0,
+          "y0": 640,
+          "x1": 1080,
+          "y1": 1070
+        },
+        "note": "Hot 100 average: 3:30"
+      },
+      "source": "Fortune, Jan 2019",
+      "strength": "inferred",
+      "loop_to": 1,
+      "loop_label": "more plays, more pay"
+    }
+  ],
+  "landing": {
+    "image": ".scratch/why-ladder/assets/still-jukebox.png",
+    "insight": "The meter starts at 30 seconds, so songs moved their best part toward it.",
+    "question": "If streams paid by the minute, would the long intro come back?"
+  },
+  "cover": {
+    "image": ".scratch/why-ladder/assets/still-timer.png",
+    "byline": ".scratch/why-ladder/assets/byline.png"
+  },
+  "step_card_ground": ".scratch/why-ladder/assets/still-record-phone.png"
+}

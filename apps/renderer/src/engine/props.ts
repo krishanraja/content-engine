@@ -41,9 +41,20 @@ export const EngineObjectSchema = z.object({
   toFrame: Frame,
 }).strict()
 
+/** Props a recorded cut was compiled with before 24 Nov 2026 (docs/plans/**, records kept as written) may name a
+ *  'call' beat. It reads as a landing beat with no landing, a closing beat like any other: nothing draws a call
+ *  (Ruling, Krish, 2026-11-24: "the signature format is the 5 Whys; get rid of everything that suggests predictions,
+ *  calls, dated, odds or scores"). Compile never writes one. */
+const archivedRole = (role: unknown) => role === 'call' ? 'landing' : role
+
 export const EngineBeatSchema = z.object({
   id: z.string().min(1),
-  role: z.enum(['hook', 'anchor', 'bridge', 'pivot', 'payoff', 'call']),
+  // `why` is one rung of the why-ladder (chrome/WhyStep.tsx), `landing` is where it lands (chrome/LandingCard.tsx).
+  role: z.preprocess(archivedRole, z.enum(['hook', 'anchor', 'bridge', 'pivot', 'payoff', 'why', 'landing'])),
+  /** A why beat's rung (spec beat.why; packages/contracts/src/whys.ts WhyRung): drawn by chrome/WhyStep.tsx. */
+  why: z.object({ n: z.number().int().min(1).max(7), question: z.string().min(1), strength: z.enum(['documented', 'inferred', 'open']) }).strict().optional(),
+  /** A landing beat's landing (spec beat.landing; whys.ts WhyLanding): drawn by chrome/LandingCard.tsx in place of the captions. */
+  landing: z.object({ shows: z.string().min(1), open_question: z.string().min(1) }).strict().optional(),
   layout: z.enum(['P1', 'P3', 'P6', 'F1', 'F3', 'STAGE', 'SPLIT', 'WINDOW']),
   /** The beat's shot type under the shot grammar (spec beat.shot; docs/ve/INGREDIENTS.md, "Shot grammar"). */
   shot: z.enum(['band', 'stage', 'anchor', 'plate', 'number', 'chapter', 'title', 'end']).optional(),
@@ -103,9 +114,10 @@ export const EngineRenderPropsSchema = z.object({
     images: z.record(z.string(), z.object({ closed: z.string(), open: z.string(), blink: z.string() }).strict()),
     seed: z.string(),
   }).strict().optional(),
+  renderTheme: z.literal('makeyourmindup-v5').optional(),
   pieceId: z.string().min(1),
   cutId: z.string().min(1),
-  format: z.enum(['face-with-proof', 'scoreboard-test', 'voice-led-pictures', 'hand-held-screen', 'two-passports']),
+  format: z.enum(['face-with-proof', 'scoreboard-test', 'voice-led-pictures', 'hand-held-screen', 'two-passports', 'why-ladder-v5']),
   aspect: z.enum(['9:16', '16:9']),
   fps: z.literal(30),
   durationFrames: z.number().int().positive(),
@@ -170,7 +182,9 @@ export const EngineRenderPropsSchema = z.object({
   beats: z.array(EngineBeatSchema).min(1),
   objects: z.array(EngineObjectSchema),
   events: z.array(EngineEventSchema),
-  call: z.object({ statement: z.string(), due: z.string(), confidencePercent: z.number().int() }).strict().optional(),
+  /** Retired with the call card (Ruling, Krish, 2026-11-24): an archived cut's props may still carry its dated call, so
+   *  they parse; nothing reads or draws it and compile never writes it. */
+  call: z.unknown().optional(),
   // The house close (chrome/EndingBand.tsx, docs/production/CLOSING.md). `ticker` is kept for old props and drawn by nothing.
   ending: z.object({ fromFrame: Frame, url: z.string().min(1), ticker: z.boolean().default(true),
     tagline: z.string().min(1).optional(), cta: z.string().min(1).optional(),

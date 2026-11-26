@@ -47,8 +47,8 @@ Video, per beat, in this order, at most two per beat (`limits.max_treatments_per
 2. A device on the beat shows a number (`kinetic_stat`, `stat_strip`, `quota_chart`, `leaderboard`, `ladder_stage`,
    `slot_machine`): `number-glow`. A receipt or proof (`receipt_print`, `evidence_card`, `record_card`,
    `passport_page`, `quote_card`, `pull_quote`, `thread_card`, `stamp`): `receipt-paper`.
-3. By role: `hook` gets `hook-hit`, `payoff` gets `payoff-glow`; `anchor`, `bridge`, `pivot` and `call` get nothing
-   from their role. The call stays clean. `pivot-split` is retired (20 Nov 2026): a channel split on the turn reads as a
+3. By role: `hook` gets `hook-hit`, `payoff` gets `payoff-glow`; `anchor`, `bridge`, `pivot` and `why` get nothing
+   from their role (`why` replaced `call` on 24 Nov 2026, `docs/FIVE-WHYS.md`). The landing stays clean. `pivot-split` is retired (20 Nov 2026): a channel split on the turn reads as a
    layout change, and a cut keeps one staging (Ruling, Krish, 2026-11-20; `docs/ve/INGREDIENTS.md`, "Shot grammar").
 
 Stills, by kind, and only where the still has the content each one needs:

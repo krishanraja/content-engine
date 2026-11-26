@@ -44,7 +44,6 @@ export const JOBS: Readonly<Record<string, JobEntry>> = Object.freeze({
   runner_watch: { path: '/api/video-studio/runner/watch', safety: 'replayable', note: 'Read-only over heartbeats and queues.' },
   aeo_ingest: { path: '/api/aeo/ingest', safety: 'manual_only', note: 'Spends roughly $0.70 of probe budget per run and has no schedule.' },
   trend_entities: { path: '/api/trends/entities', safety: 'replayable', note: 'Tags only observations with no alias extraction yet; a second run finds none.' },
-  claims_resolve: { path: '/api/claims/resolve', safety: 'replayable', note: 'Notices due falsifiers; one came_due row per claim, so a replay writes nothing twice. It never rules.' },
   trend_metrics: { path: '/api/trends/metrics', safety: 'replayable', note: 'Appends a fresh snapshot beside the old one rather than replacing it, which is the point: a moved number stays attributable.' },
   purge: { path: '/api/purge/run', safety: 'manual_only', note: 'Hard-deletes. To undo a purge use POST /api/purge/restore, never a second run.' },
   judge_sweep: { path: '/api/judge/sweep', safety: 'replayable', note: 'Runs every 10 minutes and re-judges only rows whose text changed, so a replay spends only on work the next tick would do anyway.' },
@@ -53,7 +52,8 @@ export const JOBS: Readonly<Record<string, JobEntry>> = Object.freeze({
   publish_watch: { path: '/api/publish/watch', safety: 'replayable', note: 'Keyless read of the public Substack archive; marks a piece published only once and closes board items only once, so a replay changes nothing it already changed.' },
   recordings_drive_inbox: { path: '/api/library/recordings/drive-inbox', safety: 'replayable', note: 'Keyed by sha256: a recording already in the store is skipped, so a replay copies only what the next tick would.' },
   research_library_mirror: { path: '/api/research-library/sweep', safety: 'replayable', note: 'Keyed by the material: a copy already in the research library, or a row already in its index, is never made again, so a replay copies only what the next tick would. It only adds to Drive; in the index it removes only a later row of a material already listed.' },
-  signals_odds: { path: '/api/signals/odds', safety: 'replayable', note: 'Keyless reads of Polymarket and Kalshi; a replay appends one more reading to each pinned Call\'s history, which is harmless and dated.' },
+  hub_edition: { path: '/api/hub/edition', safety: 'replayable', note: 'Leases the day with hub_claim_run and skips a day already published, so a replay writes only an edition the schedule failed to write. Its model calls spend only on that one missing edition.' },
+  hub_prices: { path: '/api/hub/prices', safety: 'replayable', note: 'Keyless Yahoo closes; it rewrites only the ticker of the latest edition, so a replay changes nothing the next tick would not.' },
 })
 
 export const JOB_NAMES: readonly string[] = Object.freeze(Object.keys(JOBS).sort())

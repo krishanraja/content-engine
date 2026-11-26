@@ -1,3 +1,5 @@
+import {V5Previews} from './engine/v5/Previews'
+import retiredStyles from '../../../config/retired-styles.json'
 import React from 'react'
 import { SplitKeyFrame, SplitKeyFrameSchema } from './engine/stills/split/SplitKeyFrame'
 import { StyleStill, StyleStillSchema } from './engine/stills/StyleStill'
@@ -78,6 +80,7 @@ function TransportVeCut(props: EngineRenderProps) {
 export function RemotionRoot() {
   return (
     <>
+      <V5Previews/>
       <Composition id="SplitKeyFrame" component={SplitKeyFrame} width={1080} height={1920} fps={30} durationInFrames={1} schema={SplitKeyFrameSchema} defaultProps={{variant: 'slam', beat: 'hook', plateSrc: '', series: 'under.the.hood'}} />
       <Composition id="StyleStill" component={StyleStill} width={1080} height={1920} fps={30} durationInFrames={1} schema={StyleStillSchema} defaultProps={{layer: 'motion', id: 'ai-music-slam'}} />
       <Composition
@@ -133,14 +136,14 @@ export function RemotionRoot() {
         calculateMetadata={({ props }) => ({ durationInFrames: Math.max(1, Math.ceil(props.durationMs / 1000 * 30)) })}
       />
       {/* The story intro and outro (the stand-off), silent: the music is mixed elsewhere. */}
-      <Composition id="StoryIntroStandoffWide" component={StoryIntroStandoff} width={1920} height={1080} fps={30}
-        durationInFrames={STORY_INTRO_FRAMES} schema={StoryStandoffPropsSchema} defaultProps={mondayStandoffProps('16x9')} />
-      <Composition id="StoryIntroStandoffTall" component={StoryIntroStandoff} width={1080} height={1920} fps={30}
-        durationInFrames={STORY_INTRO_FRAMES} schema={StoryStandoffPropsSchema} defaultProps={mondayStandoffProps('9x16')} />
-      <Composition id="StoryOutroStandoffWide" component={StoryOutroStandoff} width={1920} height={1080} fps={30}
-        durationInFrames={STORY_OUTRO_FRAMES} schema={StoryStandoffPropsSchema} defaultProps={mondayStandoffProps('16x9')} />
-      <Composition id="StoryOutroStandoffTall" component={StoryOutroStandoff} width={1080} height={1920} fps={30}
-        durationInFrames={STORY_OUTRO_FRAMES} schema={StoryStandoffPropsSchema} defaultProps={mondayStandoffProps('9x16')} />
+      {!retiredStyles.some(row => row.kind === 'composition' && row.id === 'StoryIntroStandoffWide') && <Composition id="StoryIntroStandoffWide" component={StoryIntroStandoff} width={1920} height={1080} fps={30}
+        durationInFrames={STORY_INTRO_FRAMES} schema={StoryStandoffPropsSchema} defaultProps={mondayStandoffProps('16x9')} />}
+      {!retiredStyles.some(row => row.kind === 'composition' && row.id === 'StoryIntroStandoffTall') && <Composition id="StoryIntroStandoffTall" component={StoryIntroStandoff} width={1080} height={1920} fps={30}
+        durationInFrames={STORY_INTRO_FRAMES} schema={StoryStandoffPropsSchema} defaultProps={mondayStandoffProps('9x16')} />}
+      {!retiredStyles.some(row => row.kind === 'composition' && row.id === 'StoryOutroStandoffWide') && <Composition id="StoryOutroStandoffWide" component={StoryOutroStandoff} width={1920} height={1080} fps={30}
+        durationInFrames={STORY_OUTRO_FRAMES} schema={StoryStandoffPropsSchema} defaultProps={mondayStandoffProps('16x9')} />}
+      {!retiredStyles.some(row => row.kind === 'composition' && row.id === 'StoryOutroStandoffTall') && <Composition id="StoryOutroStandoffTall" component={StoryOutroStandoff} width={1080} height={1920} fps={30}
+        durationInFrames={STORY_OUTRO_FRAMES} schema={StoryStandoffPropsSchema} defaultProps={mondayStandoffProps('9x16')} />}
     </>
   )
 }

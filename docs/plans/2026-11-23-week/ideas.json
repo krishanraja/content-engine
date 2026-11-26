@@ -1,5 +1,5 @@
 {
-  "_about": "The Sunday ideas run for the week of 23 November 2026 (sunday-ideas.yml), steps 1 to 7 of plan-week, re-run on 16 Nov for the open options on mon to sat. Researched with web search and web fetch only: Drive and Firecrawl were not connected, so the Cold Ideas & Inspo folder was not read. Feed fallback: the Instagram inspo sheet could not be read (the Posts tab has no published, retrieved, headline, post url column); the patterns come from the feed the gather read (inspiration.lookalike_feed). Stale sheet: the gathered feed's newest row is 2026-11-11, more than 3 days before 2026-11-16; the patterns lean on older posts.",
+  "_about": "The Sunday ideas run for the week of 23 November 2026 (sunday-ideas.yml), steps 1 to 7 of plan-week, re-run on 16 Nov for the open options on mon to sat. Researched with web search and web fetch only: Drive and Firecrawl were not connected, so the Cold Ideas & Inspo folder was not read. Feed fallback: the Instagram inspo sheet could not be read (the Posts tab has no published, retrieved, headline, post url column); the patterns come from the feed the gather read (inspiration.lookalike_feed). Stale sheet: the gathered feed's newest row is 2026-11-11, more than 3 days before 2026-11-16; the patterns lean on older posts. Thursday and Saturday remade on 26 Nov 2026 by the v5 story engine (first live test), every other day left as it was. Stale sheet: the Instagram inspo sheet's newest row is 2026-11-16, more than 3 days before 2026-11-26; the patterns lean on older posts. Zero-spend run: the divergent angles and the humour engine (story_score.py angles and humour, both paid) were not called; the funny line and the angle were checked by blind subagent readers instead, and the story score axes that need them abstain.",
   "week_start": "2026-11-23",
   "checked_on": "2026-11-16",
   "days": {
@@ -1475,403 +1475,647 @@
     ],
     "thu": [
       {
-        "id": "fortytoone",
-        "format": "Explainer carousel, 6 cards, 4:5",
-        "source_tag": "his_press",
-        "source": {
-          "label": "Built In, What the 2026 midterm results mean for the AI industry (11 Nov 2026)",
-          "url": "https://builtin.com/articles/2026-midterms-ai-industry"
+        "id": "tidalpurge",
+        "kind": "explainer",
+        "format": "Quiz carousel, 4 cards, 4:5",
+        "set": "quiz",
+        "make": {
+          "command": "python scripts/library/make_piece.py <piece folder> --set quiz",
+          "set": "quiz",
+          "slides": 4,
+          "note": "Library quiz set: simple-advice cover, quiz question, quiz answer, simple-advice close. Photo slots are generated per piece (library imagery styles); the words below fill every text slot within its character limit."
         },
-        "hook": "The US just voted on AI. Here is what changes.",
-        "copy": "Rebuilt on your Improve: what the midterms mean for AI under the new US system. Democrats now hold Congress, 56% of voters said data centres shaped their vote, and 44 of 45 local measures to restrict data centres passed.",
+        "source_tag": "trade_press",
+        "source": {
+          "label": "TechCrunch, 24 Nov 2026",
+          "url": "https://techcrunch.com/2026/11/24/tidal-to-ban-and-remove-millions-of-ai-generated-tracks-as-ai-slop-inundates-music-streaming"
+        },
+        "hook": "Tidal is deleting 29 million AI songs. Guess how many were ever played.",
+        "copy": "A four-card quiz on the biggest clear-out in streaming: from 9 Dec Tidal removes fully AI-made tracks, more than 29 million by the end of the year, and 96% of them never got a single stream. Songs made with AI help stay, which is the line every musician releasing music this year needs to know.",
         "pitch": {
-          "see": "Six cards: a ballot box with a computer chip in it; then who now runs Congress, the 56% of voters who said data centres mattered, the 44 of 45 data centre limits that passed, what Congress can and cannot change before January, and our one-line call.",
-          "lands": "It turns an election most people outside the US skimmed into what changes for the AI tools they use.",
-          "why_now": "Built In, 11 Nov 2026, citing the NBC News exit poll and Redbud Consulting.",
-          "share": "AI was on the ballot, and it lost a few."
+          "see": "A record-shop skip overflowing with unplayed songs, then a quiz card: how many of Tidal's fully AI tracks were never streamed? About half, or 96 in every 100? Then the answer, and a close.",
+          "lands": "A huge number, a guess most people get wrong, and one rule a musician can use today: AI help is fine, a fully AI track is out.",
+          "why_now": "TechCrunch and MacRumors, 24 Nov 2026: Tidal starts removing fully AI-generated music on 9 Dec.",
+          "share": "Tidal is binning 29 million songs almost nobody played."
+        },
+        "shape": "story",
+        "dive": "More than 43% of the tracks uploaded to Tidal in the last 90 days were AI-generated, yet 96% of the 27 million fully AI tracks have no streams, so removing them costs listeners nothing and makes human releases easier to find, while Spotify and YouTube Music only label them.",
+        "aim": "utility",
+        "funny": "The biggest clear-out in music history, and the only ones who will notice are the bots that uploaded it.",
+        "lookalike": {
+          "pattern": "shock-number",
+          "beats": "https://www.instagram.com/evolving.ai/p/Dcno5uwADrV/",
+          "our_take": "Where the post reports a new rule on AI music, we turn the number into a quiz and give musicians the line that keeps their AI-assisted releases safe."
         },
         "cards": [
           {
-            "words": "The US just voted on AI.",
-            "picture": "A ballot box with a computer chip dropped in the slot"
+            "words": "Tidal is deleting 29 million AI songs. Guess how many were ever played.",
+            "picture": "A record-shop skip overflowing with blank, unlabelled song files, a Tidal-black night street"
           },
           {
-            "words": "Democrats now hold both houses of Congress",
-            "picture": "The Capitol, two halves shaded"
+            "words": "How many AI tracks got no plays? About half or 96 in every 100?",
+            "picture": "Two record sleeves side by side, one half-full of play marks, one empty"
           },
           {
-            "words": "56% of voters said data centres shaped their vote",
-            "picture": "A bar of 56 voters out of 100"
+            "words": "96% were never streamed once.",
+            "picture": "An empty play counter stuck at zero on a phone screen"
           },
           {
-            "words": "44 of 45 local limits on data centres passed",
-            "picture": "45 ticks, one cross"
-          },
-          {
-            "words": "New Congress sits from January: more hearings, few new laws",
-            "picture": "A calendar on January"
-          },
-          {
-            "words": "What should change first?",
-            "picture": "The ballot box again"
+            "words": "Made with AI help? You stay up.",
+            "picture": "The house close: the wordmark and makeyourmindup.ai above the colour bars"
           }
         ],
         "direction": {
-          "look": "Election-night graphics in the brand kit, one number per card",
-          "format": "Explainer carousel, 6 cards, 4:5",
+          "look": "Quiz carousel from the v5 Library, a bright real-object photo per card",
+          "format": "Quiz carousel, 4 cards, 4:5",
           "frames": [
             {
-              "words": "THE US JUST VOTED ON AI",
-              "picture": "Ballot box with a chip"
+              "words": "TIDAL IS DELETING 29 MILLION AI SONGS. GUESS HOW MANY WERE EVER PLAYED.",
+              "picture": "A record-shop skip overflowing with blank, unlabelled song files, a Tidal-black night street"
             },
             {
-              "words": "CONGRESS CHANGED HANDS",
-              "picture": "The Capitol"
+              "words": "HOW MANY AI TRACKS GOT NO PLAYS? ABOUT HALF OR 96 IN EVERY 100?",
+              "picture": "Two record sleeves side by side, one half-full of play marks, one empty"
             },
             {
-              "words": "56% SAID DATA CENTRES MATTERED",
-              "picture": "Voter bar"
+              "words": "96% WERE NEVER STREAMED ONCE.",
+              "picture": "An empty play counter stuck at zero on a phone screen"
             },
             {
-              "words": "44 OF 45 LIMITS PASSED",
-              "picture": "Ticks and a cross"
-            },
-            {
-              "words": "FROM JANUARY: HEARINGS",
-              "picture": "A calendar"
-            },
-            {
-              "words": "WHAT CHANGES FIRST?",
-              "picture": "Ballot box"
+              "words": "MADE WITH AI HELP? YOU STAY UP.",
+              "picture": "The house close: the wordmark and makeyourmindup.ai above the colour bars"
             }
           ],
-          "tone": "Clear and neutral",
-          "kit": "Brand kit, mint"
+          "tone": "Dry and quick, on the musicians' side",
+          "kit": "v5 Library quiz set, house palette and grain, Anton, Fraunces and DM Mono"
         },
-        "returns": {
-          "press": "2026-11-16/queue/off-thu-fortytoone",
-          "said": "Needs to be about the future of AI under the new U.S. system after the midterms.",
-          "answers": [],
-          "sources": [
-            {
-              "url": "https://builtin.com/articles/2026-midterms-ai-industry",
-              "date": "2026-11-11"
-            }
-          ]
-        },
-        "revised": {
-          "side": "idea",
-          "words": "Needs to be about the future of AI under the new U.S. system after the midterms."
+        "library": {
+          "carousel-simple-advice-cover": {
+            "headline_1": "Tidal is deleting 29 million AI songs.",
+            "body_1": "Guess how many were ever played.",
+            "label_p": "From 9 Dec, Tidal removes fully AI-made tracks. Songs made with AI help stay up."
+          },
+          "carousel-quiz-question": {
+            "label_1": "Streaming quiz",
+            "headline_1": "How many AI tracks got no plays?",
+            "label_2": "About half",
+            "label_3": "96 in every 100"
+          },
+          "carousel-quiz-answer": {
+            "label_1": "The answer",
+            "headline_1": "96% were never streamed once.",
+            "label_2": "About half",
+            "label_3": "96 in every 100"
+          },
+          "carousel-simple-advice-close": {
+            "body_1": "Made with AI help? You stay up.",
+            "label_1": "makeyourmindup.ai"
+          }
         },
         "learned_from": [
-          "Your Improve (9 Nov): \"Needs to be about the future of AI under the new U.S. system after the midterms.\""
+          "Your Reject on a Tuesday carousel (16 Nov): \"The idea is lame. This doesn't translate into a carousel properly.\""
+        ],
+        "facts": [
+          {
+            "claim": "More than 43% of tracks uploaded to Tidal in the past 90 days were AI-generated.",
+            "url": "https://techcrunch.com/2026/11/24/tidal-to-ban-and-remove-millions-of-ai-generated-tracks-as-ai-slop-inundates-music-streaming",
+            "date": "2026-11-24"
+          },
+          {
+            "claim": "27 million tracks (6.3% of the catalogue) are fully AI-generated, and 96% of them have no streams.",
+            "url": "https://techcrunch.com/2026/11/24/tidal-to-ban-and-remove-millions-of-ai-generated-tracks-as-ai-slop-inundates-music-streaming",
+            "date": "2026-11-24"
+          },
+          {
+            "claim": "Removal starts 9 Dec; more than 29 million songs by year end; AI-assisted songs stay; Spotify and YouTube Music only label.",
+            "url": "https://techcrunch.com/2026/11/24/tidal-to-ban-and-remove-millions-of-ai-generated-tracks-as-ai-slop-inundates-music-streaming",
+            "date": "2026-11-24"
+          },
+          {
+            "claim": "Apple has not banned AI songs; it said in April more than a third of monthly uploads are 100 percent AI-generated but under 0.5 percent of listening.",
+            "url": "https://www.macrumors.com/2026/11/24/tidal-ai-music-ban/",
+            "date": "2026-11-24"
+          }
+        ],
+        "whys": [
+          "Why is Tidal deleting songs? Because fully AI-made uploads now pour in: more than 43% of the last 90 days' uploads (TechCrunch).",
+          "Why does that hurt anyone? Because they bury human releases in search and recommendations while almost nobody plays them: 96% have no streams (TechCrunch).",
+          "Why can Tidal afford to cut them? Because they earn nothing: Apple says AI tracks are over a third of uploads but under 0.5% of listening (MacRumors).",
+          "Why do Spotify and YouTube Music not do the same? They chose to label AI tracks rather than remove them (TechCrunch).",
+          "Why does it matter to a working musician? Because the line is drawn at fully generated: AI-assisted songs stay, so a release made with AI help is safe (TechCrunch)."
+        ],
+        "sources": [
+          {
+            "label": "MacRumors, 24 Nov 2026",
+            "url": "https://www.macrumors.com/2026/11/24/tidal-ai-music-ban/",
+            "date": "2026-11-24"
+          }
         ],
         "recommended": true,
-        "research_prompt": "Act as a policy researcher. Plain question: what changes for AI tools and data centres now the US midterms have changed who runs Congress and several states? Find, from primary sources first (official results, state ballot measure pages, committee announcements, company statements), the newest dated facts from 3 November to 22 November 2026: who controls each chamber, data centre measures passed, state AI laws taking effect, hearings announced, and any company that changed plans. For every claim give the exact wording or number, its URL and its date, and list anything you could not confirm.",
         "read_back": {
           "readers": [
-            "Fresh reader A (Sonnet, a 12-year-old reading once)",
-            "Fresh reader B (Haiku, a 12-year-old reading once)"
+            "Fresh reader A (Sonnet subagent, a 12-year-old reading once, 26 Nov)",
+            "Fresh reader B (Haiku subagent, a 12-year-old reading once, 26 Nov)"
           ],
           "says": [
-            "What the US election results mean for AI rules and data centres",
-            "After the US vote, who runs Congress, what voters said about data centres, and what Congress can still change before January."
+            "Tidal is deleting 29 million AI songs, and a quiz asks how many were ever played.",
+            "Tidal is throwing out millions of AI-made songs, and you guess how many were ever listened to."
           ],
-          "against": 48,
-          "repeat": "Both readers matched it to the 16 Nov Thursday option of the same name: it is that option brought back on your Improve, rebuilt on the midterm results."
+          "against": 49
         }
       },
       {
-        "id": "designfight",
-        "supports": "wed",
-        "format": "Carousel, 5 cards, 4:5",
-        "source_tag": "his_card",
-        "source": {
-          "label": "Adobe newsroom, 10 Nov 2026",
-          "url": "https://news.adobe.com/news/2026/11/adobe-powers-new-era-of-creativity"
+        "id": "fincherrelip",
+        "kind": "explainer",
+        "format": "Quiz carousel, 4 cards, 4:5",
+        "set": "quiz",
+        "make": {
+          "command": "python scripts/library/make_piece.py <piece folder> --set quiz",
+          "set": "quiz",
+          "slides": 4,
+          "note": "Library quiz set: simple-advice cover, quiz question, quiz answer, simple-advice close. Photo slots are generated per piece (library imagery styles); the words below fill every text slot within its character limit."
         },
-        "hook": "Canva, Adobe or Claude: which one makes your poster in 2028?",
-        "copy": "Five cards for Wednesday's design question: what Adobe opened up at its 10 Nov show, how Canva and Adobe both plug into Claude Design (Anthropic's own blog, June), and our dated guess at who still gets paid in two years.",
+        "source_tag": "trade_press",
+        "source": {
+          "label": "Variety Australia, 26 Nov 2026 (US edition 25 Nov), from The Ringer's Big Picture podcast",
+          "url": "https://au.variety.com/2026/film/news/david-fincher-explains-ai-use-cliff-booth-42928"
+        },
+        "hook": "David Fincher fixed his new film's lines with AI. Guess how many were re-recorded.",
+        "copy": "A four-card quiz on how one of cinema's most exacting directors finished The Further Mis-Adventures of Cliff Booth: only 5% of the film used re-recorded dialogue, he says, and the rest of the fixes were \"all AI\". For anyone in film and TV, it is the clearest sign yet that AI has reached the edit suite of the people who never cut corners.",
         "pitch": {
-          "see": "Five cards: three logos racing to finish the same birthday poster; then one card each on what Adobe, Canva and Claude Design did this year, with dates; a last card asking which one you would bet on.",
-          "lands": "Everyone has used one of these three; it shows the fight in one swipe.",
-          "why_now": "Adobe opened its apps to other companies' AI on 10 Nov 2026.",
-          "share": "Which design app will still be paid in 2028?"
+          "see": "A tiny sound booth with a dusty \"closed\" sign on the door, then a quiz card: how did Fincher fix the lines in Cliff Booth? Actors back in the booth, or AI re-lipping the shot? Then the answer, and a close.",
+          "lands": "Fincher is famous for take after take; hearing he let AI do the re-recording is the surprise, and the number makes it concrete for anyone who edits, mixes or acts.",
+          "why_now": "The film opened in IMAX on 25 Nov 2026 and Fincher said it on The Ringer the same day.",
+          "share": "Even Fincher is not going back to the booth."
+        },
+        "shape": "story",
+        "dive": "Instead of calling actors back to re-record lines in a booth (dialogue replacement), the team used AI to \"re-lip\" the shot so the face matches the new line; Fincher says only 5% of the film used the old way, which moves money and time from booth sessions to the edit.",
+        "aim": "utility",
+        "funny": "The director famous for endless takes found a way to do one more without the actor.",
+        "lookalike": {
+          "pattern": "shock-number",
+          "beats": "https://www.instagram.com/evolving.ai/p/DcwTlSYADzH/",
+          "our_take": "Where the post shows a tool that remakes any video, we show the most careful director in Hollywood using it on a real release, with his own number."
         },
         "cards": [
           {
-            "words": "Canva, Adobe or Claude: which one makes your poster in 2028?",
-            "picture": "One birthday poster being pulled three ways"
+            "words": "Fincher fixed his film's lines with AI. Guess how many were re-recorded.",
+            "picture": "A small dialogue booth with a microphone and a \"closed\" sign on the door, warm studio light"
           },
           {
-            "words": "Adobe: opened Photoshop and Premiere to other companies' AI (10 Nov)",
-            "picture": "The Photoshop window with a robot hand on the mouse"
+            "words": "How did Fincher fix his lines? Actors in a booth or AI re-lipped them?",
+            "picture": "A film editing screen with an actor's mouth framed in a box"
           },
           {
-            "words": "Canva: plugs straight into Claude Design",
-            "picture": "The Canva connector inside Claude Design"
+            "words": "AI. Only 5% was re-recorded.",
+            "picture": "An empty booth chair beside a microphone on its stand"
           },
           {
-            "words": "Claude Design: over a million users in its first week (Anthropic, June)",
-            "picture": "A crowd of tiny cursors"
-          },
-          {
-            "words": "Which one would you bet on?",
-            "picture": "Three betting chips"
+            "words": "The booth just got quieter.",
+            "picture": "The house close: the wordmark and makeyourmindup.ai above the colour bars"
           }
         ],
         "direction": {
-          "look": "A race-day poster in the brand kit, real product screenshots",
-          "format": "Carousel, 5 cards, 4:5",
+          "look": "Quiz carousel from the v5 Library, real film-set objects, no faces of the cast",
+          "format": "Quiz carousel, 4 cards, 4:5",
           "frames": [
             {
-              "words": "WHO MAKES YOUR POSTER IN 2028?",
-              "picture": "A poster pulled three ways"
+              "words": "FINCHER FIXED HIS FILM'S LINES WITH AI. GUESS HOW MANY WERE RE-RECORDED.",
+              "picture": "A small dialogue booth with a microphone and a \"closed\" sign on the door, warm studio light"
             },
             {
-              "words": "ADOBE OPENED ITS APPS",
-              "picture": "Photoshop with a robot hand"
+              "words": "HOW DID FINCHER FIX HIS LINES? ACTORS IN A BOOTH OR AI RE-LIPPED THEM?",
+              "picture": "A film editing screen with an actor's mouth framed in a box"
             },
             {
-              "words": "CANVA: PLUGS INTO CLAUDE",
-              "picture": "Connector"
+              "words": "AI. ONLY 5% WAS RE-RECORDED.",
+              "picture": "An empty booth chair beside a microphone on its stand"
             },
             {
-              "words": "CLAUDE DESIGN: 1M IN ITS FIRST WEEK (JUNE)",
-              "picture": "Cursors"
-            },
-            {
-              "words": "PLACE YOUR BET",
-              "picture": "Chips"
+              "words": "THE BOOTH JUST GOT QUIETER.",
+              "picture": "The house close: the wordmark and makeyourmindup.ai above the colour bars"
             }
           ],
-          "tone": "Playful, fair to all three",
-          "kit": "Brand kit, under.the.hood pill"
+          "tone": "Wry, impressed, never sneering at the craft",
+          "kit": "v5 Library quiz set, house palette and grain, Anton, Fraunces and DM Mono"
+        },
+        "library": {
+          "carousel-simple-advice-cover": {
+            "headline_1": "Fincher fixed his film's lines with AI.",
+            "body_1": "Guess how many were re-recorded.",
+            "label_p": "The Further Mis-Adventures of Cliff Booth opened in IMAX on 25 Nov. Fincher told The Ringer how he finished it."
+          },
+          "carousel-quiz-question": {
+            "label_1": "Film quiz",
+            "headline_1": "How did Fincher fix his lines?",
+            "label_2": "Actors in a booth",
+            "label_3": "AI re-lipped them"
+          },
+          "carousel-quiz-answer": {
+            "label_1": "The answer",
+            "headline_1": "AI. Only 5% was re-recorded.",
+            "label_2": "Actors in a booth",
+            "label_3": "AI re-lipped them"
+          },
+          "carousel-simple-advice-close": {
+            "body_1": "The booth just got quieter.",
+            "label_1": "makeyourmindup.ai"
+          }
         },
         "learned_from": [
-          "Your card (5 Nov): \"Hypothesise who will have the bigger moat.\""
+          "Your Reject on a Thursday direction (9 Nov): \"I don't get it and it feels boring with not much point to it.\""
         ],
-        "ties_to": "Wed: under.the.hood, if you pick the design piece",
+        "facts": [
+          {
+            "claim": "Fincher said only 5% of the film used automated dialogue replacement, while the rest was \"all AI\".",
+            "url": "https://au.variety.com/2026/film/news/david-fincher-explains-ai-use-cliff-booth-42928",
+            "date": "2026-11-26"
+          },
+          {
+            "claim": "\"We could use AI to re-lip that thing.\" and \"We're not chiseling this out of marble. We're working with plasticine.\"",
+            "url": "https://au.variety.com/2026/film/news/david-fincher-explains-ai-use-cliff-booth-42928",
+            "date": "2026-11-26"
+          },
+          {
+            "claim": "\"I'm not going backwards.\"",
+            "url": "https://www.worldofreel.com/blog/2026/11/25/david-fincher-admits-to-using-ai-on-cliff-booth-im-not-going-backwards",
+            "date": "2026-11-25"
+          }
+        ],
+        "whys": [
+          "Why is this news? Because Fincher said only 5% of Cliff Booth used re-recorded dialogue and the rest was \"all AI\" (Variety).",
+          "Why use AI there? Because it can \"re-lip\" a shot so the face matches a changed line, without a booth session (Variety).",
+          "Why does that matter to him? He calls it working \"with plasticine\" rather than marble: the edit stays changeable (Variety).",
+          "Why will others follow? He says he is \"not going backwards\" (World of Reel), and he is the director others copy on craft.",
+          "Stop: no source gives the money saved, so the carousel does not claim one."
+        ],
+        "sources": [
+          {
+            "label": "World of Reel, 25 Nov 2026",
+            "url": "https://www.worldofreel.com/blog/2026/11/25/david-fincher-admits-to-using-ai-on-cliff-booth-im-not-going-backwards",
+            "date": "2026-11-25"
+          }
+        ],
         "read_back": {
           "readers": [
-            "Fresh reader A (Sonnet, a 12-year-old reading once, 16 Nov)",
-            "Fresh reader B (Haiku, a 12-year-old reading once, 16 Nov)"
+            "Fresh reader A (Sonnet subagent, a 12-year-old reading once, 26 Nov)",
+            "Fresh reader B (Haiku subagent, a 12-year-old reading once, 26 Nov)"
           ],
           "says": [
-            "Cards asking whether Canva, Adobe or Claude Design will win at making posters, with what each did this year.",
-            "Canva, Adobe or Claude race to make a birthday poster, then what each did this year and which you would bet on."
+            "David Fincher fixed his film's lines with AI, and a quiz asks whether actors came back to re-record.",
+            "A film director used AI to fix actors' spoken lines instead of bringing them back to re-record, and you guess which way."
           ],
           "against": 49
+        }
+      },
+      {
+        "id": "facefee",
+        "kind": "explainer",
+        "format": "Quiz carousel, 4 cards, 4:5",
+        "set": "quiz",
+        "make": {
+          "command": "python scripts/library/make_piece.py <piece folder> --set quiz",
+          "set": "quiz",
+          "slides": 4,
+          "note": "Library quiz set: simple-advice cover, quiz question, quiz answer, simple-advice close. Photo slots are generated per piece (library imagery styles); the words below fill every text slot within its character limit."
+        },
+        "source_tag": "trade_press",
+        "source": {
+          "label": "TechCrunch, 21 Nov 2026",
+          "url": "https://techcrunch.com/2026/11/21/is-selling-an-ai-version-of-your-face-to-this-microdrama-startup-the-future-of-hollywood"
+        },
+        "hook": "An actor rented his face to an AI drama. Guess what a face goes for.",
+        "copy": "A four-card quiz for actors and creators: the Israeli actor Aki Avni licensed his face to the startup Shortical, which made him the star of Inevitable, a microdrama made entirely with AI. Rest of World found microdrama firms paying between $15 and $700 to license a face, so the quiz ends on the number to know before anyone asks for yours.",
+        "pitch": {
+          "see": "A face on a price tag hanging in a shop window, then a quiz card: what do microdrama firms pay to license a face? Up to $700, or up to $70,000? Then the answer, and a close.",
+          "lands": "Everyone has a guess at what their face is worth; the real figure is a shock and a bargaining fact for any performer.",
+          "why_now": "TechCrunch, 21 Nov 2026, after Inevitable premiered in Los Angeles.",
+          "share": "Your face can be rented for $15. Know your price."
         },
         "shape": "story",
-        "dive": "Adobe opened its apps to other companies' AI, so the fight moves to which app the AIs send work to.",
+        "dive": "AI microdramas need a recognisable face but no shoot, so startups like Shortical license a performer's likeness for an avatar; with firms paying between $15 and $700 a face, the price is set by whoever asks first unless the performer knows the going rate.",
         "aim": "utility",
-        "funny": "Three design companies in a ring, and the referee is an AI that picks whoever answers fastest.",
+        "funny": "He played himself, a man who sells his face to a studio, by selling his face to a studio.",
+        "lookalike": {
+          "pattern": "shock-number",
+          "beats": "https://www.instagram.com/evolving.ai/p/Dc_4Sy7gGi5/",
+          "our_take": "Where the post shows a streamer quitting as a human, we show what a performer is actually paid for their face, and the number to know before signing."
+        },
+        "cards": [
+          {
+            "words": "An actor rented his face to an AI drama. Guess what a face goes for.",
+            "picture": "A paper price tag with a face drawn on it hanging in a shop window"
+          },
+          {
+            "words": "What does a face rent for? Up to $700 or Up to $70,000?",
+            "picture": "Two price tags on a counter, one small, one large"
+          },
+          {
+            "words": "$15 to $700, Rest of World found.",
+            "picture": "A small stack of coins next to a mirror"
+          },
+          {
+            "words": "Know your price before they ask.",
+            "picture": "The house close: the wordmark and makeyourmindup.ai above the colour bars"
+          }
+        ],
+        "direction": {
+          "look": "Quiz carousel from the v5 Library, bright everyday objects, no real person's face",
+          "format": "Quiz carousel, 4 cards, 4:5",
+          "frames": [
+            {
+              "words": "AN ACTOR RENTED HIS FACE TO AN AI DRAMA. GUESS WHAT A FACE GOES FOR.",
+              "picture": "A paper price tag with a face drawn on it hanging in a shop window"
+            },
+            {
+              "words": "WHAT DOES A FACE RENT FOR? UP TO $700 OR UP TO $70,000?",
+              "picture": "Two price tags on a counter, one small, one large"
+            },
+            {
+              "words": "$15 TO $700, REST OF WORLD FOUND.",
+              "picture": "A small stack of coins next to a mirror"
+            },
+            {
+              "words": "KNOW YOUR PRICE BEFORE THEY ASK.",
+              "picture": "The house close: the wordmark and makeyourmindup.ai above the colour bars"
+            }
+          ],
+          "tone": "Playful, protective of performers",
+          "kit": "v5 Library quiz set, house palette and grain, Anton, Fraunces and DM Mono"
+        },
+        "library": {
+          "carousel-simple-advice-cover": {
+            "headline_1": "An actor rented his face to an AI drama.",
+            "body_1": "Guess what a face goes for.",
+            "label_p": "Aki Avni stars as an AI version of himself in Inevitable, an all-AI microdrama from the startup Shortical."
+          },
+          "carousel-quiz-question": {
+            "label_1": "Actor quiz",
+            "headline_1": "What does a face rent for?",
+            "label_2": "Up to $700",
+            "label_3": "Up to $70,000"
+          },
+          "carousel-quiz-answer": {
+            "label_1": "The answer",
+            "headline_1": "$15 to $700, Rest of World found.",
+            "label_2": "Up to $700",
+            "label_3": "Up to $70,000"
+          },
+          "carousel-simple-advice-close": {
+            "body_1": "Know your price before they ask.",
+            "label_1": "makeyourmindup.ai"
+          }
+        },
+        "learned_from": [
+          "Your Reject on a Tuesday carousel (16 Nov): \"The idea is lame. This doesn't translate into a carousel properly.\""
+        ],
+        "facts": [
+          {
+            "claim": "Rest of World found microdrama firms paying \"between US$15 to US$700 to license their facial likenesses\".",
+            "url": "https://techcrunch.com/2026/11/21/is-selling-an-ai-version-of-your-face-to-this-microdrama-startup-the-future-of-hollywood",
+            "date": "2026-11-21"
+          },
+          {
+            "claim": "Aki Avni licensed his face to Shortical for Inevitable, an all-AI microdrama, playing a version of himself who licenses his face to a film studio.",
+            "url": "https://techcrunch.com/2026/11/21/is-selling-an-ai-version-of-your-face-to-this-microdrama-startup-the-future-of-hollywood",
+            "date": "2026-11-21"
+          },
+          {
+            "claim": "Shortical's face-licensing offer \"hasn't yet resulted in any signed contracts\"; it would not share Avni's fee, saying it was \"in line with industry standards for a comparable non-AI acting role\".",
+            "url": "https://techcrunch.com/2026/11/21/is-selling-an-ai-version-of-your-face-to-this-microdrama-startup-the-future-of-hollywood",
+            "date": "2026-11-21"
+          }
+        ],
+        "whys": [
+          "Why rent a face? Because AI microdramas need a familiar face but no shoot: Shortical built Inevitable around Avni's avatar (TechCrunch).",
+          "Why is the price so low? Because firms pay \"between US$15 to US$700\" a face, per Rest of World (cited by TechCrunch).",
+          "Why does Avni's deal differ? Shortical says his pay matched a comparable non-AI acting role (TechCrunch).",
+          "Why does it matter now? Shortical invites anyone to \"LICENSE YOUR FACE\", though no contracts are signed yet (TechCrunch).",
+          "Stop: no second primary source on the $15 to $700 range was opened, so it is quoted as Rest of World's finding."
+        ],
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Sonnet subagent, a 12-year-old reading once, 26 Nov)",
+            "Fresh reader B (Haiku subagent, a 12-year-old reading once, 26 Nov)"
+          ],
+          "says": [
+            "An actor rented his face to an AI drama, and a quiz asks how much a face is worth.",
+            "An actor sold the use of his face to an AI show, and you guess how much a face costs."
+          ],
+          "against": 49
+        }
+      },
+      {
+        "id": "reuterscut",
+        "kind": "explainer",
+        "format": "Quiz carousel, 4 cards, 4:5",
+        "set": "quiz",
+        "make": {
+          "command": "python scripts/library/make_piece.py <piece folder> --set quiz",
+          "set": "quiz",
+          "slides": 4,
+          "note": "Library quiz set: simple-advice cover, quiz question, quiz answer, simple-advice close. Photo slots are generated per piece (library imagery styles); the words below fill every text slot within its character limit."
+        },
+        "source_tag": "trade_press",
+        "source": {
+          "label": "TheWrap, 17 Nov 2026",
+          "url": "https://www.thewrap.com/media-platforms/journalism/reuters-journalists-authorize-strike/"
+        },
+        "hook": "Reuters licenses its stories to AI firms. Its reporters want a cut.",
+        "copy": "A four-card quiz for anyone whose words or work are licensed to AI: Reuters journalists, about 300 of them in their union, voted to authorise a strike, and one of their demands is a share of the money from AI licensing deals that use their journalism. The quiz asks how many voted yes, and ends on the question every writer, photographer and musician should ask about their own contract.",
+        "pitch": {
+          "see": "A newsroom notepad on a scale against a stack of coins, then a quiz card: what share of Reuters' union voters backed a strike? About half, or 94%? Then the answer, and a close.",
+          "lands": "Everyone in media has wondered who gets paid when their work trains an AI; here a newsroom puts a number on how much they care.",
+          "why_now": "TheWrap, 17 Nov 2026: the strike vote and the demand for a share of AI licensing revenue.",
+          "share": "Reporters want a cut of the AI money their stories make."
+        },
+        "shape": "story",
+        "dive": "Reuters signs licensing deals that let AI companies use its archive, the money goes to the company, and the newsroom union now asks for a share of that revenue in its contract, backed by a strike vote.",
+        "aim": "utility",
+        "funny": "The AI read every story they ever wrote; the reporters would like to be paid at least once more for them.",
+        "lookalike": {
+          "pattern": "work-reality-check",
+          "beats": "https://www.instagram.com/evolving.ai/p/DclnQ1AgDu0/",
+          "our_take": "Where the post jokes about AI and jobs, we show the people whose work trains it asking for the money, with the vote count."
+        },
+        "cards": [
+          {
+            "words": "Reuters reporters want a cut of AI deals. Guess how many voted to strike.",
+            "picture": "A reporter's notepad on one side of a brass scale, a stack of coins on the other"
+          },
+          {
+            "words": "What share voted to strike? About half or 94% of voters?",
+            "picture": "A ballot box with press passes instead of ballot papers"
+          },
+          {
+            "words": "94%, with 96% turnout.",
+            "picture": "A newsroom desk with a placard reading \"no Reuters without us\""
+          },
+          {
+            "words": "Licensed work? Ask for a share.",
+            "picture": "The house close: the wordmark and makeyourmindup.ai above the colour bars"
+          }
+        ],
+        "direction": {
+          "look": "Quiz carousel from the v5 Library, newsroom objects, bright and real",
+          "format": "Quiz carousel, 4 cards, 4:5",
+          "frames": [
+            {
+              "words": "REUTERS REPORTERS WANT A CUT OF AI DEALS. GUESS HOW MANY VOTED TO STRIKE.",
+              "picture": "A reporter's notepad on one side of a brass scale, a stack of coins on the other"
+            },
+            {
+              "words": "WHAT SHARE VOTED TO STRIKE? ABOUT HALF OR 94% OF VOTERS?",
+              "picture": "A ballot box with press passes instead of ballot papers"
+            },
+            {
+              "words": "94%, WITH 96% TURNOUT.",
+              "picture": "A newsroom desk with a placard reading \"no Reuters without us\""
+            },
+            {
+              "words": "LICENSED WORK? ASK FOR A SHARE.",
+              "picture": "The house close: the wordmark and makeyourmindup.ai above the colour bars"
+            }
+          ],
+          "tone": "Even-handed, on the side of people whose work is licensed",
+          "kit": "v5 Library quiz set, house palette and grain, Anton, Fraunces and DM Mono"
+        },
+        "library": {
+          "carousel-simple-advice-cover": {
+            "headline_1": "Reuters reporters want a cut of AI deals.",
+            "body_1": "Guess how many voted to strike.",
+            "label_p": "Reuters licenses its stories to AI firms. Its newsroom union wants a share of that money in its next contract."
+          },
+          "carousel-quiz-question": {
+            "label_1": "Media quiz",
+            "headline_1": "What share voted to strike?",
+            "label_2": "About half",
+            "label_3": "94% of voters"
+          },
+          "carousel-quiz-answer": {
+            "label_1": "The answer",
+            "headline_1": "94%, with 96% turnout.",
+            "label_2": "About half",
+            "label_3": "94% of voters"
+          },
+          "carousel-simple-advice-close": {
+            "body_1": "Licensed work? Ask for a share.",
+            "label_1": "makeyourmindup.ai"
+          }
+        },
+        "learned_from": [
+          "Your Reject on a Thursday direction (9 Nov): \"I don't get it and it feels boring with not much point to it.\""
+        ],
+        "facts": [
+          {
+            "claim": "About 300 members; nearly 96% voted and 94% of participants voted to authorise a strike.",
+            "url": "https://www.thewrap.com/media-platforms/journalism/reuters-journalists-authorize-strike/",
+            "date": "2026-11-17"
+          },
+          {
+            "claim": "The demands include \"a share of revenue from AI licensing deals involving journalists' work.\"",
+            "url": "https://www.thewrap.com/media-platforms/journalism/reuters-journalists-authorize-strike/",
+            "date": "2026-11-17"
+          },
+          {
+            "claim": "Unit chair Scott DiSavino: \"We are ready to walk off the job to prove that there is no Reuters without us.\"",
+            "url": "https://www.thewrap.com/media-platforms/journalism/reuters-journalists-authorize-strike/",
+            "date": "2026-11-17"
+          }
+        ],
+        "whys": [
+          "Why a strike vote? The Reuters Guild has worked under an expired contract and voted 94% to authorise a strike (TheWrap).",
+          "Why AI money? Because Reuters licenses its journalism to AI firms, and the union wants a share of that revenue (TheWrap).",
+          "Stop: the licensing deal values were not on a page opened this run (Mediaite would not open), so the carousel gives no deal figure."
+        ],
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Sonnet subagent, a 12-year-old reading once, 26 Nov)",
+            "Fresh reader B (Haiku subagent, a 12-year-old reading once, 26 Nov)"
+          ],
+          "says": [
+            "Reuters licenses its stories to AI firms, and its union voters backed a strike.",
+            "A news company sells its stories to AI firms and its reporters want some of the money, and you guess how many voted to strike."
+          ],
+          "against": 49
+        }
+      },
+      {
+        "id": "wetaplan",
+        "kind": "meme",
+        "format": "Meme, 2 panels, 4:5",
+        "set": null,
+        "make": {
+          "command": null,
+          "note": "No Library command makes a single meme image (config/asset-routes.json meme-square is a gap, and make_piece.py refuses the meme set), so this is made by hand if approved. Not a candidate for today's Library carousel."
+        },
+        "source_tag": "trade_press",
+        "source": {
+          "label": "Filmstories, 6 Nov 2026, quoting Variety",
+          "url": "https://filmstories.co.uk/news/weta-hollywood-studios-actively-pursuing-generative-ai/"
+        },
+        "hook": "Hollywood studios to VFX houses: no AI plan? Don't bother.",
+        "copy": "A two-panel meme for everyone in film and VFX: the studio legal team that banned generative AI from its films, and the same studio now telling effects houses, in Weta FX boss Daniel Seah's words to Variety, \"if you don't have an AI strategy, don't bother to work with us\".",
+        "pitch": {
+          "see": "Panel one: a studio lawyer stamping NO AI on a VFX bid. Panel two: the same lawyer, same desk, stamping NO AI PLAN? NO JOB.",
+          "lands": "Everyone in film has lived the whiplash; the second panel is the line Weta's boss says studios now use.",
+          "why_now": "Filmstories, 6 Nov 2026, reporting Seah's Variety interview: a ban became a requirement in about a year.",
+          "share": "From \"no AI\" to \"no AI plan, no job\"."
+        },
+        "shape": "story",
+        "dive": "Studios first had their lawyers ban generative AI from their films, then started asking effects houses for an AI strategy, mostly for cost savings, so a VFX vendor without one is now dropped from the bid.",
+        "aim": "humour",
+        "funny": "The same lawyer who banned AI now rejects you for not using enough of it.",
         "lookalike": {
           "pattern": "big-tech-chess",
-          "beats": "https://www.instagram.com/therundownai/p/DfiNxE3Rp8Q/",
-          "our_take": "Where the post reports one partnership, we put three design companies side by side and make a dated call."
-        }
-      },
-      {
-        "id": "lostcity",
-        "format": "Meme, single image, 4:5",
-        "source_tag": "trade_press",
-        "source": {
-          "label": "Winzheng, 12 Nov 2026",
-          "url": "https://www.winzheng.com/en/article/ai-agents-maya-lidar-discovery-72-hours"
+          "beats": "https://www.instagram.com/evolving.ai/p/DdEdz4xgK0f/",
+          "our_take": "Where the post is a trailer about AI in Hollywood, we show the real flip inside the studios in two panels."
         },
-        "hook": "AI 'discovered' a lost Maya site. Archaeologists wrote about it in 2025.",
-        "copy": "A meme of the week's best walk-back: 48 AI agents flagged a lost Maya site within 72 hours of the idea, and archaeologists had already written it up in 2025. It sets up Friday's question about AI discoveries.",
-        "pitch": {
-          "see": "A two-panel joke picture: top, tiny robots planting a flag on a jungle pyramid under the word 'discovered'; bottom, an archaeologist holding up a 2025 science journal with the same pyramid on its cover.",
-          "lands": "Everyone has been that confident once.",
-          "why_now": "The walk-back was reported on 12 Nov 2026.",
-          "share": "Check the library before you plant the flag."
-        },
-        "direction": {
-          "look": "Drawn fresh in the brand kit, house robots as the explorers",
-          "format": "Single image, 4:5",
-          "frames": [
-            {
-              "words": "48 AI AGENTS: WE FOUND A LOST CITY",
-              "picture": "Robots planting a flag on a jungle pyramid"
-            },
-            {
-              "words": "ARCHAEOLOGIST: PAGE 12",
-              "picture": "A woman holding a 2025 journal"
-            }
-          ],
-          "tone": "Gentle mickey-take",
-          "kit": "Brand kit, house robot"
-        },
-        "learned_from": [
-          "Your Improve on the homework carousel (3 Nov): \"add a couple of relatable memes here\""
+        "cards": [
+          {
+            "words": "Studios, before: no generative AI on our films.",
+            "picture": "A studio lawyer stamping NO AI on a VFX bid"
+          },
+          {
+            "words": "Studios, 2026: no AI strategy? Don't bother to work with us.",
+            "picture": "The same lawyer stamping NO AI PLAN? NO JOB"
+          }
         ],
-        "ties_to": "Fri: mind.the.gap",
-        "read_back": {
-          "readers": [
-            "Fresh reader A (Sonnet, a 12-year-old reading once, 16 Nov)",
-            "Fresh reader B (Haiku, a 12-year-old reading once, 16 Nov)"
-          ],
-          "says": [
-            "A joke picture: AI claims it discovered a Maya pyramid that archaeologists already wrote about in 2025.",
-            "AI robots claim a jungle pyramid as discovered, but an archaeologist holds up a 2025 journal with the same pyramid."
-          ],
-          "against": 49
-        },
-        "shape": "story",
-        "dive": "AI agents flagged a Maya site within 72 hours of the idea, and a 2025 paper had already documented it.",
-        "aim": "humour",
-        "funny": "48 AI agents shout 'Eureka', and a 2025 paper clears its throat.",
-        "lookalike": {
-          "pattern": "agents-did-it-alone",
-          "beats": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/",
-          "our_take": "Where the post celebrates speed, the meme lands the check nobody ran."
-        }
-      },
-      {
-        "id": "refusals",
-        "format": "Meme, 2 panels, 4:5",
-        "source_tag": "trade_press",
-        "source": {
-          "label": "Pasquale Pillitteri, chatbot refusals expose AI bots under Italian politicians' posts (15 Nov 2026)",
-          "url": "https://pasqualepillitteri.it/en/news/33503/chatbot-refusals-expose-ai-bots-salvini-fidanza-nardella"
-        },
-        "hook": "The bot network that was too polite to do its job.",
-        "copy": "A meme on the fake accounts caught out on 13 and 14 Nov: dozens of comments under Italian politicians' posts were chatbots' refusals, pasted in as they came. The joke is on whoever ran them; nothing shows the politicians did.",
-        "pitch": {
-          "see": "Panel one: a shadowy figure at a laptop typing 'write a nasty comment'. Panel two: forty identical comments under a post, each one reading 'I can't write a message aimed at insulting a specific political party'.",
-          "lands": "Everyone has wondered whether the comments are real; here the bots told on themselves.",
-          "why_now": "The comments appeared on 13 and 14 Nov 2026, reported on 15 Nov.",
-          "share": "The bots were too polite to insult anyone, so they posted the apology instead."
-        },
-        "shape": "story",
-        "dive": "The accounts pasted a chatbot's refusal word for word, which gave the whole network away.",
-        "aim": "humour",
-        "funny": "A network of fake accounts undone by its own good manners.",
-        "lookalike": {
-          "pattern": "ai-misbehaves",
-          "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
-          "our_take": "Where the post shows an AI refusing, ours shows the refusal exposing the people misusing it, and what that says about comment sections."
-        },
         "direction": {
-          "look": "Clean two-panel meme in the brand kit, drawn fresh; no real politician's face or post is shown",
-          "format": "Single image, 4:5",
+          "look": "Two-panel meme in the brand kit, a drawn studio office",
+          "format": "2 panels, 4:5",
           "frames": [
             {
-              "words": "ME: WRITE A NASTY COMMENT",
-              "picture": "A hooded figure grinning at a laptop"
+              "words": "STUDIOS, BEFORE: NO GENERATIVE AI ON OUR FILMS.",
+              "picture": "Lawyer stamping NO AI"
             },
             {
-              "words": "THE COMMENTS SECTION:",
-              "picture": "A wall of identical comments, each 'I can't write a message aimed at insulting a specific political party'"
+              "words": "STUDIOS, NOW: NO AI STRATEGY? DON'T BOTHER.",
+              "picture": "Lawyer stamping NO AI PLAN? NO JOB"
             }
           ],
           "tone": "Deadpan",
-          "kit": "Brand kit, mint"
+          "kit": "Brand kit, house type"
         },
         "learned_from": [
-          "Your Improve on the Home Depot meme (3 Nov): \"play on the hilarity of this topic\""
+          "Your Reject on a Thursday direction (9 Nov): \"I don't get it and it feels boring with not much point to it.\""
         ],
-        "read_back": {
-          "readers": [
-            "Fresh reader A (Sonnet, a 12-year-old reading once, 16 Nov)",
-            "Fresh reader B (Haiku, a 12-year-old reading once, 16 Nov)"
-          ],
-          "says": [
-            "A joke picture: a bot army told to write nasty comments instead posts forty polite refusals.",
-            "A person types a nasty comment, then forty bots post the same polite refusal under a post."
-          ],
-          "against": 49
-        }
-      },
-      {
-        "id": "meetings",
-        "format": "Explainer carousel, 5 cards, 4:5",
-        "source_tag": "trade_press",
-        "source": {
-          "label": "TechCrunch, Anthropic launches Claude Meetings (10 Nov 2026)",
-          "url": "https://techcrunch.com/2026/11/10/anthropic-launches-claude-meetings-to-turn-workplace-discussions-into-plans-and-tasks/"
-        },
-        "hook": "Your next meeting has a new attendee, and it takes the notes.",
-        "copy": "An explainer on Claude Meetings, in beta from 10 Nov on Claude's Team and Enterprise plans: Claude joins a Google Meet call as a named participant, drafts the plan and the whiteboard while people talk, and leaves notes and actions after. Five cards on what it does and the house rules to set before it joins yours.",
-        "pitch": {
-          "see": "A cover of a video call grid where one square is the house robot taking notes, then one card per thing it does and a last card of three house rules.",
-          "lands": "Everyone has left a meeting with nobody sure who agreed to what; this is the colleague who wrote it down.",
-          "why_now": "TechCrunch, 10 Nov 2026.",
-          "share": "The new person in your meeting is an AI, and it says so."
-        },
-        "shape": "story",
-        "dive": "An AI that sits in the call as a visible participant turns talk into a draft plan, a whiteboard and a task list in real time.",
-        "aim": "utility",
-        "funny": "Finally, a colleague who actually reads the chat, and leaves the moment someone from outside joins.",
-        "lookalike": {
-          "pattern": "agents-did-it-alone",
-          "beats": "https://www.instagram.com/evolving.ai/p/DfXfbEMACR-/",
-          "our_take": "Where the post shows agents making things on their own, ours shows one sitting in your meeting, and the rules to set first."
-        },
-        "cards": [
+        "facts": [
           {
-            "words": "Your next meeting has a new attendee, and it takes the notes.",
-            "picture": "A video call grid with the house robot in one square, pen in hand"
-          },
-          {
-            "words": "It joins Google Meet as a named participant and says so in the chat",
-            "picture": "A chat line announcing Claude has joined"
-          },
-          {
-            "words": "While you talk, it drafts the plan and maps the timeline on a whiteboard",
-            "picture": "A whiteboard timeline filling in"
-          },
-          {
-            "words": "It stays out of calls with outside guests unless an admin allows it",
-            "picture": "A door marked staff only"
-          },
-          {
-            "words": "Before it joins yours: who sees the notes, who checks the actions, which calls it skips",
-            "picture": "Three boxes on a checklist"
+            "claim": "Seah: \"if you don't have an AI strategy, don't bother to work with us\", he told Variety; studio legal teams first banned generative AI, then clients asked for AI strategies, mostly for cost savings.",
+            "url": "https://filmstories.co.uk/news/weta-hollywood-studios-actively-pursuing-generative-ai/",
+            "date": "2026-11-06"
           }
         ],
-        "direction": {
-          "look": "Infographic explainer in the house look, a video-call grid motif",
-          "format": "5 cards, 4:5",
-          "frames": [
-            {
-              "words": "YOUR NEXT MEETING HAS A NEW ATTENDEE",
-              "picture": "A call grid with the robot in one square"
-            },
-            {
-              "words": "IT SAYS IT IS THERE",
-              "picture": "A chat line"
-            },
-            {
-              "words": "IT DRAFTS WHILE YOU TALK",
-              "picture": "A whiteboard filling in"
-            },
-            {
-              "words": "IT SKIPS OUTSIDE GUESTS",
-              "picture": "A staff-only door"
-            },
-            {
-              "words": "THREE HOUSE RULES",
-              "picture": "A checklist"
-            }
-          ],
-          "tone": "Light and practical",
-          "kit": "Brand kit, infographic style"
-        },
-        "learned_from": [
-          "Your note on the proactive-agent piece (2 Nov): \"literally give instructions as I gave my friend\""
-        ],
+        "note_on_date": "From 6 Nov, older than the 7 to 10 days asked for; the Variety original is paywalled and was not opened, so the quote is Filmstories' report of it.",
         "read_back": {
           "readers": [
-            "Fresh reader A (Sonnet, a 12-year-old reading once, 16 Nov)",
-            "Fresh reader B (Haiku, a 12-year-old reading once, 16 Nov)"
+            "Fresh reader A (Sonnet subagent, a 12-year-old reading once, 26 Nov)",
+            "Fresh reader B (Haiku subagent, a 12-year-old reading once, 26 Nov)"
           ],
           "says": [
-            "An AI note-taker is now sitting in your meetings, with three house rules for it.",
-            "An AI robot joins a video call and takes the notes, with three house rules for it."
+            "Hollywood studios reject VFX bids that have no AI plan.",
+            "Movie studios tell effects companies they will not hire them unless they have a plan for AI."
           ],
           "against": 49
         }
@@ -1880,465 +2124,1992 @@
     "sat": [
       {
         "id": "goodnews",
-        "weekly": "good_news",
-        "format": "Uplifting AI news carousel, 7 cards, 4:5",
-        "stories_due": "2026-11-16",
-        "topic": "AI in the hospital this week",
+        "kind": "good_news",
+        "format": "Good news carousel, 6 cards, 4:5",
+        "set": "good-news",
+        "make": {
+          "command": "python scripts/library/make_piece.py <piece folder> --set good-news",
+          "set": "good-news",
+          "slides": 6,
+          "note": "Library good-news set: the cover carries story 1 (its photo and its source page as the proof), four items carry stories 2 to 5, the close shows all five photos. The document slot needs the proof and proof_ink_px at make time."
+        },
+        "source_tag": "trade_press",
+        "topic": "Five makers and fans AI helped this week",
+        "stories_due": "2026-11-26",
         "source": {
-          "label": "Your saved post asking for a positive ray of sunshine, and each story's own source",
-          "url": "https://nyulangone.org/news/ai-predicts-ptsd-risk-based-stories-about-what-brought-patients-emergency-room"
+          "label": "Edaily, 26 Nov 2026",
+          "url": "https://en.edaily.co.kr/news/eda202611265584/"
         },
-        "hook": "AI in the hospital this week: five good things.",
-        "copy": "Five real stories from one week of AI in hospitals: catching PTSD risk early, giving a woman with ALS her voice back, reading 7,800 heart records, sparing lung cancer patients a rushed test, and giving nurses time back. Found again and checked on 16 Nov; each is checked against its source once more before it is made, because it posts about two weeks later. NYU Langone's only photo for story 1 is a Getty stock image, so its card shows NYU's own announcement page instead.",
+        "hook": "This week AI gave a K-pop duo its late singer back. Four more good things.",
+        "copy": "Five real stories from this week, one from each corner of the creative world: a K-pop duo released new songs with its late member's voice, a quiet four-minute AI short won a Grand Prix where 40% of entrants were first-time filmmakers, Champions League fans can now see who moved the ball, a podcaster passed 22 million YouTube subscribers with AI research and dubbing, and London gets a free gallery for AI art. All dated 22 to 26 Nov, each checked at its source with its own photo.",
         "pitch": {
-          "see": "A title card, then one card per story: its real headline, its own photo, one line on why it matters, and its source and date; a last card asks which one you would want in your hospital.",
-          "lands": "Good news people save, because every story is real and shown.",
-          "why_now": "Five stories from 9 to 13 Nov 2026, checked again on 16 Nov.",
-          "share": "Five good things AI did in hospitals this week."
-        },
-        "direction": {
-          "look": "The positive post you saved, with each story's real photo, and a hilarious generated cover",
-          "format": "Uplifting AI news carousel, 7 cards, 4:5",
-          "frames": [
-            {
-              "words": "AI IN THE HOSPITAL THIS WEEK",
-              "picture": "A generated cover: the house robot in scrubs proudly holding a clipboard upside down"
-            },
-            {
-              "words": "STORY 1: ITS REAL HEADLINE",
-              "picture": "Its own photo, source and date small"
-            },
-            {
-              "words": "STORY 2: ITS REAL HEADLINE",
-              "picture": "Its own photo"
-            },
-            {
-              "words": "STORY 3: ITS REAL HEADLINE",
-              "picture": "Its own photo"
-            },
-            {
-              "words": "STORY 4: ITS REAL HEADLINE",
-              "picture": "Its own photo"
-            },
-            {
-              "words": "STORY 5: ITS REAL HEADLINE",
-              "picture": "Its own photo"
-            },
-            {
-              "words": "WHICH ONE WOULD YOU WANT IN YOUR HOSPITAL?",
-              "picture": "Five thumbnails"
-            }
-          ],
-          "tone": "Warm and true",
-          "kit": "Brand kit, sun yellow"
-        },
-        "learned_from": [
-          "Your Improve on the 14 Nov good news (3 Nov): \"Real-world stories only, but with a hilarious generated cover page\"",
-          "Your Improve (2 Nov): \"I want actual news items and the content we are going to use here - embedded real world images or videos\""
-        ],
-        "returns": {
-          "press": "2026-11-02/queue/off-sat-goodnews",
-          "said": "I want actual news items and the content we are going to use here - embedded real world images or videos",
-          "answers": [],
-          "sources": [
-            {
-              "url": "https://nyulangone.org/news/ai-predicts-ptsd-risk-based-stories-about-what-brought-patients-emergency-room",
-              "date": "2026-11-09"
-            }
-          ]
-        },
-        "stories": [
-          {
-            "headline": "AI spots who may get PTSD from what they say in A&E",
-            "what": "Doctors at NYU Langone let an AI read the stories patients told about why they came to the emergency room, and it flagged every one of 30 people who later developed PTSD.",
-            "why": "Only about 28 percent of US emergency rooms routinely screen for PTSD, so catching it early could get people help sooner.",
-            "kind": "health",
-            "date": "2026-11-09",
-            "source": {
-              "label": "NYU Langone Health news, 9 Nov 2026",
-              "url": "https://nyulangone.org/news/ai-predicts-ptsd-risk-based-stories-about-what-brought-patients-emergency-room"
-            },
-            "media": {
-              "kind": "photo",
-              "url": "https://nyulangone.org/news/sites/default/files/styles/hero/public/2026-08/NH_GettyImages-2197450644.jpg?h=06ac0d8c&itok=JdJ-iivU"
-            }
-          },
-          {
-            "headline": "A woman with ALS speaks again in her own voice",
-            "what": "Anne-Marie Poirier, who has ALS, types a few words into the Vocality app and it speaks a full sentence in a voice built from her own recordings.",
-            "why": "People losing their speech can keep talking to their families in a voice that sounds like them.",
-            "kind": "people",
-            "date": "2026-11-11",
-            "source": {
-              "label": "Global News (The Canadian Press), 11 Nov 2026",
-              "url": "https://globalnews.ca/news/12147285/quebec-woman-als-ai-voice-app"
-            },
-            "media": {
-              "kind": "photo",
-              "url": "https://globalnews.ca/wp-content/uploads/2026/11/c75cdc637fd60095cac21aba396acbb56fe7325dd73fc5cc25f58f485e8ef89a.jpg?quality=65&strip=all"
-            }
-          },
-          {
-            "headline": "AI read 7,800 heart patients' records in a fraction of the time",
-            "what": "Cleveland Clinic used an AI to review the records of more than 7,800 heart valve patients and predict whose new valve may wear out.",
-            "why": "Chart review that would have taken doctors years by hand now helps plan each patient's care.",
-            "kind": "health",
-            "date": "2026-11-13",
-            "source": {
-              "label": "NVIDIA blog, 13 Nov 2026",
-              "url": "https://blogs.nvidia.com/blog/how-ai-is-helping-care-teams/"
-            },
-            "media": {
-              "kind": "photo",
-              "url": "https://blogs.nvidia.com/wp-content/uploads/2026/11/Screenshot-2026-11-12-at-9.25.28-AM-1280x592.png"
-            }
-          },
-          {
-            "headline": "AI could spare one in three lung cancer patients a rushed test",
-            "what": "Doctors at Memorial Sloan Kettering and Mount Sinai showed an AI reading tissue slides could have let 26 of 80 lung cancer patients skip a rushed gene test without missing anyone who needed it.",
-            "why": "Fewer rushed tests means faster, cheaper answers and more tissue saved for the full test.",
-            "kind": "lab",
-            "date": "2026-11-13",
-            "source": {
-              "label": "Clinical Lab Products, AMP 2026 report, 13 Nov 2026",
-              "url": "https://clpmag.com/diagnostic-technologies/digital-pathology/ai-tools-cancer-classification-reporting-amp-2026/"
-            },
-            "media": {
-              "kind": "photo",
-              "url": "https://images.ctfassets.net/iujm5coq335o/nh8PTB9sk2mkJJRR4P889/e407c12bd35839440dfa8ecc7bc8f5a5/EGFR_AI_02.jpg"
-            }
-          },
-          {
-            "headline": "Sensors that give nurses time back raise $5.5 million",
-            "what": "Akara, a Trinity College Dublin spinout, raised $5.5 million for sensors and AI that track how hospital rooms are used without filming anyone.",
-            "why": "As much as 40% of nursing time goes on admin, so taking some of it away leaves more time for patients.",
-            "kind": "work",
-            "date": "2026-11-11",
-            "source": {
-              "label": "Trinity College Dublin news, 11 Nov 2026",
-              "url": "https://www.tcd.ie/news_events/top-stories/featured/akara-funding-round/"
-            },
-            "media": {
-              "kind": "photo",
-              "url": "https://pxl01-tcdie.terminalfour.net/prod01/channel_3/media/tcd/news-images/Akara-Founders-RS-800X582.jpg"
-            }
-          }
-        ],
-        "recommended": true,
-        "read_back": {
-          "readers": [
-            "Fresh reader A (Sonnet, a 12-year-old reading once, 16 Nov)",
-            "Fresh reader B (Haiku, a 12-year-old reading once, 16 Nov)"
-          ],
-          "says": [
-            "Cards about five good things AI did in hospitals this week, each with a real story and source.",
-            "Five good things AI did in hospitals this week, one card each with headline, photo, source and date."
-          ],
-          "against": 49,
-          "note": "Both readers named only the weekly format as a repeat of earlier good-news posts; a weekly series recurs by design, and its stories are new."
+          "see": "A cover of DEUX's new album sleeve with the late singer's name on the credits, then one card per story with its own photo: the festival winner, Prime Video's arrows on the pitch, the podcast studio, the King's Cross gallery, and a close with all five photos.",
+          "lands": "Five named people and places from music, film, sport, creators and art, each better off because of AI, all from this week.",
+          "why_now": "All five were reported between 22 and 26 Nov 2026.",
+          "share": "Five good things AI did for makers and fans this week."
         },
         "shape": "theme",
         "aim": "interest",
-        "funny": "Cover: the house robot in scrubs proudly holding its clipboard upside down, while five real stories do the work."
-      },
-      {
-        "id": "builditself",
-        "supports": "fri",
-        "format": "Carousel, 6 cards, 4:5",
-        "source_tag": "his_press",
-        "source": {
-          "label": "AI Futures Project, 10 Nov 2026",
-          "url": "https://blog.aifutures.org/p/q35-timelines-update-looks-like-the"
-        },
-        "hook": "Is AI building itself? Four facts and one myth.",
-        "copy": "Six cards for Friday's big question: four checked facts (a quarter of one lab's research tasks led by its AI, research about twice as fast, the forecasters' 2027 date) and the one myth (that a model already builds the next one alone).",
-        "pitch": {
-          "see": "Six cards: a robot holding a smaller robot it built; then a FACT stamp on four cards, each with its number and source; a MYTH stamp on the fifth; a last card asks what you think.",
-          "lands": "It sorts the scariest AI claim into real and not yet, simply.",
-          "why_now": "AI Futures Project update, 10 Nov 2026.",
-          "share": "AI writes most of its own code now. It does not build itself yet."
-        },
+        "funny": "The cover plays the comeback straight: a duo's first album in 31 years, and the late singer is on it.",
         "cards": [
           {
-            "words": "Is AI building itself?",
-            "picture": "The house robot holding up a smaller robot it has just screwed together"
+            "words": "A K-pop duo sang again with its late member. Five good things from this week.",
+            "picture": "Story 1's own photo (Edaily, 26 Nov 2026), with the source page as proof"
           },
           {
-            "words": "FACT: METR estimates AI roughly doubles the speed of Anthropic's research",
-            "picture": "A code page with most lines highlighted"
+            "words": "A four-minute AI short won a Grand Prix. 40% of the Australian entrants were first-time filmmakers.",
+            "picture": "The story's own photo, B&T, 25 Nov 2026"
           },
           {
-            "words": "FACT: Claude led about 26% of research tasks by August",
-            "picture": "A quarter of a pie"
+            "words": "Football fans can now see who moved the ball. It debuted on 24 Nov, on Arsenal against Borussia Dortmund.",
+            "picture": "The story's own photo, SVG Europe, 23 Nov 2026"
           },
           {
-            "words": "FACT: the AI Futures authors all now forecast 2027",
-            "picture": "A calendar on 2027"
+            "words": "A podcaster passed Rogan on YouTube with AI. Over 22 million subscribers; audience outside India up from 3% to 22%.",
+            "picture": "The story's own photo, Fortune, 22 Nov 2026"
           },
           {
-            "words": "MYTH: an AI already builds the next AI alone",
-            "picture": "The robot with a person still holding the screwdriver"
+            "words": "London gets a free gallery for AI art. It runs from 9 Dec 2026 to August 2027, free to all.",
+            "picture": "The story's own photo, FAD Magazine, 25 Nov 2026"
           },
           {
-            "words": "Real, myth, or too early to tell?",
-            "picture": "Three buttons"
+            "words": "Five stories. One good week.",
+            "picture": "The five story photos in a row above the house close"
           }
         ],
         "direction": {
-          "look": "Fact and myth stamps in the brand kit",
-          "format": "Carousel, 6 cards, 4:5",
+          "look": "v5 Library good-news set: each story's own credited photo, house palette and grain",
+          "format": "6 cards, 4:5",
           "frames": [
             {
-              "words": "IS AI BUILDING ITSELF?",
-              "picture": "Robot building a robot"
+              "words": "A K-POP DUO SANG AGAIN WITH ITS LATE MEMBER. FIVE GOOD THINGS FROM THIS WEEK.",
+              "picture": "Story 1's own photo (Edaily, 26 Nov 2026), with the source page as proof"
             },
             {
-              "words": "FACT: RESEARCH ABOUT TWICE AS FAST",
-              "picture": "A stopwatch running at double speed"
+              "words": "A FOUR-MINUTE AI SHORT WON A GRAND PRIX. 40% OF THE AUSTRALIAN ENTRANTS WERE FIRST-TIME FILMMAKERS.",
+              "picture": "The story's own photo, B&T, 25 Nov 2026"
             },
             {
-              "words": "FACT: 26% OF RESEARCH TASKS",
-              "picture": "Pie"
+              "words": "FOOTBALL FANS CAN NOW SEE WHO MOVED THE BALL. IT DEBUTED ON 24 NOV, ON ARSENAL AGAINST BORUSSIA DORTMUND.",
+              "picture": "The story's own photo, SVG Europe, 23 Nov 2026"
             },
             {
-              "words": "FACT: THE FORECASTERS SAY 2027",
-              "picture": "Calendar"
+              "words": "A PODCASTER PASSED ROGAN ON YOUTUBE WITH AI. OVER 22 MILLION SUBSCRIBERS; AUDIENCE OUTSIDE INDIA UP FROM 3% TO 22%.",
+              "picture": "The story's own photo, Fortune, 22 Nov 2026"
             },
             {
-              "words": "MYTH: IT BUILDS ITSELF ALONE",
-              "picture": "A person still holding the screwdriver"
+              "words": "LONDON GETS A FREE GALLERY FOR AI ART. IT RUNS FROM 9 DEC 2026 TO AUGUST 2027, FREE TO ALL.",
+              "picture": "The story's own photo, FAD Magazine, 25 Nov 2026"
             },
             {
-              "words": "WHAT DO YOU THINK?",
-              "picture": "Three buttons"
+              "words": "FIVE STORIES. ONE GOOD WEEK.",
+              "picture": "The five story photos in a row above the house close"
             }
           ],
-          "tone": "Calm, clear",
-          "kit": "Brand kit, mind.the.gap pill"
+          "tone": "Warm and true, one dry line on the cover",
+          "kit": "v5 Library good-news set, Anton, Fraunces and DM Mono"
         },
-        "learned_from": [
-          "Your Save as a trend (9 Nov): \"needs to be really substantiated properly as to what's actually real and what's myth\""
+        "library": {
+          "carousel-good-news-cover": {
+            "headline_1": "A K-pop duo sang again with its late member",
+            "body_1": "Five good things from this week."
+          },
+          "carousel-good-news-item": {
+            "headline_1": "A four-minute AI short won a Grand Prix",
+            "body_1": "40% of the Australian entrants were first-time filmmakers."
+          },
+          "carousel-good-news-item-2": {
+            "headline_1": "Football fans can now see who moved the ball",
+            "body_1": "It debuted on 24 Nov, on Arsenal against Borussia Dortmund."
+          },
+          "carousel-good-news-item-3": {
+            "headline_1": "A podcaster passed Rogan on YouTube with AI",
+            "body_1": "Over 22 million subscribers; audience outside India up from 3% to 22%."
+          },
+          "carousel-good-news-item-4": {
+            "headline_1": "London gets a free gallery for AI art",
+            "body_1": "It runs from 9 Dec 2026 to August 2027, free to all."
+          },
+          "carousel-good-news-close": {
+            "body_1": "Five stories. One good week.",
+            "label_1": "makeyourmindup.ai"
+          }
+        },
+        "stories": [
+          {
+            "headline": "A K-pop duo sang again with its late member",
+            "what": "DEUX released its first studio album in 31 years, with new songs that carry an AI recreation of the late Kim Sung-jae's voice, built from the recordings he left.",
+            "why": "\"We've been able to release a new song featuring Seong-jae's voice.\"",
+            "kind": "music",
+            "helps": {
+              "who": "a band and its fans",
+              "how": "happier"
+            },
+            "date": "2026-11-26",
+            "source": {
+              "label": "Edaily, 26 Nov 2026",
+              "url": "https://en.edaily.co.kr/news/eda202611265584/"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://eda.edailystatic.com/data/eda/image/2026/11/26/eda20261126100681.1280x.0.png"
+            }
+          },
+          {
+            "headline": "A four-minute AI short won a Grand Prix",
+            "what": "Jamin Tasker's AI-assisted short Everything Soft won the Grand Prix at TBWA's DISRUPT AI Film Festival in Australia.",
+            "why": "40% of the Australian entrants were first-time filmmakers.",
+            "kind": "film_tv",
+            "helps": {
+              "who": "first-time filmmakers",
+              "how": "more successful"
+            },
+            "date": "2026-11-25",
+            "source": {
+              "label": "B&T, 25 Nov 2026",
+              "url": "https://bandt.com.au/jamin-tasker-wins-grand-prix-at-tbwas-disrupt-ai-film-festival"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://www.bandt.com.au/information/uploads/2026/11/TBWA-AI-film-festival.jpg"
+            }
+          },
+          {
+            "headline": "Football fans can now see who moved the ball",
+            "what": "Prime Video's new Progressive Actions graphics use AI to pick out the passes and carries that move a team up the pitch, and name the player, live on Champions League coverage.",
+            "why": "It debuted on 24 Nov, on Arsenal against Borussia Dortmund.",
+            "kind": "sports",
+            "helps": {
+              "who": "Champions League viewers",
+              "how": "smarter"
+            },
+            "date": "2026-11-23",
+            "source": {
+              "label": "SVG Europe, 23 Nov 2026",
+              "url": "https://www.svgeurope.org/blog/top-stories/prime-video-launches-new-feature-for-champions-league-coverage/"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://www.svgeurope.org/wp-content/blogs.dir/17/files/2026/11/Prime_Video_Progressive_Actions_pass_715x429.jpg"
+            }
+          },
+          {
+            "headline": "A podcaster passed Rogan on YouTube with AI",
+            "what": "Raj Shamani's Figuring Out team uses AI to research guests and a ten-person team backed by AI agents, and dubs episodes into Hindi, English and Spanish.",
+            "why": "Over 22 million subscribers; audience outside India up from 3% to 22%.",
+            "kind": "creators",
+            "helps": {
+              "who": "a podcaster and his team",
+              "how": "more successful"
+            },
+            "date": "2026-11-22",
+            "source": {
+              "label": "Fortune, 22 Nov 2026",
+              "url": "https://fortune.com/2026/11/22/raj-shamani-figuring-out-podcast-joe-rogan-steven-bartlett-youtube-subscribers/"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://fortune.com/img-assets/wp-content/uploads/2026/11/PHOTO-2026-06-17-14-28-39.jpg?format=webp&w=1440&quality=75"
+            }
+          },
+          {
+            "headline": "London gets a free gallery for AI art",
+            "what": "AI Exchange, a free gallery in King's Cross supported by Google DeepMind and run by independent curators, opens with Intelligences, showing Anna Ridler, Alexandra Daisy Ginsberg, DeeKay and others.",
+            "why": "It runs from 9 Dec 2026 to August 2027, free to all.",
+            "kind": "arts_design",
+            "helps": {
+              "who": "artists who work with AI",
+              "how": "more successful"
+            },
+            "date": "2026-11-25",
+            "source": {
+              "label": "FAD Magazine, 25 Nov 2026",
+              "url": "https://fadmagazine.com/2026/11/25/ai-exchange-london-intelligences/"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://fadmagazine.com/wp-content/uploads/Anna-Ridler_A-Catalogue-of-Exceptions-2026-detail-2_Image-courtesy-of-the-artist.JPG-1200x800.jpg"
+            }
+          }
         ],
-        "ties_to": "Fri: mind.the.gap, if you pick the AI building itself piece",
+        "candidates": [
+          {
+            "title": "A singing teacher sang on stage again",
+            "url": "https://elevenlabs.io/blog/impact-nyc-summit",
+            "place": "news",
+            "date": "2026-11-12"
+          },
+          {
+            "title": "A K-pop duo sang again with its late member",
+            "url": "https://en.edaily.co.kr/news/eda202611265584/",
+            "place": "news",
+            "date": "2026-11-26"
+          },
+          {
+            "title": "Spotify lets every artist block fake songs",
+            "url": "https://techcrunch.com/2026/11/17/spotifys-new-tool-aims-to-stop-deepfakes-from-being-attributed-to-real-artists/",
+            "place": "news",
+            "date": "2026-11-17"
+          },
+          {
+            "title": "Nile Rodgers made an AI video for sick kids",
+            "url": "https://stereogum.com/2516578/nile-rodgers-defends-new-ai-music-video/news",
+            "place": "news",
+            "date": "2026-11-05"
+          },
+          {
+            "title": "A brain implant let a singer sing a scale",
+            "url": "https://policy-wire.com/breakthrough-brain-implants-restore-speech-and-song-for-a-l-s-patients/",
+            "place": "news",
+            "date": "2026-11-14"
+          },
+          {
+            "title": "An orchestra played a symphony with an AI",
+            "url": "https://www.thecrimson.com/article/2026/11/9/already-and-not-yet-tod-machover-bso-review/",
+            "place": "news",
+            "date": "2026-11-09"
+          },
+          {
+            "title": "Independent artists get paid to train AI",
+            "url": "https://www.hypebot.com/ai-companies-want-independent-music-this-time-theyre-asking-permission/",
+            "place": "news",
+            "date": "2026-11-26"
+          },
+          {
+            "title": "A lost 1938 film came back from its stills",
+            "url": "https://www.placera.se/pressmeddelanden/iqiyi-iqiyi-revives-90-year-old-lost-film-with-nadoupro-shortlisted-for-the-ai-unit-at-the-golden-rooster-awards-20261106",
+            "place": "news",
+            "date": "2026-11-06"
+          },
+          {
+            "title": "Audio description for blind viewers in hours",
+            "url": "https://www.aboutamazon.eu/news/company-news/made-for-everyone-how-amazons-ai-helps-more-people-see-hear-and-enjoy-the-story",
+            "place": "news",
+            "date": "2026-11-24"
+          },
+          {
+            "title": "A filmmaker won $450,000 for an AI-made film",
+            "url": "https://www.euronews.com/2026/10/06/latvian-filmmaker-wins-400000-grand-prix-at-kazakhstans-ai-film-festival",
+            "place": "news",
+            "date": "2026-10-06"
+          },
+          {
+            "title": "A four-minute AI short won a Grand Prix",
+            "url": "https://bandt.com.au/jamin-tasker-wins-grand-prix-at-tbwas-disrupt-ai-film-festival",
+            "place": "news",
+            "date": "2026-11-25"
+          },
+          {
+            "title": "A Spanish newsroom launched in English",
+            "url": "https://theajp.org/28-local-newsrooms-experimented-with-ai/",
+            "place": "news",
+            "date": "2026-11-06"
+          },
+          {
+            "title": "One first-time developer sold 200,000 games",
+            "url": "https://lastwordongaming.com/2026/11/25/ai-assisted-slotbound-million/",
+            "place": "news",
+            "date": "2026-11-25"
+          },
+          {
+            "title": "The Bundesliga answers fans in 200 nations",
+            "url": "https://www.customerexperiencedive.com/news/how-a-german-football-league-scored-big-with-a-customer-service-upgrade/875407/",
+            "place": "news",
+            "date": "2026-11-24"
+          },
+          {
+            "title": "Sky Sports added AI live captions for fans",
+            "url": "https://www.hdtvtest.co.uk/news/sky-announces-live-ai-commentary-and-captions-for-premier-league-football",
+            "place": "news",
+            "date": "2026-10-21"
+          },
+          {
+            "title": "Football fans can now see who moved the ball",
+            "url": "https://www.svgeurope.org/blog/top-stories/prime-video-launches-new-feature-for-champions-league-coverage/",
+            "place": "news",
+            "date": "2026-11-23"
+          },
+          {
+            "title": "NASCAR found its best moments in 3m clips",
+            "url": "https://www.sportspro.com/opinions/broadcast-ott/perfect-memory-nascar-sports-content/",
+            "place": "news",
+            "date": "2026-11-12"
+          },
+          {
+            "title": "A runner built a free AI coach, came third",
+            "url": "https://the5krunner.com/2026/11/11/athlete-space-personal-ai-coach/",
+            "place": "news",
+            "date": "2026-11-11"
+          },
+          {
+            "title": "AI found the lost detail in an 1888 painting",
+            "url": "https://www.theartnewspaper.com/2026/11/13/ai-helps-conservators-uncover-lost-details-in-william-merritt-chase-painting",
+            "place": "news",
+            "date": "2026-11-13"
+          },
+          {
+            "title": "London gets a free gallery for AI art",
+            "url": "https://fadmagazine.com/2026/11/25/ai-exchange-london-intelligences/",
+            "place": "news",
+            "date": "2026-11-25"
+          },
+          {
+            "title": "A 4,000-year-old ritual came back in Berghain",
+            "url": "https://www.theartnewspaper.com/2026/11/25/ala-roushan-charles-stankievech-exhibition-berghain-nightclub-berlin-house-autotelic-foundation",
+            "place": "news",
+            "date": "2026-11-25"
+          },
+          {
+            "title": "A podcaster passed Rogan on YouTube with AI",
+            "url": "https://fortune.com/2026/11/22/raj-shamani-figuring-out-podcast-joe-rogan-steven-bartlett-youtube-subscribers/",
+            "place": "news",
+            "date": "2026-11-22"
+          },
+          {
+            "title": "The BBC kept Wimbledon fans watching longer",
+            "url": "https://www.sportspro.com/broadcast-ott/bbc-sport-ai-signals-wimbledon-broadcast/",
+            "place": "news",
+            "date": "2026-11-13"
+          },
+          {
+            "title": "An AI publisher has put out 8,000 authors",
+            "url": "https://fortune.com/2026/11/09/publisher-spines-raises-64-million-in-new-funding-to-accelerate-effort-to-automate-book-publishing-with-ai-agents/",
+            "place": "news",
+            "date": "2026-11-09"
+          },
+          {
+            "title": "A local news group grew its revenue 23%",
+            "url": "https://theajp.org/28-local-newsrooms-experimented-with-ai/",
+            "place": "news",
+            "date": "2026-11-06"
+          },
+          {
+            "title": "SIQA AI Music Awards: Aries Ivory wins Best Human+AI Hybrid Song (no photo of its own found)",
+            "url": "https://www.aimusicpreneur.com/ai-music-news/siqa-ai-music-awards-2026-winners-full-list/",
+            "place": "news",
+            "date": "2026-11-13"
+          },
+          {
+            "title": "Tidal clears fully AI tracks so human artists are found (on Thursday instead)",
+            "url": "https://techcrunch.com/2026/11/24/tidal-to-ban-and-remove-millions-of-ai-generated-tracks-as-ai-slop-inundates-music-streaming",
+            "place": "news",
+            "date": "2026-11-24"
+          },
+          {
+            "title": "Pinacoteca di Brera AI glasses describe eight works to blind visitors (stock photo only)",
+            "url": "https://mixed-news.com/en/meta-ai-glasses-pinacoteca-brera-sensing-art-eight-artworks/",
+            "place": "news",
+            "date": "2026-10-17"
+          }
+        ],
+        "stories_note": "Searched the news only on 26 Nov (Reddit, YouTube, LinkedIn and the sheet were not searched this run), so every candidate is from the news. Stories older than seven days stand where nothing in the week was as strong in their sector; each date is on the story.",
+        "learned_from": [
+          "Your Improve on the good news (2 Nov): \"I want actual news items and the content we are going to use here - embedded real world images or videos\"",
+          "Your Improve on the good news direction (9 Nov): \"Real-world stories only, but with a hilarious generated cover page\""
+        ],
+        "topic_kind": "other",
+        "weekly": "good_news",
+        "recommended": true,
         "read_back": {
           "readers": [
-            "Fresh reader A (Sonnet, a 12-year-old reading once, 16 Nov)",
-            "Fresh reader B (Haiku, a 12-year-old reading once, 16 Nov)"
+            "Fresh reader A (Sonnet subagent, a 12-year-old reading once, 26 Nov)",
+            "Fresh reader B (Haiku subagent, a 12-year-old reading once, 26 Nov)"
           ],
           "says": [
-            "Six cards sorting four facts and one myth about whether AI is building itself.",
-            "Is AI building itself? Four facts and one myth, each stamped and sourced."
+            "Five good-news AI stories, led by a K-pop duo getting their late singer back through AI.",
+            "Five good things AI did this week, starting with a K-pop duo getting its late singer's voice back."
           ],
-          "against": 49
-        },
-        "shape": "story",
-        "dive": "The labs now publish how much research their AI leads, so the myth and the facts can be told apart.",
-        "aim": "utility",
-        "funny": "Four facts, one myth, and a robot nervously checking its own homework.",
-        "lookalike": {
-          "pattern": "agents-did-it-alone",
-          "beats": "https://www.instagram.com/evolving.ai/p/DfiMWH2ACgp/",
-          "our_take": "Where the post marvels at agents building an operating system, we sort the measured facts from the myth."
+          "against": 49,
+          "repeat": "A weekly series by design: both readers and the same-story reader called its stories new; only the format recurs."
         }
       },
       {
-        "id": "salesagent",
-        "format": "Explainer carousel, 5 cards, 4:5",
-        "source_tag": "engine_research",
+        "id": "voices",
+        "kind": "good_news",
+        "format": "Good news carousel, 6 cards, 4:5",
+        "set": "good-news",
+        "make": {
+          "command": "python scripts/library/make_piece.py <piece folder> --set good-news",
+          "set": "good-news",
+          "slides": 6,
+          "note": "Library good-news set: the cover carries story 1 (its photo and its source page as the proof), four items carry stories 2 to 5, the close shows all five photos. The document slot needs the proof and proof_ink_px at make time."
+        },
+        "source_tag": "trade_press",
+        "topic": "Singers and musicians doing more with AI",
+        "stories_due": "2026-11-26",
         "source": {
-          "label": "The Tech Outlook, OpenAI introduces business profiles in ChatGPT (11 Nov 2026)",
-          "url": "https://www.thetechoutlook.com/news/apps/openai-introduces-business-profiles-in-chatgpt-with-business-agents-limited-to-eligible-us-businesses/"
+          "label": "ElevenLabs blog, 12 Nov 2026",
+          "url": "https://elevenlabs.io/blog/impact-nyc-summit"
         },
-        "hook": "Shops can now put their own AI helper inside ChatGPT.",
-        "copy": "An explainer on Businesses in ChatGPT: from 10 Nov, eligible businesses can claim a profile inside ChatGPT, and eligible US online shops can run their own AI helper to answer customers, in chats that are labelled and kept apart. Five cards on what it is and what a small business does next.",
+        "hook": "This month AI gave singers their voices, and their names, back.",
+        "copy": "Five real stories from the music world this month: a singing teacher who lost his voice to cancer sang on stage again, Spotify let every artist block songs faked under their name, Nile Rodgers made a charity video for sick children, a trained singer with ALS sang a scale through a brain implant, and independent artists now get paid when their songs train AI. Each is checked at its source, with its own photo.",
         "pitch": {
-          "see": "Five cards: a little shop drawn inside a chat bubble; then a card saying that from 10 Nov eligible businesses can claim a page in ChatGPT, one showing an eligible US shop's own AI helper answering a shopper's question, one showing that these chats are labelled and kept apart from ChatGPT's own answers, and a last card asking whether your customers would find you there.",
-          "lands": "It explains a new place customers will find you before your competitors notice it.",
-          "why_now": "OpenAI launched it in beta on 10 Nov 2026.",
-          "share": "The shop window moved into the chat."
+          "see": "A cover of a singing teacher back at the microphone, then one card per story with its own photo: Spotify's block button, Nile Rodgers in the studio, a singer's brain implant, Symphonic's artist payout, and a close with all five photos.",
+          "lands": "Five named musicians and the platforms around them, each better off because of AI, told in a swipe.",
+          "why_now": "Reported between 5 and 26 Nov 2026.",
+          "share": "Five good things AI did for musicians this month."
         },
+        "shape": "theme",
+        "aim": "interest",
+        "funny": "The cover is the only joke: a singing teacher getting his own voice back is the one comeback nobody can call a cover version.",
         "cards": [
           {
-            "words": "Your next customer might be a chatbot.",
-            "picture": "A shop window drawn inside a chat bubble"
+            "words": "A singing teacher sang on stage again. Five stories from the music world.",
+            "picture": "Story 1's own photo (ElevenLabs blog, 12 Nov 2026), with the source page as proof"
           },
           {
-            "words": "From 10 Nov, eligible businesses can claim a profile in ChatGPT",
-            "picture": "A profile card with a tick"
+            "words": "Spotify lets every artist block fake songs. Sony asked for 260,000 deepfake songs to come down in one month.",
+            "picture": "The story's own photo, TechCrunch, 17 Nov 2026"
           },
           {
-            "words": "Eligible US online shops: their own AI agent answers customers",
-            "picture": "Two chat bubbles talking"
+            "words": "Nile Rodgers made an AI video for sick kids. The charity single was due out on 20 Nov.",
+            "picture": "The story's own photo, Stereogum, 5 Nov 2026"
           },
           {
-            "words": "These chats are labelled and kept apart from yours",
-            "picture": "A labelled chat tab beside the main chat"
+            "words": "A brain implant let a singer sing a scale. Shown at the Society for Neuroscience: a first step back to song.",
+            "picture": "The story's own photo, Policy Wire, Nov 2026, reporting the Society for Neuroscience presentation"
           },
           {
-            "words": "Would your customers find you there?",
-            "picture": "The shop window, lights on"
+            "words": "Independent artists get paid to train AI. In Symphonic's AI licensing programme, artists get 80% of net revenue.",
+            "picture": "The story's own photo, Hypebot, 26 Nov 2026 (deal announced 18 Nov)"
+          },
+          {
+            "words": "Five musicians. One good month.",
+            "picture": "The five story photos in a row above the house close"
           }
         ],
         "direction": {
-          "look": "The infographic style you saved: one idea per card",
-          "format": "Explainer carousel, 5 cards, 4:5",
+          "look": "v5 Library good-news set: each story's own credited photo, house palette and grain",
+          "format": "6 cards, 4:5",
           "frames": [
             {
-              "words": "THE SHOP WINDOW MOVED INTO THE CHAT",
-              "picture": "Shop window in a chat bubble"
+              "words": "A SINGING TEACHER SANG ON STAGE AGAIN. FIVE STORIES FROM THE MUSIC WORLD.",
+              "picture": "Story 1's own photo (ElevenLabs blog, 12 Nov 2026), with the source page as proof"
             },
             {
-              "words": "CLAIM YOUR PROFILE",
-              "picture": "Profile card"
+              "words": "SPOTIFY LETS EVERY ARTIST BLOCK FAKE SONGS. SONY ASKED FOR 260,000 DEEPFAKE SONGS TO COME DOWN IN ONE MONTH.",
+              "picture": "The story's own photo, TechCrunch, 17 Nov 2026"
             },
             {
-              "words": "YOUR AGENT ANSWERS",
-              "picture": "Two bubbles"
+              "words": "NILE RODGERS MADE AN AI VIDEO FOR SICK KIDS. THE CHARITY SINGLE WAS DUE OUT ON 20 NOV.",
+              "picture": "The story's own photo, Stereogum, 5 Nov 2026"
             },
             {
-              "words": "LABELLED, KEPT APART",
-              "picture": "A labelled chat tab"
+              "words": "A BRAIN IMPLANT LET A SINGER SING A SCALE. SHOWN AT THE SOCIETY FOR NEUROSCIENCE: A FIRST STEP BACK TO SONG.",
+              "picture": "The story's own photo, Policy Wire, Nov 2026, reporting the Society for Neuroscience presentation"
             },
             {
-              "words": "WOULD THEY FIND YOU?",
-              "picture": "Lit window"
+              "words": "INDEPENDENT ARTISTS GET PAID TO TRAIN AI. IN SYMPHONIC'S AI LICENSING PROGRAMME, ARTISTS GET 80% OF NET REVENUE.",
+              "picture": "The story's own photo, Hypebot, 26 Nov 2026 (deal announced 18 Nov)"
+            },
+            {
+              "words": "FIVE MUSICIANS. ONE GOOD MONTH.",
+              "picture": "The five story photos in a row above the house close"
             }
           ],
-          "tone": "Practical",
-          "kit": "Brand kit, mint"
+          "tone": "Warm and true, one dry line on the cover",
+          "kit": "v5 Library good-news set, Anton, Fraunces and DM Mono"
         },
-        "learned_from": [
-          "Your note on the translator meme (2 Nov): \"POV: your AI agent trying to communicate with your customer's AI agent\""
+        "library": {
+          "carousel-good-news-cover": {
+            "headline_1": "A singing teacher sang on stage again",
+            "body_1": "Five stories from the music world."
+          },
+          "carousel-good-news-item": {
+            "headline_1": "Spotify lets every artist block fake songs",
+            "body_1": "Sony asked for 260,000 deepfake songs to come down in one month."
+          },
+          "carousel-good-news-item-2": {
+            "headline_1": "Nile Rodgers made an AI video for sick kids",
+            "body_1": "The charity single was due out on 20 Nov."
+          },
+          "carousel-good-news-item-3": {
+            "headline_1": "A brain implant let a singer sing a scale",
+            "body_1": "Shown at the Society for Neuroscience: a first step back to song."
+          },
+          "carousel-good-news-item-4": {
+            "headline_1": "Independent artists get paid to train AI",
+            "body_1": "In Symphonic's AI licensing programme, artists get 80% of net revenue."
+          },
+          "carousel-good-news-close": {
+            "body_1": "Five musicians. One good month.",
+            "label_1": "makeyourmindup.ai"
+          }
+        },
+        "stories": [
+          {
+            "headline": "A singing teacher sang on stage again",
+            "what": "Greg Kellner, a New York singing teacher who lost his singing voice to brain cancer in 2019, sang a new song at the ElevenLabs New York Summit on 11 Nov with a voice rebuilt from his old recordings. Abdi Omar, who has cerebral palsy and never had a spoken voice, sang with a voice he designed himself.",
+            "why": "The same programme has helped more than 11,000 people, it says.",
+            "kind": "music",
+            "helps": {
+              "who": "singers who lost their voices",
+              "how": "happier"
+            },
+            "date": "2026-11-12",
+            "source": {
+              "label": "ElevenLabs blog, 12 Nov 2026",
+              "url": "https://elevenlabs.io/blog/impact-nyc-summit"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://elevenlabs.io/_next/image?url=https%3A%2F%2Feleven-public-cdn.elevenlabs.io%2Fpayloadcms%2Fhzu606cgpup-2304662705.webp&w=3840&q=80"
+            }
+          },
+          {
+            "headline": "Spotify lets every artist block fake songs",
+            "what": "Spotify rolled out Artist Profile Protection to all artists on 17 Nov, after eight months of testing with thousands of them: an artist can now block releases someone tries to put under their name.",
+            "why": "Sony asked for 260,000 deepfake songs to come down in one month.",
+            "kind": "music",
+            "helps": {
+              "who": "musicians whose names get faked",
+              "how": "better"
+            },
+            "date": "2026-11-17",
+            "source": {
+              "label": "TechCrunch, 17 Nov 2026",
+              "url": "https://techcrunch.com/2026/11/17/spotifys-new-tool-aims-to-stop-deepfakes-from-being-attributed-to-real-artists/"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://techcrunch.com/wp-content/uploads/2026/11/Hero-asset.png"
+            }
+          },
+          {
+            "headline": "Nile Rodgers made an AI video for sick kids",
+            "what": "Nile Rodgers, 74, made an AI-animated video for his charity single The Christmas Song, to cheer up ill and bedridden children, and defended it to fans.",
+            "why": "The charity single was due out on 20 Nov.",
+            "kind": "music",
+            "helps": {
+              "who": "a songwriter raising money for children",
+              "how": "more successful"
+            },
+            "date": "2026-11-05",
+            "source": {
+              "label": "Stereogum, 5 Nov 2026",
+              "url": "https://stereogum.com/2516578/nile-rodgers-defends-new-ai-music-video/news"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://lede-admin.stereogum.com/wp-content/uploads/sites/64/2026/11/Nile-Rodgers.jpeg?w=2880"
+            }
+          },
+          {
+            "headline": "A brain implant let a singer sing a scale",
+            "what": "Researchers at UC Davis showed experimental brain implants that let a trained singer with ALS sing a musical scale again, and another man with ALS speak.",
+            "why": "Shown at the Society for Neuroscience: a first step back to song.",
+            "kind": "health",
+            "helps": {
+              "who": "a trained singer with ALS",
+              "how": "happier"
+            },
+            "date": "2026-11-14",
+            "source": {
+              "label": "Policy Wire, Nov 2026, reporting the Society for Neuroscience presentation",
+              "url": "https://policy-wire.com/breakthrough-brain-implants-restore-speech-and-song-for-a-l-s-patients/"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://media.policy-wire.com/2026/11/pw_editorial_00dqrl6r.jpg"
+            }
+          },
+          {
+            "headline": "Independent artists get paid to train AI",
+            "what": "AI music startup Sonilo signed an opt-in licensing deal with the distributor Symphonic, so independent artists and labels are paid when their recordings train its models.",
+            "why": "In Symphonic's AI licensing programme, artists get 80% of net revenue.",
+            "kind": "rights",
+            "helps": {
+              "who": "independent musicians",
+              "how": "more successful"
+            },
+            "date": "2026-11-26",
+            "source": {
+              "label": "Hypebot, 26 Nov 2026 (deal announced 18 Nov)",
+              "url": "https://www.hypebot.com/ai-companies-want-independent-music-this-time-theyre-asking-permission/"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://storage.ghost.io/c/3a/95/3a957c06-c825-4057-9939-0a274cc16d23/content/images/size/w652/format/webp/2026/11/11-25-sonilo.jpg"
+            }
+          }
         ],
+        "candidates": [
+          {
+            "title": "A singing teacher sang on stage again",
+            "url": "https://elevenlabs.io/blog/impact-nyc-summit",
+            "place": "news",
+            "date": "2026-11-12"
+          },
+          {
+            "title": "A K-pop duo sang again with its late member",
+            "url": "https://en.edaily.co.kr/news/eda202611265584/",
+            "place": "news",
+            "date": "2026-11-26"
+          },
+          {
+            "title": "Spotify lets every artist block fake songs",
+            "url": "https://techcrunch.com/2026/11/17/spotifys-new-tool-aims-to-stop-deepfakes-from-being-attributed-to-real-artists/",
+            "place": "news",
+            "date": "2026-11-17"
+          },
+          {
+            "title": "Nile Rodgers made an AI video for sick kids",
+            "url": "https://stereogum.com/2516578/nile-rodgers-defends-new-ai-music-video/news",
+            "place": "news",
+            "date": "2026-11-05"
+          },
+          {
+            "title": "A brain implant let a singer sing a scale",
+            "url": "https://policy-wire.com/breakthrough-brain-implants-restore-speech-and-song-for-a-l-s-patients/",
+            "place": "news",
+            "date": "2026-11-14"
+          },
+          {
+            "title": "An orchestra played a symphony with an AI",
+            "url": "https://www.thecrimson.com/article/2026/11/9/already-and-not-yet-tod-machover-bso-review/",
+            "place": "news",
+            "date": "2026-11-09"
+          },
+          {
+            "title": "Independent artists get paid to train AI",
+            "url": "https://www.hypebot.com/ai-companies-want-independent-music-this-time-theyre-asking-permission/",
+            "place": "news",
+            "date": "2026-11-26"
+          },
+          {
+            "title": "A lost 1938 film came back from its stills",
+            "url": "https://www.placera.se/pressmeddelanden/iqiyi-iqiyi-revives-90-year-old-lost-film-with-nadoupro-shortlisted-for-the-ai-unit-at-the-golden-rooster-awards-20261106",
+            "place": "news",
+            "date": "2026-11-06"
+          },
+          {
+            "title": "Audio description for blind viewers in hours",
+            "url": "https://www.aboutamazon.eu/news/company-news/made-for-everyone-how-amazons-ai-helps-more-people-see-hear-and-enjoy-the-story",
+            "place": "news",
+            "date": "2026-11-24"
+          },
+          {
+            "title": "A filmmaker won $450,000 for an AI-made film",
+            "url": "https://www.euronews.com/2026/10/06/latvian-filmmaker-wins-400000-grand-prix-at-kazakhstans-ai-film-festival",
+            "place": "news",
+            "date": "2026-10-06"
+          },
+          {
+            "title": "A four-minute AI short won a Grand Prix",
+            "url": "https://bandt.com.au/jamin-tasker-wins-grand-prix-at-tbwas-disrupt-ai-film-festival",
+            "place": "news",
+            "date": "2026-11-25"
+          },
+          {
+            "title": "A Spanish newsroom launched in English",
+            "url": "https://theajp.org/28-local-newsrooms-experimented-with-ai/",
+            "place": "news",
+            "date": "2026-11-06"
+          },
+          {
+            "title": "One first-time developer sold 200,000 games",
+            "url": "https://lastwordongaming.com/2026/11/25/ai-assisted-slotbound-million/",
+            "place": "news",
+            "date": "2026-11-25"
+          },
+          {
+            "title": "The Bundesliga answers fans in 200 nations",
+            "url": "https://www.customerexperiencedive.com/news/how-a-german-football-league-scored-big-with-a-customer-service-upgrade/875407/",
+            "place": "news",
+            "date": "2026-11-24"
+          },
+          {
+            "title": "Sky Sports added AI live captions for fans",
+            "url": "https://www.hdtvtest.co.uk/news/sky-announces-live-ai-commentary-and-captions-for-premier-league-football",
+            "place": "news",
+            "date": "2026-10-21"
+          },
+          {
+            "title": "Football fans can now see who moved the ball",
+            "url": "https://www.svgeurope.org/blog/top-stories/prime-video-launches-new-feature-for-champions-league-coverage/",
+            "place": "news",
+            "date": "2026-11-23"
+          },
+          {
+            "title": "NASCAR found its best moments in 3m clips",
+            "url": "https://www.sportspro.com/opinions/broadcast-ott/perfect-memory-nascar-sports-content/",
+            "place": "news",
+            "date": "2026-11-12"
+          },
+          {
+            "title": "A runner built a free AI coach, came third",
+            "url": "https://the5krunner.com/2026/11/11/athlete-space-personal-ai-coach/",
+            "place": "news",
+            "date": "2026-11-11"
+          },
+          {
+            "title": "AI found the lost detail in an 1888 painting",
+            "url": "https://www.theartnewspaper.com/2026/11/13/ai-helps-conservators-uncover-lost-details-in-william-merritt-chase-painting",
+            "place": "news",
+            "date": "2026-11-13"
+          },
+          {
+            "title": "London gets a free gallery for AI art",
+            "url": "https://fadmagazine.com/2026/11/25/ai-exchange-london-intelligences/",
+            "place": "news",
+            "date": "2026-11-25"
+          },
+          {
+            "title": "A 4,000-year-old ritual came back in Berghain",
+            "url": "https://www.theartnewspaper.com/2026/11/25/ala-roushan-charles-stankievech-exhibition-berghain-nightclub-berlin-house-autotelic-foundation",
+            "place": "news",
+            "date": "2026-11-25"
+          },
+          {
+            "title": "A podcaster passed Rogan on YouTube with AI",
+            "url": "https://fortune.com/2026/11/22/raj-shamani-figuring-out-podcast-joe-rogan-steven-bartlett-youtube-subscribers/",
+            "place": "news",
+            "date": "2026-11-22"
+          },
+          {
+            "title": "The BBC kept Wimbledon fans watching longer",
+            "url": "https://www.sportspro.com/broadcast-ott/bbc-sport-ai-signals-wimbledon-broadcast/",
+            "place": "news",
+            "date": "2026-11-13"
+          },
+          {
+            "title": "An AI publisher has put out 8,000 authors",
+            "url": "https://fortune.com/2026/11/09/publisher-spines-raises-64-million-in-new-funding-to-accelerate-effort-to-automate-book-publishing-with-ai-agents/",
+            "place": "news",
+            "date": "2026-11-09"
+          },
+          {
+            "title": "A local news group grew its revenue 23%",
+            "url": "https://theajp.org/28-local-newsrooms-experimented-with-ai/",
+            "place": "news",
+            "date": "2026-11-06"
+          },
+          {
+            "title": "SIQA AI Music Awards: Aries Ivory wins Best Human+AI Hybrid Song (no photo of its own found)",
+            "url": "https://www.aimusicpreneur.com/ai-music-news/siqa-ai-music-awards-2026-winners-full-list/",
+            "place": "news",
+            "date": "2026-11-13"
+          },
+          {
+            "title": "Tidal clears fully AI tracks so human artists are found (on Thursday instead)",
+            "url": "https://techcrunch.com/2026/11/24/tidal-to-ban-and-remove-millions-of-ai-generated-tracks-as-ai-slop-inundates-music-streaming",
+            "place": "news",
+            "date": "2026-11-24"
+          },
+          {
+            "title": "Pinacoteca di Brera AI glasses describe eight works to blind visitors (stock photo only)",
+            "url": "https://mixed-news.com/en/meta-ai-glasses-pinacoteca-brera-sensing-art-eight-artworks/",
+            "place": "news",
+            "date": "2026-10-17"
+          }
+        ],
+        "stories_note": "Searched the news only on 26 Nov (Reddit, YouTube, LinkedIn and the sheet were not searched this run), so every candidate is from the news. Stories older than seven days stand where nothing in the week was as strong in their sector; each date is on the story.",
+        "learned_from": [
+          "Your Improve on the good news (2 Nov): \"I want actual news items and the content we are going to use here - embedded real world images or videos\"",
+          "Your Improve on the good news direction (9 Nov): \"Real-world stories only, but with a hilarious generated cover page\""
+        ],
+        "topic_kind": "music",
+        "lookalike": {
+          "pattern": "everyday-rescue",
+          "beats": "https://www.instagram.com/evolving.ai/p/Dc8EA8BAFoE/",
+          "our_take": "Where the post asks whether a robot can write a symphony, we show five real musicians AI helped this month."
+        },
         "read_back": {
           "readers": [
-            "Fresh reader A (Sonnet, a 12-year-old reading once, 16 Nov)",
-            "Fresh reader B (Haiku, a 12-year-old reading once, 16 Nov)"
+            "Fresh reader A (Sonnet subagent, a 12-year-old reading once, 26 Nov)",
+            "Fresh reader B (Haiku subagent, a 12-year-old reading once, 26 Nov)"
           ],
           "says": [
-            "Cards explaining that shops can now put their own AI helper inside ChatGPT from 10 November.",
-            "Shops can put their own AI helper inside ChatGPT from 10 November, shown in a chat bubble with labels."
+            "Five stories about AI giving singers back their voices and names.",
+            "Five stories about AI giving singers their voices and names back."
           ],
           "against": 49
+        }
+      },
+      {
+        "id": "screens",
+        "kind": "good_news",
+        "format": "Good news carousel, 6 cards, 4:5",
+        "set": "good-news",
+        "make": {
+          "command": "python scripts/library/make_piece.py <piece folder> --set good-news",
+          "set": "good-news",
+          "slides": 6,
+          "note": "Library good-news set: the cover carries story 1 (its photo and its source page as the proof), four items carry stories 2 to 5, the close shows all five photos. The document slot needs the proof and proof_ink_px at make time."
         },
-        "shape": "story",
-        "dive": "Businesses can claim a profile inside ChatGPT, and US online shops can run their own agent there, in chats labelled and kept apart.",
+        "source_tag": "trade_press",
+        "topic": "Film, games and newsrooms making more with AI",
+        "stories_due": "2026-11-26",
+        "source": {
+          "label": "iQIYI via PR Newswire, 6 Nov 2026",
+          "url": "https://www.placera.se/pressmeddelanden/iqiyi-iqiyi-revives-90-year-old-lost-film-with-nadoupro-shortlisted-for-the-ai-unit-at-the-golden-rooster-awards-20261106"
+        },
+        "hook": "A lost 1938 film, a $450,000 prize, 200,000 games: AI on screen.",
+        "copy": "Five real stories of people on screens making more with AI, each with the move a maker can copy: a lost 1938 film was rebuilt from its stills, Prime Video cut audio description for blind viewers from weeks to hours, an AI film won a $450,000 prize, a first-time solo developer sold 200,000 copies of his game, and a Spanish-language newsroom launched in English. Each is checked at its source, with its own photo.",
+        "pitch": {
+          "see": "A cover of a surviving 1938 film still beside the rebuilt frame, then one card per story: Prime Video's audio description, the Astana winner, the Slotbound Steam page, the newsroom's first English newsletter, and a close with all five photos.",
+          "lands": "Each card is a move a maker can copy, with its number: rebuild from stills, describe in hours, ship alone, publish in a second language.",
+          "why_now": "Reported between 6 Oct and 25 Nov 2026; the Prime Video and Slotbound stories are from 24 and 25 Nov.",
+          "share": "One person sold 200,000 games with AI doing the code."
+        },
+        "shape": "theme",
         "aim": "utility",
-        "funny": "Your next customer might be a chatbot, and it would like to speak to your chatbot.",
-        "lookalike": {
-          "pattern": "big-tech-chess",
-          "beats": "https://www.instagram.com/therundownai/p/DfiNxE3Rp8Q/",
-          "our_take": "Where the post covers a deal between giants, we say what a small business does with ChatGPT's new shop window."
-        }
-      },
-      {
-        "id": "presszero",
-        "format": "Meme, 2 panels, 4:5",
-        "source_tag": "trade_press",
-        "source": {
-          "label": "Twilio press release, The AI expectations gap (9 Nov 2026)",
-          "url": "https://www.twilio.com/en-us/press/releases/the-ai-expectations-gap--twilio-s-report-finds-businesses-are-me"
-        },
-        "hook": "Companies: 86% of customers love our AI. Customers: HUMAN. HUMAN. HUMAN.",
-        "copy": "A meme on Twilio's survey: 86% of companies believe customers are happy with their AI customer service, 51% of customers agree, and 78% have tried to get past the AI to a person. It stands on its own.",
-        "pitch": {
-          "see": "Panel one: a smiling executive in front of a chart reading '86% happy'. Panel two: a customer on the phone shouting 'HUMAN' while mashing the zero key.",
-          "lands": "Everyone has shouted 'agent' at a phone line; the numbers say they are not alone.",
-          "why_now": "Twilio's report, 9 Nov 2026.",
-          "share": "86% of firms think you love their AI. 78% of you have tried to escape it."
-        },
-        "shape": "story",
-        "dive": "Firms measure their AI on speed while customers judge it on whether they can reach a person, so the two numbers drift apart.",
-        "aim": "humour",
-        "funny": "The boardroom chart says delighted; the customer is pressing zero for the ninth time.",
-        "lookalike": {
-          "pattern": "work-reality-check",
-          "beats": "https://www.instagram.com/therundownai/p/DfiNa2JkRhx/",
-          "our_take": "Where the post weighs AI against jobs, ours shows the gap between what firms believe and what customers do, and the fix: an easy way to a person."
-        },
+        "funny": "The cover plays it straight until the last line: a film lost for 88 years, back in two months.",
+        "cards": [
+          {
+            "words": "A lost 1938 film came back from its stills. Five makers, five big numbers.",
+            "picture": "Story 1's own photo (iQIYI via PR Newswire, 6 Nov 2026), with the source page as proof"
+          },
+          {
+            "words": "Audio description for blind viewers in hours. Nearly 80% of 99 blind users would use it with no human version.",
+            "picture": "The story's own photo, Amazon EU, 24 Nov 2026"
+          },
+          {
+            "words": "A filmmaker won $450,000 for an AI-made film. He beat more than 8,000 submissions from 125 countries.",
+            "picture": "The story's own photo, Euronews, 6 Oct 2026"
+          },
+          {
+            "words": "One first-time developer sold 200,000 games. 200,000 copies in six days, and $1,332,409 gross in its first week.",
+            "picture": "The story's own photo, Last Word on Gaming, 25 Nov 2026"
+          },
+          {
+            "words": "A Spanish newsroom launched in English. About 150 hours and $6,500 saved across the first five editions.",
+            "picture": "The story's own photo, American Journalism Project, 6 Nov 2026"
+          },
+          {
+            "words": "Five makers. Five big numbers.",
+            "picture": "The five story photos in a row above the house close"
+          }
+        ],
         "direction": {
-          "look": "Clean two-panel meme in the brand kit, drawn fresh",
-          "format": "Single image, 4:5",
+          "look": "v5 Library good-news set: each story's own credited photo, house palette and grain",
+          "format": "6 cards, 4:5",
           "frames": [
             {
-              "words": "COMPANIES: 86% OF CUSTOMERS LOVE OUR AI",
-              "picture": "A smiling executive in front of a rising chart"
+              "words": "A LOST 1938 FILM CAME BACK FROM ITS STILLS. FIVE MAKERS, FIVE BIG NUMBERS.",
+              "picture": "Story 1's own photo (iQIYI via PR Newswire, 6 Nov 2026), with the source page as proof"
             },
             {
-              "words": "CUSTOMERS:",
-              "picture": "Someone on the phone shouting 'HUMAN' and pressing zero"
+              "words": "AUDIO DESCRIPTION FOR BLIND VIEWERS IN HOURS. NEARLY 80% OF 99 BLIND USERS WOULD USE IT WITH NO HUMAN VERSION.",
+              "picture": "The story's own photo, Amazon EU, 24 Nov 2026"
+            },
+            {
+              "words": "A FILMMAKER WON $450,000 FOR AN AI-MADE FILM. HE BEAT MORE THAN 8,000 SUBMISSIONS FROM 125 COUNTRIES.",
+              "picture": "The story's own photo, Euronews, 6 Oct 2026"
+            },
+            {
+              "words": "ONE FIRST-TIME DEVELOPER SOLD 200,000 GAMES. 200,000 COPIES IN SIX DAYS, AND $1,332,409 GROSS IN ITS FIRST WEEK.",
+              "picture": "The story's own photo, Last Word on Gaming, 25 Nov 2026"
+            },
+            {
+              "words": "A SPANISH NEWSROOM LAUNCHED IN ENGLISH. ABOUT 150 HOURS AND $6,500 SAVED ACROSS THE FIRST FIVE EDITIONS.",
+              "picture": "The story's own photo, American Journalism Project, 6 Nov 2026"
+            },
+            {
+              "words": "FIVE MAKERS. FIVE BIG NUMBERS.",
+              "picture": "The five story photos in a row above the house close"
             }
           ],
-          "tone": "Deadpan",
-          "kit": "Brand kit, mint"
+          "tone": "Warm and true, one dry line on the cover",
+          "kit": "v5 Library good-news set, Anton, Fraunces and DM Mono"
         },
-        "learned_from": [
-          "Your Improve on the Home Depot meme (3 Nov): \"play on the hilarity of this topic\""
+        "library": {
+          "carousel-good-news-cover": {
+            "headline_1": "A lost 1938 film came back from its stills",
+            "body_1": "Five makers, five big numbers."
+          },
+          "carousel-good-news-item": {
+            "headline_1": "Audio description for blind viewers in hours",
+            "body_1": "Nearly 80% of 99 blind users would use it with no human version."
+          },
+          "carousel-good-news-item-2": {
+            "headline_1": "A filmmaker won $450,000 for an AI-made film",
+            "body_1": "He beat more than 8,000 submissions from 125 countries."
+          },
+          "carousel-good-news-item-3": {
+            "headline_1": "One first-time developer sold 200,000 games",
+            "body_1": "200,000 copies in six days, and $1,332,409 gross in its first week."
+          },
+          "carousel-good-news-item-4": {
+            "headline_1": "A Spanish newsroom launched in English",
+            "body_1": "About 150 hours and $6,500 saved across the first five editions."
+          },
+          "carousel-good-news-close": {
+            "body_1": "Five makers. Five big numbers.",
+            "label_1": "makeyourmindup.ai"
+          }
+        },
+        "stories": [
+          {
+            "headline": "A lost 1938 film came back from its stills",
+            "what": "An eight-person team used iQIYI's NadouPro AI platform to rebuild Visiting Shanghai after Sixty Years, a 1938 film lost for nearly 90 years, from surviving stills, posters and newspaper clippings, in two months.",
+            "why": "Shortlisted for the first AI unit at China's Golden Rooster Awards.",
+            "kind": "film_tv",
+            "helps": {
+              "who": "film historians and audiences",
+              "how": "smarter"
+            },
+            "date": "2026-11-06",
+            "source": {
+              "label": "iQIYI via PR Newswire, 6 Nov 2026",
+              "url": "https://www.placera.se/pressmeddelanden/iqiyi-iqiyi-revives-90-year-old-lost-film-with-nadoupro-shortlisted-for-the-ai-unit-at-the-golden-rooster-awards-20261106"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://mmx.prnewswire.com/media/MS2028964/20261106034642EST_image_4.jpg?id=OA3062623"
+            }
+          },
+          {
+            "headline": "Audio description for blind viewers in hours",
+            "what": "Amazon says its AI authoring tool cuts writing, recording and mixing audio description for blind viewers from weeks into hours, so more titles can carry it.",
+            "why": "Nearly 80% of 99 blind users would use it with no human version.",
+            "kind": "film_tv",
+            "helps": {
+              "who": "blind and partially sighted viewers",
+              "how": "happier"
+            },
+            "date": "2026-11-24",
+            "source": {
+              "label": "Amazon EU, 24 Nov 2026",
+              "url": "https://www.aboutamazon.eu/news/company-news/made-for-everyone-how-amazons-ai-helps-more-people-see-hear-and-enjoy-the-story"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://assets.aboutamazon.com/dims4/default/7a2c810/2147483647/strip/true/crop/3137x1766+0+41/resize/1240x698!/quality/90/?url=https%3A%2F%2Fassets.aboutamazon.com%2F21%2F0d%2Ff9cf0cce41adbbc153c2c188f2a9%2F20261110-124415c.png"
+            }
+          },
+          {
+            "headline": "A filmmaker won $450,000 for an AI-made film",
+            "what": "Latvian filmmaker Nikolay Shestak, who started making films with AI two years ago, won the Grand Prix at Kazakhstan's AI film festival in Astana for The First Honest Day.",
+            "why": "He beat more than 8,000 submissions from 125 countries.",
+            "kind": "film_tv",
+            "helps": {
+              "who": "an independent filmmaker",
+              "how": "more successful"
+            },
+            "date": "2026-10-06",
+            "source": {
+              "label": "Euronews, 6 Oct 2026",
+              "url": "https://www.euronews.com/2026/10/06/latvian-filmmaker-wins-400000-grand-prix-at-kazakhstans-ai-film-festival"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://images.euronews.com/articles/stories/09/93/92/42/1536x864_cmsv2_7cecc9dd-7306-5f0d-93f1-f62a32a1677c-9939242.jpg"
+            }
+          },
+          {
+            "headline": "One first-time developer sold 200,000 games",
+            "what": "Min Kim, a first-time solo developer, built the roguelite Slotbound with AI writing virtually all of its code and helping with its art and sound, and it went to the top of Steam.",
+            "why": "200,000 copies in six days, and $1,332,409 gross in its first week.",
+            "kind": "games",
+            "helps": {
+              "who": "a solo game developer",
+              "how": "more successful"
+            },
+            "date": "2026-11-25",
+            "source": {
+              "label": "Last Word on Gaming, 25 Nov 2026",
+              "url": "https://lastwordongaming.com/2026/11/25/ai-assisted-slotbound-million/"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://media.lastwordongaming.com/wp-content/uploads/2026/11/Slotbound-AI-Game-Makes-Over-1-Million-Dollars-1200x800.webp"
+            }
+          },
+          {
+            "headline": "A Spanish newsroom launched in English",
+            "what": "Enlace Latino NC, a Spanish-language local newsroom in North Carolina, used AI-assisted translation to launch its first English newsletter, and it drew new donors.",
+            "why": "About 150 hours and $6,500 saved across the first five editions.",
+            "kind": "media",
+            "helps": {
+              "who": "a small local newsroom",
+              "how": "more successful"
+            },
+            "date": "2026-11-06",
+            "source": {
+              "label": "American Journalism Project, 6 Nov 2026",
+              "url": "https://theajp.org/28-local-newsrooms-experimented-with-ai/"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://theajp.org/wp-content/uploads/2026/11/6534334-scaled.jpg"
+            }
+          }
         ],
+        "candidates": [
+          {
+            "title": "A singing teacher sang on stage again",
+            "url": "https://elevenlabs.io/blog/impact-nyc-summit",
+            "place": "news",
+            "date": "2026-11-12"
+          },
+          {
+            "title": "A K-pop duo sang again with its late member",
+            "url": "https://en.edaily.co.kr/news/eda202611265584/",
+            "place": "news",
+            "date": "2026-11-26"
+          },
+          {
+            "title": "Spotify lets every artist block fake songs",
+            "url": "https://techcrunch.com/2026/11/17/spotifys-new-tool-aims-to-stop-deepfakes-from-being-attributed-to-real-artists/",
+            "place": "news",
+            "date": "2026-11-17"
+          },
+          {
+            "title": "Nile Rodgers made an AI video for sick kids",
+            "url": "https://stereogum.com/2516578/nile-rodgers-defends-new-ai-music-video/news",
+            "place": "news",
+            "date": "2026-11-05"
+          },
+          {
+            "title": "A brain implant let a singer sing a scale",
+            "url": "https://policy-wire.com/breakthrough-brain-implants-restore-speech-and-song-for-a-l-s-patients/",
+            "place": "news",
+            "date": "2026-11-14"
+          },
+          {
+            "title": "An orchestra played a symphony with an AI",
+            "url": "https://www.thecrimson.com/article/2026/11/9/already-and-not-yet-tod-machover-bso-review/",
+            "place": "news",
+            "date": "2026-11-09"
+          },
+          {
+            "title": "Independent artists get paid to train AI",
+            "url": "https://www.hypebot.com/ai-companies-want-independent-music-this-time-theyre-asking-permission/",
+            "place": "news",
+            "date": "2026-11-26"
+          },
+          {
+            "title": "A lost 1938 film came back from its stills",
+            "url": "https://www.placera.se/pressmeddelanden/iqiyi-iqiyi-revives-90-year-old-lost-film-with-nadoupro-shortlisted-for-the-ai-unit-at-the-golden-rooster-awards-20261106",
+            "place": "news",
+            "date": "2026-11-06"
+          },
+          {
+            "title": "Audio description for blind viewers in hours",
+            "url": "https://www.aboutamazon.eu/news/company-news/made-for-everyone-how-amazons-ai-helps-more-people-see-hear-and-enjoy-the-story",
+            "place": "news",
+            "date": "2026-11-24"
+          },
+          {
+            "title": "A filmmaker won $450,000 for an AI-made film",
+            "url": "https://www.euronews.com/2026/10/06/latvian-filmmaker-wins-400000-grand-prix-at-kazakhstans-ai-film-festival",
+            "place": "news",
+            "date": "2026-10-06"
+          },
+          {
+            "title": "A four-minute AI short won a Grand Prix",
+            "url": "https://bandt.com.au/jamin-tasker-wins-grand-prix-at-tbwas-disrupt-ai-film-festival",
+            "place": "news",
+            "date": "2026-11-25"
+          },
+          {
+            "title": "A Spanish newsroom launched in English",
+            "url": "https://theajp.org/28-local-newsrooms-experimented-with-ai/",
+            "place": "news",
+            "date": "2026-11-06"
+          },
+          {
+            "title": "One first-time developer sold 200,000 games",
+            "url": "https://lastwordongaming.com/2026/11/25/ai-assisted-slotbound-million/",
+            "place": "news",
+            "date": "2026-11-25"
+          },
+          {
+            "title": "The Bundesliga answers fans in 200 nations",
+            "url": "https://www.customerexperiencedive.com/news/how-a-german-football-league-scored-big-with-a-customer-service-upgrade/875407/",
+            "place": "news",
+            "date": "2026-11-24"
+          },
+          {
+            "title": "Sky Sports added AI live captions for fans",
+            "url": "https://www.hdtvtest.co.uk/news/sky-announces-live-ai-commentary-and-captions-for-premier-league-football",
+            "place": "news",
+            "date": "2026-10-21"
+          },
+          {
+            "title": "Football fans can now see who moved the ball",
+            "url": "https://www.svgeurope.org/blog/top-stories/prime-video-launches-new-feature-for-champions-league-coverage/",
+            "place": "news",
+            "date": "2026-11-23"
+          },
+          {
+            "title": "NASCAR found its best moments in 3m clips",
+            "url": "https://www.sportspro.com/opinions/broadcast-ott/perfect-memory-nascar-sports-content/",
+            "place": "news",
+            "date": "2026-11-12"
+          },
+          {
+            "title": "A runner built a free AI coach, came third",
+            "url": "https://the5krunner.com/2026/11/11/athlete-space-personal-ai-coach/",
+            "place": "news",
+            "date": "2026-11-11"
+          },
+          {
+            "title": "AI found the lost detail in an 1888 painting",
+            "url": "https://www.theartnewspaper.com/2026/11/13/ai-helps-conservators-uncover-lost-details-in-william-merritt-chase-painting",
+            "place": "news",
+            "date": "2026-11-13"
+          },
+          {
+            "title": "London gets a free gallery for AI art",
+            "url": "https://fadmagazine.com/2026/11/25/ai-exchange-london-intelligences/",
+            "place": "news",
+            "date": "2026-11-25"
+          },
+          {
+            "title": "A 4,000-year-old ritual came back in Berghain",
+            "url": "https://www.theartnewspaper.com/2026/11/25/ala-roushan-charles-stankievech-exhibition-berghain-nightclub-berlin-house-autotelic-foundation",
+            "place": "news",
+            "date": "2026-11-25"
+          },
+          {
+            "title": "A podcaster passed Rogan on YouTube with AI",
+            "url": "https://fortune.com/2026/11/22/raj-shamani-figuring-out-podcast-joe-rogan-steven-bartlett-youtube-subscribers/",
+            "place": "news",
+            "date": "2026-11-22"
+          },
+          {
+            "title": "The BBC kept Wimbledon fans watching longer",
+            "url": "https://www.sportspro.com/broadcast-ott/bbc-sport-ai-signals-wimbledon-broadcast/",
+            "place": "news",
+            "date": "2026-11-13"
+          },
+          {
+            "title": "An AI publisher has put out 8,000 authors",
+            "url": "https://fortune.com/2026/11/09/publisher-spines-raises-64-million-in-new-funding-to-accelerate-effort-to-automate-book-publishing-with-ai-agents/",
+            "place": "news",
+            "date": "2026-11-09"
+          },
+          {
+            "title": "A local news group grew its revenue 23%",
+            "url": "https://theajp.org/28-local-newsrooms-experimented-with-ai/",
+            "place": "news",
+            "date": "2026-11-06"
+          },
+          {
+            "title": "SIQA AI Music Awards: Aries Ivory wins Best Human+AI Hybrid Song (no photo of its own found)",
+            "url": "https://www.aimusicpreneur.com/ai-music-news/siqa-ai-music-awards-2026-winners-full-list/",
+            "place": "news",
+            "date": "2026-11-13"
+          },
+          {
+            "title": "Tidal clears fully AI tracks so human artists are found (on Thursday instead)",
+            "url": "https://techcrunch.com/2026/11/24/tidal-to-ban-and-remove-millions-of-ai-generated-tracks-as-ai-slop-inundates-music-streaming",
+            "place": "news",
+            "date": "2026-11-24"
+          },
+          {
+            "title": "Pinacoteca di Brera AI glasses describe eight works to blind visitors (stock photo only)",
+            "url": "https://mixed-news.com/en/meta-ai-glasses-pinacoteca-brera-sensing-art-eight-artworks/",
+            "place": "news",
+            "date": "2026-10-17"
+          }
+        ],
+        "stories_note": "Searched the news only on 26 Nov (Reddit, YouTube, LinkedIn and the sheet were not searched this run), so every candidate is from the news. Stories older than seven days stand where nothing in the week was as strong in their sector; each date is on the story.",
+        "learned_from": [
+          "Your Improve on the good news (2 Nov): \"I want actual news items and the content we are going to use here - embedded real world images or videos\"",
+          "Your Improve on the good news direction (9 Nov): \"Real-world stories only, but with a hilarious generated cover page\""
+        ],
+        "topic_kind": "film_tv",
+        "lookalike": {
+          "pattern": "free-toolkit",
+          "beats": "https://www.instagram.com/evolving.ai/p/Dcs7D_6ADQB/",
+          "our_take": "Where the weekly roundup lists launches, we show five named makers each with the move and the number AI changed for them."
+        },
         "read_back": {
           "readers": [
-            "Fresh reader A (Sonnet, a 12-year-old reading once, 16 Nov)",
-            "Fresh reader B (Haiku, a 12-year-old reading once, 16 Nov)"
+            "Fresh reader A (Sonnet subagent, a 12-year-old reading once, 26 Nov)",
+            "Fresh reader B (Haiku subagent, a 12-year-old reading once, 26 Nov)"
           ],
           "says": [
-            "A joke picture: a company boasts 86% of customers love its AI while a customer shouts HUMAN and presses zero.",
-            "A bosses' 86 percent happy chart meets a customer shouting HUMAN while mashing zero."
+            "Five AI film and game stories, led by a 1938 film brought back.",
+            "Five stories about AI and screens: an old 1938 film, a big prize, and lots of games."
           ],
           "against": 49
         }
       },
       {
-        "id": "parentsban",
-        "format": "Meme, 2 panels, 4:5",
+        "id": "fans",
+        "kind": "good_news",
+        "format": "Good news carousel, 6 cards, 4:5",
+        "set": "good-news",
+        "make": {
+          "command": "python scripts/library/make_piece.py <piece folder> --set good-news",
+          "set": "good-news",
+          "slides": 6,
+          "note": "Library good-news set: the cover carries story 1 (its photo and its source page as the proof), four items carry stories 2 to 5, the close shows all five photos. The document slot needs the proof and proof_ink_px at make time."
+        },
         "source_tag": "trade_press",
+        "topic": "Sport fans and athletes getting more from AI",
+        "stories_due": "2026-11-26",
         "source": {
-          "label": "National Review, on the Institute for Family Studies poll of 2,000 parents (12 Nov 2026)",
-          "url": "https://www.nationalreview.com/news/politically-divided-parents-find-common-ground-in-concerns-about-ai-in-schools"
+          "label": "Customer Experience Dive, 24 Nov 2026",
+          "url": "https://www.customerexperiencedive.com/news/how-a-german-football-league-scored-big-with-a-customer-service-upgrade/875407/"
         },
-        "hook": "56% of parents want AI blocked at school. Meanwhile, at home:",
-        "copy": "A meme on the Institute for Family Studies poll: 56% of parents of school-age children want schools to fully block students' use of AI. The joke is the parent who just asked AI to write the email to the school. It stands on its own.",
+        "hook": "Football fans in 200 nations, and four more good AI sport stories.",
+        "copy": "Five real stories from sport: the Bundesliga answers fans in 200 nations, Sky Sports added AI live subtitles to the Premier League, NASCAR finds its best moments across three million clips, a runner built his own free AI coach and finished third, and the BBC kept Wimbledon viewers watching with AI. Each is checked at its source, with its own photo.",
         "pitch": {
-          "see": "Panel one: a parent at a school meeting, arms folded, under '56% of parents: block AI in schools'. Panel two: the same parent at home, typing 'write a polite email to my son's teacher' into a chatbot.",
-          "lands": "Every parent who has used AI for a tricky email will recognise themselves.",
-          "why_now": "The poll was reported on 12 Nov 2026.",
-          "share": "Ban it at school. Use it for the email to the school."
+          "see": "A cover of a Bundesliga stadium with a phone in a fan's hand answering in another language, then one card per story: Sky's captions, NASCAR's archive, a runner with his watch, the BBC's tennis data, and a close with all five photos.",
+          "lands": "Every fan, athlete and broadcaster gets something: answers, captions, highlights, a coach, a better match.",
+          "why_now": "Reported between 21 Oct and 24 Nov 2026; the Bundesliga story is from 24 Nov.",
+          "share": "The Bundesliga now answers fans in 200 nations."
         },
-        "shape": "story",
-        "dive": "Most parents want AI kept out of the classroom while using it themselves for the everyday jobs it is good at.",
-        "aim": "humour",
-        "funny": "The permission slip banning AI was, of course, drafted by AI.",
-        "lookalike": {
-          "pattern": "work-reality-check",
-          "beats": "https://www.instagram.com/therundownai/p/DfiNa2JkRhx/",
-          "our_take": "Where the post weighs AI at work, ours finds the same double standard at the school gate."
-        },
+        "shape": "theme",
+        "aim": "interest",
+        "funny": "The cover has one fan asking the league app why his team lost, in 200 languages at once.",
+        "cards": [
+          {
+            "words": "The Bundesliga answers fans in 200 nations. Five good AI stories from sport.",
+            "picture": "Story 1's own photo (Customer Experience Dive, 24 Nov 2026), with the source page as proof"
+          },
+          {
+            "words": "Sky Sports added AI live captions for fans. Subtitles will run on about 210 games a season.",
+            "picture": "The story's own photo, HDTVTest, 21 Oct 2026"
+          },
+          {
+            "words": "NASCAR found its best moments in 3m clips. More than three million media assets, for 15 million fans worldwide.",
+            "picture": "The story's own photo, SportsPro (Perfect Memory partner piece), 12 Nov 2026"
+          },
+          {
+            "words": "A runner built a free AI coach, came third. He finished in 2:29, third overall.",
+            "picture": "The story's own photo, the5krunner, 11 Nov 2026"
+          },
+          {
+            "words": "The BBC kept Wimbledon fans watching longer. 75% of viewers kept Signals on; average viewing was 30 minutes.",
+            "picture": "The story's own photo, SportsPro, 13 Nov 2026"
+          },
+          {
+            "words": "Fans, athletes, clubs: all up.",
+            "picture": "The five story photos in a row above the house close"
+          }
+        ],
         "direction": {
-          "look": "Clean two-panel meme in the brand kit, drawn fresh",
-          "format": "Single image, 4:5",
+          "look": "v5 Library good-news set: each story's own credited photo, house palette and grain",
+          "format": "6 cards, 4:5",
           "frames": [
             {
-              "words": "56% OF PARENTS: BLOCK AI IN SCHOOLS",
-              "picture": "A parent at a school meeting, arms folded"
+              "words": "THE BUNDESLIGA ANSWERS FANS IN 200 NATIONS. FIVE GOOD AI STORIES FROM SPORT.",
+              "picture": "Story 1's own photo (Customer Experience Dive, 24 Nov 2026), with the source page as proof"
             },
             {
-              "words": "ALSO PARENTS:",
-              "picture": "The same parent at home asking a chatbot to write a polite email to the teacher"
+              "words": "SKY SPORTS ADDED AI LIVE CAPTIONS FOR FANS. SUBTITLES WILL RUN ON ABOUT 210 GAMES A SEASON.",
+              "picture": "The story's own photo, HDTVTest, 21 Oct 2026"
+            },
+            {
+              "words": "NASCAR FOUND ITS BEST MOMENTS IN 3M CLIPS. MORE THAN THREE MILLION MEDIA ASSETS, FOR 15 MILLION FANS WORLDWIDE.",
+              "picture": "The story's own photo, SportsPro (Perfect Memory partner piece), 12 Nov 2026"
+            },
+            {
+              "words": "A RUNNER BUILT A FREE AI COACH, CAME THIRD. HE FINISHED IN 2:29, THIRD OVERALL.",
+              "picture": "The story's own photo, the5krunner, 11 Nov 2026"
+            },
+            {
+              "words": "THE BBC KEPT WIMBLEDON FANS WATCHING LONGER. 75% OF VIEWERS KEPT SIGNALS ON; AVERAGE VIEWING WAS 30 MINUTES.",
+              "picture": "The story's own photo, SportsPro, 13 Nov 2026"
+            },
+            {
+              "words": "FANS, ATHLETES, CLUBS: ALL UP.",
+              "picture": "The five story photos in a row above the house close"
             }
           ],
-          "tone": "Deadpan",
-          "kit": "Brand kit, mint"
+          "tone": "Warm and true, one dry line on the cover",
+          "kit": "v5 Library good-news set, Anton, Fraunces and DM Mono"
         },
-        "learned_from": [
-          "Your Improve on the Home Depot meme (3 Nov): \"play on the hilarity of this topic\""
+        "library": {
+          "carousel-good-news-cover": {
+            "headline_1": "The Bundesliga answers fans in 200 nations",
+            "body_1": "Five good AI stories from sport."
+          },
+          "carousel-good-news-item": {
+            "headline_1": "Sky Sports added AI live captions for fans",
+            "body_1": "Subtitles will run on about 210 games a season."
+          },
+          "carousel-good-news-item-2": {
+            "headline_1": "NASCAR found its best moments in 3m clips",
+            "body_1": "More than three million media assets, for 15 million fans worldwide."
+          },
+          "carousel-good-news-item-3": {
+            "headline_1": "A runner built a free AI coach, came third",
+            "body_1": "He finished in 2:29, third overall."
+          },
+          "carousel-good-news-item-4": {
+            "headline_1": "The BBC kept Wimbledon fans watching longer",
+            "body_1": "75% of viewers kept Signals on; average viewing was 30 minutes."
+          },
+          "carousel-good-news-close": {
+            "body_1": "Fans, athletes, clubs: all up.",
+            "label_1": "makeyourmindup.ai"
+          }
+        },
+        "stories": [
+          {
+            "headline": "The Bundesliga answers fans in 200 nations",
+            "what": "The Bundesliga's app assistant Captain, built with AWS, now answers fans across seven channels in 200 nations, with a second AI agent handling follow-ups.",
+            "why": "89% of fan questions solved at first contact; cases down by over half.",
+            "kind": "sports",
+            "helps": {
+              "who": "football fans worldwide",
+              "how": "happier"
+            },
+            "date": "2026-11-24",
+            "source": {
+              "label": "Customer Experience Dive, 24 Nov 2026",
+              "url": "https://www.customerexperiencedive.com/news/how-a-german-football-league-scored-big-with-a-customer-service-upgrade/875407/"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://imgproxy.divecdn.com/g9d-wwFJPI6tCqRLPn9d8Wt9DDee6Lu6PHlliAw1QJg/g:ce/rs:fill:1200:675:1/Z3M6Ly9kaXZlc2l0ZS1zdG9yYWdlL2RpdmVpbWFnZS9Tb2NjZXIuanBn.webp"
+            }
+          },
+          {
+            "headline": "Sky Sports added AI live captions for fans",
+            "what": "Sky Sports added AI-powered live subtitles to its Premier League coverage, and live audio description for blind and partially sighted fans designed with RNIB.",
+            "why": "Subtitles will run on about 210 games a season.",
+            "kind": "sports",
+            "helps": {
+              "who": "deaf, blind and partially sighted fans",
+              "how": "happier"
+            },
+            "date": "2026-10-21",
+            "source": {
+              "label": "HDTVTest, 21 Oct 2026",
+              "url": "https://www.hdtvtest.co.uk/news/sky-announces-live-ai-commentary-and-captions-for-premier-league-football"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://cdn.mos.cms.futurecdn.net/zkgPTgyd6ERzFmk455JgB.jpg"
+            }
+          },
+          {
+            "headline": "NASCAR found its best moments in 3m clips",
+            "what": "Perfect Memory's AI indexes NASCAR's archive, finds the highlights and links each clip to the sponsors in it, so fans get highlights faster.",
+            "why": "More than three million media assets, for 15 million fans worldwide.",
+            "kind": "sports",
+            "helps": {
+              "who": "NASCAR fans and its media team",
+              "how": "better"
+            },
+            "date": "2026-11-12",
+            "source": {
+              "label": "SportsPro (Perfect Memory partner piece), 12 Nov 2026",
+              "url": "https://www.sportspro.com/opinions/broadcast-ott/perfect-memory-nascar-sports-content/"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://www.sportspro.com/wp-content/uploads/2026/11/nascar-media-day.jpg?x57778"
+            }
+          },
+          {
+            "headline": "A runner built a free AI coach, came third",
+            "what": "Bruno Artacho built Athlete Space, a free AI coach that rewrites his training week around illness and travel, and trained with it for the St. Jude Memphis Marathon.",
+            "why": "He finished in 2:29, third overall.",
+            "kind": "sports",
+            "helps": {
+              "who": "amateur runners",
+              "how": "better"
+            },
+            "date": "2026-11-11",
+            "source": {
+              "label": "the5krunner, 11 Nov 2026",
+              "url": "https://the5krunner.com/2026/11/11/athlete-space-personal-ai-coach/"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://imagedelivery.net/_jGo7Cp8DLHLbI9FzBn6-Q/the5krunner.com/2026/11/athlete-space-hero-runner-watch.jpg/w=1200"
+            }
+          },
+          {
+            "headline": "The BBC kept Wimbledon fans watching longer",
+            "what": "BBC R&D's Signals layered live data and AI, including a voice assistant trained on tennis data, over every Centre Court broadcast, and the BBC now licenses it to others.",
+            "why": "75% of viewers kept Signals on; average viewing was 30 minutes.",
+            "kind": "media",
+            "helps": {
+              "who": "tennis viewers and broadcasters",
+              "how": "smarter"
+            },
+            "date": "2026-11-13",
+            "source": {
+              "label": "SportsPro, 13 Nov 2026",
+              "url": "https://www.sportspro.com/broadcast-ott/bbc-sport-ai-signals-wimbledon-broadcast/"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://www.sportspro.com/wp-content/uploads/2026/11/Gabby-Logan-BBC.jpg?x57778"
+            }
+          }
         ],
+        "candidates": [
+          {
+            "title": "A singing teacher sang on stage again",
+            "url": "https://elevenlabs.io/blog/impact-nyc-summit",
+            "place": "news",
+            "date": "2026-11-12"
+          },
+          {
+            "title": "A K-pop duo sang again with its late member",
+            "url": "https://en.edaily.co.kr/news/eda202611265584/",
+            "place": "news",
+            "date": "2026-11-26"
+          },
+          {
+            "title": "Spotify lets every artist block fake songs",
+            "url": "https://techcrunch.com/2026/11/17/spotifys-new-tool-aims-to-stop-deepfakes-from-being-attributed-to-real-artists/",
+            "place": "news",
+            "date": "2026-11-17"
+          },
+          {
+            "title": "Nile Rodgers made an AI video for sick kids",
+            "url": "https://stereogum.com/2516578/nile-rodgers-defends-new-ai-music-video/news",
+            "place": "news",
+            "date": "2026-11-05"
+          },
+          {
+            "title": "A brain implant let a singer sing a scale",
+            "url": "https://policy-wire.com/breakthrough-brain-implants-restore-speech-and-song-for-a-l-s-patients/",
+            "place": "news",
+            "date": "2026-11-14"
+          },
+          {
+            "title": "An orchestra played a symphony with an AI",
+            "url": "https://www.thecrimson.com/article/2026/11/9/already-and-not-yet-tod-machover-bso-review/",
+            "place": "news",
+            "date": "2026-11-09"
+          },
+          {
+            "title": "Independent artists get paid to train AI",
+            "url": "https://www.hypebot.com/ai-companies-want-independent-music-this-time-theyre-asking-permission/",
+            "place": "news",
+            "date": "2026-11-26"
+          },
+          {
+            "title": "A lost 1938 film came back from its stills",
+            "url": "https://www.placera.se/pressmeddelanden/iqiyi-iqiyi-revives-90-year-old-lost-film-with-nadoupro-shortlisted-for-the-ai-unit-at-the-golden-rooster-awards-20261106",
+            "place": "news",
+            "date": "2026-11-06"
+          },
+          {
+            "title": "Audio description for blind viewers in hours",
+            "url": "https://www.aboutamazon.eu/news/company-news/made-for-everyone-how-amazons-ai-helps-more-people-see-hear-and-enjoy-the-story",
+            "place": "news",
+            "date": "2026-11-24"
+          },
+          {
+            "title": "A filmmaker won $450,000 for an AI-made film",
+            "url": "https://www.euronews.com/2026/10/06/latvian-filmmaker-wins-400000-grand-prix-at-kazakhstans-ai-film-festival",
+            "place": "news",
+            "date": "2026-10-06"
+          },
+          {
+            "title": "A four-minute AI short won a Grand Prix",
+            "url": "https://bandt.com.au/jamin-tasker-wins-grand-prix-at-tbwas-disrupt-ai-film-festival",
+            "place": "news",
+            "date": "2026-11-25"
+          },
+          {
+            "title": "A Spanish newsroom launched in English",
+            "url": "https://theajp.org/28-local-newsrooms-experimented-with-ai/",
+            "place": "news",
+            "date": "2026-11-06"
+          },
+          {
+            "title": "One first-time developer sold 200,000 games",
+            "url": "https://lastwordongaming.com/2026/11/25/ai-assisted-slotbound-million/",
+            "place": "news",
+            "date": "2026-11-25"
+          },
+          {
+            "title": "The Bundesliga answers fans in 200 nations",
+            "url": "https://www.customerexperiencedive.com/news/how-a-german-football-league-scored-big-with-a-customer-service-upgrade/875407/",
+            "place": "news",
+            "date": "2026-11-24"
+          },
+          {
+            "title": "Sky Sports added AI live captions for fans",
+            "url": "https://www.hdtvtest.co.uk/news/sky-announces-live-ai-commentary-and-captions-for-premier-league-football",
+            "place": "news",
+            "date": "2026-10-21"
+          },
+          {
+            "title": "Football fans can now see who moved the ball",
+            "url": "https://www.svgeurope.org/blog/top-stories/prime-video-launches-new-feature-for-champions-league-coverage/",
+            "place": "news",
+            "date": "2026-11-23"
+          },
+          {
+            "title": "NASCAR found its best moments in 3m clips",
+            "url": "https://www.sportspro.com/opinions/broadcast-ott/perfect-memory-nascar-sports-content/",
+            "place": "news",
+            "date": "2026-11-12"
+          },
+          {
+            "title": "A runner built a free AI coach, came third",
+            "url": "https://the5krunner.com/2026/11/11/athlete-space-personal-ai-coach/",
+            "place": "news",
+            "date": "2026-11-11"
+          },
+          {
+            "title": "AI found the lost detail in an 1888 painting",
+            "url": "https://www.theartnewspaper.com/2026/11/13/ai-helps-conservators-uncover-lost-details-in-william-merritt-chase-painting",
+            "place": "news",
+            "date": "2026-11-13"
+          },
+          {
+            "title": "London gets a free gallery for AI art",
+            "url": "https://fadmagazine.com/2026/11/25/ai-exchange-london-intelligences/",
+            "place": "news",
+            "date": "2026-11-25"
+          },
+          {
+            "title": "A 4,000-year-old ritual came back in Berghain",
+            "url": "https://www.theartnewspaper.com/2026/11/25/ala-roushan-charles-stankievech-exhibition-berghain-nightclub-berlin-house-autotelic-foundation",
+            "place": "news",
+            "date": "2026-11-25"
+          },
+          {
+            "title": "A podcaster passed Rogan on YouTube with AI",
+            "url": "https://fortune.com/2026/11/22/raj-shamani-figuring-out-podcast-joe-rogan-steven-bartlett-youtube-subscribers/",
+            "place": "news",
+            "date": "2026-11-22"
+          },
+          {
+            "title": "The BBC kept Wimbledon fans watching longer",
+            "url": "https://www.sportspro.com/broadcast-ott/bbc-sport-ai-signals-wimbledon-broadcast/",
+            "place": "news",
+            "date": "2026-11-13"
+          },
+          {
+            "title": "An AI publisher has put out 8,000 authors",
+            "url": "https://fortune.com/2026/11/09/publisher-spines-raises-64-million-in-new-funding-to-accelerate-effort-to-automate-book-publishing-with-ai-agents/",
+            "place": "news",
+            "date": "2026-11-09"
+          },
+          {
+            "title": "A local news group grew its revenue 23%",
+            "url": "https://theajp.org/28-local-newsrooms-experimented-with-ai/",
+            "place": "news",
+            "date": "2026-11-06"
+          },
+          {
+            "title": "SIQA AI Music Awards: Aries Ivory wins Best Human+AI Hybrid Song (no photo of its own found)",
+            "url": "https://www.aimusicpreneur.com/ai-music-news/siqa-ai-music-awards-2026-winners-full-list/",
+            "place": "news",
+            "date": "2026-11-13"
+          },
+          {
+            "title": "Tidal clears fully AI tracks so human artists are found (on Thursday instead)",
+            "url": "https://techcrunch.com/2026/11/24/tidal-to-ban-and-remove-millions-of-ai-generated-tracks-as-ai-slop-inundates-music-streaming",
+            "place": "news",
+            "date": "2026-11-24"
+          },
+          {
+            "title": "Pinacoteca di Brera AI glasses describe eight works to blind visitors (stock photo only)",
+            "url": "https://mixed-news.com/en/meta-ai-glasses-pinacoteca-brera-sensing-art-eight-artworks/",
+            "place": "news",
+            "date": "2026-10-17"
+          }
+        ],
+        "stories_note": "Searched the news only on 26 Nov (Reddit, YouTube, LinkedIn and the sheet were not searched this run), so every candidate is from the news. Stories older than seven days stand where nothing in the week was as strong in their sector; each date is on the story.",
+        "learned_from": [
+          "Your Improve on the good news (2 Nov): \"I want actual news items and the content we are going to use here - embedded real world images or videos\"",
+          "Your Improve on the good news direction (9 Nov): \"Real-world stories only, but with a hilarious generated cover page\""
+        ],
+        "topic_kind": "sports",
+        "lookalike": {
+          "pattern": "everyday-rescue",
+          "beats": "https://www.instagram.com/evolving.ai/p/Dc_GTNigPhb/",
+          "our_take": "Where the weekly roundup is a grab bag of launches, we pick five named clubs, broadcasters and athletes, each with what AI did for them."
+        },
         "read_back": {
           "readers": [
-            "Fresh reader A (Sonnet, a 12-year-old reading once, 16 Nov)",
-            "Fresh reader B (Haiku, a 12-year-old reading once, 16 Nov)"
+            "Fresh reader A (Sonnet subagent, a 12-year-old reading once, 26 Nov)",
+            "Fresh reader B (Haiku subagent, a 12-year-old reading once, 26 Nov)"
           ],
           "says": [
-            "A meme: 56% of parents want AI blocked at school, but the same parent uses a chatbot at home to write to the teacher.",
-            "Most parents want AI blocked at school, but the same parent uses a chatbot at home to write an email."
+            "Five AI sport stories, led by a Bundesliga fan app that answers in other languages.",
+            "Football fans around the world and four more good AI sport stories."
+          ],
+          "against": 49
+        }
+      },
+      {
+        "id": "galleries",
+        "kind": "good_news",
+        "format": "Good news carousel, 6 cards, 4:5",
+        "set": "good-news",
+        "make": {
+          "command": "python scripts/library/make_piece.py <piece folder> --set good-news",
+          "set": "good-news",
+          "slides": 6,
+          "note": "Library good-news set: the cover carries story 1 (its photo and its source page as the proof), four items carry stories 2 to 5, the close shows all five photos. The document slot needs the proof and proof_ink_px at make time."
+        },
+        "source_tag": "trade_press",
+        "topic": "Artists, orchestras and authors doing more with AI",
+        "stories_due": "2026-11-26",
+        "source": {
+          "label": "The Art Newspaper, 25 Nov 2026",
+          "url": "https://www.theartnewspaper.com/2026/11/25/ala-roushan-charles-stankievech-exhibition-berghain-nightclub-berlin-house-autotelic-foundation"
+        },
+        "hook": "A 4,000-year-old ritual in Berghain, and three more good AI art stories.",
+        "copy": "Four real stories from art, performance and books, with a fifth to find: artists brought a 4,000-year-old ritual into Berlin's Berghain with AI voices, conservators found the lost detail in an 1888 painting, the Boston Symphony played a new symphony with a live AI, and an AI publisher has put out 8,000 authors at 80% royalties. Each is checked at its source, with its own photo.",
+        "pitch": {
+          "see": "A cover of Berghain's concrete hall lit for a ritual, then one card per story: the Chase painting before and after, the Boston Symphony on stage, a shelf of Spines books, and a close with the photos.",
+          "lands": "It shows AI in the places people least expect it: a techno club, a conservation studio, a concert hall and a bookshelf.",
+          "why_now": "Reported between 9 and 25 Nov 2026.",
+          "share": "AI brought a 4,000-year-old ritual into Berghain."
+        },
+        "shape": "theme",
+        "aim": "interest",
+        "funny": "The cover gives Berghain its strangest night yet: a 4,000-year-old chant, and still nobody gets in without the right shoes.",
+        "cards": [
+          {
+            "words": "A 4,000-year-old ritual came back in Berghain. Four stories from art and stage.",
+            "picture": "Story 1's own photo (The Art Newspaper, 25 Nov 2026), with the source page as proof"
+          },
+          {
+            "words": "AI found the lost detail in an 1888 painting. Far faster than by hand, said conservator Suzanne Siano. On show now.",
+            "picture": "The story's own photo, The Art Newspaper, 13 Nov 2026"
+          },
+          {
+            "words": "An orchestra played a symphony with an AI. A major orchestra put AI on stage as an instrument, not a replacement.",
+            "picture": "The story's own photo, The Harvard Crimson, 9 Nov 2026"
+          },
+          {
+            "words": "An AI publisher has put out 8,000 authors. Authors now keep 80% of net royalties, up from 70%.",
+            "picture": "The story's own photo, Fortune, 9 Nov 2026"
+          },
+          {
+            "words": "Story five, to find",
+            "picture": "Its own photo, once found"
+          },
+          {
+            "words": "Art, stage and books: all up.",
+            "picture": "The five story photos in a row above the house close"
+          }
+        ],
+        "direction": {
+          "look": "v5 Library good-news set: each story's own credited photo, house palette and grain",
+          "format": "6 cards, 4:5",
+          "frames": [
+            {
+              "words": "A 4,000-YEAR-OLD RITUAL CAME BACK IN BERGHAIN. FOUR STORIES FROM ART AND STAGE.",
+              "picture": "Story 1's own photo (The Art Newspaper, 25 Nov 2026), with the source page as proof"
+            },
+            {
+              "words": "AI FOUND THE LOST DETAIL IN AN 1888 PAINTING. FAR FASTER THAN BY HAND, SAID CONSERVATOR SUZANNE SIANO. ON SHOW NOW.",
+              "picture": "The story's own photo, The Art Newspaper, 13 Nov 2026"
+            },
+            {
+              "words": "AN ORCHESTRA PLAYED A SYMPHONY WITH AN AI. A MAJOR ORCHESTRA PUT AI ON STAGE AS AN INSTRUMENT, NOT A REPLACEMENT.",
+              "picture": "The story's own photo, The Harvard Crimson, 9 Nov 2026"
+            },
+            {
+              "words": "AN AI PUBLISHER HAS PUT OUT 8,000 AUTHORS. AUTHORS NOW KEEP 80% OF NET ROYALTIES, UP FROM 70%.",
+              "picture": "The story's own photo, Fortune, 9 Nov 2026"
+            },
+            {
+              "words": "STORY FIVE, TO FIND",
+              "picture": "Its own photo, once found"
+            },
+            {
+              "words": "ART, STAGE AND BOOKS: ALL UP.",
+              "picture": "The five story photos in a row above the house close"
+            }
+          ],
+          "tone": "Warm and true, one dry line on the cover",
+          "kit": "v5 Library good-news set, Anton, Fraunces and DM Mono"
+        },
+        "library": {
+          "carousel-good-news-cover": {
+            "headline_1": "A 4,000-year-old ritual came back in Berghain",
+            "body_1": "Four stories from art and stage."
+          },
+          "carousel-good-news-item": {
+            "headline_1": "AI found the lost detail in an 1888 painting",
+            "body_1": "Far faster than by hand, said conservator Suzanne Siano. On show now."
+          },
+          "carousel-good-news-item-2": {
+            "headline_1": "An orchestra played a symphony with an AI",
+            "body_1": "A major orchestra put AI on stage as an instrument, not a replacement."
+          },
+          "carousel-good-news-item-3": {
+            "headline_1": "An AI publisher has put out 8,000 authors",
+            "body_1": "Authors now keep 80% of net royalties, up from 70%."
+          },
+          "carousel-good-news-close": {
+            "body_1": "Art, stage and books: all up.",
+            "label_1": "makeyourmindup.ai"
+          }
+        },
+        "stories": [
+          {
+            "headline": "A 4,000-year-old ritual came back in Berghain",
+            "what": "Artists Ala Roushan and Charles Stankievech used AI to generate chanting in a reconstructed ancient language, one voice trained on Roushan's mother's, for an installation in Berlin's Berghain.",
+            "why": "The Art Newspaper called it one of the year's highlights in AI art.",
+            "kind": "arts_design",
+            "helps": {
+              "who": "artists",
+              "how": "better"
+            },
+            "date": "2026-11-25",
+            "source": {
+              "label": "The Art Newspaper, 25 Nov 2026",
+              "url": "https://www.theartnewspaper.com/2026/11/25/ala-roushan-charles-stankievech-exhibition-berghain-nightclub-berlin-house-autotelic-foundation"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://cdn.sanity.io/images/cxgd3urn/production/d717cc8fcfb2d31f7707d21a9aa09c5d91edefc9-2000x1500.jpg?w=1200&h=900&q=85&fit=crop&auto=format"
+            }
+          },
+          {
+            "headline": "AI found the lost detail in an 1888 painting",
+            "what": "Conservators used an AI composite of an early black-and-white photo and a colour image to see where William Merritt Chase's A Comfortable Corner (The Blue Kimono) had been changed by later restorations.",
+            "why": "Far faster than by hand, said conservator Suzanne Siano. On show now.",
+            "kind": "arts_design",
+            "helps": {
+              "who": "conservators and museum visitors",
+              "how": "smarter"
+            },
+            "date": "2026-11-13",
+            "source": {
+              "label": "The Art Newspaper, 13 Nov 2026",
+              "url": "https://www.theartnewspaper.com/2026/11/13/ai-helps-conservators-uncover-lost-details-in-william-merritt-chase-painting"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://cdn.sanity.io/images/cxgd3urn/production/3f4d4a5753800f774ddfc0bd6433a136d9a5d8fb-1664x2083.jpg"
+            }
+          },
+          {
+            "headline": "An orchestra played a symphony with an AI",
+            "what": "The Boston Symphony Orchestra, conducted by Kent Nagano, premiered Tod Machover's new symphony, with a live AI system as part of the performance.",
+            "why": "A major orchestra put AI on stage as an instrument, not a replacement.",
+            "kind": "performance",
+            "helps": {
+              "who": "an orchestra and its composer",
+              "how": "better"
+            },
+            "date": "2026-11-09",
+            "source": {
+              "label": "The Harvard Crimson, 9 Nov 2026",
+              "url": "https://www.thecrimson.com/article/2026/11/9/already-and-not-yet-tod-machover-bso-review/"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://media.thecrimson.com/photos/2026/11/10/005057_1389144.jpg"
+            }
+          },
+          {
+            "headline": "An AI publisher has put out 8,000 authors",
+            "what": "Spines uses AI agents to edit, translate, design and market books for authors with no traditional publisher, and raised $64 million this month.",
+            "why": "Authors now keep 80% of net royalties, up from 70%.",
+            "kind": "creative_tools",
+            "helps": {
+              "who": "authors without a publisher",
+              "how": "more successful"
+            },
+            "date": "2026-11-09",
+            "source": {
+              "label": "Fortune, 9 Nov 2026",
+              "url": "https://fortune.com/2026/11/09/publisher-spines-raises-64-million-in-new-funding-to-accelerate-effort-to-automate-book-publishing-with-ai-agents/"
+            },
+            "media": {
+              "kind": "photo",
+              "url": "https://fortune.com/img-assets/wp-content/uploads/2026/11/Yehuda-Niv-CEO--Spines-e1794228747358.jpg?format=webp&w=1440&quality=75"
+            }
+          }
+        ],
+        "candidates": [
+          {
+            "title": "A singing teacher sang on stage again",
+            "url": "https://elevenlabs.io/blog/impact-nyc-summit",
+            "place": "news",
+            "date": "2026-11-12"
+          },
+          {
+            "title": "A K-pop duo sang again with its late member",
+            "url": "https://en.edaily.co.kr/news/eda202611265584/",
+            "place": "news",
+            "date": "2026-11-26"
+          },
+          {
+            "title": "Spotify lets every artist block fake songs",
+            "url": "https://techcrunch.com/2026/11/17/spotifys-new-tool-aims-to-stop-deepfakes-from-being-attributed-to-real-artists/",
+            "place": "news",
+            "date": "2026-11-17"
+          },
+          {
+            "title": "Nile Rodgers made an AI video for sick kids",
+            "url": "https://stereogum.com/2516578/nile-rodgers-defends-new-ai-music-video/news",
+            "place": "news",
+            "date": "2026-11-05"
+          },
+          {
+            "title": "A brain implant let a singer sing a scale",
+            "url": "https://policy-wire.com/breakthrough-brain-implants-restore-speech-and-song-for-a-l-s-patients/",
+            "place": "news",
+            "date": "2026-11-14"
+          },
+          {
+            "title": "An orchestra played a symphony with an AI",
+            "url": "https://www.thecrimson.com/article/2026/11/9/already-and-not-yet-tod-machover-bso-review/",
+            "place": "news",
+            "date": "2026-11-09"
+          },
+          {
+            "title": "Independent artists get paid to train AI",
+            "url": "https://www.hypebot.com/ai-companies-want-independent-music-this-time-theyre-asking-permission/",
+            "place": "news",
+            "date": "2026-11-26"
+          },
+          {
+            "title": "A lost 1938 film came back from its stills",
+            "url": "https://www.placera.se/pressmeddelanden/iqiyi-iqiyi-revives-90-year-old-lost-film-with-nadoupro-shortlisted-for-the-ai-unit-at-the-golden-rooster-awards-20261106",
+            "place": "news",
+            "date": "2026-11-06"
+          },
+          {
+            "title": "Audio description for blind viewers in hours",
+            "url": "https://www.aboutamazon.eu/news/company-news/made-for-everyone-how-amazons-ai-helps-more-people-see-hear-and-enjoy-the-story",
+            "place": "news",
+            "date": "2026-11-24"
+          },
+          {
+            "title": "A filmmaker won $450,000 for an AI-made film",
+            "url": "https://www.euronews.com/2026/10/06/latvian-filmmaker-wins-400000-grand-prix-at-kazakhstans-ai-film-festival",
+            "place": "news",
+            "date": "2026-10-06"
+          },
+          {
+            "title": "A four-minute AI short won a Grand Prix",
+            "url": "https://bandt.com.au/jamin-tasker-wins-grand-prix-at-tbwas-disrupt-ai-film-festival",
+            "place": "news",
+            "date": "2026-11-25"
+          },
+          {
+            "title": "A Spanish newsroom launched in English",
+            "url": "https://theajp.org/28-local-newsrooms-experimented-with-ai/",
+            "place": "news",
+            "date": "2026-11-06"
+          },
+          {
+            "title": "One first-time developer sold 200,000 games",
+            "url": "https://lastwordongaming.com/2026/11/25/ai-assisted-slotbound-million/",
+            "place": "news",
+            "date": "2026-11-25"
+          },
+          {
+            "title": "The Bundesliga answers fans in 200 nations",
+            "url": "https://www.customerexperiencedive.com/news/how-a-german-football-league-scored-big-with-a-customer-service-upgrade/875407/",
+            "place": "news",
+            "date": "2026-11-24"
+          },
+          {
+            "title": "Sky Sports added AI live captions for fans",
+            "url": "https://www.hdtvtest.co.uk/news/sky-announces-live-ai-commentary-and-captions-for-premier-league-football",
+            "place": "news",
+            "date": "2026-10-21"
+          },
+          {
+            "title": "Football fans can now see who moved the ball",
+            "url": "https://www.svgeurope.org/blog/top-stories/prime-video-launches-new-feature-for-champions-league-coverage/",
+            "place": "news",
+            "date": "2026-11-23"
+          },
+          {
+            "title": "NASCAR found its best moments in 3m clips",
+            "url": "https://www.sportspro.com/opinions/broadcast-ott/perfect-memory-nascar-sports-content/",
+            "place": "news",
+            "date": "2026-11-12"
+          },
+          {
+            "title": "A runner built a free AI coach, came third",
+            "url": "https://the5krunner.com/2026/11/11/athlete-space-personal-ai-coach/",
+            "place": "news",
+            "date": "2026-11-11"
+          },
+          {
+            "title": "AI found the lost detail in an 1888 painting",
+            "url": "https://www.theartnewspaper.com/2026/11/13/ai-helps-conservators-uncover-lost-details-in-william-merritt-chase-painting",
+            "place": "news",
+            "date": "2026-11-13"
+          },
+          {
+            "title": "London gets a free gallery for AI art",
+            "url": "https://fadmagazine.com/2026/11/25/ai-exchange-london-intelligences/",
+            "place": "news",
+            "date": "2026-11-25"
+          },
+          {
+            "title": "A 4,000-year-old ritual came back in Berghain",
+            "url": "https://www.theartnewspaper.com/2026/11/25/ala-roushan-charles-stankievech-exhibition-berghain-nightclub-berlin-house-autotelic-foundation",
+            "place": "news",
+            "date": "2026-11-25"
+          },
+          {
+            "title": "A podcaster passed Rogan on YouTube with AI",
+            "url": "https://fortune.com/2026/11/22/raj-shamani-figuring-out-podcast-joe-rogan-steven-bartlett-youtube-subscribers/",
+            "place": "news",
+            "date": "2026-11-22"
+          },
+          {
+            "title": "The BBC kept Wimbledon fans watching longer",
+            "url": "https://www.sportspro.com/broadcast-ott/bbc-sport-ai-signals-wimbledon-broadcast/",
+            "place": "news",
+            "date": "2026-11-13"
+          },
+          {
+            "title": "An AI publisher has put out 8,000 authors",
+            "url": "https://fortune.com/2026/11/09/publisher-spines-raises-64-million-in-new-funding-to-accelerate-effort-to-automate-book-publishing-with-ai-agents/",
+            "place": "news",
+            "date": "2026-11-09"
+          },
+          {
+            "title": "A local news group grew its revenue 23%",
+            "url": "https://theajp.org/28-local-newsrooms-experimented-with-ai/",
+            "place": "news",
+            "date": "2026-11-06"
+          },
+          {
+            "title": "SIQA AI Music Awards: Aries Ivory wins Best Human+AI Hybrid Song (no photo of its own found)",
+            "url": "https://www.aimusicpreneur.com/ai-music-news/siqa-ai-music-awards-2026-winners-full-list/",
+            "place": "news",
+            "date": "2026-11-13"
+          },
+          {
+            "title": "Tidal clears fully AI tracks so human artists are found (on Thursday instead)",
+            "url": "https://techcrunch.com/2026/11/24/tidal-to-ban-and-remove-millions-of-ai-generated-tracks-as-ai-slop-inundates-music-streaming",
+            "place": "news",
+            "date": "2026-11-24"
+          },
+          {
+            "title": "Pinacoteca di Brera AI glasses describe eight works to blind visitors (stock photo only)",
+            "url": "https://mixed-news.com/en/meta-ai-glasses-pinacoteca-brera-sensing-art-eight-artworks/",
+            "place": "news",
+            "date": "2026-10-17"
+          }
+        ],
+        "stories_note": "Searched the news only on 26 Nov (Reddit, YouTube, LinkedIn and the sheet were not searched this run), so every candidate is from the news. Stories older than seven days stand where nothing in the week was as strong in their sector; each date is on the story.",
+        "learned_from": [
+          "Your Improve on the good news (2 Nov): \"I want actual news items and the content we are going to use here - embedded real world images or videos\"",
+          "Your Improve on the good news direction (9 Nov): \"Real-world stories only, but with a hilarious generated cover page\""
+        ],
+        "stories_to_find": true,
+        "stories_short": "4 of 5 found in art and performance between 1 and 26 Nov: the SIQA awards had no photo of their own, and the Brera glasses tour only a stock photo, so neither was used. The Find the other story press fills it to five.",
+        "topic_kind": "arts_design",
+        "lookalike": {
+          "pattern": "everyday-rescue",
+          "beats": "https://www.instagram.com/evolving.ai/p/DcqToRmgEIH/",
+          "our_take": "Where the post shows one artist's shirt against AI cameras, we show artists, conservators and an orchestra using AI on real work this month."
+        },
+        "read_back": {
+          "readers": [
+            "Fresh reader A (Sonnet subagent, a 12-year-old reading once, 26 Nov)",
+            "Fresh reader B (Haiku subagent, a 12-year-old reading once, 26 Nov)"
+          ],
+          "says": [
+            "AI art stories, led by a 4,000-year-old ritual in Berghain.",
+            "An ancient ritual in a Berlin club and three more good AI art stories."
           ],
           "against": 49
         }
@@ -2582,6 +4353,66 @@
         "label": "When Tools Overturn Truth, research dossier",
         "url": "https://docs.google.com/document/d/1QWMbt2S9w6KFMLac1tTr9StKh2pFK6t1/edit#heading=h.3ucsa860xhl4"
       }
+    },
+    {
+      "ref": "2026-11-23/replaced/off-thu-fortytoone",
+      "day": "thu",
+      "title": "The US just voted on AI. Here is what changes.",
+      "reason": "Replaced on 26 Nov 2026 by the v5 story engine test run (Thursday and Saturday only, none of them answered): Thursday and Saturday were remade in the new style for this week's test, and this option was not answered, so it was set aside unmade."
+    },
+    {
+      "ref": "2026-11-23/replaced/off-thu-designfight",
+      "day": "thu",
+      "title": "Canva, Adobe or Claude: which one makes your poster in 2028?",
+      "reason": "Replaced on 26 Nov 2026 by the v5 story engine test run (Thursday and Saturday only, none of them answered): Thursday and Saturday were remade in the new style for this week's test, and this option was not answered, so it was set aside unmade."
+    },
+    {
+      "ref": "2026-11-23/replaced/off-thu-lostcity",
+      "day": "thu",
+      "title": "AI 'discovered' a lost Maya site. Archaeologists wrote about it in 2025.",
+      "reason": "Replaced on 26 Nov 2026 by the v5 story engine test run (Thursday and Saturday only, none of them answered): Thursday and Saturday were remade in the new style for this week's test, and this option was not answered, so it was set aside unmade."
+    },
+    {
+      "ref": "2026-11-23/replaced/off-thu-refusals",
+      "day": "thu",
+      "title": "The bot network that was too polite to do its job.",
+      "reason": "Replaced on 26 Nov 2026 by the v5 story engine test run (Thursday and Saturday only, none of them answered): Thursday and Saturday were remade in the new style for this week's test, and this option was not answered, so it was set aside unmade."
+    },
+    {
+      "ref": "2026-11-23/replaced/off-thu-meetings",
+      "day": "thu",
+      "title": "Your next meeting has a new attendee, and it takes the notes.",
+      "reason": "Replaced on 26 Nov 2026 by the v5 story engine test run (Thursday and Saturday only, none of them answered): Thursday and Saturday were remade in the new style for this week's test, and this option was not answered, so it was set aside unmade."
+    },
+    {
+      "ref": "2026-11-23/replaced/off-sat-goodnews",
+      "day": "sat",
+      "title": "AI in the hospital this week: five good things.",
+      "reason": "Replaced on 26 Nov 2026 by the v5 story engine test run (Thursday and Saturday only, none of them answered): Thursday and Saturday were remade in the new style for this week's test, and this option was not answered, so it was set aside unmade."
+    },
+    {
+      "ref": "2026-11-23/replaced/off-sat-builditself",
+      "day": "sat",
+      "title": "Is AI building itself? Four facts and one myth.",
+      "reason": "Replaced on 26 Nov 2026 by the v5 story engine test run (Thursday and Saturday only, none of them answered): Thursday and Saturday were remade in the new style for this week's test, and this option was not answered, so it was set aside unmade."
+    },
+    {
+      "ref": "2026-11-23/replaced/off-sat-salesagent",
+      "day": "sat",
+      "title": "Shops can now put their own AI helper inside ChatGPT.",
+      "reason": "Replaced on 26 Nov 2026 by the v5 story engine test run (Thursday and Saturday only, none of them answered): Thursday and Saturday were remade in the new style for this week's test, and this option was not answered, so it was set aside unmade."
+    },
+    {
+      "ref": "2026-11-23/replaced/off-sat-presszero",
+      "day": "sat",
+      "title": "Companies: 86% of customers love our AI. Customers: HUMAN. HUMAN. HUMAN.",
+      "reason": "Replaced on 26 Nov 2026 by the v5 story engine test run (Thursday and Saturday only, none of them answered): Thursday and Saturday were remade in the new style for this week's test, and this option was not answered, so it was set aside unmade."
+    },
+    {
+      "ref": "2026-11-23/replaced/off-sat-parentsban",
+      "day": "sat",
+      "title": "56% of parents want AI blocked at school. Meanwhile, at home:",
+      "reason": "Replaced on 26 Nov 2026 by the v5 story engine test run (Thursday and Saturday only, none of them answered): Thursday and Saturday were remade in the new style for this week's test, and this option was not answered, so it was set aside unmade."
     }
   ],
   "vetoes": [
@@ -2847,54 +4678,6 @@
         "why": "The cost of ads in free AI chat has no recent counterpart."
       },
       {
-        "ref": "off-thu-fortytoone",
-        "verdict": "new",
-        "of": "piece:b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
-        "why": "The midterms' effect on AI policy and local data-centre limits is related to OpenAI's post-election pledge, but is a different story with its own facts."
-      },
-      {
-        "ref": "off-thu-designfight",
-        "verdict": "new",
-        "of": "off-tue-701a2c55-7400-4dc8-99cb-d6001147ae16",
-        "why": "Adobe, Canva and Claude Design competing has no recent match."
-      },
-      {
-        "ref": "off-thu-lostcity",
-        "verdict": "new",
-        "of": "off-sat-oldproof",
-        "why": "A Maya site AI re-found versus a 1986 proof error AI found; the same lesson about AI and prior knowledge, but different news."
-      },
-      {
-        "ref": "off-thu-refusals",
-        "verdict": "new",
-        "of": "piece:7083d6ad-419e-4fdc-9aba-f3be7f3f3a23",
-        "why": "Bot accounts pasting chatbot refusals in Italy is a new story; the nearest is about refusals by where a model was built."
-      },
-      {
-        "ref": "off-sat-goodnews",
-        "verdict": "new",
-        "of": "off-tue-701a2c55-7400-4dc8-99cb-d6001147ae16",
-        "why": "AI in hospitals good news has no recent counterpart."
-      },
-      {
-        "ref": "off-sat-builditself",
-        "verdict": "new",
-        "of": "off-thu-gitbroke",
-        "why": "Four facts and a myth on whether AI builds itself; it overlaps Anthropic's code volume but is a different story and format from the Git piece."
-      },
-      {
-        "ref": "off-sat-salesagent",
-        "verdict": "new",
-        "of": "piece:b63d2507-dbb4-449d-bce4-f21e859ee2ad",
-        "why": "Businesses in ChatGPT is a new news item; no recent post covers it."
-      },
-      {
-        "ref": "off-sat-presszero",
-        "verdict": "new",
-        "of": "off-tue-translator",
-        "why": "A meme on Twilio's survey of AI customer service; the translator post is about AI-to-AI talk and is a different story."
-      },
-      {
         "ref": "mon-3",
         "verdict": "new",
         "of": "piece:b358e788-209f-427b-a84d-1f79a8ebb430",
@@ -2913,18 +4696,6 @@
         "why": "RAND's survey of how parents shape teens' AI homework use; the earlier Home Depot post only shares the word homework."
       },
       {
-        "ref": "off-thu-meetings",
-        "verdict": "new",
-        "of": "piece:b63d2507-dbb4-449d-bce4-f21e859ee2ad",
-        "why": "Claude Meetings joining a call as a note-taking participant is new; the Claude Duet piece is a different product and advice angle."
-      },
-      {
-        "ref": "off-sat-parentsban",
-        "verdict": "new",
-        "of": "off-tue-701a2c55-7400-4dc8-99cb-d6001147ae16",
-        "why": "No recent post covers the parents' poll on AI in school; the closest is a loose match about AI habits."
-      },
-      {
         "ref": "fri-5",
         "verdict": "new",
         "of": "piece:db9f9f6a-1092-49be-8024-f335e060305a",
@@ -2935,8 +4706,188 @@
         "verdict": "new",
         "of": "off-tue-mcpskin",
         "why": "The nearest post shares the MCP tool-call subject but tells a different story (Anthropic cut one task from 150,000 to 2,000 tokens by loading only needed tools), while the option is a plain definition of MCP with a buy-check, so neither the news nor the advice matches."
+      },
+      {
+        "ref": "off-thu-tidalpurge",
+        "verdict": "new",
+        "of": "none (nearest: off-sat-oldproof, loosely)",
+        "why": "Tidal deleting fully AI tracks (29M, 96% unplayed) and the AI-assisted versus fully AI line is not in any recent post; music items so far were Suno/HUGEL credits and Spotify."
+      },
+      {
+        "ref": "off-thu-fincherrelip",
+        "verdict": "new",
+        "of": "piece:36886e0b",
+        "why": "Fincher using AI to fix dialogue in a film is a different news item and reader (film and TV makers) from hidden AI in song credits."
+      },
+      {
+        "ref": "off-thu-facefee",
+        "verdict": "new",
+        "of": "none",
+        "why": "An actor licensing his face to an AI microdrama and the $15 to $700 rate has no counterpart in the recent posts."
+      },
+      {
+        "ref": "off-thu-reuterscut",
+        "verdict": "new",
+        "of": "off-tue-shell",
+        "why": "The Reuters union strike over AI licensing revenue is a different news item and reader from Character.AI users getting nothing from the sale."
+      },
+      {
+        "ref": "off-thu-wetaplan",
+        "verdict": "new",
+        "of": "none (nearest: off-fri-beststicker, as a two-panel meme)",
+        "why": "Studios demanding VFX houses have an AI plan after banning AI is a distinct story and audience."
+      },
+      {
+        "ref": "off-sat-goodnews",
+        "verdict": "new",
+        "of": "goodnews 2026-11-16 sat",
+        "why": "The same weekly good-news format, but this week's items are dated 22 to 26 Nov and cannot repeat earlier weeks."
+      },
+      {
+        "ref": "off-sat-voices",
+        "verdict": "new",
+        "of": "goodnews 2026-11-16 sat (format only)",
+        "why": "A music good-news set; the recent Spotify and AI-music posts (spotai, HUGEL) are different news."
+      },
+      {
+        "ref": "off-sat-screens",
+        "verdict": "new",
+        "of": "goodnews 2026-11-09 sat (format only)",
+        "why": "A screens roundup (1938 film, audio description, Astana prize, Slotbound, newsroom newsletter) with no matching recent story."
+      },
+      {
+        "ref": "off-sat-fans",
+        "verdict": "new",
+        "of": "goodnews 2026-11-16 sat (format only)",
+        "why": "A sport roundup (Bundesliga, Sky, NASCAR, runner, BBC) that is a new set."
+      },
+      {
+        "ref": "off-sat-galleries",
+        "verdict": "new",
+        "of": "goodnews 2026-11-02 sat (format only)",
+        "why": "An art, performance and books roundup (Berghain ritual, Chase painting, Boston Symphony, Spines) that is new."
       }
     ],
-    "note": "Two rounds: the first read every option; the second read the five written after it to replace those cut (16 Nov). Its refs use each option's place after the swap."
+    "note": "Two rounds: the first read every option; the second read the five written after it to replace those cut (16 Nov). Its refs use each option's place after the swap.",
+    "reader_26nov": "Fresh reader (Sonnet subagent, same-story check, 26 Nov), with none of the writer's reasoning, for the Thursday and Saturday options remade that day. It also noted that the five Saturday options are all good-news roundups for one slot, so only one runs, and that no two share a story."
+  },
+  "v5_rerun": {
+    "on": "2026-11-26",
+    "days": [
+      "thu",
+      "sat"
+    ],
+    "replaced": [
+      "off-thu-fortytoone",
+      "off-thu-designfight",
+      "off-thu-lostcity",
+      "off-thu-refusals",
+      "off-thu-meetings",
+      "off-sat-goodnews",
+      "off-sat-builditself",
+      "off-sat-salesagent",
+      "off-sat-presszero",
+      "off-sat-parentsban"
+    ],
+    "considered": {
+      "thu": 6,
+      "sat": 28
+    },
+    "considered_note": "Thursday: Tidal, Fincher, the face-licensing microdrama, Weta FX (6 Nov, Variety paywalled, quote seen only second hand), Reuters journalists and AI licensing money (Mediaite would not open; TheWrap 17 Nov opened), Tor AI cover art (no November 2026 report found). Saturday: the twenty-eight candidates on each option.",
+    "paid_steps_replaced": "Zero-spend run: the divergent angles and the humour engine (story_score.py angles and humour, both paid) were not called; the funny line and the angle were checked by blind subagent readers instead, and the story score axes that need them abstain.",
+    "story_score": {
+      "how": "story_score.py brief, a blind Sonnet subagent judge (recorded with story_score.py record, story/judged.json), then story_score.py score: zero spend. The paid reads (angles, humour) were not run, so absurdity_humour, unique_angle, mechanism and wonder abstain. The gate binds the score only from 30 Nov.",
+      "totals": {
+        "thu/tidalpurge": {
+          "total": 72.0,
+          "type": "explainer",
+          "floors_failed": [],
+          "unread": [
+            "absurdity_humour",
+            "mechanism"
+          ]
+        },
+        "thu/fincherrelip": {
+          "total": 54.0,
+          "type": "explainer",
+          "floors_failed": [],
+          "unread": [
+            "absurdity_humour",
+            "mechanism"
+          ]
+        },
+        "thu/facefee": {
+          "total": 64.0,
+          "type": "explainer",
+          "floors_failed": [],
+          "unread": [
+            "absurdity_humour",
+            "mechanism"
+          ]
+        },
+        "thu/reuterscut": {
+          "total": 61.3,
+          "type": "explainer",
+          "floors_failed": [],
+          "unread": [
+            "absurdity_humour",
+            "mechanism"
+          ]
+        },
+        "thu/wetaplan": {
+          "total": 61.5,
+          "type": "offday_short",
+          "floors_failed": [
+            "a short leads on humour the engine can read (not read)",
+            "a short's joke never needs explaining (not read)",
+            "a short rests on at least one documented why (not read)"
+          ],
+          "unread": [
+            "absurdity_humour",
+            "unique_angle"
+          ]
+        },
+        "sat/goodnews": {
+          "total": 64.7,
+          "type": "goodnews",
+          "floors_failed": [],
+          "unread": [
+            "wonder"
+          ]
+        },
+        "sat/voices": {
+          "total": 67.6,
+          "type": "goodnews",
+          "floors_failed": [],
+          "unread": [
+            "wonder"
+          ]
+        },
+        "sat/screens": {
+          "total": 72.4,
+          "type": "goodnews",
+          "floors_failed": [],
+          "unread": [
+            "wonder"
+          ]
+        },
+        "sat/fans": {
+          "total": 67.1,
+          "type": "goodnews",
+          "floors_failed": [],
+          "unread": [
+            "wonder"
+          ]
+        },
+        "sat/galleries": {
+          "total": 65.3,
+          "type": "goodnews",
+          "floors_failed": [],
+          "unread": [
+            "wonder"
+          ]
+        }
+      }
+    }
   }
 }

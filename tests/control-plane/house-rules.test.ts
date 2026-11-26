@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, test } from 'vitest'
 import { HOUSE_RULES, houseRulesBlock, rulesFor, type Stage } from '../../apps/control-plane/api/_houseRules.js'
-import { articleFormat, confidenceOf, predictionCheck, publishChecks, publishStatus, readingGrade } from '../../apps/control-plane/api/_publishChecks.js'
+import { articleFormat, publishChecks, publishStatus, readingGrade } from '../../apps/control-plane/api/_publishChecks.js'
 import { VOICE_GUARDRAILS } from '../../apps/control-plane/api/_content.js'
 import { bodyHash } from '../../apps/control-plane/api/_factGate.js'
 import { VOICE_ABSOLUTES } from '../../apps/control-plane/api/_finalPass.js'
@@ -12,15 +12,12 @@ import { VOICE_ABSOLUTES } from '../../apps/control-plane/api/_finalPass.js'
 // together", and each guideline he gives should reach every stage it touches.
 // The registry is the one place a ruling lives; these tests fail when a live
 // ruling is recorded but enforced nowhere, or a stage drops one.
-// Piece 2 as published in its edition (Krish set 75% on 2026-09-26), and the
-// same text as it stood when it passed the fact gate, before he set it.
+// Piece 2 as published in its edition. It is archive and still ends on the old
+// prediction section; since 2026-11-24 no check reads that section at all
+// (Ruling, Krish, 2026-11-24: "the signature format is the 5 Whys; get rid of
+// everything that suggests predictions, calls, dated, odds or scores").
 const PASSED = readFileSync('editions/2026-09-who-picks-your-ai/body.md', 'utf8')
-const UNSET = PASSED.replace('How sure we are: 75%.', 'How sure we are: [to set]')
 const factsOk = { ok: true, reason: null }
-// Krish, 2026-10-19: a call must fall within 92 days. PASSED is due 30 September 2027 and
-// the Call in the other fixtures 30 June 2027, so a fixed `now` keeps each inside the window.
-const NOW_SEP = new Date('2027-07-15T12:00:00Z')
-const NOW_JUN = new Date('2027-04-15T12:00:00Z')
 
 describe('a script makes sense out loud and tells one story (walk log F75)', () => {
   test('both rules are live and reach the writers, both judge gates and the final pass', () => {
@@ -57,9 +54,7 @@ describe('every ruling carries his words and reaches a stage', () => {
   })
   test('every publish-check rule has a mechanical check', () => {
     const ids = new Set(publishChecks(PASSED, factsOk).map(c => c.id))
-    // SHARP_PREDICTION reaches no writer since 19 November (Ruling, Krish, 2026-11-19); CALL_HORIZON and CLEAR_STANCE hold it.
-    const ENFORCED_AS: Record<string, string> = { SHARP_PREDICTION: 'CALL_HORIZON' }
-    for (const r of rulesFor('publish_check')) assert.ok(ids.has(ENFORCED_AS[r.id] ?? r.id), r.id)
+    for (const r of rulesFor('publish_check')) assert.ok(ids.has(r.id), r.id)
   })
   test('both judge gates read the rules for their gate, with the subchannel', async () => {
     process.env.SUPABASE_URL ||= 'http://127.0.0.1:9'
@@ -228,102 +223,30 @@ describe('every ruling carries his words and reaches a stage', () => {
 })
 
 describe('the checks before approval, on real text', () => {
-  test('piece 2 as it passed the fact gate clears everything but the confidence Krish sets (CALL, CALL_HORIZON and CLEAR_STANCE block)', () => {
-    const checks = publishChecks(UNSET, factsOk, NOW_SEP)
-    const failing = publishStatus(checks).failing.map(c => c.id)
-    assert.deepEqual(failing, ['CALL', 'CALL_HORIZON', 'CLEAR_STANCE'])
-    assert.match(checks.find(c => c.id === 'CALL')!.detail, /no confidence yet/)
+  test('piece 2 as published clears every blocking check, and no check reads its old prediction section', () => {
+    const checks = publishChecks(PASSED, factsOk)
+    assert.deepEqual(publishStatus(checks).failing.map(c => c.id), [])
+    for (const id of ['CALL', 'CALL_HORIZON', 'CLEAR_STANCE']) assert.equal(checks.find(c => c.id === id), undefined, id)
     assert.ok(readingGrade(PASSED) <= 8)
-  })
-  test('with a clear 85% set and the call within 92 days, it is ready, and the fact check still holds', () => {
-    // Krish, 2026-09-26: 75%. The confidence is his judgement, not a fact, so
-    // setting it leaves the passed check in force (api/_factGate.ts bodyHash).
-    const set = PASSED
-    assert.ok(set.includes('How sure we are: 75%.') && UNSET !== set)
-    const clear = set.replace('75%.', '85%.')
-    assert.equal(publishStatus(publishChecks(clear, factsOk, NOW_SEP)).ok, true)
-    // Krish, 2026-10-19: 75% is now a fence-sit and blocks; a year-out call is held by CALL_HORIZON.
-    assert.deepEqual(publishStatus(publishChecks(set, factsOk, NOW_SEP)).failing.map(c => c.id), ['CLEAR_STANCE'])
-    assert.deepEqual(publishStatus(publishChecks(clear, factsOk, new Date('2026-10-19T12:00:00Z'))).failing.map(c => c.id), ['CALL_HORIZON'])
-    assert.equal(bodyHash(UNSET), bodyHash(set))
-    const edition = JSON.parse(readFileSync('editions/2026-09-who-picks-your-ai/edition.json', 'utf8'))
-    assert.equal(bodyHash(set.trim()), edition.fact_check.body_hash)
-    assert.equal(bodyHash(set.replace('75%.', '60%')), bodyHash(set))
   })
   test('a piece that names Krish is held, in any spelling, with no override (house rule NO_NAME)', () => {
     // Krish, 2026-10-28: "Remember, no content refers to Krish, ever."
-    const clear = PASSED.replace('75%.', '85%.')
-    const failing = (t: string) => publishStatus(publishChecks(t, factsOk, NOW_SEP)).failing.map(c => c.id)
-    assert.deepEqual(failing(clear), [])
-    for (const named of [`By Krish Raja\n\n${clear}`, clear.replace('## OUR PREDICTION', "Krish's test showed it.\n\n## OUR PREDICTION"), `${clear}\n\nMore at krishraja.com`]) {
+    const failing = (t: string) => publishStatus(publishChecks(t, factsOk)).failing.map(c => c.id)
+    assert.deepEqual(failing(PASSED), [])
+    for (const named of [`By Krish Raja\n\n${PASSED}`, PASSED.replace('## OUR PREDICTION', "Krish's test showed it.\n\n## OUR PREDICTION"), `${PASSED}\n\nMore at krishraja.com`]) {
       assert.deepEqual(failing(named), ['NO_NAME'], named.slice(0, 40))
     }
-    const check = publishChecks(`By Krish Raja. ${clear}`, factsOk, NOW_SEP).find(c => c.id === 'NO_NAME')!
+    const check = publishChecks(`By Krish Raja. ${PASSED}`, factsOk).find(c => c.id === 'NO_NAME')!
     assert.equal(check.blocking, true)
     assert.match(check.detail, /"Krish Raja"/)
-    // The old placeholder named him; the one drafts carry now does not.
-    assert.ok(failing(PASSED.replace('How sure we are: 75%.', 'How sure we are: [Krish to set]')).includes('NO_NAME'))
-    assert.ok(!failing(UNSET).includes('NO_NAME'))
   })
-  test('only the number is exempt: words added to the confidence line are checked like any other', () => {
-    const set = PASSED
-    assert.notEqual(bodyHash(set.replace('75%.', '75%, because OpenAI said so.')), bodyHash(set))
-    assert.notEqual(bodyHash(set.replace('By 30 September 2027', 'By 30 September 2028')), bodyHash(set))
-  })
-  test('a fence-sitting confidence now blocks, and only 80% or more is a clear stance', () => {
-    const at = (n: number) => publishChecks(PASSED.replace('75%.', `${n}%.`), factsOk, NOW_SEP).find(c => c.id === 'CLEAR_STANCE')!
-    assert.equal(at(60).ok, false); assert.equal(at(60).blocking, true); assert.match(at(60).detail, /sitting on the fence/)
-    assert.equal(at(75).ok, false)
-    assert.equal(at(79).ok, false)
-    assert.equal(at(80).ok, true)
-    assert.equal(at(85).ok, true)
-    assert.equal(publishStatus(publishChecks(PASSED.replace('75%.', '60%.'), factsOk, NOW_SEP)).ok, false)
-  })
-  test('the call must fall after today and within 92 days (CALL_HORIZON blocks)', () => {
-    const body = PASSED.replace('75%.', '85%.')
-    const horizon = (now: Date) => publishChecks(body, factsOk, now).find(c => c.id === 'CALL_HORIZON')!
-    assert.equal(horizon(NOW_SEP).ok, true)
-    assert.equal(horizon(NOW_SEP).blocking, true)
-    const far = horizon(new Date('2026-10-19T12:00:00Z'))
-    assert.equal(far.ok, false)
-    assert.match(far.detail, /days away/)
-    assert.equal(horizon(new Date('2027-10-01T12:00:00Z')).ok, false)
-  })
-  test('piece 1\'s "Confidence: 85%" is read, so the stance is judged on its number', () => {
-    // Walk log F35: v10 ends "**The Call.** ... Confidence: 70%." and the
-    // check read only "How sure we are:", so CLEAR_STANCE showed green over
-    // "No confidence set yet". The label is still read; the bar is now 80%.
-    const call = (line: string) => `Amazon's move is about ads.\n\n**The Call.** By 30 June 2027, Amazon opens an authorised route for shopping agents. ${line}`
-    assert.equal(confidenceOf(call('Confidence: 70%.')), 70)
-    assert.equal(confidenceOf('How sure we are: 75%.'), 75)
-    const stance = (line: string) => publishChecks(call(line), factsOk, NOW_JUN).find(c => c.id === 'CLEAR_STANCE')!
-    assert.equal(stance('Confidence: 85%.').ok, true)
-    assert.equal(stance('Confidence: 85%.').detail, '85% is a clear stance.')
-    assert.equal(stance('Confidence: 70%.').ok, false)
-    assert.match(stance('Confidence: 70%.').detail, /sitting on the fence/)
-  })
-  test('a confidence without its label blocks the call and is never green', () => {
-    // The Studio cannot tell which number is the confidence, so the call card
-    // could not be drawn: CALL now refuses what the Studio refuses (H32).
-    const text = 'Amazon\'s move is about ads.\n\n**The Call.** By 30 June 2027, Amazon opens an authorised route. We are 70% sure.'
-    const checks = publishChecks(text, factsOk, NOW_JUN)
-    const call = checks.find(c => c.id === 'CALL')!
-    assert.equal(call.ok, false)
-    assert.equal(call.blocking, true)
-    assert.match(call.detail, /without "How sure we are:"/)
-    const stance = checks.find(c => c.id === 'CLEAR_STANCE')!
-    assert.equal(stance.ok, false)
-    assert.equal(stance.blocking, true)
-    const unset = publishChecks(UNSET, factsOk, NOW_SEP).find(c => c.id === 'CLEAR_STANCE')!
-    assert.equal(unset.ok, false)
-    assert.equal(unset.detail, 'No confidence set yet.')
-  })
-  test('the prediction can be a bold paragraph, as piece 1 writes it', () => {
-    assert.equal(predictionCheck('**The Call.** By 30 June 2027, Amazon opens a route. Confidence: 70%.').ok, true)
-    assert.equal(predictionCheck('**The Call.** Amazon opens a route. Confidence: 70%.').ok, false)
+  test('every number is hashed as written: no confidence line is exempt any more', () => {
+    assert.notEqual(bodyHash(PASSED.replace('75%.', '60%.')), bodyHash(PASSED))
+    assert.notEqual(bodyHash(PASSED.replace('75%.', '75%, because OpenAI said so.')), bodyHash(PASSED))
+    assert.notEqual(bodyHash(PASSED.replace('By 30 September 2027', 'By 30 September 2028')), bodyHash(PASSED))
   })
   test('an em dash, an exclamation mark or a "Not X, Y" blocks', () => {
-    const ids = (t: string) => publishStatus(publishChecks(t + '\n\n## OUR PREDICTION\n\nBy 1 June 2027, it ships. How sure we are: 60%.', factsOk)).failing.map(c => c.id)
+    const ids = (t: string) => publishStatus(publishChecks(t, factsOk)).failing.map(c => c.id)
     assert.ok(ids('It shipped — late.').includes('NO_EM_DASH'))
     assert.ok(ids('It shipped late!').includes('NO_EXCLAMATION'))
     assert.ok(!ids('He said "ship it!" and it shipped.').includes('NO_EXCLAMATION'))
@@ -372,7 +295,7 @@ describe('the checks before approval, on real text', () => {
   })
   test('the PATCH to approved or published asks the checks', () => {
     const src = readFileSync('apps/control-plane/api/content-ideas.ts', 'utf8')
-    assert.match(src, /if \(updates\.state === 'approved' \|\| updates\.state === 'published'\) \{\s*\n\s*const checks = publishChecks\(effective, gate, new Date\(\), id, \{ predictionWanted: predictionWanted\(jsonRecord\(current\.meta\)\) \}\)/)
+    assert.match(src, /if \(updates\.state === 'approved' \|\| updates\.state === 'published'\) \{\s*\n\s*const checks = publishChecks\(effective, gate, jsonRecord\(current\.meta\)\.whys\)/)
     assert.match(src, /reason: 'publish_gate'/)
   })
 })
@@ -832,7 +755,7 @@ describe('every article ends with "3 things you can do tomorrow" (THREE_THINGS_T
     assert.match(HOUSE_RULES.find(x => x.id === 'ONE_SPINE')!.text, /"3 things you can do tomorrow" section \(THREE_THINGS_TOMORROW\), which is not an outline section/)
   })
   test('the publish check reads the heading and the three items, and does not block yet', () => {
-    const three = (body: string) => publishChecks(body, factsOk, NOW_SEP).find(c => c.id === 'THREE_THINGS_TOMORROW')!
+    const three = (body: string) => publishChecks(body, factsOk).find(c => c.id === 'THREE_THINGS_TOMORROW')!
     const ok = `${PASSED}\n\n## 3 things you can do tomorrow\n\n- Check what your plan costs.\n- Ask which model your app uses.\n- Write down the one task you hand over first.\n`
     assert.equal(three(ok).ok, true)
     assert.equal(three(ok).blocking, false)
@@ -845,7 +768,7 @@ describe('every article ends with "3 things you can do tomorrow" (THREE_THINGS_T
     assert.match(three(ok + '\n## Sources\n\n- one\n').detail, /not the last section/)
     assert.match(three(ok.replace(/^- /gm, '1. ')).detail, /Ends with/)
     // Not blocking: the pieces already written and fact-checked are not stopped by it.
-    assert.deepEqual(publishStatus(publishChecks(PASSED.replace('75%.', '85%.'), factsOk, NOW_SEP)).failing.map(c => c.id), [])
+    assert.deepEqual(publishStatus(publishChecks(PASSED, factsOk)).failing.map(c => c.id), [])
   })
 })
 
@@ -964,7 +887,8 @@ describe('this week\'s unrecorded scripts keep every gate but the new close and 
       assert.ok(found.some(l => /NO_NAME/.test(l)), `${file}: v5 opens on a series line that says his name`)
       // Ruling (Krish, 2026-11-16), Growth's audience brief: the first sentence names one concrete thing
       // (ONE_CONCRETE_THING) and the short cut runs to SHORT_CUT (TWO_CUTS); v5 predates all three.
-      const later = cut === 'short' ? /SCRIPT_CLOSE|NO_NAME|ONE_CONCRETE_THING|TWO_CUTS/ : /SCRIPT_CLOSE|NO_NAME|ONE_CONCRETE_THING/
+      // The 5 Whys (Ruling, Krish, 2026-11-24): the October Friday scripts' "85% sure" and dated close are now refused too.
+      const later = cut === 'short' ? /SCRIPT_CLOSE|NO_NAME|ONE_CONCRETE_THING|TWO_CUTS|the signature format is the 5 Whys/ : /SCRIPT_CLOSE|NO_NAME|ONE_CONCRETE_THING|the signature format is the 5 Whys/
       for (const line of found) assert.match(line, later, `${file}: ${line}`)
     }
   })
@@ -1035,7 +959,7 @@ describe('no public word names Krish, and every picture adds meaning (NO_NAME, A
 })
 
 describe('nothing unfinished on the page (ARTICLE_FORMAT, Krish, 2026-11-01)', () => {
-  const fmt = (body: string) => publishChecks(body, factsOk, NOW_SEP).find(c => c.id === 'ARTICLE_FORMAT')!
+  const fmt = (body: string) => publishChecks(body, factsOk).find(c => c.id === 'ARTICLE_FORMAT')!
   test('a clean article passes, and the check blocks', () => {
     assert.equal(fmt(PASSED).ok, true, fmt(PASSED).detail)
     assert.equal(fmt(PASSED).blocking, true)
