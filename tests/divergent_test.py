@@ -119,6 +119,9 @@ class Score(unittest.TestCase):
         self.assertNotIn('judge', body)
         self.assertEqual(len(body['ideas']), len(rows))
         self.assertEqual(body['namespace'], 'content-engine:ideas')
+        # The problem names the reader's subject from config/beat.json reader.about, never the retired business leader.
+        self.assertIn('creative, arts, music, entertainment, media and sports industries', body['problem'])
+        self.assertNotIn('business leaders', body['problem'])
 
     def test_nothing_to_hold_against_makes_no_call(self):
         poster = Poster()

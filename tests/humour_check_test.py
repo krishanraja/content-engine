@@ -60,6 +60,11 @@ class Audience(unittest.TestCase):
         self.assertIn('creative, arts, music, entertainment, media and sports industries', hc.AUDIENCE)
         self.assertNotIn('follow AI news', hc.AUDIENCE)
 
+    def test_a_script_is_about_the_readers_world_not_ai_news(self):
+        beat = json.loads((ROOT / 'config' / 'beat.json').read_text(encoding='utf-8'))
+        self.assertTrue(hc.SURFACES['script'].endswith(beat['reader']['about']))
+        self.assertNotIn('AI news', hc.SURFACES['script'])
+
     def test_every_request_carries_it(self):
         body = hc.request(['A line.'], 'funny', 'ce:t')
         self.assertIn(hc.AUDIENCE, json.dumps(body))

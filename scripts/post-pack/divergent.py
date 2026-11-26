@@ -230,7 +230,9 @@ def score_body(ideas, sources, plans=None):
     if not rows or not obvious:
         return None, rows
     week = (ideas or {}).get('week_start') or (sources or {}).get('week_start') or ''
-    problem = 'Story ideas for makeyourmindup, a publication on AI for business leaders, for the week of %s' % week
+    # The reader's subject, config/beat.json reader.about (the North Star reader line, 2026-11-26), never a copy here.
+    about = json.loads((Path(__file__).resolve().parents[2] / 'config' / 'beat.json').read_text(encoding='utf-8'))['reader']['about']
+    problem = 'Story ideas for makeyourmindup, a publication on %s, for the week of %s' % (about, week)
     return {'op': 'score', 'problem': problem.strip(), 'ideas': [t for _r, _o, t in rows], 'obvious': obvious,
             'namespace': NAMESPACE}, rows
 

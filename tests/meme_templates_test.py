@@ -94,6 +94,9 @@ class GatherTest(unittest.TestCase):
             self.assertEqual(by['reddit:r/MemeTemplatesOfficial']['count'], 2)
             self.assertIn('blocked', by['reddit:r/memes']['error'])
             self.assertEqual(doc['offered_before'], 1)
+            # The roaster reads the reader's world beside the clips (config/beat.json offdays.meme, Krish, 2026-11-26).
+            self.assertIn('studios', doc['write_for']['worlds'])
+            self.assertIn('Never office or enterprise AI', doc['write_for']['meme'])
             self.assertEqual([c['title'] for c in doc['candidates']], ['Green screen: man slowly closing laptop'])
             self.assertEqual(path.name, 'meme-template-candidates.json')
 

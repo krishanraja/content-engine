@@ -69,6 +69,17 @@ class GatherError(Exception):
     pass
 
 
+def write_for():
+    """Who the captions are for and what a meme may be about, read from config/beat.json (the reader's about line and
+    offdays.meme, Krish, 2026-11-26: the memes are aligned to the new positioning), so the roaster step reads the reader's
+    world beside the clips. The clips themselves are found as before: a template is any clip; its subject is ours."""
+    beat = json.loads((Path(__file__).resolve().parents[2] / 'config' / 'beat.json').read_text(encoding='utf-8'))
+    off = beat.get('offdays') or {}
+    return {'reader': beat['reader']['audience_short'], 'about': beat['reader']['about'], 'meme': off.get('meme'),
+            'worlds': off.get('worlds') or [], 'gate': 'board_feed.py gate (code off_beat) refuses a template whose funny line and '
+            'why_it_works name nothing in the focus sectors, from the story score board'}
+
+
 def monday(text):
     try:
         d = date.fromisoformat(text)
@@ -307,7 +318,7 @@ def gather(week, plans=None, today=None, network=True, reddit_files=None, apify=
     doc = {'week_start': wk.isoformat(), 'gathered_at': datetime.now(timezone.utc).isoformat(timespec='seconds'),
            '_about': 'Meme template candidates for the roaster step (references/meme-roaster.md). Never committed: other '
                      'people\'s titles and clips. Each needs why_it_works, mechanism and caption ideas before it is an option.',
-           'sources': sources, 'offered_before': dropped, 'candidates': out}
+           'write_for': write_for(), 'sources': sources, 'offered_before': dropped, 'candidates': out}
     path = folder / 'meme-template-candidates.json'
     path.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')
     lines = [f'{s["source"]}: {s["count"]}' + (f' (not read: {s["error"]})' if s['error'] else '') for s in sources]
