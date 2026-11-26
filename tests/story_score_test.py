@@ -37,7 +37,7 @@ class Rubric(unittest.TestCase):
     def test_version_and_dates(self):
         self.assertEqual(RUBRIC['rubric_version'], 'story-score/1')
         self.assertRegex(RUBRIC['from'], r'^20\d\d-\d\d-\d\d$')
-        self.assertIn(RUBRIC['from'], ('2026-11-30', '2026-12-07'))
+        self.assertEqual(RUBRIC['from'], '2026-11-30', 'Ruling, Krish, 2026-11-26: "Newgate, 30th of November"')
 
     def test_axes_are_unique_and_anchored(self):
         self.assertEqual(len(self.axes), len(RUBRIC['axes']), 'axis ids are unique')

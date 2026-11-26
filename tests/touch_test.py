@@ -17,7 +17,7 @@ import idea_checks as ic  # noqa: E402
 import making  # noqa: E402
 import touch  # noqa: E402
 
-WEEK = '2026-12-07'  # the story score's from week: the gates read the touches from here
+WEEK = '2026-12-07'  # a week after the story score's from (2026-11-30): the gates read the touches from here
 EARLY = '2026-11-23'
 PIECE = '8287846b-6618-4a19-9fb8-23ad4eca2718'
 SYSTEMS = {'file-archives', 'divergence-engine', 'strategist', 'higgsfield', 'growth-makeyourmindup', 'makeyourmindup',

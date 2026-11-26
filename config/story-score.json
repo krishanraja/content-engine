@@ -1,12 +1,13 @@
 {
   "_about": "The story score: how every Sunday option is scored blind and ordered, as rows (the story engine v5 plan, 26 Nov 2026; docs/proposals/2026-11-26-story-engine-gaps.md). Three stages in a fixed order: the floor (scripts/post-pack/story_floor.py, config/story-floor.json: the only reader of his rejections, pass or refused, never a number), the blind score (scripts/post-pack/story_score.py: anchored 0-10 axes, weighted per content type out of 100, with hard floors per type) and the council on close calls only. Taste is a floor only (Ruling, Krish, 2026-11-26): nothing here reads his picks, his approved taste, why_here, cues, scorecards or his verdicts on formats, and nothing is tuned from his picks automatically. Weights and anchors are a first proposal from the growth evidence below and the rulings; only Krish changes them, by a pull request. A weight, anchor, floor, margin or cost is a row here, never code.",
   "rubric_version": "story-score/1",
-  "from": "2026-12-07",
-  "from_note": "The first board the Sunday gate holds to the score (codes story and story_floor). 2026-11-30 if this merges before the 29 Nov run; earlier boards keep the order they were made in.",
+  "from": "2026-11-30",
+  "from_note": "The first board the Sunday gate holds to the score (codes story and story_floor): the board of 30 Nov, made by the Sunday 29 Nov run (ruling gate_from). Earlier boards keep the order they were made in.",
   "rulings": [
     {"id": "floor_only", "at": "2026-11-26", "ruling": "His taste is a floor only: his rejections refuse an option, never score it, and the judges stay blind (check-judges.ts section 4, tests/story_wall_test.py)."},
     {"id": "spend_ceiling", "at": "2026-11-26", "ruling": "The blind proof run spends at most $10, through the ledger, after the protocol is committed."},
-    {"id": "reader", "at": "2026-11-26", "ruling": "The approved North Star reader line (config/beat.json reader), his words: \"I approve the lines\"."}
+    {"id": "reader", "at": "2026-11-26", "ruling": "The approved North Star reader line (config/beat.json reader), his words: \"I approve the lines\"."},
+    {"id": "gate_from", "at": "2026-11-26", "said": "Newgate, 30th of November.", "ruling": "The story gate starts on the board of 30 Nov: the Sunday 29 Nov run is the first one gated."}
   ],
   "audience_from": "config/beat.json reader.audience_short",
   "blind_view": {
