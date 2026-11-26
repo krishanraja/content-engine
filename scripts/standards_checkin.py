@@ -85,6 +85,18 @@ def decided_words(group, db_group):
     return group.get('never_beneath')
 
 
+def ruled_words(key, rulings=None):
+    """The ruled statement for a group in a ruled lineage (config/floor-rulings.json "retired" groups: bold_predictions,
+    predictions_committed and their weekly evolutions), else None. His 24 Nov amendment in the database quotes his words
+    after the statement; the ruling keeps the statement alone, and tests/floor_rulings_test.py holds every group in the
+    lineage to it (26 Nov: the check-in's bold_predictions_e261126 copied the amendment and that test went red)."""
+    import floor_rulings
+    group = ((floor_rulings.load_rulings() if rulings is None else rulings).get('retired') or {}).get('groups') or {}
+    if group.get('statement') and floor_rulings.in_lineage(key, group.get('lineage') or []):
+        return group['statement']
+    return None
+
+
 def prune(floor, groups):
     """Take out of the grouping every standard the floor no longer holds, in place, and return them as
     {id: where}. The Rejections engine retires a standard when a newer one supersedes it: on 18 Nov the floor dropped
@@ -162,7 +174,7 @@ def propose(floor, groups, db_groups, week_of):
             parent = by_key[b['parent']]
             evolves[key] = b['parent']
             entry = {'key': key, 'title': plain(f'{parent["title"]} (evolution, week of {week_of})')[:120],
-                     'never_beneath': plain(decided_words(parent, db_groups.get(b['parent']))),
+                     'never_beneath': plain(ruled_words(key) or decided_words(parent, db_groups.get(b['parent']))),
                      'check': plain(parent['check']), 'members': members, 'evolves': b['parent']}
         else:
             theme = str(first.get('theme') or 'other').replace('_', ' ')

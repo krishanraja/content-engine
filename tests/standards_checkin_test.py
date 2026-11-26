@@ -55,6 +55,24 @@ class Builder(unittest.TestCase):
         merged = dict(groups, groups=groups['groups'] + new)
         self.assertEqual(standards_checkin.floor_group.check(floor, merged), [])
 
+    def test_an_evolution_in_a_ruled_lineage_carries_the_ruled_words(self):
+        # 26 Nov: bold_predictions_e261126 copied his database amendment, which quotes his words after the statement,
+        # and tests/floor_rulings_test.py refused it; the ruling's statement is what every group in the lineage carries.
+        import floor_rulings
+        statement = floor_rulings.load_rulings()['retired']['groups']['statement']
+        floor = {'standards': {
+            's0000000001': {'theme': 'close', 'never_beneath': 'An insight.', 'check_before_delivery': 'Read.'},
+            's0000000002': {'theme': 'close', 'never_beneath': 'A question.', 'check_before_delivery': 'Read.'},
+            's0000000003': {'theme': 'close', 'never_beneath': 'An open end.', 'check_before_delivery': 'Read.'}}}
+        groups = {'groups': [{'key': 'bold_predictions', 'title': 'No predictions', 'never_beneath': statement,
+                              'check': 'Read the close.', 'members': ['s0000000001', 's0000000002']}],
+                  'operating': {'title': 'Ops', 'members': []}}
+        db = {'bold_predictions': {'status': 'approved', 'amendment': statement + ' (Krish, 2026-11-24: "his words").'}}
+        new, _ = standards_checkin.propose(floor, groups, db, '2026-11-26')
+        self.assertEqual([g['key'] for g in new], ['bold_predictions_e261126'])
+        self.assertEqual(new[0]['never_beneath'], statement)
+        self.assertIsNone(standards_checkin.ruled_words('covers_e261126'))
+
 
 if __name__ == '__main__':
     unittest.main()
