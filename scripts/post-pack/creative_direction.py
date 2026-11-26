@@ -36,6 +36,9 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
+sys.path.insert(0, str(ROOT / 'scripts'))
+from velib.retirement import problems as retired_choices
+
 STYLES = ROOT / 'config' / 'style-references.json'
 BAR = ROOT / 'config' / 'reference-cuts.json'  # the bar; its `under_test` holds each choice's default and options
 FILE = 'creative-direction.json'
@@ -211,6 +214,9 @@ def replace_module_text(text, data, module):
 def motion_problems(doc, modules=None):
     """style.motion is {module, reason}: one module from the motion layer, with the point it lands, never one Krish
     turned down. Required for pieces published from MOTION_FROM; checked whenever it is given."""
+    retired = retired_choices(doc)
+    if retired:
+        return retired
     modules = motion_modules() if modules is None else modules
     motion = (doc.get('style') or {}).get('motion')
     if motion is None:

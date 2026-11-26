@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts' / 'post-pack'))
 from velib.lint import lint, no_name_pattern  # noqa: E402
 
-FIXTURE = json.loads((ROOT / 'fixtures/ve/my-test-19s/spec.json').read_text(encoding='utf-8'))
+FIXTURE = json.loads((ROOT / 'fixtures/ve/my-test-19s/spec-v5.json').read_text(encoding='utf-8'))
 
 
 FIXTURE_WORDS_TEXT = json.loads((ROOT / 'fixtures/ve/my-test-19s/script.words.json').read_text(encoding='utf-8'))['text']
@@ -63,37 +63,67 @@ class FridayFailuresAreRefused(unittest.TestCase):
     def test_F07_coral_family_hex_used_as_a_failure_colour(self):
         self.assertRefused(mutate(lambda s: s['cuts']['proof-tall']['beats'][2]['events'][0].update(to_state='fail cells in #ff9b85')), 'brand.no_hex')
 
-    def test_IR48_mind_the_gap_needs_no_dated_call(self):
-        # Ruling (Krish, 2026-11-19): no piece needs a prediction; a cut carries one only when he asked for it.
-        def no_call(s):
-            s.pop('call')
-            whole_tall(s)
-        found = codes_for(mutate(no_call))
+    # Ruling (Krish, 2026-11-24): "the signature format is the 5 Whys; get rid of everything that suggests predictions,
+    # calls, dated, odds or scores." No piece carries a prediction, and no cut, day or series needs one.
+
+    def test_no_prediction_anywhere_whole_cut_needs_none(self):
+        found = codes_for(mutate(whole_tall))
         self.assertNotIn('SCHEMA', found)
-        self.assertNotIn('story.call', found)
+        self.assertFalse([c for c in found if c.startswith('story.call') or c.startswith('story.no_call')], found)
 
-    def test_IR48_whole_cut_with_his_call_but_no_call_beat(self):
-        self.assertRefused(mutate(whole_tall), 'story.call')
+    def test_a_dated_call_is_refused(self):
+        def dated(s):
+            s['call'] = {'statement': 'One more country will fund its own national model.', 'due': '2026-12-31', 'confidence_percent': 90}
+        self.assertRefused(mutate(dated), 'SCHEMA')
 
-    def test_a_call_beat_with_no_call_is_refused(self):
-        def stray(s):
-            s.pop('call')
-            s['cuts']['proof-tall']['beats'][3]['role'] = 'call'
-        self.assertRefused(mutate(stray), 'story.call')
+    def test_a_call_beat_is_refused(self):
+        self.assertRefused(mutate(lambda s: s['cuts']['proof-tall']['beats'][3].update(role='call')), 'SCHEMA')
 
-    def test_off_day_mind_the_gap_needs_no_call(self):
-        # A mind.the.gap piece published on a Tuesday is an off day: no series promise, no dated call card (18 Nov 2026).
-        def off_day(s):
-            s.pop('call')
-            s['publish_day'] = '2026-11-17'
-        self.assertNotIn('SCHEMA', codes_for(mutate(off_day)))
+    def test_no_day_needs_a_prediction(self):
+        for day in ('2026-11-17', '2026-11-20'):  # an off day and a Friday
+            self.assertNotIn('SCHEMA', codes_for(mutate(lambda s: s.update(publish_day=day))))
 
-    def test_friday_mind_the_gap_needs_no_call_either(self):
-        # Ruling (Krish, 2026-11-19): no day needs a prediction.
-        def friday(s):
-            s.pop('call')
-            s['publish_day'] = '2026-11-20'
-        self.assertNotIn('SCHEMA', codes_for(mutate(friday)))
+    def test_a_why_beat_names_its_rung(self):
+        self.assertRefused(mutate(lambda s: s['cuts']['proof-tall']['beats'][2].update(role='why')), 'SCHEMA')
+
+    def test_why_rungs_climb_in_order(self):
+        def ladder(s):
+            beats = s['cuts']['proof-tall']['beats']
+            beats[2].update(role='why', why={'n': 2, 'question': 'Why did the test pass on the second try?', 'strength': 'documented'})
+            beats[3].update(role='why', why={'n': 1, 'question': 'Why was the first answer refused?', 'strength': 'inferred'})
+        self.assertRefused(mutate(ladder), 'story.why')
+
+    def test_a_clean_ladder_and_landing_pass(self):
+        def ladder(s):
+            beats = s['cuts']['proof-tall']['beats']
+            beats[2].update(role='why', why={'n': 1, 'question': 'Why was the first answer refused?', 'strength': 'documented'})
+            beats[3].update(role='why', why={'n': 2, 'question': 'Why did the second one pass?', 'strength': 'open'})
+            beats[4].update(role='landing', landing={'shows': 'The refusal came from the rule, not from the model.',
+                                                     'open_question': 'Who wrote the rule your tools follow?'})
+        found = codes_for(mutate(ladder))
+        self.assertNotIn('SCHEMA', found)
+        self.assertNotIn('story.why', found)
+        self.assertNotIn('story.landing', found)
+
+    def test_the_landing_never_forecasts_or_scores(self):
+        for shows, question in (('By 2027 every country will fund its own model.', 'Who pays for it?'),
+                                ('We are 80% sure the rule changes next.', 'Who wrote the rule?'),
+                                ('The odds are the rule changes.', 'Who wrote the rule?'),
+                                ("There's a 70% chance labels fold.", 'Who wrote the rule?'),
+                                ('The rule came first, and that is the lesson for leaders.', 'Who wrote the rule?'),
+                                ('The rule came first.', 'Who wrote the rule')):
+            def landing(s, shows=shows, question=question):
+                s['cuts']['proof-tall']['beats'][4].update(role='landing', landing={'shows': shows, 'open_question': question})
+            self.assertRefused(mutate(landing), 'story.landing')
+
+    def test_the_landing_may_carry_a_share_or_the_bare_nouns(self):
+        # The lint refuses what packages/contracts/src/whys.ts landingVetoes refuses: stated odds and stated confidence,
+        # never a share, "confidence" or "likelihood" as facts.
+        for shows in ("Spotify now keeps 30% of every AI track's royalties.",
+                      'Consumer confidence fell after the recall, and the likelihood of a second recall was in the filing.'):
+            def landing(s, shows=shows):
+                s['cuts']['proof-tall']['beats'][4].update(role='landing', landing={'shows': shows, 'open_question': 'Who wrote the rule?'})
+            self.assertNotIn('story.landing', codes_for(mutate(landing)), shows)
 
     def test_R46_generated_picture_used_as_evidence(self):
         asset = {'id': 'fake-shot', 'kind': 'screenshot', 'origin': 'generated', 'path': 'x.png', 'sha256': '0' * 64,
@@ -249,7 +279,10 @@ class NoNameOnScreen(unittest.TestCase):
         self.assertNamed(lambda s: s['objects'][1]['params'].update(text='KRISH’S CONFIDENCE'), 'objects.1.params.text')
         self.assertNamed(lambda s: s['objects'][0]['params']['cols'][0].update(label='@TheRealKrisho'), 'objects.0.params.cols.0.label')
         self.assertNamed(lambda s: s['objects'][2]['params'].update(outlet='krishraja.com'), 'objects.2.params.outlet')
-        self.assertNamed(lambda s: s['call'].update(statement='Krish thinks one more country will fund its own model.'), 'call.statement')
+        self.assertNamed(lambda s: s['cuts']['proof-tall']['beats'][4].update(role='landing', landing={
+            'shows': 'Krish thinks the rule came first.', 'open_question': 'Who wrote the rule?'}), 'cuts.proof-tall.beats.4.landing.shows')
+        self.assertNamed(lambda s: s['cuts']['proof-tall']['beats'][2].update(role='why', why={
+            'n': 1, 'question': 'Why did Krish see the refusal?', 'strength': 'open'}), 'cuts.proof-tall.beats.2.why.question')
 
     def test_records_files_ids_and_other_names_pass(self):
         def records(s):

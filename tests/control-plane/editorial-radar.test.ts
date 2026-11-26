@@ -90,3 +90,28 @@ describe('parseEditorialLensResponse', () => {
     expect(results[0]?.title).toBe('What the pricing move actually says')
   })
 })
+
+// Ruling (Krish, 2026-11-24): the engine brings stories in his focus sectors
+// (media, entertainment, content, arts, music, creator tech, with the economics
+// of AI inside them) and not governance, regulation, security or data breaches.
+describe('the lens prompt carries the beat', () => {
+  it('appends the beat block built from config/beat.json, for both series', async () => {
+    const { buildEditorialLensSystemPrompt } = await import('../../apps/control-plane/api/_editorialRadar.js')
+    const { beatPromptBlock } = await import('../../apps/control-plane/api/_beat.js')
+    for (const series of ['money_of_ai', 'built_with_ai'] as const) {
+      const system = buildEditorialLensSystemPrompt(series, '', '')
+      expect(system).toContain(beatPromptBlock())
+      expect(system).toContain('Governance, regulation, compliance and policy')
+      expect(system).toContain('a Reiki master wrote a UK number two')
+    }
+  })
+})
+
+describe('the lens radar hunts the focus sectors', () => {
+  it('searches music, film and TV, creators and art and design, and scores their economics on direction', async () => {
+    const { lensThemeQueries, isOnDirection } = await import('../../apps/control-plane/api/_judgmentLens.js')
+    const queries = lensThemeQueries().join(' | ')
+    for (const word of ['music', 'film and TV', 'creator', 'design']) expect(queries).toContain(word)
+    expect(isOnDirection('Streaming royalties: what the artist behind an AI-assisted hit actually earned')).toBe(true)
+  })
+})

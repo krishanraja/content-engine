@@ -1,5 +1,6 @@
+import { fileURLToPath } from 'node:url'
 import { createHash } from 'node:crypto'
-import { access, copyFile, mkdir, writeFile } from 'node:fs/promises'
+import { access, copyFile, mkdir, readFile, writeFile } from 'node:fs/promises'
 import { basename, dirname, extname, join } from 'node:path'
 import { isLiveSeries, PENDING_BRAND_SOURCE_COMMIT, PUBLIC_SERIES_NAMES, SERIES_IDS, type BrandHouseStyleV1, type BrandPublicationLockupV1, type BrandThemeV1, type BrandWordmarkAssetV1, type BrandWordmarkLockupV1, type RenderManifestV1, type Series } from '@mindmake/contracts'
 import { hashFile } from './hash.js'
@@ -83,6 +84,13 @@ function assertSafeSvg(bytes: Uint8Array, sourcePath: string): void {
 
 async function cachedOfficialAsset(theme: BrandThemeV1, asset: BrandWordmarkAssetV1, fetchImpl: typeof fetch): Promise<string> {
   const extension = wordmarkExtension(asset)
+  if (/^assets\/brand\/makeyourmindup\/v5\/[a-z0-9-]+\.svg$/.test(asset.source_path)) {
+    const localPath = fileURLToPath(new URL('../../../' + asset.source_path, import.meta.url))
+    const bytes = await readFile(localPath)
+    if (contentHash(bytes) !== asset.sha256) throw new Error(`v5 mark hash mismatch for ${asset.source_path}`)
+    assertSafeSvg(bytes, asset.source_path)
+    return localPath
+  }
   const cachePath = join(studioPaths().cacheRoot, 'brand-wordmarks', `${asset.sha256}${extension}`)
   try {
     await access(cachePath)

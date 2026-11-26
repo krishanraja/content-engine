@@ -5,7 +5,11 @@
 // items for two repeated reasons that the old contract had no field for:
 //
 //   backward-looking   "too opinion based and not enough analysis + prediction"
-//                      -> where_this_goes
+//                      -> where_this_goes, which since 2026-11-25 holds the
+//                      landing: what the arc shows plus one open question,
+//                      never a prediction (Ruling, Krish, 2026-11-24: "the
+//                      signature format is the 5 Whys; get rid of everything
+//                      that suggests predictions, calls, dated, odds or scores")
 //   no consequence     "so what? ... I dont understand why it matters or who
 //                      it matters to"
 //                      -> reader_decision
@@ -28,12 +32,15 @@
 // implemented. If a field was meant to be dropped, it needs naming.
 // ---------------------------------------------------------------------------
 
+import { landingVetoes } from '../../../packages/contracts/src/whys.js'
+
 export interface Card {
   headline: string
   what_changed: string
   why_now: string
   the_opening: string
-  /** A falsifiable forward claim. Continuation of the current trend is not one. */
+  /** The landing: what the arc shows, then one open question for the reader. Never a forecast, a date to check, odds
+   *  or a confidence number (the field keeps its name so stored cards still read). */
   where_this_goes: string
   /** A decision the reader already owns, whose inputs this changes. Not an action. */
   reader_decision: string
@@ -130,8 +137,8 @@ const CONTINUATION = [
   'will only accelerate', 'shows no sign of', 'is here to stay',
 ]
 
-/** Something a forward claim can be checked against later. */
-const FALSIFIABLE_MARK = /\d|\b(by|within|before|during)\s+(the\s+)?(20\d\d|next|this|end|first|second|third|fourth|q[1-4]|\d+\s*(month|year|quarter|week))/i
+/** A forecast to a date ("by 2027", "within six months", "by the end of next year"): a prediction, refused. */
+const DATED_FORECAST = /\b(by|within|before)\s+(the\s+)?(end\s+of\s+)?(20\d\d|next\s+(year|quarter|month)|\d+\s*(month|year|quarter|week)s?|(two|three|six|twelve|eighteen)\s+(month|year|quarter|week)s?|q[1-4])\b|\bwill\b[^.?!]*\b(20\d\d|next year)\b/i
 
 /** Decision framing, as opposed to instruction. */
 const DECISION_MARK = /\b(whether|which|how much|how many|when to|who to|what to|trade[- ]off|choose|chooses|choice|decide|decides|decision|weigh|weighs|between)\b/i
@@ -185,7 +192,7 @@ export function lintCard(card: Card, ctx: LintContext = {}): LintFailure[] {
   //  remains, discard."
   //
   // Runs on the headline and the opening only, NOT the whole claim. The first
-  // version read where_this_goes too, and a separate rule requires that field
+  // version read where_this_goes too, and a separate rule then required that field
   // to carry a number or a date, so the survival test passed on that number
   // every time and this gate could essentially never fire. One required rule
   // silently disabling another is the kind of fault a green test suite hides,
@@ -249,16 +256,27 @@ export function lintCard(card: Card, ctx: LintContext = {}): LintFailure[] {
   // ── where_this_goes ─────────────────────────────────────────────────────
   const wtg = (card.where_this_goes || '').trim()
   if (!wtg) {
-    add('where_this_goes', 'required', 'missing: a card with no forward claim is a summary of the past')
+    add('where_this_goes', 'required', 'missing: a card with no landing is a summary of the past')
   } else {
+    // The landing (Ruling, Krish, 2026-11-24): what the arc shows, then one open question. The same vetoes as a
+    // why-ladder's landing (packages/contracts/src/whys.ts), plus a forecast to a date and "the trend continues".
     const cont = has(wtg, CONTINUATION)
     if (cont) {
       add('where_this_goes', 'continuation_not_claim',
-        `"${cont}" says the current direction continues, which is not a forward claim`)
+        `"${cont}" says the current direction continues: that is a forecast, and a card makes none`)
     }
-    if (!FALSIFIABLE_MARK.test(wtg)) {
-      add('where_this_goes', 'not_falsifiable',
-        'no number and no timeframe, so nobody could ever say it was wrong')
+    const dated = DATED_FORECAST.exec(wtg)
+    if (dated) {
+      add('where_this_goes', 'forecast',
+        `"${dated[0]}" forecasts to a date; land on what the arc shows and an open question instead`)
+    }
+    const ask = wtg.lastIndexOf('?')
+    const cut = ask > 0 ? wtg.lastIndexOf('.', ask) + 1 : wtg.length
+    for (const v of landingVetoes({ shows: wtg.slice(0, cut), open_question: wtg.slice(cut) })) {
+      add('where_this_goes', 'forecast', `"${v.said}" reads as ${v.kind}; a card makes no prediction, call, odds or confidence`)
+    }
+    if (!/\?\s*$/.test(wtg)) {
+      add('where_this_goes', 'no_open_question', 'end on one open question handed to the reader')
     }
   }
 

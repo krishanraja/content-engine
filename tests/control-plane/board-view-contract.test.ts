@@ -46,6 +46,17 @@ const look = (id: string, name: string) => ({ id, name, pitch: `${name}, pitched
 const motion = (id: string, fits: string, krish_verdict: string, point_types: string[], formats = ['long_video', 'short_video'], ve_route = ['headline']) =>
   ({ id, name: `The ${id} style`, how: `How ${id} moves.`, rules: [`${id} rule one`, `${id} rule two`], point_types, formats, fits, krish_verdict, ve_route })
 
+/** Monday's why-ladder as research filing keeps it (meta.whys, _whys.ts; 1.34.0). */
+const WHYS: Body = {
+  checked_at: '2026-11-15T09:30:00Z', material_id: 'm-research',
+  ladder: { schema: 'why-ladder/1', question: 'Why did the cheap model get dearer?', series: 'follow_the_money',
+    rungs: [1, 2, 3].map(n => ({ n, question: `Why ${n}?`, answer: `Because of cause ${n}.`, strength: n === 3 ? 'open' : 'documented', counter: { text: 'A rival view.' },
+      evidence: n === 3 ? [] : [{ url: 'https://sec.gov/a', domain: 'sec.gov', date: '2026-11-01', quote: 'q' }, ...(n === 2 ? [] : [{ url: 'https://reuters.com/b', domain: 'reuters.com', date: '2026-11-02', quote: 'q' }])],
+      stop: n === 3 ? 'evidence_exhausted' : null })),
+    landing: { shows: 'The price follows who owns the meter.', open_question: 'Which of your tools is metered by someone else?' } },
+  problems: [{ rung: 2, problem: 'Why 2 needs a second source' }],
+}
+
 /** Friday's thumbnail options (1.16.0): three options, each file's review copy in Drive, the critic's pick B and C held. */
 function thumbSet() {
   const sha = (s: string) => createHash('sha256').update(s).digest('hex')
@@ -77,7 +88,9 @@ function full(): ViewInputs {
           // 1.4.0: his motion pick and a "Not this" on a caption style.
           style: { motion: 'ladder', captions: null, rejected: { motion: [], captions: ['beast'] }, by: 'Krish', at: '2026-11-15T11:00:00Z' },
           // 1.6.0: his Not this on the long cut, with his words.
-          cut_verdicts: [{ media_id: 'a'.repeat(64), cut: 'long', verdict: 'not_this', words: 'The open drags. Start on the number.', sha256: 'a'.repeat(64), path: '3 Posts/mon/long.mp4', by: 'Krish', at: '2026-11-16T08:40:00Z' }] }),
+          cut_verdicts: [{ media_id: 'a'.repeat(64), cut: 'long', verdict: 'not_this', words: 'The open drags. Start on the number.', sha256: 'a'.repeat(64), path: '3 Posts/mon/long.mp4', by: 'Krish', at: '2026-11-16T08:40:00Z' }],
+          // 1.34.0: the why-ladder read from its research, one rung still short of a second source.
+          whys: WHYS }),
       piece(WED, '2026-11-18', 'under_the_hood', {}, { materials: [{ id: 'm2', title: 'WIRED: a source', kind: 'paste', content: 'x', at: '2026-11-14T10:00:00Z' }] }),
       // 1.16.0: Friday's thumbnail options wait on his pick.
       piece(FRI, '2026-11-20', 'mind_the_gap', { thumbnail_options: thumbSet() }),
@@ -303,6 +316,24 @@ describe('the Publish Board view contract', () => {
     expect(validate(SCHEMA, v, SCHEMA, '$', { open: true })).toEqual([])
     // The engine's own views are held to the declared kinds: a new kind is added to the schema with a minor bump.
     expect(validate(SCHEMA, v).join()).toMatch(/teleprompter/)
+  })
+
+  it("shows the piece's why-ladder on its read sheet, each rung ok or what it still needs (1.34.0)", () => {
+    const v = buildView(full())
+    const mon = v.model!.days.find(d => d.day === 'mon')!.items.find(i => i.piece_id === MON)!
+    expect(mon.read.whys).toEqual({
+      question: 'Why did the cheap model get dearer?',
+      rungs: [
+        { n: 1, question: 'Why 1?', strength: 'documented', status: 'ok', problems: [], stop: null },
+        { n: 2, question: 'Why 2?', strength: 'documented', status: 'needs_work', problems: ['Why 2 needs a second source'], stop: null },
+        { n: 3, question: 'Why 3?', strength: 'open', status: 'ok', problems: [], stop: 'evidence_exhausted' },
+      ],
+      landing: { shows: 'The price follows who owns the meter.', open_question: 'Which of your tools is metered by someone else?' },
+      problems: [], checked_at: '2026-11-15T09:30:00Z',
+    })
+    const wed = v.model!.days.find(d => d.day === 'wed')!.items.find(i => i.piece_id === WED)
+    expect(wed?.read.whys).toBeUndefined()
+    expect(validate(SCHEMA, JSON.parse(JSON.stringify({ ok: true, ...v })))).toEqual([])
   })
 
   it('pins a frozen fixture that keeps the schema (UPDATE_VIEW_FIXTURE=1 writes it again)', () => {

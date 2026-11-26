@@ -8,7 +8,8 @@ export const MONEY_OF_AI_FORMATS_V1 = ['money_trace', 'artifact', 'verdict', 'co
 export const BUILT_WITH_AI_FORMATS_V1 = ['builder_conversation', 'build_itself', 'third_why', 'first_version'] as const
 /** mind.the.gap's format (Krish, 2026-09-26: "The Fork is good"). It tells
  *  the story in the order the channel's timeline draws it: then, now, the
- *  fork, our call. */
+ *  fork, then the landing: what this shows, and an open question handed to
+ *  the viewer (the why-ladder's landing, packages/contracts/src/whys.ts). */
 export const MIND_THE_GAP_FORMATS_V1 = ['the_fork'] as const
 /** Every format a runner could parse before The Fork. A runner that does not
  *  declare the formats it understands is only handed briefs in these. */
@@ -75,6 +76,13 @@ export const ProductionBriefV1Schema = z.object({
     approved_text: z.string().min(12).max(30_000),
     audience: z.string().min(3).max(600),
     intended_payoff: z.string().min(12).max(1200),
+    // Where the piece's checked why-ladder lands (meta.whys.ladder.landing), bound into the brief when the ladder
+    // stands (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys). Optional and additive: a brief made
+    // before it, or for a piece with no standing ladder, has none. The landing card takes it word for word.
+    landing: z.object({
+      shows: z.string().min(1).max(600),
+      open_question: z.string().min(1).max(600),
+    }).strict().optional(),
   }).strict(),
   claims: z.array(z.object({
     claim_id: IdentifierV1Schema,

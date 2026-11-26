@@ -10,22 +10,27 @@ vi.mock('remotion', async (importOriginal) => {
     Freeze: ({ children }: { children: React.ReactNode }) => children,
     OffthreadVideo: (props: React.VideoHTMLAttributes<HTMLVideoElement>) => React.createElement('video', props) }
 })
-import { houseDueLine } from '../../house/geometry'
 import { EngineRenderPropsSchema, type EngineRenderProps } from '../props'
-import { CallCard, callCardLayout, callCardModel, ENDING_SAFE } from './CallCard'
+import { ENDING_SAFE, LANDING_KICKER, LandingCard, landingCardLayout, landingCardModel } from './LandingCard'
+import { WhyStep, whyStepModel } from './WhyStep'
 import { ENDING_DAYS, ENDING_SETTLED_S, ENDING_SETTLED_TALL_S, ENDING_TAGLINE, EndingBand, endingBandModel, statementLines } from './EndingBand'
 
 function fixture(aspect: EngineRenderProps['aspect']): EngineRenderProps {
   const image = { src: 'stacked.svg', pixelWidth: 1040, pixelHeight: 320 }
   return EngineRenderPropsSchema.parse({
-    pieceId: 'call-ending', cutId: 'short', format: 'face-with-proof', aspect, fps: 30, durationFrames: 2000,
+    pieceId: 'landing-ending', cutId: 'short', format: 'face-with-proof', aspect, fps: 30, durationFrames: 2000,
     tokens: { ink: 'black', inkDeep: 'black', inkSoft: 'gray', cream: 'white', mint: 'aquamarine', channel: 'gold' },
     series: { label: 'follow.the.money', day: 'Monday', promise: 'Where the money moves', site: 'makeyourmindup.ai' },
     brand: { mark: image, logo: image, stacked: image },
     audio: { stem: { src: 'stem.wav', trimBeforeFrames: 0 } },
-    captions: [{ fromFrame: 0, toFrame: 2000, words: [{ text: 'Call', atFrame: 0 }], swipeIndex: null }],
-    beats: [{ id: 'call', role: 'call', layout: 'F1', fromFrame: 100, toFrame: 180, uses: [], transitionOut: 'cut' }],
-    objects: [], events: [], call: { statement: 'Teams will spend less on tools and more on checking the work.', due: '2027-09-30', confidencePercent: 75 },
+    captions: [{ fromFrame: 0, toFrame: 2000, words: [{ text: 'Why', atFrame: 0 }], swipeIndex: null }],
+    beats: [
+      { id: 'why-1', role: 'why', layout: 'F1', fromFrame: 0, toFrame: 100, uses: [], transitionOut: 'cut',
+        why: { n: 1, question: 'Why are teams spending more on checking the work?', strength: 'documented' } },
+      { id: 'landing', role: 'landing', layout: 'F1', fromFrame: 100, toFrame: 180, uses: [], transitionOut: 'cut',
+        landing: { shows: 'Teams now spend less on tools and more on checking the work.', open_question: 'Who in your team checks the work today?' } },
+    ],
+    objects: [], events: [],
     ending: { fromFrame: 180, url: 'makeyourmindup.ai' },
   })
 }
@@ -74,13 +79,14 @@ describe('the statement close', () => {
 })
 
 describe.each(['9:16', '16:9'] as const)('%s chrome', (aspect) => {
-  it('keeps the call, its shadow and arrival inside the safe area', () => {
+  it('keeps the landing card, its shadow and arrival inside the safe area', () => {
     const props = fixture(aspect)
     const safe = ENDING_SAFE[aspect]
     const width = aspect === '9:16' ? 1080 : 1920
     const height = aspect === '9:16' ? 1920 : 1080
-    for (const statement of [props.call!.statement, 'We expect costs to fall.', 'Teams will spend less on tools and more on checking the work before it reaches their customers next year.']) {
-      const layout = callCardLayout(aspect, statement)
+    const question = 'Who in your team checks the work today, and who would notice if nobody did?'
+    for (const shows of [props.beats[1]!.landing!.shows, 'Costs fell.', 'Teams now spend less on tools and more on checking the work before it reaches their customers, and the checking is the new cost.']) {
+      const layout = landingCardLayout(aspect, shows, question)
       expect(layout.box.left).toBeGreaterThanOrEqual(safe.leftPx)
       expect(layout.box.top - 60).toBeGreaterThanOrEqual(safe.topPx)
       expect(layout.box.left + layout.box.width).toBeLessThanOrEqual(width - safe.rightPx)
@@ -90,12 +96,30 @@ describe.each(['9:16', '16:9'] as const)('%s chrome', (aspect) => {
         expect(layout.left + layout.width / 2).toBe(960)
       }
     }
-    expect(callCardModel(props, 99)).toBeNull()
-    expect(callCardModel(props, 100)!.arrival).toBe(0)
-    expect(callCardModel(props, 105)!.arrival).toBe(1)
-    expect(callCardModel(props, 180)).toBeNull()
-    const { call: _call, ...withoutCall } = props
-    expect(callCardModel(withoutCall, 105)).toBeNull()
+    expect(landingCardModel(props, 99)).toBeNull()
+    expect(landingCardModel(props, 100)!.arrival).toBe(0)
+    expect(landingCardModel(props, 112)!.arrival).toBe(1)
+    expect(landingCardModel(props, 180)).toBeNull()
+    // A landing beat with no landing (an archived cut's closing beat) draws no card.
+    const bare = { ...props, beats: props.beats.map(({ landing: _landing, ...beat }) => beat) }
+    expect(landingCardModel(bare, 112)).toBeNull()
+  })
+
+  it('holds the why step for 1.5 s from its beat, marks its strength, and draws nothing on other beats', () => {
+    const props = fixture(aspect)
+    const [why, landing] = props.beats
+    expect(whyStepModel(props, why!, 0)!.label).toBe('Why 1')
+    expect(whyStepModel(props, why!, 12)!.opacity).toBe(1)
+    expect(whyStepModel(props, why!, 45)!.opacity).toBe(1)
+    expect(whyStepModel(props, why!, 45 + 6)).toBeNull()
+    expect(whyStepModel(props, landing!, 120)).toBeNull()
+    const markup = (strength: 'documented' | 'inferred' | 'open') => renderToStaticMarkup(React.createElement(WhyStep, { props, beat: { ...why!, why: { ...why!.why!, strength } }, frame: 20 }))
+    expect(markup('documented')).toContain('Why 1')
+    expect(markup('documented')).toContain(why!.why!.question)
+    expect(markup('documented')).toMatch(/data-strength-marker="" style="[^"]*background:black;border:4px solid black/)
+    expect(markup('inferred')).toMatch(/data-strength-marker="" style="[^"]*background:transparent;border:4px solid black/)
+    expect(markup('open')).toMatch(/data-strength-marker="" style="[^"]*background:transparent;border:4px dashed black/)
+    expect(markup('open')).toContain('open question')
   })
 
   it('covers the whole frame in ink and keeps every word inside the safe box', () => {
@@ -111,16 +135,14 @@ describe.each(['9:16', '16:9'] as const)('%s chrome', (aspect) => {
     expect(model.logoWidth).toBe(aspect === '9:16' ? 420 : 520)
   })
 
-  it('renders the call data, stacked logo, day, promise, pill and URL', () => {
+  it('renders the landing, stacked logo, day, promise, pill and URL, and no prediction anywhere', () => {
     const props = fixture(aspect)
-    const call = renderToStaticMarkup(React.createElement(CallCard, { props, frame: 105 }))
-    expect(call).toContain('The call')
-    expect(call).toContain('Our ')
-    expect(call).toContain('call.')
-    expect(call).toContain(props.call!.statement)
-    const due = houseDueLine(props.call!.due, props.call!.confidencePercent)
-    expect(call).toContain(due.due)
-    expect(call).toContain(due.sure)
+    const landing = renderToStaticMarkup(React.createElement(LandingCard, { props, frame: 112 }))
+    expect(landing).toContain(LANDING_KICKER)
+    expect(landing).toContain(props.beats[1]!.landing!.shows)
+    expect(landing).toContain(props.beats[1]!.landing!.open_question)
+    // No verdict, odds, meter or date on the landing (Ruling, Krish, 2026-11-24).
+    expect(landing).not.toMatch(/our call|the call|% sure|how sure|\bdue\b|\d{4}-\d{2}-\d{2}|predict|odds/i)
     const band = renderToStaticMarkup(React.createElement(EndingBand, { props, frame: 200 }))
     for (const text of [props.brand.stacked.src, 'Built to', 'help you', 'decide.', 'Subscribe free', props.ending!.url, 'MYMU Plex Mono', 'MYMU Anton',
       ...ENDING_DAYS.map((d) => d.day)]) expect(band).toContain(text)

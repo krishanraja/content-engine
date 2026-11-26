@@ -77,10 +77,11 @@ export const IDEA_JUDGES: Judge[] = [
       + '10 means every step is either sourced or labelled as inference, and the piece says plainly what it does not '
       + 'know; 5 means the chain is followable but one step is asserted without support or a label; 1 means the '
       + 'claim floats free and the reader cannot tell fact from guess. '
-      + 'A FORWARD-LOOKING CLAIM WITH NO SOURCE YET IS NOT A LOW SCORE. Krish, 2026-09-24: "In the absence of tons '
-      + 'of evidence, we need to look at hypotheticals and sense-backed predictions." A labelled hypothesis that '
-      + 'reasons from something real scores HIGH here. What scores low is an unlabelled one: a prediction dressed '
-      + 'as a finding. Do not score whether the claim is true, and do not demand a citation for the future.',
+      + 'Read the chain as a why-ladder: each Why is answered from a source or labelled as inference, and the chain '
+      + 'stops honestly where the evidence runs out. A LABELLED INFERENCE THAT REASONS FROM SOMETHING REAL IS NOT A '
+      + 'LOW SCORE, and an honest stop scores HIGH. What scores low is an unlabelled inference dressed as a finding, '
+      + 'or a forecast of what will happen: the piece lands on what the evidence shows and an open question, and '
+      + 'makes no prediction (Ruling, Krish, 2026-11-24). Do not score whether the claim is true.',
     evidence: 'Name the load-bearing step, and say whether it is sourced, labelled as inference, or neither.',
   },
   {

@@ -156,7 +156,8 @@
       "slot-roll": "",
       "receipt-chip": "/api/board/sign-offs?file=1wimTz66mETNNnv6YGhc9QsMrRwGB3b1c",
       "ink-block": "/api/board/sign-offs?file=1cbx6mqGYMRvSinx8CuPkzcY-IWzCK4DW",
-      "mint-word": "/api/board/sign-offs?file=1QqqcuNpas17EsG1P2pGW_r-NX4V3rlh0"
+      "mint-word": "/api/board/sign-offs?file=1QqqcuNpas17EsG1P2pGW_r-NX4V3rlh0",
+      "house-v5": ""
     }
   },
   "stills_drive": {

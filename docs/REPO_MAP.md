@@ -84,9 +84,6 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/briefs/[week]/video-script`
 - `/api/briefs/assemble`
 - `/api/briefs/notes`
-- `/api/calls`
-- `/api/claims/resolve`
-- `/api/claims/rule`
 - `/api/content-creators`
 - `/api/content-decisions/[id]`
 - `/api/content-decisions/[id]/likely-reasons`
@@ -95,7 +92,6 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/content-engine/ping`
 - `/api/content-engine/runs/replay`
 - `/api/content-ideas`
-- `/api/content-ideas/[id]/call-market`
 - `/api/content-ideas/[id]/challenge`
 - `/api/content-ideas/[id]/channel-cut`
 - `/api/content-ideas/[id]/chat`
@@ -171,7 +167,6 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/shifts/[id]/write`
 - `/api/shifts/detect`
 - `/api/signals/news`
-- `/api/signals/odds`
 - `/api/trends/entities`
 - `/api/trends/metrics`
 - `/api/triage/sweep`
@@ -227,9 +222,9 @@ From `.agents/skills/mindmake-video/stations/registry.json`; each station's inst
 | `claims` | v1 | active | Separate facts, inferences and judgments and bind consequential claims to evidence. | `packages/core/src/evidence.ts`, `packages/core/src/editorial.ts` |
 | `visual_plan` | v2 | active | Convert the approved argument into viewer-attention, camera, proof and fallback decisions. | `packages/core/src/visual-plan.ts`, `packages/core/src/art-director.ts` |
 | `assets` | v1 | active | Acquire and approve exact visual evidence, owned media and clearly labelled illustrations. | `packages/core/src/evidence.ts`, `packages/core/src/brand-assets.ts` |
-| `styleframes` | v1 | active | Show exact phone-size compositions before motion and full rendering consume production time. | `packages/core/src/visual-plan.ts`, `packages/core/src/virtual-camera.ts`, `packages/core/src/render-call.ts` |
+| `styleframes` | v1 | active | Show exact phone-size compositions before motion and full rendering consume production time. | `packages/core/src/visual-plan.ts`, `packages/core/src/virtual-camera.ts`, `packages/core/src/render-landing.ts` |
 | `animatic` | v1 | active | Test the timed visual argument, reading load and attention flow before final treatment. | `packages/core/src/visual-plan.ts` |
-| `treatment` | v1 | active | Compile the approved story into deterministic platform render manifests and treatment rules. | `packages/core/src/treatment.ts`, `packages/core/src/render-lineage-v2.ts`, `packages/core/src/render-call.ts` |
+| `treatment` | v1 | active | Compile the approved story into deterministic platform render manifests and treatment rules. | `packages/core/src/treatment.ts`, `packages/core/src/render-lineage-v2.ts`, `packages/core/src/render-landing.ts` |
 | `render` | v1 | active | Render only exact manifests into deterministic platform masters and measurable media outputs. | `packages/core/src/render-v2.ts`, `apps/renderer/src` |
 | `qa` | v1 | active | Independently test technical, editorial, brand, rights and lineage requirements on each master. | `packages/core/src/qa.ts` |
 | `package` | v1 | active | Bind approved masters, copy, covers, captions, ledgers and delivery settings into one artifact. | `packages/core/src/package.ts`, `packages/core/src/youtube.ts` |
@@ -375,6 +370,15 @@ _beat — the MYMU: Teardown beat gate (G0).
 - `const OFF_BEAT`
 - `const NEVER_BEAT`
 - `const ON_BEAT`
+- `function keywordRegex(rows: readonly BeatRow[], flags = 'i'): RegExp`
+- `const AVOID_BEAT`
+- `const FOCUS_BEAT`
+- `const ENTERPRISE_BEAT`
+- `function onAvoidList(text: string): boolean`
+- `function inFocusSector(text: string): boolean`
+- `function neverBeat(headline: string): boolean`
+- `function poolCategoryOffBeat(category: string | null | undefined): boolean`
+- `function beatPromptBlock(): string`
 - `function onTeardownBeat(headline: string, numberSentence?: string | null): boolean`
 
 ### `apps/control-plane/api/_briefNotes.ts`
@@ -561,6 +565,7 @@ How a creator's post is identified, and how close to it Krish's version is
 - `interface CreatorMove`
 - `interface CreatorYieldRow`
 - `interface CreatorMoveCtx`
+- `function buildSystem(ctx: CreatorMoveCtx, creators: CreatorRow[]): string`
 - `async function extractCreatorMoves( posts: CreatorPost[], ctx: CreatorMoveCtx, ): Promise<CreatorMove[]>`
 - `function knownPillar(id: string | null, pillars: { id: string }[]): string | null`
 
@@ -654,14 +659,15 @@ The fact gate.
 - `function activeManualReviews(meta: Record<string, any>): ManualFactReview[]`
 - `function effectiveBlocking(meta: Record<string, any>): CheckedClaim[]`
 - `const PASSING: ReadonlySet<ClaimVerdict>`
-- `const UNSET`
-- `function withoutConfidence(text: string): string`
-- `function isConfidenceLine(sentence: string): boolean`
 - `function bodyHash(body: string): string`
 - `function norm(s: string): string`
 - `function sentences(body: string): string[]`
 - `function sectionOf(body: string, sentence: string): string`
 - `function readsAsForecast(sentence: string): boolean`
+- `function labelledAside(sentence: string, reason = '', section = ''): boolean`
+- `const NO_PREDICTION_MARK`
+- `function asideFlag(sentence: string): string`
+- `function staleAside(sentence: string, entry: LedgerEntry | undefined): boolean`
 - `function numbersIn(s: string): string[]`
 - `function numbersNotOnFile(body: string, meta: Record<string, any>): Array<{ sentence: string; numbers: string[] }>`
 - `const SOURCE_MARK`
@@ -807,7 +813,6 @@ _gates: the investigation double-check gate set. Pure module: no I/O, no
 - `function groundClaim(claimText: string, quote: string, sourceText: string): GroundingResult`
 - `const MIN_VERIFIABILITY`
 - `const FALSIFIER_JACCARD_CEILING`
-- `const FALSIFIER_HORIZON_DAYS`
 - `const SOURCE_CLASSES`
 - `const TAUTOLOGY_BLACKLIST`
 - `interface FalsifierResult`
@@ -815,7 +820,6 @@ _gates: the investigation double-check gate set. Pure module: no I/O, no
 - `interface InterestInput`
 - `interface InterestResult`
 - `function gateInterest(input: InterestInput): InterestResult`
-- `function falsifierDueOn(from = new Date(), days = FALSIFIER_HORIZON_DAYS): string`
 - `const MAX_RUNGS`
 - `const MECHANISM_TYPES`
 - `type MechanismType = typeof MECHANISM_TYPES[number]`
@@ -1338,6 +1342,12 @@ The making record: where one piece is on its way from the workroom to
 - `interface PieceState`
 - `function pieceVerdict(piece: PieceState, closesOn: string, steps: MakingStep[] = makingSteps(piece)): 'done' | 'moot' |…`
 
+### `apps/control-plane/api/_mandate.ts`
+
+A subchannel mandate with its old prediction close taken out.
+
+- `function mandateWithoutCall(mandate: string): string`
+
 ### `apps/control-plane/api/_mediaQuality.ts`
 
 - `export { MEDIA_STANDARD, MEDIA_STANDARD_HASH }`
@@ -1491,7 +1501,6 @@ The YouTube title and description for a piece's video, and the title and
 - `interface PackageContext`
 - `function namesIn(title: string, source: string): string[]`
 - `function repeatsThumbnail(title: string, thumbnail: string | null | undefined): 'same' | 'mostly' | null`
-- `function predictionDate(source: string): string | null`
 - `function lintTitle(input: PackageContext & { title: string }): PackageLint`
 - `function lintPackage(input: PackageContext & { title: string; description: string }): PackageLint`
 - `function lintSubstack(input: PackageContext & { substackTitle: string; substackSubtitle: string }): PackageLint`
@@ -1615,11 +1624,13 @@ The one Anthropic price table.
 - `type ProductionSeries = typeof PRODUCTION_SERIES_VALUES[number]`
 - `type ProductionFormat`
 - `interface ContentRevisionInput`
+- `interface ProductionLanding`
 - `interface ProductionApprovalV1`
 - `interface ProductionBriefV1`
 - `function jsonRecord(value: unknown): JsonRecord`
 - `function productionBriefHash(value: unknown): string`
 - `function contentRevisionHash(input: ContentRevisionInput): string`
+- `function productionLanding(meta: unknown): ProductionLanding | null`
 - `function productionSeries(input: Pick<ContentRevisionInput, 'lane' | 'lane_slot'>): ProductionSeries | null`
 - `function seriesHasFormats(series: ProductionSeries): boolean`
 - `function createProductionApproval(input: ContentRevisionInput, approvedAt: string): ProductionApprovalV1`
@@ -1652,19 +1663,12 @@ The mechanical checks a piece must pass before it can be approved or
 - `function americanSpellings(body: string): Array<{ found: string; use: string }>`
 - `function emDashes(body: string): string[]`
 - `function exclamationMarks(body: string): string[]`
-- `const CLEAR_STANCE_AT`
-- `const CALL_HORIZON_DAYS`
-- `function callHorizon(body: string, now: Date = new Date(), pieceId?: string): { ok: boolean; detail: string } | null`
-- `function confidenceOf(body: string): number | null`
-- `function predictionCheck(body: string): { ok: boolean; detail: string }`
 - `function bareScores(body: string): Array<{ number: string; sentence: string }>`
 - `function threeThingsTomorrow(body: string): { ok: boolean; detail: string }`
 - `function articleSubscribeAsks(body: string): { ok: boolean; detail: string }`
 - `function articleFormat(body: string): string[]`
-- `function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, now: Date = new Date(), pieceId?…`
-- `const PREDICTION_CHECKS: readonly string[]`
-- `const NO_PREDICTION_NEEDED`
-- `function predictionWanted(meta: unknown): boolean`
+- `function whyLadderCheck(whys: unknown): Check`
+- `function publishChecks(body: string, factGate: { ok: boolean; reason: string | null }, whys?: unknown): Check[]`
 - `function publishStatus(checks: Check[]): { ok: boolean; reason: string | null; failing: Check[] }`
 
 ### `apps/control-plane/api/_publishWatch.ts`
@@ -1915,8 +1919,6 @@ The writer's self-check (walk log F42).
 - `function correctionFor(text: string, hits: SelfCheckHit[], answer: string): string`
 - `interface SelfChecked`
 - `async function selfCheck(opts: { /** The writer's first answer, cleaned (sanitizeVoice and the rest). */ first: string …`
-- `const UNSET_CONFIDENCE`
-- `function guardConfidence(text: string, source: string | null): { text: string; restored: boolean }`
 
 ### `apps/control-plane/api/_ships.ts`
 
@@ -1927,16 +1929,6 @@ The writer's self-check (walk log F42).
 
 Signals: the free public sources and the keyed readers the engine reads on
 
-- `type MarketSource = 'polymarket' | 'kalshi'`
-- `interface MarketOdds`
-- `function polymarketProbability(market: { outcomes?: unknown; outcomePrices?: unknown }): number | null`
-- `async function polymarketBySlug(slug: string): Promise<MarketOdds | null>`
-- `async function polymarketSearch(query: string, limit = 6): Promise<MarketOdds[]>`
-- `function kalshiProbability(market: { yes_bid?: unknown; yes_ask?: unknown; last_price?: unknown }): number | null`
-- `async function kalshiByTicker(ticker: string): Promise<MarketOdds | null>`
-- `async function marketOdds(source: MarketSource, key: string): Promise<MarketOdds | null>`
-- `interface CallMarketRecord`
-- `function nextCallMarket(prev: Partial<CallMarketRecord> | null | undefined, odds: MarketOdds, now = new Date()): CallMa…`
 - `interface NewsArticle`
 - `function gdeltSeenToIso(seen: string): string`
 - `async function gdeltArticles(query: string, days = 2, max = 25): Promise<NewsArticle[]>`
@@ -2864,6 +2856,7 @@ Every prompt the live board copies out (docs/plans/2026-11-09-board-desk/PLAN.md
 ### `apps/control-plane/api/board/_research.ts`
 
 - `const MAX_MATERIAL`
+- `const MAX_TOKENS`
 - `async function runResearch(prompt: string, env: Record<string, string | undefined> = process.env, fetcher: Fetcher = fe…`
 - `class MaterialError`
 - `function pastedKind(role: unknown): 'file' | 'research'`
@@ -2878,6 +2871,10 @@ Every prompt the live board copies out (docs/plans/2026-11-09-board-desk/PLAN.md
 - `const PERPLEXITY_LABEL`
 - `const RESEARCH_NOTES_HEADING`
 - `interface ResearchContext`
+- `const WHY_ONE: Readonly<Record<'follow_the_money' | 'under_the_hood' | 'mind_the_gap', { name: string; asks: string }>>`
+- `function seriesKey(series: string | null | undefined): keyof typeof WHY_ONE | null`
+- `interface WhysPromptInput`
+- `function whysResearchPrompt(c: WhysPromptInput): string`
 - `function researchPromptFor(c: ResearchContext): string`
 - `function withResearchPrompts(model: WeekModel, contextOf: (day: string, item: ModelItem) => Omit<ResearchContext, 'item…`
 
@@ -3229,6 +3226,17 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function weekModel(days: DayView[], m: ModelInputs): WeekModel`
 - `function modelProblems(model: WeekModel, days: DayView[]): string[]`
 
+### `apps/control-plane/api/board/_whys.ts`
+
+- `interface WhysProblem`
+- `interface PieceWhys`
+- `function whysFromResearch(content: string, at: string, materialId?: string): PieceWhys | null`
+- `async function saveWhys(db: StoreDb, pieceId: string, whys: PieceWhys): Promise<boolean>`
+- `function whysSummary(whys: PieceWhys, saved: boolean): { rungs: number; problems: string[]; saved: boolean }`
+- `interface ModelWhyRung`
+- `interface ModelWhys`
+- `function whysView(meta: unknown): ModelWhys | null`
+
 ### `apps/control-plane/api/board/_writeBack.ts`
 
 What every prompt the board copies out says about reporting back, and what the board shows of the sessions and the
@@ -3301,28 +3309,6 @@ One yes anywhere (Ruling, Krish, 2026-11-02): his answer for each day, read from
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
-### `apps/control-plane/api/calls.ts`
-
-- `interface ScoreboardCall`
-- `function toScoreboardCall(row: { id: string; idea: string | null; lane_slot: string | null; body: string | null; publis…`
-- `default async function handler(req: VercelRequest, res: VercelResponse)`
-
-### `apps/control-plane/api/claims/_notice.ts`
-
-The came_due notices the claim sweep (resolve.ts) writes: one per claim, ever.
-
-- `interface Notice`
-- `interface NoticeDb`
-- `async function recordNotices(db: NoticeDb, rows: Notice[]): Promise<number>`
-
-### `apps/control-plane/api/claims/resolve.ts`
-
-- `export default withContentRun('claims_resolve', handler)`
-
-### `apps/control-plane/api/claims/rule.ts`
-
-- `default async function handler(req: VercelRequest, res: VercelResponse)`
-
 ### `apps/control-plane/api/content-creators.ts`
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
@@ -3379,10 +3365,6 @@ What this deployment needs before it can do its job.
 - `const PIECE_COLUMNS`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 
-### `apps/control-plane/api/content-ideas/[id]/call-market.ts`
-
-- `default async function handler(req: VercelRequest, res: VercelResponse)`
-
 ### `apps/control-plane/api/content-ideas/[id]/challenge.ts`
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
@@ -3411,6 +3393,7 @@ What this deployment needs before it can do its job.
 ### `apps/control-plane/api/content-ideas/[id]/draft.ts`
 
 - `export { curationBlock }`
+- `const NO_PREDICTION_LINE`
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
 - `const config`
 
@@ -4093,10 +4076,6 @@ A copy of every row the Monday purge is about to hard-delete.
 ### `apps/control-plane/api/signals/news.ts`
 
 - `export default withContentRun('signals_news', handler)`
-
-### `apps/control-plane/api/signals/odds.ts`
-
-- `export default withContentRun('signals_odds', handler)`
 
 ### `apps/control-plane/api/trends/_entities.ts`
 
@@ -5044,14 +5023,6 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 - `function cutHeight(captions: readonly Page[], aspect: EngineRenderProps['aspect']): number`
 - `function ArtDirectedCaption({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
 
-### `apps/renderer/src/engine/chrome/CallCard.tsx`
-
-- `interface CallCardProps`
-- `const ENDING_SAFE`
-- `function callCardLayout(aspect: EngineRenderProps['aspect'], statement: string)`
-- `function callCardModel(props: EngineRenderProps, frame: number)`
-- `function CallCard({ props, frame }: CallCardProps): React.ReactElement | null`
-
 ### `apps/renderer/src/engine/chrome/CaptionTrack.tsx`
 
 - `type CaptionPage = EngineRenderProps['captions'][number]`
@@ -5085,6 +5056,16 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 - `function StingClose({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
 - `function EndingBand({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
 
+### `apps/renderer/src/engine/chrome/LandingCard.tsx`
+
+- `interface LandingCardProps`
+- `const LANDING_KICKER`
+- `const ENDING_SAFE`
+- `function landingCardLayout(aspect: EngineRenderProps['aspect'], shows: string, openQuestion: string)`
+- `function landingBeatAt(props: EngineRenderProps, frame: number): LandingBeat | null`
+- `function landingCardModel(props: EngineRenderProps, frame: number)`
+- `function LandingCard({ props, frame }: LandingCardProps): React.ReactElement | null`
+
 ### `apps/renderer/src/engine/chrome/LeadCaption.tsx`
 
 - `interface LeadWord`
@@ -5107,6 +5088,16 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 
 - `export { REGIONS as THEME_REGION } from '../captions/kit'`
 - `function ThemedCaption({ props, theme, frame = 0 }: { props: EngineRenderProps; theme: CaptionThemeName; frame?: number…`
+
+### `apps/renderer/src/engine/chrome/WhyStep.tsx`
+
+- `interface WhyStepProps`
+- `const WHY_STEP_HOLD_S`
+- `type WhyStrength = NonNullable<EngineBeat['why']>['strength']`
+- `function whyStrengthMarker(strength: WhyStrength, ink: string): React.CSSProperties`
+- `const WHY_STRENGTH_WORDS: Record<WhyStrength, string>`
+- `function whyStepModel(props: EngineRenderProps, beat: EngineBeat, frame: number)`
+- `function WhyStep({ props, beat, frame }: WhyStepProps): React.ReactElement | null`
 
 ### `apps/renderer/src/engine/chrome/WordCaption.tsx`
 
@@ -6425,13 +6416,12 @@ JSON-value transport: escape values only; keys retain their original spelling.
 - `function houseStickerSize(text: string, sizePx: number = HOUSE.sticker.size, paddingX: number = HOUSE.sticker.paddingX,…`
 - `function houseShortStickerFrame(text: string, safe: HouseSafeZones)`
 - `function houseCaptionFrame(safe: HouseSafeZones, bounds?: { x: number; y: number; width: number }): { left: number; top…`
-- `function houseCallFrame(statement: string, safe: HouseSafeZones)`
+- `function houseLandingHeight(shows: string, openQuestion: string, width: number)`
+- `function houseLandingFrame(shows: string, openQuestion: string, safe: HouseSafeZones)`
 - `function houseBandInsets(safe: HouseSafeZones): { left: number; right: number }`
 - `function houseTickerCycleWidth(promise: string, day: string): number`
 - `function houseTickerOffset(promise: string, day: string, msSinceArrival: number): number`
 - `function houseSwipeIndex(text: string, emphasis: readonly string[]): number`
-- `function houseLastWordIndex(text: string): number`
-- `function houseDueLine(due: string, confidencePercent: number): { due: string; sure: string }`
 
 ### `apps/renderer/src/house/metrics.ts`
 
@@ -6539,12 +6529,12 @@ Fitting type into a box, as a pure function of a width measurer, so the
 - `function houseBandModel(branding: RuntimeBranding, cue: RuntimeBrandCue | undefined, safeZones: V2RenderProps['safeZone…`
 - `function houseCaptionModel(branding: RuntimeBranding, cue: RuntimeCaption, safeZones: V2RenderProps['safeZones'], bound…`
 - `function houseStickerModel(branding: RuntimeBranding, safeZones: V2RenderProps['safeZones'], atMs: number)`
-- `function houseCallModel(branding: RuntimeBranding, safeZones: V2RenderProps['safeZones'], atMs: number)`
+- `function houseLandingModel(branding: RuntimeBranding, safeZones: V2RenderProps['safeZones'], atMs: number)`
 - `function houseCaptionHidden(branding: RuntimeBranding, cue: RuntimeBrandCue | undefined, safeZones: V2RenderProps['safe…`
 - `function HouseMark({ branding, cue, resolve }: { branding: RuntimeBranding; cue: RuntimeBrandCue | undefined; resolve: …`
 - `function HouseCaption({ cue, branding, safeZones, bounds }: { cue: RuntimeCaption; branding: RuntimeBranding; safeZones…`
 - `function HouseSticker({ branding, safeZones, atMs }: { branding: RuntimeBranding; safeZones: V2RenderProps['safeZones']…`
-- `function HouseCall({ branding, safeZones, atMs }: { branding: RuntimeBranding; safeZones: V2RenderProps['safeZones']; a…`
+- `function HouseLanding({ branding, safeZones, atMs }: { branding: RuntimeBranding; safeZones: V2RenderProps['safeZones']…`
 - `function HouseBand({ branding, cue, safeZones, atMs, resolve }: { branding: RuntimeBranding; cue: RuntimeBrandCue | und…`
 
 ### `apps/renderer/src/v2/MindmakeStory.tsx`
@@ -6622,22 +6612,6 @@ Fitting type into a box, as a pure function of a width measurer, so the
 - `type DeviceLearningProposalV1 = z.infer<typeof DeviceLearningProposalV1Schema>`
 - `const ArtDirectorRepertoireV1Schema`
 - `type ArtDirectorRepertoireV1 = z.infer<typeof ArtDirectorRepertoireV1Schema>`
-
-### `packages/contracts/src/call.ts`
-
-The piece's call: the dated prediction every makeyourmindup piece ends on
-
-- `const CALL_MISSING`
-- `interface PieceCallV1`
-- `type PieceCallReadingV1`
-- `interface CallDateMentionV1`
-- `interface CallConfidenceMentionV1`
-- `function callSectionOf(text: string): string | null`
-- `function callDateMentions(text: string): CallDateMentionV1[]`
-- `function labelledConfidences(text: string): CallConfidenceMentionV1[]`
-- `function withoutBrackets(text: string): string`
-- `function hasPercentage(text: string): boolean`
-- `function readPieceCall(approvedText: string): PieceCallReadingV1`
 
 ### `packages/contracts/src/confirmation-v1.ts`
 
@@ -6805,12 +6779,12 @@ Artifact-bound user confirmation references.
 - `export * from './control-plane-v1.js'`
 - `export * from './drive-discovery-v1.js'`
 - `export * from './session-v1.js'`
+- `export * from './whys.js'`
 - `export * from './confirmation-v1.js'`
 - `export * from './editorial-v1.js'`
 - `export * from './art-director-v1.js'`
 - `export * from './station-harness-v1.js'`
 - `export * from './series.js'`
-- `export * from './call.js'`
 - `const SCHEMA_VERSION`
 - `const SeriesSchema`
 - `type Series = z.infer<typeof SeriesSchema>`
@@ -6913,6 +6887,8 @@ Artifact-bound user confirmation references.
 - `const VE_SHOTS`
 - `const VE_STAGING_MODES`
 - `const VeRoleSchema`
+- `const VeWhyStepSchema`
+- `const VeLandingSchema`
 - `const VeVerbSchema`
 - `const VeTransitionSchema`
 - `const VeFinishSchema`
@@ -6928,7 +6904,6 @@ Artifact-bound user confirmation references.
 - `const VeAssetSchema`
 - `const VeAudioSchema`
 - `const VeApprovalSchema`
-- `const VeCallSchema`
 - `const VeReferenceSchema`
 - `const VeCharacterCueSchema`
 - `const VeCharacterSchema`
@@ -6937,6 +6912,8 @@ Artifact-bound user confirmation references.
 - `type ProductionSpecV2 = z.infer<typeof ProductionSpecV2Schema>`
 - `type VeBeat = z.infer<typeof VeBeatSchema>`
 - `type VeEvent = z.infer<typeof VeEventSchema>`
+- `type VeWhyStep = z.infer<typeof VeWhyStepSchema>`
+- `type VeLanding = z.infer<typeof VeLandingSchema>`
 
 ### `packages/contracts/src/series.ts`
 
@@ -7068,8 +7045,8 @@ Artifact-bound user confirmation references.
 - `const VisualRenderSourceV2Schema`
 - `const AudioOnlyRenderSourceV2Schema`
 - `const RenderSourceV2Schema`
-- `const RenderCallV1Schema`
-- `type RenderCallV1 = z.infer<typeof RenderCallV1Schema>`
+- `const RenderLandingV1Schema`
+- `type RenderLandingV1 = z.infer<typeof RenderLandingV1Schema>`
 - `const RenderManifestV2Schema`
 - `type RenderManifestV2 = z.infer<typeof RenderManifestV2Schema>`
 - `const DraftPackageV2Schema`
@@ -7089,6 +7066,33 @@ Artifact-bound user confirmation references.
 - `type ExperimentV2 = z.infer<typeof ExperimentV2Schema>`
 - `const ConfigChangeProposalV1Schema`
 - `type ConfigChangeProposalV1 = z.infer<typeof ConfigChangeProposalV1Schema>`
+
+### `packages/contracts/src/whys.ts`
+
+The why-ladder: the signature format of every makeyourmindup piece (Ruling, Krish, 2026-11-24: the signature format
+
+- `const WHY_LADDER_SCHEMA`
+- `type WhyStrength = 'documented' | 'inferred' | 'open'`
+- `type WhyStop`
+- `interface WhyEvidence`
+- `interface WhyBranch`
+- `interface WhyRung`
+- `interface WhyLanding`
+- `interface WhyLadder`
+- `const WHY_STRENGTHS: readonly WhyStrength[]`
+- `const WHY_STOPS: readonly WhyStop[]`
+- `const WHY_LADDER_TARGET`
+- `const WHY_LADDER_MIN`
+- `const WHY_LADDER_MAX`
+- `const WHY_ANSWER_MAX_WORDS`
+- `const NO_WHY_LADDER`
+- `function domainOf(url: string): string`
+- `function siteOf(domain: string): string`
+- `function parseWhyLadder(text: string): { ladder: WhyLadder | null; problems: string[] }`
+- `function loopTarget(rung: Pick<WhyRung, 'answer'>): number | null`
+- `const WHY_LANDING_VETO: ReadonlyArray<{ kind: string; pattern: RegExp }>`
+- `function landingVetoes(landing: WhyLanding): Array<{ kind: string; said: string }>`
+- `function checkWhyLadder(l: WhyLadder): { rung: number | null; problem: string }[]`
 
 ### `packages/core/src/analytics.ts`
 
@@ -7413,7 +7417,7 @@ Where a finished video is filed: one folder per piece, whose name says the
 - `export * from './qa.js'`
 - `export * from './radar.js'`
 - `export * from './render.js'`
-- `export * from './render-call.js'`
+- `export * from './render-landing.js'`
 - `export * from './render-v2.js'`
 - `export * from './render-lineage-v2.js'`
 - `export * from './review-bindings.js'`
@@ -7627,12 +7631,12 @@ The producer supplies work. An independently provisioned reviewer signs evidence
 - `async function fetchRadarFeed(url: string, token: string): Promise<RadarFeedV1>`
 - `function sourceReferenceHash(value: string): string`
 
-### `packages/core/src/render-call.ts`
+### `packages/core/src/render-landing.ts`
 
-- `function drawsHouseCallV2(manifest: RenderManifestV2, theme: BrandThemeV1 | undefined): boolean`
-- `function renderCallFromBriefV2(brief: ProductionBriefV1, beatId: string): RenderCallV1`
-- `function renderCallIssuesV2(manifest: RenderManifestV2, theme: BrandThemeV1 | undefined, brief: ProductionBriefV1 | und…`
-- `async function boundRenderCallIssuesV2(manifest: RenderManifestV2, registry?: TreatmentRegistryV1): Promise<string[]>`
+- `function drawsHouseLandingV2(manifest: RenderManifestV2, theme: BrandThemeV1 | undefined): boolean`
+- `function renderLandingFromBriefV2(brief: ProductionBriefV1, beatId: string): RenderLandingV1`
+- `function renderLandingIssuesV2(manifest: RenderManifestV2, theme: BrandThemeV1 | undefined, brief: ProductionBriefV1 | …`
+- `async function boundRenderLandingIssuesV2(manifest: RenderManifestV2, registry?: TreatmentRegistryV1): Promise<string[]>`
 
 ### `packages/core/src/render-lineage-v2.ts`
 

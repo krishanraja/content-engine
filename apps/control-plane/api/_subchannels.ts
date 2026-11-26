@@ -1,4 +1,5 @@
 import { supabase } from './_supabase.js'
+import { mandateWithoutCall } from './_mandate.js'
 
 // The live subchannels, read from the database rather than copied into code.
 //
@@ -25,7 +26,8 @@ export const LIVE_SUBCHANNELS = ['follow_the_money', 'mind_the_gap', 'under_the_
 
 /**
  * Resolve a stored slot (live slug or retired alias) to its live subchannel,
- * with the mandate as the database holds it now. Null when the value names no
+ * with the mandate as the database holds it now, less its old prediction close
+ * (api/_mandate.ts; Ruling, Krish, 2026-11-24). Null when the value names no
  * live subchannel, which a caller must treat as "not routed yet", never as a
  * default.
  */
@@ -45,5 +47,5 @@ export async function loadSubchannel(value?: string | null): Promise<Subchannel 
     .maybeSingle()
   const row = data as { slug: string; label: string | null; mandate: string | null; active: boolean | null } | null
   if (!row || row.active === false || !row.mandate) return null
-  return { slug: row.slug, label: row.label || row.slug, mandate: row.mandate }
+  return { slug: row.slug, label: row.label || row.slug, mandate: mandateWithoutCall(row.mandate) }
 }

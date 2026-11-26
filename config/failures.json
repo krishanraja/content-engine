@@ -1662,8 +1662,8 @@
       "guards": [
         {
           "file": "scripts/velib/compile.py",
-          "contains": "if not cut.get('excerpt', False):\n        props['ending']",
-          "how": "every whole cut closes on the ending band, call or not",
+          "contains": "if not cut.get('excerpt', False) and spec['format'] != 'why-ladder-v5':\n        props['ending']",
+          "how": "whole cuts outside the v5 ladder retain the ending band; the ladder has its own close card",
           "test": "python3 -m unittest tests/ve_compile_test.py"
         },
         {

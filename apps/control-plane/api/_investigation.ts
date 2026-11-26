@@ -22,7 +22,7 @@ import { isoWeekLabel } from './_weeks.js'
 import { rootDomain } from './_trendGate.js'
 import {
   gateAnchor, groundClaim, gateInterest, gateRung, gateAnalogy, gateEvidence,
-  terminalStatement, falsifierDueOn, diversity, originKey, numericFingerprint,
+  terminalStatement, diversity, originKey, numericFingerprint,
   sourceTier, lexiconIsStale, MAX_RUNGS, MAX_ANCHOR_ATTEMPTS,
   MIN_CIRCULATION_DOMAINS, CIRCULATION_WINDOW_DAYS, GROUNDING_FAILURE_LIMIT,
   MIN_INVESTIGATION_DOMAINS, MAX_EVIDENCE_FETCHES_PER_RUN, check,
@@ -685,7 +685,6 @@ export async function runInvestigation(opts: RunOpts = {}): Promise<RunResult> {
       strength_inflation: it.x.g.strengthInflation,
       falsifier: String(it.x.claim.falsifier || '').slice(0, 1000),
       falsifier_well_formed: it.r.wellFormed, falsifier_jaccard: it.r.jaccard,
-      falsifier_due_on: it.r.wellFormed ? falsifierDueOn() : null,
       surprise: Number(it.x.claim.surprise || 0), verifiability: Number(it.x.claim.verifiability || 0), priority: it.r.priority,
       source_url: anchor.url, source_domain: rootDomain(anchor.url), source_tier: sourceTier(anchor.url),
       publisher_is_beneficiary: decision.origin === 'self' || decision.origin === 'self_relayed',
@@ -938,8 +937,8 @@ export function buildManifest(m: ManifestInput): string {
     m.terminalStatement,
     `(reason: ${m.terminalReason})`,
     '',
-    '### Claims with their falsifiers',
-    ...m.survivingClaims.slice(0, 5).map((c, i) => `${i + 1}. ${c.text}\n   quote: "${c.quote.slice(0, 200)}"\n   falsified if: ${c.falsifier}`),
+    '### What would break each claim',
+    ...m.survivingClaims.slice(0, 5).map((c, i) => `${i + 1}. ${c.text}\n   quote: "${c.quote.slice(0, 200)}"\n   would break if: ${c.falsifier}`),
     '',
     quarantined.length ? `### Harnesses that returned nothing: ${[...new Set(quarantined)].join(', ')}. Do not fill these gaps with inference.` : '',
   ].filter(Boolean).join('\n')

@@ -293,7 +293,7 @@ Held to a piece published from `config/ve/show-gate.json` `enforce_from` (2026-1
 - One EDL drives picture, dialogue, bed, SFX/captions. No manual mux or separate retiming; AAC correction preserves video.
 - No per-piece compositions/render scripts. New hero mechanisms become library devices via cards. `npm run check:ve-route` (`scripts/ve/check_route.py`) bans per-piece code for every move in `config/ve/moves.json` whose device is registered; the weekly device sprint is `docs/ve/SPRINT.md`.
 - Never hand-write a pass/receipt/ready. status checks lint, QC bound to the existing MP4 SHA, completeness, Critic verdict and Krish's exact-file approval.
-- Evidence is real; a generated picture never stands in for a real place, record or test. A generated plate carries no on-screen label, tag or provenance note, and no ILLUSTRATION tag (Krish, 28 Oct 2026: "No one cares that things are AI-generated"; "Yes remove those."); its sidecar keeps the provenance. Numbers name producers; mind.the.gap ends in a dated call. No synthetic Krish without realism-test approval. Follow tools.json recipes/rulings.
+- Evidence is real; a generated picture never stands in for a real place, record or test. A generated plate carries no on-screen label, tag or provenance note, and no ILLUSTRATION tag (Krish, 28 Oct 2026: "No one cares that things are AI-generated"; "Yes remove those."); its sidecar keeps the provenance. Numbers name producers; mind.the.gap lands on the pattern its why-ladder reaches (`docs/FIVE-WHYS.md`); no piece ends on a call (Ruling, Krish, 2026-11-24). No synthetic Krish without realism-test approval. Follow tools.json recipes/rulings.
 - No publish/send/schedule verb.
 
 ## Codex

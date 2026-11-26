@@ -1,0 +1,2 @@
+# Source photos are staged locally by stage.py from the approved Library capture; never committed.
+*.png

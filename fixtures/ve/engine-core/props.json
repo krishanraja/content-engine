@@ -1,7 +1,7 @@
 {
   "pieceId": "engine-core-fixture",
   "cutId": "voiceover-tall",
-  "format": "voice-led-pictures",
+  "format": "face-with-proof",
   "aspect": "9:16",
   "fps": 30,
   "durationFrames": 120,
@@ -23,7 +23,7 @@
   ],
   "beats": [
     { "id": "hook", "role": "hook", "layout": "F3", "fromFrame": 0, "toFrame": 60, "uses": [], "transitionOut": "cut", "sectionBeat": true },
-    { "id": "call", "role": "call", "layout": "F3", "fromFrame": 60, "toFrame": 120, "uses": [], "transitionOut": "cut", "sectionBeat": false }
+    { "id": "close", "role": "landing", "layout": "F3", "fromFrame": 60, "toFrame": 120, "uses": [], "transitionOut": "cut", "sectionBeat": false }
   ],
   "objects": [],
   "events": []

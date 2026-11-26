@@ -1,3 +1,4 @@
+/* Retired publication kit, 25 Nov 2026. */
 /* The publish board's and publish pages' one set of colours (light, dark, and the dark theme on request).
    publish_manager.py reads these three lines into every publish page and the board takes them from there; change them
    only with Krish's recorded words (scripts/check_board_layout.py holds this file's hash; --update --approved). */

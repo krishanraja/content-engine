@@ -1,0 +1,68 @@
+# Proposal: the three subchannel mandates as why-ladder mandates (24 Nov 2026)
+
+Status: Applied 2026-11-25 on Krish's yes ("Merge and apply"), as
+`supabase/migrations/20261225090000_mandates_five_whys.sql` after the beat migration. A check on the live rows found
+each with exactly one THE BEAT sentence, THE LADDER, and no THE CALL, OUR PREDICTION or How sure we are. The sanitiser
+(`apps/control-plane/api/_mandate.ts`) stays as a guard.
+
+## The ask
+
+Ruling (Krish, 2026-11-24): "the signature format is the 5 Whys; get rid of everything that suggests predictions, calls,
+dated, odds or scores." Keep the Monday, Wednesday and Friday series and make them more distinct. Learning
+`why-ladder-close` in `config/learnings.json`.
+
+## Where the drafts come from
+
+Read only from this repository: the current mandates as plan-week last read them
+(`docs/plans/2026-11-23-week/sources.json`, `series[].mandate`), the clause a 2026-10-02 migration appended
+(`supabase/migrations/20261002090000_mandates_dated_prediction.sql`), and the plan's series table (Why 1, main evidence
+plate, where it lands, research). Each keeps what the current mandate gets right: the standing question, the reader,
+the boundary ("what does the reader change next?"), naming, the hard gates and no preaching. What changes: the close
+becomes the ladder's landing, and nothing asks for a forecast, a date to check, odds or a confidence number.
+
+## What changes, row by row
+
+| | follow.the.money (Mon) | under.the.hood (Wed) | mind.the.gap (Fri) |
+|---|---|---|---|
+| Removed | "THE CLOSE is a verdict"; the THE CALL clause | the THE CALL clause | "say what it means is coming"; the THE CALL clause |
+| Why 1 asks | who pays, and why the price moved | how it is built, and what broke | where the claim and the reality part |
+| Main evidence | money flow, contracts, royalty splits | mechanism diagrams; Real or Theatre as an evidence annotation | belief against evidence; the pattern timeline |
+| Lands on | who ends up better or worse off | what is really inside | the pattern |
+
+## follow_the_money
+
+> Work out where the money moves and who ends up better or worse off, one Why at a time. That is the standing question and it leads every piece. THE LADDER: Why 1 asks who pays, and why the price moved. Each Why is answered from evidence on two domains, a filing, a contract, a pricing page, a royalty split, or it is marked as an open question and the ladder stops there; a Why is never climbed past without its evidence. Each rung joins the last with "because" or "but", never "and then", and ends on the next question. Three to seven rungs, five as the target, never padded. The channel covers the whole money system, from any side of the invoice: what a business can charge for AI-powered work, what AI actually costs to run and whether it pays back, how the labs themselves make money, and when it is worth owning the thing rather than renting it. A piece that traces one chain end to end is the best version of this channel. THE READER is anyone standing at the invoice, on either side of it: the leader of a five to fifty million pound business who has just seen the renewal quote, the operator setting a price for work a model now does, and the founder deciding whether to build the thing or keep renting it. SUBJECTS are giants, and after that whoever leaves the best paper trail. Product surfaces are evidence for the money question and are never a follow.the.money subject in their own right. THE BOUNDARY, and it decides every contested subject: what does the reader change next? If they would go and change a price, a budget or a contract, it is follow.the.money. If they would change what they build or buy, it is under.the.hood. If they would change how they think or what they expect, it is mind.the.gap. The question decides, never the surface. NAMING: name whoever the number came from. A public decision by a named executive is fair game; their character is not. THE LANDING: what the ladder shows about who ends up better or worse off, and the strongest version names something already fixed that has not yet shown up in the price (a lease, a depreciation schedule, a liability cap), then hands the reader one open question. Never a forecast, a date to check, odds or a confidence number. Diagram language: the money map, where the dollars enter and where they leave, one rung at a time. HARD GATES, applied before scoring. NOT US: the subject is never Krish, mind/make, CTRL or his own accounts, however available the material. MATERIAL EXISTS: if the evidence has to be created rather than found, it is not commissioned, however good the idea. THE BEAT: who gets paid when AI helps make creative work, in music, film and TV, games, art and design, theatre, media and creator tech: the money behind the hit, the royalty, the licence and the tool. Not governance, regulation, security or data breaches.
+
+## under_the_hood
+
+> Work out what actually goes together, and why this one worked, one Why at a time. Take a shipped thing apart to show what is really in it. THE LADDER: Why 1 asks how it is built, and what broke. Each Why is answered from evidence on two domains, a changelog, the docs, a pricing page, a release note, an error state, or it is marked as an open question and the ladder stops there; a Why is never climbed past without its evidence. Each rung joins the last with "because" or "but", never "and then", and ends on the next question. Three to seven rungs, five as the target, never padded. THE STANDING QUESTION, and the one the opening artifact asks the reader: what would you build differently having seen inside this? Second question, and it decides the harder cases: does this make its user sharper, or dependent? SUBJECTS: the stack and the surface together. Which pieces go together and which quietly do not; the architectures behind builds that are working and the reason they are; what actually ships against what was demoed; and the gap between what a keynote claimed and what a normal account can reach on day one. Big-company launches first, because the distribution makes the stakes legible; after that, whoever leaves the best paper trail. THE READER is choosing what to build or buy: someone with a team, a budget and a decision in front of them about which pieces to put together. THE BOUNDARY, and it decides every contested subject: what does the reader change next? If they would change what they build or buy, it is under.the.hood. If they would change a price, a budget or a contract, it is follow.the.money. If they would change how they think or what they expect, it is mind.the.gap. The question decides, never the surface. Diagram language: the mechanism diagram, with Real or Theatre as the annotation on the evidence it judges. THE LANDING: what is really inside, said as the ladder found it, then one open question handed to the reader. Never a forecast, a date to check, odds or a confidence number. CADENCE: standing subchannel with no fixed day. It publishes when a subject earns it. HARD GATES, applied before scoring. NOT US: the subject is never Krish, mind/make, CTRL or his own builds, however available the material. MATERIAL EXISTS: if the evidence has to be created rather than found, it is not commissioned, however good the idea. A product that must be bought, installed and run to be inspected fails this gate; a product whose changelog, docs and pricing page are public passes it. TIMESTAMP EVERYTHING: pricing pages and changelogs change, so archive the surface before recording or the piece rots in a week. NO PREACHING: no closing moral, no lesson for leaders, no sentence telling the reader what to conclude. The conclusion is the reader's to reach. THE BEAT: one creative tool or one finished work taken apart, a song, a film, a game, a design or a creator's channel, to show how AI was used to make it and what that changed. Not governance, regulation, security or data breaches.
+
+## mind_the_gap
+
+> Notice the pattern, and trace why it is there, one Why at a time. Take a shift that is visible across several threads and resolve it into one observation the reader has half-noticed and never named. THE LADDER: Why 1 asks where the claim and the reality part. Each Why is answered from evidence on two domains, or it is marked as an open question and the ladder stops there; a Why is never climbed past without its evidence. Each rung joins the last with "because" or "but", never "and then", and ends on the next question. Three to seven rungs, five as the target, never padded. When the evidence splits, follow the better-evidenced branch and park the other; when a Why lands on a person, ask how it made sense to them, never who is to blame; when a Why leaves the subject, stop and name who owns that question. The gap is any of three, and the piece says which one it is working: between what is claimed and what is actually happening; between what people believe and what the evidence shows; or no gap at all, just a pattern worth naming and what it shows. SEVERAL THREADS, ONE SPINE. A piece may and should draw on several subjects, shifts or themes. What it may not do is survey them: they resolve into one ladder with one spine, or it is a roundup. Covers thinking, usage, habit, technology and application; public decisions and what they say about the wider picture; historical shifts; and the human stories underneath the technology. The question the opening artifact asks the reader: what is the pattern here, and why is it there? THE BOUNDARY, and it decides every contested subject: what does the reader change next? If they would change how they think or what they expect, it is mind.the.gap. If they would change a price, a budget or a contract, it is follow.the.money. If they would change what they build or buy, it is under.the.hood. The question decides, never the surface. Diagram language: two columns, belief against evidence, and the pattern timeline. Register is human, observant and connected to the real world. Strongest subjects invert a well-covered story rather than restating it. THE LANDING: the pattern, said as the ladder found it, then one open question handed to the reader. Never a forecast, a date to check, odds or a confidence number, and never what is coming next. HARD RULE, and the one that overrides every other instruction in this mandate: no preaching. No closing moral, no lesson for leaders, no sentence telling the reader what to conclude or become. The not-us gate applies here too: the subject is never Krish, mind/make, CTRL or his own operating loop, however available the material. THE BEAT: the gap between what makers, performers and creators are promised about AI and what the record shows, in their earnings, their audiences and their work. Not governance, regulation, security or data breaches.
+
+## How this composes with the beat migration
+
+`supabase/migrations/20261224091000_mandates_creative_beat.sql` (also not applied, also waiting on Krish's yes) appends
+one ` THE BEAT: ...` sentence to each of the same three rows, skipping a row that already says `THE BEAT:`. Each text
+above already ends with its subchannel's THE BEAT sentence, copied word for word from that migration, so the two land
+the same rows in either order:
+
+- Replacement after the beat migration: the replacement supersedes it. It overwrites each row (old text plus THE BEAT)
+  with the text above, which carries the same THE BEAT sentence once.
+- Replacement before the beat migration: the beat migration finds `THE BEAT:` already in each row and changes nothing.
+
+The replacement is guarded on `position('THE CALL:' in mandate) > 0`, not on the exact old text, because the old text
+may already carry the appended beat. Every live row has said `THE CALL:` since
+`20261002090000_mandates_dated_prediction.sql`, and no text above says it, so the replacement runs once and a re-run
+changes nothing.
+
+## What a yes does
+
+1. One migration replaces the three `venture_formats.mandate` rows with the texts above, one `update` per slug, each
+   `where slug = '<slug>' and position('THE CALL:' in mandate) > 0`, so it runs once and supersedes the beat migration
+   if that was applied first.
+2. A SELECT on `venture_formats` for the three slugs confirms every row ends up with exactly one THE BEAT sentence and
+   no THE CALL: `(length(mandate) - length(replace(mandate, 'THE BEAT:', ''))) / length('THE BEAT:') = 1` and
+   `position('THE CALL' in mandate) = 0` on each row, and no row holds "OUR PREDICTION" or "How sure we are".
+3. The sanitiser stays; on the rewritten rows it changes nothing (`tests/control-plane/mandate.test.ts`).

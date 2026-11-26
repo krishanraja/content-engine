@@ -71,9 +71,21 @@ def check(floor, groups):
             out.append(f'{m}: in {len(at)} places ({", ".join(at)}); a standard sits in exactly one')
         if m not in ids:
             out.append(f'{m}: not a standard on the floor (config/rejection-floor.json)')
-    for m in sorted(ids - set(where)):
+    for m in sorted(ids - set(where) - retired_ids(floor)):
         out.append(f'{m}: on the floor but in no group and not operating; group it in config/floor-groups.json')
     return out
+
+
+def retired_ids(floor) -> set:
+    """The standards config/floor-rulings.json retires (Ruling, Krish, 2026-11-24: "the signature format is the 5 Whys;
+    get rid of everything that suggests predictions, calls, dated, odds or scores"). No maker reads them, so a new one
+    needs no group and the weekly check-in never proposes one to him."""
+    try:
+        import floor_rulings
+    except ImportError:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import floor_rulings
+    return floor_rulings.retired_standards(floor, floor_rulings.load_rulings().get('retired') or {})
 
 
 def card(floor, g):

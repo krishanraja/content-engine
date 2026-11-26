@@ -6,13 +6,16 @@
     "span",
     "viewer_task",
     "point",
-    "call"
+    "why",
+    "landing"
   ],
   "lints": [
     "story.hook_event",
     "story.anchor_by_5s",
     "story.alternation",
-    "story.one_payoff"
+    "story.one_payoff",
+    "story.why",
+    "story.landing"
   ],
   "qc": [
     "qc_motion.hook"

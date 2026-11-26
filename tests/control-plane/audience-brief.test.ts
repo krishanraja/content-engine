@@ -68,9 +68,9 @@ describe('Growth\'s audience brief of 16 Nov: changes 1 to 6 are enforced from t
     }
   })
 
-  test('the subscribe ask promises no calls and no scorecard (change 6, with 7 open; Ruling, Krish, 2026-11-19)', () => {
+  test('the subscribe ask promises no calls, odds or scorecard (change 6, with 7 open; Ruling, Krish, 2026-11-24)', () => {
     const text = rule('ARTICLE_SUBSCRIBE_ASK').text
-    assert.match(text, /never predictions, calls or a scorecard of them/)
+    assert.match(text, /never predictions, calls, odds or a scorecard of them: a piece makes none/)
     assert.doesNotMatch(text, /dated call/)
   })
 

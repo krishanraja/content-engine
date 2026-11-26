@@ -31,8 +31,9 @@ export interface SpineCheck {
 }
 
 /** The draft's sections: the text before the first "## " heading is the
- *  opening, then one section per heading. The prediction is the piece's own
- *  call on the answer, so it is judged too. */
+ *  opening, then one section per heading. The landing says what the ladder
+ *  shows and hands the reader an open question, so it is judged too. A piece
+ *  makes no prediction (Ruling, Krish, 2026-11-24). */
 export function sectionsOf(body: string): SpineSection[] {
   const out: SpineSection[] = []
   let cur: SpineSection = { heading: 'OPENING', text: '' }
@@ -51,7 +52,7 @@ export function sectionsOf(body: string): SpineSection[] {
 
 export const SPINE_SYSTEM = [
   'You are a strict editor. A piece must answer ONE question, its spine, and every section must earn its place by helping answer it.',
-  'For each section you are given, decide: does this section directly help the reader reach the spine\'s answer? A section that is interesting, true or related but answers a different question is a NO. A section that sets up, proves, complicates or applies the answer is a YES. The opening is a YES when it raises the spine question; the prediction is a YES when it is a call about the spine\'s answer; a closing "3 things you can do tomorrow" section is a YES when each action applies the answer.',
+  'For each section you are given, decide: does this section directly help the reader reach the spine\'s answer? A section that is interesting, true or related but answers a different question is a NO. A section that sets up, proves, complicates or applies the answer is a YES. The opening is a YES when it raises the spine question; the landing is a YES when it says what the ladder shows about the spine\'s answer and hands the reader an open question; a closing "3 things you can do tomorrow" section is a YES when each action applies the answer.',
   'Be specific in "why": name the question the section actually answers when it is a NO.',
   'Reply ONLY with JSON: {"sections":[{"heading":"<as given>","answers":true|false,"why":"<one short sentence>"}]}',
 ].join('\n')

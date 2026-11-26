@@ -29,7 +29,7 @@ beat's `role`:
 | `bridge` | carries the thought to the next anchor | a lighter beat that ends on a cue into the next |
 | `pivot` | the turn | one designed move: a zoom out, a carry into a new frame |
 | `payoff` | the answer, exactly once (`story.one_payoff`) | the one big moment; mint on the result |
-| `call` | only when Krish asked for a prediction on the piece (`spec.call`); no piece needs one (Ruling, Krish, 2026-11-19) | calm; the call reads and holds |
+| `why` | one rung of the piece's why-ladder (`docs/FIVE-WHYS.md`): the step card asks the Why, an evidence plate answers it with its source line and strength marker; it replaced `call` (Ruling, Krish, 2026-11-24: no predictions, calls, dated, odds or scores) | a decelerating move of about 8 to 12 frames, no bounce or slap; the rail lights the current rung |
 
 Anchors and bridges alternate (`story.alternation`). The close comes from `config/brand-palette.json` (the tall cut's one
 statement beat of at most 2 s, the wide cut's statement card) and the engine draws it. The plan never adds a close, an

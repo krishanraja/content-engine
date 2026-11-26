@@ -117,6 +117,12 @@ const SUPPORT_TERMS: string[] = [
   'tradeoff', 'trade-off', 'distribution', 'headcount', 'reskill', 'adoption', 'autonomy',
   'friction', 'workflow', 'fractional', 'reinvent', 'portfolio', 'community', 'attention',
   'wetware', 'expertise', 'middle managers', 'real deployment', 'roi', 'switching cost',
+  // His focus sectors (Ruling, Krish, 2026-11-24: the engine brings stories in
+  // media, entertainment, content, arts, music and creator tech, with the
+  // economics of AI inside them; config/beat.json). Substrings, like every
+  // term here.
+  'royalt', 'licensing', 'musician', 'songwriter', 'record label', 'artist', 'album',
+  'film', 'studio', 'streaming', 'creator', 'publisher', 'theatre', 'performer', 'designer',
 ]
 
 const SATURATION = 5 // weighted-hit total at which fit saturates to 1.0
@@ -148,5 +154,11 @@ export function lensThemeQueries(): string[] {
     'when coordination gets cheap the moat moves to owning the context layer',
     'non-linear careers reinventing around AI - operators who capitalise on judgment',
     'model routing and token cost as the applied-AI differentiator',
+    // His focus sectors, with the economics of AI inside them (Ruling, Krish,
+    // 2026-11-24; config/beat.json).
+    'AI music on the charts: who gets paid, royalties and the artists behind the hit',
+    'AI in film and TV production: what it costs, who it pays and what studios save',
+    'creator tools and how creators monetise AI: income, audiences and the businesses behind them',
+    'AI art and design markets: what artists and designers earn and who buys the work',
   ]
 }

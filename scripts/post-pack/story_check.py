@@ -759,7 +759,47 @@ def problems(text, cut=None, series=None, lift=None, title=None):
     found += intro_problems(beats, cut, lift, title)  # house rule INTRO_PATTERN, Ruling, Krish, 2026-11-17
     if cut == 'short':
         found += one_story_problems(beats)
+    found += call_problems(beats)
     return found
+
+
+# The call is retired (Ruling, Krish, 2026-11-24: "the signature format is the 5 Whys; get rid of everything that
+# suggests predictions, calls, dated, odds or scores"). A piece lands on what this shows and an open question for the
+# viewer; an opinion is said as "I reckon" or "I think". A spoken script that makes a call, forecasts to a date, states
+# odds or says a confidence number is refused. A share ("Spotify keeps 30% of the royalties"), a past date ("by 2025 it
+# had a million users") and "I'm not sure" are facts and doubt, not calls, and pass.
+RULING_5_WHYS = ('Ruling, Krish, 2026-11-24: "the signature format is the 5 Whys; get rid of everything that suggests '
+                 'predictions, calls, dated, odds or scores"')
+_MONTHS = r'(?:January|February|March|April|May|June|July|August|September|October|November|December)'
+_SPOKEN_NUMBER = (r'(?:\d{1,3}(?:\.\d+)?|(?:twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(?:[- ](?:one|two|three|four|'
+                  r'five|six|seven|eight|nine))?|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|'
+                  r'(?:a|one) hundred)')
+CALL_SAID = [
+    ('a call', re.compile(r"\b(?:(?:here(?:'s| is)|that(?:'s| is)|this is) (?:our|my) call|our call|my call (?:is|:)|the call is|"
+                          r"(?:my|our) predictions?|(?:i|we) predict|mark (?:it|this|us|me) (?:right or wrong|on the day)|"
+                          r"right or wrong on the day)", re.I)),
+    ('odds', re.compile(r"\b(?:(?:the )?odds (?:are|favou?rs?)|long shot|(?:high|low|good|slim|strong|real|even) "
+                        r"(?:probability|likelihood|chance) (?:of|that))\b|\b" + _SPOKEN_NUMBER +
+                        r"\s?(?:%|per ?cent)\s*(?:chance|likely|likelihood|probability)\b", re.I)),
+    ('a confidence number', re.compile(r"\b(?:how sure|how confident|confidence (?:level|score|rating|number|interval))\b|\b"
+                                       + _SPOKEN_NUMBER + r"\s?(?:%|per ?cent)\s*(?:sure|confident|certain)\b", re.I)),
+]
+# A date the script forecasts to: "by the end of June 2027", "by 31 December 2027", "by mid-2027", for a year to come.
+DATED = re.compile(r"\bby (?:the (?:end|middle|start) of |mid-?|early |late )?(?:\d{1,2}(?:st|nd|rd|th)? )?(?:" + _MONTHS
+                   + r",? )?((?:19|20)\d\d)\b|\bby the end of next year\b", re.I)
+
+
+def call_problems(beats):
+    """Where a spoken script still makes the retired call: a call, a dated forecast, odds or a confidence number."""
+    text = re.sub(r'"[^"]*"|“[^”]*”', '', ' '.join(beats))  # a quoted source is reported, not said as ours
+    said = [(kind, m.group(0)) for kind, rx in CALL_SAID for m in [rx.search(text)] if m]
+    import datetime as _dt
+    dated = next((m for m in DATED.finditer(text) if not m.group(1) or int(m.group(1)) > _dt.date.today().year), None)
+    if dated:
+        said.append(('a dated forecast', dated.group(0)))
+    return [f'it makes {kind} ("{words}"): a piece lands on what this shows and an open question for the viewer, never a '
+            f'prediction, a call, a dated forecast, odds or a confidence number; say "So what this shows is ..." and hand the '
+            f'viewer the question, and say an opinion as "I reckon" or "I think" ({RULING_5_WHYS})' for kind, words in said]
 
 
 OPINION = re.compile(r"\b(?:my (?:bet|call|take|guess)|i think|i reckon|i'd bet|i would bet|if you ask me|"
@@ -796,8 +836,8 @@ def warnings(text):
 
     Krish, 2026-10-09 (house rule VOICE_ON_CAMERA): the script is him reacting,
     with opinion and dry wit. A rule cannot grade a joke; it can see whether a
-    script of a minute or more ever says an opinion as an opinion ("my bet",
-    "I think", "my call"), kept apart from the checked facts. Whether the wit
+    script of a minute or more ever says an opinion as an opinion ("I reckon",
+    "I think"), kept apart from the checked facts. Whether the wit
     landed is for him. And it can see a line saying the script was made with
     AI (house rule NO_AI_DISCLOSURE_LINE), which he ruled out of every script on
     2026-10-12: cut it."""
@@ -811,7 +851,7 @@ def warnings(text):
     if stake:
         found.append(stake)
     if len(words) >= SHORT_WORDS and not OPINION.search(' '.join(beats)):
-        found.append('it states no opinion as an opinion: somewhere say "I reckon", "I think" or "my call", kept apart '
+        found.append('it states no opinion as an opinion: somewhere say "I reckon" or "I think", kept apart '
                      'from the checked facts (house rule VOICE_ON_CAMERA; a warning, not a refusal)')
     for beat in beats:
         hit = AI_LINE.search(beat)
@@ -855,7 +895,10 @@ JOINER_SHARE = 0.25
 # or fewer. A lone short line stays for a punchline.
 CHOPPY_AVERAGE = 9.5
 CHOPPY_WORDS = 5
-BARE_PREDICTION = re.compile(r"^\s*(?:my prediction\s*[:.]|here'?s my bet\s*[:.]|my bet\s*[:.])\s*$", re.I)
+# A landing label said on its own ("What this shows:"). The old prediction labels are caught here too, and the call
+# itself is refused by call_problems (Ruling, Krish, 2026-11-24).
+BARE_LANDING = re.compile(r"^\s*(?:(?:so )?what (?:this|that|it) shows\s*[:.]|the landing\s*[:.]|my prediction\s*[:.]|"
+                          r"here'?s my bet\s*[:.]|my bet\s*[:.])\s*$", re.I)
 DAY_DEADLINE = re.compile(r"\b\d{1,2}(?:st|nd|rd|th)?\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)"
                           r"\s+20\d\d\b")
 HIS_WORDS = [(re.compile(r"\bnobody\b", re.I), '"no one", not "nobody"'),
@@ -871,7 +914,7 @@ def spoken_habit_warnings(beats):
         share = sum(1 for x in sents if words_of(x)[0].lower() in JOINERS) / len(sents)
         if share < JOINER_SHARE:
             found.append(f'only {share:.0%} of its sentences open with So, And, But, Now or See; he opens about one in three that way '
-                         'in every take (So before a result or the prediction, "Now," before a new step or a question): say the link in '
+                         'in every take (So before a result or the landing, "Now," before a new step or a question): say the link in '
                          'the opening word (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
     if len(sents) >= 12:
         lengths = [len(words_of(x)) for x in sents]
@@ -887,15 +930,16 @@ def spoken_habit_warnings(beats):
                          'sounds robotic"): join the short ones into one flowing sentence and keep a lone short line for a punchline '
                          '(house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
     for x in sents:
-        if BARE_PREDICTION.match(x):
-            found.append(f'"{x.strip()}" stands alone; he never says a prediction label on its own: run it into the claim, "So my '
-                         'prediction is that..." (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
+        if BARE_LANDING.match(x):
+            found.append(f'"{x.strip()}" stands alone; he never says a label on its own: run it into what the piece found, "So '
+                         'what this shows is..." (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
             break
     text = ' '.join(beats)
     day = DAY_DEADLINE.search(text)
     if day:
-        found.append(f'"{day.group(0)}" is a day number; he says a deadline as a period ("by the end of December 2027"): keep the '
-                     'exact day in the article and the prediction record (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
+        found.append(f'"{day.group(0)}" is a day number; he says a date as a period ("at the end of December 2025"): keep the '
+                     'exact day in the article. A forecast to a date is refused, never warned (call_problems; Ruling, Krish, '
+                     '2026-11-24) (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
     for rx, say in HIS_WORDS:
         if rx.search(text):
             found.append(f'write his words: {say} (house rule SCRIPT_AS_HE_TALKS; a warning, not a refusal)')
@@ -1186,13 +1230,18 @@ Changes from version 1, and why
 - No spoken sign-off.
 '''
 
+# The ladder lands on what this shows and an open question (Ruling, Krish, 2026-11-24); the call it replaced is refused.
+GOOD_LANDING = ('So what this shows is that the billion is a pace, worked out from four weeks of sales. '
+                'And the question that leaves you with: would you trust a number no one can check?')
+OLD_CALL_CLOSE = "So here's our call. We're eighty-five per cent sure, and we'll mark it right or wrong on the day."
+
 GOOD = '''Higgsfield says it crossed a billion dollars a year.
 
 So how do you lose your biggest supplier and keep growing? Let's take it apart.
 
 One claim doesn't stand up. On a podcast, the founder was asked if Higgsfield pays for advertising. "We don't do paid," he said. ''' + ' '.join(['More words that fill the middle of the script.'] * 20) + '''
 
-So here's our call. We're eighty-five per cent sure, and we'll mark it right or wrong on the day.
+''' + GOOD_LANDING + '''
 
 If I ran an AI firm, I'd do one thing. I'd show everyone how I count my sales.
 
@@ -1314,22 +1363,38 @@ def self_test():
     check('a script that opens few sentences with a joiner is warned; one written his way is not',
           (any('So, And, But, Now or See' in w for w in spoken_habit_warnings([flat])),
            any('So, And, But, Now or See' in w for w in spoken_habit_warnings([talky]))), (True, False))
-    check('a bare "My prediction:" and a day-number deadline are warned',
-          (any('stands alone' in w for w in spoken_habit_warnings(['My prediction:', 'By 31 December 2027, it ships.'])),
-           any('day number' in w for w in spoken_habit_warnings(['By 31 December 2027, it ships.']))), (True, True))
+    bare = [w for w in spoken_habit_warnings(['What this shows:', 'On 31 December 2025, it shipped.']) if 'stands alone' in w]
+    check('a bare "What this shows:" is warned towards "So what this shows is...", with no prediction in the advice; a day number is warned',
+          (len(bare), 'So what this shows is' in ''.join(bare), 'prediction' in ''.join(bare).lower(),
+           any('day number' in w and 'prediction record' not in w for w in spoken_habit_warnings(['On 31 December 2025, it shipped.']))),
+          (1, True, False, True))
+    # The call is retired (Ruling, Krish, 2026-11-24): GOOD's old close is refused, quoting the ruling.
+    old = [p for p in problems(GOOD.replace(GOOD_LANDING, OLD_CALL_CLOSE)) if 'the signature format is the 5 Whys' in p]
+    check("GOOD's old close (\"So here's our call. We're eighty-five per cent sure...\") is refused, quoting the ruling",
+          (len(old) >= 2, any('a call' in p for p in old), any('a confidence number' in p for p in old)), (True, True, True))
+    for said in ("We're 85 per cent sure it happens.", "So here's our call: it happens.", "And we'll mark it right or wrong.",
+                 'So my prediction is that it happens.', "There's a 70% chance labels fold.", 'How sure are we? Very.',
+                 'By the end of June 2099, Higgsfield raises money.', 'By 31 December 2099, one of them signs.'):
+        check(f'"{said}" in a script is refused as a call', bool(call_problems([said])), True)
+    for said in ("Spotify now keeps 30% of every AI track's royalties.", 'By 2025 it had a million users.',
+                 "I'm not sure that adds up.", 'I reckon the billion is a pace.', 'I think the deal holds.',
+                 'He said, "We are ninety per cent sure."'):
+        check(f'"{said}" is not a call', call_problems([said]), [])
     flowing = ' '.join(['So the price went up last year, and most firms never noticed it on the bill.'] * 12)
     robotic = ' '.join(['The price went up. Nobody noticed. It was on the bill. Then it doubled.'] * 4)
     check('a choppy script is warned that it sounds robotic (Krish, 2026-10-23); one that flows the way he talks is not',
           (any('sounds robotic' in w for w in spoken_habit_warnings([robotic])),
            any('sounds robotic' in w for w in spoken_habit_warnings([flowing]))), (True, False))
     check('"nobody" is warned towards his "no one"', any('"no one"' in w for w in spoken_habit_warnings([talky])), True)
-    check('a long script that says "my bet" passes the voice check',
-          warns(GOOD.replace("So here's our call.", "So here's my bet.")), [])
+    check('a long script that says "I reckon" passes the voice check',
+          warns(GOOD.replace('So what this shows is', 'So I reckon what this shows is')), [])
+    check('the voice check now asks for "I reckon" or "I think", never "my call"',
+          any('"I reckon" or "I think"' in w and 'my call' not in w for w in warns(GOOD)), True)
     check('a short hook needs no opinion', warnings(short), [])
     # House rule NO_AI_DISCLOSURE_LINE: the line Krish cut from Monday's and Friday's scripts on 2026-10-12.
-    said_ai = warnings(GOOD.replace("So here's our call.", "My bet: yes. Yes, I made this with Claude's help. So here's our call."))
+    said_ai = warnings(GOOD.replace('So what this shows is', "I reckon so. Yes, I made this with Claude's help. So what this shows is"))
     check('a line saying it was made with Claude is a warning naming his rule, never a refusal',
-          ([w for w in said_ai if 'NO_AI_DISCLOSURE_LINE' in w] != [], problems(GOOD.replace("So here's our call.", "I made this with Claude's help. So here's our call."))
+          ([w for w in said_ai if 'NO_AI_DISCLOSURE_LINE' in w] != [], problems(GOOD.replace('So what this shows is', "I made this with Claude's help. So what this shows is"))
            == problems(GOOD)), (True, True))
     check('a song made with an app, or "it", is not that line', [bool(AI_LINE.search(x)) for x in (
         'I made a song with Suno in ten minutes.', 'I made it with AI in ten minutes.', 'A fan made this with AI.')], [False, False, False])

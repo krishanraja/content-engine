@@ -148,7 +148,8 @@
         "bridge": [],
         "pivot": [],
         "payoff": ["payoff-glow"],
-        "call": []
+        "why": [],
+        "landing": []
       },
       "when_face_full": ["subject-lift"],
       "by_device_kind": {

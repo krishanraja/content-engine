@@ -13,8 +13,8 @@ powerful, useful, and fun to consume, and really find the deeper story beneath t
   across all three picks rather than Monday's first by habit, each with your best guess, and the next only after
   he answers.
 - **Each question settles one part of a lock** (step 10): the deeper story beneath the surface story; the arc;
-  what makes it fun to consume; what makes it useful, the one thing a business leader does differently on Monday
-  (the lock's The use); his close, his own call in his own words (ask for it, never write it for him; learning
+  what makes it fun to consume; what makes it useful, what the viewer can now see that they could not before (the
+  lock's The use: the landing, never an action or a lesson for leaders); his close, the words he ends on, his own (ask for it, never write it for him; learning
   `his-call-in-his-words`); the facts that must be checked; the spine of the outline and its sections; the style
   recipe (a script format, a production format and the experiment, from `config/style-references.json`
   `formats`); and the music bed (an approved track in the ledger, `config/music-library.json`; never browse Drive
@@ -58,15 +58,24 @@ Answer: <its one-line answer>
 1. <SECTION HEADING> | proves: <the part of the answer it proves>
 ## Style recipe
 ## Music bed
+## The Whys
+Why 1: <the question>? <the answer> [evidence: <corpus ids or source links>]
+Why 2: <the question>? <the answer> [evidence: <corpus ids or source links>]
 
 Signed by Krish: "<his words>", <YYYY-MM-DD>, lock sha256 <the hash making.py printed>
 ```
 
 - Every part has its words under it. Only the outline's sections are numbered, at most six (house rule
   ONE_SPINE); everything else is plain lines or `-` bullets, because the spine check reads numbered lines.
-- The use is the one thing a business leader does differently on Monday, from his answer; it is new, never an
-  action a recent piece already gave (step 10's checks).
+- The use is what the viewer can now see that they could not before: the landing, what this shows plus the open
+  question handed to them, from his answer. Never an action or a lesson for leaders; it is new, never a landing a
+  recent piece already gave (step 10's checks).
 - Each fact to check is `- <the claim> | <its source, linked> | <checked on YYYY-MM-DD, or to check>`.
+- The Whys is the why-ladder the piece climbs (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys), one
+  Why per beat, in order, from the why-ladder in the research (`meta.whys`). Every Why cites the evidence it rests on;
+  the last may be an open question with no evidence, which ends the ladder. Five is the target, never padded; seven at
+  most. It lands on what this shows and an open question for the viewer, never a verdict, a forecast or a lesson.
+  `making.py` refuses a lock signed from 2026-11-25 (or not signed yet) without it; locks signed before keep standing.
 - `Publishes` is the day it goes live, and the piece's dated drafts carry that date
   (`docs/plans/<that date>-draft-script.md` and `-draft-script-90s.md`).
 - **The signature binds his words.** Before he signs, `python3 scripts/post-pack/making.py <uuid> narrative
@@ -118,3 +127,15 @@ yet). The room sends exactly those approved words through the Teleprompter conne
   `speed`, `alignment` or `timedSpeed`.
 - Run each `record` line it prints, then `get_script` each cut and check its text is the approved words (the
   readback).
+
+## Why Sunday is an interview (Krish, 2026-10-28)
+
+"on a Sunday, Claude Code proactively brings me ideas", and then "Claude
+interviews me on all three ideas to nail down the narrative arc, make it
+really powerful, useful, and fun to consume, and really find the deeper story
+beneath the surface story." That retires both halves of the rule of 11
+October (Monday's piece only, and never asking him anything else on a
+Sunday). The publish board is the one surface (his answer: "Publish board");
+Control Center's #/week only tracks it. Still never ask him what
+`docs/CADENCE.md` already answers (a 5-minute video and a 90-second cut, every
+piece; Substack and YouTube, then Shorts, TikTok and Instagram).

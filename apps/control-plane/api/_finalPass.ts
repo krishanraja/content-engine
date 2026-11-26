@@ -186,7 +186,7 @@ const RUBRICS: Record<StaticVenture, VentureRubric> = {
       'A load-bearing claim is factually incorrect or cannot be substantiated.',
     ],
     evidenceBar:
-      'Primary sources only for the load-bearing claims: a filing, a study, a dashboard, a P&L Krish has run. A vendor blog or a summary of a summary is NOT enough, demand the primary source or convert the claim to Krish\'s lived framing ("from the P&Ls I have run..."). Bold predictions are allowed only when they are substantiated; an unsubstantiated bold prediction is clickbait, soften it.',
+      'Primary sources only for the load-bearing claims: a filing, a study, a dashboard, a P&L Krish has run. A vendor blog or a summary of a summary is NOT enough, demand the primary source or convert the claim to Krish\'s lived framing ("from the P&Ls I have run..."). No prediction or forecast: where the evidence stops, label the inference and land on what the evidence shows (Ruling, Krish, 2026-11-24).',
     mustHave: [
       'At least two distinct lenses layered onto the same fact (economic + one more).',
       'Every number cited to a real source or owned as lived experience. Never "studies show" without the study.',
@@ -371,7 +371,7 @@ export function subchannelRubric(sub: { slug: string; label: string; mandate: st
       'Every number is dated and attributed to whoever it came from. A claim that is inference is labelled as inference, and where the public record stops the piece says so. Never invent a number, outcome or quote.',
     mustHave: [
       "The mandate's standing question, answered.",
-      'The close the mandate asks for, and no other.',
+      'The close the mandate asks for, and no other, except that the piece makes no prediction, call, dated forecast, odds or confidence number: where the mandate asks for a verdict or what is coming, it lands on what the evidence shows and an open question handed to the reader instead (Ruling, Krish, 2026-11-24).',
     ],
     notes: [
       "Apply the mandate's boundary test (what does the reader change next?). If the piece answers a different subchannel's question, that is a high-severity structure suggestion, not an instant fail.",
@@ -440,7 +440,7 @@ export function buildFinalPassSystem(args: {
       .filter(s => !(rubric.mandateGovernsClose && CLOSE_ABSOLUTE.test(s)))
       .map(s => `- ${s}`).join('\n'),
     rubric.mandateGovernsClose
-      ? 'THE CLOSE is whatever the MANDATE above asks for. Judge the ending against the mandate, not against a house rule.'
+      ? 'THE CLOSE is whatever the MANDATE above asks for. Judge the ending against the mandate, not against a house rule, with one exception that wins over the mandate: the piece makes no prediction, call, dated forecast, odds or confidence number, so where the mandate asks for a verdict or what is coming, the ending lands on what the evidence shows and an open question handed to the reader (Ruling, Krish, 2026-11-24).'
       : '',
     '',
     voice ? `VOICE REFERENCE (how Krish writes):\n${voice}` : '',

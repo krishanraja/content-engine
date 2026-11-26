@@ -772,23 +772,13 @@
       "on": "2026-10-19",
       "krish": "I changed the prediction to 95% by the end of this year, 2026 ... I'm done with sitting on the fence and putting predictions a year away: 55%. There's no point in that. Given how this article reads it's pretty obvious someone's going to shift their price again in the next month.",
       "why": "House rule SHARP_PREDICTION told writers to avoid the obvious outcome and give a bolder call a lower number, so calls drifted to long shots a year out at 15 to 55%, which read as fence-sitting and help no reader decide anything.",
-      "means": "When a piece carries a prediction (only when Krish asked for one on it, since 19 Nov 2026: see no-required-predictions), it is what we believe happens next, due within about three months (92 days) and backed at 80% or more. Both are blocking publish checks on such a piece.",
+      "means": "Superseded on 2026-11-24 by why-ladder-close (Ruling, Krish: \"get rid of everything that suggests predictions, calls, dated, etc etc\"). What it meant from 19 Oct to 24 Nov: When a piece carries a prediction (only when Krish asked for one on it, since 19 Nov 2026: see no-required-predictions), it is what we believe happens next, due within about three months (92 days) and backed at 80% or more. Both are blocking publish checks on such a piece.",
       "status": "encoded",
       "encoded": [
         {
-          "file": "apps/control-plane/api/_publishChecks.ts",
-          "contains": "export const CALL_HORIZON_DAYS = 92",
-          "how": "CALL_HORIZON blocks a call due more than 92 days out or already past"
-        },
-        {
-          "file": "apps/control-plane/api/_publishChecks.ts",
-          "contains": "export const CLEAR_STANCE_AT = 80",
-          "how": "CLEAR_STANCE now blocks below 80%"
-        },
-        {
-          "file": "apps/control-plane/api/_houseRules.ts",
-          "contains": "A near-term prediction we back, that a reader can check",
-          "how": "house rule SHARP_PREDICTION, read by the publish check only (no writer or judge since 19 Nov 2026)"
+          "file": "tests/control-plane/no-prediction.test.ts",
+          "contains": "which supersedes near-term-backed-predictions and",
+          "how": "its supersession, pinned: the 92-day horizon, the 80% stance and SHARP_PREDICTION are gone, and the test fails if any comes back"
         }
       ]
     },
@@ -797,33 +787,53 @@
       "on": "2026-11-19",
       "krish": "remove all traces that require predictions in every article, I am starting to really hate the prediction format, it's baseless, lame and has no value, and the predictions are dull and vanilla. If I want to predict something in a particular piece I will",
       "why": "House rule CALL made every piece end on a dated prediction, and the writers, the judges, the final pass, the publish checks (CALL, CALL_HORIZON, CLEAR_STANCE) and ve's mind.the.gap schema all enforced it, so every article and script carried one whether or not the piece had anything worth predicting. The result was calls he calls baseless, dull and vanilla.",
-      "means": "No check, gate, prompt, template, skill or default requires or invites a prediction. A piece carries one only when Krish asks for it on that piece: meta.prediction ({ wanted: true, said: his words, on }) on the piece, or, in a ve spec he signs, spec.call. A body or spec that carries a prediction is still held to the old standard (a date within 92 days, 80% or more, a call beat), so a weak one cannot slip through. Scripts end on the answer and the close, never a call.",
+      "means": "Superseded on 2026-11-24 by why-ladder-close (Ruling, Krish: \"get rid of everything that suggests predictions, calls, dated, etc etc\"). What it meant from 19 to 24 Nov: No check, gate, prompt, template, skill or default requires or invites a prediction. A piece carries one only when Krish asks for it on that piece: meta.prediction ({ wanted: true, said: his words, on }) on the piece, or, in a ve spec he signs, spec.call. A body or spec that carries a prediction is still held to the old standard (a date within 92 days, 80% or more, a call beat), so a weak one cannot slip through. Scripts end on the answer and the close, never a call.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "tests/control-plane/no-prediction.test.ts",
+          "contains": "// no-required-predictions: no prediction check, rule or prompt line remains, and the 19 Nov opt-in went with them.",
+          "how": "its supersession, pinned: the opt-in (meta.prediction, predictionWanted) and the CALL checks are gone, and the test fails if any comes back"
+        }
+      ]
+    },
+    {
+      "id": "why-ladder-close",
+      "on": "2026-11-24",
+      "krish": "get rid of everything that suggests predictions, calls, dated, etc etc",
+      "why": "He made the 5 Whys the signature format: a ladder the viewer follows step by step that ends somewhere insightful, not on a verdict. The opt-in prediction path of 19 Nov, the dated call, the confidence number, the market odds and the held-or-broke scoreboard all still told writers, judges and readers that a piece forecasts, and he wants nothing left that suggests it.",
+      "means": "Every piece lands on a why-ladder insight (what this shows) and an open question handed to the reader. No piece carries a prediction, call, dated forecast, odds, confidence number or score, and no check, rule, prompt, opt-in or route asks for, shapes, scores or tracks one. The mandates' old close is taken out as they are read until the venture_formats rows are rewritten on his yes. Supersedes near-term-backed-predictions and no-required-predictions. Internal strategist, revenue-desk, council, business-scorecard and idea-quality confidence fields are not prediction content and stay.",
       "status": "encoded",
       "encoded": [
         {
           "file": "apps/control-plane/api/_publishChecks.ts",
-          "contains": "export const NO_PREDICTION_NEEDED",
-          "how": "CALL, CALL_HORIZON and CLEAR_STANCE pass a piece that carries no prediction and was not asked for one"
+          "contains": "No check here reads a prediction, a date to check by or a confidence.",
+          "how": "CALL, CALL_HORIZON, CLEAR_STANCE, the hash-pinned exceptions and predictionWanted are gone from the publish checks"
         },
         {
-          "file": "apps/control-plane/api/_publishChecks.ts",
-          "contains": "export function predictionWanted",
-          "how": "the opt-in, meta.prediction, read by the approval and fact-check routes"
+          "file": "apps/control-plane/api/_mandate.ts",
+          "contains": "export function mandateWithoutCall(",
+          "how": "every reader of venture_formats.mandate (loadSubchannel, the router, week options) drops the old prediction close"
         },
         {
-          "file": "apps/control-plane/api/_houseRules.ts",
-          "contains": "A prediction only when Krish asks for one on the piece",
-          "how": "house rule CALL, publish check only; CLEAR_STANCE and SHARP_PREDICTION no longer reach a writer or judge"
+          "file": "apps/control-plane/api/content-ideas/[id]/draft.ts",
+          "contains": "export const NO_PREDICTION_LINE = 'The piece makes no prediction: no call, no dated forecast, no odds and no confidence number.",
+          "how": "the drafter is told the piece makes none and lands on what the evidence shows and an open question"
         },
         {
-          "file": "scripts/velib/lint.py",
-          "contains": "a cut carries a prediction only when Krish asked for one on the piece",
-          "how": "ve lint story.call: a call beat only with spec.call; the schema no longer requires a call on mind.the.gap"
+          "file": "apps/control-plane/api/_factGate.ts",
+          "contains": "never waved through as the piece's own prediction",
+          "how": "the fact gate sets no forecast aside as a prediction, flags one, and hashes every number as written"
         },
         {
-          "file": "tests/control-plane/no-required-prediction.test.ts",
-          "contains": "no piece needs a prediction (Ruling, Krish, 2026-11-19)",
-          "how": "a piece with no prediction passes; one he asked for still must carry one; no writer or judge rule asks for one"
+          "file": "supabase/migrations/20261224090000_retire_call_scoreboard.sql",
+          "contains": "drop view if exists public.claim_scoreboard;",
+          "how": "the scoreboard and claims-due views retire (written, applied only on his yes); the routes and crons that fed them are deleted"
+        },
+        {
+          "file": "tests/control-plane/no-prediction.test.ts",
+          "contains": "no prediction check, rule or prompt line remains (why-ladder-close)",
+          "how": "fails on any prediction check, house rule, packaging rule, fact-gate prompt line or live call vocabulary in the control plane"
         }
       ]
     },
@@ -1421,13 +1431,13 @@
       "id": "his-call-in-his-words",
       "on": "2026-10-23",
       "krish": "It's more, yes, if you don't care about where your data ends up going ... It's kind of like the supply chain issue ... similar things will happen in AI. It just increases the need to not have overreliance on one supplier.",
-      "why": "Asked for his own view before the call beat was written, he gave a sharper take than the drafted one, and its supply-chain comparison became the piece's best line and its last action.",
-      "means": "The beat where he gives his call is built from his own words, asked for in one question before it is written; a drafted call is only a placeholder until he answers.",
+      "why": "Asked for his own view before the beat where he gives it was written, he gave a sharper take than the drafted one, and its supply-chain comparison became the piece's best line and its last action.",
+      "means": "The beat where he gives his view is built from his own words, asked for in one question before it is written; a drafted view is only a placeholder until he answers.",
       "status": "encoded",
       "encoded": [
         {
           "file": ".agents/skills/make-piece/SKILL.md",
-          "contains": "ask him for his view in his own words",
+          "contains": "ask him for it in his own words",
           "how": "the Scripts step, beside dry wit"
         }
       ]
@@ -2822,7 +2832,7 @@
       "on": "2026-11-16",
       "krish": "Record each of its nine changes through your learning route. Relayed by the brief, 16 Nov: \"some of it is about my content itself ... you need to ensure my content-engine understands what needs to be improved from a content production POV.\"",
       "why": "\"Every call dated and scored in public\" is the publication's most distinctive promise, but makeyourmindup.ai shows an \"Example board\". A live board gives a leader a reason to come back and to subscribe.",
-      "means": "Not content-engine's to build: the scorecard page belongs to the makeyourmindup site's repository. Amended 19 Nov 2026 (no-required-predictions): no article carries a dated call unless Krish asked for one on that piece, so there is no stream of calls to score, and the subscribe asks never promise one. Krish decides whether the site's scorecard and its promise stay.",
+      "means": "Not content-engine's to build: the scorecard page belongs to the makeyourmindup site's repository. Amended 19 Nov 2026 (no-required-predictions): no article carries a dated call unless Krish asked for one on that piece, so there is no stream of calls to score, and the subscribe asks never promise one. Amended 24 Nov 2026 (why-ladder-close): no piece carries a call, odds or score at all, and the engine's scoreboard feed (/api/calls) is gone; makeyourmindup removed its scoreboard on 17 Nov.",
       "status": "open",
       "brief": {
         "material": "cbb90470-7d90-4f54-8d98-cf6ec704b5f2",

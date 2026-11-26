@@ -1,5 +1,15 @@
 {
   "devices": {
+    "v5_title": {"verbs": ["enter", "exit"]},
+    "v5_why": {"verbs": ["enter", "exit"]},
+    "v5_evidence": {"verbs": ["enter", "exit"]},
+    "v5_callout": {"verbs": ["enter", "exit"]},
+    "v5_challenger": {"verbs": ["enter", "exit"]},
+    "v5_recap": {"verbs": ["enter", "exit"]},
+    "v5_landing": {"verbs": ["enter", "exit"]},
+    "v5_close": {"verbs": ["enter", "exit"]},
+    "v5_rail": {"verbs": ["enter", "exit"]},
+    "v5_source": {"verbs": ["enter", "exit"]},
     "scene_plate": {"verbs": ["enter", "move", "exit"]},
     "facility_block": {"verbs": ["enter", "fill", "connect", "add", "stamp", "carry", "move", "multiply", "grey", "grow", "thin", "exit"]},
     "credit_meter": {"verbs": ["enter", "fill", "add", "mark", "count_to", "drop", "exit"]},

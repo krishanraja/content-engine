@@ -1,7 +1,7 @@
 ---
 repo: krishanraja/content-engine
 product: Make Your Mind Up content engine
-as_of: 2026-11-23
+as_of: 2026-11-25
 head: 6bbfa12
 lifecycle: building
 production_url: https://content-engine-flame-nu.vercel.app
@@ -30,36 +30,34 @@ Stories a writer can carry without asking Krish:
 
 Objection it answers: "AI content is slop." Here is an engine that grades its judges against the editor, refuses to ship beneath his recorded rejections, and never counts its own actions as taste.
 
-## Where it is right now (as of 2026-11-23)
+## Where it is right now (as of 2026-11-25)
 
-<!-- north-star-state {"week_of":"2026-11-23","week_target":20,"current":2,"current_as_of":"2026-11-23","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (0 published, and 2 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (10% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 2, against 20 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
+<!-- north-star-state {"week_of":"2026-11-23","week_target":20,"current":1,"current_as_of":"2026-11-25","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (0 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (5% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 20 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
+- Story-arc cards make no prediction: where_this_goes now holds the landing, what the arc shows plus one open question ending in a question mark (compose prompt, card lint and arc score), and the lint refuses a forecast to a date, stated odds or confidence, and a landing with no question (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores). The score's forward_claim component is now landing, same weight; stored cards keep the field name and still read. (2026-11-25)
+- The 5 Whys is live (PR 970; Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores). The three venture_formats mandates are why-ladder mandates with THE BEAT, the claim_scoreboard and claims_due views are dropped, and control-center's pillar:creative_economy is live with the shared avoid list on all six pillars; all applied 2026-11-25 on Krish's yes and checked on the live rows. (2026-11-25)
+- The control plane carries no prediction machinery (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores). The CALL, CALL_HORIZON and CLEAR_STANCE checks, the 19 Nov opt-in, the confidence guard, the fact gate's forecast set-asides, packages/contracts/src/call.ts, the scoreboard, the call-market and odds routes and the claims sweep and its two crons are gone, and every reader of venture_formats.mandate drops the old prediction close as it reads the row. (2026-11-24)
+- The creative beat is in code. config/beat.json holds Krish's focus sectors (media, entertainment, arts, music, creator tech, their economics included), the avoid list (governance, regulation, security, privacy, breaches, enterprise productivity with no creative angle), his 24 Nov words and the model piece. The headline gate (_beat.ts), the feed ingest (pool governance and security lanes dropped as off_beat unless the headline is in a focus sector), the relevance classifier, the lens radar's searches, the editorial radar's prompt, the creator moves grounding, the Sunday gate (off_beat, from the 30 Nov board) and the plan-week skill read it. Creative tools and platforms (YouTube, Midjourney, Runway, Sora, Veo, ElevenLabs, Adobe and others) are a focus row, a rollout verb is not enterprise by itself, and the Sunday gate reads the focus angle from the topic alone. The mandates migration is written and not applied. (2026-11-24)
 - The habits voiceover short (piece 701a2c55, moved by Krish to Thu 19 Nov) is made and filed: 3 Posts/2026-11-19 Thu off.day - Which of your habits will cost you your job holds the final 9:16 cut (3 Video, Drive sha256 matches), the brand cover he picked (option 2, tall and wide), his face cover and a caption for each of eight channels, with the draft manifest in 0 Publish. The board's Thu card leads with Approve for publish bound to that manifest. The cut was rendered on the engine he approved for v9 (main's later caption engine regressed it) and filed with the cloud Drive uploader by his ruling, past the library gate, whose QC false readings are with another session. (2026-11-19)
 - The standards check-in of 2026-11-23 grouped the new floor standards; config/floor-groups.json holds 78 groups, each new one seeded as a proposal for Krish on the pinned check-in page. (2026-11-23)
 - The standards page test no longer breaks when the floor reaches 78 groups, so the floor pull requests held since 20 November can pass verify. (2026-11-23)
 - Every Claude and Growth prompt the Content Board copies now says that Codex generates the visual assets, Claude arbitrates the standards and checks what Codex returns, failures and best practices go to record_harness_observation for the internal-auditor, and only preference and inspiration go to the taste engine. (2026-11-23)
 - Migration 20261207090000_defects_leave_taste is written and not applied. It adds engine_standards and production_floor and marks where defects moved from. (2026-11-23)
-- main's red verify is fixed in tests and fixtures only. Fixtures that name no recipe now freeze before the recipe floor's start date, and three Windows-only test failures (CRLF in a test's output, CRLF on Growth's vendored mix, a 5-second default timeout) are fixed. No rule for real pieces changed. (2026-11-23)
-- The antislop guardrail (miqdadbadjuber/anti-slop at 7f6a03d) is vendored unmodified in .agents/skills/antislop*, with ADAPTER.md putting Krish's own rules above it; its PASS/FAIL report runs in the check steps of meme and cover-art, in the references the make-piece, thumbnail-designer and motion-designer checks read, and in docs/CAROUSEL-STANDARD.md for carousels (the cores sit at their byte caps), and the copy lint carries four antislop_ patterns (emoji bullets, capitals shouting in prose, hype phrases, rounded "N+ users" counts). (2026-11-23)
-- The tall and wide sting closes and the Character.ai recording layout carry their size and fill fixes (every close size at least 40 px, the tall band lifted 450 px, the wide close clear of x 1100, the recording filling its panel with its source line beneath); these missed the first merge of the outro pull request. (2026-11-20)
-- The premium title slide (direction A) is queued to Codex as card ve-title-premium-a on gpt-6.2-astra, set on this card only; the engine's default model pin is unchanged. (2026-11-20)
-- Everything the next session needs is in docs/ve/handoff-2026-11-20/ (HANDOFF.md, the approved PLAN.md, the audit evidence, the shot study, the polish spec and generators, and Krish's ten recipe verdicts); WORKBENCH.md points to it. All the week's engine work is merged to main (#941 to #956); the title slide card is queued to Codex. (2026-11-20)
-- ve shot grammar step 5 built. `ve matte` makes an offline subject matte of a cut's picture, cached by its sha256; compile writes `props.matte`, the in-world number and chapter marks with his head, the anchor title behind his head and a body keep-out; the renderer lays type between his take and the matted subject and cuts him out over a whole-frame stage panel. Anchor graphics sit only above his head on an ink scrim, captions under his chin. `grammar.depth`, `grammar.title_timing` (the title on his spoken words within 30 s) and the after-render `panel.fill` row hold it. Generated imagery is allowed as an art-directed metaphor and refused as a stand-in for a real thing (`depicts`). Reference renders on the Fri 20 take: anchor 9:16, stage 9:16, stage 16:9 (docs/ve/INGREDIENTS.md, "Depth and the staging fixes"). (2026-11-20)
 - **StyleStill covers: 47 of 48 passed a separate review and are filed and recorded for the board's style pickers** (`config/ve/style-samples.json`). Eight came from Codex's second pass, 24 from its third, and 15 of the 16 held back from its fourth, after the reviewer's five named faults were fixed (`82360c9b`: line-boil passes too thick to read as three lines, receipt and living-ui labels ink on ink, the data story's chart now the sourced monthly sales indexed 100 to 107, flip-hinge sampled with its key word lit). slot-roll stays held: its uneven word gap is in the caption theme itself (`c631e0ac`). (2026-11-16)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3**, at 0 of 3 counted cuts (`docs/ve/STATUS.md`, "Phase 3 count", last moved 2026-11-18). Procedure: `docs/ve/ENGINE.md` and `docs/ve/RUNBOOK.md`; `ve render` refuses a whole cut until he presses Approve proof. (2026-11-19)
 
 ## What changed recently
 
-- 2026-11-19 scripts/pages/receipt.py (tall Receipt clear of the Reel UI), tests, config/title-verdicts.json, docs/plans/2026-11-17-tue-habits/, docs/ve/cards/habits/
-Older lines: `docs/history/2026-11-24-NOW-moved-1.md` (it names every earlier move) and `LOG.md`.
+- 2026-11-25 the call, its checks, odds, the scoreboard routes and crons are gone; research files a sourced why-ladder (meta.whys), WHY_LADDER blocks approval on a filed ladder, and the Short ends on the landing card bound from it.
+Older lines: `docs/history/2026-11-25-NOW-moved-2.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-19): Krish presses Approve for publish on the Thu 19 card; Growth's go-live then schedules the posts in Buffer.
+- Next (2026-11-25): none; the next composed arcs land on a question.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
-- North Star check (2026-11-19): holds.
+- North Star check (2026-11-25): holds.
 
 ## Read next
 
