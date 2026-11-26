@@ -26,9 +26,9 @@ describe('the motion styles on a piece', () => {
   it('reads the bank\'s motion layer, in bank order', () => {
     const styles = JSON.parse(readFileSync('config/style-references.json', 'utf8'))
     const bank = motionBank(styles)
-    expect(bank.length).toBeGreaterThanOrEqual(18)
+    expect(bank.length).toBeGreaterThan(0)
     expect(bank.every(x => x.name && x.how && x.rules.length && x.formats.length)).toBe(true)
-    expect(bank.map(x => x.id)).toEqual(styles.bank.filter((x: Body) => x.layer === 'motion').map((x: Body) => x.id))
+    expect(bank.map(x => x.id)).toEqual(styles.bank.filter((x: Body) => x.layer === 'motion' && x.krish_verdict !== 'not for us').map((x: Body) => x.id))
   })
 
   it('recommends at most three, made for every format the piece makes: often first, then his liked ones', () => {
@@ -120,7 +120,7 @@ describe('the caption styles on a piece', () => {
     const no = dayStyle(inputs({ meta: { style: { rejected: { captions: ['art-directed'] } } } }))
     expect(ids(no.captions.options)).toEqual([])
     expect(no.captions.options.find(o => o.id === 'art-directed')!.rejected).toBe(true)
-    expect(s.captions.options[0]!.presses.yes.body).toEqual({ piece_id: PIECE, captions: 'pop' })
+    expect(s.captions.options[0]!.presses.yes.body).toEqual({ piece_id: PIECE, captions: 'karaoke' })
   })
 })
 
@@ -129,7 +129,7 @@ describe('the treatment in the same shape', () => {
     const s = dayStyle(inputs({ meta: { look: { production: 'face-with-proof', experiment: 'kinetic-movement', inspiration: ['c1'], at: '2026-11-15T10:00:00Z' } } }))
     expect(s.treatment).toMatchObject({ picked: 'face-with-proof', picked_by: 'Krish', picked_at: '2026-11-15T10:00:00Z' })
     expect(s.treatment.options[0]).toMatchObject({ recommended: true, line: 'His face with the proof.',
-      presses: { yes: { op: 'look', body: { piece_id: PIECE, production: 'face-with-proof', experiment: 'kinetic-movement', inspiration: ['c1'] } } } })
+      presses: { yes: { op: 'look', body: { piece_id: PIECE, production: 'face-with-proof', experiment: null, inspiration: ['c1'] } } } })
     // "Not this" on a look, the same shape as motion and captions (mock M5: Yes, Not this, Change it, Add a note on every
     // option), on every look but the picked one, which he changes by picking another.
     expect(s.treatment.options[0]!.presses.not_this).toBeUndefined()
@@ -173,7 +173,7 @@ describe('his press on a style', () => {
   it('takes a known motion style, a known caption style, or a Not this on one of either', () => {
     expect(stylePick({ piece_id: PIECE, motion: 'ladder' }, motionIds)).toEqual({ motion: 'ladder' })
     expect(stylePick({ piece_id: PIECE, captions: 'art-directed' }, null)).toEqual({ captions: 'art-directed' })
-    expect(stylePick({ piece_id: PIECE, reject: { layer: 'captions', id: 'beast' } }, null)).toEqual({ reject: { layer: 'captions', id: 'beast' } })
+    expect(stylePick({ piece_id: PIECE, reject: { layer: 'captions', id: 'karaoke' } }, null)).toEqual({ reject: { layer: 'captions', id: 'karaoke' } })
     expect(refused({ motion: 'nope' })).toEqual([400, 'unknown_motion'])
     expect(refused({ captions: 'nope' })).toEqual([400, 'unknown_caption'])
     expect(refused({ reject: { layer: 'motion', id: 'nope' } })).toEqual([400, 'unknown_motion'])
@@ -323,9 +323,9 @@ describe('POST /api/board/<Monday>/style', () => {
   })
 
   it('records a Not this on a caption style with no read of the bank', async () => {
-    const { status, state } = await press({ reject: { layer: 'captions', id: 'beast' } }, { bank: null })
+    const { status, state } = await press({ reject: { layer: 'captions', id: 'karaoke' } }, { bank: null })
     expect(status).toBe(200)
-    expect(state.row.meta.style.rejected).toEqual({ motion: [], captions: ['beast'], treatment: [] })
+    expect(state.row.meta.style.rejected).toEqual({ motion: [], captions: ['karaoke'], treatment: [] })
   })
 
   it('takes a pick on an off-day video post\'s record linked to this week, never scheduled (Krish, 2026-11-17)', async () => {
@@ -354,4 +354,10 @@ describe('POST /api/board/<Monday>/style', () => {
     expect(none).toMatchObject({ status: 400, out: { error: 'nothing_to_record' } })
     expect(none.state.writes).toBe(0)
   })
+})
+
+it('refuses retired styles supplied directly and hides rejected bank rows', () => {
+  expect(() => stylePick({ motion: 'toy-3d' }, new Set(['toy-3d']))).toThrow('unknown_motion')
+  expect(() => stylePick({ captions: 'pop' }, null)).toThrow('unknown_caption')
+  expect(motionBank({ bank: [{ id: 'experimental', layer: 'motion', krish_verdict: 'not for us' }] })).toEqual([])
 })

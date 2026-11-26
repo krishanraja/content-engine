@@ -13,7 +13,7 @@
     "vercel-crons": {
       "what": "the engine's Vercel crons",
       "prefixes": ["editorial-radar-", "judge-", "ladder-", "arcs-", "shifts-"],
-      "keys": ["briefs-assemble", "investigations", "standards", "feed-ingest", "spine-check"]
+      "keys": ["briefs-assemble", "investigations", "standards", "feed-ingest", "spine-check", "hub-relevance", "hub-item"]
     },
     "fact-gate": {
       "what": "the fact gate (Anthropic and Perplexity)",

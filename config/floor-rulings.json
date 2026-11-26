@@ -32,11 +32,31 @@
         "where": "his ruling for the five whys release (docs/FIVE-WHYS.md)"
       }
     ],
-    "formats": ["prediction"],
+    "formats": [
+      "prediction"
+    ],
     "standards": [
-      "s08e19e659c", "s172d06ce8b", "s1949b94c5f", "s438120032e", "s6262d852ee", "s6eb417dd40", "s8183b5a9d6",
-      "s83075046d2", "s940c2c5a5c", "s9c6d02148a", "sa9f9134e89", "sb0e20f145c", "sd4d7f27990", "se49eca7e39",
-      "secddf8b1ab", "sedf0fc1d56", "sf89aa11473"
+      "s08e19e659c",
+      "s172d06ce8b",
+      "s1949b94c5f",
+      "s438120032e",
+      "s6262d852ee",
+      "s6eb417dd40",
+      "s8183b5a9d6",
+      "s83075046d2",
+      "s940c2c5a5c",
+      "s9c6d02148a",
+      "sa9f9134e89",
+      "sb0e20f145c",
+      "sd4d7f27990",
+      "se49eca7e39",
+      "secddf8b1ab",
+      "sedf0fc1d56",
+      "sf89aa11473",
+      "sae2fcdb893",
+      "s6d0b9e1f42",
+      "s0497f76182",
+      "sff11b3194a"
     ],
     "pattern": "\\bpredict|\\bconfidence (?:level|percentage|number)|\\bodds\\b|scorecard|\\b(?:final|running) score\\b|percentage likelihood|too close to call|checkable future event|near-term call|\\bforecast",
     "keep": {
@@ -44,13 +64,48 @@
       "s81fb5ec09f": "the close format agreed for the day, never a prediction by default: it holds the ruling"
     },
     "records": [
-      "r0296dca046", "r06d56194b6", "r1f67ec1023", "r333f6698df", "r4bfd68013f", "r621de3e411", "r6fac5978ce",
-      "r820632256e", "r8e82b95e43", "raf599df208"
+      "r0296dca046",
+      "r06d56194b6",
+      "r1f67ec1023",
+      "r333f6698df",
+      "r4bfd68013f",
+      "r621de3e411",
+      "r6fac5978ce",
+      "r820632256e",
+      "r8e82b95e43",
+      "raf599df208"
     ],
     "groups": {
-      "lineage": ["bold_predictions", "predictions_committed"],
+      "lineage": [
+        "bold_predictions",
+        "predictions_committed"
+      ],
       "title": "No predictions: an insight and an open question",
       "statement": "No piece makes a prediction: no call, dated forecast, odds, confidence number or score. A piece lands on an insight and an open question."
+    },
+    "v5_groups": {
+      "covers_stop_scroll": "Use a full-bleed photo burning into ink, with a cream Anton headline and V4 below it.",
+      "house_brand": "Use the v5 palette and the wordmark on ink.",
+      "wordmark_placement": "Place V4 under the headline on the same left edge, including the title frame.",
+      "brand_book_type": "Use Anton for headlines, Fraunces for the human line and DM Mono for evidence labels. Feed covers carry no badges.",
+      "plain_words": "Every line is read aloud before recording; every actor is named, every term explained, every analogy whole, and the reading age is 12. Copy like that which is vague and smart arse needs to be banned."
     }
+  },
+  "v5": {
+    "ruling": "Ruling (Krish, 2026-11-25): \"s3h is great, lock v5\"",
+    "his_words": [
+      {
+        "on": "2026-11-24",
+        "said": "yes good - but make sure you remember how I want title animations to feel when I narrate them naturally in a sentence too. there needs to be a floor for every generated component and a floor for motion throughout too - the rest I feel like I can select from in the visual style combos if I am not mistaken"
+      },
+      {
+        "on": "2026-11-24",
+        "said": "lets remove all badges like mind.the.gap from socials, and just have the wordmark left aligned with the wording at the bottom"
+      },
+      {
+        "on": "2026-11-25",
+        "said": "Copy like that which is vague and smart arse needs to be banned"
+      }
+    ]
   }
 }

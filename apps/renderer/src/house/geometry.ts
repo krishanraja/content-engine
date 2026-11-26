@@ -11,11 +11,16 @@ import { textWidth, wrapWords } from './metrics'
  *  This module is pure (no React, no CSS) so the Studio's placement gates and
  *  the renderer measure the same boxes. */
 
+// As with the engine canvas and motion profile, FormatMaster sets the version on each frame.
+let v5DataFace = false
+export function setHouseDataFace(v5: boolean) { v5DataFace = v5 }
+export const V5_DATA_FONT = '"DM Mono", ui-monospace, monospace'
+
 export const HOUSE_FONTS = {
   display: '"MYMU Anton", "Arial Narrow", sans-serif',
   structure: '"MYMU Archivo", system-ui, sans-serif',
   dek: '"MYMU Fraunces", Georgia, serif',
-  data: '"MYMU Plex Mono", ui-monospace, monospace',
+  get data() { return v5DataFace ? V5_DATA_FONT : '"MYMU Plex Mono", ui-monospace, monospace' },
 } as const
 
 /** The CSS family names the house faces register under (fonts.css). */
@@ -23,7 +28,7 @@ export const HOUSE_FONT_FAMILIES = {
   display: 'MYMU Anton',
   structure: 'MYMU Archivo',
   dek: 'MYMU Fraunces',
-  data: 'MYMU Plex Mono',
+  data: 'DM Mono',
 } as const
 
 /** Fractal noise, printed at 7% over every dark block (brand book p. 12). */

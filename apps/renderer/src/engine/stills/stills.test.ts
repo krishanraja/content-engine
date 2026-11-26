@@ -9,9 +9,9 @@ const ids=stillIds()
 const meets=(a:{x0:number;y0:number;x1:number;y1:number},b:typeof a)=>a.x0<b.x1&&a.x1>b.x0&&a.y0<b.y1&&a.y1>b.y0
 
 describe('StyleStill full bank',()=>{
- it('covers exactly 14 motion, 7 treatment and all 27 native captions',()=>{
-  expect(ids).toHaveLength(48)
-  expect(new Set(ids.map(x=>`${x.layer}/${x.id}`)).size).toBe(48)
+ it('covers exactly 14 motion, 7 treatment and all 28 native captions',()=>{
+  expect(ids).toHaveLength(49)
+  expect(new Set(ids.map(x=>`${x.layer}/${x.id}`)).size).toBe(49)
   expect(ids.filter(x=>x.layer==='motion')).toHaveLength(14)
   expect(ids.filter(x=>x.layer==='treatment')).toHaveLength(7)
   expect(ids.filter(x=>x.layer==='captions').map(x=>x.id)).toEqual([...CAPTION_THEMES])

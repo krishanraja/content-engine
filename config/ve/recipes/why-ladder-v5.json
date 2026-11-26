@@ -1,0 +1,43 @@
+{
+  "style": "why-ladder-v5",
+  "name": "The why ladder",
+  "rated": null,
+  "motion": null,
+  "caption_themes": [
+    "house-v5"
+  ],
+  "captions": {
+    "theme": "house-v5"
+  },
+  "camera": {
+    "move": "none"
+  },
+  "transitions": {
+    "kind": "push"
+  },
+  "energy": "medium",
+  "staging": "stage",
+  "layout": {
+    "9:16": "stage",
+    "16:9": "stage"
+  },
+  "sequence": [
+    "v5_title",
+    "v5_why",
+    "v5_evidence",
+    "v5_why",
+    "v5_evidence",
+    "v5_why",
+    "v5_evidence",
+    {
+      "optional": "v5_challenger"
+    },
+    "v5_recap",
+    "v5_landing",
+    "v5_close"
+  ],
+  "generated_kinds": [
+    "illustration"
+  ],
+  "description": "Three questions and their sources, a rival explanation, a recap and a mint landing."
+}

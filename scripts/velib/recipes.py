@@ -48,6 +48,9 @@ def rate(recipe_id: str, score=None, *, approved: bool = False, words: str, on: 
     """Write his rating into the recipe file and return the rated block. Refuses an unknown recipe."""
     if not re.fullmatch(r'[a-z0-9][a-z0-9-]{0,63}', recipe_id or ''):
         raise ValueError(f'{recipe_id!r} is not a recipe id')
+    from .retirement import registry
+    if ('recipe', recipe_id) in registry():
+        raise ValueError(f'recipe {recipe_id!r} is retired')
     path = Path(root or RECIPES) / f'{recipe_id}.json'
     if not path.is_file():
         raise ValueError(f'{recipe_id} is not a recipe in {path.parent}')

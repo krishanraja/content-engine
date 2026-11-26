@@ -15,7 +15,7 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 sys.path.insert(0, str(ROOT / 'scripts' / 'post-pack'))
 from velib import lint as ve_lint  # noqa: E402
 
-FIXTURE = ROOT / 'fixtures/ve/my-test-19s/spec.json'
+FIXTURE = ROOT / 'fixtures/ve/my-test-19s/spec-v5.json'
 VOICE = {'name': 'krish-voice-1', 'kind': 'voice', 'platform': 'elevenlabs', 'approved_sha256': 'c' * 64,
          'approved_words': "test words, not Krish's", 'approved_on': '2026-11-20'}
 LIKENESS = {**VOICE, 'name': 'krish-twin-1', 'kind': 'likeness', 'platform': 'heygen', 'approved_sha256': 'd' * 64}

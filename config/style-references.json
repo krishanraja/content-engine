@@ -686,7 +686,7 @@
       "ve_route": ["scribble"],
       "rules": ["one stroke in cream on ink, 6 px at 1920, round caps; mint only on the final mark that lands the point", "draw speed tied to the words: the line reaches each object as he names it", "the camera pans with the pen tip, never ahead of it", "labels in IBM Plex Mono appear after the line reaches them"],
       "avoid": ["several lines drawing at once", "sketchy multi-pass strokes", "a doodle with no point at the end"],
-      "krish_verdict": "untested"
+      "krish_verdict": "not for us"
     },
     {
       "id": "data-story",
@@ -790,7 +790,7 @@
       "ve_route": ["query_chip", "evidence_card"],
       "rules": ["IBM Plex Mono only, on ink; mint for the result line, cream for everything else", "text types at a readable 25 to 40 characters a second, never a blur", "brackets lock onto the one value that matters with the slap token", "rolling numbers settle on the real figure and hold"],
       "avoid": ["green-on-black hacker clichés", "glitch and scan noise over the proof", "walls of fake code"],
-      "krish_verdict": "untested"
+      "krish_verdict": "not for us"
     },
     {
       "id": "watercolour-ink",
@@ -818,7 +818,7 @@
       "ve_route": ["sticker", "stamp", "quote_card"],
       "rules": ["two inks from brand roles (ink and mint, or ink and the channel colour on its own piece)", "plate offset no more than 4 px; halftone dot at 6 to 10 px", "type stays crisp; only images take the halftone"],
       "avoid": ["offset on the type so it is hard to read", "more than three inks", "retro for its own sake"],
-      "krish_verdict": "untested"
+      "krish_verdict": "not for us"
     },
     {
       "id": "paper-cutout",
@@ -832,7 +832,7 @@
       "ve_route": ["sticker", "quote_card"],
       "rules": ["cut-outs from real photos or logos with a cream paper edge and a 2 to 4 px shadow", "move on twos (15 fps steps inside the 30 fps cut)", "one layer moves at a time"],
       "avoid": ["ransom-note type", "clutter of many cut-outs", "faces of real people altered"],
-      "krish_verdict": "untested"
+      "krish_verdict": "not for us"
     },
     {
       "id": "line-boil",
@@ -846,7 +846,7 @@
       "ve_route": ["scribble"],
       "rules": ["boil on twos with 3 seeded variants; amplitude under 2 px", "cream line on ink, mint only on the point"],
       "avoid": ["cartoon characters", "boil on type or numbers", "using it for proof"],
-      "krish_verdict": "untested"
+      "krish_verdict": "not for us"
     },
     {
       "id": "pixel-retro",
@@ -860,7 +860,7 @@
       "ve_route": ["needs_device"],
       "rules": ["render at 320x180 and scale by 6 with nearest neighbour", "palette from brand roles only"],
       "avoid": ["real game characters or art", "a whole piece in pixels", "using it for a serious finance claim"],
-      "krish_verdict": "untested"
+      "krish_verdict": "not for us"
     },
     {
       "id": "film-crt",
@@ -874,7 +874,7 @@
       "ve_route": ["needs_device"],
       "rules": ["only on archive or \"back then\" beats, never on today's proof", "house grain stays at 0.07; era texture sits on the footage, never over marks or logos"],
       "avoid": ["heavy glitch", "texture over captions or source labels", "the look on every beat"],
-      "krish_verdict": "untested"
+      "krish_verdict": "not for us"
     },
     {
       "id": "toy-3d",
@@ -888,7 +888,7 @@
       "ve_route": ["needs_device"],
       "rules": ["one hero object per shot, studio light, soft shadow on an ink floor", "materials tinted from brand roles; the object that matters is mint", "slow turntable at no more than 20 degrees a second, or a drop with the drop token"],
       "avoid": ["shiny chrome", "many objects bouncing", "generic 3D stock"],
-      "krish_verdict": "untested"
+      "krish_verdict": "not for us"
     },
     {
       "id": "vertical-captions",
@@ -961,7 +961,7 @@
       "ve_route": ["evidence_card", "hand_phone_stage", "kinetic_stat", "headline", "logo_card"],
       "rules": ["two materials only: mint for what a human made, hatched ink for what the machine made", "every real thing slams in on a back curve, settles on a small tilt with a soft shadow, and the picture behind it dims", "the camera pushes through every scene and breathes on long holds; nothing is ever still", "scenes hand over with a horizontal blur whip; one crossfade inside a scene at most", "each rebuilt interface carries its rebuilt-from line"],
       "avoid": ["a third colour for provenance", "a crossfade between scenes", "the series colour anywhere but the pill and the end ticker", "a rebuilt interface passed off as the real one"],
-      "krish_verdict": "liked",
+      "krish_verdict": "not for us",
       "krish_liked_words": "Krish, 2026-11-19, on generated imagery: \"The AI music video is a really good example\""
     },
     {

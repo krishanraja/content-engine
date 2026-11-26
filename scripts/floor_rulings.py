@@ -81,6 +81,9 @@ def retire(doc, retired: dict | None) -> dict:
     for g in doc.get('groups') if isinstance(doc.get('groups'), list) else []:
         if not isinstance(g, dict):
             continue
+        for key, statement in retired.get('v5_groups', {}).items():
+            if in_lineage(g.get('key'), [key]):
+                g['statement'] = statement
         g['members'] = [m for m in g.get('members') or [] if m not in gone]
         if in_lineage(g.get('key'), group.get('lineage') or []):
             g['title'] = group.get('title') or g.get('title')

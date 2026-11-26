@@ -401,13 +401,17 @@ class AdvisoryTests(unittest.TestCase):
         beats = advisory_qc.beats_of([], 10.0, 3.0, 24)
         self.assertEqual(beats, [{'id': 'main', 'fromFrame': 72, 'toFrame': 312}])
         with patch('shutil.which', return_value=None):
-            out = advisory_qc.rows(ROOT / 'missing.mp4', shape='16x9', joins=None, pages=pages, beats=beats, mark=None)
+            out = advisory_qc.rows(ROOT / 'missing.mp4', shape='16x9', joins=None, pages=pages, beats=beats,
+                                   mark=ROOT / 'mark.png')
         rows = out['rows']
         self.assertEqual(set(rows), {'joins', 'captions', 'brand', 'composition'})
         self.assertTrue(all(r['advisory'] is True and r['blocking'] is False for r in rows.values()))
         self.assertEqual(rows['composition']['status'], 'not_applicable')
         self.assertIn('tesseract', rows['captions']['reason'])
         self.assertEqual(rows['joins']['status'], 'not_run')
+        self.assertEqual(rows['brand']['status'], 'error')
+        self.assertIsNone(rows['brand']['pass'])
+        self.assertIn('ffmpeg is not on PATH', rows['brand']['reason'])
         # A measure that errors is a row that says so, never an exception out of the cut.
         broken = advisory_qc.rows(ROOT / 'missing.mp4', shape='9x16', joins=[1.0], pages=None, beats=beats, mark=ROOT / 'missing.png')
         self.assertEqual(broken['rows']['joins']['status'], 'error')

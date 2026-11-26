@@ -12,7 +12,7 @@ business logos as we're supposed to". The cards had been drawn by a one-off
 script with a system fallback font. This is the one tool for them now:
 
   * Faces and colours come from brand.py (Anton for headlines, Archivo for
-    words, IBM Plex Mono for labels and sources; ink, cream, mint and the
+    words, DM Mono for labels and sources; ink, cream, mint and the
     series accent from config/studio.json). Nothing else is drawn.
   * Every card carries at least one company logo people recognise, and every
     logo a card names is drawn (a columns card's own "logos" sit on its
@@ -140,14 +140,14 @@ body { padding: 64px 96px; display: flex; flex-direction: column; justify-conten
 .kl { display: flex; align-items: center; justify-content: space-between; gap: 40px; height: 40px; }
 .kl .logos { display: flex; align-items: center; gap: 32px; flex: none; }
 .kl .logos img { height: 40px; width: auto; max-width: 300px; object-fit: contain; display: block; }
-.k { font: 700 26px/1 'IBM Plex Mono', monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+.k { font: 700 26px/1 'DM Mono', monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
 /* Lines of a heading balanced, so a word never sits alone on the last line. */
 h1 { text-wrap: balance; font: 400 72px/1.0 'Anton', sans-serif; text-transform: uppercase; letter-spacing: .005em; }
 /* the heading always takes two lines' room, so what is under it starts at the same place on every card */
 .hd h1 { min-height: 144px; }
 .foot { margin-top: auto; display: flex; flex-direction: column; gap: 10px; flex: none; }
-.note { font: 500 24px/1.3 'IBM Plex Mono', monospace; color: var(--muted); }
-.src { font: 500 22px/1.25 'IBM Plex Mono', monospace; color: var(--muted); text-wrap: balance; }
+.note { font: 500 24px/1.3 'DM Mono', monospace; color: var(--muted); }
+.src { font: 500 22px/1.25 'DM Mono', monospace; color: var(--muted); text-wrap: balance; }
 .nb { white-space: nowrap; }
 
 /* chapter dividers: centred, 104px lines, logos under */
@@ -165,7 +165,7 @@ body.chapter .logos img { height: 56px; width: auto; max-width: 360px; object-fi
 .rows { display: flex; flex-direction: column; gap: 14px; }
 .rows.g { gap: 8px; }
 .rows.g .r { height: 56px; }
-.band { font: 700 20px/1 'IBM Plex Mono', monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+.band { font: 700 20px/1 'DM Mono', monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
         border-top: 2px solid var(--line); padding-top: 12px; margin-top: 8px; }
 .band:first-child { margin-top: 0; }
 .r { display: grid; grid-template-columns: var(--grid, 400px 1fr 90px); align-items: center; gap: 28px; height: 70px; }
@@ -181,16 +181,16 @@ body.chapter .logos img { height: 56px; width: auto; max-width: 360px; object-fi
 .who img { height: 40px; width: 64px; object-fit: contain; object-position: left center; flex: none; }
 .who .nm { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .who span { font: 700 36px/1 'Archivo', sans-serif; white-space: nowrap; }
-.who small { font: 500 20px/1 'IBM Plex Mono', monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.who small { font: 500 20px/1 'DM Mono', monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
 .bar { height: 40px; background: var(--ink-soft); border: 2px solid var(--line); position: relative; }
 .bar i { position: absolute; inset: 0 auto 0 0; background: var(--bar); }
 .s { font: 400 64px/1 'Anton', sans-serif; text-align: right; white-space: nowrap; }
 .x { font: 700 34px/1 'Archivo', sans-serif; text-align: right; white-space: nowrap; color: var(--muted); }
 .hi .who span, .hi .s, .hi .x { color: var(--accent); }
 .hi .bar i { background: var(--accent); }
-.axis { font: 700 18px/1.2 'IBM Plex Mono', monospace; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); text-align: right; }
+.axis { font: 700 18px/1.2 'DM Mono', monospace; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); text-align: right; }
 .r.ticks { height: 22px; }
-.ticks .tk { position: relative; height: 22px; font: 500 20px/1 'IBM Plex Mono', monospace; color: var(--muted); }
+.ticks .tk { position: relative; height: 22px; font: 500 20px/1 'DM Mono', monospace; color: var(--muted); }
 .ticks .tk span { position: absolute; top: 0; transform: translateX(-50%); }
 .ticks .tk span:first-child { transform: none; }
 .ticks .tk span:last-child { transform: translateX(-100%); }
@@ -201,14 +201,14 @@ body.chapter .logos img { height: 56px; width: auto; max-width: 360px; object-fi
 
 /* table */
 table { border-collapse: collapse; width: 100%; }
-th { font: 700 20px/1.1 'IBM Plex Mono', monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
+th { font: 700 20px/1.1 'DM Mono', monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
      text-align: center; padding: 0 8px 14px; vertical-align: bottom; }
 td { font: 400 46px/1 'Anton', sans-serif; text-align: center; padding: 12px 8px; border-top: 2px solid var(--line); }
 td.who { display: flex; align-items: center; gap: 14px; text-align: left; font: 700 32px/1 'Archivo', sans-serif; }
 td.who img { height: 36px; width: 100px; object-fit: contain; object-position: left center; }
 td.t { border-left: 2px solid var(--line); }
 tr.hi td { color: var(--accent); }
-tr.bandrow td { font: 700 18px/1 'IBM Plex Mono', monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+tr.bandrow td { font: 700 18px/1 'DM Mono', monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
                 text-align: left; padding: 14px 8px 4px; }
 
 /* columns */
@@ -216,7 +216,7 @@ tr.bandrow td { font: 700 18px/1 'IBM Plex Mono', monospace; letter-spacing: .08
 .col { border-top: 4px solid var(--line); padding-top: 22px; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
 .cols.some-hi .col:not(.hi) { opacity: .5; }
 .col.hi { border-top-color: var(--accent); }
-.cl { font: 700 24px/1.1 'IBM Plex Mono', monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.cl { font: 700 24px/1.1 'DM Mono', monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 .col.hi .cl, .col.hi .cn { color: var(--accent); }
 .cg { display: flex; align-items: center; gap: 22px; height: 56px; }
 .cg img { height: 48px; width: auto; max-width: 150px; object-fit: contain; }
@@ -229,7 +229,7 @@ tr.bandrow td { font: 700 18px/1 'IBM Plex Mono', monospace; letter-spacing: .08
 .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; }
 .panel { display: flex; flex-direction: column; gap: 16px; border-top: 4px solid var(--line); padding-top: 18px; }
 .panel.dim { opacity: .35; }
-.pt { font: 700 20px/1.25 'IBM Plex Mono', monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.pt { font: 700 20px/1.25 'DM Mono', monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 .pr { display: grid; grid-template-columns: 200px 1fr 170px; align-items: center; gap: 22px; height: 72px; }
 .pr .pn { font: 700 32px/1.05 'Archivo', sans-serif; white-space: nowrap; }
 .pr .pv { font: 400 64px/1 'Anton', sans-serif; text-align: right; white-space: nowrap; }
@@ -249,17 +249,17 @@ tr.bandrow td { font: 700 18px/1 'IBM Plex Mono', monospace; letter-spacing: .08
 .tl .lead { position: absolute; width: 2px; transform: translateX(-1px); background: var(--line); }
 .tl .lab { position: absolute; white-space: nowrap; }
 .tl .lab.major b { display: block; font: 700 34px/1 'Archivo', sans-serif; color: var(--cream); }
-.tl .lab.major i { display: block; font: 500 20px/1 'IBM Plex Mono', monospace; font-style: normal; color: var(--muted); margin-top: 6px; }
+.tl .lab.major i { display: block; font: 500 20px/1 'DM Mono', monospace; font-style: normal; color: var(--muted); margin-top: 6px; }
 .tl .lab.minor b { display: block; font: 600 28px/1 'Archivo', sans-serif; color: var(--muted); }
 .tl .lab.hi b, .tl .lab.hi i { color: var(--accent); }
-.tl .month { position: absolute; bottom: 0; font: 500 18px/1 'IBM Plex Mono', monospace; color: var(--muted); letter-spacing: .06em; transform: translateX(-50%); }
+.tl .month { position: absolute; bottom: 0; font: 500 18px/1 'DM Mono', monospace; color: var(--muted); letter-spacing: .06em; transform: translateX(-50%); }
 
 /* dots */
 .dotcols { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 64px; }
 .dc { display: flex; flex-direction: column; gap: 18px; border-top: 4px solid var(--line); padding-top: 18px; min-width: 0; }
 .dc.hi { border-top-color: var(--accent); }
 .dc.empty { opacity: .45; }
-.dc .dl { font: 700 24px/1.15 'IBM Plex Mono', monospace; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+.dc .dl { font: 700 24px/1.15 'DM Mono', monospace; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
 .dc.hi .dl { color: var(--accent); }
 .dc .dr { display: flex; gap: 36px; align-items: center; }
 .grid { display: grid; grid-template-columns: repeat(10, 22px); gap: 7px; flex: none; }
@@ -964,7 +964,7 @@ def contact_sheet(pg, drawn, cues, out):
     doc = (f'<!doctype html><html><head><meta charset="utf-8"><style>{brand.font_css()}'
            f'* {{ margin: 0; box-sizing: border-box; }} body {{ background: {t["ink"]}; width: {cols * 640}px; display: grid; '
            f'grid-template-columns: repeat({cols}, 640px); }} figure {{ width: 640px; height: 396px; }} img {{ display: block; width: 640px; height: 360px; }} '
-           f'figcaption {{ height: 36px; padding: 8px 12px 0; font: 500 18px/1 "IBM Plex Mono", monospace; color: {t["cream"]}; '
+           f'figcaption {{ height: 36px; padding: 8px 12px 0; font: 500 18px/1 "DM Mono", monospace; color: {t["cream"]}; '
            f'white-space: nowrap; overflow: hidden; }}</style></head><body>{"".join(tiles)}</body></html>')
     pg.set_viewport_size({'width': cols * 640, 'height': rows * 396})
     pg.set_content(doc)
@@ -1015,7 +1015,7 @@ def main(argv=None):
             pg.evaluate('document.fonts.ready')
             pg.wait_for_timeout(100)
             missing = pg.evaluate("""async () => {
-              const want = ['400 20px "Anton"', '700 20px "Archivo"', '500 20px "IBM Plex Mono"', '700 20px "IBM Plex Mono"'];
+              const want = ['400 20px "Anton"', '700 20px "Archivo"', '500 20px "DM Mono"', '700 20px "DM Mono"'];
               const out = [];
               for (const f of want) { const got = await document.fonts.load(f); if (!got.length) out.push(f); }
               return out;

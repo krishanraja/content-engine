@@ -1,0 +1,4 @@
+interface:
+  display_name: "Draft the weekly edition"
+  short_description: "Friday: the week's live pieces and checked creative news, packaged for his Approve for send"
+  default_prompt: "Use $weekly-edition to draft this week's makeyourmindup weekly: gather, check every source, write, check, render and package."

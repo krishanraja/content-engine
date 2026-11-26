@@ -1,6 +1,6 @@
 {
-  "theme_id": "makeyourmindup-video-v1",
-  "source": "config/studio.json brand_themes[makeyourmindup-video-v1]; never copy hex into a spec or a device",
+  "theme_id": "makeyourmindup-v5",
+  "source": "config/studio.json brand_themes[makeyourmindup-v5]",
   "roles": {
     "background": "ink",
     "background_deep": "ink_deep",
@@ -12,8 +12,9 @@
     "action": "mint",
     "channel": "channel_color"
   },
+  "cover_wordmark": {"mint-on-cream": "#1E9E70"},
   "role_rules": {
-    "channel": "the series colour (mind.the.gap coral, follow.the.money butter, under.the.hood lilac) marks channel identity only: pill, mark shadow, caption shadow. Never a country, a warning or a failure.",
+    "channel": "Coral, butter and lilac mark successive rungs.",
     "answer": "mint marks the answer, the brand and the next action only",
     "type_on_colour": "type on a colour block is always ink"
   },
@@ -37,57 +38,105 @@
       "gradient": "gradient",
       "duotone": "duotone_cutout"
     },
-    "days": [
-      "monday",
-      "wednesday",
-      "friday"
-    ],
+    "days": [],
     "off_days": "unchanged: mint and the house tones, never an accent colour (config/brand-palette.json colour.off)",
     "gradients": {
       "moment": [
-        ["plum_deep", 0],
-        ["plum", 12],
-        ["ember_deep", 30],
-        ["#FF6A4D", 46],
-        ["ember", 62],
-        ["#8E2A22", 82],
-        ["plum_deep", 100]
+        [
+          "plum_deep",
+          0
+        ],
+        [
+          "plum",
+          12
+        ],
+        [
+          "ember_deep",
+          30
+        ],
+        [
+          "#FF6A4D",
+          46
+        ],
+        [
+          "ember",
+          62
+        ],
+        [
+          "#8E2A22",
+          82
+        ],
+        [
+          "plum_deep",
+          100
+        ]
       ],
       "moment_glow": "a 35% peach radial at the number's height, and grain 0.09",
       "title": [
-        ["#FF7A52", 0],
-        ["#FF6A4D", 22],
-        ["ember", 50],
-        ["#8E2A22", 74],
-        ["plum", 90],
-        ["plum_deep", 100]
+        [
+          "#FF7A52",
+          0
+        ],
+        [
+          "#FF6A4D",
+          22
+        ],
+        [
+          "ember",
+          50
+        ],
+        [
+          "#8E2A22",
+          74
+        ],
+        [
+          "plum",
+          90
+        ],
+        [
+          "plum_deep",
+          100
+        ]
       ]
     },
     "duotone_ember": [
-      ["#2A0C24", 0],
-      ["ember_deep", 45],
-      ["#FF8A5C", 80],
-      ["peach_light", 100]
+      [
+        "#2A0C24",
+        0
+      ],
+      [
+        "ember_deep",
+        45
+      ],
+      [
+        "#FF8A5C",
+        80
+      ],
+      [
+        "peach_light",
+        100
+      ]
     ]
   },
   "type_roles": {
     "display": "Anton (headlines, single big numbers)",
     "structure": "Archivo (structure, quoted answers, captions at 900 w112)",
-    "dek": "Fraunces italic (the human line)",
-    "data": "IBM Plex Mono (labels, dates, provenance)"
+    "dek": "Fraunces italic (SOFT 50, WONK 0)",
+    "data": "DM Mono"
   },
   "finish": {
     "grain_opacity": 0.07,
-    "grain_rule": "grain behind everything, never over marks or logos"
+    "grain_rule": "grain behind everything, never over marks or logos",
+    "grain_on_colour": 0.12
   },
   "motion": {
-    "fps": 30,
+    "fps": 25,
     "enter_ms": 400,
     "enter_bezier": [
-      0.05,
-      0.7,
-      0.1,
-      1.0
+      0.22,
+      1,
+      0.36,
+      1
     ],
     "exit_ms": 200,
     "exit_bezier": [
@@ -104,18 +153,21 @@
       1
     ],
     "hero_bezier": [
-      0.16,
+      0.22,
       1,
-      0.3,
+      0.36,
       1
     ],
     "stagger_frames": 3,
-    "slap_frames": 5,
     "drop_frames": 8,
     "slide_frames": 12,
     "ambient_drift_pct": 1.5,
-    "grammar": "slide, drop, slap; nothing moves for its own sake; nothing fully stops (ambient drift) except a declared silence beat",
-    "corpus": "_corpus/motion-design-video-corpus.md sections 5.1-5.3, 14.2"
+    "grammar": "Entries settle once without overshoot.",
+    "corpus": "_corpus/motion-design-video-corpus.md sections 5.1-5.3, 14.2",
+    "enter_frames": [
+      6,
+      12
+    ]
   },
   "geometry": {
     "tall": "apps/renderer/src/house/geometry.ts HOUSE (caption top 1180; no mark on the tall cut, Ruling, Krish, 2026-11-11)",
@@ -139,6 +191,28 @@
       54,
       1824,
       1026
+    ]
+  },
+  "colours": {
+    "ink": "#0C1512",
+    "cream": "#F4EFE4",
+    "mint": "#7EF0C0",
+    "climb": [
+      "#FF6A4D",
+      "#FFD84D",
+      "#B7A6FF"
+    ],
+    "grain_on_ink": 0.07,
+    "grain_on_colour": 0.12,
+    "fraunces_axes": {
+      "SOFT": 50,
+      "WONK": 0
+    },
+    "ease": "cubic-bezier(0.22, 1, 0.36, 1)",
+    "fps": 25,
+    "entry_frames": [
+      6,
+      12
     ]
   }
 }

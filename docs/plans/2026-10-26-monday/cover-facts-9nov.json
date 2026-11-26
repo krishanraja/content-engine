@@ -105,5 +105,30 @@
   "quiet_pill": true,
   "headline_first": true
  },
- "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430"
+ "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+ "image_led": {
+  "still_subject": "A cardboard archive box containing bankruptcy filings",
+  "figure": {
+   "value": "$20M",
+   "headline_from": "cover",
+   "caption": "Disney's price for what is left, in the court filing",
+   "source": "court_filing"
+  },
+  "proof_caption": "Character.AI's bankruptcy filing, 13 Oct 2026",
+  "stills": {
+   "existing": "cover-assets/scene.jpg"
+  },
+  "proof_capture": "cover-assets/proof.png",
+  "proof_photo_free": true,
+  "person": {
+   "name": "Josh D'Amaro",
+   "role": "Disney CEO",
+   "file_page": "https://commons.wikimedia.org/wiki/File:Josh_D%27Amaro_Warrior_Games_2022_(cropped).jpg",
+   "artist": "Spc. Albert Juarez",
+   "license": "Public domain",
+   "own_story": true,
+   "company_accusation": false,
+   "image": "cover-assets/damaro.jpg"
+  }
+ }
 }

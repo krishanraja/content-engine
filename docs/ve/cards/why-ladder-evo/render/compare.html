@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Cover and feed comparisons</title>
+<style>
+html, body { margin: 0; }
+canvas { display: block; max-width: 100vw; max-height: 100vh; width: auto; height: auto; }
+</style>
+<canvas role="img"></canvas>
+<script>
+"use strict";
+window.ready = (async () => {
+  const read = async key => (await fetch("../" + key + ".json")).json();
+  const {tokens:t, piece:p} = window.ladderData || {tokens:await read("tokens"), piece:await read("piece")};
+  const {colour:c, type} = t;
+  const {w,h,safe} = t.canvas;
+  const variant = new URLSearchParams(location.search).get("variant") || "cover-B";
+  const tile = variant.startsWith("tile-");
+  const canvas = document.querySelector("canvas");
+  canvas.width = w;
+  canvas.height = tile ? w * 5/4 : h;
+  canvas.setAttribute("aria-label", p.title + " — " + variant);
+  const g = canvas.getContext("2d");
+  const url = file => new URL("../../../../../" + file, location.href).href;
+  const axes = Object.entries(type.human.variation).map(([k,v])=>'"'+k+'" '+v).join(", ");
+  async function font(family,file,weight,style="normal",variationSettings="normal") {
+    const face = new FontFace(family,'url("'+url(file)+'")',{weight,style,variationSettings});
+    document.fonts.add(await face.load());
+  }
+  await Promise.all([
+    font(type.display.family,type.display.file,"400"),
+    font(type.human.family,type.human.files.upright,"100 900","normal",axes),
+    font(type.human.family,type.human.files.italic,"100 900","italic",axes),
+    font(type.label.family,type.label.files.regular,"400"),
+    font(type.label.family,type.label.files.medium,"500")
+  ]);
+  const grain = new Image();
+  grain.src="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>');
+  await grain.decode();
+
+  async function image(file) {
+    const im = new Image();
+    im.src = url(file);
+    await im.decode();
+    return im;
+  }
+  const [photo, logo] = await Promise.all([
+    image(p.cover.image), image(tile ? ".scratch/why-ladder/assets/mark.png" : t.wordmark.file)
+  ]);
+
+  function texture(y, height) {
+    g.save();
+    g.globalCompositeOperation = "overlay";
+    g.globalAlpha = t.texture.grain_on_ink;
+    g.drawImage(grain, 0,y,w,height, 0,y,w,height);
+    g.restore();
+  }
+  function burn(start, end) {
+    const fade = g.createLinearGradient(0,start,0,end);
+    const rgb = [1,3,5].map(i => parseInt(c.ink.slice(i,i+2),16));
+    fade.addColorStop(0, "rgba(" + rgb.join(",") + ",0)");
+    fade.addColorStop(1, c.ink);
+    g.fillStyle = fade;
+    g.fillRect(0,start,w,canvas.height-start);
+    texture(start, canvas.height-start);
+  }
+  function style(role, over={}) {
+    const s = {...type.roles[role], ...over};
+    const family = type[s.font];
+    g.font = (s.weight === "medium" ? 500 : s.weight || 400) + " " + s.size + 'px "' + family.family + '"';
+    g.letterSpacing = (s.tracking_em ?? family.tracking_em ?? 0) * s.size + "px";
+    return s.case ?? family.case;
+  }
+  function lettering(value,x,y,role,over={},width=w) {
+    const casing = style(role,over);
+    const text = casing === "upper" ? value.toUpperCase() : casing === "lower" ? value.toLowerCase() : value;
+    g.fillStyle = c.cream;
+    g.fillText(text,x,y+g.measureText("H").actualBoundingBoxAscent,width);
+  }
+  function callout() {
+    const d = p.cover.callout, x = safe.x0, y = 300;
+    const tag = type.roles.tag, [py,px] = tag.padding;
+    style("tag");
+    const width = Math.ceil(g.measureText(d.tag).width) + 2*px;
+    const height = tag.size+2*py, top = y+type.roles.callout_small.size;
+    g.beginPath();
+    g.moveTo(...d.detail_xy);
+    g.lineTo(220,350);
+    g.lineTo(x+width,350);
+    g.strokeStyle = c.cream;
+    g.lineWidth = t.lines.leader;
+    g.stroke();
+    lettering(d.descriptor,x,y,"callout_small");
+    g.lineWidth = tag.border;
+    g.strokeRect(x+tag.border/2,top+tag.border/2,width-tag.border,height-tag.border);
+    style("tag");
+    lettering(d.tag,x+px,top+(height-g.measureText("H").actualBoundingBoxAscent)/2,"tag");
+  }
+  function cover() {
+    // Anchor the new crop on the original leader tip.
+    const [x,y] = p.cover.callout.detail_xy;
+    const oldScale = Math.max(w/photo.width,h/photo.height)*t.motion.photo_punch.scale_to;
+    const scale = Math.max(w/photo.width,h/photo.height)*1.15, ratio = scale/oldScale;
+    g.drawImage(photo, x+(w/2-x)*ratio-photo.width*scale/2,
+      y+(h/2-y)*ratio-photo.height*scale/2, photo.width*scale, photo.height*scale);
+    burn(900,1500);
+    callout();
+    const words = p.title.split(" "), size = type.roles.cover_headline.size;
+    lettering(p.section_label,safe.x0,944,"section_label",{size:26,tracking_em:0.32});
+    [words.slice(0,2),words.slice(2,4),words.slice(4)].forEach((row,i) =>
+      lettering(row.join(" "),safe.x0,1000+i*size*type.display.line,"cover_headline",{},safe.x1-safe.x0));
+    const mw = t.wordmark.width, mh = mw*logo.height/logo.width;
+    g.fillStyle = c.ink;
+    g.fillRect(safe.x1-mw,safe.y1-mh,mw,mh);
+    g.drawImage(logo,safe.x1-mw,safe.y1-mh,mw,mh);
+  }
+  function feed() {
+    const height = canvas.height, locked = variant === "tile-A", serif = variant === "tile-C";
+    const photoHeight = locked ? Math.round(height*0.55) : height;
+    const scale = Math.max(w/photo.width,photoHeight/photo.height);
+    g.save();
+    g.beginPath();
+    g.rect(0,0,w,photoHeight);
+    g.clip();
+    g.drawImage(photo,(w-photo.width*scale)/2,0,photo.width*scale,photo.height*scale);
+    g.restore();
+    if (locked) {
+      g.fillStyle = c.ink;
+      g.fillRect(0,photoHeight,w,height-photoHeight);
+      texture(photoHeight,height-photoHeight);
+    } else {
+      burn(height*0.45,height);
+    }
+    g.drawImage(logo,40,40,56*logo.width/logo.height,56);
+
+    const face = serif ? {font:"human",size:68,weight:600,case:"sentence"} : {size:96};
+    const leading = serif ? 78 : 102;
+    const words = (serif ? p.title : p.title.toUpperCase()).split(" ");
+    style("cover_headline",face);
+    // Among two-line settings, choose the most even pair that fits the column.
+    const margin = safe.x0, width = w-2*margin;
+    let rows, best = Infinity;
+    for (let i=1; i<words.length; i++) {
+      const pair = [words.slice(0,i).join(" "),words.slice(i).join(" ")];
+      const [a,b] = pair.map(line => g.measureText(line).width);
+      if (Math.max(a,b)<=width && Math.abs(a-b)<best) {
+        best = Math.abs(a-b);
+        rows = pair;
+      }
+    }
+    if (!rows) throw new Error("Title needs a new line setting");
+    const squareBottom = (height+w)/2;
+    const finalLine = g.measureText(rows[1]);
+    const firstBaseline = squareBottom-64-finalLine.actualBoundingBoxDescent-leading;
+    const eyebrowY = firstBaseline-g.measureText(rows[0]).actualBoundingBoxAscent-62;
+    lettering(p.section_label,margin,eyebrowY,"section_label",{size:26,tracking_em:locked ? 0 : 0.32});
+    style("cover_headline",face);
+    g.fillStyle = c.cream;
+    rows.forEach((line,i) => g.fillText(line,margin,firstBaseline+i*leading));
+
+    // Both centre crops must keep the complete editorial column.
+    const portraitInset = (w-height*3/4)/2;
+    if (margin<portraitInset || eyebrowY<(height-w)/2 || (locked && eyebrowY<photoHeight))
+      throw new Error("Editorial column falls outside the crop or crosses the seam");
+  }
+  if (tile) feed(); else cover();
+})();
+</script>
+</html>

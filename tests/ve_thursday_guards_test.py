@@ -23,7 +23,7 @@ os.environ['VE_GOLDEN'] = 'off'  # the house golden test is never run from here;
 
 import ve  # noqa: E402
 from velib import guards, lint as ve_lint, proof  # noqa: E402
-from ve_proof_test import CUT, FIXTURE, approve, fake_render, props_for, whole  # noqa: E402
+from ve_proof_test import CUT, V5_FIXTURE, approve, fake_render, props_for, whole  # noqa: E402
 
 LADDER = {
     'object': 'One career ladder; every number is drawn on, beside or instead of a rung',
@@ -180,8 +180,8 @@ class OffDays(unittest.TestCase):
         from velib.common import load_json  # noqa: PLC0415
         folder = ROOT / 'fixtures/ve/my-test-19s'
         words = [dict(w, end_s=w['onset_s'] + 0.2) for w in load_json(folder / 'words.frames.json')]
-        friday = compile_cut(whole(day='2026-11-13'), CUT, words, folder)
-        thursday = compile_cut(whole(day='2026-11-12'), CUT, words, folder)
+        friday = compile_cut(whole(V5_FIXTURE, day='2026-11-13'), CUT, words, folder)
+        thursday = compile_cut(whole(V5_FIXTURE, day='2026-11-12'), CUT, words, folder)
         self.assertNotEqual(friday['tokens']['channel'], friday['tokens']['mint'])
         self.assertEqual(thursday['tokens']['channel'], thursday['tokens']['mint'])
         self.assertEqual(thursday['series']['label'], 'off.day')

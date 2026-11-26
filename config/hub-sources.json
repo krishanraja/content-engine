@@ -1,0 +1,140 @@
+{
+  "subsectors": [
+    {
+      "key": "music",
+      "label": "Music",
+      "line": "Recording, rights and live music.",
+      "query": "AI music"
+    },
+    {
+      "key": "film_tv",
+      "label": "Film & TV",
+      "line": "Production, distribution and streaming.",
+      "query": "AI film OR television OR Hollywood"
+    },
+    {
+      "key": "gaming",
+      "label": "Gaming",
+      "line": "Studios, platforms and the people making games.",
+      "query": "AI video games"
+    },
+    {
+      "key": "sport",
+      "label": "Sport",
+      "line": "Clubs, competitions and broadcast rights.",
+      "query": "AI sport"
+    },
+    {
+      "key": "publishing_media",
+      "label": "Publishing & Media",
+      "line": "Books, newsrooms and the business of publishing.",
+      "query": "AI publishing OR newspaper OR books"
+    },
+    {
+      "key": "art_design",
+      "label": "Art & Design",
+      "line": "Visual arts, illustration and design practice.",
+      "query": "AI art OR design OR illustration"
+    }
+  ],
+  "trades": [
+    {
+      "subsector": "music",
+      "outlet": "Music Business Worldwide",
+      "url": "https://www.musicbusinessworldwide.com/feed/"
+    },
+    {
+      "subsector": "music",
+      "outlet": "Billboard",
+      "url": "https://www.billboard.com/feed/"
+    },
+    {
+      "subsector": "film_tv",
+      "outlet": "Variety",
+      "url": "https://variety.com/feed/"
+    },
+    {
+      "subsector": "film_tv",
+      "outlet": "The Hollywood Reporter",
+      "url": "https://www.hollywoodreporter.com/feed/"
+    },
+    {
+      "subsector": "film_tv",
+      "outlet": "Deadline",
+      "url": "https://deadline.com/feed/"
+    },
+    {
+      "subsector": "gaming",
+      "outlet": "GamesIndustry.biz",
+      "url": "https://www.gamesindustry.biz/feed"
+    },
+    {
+      "subsector": "sport",
+      "outlet": "SportBusiness",
+      "url": "https://www.sportbusiness.com/feed/"
+    },
+    {
+      "subsector": "publishing_media",
+      "outlet": "Press Gazette",
+      "url": "https://pressgazette.co.uk/feed/"
+    },
+    {
+      "subsector": "art_design",
+      "outlet": "The Art Newspaper",
+      "url": "https://www.theartnewspaper.com/rss.xml"
+    },
+    {
+      "subsector": "art_design",
+      "outlet": "Dezeen",
+      "url": "https://www.dezeen.com/feed/"
+    },
+    {
+      "subsector": "music",
+      "outlet": "Music Ally",
+      "url": "https://musically.com/feed/"
+    },
+    {
+      "subsector": "music",
+      "outlet": "Digital Music News",
+      "url": "https://www.digitalmusicnews.com/feed/"
+    }
+  ],
+  "sport_keywords": [
+    "sport",
+    "sports",
+    "sportsperson*",
+    "athlete*",
+    "football",
+    "footballer*",
+    "soccer",
+    "rugby",
+    "cricket",
+    "cricketer*",
+    "tennis",
+    "golf",
+    "golfer*",
+    "basketball",
+    "baseball",
+    "nba",
+    "nfl",
+    "mlb",
+    "nhl",
+    "premier league",
+    "champions league",
+    "formula 1",
+    "formula one",
+    "olympic*",
+    "paralympic*",
+    "world cup",
+    "sports rights",
+    "broadcast rights",
+    "stadium*",
+    "matchday"
+  ],
+  "sport_exceptions": [
+    "sports cars",
+    "sports car",
+    "sport utility",
+    "f1 score"
+  ]
+}

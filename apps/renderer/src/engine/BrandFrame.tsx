@@ -34,6 +34,7 @@ export function BrandFrame({ props, beat, frame }: BrandFrameProps): React.React
   const house = props.brandTokens ? { ...props, tokens: props.brandTokens } : props
   const chrome = ending ? <EndingBand props={house} frame={frame} />
     : landing ? <LandingCard props={house} frame={frame} />
+      : props.captionTheme === 'house-v5' ? <ThemedCaption props={props} theme="house-v5" frame={frame} />
       : props.captionTheme ? (onFullPlate(props, beat) || props.captionTheme === 'rack-focus' || overTake(beat)
         ? <div data-caption-halo style={{ position: 'absolute', inset: 0, filter: onFullPlate(props, beat) ? CAPTION_HALO : TAKE_HALO }}><ThemedCaption props={props} theme={props.captionTheme} frame={frame} /></div>
         : <ThemedCaption props={props} theme={props.captionTheme} frame={frame} />)
