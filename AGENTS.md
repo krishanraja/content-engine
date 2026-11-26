@@ -28,8 +28,8 @@ thumbnails come only from `python scripts/covers/make_covers.py <piece> --out <f
 `python scripts/library/make_piece.py <piece> --set <set>`, through `python3 scripts/carousel_make.py`, which enforces
 the carousel format (`config/carousel-format.json`) as refusals. `config/asset-routes.json` maps every asset kind to
 its command (`scripts/post-pack/asset_routes.py`); until the Library is on the checkout these refuse with "the v5
-Library is not on this checkout yet" and never fall back to another renderer. Each is made in a Claude session, never a
-scheduled job, a headless model run or another template engine. The route is `docs/CAROUSEL-STANDARD.md`, "How a
+Library is not on this checkout yet" and never fall back to another renderer. Each is made in a Claude session (an off-day voiceover short on the ve
+route), never a scheduled job, a headless model run or another template engine. The route is `docs/CAROUSEL-STANDARD.md`, "How a
 carousel is made".
 
 The production cycle's touches of the other systems (divergence engine, humour engine, strategist, file archives,

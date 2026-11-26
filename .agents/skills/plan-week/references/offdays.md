@@ -219,7 +219,7 @@ exactly as shown, from the locked v5 Library by its route (`config/asset-routes.
 a carousel through `scripts/carousel_make.py`, `docs/CAROUSEL-STANDARD.md`, "How a
 carousel is made"), writes its captions and asks the judges, and returns it on the
 option as `mock` for his final yes; Growth posts it once he approves (Ruling, Krish,
-2026-11-26: content-engine makes every asset; Growth made the mocks until then). This
+2026-11-26: content-engine makes every asset, the mocks included). This
 repository cuts any snackable clip.
 
 **Revising one option** (the revision run, or a session asked to). What waits
