@@ -32,7 +32,14 @@ HOOK_IS_THE_INTRO).
   go at the start of the longer wide videos 100%,"); it was paused on
   2026-11-12 and retired the same day.
 - **One opening and one close.** The close is one calm outro card, held long
-  enough to read (house rule STORY_INTRO_OUTRO; the story outro). Krish,
+  enough to read (house rule STORY_INTRO_OUTRO; the story outro): the plain v5
+  outro card on every cut, wide and tall, series or off day (Ruling, Krish,
+  2026-11-26: "1 agreed", retiring the sting close that series cuts wore from
+  23 Nov; `config/brand-palette.json` `series_close`, drawn by ve's
+  `EndingBand.tsx`). No intro sting clip goes anywhere in a cut dated from 26
+  Nov: ve lint (`guards.close_problems`) and ve render
+  (`compile.ending_problems`) refuse one. A series cut dated 23 to 25 Nov
+  keeps the sting close it was signed with, so it still renders. Krish,
   2026-10-21: "why are there two separate intro sequences? that should NEVER
   happen."; 2026-10-28: "we also don't need three separate outro transitions
   and screens. Ever." The animated story card in front of each cut (the intro

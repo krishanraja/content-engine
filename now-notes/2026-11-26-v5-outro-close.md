@@ -1,0 +1,4 @@
+Status: Every video, series or off day, wide or tall, now ends on the plain v5 outro card (statement_card wide, statement_beat tall, drawn by EndingBand.tsx in the v5 look), and the intro sting closes no cut dated from 26 Nov (Ruling, Krish, 2026-11-26: "1 agreed"); ve lint and ve render refuse a sting clip anywhere in such a cut, and series cuts dated 23 to 25 Nov keep the sting close they were signed with.
+Changed: config/intro-sting.json close is retired with his words; config/brand-palette.json has series_close in place of sting_close and no sting closes; guards.close_problems, compile.ending_problems, brand_palette.py, the produce-video skill, docs/DRIVE.md and BRAND_PALETTE.md say the same.
+Next: Confirm the next series cut's compile report says close v5_outro.
+North Star check (2026-11-26): holds.

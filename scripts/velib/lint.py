@@ -379,8 +379,9 @@ def palette_lints(spec: dict) -> list[str]:
     """brand.palette: each whole cut's opening, sting and close against config/brand-palette.json for its day
     (Ruling, Krish, 2026-11-12: "I approve the brand palette sheet, but only if it falls in line with the
     attached"). What ve will draw is read from compile, the one place it is decided: its close is ENDING_FRAMES
-    long on both shapes, and no cut carries a sting (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove
-    the sting exception for good."). A spec dated before the palette's applies_from is not checked."""
+    long on both shapes, the plain v5 outro card (Ruling, Krish, 2026-11-26: "1 agreed"), and no cut carries a sting
+    before its hook (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good.").
+    A spec dated before the palette's applies_from is not checked."""
     import sys  # noqa: PLC0415
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     import brand_palette  # noqa: PLC0415
@@ -401,8 +402,8 @@ def palette_lints(spec: dict) -> list[str]:
         if not shape:
             continue
         sting = 'none'
-        # The series close plays the intro sting at the end from its own date (Ruling, Krish, 2026-11-20); the tall one
-        # carries no days row (EndingBand.tsx).
+        # Every cut ends on the plain v5 outro card (Ruling, Krish, 2026-11-26: "1 agreed"; EndingBand.tsx). A series cut
+        # dated 23 to 25 Nov keeps the retired sting close it was signed with (F33); the palette leaves that close unchecked.
         closes_on_sting = kind == 'series' and ve_compile._intro().close_wanted(shape, series, when)
         ids = ('sting_card', 'sting_beat') if closes_on_sting else ('statement_card', 'statement_beat')
         record = {'date': when, 'format': 'long_cut' if shape == '16x9' else 'short_cut', 'shape': shape, 'kind': kind,

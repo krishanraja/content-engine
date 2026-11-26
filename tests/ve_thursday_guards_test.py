@@ -139,6 +139,42 @@ class ShowTheRealThing(unittest.TestCase):
         self.assertEqual(guards.retype_problems(self.spec('OPENAI · CHATGPT · 3 NOV 2026')), [])
 
 
+class TheClose(unittest.TestCase):
+    """Ruling (Krish, 2026-11-26): "1 agreed", to retiring the sting close and ending every video on the plain v5 outro
+    card. A spec dated from 26 Nov that names an intro sting clip anywhere, or is made in another theme, is refused."""
+
+    def v5(self, day='2026-11-27'):
+        spec = whole(copy.deepcopy(V5_FIXTURE), day=day)
+        self.assertEqual(spec['theme'], 'makeyourmindup-v5')
+        return spec
+
+    def test_a_v5_spec_from_26_nov_passes(self):
+        self.assertEqual(guards.close_problems(self.v5()), [])
+
+    def test_a_sting_clip_anywhere_in_the_spec_is_refused(self):
+        clip = json.loads((ROOT / 'config' / 'intro-sting.json').read_text(encoding='utf-8'))['clips']['9x16']['mind_the_gap']
+        for name, value in (('its library path', clip['library']), ('its file name', clip['library'].rsplit('/', 1)[1]),
+                            ('its sha256', clip['sha256']), ('a path in its folder', '1 Brand kit (permanent)/Intro sting/x.mp4')):
+            with self.subTest(name):
+                spec = self.v5()
+                spec['assets'].append({'id': 'close-plate', 'kind': 'clip', 'path': value})
+                found = guards.close_problems(spec)
+                self.assertEqual(codes(found), ['close.v5_outro'])
+                self.assertIn('1 agreed', found[0])
+                self.assertIn('close.v5_outro', codes(guards.spec_lints(spec)))
+
+    def test_another_theme_is_refused_from_26_nov(self):
+        spec = self.v5()
+        spec['theme'] = 'makeyourmindup-video-v1'
+        self.assertEqual(codes(guards.close_problems(spec)), ['close.v5_outro'])
+
+    def test_a_piece_dated_before_26_nov_is_not_held(self):
+        spec = self.v5(day='2026-11-25')
+        spec['theme'] = 'makeyourmindup-video-v1'
+        spec['assets'].append({'id': 'close-plate', 'kind': 'clip', 'path': '1 Brand kit (permanent)/Intro sting/x.mp4'})
+        self.assertEqual(guards.close_problems(spec), [])
+
+
 class OffDays(unittest.TestCase):
     """Krish, 2026-11-04: "Yes, give off days their own music and look - Rotate." """
 

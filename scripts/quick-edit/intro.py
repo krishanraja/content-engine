@@ -17,10 +17,12 @@ The design is six fixed clips, not source code. The Remotion source of the clips
 he saw on 12 October was never committed and is lost, so the clips themselves,
 taken byte for byte from his page, are the design. config/intro-sting.json names
 each one (clips.<shape>.<series>: its library path, sha256 and bytes), and
-"shapes" says where the sting went (["16x9"]). Since 20 Nov 2026 all six clips,
-9:16 and 16:9, are the series close's plate at the END of a cut (the config's
-"close" block; Ruling, Krish, 2026-11-19 and 2026-11-20): close_wanted() and
-close_clip() read it for ve compile; it never opens a cut.
+"shapes" says where the sting went (["16x9"]). From 23 to 25 Nov 2026 all six
+clips, 9:16 and 16:9, were the series close's plate at the END of a cut (the
+config's "close" block; Ruling, Krish, 2026-11-19 and 2026-11-20). That close is
+retired too (Ruling, Krish, 2026-11-26: "1 agreed"): every cut dated from 26 Nov
+ends on the plain v5 outro card, and close_wanted() and close_clip() serve only a
+series cut dated inside the close's window, so it still renders as it was signed.
 
 Where the clips are:
   - in the engine's library, at clips.<shape>.<series>.library
@@ -260,30 +262,38 @@ def clip_sha256(shape, series, config=None):
 
 
 def close_rules(config=None):
-    """The series close's rules (config/intro-sting.json "close"), or None when there is none or it is not approved.
-    The close plays the sting at the END of a cut (Ruling, Krish, 2026-11-19 and 2026-11-20); the opening stays
-    retired, so nothing here ever gives a cut a sting before its hook."""
+    """The series close's rules (config/intro-sting.json "close"), or None when there is none. The close played the
+    sting at the END of a cut (Ruling, Krish, 2026-11-19 and 2026-11-20) and is retired (Ruling, Krish, 2026-11-26:
+    "1 agreed"): a retired close is returned only while it names the last day it binds (applies_until), so a series cut
+    signed inside its window still renders as signed (F33). The opening stays retired, so nothing here ever gives a cut a
+    sting before its hook."""
     try:
         close = load(config).get('close') or {}
     except IntroError:
         return None
-    return close if close.get('status') == 'approved' else None
+    if close.get('status') == 'approved' or (close.get('status') == 'retired' and close.get('applies_until')):
+        return close
+    return None
 
 
 def close_wanted(shape, series, date, config=None):
     """Whether a whole cut of this shape, series and publish date closes on the sting: a weekly series piece dated from
-    the close's applies_from, on a shape the close names. An off day has no sting (close.off_days)."""
+    the close's applies_from to its applies_until (25 Nov; the close is retired from 26 Nov), on a shape the close
+    names. An off day has no sting (close.off_days), and no cut dated from 26 Nov closes on one: it ends on the plain v5
+    outro card (config/brand-palette.json series_close)."""
     close = close_rules(config)
+    day = str(date or '')[:10]
     return bool(close and series_name(series) and shape in close.get('shapes', ())
-                and str(date or '')[:10] >= close.get('applies_from', '9999'))
+                and close.get('applies_from', '9999') <= day <= close.get('applies_until', '9999-12-31'))
 
 
 def close_clip(shape, series, config=None, clips=None):
-    """(path, sha256, frames) of the verified clip the close plays for this shape and series. Raises IntroError,
-    saying what is wrong (no approved close, no such clip, or the clip is not on this machine: run fetch)."""
+    """(path, sha256, frames) of the verified clip the close plays for this shape and series, for a cut close_wanted()
+    says closes on it. Raises IntroError, saying what is wrong (no close, no such clip, or the clip is not on this
+    machine: run fetch)."""
     cfg = load(config)
-    if not (cfg.get('close') or {}).get('status') == 'approved':
-        raise IntroError('config/intro-sting.json carries no approved close')
+    if close_rules(config) is None:
+        raise IntroError('config/intro-sting.json carries no close a cut may play')
     found = series_name(series)
     path = clip(shape, found, cfg, clips)
     return path, cfg['clips'][shape][found]['sha256'], cfg['frames']
