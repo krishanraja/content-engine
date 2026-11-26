@@ -249,7 +249,10 @@ none of it.
    `specs/subscribe-route.json`: `utm_source=newsletter`, `utm_medium=email`, `utm_campaign=weekly`,
    `utm_content=edition-<edition_date>-<place>` (`forward`, `piece-mon` and the rest); the Pass it on link goes to the
    one subscribe page. Made by `python3 scripts/edition/edition.py link`, checked by `check`.
-6. **Not built yet.** Growth reporting the edition scheduled and sent back to the board (the Scheduled and Sent steps of
+6. **Who it goes to.** All subscribers, free and paid. Krish, 2026-11-26: "substack weekly should be sent to ALL
+   subscribers". That is Substack's audience Everyone. A new post on this publication starts as "Paid subscribers
+   only", so Growth's Substack step sets Everyone, reads it back and schedules nothing on any other audience.
+7. **Not built yet.** Growth reporting the edition scheduled and sent back to the board (the Scheduled and Sent steps of
    the Saturday card), and a board press that starts the Friday run by hand (`run` job `weekly-edition`).
 
 ## Tick the board when a post goes out

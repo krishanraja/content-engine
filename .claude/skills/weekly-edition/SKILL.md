@@ -123,4 +123,5 @@ folder, the press); the topic heads are the hub's subsectors in `config/hub-sour
 His press is `picks/sat-edition` (kind `approve_send`, bound to the draft's `edition_sha256`). Growth's Substack step
 reads the Saturday item from the board's view, builds the Substack draft from exactly those bytes, and schedules it for
 08:00 only when his press binds that sha256; a changed edition holds until he presses again. Redrafting after his press
-(`force` on the workflow) makes a new sha256, which his old press does not cover.
+(`force` on the workflow) makes a new sha256, which his old press does not cover. It goes to all subscribers, free and
+paid (Substack's Everyone; Krish, 26 Nov).
