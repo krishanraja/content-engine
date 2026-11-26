@@ -361,8 +361,11 @@ def cards_problems(paths: list, deck: dict | None = None) -> tuple[list[str], li
     return found + [p for p in more if p not in found], cards
 
 
-def receipt(paths: list, deck_path: str | None = None, found: list | None = None) -> dict:
-    """What the make route and the manifest read: passed, the slides' sha256s in order, the deck's sha256."""
+def receipt(paths: list, deck_path: str | None = None, found: list | None = None, *, made_by: str | None = None,
+            first_slide_sha256: str | None = None) -> dict:
+    """What the make route and the manifest read: passed, the slides' sha256s in order, the deck's sha256, who made it
+    (made_by: carousel_make, the one route) and the first slide's sha256 as make_covers.py's covers.json records it.
+    The manifest refuses a receipt with no deck, no set or made by anything but carousel_make."""
     import hashlib
 
     def sha(p):
@@ -370,7 +373,8 @@ def receipt(paths: list, deck_path: str | None = None, found: list | None = None
     deck = json.loads(Path(deck_path).read_text(encoding='utf-8')) if deck_path else {}
     return {'schema': 'carousel-receipt/1', 'passed': not found, 'problems': list(found or []),
             'format': 'config/carousel-format.json', 'set': deck.get('set'), 'piece': deck.get('piece'),
-            'deck_sha256': sha(deck_path) if deck_path else None,
+            'deck_sha256': sha(deck_path) if deck_path else None, 'made_by': made_by,
+            'first_slide_sha256': first_slide_sha256,
             'slides': [{'file': Path(p).name, 'sha256': sha(p)} for p in paths]}
 
 
@@ -387,6 +391,12 @@ def main(argv=None) -> int:
                     deck_path = value
                 else:
                     out_path = value
+        if out_path and not deck_path:
+            # A receipt names the deck it checked: without one, slides from any renderer would pass on their count and
+            # layout alone, never checked for the set, the word limits or a make_covers first slide.
+            print('carousel_check: REFUSED --receipt needs --deck: a receipt is written only for slides checked against their '
+                  'deck (python3 scripts/carousel_make.py writes the one the manifest reads)')
+            return 2
         deck = json.loads(Path(deck_path).read_text(encoding='utf-8')) if deck_path else None
         found, cards = cards_problems(rest, deck)
         if deck is not None:
