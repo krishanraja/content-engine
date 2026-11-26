@@ -2,7 +2,7 @@
 
 Status: Current
 Owner: Krish Raja
-Last verified: 2026-11-12 against `main` at `02184d34` for every term (each checked against the code or config it names), with `venture_formats`, `format_aliases`, the `content_ideas` state check and the tables named here read back from the database the same day; caption styles, the ideas gate and the lookalike step rechecked on 16 Nov against `main` at `4fcf48fb`; the story engine, the cycle and the 26 Nov split added against branch `story/engine-v5` at `53ff7558`
+Last verified: 2026-11-12 against `main` at `02184d34` for every term (each checked against the code or config it names), with `venture_formats`, `format_aliases`, the `content_ideas` state check and the tables named here read back from the database the same day; caption styles, the ideas gate and the lookalike step rechecked on 16 Nov against `main` at `4fcf48fb`; the story engine, the cycle and the 26 Nov split added against branch `story/engine-v5` at `e3593a2f`
 
 Terms as this repository uses them. Where a word means different things in the
 two halves, both meanings are given. Read "Names" first: most misreadings of

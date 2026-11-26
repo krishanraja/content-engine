@@ -144,9 +144,9 @@ Publish Board draws `model` and nothing else on a day.
 - **Good news is one post, five stories on one topic.** The Saturday item lists its stories in full (headline, what,
   why it matters, source, date) and how many of five it holds (`stories`, `stories_planned`; the board says "1 of 5 stories
   found"). One that holds fewer has as its next action "Find
-  the other N stories", `saturday-goodnews.yml` with `fill: off-<day>-<id>`, which fills that approved post to five
+  the other N stories", `saturday-goodnews.yml` with `fill: off-<day>-<id>`, which fills that approved post to four (config/carousel-format.json good_news)
   on its own topic and changes none of the words his Approve is bound to (plan-week `references/offdays.md`, "Filling
-  an approved post to five").
+  an approved post to four").
 - **The read sheet** (`read` on every item and idea): its story, why now, the fact, its sources and the research on
   file, read-only, with its one action. Control Centre opens it from a card, and `#/content?idea=<id>` opens it for
   that idea; the old content composer is never reached from the board.
@@ -414,7 +414,7 @@ the item has none yet), `scheduled` on a channel for a time, `live` on a channel
 (a scheduled post taken back). It is merged into the item's record (`posts`): one made, and per channel its latest
 scheduled or live post; a live post is never undone by a later scheduled report. Live needs the channel and the link,
 and Growth never reports a post it did not post. The board shows it: the option's `posts` (contract 1.9.0), the day's
-`posted` (`by: growth`, with each link), the day's line ("Approved. Growth made it", "Growth scheduled it on Instagram,
+`posted` (`by: growth`, with each link), the day's line ("Ready to post: Growth posts it on the day", "Growth scheduled it on Instagram,
 TikTok"), and an approved option Growth reports live makes the day done ("Live on Instagram, TikTok. Growth posted it,
 Tue 10 Nov, 13:25") with no It's live left to press.
 

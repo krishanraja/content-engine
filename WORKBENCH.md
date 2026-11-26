@@ -10,9 +10,9 @@ committed and nothing is pushed, posted, sent or spent. What it holds, commit by
 
 Where it stopped:
 
-- **Docs are current** with every commit to `4cb6bdd1` and the state commit after it.
+- **Docs are current** with every commit to `0c2ad28f` and the state commit after it.
 - **The blind proof has not run.** Its frozen SHA in `docs/plans/proofs/2026-11-26-story-engine-v5/PROTOCOL.md` is
-  `c831787a`; `53ff7558` (the carousel format) changed `idea_checks.py`, `story_score.py` and `config/story-score.json`
+  `c831787a`; `e3593a2f` (the carousel format) changed `idea_checks.py`, `story_score.py` and `config/story-score.json`
   since, so `story_proof.py run` refuses until the SHA is moved again (as `ad5b10d9`, `13ecbe7c` and `4cfb7b6f` did,
   each before any paid call) or Krish says otherwise. Then the paid run (at most $10, his yes), the tells check, the
   sheet to his notes folder, his answers, the reveal.

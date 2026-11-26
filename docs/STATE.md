@@ -58,7 +58,7 @@ When this page and the code disagree, the code wins: fix this page.
 - **The failure loop.** `engine_incidents` holds 3 rows; the weekly job (`engine-learning-weekly.yml`) reads it with
   the failure and learning registers (`docs/learning/README.md`).
 
-## On branch `story/engine-v5`, not on `main` (checked 26 Nov 2026 against `53ff7558`)
+## On branch `story/engine-v5`, not on `main` (checked 26 Nov 2026 against `e3593a2f`)
 
 Each line names the commit or file it was checked in; none of it is live until the branch merges.
 
@@ -73,7 +73,7 @@ Each line names the commit or file it was checked in; none of it is live until t
 - **The blind proof.** Harness and protocol committed before any paid call (`07c554e0`;
   `docs/plans/proofs/2026-11-26-story-engine-v5/PROTOCOL.md`, frozen SHA `c831787a`). No paid run has been made: the
   proof's cache holds the two weeks' pools and old picks only, and no sheet has gone to Krish. Since the freeze,
-  `53ff7558` changed three engine files (`idea_checks.py`, `story_score.py`, `config/story-score.json`), so a real run
+  `e3593a2f` changed three engine files (`idea_checks.py`, `story_score.py`, `config/story-score.json`), so a real run
   refuses until the frozen SHA is moved again or that change is taken out.
 - **The production cycle.** `config/cycle.json` and `scripts/post-pack/touch.py` (`d979db59`, `24c75f5a`); connector
   touches queue in `.cache/touch/outbox.jsonl` while `CC_HARNESS_KEY` is unset, and the two workflows pass the secret
@@ -82,8 +82,8 @@ Each line names the commit or file it was checked in; none of it is live until t
   em dash is vetoed on Windows too (`test_the_real_kill_list_runs`; `config/failures.json`
   `kill-list-windows-encoding`).
 - **Every asset made here.** `config/asset-routes.json` and `asset_routes.py`, the captions step, the make flow's own
-  judges, the Saturday Note, manifest schema 1.1 and the cycle's Growth rows (`c8ea47d5` to `7e6bfdce`), and the
-  carousel format enforced as refusals (`53ff7558`). Each Library call refuses with "the v5 Library is not on this
+  judges, the Saturday Note, manifest schema 1.1 and the cycle's Growth rows (`c8ea47d5` to `9a6508e3`), and the
+  carousel format enforced as refusals (`e3593a2f`). Each Library call refuses with "the v5 Library is not on this
   checkout yet" until content-engine `library/gates-and-wiring` merges.
 
 ## Broken or risky
