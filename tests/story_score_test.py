@@ -689,6 +689,34 @@ class Cli(unittest.TestCase):
         self.assertLessEqual(summary['spent_usd'], RUBRIC['budget_usd'])
         self.assertAlmostEqual(summary['spent_usd'], 0.6 + (summary['calls'] - 3) * 0.005, places=4)
 
+    def test_angle_ids_follow_the_words_and_sparks_are_carried_forward(self):
+        ideas = {'week_start': WEEK, 'days': {'mon': [hero(A, 'Warner signs with a model maker', 'Warner said it signed a deal.')],
+                                              'wed': [], 'fri': []}}
+        self.write('ideas.json', ideas)
+        self.write('sources.json', {'recent_posts': []})
+        lens = {'lens': 'series', 'text': 'Warner is paid for what it sued over', 'rests_on': 'signed a deal'}
+        self.write('story/angles.json', {'options': {f'mon/{A}': [lens]}})
+        poster = Poster()
+        self.assertEqual(self.run_cli('angles', '--provoke', '--judge', '--ledger', self.ledger, poster=poster, cap=UNDER), 0)
+        path = self.folder / 'story' / 'angles.json'
+        first = {x['text']: x for x in json.loads(path.read_text(encoding='utf-8'))['pooled'][f'mon/{A}']}
+        self.assertIn('The label pays twice reversal', first, 'the spark is pooled')
+        # The pool changes: a new lens angle goes first. Without --provoke the spark stays; ids follow the words.
+        doc = json.loads(path.read_text(encoding='utf-8'))
+        doc['options'][f'mon/{A}'] = [{'lens': 'funniest_true', 'text': 'A new angle nobody judged', 'rests_on': 'signed a deal'}, lens]
+        path.write_text(json.dumps(doc), encoding='utf-8')
+        calls = len(poster.calls)
+        self.assertEqual(self.run_cli('angles', '--ledger', self.ledger, poster=poster, cap=UNDER), 0)
+        self.assertEqual(len(poster.calls), calls, 'no call without --provoke or --judge')
+        again = {x['text']: x for x in json.loads(path.read_text(encoding='utf-8'))['pooled'][f'mon/{A}']}
+        for text, x in first.items():
+            self.assertEqual(again[text]['id'], x['id'], text)
+            self.assertEqual(again[text]['judge'], x['judge'], 'a judge read stays with its words')
+        self.assertEqual(again['The label pays twice reversal']['run_id'], 'run-1', 'the paid spark is carried forward')
+        self.assertIsNone(again['A new angle nobody judged']['judge'], "a new text is never given another angle's numbers")
+        self.assertEqual(self.run_cli('angles', '--provoke', '--ledger', self.ledger, poster=poster, cap=UNDER), 0)
+        self.assertEqual(len(poster.calls), calls, 'a key with sparks already paid for is not provoked again')
+
     def test_a_step_that_did_not_run_exits_2(self):
         self.write('ideas.json', {'week_start': WEEK, 'days': {'mon': [hero(A, 'Warner signs', 'Warner signed.')], 'wed': [], 'fri': []}})
         self.write('sources.json', {'recent_posts': []})
