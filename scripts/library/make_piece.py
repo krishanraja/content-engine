@@ -109,6 +109,41 @@ def headline_text(lines):
     raise PieceError('the headline is one line or a list of lines (the lead, then the payoff)')
 
 
+def approved_lines(facts, first):
+    """Krish's own lines for a Receipt headline, in order of preference: the piece's override, then the block the set is
+    for (cover or thumbs), then the other one. Each is (where it came from, text). Never a line the piece did not hold."""
+    library = facts.get('library') or {}
+    order = [('library.headline', library.get('headline'))]
+    blocks = [('cover', facts.get('cover') or {}), ('thumbs', facts.get('thumbs') or {})]
+    if first == 'thumbs':
+        blocks.reverse()
+    order += [(name + '.headline', block.get('headline')) for name, block in blocks]
+    order.append(('headline', facts.get('headline')))
+    lines, seen = [], set()
+    for where, value in order:
+        if not value:
+            continue
+        text = headline_text(value)
+        if text not in seen:
+            seen.add(text)
+            lines.append((where, text))
+    if not lines:
+        raise PieceError('the facts give no headline (cover.headline, thumbs.headline or headline)')
+    return lines
+
+
+def fitting_line(item, lines):
+    """The first approved line the template's headline slot takes (its character and line limits, as the renderer
+    counts them), or a refusal naming every line tried. The renderer still checks the fitted size."""
+    rule = item['slots']['headline_1']
+    for where, text in lines:
+        if len(text) <= rule['max_chars'] and len(text.split(chr(10))) <= rule['max_lines']:
+            return where, text
+    tried = '; '.join(f'{where} ({len(text)} characters, {len(text.splitlines())} lines)' for where, text in lines)
+    raise PieceError(f'no approved line fits the headline of {item["id"]} (at most {rule["max_chars"]} characters in '
+                     f'{rule["max_lines"]} lines): {tried}. Ask Krish for a shorter line in his shape (TITLES.md); never cut his words')
+
+
 def companies(block, base):
     """Up to three companies for a Receipt, rows first and then the strip, each with a logo file that exists."""
     rows = list(block.get('rows') or []) + list(block.get('strip') or [])
@@ -238,24 +273,33 @@ def build_pack(facts_file, set_name, out_dir):
     base = facts_file.parent
     library = registry()
     evidence = {'tool_logos': {}, 'screenshots': {}}
-    override = (facts.get('library') or {}).get('headline')
     extra = {'proof': proof_facts(facts)}
     if set_name == 'covers':
         cover = facts.get('cover') or {}
         if not cover:
             raise PieceError('the facts have no "cover" block')
-        headline = headline_text(override or cover.get('headline') or facts.get('headline'))
+        lines = approved_lines(facts, 'cover')
         picked = companies(cover, base)
-        content = {template: receipt_content(headline, picked, evidence, out_dir) for template, _, _ in COVERS.values()}
+        items = {item['id']: item for item in library['items']}
+        content, extra['headlines'] = {}, {}
+        for template, _, _ in COVERS.values():
+            where, text = fitting_line(items[template], lines)
+            content[template] = receipt_content(text, picked, evidence, out_dir)
+            extra['headlines'][template] = where
         outputs = [(template, name) for template, name, _ in COVERS.values()]
         images = {}
         extra['logos'] = [c['name'] for c in picked]
     elif set_name == 'video':
         thumbs = facts.get('thumbs') or {}
         block = thumbs if (thumbs.get('rows') or thumbs.get('strip')) else (facts.get('cover') or {})
-        headline = headline_text(override or thumbs.get('headline') or (facts.get('cover') or {}).get('headline'))
+        lines = approved_lines(facts, 'thumbs')
         picked = companies(block, base)
-        content = {template: receipt_content(headline, picked, evidence, out_dir) for template, _, _ in THUMBS.values()}
+        items = {item['id']: item for item in library['items']}
+        content, extra['headlines'] = {}, {}
+        for template, _, _ in THUMBS.values():
+            where, text = fitting_line(items[template], lines)
+            content[template] = receipt_content(text, picked, evidence, out_dir)
+            extra['headlines'][template] = where
         outputs = [(template, 'thumbs/' + name) for template, name, _ in THUMBS.values()]
         images = {}
         extra['logos'] = [c['name'] for c in picked]
@@ -302,7 +346,7 @@ def copy_outputs(folder, outputs, out_dir, set_name, extra, pack_sha):
     if set_name == 'covers':
         for template, target in written:
             record = dict(receipt, library_item=template, sha256=sha256_of(target), logos=extra.get('logos'),
-                          rows=extra.get('logos'))
+                          rows=extra.get('logos'), headline_from=(extra.get('headlines') or {}).get(template))
             target.with_suffix('.json').write_text(json.dumps(record, indent=1), encoding='utf-8')
     elif set_name == 'video':
         record = dict(receipt, logos=extra.get('logos'), companies=extra.get('logos'),

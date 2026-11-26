@@ -42,7 +42,10 @@ class PackTest(unittest.TestCase):
         facts = json.loads((FRIDAY / 'cover-facts.json').read_text(encoding='utf-8'))
         self.assertEqual(sorted(pack['content']), sorted(t for t, _, _ in make_piece.COVERS.values()))
         for template, content in pack['content'].items():
-            self.assertEqual(content['headline_1'], '\n'.join(facts['cover']['headline']), template)
+            # His cover line runs 48 characters against the Receipt's 44, so each template takes his thumbnail hook,
+            # which he also wrote, and never a cut version of his words.
+            self.assertEqual(content['headline_1'], '\n'.join(facts['thumbs']['headline']), template)
+            self.assertEqual(extra['headlines'][template], 'thumbs.headline')
             # Rows first, then the strip, three at most: Meta, Amazon, then Shopify from the strip.
             self.assertEqual(content['logos'], ['piece-meta', 'piece-amazon', 'piece-shopify'])
             # No row carries a tag, so no verdict chip is drawn (never the template's sample words).
@@ -67,8 +70,16 @@ class PackTest(unittest.TestCase):
         for row in facts['cover']['rows'] + facts['cover']['strip']:
             (piece / row['logo']).write_bytes((FRIDAY / row['logo']).read_bytes())
         (piece / 'cover-facts.json').write_text(json.dumps(facts), encoding='utf-8')
-        pack, _, _ = make_piece.build_pack(piece / 'cover-facts.json', 'covers', self.out)
+        pack, _, extra = make_piece.build_pack(piece / 'cover-facts.json', 'covers', self.out)
         self.assertEqual(pack['content']['social-square']['headline_1'], 'Ranked by AI use.\nThey gamed it.')
+        self.assertEqual(extra['headlines']['social-square'], 'library.headline')
+        # When none of his lines fits, it refuses and names them; it never shortens one.
+        for key in ('library', 'thumbs'):
+            facts.pop(key, None)
+        facts['headline'] = facts['cover']['headline'] = ['Meta staff were ranked by how much AI they used.', 'They gamed it.']
+        (piece / 'cover-facts.json').write_text(json.dumps(facts), encoding='utf-8')
+        with self.assertRaisesRegex(make_piece.PieceError, 'no approved line fits'):
+            make_piece.build_pack(piece / 'cover-facts.json', 'covers', self.out)
 
     def test_refusals_in_plain_words(self):
         with self.assertRaisesRegex(make_piece.PieceError, 'no carousel set'):
@@ -142,6 +153,29 @@ class PostPackNamesTest(unittest.TestCase):
         self.assertIn('face', visual_gate.not_receipt(good | {'portrait': True}))
         self.assertIn('retired', visual_gate.not_receipt(good | {'skin': 'v5_feed'}))
         self.assertIn('Library template', visual_gate.not_receipt(good | {'library_item': None}))
+
+
+class WordmarkGroundTest(unittest.TestCase):
+    """STANDARD 6 as the ink gate reads it: cream or mint on ink, ink tone on a rung or answer field, never cream on colour."""
+
+    def check(self, ground, mark):
+        sys.path.insert(0, str(make_piece.LIBRARY))
+        from PIL import Image
+        from pixel_alignment import wordmark_ground_ok
+        back = Image.new('RGB', (40, 20), ground)
+        drawn = back.copy()
+        drawn.paste(mark, (5, 5, 35, 15))
+        return wordmark_ground_ok(back, drawn)
+
+    def test_the_rule(self):
+        ink, cream, mint, coral, lilac = (12, 21, 18), (244, 239, 228), (126, 240, 192), (255, 106, 77), (183, 166, 255)
+        self.assertTrue(self.check(ink, cream))
+        self.assertTrue(self.check(ink, mint))
+        self.assertTrue(self.check(coral, ink))
+        self.assertTrue(self.check(lilac, ink))
+        self.assertTrue(self.check(mint, ink))
+        self.assertFalse(self.check(coral, cream))
+        self.assertFalse(self.check((90, 90, 90), cream))
 
 
 class RetirementRefusalTest(unittest.TestCase):
