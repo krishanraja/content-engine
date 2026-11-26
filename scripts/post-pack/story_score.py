@@ -32,11 +32,14 @@ unscored. A step that could not run is listed unread and the command exits 2: ne
     python3 scripts/post-pack/story_score.py order <Monday> (--status F --before F | --fresh)
     python3 scripts/post-pack/story_score.py council-brief <Monday> --day D
     python3 scripts/post-pack/story_score.py council-record <Monday> --day D COUNCIL.md
-    python3 scripts/post-pack/story_score.py ledger [--ledger F]
+    python3 scripts/post-pack/story_score.py ledger [<Monday>] [--ledger F]
 
-Paid calls go through the spend ledger (.cache/story-score/spend.jsonl): a call is reserved before its transport is
-touched, and refused when it would pass budget_usd (or --budget-usd, never above it), the day's dollars or the day's
-divergent ops. Divergent calls then pass the weekly chain cap (divergent.at_will) before the route.
+Paid calls go through the week's spend ledger (.cache/story-score/<Monday>.jsonl, or --ledger): a call is reserved
+before its transport is touched, and refused when it would pass budget_usd (or --budget-usd, never above it), the day's
+dollars or the day's divergent ops, all read from that ledger file. Divergent calls then pass the weekly chain cap
+(divergent.at_will) before the route. After a served divergent call the reservation is settled to the metered cost: the
+route's own figure when its answer gives one, else the chain's change over the call when that is more than the
+reservation (never less: the chain may lag). A humour read keeps its reservation: the engine's answer names no cost.
 """
 import argparse
 import hashlib
@@ -962,7 +965,51 @@ class Ledger:
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Transports (paid): divergent provoke and judged score, humour reads. Each reserves first; a refusal or an engine that
-# is not served is returned as skipped with its reason, never a pass.
+# is not served is returned as skipped with its reason, never a pass. A served divergent call is settled to its metered
+# cost (meter).
+
+METER_KEYS = ('cost_usd', 'usd', 'spent_usd', 'costUsd', 'spentUsd', 'cost')
+
+
+def metered_usd(reply):
+    """The dollars the route says one call cost, from its reply (`cost_usd` and the like, at the top or under `usage`
+    or `cost`), or None when it says nothing."""
+    if not isinstance(reply, dict):
+        return None
+    for node in (reply, reply.get('usage'), reply.get('cost'), reply.get('meter')):
+        if isinstance(node, dict):
+            for k in METER_KEYS:
+                v = node.get(k)
+                if isinstance(v, (int, float)) and not isinstance(v, bool) and v >= 0:
+                    return float(v)
+    return None
+
+
+def _chain_usd(cap):
+    try:
+        week = cap()
+    except Exception:  # noqa: BLE001  an unread chain meters nothing, and says so
+        return None
+    v = week.get('chain_usd') if isinstance(week, dict) else None
+    return float(v) if isinstance(v, (int, float)) and not isinstance(v, bool) else None
+
+
+def meter(entry, got, chain_before, cap, ledger):
+    """Settle a served call's reservation to what it cost. The route's own figure settles it exactly; with none, the
+    chain's change over the call settles it only when that is more than the reservation (the chain may lag, so it never
+    lowers it). Returns how it was metered."""
+    usd = metered_usd((got or {}).get('result'))
+    if usd is not None:
+        ledger.settle(entry, usd)
+        return {'by': 'route', 'usd': usd}
+    after = _chain_usd(cap) if chain_before is not None else None
+    if after is not None:
+        delta = round(after - chain_before, 4)
+        if delta > entry['usd'] + 1e-9:
+            ledger.settle(entry, delta)
+            return {'by': 'chain', 'usd': delta}
+        return {'by': 'reservation', 'usd': entry['usd'], 'chain_delta': delta}
+    return {'by': 'reservation', 'usd': entry['usd'], 'note': 'no metered figure: the reservation stands'}
 
 
 def provoke(view, main, worn, ledger, *, poster=None, cap=None, cfg=None):
@@ -975,12 +1022,15 @@ def provoke(view, main, worn, ledger, *, poster=None, cap=None, cfg=None):
     entry, why = ledger.reserve('provoke', cfg['unit_costs']['provoke'], divergent=True, note=view.get('id'))
     if entry is None:
         return {'status': 'skipped', 'reason': why}
+    chain = cap or divergent.chain_week
+    before = _chain_usd(chain)
     got = divergent.at_will(body, **{k: v for k, v in (('poster', poster), ('cap', cap)) if v is not None})
     if got.get('status') not in SERVED:
         ledger.settle(entry, 0)
         return {'status': 'skipped', 'reason': got.get('reason') or got.get('status')}
+    metered = meter(entry, got, before, chain, ledger)
     sparks = [s for s in (got.get('result') or {}).get('sparks') or [] if isinstance(s, dict)]
-    return {'status': 'ok', 'sparks': sparks, 'run_id': (got.get('result') or {}).get('runId')}
+    return {'status': 'ok', 'sparks': sparks, 'run_id': (got.get('result') or {}).get('runId'), 'metered': metered}
 
 
 def judge(texts, obvious, ledger, *, poster=None, cap=None, cfg=None):
@@ -998,11 +1048,14 @@ def judge(texts, obvious, ledger, *, poster=None, cap=None, cfg=None):
         if entry is None:
             skipped.append(why)
             continue
+        chain = cap or divergent.chain_week
+        before = _chain_usd(chain)
         got = divergent.at_will(body, **{k: v for k, v in (('poster', poster), ('cap', cap)) if v is not None})
         if got.get('status') not in SERVED:
             ledger.settle(entry, 0)
             skipped.append(got.get('reason') or got.get('status'))
             continue
+        meter(entry, got, before, chain, ledger)
         for n, r in enumerate((got.get('result') or {}).get('results') or []):
             if i + n < len(out):
                 out[i + n] = r
@@ -1087,6 +1140,13 @@ def select_edition(items, week=None, reads=None, judged=None, cfg=None):
 
 # ---------------------------------------------------------------------------------------------------------------------
 # CLI
+
+
+def ledger_of(week, cfg=None):
+    """The week's spend ledger (config files.ledger, with {week} its Monday): budget_usd is a cap per week's run, so
+    each week has its own file. An explicit --ledger (the blind proof's) is read whole."""
+    cfg = cfg or RUBRIC
+    return ROOT / cfg['files']['ledger'].format(week=week)
 
 
 def week_dir(week, plans=None):
@@ -1373,7 +1433,7 @@ def main(argv=None, *, poster=None, cap=None, read=None, kill=None, plans=None, 
 
     def paid(p):
         p.add_argument('--budget-usd', type=float, help=f'at most this, never above budget_usd ({cfg["budget_usd"]})')
-        p.add_argument('--ledger', help='the spend ledger (default .cache/story-score/spend.jsonl)')
+        p.add_argument('--ledger', help="the spend ledger (default the week's .cache/story-score/<Monday>.jsonl)")
         return p
 
     g = paid(wk(sub.add_parser('angles')))
@@ -1400,11 +1460,15 @@ def main(argv=None, *, poster=None, cap=None, read=None, kill=None, plans=None, 
     cr.add_argument('--day', required=True)
     cr.add_argument('file')
     lg = sub.add_parser('ledger')
+    lg.add_argument('week', nargs='?', help="the Monday whose ledger to read (default: --ledger)")
     lg.add_argument('--ledger')
     a = ap.parse_args(argv)
 
     if a.cmd == 'ledger':
-        print(json.dumps(Ledger(a.ledger or ROOT / cfg['files']['ledger'], cfg=cfg, today=today, write=False).summary(), indent=1))
+        if not (a.ledger or a.week):
+            print('give the Monday or --ledger: each week has its own ledger', file=sys.stderr)
+            return 2
+        print(json.dumps(Ledger(a.ledger or ledger_of(a.week, cfg), cfg=cfg, today=today, write=False).summary(), indent=1))
         return 0
     plans_dir = Path(a.plans) if a.plans else Path(plans) if plans else PLANS
     ideas_path = Path(a.ideas) if a.ideas else week_dir(a.week, plans_dir) / 'ideas.json'
@@ -1416,7 +1480,7 @@ def main(argv=None, *, poster=None, cap=None, read=None, kill=None, plans=None, 
     ideas = load(ideas_path)
     kill = kill or ic.kill_list_vetoes
     if a.cmd in ('angles', 'humour'):
-        ledger = Ledger(a.ledger or ROOT / cfg['files']['ledger'], a.budget_usd, cfg, today)
+        ledger = Ledger(a.ledger or ledger_of(a.week, cfg), a.budget_usd, cfg, today)
         if a.cmd == 'angles':
             return cmd_angles(a, ideas, plans_dir, ledger, poster, cap, kill, cfg)
         if read is None:

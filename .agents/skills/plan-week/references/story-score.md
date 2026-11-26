@@ -34,7 +34,7 @@ place where an option came from is read.
 Steps 1 to 3 run once the gather's pool is in (steps 1 to 3 of the core, before you write options). Steps 4 to 11 run
 once `ideas.json` holds the week's options (step 4 of the core), and step 12 is the core's step 7. All working files
 go in `docs/plans/<Monday>-week/` (`story/` for the score's own, `probe/` for the whys probes); the spend ledger is
-`.cache/story-score/spend.jsonl`, gitignored.
+`.cache/story-score/<Monday>.jsonl` (one per week), gitignored.
 
 1. **Gather.** `board_feed.py gather` and `cover`, as the core says. Nothing here changes what is read.
 2. **The floor.** `python3 scripts/post-pack/story_floor.py <Monday> --pool --json`. Leave out every candidate it

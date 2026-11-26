@@ -592,6 +592,36 @@ class Spend(unittest.TestCase):
         self.assertEqual(skipped, [])
         self.assertAlmostEqual(ledger.spent(), 0.45)
 
+    def test_a_served_call_is_settled_to_its_metered_cost(self):
+        class Metered(Poster):
+            def __call__(self, body):
+                status, answer = super().__call__(body)
+                return status, {**answer, 'usage': {'cost_usd': 0.42}}
+        ledger = ss.Ledger(None, 10, today='2026-11-26')
+        got = ss.provoke(self.view(), True, [], ledger, poster=Metered(), cap=UNDER)
+        self.assertEqual(got['metered'], {'by': 'route', 'usd': 0.42})
+        self.assertAlmostEqual(ledger.spent(), 0.42, msg="the route's own figure, not the $0.15 estimate")
+        # No figure in the answer: the chain's change over the call raises the reservation, never lowers it.
+        chain = iter([1.0, 1.0, 1.9])
+        ledger = ss.Ledger(None, 10, today='2026-11-26')
+        got = ss.provoke(self.view(), True, [], ledger, poster=Poster(), cap=lambda: {'chain_over': False, 'chain_usd': next(chain), 'chain_cap_usd': 15})
+        self.assertEqual(got['metered']['by'], 'chain')
+        self.assertAlmostEqual(ledger.spent(), 0.9)
+        ledger = ss.Ledger(None, 10, today='2026-11-26')
+        got = ss.provoke(self.view(), True, [], ledger, poster=Poster(), cap=UNDER)
+        self.assertEqual(got['metered']['by'], 'reservation')
+        self.assertAlmostEqual(ledger.spent(), RUBRIC['unit_costs']['provoke'], msg='a chain that did not move leaves the estimate')
+        # A cost over its estimate counts at once: the next call is refused when it leaves no room.
+        ledger = ss.Ledger(None, 0.5, today='2026-11-26')
+        poster = Metered()
+        self.assertEqual(ss.provoke(self.view(), True, [], ledger, poster=poster, cap=UNDER)['status'], 'ok')
+        self.assertEqual(ss.provoke(self.view(), True, [], ledger, poster=poster, cap=UNDER)['status'], 'skipped')
+        self.assertEqual(len(poster.calls), 1)
+
+    def test_each_week_has_its_own_ledger(self):
+        self.assertNotEqual(ss.ledger_of('2026-11-23'), ss.ledger_of('2026-11-30'))
+        self.assertTrue(str(ss.ledger_of('2026-11-30')).replace('\\', '/').endswith('.cache/story-score/2026-11-30.jsonl'))
+
     def test_a_humour_read_reserves_and_an_unreachable_engine_spends_nothing(self):
         ledger = ss.Ledger(None, 10, today='2026-11-26')
         got, _why = ss.humour('Warner was paid twice.', 'fact', 'mon/a:fact', ledger, lambda req: analysis())
