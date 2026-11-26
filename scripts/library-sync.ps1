@@ -20,7 +20,7 @@ This is his explicit instruction for this one folder, carried out by his own
 machine, and it covers that folder only. So this script:
 
   - writes only inside the library root, and only under "1 Brand kit
-    (permanent)", "2 Channel art (permanent)" and "3 Posts";
+    (permanent)" (channel art in its "Channel art" folder) and "3 Posts";
   - never deletes or renames anything in Drive. A file it wrote before is
     replaced in place by a newer version; a file someone else put there or
     changed is kept, and the new version goes beside it as "name (2).ext";
@@ -61,7 +61,9 @@ $RepoRoot = [System.IO.Path]::GetFullPath((Split-Path -Parent $PSScriptRoot))
 # Update-HomeCopy). Krish, 2026-11-20: "We need to ensure this can never happen again in the future."
 $HomeCopyScript = Join-Path $PSScriptRoot 'home-copy.ps1'
 . $HomeCopyScript
-$TopFolders = @('1 Brand kit (permanent)', '2 Channel art (permanent)', '3 Posts')
+# Channel art lives in "1 Brand kit (permanent)/Channel art" since 26 Nov 2026; nothing is written to the retired
+# "2 Channel art (permanent)".
+$TopFolders = @('1 Brand kit (permanent)', '3 Posts')
 # A second library (Krish, 2026-11-03: "Why don't you duplicate that Python
 # script for Heartside then? We're going to need to do a lot more of this type
 # of stuff moving forward"): Heartside's social library, Heartside\03b_Social-Schedule (named 05_Social-Library until 2026-11-09),

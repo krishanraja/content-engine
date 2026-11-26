@@ -812,6 +812,50 @@
       "days": [
         "fri"
       ]
+    },
+    {
+      "id": "four-on-the-funky-flour",
+      "title": "Four on the Funky Flour",
+      "artist": "Duke Herrington",
+      "provider": "Epidemic Sound",
+      "provider_track_id": null,
+      "provider_url": null,
+      "licence_type": "Epidemic Sound subscription; channels safelisted",
+      "licence_id": "epidemic-sound-safelist-2026-10-12",
+      "licensee": "makeyourmindup (Krish Raja)",
+      "licence_file": "config/music-licences/epidemic-sound-safelist-2026-10-12.jpg",
+      "acquired_on": "2026-11-25",
+      "expires_on": null,
+      "platforms": [
+        "youtube",
+        "shorts",
+        "substack",
+        "reels",
+        "tiktok",
+        "linkedin"
+      ],
+      "monetisation_ok": null,
+      "content_id_cleared": true,
+      "attribution": null,
+      "restrictions": "Safelisted on Epidemic Sound (Krish's screenshot, 12 October): YouTube makeyourmindup, Instagram makeyourmind.up, TikTok therealkrisho, Facebook, website makeyourmindup.ai. Every other online platform, LinkedIn included, needs no safelisting: Epidemic's own words on the platform screen, 'All other online platforms are safe to publish on. No safelisting required.' (config/music-licences/epidemic-sound-other-platforms-2026-10-12.jpg). Epidemic Sound issues no per-track licence number; the screenshots are the record.",
+      "file": "ES_Four on the Funky Flour - Duke Herrington.mp3",
+      "sha256": "4dd8bc5f45d92bc486026ccc8aab12d0e7882d0a691f15ca954abc1e9b9721e1",
+      "bytes": 6239459,
+      "duration_s": 184.5,
+      "sample_rate": 48000,
+      "measured_lufs": -9.8,
+      "measured_true_peak": 0.3,
+      "intro_cue_s": 0.0,
+      "outro_cue_s": null,
+      "mood": null,
+      "for": "series",
+      "status": "approved",
+      "approved_by": "Krish",
+      "approved_on": "2026-11-26",
+      "approval_words": "The music folder needs to stay with https://drive.google.com/file/d/1lCurob9xnwk7pK2gLbsKdgaaE1UqxqZ4/view?usp=drive_link being the new main track behind my videos.",
+      "drive_file_id": "1lCurob9xnwk7pK2gLbsKdgaaE1UqxqZ4",
+      "days": [],
+      "main": true
     }
   ]
 }

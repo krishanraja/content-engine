@@ -3,7 +3,7 @@
   "about": [
     "What may go into Krish's makeyourmindup asset library on Drive, and how a post's folder is named. Krish, 2026-10-06: \"I want every single asset in there, permanent and for individual posts, categorized properly, clear what to use them for, and every new post gets its own new folder with all assets including the article HTML I can copy paste, video scripts, etc etc\".",
     "Two programs follow this rule: the engine's library routes (apps/control-plane/api/library/_library.ts), which refuse anything else, and the post pack (scripts/post-pack/library.py), which builds and sends the files. Both are tested against every case in this file, so they cannot drift apart. Change the rule here first, then in both.",
-    "A library path is relative, with forward slashes, and starts with one of top_folders. Inside \"3 Posts\" the next folder is one post's folder, and a file in it is either post_readme or sits inside one of post_sections.",
+    "A library path is relative, with forward slashes, and starts with one of top_folders. Channel art lives in \"1 Brand kit (permanent)/Channel art\" since 26 Nov 2026 (Krish, 2026-11-26: collapse the two folders into one, with everything that references them relinked); \"2 Channel art (permanent)\" is retired. Inside \"3 Posts\" the next folder is one post's folder, and a file in it is either post_readme or sits inside one of post_sections.",
     "Every name is safe on Windows and Google Drive: no . or .. folder, no name starting with a dot, none of < > : \" \\ | ? * or a control character, no space at either end or dot at the end, none of Windows' reserved device names. Accented letters are written in their composed form (NFC). At most path_max characters in the whole path and part_max in one name, counted as Windows counts them (UTF-16 code units).",
     "The extension decides the type, from content_types; nothing else is taken. A file is at most max_bytes.",
     "A post's folder: YYYY-MM-DD <Day> <subchannel> - <Subject>, with the day the date fell on (Mon, Tue, Wed, Thu, Fri, Sat or Sun) and the subchannel as the brand writes it; a launch post is YYYY-MM-DD Launch - <Subject>. The subject is made safe by the archive naming rule (config/archive-naming.cases.json) and cut at a space so the whole name stays within part_max.",
@@ -13,7 +13,6 @@
   ],
   "top_folders": [
     "1 Brand kit (permanent)",
-    "2 Channel art (permanent)",
     "3 Posts"
   ],
   "post_sections": [
@@ -115,23 +114,23 @@
     },
     {
       "why": "channel art at the top of its folder",
-      "path": "2 Channel art (permanent)/youtube-banner.png"
+      "path": "1 Brand kit (permanent)/Channel art/youtube-banner.png"
     },
     {
       "why": "capitals in the extension",
-      "path": "2 Channel art (permanent)/WATERMARK.PNG"
+      "path": "1 Brand kit (permanent)/Channel art/WATERMARK.PNG"
     },
     {
       "why": "an accented letter in its composed form",
-      "path": "2 Channel art (permanent)/Café card.png"
+      "path": "1 Brand kit (permanent)/Channel art/Café card.png"
     },
     {
       "why": "a name of exactly part_max characters",
-      "path": "2 Channel art (permanent)/dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd.png"
+      "path": "1 Brand kit (permanent)/Channel art/dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd.png"
     },
     {
       "why": "a path of exactly path_max characters",
-      "path": "2 Channel art (permanent)/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/cccccccccccccccccccccccccccccccccccccccccccccccc.png"
+      "path": "1 Brand kit (permanent)/Channel art/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/cccccccccccccccccccccccccccccccccccccc.png"
     },
     {
       "why": "climbing out with ..",
@@ -180,62 +179,62 @@
     },
     {
       "why": "a question mark",
-      "path": "2 Channel art (permanent)/why?.png",
+      "path": "1 Brand kit (permanent)/Channel art/why?.png",
       "refused": "path_unsafe_character"
     },
     {
       "why": "a pipe",
-      "path": "2 Channel art (permanent)/a|b.png",
+      "path": "1 Brand kit (permanent)/Channel art/a|b.png",
       "refused": "path_unsafe_character"
     },
     {
       "why": "an asterisk",
-      "path": "2 Channel art (permanent)/a*.png",
+      "path": "1 Brand kit (permanent)/Channel art/a*.png",
       "refused": "path_unsafe_character"
     },
     {
       "why": "a double quote",
-      "path": "2 Channel art (permanent)/\"quoted\".png",
+      "path": "1 Brand kit (permanent)/Channel art/\"quoted\".png",
       "refused": "path_unsafe_character"
     },
     {
       "why": "angle brackets",
-      "path": "2 Channel art (permanent)/<b>.png",
+      "path": "1 Brand kit (permanent)/Channel art/<b>.png",
       "refused": "path_unsafe_character"
     },
     {
       "why": "a line break",
-      "path": "2 Channel art (permanent)/two\nlines.png",
+      "path": "1 Brand kit (permanent)/Channel art/two\nlines.png",
       "refused": "path_unsafe_character"
     },
     {
       "why": "a tab",
-      "path": "2 Channel art (permanent)/tab\there.png",
+      "path": "1 Brand kit (permanent)/Channel art/tab\there.png",
       "refused": "path_unsafe_character"
     },
     {
       "why": "a name ending in a dot",
-      "path": "2 Channel art (permanent)/art./x.png",
+      "path": "1 Brand kit (permanent)/Channel art/art./x.png",
       "refused": "path_part_edge"
     },
     {
       "why": "a name ending in a space",
-      "path": "2 Channel art (permanent)/art /x.png",
+      "path": "1 Brand kit (permanent)/Channel art/art /x.png",
       "refused": "path_part_edge"
     },
     {
       "why": "a name starting with a space",
-      "path": "2 Channel art (permanent)/ x.png",
+      "path": "1 Brand kit (permanent)/Channel art/ x.png",
       "refused": "path_part_edge"
     },
     {
       "why": "Windows' reserved name CON",
-      "path": "2 Channel art (permanent)/con.png",
+      "path": "1 Brand kit (permanent)/Channel art/con.png",
       "refused": "path_reserved_name"
     },
     {
       "why": "Windows' reserved name LPT1 as a folder",
-      "path": "2 Channel art (permanent)/LPT1/x.png",
+      "path": "1 Brand kit (permanent)/Channel art/LPT1/x.png",
       "refused": "path_reserved_name"
     },
     {
@@ -269,8 +268,13 @@
       "refused": "path_wrong_top_folder"
     },
     {
+      "why": "the retired channel art folder: channel art lives in the brand kit since 26 Nov 2026",
+      "path": "2 Channel art (permanent)/youtube-banner.png",
+      "refused": "path_wrong_top_folder"
+    },
+    {
       "why": "a top folder alone",
-      "path": "2 Channel art (permanent)",
+      "path": "1 Brand kit (permanent)",
       "refused": "path_no_file"
     },
     {
@@ -340,37 +344,37 @@
     },
     {
       "why": "a slash at the end",
-      "path": "2 Channel art (permanent)/art/",
+      "path": "1 Brand kit (permanent)/Channel art/art/",
       "refused": "path_empty_part"
     },
     {
       "why": "longer than path_max",
-      "path": "2 Channel art (permanent)/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/cc.png",
+      "path": "1 Brand kit (permanent)/Channel art/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/cc.png",
       "refused": "path_too_long"
     },
     {
       "why": "a name longer than part_max",
-      "path": "2 Channel art (permanent)/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.png",
+      "path": "1 Brand kit (permanent)/Channel art/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.png",
       "refused": "path_part_too_long"
     },
     {
       "why": "an accented letter written in two pieces",
-      "path": "2 Channel art (permanent)/Café card.png",
+      "path": "1 Brand kit (permanent)/Channel art/Café card.png",
       "refused": "path_not_nfc"
     },
     {
       "why": "a program",
-      "path": "2 Channel art (permanent)/setup.exe",
+      "path": "1 Brand kit (permanent)/Channel art/setup.exe",
       "refused": "path_type_not_allowed"
     },
     {
       "why": "no extension",
-      "path": "2 Channel art (permanent)/banner",
+      "path": "1 Brand kit (permanent)/Channel art/banner",
       "refused": "path_type_not_allowed"
     },
     {
       "why": "a type named like a property every JavaScript object has",
-      "path": "2 Channel art (permanent)/x.constructor",
+      "path": "1 Brand kit (permanent)/Channel art/x.constructor",
       "refused": "path_type_not_allowed"
     },
     {
