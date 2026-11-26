@@ -1,3 +1,4 @@
+import {isV5Id,v5Params} from './why-ladder-v5.js'
 import { z } from 'zod'
 import { IdentifierV1Schema, NarrativeBeatV1Schema, Sha256V1Schema } from './v2.js'
 
@@ -7,7 +8,7 @@ import { IdentifierV1Schema, NarrativeBeatV1Schema, Sha256V1Schema } from './v2.
  *  script (w), never seconds, so a treatment can be written before recording.
  *  docs/ve/ENGINE.md explains the fields; config/ve holds formats, crew and tokens. */
 
-export const VE_FORMATS = ['face-with-proof', 'scoreboard-test', 'voice-led-pictures', 'hand-held-screen', 'two-passports'] as const
+export const VE_FORMATS = ['face-with-proof', 'scoreboard-test', 'voice-led-pictures', 'hand-held-screen', 'two-passports', 'why-ladder-v5'] as const
 export const VeFormatSchema = z.enum(VE_FORMATS)
 export const VeSeriesSchema = z.enum(['mind.the.gap', 'follow.the.money', 'under.the.hood'])
 /** brand.intro_sting: nothing goes before the hook, ever (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever.
@@ -298,7 +299,7 @@ export const ProductionSpecV2Schema = z.object({
     // A caption theme instead of the house caption (Krish, 2026-11-11: "install all of these different caption styles
     // in to the engine, so future productions can select from them"). Names as apps/renderer/src/engine/captions/names.ts.
     caption_theme: z.enum(['pop', 'karaoke', 'kinetic-01', 'kinetic-02', 'hustle', 'grape', 'beast', 'poppin', 'aarit',
-      'soft-ai', 'gaming-stream', 'simple-one-word', 'podcast', 'art-directed', 'cinematic', 'slam', 'georgia-build', 'stair-flash', 'tuck-stack', 'anchor-quote', 'rack-focus', 'flip-hinge', 'slice', 'slot-roll', 'receipt-chip', 'ink-block', 'mint-word']).optional(),
+      'soft-ai', 'gaming-stream', 'simple-one-word', 'podcast', 'art-directed', 'cinematic', 'slam', 'georgia-build', 'stair-flash', 'tuck-stack', 'anchor-quote', 'rack-focus', 'flip-hinge', 'slice', 'slot-roll', 'receipt-chip', 'ink-block', 'mint-word', 'house-v5']).optional(),
     title: z.string().min(3).max(48).optional(),
     // The logo rule (config/brand-palette.json logo_rule: no logo in a cut's body, only on the title frame and the close)
     // applied to a piece ahead of the rule's date, on Krish's word for that piece (Tue 17, 18 Nov 2026: "we have a strict
@@ -332,7 +333,7 @@ export const ProductionSpecV2Schema = z.object({
     // The ingredients chosen apart from the motion style (docs/ve/INGREDIENTS.md; Krish, 2026-11-13: "the captions
     // should be decoupled from the animation styles"). captions wins over brand.caption_theme.
     captions: z.object({ theme: z.enum(['pop', 'karaoke', 'kinetic-01', 'kinetic-02', 'hustle', 'grape', 'beast', 'poppin', 'aarit',
-      'soft-ai', 'gaming-stream', 'simple-one-word', 'podcast', 'art-directed', 'cinematic', 'slam', 'georgia-build', 'stair-flash', 'tuck-stack', 'anchor-quote', 'rack-focus', 'flip-hinge', 'slice', 'slot-roll', 'receipt-chip', 'ink-block', 'mint-word']),
+      'soft-ai', 'gaming-stream', 'simple-one-word', 'podcast', 'art-directed', 'cinematic', 'slam', 'georgia-build', 'stair-flash', 'tuck-stack', 'anchor-quote', 'rack-focus', 'flip-hinge', 'slice', 'slot-roll', 'receipt-chip', 'ink-block', 'mint-word', 'house-v5']),
       placement: z.enum(['lower', 'centre', 'upper', 'seam', 'chin']).optional(), reason: z.string().min(1) }).strict().optional(),
     // lead: the exit leads the entrance, on a handover that travels (docs/ve/INGREDIENTS.md, 15 Nov 2026).
     transitions: z.object({ kind: z.enum(['cut', 'whip', 'push', 'zoom-through', 'flash', 'punch', 'crossfade']), lead: z.boolean().optional(), reason: z.string().min(1) }).strict()
@@ -394,6 +395,10 @@ export const ProductionSpecV2Schema = z.object({
   const objects = new Set(spec.objects.map((o) => o.obj))
   const assets = new Set(spec.assets.map((a) => a.id))
   spec.objects.forEach((o, i) => {
+    if (isV5Id(o.device)) {
+      const result = v5Params[o.device].safeParse(o.params)
+      if (!result.success) for (const issue of result.error.issues) c.addIssue({code:'custom', path:['objects',i,'params',...issue.path], message:issue.message})
+    }
     if (o.dataset && !datasets.has(o.dataset)) c.addIssue({ code: 'custom', path: ['objects', i, 'dataset'], message: `unknown dataset ${o.dataset}` })
   })
   for (const [cutId, cut] of Object.entries(spec.cuts)) {
@@ -401,6 +406,7 @@ export const ProductionSpecV2Schema = z.object({
     let lastEnd = -1
     cut.beats.forEach((b, i) => {
       const at = ['cuts', cutId, 'beats', i]
+      if (b.uses.filter(id => spec.objects.find(o => o.obj === id)?.device === 'v5_callout').length > 1) c.addIssue({code:'custom',path:[...at,'uses'],message:'Only one callout can appear at once'})
       if (seen.has(b.id)) c.addIssue({ code: 'custom', path: [...at, 'id'], message: `duplicate beat id ${b.id}` })
       seen.add(b.id)
       if (b.span.from_w <= lastEnd) c.addIssue({ code: 'custom', path: [...at, 'span'], message: 'beats run in script order and never overlap' })

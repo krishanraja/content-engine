@@ -29,14 +29,31 @@ repository's `docs/CAROUSEL-STANDARD.md`, the rejection floor and the copy
 lint. Content-engine keeps the standard and makes the hero assets: the
 article, both cuts, thumbnails and covers.
 
+Every cover and thumbnail comes from the approved cover systems (Krish, 26 Nov 2026: "I approve the new cover thumbnail systems, go"):
+`python scripts/covers/make_covers.py <piece folder> --out <folder>` writes the
+Substack cover, the YouTube thumbnail, the 9:16 cover, the tall thumbnail and
+the carousel first slide with a `covers.json` receipt that post-pack reads as
+`cover_set` (`docs/ve/cards/library/COVERS-PLAYBOOK.md`). Every carousel is
+filled from the approved makeyourmindup Library (`docs/ve/cards/library/`):
+`python scripts/library/make_piece.py <piece folder> --set <carousel set>`,
+which builds the piece's pack from its `cover-facts.json`, renders it with the
+Library's `render.py --carousel-pack` and writes the files under the names
+`scripts/post-pack/build.py` reads. Read
+`docs/ve/cards/library/ART-DIRECTION.md` first (variety and imagery rules),
+then `LIBRARY-GUIDE.md` and `PRODUCTION-PLAYBOOK.md`. The old drawer
+(`scripts/pages/build.py --cover`/`--thumbs`, the v5_feed skin) is retired in
+`config/retired-styles.json` and runs only with `--legacy`, for an archived piece.
+
 How they are made (Ruling, Krish, 2026-11-13: "all the carousels should now be
 done in Claude, but using the Codex plug in as per the other usual
 workflows"; "memes and Notes images should go the same way"; "Off-day
 voiceover shorts should go the same way too"): every carousel, meme and Notes
-image is made in a Claude session, with the Codex plugin building it (a
-`ve card` of kind carousel, meme or notes_image), and every off-day voiceover
-short on the ve route from a Claude session. Never a scheduled job, a
-headless model run or a template engine. The route is
+image is made in a Claude session, and every off-day voiceover short on the ve
+route from a Claude session. Never a scheduled job or a headless model run. A
+carousel is filled in that session from an approved Library carousel set with
+`scripts/library/make_piece.py` (above); Codex makes the per-piece pictures its
+slots take (`docs/ve/cards/library/IMAGERY.md`) and builds memes and Notes
+images from a `ve card` of kind meme or notes_image. The floor is
 `docs/CAROUSEL-STANDARD.md`, "How a carousel is made".
 
 **Publish boards:** the one live board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its link); the old board pages at content.krishraja.com/board are retired for good and redirect to it (Ruling, Krish, 2026-11-13: the old publish boards are retired for good, and everything old in content-engine is retired). How every actor feeds it, reports to it and files on it: `docs/PUBLISH_BOARDS.md`. Older board instructions in this repository are history.
@@ -55,6 +72,9 @@ Codex reads no hooks and no `CLAUDE.md`, so the route is here (`docs/plans/2026-
    and the week's board), `.agents/skills/make-piece/SKILL.md` (a picked piece: story, scripts, creative direction,
    article), `.agents/skills/produce-video/SKILL.md` (cutting recorded takes), `.agents/skills/thumbnail-designer/SKILL.md`
    (a recorded piece's thumbnails: two or three options, a separate critic, his pick in his words),
+   `.agents/skills/cover-art/SKILL.md` and `.agents/skills/carousel/SKILL.md` (covers and carousels). Covers,
+   thumbnails and carousels are filled from the Library with `scripts/library/make_piece.py`; read
+   `docs/ve/cards/library/ART-DIRECTION.md`, `LIBRARY-GUIDE.md` and `PRODUCTION-PLAYBOOK.md` before making any,
    `.agents/skills/motion-designer/SKILL.md` (a ve piece's per-beat motion plan in its spec, before Sign storyboard).
 3. Claude owns the words and the visuals: the story, the scripts, the article copy, every article figure and the
    creative direction (`docs/CREATIVE_DIRECTION.md`). Production renders only from a direction Krish signed;

@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
+import retiredStyles from '../../../../config/retired-styles.json'
 import { CAPTION_THEMES } from './captions/names'
 import { THEMES } from './captions/themes'
 import { REGIONS, hero, heroScore, key, textWidth } from './captions/kit'
@@ -11,7 +12,7 @@ import { EngineRenderPropsSchema } from './props'
 import fixture from '../../../../fixtures/ve/engine-core/props.json'
 
 const SAFE_TALL = { top: 270, right: 880, bottom: 1320 } // config/channel-safe-zones.json, every platform
-const HOUSE_FACES = /MYMU (Anton|Archivo|Fraunces|Plex Mono)/
+const HOUSE_FACES = /MYMU (Anton|Archivo|Fraunces)|DM Mono/
 const page = (texts: string[], swipeIndex: number | null = null) =>
   ({ fromFrame: 0, toFrame: 60, words: texts.map((text, i) => ({ text, atFrame: i * 8 })), swipeIndex })
 const render = (node: unknown) => JSON.stringify(node, (_k, v) => (typeof v === 'function' ? undefined : v))
@@ -67,17 +68,17 @@ describe('the caption styles (Krish, 2026-11-11)', () => {
     expect(key(page(['Cash', 'machines', 'should', 'have'], null))).toBe(1)
   })
 
-  it('draws every style in the house faces and colours only, and shows no word before it is said', () => {
+  it('draws live styles in the house faces and colours and respects their word timing', () => {
     const fx = EngineRenderPropsSchema.parse(fixture)
     const base = { ...fx, captions: [page(['Banks', 'opened', 'more', 'branches.'], 3), ...fx.captions.slice(1).map((c) => ({ ...c, fromFrame: Math.max(c.fromFrame, 60) }))] }
     const allowed = new Set(Object.values(base.tokens))
+    const retired = new Set(retiredStyles.filter(s => s.kind === 'caption_theme').map(s => s.id))
     for (const [name, draw] of Object.entries(THEMES)) {
+      if (retired.has(name)) continue
       const p0 = base.captions[0]!
       const at = p0.words[0]!.atFrame + 1
       const early = visibleText(draw(base, at)).join(' ').toLowerCase()
-      // the probe can see a word: the first one, said already, is on screen (the terminal types it, so a prefix)
-      expect(early, `${name} hides the first word`).toContain(p0.words[0]!.text.replace(/[,.;:]+$/, '').toLowerCase().slice(0, 1))
-      if (name !== 'gaming-stream') expect(early, name).toContain(p0.words[0]!.text.replace(/[,.;:]+$/, '').toLowerCase())
+      expect(early, name).toContain(p0.words[0]!.text.replace(/[,.;:]+$/, '').toLowerCase())
       // karaoke sets the whole line quietly by design and fills each word as it is said; every other style holds a word back
       for (const w of p0.words.filter((w) => w.atFrame > at + 1)) {
         const word = w.text.replace(/[,.;:]+$/, '').toLowerCase()

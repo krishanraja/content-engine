@@ -221,7 +221,8 @@ def experiment(spec: dict) -> bool:
 
 
 def recipe(name: str | None, root: Path | None = None) -> dict | None:
-    if not name:
+    from .retirement import registry
+    if not name or ('recipe', name) in registry():
         return None
     path = Path(root or RECIPES) / f'{name}.json'
     return load_json(path) if path.is_file() else None

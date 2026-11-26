@@ -25,6 +25,7 @@ from velib import expect, gates, guards, packet, proof, refgate, styles  # noqa:
 from velib.common import sha256_file  # noqa: E402
 
 FIXTURE = json.loads((ROOT / 'fixtures/ve/my-test-19s/spec.json').read_text(encoding='utf-8'))
+V5_FIXTURE = json.loads((ROOT / 'fixtures/ve/my-test-19s/spec-v5.json').read_text(encoding='utf-8'))
 CUT = 'proof-tall'
 # The fixture names no recipe, so it stands for a piece frozen before the recipe floor (velib.floor.RECIPE_FROM). A lock
 # written "now" would turn the suite red on a date; binding by date is tested in ve_quality_floor_test.py.
@@ -276,14 +277,14 @@ class RenderRefusal(unittest.TestCase):
 
     def test_ve_proof_verb_renders_the_window_and_records_it(self):
         spec_file = self.dir / 'spec.json'
-        spec_file.write_text(json.dumps(FIXTURE), encoding='utf-8')
-        (self.dir / f'props.{CUT}.json').write_text(json.dumps(props_for(FIXTURE)), encoding='utf-8')
-        args = types.SimpleNamespace(spec=str(spec_file), cut=CUT, beat='b2-key', props=None, assets_dir=None,
+        spec_file.write_text(json.dumps(V5_FIXTURE), encoding='utf-8')
+        (self.dir / f'props.{CUT}.json').write_text(json.dumps(props_for(V5_FIXTURE)), encoding='utf-8')
+        args = types.SimpleNamespace(spec=str(spec_file), cut=CUT, beat='face', props=None, assets_dir=None,
                                      scale=1.0, no_qc=True)
         self.assertEqual(ve.cmd_proof(args, render_fn=fake_render()), 0)
         record = json.loads((self.dir / 'proof' / f'{CUT}.json').read_text(encoding='utf-8'))
-        self.assertEqual(record['beat'], 'b2-key')
-        self.assertEqual(record['spec_sha256'], proof.structural_hash(FIXTURE, CUT), '--beat never changes the hash')
+        self.assertEqual(record['beat'], 'face')
+        self.assertEqual(record['spec_sha256'], proof.structural_hash(V5_FIXTURE, CUT), '--beat never changes the hash')
         self.assertTrue(set(record) >= {'beat', 'start', 'end', 'sha256', 'spec_sha256', 'style_module'})
         window = json.loads((self.dir / 'proof' / f'props.{CUT}.json').read_text(encoding='utf-8'))
         self.assertLessEqual(window['durationFrames'], 450)

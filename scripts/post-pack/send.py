@@ -9,7 +9,7 @@ and every new post gets its own new folder with all assets including the
 article HTML I can copy paste, video scripts, etc etc".
 
     python send.py PACK                               a post's pack from build.py
-    python send.py FOLDER --as "2 Channel art (permanent)" --purpose "..."
+    python send.py FOLDER --as "1 Brand kit (permanent)/Channel art" --purpose "..."
     python send.py --brand-kit KIT                    the unpacked brand kit, or its .zip
     python send.py ... --dry-run                      show what would be sent, send nothing
     python send.py --self-test
@@ -203,7 +203,7 @@ def plan(folder, prefix=None, purpose=None, brand_kit=False, lib=library.MAKEYOU
         raise SendError('say which post these are, with --as "Posts/<post id>" (for example Posts/F01)')
     if not prefix:
         raise SendError('say where in the library these go, with --as: "1 Brand kit (permanent)", '
-                        '"2 Channel art (permanent)" or "3 Posts/<post folder>"')
+                        '"1 Brand kit (permanent)/Channel art" or "3 Posts/<post folder>"')
     prefix = prefix.strip().strip('/')
     files = walk(folder)
     if not files:
@@ -477,7 +477,7 @@ def self_test():
         (loose / 'art' / 'banner.png').write_bytes(b'banner')
         (loose / 'art' / ' bad name.png').write_bytes(b'bad')  # a leading space: Windows allows it, the library does not
         calls = len(fake.calls)
-        refused('one bad name stops everything', lambda: send(plan(loose, '2 Channel art (permanent)', 'Art.'), fake, quiet), 'nothing was sent')
+        refused('one bad name stops everything', lambda: send(plan(loose, '1 Brand kit (permanent)/Channel art', 'Art.'), fake, quiet), 'nothing was sent')
         check('nothing reached the engine', len(fake.calls), calls)
         (loose / 'art' / ' bad name.png').unlink()
         refused('no place in the library', lambda: plan(loose, purpose='Art.'), 'say where in the library')
@@ -485,7 +485,7 @@ def self_test():
         refused('loose in a post folder', lambda: plan(loose, f'3 Posts/{pack.name}', 'Art.'), 'inside a post folder')
 
         fake.fail_on = 'banner.png'
-        refused('the engine says no', lambda: send(plan(loose, '2 Channel art (permanent)', 'Art.'), fake, quiet),
+        refused('the engine says no', lambda: send(plan(loose, '1 Brand kit (permanent)/Channel art', 'Art.'), fake, quiet),
                 "the engine's library storage cannot be reached")
         fake.fail_on = None
 
@@ -528,7 +528,7 @@ def self_test():
 def main():
     ap = argparse.ArgumentParser(description="Send files to the engine's library, for Krish's machine to write into his asset library on Drive.")
     ap.add_argument('folder', nargs='?', help='a pack from build.py, or any folder (with --as)')
-    ap.add_argument('--as', dest='prefix', help='where in the library: "2 Channel art (permanent)", or "3 Posts/<post folder>" (a pack knows its own)')
+    ap.add_argument('--as', dest='prefix', help='where in the library: "1 Brand kit (permanent)/Channel art", or "3 Posts/<post folder>" (a pack knows its own)')
     ap.add_argument('--library', default=library.MAKEYOURMINDUP, choices=library.LIBRARIES,
                     help='which library on Drive: makeyourmindup (default) or heartside, whose files go in "Posts/<post id>"')
     ap.add_argument('--brand-kit', help='the unpacked brand kit, or its .zip: goes into "1 Brand kit (permanent)"')

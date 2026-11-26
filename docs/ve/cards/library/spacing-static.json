@@ -1,0 +1,4818 @@
+{
+  "model": "local fonts and SVG transforms",
+  "items": {
+    "video-vertical-title": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source logo",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 837.55,
+          "below_top_px": 904.55,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "video-vertical-why-1": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 862.855,
+          "below_top_px": 929.855,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "video-vertical-why-2": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 704.61,
+          "below_top_px": 771.61,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "video-vertical-why-3": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 704.61,
+          "below_top_px": 771.61,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "video-vertical-document": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": []
+    },
+    "video-vertical-chart": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 293.836,
+          "below_top_px": 549.0,
+          "gap_px": 255.164,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "0 s",
+          "minimum_px": 64.0,
+          "above_bottom_px": 860.991,
+          "below_top_px": 933.183,
+          "gap_px": 72.192,
+          "passed": true
+        },
+        {
+          "above": "0 s",
+          "below": "label_4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 968.245,
+          "below_top_px": 1245.0,
+          "gap_px": 276.755,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "10 s",
+          "minimum_px": 64.0,
+          "above_bottom_px": 860.991,
+          "below_top_px": 933.183,
+          "gap_px": 72.192,
+          "passed": true
+        },
+        {
+          "above": "10 s",
+          "below": "label_4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 968.245,
+          "below_top_px": 1245.0,
+          "gap_px": 276.755,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "20 s",
+          "minimum_px": 64.0,
+          "above_bottom_px": 860.991,
+          "below_top_px": 933.183,
+          "gap_px": 72.192,
+          "passed": true
+        },
+        {
+          "above": "20 s",
+          "below": "label_4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 968.245,
+          "below_top_px": 1245.0,
+          "gap_px": 276.755,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "threshold tick",
+          "minimum_px": 64.0,
+          "above_bottom_px": 860.991,
+          "below_top_px": 933.183,
+          "gap_px": 72.192,
+          "passed": true
+        },
+        {
+          "above": "threshold tick",
+          "below": "label_4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 968.245,
+          "below_top_px": 1245.0,
+          "gap_px": 276.755,
+          "passed": true
+        }
+      ]
+    },
+    "video-vertical-place": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": []
+    },
+    "video-vertical-creative-work": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": []
+    },
+    "video-vertical-quote": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": []
+    },
+    "video-vertical-callout": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": []
+    },
+    "video-vertical-challenger": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "body_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 911.805,
+          "below_top_px": 978.805,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "video-vertical-recap": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "body_1",
+          "below": "body_2",
+          "minimum_px": 64.0,
+          "above_bottom_px": 856.141,
+          "below_top_px": 1029.0,
+          "gap_px": 172.859,
+          "passed": true
+        },
+        {
+          "above": "body_2",
+          "below": "body_3",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1072.141,
+          "below_top_px": 1253.0,
+          "gap_px": 180.859,
+          "passed": true
+        }
+      ]
+    },
+    "video-vertical-landing": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "body_1",
+          "below": "body_2",
+          "minimum_px": 40.0,
+          "above_bottom_px": 1148.697,
+          "below_top_px": 1191.697,
+          "gap_px": 43.0,
+          "passed": true
+        }
+      ]
+    },
+    "video-vertical-close": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "s3h",
+          "below": "body_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 984.985,
+          "below_top_px": 1051.985,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "label_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1118.329,
+          "below_top_px": 1185.329,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "video-vertical-captions": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": []
+    },
+    "video-vertical-rail": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 894.855,
+          "below_top_px": 961.855,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "video-wide-title": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source logo",
+          "below": "headline_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 232.136,
+          "below_top_px": 348.913,
+          "gap_px": 116.778,
+          "passed": true
+        }
+      ]
+    },
+    "video-wide-why-1": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 497.097,
+          "below_top_px": 613.875,
+          "gap_px": 116.778,
+          "passed": true
+        }
+      ]
+    },
+    "video-wide-why-2": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 543.472,
+          "below_top_px": 660.25,
+          "gap_px": 116.778,
+          "passed": true
+        }
+      ]
+    },
+    "video-wide-why-3": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 544.597,
+          "below_top_px": 661.375,
+          "gap_px": 116.778,
+          "passed": true
+        }
+      ]
+    },
+    "video-wide-document": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source excerpt",
+          "below": "headline_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 494.0,
+          "below_top_px": 621.444,
+          "gap_px": 127.444,
+          "passed": true
+        },
+        {
+          "above": "source excerpt",
+          "below": "label_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 494.0,
+          "below_top_px": 621.444,
+          "gap_px": 127.444,
+          "passed": true
+        }
+      ]
+    },
+    "video-wide-chart": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 125.153,
+          "below_top_px": 251.667,
+          "gap_px": 126.514,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "0 s",
+          "minimum_px": 113.778,
+          "above_bottom_px": 473.542,
+          "below_top_px": 604.12,
+          "gap_px": 130.578,
+          "passed": true
+        },
+        {
+          "above": "0 s",
+          "below": "label_4",
+          "minimum_px": 113.778,
+          "above_bottom_px": 666.453,
+          "below_top_px": 792.111,
+          "gap_px": 125.658,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "10 s",
+          "minimum_px": 113.778,
+          "above_bottom_px": 473.542,
+          "below_top_px": 604.12,
+          "gap_px": 130.578,
+          "passed": true
+        },
+        {
+          "above": "10 s",
+          "below": "label_4",
+          "minimum_px": 113.778,
+          "above_bottom_px": 666.453,
+          "below_top_px": 792.111,
+          "gap_px": 125.658,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "20 s",
+          "minimum_px": 113.778,
+          "above_bottom_px": 473.542,
+          "below_top_px": 604.12,
+          "gap_px": 130.578,
+          "passed": true
+        },
+        {
+          "above": "20 s",
+          "below": "label_4",
+          "minimum_px": 113.778,
+          "above_bottom_px": 666.453,
+          "below_top_px": 792.111,
+          "gap_px": 125.658,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "threshold tick",
+          "minimum_px": 113.778,
+          "above_bottom_px": 473.542,
+          "below_top_px": 604.12,
+          "gap_px": 130.578,
+          "passed": true
+        },
+        {
+          "above": "threshold tick",
+          "below": "label_4",
+          "minimum_px": 113.778,
+          "above_bottom_px": 666.453,
+          "below_top_px": 792.111,
+          "gap_px": 125.658,
+          "passed": true
+        }
+      ]
+    },
+    "video-wide-place": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "label_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 665.514,
+          "below_top_px": 782.292,
+          "gap_px": 116.778,
+          "passed": true
+        }
+      ]
+    },
+    "video-wide-creative-work": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "label_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 665.514,
+          "below_top_px": 782.292,
+          "gap_px": 116.778,
+          "passed": true
+        }
+      ]
+    },
+    "video-wide-quote": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source excerpt",
+          "below": "headline_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 494.0,
+          "below_top_px": 621.444,
+          "gap_px": 127.444,
+          "passed": true
+        },
+        {
+          "above": "source excerpt",
+          "below": "label_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 494.0,
+          "below_top_px": 621.444,
+          "gap_px": 127.444,
+          "passed": true
+        }
+      ]
+    },
+    "video-wide-callout": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": []
+    },
+    "video-wide-documented": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "label_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 571.528,
+          "below_top_px": 692.556,
+          "gap_px": 121.028,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "label_2",
+          "minimum_px": 113.778,
+          "above_bottom_px": 571.528,
+          "below_top_px": 692.556,
+          "gap_px": 121.028,
+          "passed": true
+        }
+      ]
+    },
+    "video-wide-challenger": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "body_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 490.532,
+          "below_top_px": 607.31,
+          "gap_px": 116.778,
+          "passed": true
+        }
+      ]
+    },
+    "video-wide-recap": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "body_1",
+          "below": "body_2",
+          "minimum_px": 113.778,
+          "above_bottom_px": 293.309,
+          "below_top_px": 422.333,
+          "gap_px": 129.024,
+          "passed": true
+        },
+        {
+          "above": "body_2",
+          "below": "body_3",
+          "minimum_px": 113.778,
+          "above_bottom_px": 577.754,
+          "below_top_px": 706.778,
+          "gap_px": 129.024,
+          "passed": true
+        }
+      ]
+    },
+    "video-wide-landing": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "body_1",
+          "below": "body_2",
+          "minimum_px": 71.111,
+          "above_bottom_px": 676.77,
+          "below_top_px": 750.882,
+          "gap_px": 74.111,
+          "passed": true
+        }
+      ]
+    },
+    "video-wide-close": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "s3h",
+          "below": "body_1",
+          "minimum_px": 71.111,
+          "above_bottom_px": 539.035,
+          "below_top_px": 613.146,
+          "gap_px": 74.111,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "label_1",
+          "minimum_px": 71.111,
+          "above_bottom_px": 666.757,
+          "below_top_px": 740.868,
+          "gap_px": 74.111,
+          "passed": true
+        }
+      ]
+    },
+    "video-wide-lower-third": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source logo",
+          "below": "label_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 622.62,
+          "below_top_px": 749.444,
+          "gap_px": 126.824,
+          "passed": true
+        }
+      ]
+    },
+    "video-wide-captions": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": []
+    },
+    "video-wide-rail": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 529.097,
+          "below_top_px": 645.875,
+          "gap_px": 116.778,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-cover": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source logo",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 674.5,
+          "below_top_px": 741.5,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 973.82,
+          "below_top_px": 1016.82,
+          "gap_px": 43.0,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "v4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1058.0,
+          "below_top_px": 1126.0,
+          "gap_px": 68.0,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-why-1": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 687.55,
+          "below_top_px": 754.55,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-why-2": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 756.52,
+          "below_top_px": 823.52,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-why-3": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 763.046,
+          "below_top_px": 830.046,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-document": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": []
+    },
+    "carousel-landing": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "body_1",
+          "below": "body_2",
+          "minimum_px": 40.0,
+          "above_bottom_px": 1077.203,
+          "below_top_px": 1120.203,
+          "gap_px": 43.0,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-close": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "s3h",
+          "below": "body_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 951.444,
+          "below_top_px": 1018.444,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "label_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1063.678,
+          "below_top_px": 1130.678,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-good-news-roundup-cover": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 973.492,
+          "below_top_px": 1016.492,
+          "gap_px": 43.0,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "v4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1058.0,
+          "below_top_px": 1126.0,
+          "gap_px": 68.0,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-good-news-cover": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 983.336,
+          "below_top_px": 1026.336,
+          "gap_px": 43.0,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "v4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1058.0,
+          "below_top_px": 1126.0,
+          "gap_px": 68.0,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-good-news-item": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 977.012,
+          "below_top_px": 1020.012,
+          "gap_px": 43.0,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-good-news-close": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "s3h",
+          "below": "body_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1009.714,
+          "below_top_px": 1076.714,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "label_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1121.949,
+          "below_top_px": 1188.949,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-simple-advice-cover": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 979.422,
+          "below_top_px": 1022.422,
+          "gap_px": 43.0,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "v4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1058.0,
+          "below_top_px": 1126.0,
+          "gap_px": 68.0,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-simple-advice-item": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 576.836,
+          "below_top_px": 643.836,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 790.168,
+          "below_top_px": 1120.516,
+          "gap_px": 330.348,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-simple-advice-close": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "s3h",
+          "below": "body_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 951.444,
+          "below_top_px": 1018.444,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "label_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1063.678,
+          "below_top_px": 1130.678,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "social-feed": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source logo",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 747.749,
+          "below_top_px": 814.749,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1051.104,
+          "below_top_px": 1118.104,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "social-square": {
+      "width": 1080,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source logo",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 582.691,
+          "below_top_px": 649.691,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 879.919,
+          "below_top_px": 946.919,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "social-ig-reels-cover": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source logo",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1117.408,
+          "below_top_px": 1184.408,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1369.11,
+          "below_top_px": 1436.11,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "social-tiktok-cover": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source logo",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1117.408,
+          "below_top_px": 1184.408,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1369.11,
+          "below_top_px": 1436.11,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "social-youtube-thumb": {
+      "width": 1280,
+      "height": 720,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source logo",
+          "below": "headline_1",
+          "minimum_px": 75.852,
+          "above_bottom_px": 210.667,
+          "below_top_px": 289.519,
+          "gap_px": 78.852,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 75.852,
+          "above_bottom_px": 450.769,
+          "below_top_px": 529.621,
+          "gap_px": 78.852,
+          "passed": true
+        }
+      ]
+    },
+    "social-youtube-shorts-thumb": {
+      "width": 2160,
+      "height": 3840,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source logo",
+          "below": "headline_1",
+          "minimum_px": 128.0,
+          "above_bottom_px": 2241.548,
+          "below_top_px": 2372.548,
+          "gap_px": 131.0,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 128.0,
+          "above_bottom_px": 2740.22,
+          "below_top_px": 2871.22,
+          "gap_px": 131.0,
+          "passed": true
+        }
+      ]
+    },
+    "social-quote": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "label_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1112.896,
+          "below_top_px": 1179.896,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "social-number": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 125.836,
+          "below_top_px": 405.0,
+          "gap_px": 279.164,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "0 s",
+          "minimum_px": 64.0,
+          "above_bottom_px": 569.9,
+          "below_top_px": 768.828,
+          "gap_px": 198.927,
+          "passed": true
+        },
+        {
+          "above": "0 s",
+          "below": "label_4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 803.89,
+          "below_top_px": 1189.0,
+          "gap_px": 385.11,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "10 s",
+          "minimum_px": 64.0,
+          "above_bottom_px": 569.9,
+          "below_top_px": 768.828,
+          "gap_px": 198.927,
+          "passed": true
+        },
+        {
+          "above": "10 s",
+          "below": "label_4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 803.89,
+          "below_top_px": 1189.0,
+          "gap_px": 385.11,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "20 s",
+          "minimum_px": 64.0,
+          "above_bottom_px": 569.9,
+          "below_top_px": 768.828,
+          "gap_px": 198.927,
+          "passed": true
+        },
+        {
+          "above": "20 s",
+          "below": "label_4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 803.89,
+          "below_top_px": 1189.0,
+          "gap_px": 385.11,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "threshold tick",
+          "minimum_px": 64.0,
+          "above_bottom_px": 569.9,
+          "below_top_px": 768.828,
+          "gap_px": 198.927,
+          "passed": true
+        },
+        {
+          "above": "threshold tick",
+          "below": "label_4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 803.89,
+          "below_top_px": 1189.0,
+          "gap_px": 385.11,
+          "passed": true
+        }
+      ]
+    },
+    "social-versus": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "label_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 314.12,
+          "below_top_px": 477.0,
+          "gap_px": 162.88,
+          "passed": true
+        },
+        {
+          "above": "label_1",
+          "below": "headline_2",
+          "minimum_px": 64.0,
+          "above_bottom_px": 501.836,
+          "below_top_px": 661.0,
+          "gap_px": 159.164,
+          "passed": true
+        },
+        {
+          "above": "headline_2",
+          "below": "body_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 777.226,
+          "below_top_px": 965.0,
+          "gap_px": 187.774,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "label_2",
+          "minimum_px": 64.0,
+          "above_bottom_px": 314.12,
+          "below_top_px": 477.0,
+          "gap_px": 162.88,
+          "passed": true
+        },
+        {
+          "above": "label_2",
+          "below": "headline_3",
+          "minimum_px": 64.0,
+          "above_bottom_px": 501.836,
+          "below_top_px": 661.0,
+          "gap_px": 159.164,
+          "passed": true
+        },
+        {
+          "above": "headline_3",
+          "below": "body_2",
+          "minimum_px": 40.0,
+          "above_bottom_px": 747.18,
+          "below_top_px": 965.0,
+          "gap_px": 217.82,
+          "passed": true
+        }
+      ]
+    },
+    "social-poll-question": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 137.836,
+          "below_top_px": 204.836,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 771.498,
+          "below_top_px": 1199.75,
+          "gap_px": 428.252,
+          "passed": true
+        }
+      ]
+    },
+    "social-poll-result": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 137.836,
+          "below_top_px": 204.836,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 771.498,
+          "below_top_px": 1199.75,
+          "gap_px": 428.252,
+          "passed": true
+        }
+      ]
+    },
+    "social-clip-cover": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source logo",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1117.408,
+          "below_top_px": 1184.408,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1369.11,
+          "below_top_px": 1436.11,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "social-meme": {
+      "width": 1080,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 200.449,
+          "below_top_px": 970.836,
+          "gap_px": 770.387,
+          "passed": true
+        }
+      ]
+    },
+    "social-threads-text": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "body_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 644.745,
+          "below_top_px": 711.745,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "body_2",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1139.375,
+          "below_top_px": 1206.375,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "social-linkedin-page": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1125.0,
+          "below_top_px": 1196.002,
+          "gap_px": 71.002,
+          "passed": true
+        }
+      ]
+    },
+    "social-youtube-community": {
+      "width": 1080,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source logo",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 582.691,
+          "below_top_px": 649.691,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 879.919,
+          "below_top_px": 946.919,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "profile-ig-avatar": {
+      "width": 1080,
+      "height": 1080,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-tiktok-avatar": {
+      "width": 720,
+      "height": 720,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-youtube-avatar": {
+      "width": 800,
+      "height": 800,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-x-avatar": {
+      "width": 800,
+      "height": 800,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-linkedin-avatar": {
+      "width": 800,
+      "height": 800,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-substack-logo": {
+      "width": 512,
+      "height": 512,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-youtube-banner": {
+      "width": 2560,
+      "height": 1440,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-facebook-cover": {
+      "width": 1640,
+      "height": 856,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-x-header": {
+      "width": 1500,
+      "height": 500,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-linkedin-banner": {
+      "width": 1584,
+      "height": 396,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-youtube-endscreen": {
+      "width": 3840,
+      "height": 2160,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "s3h",
+          "below": "body_1",
+          "minimum_px": 227.556,
+          "above_bottom_px": 1290.0,
+          "below_top_px": 1527.333,
+          "gap_px": 237.333,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "label_1",
+          "minimum_px": 227.556,
+          "above_bottom_px": 1652.482,
+          "below_top_px": 1897.111,
+          "gap_px": 244.629,
+          "passed": true
+        }
+      ]
+    },
+    "profile-ig-highlight-start-here": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-ig-highlight-follow-the-money": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-ig-highlight-under-the-hood": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-ig-highlight-mind-the-gap": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-facebook-avatar": {
+      "width": 320,
+      "height": 320,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-threads-avatar": {
+      "width": 320,
+      "height": 320,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-whatsapp-avatar": {
+      "width": 640,
+      "height": 640,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-telegram-avatar": {
+      "width": 512,
+      "height": 512,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-podcast-avatar": {
+      "width": 3000,
+      "height": 3000,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-favicon-16": {
+      "width": 16,
+      "height": 16,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-favicon-32": {
+      "width": 32,
+      "height": 32,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-favicon-48": {
+      "width": 48,
+      "height": 48,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-favicon-180": {
+      "width": 180,
+      "height": 180,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-favicon-192": {
+      "width": 192,
+      "height": 192,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-favicon-512": {
+      "width": 512,
+      "height": 512,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-maskable-512": {
+      "width": 512,
+      "height": 512,
+      "passed": true,
+      "pairs": []
+    },
+    "profile-bio": {
+      "width": 800,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "Instagram bio 96",
+          "below": "Instagram bio 136",
+          "minimum_px": 47.407,
+          "above_bottom_px": 54.672,
+          "below_top_px": 113.066,
+          "gap_px": 58.395,
+          "passed": true
+        },
+        {
+          "above": "TikTok bio 96",
+          "below": "TikTok bio 136",
+          "minimum_px": 47.407,
+          "above_bottom_px": 231.672,
+          "below_top_px": 290.066,
+          "gap_px": 58.395,
+          "passed": true
+        },
+        {
+          "above": "X bio 96",
+          "below": "X bio 136",
+          "minimum_px": 47.407,
+          "above_bottom_px": 408.672,
+          "below_top_px": 467.066,
+          "gap_px": 58.395,
+          "passed": true
+        },
+        {
+          "above": "LinkedIn bio 96",
+          "below": "LinkedIn bio 136",
+          "minimum_px": 47.407,
+          "above_bottom_px": 585.672,
+          "below_top_px": 644.066,
+          "gap_px": 58.395,
+          "passed": true
+        },
+        {
+          "above": "YouTube bio 96",
+          "below": "YouTube bio 136",
+          "minimum_px": 47.407,
+          "above_bottom_px": 762.672,
+          "below_top_px": 821.066,
+          "gap_px": 58.395,
+          "passed": true
+        },
+        {
+          "above": "Substack homepage tagline 96",
+          "below": "Substack homepage tagline 136",
+          "minimum_px": 47.407,
+          "above_bottom_px": 939.672,
+          "below_top_px": 998.066,
+          "gap_px": 58.395,
+          "passed": true
+        },
+        {
+          "above": "Instagram bio 136",
+          "below": "TikTok bio 96",
+          "minimum_px": 47.407,
+          "above_bottom_px": 139.328,
+          "below_top_px": 204.328,
+          "gap_px": 65.0,
+          "passed": true
+        },
+        {
+          "above": "TikTok bio 136",
+          "below": "X bio 96",
+          "minimum_px": 47.407,
+          "above_bottom_px": 316.328,
+          "below_top_px": 381.328,
+          "gap_px": 65.0,
+          "passed": true
+        },
+        {
+          "above": "X bio 136",
+          "below": "LinkedIn bio 96",
+          "minimum_px": 47.407,
+          "above_bottom_px": 493.328,
+          "below_top_px": 558.328,
+          "gap_px": 65.0,
+          "passed": true
+        },
+        {
+          "above": "LinkedIn bio 136",
+          "below": "YouTube bio 96",
+          "minimum_px": 47.407,
+          "above_bottom_px": 670.328,
+          "below_top_px": 735.328,
+          "gap_px": 65.0,
+          "passed": true
+        },
+        {
+          "above": "YouTube bio 136",
+          "below": "Substack homepage tagline 96",
+          "minimum_px": 47.407,
+          "above_bottom_px": 847.328,
+          "below_top_px": 912.328,
+          "gap_px": 65.0,
+          "passed": true
+        }
+      ]
+    },
+    "podcast-show-art": {
+      "width": 3000,
+      "height": 3000,
+      "passed": true,
+      "pairs": []
+    },
+    "podcast-episode-art": {
+      "width": 3000,
+      "height": 3000,
+      "passed": true,
+      "pairs": []
+    },
+    "podcast-audiogram": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": []
+    },
+    "newsletter-weekly-edition": {
+      "width": 600,
+      "height": 3825,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "v9",
+          "below": "opener",
+          "minimum_px": 35.556,
+          "above_bottom_px": 52.034,
+          "below_top_px": 110.0,
+          "gap_px": 57.966,
+          "passed": true
+        },
+        {
+          "above": "opener",
+          "below": "contents",
+          "minimum_px": 35.556,
+          "above_bottom_px": 163.123,
+          "below_top_px": 206.0,
+          "gap_px": 42.877,
+          "passed": true
+        },
+        {
+          "above": "contents",
+          "below": "contents_pieces",
+          "minimum_px": 35.556,
+          "above_bottom_px": 308.375,
+          "below_top_px": 377.0,
+          "gap_px": 68.625,
+          "passed": true
+        },
+        {
+          "above": "contents_pieces",
+          "below": "contents_topics",
+          "minimum_px": 35.556,
+          "above_bottom_px": 452.994,
+          "below_top_px": 495.0,
+          "gap_px": 42.006,
+          "passed": true
+        },
+        {
+          "above": "contents_topics",
+          "below": "day_0",
+          "minimum_px": 35.556,
+          "above_bottom_px": 535.992,
+          "below_top_px": 614.0,
+          "gap_px": 78.008,
+          "passed": true
+        },
+        {
+          "above": "day_0",
+          "below": "piece_0",
+          "minimum_px": 35.556,
+          "above_bottom_px": 627.879,
+          "below_top_px": 674.0,
+          "gap_px": 46.121,
+          "passed": true
+        },
+        {
+          "above": "piece_0",
+          "below": "summary_0",
+          "minimum_px": 22.222,
+          "above_bottom_px": 708.125,
+          "below_top_px": 763.0,
+          "gap_px": 54.875,
+          "passed": true
+        },
+        {
+          "above": "summary_0",
+          "below": "read_0",
+          "minimum_px": 35.556,
+          "above_bottom_px": 786.531,
+          "below_top_px": 988.0,
+          "gap_px": 201.469,
+          "passed": true
+        },
+        {
+          "above": "summary_0",
+          "below": "watch_0",
+          "minimum_px": 35.556,
+          "above_bottom_px": 786.531,
+          "below_top_px": 988.0,
+          "gap_px": 201.469,
+          "passed": true
+        },
+        {
+          "above": "watch_0",
+          "below": "day_1",
+          "minimum_px": 35.556,
+          "above_bottom_px": 1001.879,
+          "below_top_px": 1060.0,
+          "gap_px": 58.121,
+          "passed": true
+        },
+        {
+          "above": "day_1",
+          "below": "piece_1",
+          "minimum_px": 35.556,
+          "above_bottom_px": 1073.879,
+          "below_top_px": 1120.0,
+          "gap_px": 46.121,
+          "passed": true
+        },
+        {
+          "above": "piece_1",
+          "below": "summary_1",
+          "minimum_px": 22.222,
+          "above_bottom_px": 1171.625,
+          "below_top_px": 1231.0,
+          "gap_px": 59.375,
+          "passed": true
+        },
+        {
+          "above": "summary_1",
+          "below": "read_1",
+          "minimum_px": 35.556,
+          "above_bottom_px": 1278.78,
+          "below_top_px": 1486.0,
+          "gap_px": 207.22,
+          "passed": true
+        },
+        {
+          "above": "summary_1",
+          "below": "watch_1",
+          "minimum_px": 35.556,
+          "above_bottom_px": 1278.78,
+          "below_top_px": 1486.0,
+          "gap_px": 207.22,
+          "passed": true
+        },
+        {
+          "above": "watch_1",
+          "below": "day_2",
+          "minimum_px": 35.556,
+          "above_bottom_px": 1499.879,
+          "below_top_px": 1558.0,
+          "gap_px": 58.121,
+          "passed": true
+        },
+        {
+          "above": "day_2",
+          "below": "piece_2",
+          "minimum_px": 35.556,
+          "above_bottom_px": 1571.359,
+          "below_top_px": 1618.0,
+          "gap_px": 46.641,
+          "passed": true
+        },
+        {
+          "above": "piece_2",
+          "below": "summary_2",
+          "minimum_px": 22.222,
+          "above_bottom_px": 1669.625,
+          "below_top_px": 1729.0,
+          "gap_px": 59.375,
+          "passed": true
+        },
+        {
+          "above": "summary_2",
+          "below": "read_2",
+          "minimum_px": 35.556,
+          "above_bottom_px": 1776.686,
+          "below_top_px": 1984.0,
+          "gap_px": 207.314,
+          "passed": true
+        },
+        {
+          "above": "summary_2",
+          "below": "watch_2",
+          "minimum_px": 35.556,
+          "above_bottom_px": 1776.686,
+          "below_top_px": 1984.0,
+          "gap_px": 207.314,
+          "passed": true
+        },
+        {
+          "above": "watch_2",
+          "below": "news",
+          "minimum_px": 35.556,
+          "above_bottom_px": 1997.879,
+          "below_top_px": 2044.0,
+          "gap_px": 46.121,
+          "passed": true
+        },
+        {
+          "above": "read_0",
+          "below": "day_1",
+          "minimum_px": 35.556,
+          "above_bottom_px": 1001.879,
+          "below_top_px": 1060.0,
+          "gap_px": 58.121,
+          "passed": true
+        },
+        {
+          "above": "read_1",
+          "below": "day_2",
+          "minimum_px": 35.556,
+          "above_bottom_px": 1499.879,
+          "below_top_px": 1558.0,
+          "gap_px": 58.121,
+          "passed": true
+        },
+        {
+          "above": "read_2",
+          "below": "news",
+          "minimum_px": 35.556,
+          "above_bottom_px": 1997.879,
+          "below_top_px": 2044.0,
+          "gap_px": 46.121,
+          "passed": true
+        },
+        {
+          "above": "news",
+          "below": "topic_0",
+          "minimum_px": 35.556,
+          "above_bottom_px": 2095.625,
+          "below_top_px": 2149.0,
+          "gap_px": 53.375,
+          "passed": true
+        },
+        {
+          "above": "topic_0",
+          "below": "news_0",
+          "minimum_px": 22.222,
+          "above_bottom_px": 2200.625,
+          "below_top_px": 2258.0,
+          "gap_px": 57.375,
+          "passed": true
+        },
+        {
+          "above": "news_0",
+          "below": "source_0",
+          "minimum_px": 35.556,
+          "above_bottom_px": 2306.868,
+          "below_top_px": 2349.0,
+          "gap_px": 42.132,
+          "passed": true
+        },
+        {
+          "above": "source_0",
+          "below": "news_1",
+          "minimum_px": 35.556,
+          "above_bottom_px": 2365.254,
+          "below_top_px": 2411.0,
+          "gap_px": 45.746,
+          "passed": true
+        },
+        {
+          "above": "news_1",
+          "below": "source_1",
+          "minimum_px": 35.556,
+          "above_bottom_px": 2459.696,
+          "below_top_px": 2502.0,
+          "gap_px": 42.304,
+          "passed": true
+        },
+        {
+          "above": "source_1",
+          "below": "topic_1",
+          "minimum_px": 35.556,
+          "above_bottom_px": 2518.254,
+          "below_top_px": 2564.0,
+          "gap_px": 45.746,
+          "passed": true
+        },
+        {
+          "above": "topic_1",
+          "below": "news_2",
+          "minimum_px": 22.222,
+          "above_bottom_px": 2634.875,
+          "below_top_px": 2698.0,
+          "gap_px": 63.125,
+          "passed": true
+        },
+        {
+          "above": "news_2",
+          "below": "source_2",
+          "minimum_px": 35.556,
+          "above_bottom_px": 2746.868,
+          "below_top_px": 2789.0,
+          "gap_px": 42.132,
+          "passed": true
+        },
+        {
+          "above": "source_2",
+          "below": "topic_2",
+          "minimum_px": 35.556,
+          "above_bottom_px": 2805.254,
+          "below_top_px": 2851.0,
+          "gap_px": 45.746,
+          "passed": true
+        },
+        {
+          "above": "topic_2",
+          "below": "news_3",
+          "minimum_px": 22.222,
+          "above_bottom_px": 2916.625,
+          "below_top_px": 2978.0,
+          "gap_px": 61.375,
+          "passed": true
+        },
+        {
+          "above": "news_3",
+          "below": "source_3",
+          "minimum_px": 35.556,
+          "above_bottom_px": 3021.712,
+          "below_top_px": 3069.0,
+          "gap_px": 47.288,
+          "passed": true
+        },
+        {
+          "above": "source_3",
+          "below": "topic_3",
+          "minimum_px": 35.556,
+          "above_bottom_px": 3085.254,
+          "below_top_px": 3131.0,
+          "gap_px": 45.746,
+          "passed": true
+        },
+        {
+          "above": "topic_3",
+          "below": "news_4",
+          "minimum_px": 22.222,
+          "above_bottom_px": 3180.0,
+          "below_top_px": 3237.0,
+          "gap_px": 57.0,
+          "passed": true
+        },
+        {
+          "above": "news_4",
+          "below": "source_4",
+          "minimum_px": 35.556,
+          "above_bottom_px": 3281.142,
+          "below_top_px": 3328.0,
+          "gap_px": 46.858,
+          "passed": true
+        },
+        {
+          "above": "source_4",
+          "below": "news_5",
+          "minimum_px": 35.556,
+          "above_bottom_px": 3344.254,
+          "below_top_px": 3390.0,
+          "gap_px": 45.746,
+          "passed": true
+        },
+        {
+          "above": "news_5",
+          "below": "source_5",
+          "minimum_px": 35.556,
+          "above_bottom_px": 3433.712,
+          "below_top_px": 3481.0,
+          "gap_px": 47.288,
+          "passed": true
+        },
+        {
+          "above": "source_5",
+          "below": "forward",
+          "minimum_px": 35.556,
+          "above_bottom_px": 3497.254,
+          "below_top_px": 3543.0,
+          "gap_px": 45.746,
+          "passed": true
+        },
+        {
+          "above": "forward",
+          "below": "subscribe",
+          "minimum_px": 35.556,
+          "above_bottom_px": 3590.686,
+          "below_top_px": 3639.0,
+          "gap_px": 48.314,
+          "passed": true
+        },
+        {
+          "above": "subscribe",
+          "below": "closing",
+          "minimum_px": 35.556,
+          "above_bottom_px": 3652.879,
+          "below_top_px": 3699.0,
+          "gap_px": 46.121,
+          "passed": true
+        },
+        {
+          "above": "closing",
+          "below": "footer",
+          "minimum_px": 35.556,
+          "above_bottom_px": 3722.531,
+          "below_top_px": 3779.0,
+          "gap_px": 56.469,
+          "passed": true
+        }
+      ]
+    },
+    "newsletter-post-header": {
+      "width": 1456,
+      "height": 816,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 86.281,
+          "above_bottom_px": 600.259,
+          "below_top_px": 689.541,
+          "gap_px": 89.281,
+          "passed": true
+        }
+      ]
+    },
+    "newsletter-substack-cover": {
+      "width": 1200,
+      "height": 1200,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 44.444,
+          "above_bottom_px": 906.594,
+          "below_top_px": 954.038,
+          "gap_px": 47.444,
+          "passed": true
+        }
+      ]
+    },
+    "newsletter-substack-post-social": {
+      "width": 1456,
+      "height": 1048,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 86.281,
+          "above_bottom_px": 806.259,
+          "below_top_px": 895.541,
+          "gap_px": 89.281,
+          "passed": true
+        }
+      ]
+    },
+    "newsletter-substack-email-header": {
+      "width": 1100,
+      "height": 220,
+      "passed": true,
+      "pairs": []
+    },
+    "newsletter-substack-wordmark": {
+      "width": 1344,
+      "height": 256,
+      "passed": true,
+      "pairs": []
+    },
+    "newsletter-figure-chart": {
+      "width": 1200,
+      "height": 800,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 71.111,
+          "above_bottom_px": 87.595,
+          "below_top_px": 237.778,
+          "gap_px": 150.182,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "0 s",
+          "minimum_px": 71.111,
+          "above_bottom_px": 411.606,
+          "below_top_px": 491.497,
+          "gap_px": 79.891,
+          "passed": true
+        },
+        {
+          "above": "0 s",
+          "below": "label_4",
+          "minimum_px": 71.111,
+          "above_bottom_px": 530.456,
+          "below_top_px": 673.333,
+          "gap_px": 142.878,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "10 s",
+          "minimum_px": 71.111,
+          "above_bottom_px": 411.606,
+          "below_top_px": 491.497,
+          "gap_px": 79.891,
+          "passed": true
+        },
+        {
+          "above": "10 s",
+          "below": "label_4",
+          "minimum_px": 71.111,
+          "above_bottom_px": 530.456,
+          "below_top_px": 673.333,
+          "gap_px": 142.878,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "20 s",
+          "minimum_px": 71.111,
+          "above_bottom_px": 411.606,
+          "below_top_px": 491.497,
+          "gap_px": 79.891,
+          "passed": true
+        },
+        {
+          "above": "20 s",
+          "below": "label_4",
+          "minimum_px": 71.111,
+          "above_bottom_px": 530.456,
+          "below_top_px": 673.333,
+          "gap_px": 142.878,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "threshold tick",
+          "minimum_px": 71.111,
+          "above_bottom_px": 411.606,
+          "below_top_px": 491.497,
+          "gap_px": 79.891,
+          "passed": true
+        },
+        {
+          "above": "threshold tick",
+          "below": "label_4",
+          "minimum_px": 71.111,
+          "above_bottom_px": 530.456,
+          "below_top_px": 673.333,
+          "gap_px": 142.878,
+          "passed": true
+        }
+      ]
+    },
+    "newsletter-figure-document": {
+      "width": 1200,
+      "height": 800,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "label_1",
+          "minimum_px": 71.111,
+          "above_bottom_px": 589.107,
+          "below_top_px": 663.218,
+          "gap_px": 74.111,
+          "passed": true
+        }
+      ]
+    },
+    "web-desktop": {
+      "width": 1440,
+      "height": 900,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "body_1",
+          "below": "label_2",
+          "minimum_px": 53.333,
+          "above_bottom_px": 214.906,
+          "below_top_px": 316.2,
+          "gap_px": 101.294,
+          "passed": true
+        },
+        {
+          "above": "label_2",
+          "below": "headline_1",
+          "minimum_px": 85.333,
+          "above_bottom_px": 348.684,
+          "below_top_px": 747.0,
+          "gap_px": 398.316,
+          "passed": true
+        }
+      ]
+    },
+    "web-mobile": {
+      "width": 390,
+      "height": 844,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "s3h",
+          "below": "label_2",
+          "minimum_px": 23.111,
+          "above_bottom_px": 218.918,
+          "below_top_px": 267.2,
+          "gap_px": 48.282,
+          "passed": true
+        },
+        {
+          "above": "label_1",
+          "below": "body_1",
+          "minimum_px": 23.111,
+          "above_bottom_px": 35.318,
+          "below_top_px": 118.0,
+          "gap_px": 82.682,
+          "passed": true
+        },
+        {
+          "above": "label_3",
+          "below": "headline_1",
+          "minimum_px": 23.111,
+          "above_bottom_px": 279.012,
+          "below_top_px": 419.625,
+          "gap_px": 140.613,
+          "passed": true
+        }
+      ]
+    },
+    "web-article": {
+      "width": 1440,
+      "height": 2000,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "v9",
+          "below": "headline_1",
+          "minimum_px": 85.333,
+          "above_bottom_px": 630.063,
+          "below_top_px": 812.087,
+          "gap_px": 182.025,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 53.333,
+          "above_bottom_px": 1120.0,
+          "below_top_px": 1238.0,
+          "gap_px": 118.0,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "body_2",
+          "minimum_px": 85.333,
+          "above_bottom_px": 1295.521,
+          "below_top_px": 1440.667,
+          "gap_px": 145.146,
+          "passed": true
+        }
+      ]
+    },
+    "web-og-card": {
+      "width": 1200,
+      "height": 630,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source logo",
+          "below": "headline_1",
+          "minimum_px": 71.111,
+          "above_bottom_px": 241.735,
+          "below_top_px": 315.846,
+          "gap_px": 74.111,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 71.111,
+          "above_bottom_px": 437.605,
+          "below_top_px": 511.717,
+          "gap_px": 74.111,
+          "passed": true
+        }
+      ]
+    },
+    "email-signature": {
+      "width": 800,
+      "height": 120,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "v4",
+          "below": "label_1",
+          "minimum_px": 47.407,
+          "above_bottom_px": 45.72,
+          "below_top_px": 97.889,
+          "gap_px": 52.169,
+          "passed": true
+        }
+      ]
+    },
+    "future-deck-cover": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source logo",
+          "below": "headline_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 224.721,
+          "below_top_px": 341.499,
+          "gap_px": 116.778,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 113.778,
+          "above_bottom_px": 820.497,
+          "below_top_px": 937.274,
+          "gap_px": 116.778,
+          "passed": true
+        }
+      ]
+    },
+    "future-deck-section": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 305.372,
+          "below_top_px": 422.15,
+          "gap_px": 116.778,
+          "passed": true
+        }
+      ]
+    },
+    "future-deck-document": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "label_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 759.371,
+          "below_top_px": 876.149,
+          "gap_px": 116.778,
+          "passed": true
+        }
+      ]
+    },
+    "future-deck-quote": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "label_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 759.371,
+          "below_top_px": 876.149,
+          "gap_px": 116.778,
+          "passed": true
+        }
+      ]
+    },
+    "future-deck-close": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "s3h",
+          "below": "body_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 647.401,
+          "below_top_px": 764.179,
+          "gap_px": 116.778,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "label_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 817.79,
+          "below_top_px": 934.568,
+          "gap_px": 116.778,
+          "passed": true
+        }
+      ]
+    },
+    "future-press-kit": {
+      "width": 1240,
+      "height": 1754,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 73.481,
+          "above_bottom_px": 789.755,
+          "below_top_px": 866.237,
+          "gap_px": 76.481,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 45.926,
+          "above_bottom_px": 1265.08,
+          "below_top_px": 1573.468,
+          "gap_px": 308.388,
+          "passed": true
+        }
+      ]
+    },
+    "future-partner": {
+      "width": 1080,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "s3h",
+          "minimum_px": 64.0,
+          "above_bottom_px": 650.169,
+          "below_top_px": 745.2,
+          "gap_px": 95.031,
+          "passed": true
+        },
+        {
+          "above": "s3h",
+          "below": "label_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 864.0,
+          "below_top_px": 961.0,
+          "gap_px": 97.0,
+          "passed": true
+        }
+      ]
+    },
+    "future-event": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 674.754,
+          "below_top_px": 741.754,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 1162.859,
+          "below_top_px": 1205.859,
+          "gap_px": 43.0,
+          "passed": true
+        }
+      ]
+    },
+    "future-ad-square": {
+      "width": 1080,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 873.0,
+          "below_top_px": 940.0,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "future-ad-vertical": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1373.0,
+          "below_top_px": 1440.0,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "future-channel-header": {
+      "width": 1280,
+      "height": 720,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 75.852,
+          "above_bottom_px": 528.074,
+          "below_top_px": 606.926,
+          "gap_px": 78.852,
+          "passed": true
+        }
+      ]
+    },
+    "future-merch-marks": {
+      "width": 1600,
+      "height": 1000,
+      "passed": true,
+      "pairs": []
+    },
+    "video-vertical-talking-head": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": []
+    },
+    "video-vertical-chapter": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 736.61,
+          "below_top_px": 803.61,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "video-vertical-big-moment": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "figure_1",
+          "below": "label_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1202.164,
+          "below_top_px": 1269.164,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "video-vertical-number": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "figure_1",
+          "below": "label_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1202.164,
+          "below_top_px": 1269.164,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "video-vertical-outro": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "s3h",
+          "below": "body_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 984.985,
+          "below_top_px": 1051.985,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "label_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1118.329,
+          "below_top_px": 1185.329,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "video-vertical-statement-close": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "s3h",
+          "below": "body_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 995.946,
+          "below_top_px": 1062.946,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "label_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1108.18,
+          "below_top_px": 1175.18,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "video-vertical-split": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": []
+    },
+    "video-vertical-pip": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": []
+    },
+    "video-vertical-voiceover": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": []
+    },
+    "video-vertical-plate": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": []
+    },
+    "video-vertical-slideshow": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 924.904,
+          "below_top_px": 965.611,
+          "gap_px": 40.707,
+          "passed": true
+        }
+      ]
+    },
+    "video-wide-talking-head": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": []
+    },
+    "video-wide-chapter": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 575.472,
+          "below_top_px": 692.25,
+          "gap_px": 116.778,
+          "passed": true
+        }
+      ]
+    },
+    "video-wide-big-moment": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": []
+    },
+    "video-wide-number": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": []
+    },
+    "video-wide-outro": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "s3h",
+          "below": "body_1",
+          "minimum_px": 71.111,
+          "above_bottom_px": 539.035,
+          "below_top_px": 613.146,
+          "gap_px": 74.111,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "label_1",
+          "minimum_px": 71.111,
+          "above_bottom_px": 666.757,
+          "below_top_px": 740.868,
+          "gap_px": 74.111,
+          "passed": true
+        }
+      ]
+    },
+    "video-wide-statement-close": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "s3h",
+          "below": "body_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 647.401,
+          "below_top_px": 764.179,
+          "gap_px": 116.778,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "label_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 817.79,
+          "below_top_px": 934.568,
+          "gap_px": 116.778,
+          "passed": true
+        }
+      ]
+    },
+    "video-wide-side-by-side": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": []
+    },
+    "social-youtube-thumb-face": {
+      "width": 1280,
+      "height": 720,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source logo",
+          "below": "headline_1",
+          "minimum_px": 75.852,
+          "above_bottom_px": 210.667,
+          "below_top_px": 289.519,
+          "gap_px": 78.852,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 75.852,
+          "above_bottom_px": 450.769,
+          "below_top_px": 529.621,
+          "gap_px": 78.852,
+          "passed": true
+        }
+      ]
+    },
+    "social-tall-cover-face": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source logo",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1117.408,
+          "below_top_px": 1184.408,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1369.11,
+          "below_top_px": 1436.11,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "social-meme-tall": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 382.476,
+          "below_top_px": 1458.0,
+          "gap_px": 1075.524,
+          "passed": true
+        }
+      ]
+    },
+    "social-meme-video": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 314.703,
+          "below_top_px": 1458.0,
+          "gap_px": 1143.297,
+          "passed": true
+        }
+      ]
+    },
+    "social-ig-story-hook": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 1392.859,
+          "below_top_px": 1435.859,
+          "gap_px": 43.0,
+          "passed": true
+        }
+      ]
+    },
+    "social-ig-story-proof": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 1349.092,
+          "below_top_px": 1392.092,
+          "gap_px": 43.0,
+          "passed": true
+        }
+      ]
+    },
+    "social-ig-story-action": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": []
+    },
+    "social-poll-frame": {
+      "width": 1080,
+      "height": 1920,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 894.664,
+          "below_top_px": 961.664,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 1394.75,
+          "below_top_px": 1437.75,
+          "gap_px": 43.0,
+          "passed": true
+        }
+      ]
+    },
+    "social-receipt": {
+      "width": 1600,
+      "height": 900,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "label_1",
+          "minimum_px": 94.815,
+          "above_bottom_px": 632.809,
+          "below_top_px": 730.624,
+          "gap_px": 97.815,
+          "passed": true
+        }
+      ]
+    },
+    "social-note-image": {
+      "width": 1456,
+      "height": 1048,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "body_1",
+          "minimum_px": 86.281,
+          "above_bottom_px": 226.675,
+          "below_top_px": 315.957,
+          "gap_px": 89.281,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "body_2",
+          "minimum_px": 86.281,
+          "above_bottom_px": 574.132,
+          "below_top_px": 663.414,
+          "gap_px": 89.281,
+          "passed": true
+        },
+        {
+          "above": "body_2",
+          "below": "v4",
+          "minimum_px": 86.281,
+          "above_bottom_px": 720.879,
+          "below_top_px": 810.16,
+          "gap_px": 89.281,
+          "passed": true
+        }
+      ]
+    },
+    "social-share-card": {
+      "width": 1200,
+      "height": 675,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source logo",
+          "below": "headline_1",
+          "minimum_px": 71.111,
+          "above_bottom_px": 151.763,
+          "below_top_px": 225.874,
+          "gap_px": 74.111,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 71.111,
+          "above_bottom_px": 512.31,
+          "below_top_px": 586.422,
+          "gap_px": 74.111,
+          "passed": true
+        }
+      ]
+    },
+    "social-x-card": {
+      "width": 1200,
+      "height": 675,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 71.111,
+          "above_bottom_px": 78.595,
+          "below_top_px": 152.707,
+          "gap_px": 74.111,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "0 s",
+          "minimum_px": 71.111,
+          "above_bottom_px": 320.675,
+          "below_top_px": 489.346,
+          "gap_px": 168.671,
+          "passed": true
+        },
+        {
+          "above": "0 s",
+          "below": "label_4",
+          "minimum_px": 71.111,
+          "above_bottom_px": 516.13,
+          "below_top_px": 597.405,
+          "gap_px": 81.275,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "10 s",
+          "minimum_px": 71.111,
+          "above_bottom_px": 320.675,
+          "below_top_px": 489.346,
+          "gap_px": 168.671,
+          "passed": true
+        },
+        {
+          "above": "10 s",
+          "below": "label_4",
+          "minimum_px": 71.111,
+          "above_bottom_px": 516.13,
+          "below_top_px": 597.405,
+          "gap_px": 81.275,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "20 s",
+          "minimum_px": 71.111,
+          "above_bottom_px": 320.675,
+          "below_top_px": 489.346,
+          "gap_px": 168.671,
+          "passed": true
+        },
+        {
+          "above": "20 s",
+          "below": "label_4",
+          "minimum_px": 71.111,
+          "above_bottom_px": 516.13,
+          "below_top_px": 597.405,
+          "gap_px": 81.275,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "threshold tick",
+          "minimum_px": 71.111,
+          "above_bottom_px": 320.675,
+          "below_top_px": 489.346,
+          "gap_px": 168.671,
+          "passed": true
+        },
+        {
+          "above": "threshold tick",
+          "below": "label_4",
+          "minimum_px": 71.111,
+          "above_bottom_px": 516.13,
+          "below_top_px": 597.405,
+          "gap_px": 81.275,
+          "passed": true
+        }
+      ]
+    },
+    "newsletter-substack-cover-wide": {
+      "width": 1200,
+      "height": 630,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source logo",
+          "below": "headline_1",
+          "minimum_px": 71.111,
+          "above_bottom_px": 241.735,
+          "below_top_px": 315.846,
+          "gap_px": 74.111,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 71.111,
+          "above_bottom_px": 437.605,
+          "below_top_px": 511.717,
+          "gap_px": 74.111,
+          "passed": true
+        }
+      ]
+    },
+    "newsletter-substack-feed": {
+      "width": 1200,
+      "height": 800,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source logo",
+          "below": "headline_1",
+          "minimum_px": 71.111,
+          "above_bottom_px": 467.314,
+          "below_top_px": 541.425,
+          "gap_px": 74.111,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 71.111,
+          "above_bottom_px": 608.021,
+          "below_top_px": 682.132,
+          "gap_px": 74.111,
+          "passed": true
+        }
+      ]
+    },
+    "newsletter-figure-scale": {
+      "width": 1200,
+      "height": 800,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 71.111,
+          "above_bottom_px": 87.595,
+          "below_top_px": 161.707,
+          "gap_px": 74.111,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "0 s",
+          "minimum_px": 71.111,
+          "above_bottom_px": 358.972,
+          "below_top_px": 594.402,
+          "gap_px": 235.43,
+          "passed": true
+        },
+        {
+          "above": "0 s",
+          "below": "label_4",
+          "minimum_px": 71.111,
+          "above_bottom_px": 621.186,
+          "below_top_px": 712.405,
+          "gap_px": 91.218,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "10 s",
+          "minimum_px": 71.111,
+          "above_bottom_px": 358.972,
+          "below_top_px": 594.402,
+          "gap_px": 235.43,
+          "passed": true
+        },
+        {
+          "above": "10 s",
+          "below": "label_4",
+          "minimum_px": 71.111,
+          "above_bottom_px": 621.186,
+          "below_top_px": 712.405,
+          "gap_px": 91.218,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "20 s",
+          "minimum_px": 71.111,
+          "above_bottom_px": 358.972,
+          "below_top_px": 594.402,
+          "gap_px": 235.43,
+          "passed": true
+        },
+        {
+          "above": "20 s",
+          "below": "label_4",
+          "minimum_px": 71.111,
+          "above_bottom_px": 621.186,
+          "below_top_px": 712.405,
+          "gap_px": 91.218,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "threshold tick",
+          "minimum_px": 71.111,
+          "above_bottom_px": 358.972,
+          "below_top_px": 594.402,
+          "gap_px": 235.43,
+          "passed": true
+        },
+        {
+          "above": "threshold tick",
+          "below": "label_4",
+          "minimum_px": 71.111,
+          "above_bottom_px": 621.186,
+          "below_top_px": 712.405,
+          "gap_px": 91.218,
+          "passed": true
+        }
+      ]
+    },
+    "newsletter-figure-timeline": {
+      "width": 1200,
+      "height": 800,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "0:00",
+          "minimum_px": 71.111,
+          "above_bottom_px": 164.58,
+          "below_top_px": 343.949,
+          "gap_px": 179.369,
+          "passed": true
+        },
+        {
+          "above": "0:00",
+          "below": "body_1",
+          "minimum_px": 71.111,
+          "above_bottom_px": 370.733,
+          "below_top_px": 451.111,
+          "gap_px": 80.378,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "label_1",
+          "minimum_px": 71.111,
+          "above_bottom_px": 499.045,
+          "below_top_px": 611.111,
+          "gap_px": 112.066,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "0:30",
+          "minimum_px": 71.111,
+          "above_bottom_px": 164.58,
+          "below_top_px": 343.949,
+          "gap_px": 179.369,
+          "passed": true
+        },
+        {
+          "above": "0:30",
+          "below": "body_1",
+          "minimum_px": 71.111,
+          "above_bottom_px": 370.733,
+          "below_top_px": 451.111,
+          "gap_px": 80.378,
+          "passed": true
+        }
+      ]
+    },
+    "newsletter-figure-ledger": {
+      "width": 1200,
+      "height": 800,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "label_1",
+          "minimum_px": 71.111,
+          "above_bottom_px": 167.205,
+          "below_top_px": 246.667,
+          "gap_px": 79.462,
+          "passed": true
+        },
+        {
+          "above": "label_1",
+          "below": "body_1",
+          "minimum_px": 71.111,
+          "above_bottom_px": 274.262,
+          "below_top_px": 353.333,
+          "gap_px": 79.071,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "body_3",
+          "minimum_px": 71.111,
+          "above_bottom_px": 390.382,
+          "below_top_px": 468.889,
+          "gap_px": 78.507,
+          "passed": true
+        },
+        {
+          "above": "body_3",
+          "below": "label_3",
+          "minimum_px": 71.111,
+          "above_bottom_px": 505.938,
+          "below_top_px": 611.111,
+          "gap_px": 105.174,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "label_2",
+          "minimum_px": 71.111,
+          "above_bottom_px": 167.205,
+          "below_top_px": 246.667,
+          "gap_px": 79.462,
+          "passed": true
+        },
+        {
+          "above": "label_2",
+          "below": "body_2",
+          "minimum_px": 71.111,
+          "above_bottom_px": 274.262,
+          "below_top_px": 353.333,
+          "gap_px": 79.071,
+          "passed": true
+        },
+        {
+          "above": "body_2",
+          "below": "body_4",
+          "minimum_px": 71.111,
+          "above_bottom_px": 388.281,
+          "below_top_px": 468.889,
+          "gap_px": 80.608,
+          "passed": true
+        },
+        {
+          "above": "body_4",
+          "below": "label_3",
+          "minimum_px": 71.111,
+          "above_bottom_px": 503.837,
+          "below_top_px": 611.111,
+          "gap_px": 107.274,
+          "passed": true
+        }
+      ]
+    },
+    "newsletter-figure-map": {
+      "width": 1200,
+      "height": 800,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 44.444,
+          "above_bottom_px": 143.58,
+          "below_top_px": 522.222,
+          "gap_px": 378.642,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "label_2",
+          "minimum_px": 71.111,
+          "above_bottom_px": 559.08,
+          "below_top_px": 646.667,
+          "gap_px": 87.587,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "label_1",
+          "minimum_px": 71.111,
+          "above_bottom_px": 143.58,
+          "below_top_px": 531.111,
+          "gap_px": 387.531,
+          "passed": true
+        },
+        {
+          "above": "label_1",
+          "below": "label_2",
+          "minimum_px": 71.111,
+          "above_bottom_px": 558.707,
+          "below_top_px": 646.667,
+          "gap_px": 87.96,
+          "passed": true
+        }
+      ]
+    },
+    "newsletter-figure-comparison": {
+      "width": 1200,
+      "height": 800,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "label_1",
+          "minimum_px": 71.111,
+          "above_bottom_px": 172.455,
+          "below_top_px": 255.556,
+          "gap_px": 83.101,
+          "passed": true
+        },
+        {
+          "above": "label_1",
+          "below": "body_1",
+          "minimum_px": 71.111,
+          "above_bottom_px": 283.151,
+          "below_top_px": 371.111,
+          "gap_px": 87.96,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "body_2",
+          "minimum_px": 71.111,
+          "above_bottom_px": 408.16,
+          "below_top_px": 486.667,
+          "gap_px": 78.507,
+          "passed": true
+        },
+        {
+          "above": "body_2",
+          "below": "label_3",
+          "minimum_px": 71.111,
+          "above_bottom_px": 521.615,
+          "below_top_px": 611.111,
+          "gap_px": 89.497,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "label_2",
+          "minimum_px": 71.111,
+          "above_bottom_px": 172.455,
+          "below_top_px": 255.556,
+          "gap_px": 83.101,
+          "passed": true
+        },
+        {
+          "above": "label_2",
+          "below": "body_3",
+          "minimum_px": 71.111,
+          "above_bottom_px": 283.151,
+          "below_top_px": 371.111,
+          "gap_px": 87.96,
+          "passed": true
+        },
+        {
+          "above": "body_3",
+          "below": "body_4",
+          "minimum_px": 71.111,
+          "above_bottom_px": 408.16,
+          "below_top_px": 486.667,
+          "gap_px": 78.507,
+          "passed": true
+        },
+        {
+          "above": "body_4",
+          "below": "label_3",
+          "minimum_px": 71.111,
+          "above_bottom_px": 522.76,
+          "below_top_px": 611.111,
+          "gap_px": 88.351,
+          "passed": true
+        }
+      ]
+    },
+    "newsletter-figure-whys": {
+      "width": 1200,
+      "height": 800,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 44.444,
+          "above_bottom_px": 242.875,
+          "below_top_px": 291.111,
+          "gap_px": 48.236,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "body_3",
+          "minimum_px": 71.111,
+          "above_bottom_px": 339.045,
+          "below_top_px": 460.0,
+          "gap_px": 120.955,
+          "passed": true
+        },
+        {
+          "above": "body_3",
+          "below": "body_5",
+          "minimum_px": 71.111,
+          "above_bottom_px": 549.19,
+          "below_top_px": 628.889,
+          "gap_px": 79.699,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "body_2",
+          "minimum_px": 44.444,
+          "above_bottom_px": 242.875,
+          "below_top_px": 291.111,
+          "gap_px": 48.236,
+          "passed": true
+        },
+        {
+          "above": "body_2",
+          "below": "body_4",
+          "minimum_px": 71.111,
+          "above_bottom_px": 380.301,
+          "below_top_px": 460.0,
+          "gap_px": 79.699,
+          "passed": true
+        },
+        {
+          "above": "body_4",
+          "below": "body_6",
+          "minimum_px": 71.111,
+          "above_bottom_px": 552.72,
+          "below_top_px": 628.889,
+          "gap_px": 76.169,
+          "passed": true
+        }
+      ]
+    },
+    "newsletter-welcome-email": {
+      "width": 600,
+      "height": 900,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 35.556,
+          "above_bottom_px": 454.456,
+          "below_top_px": 493.011,
+          "gap_px": 38.556,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 22.222,
+          "above_bottom_px": 783.664,
+          "below_top_px": 808.886,
+          "gap_px": 25.222,
+          "passed": true
+        }
+      ]
+    },
+    "newsletter-paid-welcome": {
+      "width": 600,
+      "height": 900,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 35.556,
+          "above_bottom_px": 427.096,
+          "below_top_px": 465.652,
+          "gap_px": 38.556,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 22.222,
+          "above_bottom_px": 783.854,
+          "below_top_px": 809.077,
+          "gap_px": 25.222,
+          "passed": true
+        }
+      ]
+    },
+    "web-subscribe-band": {
+      "width": 1440,
+      "height": 420,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "label_1",
+          "minimum_px": 85.333,
+          "above_bottom_px": 153.358,
+          "below_top_px": 256.0,
+          "gap_px": 102.642,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "label_2",
+          "minimum_px": 85.333,
+          "above_bottom_px": 153.358,
+          "below_top_px": 256.0,
+          "gap_px": 102.642,
+          "passed": true
+        }
+      ]
+    },
+    "web-subscribe-band-mobile": {
+      "width": 390,
+      "height": 460,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "label_1",
+          "minimum_px": 23.111,
+          "above_bottom_px": 182.014,
+          "below_top_px": 262.222,
+          "gap_px": 80.208,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "label_2",
+          "minimum_px": 23.111,
+          "above_bottom_px": 182.014,
+          "below_top_px": 262.222,
+          "gap_px": 80.208,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-body": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": []
+    },
+    "carousel-chart": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 202.836,
+          "below_top_px": 442.0,
+          "gap_px": 239.164,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "0 s",
+          "minimum_px": 64.0,
+          "above_bottom_px": 614.362,
+          "below_top_px": 760.358,
+          "gap_px": 145.995,
+          "passed": true
+        },
+        {
+          "above": "0 s",
+          "below": "label_4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 795.42,
+          "below_top_px": 1114.0,
+          "gap_px": 318.58,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "10 s",
+          "minimum_px": 64.0,
+          "above_bottom_px": 614.362,
+          "below_top_px": 760.358,
+          "gap_px": 145.995,
+          "passed": true
+        },
+        {
+          "above": "10 s",
+          "below": "label_4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 795.42,
+          "below_top_px": 1114.0,
+          "gap_px": 318.58,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "20 s",
+          "minimum_px": 64.0,
+          "above_bottom_px": 614.362,
+          "below_top_px": 760.358,
+          "gap_px": 145.995,
+          "passed": true
+        },
+        {
+          "above": "20 s",
+          "below": "label_4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 795.42,
+          "below_top_px": 1114.0,
+          "gap_px": 318.58,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "threshold tick",
+          "minimum_px": 64.0,
+          "above_bottom_px": 614.362,
+          "below_top_px": 760.358,
+          "gap_px": 145.995,
+          "passed": true
+        },
+        {
+          "above": "threshold tick",
+          "below": "label_4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 795.42,
+          "below_top_px": 1114.0,
+          "gap_px": 318.58,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-versus": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "label_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 271.868,
+          "below_top_px": 506.0,
+          "gap_px": 234.132,
+          "passed": true
+        },
+        {
+          "above": "label_1",
+          "below": "headline_2",
+          "minimum_px": 64.0,
+          "above_bottom_px": 530.836,
+          "below_top_px": 666.0,
+          "gap_px": 135.164,
+          "passed": true
+        },
+        {
+          "above": "headline_2",
+          "below": "body_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 785.868,
+          "below_top_px": 922.0,
+          "gap_px": 136.132,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "label_2",
+          "minimum_px": 64.0,
+          "above_bottom_px": 271.868,
+          "below_top_px": 506.0,
+          "gap_px": 234.132,
+          "passed": true
+        },
+        {
+          "above": "label_2",
+          "below": "headline_3",
+          "minimum_px": 64.0,
+          "above_bottom_px": 530.836,
+          "below_top_px": 666.0,
+          "gap_px": 135.164,
+          "passed": true
+        },
+        {
+          "above": "headline_3",
+          "below": "body_2",
+          "minimum_px": 40.0,
+          "above_bottom_px": 754.368,
+          "below_top_px": 922.0,
+          "gap_px": 167.632,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-explainer-step": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 672.358,
+          "below_top_px": 739.358,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 1085.859,
+          "below_top_px": 1128.859,
+          "gap_px": 43.0,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-meme": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 297.449,
+          "below_top_px": 1142.854,
+          "gap_px": 845.405,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-quiz-question": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_2",
+          "below": "label_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 698.836,
+          "below_top_px": 863.068,
+          "gap_px": 164.232,
+          "passed": true
+        },
+        {
+          "above": "label_3",
+          "below": "label_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 697.906,
+          "below_top_px": 863.068,
+          "gap_px": 165.162,
+          "passed": true
+        },
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 892.552,
+          "below_top_px": 959.552,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-quiz-answer": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_2",
+          "below": "label_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 698.836,
+          "below_top_px": 835.046,
+          "gap_px": 136.211,
+          "passed": true
+        },
+        {
+          "above": "label_3",
+          "below": "label_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 697.906,
+          "below_top_px": 835.046,
+          "gap_px": 137.14,
+          "passed": true
+        },
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 859.882,
+          "below_top_px": 926.882,
+          "gap_px": 67.0,
+          "passed": true
+        }
+      ]
+    },
+    "copy-substack-note": {
+      "width": 800,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 47.407,
+          "above_bottom_px": 99.397,
+          "below_top_px": 193.593,
+          "gap_px": 94.196,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "label_2",
+          "minimum_px": 47.407,
+          "above_bottom_px": 361.774,
+          "below_top_px": 418.778,
+          "gap_px": 57.003,
+          "passed": true
+        },
+        {
+          "above": "label_2",
+          "below": "body_1",
+          "minimum_px": 47.407,
+          "above_bottom_px": 437.175,
+          "below_top_px": 519.519,
+          "gap_px": 82.344,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "body_2",
+          "minimum_px": 47.407,
+          "above_bottom_px": 584.277,
+          "below_top_px": 837.157,
+          "gap_px": 252.88,
+          "passed": true
+        }
+      ]
+    },
+    "copy-x-post": {
+      "width": 800,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 47.407,
+          "above_bottom_px": 102.545,
+          "below_top_px": 193.593,
+          "gap_px": 91.047,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "label_2",
+          "minimum_px": 47.407,
+          "above_bottom_px": 361.774,
+          "below_top_px": 418.778,
+          "gap_px": 57.003,
+          "passed": true
+        },
+        {
+          "above": "label_2",
+          "below": "body_1",
+          "minimum_px": 47.407,
+          "above_bottom_px": 437.175,
+          "below_top_px": 519.519,
+          "gap_px": 82.344,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "body_2",
+          "minimum_px": 47.407,
+          "above_bottom_px": 551.475,
+          "below_top_px": 853.622,
+          "gap_px": 302.147,
+          "passed": true
+        }
+      ]
+    },
+    "copy-x-thread": {
+      "width": 800,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 47.407,
+          "above_bottom_px": 98.708,
+          "below_top_px": 193.593,
+          "gap_px": 94.884,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "label_2",
+          "minimum_px": 47.407,
+          "above_bottom_px": 343.024,
+          "below_top_px": 418.778,
+          "gap_px": 75.753,
+          "passed": true
+        },
+        {
+          "above": "label_2",
+          "below": "body_1",
+          "minimum_px": 47.407,
+          "above_bottom_px": 437.175,
+          "below_top_px": 519.519,
+          "gap_px": 82.344,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "body_2",
+          "minimum_px": 47.407,
+          "above_bottom_px": 591.534,
+          "below_top_px": 793.406,
+          "gap_px": 201.872,
+          "passed": true
+        }
+      ]
+    },
+    "copy-yt-description": {
+      "width": 800,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 47.407,
+          "above_bottom_px": 99.397,
+          "below_top_px": 193.593,
+          "gap_px": 94.196,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "label_2",
+          "minimum_px": 47.407,
+          "above_bottom_px": 359.679,
+          "below_top_px": 418.778,
+          "gap_px": 59.099,
+          "passed": true
+        },
+        {
+          "above": "label_2",
+          "below": "body_1",
+          "minimum_px": 47.407,
+          "above_bottom_px": 437.175,
+          "below_top_px": 519.519,
+          "gap_px": 82.344,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "body_2",
+          "minimum_px": 47.407,
+          "above_bottom_px": 551.729,
+          "below_top_px": 776.941,
+          "gap_px": 225.212,
+          "passed": true
+        }
+      ]
+    },
+    "copy-yt-pinned": {
+      "width": 800,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 47.407,
+          "above_bottom_px": 99.397,
+          "below_top_px": 193.593,
+          "gap_px": 94.196,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "label_2",
+          "minimum_px": 47.407,
+          "above_bottom_px": 361.774,
+          "below_top_px": 418.778,
+          "gap_px": 57.003,
+          "passed": true
+        },
+        {
+          "above": "label_2",
+          "below": "body_1",
+          "minimum_px": 47.407,
+          "above_bottom_px": 437.175,
+          "below_top_px": 519.519,
+          "gap_px": 82.344,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "body_2",
+          "minimum_px": 47.407,
+          "above_bottom_px": 584.277,
+          "below_top_px": 813.435,
+          "gap_px": 229.158,
+          "passed": true
+        }
+      ]
+    },
+    "copy-spoken-close": {
+      "width": 800,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 47.407,
+          "above_bottom_px": 102.545,
+          "below_top_px": 193.593,
+          "gap_px": 91.047,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "label_2",
+          "minimum_px": 47.407,
+          "above_bottom_px": 362.475,
+          "below_top_px": 418.778,
+          "gap_px": 56.303,
+          "passed": true
+        },
+        {
+          "above": "label_2",
+          "below": "body_1",
+          "minimum_px": 47.407,
+          "above_bottom_px": 437.175,
+          "below_top_px": 519.519,
+          "gap_px": 82.344,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "body_2",
+          "minimum_px": 47.407,
+          "above_bottom_px": 591.534,
+          "below_top_px": 834.635,
+          "gap_px": 243.102,
+          "passed": true
+        }
+      ]
+    },
+    "copy-carousel-caption": {
+      "width": 800,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 47.407,
+          "above_bottom_px": 102.545,
+          "below_top_px": 193.593,
+          "gap_px": 91.047,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "label_2",
+          "minimum_px": 47.407,
+          "above_bottom_px": 361.074,
+          "below_top_px": 418.778,
+          "gap_px": 57.704,
+          "passed": true
+        },
+        {
+          "above": "label_2",
+          "below": "body_1",
+          "minimum_px": 47.407,
+          "above_bottom_px": 437.175,
+          "below_top_px": 519.519,
+          "gap_px": 82.344,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "body_2",
+          "minimum_px": 47.407,
+          "above_bottom_px": 551.347,
+          "below_top_px": 817.127,
+          "gap_px": 265.78,
+          "passed": true
+        }
+      ]
+    },
+    "copy-chapters": {
+      "width": 800,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 47.407,
+          "above_bottom_px": 102.545,
+          "below_top_px": 193.593,
+          "gap_px": 91.047,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "label_2",
+          "minimum_px": 47.407,
+          "above_bottom_px": 346.774,
+          "below_top_px": 418.778,
+          "gap_px": 72.003,
+          "passed": true
+        },
+        {
+          "above": "label_2",
+          "below": "body_1",
+          "minimum_px": 47.407,
+          "above_bottom_px": 437.175,
+          "below_top_px": 519.519,
+          "gap_px": 82.344,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "body_2",
+          "minimum_px": 47.407,
+          "above_bottom_px": 584.277,
+          "below_top_px": 853.495,
+          "gap_px": 269.218,
+          "passed": true
+        }
+      ]
+    },
+    "copy-substack-about": {
+      "width": 800,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 47.407,
+          "above_bottom_px": 99.397,
+          "below_top_px": 193.593,
+          "gap_px": 94.196,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "label_2",
+          "minimum_px": 47.407,
+          "above_bottom_px": 359.679,
+          "below_top_px": 418.778,
+          "gap_px": 59.099,
+          "passed": true
+        },
+        {
+          "above": "label_2",
+          "below": "body_1",
+          "minimum_px": 47.407,
+          "above_bottom_px": 437.175,
+          "below_top_px": 519.519,
+          "gap_px": 82.344,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "body_2",
+          "minimum_px": 47.407,
+          "above_bottom_px": 544.345,
+          "below_top_px": 833.529,
+          "gap_px": 289.184,
+          "passed": true
+        }
+      ]
+    },
+    "copy-welcome": {
+      "width": 800,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 47.407,
+          "above_bottom_px": 99.397,
+          "below_top_px": 193.593,
+          "gap_px": 94.196,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "label_2",
+          "minimum_px": 47.407,
+          "above_bottom_px": 359.679,
+          "below_top_px": 418.778,
+          "gap_px": 59.099,
+          "passed": true
+        },
+        {
+          "above": "label_2",
+          "below": "body_1",
+          "minimum_px": 47.407,
+          "above_bottom_px": 437.175,
+          "below_top_px": 519.519,
+          "gap_px": 82.344,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "body_2",
+          "minimum_px": 47.407,
+          "above_bottom_px": 584.277,
+          "below_top_px": 833.401,
+          "gap_px": 249.124,
+          "passed": true
+        }
+      ]
+    },
+    "future-desk-teardown": {
+      "width": 1240,
+      "height": 1754,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 73.481,
+          "above_bottom_px": 789.755,
+          "below_top_px": 866.237,
+          "gap_px": 76.481,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 45.926,
+          "above_bottom_px": 1265.08,
+          "below_top_px": 1573.468,
+          "gap_px": 308.388,
+          "passed": true
+        }
+      ]
+    },
+    "future-sponsor-read": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "label_1",
+          "below": "headline_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 512.873,
+          "below_top_px": 629.651,
+          "gap_px": 116.778,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 71.111,
+          "above_bottom_px": 775.972,
+          "below_top_px": 939.417,
+          "gap_px": 163.445,
+          "passed": true
+        }
+      ]
+    },
+    "podcast-episode-thumb": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source logo",
+          "below": "headline_1",
+          "minimum_px": 113.778,
+          "above_bottom_px": 317.501,
+          "below_top_px": 434.278,
+          "gap_px": 116.778,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "v4",
+          "minimum_px": 113.778,
+          "above_bottom_px": 676.153,
+          "below_top_px": 792.931,
+          "gap_px": 116.778,
+          "passed": true
+        }
+      ]
+    },
+    "podcast-audio-edition": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": []
+    },
+    "podcast-audiogram-wide": {
+      "width": 1920,
+      "height": 1080,
+      "passed": true,
+      "pairs": []
+    },
+    "podcast-audiogram-square": {
+      "width": 1080,
+      "height": 1080,
+      "passed": true,
+      "pairs": []
+    },
+    "sonic-close-sting": {
+      "width": 1200,
+      "height": 800,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "Ink",
+          "minimum_px": 71.111,
+          "above_bottom_px": 242.875,
+          "below_top_px": 376.631,
+          "gap_px": 133.756,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "0f",
+          "minimum_px": 71.111,
+          "above_bottom_px": 242.875,
+          "below_top_px": 638.023,
+          "gap_px": 395.148,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "4f",
+          "minimum_px": 71.111,
+          "above_bottom_px": 242.875,
+          "below_top_px": 638.023,
+          "gap_px": 395.148,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "8f",
+          "minimum_px": 71.111,
+          "above_bottom_px": 242.875,
+          "below_top_px": 638.023,
+          "gap_px": 395.148,
+          "passed": true
+        }
+      ]
+    },
+    "sonic-beds": {
+      "width": 1200,
+      "height": 800,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "Open \u221216",
+          "minimum_px": 71.111,
+          "above_bottom_px": 194.663,
+          "below_top_px": 322.109,
+          "gap_px": 127.447,
+          "passed": true
+        },
+        {
+          "above": "Open \u221216",
+          "below": "LUFS   /   Mix \u221214 LUFS   /   Peak \u2264 \u22121 dBTP",
+          "minimum_px": 71.111,
+          "above_bottom_px": 356.484,
+          "below_top_px": 645.022,
+          "gap_px": 288.538,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "Close \u221218",
+          "minimum_px": 71.111,
+          "above_bottom_px": 194.663,
+          "below_top_px": 330.255,
+          "gap_px": 135.592,
+          "passed": true
+        },
+        {
+          "above": "Close \u221218",
+          "below": "LUFS   /   Mix \u221214 LUFS   /   Peak \u2264 \u22121 dBTP",
+          "minimum_px": 71.111,
+          "above_bottom_px": 357.325,
+          "below_top_px": 645.022,
+          "gap_px": 287.697,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "Voice \u221231",
+          "minimum_px": 71.111,
+          "above_bottom_px": 194.663,
+          "below_top_px": 503.111,
+          "gap_px": 308.448,
+          "passed": true
+        },
+        {
+          "above": "Voice \u221231",
+          "below": "LUFS   /   Mix \u221214 LUFS   /   Peak \u2264 \u22121 dBTP",
+          "minimum_px": 71.111,
+          "above_bottom_px": 530.181,
+          "below_top_px": 645.022,
+          "gap_px": 114.841,
+          "passed": true
+        }
+      ]
+    },
+    "sonic-big-moment": {
+      "width": 1200,
+      "height": 800,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "One cue on the number",
+          "minimum_px": 71.111,
+          "above_bottom_px": 169.2,
+          "below_top_px": 629.591,
+          "gap_px": 460.391,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-good-news-item-2": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 1031.779,
+          "below_top_px": 1074.779,
+          "gap_px": 43.0,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-good-news-item-3": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 1031.607,
+          "below_top_px": 1074.607,
+          "gap_px": 43.0,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-good-news-item-4": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 1031.264,
+          "below_top_px": 1074.264,
+          "gap_px": 43.0,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-good-news-item-5": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 985.605,
+          "below_top_px": 1028.605,
+          "gap_px": 43.0,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-howto-cover": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "source logo",
+          "below": "headline_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 623.74,
+          "below_top_px": 690.74,
+          "gap_px": 67.0,
+          "passed": true
+        },
+        {
+          "above": "headline_1",
+          "below": "body_1",
+          "minimum_px": 40.0,
+          "above_bottom_px": 975.695,
+          "below_top_px": 1018.695,
+          "gap_px": 43.0,
+          "passed": true
+        },
+        {
+          "above": "body_1",
+          "below": "v4",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1058.0,
+          "below_top_px": 1126.0,
+          "gap_px": 68.0,
+          "passed": true
+        }
+      ]
+    },
+    "carousel-howto-step": {
+      "width": 1080,
+      "height": 1350,
+      "passed": true,
+      "pairs": [
+        {
+          "above": "counter",
+          "below": "screenshot frame",
+          "minimum_px": 40.0,
+          "above_bottom_px": 218.496,
+          "below_top_px": 265.0,
+          "gap_px": 46.504,
+          "passed": true
+        },
+        {
+          "above": "screenshot frame",
+          "below": "prompt",
+          "minimum_px": 40.0,
+          "above_bottom_px": 755.0,
+          "below_top_px": 796.0,
+          "gap_px": 41.0,
+          "passed": true
+        },
+        {
+          "above": "prompt",
+          "below": "step_1",
+          "minimum_px": 64.0,
+          "above_bottom_px": 884.627,
+          "below_top_px": 949.0,
+          "gap_px": 64.373,
+          "passed": true
+        },
+        {
+          "above": "step_1",
+          "below": "step_2",
+          "minimum_px": 64.0,
+          "above_bottom_px": 990.508,
+          "below_top_px": 1055.0,
+          "gap_px": 64.492,
+          "passed": true
+        },
+        {
+          "above": "step_2",
+          "below": "step_3",
+          "minimum_px": 64.0,
+          "above_bottom_px": 1096.016,
+          "below_top_px": 1161.0,
+          "gap_px": 64.984,
+          "passed": true
+        }
+      ]
+    }
+  }
+}

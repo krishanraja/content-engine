@@ -55,9 +55,10 @@ export const LIBRARY_MAX_BYTES = 2 * 1024 * 1024 * 1024
 export const LIBRARY_PATH_MAX = 180
 export const LIBRARY_PART_MAX = 100
 export const LIBRARY_BRAND_KIT = '1 Brand kit (permanent)'
-export const LIBRARY_CHANNEL_ART = '2 Channel art (permanent)'
+// Channel art lives inside the brand kit since 26 Nov 2026 (Krish: "collapse those two folders in to one"); the old top folder is refused.
+export const LIBRARY_CHANNEL_ART = '1 Brand kit (permanent)/Channel art'
 export const LIBRARY_POSTS = '3 Posts'
-export const LIBRARY_TOP_FOLDERS = [LIBRARY_BRAND_KIT, LIBRARY_CHANNEL_ART, LIBRARY_POSTS] as const
+export const LIBRARY_TOP_FOLDERS = [LIBRARY_BRAND_KIT, LIBRARY_POSTS] as const
 export const LIBRARY_POST_SECTIONS = ['0 Publish', '1 Article', '2 Covers and images', '3 Video', '4 Social'] as const
 export const LIBRARY_POST_README = 'READ ME.txt'
 /** The live subchannels as the brand writes them, from the Studio's series. */

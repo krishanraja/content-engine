@@ -64,3 +64,6 @@ apps/control-plane/api/board/_deskPage.ts text eol=lf
 # Tests match the engine's Python source by its text (tests/control-plane/make-route.test.ts and others); keep it LF on
 # Windows too, so a regex over a line break means the same on every runner (full verify red on Windows from 13 Nov).
 scripts/**/*.py text eol=lf
+
+# The Studio verifies the exact bytes of the v5 vector marks.
+assets/brand/makeyourmindup/v5/*.svg text eol=lf

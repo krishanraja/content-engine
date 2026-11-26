@@ -45,10 +45,12 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `packages/moves/`
 - `scripts/`
 - `scripts/channel-kit/`
+- `scripts/covers/`
 - `scripts/cutgates/`
 - `scripts/edition/`
 - `scripts/hooks/`
 - `scripts/learning/`
+- `scripts/library/`
 - `scripts/overnight/`
 - `scripts/pages/`
 - `scripts/post-pack/`
@@ -3020,6 +3022,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 
 ### `apps/control-plane/api/board/_style.ts`
 
+- `const retiredStyle = (kind: string, id: unknown) =>`
 - `type StyleLayerKey = 'motion' | 'captions'`
 - `const STYLE_LAYERS: readonly StyleLayerKey[]`
 - `type RejectLayerKey = StyleLayerKey | 'treatment'`
@@ -4711,6 +4714,14 @@ The Content Engine's schedule, as the dashboard knows it.
 - `function hasExactProductionApproval(meta: unknown): boolean`
 - `function storedProductionBriefs(outputs: unknown): StoredProductionBrief[]`
 
+### `apps/control-plane/lib/hub/announce.ts`
+
+After the daily edition is saved, makeyourmindup.ai is asked to tell IndexNow that today's edition page, the home page
+
+- `const INDEXNOW_ENDPOINT`
+- `type Announced = 'accepted' | 'skipped' | 'failed'`
+- `async function announceEdition(): Promise<Announced>`
+
 ### `apps/control-plane/lib/hub/articles.ts`
 
 - `async function readPage(input: string)`
@@ -4757,6 +4768,8 @@ The Content Engine's schedule, as the dashboard knows it.
 ### `apps/control-plane/lib/hub/store.ts`
 
 - `async function latest()`
+- `async function byDate(date: string)`
+- `async function editionDates(limit = 400)`
 - `async function discover(now: number)`
 - `async function markets(now: number, prior?: Ticker)`
 - `async function pieces()`
@@ -6512,6 +6525,27 @@ JSON-value transport: escape values only; keys retain their original spelling.
 - `function subjectLiftParameters(strength: number)`
 - `function SubjectLift({ take, matte, frame, width, height, strength, tokens, id }: SubjectLiftProps): ReactElement<SVGPr…`
 
+### `apps/renderer/src/engine/v5/Cards.tsx`
+
+- `const enter = (frame: number, duration: number) =>`
+- `type CardProps`
+- `function Card({ id, params, format, frame, lineStarts, captionSpace }: CardProps)`
+- `const cardDevice: DeviceComponent`
+
+### `apps/renderer/src/engine/v5/HouseCaptions.tsx`
+
+- `function captionPages(input: Pages): Pages`
+- `function ladderCaptionBand(format: EngineRenderProps['aspect'])`
+- `const houseCaptions: Draw`
+
+### `apps/renderer/src/engine/v5/Previews.tsx`
+
+- `function V5Previews()`
+
+### `apps/renderer/src/engine/v5/Sequence.tsx`
+
+- `function LadderSequence({ props, frame, stem, }: { props: EngineRenderProps frame: number stem: boolean })`
+
 ### `apps/renderer/src/evidence-label.ts`
 
 - `type EvidenceLabelInput`
@@ -6534,6 +6568,8 @@ JSON-value transport: escape values only; keys retain their original spelling.
 
 ### `apps/renderer/src/house/geometry.ts`
 
+- `function setHouseDataFace(v5: boolean)`
+- `const V5_DATA_FONT`
 - `const HOUSE_FONTS`
 - `const HOUSE_FONT_FAMILIES`
 - `const HOUSE_GRAIN_IMAGE`
@@ -7199,6 +7235,13 @@ Artifact-bound user confirmation references.
 - `type ExperimentV2 = z.infer<typeof ExperimentV2Schema>`
 - `const ConfigChangeProposalV1Schema`
 - `type ConfigChangeProposalV1 = z.infer<typeof ConfigChangeProposalV1Schema>`
+
+### `packages/contracts/src/why-ladder-v5.ts`
+
+- `type SourceImage = z.infer<typeof image>`
+- `const v5Params`
+- `type V5Id = keyof typeof v5Params`
+- `function isV5Id(id: string): id is V5Id`
 
 ### `packages/contracts/src/whys.ts`
 

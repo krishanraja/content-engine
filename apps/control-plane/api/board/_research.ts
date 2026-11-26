@@ -1,3 +1,4 @@
+import { retiredStyle } from './_style.js'
 import { randomUUID } from 'node:crypto'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { meterScope, perplexityCall } from '../_meter.js'
@@ -88,8 +89,8 @@ export interface LookPick { production: string; experiment: string | null; inspi
 /** His pick of the look for a piece (meta.look): a production format, an optional experiment and the inspiration cards he folded in. */
 export async function saveLook(db: SupabaseClient, pieceId: string, pick: { production: string; experiment?: string | null; inspiration?: string[] },
   formats: Set<string>): Promise<LookPick> {
-  if (!formats.has(pick.production)) throw new MaterialError(400, 'unknown_format')
-  if (pick.experiment && !formats.has(pick.experiment)) throw new MaterialError(400, 'unknown_format')
+  if (retiredStyle('format_look', pick.production) || !formats.has(pick.production)) throw new MaterialError(400, 'unknown_format')
+  if (pick.experiment && (retiredStyle('format_look', pick.experiment) || !formats.has(pick.experiment))) throw new MaterialError(400, 'unknown_format')
   const inspiration = (pick.inspiration || []).filter(x => typeof x === 'string' && x.length <= 200).slice(0, 6)
   const read = await db.from('content_ideas').select('id,meta').eq('id', pieceId).single()
   if (read.error || !read.data) throw new MaterialError(404, 'piece_not_found')

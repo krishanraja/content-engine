@@ -1,3 +1,5 @@
+import retirement from '../../../../config/retired-styles.json' with { type: 'json' }
+export const retiredStyle = (kind: string, id: unknown) => retirement.some(row => row.kind === kind && row.id === id)
 import captionThemes from '../../../../config/caption-themes.json' with { type: 'json' }
 import styleSamples from '../../../../config/ve/style-samples.json' with { type: 'json' }
 import type { SupabaseClient } from '@supabase/supabase-js'
@@ -96,14 +98,14 @@ export interface Look { id: string; name: string; pitch: string; status: string 
 interface CaptionTheme { name: string; line: string; rules: string[]; recommended_why?: string }
 /** The caption styles, in names.ts order. */
 export const CAPTIONS: Array<{ id: string } & CaptionTheme> = Object.entries(captionThemes as Record<string, unknown>)
-  .filter((e): e is [string, CaptionTheme] => !e[0].startsWith('_') && isObj(e[1]))
+  .filter((e): e is [string, CaptionTheme] => !e[0].startsWith('_') && !retiredStyle('caption_theme', e[0]) && isObj(e[1]))
   .map(([id, t]) => ({ id, name: String(t.name), line: String(t.line), rules: strings(t.rules), ...(typeof t.recommended_why === 'string' ? { recommended_why: t.recommended_why } : {}) }))
 const CAPTION_IDS = new Set(CAPTIONS.map(c => c.id))
 
 /** The motion layer of the style bank (config/style-references.json), in bank order. */
 export function motionBank(styles: unknown): MotionModule[] {
   const bank = isObj(styles) && Array.isArray(styles.bank) ? styles.bank : []
-  return bank.filter(isObj).filter(m => m.layer === 'motion' && typeof m.id === 'string')
+  return bank.filter(isObj).filter(m => m.layer === 'motion' && !retiredStyle('motion_style', m.id) && !NOT_FOR_US.has(String(m.krish_verdict)) && typeof m.id === 'string')
     .map(m => ({ id: String(m.id), name: String(m.name || m.id), how: String(m.how || ''), rules: strings(m.rules), point_types: strings(m.point_types),
       formats: strings(m.formats), fits: String(m.fits || ''), krish_verdict: String(m.krish_verdict || 'untested'), ve_route: strings(m.ve_route) }))
 }
@@ -243,7 +245,8 @@ export function dayStyle(i: StyleInputs): DayStyle {
 
   // Motion: up to three recommended, in their rank order, then every other option in bank order.
   const known = i.points && i.points.length ? i.points : null
-  const ranked = i.motion.map((m, n) => ({ m, n, hits: known ? m.point_types.filter(p => known.includes(p)) : [] }))
+  const motionOptions = i.motion.filter(m => !retiredStyle('motion_style', m.id))
+  const ranked = motionOptions.map((m, n) => ({ m, n, hits: known ? m.point_types.filter(p => known.includes(p)) : [] }))
     .filter(x => ready(x.m) && !mine.rejected.motion.includes(x.m.id) && !NOT_FOR_US.has(x.m.krish_verdict))
     .filter(x => i.formats.every(f => x.m.formats.includes(f)) && (!known || x.hits.length > 0))
     .sort((a, b) => (FITS_ORDER[a.m.fits] ?? 3) - (FITS_ORDER[b.m.fits] ?? 3) || Number(LIKED.has(b.m.krish_verdict)) - Number(LIKED.has(a.m.krish_verdict))
@@ -256,24 +259,25 @@ export function dayStyle(i: StyleInputs): DayStyle {
   // recommendations in my UI never adapt to the piece?": Fri 20 Nov's plan named living-screen, rejected 13 Nov, and
   // the card fell back to the channel's three though the plan named ai-music-slam next).
   const motionNo = (id: string) => {
-    const m = i.motion.find(x => x.id === id)
+    const m = motionOptions.find(x => x.id === id)
     return !m ? 'is not in the style bank' : mine.rejected.motion.includes(id) ? 'is one you said Not this to'
       : NOT_FOR_US.has(m.krish_verdict) ? 'is one you called not for us' : !ready(m) ? 'cannot be drawn yet' : ''
   }
   const motionPlan = i.recommendedMotion ? [i.recommendedMotion, ...(i.motionAlternatives ?? [])] : []
   const planned = motionPlan.find(id => !motionNo(id)) ?? null
-  const motionName = (id: string) => i.motion.find(x => x.id === id)?.name ?? id
+  const motionName = (id: string) => motionOptions.find(x => x.id === id)?.name ?? id
   const recommended = planned ? new Map([[planned, plannedWhy(motionPlan[0]!, planned, motionName, motionNo)]])
     : new Map(ranked.map(x => [x.m.id, motionWhy(x.m, x.hits)]))
-  const motionIds = new Set(i.motion.map(m => m.id))
-  const gateModule = i.gate?.state === 'picked' && i.gate.module && motionIds.has(i.gate.module) && !mine.rejected.motion.includes(i.gate.module) ? i.gate.module : null
+  const motionIds = new Set(motionOptions.map(m => m.id))
+  const recordedMotion = (id: string) => motionIds.has(id) || retiredStyle('motion_style', id)
+  const gateModule = i.gate?.state === 'picked' && i.gate.module && recordedMotion(i.gate.module) && !mine.rejected.motion.includes(i.gate.module) ? i.gate.module : null
   const specMotion = signed && isObj(signed.style) && isObj(signed.style.motion) && typeof signed.style.motion.module === 'string' ? signed.style.motion.module : null
-  const motionPick: Pick<StyleLayer, 'picked' | 'picked_by' | 'picked_at'> = mine.motion && motionIds.has(mine.motion) ? { picked: mine.motion, picked_by: 'Krish', picked_at: mine.at }
+  const motionPick: Pick<StyleLayer, 'picked' | 'picked_by' | 'picked_at'> = mine.motion && recordedMotion(mine.motion) ? { picked: mine.motion, picked_by: 'Krish', picked_at: mine.at }
     : gateModule ? { picked: gateModule, picked_by: 'Krish', picked_at: i.gate?.at ?? null }
     : specMotion && MOTION_ID.test(specMotion) && !mine.rejected.motion.includes(specMotion) ? { picked: specMotion, picked_by: 'spec', picked_at: signedOn }
     : { picked: null, picked_by: null, picked_at: null }
-  const order = (planned ? [...i.motion.filter(m => m.id === planned), ...i.motion.filter(m => m.id !== planned)]
-    : [...ranked.map(x => x.m), ...i.motion.filter(m => !recommended.has(m.id))])
+  const order = (planned ? [...motionOptions.filter(m => m.id === planned), ...motionOptions.filter(m => m.id !== planned)]
+    : [...ranked.map(x => x.m), ...motionOptions.filter(m => !recommended.has(m.id))])
     .sort((a, b) => Number(a.id === LAST_MOTION) - Number(b.id === LAST_MOTION))
   const motion: StyleLayer = {
     options: order.map(m => ({ id: m.id, name: m.name, line: m.how, rules: m.rules, point_types: m.point_types, formats: m.formats, ready: ready(m),
@@ -286,8 +290,9 @@ export function dayStyle(i: StyleInputs): DayStyle {
 
   // Captions: the one with his reason recommended, unless he said "Not this" to it here.
   const specCaption = signed && isObj(signed.brand) && typeof signed.brand.caption_theme === 'string' ? signed.brand.caption_theme : null
-  const captionPick: Pick<StyleLayer, 'picked' | 'picked_by' | 'picked_at'> = mine.captions && CAPTION_IDS.has(mine.captions) ? { picked: mine.captions, picked_by: 'Krish', picked_at: mine.at }
-    : specCaption && CAPTION_IDS.has(specCaption) && !mine.rejected.captions.includes(specCaption) ? { picked: specCaption, picked_by: 'spec', picked_at: signedOn }
+  const recordedCaption = (id: string) => CAPTION_IDS.has(id) || retiredStyle('caption_theme', id)
+  const captionPick: Pick<StyleLayer, 'picked' | 'picked_by' | 'picked_at'> = mine.captions && recordedCaption(mine.captions) ? { picked: mine.captions, picked_by: 'Krish', picked_at: mine.at }
+    : specCaption && recordedCaption(specCaption) && !mine.rejected.captions.includes(specCaption) ? { picked: specCaption, picked_by: 'spec', picked_at: signedOn }
     : { picked: null, picked_by: null, picked_at: null }
   const captionNo = (id: string) => !CAPTION_IDS.has(id) ? 'is not a caption style' : mine.rejected.captions.includes(id) ? 'is one you said Not this to' : ''
   const captionPlan = i.recommendedCaptions ? [i.recommendedCaptions, ...(i.captionsAlternatives ?? [])] : []
@@ -309,17 +314,18 @@ export function dayStyle(i: StyleInputs): DayStyle {
   // look is kept on the piece's style (meta.style.rejected.treatment), as on motion and captions, and takes it off the
   // recommended; a later Yes on it takes it back.
   const look = isObj(i.meta.look) && typeof i.meta.look.production === 'string' ? i.meta.look : null
-  const keep = { experiment: look && typeof look.experiment === 'string' ? look.experiment : null, inspiration: look ? strings(look.inspiration) : [] }
+  const keep = { experiment: look && typeof look.experiment === 'string' && !retiredStyle('format_look', look.experiment) ? look.experiment : null, inspiration: look ? strings(look.inspiration) : [] }
   // With no look from the Sunday room, the proven one he has not turned down is recommended, so the board can always
   // offer a whole recommended set (Krish, 2026-11-16: "or the system itself can considerately recommend the best
   // combination for me").
-  const lookNo = (id: string) => !i.looks.some(l => l.id === id) ? 'is not a look on offer' : mine.rejected.treatment.includes(id) ? 'is one you said Not this to' : ''
+  const looks = i.looks.filter(l => !retiredStyle('format_look', l.id))
+  const lookNo = (id: string) => !looks.some(l => l.id === id) ? 'is not a look on offer' : mine.rejected.treatment.includes(id) ? 'is one you said Not this to' : ''
   const lookPlan = i.recommendedLook ? [i.recommendedLook, ...(i.lookAlternatives ?? [])] : []
   const roomLook = lookPlan.find(id => !lookNo(id)) ?? null
-  const lookName = (id: string) => i.looks.find(l => l.id === id)?.name ?? id
-  const provenLook = roomLook ? null : i.looks.find(l => l.status === 'proven' && !mine.rejected.treatment.includes(l.id))?.id ?? null
+  const lookName = (id: string) => looks.find(l => l.id === id)?.name ?? id
+  const provenLook = roomLook ? null : looks.find(l => l.status === 'proven' && !mine.rejected.treatment.includes(l.id))?.id ?? null
   const treatment: StyleLayer = {
-    options: i.looks.map(l => {
+    options: looks.map(l => {
       // A look he picked after saying "Not this" to it (the look op) is his pick, never also a no.
       const rejected = mine.rejected.treatment.includes(l.id) && !(look && look.production === l.id)
       const rec = (l.id === roomLook || l.id === provenLook) && !rejected
@@ -361,7 +367,7 @@ export function stylePick(body: Body, motionIds: Set<string> | null, undrawable:
   const out: StylePick = {}
   const motion = (id: unknown) => {
     if (!motionIds || !motionIds.size) throw new StyleError(503, 'styles_unavailable')
-    if (typeof id !== 'string' || !motionIds.has(id)) throw new StyleError(400, 'unknown_motion')
+    if (typeof id !== 'string' || retiredStyle('motion_style', id) || !motionIds.has(id)) throw new StyleError(400, 'unknown_motion')
     return id
   }
   const caption = (id: unknown) => {
