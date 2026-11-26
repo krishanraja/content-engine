@@ -202,7 +202,7 @@
     "rejection_floor": "config/rejection-floor.json, read through scripts/floor.py: what he rejected, in his words, with dates: the examples of what does not fly",
     "ve_key_frames": "config/ve/design-lock.json formats.*.keyframes: approved key frames for one ve format and module, matched by structural similarity; the reference cuts are never matched pixel for pixel",
     "style_bank": "config/style-references.json: every style in the bank has to reach this bar",
-    "brand": "the brand book is the reference (ruling 3): krishanraja/makeyourmindup docs/brandbooknew/ (version 1.5); docs/STUDIO.md (makeyourmindup branding) and config/ve/brand-tokens.json carry it here and own the palette, type and brand rules",
+    "brand": "the brand book is the reference (ruling 3); since the v5 lock on 25 Nov 2026 that is the v5 brand kit: krishanraja/makeyourmindup brand-kit/ (makeyourmindup-brand-kit.zip, built by scripts/brand-kit-v5/build.py) and its marks here in assets/brand/makeyourmindup/v5 (the older docs/brandbooknew/ book is retired); docs/STUDIO.md (makeyourmindup branding) and config/ve/brand-tokens.json carry it here and own the palette, type and brand rules",
     "logos": "docs/MEDIA_STANDARD.md, Design before labels: outside brands appear as their accurate official marks, never invented or redrawn (and draft floor standard s53328195a4). Ruling 6: the official mark in full colour or the company's own published one-colour version, whichever fits the rest of the production; never recoloured or redrawn by us. Whether we may set a mark in a house colour the company does not publish is still Krish's decision on rights"
   },
   "qualities": [

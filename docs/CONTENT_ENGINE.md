@@ -559,7 +559,9 @@ the bucket's settings checked on every request, and the Studio's error shape
 (`{ ok: false, error: { code } }`). Every path is checked against one rule
 (`api/library/_library.ts`, tested with `scripts/post-pack/library.py` against
 `config/library-paths.cases.json`): relative, forward slashes, Windows-safe,
-and inside `1 Brand kit (permanent)/`, `2 Channel art (permanent)/` or one
+and inside `1 Brand kit (permanent)/` (channel art is in
+`1 Brand kit (permanent)/Channel art/` since 26 Nov 2026; the old
+`2 Channel art (permanent)/` top folder is retired and refused) or one
 post's folder, `3 Posts/YYYY-MM-DD <Day> <subchannel> - <Subject>/` (`off.day`
 in place of the subchannel on a Tuesday, Thursday or Saturday post), in its
 sections or as its `READ ME.txt`.

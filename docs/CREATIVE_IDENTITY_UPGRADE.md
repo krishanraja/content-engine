@@ -424,7 +424,15 @@ signature device per Short (`config/techniques.json`) holds: this is that one.
   the section's colours. The cover promises "the real ones show the evidence
   for every stamp".
 
-**The felt robot** (brand book v1.4, p.13) is the publication's only
+**The felt robot: retired.** Krish locked the v5 look on 25 Nov 2026, and v5
+retires the felt robot (`config/retired-styles.json`, brand asset
+`felt-robot`). A piece's picture is now a real photo or a v5 still, never the
+felt robot and never a generic robot (`docs/ve/cards/library/FLOOR.md`). The
+brand reference is the v5 brand kit (`krishanraja/makeyourmindup`,
+`brand-kit/`) and the marks in `assets/brand/makeyourmindup/v5`. The next
+paragraph is the record of what the robot was, and is not to be used.
+
+Record: the felt robot (brand book v1.4, p.13) was the publication's only
 photographic subject: a hand-sewn felt robot in cream felt with grey patches
 and a blank dark visor, lying on the operating table for the cover and standing
 for the welcome page. The stuffing is just visible at the unpicked seam, never
@@ -432,9 +440,9 @@ a plume. Three threads, lilac, butter and coral, one per section; the mint seam
 ripper is the only other colour. The backdrop is darker than ink, so the photo
 lightens into the page, with no frame. The cut is at an edge, and the threads
 hang past it into the headline. Never stretch it, recolour it or give it
-company. The originals, cut-outs and threads are in the kit's `photography/`
-folder (`krishanraja/makeyourmindup`, `docs/brandbooknew/`); the Studio does
-not use them yet.
+company. The originals, cut-outs and threads were in the old kit's
+`photography/` folder (`krishanraja/makeyourmindup`, `docs/brandbooknew/`,
+now removed); the Studio never used them.
 
 **Keeping the three apart** (proposed 2026-09-26, waiting on Krish; sketches
 at the "three signatures" artifact). Each device answers its own question in

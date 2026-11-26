@@ -133,9 +133,10 @@ post it draws on; a copy that is "way worse" (2 Nov) is cut.
 must be fun for me to produce, and must be fun for an audience to consume."). An option he would not enjoy making, or a
 reader would not enjoy reading, is cut before the tab, however useful.
 
-A carousel's first `picture` (its cover) names a scene that is the story's object, place or moment, or the house robot
-doing something (`config/brand-robot.json`), never a made-up robot (Ruling, Krish, 2026-11-05: "either use the branded
-toy robot or are more creative than just a robot doing something"; `docs/CAROUSEL-STANDARD.md`).
+A carousel's first `picture` (its cover) names a scene that is the story's object, place or moment, never a robot:
+the felt robot is retired with the v5 look (25 Nov 2026) and a made-up robot was never allowed (Ruling, Krish,
+2026-11-05: "more creative than just a robot doing something"; `docs/CAROUSEL-STANDARD.md`,
+`docs/ve/cards/library/FLOOR.md`).
 
 **Read back before the tab, from the 9 Nov week** (Krish, 2026-11-02, of the 9 Nov off days: a Tuesday option
 "already being used this week", a meme "just a copy of a post from my inspo board but way worse", and of a Thursday

@@ -114,13 +114,30 @@ keep the frame YouTube picks.
 ## The profiles every link lands on
 
 Every step above sends people to a profile, so the profiles have to explain
-the publication to someone who has never heard of it. Krish had them rebuilt
-on 11 and 12 October 2026 (a Claude session working in his browser, every
-change checked on the live page). This is what each one carries and what is
-left. The pictures are made by `scripts/channel-kit/` (`build.py` for the
-YouTube banner and watermark, `profiles.py` for everything else); the copies
-he uploaded are in Drive under `makeyourmindup > 2 Channel art (permanent)`,
-indexed in `READ ME - profiles.txt`.
+the publication to someone who has never heard of it.
+
+**The v5 profile set (since 26 November 2026).** Krish locked the v5 look on
+25 November. Every profile image and the bios and descriptions for each
+profile are in Drive, `makeyourmindup > 1 Brand kit (permanent) > Channel art`
+(folder id `1FVfcoSMT3DCzvyvsq0KHdSgr8JTzRBIe`; the copy is in
+`bios-and-descriptions.txt`). They are built by krishanraja/makeyourmindup
+`scripts/brand-kit-v5/build.py`, the same build as
+`brand-kit/makeyourmindup-brand-kit.zip`. The live profiles do not show them
+yet: a worker session uploads them, and this section is updated, with each
+change checked on the live page, once it has. `scripts/channel-kit/` is
+retired and refuses to run, and `2 Channel art (permanent)` in Drive is
+retired and refused; the old files are in Drive under
+`_Archive/2026-11-26 v4 brand (retired, do not use)`.
+
+**Superseded: the October profiles.** The rest of this section is the record
+of 11 and 12 October 2026, and is what the live profiles still carry until
+the v5 upload. Krish had them rebuilt then (a Claude session working in his
+browser, every change checked on the live page). The pictures were made by
+the now retired `scripts/channel-kit/` (`build.py` for the YouTube banner and
+watermark, `profiles.py` for everything else): the splashes picture, the day
+pills and the day colours, none of which is v5. The copies he uploaded were in
+Drive under `makeyourmindup > 2 Channel art (permanent)`, indexed in
+`READ ME - profiles.txt`, and are now in the archive above.
 
 **Which accounts.** Three brand accounts carry the publication: YouTube
 `@makeyourmind-up`, Instagram `@makeyourmind.up` and the Facebook Page
@@ -128,7 +145,7 @@ indexed in `READ ME - profiles.txt`.
 (`@TheRealKrisho`) carry him as its editor and amplify it. LinkedIn stays his
 personal profile, unchanged.
 
-| Profile | What it carries (checked live, 12 October 2026) | Left to do |
+| Profile | What it carried (checked live, 12 October 2026; superseded by the v5 set above) | Left to do then |
 |---|---|---|
 | YouTube `@makeyourmind-up` | Name `makeyourmindup` (the handle stays: the site links to it). The splashes picture. Banner and description from `build.py`. Links: Read free (makeyourmindup.ai), Instagram, and Build Your AI Brain, kept. The watermark for the whole video. Home tab: the launch video as trailer for new visitors, Higgsfield for subscribers, and a row of the three day playlists (follow.the.money, under.the.hood, mind.the.gap). The launch Short's Related video points at Higgsfield. Channel keywords; upload defaults of Science and Technology and a description footer. | A Scored playlist once the first call falls due. The three videos already up print mindmakerlive.substack.com on their thumbnails (seen 11 October); the next ones should print makeyourmindup.ai. |
 | Instagram `@makeyourmind.up` | The splashes picture. Category Magazine. Bio: "AI, unpicked, unboringly." then one line per day (yellow, purple and red dots): "Mon follow.the.money: who gets paid", "Wed under.the.hood: real or theatre", "Fri mind.the.gap: what's coming". Links: Read free (makeyourmindup.ai) and YouTube. Linked to the Facebook Page. | On Krish's phone: the name `makeyourmindup \| AI, unpicked` once Instagram's 14-day lock on name changes lifts; the five highlights once a full week of pieces is up (covers from `profiles.py`: Start here, Mon, Wed, Fri, Scored); pinned posts. |

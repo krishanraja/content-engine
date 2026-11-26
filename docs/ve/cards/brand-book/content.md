@@ -116,6 +116,6 @@ Retired for good, and blocked in the engine so they cannot be picked: brutal off
 Body: The tokens, the master files for the icon and wordmark, the one cover template and the retirement list are in the content engine (pull request 976). The video templates follow in the same change.
 
 ## After you approve
-- The book replaces v1.5 in the Drive folder "1 Brand kit (permanent)", the old kit moves to the archive, and the Library's files go to "2 Channel art (permanent)", keeping private crops out of shared folders.
+- The book replaces v1.5 in the Drive folder "1 Brand kit (permanent)", the old kit moves to the archive, and the Library's files go to "1 Brand kit (permanent)/Channel art" ("2 Channel art (permanent)" is retired since 26 Nov 2026), keeping private crops out of shared folders.
 - One cowork prompt per account updates Instagram, TikTok, YouTube, X, LinkedIn, Facebook, Substack, Spotify and Apple, makeyourmindup.ai and the email signature. You run them.
 - The Library lands in the repos: content-engine, then growth-makeyourmindup and makeyourmindup, each retiring its old templates in the same change.
