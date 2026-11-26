@@ -2016,11 +2016,41 @@ def option_open(key, status, before=None):
     return before is not None and key not in before
 
 
+def _has_url(evidence):
+    return any(isinstance(e, dict) and re.match(r'^https?://', str(e.get('url') or '')) for e in evidence or [])
+
+
 def sourced_rungs(ladder):
-    """How many rungs of a why-ladder/1 document carry at least one evidence item with an http(s) url."""
+    """How many rungs of a why-ladder/1 document carry at least one evidence item with an http(s) url: the rung's own,
+    or on a split rung the branch answer it follows (packages/contracts/src/whys.ts checkWhyLadder). A probe file that
+    wraps the ladder as {whys: {...}} is read as ladderFromText reads it."""
+    if isinstance(ladder, dict) and ladder.get('schema') is None and isinstance(ladder.get('whys'), dict):
+        ladder = ladder['whys']
     rungs = (ladder or {}).get('rungs') if isinstance(ladder, dict) else None
-    return sum(1 for r in rungs or [] if isinstance(r, dict) and any(
-        isinstance(e, dict) and re.match(r'^https?://', str(e.get('url') or '')) for e in r.get('evidence') or []))
+    n = 0
+    for r in rungs or []:
+        if not isinstance(r, dict):
+            continue
+        b = r.get('branch') if isinstance(r.get('branch'), dict) else None
+        answers = b.get('answers') if b and isinstance(b.get('answers'), list) else []
+        k = b.get('followed', 0) if b else None
+        followed = answers[k] if b and isinstance(k, int) and 0 <= k < len(answers) and isinstance(answers[k], dict) else None
+        n += bool(_has_url(followed.get('evidence')) if followed else _has_url(r.get('evidence')))
+    return n
+
+
+def verified_probe(entry):
+    """Whether a probe entry is scripts/whys-probe-check.ts output (story/probes.json: documented rungs counted only
+    when the quote is verbatim in the cached page), not a raw why-ladder."""
+    return isinstance(entry, dict) and (isinstance(entry.get('documented'), int) and not isinstance(entry.get('documented'), bool)
+                                        or set(entry) == {'error'})
+
+
+def whys_held(entry):
+    """(rungs, how): a verified probe's documented rungs (an error holds none), else a raw ladder's sourced rungs."""
+    if verified_probe(entry):
+        return (0 if 'error' in entry else entry['documented']), 'documented in their cached pages'
+    return sourced_rungs(entry), 'with a source'
 
 
 def story_findings(ideas, week, status=None, probes=None, cfg=None, before=None):
@@ -2029,8 +2059,10 @@ def story_findings(ideas, week, status=None, probes=None, cfg=None, before=None)
       - story: a day whose options are all open and do not stand in story_score.py order's order (by total, a floored
         or floor-failing option last, his option first at equal totals only, a council read deciding its pair, a short
         or meme unread for humour never first, the weekly series in its place);
-      - story: a hero option (Mon, Wed, Fri) whose pre-pick whys probe has fewer than STORY_WHYS_MIN rungs with a
-        source url (probes: {option id: why-ladder/1}; the option's own `whys` when it carries one);
+      - story: a hero option (Mon, Wed, Fri) whose pre-pick whys probe holds fewer than STORY_WHYS_MIN whys: the
+        verified probe's documented rungs (story/probes.json, as the score's hero floor reads them) when there is one,
+        else the raw ladder's rungs with a source url (probes: {option id: probe result or why-ladder/1}; the option's
+        own `whys` when it carries one);
       - story_floor: an open option the floor refused or that fails one of its type's hard floors.
     status: board_feed option_status {key: status}, or None for a board never shown (every option open). An answered
     option is his: it is never checked, and a day with one is never checked for order (its presses name it by place).
@@ -2073,9 +2105,9 @@ def story_findings(ideas, week, status=None, probes=None, cfg=None, before=None)
             ladder = probes.get(str(o.get('id') or '').lower())
             if ladder is None and isinstance(o.get('whys'), dict):
                 ladder = o['whys']
-            n = sourced_rungs(ladder)
+            n, how = whys_held(ladder)
             if n < STORY_WHYS_MIN:
-                out.append({'code': 'story', 'ref': ref, 'line': f'story: {name} holds {n} whys with a source before the pick, under '
+                out.append({'code': 'story', 'ref': ref, 'line': f'story: {name} holds {n} whys {how} before the pick, under '
                             f'{STORY_WHYS_MIN}; probe it (whys-probe-check) or replace it'})
 
     for group, block in (('days', (ideas or {}).get('days')), ('offdays', (ideas or {}).get('offdays'))):
