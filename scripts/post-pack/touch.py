@@ -9,7 +9,7 @@ right moments of the production cycle, reading from them or informing them, in t
         every touch of that stage, through the clients that already exist (divergent.py, humour_check.py, story_floor.py,
         voice_gate.py, board_session.py, ve.py, gh api reads of strategist, growth-makeyourmindup and makeyourmindup,
         the krish-clone registry). Values a row needs (topic, angle, problem, hook, landing, long, short, edits, title,
-        refused, defect, failures, corrections, pool, amount, asset, spend_id, settled, instruction_id) come by --set.
+        refused, defect, failures, corrections, pool, amount, asset, spend_id, settled, instruction_id, generation) come by --set.
     python3 scripts/post-pack/touch.py check STAGE --week MONDAY [--piece ID]   exit 1 when a required touch is missing
     python3 scripts/post-pack/touch.py drain [--week MONDAY]                    send what was queued for Control Center
     python3 scripts/post-pack/touch.py list [STAGE]                             the registry, stage by stage
@@ -18,9 +18,14 @@ Connector touches (report_to_taste_engine, record_harness_observation, find_rese
 ack, get_engine_brief, reserve and settle_credit_spend) go through one JSON-RPC client to Control Center's
 /api/harness/mcp on CC_HARNESS_KEY. Without the key they are queued in .cache/touch/outbox.jsonl and on the week's log
 line, and `drain` sends them later. Every touch writes one line to docs/plans/<Monday>-week/touches.jsonl:
-{id, stage, system, direction, status done|queued|skipped|failed, reason, ref, at}. Exit 2 or not served is skipped,
-never done. A paid touch reserves through the chain cap and the story-score ledger first, and is skipped over either.
---dry prints what would run and writes nothing.
+{id, stage, system, direction, status done|queued|skipped|failed, reason, ref, at}, and on a skipped line a
+machine-readable skip_kind (SKIP_KINDS): not_applicable (a manual row, a row whose trigger file is not there, or one
+another gate enforces), not_given (a value or evidence file the row needs was not given), not_served (exit 2, a read
+that did not come back) or refused (a cap refused a paid touch). A required row is complete only when done, queued for
+an inform, or skipped not_applicable: never on a value nobody gave, a missing evidence file, a read not served or a
+read merely queued. Control Center refusing a call (isError, or a JSON-RPC error on HTTP 200) is failed, never queued:
+only no key, a non-200 answer or an unreachable endpoint queues for drain. A paid touch reserves through the chain cap
+and the story-score ledger first, and is skipped over either. --dry prints what would run and writes nothing.
 """
 from __future__ import annotations
 
@@ -46,6 +51,7 @@ sys.path.insert(0, str(HERE.parent))
 CONFIG = ROOT / 'config' / 'cycle.json'
 OK = ('done', 'queued')
 STATUSES = ('done', 'queued', 'skipped', 'failed')
+SKIP_KINDS = ('not_applicable', 'not_given', 'not_served', 'refused')
 DIRECTIONS = ('read', 'inform')
 KINDS = ('script', 'gh', 'builtin', 'mcp', 'exists', 'manual')
 PLACEHOLDER = re.compile(r'\{([a-z_]+)\}')
@@ -154,19 +160,24 @@ def fill(node, ctx):
 
 
 def unmet(row, ctx):
-    """Why the row does not apply now, or None: a value it needs that was not given, or a file that is not there."""
+    """(why, skip_kind) the row does not apply now, or (None, None): a when.if value nobody gave (the row is for another
+    case, such as a Higgsfield generation: not_applicable), a value it needs that was not given (not_given), or a trigger
+    file that is not there yet (not_applicable)."""
     when = row.get('when') or {}
+    off = [v for v in when.get('if') or [] if ctx.get(v) in (None, '')]
+    if off:
+        return 'applies only with ' + ', '.join(off), 'not_applicable'
     gone = [v for v in when.get('vars') or [] if ctx.get(v) in (None, '')]
     if gone:
-        return 'not given: ' + ', '.join(gone)
+        return 'not given: ' + ', '.join(gone), 'not_given'
     for f in when.get('files') or []:
         p = Path(fill(f, ctx))
         if not (p if p.is_absolute() else ROOT / p).exists():
-            return f'no {fill(f, ctx)} yet'
+            return f'no {fill(f, ctx)} yet', 'not_applicable'
     need = missing_vars(row['how'].get('call'), ctx)
     if need:
-        return 'not given: ' + ', '.join(sorted(need))
-    return None
+        return 'not given: ' + ', '.join(sorted(need)), 'not_given'
+    return None, None
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -229,19 +240,32 @@ def parse_rpc(text):
     return json.loads(data[-1]) if data else {}
 
 
+SENT, REFUSED, UNSENT = 'sent', 'refused', 'unsent'
+
+
 def mcp_call(tool, arguments, *, key, url, post=http_post):
-    """(sent, line, answer): one tools/call. sent False keeps the touch queued, with why."""
+    """(outcome, line, answer): one tools/call. outcome SENT; REFUSED when Control Center answered and said no (the tool's
+    isError, or a JSON-RPC error on HTTP 200: an over_share or held credit, an unknown instruction, an invalid payload),
+    which is never queued or sent again; UNSENT when it did not answer (non-200, unreachable), which stays queued."""
     body = {'jsonrpc': '2.0', 'id': str(uuid.uuid4()), 'method': 'tools/call', 'params': {'name': tool, 'arguments': arguments}}
     status, data = post(url, body, key)
     if status != 200:
-        return False, f'Control Center answered {status}' + (f": {(data.get('error') or {}).get('message')}" if isinstance(data, dict) and data.get('error') else ''), None
+        return UNSENT, f'Control Center answered {status}' + (f": {(data.get('error') or {}).get('message')}" if isinstance(data, dict) and data.get('error') else ''), None
+    data = data if isinstance(data, dict) else {}
     if data.get('error'):
-        return False, f"Control Center refused: {(data['error'] or {}).get('message', 'error')}", None
+        return REFUSED, f"Control Center refused: {(data['error'] or {}).get('message', 'error')}", None
     result = data.get('result') or {}
     text = ' '.join(c.get('text', '') for c in result.get('content') or [] if isinstance(c, dict)).strip()
     if result.get('isError'):
-        return False, f'{tool} refused: {text[:200]}', result
-    return True, text[:200] or f'{tool} answered', result
+        return REFUSED, f'{tool} refused: {text[:200]}', result
+    return SENT, text[:200] or f'{tool} answered', result
+
+
+def call_key(rid, week, piece, arguments):
+    """One queued connector touch, keyed by its full call: two find_research calls of one row with different topics, or
+    two reservations of one piece, are two touches."""
+    digest = hashlib.sha256(json.dumps(arguments or {}, sort_keys=True, ensure_ascii=False).encode('utf-8')).hexdigest()[:16]
+    return f"{rid}|{week}|{piece or ''}|{digest}"
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -325,9 +349,11 @@ class Runner:
         return self.env.get(self.cfg['control_center']['key_env']) or ''
 
     # -- the log
-    def log(self, row, ctx, status, reason, ref=None, extra=None):
+    def log(self, row, ctx, status, reason, ref=None, extra=None, kind=None):
         line = {'id': row['id'], 'stage': int(row['stage']), 'system': row['system'], 'direction': row['direction'],
                 'status': status, 'reason': reason, 'ref': ref, 'at': now_iso(), 'week': ctx['week']}
+        if status == 'skipped':
+            line['skip_kind'] = kind if kind in SKIP_KINDS else ('not_served' if str(reason).startswith('not served') else 'not_given')
         if ctx.get('piece'):
             line['piece'] = ctx['piece']
         line.update(extra or {})
@@ -358,19 +384,21 @@ class Runner:
     def touch(self, row, ctx):
         how = row['how']
         kind = how['kind']
-        why = unmet(row, ctx) if kind not in ('manual',) else None
+        why, skip = unmet(row, ctx) if kind not in ('manual',) else (None, None)
         if why:
-            return self.log(row, ctx, 'skipped', why)
+            return self.log(row, ctx, 'skipped', why, kind=skip)
         call = fill(how.get('call'), ctx)
         if kind == 'manual':
-            return self.log(row, ctx, 'skipped', call['reason'])
+            return self.log(row, ctx, 'skipped', call['reason'], kind='not_applicable')
         if kind == 'exists':
             ev = call.get('evidence')
             if ev:
                 p = Path(ev)
                 if (p if p.is_absolute() else ROOT / p).exists():
                     return self.log(row, ctx, 'done', f'done by {row["cites"]}', ev)
-            return self.log(row, ctx, 'skipped', f'done elsewhere: {row["cites"]}' + (f' (no {ev} this week)' if ev else ''))
+                return self.log(row, ctx, 'skipped', f'no {ev} this week: {row["cites"]} writes it', kind='not_given')
+            # No file to read: the touch is the gate it cites, which holds the run itself.
+            return self.log(row, ctx, 'skipped', f'done elsewhere: {row["cites"]}', kind='not_applicable')
         if self.dry:
             return self.log(row, ctx, 'skipped', f'dry run: would {kind} ' + (' '.join(call) if isinstance(call, list) else json.dumps(call)[:160]))
         if kind == 'mcp':
@@ -380,10 +408,10 @@ class Runner:
         if kind == 'builtin':
             fn = BUILTINS[call['name']]
             status, reason, ref = fn(call, self.gh) if call['name'] == 'killlist_drift' else fn(call, self.get)
-            return self.log(row, ctx, status, reason, ref)
+            return self.log(row, ctx, status, reason, ref, kind='not_served' if status == 'skipped' else None)
         reserved, why = self.reserve(row, ctx)
         if row.get('paid') and not reserved:
-            return self.log(row, ctx, 'skipped', f'refused by the cap: {why}')
+            return self.log(row, ctx, 'skipped', f'refused by the cap: {why}', kind='refused')
         code, text = self.cmd(call)
         if code == 0:
             return self.log(row, ctx, 'done', _tail(text) or 'ran', ' '.join(call[:3]))
@@ -393,41 +421,47 @@ class Runner:
             entry, ledger = reserved
             ledger.settle(entry, 0)
         if code == 2:
-            return self.log(row, ctx, 'skipped', 'not served: ' + (_tail(text) or 'exit 2'))
+            return self.log(row, ctx, 'skipped', 'not served: ' + (_tail(text) or 'exit 2'), kind='not_served')
         return self.log(row, ctx, 'failed', f'exit {code}: ' + _tail(text))
 
     def gh_read(self, row, ctx, call):
         code, text = self.gh(f"repos/{call['repo']}/contents/{call['path']}")
         if code != 0:
-            return self.log(row, ctx, 'skipped', f"not served: gh api could not read {call['repo']}/{call['path']} ({_tail(text)})")
+            return self.log(row, ctx, 'skipped', f"not served: gh api could not read {call['repo']}/{call['path']} ({_tail(text)})",
+                            kind='not_served')
         try:
             doc = json.loads(text)
         except ValueError:
-            return self.log(row, ctx, 'skipped', 'not served: gh api answered no JSON')
+            return self.log(row, ctx, 'skipped', 'not served: gh api answered no JSON', kind='not_served')
         if call.get('latest') and isinstance(doc, list):
             files = sorted((d for d in doc if isinstance(d, dict) and d.get('type') == 'file'), key=lambda d: d.get('name', ''))
             if not files:
-                return self.log(row, ctx, 'skipped', f"{call['repo']}/{call['path']} holds no file yet")
+                return self.log(row, ctx, 'skipped', f"{call['repo']}/{call['path']} holds no file yet", kind='not_applicable')
             doc = files[-1]
         if not isinstance(doc, dict):
-            return self.log(row, ctx, 'skipped', 'not served: an unexpected answer')
+            return self.log(row, ctx, 'skipped', 'not served: an unexpected answer', kind='not_served')
         return self.log(row, ctx, 'done', f"read {doc.get('path', call['path'])}", f"{doc.get('path', call['path'])}@{str(doc.get('sha', ''))[:12]}")
 
     def connector(self, row, ctx, call):
         tool, args = call['tool'], call.get('arguments') or {}
+        k = call_key(row['id'], ctx['week'], ctx.get('piece'), args)
         key = self.key()
         if key:
-            sent, line, _ = mcp_call(tool, args, key=key, url=ctx['_url'], post=self.post)
-            if sent:
-                return self.log(row, ctx, 'done', line, tool)
+            outcome, line, _ = mcp_call(tool, args, key=key, url=ctx['_url'], post=self.post)
+            if outcome == SENT:
+                return self.log(row, ctx, 'done', line, tool, {'call_key': k})
+            if outcome == REFUSED:
+                # Control Center said no (an over_share reservation, an unknown instruction, an invalid payload): failed,
+                # never queued, so a later drain never books what the refusal withheld.
+                return self.log(row, ctx, 'failed', line, tool, {'call_key': k})
             reason = f'queued for drain: {line}'
         else:
             reason = f"queued for drain: no {self.cfg['control_center']['key_env']} here"
-        entry = {'key': f"{row['id']}|{ctx['week']}|{ctx.get('piece') or ''}", 'id': row['id'], 'stage': int(row['stage']),
-                 'week': ctx['week'], 'piece': ctx.get('piece'), 'tool': tool, 'arguments': args, 'queued_at': now_iso()}
+        entry = {'key': k, 'id': row['id'], 'stage': int(row['stage']), 'week': ctx['week'], 'piece': ctx.get('piece'),
+                 'tool': tool, 'arguments': args, 'queued_at': now_iso()}
         if not self.dry:
             append_jsonl(outbox_path(self.cfg), entry)
-        return self.log(row, ctx, 'queued', reason, tool, {'queued': {'tool': tool, 'arguments': args}})
+        return self.log(row, ctx, 'queued', reason, tool, {'queued': {'tool': tool, 'arguments': args, 'key': k}})
 
     # -- a stage
     def run(self, stage, week, piece=None, sets=None, only=None):
@@ -441,6 +475,9 @@ class Runner:
         key = self.key()
         box = outbox_path(self.cfg)
         waiting = read_jsonl(box)
+        for e in waiting:
+            if str(e.get('key') or '').count('|') != 3:  # an entry queued before calls were keyed by their arguments
+                e['key'] = call_key(e['id'], e['week'], e.get('piece'), e.get('arguments'))
         if week:
             seen = {e['key'] for e in waiting}
             for e in pending_in_log(monday(week), self.plans):
@@ -457,10 +494,20 @@ class Runner:
         left, sent = [], []
         rows = {r['id']: r for r in self.cfg['rows']}
         for e in waiting:
-            ok, line, _ = mcp_call(e['tool'], e['arguments'], key=key, url=url, post=self.post)
-            if ok and e['id'] in rows:
-                self.log(rows[e['id']], {'week': e['week'], 'piece': e.get('piece')}, 'done', f'drained: {line}', e['tool'])
+            outcome, line, _ = mcp_call(e['tool'], e['arguments'], key=key, url=url, post=self.post)
+            where = {'week': e['week'], 'piece': e.get('piece')}
+            if outcome == SENT:
+                if e['id'] in rows:
+                    self.log(rows[e['id']], where, 'done', f'drained: {line}', e['tool'], {'drained_key': e['key']})
+                else:
+                    self.out(f"sent    {e['id']} ({e['week']}): {line} (a row no longer in cycle.json; not sent again)")
                 sent.append(e)
+            elif outcome == REFUSED:
+                # A refusal is an answer: logged failed and dropped, never sent again on a later drain.
+                if e['id'] in rows:
+                    self.log(rows[e['id']], where, 'failed', f'drain refused: {line}', e['tool'], {'drained_key': e['key']})
+                else:
+                    self.out(f"refused {e['id']} ({e['week']}): {line} (dropped)")
             else:
                 self.out(f"kept    {e['id']} ({e['week']}): {line}")
                 left.append(e)
@@ -471,31 +518,38 @@ class Runner:
 
 
 def pending_in_log(week, plans=None):
-    """Queued lines of a week's touch log with no later done line for the same touch and piece, as outbox entries."""
-    lines = read_jsonl(_log_file(week, plans))
-    latest = {}
-    for line in lines:
-        latest[(line.get('id'), line.get('piece'))] = line
-    out = []
-    for (rid, piece), line in latest.items():
+    """Every queued line of a week's touch log, keyed by its full call (call_key), that no later line answered: a drain's
+    done or failed line naming it (drained_key), or a direct send of the same call (call_key). Each as an outbox entry."""
+    pending = {}
+    for line in read_jsonl(_log_file(week, plans)):
         q = line.get('queued')
         if line.get('status') == 'queued' and isinstance(q, dict):
-            out.append({'key': f"{rid}|{week}|{piece or ''}", 'id': rid, 'stage': line.get('stage'), 'week': week,
-                        'piece': piece, 'tool': q.get('tool'), 'arguments': q.get('arguments') or {}, 'queued_at': line.get('at')})
-    return out
+            k = q.get('key') or call_key(line.get('id'), week, line.get('piece'), q.get('arguments'))
+            pending[k] = {'key': k, 'id': line.get('id'), 'stage': line.get('stage'), 'week': week, 'piece': line.get('piece'),
+                          'tool': q.get('tool'), 'arguments': q.get('arguments') or {}, 'queued_at': line.get('at')}
+        elif line.get('status') in ('done', 'failed'):
+            for answered in (line.get('drained_key'), line.get('call_key')):
+                if answered:
+                    pending.pop(answered, None)
+    return list(pending.values())
 
 
 # ---------------------------------------------------------------------------------------------------------------------
 # The check
 
 
-def satisfied(line):
-    """A touch line that completes its row: done or queued, or skipped with a reason."""
+def satisfied(line, row=None):
+    """A touch line that completes its row: done; queued only for an inform (a read merely queued has not been read);
+    skipped only when the row does not apply (skip_kind not_applicable, with a reason). A value nobody gave, a missing
+    evidence file, a read not served and a refusal stay findings."""
     if not isinstance(line, dict):
         return False
-    if line.get('status') in OK:
+    status = line.get('status')
+    if status == 'done':
         return True
-    return line.get('status') == 'skipped' and bool(str(line.get('reason') or '').strip())
+    if status == 'queued':
+        return (row or line).get('direction') == 'inform'
+    return status == 'skipped' and line.get('skip_kind') == 'not_applicable' and bool(str(line.get('reason') or '').strip())
 
 
 def check(stage, week, piece=None, plans=None, cfg=None):
@@ -517,7 +571,7 @@ def check(stage, week, piece=None, plans=None, cfg=None):
         if last is None:
             found.append({'code': 'touch', 'ref': row['id'], 'line': f"touch {row['id']}: stage {stage} {row['system']} ({row['direction']}) "
                           f"has no line in touches.jsonl; run {cmd}"})
-        elif not satisfied(last):
+        elif not satisfied(last, row):
             found.append({'code': 'touch', 'ref': row['id'], 'line': f"touch {row['id']}: stage {stage} {row['system']} "
                           f"({row['direction']}) is {last.get('status')}" + (f": {last.get('reason')}" if last.get('reason') else '')
                           + f'; run {cmd} again'})
