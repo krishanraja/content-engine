@@ -5,9 +5,11 @@ import { HOUSE_FONTS } from '../../house/geometry'
 import { textWidth } from '../../house/metrics'
 import type { EngineRenderProps } from '../props'
 
-/** The house close: one card after his last word, the same card quick-edit's kit films (scripts/quick-edit/kit/
- *  endcard.html). Krish picked this direction, "C: the statement", on 10 Nov 2026, with the copy "Built to help you
- *  decide." (docs/production/CLOSING.md). The tagline is the picture: Anton, each line rising out of its own mask, the
+/** The house close, the plain v5 outro card: one card after his last word, the same card quick-edit's kit films
+ *  (scripts/quick-edit/kit/v5-close.html). Every video, series or off day, wide or tall, ends on it (Ruling, Krish,
+ *  2026-11-26: "1 agreed"; config/brand-palette.json series_close), drawn in the locked v5 look (props.renderTheme
+ *  makeyourmindup-v5: its tokens, its stacked mark). Krish picked this direction, "C: the statement", on 10 Nov 2026,
+ *  with the copy "Built to help you decide." (docs/production/CLOSING.md). The tagline is the picture: Anton, each line rising out of its own mask, the
  *  last word in the series colour; then, in reading order, the stacked logo on ink, the three days in their series
  *  colours, "Subscribe free" and the address, whose underline draws on last. Everything arrives fast and settles
  *  softly and has settled by 2.75 s; the wide card then holds to the end of its 6 s (compile ENDING_FRAMES = 180).
@@ -109,9 +111,10 @@ export function endingBandModel(props: EngineRenderProps, frame: number) {
 
 const rise = (p: number): React.CSSProperties => ({ opacity: p, transform: `translateY(${(1 - p) * 34}px)` })
 
-/** The series close on the intro sting (Ruling, Krish, 2026-11-20: "A, with Built to help you decide, and then Subscribe
- *  free at makeyourmindup.ai"; config/intro-sting.json close, config/brand-palette.json sting_beat and sting_card). All
- *  timings in frames from the close's first frame, at 30 fps, on the house curves (config/ve/brand-tokens.json motion). */
+/** The retired series close on the intro sting (Ruling, Krish, 2026-11-20: "A, with Built to help you decide, and then
+ *  Subscribe free at makeyourmindup.ai"; retired by Ruling, Krish, 2026-11-26: "1 agreed"). Drawn only for a series cut
+ *  dated 23 to 25 Nov that was signed with it (props.ending.sting, F33); compile gives no other cut one. All timings in
+ *  frames from the close's first frame, at 30 fps, on the house curves (config/ve/brand-tokens.json motion). */
 const HERO = Easing.bezier(0.16, 1, 0.3, 1)
 const UTILITY = Easing.bezier(0.2, 0, 0, 1)
 export const STING_CLOSE = {
@@ -252,8 +255,8 @@ export function StingClose({ props, frame }: { props: EngineRenderProps; frame: 
   )
 }
 
-/** Full-frame ink with the statement; nothing of the last beat shows through. With props.ending.sting it is the series
- *  close on the intro sting (StingClose) instead. */
+/** The plain v5 outro card: full-frame ink with the statement; nothing of the last beat shows through. Only the props of
+ *  a series cut signed 23 to 25 Nov carry props.ending.sting, and draw the retired sting close (StingClose) instead. */
 export function EndingBand({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null {
   if (props.ending?.sting) return <StingClose props={props} frame={frame} />
   const model = endingBandModel(props, frame)

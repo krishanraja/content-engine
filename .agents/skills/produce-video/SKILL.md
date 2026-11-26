@@ -601,6 +601,13 @@ sting is retired (`config/intro-sting.json`). Each report records its opening
 (`opening`), always the hook. Read
 `.agents/skills/produce-video/references/opening.md`.
 
+**The close: the plain v5 outro card.** Ruling (Krish, 2026-11-26): "1
+agreed", to retiring the sting close. Every cut, wide and tall, series or off
+day, ends on it (`config/brand-palette.json` `series_close`; ve draws it in
+`EndingBand.tsx`); no intro sting clip goes anywhere in a cut, and ve lint and
+ve render refuse one. Only a series cut dated 23 to 25 Nov keeps the sting
+close it was signed with.
+
 **Then the outro card and the audio treatment: required before the final
 render** (house rule `STORY_INTRO_OUTRO`). Krish, 2026-10-12: "when the
 videos come back bear in mind that I want a proper animated branded intro to

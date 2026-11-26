@@ -97,45 +97,65 @@ class Guard(unittest.TestCase):
         self.assertEqual(p['formats']['long_cut']['series']['sting_retired']['words'], 'Nothing before the hook, ever. Remove the sting exception for good.')
         self.assertEqual(json.loads((ROOT / 'config' / 'intro-sting.json').read_text(encoding='utf-8'))['status'], 'retired')
 
-    def test_the_series_close_is_the_sting_from_23_nov(self):
-        # Ruling (Krish, 2026-11-20): "A, with Built to help you decide, and then Subscribe free at makeyourmindup.ai".
-        sting = brand_palette.sting_clip('9x16', 'follow_the_money')
-        self.assertEqual(sting, '09da1e77bcd128b1bf53e022ace6056588448bde9bc6711716b8ce01ede57ed8')
-        short = dict(copy.deepcopy(GOOD_SHORT), date='2026-11-23',
-                     close={'id': 'sting_beat', 'seconds': 2.0, 'file': 'close-sting-9x16-follow_the_money.mp4', 'sting': sting, 'days_row': False})
+    def test_every_series_cut_ends_on_the_plain_v5_outro_card_from_26_nov(self):
+        # Ruling (Krish, 2026-11-26): "1 agreed", to retiring the sting close and ending on the plain v5 outro card.
+        short = dict(copy.deepcopy(GOOD_SHORT), date='2026-11-27', series='mind_the_gap')
         self.assertEqual(brand_palette.check(short), [])
         refused = {
-            'the old ink card': {'id': 'statement_beat', 'seconds': 2.0, 'file': 'endcard-9x16.mp4'},
-            'a close with no sting': dict(short['close'], sting=False),
-            'another series\' sting': dict(short['close'], sting=brand_palette.sting_clip('9x16', 'mind_the_gap')),
-            'a 2.5 s sting beat': dict(short['close'], seconds=2.5),
-            'the 11 Nov held sting': {'id': 'sting_beat', 'seconds': 2.0, 'file': 'sting-9x16-held.mp4'},
+            'the sting close': {'id': 'sting_beat', 'seconds': 2.0, 'sting': True, 'days_row': False},
+            'a sting on the plain card': dict(short['close'], sting=True),
+            'the sting close by its file': dict(short['close'], file='close-sting-9x16-mind_the_gap.mp4'),
+            'the wide sting clip by its file': dict(short['close'], file='makeyourmindup-sting-16x9-mind_the_gap.mp4'),
+            'the 11 Nov held sting': {'id': 'statement_beat', 'seconds': 2.0, 'file': 'sting-9x16-held.mp4'},
+            'a 2.5 s beat': dict(short['close'], seconds=2.5),
+            'no days row': dict(short['close'], days_row=False),
         }
         for name, close in refused.items():
             with self.subTest(name):
                 self.assertTrue(brand_palette.check(dict(short, close=close)), name)
-        long_cut = {'date': '2026-11-23', 'format': 'long_cut', 'kind': 'series', 'series': 'follow_the_money', 'opening': 'hook',
-                    'sting': 'none', 'close': {'id': 'sting_card', 'seconds': 6.0, 'sting': True, 'days_row': True}}
+        long_cut = {'date': '2026-11-30', 'format': 'long_cut', 'kind': 'series', 'series': 'follow_the_money', 'opening': 'hook',
+                    'sting': 'none', 'close': {'id': 'statement_card', 'seconds': 6.0, 'days_row': True}}
         self.assertEqual(brand_palette.check(long_cut), [])
-        self.assertTrue(brand_palette.check(dict(long_cut, close={'id': 'statement_card', 'seconds': 6.0})))
+        self.assertTrue(brand_palette.check(dict(long_cut, close={'id': 'sting_card', 'seconds': 6.0, 'sting': True, 'days_row': True})))
         # Nothing at the start changes: a sting before the hook is still refused.
         self.assertTrue(brand_palette.check(dict(long_cut, sting='before_hook')))
         # A series piece of the week of 16 Nov keeps the ink close it was signed with (F33).
         self.assertEqual(brand_palette.check(GOOD_SHORT), [])
-        # An off day has no sting: it keeps the mint statement close, and a sting on it is refused.
+        # A series piece dated 23 to 25 Nov was signed with the retired sting close (F33): its close is not checked.
+        signed = dict(copy.deepcopy(GOOD_SHORT), date='2026-11-23',
+                      close={'id': 'sting_beat', 'seconds': 2.0, 'sting': True, 'days_row': False})
+        self.assertEqual(brand_palette.check(signed), [])
+        self.assertTrue(brand_palette.check(dict(signed, date='2026-11-30')))
+        # An off day keeps the mint plain card with no series days, and a sting on it is refused.
         off = {'date': '2026-11-24', 'format': 'short_cut', 'kind': 'off', 'close': {'id': 'statement_beat', 'seconds': 2.0, 'days_row': False}}
         self.assertEqual(brand_palette.check(off), [])
         self.assertTrue(brand_palette.check(dict(off, close=dict(off['close'], sting=True))))
 
-    def test_the_close_config_and_the_palette_agree(self):
+    def test_the_palette_names_no_sting_close(self):
+        p = brand_palette.load()
+        self.assertNotIn('sting_close', p)
+        self.assertFalse({'sting_beat', 'sting_card'} & set(p['closes']))
+        self.assertFalse(any('sting' in (close.get('sting') or '') for close in p['closes'].values()))
+        for fmt in ('long_cut', 'short_cut'):
+            self.assertEqual(p['formats'][fmt]['series']['close'], p['series_close']['close'][fmt])
+        self.assertEqual(p['series_close']['close'], {'long_cut': 'statement_card', 'short_cut': 'statement_beat'})
+        self.assertEqual(p['series_close']['words'], '1 agreed')
+        self.assertEqual(p['series_close']['from'], '2026-11-26')
+        self.assertEqual(p['series_close']['theme'], 'makeyourmindup-v5')
+        self.assertEqual(p['close_copy']['tagline'], 'Built to help you decide.')
+        self.assertEqual(p['closes']['statement_beat']['seconds_max'], 2.0)
+        self.assertNotIn('sting_clip', dir(brand_palette))
+
+    def test_the_close_config_records_the_retirement_and_the_window(self):
         p = brand_palette.load()
         cfg = json.loads((ROOT / 'config' / 'intro-sting.json').read_text(encoding='utf-8'))
         self.assertEqual(cfg['status'], 'retired')  # never an opening
-        self.assertEqual(cfg['close']['status'], 'approved')
-        self.assertEqual(cfg['close']['applies_from'], p['sting_close']['from'])
-        self.assertEqual(sorted(cfg['close']['shapes']), sorted(p['closes'][c]['sting'] for c in ('sting_beat', 'sting_card')))
-        self.assertEqual(p['close_copy']['tagline'], 'Built to help you decide.')
-        self.assertEqual(p['closes']['sting_beat']['seconds_max'], 2.0)
+        self.assertEqual(cfg['close']['status'], 'retired')
+        last = cfg['close']['rulings'][-1]
+        self.assertEqual((last['on'], last['by'], last['decision'], last['words']), ('2026-11-26', 'Krish', 'retired', '1 agreed'))
+        window = p['series_close']['unchecked']
+        self.assertEqual((cfg['close']['applies_from'], cfg['close']['applies_until']), (window['from'], window['until']))
+        self.assertLess(window['until'], p['series_close']['from'])
 
     def test_an_off_day_close_has_no_series_days(self):
         off = dict(copy.deepcopy(GOOD_SHORT), date='2026-11-17', kind='off')

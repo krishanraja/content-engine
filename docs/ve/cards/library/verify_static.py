@@ -12,8 +12,9 @@ import numpy as np
 
 HERE=Path(__file__).resolve().parent
 subprocess.run([sys.executable, '-B', str(HERE/'render.py'), '--check-locks'], check=True)
+subprocess.run([sys.executable, '-B', str(HERE/'make_samples.py'), '--check'], check=True)
 root=HERE.parents[3]
-fonts=root/'.scratch/tonal-ab'
+fonts=root/'assets/fonts/makeyourmindup'
 from font_metrics import font_metrics
 metrics=font_metrics(root)
 d=json.loads((HERE/'library.json').read_text(encoding='utf8'))
@@ -319,6 +320,10 @@ for row,original in zip(bank,prompts):
 for name,photo in d['photos'].items():
     if name=='headshot':continue
     path=root/photo['path'] if 'path' in photo else root/'.scratch/why-ladder/assets'/(name+'.png')
+    if not path.is_file() and '.scratch' in path.parts:
+        # Private files never leave his machine and the page shows the camera guide without them. Every other
+        # absent file has a committed SVG stand-in at the registry size, which make_samples.py --check verified.
+        continue
     with Image.open(path) as im:
         if im.size!=(photo['width'],photo['height']):errors.append(name+' image dimensions')
 print('Minimum flat-field contrast',round(min(pairs),2),'to one. Photographic type samples:',sorted(photo_checks))

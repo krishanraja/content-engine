@@ -190,9 +190,11 @@ export const EngineRenderPropsSchema = z.object({
   ending: z.object({ fromFrame: Frame, url: z.string().min(1), ticker: z.boolean().default(true),
     tagline: z.string().min(1).optional(), cta: z.string().min(1).optional(),
     days: z.array(z.object({ day: z.string().min(1), colour: z.string().min(1) }).strict()).optional(),
-    /** The series close on the intro sting (Ruling, Krish, 2026-11-20; config/intro-sting.json close): the clip of this
-     *  cut's shape, byte for byte the one he saw, played at the END of the cut inside the close (EndingBand.tsx). Never
-     *  an opening. ve-render refuses a file whose sha256 is not this one. */
+    /** The retired series close on the intro sting (Ruling, Krish, 2026-11-20; retired by Ruling, Krish, 2026-11-26:
+     *  "1 agreed"): kept only so a series cut dated 23 to 25 Nov, signed with it, still renders as signed (F33). Every
+     *  other cut ends on the plain v5 outro card with no sting (EndingBand), and ve render refuses props that carry one
+     *  (scripts/velib/compile.py ending_problems). The clip of this cut's shape, byte for byte the one he saw, played at
+     *  the END of the cut inside the close; never an opening. ve-render refuses a file whose sha256 is not this one. */
     sting: EngineStingSchema.omit({ atFrame: true }).optional() }).strict().optional(),
   /** The motion style Krish picked (spec style.motion) and its profile; absent means the house motion, unchanged. */
   motion: EngineMotionSchema.optional(),
@@ -217,7 +219,7 @@ export const EngineRenderPropsSchema = z.object({
   const ruling = 'nothing goes before the hook (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good.")'
   if (props.sting && !(props.sting.atFrame ?? 0)) context.addIssue({ code: 'custom', path: ['sting'], message: `a sting in front of the cut: ${ruling}` })
   if (props.opening) context.addIssue({ code: 'custom', path: ['opening'], message: `an episode card in front of the cut: ${ruling}` })
-  // The close's sting is the series' own clip, and an off day (no series days) has none (config/intro-sting.json close).
+  // The retired close's sting (a cut signed 23 to 25 Nov) is the series' own clip, and an off day has none.
   const close = props.ending?.sting
   if (close && close.series !== props.series.label.replaceAll('.', '_')) {
     context.addIssue({ code: 'custom', path: ['ending', 'sting'], message: `the ${close.series} sting cannot close the ${props.series.label} cut` })

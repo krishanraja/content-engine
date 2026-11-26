@@ -117,8 +117,9 @@ export async function stageRenderAssets(inputProps, propsPath, publicDir, reposi
   }
   const close = inputProps.ending?.sting
   if (close) {
-    // The series close on the sting (Ruling, Krish, 2026-11-20; config/intro-sting.json close): the clip named byte for
-    // byte, checked before anything renders, the same as an opening sting was.
+    // The retired series close on the sting (Ruling, Krish, 2026-11-20; retired 2026-11-26, "1 agreed"), kept for a series
+    // cut signed with it on 23 to 25 Nov: the clip named byte for byte, checked before anything renders. Every other cut
+    // ends on the plain v5 outro card and carries no clip (scripts/velib/compile.py ending_problems refuses one).
     if (/^https?:\/\//.test(close.src)) throw new Error('the close\'s sting must be a local clip, so its sha256 can be checked')
     const local = path.resolve(path.dirname(path.resolve(propsPath)), close.src)
     const sha256 = createHash('sha256').update(await readFile(local)).digest('hex')

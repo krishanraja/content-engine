@@ -31,14 +31,16 @@ class MusicUseTest(unittest.TestCase):
         self.assertEqual(track['id'], 'goodie-bags')
 
     def test_the_live_ledger_rotates_each_series_day_and_keeps_the_off_day_track(self):
-        # Ruling (Krish, 2026-11-17): Monday, Wednesday and Friday music rotates week by week, replacing "Do not change
-        # Monday, Wednesday, or Friday music" (2026-11-04). Each day has its own approved pool; no carousel or off-day
-        # track is ever in a series day's rotation.
+        # Ruling (Krish, 2026-11-17): series music rotates week by week. Ruling (Krish, 2026-11-26): the rotation is two
+        # tracks, Four on the Funky Flour and NO CURVES, on every series day; the rest go behind carousels. No carousel or
+        # off-day track is ever in a series day's rotation.
         data = json.loads((ROOT / 'config/music-library.json').read_text(encoding='utf-8'))
         pools = {day: sorted(t['id'] for t in data['tracks'] if t.get('status') == 'approved' and day in (t.get('days') or []))
                  for day in music.SERIES_DAYS}
-        self.assertEqual(pools, {'mon': ['liberty-city', 'no-curves-instrumental'], 'wed': ['mind-bender', 'seize-it'],
-                                 'fri': ['conclusion', 'drifting-valleys', 'just-got-real']})
+        both = ['four-on-the-funky-flour', 'no-curves-instrumental']
+        self.assertEqual(pools, {'mon': both, 'wed': both, 'fri': both})
+        weeks = {music.day_pool(data, d)[0]['id'] for d in ('2026-11-30', '2026-12-07')}
+        self.assertEqual(weeks, set(both))  # consecutive weeks lead with different tracks
         for t in data['tracks']:
             if t.get('days'):
                 self.assertNotIn(t.get('for'), ('off-day', 'carousel'), t['id'])

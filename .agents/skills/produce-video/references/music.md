@@ -10,9 +10,10 @@ Then, 2026-10-28: "Yes I think music should be audible throughout but just
 lower." The bed runs under the whole of every cut, wide or tall, low under
 his voice, and never drops out.
 
-- **The main track.** Four on the Funky Flour (Duke Herrington) plays under every video whenever its licence allows,
-  looping under the crossfade on a cut longer than it (Krish, 2026-11-26: "the new main track behind my videos";
-  `main` in the ledger, `music.py` main_first). The weekly rotation only decides when it cannot play.
+- **The video rotation.** Two tracks, Four on the Funky Flour (Duke Herrington) and NO CURVES (Superintendent
+  McCupcakes), alternate week by week on every series day; every other track in the folder goes behind carousels
+  (Krish, 2026-11-26: "are good rotations, and the rest are good to go behind carousels"). Just Got Real and Drifting
+  Valleys are retired: their files are not in the folder.
 - **Where it lives.** Drive, `makeyourmindup > 1 Brand kit (permanent) > Music`:
   on the home computers
   `H:\My Drive\Ventures\Active Ventures\makeyourmindup\1 Brand kit (permanent)\Music`,

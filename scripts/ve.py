@@ -2027,7 +2027,8 @@ def cmd_render(args) -> int:
     from velib.compile import ending_problems
     closing = ending_problems(props, spec)
     if closing:
-        # The series close is the intro sting at the end (Ruling, Krish, 2026-11-20); never the plain ink card in its place.
+        # Every video ends on the plain v5 outro card, never the intro sting (Ruling, Krish, 2026-11-26: "1 agreed"); a
+        # series cut dated 23 to 25 Nov keeps the sting close it was signed with (F33).
         print('ve render: refused, the cut must close on its palette close:')
         print('\n'.join(f'  - {reason}' for reason in closing))
         return 1

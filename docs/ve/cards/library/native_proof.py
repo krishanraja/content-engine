@@ -27,7 +27,7 @@ def native_fonts():
     source = ROOT / 'assets/fonts/makeyourmindup'
     font_dir = OUT / 'fonts'
     font_dir.mkdir(parents=True, exist_ok=True)
-    files = [ROOT / '.scratch/tonal-ab' / f for f in ('Anton-Regular.ttf', 'DMMono-Regular.ttf')]
+    files = [ROOT / 'assets/fonts/makeyourmindup' / f for f in ('Anton-Regular.ttf', 'DMMono-Regular.ttf')]
     for style, weight in [('Upright', n) for n in (400, 500, 600, 800)] + [('Italic', 500)]:
         parent = source / f'Fraunces-{style}-Variable.ttf'
         target = font_dir / f'Fraunces-{style}-{weight}.ttf'

@@ -61,33 +61,69 @@
       "on": "2026-11-20",
       "krish": "A, with Built to help you decide, and then Subscribe free at makeyourmindup.ai",
       "why": "He ruled on 19 Nov that the tall close is the 9:16 intro sting with \"Built to help you decide.\" layered on, and picked direction A of the polish board on 20 Nov; the palette still made the tall close an ink card and its retired list would have refused a close named after the sting.",
-      "means": "A series cut from Mon 23 Nov closes on its own series sting at the END (tall: 1.5x, the band lifts, the line lands under it, exactly 2.0 s; wide: the full sting resolves into the statement card, settled by 2.75 s, the right 44% clear for the end screen). Nothing goes before the hook still. Off days keep the mint statement close until he decides on a mint sting.",
+      "means": "Superseded on 2026-11-26 by series-close-is-the-v5-outro (Ruling, Krish: \"1 agreed\"): every video now ends on the plain v5 outro card, and the sting closes no cut. What it meant from 23 to 25 Nov: A series cut from Mon 23 Nov closes on its own series sting at the END (tall: 1.5x, the band lifts, the line lands under it, exactly 2.0 s; wide: the full sting resolves into the statement card, settled by 2.75 s, the right 44% clear for the end screen). Nothing goes before the hook still. Off days keep the mint statement close until he decides on a mint sting. A series cut dated in that window keeps the close it was signed with (F33).",
       "status": "encoded",
       "encoded": [
         {
           "file": "config/brand-palette.json",
-          "contains": "\"sting_close\"",
-          "how": "the close ids, their date and the one copy of the words"
+          "contains": "\"sting_close\": \"the series close on the intro sting",
+          "how": "the sting close kept in the palette's retired closes, with its dates"
         },
         {
           "file": "config/intro-sting.json",
-          "contains": "\"close\": {",
-          "how": "the clips approved as the close, never an opening"
-        },
-        {
-          "file": "scripts/brand_palette.py",
-          "contains": "def sting_clip",
-          "how": "the guard refuses the ink card on a series day and a close with no or the wrong sting"
+          "contains": "\"applies_until\": \"2026-11-25\"",
+          "how": "the clips kept as the close only for series cuts dated 23 to 25 Nov, the close retired"
         },
         {
           "file": "apps/renderer/src/engine/chrome/EndingBand.tsx",
           "contains": "export function StingClose",
-          "how": "ve draws it"
+          "how": "ve still draws it for a cut signed with it"
         },
         {
           "file": "scripts/velib/compile.py",
           "contains": "def ending_problems",
-          "how": "ve render refuses a series cut that closes on ink"
+          "how": "ve render refuses a signed 23 to 25 Nov series cut that lost its sting close"
+        }
+      ]
+    },
+    {
+      "id": "series-close-is-the-v5-outro",
+      "on": "2026-11-26",
+      "krish": "1 agreed",
+      "asked": "Every series video still closes on the old intro-sting clips (day colours, the old gift-box wordmark). My recommendation: retire them and end on the plain v5 outro card.",
+      "why": "After the v5 lock (25 Nov) every series cut still closed on the six v4 sting clips, rendered in the old look (day colours, the gift-box wordmark, one file per series), so the last seconds of every series video undid the locked look.",
+      "means": "Every video, series or off day, wide or tall, ends on the plain v5 outro card: statement_card (16:9) or statement_beat (9:16), the ending band's plain card drawn in the locked v5 look, with the series days row on a series day. No cut dated from Thu 26 Nov carries an intro sting clip anywhere; ve compile lays none, ve lint refuses a spec naming one and ve render refuses props carrying one or drawn in another theme. A series cut dated 23 to 25 Nov keeps the sting close it was signed with (F33). The clips stay in Drive, unused by any new cut.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "config/brand-palette.json",
+          "contains": "\"series_close\": {",
+          "how": "the close ids for both shapes, the date, the theme and his words"
+        },
+        {
+          "file": "config/intro-sting.json",
+          "contains": "\"words\": \"1 agreed\"",
+          "how": "the sting close retired in his words"
+        },
+        {
+          "file": "scripts/velib/compile.py",
+          "contains": "def carried_stings(",
+          "how": "ve render (ending_problems) refuses props carrying a sting clip, no close, or another theme from 26 Nov"
+        },
+        {
+          "file": "scripts/velib/guards.py",
+          "contains": "def close_problems(",
+          "how": "ve lint refuses a spec naming a sting clip anywhere, or made in another theme, from 26 Nov"
+        },
+        {
+          "file": "scripts/brand_palette.py",
+          "contains": "the sting closes no cut: every video ends on the plain v5",
+          "how": "the palette guard refuses a close that plays the sting"
+        },
+        {
+          "file": "tests/ve_compile_test.py",
+          "contains": "def test_a_sting_clip_anywhere_in_a_cut_from_26_nov_is_refused",
+          "how": "the refusal proved on the v5 fixture"
         }
       ]
     },

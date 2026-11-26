@@ -24,7 +24,12 @@ ENDING_FRAMES = 180  # the house close: 6 s, settled by 2.75 s then held (docs/p
 # Ruling, Krish, 2026-11-12: "I approve the brand palette sheet, but only if it falls in line with the attached").
 ENDING_FRAMES_BY_ASPECT = {'16:9': ENDING_FRAMES, '9:16': 60}
 # Krish, 10 Nov 2026: "The copy should read: "Built to help you decide."" (the same words as quick-edit's kit TAGLINE).
-_CLOSE_COPY = load_json(ROOT / 'config' / 'brand-palette.json')['close_copy']  # the one copy of the close's words
+_PALETTE = load_json(ROOT / 'config' / 'brand-palette.json')
+_CLOSE_COPY = _PALETTE['close_copy']  # the one copy of the close's words
+# Every video ends on the plain v5 outro card (Ruling, Krish, 2026-11-26: "1 agreed"; config/brand-palette.json
+# series_close): the ending band's plain card (EndingBand.tsx) drawn in the locked v5 look, never the intro sting.
+V5_CLOSE = _PALETTE['series_close']
+V5_CLOSE_RULING = f'Ruling, Krish, {V5_CLOSE["from"]}: "{V5_CLOSE["words"]}"'
 ENDING_TAGLINE = _CLOSE_COPY['tagline']
 ENDING_CTA = _CLOSE_COPY['cta']
 # The opening, under test (Krish, 29 Oct 2026: "I'd pick number one here but I think that we need to test and learn.
@@ -94,12 +99,13 @@ CLOSE_STING_SHAPE = {'16:9': '16x9', '9:16': '9x16'}
 
 
 def close_sting_props(spec: dict, cut: dict, channel: str, off: bool) -> tuple[dict | None, str | None]:
-    """props.ending.sting for this cut, and why there is none when the close wants one. The series close is the intro
-    sting at the END of the cut (Ruling, Krish, 2026-11-20: "A, with Built to help you decide, and then Subscribe free at
-    makeyourmindup.ai"; config/intro-sting.json close, config/brand-palette.json sting_beat and sting_card), for a whole
-    cut of a weekly series piece dated from close.applies_from. Never an opening: the sting at the start stays retired.
-    (None, None) when the cut does not close on it (an excerpt, an off day, a piece dated before it); (None, why) when
-    it should and its clip is not on this machine, so ve render refuses (ending_problems) rather than closing on ink."""
+    """props.ending.sting for this cut, and why there is none when the close wants one. Every cut dated from 26 Nov ends
+    on the plain v5 outro card with no sting (Ruling, Krish, 2026-11-26: "1 agreed"; config/brand-palette.json
+    series_close), so this gives one only to a whole cut of a weekly series piece dated 23 to 25 Nov, signed with the
+    retired sting close (Ruling, Krish, 2026-11-20; config/intro-sting.json close, applies_from to applies_until), so it
+    still renders as signed (F33). Never an opening: the sting at the start stays retired. (None, None) when the cut does
+    not close on it; (None, why) when it should and its clip is not on this machine, so ve render refuses
+    (ending_problems)."""
     shape = CLOSE_STING_SHAPE.get(cut.get('aspect'))
     if cut.get('excerpt', False) or off or not shape:
         return None, None
@@ -113,29 +119,81 @@ def close_sting_props(spec: dict, cut: dict, channel: str, off: bool) -> tuple[d
     return {'src': str(path), 'series': intro.series_name(channel), 'sha256': sha256, 'frames': int(frames)}, None
 
 
-def ending_problems(props: dict, spec: dict | None = None) -> list[str]:
-    """Why a whole cut's close is not the one the palette asks for it: a series piece dated from the close's
-    applies_from closes on the sting clip Krish saw (Ruling, Krish, 2026-11-20), never on the plain ink card; an off
-    day never closes on one. Empty for an excerpt or a piece dated before the close."""
-    ending = props.get('ending')
-    if not ending or spec is None:
-        return []
-    channel = str((spec.get('brand') or {}).get('series') or '').replace('.', '_')
-    off = not ending.get('days')
-    shape = CLOSE_STING_SHAPE.get(props.get('aspect'))
-    intro = _intro()
-    want = (not off) and shape and intro.close_wanted(shape, channel, spec.get('publish_day'))
-    sting = ending.get('sting')
-    if want and not sting:
-        return [f'this {props.get("aspect")} cut of a series piece closes on the intro sting from '
-                f'{(intro.close_rules() or {}).get("applies_from")} (Ruling, Krish, 2026-11-20), and its props close on the '
-                'ink card: run python scripts/quick-edit/intro.py fetch, then ve compile again']
-    if sting and not want:
-        return ['the props close on a sting this cut does not wear (an off day, or a piece dated before the sting close)']
-    if sting and sting.get('sha256') != intro.clip_sha256(shape, channel):
-        return [f'the close plays sting {str(sting.get("sha256"))[:12]}, not the {shape} {channel} clip Krish saw '
-                '(config/intro-sting.json)']
+def _sting_marks(intro) -> set[str]:
+    """What names an intro sting clip: each clip's file name and sha256 (config/intro-sting.json clips), and the
+    library folder they live in."""
+    marks = {intro.LIBRARY_STING.lower()}
+    try:
+        clips = intro.load().get('clips') or {}
+    except intro.IntroError:
+        return marks
+    for per in clips.values():
+        for entry in (per or {}).values():
+            marks.add(Path(str(entry.get('library') or '')).name.lower())
+            marks.add(str(entry.get('sha256') or '').lower())
+    return {mark for mark in marks if mark}
+
+
+def carried_stings(value, marks: set[str], where: str = 'props') -> list[str]:
+    """Every place in value (props or a spec) that names an intro sting clip: a path, file name or sha256 that
+    _sting_marks knows, or a path inside the library folder they live in."""
+    if isinstance(value, dict):
+        return [hit for key, item in value.items() for hit in carried_stings(item, marks, f'{where}.{key}')]
+    if isinstance(value, list):
+        return [hit for i, item in enumerate(value) for hit in carried_stings(item, marks, f'{where}.{i}')]
+    if isinstance(value, str):
+        low = value.lower().replace('\\', '/')
+        if low in marks or low.rsplit('/', 1)[-1] in marks or any(mark in low for mark in marks if '/' in mark):
+            return [where]
     return []
+
+
+def ending_problems(props: dict, spec: dict | None = None) -> list[str]:
+    """Why a whole cut's close is not the one the palette asks for it. Every video dated from 26 Nov ends on the plain v5
+    outro card (Ruling, Krish, 2026-11-26: "1 agreed"; config/brand-palette.json series_close): the ending band's plain
+    card, drawn in the locked v5 look (props.renderTheme makeyourmindup-v5), with no intro sting clip anywhere in the
+    props. A whole series cut dated 23 to 25 Nov was signed with the retired sting close and keeps it (F33): it closes
+    on the sting clip Krish saw. Empty for a piece dated before 23 Nov."""
+    if spec is None:
+        return []
+    ending = props.get('ending')
+    day = str(spec.get('publish_day') or '')[:10]
+    cut = (spec.get('cuts') or {}).get(props.get('cutId')) or {}
+    whole = bool(cut) and not cut.get('excerpt', False) and props.get('format') != 'why-ladder-v5'
+    intro = _intro()
+    channel = str((spec.get('brand') or {}).get('series') or '').replace('.', '_')
+    shape = CLOSE_STING_SHAPE.get(props.get('aspect'))
+    off = not (ending or {}).get('days')
+    want = bool(ending) and not off and bool(shape) and intro.close_wanted(shape, channel, day)
+    sting = (ending or {}).get('sting')
+    marks = _sting_marks(intro)
+    if want:
+        if not sting:
+            return [f'this {props.get("aspect")} cut of a series piece dated {day} was signed with the sting close '
+                    '(Ruling, Krish, 2026-11-20; config/intro-sting.json close), and its props close on the plain card: '
+                    'run python scripts/quick-edit/intro.py fetch, then ve compile again']
+        if sting.get('sha256') != intro.clip_sha256(shape, channel):
+            return [f'the close plays sting {str(sting.get("sha256"))[:12]}, not the {shape} {channel} clip Krish saw '
+                    '(config/intro-sting.json)']
+        hits = [hit for hit in carried_stings(props, marks) if not hit.startswith('props.ending.sting')]
+        return [f'the props carry an intro sting clip at {", ".join(hits)}, beyond the close it was signed with'] if hits else []
+    out = []
+    if sting:
+        out.append(f'the props close on the intro sting, and the sting closes no cut: every video ends on the plain v5 outro '
+                   f'card ({V5_CLOSE_RULING}); run ve compile again')
+    hits = [hit for hit in carried_stings(props, marks) if not hit.startswith('props.ending.sting')]
+    if day >= V5_CLOSE['from'] and hits:
+        out.append(f'the props carry an intro sting clip at {", ".join(hits)}: no cut dated from {V5_CLOSE["from"]} carries '
+                   f'the sting clips anywhere ({V5_CLOSE_RULING}); run ve compile again')
+    if day >= V5_CLOSE['from'] and whole:
+        if not ending:
+            out.append(f'this whole {props.get("aspect")} cut has no close: every video ends on the plain v5 outro card '
+                       f'({V5_CLOSE_RULING}); run ve compile again')
+        elif props.get('renderTheme') != V5_CLOSE['theme']:
+            out.append(f'this cut\'s close is drawn in {props.get("renderTheme") or "the pre-v5 theme"}, not the locked v5 '
+                       f'look ({V5_CLOSE["theme"]}): every video ends on the plain v5 outro card ({V5_CLOSE_RULING}); '
+                       'run ve compile again')
+    return out
 
 
 def hook_end(props: dict) -> int:
@@ -839,13 +897,15 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                                     for c in house['channels'] if c in publication['channel_colors']] if not off else []}
         if spec.get('style', {}).get('ending_ticker') is False:
             props['ending']['ticker'] = False  # no scrolling promise strip (Krish: no marquee)
-        # The series close on the sting (Ruling, Krish, 2026-11-20): the same 60 frames tall and 180 wide, the sting
-        # inside them (EndingBand.tsx). Without its clip here the props close on ink and ve render refuses them.
+        # The plain v5 outro card (Ruling, Krish, 2026-11-26: "1 agreed"; EndingBand.tsx): 60 frames tall, 180 wide. Only
+        # a series cut dated 23 to 25 Nov keeps the retired sting close it was signed with (F33); without its clip here
+        # the props close on the plain card and ve render refuses them.
         close_sting, close_why = close_sting_props(spec, cut, channel, off)
         if close_sting:
             props['ending']['sting'] = close_sting
         if report is not None:
-            report['close'] = 'sting' if close_sting else ('ink' if not close_why else f'ink, sting missing: {close_why}')
+            report['close'] = ('sting' if close_sting else
+                               ('v5_outro' if not close_why else f'v5_outro, sting missing: {close_why}'))
         props['durationFrames'] += ENDING_FRAMES_BY_ASPECT.get(cut['aspect'], ENDING_FRAMES)
         # The ending band is drawn by BrandFrame, which FormatMaster mounts only for an active beat, so the last
         # beat (and what persists to it) runs through the ending. Captions stop at its start.

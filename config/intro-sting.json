@@ -1,16 +1,18 @@
 {
   "schema_version": 2,
   "status": "retired",
-  "about": "The makeyourmindup intro sting, retired for good (Ruling, Krish, 2026-11-12: \"Nothing before the hook, ever. Remove the sting exception for good.\"). No cut, wide or tall, series or off day, carries anything before its hook: the first frame of every cut is the hook (house rule HOOK_IS_THE_INTRO). The six clips he saw on the Intro Sting page stay in the library and are named here for the record only; intro.py gives no cut a sting, refuses an approval of this config, and refuses any status but \"retired\" on it. Its history keeps every word he said about it. Since 20 Nov 2026 the same six clips are the series close's plate, never an opening: the \"close\" block below (Ruling, Krish, 2026-11-19 and 2026-11-20).",
+  "about": "The makeyourmindup intro sting, retired for good (Ruling, Krish, 2026-11-12: \"Nothing before the hook, ever. Remove the sting exception for good.\"). No cut, wide or tall, series or off day, carries anything before its hook: the first frame of every cut is the hook (house rule HOOK_IS_THE_INTRO). The six clips he saw on the Intro Sting page stay in the library and are named here for the record only; intro.py gives no cut a sting, refuses an approval of this config, and refuses any status but \"retired\" on it. Its history keeps every word he said about it. From 23 to 25 Nov 2026 the same six clips were the series close's plate, never an opening; that close is retired too (Ruling, Krish, 2026-11-26: \"1 agreed\"), and every video now ends on the plain v5 outro card: the \"close\" block below.",
   "close": {
-    "status": "approved",
-    "about": "The series close: the sting plays at the END of the cut, after his last word, and nothing changes at the start (the opening stays retired: nothing before the hook, ever). Tall (9:16): the sting's frames 1 to 44 at 1.5x, then its settled band (frame 48) holds while the whole plate lifts 330 px, \"Built to help you\" (Anton) and \"decide.\" (Fraunces italic) land under it in ink, then an ink \"Subscribe free\" pill beside makeyourmindup.ai; exactly 2.0 s, every word inside the tall core box. Wide (16:9): the sting in full, then an ink ground wipes in from the right on its band frame, the band shrinks into the masthead slot, the line and the days row land, settled by 2.75 s, the right 44% left clear for YouTube's end-screen elements, then held to 6 s. Drawn by apps/renderer/src/engine/chrome/EndingBand.tsx from props.ending.sting (compile.close_sting_props); config/brand-palette.json closes sting_beat and sting_card.",
+    "status": "retired",
+    "about": "Retired on 26 Nov 2026 (Ruling, Krish, 2026-11-26: \"1 agreed\"): the intro sting closes no cut from Thu 26 Nov. Every video, series or off day, wide or tall, ends on the plain v5 outro card (config/brand-palette.json series_close: statement_card wide, statement_beat tall, drawn by apps/renderer/src/engine/chrome/EndingBand.tsx in the locked v5 look). From 23 to 25 Nov the six clips were the series close's plate at the END of the cut, never an opening: tall, the sting's frames 1 to 44 at 1.5x, its settled band (frame 48) held while the plate lifted and \"Built to help you decide.\" landed under it; wide, the sting in full, then an ink ground wiped in and the band shrank into the masthead slot. A series cut dated in that window (applies_from to applies_until) keeps the close it was signed with, so it still renders as signed (F33); nothing dated from 26 Nov may carry these clips anywhere (scripts/velib/compile.py ending_problems, scripts/velib/guards.py close_problems).",
     "shapes": [
       "9x16",
       "16x9"
     ],
     "applies_from": "2026-11-23",
     "applies_from_why": "Pieces of the week of 16 Nov are made on engines frozen at their storyboards (F33); every series piece from Mon 23 Nov closes on the sting.",
+    "applies_until": "2026-11-25",
+    "applies_until_why": "Retired on 26 Nov (Ruling, Krish, 2026-11-26: \"1 agreed\"). A series piece dated 23 to 25 Nov was made on an engine frozen at its storyboard (F33) with this close, so it keeps it; every cut dated from Thu 26 Nov ends on the plain v5 outro card.",
     "tall": {
       "frames": 60,
       "speed": 1.5,
@@ -44,6 +46,14 @@
         "by": "Krish",
         "picked": "Direction A (tall: the band lifts, the line lands under it; wide: the sting resolves into the statement card)",
         "words": "A, with Built to help you decide, and then Subscribe free at makeyourmindup.ai"
+      },
+      {
+        "on": "2026-11-26",
+        "by": "Krish",
+        "decision": "retired",
+        "asked": "Every series video still closes on the old intro-sting clips (day colours, the old gift-box wordmark). My recommendation: retire them and end on the plain v5 outro card.",
+        "words": "1 agreed",
+        "means": "The sting closes no cut from Thu 26 Nov: every video, wide or tall, ends on the plain v5 outro card (config/brand-palette.json series_close). The clips stay in Drive, unused by any new cut."
       }
     ]
   },

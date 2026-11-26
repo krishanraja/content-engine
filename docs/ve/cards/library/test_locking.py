@@ -36,7 +36,7 @@ class ApprovalWorkflow(unittest.TestCase):
         native = ROOT.parents[1]/'content-engine/.cache/visual-render/node_modules/@resvg/resvg-js'
         if native.is_dir():
             self.env.setdefault('RESVG_MODULE',str(native))
-        for path in ['.scratch/tonal-ab/'+f for f in ('DMMono-Regular.ttf','Anton-Regular.ttf','Fraunces-Upright-Variable.ttf')]+[
+        for path in ['assets/fonts/makeyourmindup/'+f for f in ('DMMono-Regular.ttf','Anton-Regular.ttf','Fraunces-Upright-Variable.ttf')]+[
             'assets/fonts/makeyourmindup/Fraunces-'+s+'-Variable.ttf' for s in ('Italic','Upright')]:
             (self.root/path).parent.mkdir(parents=True,exist_ok=True)
             shutil.copyfile(ROOT/path,self.root/path)

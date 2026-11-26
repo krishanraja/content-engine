@@ -12,7 +12,7 @@ Each edition is a folder:
 | `index.html` | The page. Self-contained apart from Google Fonts and `logo.png`. |
 | `body.md` | The piece's text at the version the fact gate passed. The page says this and nothing else. |
 | `edition.json` | The piece's id, its subchannel, and the fact-gate record for `body.md`: its hash, when the check ran, and the tally. |
-| `logo.png` | Not in the repository: image files are never committed (`scripts/check-no-secrets.ts`). Copy `logos/makeyourmindup-horizontal-on-dark-2400w.png` from the v5 brand kit (`brand-kit/makeyourmindup-brand-kit.zip` in `krishanraja/makeyourmindup`, inside its `makeyourmindup-brand-kit/` folder) beside the page as `logo.png` when publishing it. The same lockup as a vector is `assets/brand/makeyourmindup/v5/v9.svg` here. |
+| `logo.png` | Not in the repository: image files are never committed (`scripts/check-no-secrets.ts`). Copy `logos/makeyourmindup-horizontal-2400w.png` from the v5 brand kit (`brand-kit/makeyourmindup-brand-kit.zip` in `krishanraja/makeyourmindup`, inside its `makeyourmindup-brand-kit/` folder) beside the page as `logo.png` when publishing it. The same lockup as a vector is `assets/brand/makeyourmindup/v5/v9.svg` here. |
 
 `tests/control-plane/editions.test.ts` holds every edition to two rules:
 
