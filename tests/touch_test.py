@@ -27,9 +27,9 @@ TOOLS = {'report_to_taste_engine', 'record_harness_observation', 'find_research'
 
 
 class Fakes:
-    def __init__(self, code=0, post_ok=True):
+    def __init__(self, code=0, post_ok=True, reachable=True):
         self.cmds, self.ghs, self.gets, self.posts = [], [], [], []
-        self.code, self.post_ok = code, post_ok
+        self.code, self.post_ok, self.reachable = code, post_ok, reachable
 
     def cmd(self, argv):
         self.cmds.append(list(argv))
@@ -50,6 +50,8 @@ class Fakes:
 
     def post(self, url, body, key):
         self.posts.append((url, body, key))
+        if not self.reachable:
+            return None, {'error': {'message': 'URLError'}}
         if self.post_ok:
             return 200, {'jsonrpc': '2.0', 'id': body['id'], 'result': {'content': [{'type': 'text', 'text': 'ok, stored'}]}}
         return 200, {'jsonrpc': '2.0', 'id': body['id'], 'result': {'isError': True, 'content': [{'type': 'text', 'text': 'not on this connection'}]}}
@@ -186,17 +188,29 @@ class RunTest(Base):
         self.assertEqual(self.outbox(), [])
         self.assertNotIn('k-test', json.dumps(self.log()), 'the key is never logged')
 
-    def test_a_tool_the_connection_refuses_stays_queued(self):
+    def test_a_tool_control_center_refuses_is_failed_never_queued(self):
         fakes = Fakes(post_ok=False)
         lines = self.runner(fakes, env={'CC_HARNESS_KEY': 'k'}).run(0, WEEK, only={'s0-cc-brief'})
-        self.assertEqual(lines[0]['status'], 'queued')
+        self.assertEqual(lines[0]['status'], 'failed')
         self.assertIn('not on this connection', lines[0]['reason'])
+        self.assertEqual(self.outbox(), [], 'a refusal is an answer: nothing for drain to send again')
+        line = self.runner(fakes, env={'CC_HARNESS_KEY': 'k'}).run(
+            7, WEEK, only={'s7-credits-reserve'}, sets={'generation': 'g1', 'pool': 'higgsfield', 'amount': '12', 'asset': 'a still'})[0]
+        self.assertEqual(line['status'], 'failed', 'an over_share reservation is never booked later by a drain')
+        self.assertEqual(self.outbox(), [])
+        rpc = lambda url, body, key: (200, {'jsonrpc': '2.0', 'id': body['id'], 'error': {'code': -32602, 'message': 'invalid_summary_length'}})  # noqa: E731
+        outcome, why, _ = touch.mcp_call('record_harness_observation', {}, key='k', url='u', post=rpc)
+        self.assertEqual((outcome, 'invalid_summary_length' in why), (touch.REFUSED, True))
+
+    def test_an_unreachable_control_center_queues_for_drain(self):
+        lines = self.runner(Fakes(reachable=False), env={'CC_HARNESS_KEY': 'k'}).run(0, WEEK, only={'s0-cc-brief'})
+        self.assertEqual(lines[0]['status'], 'queued')
         self.assertEqual(len(self.outbox()), 1)
 
     def test_numbers_stay_numbers_in_tool_arguments(self):
         fakes = Fakes()
         self.runner(fakes, env={'CC_HARNESS_KEY': 'k'}).run(7, WEEK, only={'s7-credits-reserve'},
-                                                            sets={'pool': 'higgsfield', 'amount': '12', 'asset': '3 stills'})
+                                                            sets={'generation': 'g1', 'pool': 'higgsfield', 'amount': '12', 'asset': '3 stills'})
         args = fakes.posts[0][1]['params']['arguments']
         self.assertEqual(args, {'engine': 'growth-makeyourmindup', 'pool': 'higgsfield', 'amount': 12, 'asset': '3 stills'})
 
@@ -266,8 +280,40 @@ class CheckTest(Base):
         found = touch.check(2, WEEK, plans=self.plans, cfg=self.cfg)
         self.assertEqual({f['ref'] for f in found}, {r['id'] for r in touch.rows_of(2, self.cfg) if r['required']})
         self.assertTrue(all(f['code'] == 'touch' for f in found))
+        f = self.folder()
+        (f / 'story').mkdir()
+        for name in ('story/angles.json', 'story/wildcards.json', 'story/reads.json', 'scores.json'):
+            (f / name).write_text('{}', encoding='utf-8')
         self.runner(Fakes()).run(2, WEEK)
         self.assertEqual(touch.check(2, WEEK, plans=self.plans, cfg=self.cfg), [])
+
+    def test_a_required_evidence_file_that_is_missing_stays_a_finding(self):
+        lines = self.runner(Fakes()).run(2, WEEK)
+        score = next(x for x in lines if x['id'] == 's2-story-score')
+        self.assertEqual((score['status'], score['skip_kind']), ('skipped', 'not_given'))
+        refs = {f['ref'] for f in touch.findings(2, WEEK, plans=self.plans, cfg=self.cfg)}
+        self.assertTrue({'s2-story-score', 's2-divergent-angles', 's2-divergent-wildcard', 's2-humour-reads'} <= refs, refs)
+        self.assertNotIn('s2-killlist-lines', refs, 'a row another gate enforces (no evidence file) is not_applicable')
+
+    def test_stage_6_with_no_scripts_given_fails_its_check(self):
+        lines = self.runner(Fakes()).run(6, WEEK, piece=PIECE)
+        self.assertEqual({x['skip_kind'] for x in lines if x['id'] in ('s6-voice', 's6-humour-long', 's6-killlist')}, {'not_given'})
+        refs = {f['ref'] for f in touch.check(6, WEEK, piece=PIECE, plans=self.plans, cfg=self.cfg)}
+        self.assertTrue({'s6-voice', 's6-humour-long', 's6-killlist'} <= refs, refs)
+
+    def test_a_read_not_served_or_merely_queued_does_not_complete_a_required_row(self):
+        class NoGh(Fakes):
+            def gh(self, path):
+                self.ghs.append(path)
+                return 1, 'HTTP 404: Not Found'
+        self.runner(NoGh(), env={}).run(0, WEEK)
+        refs = {f['ref'] for f in touch.check(0, WEEK, plans=self.plans, cfg=self.cfg)}
+        self.assertIn('s0-strategist-memo', refs, 'not served is not read')
+        self.assertIn('s0-cc-instruction', refs, 'his instruction queued is not his instruction read')
+        row = {'direction': 'inform'}
+        self.assertTrue(touch.satisfied({'status': 'queued'}, row), 'an inform queued for drain completes its row')
+        self.assertFalse(touch.satisfied({'status': 'skipped', 'reason': 'not given: long', 'skip_kind': 'not_given'}, row))
+        self.assertTrue(touch.satisfied({'status': 'skipped', 'reason': 'a manual row', 'skip_kind': 'not_applicable'}, row))
 
     def test_a_failed_or_reasonless_skip_does_not_complete_a_stage(self):
         f = self.folder()
@@ -299,6 +345,23 @@ class CheckTest(Base):
         out = []
         self.assertEqual(touch.main(['check', '2', '--week', WEEK, '--plans', str(self.plans)], cfg=self.cfg, out=out.append), 1)
         self.assertIn('s2-story-score', out[0])
+
+
+    def test_a_higgsfield_generation_reads_the_estimate_and_books_its_credits(self):
+        self.runner(Fakes()).run(7, WEEK, piece=PIECE)
+        refs = {f['ref'] for f in touch.check(7, WEEK, piece=PIECE, plans=self.plans, cfg=self.cfg)}
+        self.assertFalse({'s7-higgsfield-estimate', 's7-credits-reserve', 's7-credits-settle'} & refs, 'no generation: not applicable')
+        sets = {'generation': 'still-1', 'pool': 'higgsfield', 'amount': '4', 'asset': 'a still'}
+        self.runner(Fakes(), env={}).run(7, WEEK, piece=PIECE, sets=sets)
+        refs = {f['ref'] for f in touch.check(7, WEEK, piece=PIECE, plans=self.plans, cfg=self.cfg)}
+        self.assertIn('s7-higgsfield-estimate', refs, 'no estimate read from the generator: a finding')
+        self.assertIn('s7-credits-settle', refs, 'a booked generation must be settled')
+        self.assertNotIn('s7-credits-reserve', refs, 'the reservation is queued for drain (an inform)')
+        est = self.folder() / 'higgsfield' / 'still-1.estimate.json'
+        est.parent.mkdir()
+        est.write_text('{"estimate_credits": 4}', encoding='utf-8')
+        self.runner(Fakes(), env={}).run(7, WEEK, piece=PIECE, sets=dict(sets, spend_id='sp-1', settled='4'))
+        self.assertEqual(touch.check(7, WEEK, piece=PIECE, plans=self.plans, cfg=self.cfg), [])
 
 
 class GatesTest(Base):
@@ -339,16 +402,52 @@ class DrainTest(Base):
         self.assertEqual((code, len(left), fakes.posts), (2, 2, []))
         self.assertEqual(len(self.outbox()), 2)
 
-    def test_drain_keeps_what_is_refused_and_reads_the_week_log(self):
+    def test_drain_keeps_what_did_not_arrive_and_reads_the_week_log(self):
         self.runner(Fakes(), env={}).run(0, WEEK)
         Path(self.cfg['files']['outbox']).unlink()  # a headless run's outbox is gone; the week's log still holds them
-        fakes = Fakes(post_ok=False)
-        code, left = self.runner(fakes, env={'CC_HARNESS_KEY': 'k'}).drain(WEEK)
+        code, left = self.runner(Fakes(reachable=False), env={'CC_HARNESS_KEY': 'k'}).drain(WEEK)
         self.assertEqual((code, len(left)), (1, 2))
         self.assertEqual(len(self.outbox()), 2)
         code, left = self.runner(Fakes(), env={'CC_HARNESS_KEY': 'k'}).drain(WEEK)
         self.assertEqual((code, left), (0, []))
         self.assertEqual(self.outbox(), [])
+        self.assertEqual(touch.pending_in_log(WEEK, self.plans), [])
+
+    def test_drain_drops_a_refusal_and_never_sends_it_again(self):
+        self.runner(Fakes(), env={}).run(7, WEEK, only={'s7-credits-reserve'}, sets={'generation': 'g1', 'pool': 'higgsfield', 'amount': '12', 'asset': 'a'})
+        code, left = self.runner(Fakes(post_ok=False), env={'CC_HARNESS_KEY': 'k'}).drain(WEEK)
+        self.assertEqual((code, left), (0, []))
+        self.assertEqual(self.outbox(), [])
+        self.assertEqual(self.log()[-1]['status'], 'failed')
+        self.assertEqual(touch.pending_in_log(WEEK, self.plans), [], 'a refused reservation is not re-sent when the share frees')
+
+    def test_two_queued_calls_of_one_row_both_survive_a_lost_outbox(self):
+        for topic in ('music royalties', 'sports rights'):
+            self.runner(Fakes(), env={}).run(1, WEEK, only={'s1-research-find'}, sets={'topic': topic})
+        Path(self.cfg['files']['outbox']).unlink()
+        pending = touch.pending_in_log(WEEK, self.plans)
+        self.assertEqual(sorted(e['arguments']['query'] for e in pending), ['music royalties', 'sports rights'])
+        fakes = Fakes()
+        code, left = self.runner(fakes, env={'CC_HARNESS_KEY': 'k'}).drain(WEEK)
+        self.assertEqual((code, left), (0, []))
+        self.assertEqual(sorted(b['params']['arguments']['query'] for _, b, _ in fakes.posts), ['music royalties', 'sports rights'])
+        self.assertEqual(touch.pending_in_log(WEEK, self.plans), [])
+
+    def test_drain_sends_a_log_entry_beside_an_outbox_entry_of_the_same_row(self):
+        self.runner(Fakes(), env={}).run(1, WEEK, only={'s1-research-find'}, sets={'topic': 'film dubbing'})
+        Path(self.cfg['files']['outbox']).unlink()
+        self.runner(Fakes(), env={}).run(1, WEEK, only={'s1-research-find'}, sets={'topic': 'stadium tickets'})
+        fakes = Fakes()
+        self.runner(fakes, env={'CC_HARNESS_KEY': 'k'}).drain(WEEK)
+        self.assertEqual(sorted(b['params']['arguments']['query'] for _, b, _ in fakes.posts), ['film dubbing', 'stadium tickets'])
+
+    def test_a_sent_entry_whose_row_is_gone_leaves_the_outbox(self):
+        self.runner(Fakes(), env={}).run(0, WEEK, only={'s0-cc-brief'})
+        self.cfg['rows'] = [r for r in self.cfg['rows'] if r['id'] != 's0-cc-brief']
+        fakes = Fakes()
+        code, left = self.runner(fakes, env={'CC_HARNESS_KEY': 'k'}).drain()
+        self.assertEqual((code, left, len(fakes.posts)), (0, [], 1))
+        self.assertEqual(self.outbox(), [], 'never re-sent on every drain')
 
 
 if __name__ == '__main__':

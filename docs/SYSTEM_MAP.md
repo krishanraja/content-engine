@@ -2,7 +2,7 @@
 
 Status: Current
 Owner: Krish Raja
-Last verified: 2026-11-12 against `main` at `02184d34` for the code, crons and workflows (every path named here checked to exist), control-center's `main` for its side, and a read-only database readback the same day; the workflows and Krish's surfaces rechecked on 16 Nov against `main` at `4fcf48fb` and control-center's `main`; the ownership split, the story engine and the production cycle (`config/cycle.json`) added on 26 Nov against branch `story/engine-v5` at `53ff7558` (not on `main` yet; every path named for them checked to exist on that branch)
+Last verified: 2026-11-12 against `main` at `02184d34` for the code, crons and workflows (every path named here checked to exist), control-center's `main` for its side, and a read-only database readback the same day; the workflows and Krish's surfaces rechecked on 16 Nov against `main` at `4fcf48fb` and control-center's `main`; the ownership split, the story engine and the production cycle (`config/cycle.json`) added on 26 Nov against branch `story/engine-v5` at `e3593a2f` (not on `main` yet; every path named for them checked to exist on that branch)
 
 One page on how the whole system fits together: what runs where, who owns
 what, and how a piece travels from a signal to a published post. Detail lives
@@ -39,7 +39,7 @@ worth making and writes it; production makes the media from it.
 | The taste engine and inspirationhouse | his rejections and cues, read only as the story floor; his presses and edits reported to his taste ledger | `scripts/post-pack/story_floor.py`, `report_to_taste_engine` |
 | internal-auditor | engine defects, refused gates and the week's failures, recorded as observations | `record_harness_observation` |
 | krish-clone | the clone registry, read before any synthetic face or voice | its registry, read at its raw URL |
-| Higgsfield | the generator's recipes and cost estimate before a paid generation, under Control Center's credit reservation | `.agents/skills/produce-video` |
+| Higgsfield | before a generation, the generator's own cost estimate and recipe, saved for the piece (`s7-higgsfield-estimate`), then Control Center's reservation and settlement, all required once a generation is named | `.agents/skills/produce-video` |
 | makeyourmindup | the kill list (pinned in `vendor/makeyourmindup/kill-list/`, its drift checked against upstream) and the publication catalogue | `krishanraja/makeyourmindup` |
 | inspirationhouse | the daily Inspiration House run that turns Krish's feedback into cues (`feedback_cues`), and the Rejections engine that writes `config/rejection-floor.json` (its `src/rejection/publish.ts`); its runs share the run ledger as the `taste_*` jobs | `krishanraja/inspirationhouse` |
 | teleprompter.com | the scripts Krish reads on camera, sent once he approves their exact words | his account, through the Teleprompter connector or the engine's server |
@@ -147,7 +147,7 @@ them later (`docs/INTEGRATIONS.md`). Prompts, skills and runs name the stage, ne
 | 4 Research and 5 Whys | the picked piece | the piece's corpus, divergence-engine `challenge`, research filed, the board session report |
 | 5 Narrative lock | before he signs | the corpus, the humour read of hook and landing, his lock edits as an observation |
 | 6 Scripts | make-piece, before `making.py scripts` | the voice check, humour reads, the kill list, his script edits, the Teleprompter record |
-| 7 Visuals and video | produce-video, before any paid generation | Higgsfield recipes, the clone registry, credit caps, reserve and settle |
+| 7 Visuals and video | produce-video, before any paid generation | the Higgsfield estimate, the clone registry, credit caps, reserve and settle |
 | 8 Publish approval | before the publish page | the done-checks, the voice check on captions, the makeyourmindup catalogue, engine defects to the auditor |
 | 9 Distribution | once a piece is out | Growth receives the finished assets and captions in the manifest; divergence-engine records what published |
 | 10 Learn | after the week | Growth's performance per piece, strategist's NOW line, the auditor's week, corrections, Drive folder changes |
