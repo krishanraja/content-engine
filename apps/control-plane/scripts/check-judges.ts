@@ -76,6 +76,16 @@ for (const [gate, roster] of [['idea', IDEA_JUDGES], ['draft', DRAFT_JUDGES]] as
 assert.deepEqual(rosterFor('idea'), IDEA_JUDGES)
 assert.deepEqual(rosterFor('draft'), DRAFT_JUDGES)
 assert.match(ROSTER_VERSION, /^[a-z0-9][a-z0-9._-]{0,39}$/)
+// Ruling (Krish, 2026-11-26): the buyer judge is kept as the paying reader. Its
+// key stays 'buyer' so stored verdicts join; its label says what it asks.
+{
+  const buyer = IDEA_JUDGES.find(j => j.key === 'buyer')
+  assert.ok(buyer, 'the paying-reader judge keeps the key buyer')
+  assert.equal(buyer!.label, 'Paying reader')
+  assert.match(buyer!.question, /pay for this/)
+  assert.doesNotMatch(`${buyer!.question} ${buyer!.rubric}`, /thirty|commercial leader|hire/i, 'the retired thirty-day buyer stays retired')
+  assert.match(buildJudgePrompt(buyer!, 'idea'), /the paying reader judge/)
+}
 
 // ── 2. Evidence is mandatory ────────────────────────────────────────────────
 {

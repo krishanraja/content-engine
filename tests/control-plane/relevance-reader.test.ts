@@ -92,6 +92,13 @@ describe('the reader and buyer judges read the new reader', () => {
     const buyer = IDEA_JUDGES.find(j => j.key === 'buyer')!
     expect(reader.rubric).toBe(beat.reader.judges.reader.rubric)
     expect(buyer.rubric).toBe(beat.reader.judges.buyer.rubric)
+    // Ruling, Krish, 2026-11-26: kept as the paying reader, recorded with the date; the flag asking him is gone.
+    expect(buyer.label).toBe('Paying reader')
+    expect(buyer.question).toContain('pay for this')
+    expect(buyer.rubric).toContain('forward it to their boss')
+    expect(buyer.rubric).toContain('free news they already saw')
+    expect((beat.reader.judges.buyer as Record<string, unknown>).flag).toBeUndefined()
+    expect(beat.reader.judges.buyer.ruling.at).toBe('2026-11-26')
     for (const j of [reader, buyer]) {
       const all = `${j.question} ${j.rubric} ${j.evidence}`
       expect(all).not.toContain('thirty')
