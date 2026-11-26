@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-23","week_target":20,"current":1,"current_as_of":"2026-11-25","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (0 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (5% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 20 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
+- Series videos rotate two beds week by week on every series day, Four on the Funky Flour and NO CURVES; Liberty City, Mind Bender, Conclusion, Seize It and the new Movie track go behind carousels; Just Got Real and Drifting Valleys are retired because their files are not in the Music folder, so the live ledger checks clean. (2026-11-26)
 - The last pre-v5 pointers point at the v5 kit (makeyourmindup brand-kit/, assets/brand/makeyourmindup/v5, Drive "1 Brand kit (permanent)/Channel art"), the felt robot and IBM Plex Mono are marked retired in live docs and skills, the palette marks pin the v5 SVGs, and the three ve tests that kept Full verify red since 08:12 on 26 Nov use the v5 fixture. (2026-11-26)
 - The stray guard leaves floor/rejections and inspo/new-drops alone, the branches the Rejections engine and the inspiration drops reuse. (2026-11-26)
 - config/beat.json carries sports as a focus sector (Ruling, Krish, 2026-11-25), so the feed, radar, ideas run and Sunday gate keep sports stories on the beat. Draft pull request, waiting for Krish's merge. (2026-11-25)
@@ -53,7 +54,7 @@ Older lines: `docs/history/2026-11-26-NOW-moved-6.md` (it names every earlier mo
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-26): Krish rules on the palette's days, series colours and sting closes, then the worker session uploads the v5 profile set.
+- Next (2026-11-26): Confirm the next series cut's report names one of the two rotation tracks.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
 - North Star check (2026-11-26): holds.
