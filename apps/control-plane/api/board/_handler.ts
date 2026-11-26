@@ -214,15 +214,18 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
       }
     }
     if (op === 'judge') {
-      // content-engine's 10/10 judges on Growth's carousels and Shorts (_judge.ts; Ruling, Krish, 2026-11-12: "Judge
-      // them; count passes."): judge one post, bind a pass to its Buffer post, or mark posts live. Growth's key only.
+      // content-engine's 10/10 judges on every carousel and Short (_judge.ts; Ruling, Krish, 2026-11-12: "Judge them;
+      // count passes."). content-engine makes every asset now (Ruling, Krish, 2026-11-26), so its make flow asks op judge
+      // itself on the engine operator's key (scripts/post-pack/judge_assets.py, recorded as written by content-engine);
+      // Growth keeps bind and live on its own key.
       if (!growthWriter(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })
       if (method !== 'POST') return res.status(405).json({ ok: false, error: 'method_not_allowed' })
       const week = scalar(req.query.week)
       if (!monday(week)) return res.status(400).json({ ok: false, error: 'invalid_week' })
       try {
         const { judgeAsset } = await import('./_judge.js')
-        const result = await judgeAsset(await getDb(), week, req.body, { ...(deps.judgePanel ? { panel: deps.judgePanel } : {}), ...(deps.now ? { now: () => new Date(deps.now!()) } : {}) })
+        const writtenBy = actor(req, true) === 'engine_operator' ? 'content-engine' : 'growth'
+        const result = await judgeAsset(await getDb(), week, req.body, { writtenBy, ...(deps.judgePanel ? { panel: deps.judgePanel } : {}), ...(deps.now ? { now: () => new Date(deps.now!()) } : {}) })
         return res.status(result.status).json(result.body)
       } catch { return res.status(503).json({ ok: false, error: 'judgements_unavailable' }) }
     }
