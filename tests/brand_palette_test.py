@@ -49,6 +49,17 @@ class Manifest(unittest.TestCase):
                 ink = ROOT / mark['file'].replace('.svg', '-ink.svg')
                 self.assertEqual(hashlib.sha256(ink.read_bytes()).hexdigest(), sha, key)
 
+    def test_the_studio_v5_pins_are_the_committed_bytes(self):
+        # 26 Nov 2026: the v5 theme pinned d-face-off.svg by the hash of a CRLF checkout, so the Studio's own byte check
+        # (packages/core/src/brand-assets.ts) would refuse the committed LF file. Every v5 mark pin is the file's own hash.
+        studio = json.loads((ROOT / 'config' / 'studio.json').read_text(encoding='utf-8'))
+        pins = [a for t in studio['brand_themes'] for a in (t.get('publication') or {}).values()
+                if isinstance(a, dict) and str(a.get('source_path', '')).startswith('assets/brand/makeyourmindup/v5/')]
+        self.assertGreaterEqual(len(pins), 3)
+        for a in pins:
+            self.assertNotIn(bytes([13, 10]), (ROOT / a['source_path']).read_bytes(), a['source_path'])
+            self.assertEqual(hashlib.sha256((ROOT / a['source_path']).read_bytes()).hexdigest(), a['sha256'], a['source_path'])
+
     def test_the_attached_corpus_is_kept(self):
         self.assertTrue((ROOT / 'docs' / 'production' / 'SOCIAL-BEST-PRACTICES-2026.md').is_file())
 
