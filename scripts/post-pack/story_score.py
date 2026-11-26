@@ -149,6 +149,12 @@ def body_text(view, main):
     parts = [ic.option_text_main(view) if main else ic.option_text_off(view), view.get('fact'), view.get('why_now'),
              view.get('funny'), view.get('dive'), *(view.get('beats') or []), *[pitch.get(k) for k in ('take', 'share')]]
     parts += [st.get('headline') or st.get('title') or st.get('what') for st in view.get('stories') or [] if isinstance(st, dict)]
+    if not main:
+        # An off day's own words as the beat gate reads them (idea_checks.offday_words): its topic, a template's title and
+        # why it works, and its cards (ruling offday_beat, Krish, 2026-11-26).
+        tpl = view.get('template') if isinstance(view.get('template'), dict) else {}
+        parts += [view.get('topic'), tpl.get('title'), tpl.get('why_it_works'), tpl.get('moment'),
+                  *[c.get('words') for c in view.get('cards') or [] if isinstance(c, dict)]]
     return ' '.join(_s(p) for p in parts if p)
 
 

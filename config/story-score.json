@@ -6,7 +6,8 @@
   "rulings": [
     {"id": "floor_only", "at": "2026-11-26", "ruling": "His taste is a floor only: his rejections refuse an option, never score it, and the judges stay blind (check-judges.ts section 4, tests/story_wall_test.py)."},
     {"id": "spend_ceiling", "at": "2026-11-26", "ruling": "The blind proof run spends at most $10, through the ledger, after the protocol is committed."},
-    {"id": "reader", "at": "2026-11-26", "ruling": "The approved North Star reader line (config/beat.json reader), his words: \"I approve the lines\"."}
+    {"id": "reader", "at": "2026-11-26", "ruling": "The approved North Star reader line (config/beat.json reader), his words: \"I approve the lines\"."},
+    {"id": "offday_beat", "at": "2026-11-26", "ruling": "The off days are the reader's world too: a good-news carousel, a meme, a short and an off-day carousel each hold the fit floor as a hard floor (config/beat.json offdays), his words: \"Make sure all the good news suggestions and meme suggestions are also aligned to the new positioning, as well as the carousels.\""}
   ],
   "audience_from": "config/beat.json reader.audience_short",
   "blind_view": {
@@ -264,7 +265,7 @@
         {"check": "comic_reading", "op": "in", "value": ["supported", "ambiguous"], "reason": "a short leads on humour the engine can read"},
         {"check": "needs_explaining", "op": "==", "value": false, "reason": "a short's joke never needs explaining"},
         {"check": "probe_documented", "op": ">=", "value": 1, "reason": "a short rests on at least one documented why"},
-        {"axis": "fit", "op": ">=", "value": 4, "hard": false, "reason": "a short is on the beat"}
+        {"axis": "fit", "op": ">=", "value": 4, "reason": "a short is on the beat: a focus-sector word in what it says (ruling offday_beat)"}
       ]
     },
     "offday_meme": {
@@ -273,21 +274,24 @@
       "floors": [
         {"check": "comic_reading", "op": "in", "value": ["supported"], "reason": "a meme's humour reads as supported"},
         {"check": "needs_explaining", "op": "==", "value": false, "reason": "a meme never needs explaining"},
-        {"check": "template_ok", "op": "==", "value": true, "reason": "a template is whole and its captions pass the kill list"}
+        {"check": "template_ok", "op": "==", "value": true, "reason": "a template is whole and its captions pass the kill list"},
+        {"axis": "fit", "op": ">=", "value": 4, "reason": "a meme is the reader's world, never office AI: a focus-sector word in what it says (ruling offday_beat)"}
       ]
     },
     "goodnews": {
       "label": "Saturday good news carousel",
       "weights": {"uplift": 2.5, "named_thing": 1.5, "scale": 1.5, "wonder": 1.5, "fun_produce": 1, "fit": 1, "evidence": 1},
       "floors": [
-        {"check": "goodnews_checks", "op": "==", "value": true, "reason": "the existing good-news checks stay the floor (config/good-news.json)"}
+        {"check": "goodnews_checks", "op": "==", "value": true, "reason": "the existing good-news checks stay the floor (config/good-news.json)"},
+        {"axis": "fit", "op": ">=", "value": 4, "reason": "the good news is people in the focus sectors doing, earning or making more with AI (ruling offday_beat)"}
       ]
     },
     "explainer": {
       "label": "Explainer or how-to (an off-day option with aim utility)",
       "weights": {"utility": 2.5, "mechanism": 1.5, "named_thing": 1.5, "fun_consume": 1.5, "fun_produce": 1, "fit": 1, "absurdity_humour": 1},
       "floors": [
-        {"check": "steps_verifiable", "op": "==", "value": true, "if_read": true, "reason": "every step is checked on the vendor's own documents"}
+        {"check": "steps_verifiable", "op": "==", "value": true, "if_read": true, "reason": "every step is checked on the vendor's own documents"},
+        {"axis": "fit", "op": ">=", "value": 4, "reason": "an off-day carousel, tip or how-to is for the reader's work: a focus-sector word in what it says (ruling offday_beat)"}
       ]
     },
     "edition_item": {
@@ -300,7 +304,7 @@
       ]
     }
   },
-  "floor_rows": "A floor is hard unless it says hard false: a hard floor that fails puts the option last and fails the Sunday gate (story_floor). A floor marked hard false is a note: reported beside the score (story_score.notes) and in the Sunday summary, never failing the gate or moving the order. The plan's hard floors are the series floors (a Monday's sourced money figure, a Wednesday's mechanism rung, a Friday's counter rung), the whys floors, a short's and a meme's humour, and the template and good-news checks; fit, a primary source and a short on the beat were added as floors without a ruling, so they are notes until Krish rules them hard. if_read: a floor whose value is not there (an explainer with no steps) is not read, never failed.",
+  "floor_rows": "A floor is hard unless it says hard false: a hard floor that fails puts the option last and fails the Sunday gate (story_floor). A floor marked hard false is a note: reported beside the score (story_score.notes) and in the Sunday summary, never failing the gate or moving the order. The plan's hard floors are the series floors (a Monday's sourced money figure, a Wednesday's mechanism rung, a Friday's counter rung), the whys floors, a short's and a meme's humour, and the template and good-news checks; fit on the off-day types (good news, meme, short, explainer) is hard by ruling offday_beat (Krish, 2026-11-26); a hero's fit and a primary source were added as floors without a ruling, so they are notes until Krish rules them hard. if_read: a floor whose value is not there (an explainer with no steps) is not read, never failed.",
   "hero_floors": {
     "types": ["hero_mon", "hero_wed", "hero_fri"],
     "floors": [

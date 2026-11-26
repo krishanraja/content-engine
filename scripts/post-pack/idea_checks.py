@@ -828,7 +828,11 @@ def considered_findings(ideas):
     return out
 
 
-GOOD_NEWS_KINDS = ('business', 'health', 'lab', 'science', 'work', 'money', 'learning', 'climate', 'creative', 'people', 'safety', 'other')
+# A good-news story's kind. From the story score's board the good news is people in the focus sectors doing, earning or
+# making more with AI (Krish, 2026-11-26; config/beat.json offdays.good_news), so each focus sector of config/beat.json
+# is a kind too (music, sports, film_tv ...): a sector is a row there, never here.
+GOOD_NEWS_KINDS = ('business', 'health', 'lab', 'science', 'work', 'money', 'learning', 'climate', 'creative', 'people', 'safety', 'other') + \
+    tuple(row['sector'] for row in json.loads((Path(__file__).resolve().parents[2] / 'config' / 'beat.json').read_text(encoding='utf-8'))['focus_sectors'])
 
 
 def goodnews_mix_findings(ideas):
@@ -1481,7 +1485,14 @@ COPY_RUN = 7
 # stuff."). Every rule reads config/good-news.json, so a new topic, limit or keyword is a row there.
 
 def good_news_config():
-    return json.loads((Path(__file__).resolve().parents[2] / 'config' / 'good-news.json').read_text(encoding='utf-8'))
+    """config/good-news.json, its topics led by the focus sectors of config/beat.json when it says sector_topics (Krish,
+    2026-11-26: the good news is the reader's world), so a music carousel is led by music, not by culture in general."""
+    root = Path(__file__).resolve().parents[2] / 'config'
+    cfg = json.loads((root / 'good-news.json').read_text(encoding='utf-8'))
+    if cfg.get('sector_topics'):
+        sectors = json.loads((root / 'beat.json').read_text(encoding='utf-8'))['focus_sectors']
+        cfg['topics'] = [{'kind': r['sector'], 'label': r['label'], 'keywords': list(r.get('keywords') or [])} for r in sectors] + cfg['topics']
+    return cfg
 
 
 GOOD_NEWS = good_news_config()
@@ -1499,11 +1510,12 @@ def is_good_news(o):
 
 
 def topic_kind_of(text):
-    """The good-news topic a text is about, by the keywords in config/good-news.json (most hits wins), or None."""
+    """The good-news topic a text is about, by the keywords in config/good-news.json (most hits wins; on a tie the first
+    row, so a focus sector before the general rows), or None. A keyword ending in * matches any ending, as in beat.json."""
     t = ' ' + re.sub(r'[^a-z0-9 ]+', ' ', str(text or '').lower()) + ' '
     best, n = None, 0
     for row in GOOD_NEWS['topics']:
-        hits = sum(t.count(f' {k} ') for k in row.get('keywords') or [])
+        hits = len(keyword_pattern(row.get('keywords')).findall(t)) if row.get('keywords') else 0
         if hits > n:
             best, n = row['kind'], hits
     return best
@@ -1992,6 +2004,73 @@ STORY_FROM = STORY['from']
 STORY_WHYS_MIN = 3  # rungs with a source url on a hero's pre-pick probe (packages/contracts/src/whys.ts WHY_LADDER_MIN)
 OPEN = ('open', 'held')  # board_feed.REMAKE: an option he never answered
 
+
+
+# The reader's world on the off days (Ruling, Krish, 2026-11-26: "Make sure all the good news suggestions and meme
+# suggestions are also aligned to the new positioning, as well as the carousels."). From the story score's `from` board
+# every off-day option, the weekly good news and the meme templates included, carries a focus-sector word somewhere in
+# what it says it is about (a dull, neutral one with none is refused, an office one says so), each good-news story is
+# itself in a focus sector, and the weekly good news is held to the avoid list too (offbeat_findings leaves it out). An
+# option he records (kind recorded) is his own words and is never refused here. Every line reads config/beat.json offdays.
+
+OFFDAY_BEAT = BEAT.get('offdays') or {}
+BEAT_OFFICE = keyword_pattern(OFFDAY_BEAT.get('office_keywords'))
+
+
+def focus_angle(text):
+    """Whether some words carry a focus-sector keyword, the exception phrases read first ('state of the art' is not art)."""
+    return bool(BEAT_FOCUS.search(BEAT_FOCUS_EXCEPT.sub(' ', str(text or ''))))
+
+
+def offday_words(o):
+    """Everything an off-day option says it is about: its words on the board, its topic and humour, a template's title
+    and why it works, and its cards' words. A template's caption ideas are drafts for his own caption and are not read:
+    its world is named in its funny line and why_it_works, as the blind story score reads it (story_score.body_text)."""
+    tpl = o.get('template') if isinstance(o.get('template'), dict) else {}
+    cards = [c.get('words') for c in o.get('cards') or [] if isinstance(c, dict)]
+    parts = [option_text_off(o), o.get('topic'), o.get('funny'), o.get('dive'),
+             tpl.get('title'), tpl.get('why_it_works'), tpl.get('moment'), *cards]
+    return ' '.join(str(p) for p in parts if p)
+
+
+def story_words(st):
+    """A good-news story's own words: its headline, what happened, why it matters and who it helps."""
+    helps = st.get('helps') if isinstance(st.get('helps'), dict) else {}
+    return ' '.join(str(p) for p in (st.get('headline'), st.get('title'), st.get('what'), st.get('why'), helps.get('who')) if p)
+
+
+def offday_beat_findings(ideas, week):
+    """From STORY_FROM: an off-day option with no focus-sector word in offday_words is refused (office AI said as
+    such), a good-news story with none in its own words is refused, and the weekly good news on the avoid list with no
+    focus-sector angle is refused. An option offbeat_findings already refuses is not said twice."""
+    if str(week) < STORY_FROM:
+        return []
+    said = OFFDAY_BEAT.get('refusals') or {}
+    out = []
+
+    def say(ref, line):
+        out.append({'code': 'off_beat', 'ref': ref, 'line': f'off_beat: {ref} {line}'})
+
+    offdays = (ideas or {}).get('offdays') if isinstance((ideas or {}).get('offdays'), dict) else {}
+    for day, opts in offdays.items():
+        for o in opts if isinstance(opts, list) else []:
+            if not isinstance(o, dict) or o.get('kind') == 'recorded':
+                continue
+            ref = f'off-{day}-{o.get("id")}'
+            hit = off_beat(' '.join(str(p) for p in (option_topic(o, False), o.get('topic')) if p))
+            if hit and not o.get('weekly'):
+                continue  # offbeat_findings says it
+            if hit:
+                say(ref, f'is about "{hit[1]}" ({hit[0].lower()}) with no focus-sector angle; the good news is the reader\'s world too '
+                         '(Ruling, Krish, 2026-11-26; config/beat.json). Find the creative angle or replace it')
+            stories = [st for st in o.get('stories') or [] if isinstance(st, dict)]
+            words = offday_words(o)
+            if not focus_angle(words) and not (stories and all(focus_angle(story_words(st)) for st in stories)):
+                say(ref, said.get('office') if BEAT_OFFICE.search(words) else said.get('dull'))
+            for i, st in enumerate(stories, 1):
+                if not focus_angle(story_words(st)):
+                    say(ref, f'story {i} ("{str(st.get("headline") or st.get("title") or "")[:60]}") {said.get("story")}')
+    return out
 
 def status_key(day, main, o):
     """An option's key in board_feed option_status: idea:<id> on a publishing day, off:<day>:<id> on an off day."""

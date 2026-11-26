@@ -56,6 +56,23 @@
       }
     }
   },
+  "offdays": {
+    "_about": "The reader and the beat on the off days: Saturday's good news, the Tuesday and Thursday memes and meme templates, and every off-day carousel, tip, how-to and short. Ruling (Krish, 2026-11-26, in the story-engine session): \"Make sure all the good news suggestions and meme suggestions are also aligned to the new positioning, as well as the carousels.\" Read by scripts/post-pack/idea_checks.py offday_beat_findings (the Sunday gate, code off_beat, from config/story-score.json from: an off-day option with no focus-sector word, a good-news story outside the focus sectors, and the weekly good news on the avoid list are refused, each reason in these words), scripts/post-pack/meme_templates.py (the roaster's candidates carry write_for) and the story score's fit floors on the off-day types; quoted by .agents/skills/plan-week/references/offdays.md and meme-roaster.md and the carousel and meme skills. A line or a keyword is a row here, never code. Changed only by a pull request carrying his ruling.",
+    "his_words": [
+      {"at": "2026-11-26", "said": "Make sure all the good news suggestions and meme suggestions are also aligned to the new positioning, as well as the carousels."}
+    ],
+    "line": "Every off-day suggestion lives in the reader's world: the creative, arts, music, entertainment, media and sports industries, the people who make the calls there and the people who make the work. One with no line into those industries is off the beat, however funny or useful.",
+    "good_news": "Good news is people in the creative, arts, music, entertainment, media and sports industries doing, earning or making more with AI: an artist, musician, performer, writer, creator or athlete, or the label, studio, publisher, broadcaster, club or league around them, named, with the number that shows it where there is one.",
+    "meme": "A meme's subject is the reader's world: studios, labels, creators, clubs, leagues, artists, performers and fans, the shoot, the session, the tour, the matchday and the edit. Never office or enterprise AI: the inbox, the spreadsheet, the meeting, the boss and the copilot at work.",
+    "carousel": "A carousel, a tip or a how-to is for someone who makes the calls or makes the work in those industries: a tool, a deal, a price or a move they can use in their own work this week.",
+    "worlds": ["studios", "labels", "creators", "clubs", "leagues", "artists", "performers", "writers", "athletes", "fans"],
+    "office_keywords": ["office", "offices", "inbox", "inboxes", "spreadsheet*", "excel", "powerpoint", "coworker*", "co-worker*", "colleague*", "boss", "bosses", "timesheet*", "standup", "stand-up meeting", "zoom call*", "hr department", "it department", "performance review*", "middle manager*", "cubicle*", "desk job*"],
+    "refusals": {
+      "dull": "has no line into the creative, arts, music, entertainment, media or sports industries; every off-day suggestion lives in the reader's world (Ruling, Krish, 2026-11-26; config/beat.json offdays). Find its angle in those industries or replace it",
+      "office": "is office or enterprise AI with no line into the creative, arts, music, entertainment, media or sports industries; a meme, a carousel or a short is the reader's world, never the office (Ruling, Krish, 2026-11-26; config/beat.json offdays). Move it to a studio, a label, a creator, a club or a league, or replace it",
+      "story": "is not a story of people in the creative, arts, music, entertainment, media or sports industries doing, earning or making more with AI (Ruling, Krish, 2026-11-26; config/beat.json offdays.good_news). Replace it with one that is"
+    }
+  },
   "model_piece": {
     "content_idea": "36886e0b-4b32-473b-be72-b0aef31fccef",
     "title": "a Reiki master wrote a UK number two",

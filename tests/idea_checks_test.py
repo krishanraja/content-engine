@@ -1105,6 +1105,82 @@ class OffBeatTest(unittest.TestCase):
 
 
 
+class OffdayBeatTest(unittest.TestCase):
+    """Ruling (Krish, 2026-11-26): "Make sure all the good news suggestions and meme suggestions are also aligned to the
+    new positioning, as well as the carousels." From the story score's from board every off-day option lives in the
+    reader's world (config/beat.json offdays): one with no focus-sector word is refused, an office one says so, each
+    good-news story is itself in a focus sector, and the weekly good news is held to the avoid list. Invented options."""
+
+    WEEK = ic.STORY_FROM
+
+    def found(self, off, week=None):
+        return ic.offday_beat_findings({'week_start': self.WEEK, 'offdays': off}, week or self.WEEK)
+
+    def story(self, n, headline, who='session musicians'):
+        return {'headline': headline, 'what': 'w', 'why': 'y', 'kind': 'music', 'helps': {'who': who, 'how': 'more successful'},
+                'source': {'label': 'L', 'url': f'https://example.org/{n}'}}
+
+    def test_the_config_is_read_and_the_code_fails_the_run(self):
+        self.assertIn('off_beat', ic.GATE_CODES)
+        for key in ('line', 'good_news', 'meme', 'carousel', 'office_keywords', 'refusals'):
+            self.assertTrue(ic.BEAT['offdays'].get(key), key)
+        self.assertEqual(self.found({'tue': [{'id': 'eggs', 'title': 'My AI agent bought 72 eggs'}]}, '2026-11-30'), [],
+                         'boards before the story score keep the beat they were made with')
+
+    def test_an_office_meme_is_refused_and_says_so(self):
+        office = template(1, funny='Every AI agent in the office.', copy='A dog answers every bell. Your caption makes it the office inbox.')
+        found = self.found({'tue': [office]})
+        self.assertEqual([f['ref'] for f in found], ['off-tue-tpl1'])
+        self.assertIn('office or enterprise AI', found[0]['line'])
+        self.assertTrue(found[0]['line'].startswith('off_beat: off-tue-tpl1 '), found[0]['line'])
+
+    def test_a_dull_neutral_option_is_refused(self):
+        found = self.found({'thu': [{'id': 'eggs', 'kind': 'voiceover', 'title': 'My AI agent bought 72 eggs', 'hook': 'It meant well.'}]})
+        self.assertEqual(len(found), 1)
+        self.assertIn('no line into the creative, arts, music, entertainment, media or sports industries', found[0]['line'])
+
+    def test_the_readers_world_keeps_it(self):
+        studio = template(2, funny='Every AI edit tool on a film set the night before the premiere.')
+        tip = {'id': 'stems', 'kind': 'explainer', 'aim': 'utility', 'title': 'Split a demo into stems in two minutes',
+               'hook': 'What a songwriter can do with it tonight.'}
+        club = {'id': 'var', 'kind': 'voiceover', 'title': 'The club that let an AI pick its matchday playlist', 'hook': 'The fans voted.'}
+        self.assertEqual(self.found({'tue': [studio, tip], 'thu': [club]}), [])
+
+    def test_a_good_news_story_outside_the_sectors_is_refused(self):
+        stories = [self.story(n, f'A drummer earns more from AI stems {n}') for n in range(4)]
+        stories.append(self.story(9, 'AI spots sepsis early in a hospital', who='patients'))
+        sat = {'id': 'gn1', 'kind': 'good_news', 'topic': 'musicians earning more', 'hook': 'Five musicians who earn more with AI', 'stories': stories}
+        found = self.found({'sat': [sat]})
+        self.assertEqual(len(found), 1)
+        self.assertIn('story 5 ("AI spots sepsis early in a hospital")', found[0]['line'])
+        sat['stories'][-1] = self.story(9, 'A theatre sells out with an AI-voiced audio guide', who='theatre producers')
+        self.assertEqual(self.found({'sat': [sat]}), [])
+
+    def test_the_weekly_good_news_is_held_to_the_avoid_list_and_the_sectors(self):
+        weekly = {'id': 'goodnews', 'weekly': 'good_news', 'title': 'Privacy wins', 'hook': 'Five wins for privacy'}
+        found = self.found({'sat': [weekly]})
+        self.assertEqual([f['ref'] for f in found], ['off-sat-goodnews', 'off-sat-goodnews'])
+        self.assertIn('security', found[0]['line'])
+        self.assertIn('no line into', found[1]['line'])
+
+    def test_his_recorded_idea_and_an_option_offbeat_already_refuses_are_not_said_here(self):
+        mine = {'id': 'mine', 'kind': 'recorded', 'title': 'Why I stopped using Copilot at work'}
+        breach = {'id': 'breach', 'title': 'Data breach at AI firm', 'hook': 'Millions of records.'}
+        self.assertEqual(self.found({'tue': [mine, breach]}), [])
+
+    def test_the_sectors_are_good_news_kinds_and_lead_the_topics(self):
+        self.assertIn('sports', ic.GOOD_NEWS_KINDS)
+        self.assertIn('music', ic.GOOD_NEWS_KINDS)
+        self.assertEqual(ic.topic_kind_of('Five musicians and a songwriter who earn more with AI'), 'music')
+        self.assertEqual(ic.topic_kind_of('A football club and its athletes'), 'sports')
+        self.assertEqual(ic.topic_kind_of('Hospital patients and doctors'), 'health')
+
+    def test_the_gate_names_it_and_a_days_rerun_can_remake_it(self):
+        line = self.found({'thu': [{'id': 'eggs', 'title': 'My AI agent bought 72 eggs'}]})[0]['line']
+        self.assertTrue(board_feed.remakeable(line, ['thu']))
+        self.assertFalse(board_feed.remakeable(line, ['tue']))
+
+
 def ladder(n, url=True):
     """A why-ladder/1 probe with n rungs, each with one source (or none)."""
     ev = [{'url': 'https://example.com/a', 'domain': 'example.com', 'date': '2026-12-01', 'quote': 'q'}] if url else [{'quote': 'q'}]
