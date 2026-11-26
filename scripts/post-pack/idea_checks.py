@@ -2236,6 +2236,10 @@ def story_findings(ideas, week, status=None, probes=None, cfg=None, before=None)
     for ref, day, main, o in board_raw(ideas):
         if o.get('weekly') or not is_open(day, main, o):
             continue
+        if o.get('from_inspiration'):
+            # His tick outranks the gate (Ruling, Krish, 2026-11-12): the Inspiration piece run places the idea from his
+            # ticked card unscored and unprobed, after the day's other options, and only his Approve places it.
+            continue
         s = o.get('story_score') if isinstance(o.get('story_score'), dict) else None
         name = label(ref, main, o)
         if s is None:
@@ -2262,7 +2266,9 @@ def story_findings(ideas, week, status=None, probes=None, cfg=None, before=None)
 
     for group, block in (('days', (ideas or {}).get('days')), ('offdays', (ideas or {}).get('offdays'))):
         for day, opts in (block if isinstance(block, dict) else {}).items():
-            opts = [o for o in (opts if isinstance(opts, list) else []) if isinstance(o, dict)]
+            # An idea from his tick stands after the day's other options (inspiration_act.py place appends it) and is
+            # never ordered: the rest of the day is read as it stood.
+            opts = [o for o in (opts if isinstance(opts, list) else []) if isinstance(o, dict) and not o.get('from_inspiration')]
             main = group == 'days'
             movable = [o for o in opts if not o.get('weekly')]
             if len(movable) < 2 or not all(is_open(day, main, o) for o in movable):

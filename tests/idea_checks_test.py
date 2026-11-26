@@ -1301,6 +1301,35 @@ class StoryGateTest(unittest.TestCase):
         apart = self.board(main_option(id=A, story_score=story(90)), main_option(id=B, story_score=story(60)))
         self.assertEqual(self.run_(apart, probes=self.probes(A, B)), [], 'not a close call: nothing to say')
 
+    def test_his_tick_from_an_inspiration_card_is_never_held_by_the_story_gate(self):
+        # Ruling (Krish, 2026-11-12): his tick outranks the gate. inspiration-piece.yml runs neither story_score.py nor
+        # the whys probe, so the idea it places carries no story score and no whys; the gate must still pass it.
+        board = self.board(main_option(id=A, story_score=story(80)), main_option(id=B, story_score=story(60)))
+        after = json.loads(json.dumps(board))
+        after['days']['mon'].append(ticked())
+        self.assertEqual(self.run_(after, probes=self.probes(A, B)), [])
+        engine = json.loads(json.dumps(board))
+        engine['days']['mon'].append(main_option(id=C))
+        self.assertEqual([f['ref'] for f in self.run_(engine, probes=self.probes(A, B))], ['mon-3', 'mon-3'],
+                         'an engine option the run adds is held as it always was')
+
+    def test_the_inspiration_gate_passes_his_tick_on_a_story_score_week(self):
+        week = '2026-12-07'
+        self.assertGreaterEqual(week, ic.STORY_FROM)
+        before = {'week_start': week, 'days': {'mon': [main_option(id=A, story_score=story(80)), main_option(id=B, aim='humour', story_score=story(60))]}}
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp) / f'{week}-week'
+            folder.mkdir()
+            (folder / 'sources.json').write_text(json.dumps(sources()))
+            write_look(folder)
+            base = Path(tmp) / 'ideas-before.json'
+            base.write_text(json.dumps(reviewed(before)))
+            after = json.loads(json.dumps(before))
+            after['days']['mon'].append(ticked())
+            (folder / 'ideas.json').write_text(json.dumps(reviewed(after)))
+            report = board_feed.gate_report(week, plans=tmp, base_path=base)
+            self.assertEqual(report['problems'], [], report)
+
     def test_the_order_story_score_writes_passes_its_own_gate(self):
         import story_score as ss
         ideas = self.board(main_option(id=A), main_option(id=B), main_option(id=C))
