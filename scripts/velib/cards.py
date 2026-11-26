@@ -136,6 +136,27 @@ CAROUSEL_RETIRED = ('ve card: a carousel card is retired. A carousel is made onl
 # photos (from scripts/post-pack/photos.py), and is held to the palette's thumbnail_wide and cover_tall formats and the
 # cover standard (docs/production/COVER-STANDARD.md).
 FACE_CHANNELS = ('tiktok', 'x', 'linkedin', 'threads', 'substack-notes', 'youtube')
+# The cover, meme and Notes image cards are retired with the carousel's (Krish, 2026-11-26: "I approve the new cover
+# thumbnail systems, go"; the Library's templates are the only artwork). Covers and thumbnails come only from
+# make_covers.py; a single meme image and a Notes image are gaps in config/asset-routes.json, never drawn another way.
+COVER_RETIRED = ('ve card: a cover card is retired. Every cover and thumbnail comes only from the v5 Library: python '
+                 'scripts/covers/make_covers.py <piece> --out <folder> (routed by config/asset-routes.json). No Codex face-led '
+                 'cover and no Receipt drawer.')
+
+
+def _gap_retired(kind: str, route_kind: str) -> str:
+    """ve card's refusal for a kind the Library has no command for yet, in config/asset-routes.json's own words."""
+    try:
+        rows = load_json(ROOT / 'config' / 'asset-routes.json')['kinds']
+        gap = next(r.get('gap') for r in rows if r.get('kind') == route_kind)
+    except (OSError, KeyError, StopIteration, ValueError):
+        gap = 'the v5 Library has no command for it yet'
+    return (f've card: a {kind} card is retired. {gap} It is not made another way: no Codex card, no hand-drawn '
+            f'stand-in (config/asset-routes.json, kind {route_kind}).')
+
+
+RETIRED = {'cover': lambda: COVER_RETIRED, 'meme': lambda: _gap_retired('meme', 'meme-square'),
+           'notes_image': lambda: _gap_retired('notes_image', 'notes-image')}
 
 
 def visual_sections(fields: dict) -> str:
@@ -144,6 +165,8 @@ def visual_sections(fields: dict) -> str:
     kind = fields['kind']
     if kind == 'carousel':
         sys.exit(CAROUSEL_RETIRED)
+    if kind in RETIRED:
+        sys.exit(RETIRED[kind]())
     fields.pop('deck', None)
     refs = fields.pop('references', None)
     refs = [str(r).strip() for r in (refs if isinstance(refs, (list, tuple)) else [refs] if refs else []) if str(r).strip()]

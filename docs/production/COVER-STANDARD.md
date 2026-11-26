@@ -98,15 +98,20 @@ was a Rio Meets thumbnail: two cutout faces large either side, the headline huge
 | Instagram @makeyourmind.up, the Facebook Page, the Substack cover and share card | The Receipt, unchanged. |
 
 It runs four weeks, then Krish decides from the numbers. This narrows THE_RECEIPT's "never his face" (2 Nov) to the
-brand accounts. The photos come only from his cutouts (`scripts/post-pack/photos.py fetch`, published from
-Video Engine > Krish Clone - Assets > Photos by the home computers), and Codex draws the options from a `ve card` of
-kind `cover` (`scripts/velib/cards.py`), checked with `scripts/channel_safe.py` and judged by the thumbnail-critic.
+brand accounts.
+
+**The routes are retired (Krish, 2026-11-26: "I approve the new cover thumbnail systems, go").** Every cover and
+thumbnail, face-led or not, comes only from the v5 Library: `python scripts/covers/make_covers.py <piece> --out
+<folder>` (routed by `config/asset-routes.json`). The Codex face-led cover from a `ve card` of kind `cover` is retired
+(`scripts/velib/cards.py` refuses the kind and names make_covers.py), and so is the Receipt drawer
+(`scripts/pages/build.py`, `--legacy` only). Files are still checked with `scripts/channel_safe.py` and judged by the
+thumbnail-critic.
 
 ## Who makes them (Ruling, Krish, 28 Oct 2026; restated 18 Nov 2026: "a clear owner [...] it should not require a manual ask anywhere")
 
 | Job | Owner | How it happens without being asked |
 |---|---|---|
-| Design every cut's wide and tall thumbnails and every channel's cover (Mon, Wed, Fri pieces and any video) | **content-engine**: the production session (`cover-art`, `thumbnail-designer`, a separate critic) | Step 8 of the one post-production prompt (`_takesIn.ts`); a cut is Produced only with its thumbnails on the record (`makingSteps`), and `piece_manifest.py draft` refuses a video channel with no cover, so the Approve for publish press never appears without them |
+| Design every cut's wide and tall thumbnails and every channel's cover (Mon, Wed, Fri pieces and any video) | **content-engine**, only from `python scripts/covers/make_covers.py <piece> --out <folder>`; the production session (`cover-art`, `thumbnail-designer`, a separate critic) checks, judges and puts the options to Krish | Step 8 of the one post-production prompt (`_takesIn.ts`); a cut is Produced only with its thumbnails on the record (`makingSteps`), and `piece_manifest.py draft` refuses a video channel with no cover, so the Approve for publish press never appears without them |
 | Pick among the options | **Krish**, in his own words, on the board | The only human step |
 | Post them, hold a post whose cover is missing, and check it went out with the right cover | **Growth** (growth-makeyourmindup) | Reads the sealed manifest; designs none |
 | A carousel's cover (card 1) | **content-engine** (Ruling, Krish, 2026-11-26: content-engine makes every asset), only from `python scripts/covers/make_covers.py <piece> --out <folder>`, through `scripts/carousel_make.py` (`docs/CAROUSEL-STANDARD.md`) | Part of making the carousel; Growth made it from 28 Oct to 26 Nov 2026 |

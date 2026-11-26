@@ -52,11 +52,17 @@ export const APPROVAL_RULE = 'When Krish approves the narrative lock or the scri
   + 'with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file.'
 
 /** Who does what, said in every copied prompt so a session never has to infer it from AGENTS.md (Ruling, Krish, 2026-11-23:
- *  Codex generates the assets, Claude arbitrates the standards and oversees; the split itself is his of 2026-11-15). */
-export const ROLES = 'Who does what: Codex generates the visual assets from cards (devices, plates, and carousel, meme and Notes images: '
-  + 'python3 scripts/ve.py card, then ve dispatch or ve lane queue). Claude writes the words and the creative direction, makes the article '
+ *  Codex generates, Claude arbitrates the standards and oversees; the split itself is his of 2026-11-15). Since the v5
+ *  Library (Krish, 2026-11-26: "I approve the new cover thumbnail systems, go") its templates are the only artwork: a
+ *  carousel, meme, Notes image, cover or thumbnail comes only from a Library command (config/asset-routes.json), never a
+ *  Codex card, so a prompt names no second renderer. */
+export const ROLES = 'Who does what: carousels, memes, Notes images, covers and thumbnails come only from the v5 Library commands, by '
+  + 'config/asset-routes.json (python3 scripts/post-pack/asset_routes.py): python3 scripts/carousel_make.py, which runs make_piece.py --set '
+  + '<set> and make_covers.py, and make_covers.py for every cover and thumbnail; a kind the routes mark a gap is not made another way. '
+  + 'Codex builds only a photoreal still of the specific thing when no licensed photo exists (no generated people, no readable logos '
+  + 'or text) and the video devices and plates from their cards. Claude writes the words and the creative direction, makes the article '
   + 'figures, arbitrates the standards (python3 scripts/check_failures.py, python3 scripts/floor.py --format <maker>, get_approved_taste) and '
-  + 'checks everything Codex returns before it counts. Codex\'s own report is never proof. A step with no visual asset needs no card.'
+  + 'verifies everything that comes back before it counts. A maker\'s own report is never proof.'
 
 /** Where a lesson goes (Ruling, Krish, 2026-11-23: engine failures and best practices reach the internal-auditor; the taste
  *  system holds only preference and inspiration). */

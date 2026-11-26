@@ -95,34 +95,28 @@ class VisualCardsTakeTheOneRoute(unittest.TestCase):
         self.assertIn('scripts/carousel_make.py', said)
         self.assertIn('make_piece.py --set', said)
 
-    def test_no_references_no_card(self):
+    def test_a_cover_card_is_retired_for_make_covers(self):
+        # Krish, 2026-11-26: "I approve the new cover thumbnail systems, go." Covers and thumbnails come only from
+        # make_covers.py: no Codex face-led cover, no Receipt drawer.
         with tempfile.TemporaryDirectory() as tmp, self.assertRaises(SystemExit) as stop:
-            self.card(tmp, kind='meme', deck=None, references=[])
-        self.assertIn('F26', str(stop.exception.code))
+            self.card(tmp, kind='cover', deck=None, channel='tiktok', date='2026-11-16', photos=['a.png'])
+        said = str(stop.exception.code)
+        self.assertIn('a cover card is retired', said)
+        self.assertIn('scripts/covers/make_covers.py <piece> --out <folder>', said)
 
-    def test_a_face_cover_card_names_its_channel_and_photos_and_wears_both_cover_sizes(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            text = self.card(tmp, kind='cover', deck=None, channel='tiktok', date='2026-11-16',
-                             photos=['.cache/photos/Denim-jacket headshot on transparent background.png']).read_text(encoding='utf-8')
-        self.assertIn('## Brand (thumbnail_wide, series, 2026-11-16', text)
-        self.assertIn('## Brand (cover_tall, series, 2026-11-16', text)
-        self.assertIn('## Face (channel tiktok', text)
-        self.assertIn('never a circle', text)
-        self.assertIn('Denim-jacket headshot', text)
-        self.assertLessEqual(len(text.encode('utf-8')), 6144)
+    def test_a_meme_and_a_notes_image_card_are_retired_as_library_gaps(self):
+        for kind, route in (('meme', 'meme-square'), ('notes_image', 'notes-image')):
+            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as tmp, self.assertRaises(SystemExit) as stop:
+                self.card(tmp, kind=kind, deck=None)
+            said = str(stop.exception.code)
+            self.assertIn(f'a {kind} card is retired', said)
+            self.assertIn('not made another way', said)
+            self.assertIn(f'kind {route}', said)
 
-    def test_a_face_cover_is_refused_for_a_receipt_channel_or_without_photos(self):
-        for extra, said in ((dict(channel='instagram', photos=['a.png']), 'Receipt'), (dict(channel='x', photos=[]), 'photos')):
-            with self.subTest(said=said), tempfile.TemporaryDirectory() as tmp, self.assertRaises(SystemExit) as stop:
-                self.card(tmp, kind='cover', deck=None, date='2026-11-16', **extra)
-            self.assertIn(said, str(stop.exception.code))
-
-    def test_a_meme_and_a_notes_image_wear_their_own_palette_and_need_no_deck(self):
-        for kind in ('meme', 'notes_image'):
-            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as tmp:
-                text = self.card(tmp, kind=kind, deck=None, spend_id='f2bfdae8').read_text(encoding='utf-8')
-                self.assertIn(f'## Brand ({kind}, off, 2026-11-17', text)
-                self.assertIn('"close": "none"', text)
-                # Codex is not counted (Ruling, Krish, 2026-11-17): a booking passed in is never written onto the card.
-                self.assertNotIn('spend_id', text)
-                self.assertNotIn('## Deck', text)
+    def test_the_board_prompt_names_no_second_renderer(self):
+        text = (ROOT / 'apps' / 'control-plane' / 'api' / 'board' / '_writeBack.ts').read_text(encoding='utf-8')
+        roles = text[text.index('export const ROLES'):text.index('export const LEARNING_RULE')]
+        self.assertNotIn('ve.py card', roles)
+        self.assertNotRegex(roles, r'Codex generates the visual assets')
+        for named in ('scripts/carousel_make.py', 'make_covers.py', 'config/asset-routes.json', 'photoreal still'):
+            self.assertIn(named, roles)
