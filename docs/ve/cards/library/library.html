@@ -88,6 +88,43 @@ function fitFrames(){
   probe.remove()
  }
 }
+// A per-piece pack (render.py --carousel-pack) names the Receipt's companies: content[id].logos lists
+// tool_logos keys (the pack's evidence or the registry's) in row order, each drawn in its row's logo box.
+// Rows past that list, and a verdict chip the pack sets to null, are left out with the colour field behind
+// them; nothing falls back to the template's sample words. The names left out are kept in
+// window.libraryDropped so the ink check treats them as absent by design, not as a regression.
+function libraryScene(item){
+ const content=window.libraryContent?.[item.id];
+ if(!content || !item.scene)return item.scene||[];
+ const rows=[], dropped=[];
+ let scene=item.scene;
+ if(Array.isArray(content.logos)){
+  const boxes=scene.filter(op=>op.kind==='logo');
+  if(content.logos.length>boxes.length || content.logos.some(key=>!Object.hasOwn(registry.tool_logos,key)))
+   throw Error(item.id+' logos unknown or more than its '+boxes.length+' rows');
+  scene=scene.flatMap(op=>{
+   const n=boxes.indexOf(op);
+   if(n<0)return [op];
+   if(n>=content.logos.length){rows.push(op.rect);return []}
+   const logo=registry.tool_logos[content.logos[n]];
+   return [{...op,value:content.logos[n],src:logo.src}];
+  });
+ }
+ for(const [slot,value] of Object.entries(content)){
+  const op=value===null && /^chip_/.test(slot) && scene.find(o=>o.kind==='text' && o.slot===slot);
+  if(op)rows.push(op.rect);
+ }
+ const within=(op,[,y,,h])=>{const middle=op.rect[1]+op.rect[3]/2;return op.rect[3]<=2.5*h && middle>=y-4 && middle<=y+h+4};
+ // A dropped chip still takes its turn in the slot order, so it stays as a marker the scene loop skips.
+ scene=scene.flatMap(op=>{
+  if(!(op.kind==='field' || op.kind==='text' && /^chip_/.test(op.slot)) || !rows.some(row=>within(op,row)))return [op];
+  if(!op.slot)return [];
+  dropped.push(op.slot);
+  return [{...op,dropped:true}];
+ });
+ (window.libraryDropped??={})[item.id]=dropped;
+ return scene;
+}
 function art(item,previewWidth,probe,t=null,sequence=false,photoOverride=null,extraImageHeight=null){
  item=editionContent(item);
  t=t??(params.has('t')?Math.max(0,Math.floor(Number(params.get('t'))||0)):(item.motion?.frames||1)-1);
@@ -386,13 +423,16 @@ function art(item,previewWidth,probe,t=null,sequence=false,photoOverride=null,ex
    }
    return
   }
-  const shot=registry.screenshots[value];
+  shotCard(registry.screenshots[value],name,x,y,w,h,true);
+ }
+ function shotCard(shot,name,x,y,w,h,framed){
   if(!shot || missingDocuments.has(shot.src)){refuse(name,'source screenshot unavailable');return}
   const inset=34,gap=7,scale=Math.min((w-2*inset)/Math.max(...shot.crops.map(r=>r[2])),
     (h-2*inset-gap*(shot.crops.length-1))/shot.crops.reduce((sum,r)=>sum+r[3],0));
   const inkHeight=shot.key_ink_px*scale;
   if(Number.isFinite(inkHeight) && inkHeight<33*W/1080){refuse(name,'source lettering below the reading floor');return}
-  out+=`<rect ${alignmentAttrs(x,"left","screenshot frame")} x="${x}" y="${y}" width="${w}" height="${h}" fill="${shot.edge}"/><rect x="${x+2}" y="${y+2}" width="${w-4}" height="${h-4}" fill="${shot.background}"/>`;
+  if(!framed)lastInk={top:y,height:h};
+  out+=`<rect ${framed||item.alignment.members['screenshot frame']?alignmentAttrs(x,"left","screenshot frame"):''} x="${x}" y="${y}" width="${w}" height="${h}" fill="${shot.edge}"/><rect x="${x+2}" y="${y+2}" width="${w-4}" height="${h-4}" fill="${shot.background}"/>`;
   let top=y+inset;
   for(const [sx,sy,sw,sh] of shot.crops){
    out+=`<svg ${Number.isFinite(inkHeight)?'data-evidence-ink="'+inkHeight+'"':''} x="${x+inset}" y="${top}" width="${sw*scale}" height="${sh*scale}" viewBox="${sx} ${sy} ${sw} ${sh}" overflow="hidden"><image href="${esc(shot.src)}" width="${shot.size[0]}" height="${shot.size[1]}"/></svg>`;
@@ -414,6 +454,8 @@ function art(item,previewWidth,probe,t=null,sequence=false,photoOverride=null,ex
    lastInk={top:y,height};
    out+=`<g ${alignmentAttrs(x,'left','source logo')}><rect x="${x}" y="${y}" width="${width}" height="${height}" fill="none"/><image href="${esc(logo.src)}" x="${x}" y="${y}" width="${width}" height="${height}"/></g>`;return
   }
+  // A pack's own source (libraryEvidence.screenshots) fills a document slot as a screenshot card.
+  if(Object.hasOwn(content,slotName) && Object.hasOwn(registry.screenshots,key)){shotCard(registry.screenshots[key],slotName,x,y,w,h,false);return}
   if(!Object.hasOwn(crops,key)){refuse(slotName,'unknown document crop');return}
   const reversed=item.scene?.some(op=>op.kind==='text' && op.color===ink)?'ink':'cream';
   const masthead=spotifyMarks[reversed];
@@ -515,7 +557,8 @@ function art(item,previewWidth,probe,t=null,sequence=false,photoOverride=null,ex
   const stackRows=[];
   let nextStepTop;
   if(buildingOutro)out+=outroSweep(item,t);
-  for(const op of item.scene){
+  for(const op of libraryScene(item)){
+   if(op.dropped){slotIndex++;continue}
    if(buildingOutro && (op.kind==='field' || op.kind==='bars'))continue;
    lastInk=null;
    const state=trackState(item,k==='outro' && op.element==='invitation'?op.slot:op.element,t);

@@ -20,6 +20,8 @@ def inspect_item(page, png, item, templates=None):
     declarations = item["alignment"]["columns"]
     members = item["alignment"]["members"]
     optional = set(item["alignment"].get("optional", ()))
+    # A per-piece pack may leave a Receipt row or verdict chip out by design (library.html, libraryScene).
+    optional |= set(page.evaluate("id => (window.libraryDropped || {})[id] || []", item["id"]))
     visible = Image.open(io.BytesIO(png)).convert("RGB")
     results = []
     intervals = {}

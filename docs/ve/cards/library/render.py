@@ -80,6 +80,8 @@ def main():
                         help="Check native horizontal ink edges, vertical ink gaps and close pixels, skipping sheets and motion")
     parser.add_argument("--phone", action="store_true", help="Also save 360 px wide item proofs from the native capture")
     parser.add_argument("--carousel-pack", type=Path, help="Load per-piece copy, generated images and original evidence from this JSON file")
+    parser.add_argument("--items", type=lambda text: [name for name in text.split(",") if name],
+                        help="With --carousel-pack: render only these template IDs (comma separated), with their fit and ink checks")
     parser.add_argument("--rasterizer", choices=("browser", "resvg"), default="browser",
                         help="Native backend for alignment, approval or changed-only exports")
     mode = parser.add_mutually_exclusive_group()
@@ -104,6 +106,8 @@ def main():
     if ((locking or args.changed) and (args.alignment_only or args.carousel_pack or args.check_only)
             or locking and (args.motion or args.phone)):
         parser.error('Select one lock, render or review job')
+    if args.items and not args.carousel_pack:
+        parser.error('--items selects templates for a --carousel-pack render')
     if not locking and not args.changed and args.rasterizer=='resvg' and not args.alignment_only:
         parser.error('Use resvg with --changed, --lock or --alignment-only')
     from render_inputs import load_registry, active_items
@@ -223,6 +227,11 @@ def render_full(args, out=OUT):
                     for family in families for case in cases)
         if args.alignment_only:
             jobs = [job for job in jobs if job[0] == "items"]
+        if getattr(args, "items", None):
+            unknown = sorted(set(args.items) - set(by_id))
+            if unknown:
+                raise ValueError("Unknown or retired template IDs: " + ", ".join(unknown))
+            jobs = [job for job in jobs if job[0] == "items" and job[1] in args.items]
         for folder, name, query, w, h in jobs:
             page.set_viewport_size({"width": w, "height": h})
             if name == "index" and folder == "sheets":
@@ -291,11 +300,12 @@ def render_full(args, out=OUT):
         browser.close()
     out.mkdir(parents=True, exist_ok=True)
     (out / "fit-failures.json").write_text(json.dumps(FIT_FAILURES, indent=1))
-    matches = {shape: closing_pixels[f"video-{shape}-close"] == closing_pixels[f"video-{shape}-outro"]
-               for shape in ("vertical","wide")}
+    matches = {shape: closing_pixels.get(f"video-{shape}-close") == closing_pixels.get(f"video-{shape}-outro")
+               for shape in ("vertical","wide")
+               if not getattr(args, "items", None) or {f"video-{shape}-close", f"video-{shape}-outro"} <= set(args.items)}
     (out / "ink-alignment.json").write_text(json.dumps({
-        "tolerance_px": 2, "vertical_close_matches_outro": matches["vertical"],
-        "wide_close_matches_outro": matches["wide"], "items": alignment
+        "tolerance_px": 2, "vertical_close_matches_outro": matches.get("vertical"),
+        "wide_close_matches_outro": matches.get("wide"), "items": alignment
     }, indent=2), encoding="utf-8")
     (out / "ink-spacing.json").write_text(json.dumps({"method": "native pixel difference", "items": spacing}, indent=2), encoding="utf-8")
     short = [name for name, record in spacing.items() if not record["passed"]]
@@ -303,7 +313,8 @@ def render_full(args, out=OUT):
     if FIT_FAILURES or failed or short or not all(matches.values()):
         raise SystemExit(f"Fit failures {len(FIT_FAILURES)}, ink failures {failed}, spacing failures {short}, matching closes {matches}")
     pair_count = sum(len(row["pairs"]) for row in spacing.values())
-    print(f"Checked {len(alignment)} native items and {pair_count} ink gaps. Both closes match their outros.")
+    closes = " Both closes match their outros." if len(matches) == 2 else ""
+    print(f"Checked {len(alignment)} native items and {pair_count} ink gaps.{closes}")
 
 
 if __name__ == "__main__":

@@ -212,6 +212,8 @@ def not_receipt(r, post=None):
     a real proof from one of the piece's sources, the wordmark and the logos, and never his face. A weekly
     series piece's covers and thumbnails wear a series skin, and nothing else wears one (Krish, 2026-11-05: "keep
     all of them and rotate them all at will over the coming weeks", and "Skin the covers too"; scripts/pages/skins)."""
+    if r.get('template') == 'library':
+        return not_library(r)
     if r.get('template') != 'receipt':
         return 'is not in the Receipt (scripts/pages/receipt.py): draw it again with "proof" in the cover facts'
     proof = r.get('proof') or {}
@@ -220,6 +222,24 @@ def not_receipt(r, post=None):
     if r.get('portrait'):
         return 'carries a face: the Receipt never does'
     return not_skinned(r, post)
+
+
+def not_library(r):
+    """Why a Library record (scripts/library/make_piece.py) is not a cover or thumbnail filled from an approved Library
+    template, or None. The Library replaced the skins and the old Receipt drawer for production (config/retired-styles.json,
+    the v5_feed skin and the receipt cover path), so it wears no skin; it still names the piece's checked proof and never
+    carries his face."""
+    items = [r.get('library_item')] + [f.get('library_item') for f in r.get('files') or [] if isinstance(f, dict)]
+    if not any(isinstance(i, str) and i for i in items) or not r.get('pack'):
+        return 'names no Library template or pack: fill it again with scripts/library/make_piece.py'
+    proof = r.get('proof') or {}
+    if not any(proof.get(k) for k in ('image', 'pdf', 'page', 'html')):
+        return 'names no proof: give the cover facts a "proof" from one of the checked sources of the piece and fill it again'
+    if r.get('portrait'):
+        return 'carries a face: the Receipt never does'
+    if r.get('skin') is not None:
+        return f'says it wears the retired "{r["skin"]}" skin: a Library template wears none'
+    return None
 
 
 def not_skinned(r, post=None):
