@@ -34,6 +34,10 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-23","week_target":20,"current":1,"current_as_of":"2026-11-25","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (0 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (5% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 20 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
+- Covers, thumbnails and carousels now fill from the approved Library with scripts/library/make_piece.py; the v5_feed skin and the old Receipt cover path are retired behind --legacy. The Library gates still hold open template conflicts (wordmark on colour, why-card caption gaps, the 160 px colour floor) that need Krish's call, and the Receipt covers wait on the image-led cover redesign. (2026-11-26)
+- The image-led renderer keeps the approved artwork. The 160 px gate now measures headline or figure cap height and local contrast on wides and applies the 10% colour floor to 9:16 and carousel covers. The three historical pieces have review HTML. Their exports and pixel checks are pending. (2026-11-26)
+- The v5 why-ladder cards and house captions are wired into the renderer in both aspect ratios. The pop-song fixture uses the original Spotify document. (2026-11-25)
+- The v5 tokens, vector marks, feed cover and retirement gates are in the look/v5-lockout worktree. Cover appearance awaits browser review. (2026-11-25)
 - The daily creative edition pipeline is implemented for local review. The cover can read a versioned snapshot and keep its last good edition through an upstream failure. (2026-11-26)
 - Story-arc cards make no prediction: where_this_goes now holds the landing, what the arc shows plus one open question ending in a question mark (compose prompt, card lint and arc score), and the lint refuses a forecast to a date, stated odds or confidence, and a landing with no question (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores). The score's forward_claim component is now landing, same weight; stored cards keep the field name and still read. (2026-11-25)
 - The 5 Whys is live (PR 970; Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores). The three venture_formats mandates are why-ladder mandates with THE BEAT, the claim_scoreboard and claims_due views are dropped, and control-center's pillar:creative_economy is live with the shared avoid list on all six pillars; all applied 2026-11-25 on Krish's yes and checked on the live rows. (2026-11-25)
@@ -52,7 +56,7 @@ Older lines: `docs/history/2026-11-25-NOW-moved-2.md` (it names every earlier mo
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-26): Claude reviews the pipeline and prepares the needs-krish draft pull request.
+- Next (2026-11-26): Krish rules on the V4 wordmark on rung-colour why and landing cards, then the cover redesign lands and make_piece fills Friday 13 Nov end to end.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
 - North Star check (2026-11-26): holds.
