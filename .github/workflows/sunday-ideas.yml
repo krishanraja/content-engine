@@ -240,8 +240,10 @@ jobs:
             well"): python3 scripts/post-pack/lookalike.py goodnews <Monday>, then pick the posts on the topic; one found
             there may be up to thirty days old, one from the web stays within the seven. Look wide before choosing the
             good news's topic: fifteen candidates or more from at least three of the news, Reddit, YouTube, LinkedIn,
-            his sheet and his saved cards, and a business that succeeded with AI counts as good news (Krish,
-            2026-11-16: "In fact successful business stories might be really good"). Then run
+            his sheet and his saved cards. The good news is config/beat.json offdays.good_news: people in the
+            creative, arts, music, entertainment, media and sports industries doing, earning or making more with AI,
+            their successful businesses included (Krish, 2026-11-16: "In fact successful business stories might be
+            really good"; the reader narrowed to those industries on 2026-11-26, config/beat.json reader). Then run
             board_feed.py gather and cover again.
 
             The lookalike step, after the gather (Krish, 2026-11-16: "build a lookalike model of stories that pull from
@@ -272,16 +274,25 @@ jobs:
             Tuesday and Thursday as kind meme with a template. board_feed.py gate refuses a Saturday option that is not
             a sheet carousel (saturday) and a week whose templates are not whole (template).
 
+            Every off-day option is the reader's world (Krish, 2026-11-26: "Make sure all the good news suggestions and
+            meme suggestions are also aligned to the new positioning, as well as the carousels."): read the reader and
+            the offdays lines in config/beat.json (good_news, meme, carousel) and .agents/skills/plan-week/references/offdays.md,
+            "Every off day is the reader's world". Memes, meme templates, carousels, tips and shorts are set in the
+            creative, arts, music, entertainment, media and sports industries (studios, labels, creators, clubs, leagues,
+            artists, performers), never office or enterprise AI or general AI news; board_feed.py gate refuses one with no
+            focus-sector word, and a good-news story outside the focus sectors (off_beat).
+
             Saturday is only good-news carousels (Ruling, Krish, 2026-11-19: "Sat should just be good news carousels -
             5 great things AI is doing for people (ideally things that make people smarter or better or happier or more
-            successful)."): at least three, each five great things AI is doing for people, each story saying who it
+            successful)."): at least three, each five great things AI is doing for people in those industries, each story saying who it
             helps and how (helps: {"who", "how"}, how one of smarter, better, happier, more successful). A carousel may
             mix topics ("Can mix if no1 is implemented properly"). No two options led by one theme or carrying one
             story, no lead a Saturday carried in the four weeks before, no medicine-led carousel while the last four
             Saturdays already carried two medical stories, and at most one medical story in any other carousel. Health
-            stories dominate search results for "AI good news", so search each area on its own (learning, work and
-            small business, money, climate and energy, science, accessibility and everyday life, culture, public
-            services) and pick the five best outside medicine. No meme, explainer or one-story carousel on Saturday.
+            stories dominate search results for "AI good news", so search each focus sector on its own (music, film and
+            TV, games, creators, art and design, theatre and performance, sports, media, creative tools, licensing and
+            rights) and pick the five best there; tag each story with its sector as its kind. No meme, explainer or
+            one-story carousel on Saturday.
             board_feed.py gate refuses the rest (goodnews).
 
             Days to make again: ${{ steps.guard.outputs.days || 'none, this run fills the whole board' }}. When days are

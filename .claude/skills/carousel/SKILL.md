@@ -29,6 +29,7 @@ light speed and needs to be able to follow the story within 10 seconds. This can
 4. At most 10 cards including cover and close. No card numbers anywhere. `carousel_check.py`.
 5. Off-day carousels give real utility at the level of his Instagram inspo sheet: a scroll-stopping headline and cover,
    cards the reader can use the same day (`aim: utility`, the ideas gate). Copy, branding and imagery are always ours.
+   Every carousel is the reader's world (`config/beat.json` `offdays`).
 
 **Imagery: never bland**
 
@@ -78,10 +79,10 @@ experiment with the floor itself; if an experiment needs a floor line broken, as
 
 1. Read the brief, the standard, the floor and the inspiration cards he ticked (F26).
 2. Write the deck (`carousel-deck/1`), run the cold read, pass `carousel_check.py DECK.json`.
-3. Pictures for every card, real-world first: a real photo, screen or document the story names; else one photoreal
-   scene per card on Higgsfield (`gpt_image_2_6`, 4:3, about 0.25 credits each, the house robot's photos as references
-   when it appears; say the cost first). The company's official wordmark from Brandfetch when the story names one.
-4. Write the Codex card (`ve card`, kind `carousel`, with `references`, `date`, `deck`), the scenes and wordmarks copied
-   into its worktree and its goal carrying the house look's exact layout, and dispatch it.
+3. Pictures in the Library's order: a licensed photo of the named person in their own story, the real thing, then a
+   photoreal still (no generated people, no readable logos or text).
+4. Make it only in the v5 Library: `python scripts/library/make_piece.py <piece> --set <set>`, covers from
+   `scripts/covers/make_covers.py`; it wins over lines 6 to 14. Absent from the checkout: stop, say
+   "the v5 Library is not on this checkout yet", never another renderer (`references/reader.md`).
 5. Verify: `carousel_check.py --cards`, the judges, a full-size and phone-size look. Fix and recheck the whole arc.
 6. File through `send.py` to `3 Posts`, report on the board, send Krish the cards, and record his words.

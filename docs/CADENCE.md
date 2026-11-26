@@ -20,7 +20,7 @@ Ruling, Krish, 2026-11-13).
   and two cuts (the 5-minute and the 90-second). They go live on Monday S+8,
   Wednesday S+10 and Friday S+12.
 - **Tuesday, Thursday and Saturday: off-day posts** on Instagram,
-  TikTok and YouTube Shorts: memes, uplifting AI news carousels, simple advice
+  TikTok and YouTube Shorts: memes, good news carousels, simple advice
   on levelling up with AI, and short clips from past weeks. Growth owns this
   lane and makes the posts. He approves them in the same Sunday session
   (Krish, 2026-10-28: "I'm happy to plan the Tuesday, Thursday, Saturday, and
