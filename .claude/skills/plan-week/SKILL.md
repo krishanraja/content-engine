@@ -284,8 +284,8 @@ he ticks: `references/inspiration-piece.md`.
    words verbatim; `use_origin` says whether his words, a rule or a model
    guess named the use, and a `model_guess` is never quoted as his reading.
    Say the cue counts in your reply. When `empty` says the cues table is
-   not there yet, say so and carry on. His taste
-   steers this ranking only; never pass it to a judge. Most ideas arrive
+   not there yet, say so and carry on. His rejections
+   are a floor only; never a score. Most ideas arrive
    with no series yet (`unassigned`: 77 of 89 on 21 Oct, when
    under.the.hood's pool was empty), so read `unassigned` too and place
    each idea in the series whose mandate it fits, or leave it out; the
@@ -421,7 +421,7 @@ he ticks: `references/inspiration-piece.md`.
    words name Monday, Wednesday or Friday. Follow the reference's last part:
    the script, its story check, two fresh readers, then `kind: recorded`.
    His Approve schedules it and sends the script to Teleprompter itself.
-4. Write each day's options, best first, one recommended:
+4. Write each day's options, best first by the story score (6d), one recommended:
    `python3 scripts/engine.py POST /api/week/options @options.json` with
    `{"week_start": "<Monday>", "series": "<slug>", "options": [{"id": "<uuid>", "rank": 1, "pitch": "two or three plain sentences", "why_now": "the dated event, with its date", "recommended": true, "covers": ["<must_cover id>"]}]}`.
    `covers` is the board idea's own `covers` list, unchanged: the engine keeps it on the piece (`meta.covers`, never
@@ -467,8 +467,8 @@ he ticks: `references/inspiration-piece.md`.
    he gave them. The lock is what he signs; the make session then judges it
    and declares it in `config/long-cuts.json` quoting those words
    (`make-piece`, "A longer long cut"). Never propose one to fill time.
-6d. **The funny lines** (humour-engine on call): before the board, read each option's `funny` with
-   `humour_check.py ideas`: `.agents/skills/plan-week/references/funny-lines.md`.
+6d. **Score, floor and order** before the board, funny lines included:
+   `.agents/skills/plan-week/references/story-score.md`.
 7. **Put the week on the live board**, last, once the options are written
    (Ruling, Krish, 2026-11-11: one live board, in Control Centre). The live board draws the week from
    `GET /api/board/<Monday>/view`, which reads `ideas.json` (each publishing
