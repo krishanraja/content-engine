@@ -25,6 +25,15 @@ sys.path.insert(0, str(ROOT / 'scripts' / 'pages'))   # first: scripts/pages/bui
 import build  # noqa: E402
 import thumb_options  # noqa: E402
 
+
+def setUpModule():
+    import skins
+    from unittest.mock import patch
+    legacy = patch.object(skins, "LEGACY", True)
+    legacy.start()
+    unittest.addModuleCleanup(legacy.stop)
+
+
 try:
     from playwright.sync_api import sync_playwright
 except ImportError:  # pragma: no cover

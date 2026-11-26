@@ -1,3 +1,54 @@
+# Image-led covers and thumbnails
+
+Krish approved these systems on 26 November 2026. “I approve the new cover thumbnail systems, go”
+
+Run the renderer with the piece folder or the exact facts filename. Passing neither shape flag builds the complete pack.
+
+```sh
+python scripts/covers/make_covers.py docs/plans/2026-11-13-friday --out .cache/meta-covers
+```
+
+Use `--wide` for YouTube and Substack, or `--vertical` for Shorts, Reels, TikTok and slide one of a carousel. Add `--review-dir DIR` to retain candidate HTML and images when a gate holds a set.
+
+## Art and family selection
+
+| System | Order | Words and placement |
+|---|---|---|
+| Wide | Portrait, evidence, number, object | Fraunces headline, DM Mono series and date, one wordmark. On cream use the `mint-on-cream` token. YouTube takes `thumbs.headline` and Substack takes `cover.headline`. |
+| Vertical | Portrait window, receipt, figure | One Anton kicker. Keep words and marks within y 330 to 1180 on the 9:16 canvas, the subject within the y 240 to 1680 grid crop, and the receipt clear of the Reels action column. The 4:5 slide has its own composition. |
+
+Read the immediately preceding **published** piece's `families` from its packed `covers.json`. Record it as `image_led.previous_published` in the facts (a path or an object with `families` and `source`), or as `previous_published` in the piece's `post.json`. A catalogue path in `image_led.catalogue` takes an array of dated records with `status`, `date` and `families`. Without an explicit record, the renderer checks neighbouring piece folders for a published post manifest and its cover receipt. A draft render supplies no publishing history. Each system takes the first supported family that differs from its predecessor. When no predecessor is recorded, the receipt identifies that gap. When no eligible different family exists, hold the piece.
+
+**Portrait.** In `image_led.person`, give the Commons file page, local image, artist, licence, name and role. Confirm `own_story: true` and `company_accusation: false`. Only public domain, CC0, CC BY and CC BY-SA qualify. Display the credit beside the portrait in both formats. The Disney facts show the full record.
+
+**Evidence and receipt.** Bind `cover.proof` to a source and a crop. A live page uses Playwright. The capture hides consent UI and publisher imagery, then caches the text crop. A local HTML figure or PDF can also supply the proof. Inspect any supplied proof image and set `image_led.proof_photo_free` only after confirming it contains no publisher photograph. `image_led.proof_capture` names that existing crop relative to the facts. The source caption comes from `proof_caption` or the proof's tag. Wide logos come from the channel's rows, with an optional `logo_names` selection.
+
+**Number and figure.** Record the sourced figure as `image_led.figure` with `value`, `caption` and `source`. A list of value lines controls line breaks. Keep the units and attribution visible.
+
+**Stills.** Supply `image_led.stills.wide` and `vertical`, or `existing` for an already approved scene. The optional `still_position` and `figure_position` give the focal point as two percentages. If a selected family needs a missing still, the receipt holds a Codex brief based on `still_subject` or the piece headline. Generate editorial photojournalism of the specific thing, with natural light, no people and no readable logos or text. Compose each new still natively at 16:9 or 9:16. The default `generate_still(brief, aspect)` stops for that input.
+
+## Delivery and checks
+
+| Surface | File |
+|---|---|
+| Substack and the website | `cover-1200x630.png` |
+| Long-form YouTube | `thumb-wide-1280x720.jpg` |
+| Shorts, Reels and TikTok | `cover-1080x1920.png` and `thumb-tall-1080x1920.jpg` |
+| Carousel | `carousel/slide-01.png` at 1080 by 1350 |
+
+The renderer writes `covers.json` with the families, facts, sources, credits, hashes and gate results. A passing run releases the files. Set the post's `cover_set` to the relative path to that receipt to pack all five. Partial shape runs are for individual exports. Inspect both wides at 160 px and the verticals at phone size. Check the rendered credit and source crop. A held set belongs in review.
+
+### The 160 px gate
+
+On 26 November 2026 Krish approved the artwork with “I approve the new cover thumbnail systems, go”. His ruling keeps the editorial wide designs exact. The 10% colour minimum applies to the 9:16 and 4:5 covers. Across both systems the luminance spread must reach 0.55, the light area must reach 2.5%, and the 40 px edge density must stay below 0.42.
+
+For YouTube and Substack, the fitted headline must have a cap height of at least 7 px at 160 px wide and at least 4.5:1 contrast against its local background. The number-led family uses the lead figure. After saving the final artwork, Playwright renders an H in each fitted face and a copy of the scene with the hook ink hidden. The gate measures the smallest cap height and the lowest local contrast. It samples the interior of every letter, digit and symbol against the underlying pixels, using the strongest pixel where a thin glyph has no solid interior. That includes the marked clause and any photograph beneath the hook.
+
+Read `gate_160` on each of the five file entries in `covers.json`. Wide entries include `cap_height_px` and `local_contrast`. To recheck an exported wide with `python docs/ve/cards/library/thumb_gate.py PATH`, keep its matching receipt beside it. A wide without render evidence holds for a fresh render.
+
+<details>
+<summary>Archived v5 research and earlier cover proposals</summary>
+
 # Covers and thumbnails playbook (makeyourmindup, v5)
 
 Written 26 Nov 2026 for the v5 Library. Scope: every cover and thumbnail for makeyourmindup ("Creativity, AI and money, simplified."): YouTube long-form and Shorts, Instagram Reels and carousels, TikTok, Facebook, Substack, LinkedIn and X.
@@ -422,3 +473,5 @@ All headlines are review samples in his shapes. The live words are his pick. Fac
 
 **Internal**
 - `TITLES.md` (his title shapes, 26 Nov 2026); content-engine `docs/production/COVER-STANDARD.md` (approved 9 Nov 2026; rulings 15 and 17 Nov); `FLOOR.md`; `BRIEF.md`; `BRIEF-2.md`; `IMAGERY.md`; `C:\Users\krish\Downloads\social_media_visual_video_best_practices_2026.md` (platform corpus, checked 12 Nov 2026); live covers at home.makeyourmindup.ai (20 posts read 26 Nov 2026).
+
+</details>

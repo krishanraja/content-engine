@@ -6,6 +6,7 @@ import sys
 import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT / 'scripts'), str(ROOT / 'scripts/pages'), str(ROOT / 'scripts/post-pack')]
@@ -14,6 +15,7 @@ from velib.compile import compile_cut
 from velib.floor import recipe
 from velib.palettes import spec_problems
 import creative_direction
+import receipt
 import skins
 
 
@@ -82,6 +84,37 @@ class RetirementTest(unittest.TestCase):
         self.assertIn('A &amp; B', document)
         self.assertIn('transparent 55%', document)
         self.assertNotIn('class="pill"', document)
+
+    def test_library_mirror(self):
+        library = ROOT / "docs/ve/cards/library/library.json"
+        registry = json.loads(library.read_text(encoding="utf-8"))
+        embedded = library.with_suffix(".html").read_text(encoding="utf-8").split("const registry=", 1)[1].split(";\n", 1)[0]
+        self.assertEqual(json.loads(embedded), registry)
+        retired = [i for i in registry["items"] if i["id"].startswith(
+            ("cover-receipt-", "cover-scene-", "cover-face-", "newsletter-substack-cover"))
+            or i["id"] in ("web-og-card", "social-x-card", "social-share-card")]
+        self.assertEqual(len(retired), 11)
+        for item in retired:
+            self.assertEqual(item["status"], "retired")
+            self.assertIn("I approve the new cover thumbnail systems, go", item["ruling"])
+
+    def test_drawer_refuses_before_accessing_assets(self):
+        with patch.object(skins, "LEGACY", False):
+            with self.assertRaisesRegex(SystemExit, "make_covers.py"):
+                receipt.draw_covers({}, ROOT, ROOT, None)
+            with self.assertRaisesRegex(SystemExit, "make_covers.py"):
+                receipt.draw_thumbs({}, ROOT, ROOT, None, None)
+            with self.assertRaisesRegex(SystemExit, "make_covers.py"):
+                skins.load("v5_feed")
+
+    def test_legacy_flag(self):
+        pages = ROOT / "scripts/pages"
+        for flags in (["--cover"], ["--thumbs"], ["--thumbs", "--options", "2"]):
+            run = subprocess.run([sys.executable, str(pages / "build.py"), "absent.json", *flags], capture_output=True, text=True)
+            self.assertNotEqual(run.returncode, 0)
+            self.assertIn("--legacy", run.stderr)
+        run = subprocess.run([sys.executable, str(pages / "build.py"), "absent.json", "--cover", "--legacy"], capture_output=True, text=True)
+        self.assertIn("FileNotFoundError", run.stderr)
 
     def test_vector_references_resolve(self):
         for path in (ROOT / 'assets/brand/makeyourmindup/v5').glob('*.svg'):

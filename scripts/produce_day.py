@@ -492,9 +492,8 @@ def loud_gate(cut, stdout, shape):
 
 def thumbs(post_path, work):
     out = work / 'thumbs'
-    # From the approved Library (scripts/library/make_piece.py); the old drawer is retired (config/retired-styles.json).
-    run([PY, 'scripts/library/make_piece.py', post_path.parent / 'cover-facts.json', '--set', 'video', '--out', work],
-        what='the thumbnails')
+    # The approved cover systems (Krish, 26 Nov 2026); the old drawer is retired (config/retired-styles.json).
+    run([PY, 'scripts/covers/make_covers.py', post_path.parent / 'cover-facts.json', '--out', out], what='the thumbnails')
     made = {'long': out / 'thumb-wide-1280x720.jpg', 'short': out / 'thumb-tall-1080x1920.jpg'}
     # The tall cover is seen on Instagram's profile grid (the middle 3:4) and under its account row: the 6 Nov reel's
     # cover lost "USING A" there (config/failures.json F43). Listed here, as quick-edit lists channel_safe.

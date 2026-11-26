@@ -464,13 +464,15 @@
   {
     "id": "v5_feed",
     "kind": "skin",
-    "why": "The approved Library replaces the feed skin: covers and thumbnails are filled from its templates by scripts/library/make_piece.py. scripts/pages/build.py draws it only with --legacy, for an archived piece.",
-    "ruling": "Ruling (Krish, 2026-11-25): \"s3h is great, lock v5\"; the approved Library (docs/ve/cards/library/STANDARD.md, 26 Nov 2026) is the one route for covers, thumbnails and carousels"
+    "path": "scripts/pages/skins/v5_feed.py",
+    "why": "The approved cover systems replace the feed skin: covers and thumbnails come from scripts/covers/make_covers.py, carousels and other items from scripts/library/make_piece.py. scripts/pages/build.py draws it only with --legacy, for an archived piece.",
+    "ruling": "Ruling (Krish, 2026-11-25): \"s3h is great, lock v5\"; Ruling (Krish, 2026-11-26): \"I approve the new cover thumbnail systems, go\""
   },
   {
     "id": "receipt",
     "kind": "cover_path",
-    "why": "The old Receipt cover path (scripts/pages/build.py --cover and --thumbs through receipt.py) is replaced by the Library's Receipt templates through scripts/library/make_piece.py. It runs only with --legacy, for an archived piece.",
-    "ruling": "Ruling (Krish, 2026-11-25): \"s3h is great, lock v5\"; the approved Library (docs/ve/cards/library/STANDARD.md, 26 Nov 2026) is the one route for covers, thumbnails and carousels"
+    "path": "scripts/pages/receipt.py",
+    "why": "The old Receipt cover path (scripts/pages/build.py --cover and --thumbs through receipt.py) is replaced by scripts/covers/make_covers.py. It runs only with --legacy, for an archived piece.",
+    "ruling": "Ruling (Krish, 2026-11-25): \"s3h is great, lock v5\"; Ruling (Krish, 2026-11-26): \"I approve the new cover thumbnail systems, go\""
   }
 ]

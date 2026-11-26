@@ -70,6 +70,9 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / 'scripts'))
+from covers import cover_outputs
+
 REGISTRY = ROOT / 'config' / 'logo-registry.json'
 VOLUME = re.compile(r"\b(so many|every few (?:weeks|months)|keeps? growing|more than a dozen|a flood of|pile[sd]? up|one after another|"
                     r"launch(?:es|ed)? (?:every|each)|dozens of|fourteen|\d{2,} (?:models|versions|releases|launches))\b", re.I)
@@ -287,6 +290,15 @@ def before_rotation(date, first_week):
         return False
 
 
+def image_led_problems(source, fmt, logos=()):
+    path = source.with_name('covers.json')
+    try:
+        cover_outputs.validate_file(source, fmt, cover_outputs.receipt(path), logos)
+        return []
+    except (ValueError, OSError, KeyError, TypeError) as exc:
+        return [str(exc)]
+
+
 def problems(post, planned, body, base, reg=None):
     """Plain-words reasons the pack fails the gate, or [] when it passes.
     `planned` is build.py's plan: dicts with 'kind' (as given), 'logos',
@@ -342,6 +354,10 @@ def problems(post, planned, body, base, reg=None):
     worn = {}   # the series skin each record says it wears, to hold the piece to one
     for c in [p for p in planned if p.get('kind') in COVER_RECEIPTS]:
         src = Path(str(c.get('source', '')))
+        if src.with_name('covers.json').is_file():
+            fmt = {'substack-cover': 'substack', 'vertical-cover': 'vertical'}.get(c['kind'])
+            found += image_led_problems(src, fmt, c.get('logos') or []) if fmt else [f'Unexpected image-led cover kind {c["kind"]}']
+            continue
         what, name = COVER_RECEIPTS[c['kind']]
         receipt = src.with_name(name)
         if not receipt.is_file():
@@ -366,6 +382,9 @@ def problems(post, planned, body, base, reg=None):
     for t in thumbs:
         src = Path(str(t.get('source', '')))
         shape = t.get('shape', '')
+        if src.with_name('covers.json').is_file():
+            found += image_led_problems(src, 'youtube' if shape == 'wide' else 'tall', t.get('logos') or [])
+            continue
         receipt = src.with_name('thumbs.json')
         if not receipt.is_file():
             found.append(f'the {shape} thumbnail {src.name} was not drawn by the house drawer (no thumbs.json beside it): draw it with '

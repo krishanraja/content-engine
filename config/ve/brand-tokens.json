@@ -12,6 +12,7 @@
     "action": "mint",
     "channel": "channel_color"
   },
+  "cover_wordmark": {"mint-on-cream": "#1E9E70"},
   "role_rules": {
     "channel": "Coral, butter and lilac mark successive rungs.",
     "answer": "mint marks the answer, the brand and the next action only",

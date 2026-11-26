@@ -1,8 +1,8 @@
 """Cover skin selection and platform crop geometry.
 
-Retired for production (config/retired-styles.json, kind "skin" v5_feed and kind "cover_path" receipt): covers,
-thumbnails and carousels come from the approved Library through scripts/library/make_piece.py
-(docs/ve/cards/library/LIBRARY-GUIDE.md and PRODUCTION-PLAYBOOK.md). This module refuses to pick or load a skin
+Retired for production (config/retired-styles.json, kind "skin" v5_feed and kind "cover_path" receipt): covers and
+thumbnails come from scripts/covers/make_covers.py (COVERS-PLAYBOOK.md), carousels and every other item from the
+approved Library through scripts/library/make_piece.py (LIBRARY-GUIDE.md and PRODUCTION-PLAYBOOK.md). This module refuses to pick or load a skin
 unless the caller has asked for the legacy drawer on purpose, to redraw an archived piece: scripts/pages/build.py
 --legacy, or allow_legacy() in code.
 """
@@ -13,9 +13,10 @@ import importlib
 
 # Off unless a caller redraws an archived piece on purpose (build.py --legacy). Never set it for a new piece.
 LEGACY = False
-LIBRARY_ROUTE = ('covers and thumbnails come from the Library now: python scripts/library/make_piece.py <piece folder> '
-                 '--set covers (or --set video for the thumbnails). The v5_feed skin and the Receipt cover path are retired '
-                 '(config/retired-styles.json); pass --legacy to scripts/pages/build.py only to redraw an archived piece')
+LIBRARY_ROUTE = ('covers and thumbnails come from the approved cover systems now: python scripts/covers/make_covers.py '
+                 '<piece folder>; every other Library item from python scripts/library/make_piece.py <piece folder>. '
+                 'The v5_feed skin and the Receipt cover path are retired (config/retired-styles.json); pass --legacy '
+                 'to scripts/pages/build.py only to redraw an archived piece')
 
 
 def allow_legacy():
@@ -72,6 +73,10 @@ CHECK_JS = r"""() => {
   const worded = decos.filter(d => (d.textContent || '').trim()).map(d => name(d) + ': ' + d.textContent.trim().slice(0, 40));
   return {over, worded, decos: decos.length};
 }"""
+
+
+# The covers branch's name for the same guard.
+require_legacy = refuse_without_library
 
 
 def week_of(facts):

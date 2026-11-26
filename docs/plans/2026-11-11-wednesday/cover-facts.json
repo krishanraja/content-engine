@@ -66,5 +66,31 @@
    "AI MUSIC OR",
    "HUMAN MUSIC?"
   ]
+ },
+ "image_led": {
+  "still_subject": "The mixing desk used to finish the dance track",
+  "still_position": [
+   50,
+   60
+  ],
+  "figure_position": [
+   55,
+   62
+  ],
+  "figure": {
+   "value": "No. 2",
+   "caption": "UK Official Singles Chart peak for Movin' To The Sun",
+   "source": "https://www.officialcharts.com/songs/hugelimael-angelultra-nate-movin-to-the-sun/"
+  },
+  "logo_names": [
+   "Suno",
+   "Grammys"
+  ],
+  "proof_caption": "The Official Charts, Movin' To The Sun",
+  "stills": {
+   "existing": "cover-assets/scene.jpg"
+  },
+  "proof_capture": "cover-assets/proof.png",
+  "proof_photo_free": true
  }
 }

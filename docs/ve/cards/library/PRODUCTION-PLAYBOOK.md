@@ -43,18 +43,13 @@ For content-engine production sessions. Read this, `LIBRARY-GUIDE.md` (every tem
 - `video-wide-lower-third` for every named person or source;
 - `video-wide-outro`, which reserves YouTube's end-screen area.
 
-**Covers:**
-- YouTube: `cover-face-youtube` against `cover-receipt-youtube` or `cover-scene-youtube` as the Test and Compare arms.
-- Tall (Reels, TikTok, Shorts): `cover-scene-tall` (Data), `cover-receipt-tall` or `cover-face-tall`.
-- Feed: `social-feed`.
-- Share cards: `social-share-card`, `social-x-card`, `web-og-card`.
-- Substack: `newsletter-substack-cover` and `newsletter-substack-cover-wide`.
+**Covers and thumbnails.** Run `python scripts/covers/make_covers.py PIECE` for every hero or off-day piece. Use the four wide and three vertical families in `COVERS-PLAYBOOK.md`. Their receipt supplies the finished post-pack entries.
 
 **Carousel** (set `piece`), 6 slides:
 
 | Slide | Template |
 |---|---|
-| 1 | `carousel-cover` |
+| 1 | `carousel/slide-01.png` from the image-led renderer |
 | 2 | `carousel-chart` (the answer, standing alone) |
 | 3 | `carousel-document` |
 | 4 | `carousel-why-3` |
@@ -77,20 +72,13 @@ For content-engine production sessions. Read this, `LIBRARY-GUIDE.md` (every tem
 
 ### Every surface carries
 - one wordmark (the template places it);
-- the colour bars (the template places them);
+- the approved series colour treatment for its format;
 - words in his shapes;
 - at most three parts besides the headline.
 
 ## 3. Choosing the cover family
 
-| The story has | Use | Never |
-|---|---|---|
-| A key number (30 seconds, $2.7 billion, 27% to 9%) | **Data** (the striped number, at most 2 words, the source card) | Stripe a number that is not the story's point |
-| Named companies acting (pays, sues, blocks) | **Receipt** (his headline, up to 3 logos with one verdict chip each) | A fourth logo, or a logo the headline does not name |
-| His take, or a question to the viewer | **Face** (his cutout on the series colour, at most 4 words) | Anything over his face; a face on the brand accounts' covers |
-| A carousel | **Carousel cover** (headline, mint payoff, the data) | A photograph of a person |
-
-On YouTube, always run Face against one face-free arm as a Test and Compare (Krish, 17 Nov 2026).
+Use the first supported family that differs from the last published piece. Wide walks portrait, evidence, number, object. Vertical walks portrait, receipt, figure. The cover playbook defines proof crops, photo eligibility, attribution, the still brief and the post-pack receipt. Keep its channel headlines as supplied in cover-facts.
 
 ## 4. Edge cases, by asset, with the action to take
 
@@ -110,7 +98,7 @@ On YouTube, always run Face against one face-free arm as a Test and Compare (Kri
 
 | Case | Action |
 |---|---|
-| No number in the story | Do not invent one. Use the Receipt or Face family for covers. Inside the cut, use evidence and footage beats and leave the devices out. |
+| No number in the story | Do not invent one. Follow the cover renderer’s automatic pick. Inside the cut, use evidence and footage beats and leave the devices out. |
 | A change between two amounts that are not durations | Use the timeline with its labels rewritten in the story's own unit. The bar counts stay proportional (20 against 5 means 4 to 1); round to whole bars and say "about" in the label. |
 | A threshold other than 30 | Set the meter `count` to the threshold (at most 40 bars) and light the threshold bar mint. |
 | A device on a colour field (why cards) | Bars go ink and the answer bar mint. The house-colour palette is only for ink grounds, because coral on coral disappears. |
@@ -140,7 +128,6 @@ On YouTube, always run Face against one face-free arm as a Test and Compare (Kri
 | No real picture of the thing exists | Generate one of the specific thing (a real product, screen, place or object), bright and contemporary, composed in the slot's shape with nothing cropped. Record the prompt, model, date and cost. Never generate people. |
 | A real person in a news story | Use only a credited real photograph with the credit visible on the sheet, or no picture. |
 | A head would be cropped | Recompose or regenerate in the slot's shape. A face is never cut. |
-| Krish's face is needed but the cutout is missing | Use the approved studio headshot panel. If neither exists, use the Receipt or Data cover; a face-led cover is never improvised. |
 
 ### Captions
 

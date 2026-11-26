@@ -3,10 +3,10 @@
 
 Wave 2, W2.5: "Thumbnails and covers made overnight through the visual and
 logo gate." The overnight run (W2.6, on a home computer) calls this once per
-piece. It makes nothing new of its own and spends nothing: it fills the approved
-Library's templates from the plan's facts (scripts/library/make_piece.py --set
-covers and --set video; the old drawer, scripts/pages/build.py --cover --thumbs,
-is retired), with the plan's own logo files, and no paid generation is ever called.
+piece. It makes nothing new of its own and spends nothing: it draws with the
+house drawer that already makes them (scripts/covers/make_covers.py,
+Playwright on the machine's own fonts and the plan's own logo files), and no
+paid generation is ever called.
 
 In order, stopping at the first that holds:
 
@@ -40,15 +40,12 @@ PY = sys.executable or 'python3'
 
 
 def draw(facts_path, out, assets=None):
-    """The Library fill (make_piece.py), as subprocesses so their browser never lives in this one. (ok, output tail).
-    The plan's logos are read beside its facts, so `assets` is not used."""
-    said, ok = '', True
-    for kind in ('covers', 'video'):
-        cmd = [PY, str(ROOT / 'scripts/library/make_piece.py'), str(facts_path), '--set', kind, '--out', str(out)]
-        run = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, encoding='utf-8')
-        ok &= run.returncode == 0
-        said += run.stdout + run.stderr
-    return ok, said[-3000:]
+    """The house drawer, as a subprocess so its browser never lives in this one. (ok, output tail)."""
+    cmd = [PY, str(ROOT / 'scripts/covers/make_covers.py'), str(facts_path), '--out', str(out)]
+    if assets:
+        cmd += ['--assets', str(assets)]
+    run = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, encoding='utf-8')
+    return run.returncode == 0, (run.stdout + run.stderr)[-3000:]
 
 
 def visual(post_path):
@@ -58,8 +55,8 @@ def visual(post_path):
 
 
 def made(out):
-    names = ['cover.png', 'cover-1200x630.png', 'cover-1200x675.png', 'cover-1080x1080.png', 'cover-1080x1920.png',
-             'thumbs/thumb-wide-1280x720.jpg', 'thumbs/thumb-tall-1080x1920.jpg', 'thumbs/thumbs.json', 'cover.json']
+    names = ['cover-1200x630.png', 'cover-1080x1920.png', 'carousel/slide-01.png',
+             'thumb-wide-1280x720.jpg', 'thumb-tall-1080x1920.jpg', 'covers.json']
     return [n for n in names if (Path(out) / n).is_file()]
 
 
@@ -69,7 +66,7 @@ def run(facts_path, out, post=None, assets=None, drawer=draw, gate=visual, regis
     base = Path(assets) if assets else facts_path.resolve().parent
     out.mkdir(parents=True, exist_ok=True)
     report = {'facts': str(facts_path), 'started_at': dt.datetime.now(dt.timezone.utc).isoformat(timespec='seconds'),
-              'paid_generation': False, 'drawer': 'scripts/library/make_piece.py --set covers and --set video'}
+              'paid_generation': False, 'drawer': 'scripts/covers/make_covers.py'}
     logos = logo_gate.check_files(logo_gate.logo_files(facts, base), registry)
     report['logo_gate'] = logos
     if logos['status'] != 'pass':

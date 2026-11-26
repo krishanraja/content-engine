@@ -19700,7 +19700,7 @@
         "Anton / Fraunces / DM Mono",
         "W0 on ink where used"
       ],
-      "status": "proposed",
+      "status": "retired",
       "grid_profile": "newsletter-substack-cover",
       "slots": {
         "headline_1": {
@@ -19927,7 +19927,9 @@
           "element": "type",
           "align_bottom": true
         }
-      ]
+      ],
+      "ruling": "Ruling (Krish, 2026-11-26): \"I approve the new cover thumbnail systems, go\"",
+      "superseded_by": "scripts/covers/make_covers.py"
     },
     {
       "id": "newsletter-substack-post-social",
@@ -20914,7 +20916,7 @@
         "Anton / Fraunces / DM Mono",
         "W0 on ink where used"
       ],
-      "status": "proposed",
+      "status": "retired",
       "grid_profile": "web-og-card",
       "slots": {
         "headline_1": {
@@ -21051,7 +21053,9 @@
       },
       "spacing_pairs": [],
       "archetype": 1,
-      "system": "poster+evidence (26 Nov 2026)"
+      "system": "poster+evidence (26 Nov 2026)",
+      "ruling": "Ruling (Krish, 2026-11-26): \"I approve the new cover thumbnail systems, go\"",
+      "superseded_by": "scripts/covers/make_covers.py"
     },
     {
       "id": "email-signature",
@@ -28149,7 +28153,7 @@
         ]
       },
       "grid_profile": "social-share-card",
-      "status": "proposed",
+      "status": "retired",
       "layout": "cover-receipt",
       "use": "Receipt (face-free): his headline, the named companies with one verdict chip each, the hero visual on its series colour.",
       "rules": [
@@ -28383,7 +28387,9 @@
         }
       },
       "spacing_pairs": [],
-      "archetype": 1
+      "archetype": 1,
+      "ruling": "Ruling (Krish, 2026-11-26): \"I approve the new cover thumbnail systems, go\"",
+      "superseded_by": "scripts/covers/make_covers.py"
     },
     {
       "id": "social-x-card",
@@ -28400,7 +28406,7 @@
         ]
       },
       "grid_profile": "social-share-card",
-      "status": "proposed",
+      "status": "retired",
       "layout": "cover-face",
       "use": "Face-led: his short thumbnail words, his approved headshot cut out and standing on the frame edge, the series colour behind.",
       "rules": [
@@ -28522,7 +28528,9 @@
       },
       "spacing_pairs": [],
       "archetype": 1,
-      "posted_by": "growth-makeyourmindup"
+      "posted_by": "growth-makeyourmindup",
+      "ruling": "Ruling (Krish, 2026-11-26): \"I approve the new cover thumbnail systems, go\"",
+      "superseded_by": "scripts/covers/make_covers.py"
     },
     {
       "id": "newsletter-substack-cover-wide",
@@ -28553,7 +28561,7 @@
         ]
       },
       "grid_profile": "web-og-card",
-      "status": "proposed",
+      "status": "retired",
       "layout": "cover-receipt",
       "use": "Receipt (face-free): his headline, the named companies with one verdict chip each, the hero visual on its series colour.",
       "rules": [
@@ -28785,7 +28793,9 @@
         }
       },
       "spacing_pairs": [],
-      "archetype": 1
+      "archetype": 1,
+      "ruling": "Ruling (Krish, 2026-11-26): \"I approve the new cover thumbnail systems, go\"",
+      "superseded_by": "scripts/covers/make_covers.py"
     },
     {
       "id": "newsletter-substack-feed",
@@ -38108,7 +38118,7 @@
         "Anton / Fraunces / DM Mono",
         "W0 on ink where used"
       ],
-      "status": "proposed",
+      "status": "retired",
       "grid_profile": "social-youtube-thumb",
       "slots": {
         "headline_1": {
@@ -38336,7 +38346,9 @@
         }
       },
       "spacing_pairs": [],
-      "archetype": 7
+      "archetype": 7,
+      "ruling": "Ruling (Krish, 2026-11-26): \"I approve the new cover thumbnail systems, go\"",
+      "superseded_by": "scripts/covers/make_covers.py"
     },
     {
       "id": "cover-face-youtube",
@@ -38372,7 +38384,7 @@
         "Anton / Fraunces / DM Mono",
         "W0 on ink where used"
       ],
-      "status": "proposed",
+      "status": "retired",
       "grid_profile": "social-youtube-thumb",
       "slots": {
         "headshot": {
@@ -38492,7 +38504,9 @@
         }
       },
       "spacing_pairs": [],
-      "archetype": 7
+      "archetype": 7,
+      "ruling": "Ruling (Krish, 2026-11-26): \"I approve the new cover thumbnail systems, go\"",
+      "superseded_by": "scripts/covers/make_covers.py"
     },
     {
       "id": "cover-scene-youtube",
@@ -38528,7 +38542,7 @@
         "Anton / Fraunces / DM Mono",
         "W0 on ink where used"
       ],
-      "status": "proposed",
+      "status": "retired",
       "grid_profile": "social-youtube-thumb",
       "slots": {
         "headline_1": {
@@ -38666,7 +38680,9 @@
       },
       "spacing_pairs": [],
       "archetype": 7,
-      "system": "poster+evidence (26 Nov 2026)"
+      "system": "poster+evidence (26 Nov 2026)",
+      "ruling": "Ruling (Krish, 2026-11-26): \"I approve the new cover thumbnail systems, go\"",
+      "superseded_by": "scripts/covers/make_covers.py"
     },
     {
       "id": "cover-receipt-tall",
@@ -38706,7 +38722,7 @@
         "Anton / Fraunces / DM Mono",
         "W0 on ink where used"
       ],
-      "status": "proposed",
+      "status": "retired",
       "grid_profile": "social-ig-reels-cover",
       "slots": {
         "headline_1": {
@@ -38939,7 +38955,9 @@
       },
       "preview_ui": "actions",
       "spacing_pairs": [],
-      "archetype": 1
+      "archetype": 1,
+      "ruling": "Ruling (Krish, 2026-11-26): \"I approve the new cover thumbnail systems, go\"",
+      "superseded_by": "scripts/covers/make_covers.py"
     },
     {
       "id": "cover-scene-tall",
@@ -38979,7 +38997,7 @@
         "Anton / Fraunces / DM Mono",
         "W0 on ink where used"
       ],
-      "status": "proposed",
+      "status": "retired",
       "grid_profile": "social-ig-reels-cover",
       "slots": {
         "headline_1": {
@@ -39142,7 +39160,9 @@
       "preview_ui": "actions",
       "spacing_pairs": [],
       "archetype": 1,
-      "system": "poster+evidence (26 Nov 2026)"
+      "system": "poster+evidence (26 Nov 2026)",
+      "ruling": "Ruling (Krish, 2026-11-26): \"I approve the new cover thumbnail systems, go\"",
+      "superseded_by": "scripts/covers/make_covers.py"
     },
     {
       "id": "cover-face-tall",
@@ -39182,7 +39202,7 @@
         "Anton / Fraunces / DM Mono",
         "W0 on ink where used"
       ],
-      "status": "proposed",
+      "status": "retired",
       "grid_profile": "social-ig-reels-cover",
       "slots": {
         "headshot": {
@@ -39293,7 +39313,9 @@
       },
       "preview_ui": "actions",
       "spacing_pairs": [],
-      "archetype": 1
+      "archetype": 1,
+      "ruling": "Ruling (Krish, 2026-11-26): \"I approve the new cover thumbnail systems, go\"",
+      "superseded_by": "scripts/covers/make_covers.py"
     },
     {
       "id": "cover-notification-tall",

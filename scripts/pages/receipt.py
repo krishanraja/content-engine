@@ -319,6 +319,7 @@ def proof_of(c, facts, base):
 def page(facts, c, base, shape, skin=...):
     """One shape of the Receipt as a page, before fitting, in the week's series skin (skins.for_shape) or the one
     given (None for the plain Receipt)."""
+    skins.require_legacy()
     spec = SHAPES[shape]
     W, H = spec['w'], spec['h']
     lead, last = words_of(c, facts)
@@ -372,6 +373,7 @@ def place_skin(pg, skin_id, shape, fit):
 def render(b, facts, c, base, shape, jpeg=None, skin=...):
     """Draw one shape in an open browser, in the week's series skin (skin_of) or the one given (None for the plain
     Receipt). Returns (bytes or None, fit, small words)."""
+    skins.require_legacy()
     spec = SHAPES[shape]
     W, H = spec['w'], spec['h']
     skin_id = skin_of(facts, shape) if skin is ... else skin
@@ -531,6 +533,7 @@ def say_skin(settled):
 def draw_covers(facts, base, out, thumb_facts):
     """Every cover shape in the Receipt. Writes all of them or none, each with its receipt json. A weekly series
     piece's covers wear the skin settle() finds for every shape of the piece, its thumbnails' included."""
+    skins.require_legacy()
     out = Path(out)
     cs = every_shape(facts, thumb_facts)
     c = cs['cover']
@@ -569,6 +572,7 @@ def draw_covers(facts, base, out, thumb_facts):
 def draw_thumbs(facts, base, out, thumb_facts, companies_of):
     """Both video thumbnails in the Receipt, under 2 MB, and thumbs.json. Both or neither. A weekly series piece's
     thumbnails wear the skin settle() finds for every shape of the piece, its covers' included."""
+    skins.require_legacy()
     out = Path(out)
     cs = every_shape(facts, thumb_facts)
     c = cs['tall']
