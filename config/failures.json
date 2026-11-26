@@ -4727,6 +4727,26 @@
           "test": "npx vitest run tests/control-plane/board-sessions.test.ts"
         }
       ]
+    },
+    {
+      "id": "kill-list-windows-encoding",
+      "on": "2026-11-26",
+      "krish": "Not his words: found by the story engine v5 gap list (docs/proposals/2026-11-26-story-engine-gaps.md), which he approved as the plan on 26 Nov 2026; the kill list is makeyourmindup's, held to its vendored copy.",
+      "what": "On a Windows home computer the kill list passed words it should have vetoed: an em dash went through, and tests/idea_checks_test.py test_the_real_kill_list_runs failed there.",
+      "symptom": "idea_checks.kill_list_vetoes('My agent — again') returned no veto on Windows while it vetoed on Linux.",
+      "cause": "kill_list_vetoes ran node vendor/makeyourmindup/kill-list/kill-list.mjs with text=True and no encoding, so Python piped the words in the locale's code page and node read a mangled character, not an em dash.",
+      "status": "guarded",
+      "mode": "encoding",
+      "guard_level": "gate",
+      "surface": "the Sunday ideas gate (board_feed.py gate), the story floor and the captions checks, every caller of idea_checks.kill_list_vetoes",
+      "guards": [
+        {
+          "file": "scripts/post-pack/idea_checks.py",
+          "contains": "capture_output=True, text=True, encoding='utf-8'",
+          "how": "kill_list_vetoes passes encoding='utf-8' (errors='replace') to node, so the words reach the kill list as written on every machine (634a15d7)",
+          "test": "python3 tests/idea_checks_test.py TemplateTest.test_the_real_kill_list_runs"
+        }
+      ]
     }
   ]
 }

@@ -5,6 +5,16 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-11-26
+
+- documented on branch `story/engine-v5` (not on `main`): the v5 reader and its North Star line, sports on the beat,
+  the story engine (floor, blind score, angles, the pre-pick whys probe, close calls, per-type rubric, the wildcard, the
+  gate codes), the blind proof's protocol, the production cycle (`config/cycle.json`, `touch.py`, the outbox and
+  `CC_HARNESS_KEY`), the off days on the reader's beat, the kill list's Windows encoding fix
+  (`kill-list-windows-encoding` in `config/failures.json`) and the 26 Nov split: content-engine makes every asset,
+  Growth posts it. `docs/GROWTH-HANDOFF.md` now opens on that contract; its 28 Oct section is kept below it as history.
+  NOW.md is not edited on a branch: the closeout note is `now-notes/2026-11-26-story-engine-v5.md`.
+
 ## 2026-11-19
 
 - reconciled at `6bbfa12`: NOW.md carried `head: b0ca88d`, which is no longer a commit after the 18 Nov history scrub (`053d6b3c`), so the strict validator could not run on the way in; `head` moved to `6bbfa12`. Sessions had folded their own closeout notes through it and none was left to fold. The 2026-11-19 "What changed recently" bullet was a list of files and now carries the why from `25ee9d2c`. The NOW.md audit's `old_dated_claims` warning (the ve and Phase 3 bullet, dated 2026-11-04) is fixed by restating it against `docs/ve/STATUS.md` ("Phase 3 count": 0 of 3); its earlier detail is below.

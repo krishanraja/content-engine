@@ -1,5 +1,30 @@
 # Workbench: where we are and what's next
 
+## Start here if you are picking up the story engine v5 (26 Nov 2026, branch `story/engine-v5`, not pushed)
+
+Worktree `ce-cards/story-engine`, branch `story/engine-v5` (built on draft PR 978, sports). The plan Krish approved:
+the story engine v5 plan (the floor, the blind score, the whys probe, close calls, the blind proof). Everything is
+committed and nothing is pushed, posted, sent or spent. What it holds, commit by commit: `docs/STATE.md`, "On branch
+`story/engine-v5`". How it fits: `docs/SYSTEM_MAP.md`, "The story engine" and "The production cycle". The split of
+26 Nov (content-engine makes every asset, Growth posts): `docs/GROWTH-HANDOFF.md`.
+
+Where it stopped:
+
+- **Docs are current** with every commit to `4cb6bdd1` and the state commit after it.
+- **The blind proof has not run.** Its frozen SHA in `docs/plans/proofs/2026-11-26-story-engine-v5/PROTOCOL.md` is
+  `c831787a`; `53ff7558` (the carousel format) changed `idea_checks.py`, `story_score.py` and `config/story-score.json`
+  since, so `story_proof.py run` refuses until the SHA is moved again (as `ad5b10d9`, `13ecbe7c` and `4cfb7b6f` did,
+  each before any paid call) or Krish says otherwise. Then the paid run (at most $10, his yes), the tells check, the
+  sheet to his notes folder, his answers, the reveal.
+- **Waiting on Krish:** the `CC_HARNESS_KEY` Actions secret (until then the cycle's connector touches queue in
+  `.cache/touch/outbox.jsonl`; `touch.py drain` sends them); the buyer judge, rewritten for the v5 reader or retired
+  (`config/beat.json` `reader.judges.buyer.flag`); merging this branch, the v5 Library (`library/gates-and-wiring`,
+  `b0cf8943`) and Growth's pull request 145.
+- **Not verified here:** the full Python and vitest suites (each ran past 10 minutes on this computer and was stopped
+  by earlier stages); the targeted tests each stage named pass.
+- **The worktree also holds another session's uncommitted impact-zoom work** (`scripts/velib/impact.py`, the renderer,
+  quick-edit, `docs/ve/`, its `config/failures.json` entry). It is not this branch's; leave it to that session.
+
 ## Start here if you are picking up the video-production work (20 Nov 2026)
 
 `docs/ve/handoff-2026-11-20/HANDOFF.md` is the full handoff: why this week failed, Krish's rulings, what is built, what is open, how the first piece (Mon 23 Nov) must run, what it has to prove, and how to stabilise and lock down after it. `PLAN.md` beside it is the approved plan.
@@ -77,6 +102,9 @@ On session branch `claude/fervent-brown-d8e55b`, going to main by pull request (
 
 [Production handoff](docs/plans/2026-10-23-friday/revisions/motion-v6/BRIEF.md). [Quality gate and failed $3 calibration](docs/plans/2026-10-26-quality-evidence/README.md): eight calls, no qualification. Gates remain draft; four videos and final board incomplete.
 ## 26 October: production and social growth have separate owners
+
+Superseded on 26 November 2026 (Ruling, Krish, 2026-11-26): content-engine makes every asset and Growth posts it;
+`docs/GROWTH-HANDOFF.md` is the contract. Kept as the record.
 
 Krish's ruling is recorded in docs/GROWTH-HANDOFF.md and AGENTS.md.
 Content-engine alone owns production and its standards; Growth-MakeYourMindUp
