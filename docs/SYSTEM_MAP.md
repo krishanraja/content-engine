@@ -2,7 +2,7 @@
 
 Status: Current
 Owner: Krish Raja
-Last verified: 2026-11-12 against `main` at `02184d34` for the code, crons and workflows (every path named here checked to exist), control-center's `main` for its side, and a read-only database readback the same day; the workflows and Krish's surfaces rechecked on 16 Nov against `main` at `4fcf48fb` and control-center's `main`; the ownership split, the story engine and the production cycle (`config/cycle.json`) added on 26 Nov against branch `story/engine-v5` at `e3593a2f` (not on `main` yet; every path named for them checked to exist on that branch)
+Last verified: 2026-11-12 against `main` at `02184d34` for the code, crons and workflows (every path named here checked to exist), control-center's `main` for its side, and a read-only database readback the same day; the workflows and Krish's surfaces rechecked on 16 Nov against `main` at `4fcf48fb` and control-center's `main`; the ownership split, the story engine and the production cycle (`config/cycle.json`) added on 26 Nov against branch `story/engine-v5` at `46bb11bc` (not on `main` yet; every path named for them checked to exist on that branch)
 
 One page on how the whole system fits together: what runs where, who owns
 what, and how a piece travels from a signal to a published post. Detail lives

@@ -58,32 +58,32 @@ When this page and the code disagree, the code wins: fix this page.
 - **The failure loop.** `engine_incidents` holds 3 rows; the weekly job (`engine-learning-weekly.yml`) reads it with
   the failure and learning registers (`docs/learning/README.md`).
 
-## On branch `story/engine-v5`, not on `main` (checked 26 Nov 2026 against `e3593a2f`)
+## On branch `story/engine-v5`, not on `main` (checked 26 Nov 2026 against `46bb11bc`)
 
 Each line names the commit or file it was checked in; none of it is live until the branch merges.
 
 - **The reader.** `config/beat.json` carries sports as a focus sector (25 Nov) and the `reader` row with the North Star
   line Krish approved on 26 Nov ("I approve the lines"; `docs/NORTH_STAR.md`). `_relevance.ts`, the reader and buyer
-  judges (`panel-v3`) and `humour_check.py` read it (`7f91bc4c`).
-- **The story engine.** The floor (`634a15d7`), the blind score's rubric and core (`7a318faa`, `dc5c5831`, `8a2e998f`),
-  the pre-pick whys probe check (`cd53a02a`), the Sunday gate's `story` and `story_floor` codes from the rubric's `from`
-  date, 2026-12-07 (`6bcb24ad`), close calls on the option card (`0d36de7e`), the off days on the reader's beat
-  (`2221d918`, `ed916f95`) and a checked wildcard on every Monday, Wednesday and Friday (`c831787a`). The procedure is
+  judges (`panel-v3`) and `humour_check.py` read it (`5ca87d1b`).
+- **The story engine.** The floor (`1c89d076`), the blind score's rubric and core (`b5646db0`, `ac1c1411`, `a8089bd9`),
+  the pre-pick whys probe check (`f0c6ee1d`), the Sunday gate's `story` and `story_floor` codes from the rubric's `from`
+  date, 2026-12-07 (`18602a2a`), close calls on the option card (`76d1a43a`), the off days on the reader's beat
+  (`4a027b9d`, `7976f8ab`) and a checked wildcard on every Monday, Wednesday and Friday (`5a36cb70`). The procedure is
   `.agents/skills/plan-week/references/story-score.md`, wired into `sunday-ideas.yml`.
-- **The blind proof.** Harness and protocol committed before any paid call (`07c554e0`;
-  `docs/plans/proofs/2026-11-26-story-engine-v5/PROTOCOL.md`, frozen SHA `c831787a`). No paid run has been made: the
+- **The blind proof.** Harness and protocol committed before any paid call (`e42ab3cd`;
+  `docs/plans/proofs/2026-11-26-story-engine-v5/PROTOCOL.md`, frozen SHA `5a36cb70`). No paid run has been made: the
   proof's cache holds the two weeks' pools and old picks only, and no sheet has gone to Krish. Since the freeze,
-  `e3593a2f` changed three engine files (`idea_checks.py`, `story_score.py`, `config/story-score.json`), so a real run
+  `46bb11bc` changed three engine files (`idea_checks.py`, `story_score.py`, `config/story-score.json`), so a real run
   refuses until the frozen SHA is moved again or that change is taken out.
-- **The production cycle.** `config/cycle.json` and `scripts/post-pack/touch.py` (`d979db59`, `24c75f5a`); connector
+- **The production cycle.** `config/cycle.json` and `scripts/post-pack/touch.py` (`e8c56bdc`, `84c6a18e`); connector
   touches queue in `.cache/touch/outbox.jsonl` while `CC_HARNESS_KEY` is unset, and the two workflows pass the secret
   through once it exists.
-- **The kill list on Windows.** `idea_checks.kill_list_vetoes` passes `encoding='utf-8'` to node (`634a15d7`), so an
+- **The kill list on Windows.** `idea_checks.kill_list_vetoes` passes `encoding='utf-8'` to node (`1c89d076`), so an
   em dash is vetoed on Windows too (`test_the_real_kill_list_runs`; `config/failures.json`
   `kill-list-windows-encoding`).
 - **Every asset made here.** `config/asset-routes.json` and `asset_routes.py`, the captions step, the make flow's own
-  judges, the Saturday Note, manifest schema 1.1 and the cycle's Growth rows (`c8ea47d5` to `9a6508e3`), and the
-  carousel format enforced as refusals (`e3593a2f`). Each Library call refuses with "the v5 Library is not on this
+  judges, the Saturday Note, manifest schema 1.1 and the cycle's Growth rows (`b8721b05` to `a8db096f`), and the
+  carousel format enforced as refusals (`46bb11bc`). Each Library call refuses with "the v5 Library is not on this
   checkout yet" on a checkout without it; the Library is on main (#984) and merged into this branch.
 
 ## Broken or risky

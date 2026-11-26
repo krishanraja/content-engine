@@ -10,14 +10,14 @@ committed and nothing is pushed, posted, sent or spent. What it holds, commit by
 
 Where it stopped:
 
-- **origin/main is merged in** (`795bc46f`), so the v5 Library (`scripts/library/make_piece.py`,
+- **origin/main is merged in** (`64c69d43`), so the v5 Library (`scripts/library/make_piece.py`,
   `scripts/covers/make_covers.py`, `docs/ve/cards/library/library.json`) is on this branch and every Library route runs
   against it. The view contract is 1.35.1; control-center's pin (`tests/fixtures/board-view/PIN.json`) is to be moved to
   the engine commit on main once this branch lands, as `check:view-contract` says.
 - **The locked Library lets some slots shrink below the format floor** (96 px glance, 34 px text):
   `config/carousel-format.json` `library_shrink_known` lists them; raising their `min_size_px` is the Library's change
   and waits on Krish. Any new disagreement fails `tests/carousel_format_test.py`.
-- **Impact zoom is committed on this branch** with its tests (`a24a87a4` and the quick-edit fix after it):
+- **Impact zoom is committed on this branch** with its tests (`34a1f886` and the quick-edit fix after it):
   `config/ve/impact-zoom.json`, `scripts/velib/impact.py`, the renderer's `kit/impact.ts`, ve qc's `camera.impact`, and
   quick-edit's pivotal push held to the same rows (hold cap, edges, per minute, stop words) with its own camera.impact
   gate that fails the run.
@@ -31,7 +31,7 @@ Where it stopped:
   `reader.judges.buyer.flag`); merging this branch and Growth's pull request (`northstar/v5-reader`), whose videos hold
   as `video_cover_in_cut_gap` until content-engine has a cover-in-cut route (`config/asset-routes.json`
   `video-cover-in-cut`).
-- **Commit SHAs moved:** two commit bodies were reworded to name their learnings, so every commit from `fb0b75da`
+- **Commit SHAs moved:** two commit bodies were reworded to name their learnings, so every commit from `026ea38b`
   (captions) on has a new SHA; docs name the new ones.
 
 ## Start here if you are picking up the video-production work (20 Nov 2026)
