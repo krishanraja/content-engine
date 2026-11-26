@@ -91,6 +91,18 @@ class IdeasHistoryTest(unittest.TestCase):
         self.assertIn(('refused', 'mon-1'), after)
         self.assertFalse(ic.P6_APPROVED, 'P6 waits for his yes on his taste ledger; only he flips it')
 
+    def test_the_23_nov_board_is_read_as_he_pressed_it(self):
+        # The proof (story engine v5) reads the 23 Nov board as it stood at his first press on its own options: his
+        # Friday pick (added 17 Nov) is on it, and the off days he later had revised are not yet.
+        self.assertIn('2026-11-23', history.BOARDS)
+        self.assertLess(ic.stamp(history.BOARDS['2026-11-23']), ic.stamp(history.FIRST_PRESS['2026-11-23']))
+        for week in history.BOARDS:
+            self.assertIn(week, history.FIRST_PRESS)
+        ideas = history.as_pressed(history.ROOT / 'docs' / 'plans' / '2026-11-23-week' / 'ideas.json', history.FIRST_PRESS['2026-11-23'])
+        self.assertEqual(ideas.get('checked_on'), '2026-11-16')
+        fri = [str(o.get('id')) for o in ideas['days']['fri']]
+        self.assertIn('4f8f23b2-8cb2-4498-b07c-243840f8a1ba', fri, 'his Friday pick was on the board he pressed')
+
 
 if __name__ == '__main__':
     unittest.main()

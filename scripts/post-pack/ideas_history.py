@@ -33,10 +33,16 @@ FIXTURE = ROOT / 'apps' / 'control-plane' / 'scripts' / 'eval' / 'cases' / 'idea
 # Each board, and when it was made: the run's own date (ideas.json checked_on, or the off days' file), so only what he
 # said before it counts.
 BOARDS = {'2026-10-19': '2026-10-18T23:59:59', '2026-10-26': '2026-10-25T23:59:59', '2026-11-02': '2026-10-31T00:00:00',
-          '2026-11-09': '2026-11-02T23:59:59', '2026-11-16': '2026-11-07T23:59:59'}
+          '2026-11-09': '2026-11-02T23:59:59', '2026-11-16': '2026-11-07T23:59:59', '2026-11-23': '2026-11-16T12:54:11'}
+# The 23 Nov board: the gather of its last Sunday run (sources.json gathered_at; ideas.json checked_on 2026-11-16, the
+# run of commit b3dae5dc), and his first press on its own options (GET /api/board/2026-11-23/outcomes, read once on
+# 26 Nov). The rows before that are a piece placed from the 16 Nov board (17 Nov) and an off-day approval moved with
+# it (18 Nov), not presses on this board; and his Friday pick was added on 17 Nov, so the board he pressed is the one
+# that stood on 19 Nov.
 # His first press on each board: a board is read as it stood just before it (git), so an option moved later still counts.
 FIRST_PRESS = {'2026-10-19': '2026-10-19T02:45:00', '2026-10-26': '2026-10-26T09:28:00', '2026-11-02': '2026-11-02T09:12:00',
-               '2026-11-09': '2026-11-03T06:43:00', '2026-11-16': '2026-11-09T13:05:00'}
+               '2026-11-09': '2026-11-03T06:43:00', '2026-11-16': '2026-11-09T13:05:00',
+               '2026-11-23': '2026-11-19T09:57:00'}
 # What the checks read, reduced: these keys only, and no string longer than the longest id the engine uses (a sha256).
 ID_MAX = 64
 
@@ -57,9 +63,9 @@ def as_pressed(path, before):
     import subprocess
     rel = path.relative_to(ROOT).as_posix() if path.is_relative_to(ROOT) else None
     if rel:
-        sha = subprocess.run(['git', 'log', '-1', f'--before={before}Z', '--format=%H', '--', rel], cwd=ROOT, capture_output=True, text=True).stdout.strip()
+        sha = subprocess.run(['git', 'log', '-1', f'--before={before}Z', '--format=%H', '--', rel], cwd=ROOT, capture_output=True, text=True, encoding='utf-8').stdout.strip()
         if sha:
-            shown = subprocess.run(['git', 'show', f'{sha}:{rel}'], cwd=ROOT, capture_output=True, text=True)
+            shown = subprocess.run(['git', 'show', f'{sha}:{rel}'], cwd=ROOT, capture_output=True, text=True, encoding='utf-8')
             if shown.returncode == 0:
                 return json.loads(shown.stdout)
     return json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
