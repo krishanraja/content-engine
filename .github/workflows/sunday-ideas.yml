@@ -201,6 +201,7 @@ jobs:
           python3 scripts/post-pack/meme_templates.py gather "$MONDAY" --apify --max-items 30 --i-approved-spend
 
       - name: The ideas stage of plan-week, in Claude Code on his subscription
+        id: claude
         if: steps.guard.outputs.go == 'true'
         uses: anthropics/claude-code-action@v1
         env:
@@ -331,12 +332,22 @@ jobs:
             Never write anything else: no triage readback, no interview, no narrative lock, no make, no Teleprompter,
             no day tab, no pick, no draft, no spend beyond this run. Stop
             after step 7. Leave docs/plans/<Monday>-week/ (ideas.json, combine.json) on disk and do not commit or push:
-            the workflow puts that folder on the live board and keeps it on a branch for the Sunday room. If
-            board_feed.py cover refuses the options, fix them and check again; if it still refuses, stop and say why.
+            the workflow puts that folder on the live board and keeps it on a branch for the Sunday room.
             Score, floor and order every option before the board, as .agents/skills/plan-week/references/story-score.md
             says (step 6d: the floor, the whys probe, the angles, the humour reads, the blind judges, then story_score.py
             score and order; on a re-run of some days, order with --status ${{ runner.temp }}/status.json and --before
             ${{ runner.temp }}/ideas-before.json, never --fresh).
+            Step 6d is part of this run, never skipped and never "spend beyond this run" (the run of 26 Nov,
+            45902842508, ended its session after story_score.py brief, so the week reached the gate with no score): its
+            paid calls (divergent.py wildcard, story_score.py angles --provoke --judge --budget-usd 3 and story_score.py
+            humour --budget-usd 3) are this run's own spend, which the ledger and the chain cap refuse past their caps by
+            themselves; its free calls (the judge Task subagent on story/judge-brief.md, story_score.py record, score,
+            order --fresh --write, divergent.py distance, then touch.py run 2) always run, in that order, whatever a
+            paid call answered. A cover or gate refusal is never a reason to stop before score, order and touch.py run
+            2: fix what it names (probe again or replace a hero under 3 documented whys, fill a short day) and check
+            again; only when it still refuses after that, stop and say why in your reply, refusal by refusal.
+            You can run only the commands listed for this run: write ideas.json and every working file with Write and
+            Edit, never through a script of your own under docs/plans (it is refused and costs turns).
             The cycle's touches (config/cycle.json; .agents/skills/plan-week/references/story-score.md, "The cycle's
             touches"): run python3 scripts/post-pack/touch.py run 0 --week <Monday> as you start, python3
             scripts/post-pack/touch.py run 1 --week <Monday> after the gather (with --set topic="<topic>" per candidate
@@ -346,6 +357,38 @@ jobs:
             board while a subject he refused is offered, a warned option leads its day, a return comes back no
             deeper, an option repeats what went out or another option, or an option lacks its shape, aim, humour or
             lookalike (the plan-week skill, "What he refused stays refused").
+
+      - name: How the Claude step ended, and what it was refused (counts and command names only)
+        if: always() && steps.guard.outputs.go == 'true'
+        continue-on-error: true
+        env:
+          EXECUTION_FILE: ${{ steps.claude.outputs.execution_file }}
+          MONDAY: ${{ steps.guard.outputs.monday }}
+        run: |
+          # The run of 26 Nov (45902842508) ended "success" after 246 of 400 turns with 8 permission denials, and the log
+          # said neither which tools were refused nor how far step 6d got. This names both. This repository is public, so
+          # a refused Bash command is cut to its program and script, any other tool to its name: never a url, a query or
+          # an idea.
+          python3 - <<'PY'
+          import json, os, pathlib
+          path = pathlib.Path(os.environ.get('EXECUTION_FILE') or pathlib.Path(os.environ['RUNNER_TEMP']) / 'claude-execution-output.json')
+          try:
+              doc = json.loads(path.read_text(encoding='utf-8'))
+          except (OSError, ValueError) as e:
+              print(f'::warning::No readable execution file ({type(e).__name__}).'); raise SystemExit(0)
+          rows = doc if isinstance(doc, list) else [doc]
+          result = next((r for r in reversed(rows) if isinstance(r, dict) and r.get('type') == 'result'), {})
+          print(f"Claude step: {result.get('subtype')}, {result.get('num_turns')} turns, {len(result.get('permission_denials') or [])} refusals.")
+          for d in result.get('permission_denials') or []:
+              tool = str(d.get('tool_name') or '?')
+              cmd = str((d.get('tool_input') or {}).get('command') or '') if tool == 'Bash' else ''
+              words = cmd.split()[:2]
+              shown = ' '.join(w if '/' not in w or w.startswith('scripts/') else w.rsplit('/', 1)[-1] for w in words)
+              print(f'::warning::Refused: {tool}' + (f' ({shown} ...)' if shown else ''))
+          week = pathlib.Path(f"docs/plans/{os.environ['MONDAY']}-week")
+          for f in ('story/probes.json', 'story/floor.json', 'story/angles.json', 'story/judge-brief.md', 'story/judge.md', 'story/judged.json', 'scores.json'):
+              print(f"{f}: {'written' if (week / f).exists() else 'missing'}")
+          PY
 
       - name: His presses read again, now the run has stopped
         if: always() && steps.guard.outputs.go == 'true' && steps.guard.outputs.days != ''
