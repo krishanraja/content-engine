@@ -126,6 +126,9 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/discover-creator-posts`
 - `/api/discover-lens-radar`
 - `/api/feed/ingest`
+- `/api/hub/edition`
+- `/api/hub/prices`
+- `/api/hub/today`
 - `/api/idea-queue`
 - `/api/inspiration/actions`
 - `/api/inspiration/candidates`
@@ -3439,6 +3442,7 @@ What this deployment needs before it can do its job.
 POST /api/content-ideas/:id/fact-check run the fact gate on the current body
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
+- `async function checkSourcedBody(body: string, url: string, content: string): Promise<FactCheck>`
 
 ### `apps/control-plane/api/content-ideas/[id]/final-pass.ts`
 
@@ -3558,6 +3562,18 @@ POST /api/content-ideas/:id/fact-check run the fact gate on the current body
 ### `apps/control-plane/api/feed/ingest.ts`
 
 - `export default withContentRun('feed_ingest', handler)`
+
+### `apps/control-plane/api/hub/edition.ts`
+
+- `export default withContentRun('hub_edition', handler)`
+
+### `apps/control-plane/api/hub/prices.ts`
+
+- `export default withContentRun('hub_prices', handler)`
+
+### `apps/control-plane/api/hub/today.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/idea-queue.ts`
 
@@ -4694,6 +4710,89 @@ The Content Engine's schedule, as the dashboard knows it.
 - `function productionBriefStatusLabel(status: string): string`
 - `function hasExactProductionApproval(meta: unknown): boolean`
 - `function storedProductionBriefs(outputs: unknown): StoredProductionBrief[]`
+
+### `apps/control-plane/lib/hub/articles.ts`
+
+- `async function readPage(input: string)`
+- `function articleText(html: string)`
+- `async function readArticle(link: string)`
+
+### `apps/control-plane/lib/hub/editorial.ts`
+
+- `function outletCount(rows: Candidate[]): number`
+- `function shortlist(rows: Candidate[])`
+- `async function classify(rows: Candidate[]): Promise<Group[]>`
+- `async function writeEdition(rows: Candidate[])`
+
+### `apps/control-plane/lib/hub/feeds.ts`
+
+- `type Feed = { url: string; subsector: string; outlet: string }`
+- `type Candidate`
+- `const feeds: Feed[]`
+- `function onBeat(row: Candidate)`
+- `function plain(html: string)`
+- `function webUrl(raw: string, base?: string)`
+- `function parseFeed(xml: string, feed: Feed, now: number): Candidate[]`
+- `type Health`
+- `function feedHealth(url: string, today: string, hasStories: boolean, prior?: Health): Health`
+
+### `apps/control-plane/lib/hub/markets.ts`
+
+- `type Close`
+- `function validSymbol(symbol: string)`
+- `function parseYahoo(symbol: string, payload: any, now: number): Chart | null`
+- `async function fetchMarkets(now: number)`
+- `function equalWeight(histories: Point[][]): Index`
+- `function buildMarkets(now: number, saved: Close[], charts: Record<string, Chart | null>, prior?: Ticker)`
+
+### `apps/control-plane/lib/hub/pipeline.ts`
+
+- `async function refresh(mode: Mode, now: number)`
+- `function cron(mode: Mode)`
+
+### `apps/control-plane/lib/hub/snapshot.ts`
+
+- `function readSnapshot(payload: unknown): Snapshot | null`
+
+### `apps/control-plane/lib/hub/store.ts`
+
+- `async function latest()`
+- `async function discover(now: number)`
+- `async function markets(now: number, prior?: Ticker)`
+- `async function pieces()`
+- `async function save(snapshot: Snapshot, revision?: string)`
+
+### `apps/control-plane/lib/hub/types.ts`
+
+- `const sectors`
+- `const stocks`
+- `const validSector = (key: unknown): key is string =>`
+- `const dayMs`
+- `const isoDay = (ms: number) =>`
+- `const userAgent`
+- `type Index`
+- `type Stock`
+- `type Ticker`
+- `type Image`
+- `type Entity = { name: string; wiki_title: string }`
+- `type Story`
+- `type Draft`
+- `type Attention`
+- `type Snapshot`
+- `async function mapLimit<T, U>(rows: T[], limit: number, fn: (row: T) => Promise<U>): Promise<U[]>`
+- `async function optional<T>(stage: string, fallback: T, read: () => Promise<T>): Promise<T>`
+
+### `apps/control-plane/lib/hub/wiki.ts`
+
+- `function commonsImage(info: any, kind: 'person' | 'company', accusation = false): Image | null`
+- `function parseViews(entity: Entity, payload: any, end: string): Attention | null`
+- `function wikiClient(deadline = Infinity)`
+- `function generateStill(brief: string): Image`
+- `async function chooseImage(draft: Draft, index: number, lookup: ReturnType<typeof wikiClient>['image'])`
+
+### `apps/control-plane/lib/readCatalogue.ts`
+
+- `async function readCatalogue(limit = 1000)`
 
 ### `apps/control-plane/scripts/check-aeo-packet-schema.ts`
 

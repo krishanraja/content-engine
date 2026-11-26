@@ -51,7 +51,7 @@
     "from_hub": {
       "route": "GET /api/board/<Monday>/edition/news",
       "table": "hub_snapshots",
-      "rule": "Candidates are the week's daily hub items (the hub pipeline's one snapshot a day, the same items makeyourmindup.ai shows), read inside the news window, the same story once: the edition runs no gathering of its own (26 Nov 2026). A hub item is where an item may come from, never its source: its address is the report the hub's writer read, so each item is still checked against its own primary source, and one whose source cannot be found or does not say what the item says is dropped (DESIGN.md section 3)."
+      "rule": "Candidates are the week's daily hub items (the hub pipeline's one snapshot a day, the same items makeyourmindup.ai shows), read inside the news window, the same story once: the edition runs no gathering of its own (26 Nov 2026). A hub item carries its day only (YYYY-MM-DD, UTC), read as that day's start, so a week takes the stories dated Saturday to Friday and each day falls in exactly one week. A hub item is where an item may come from, never its source: its address is the report the hub's writer read, so each item is still checked against its own primary source, and one whose source cannot be found or does not say what the item says is dropped (DESIGN.md section 3)."
     }
   },
   "topic_heads": {
