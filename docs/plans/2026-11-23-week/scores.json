@@ -1,0 +1,1611 @@
+{
+ "rubric_version": "story-score/1",
+ "week": "2026-11-23",
+ "at": "2026-11-26T12:34:22+00:00",
+ "options": {
+  "mon/25eb28e1-928a-43bd-8aa8-18bb72174d89": {
+   "total": null,
+   "axes": {
+    "whys": null,
+    "scale": null,
+    "unique_angle": null,
+    "absurdity_humour": null,
+    "fun_consume": null,
+    "fun_produce": null,
+    "fit": 1,
+    "named_thing": 10
+   },
+   "type": "hero_mon",
+   "floors_failed": [
+    "a hero holds at least three documented whys before he picks (not read)",
+    "a hero reaches five whys, documented plus labelled inferred (not read)",
+    "a hero's ladder lands on an open question, no landing veto (not read)",
+    "a hero has at least one sound angle (not read)"
+   ],
+   "notes": [
+    "a hero's topic is in a focus sector",
+    "a hero has at least one primary source"
+   ],
+   "unread": [
+    "absurdity_humour",
+    "fun_consume",
+    "fun_produce",
+    "scale",
+    "unique_angle",
+    "whys"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 1.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": null,
+    "money_figure_sourced": true,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "whys": "not probed",
+    "scale": "not judged",
+    "unique_angle": "no angle judged",
+    "absurdity_humour": "humour engine: fact None, angle None",
+    "fun_consume": "not judged",
+    "fun_produce": "not judged",
+    "fit": "no focus-sector word",
+    "named_thing": "named in the hook, with a number or twist"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "mon/32ba9da8-3ed8-4e50-b923-e6358cc481e3": {
+   "total": null,
+   "axes": {
+    "whys": null,
+    "scale": null,
+    "unique_angle": null,
+    "absurdity_humour": null,
+    "fun_consume": null,
+    "fun_produce": null,
+    "fit": 7,
+    "named_thing": 10
+   },
+   "type": "hero_mon",
+   "floors_failed": [
+    "a hero holds at least three documented whys before he picks (not read)",
+    "a hero reaches five whys, documented plus labelled inferred (not read)",
+    "a hero's ladder lands on an open question, no landing veto (not read)",
+    "a hero has at least one sound angle (not read)"
+   ],
+   "notes": [
+    "a hero has at least one primary source"
+   ],
+   "unread": [
+    "absurdity_humour",
+    "fun_consume",
+    "fun_produce",
+    "scale",
+    "unique_angle",
+    "whys"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 1.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": null,
+    "money_figure_sourced": true,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "whys": "not probed",
+    "scale": "not judged",
+    "unique_angle": "no angle judged",
+    "absurdity_humour": "humour engine: fact None, angle None",
+    "fun_consume": "not judged",
+    "fun_produce": "not judged",
+    "fit": "focus sector in the topic",
+    "named_thing": "named in the hook, with a number or twist"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "mon/d28707bc-f546-452f-bac1-ad9ddf10ce8c": {
+   "total": null,
+   "axes": {
+    "whys": null,
+    "scale": null,
+    "unique_angle": null,
+    "absurdity_humour": null,
+    "fun_consume": null,
+    "fun_produce": null,
+    "fit": 1,
+    "named_thing": 10
+   },
+   "type": "hero_mon",
+   "floors_failed": [
+    "a hero holds at least three documented whys before he picks (not read)",
+    "a hero reaches five whys, documented plus labelled inferred (not read)",
+    "a hero's ladder lands on an open question, no landing veto (not read)",
+    "a hero has at least one sound angle (not read)"
+   ],
+   "notes": [
+    "a hero's topic is in a focus sector"
+   ],
+   "unread": [
+    "absurdity_humour",
+    "fun_consume",
+    "fun_produce",
+    "scale",
+    "unique_angle",
+    "whys"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 1.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 1,
+    "sound_angle": null,
+    "money_figure_sourced": true,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "whys": "not probed",
+    "scale": "not judged",
+    "unique_angle": "no angle judged",
+    "absurdity_humour": "humour engine: fact None, angle None",
+    "fun_consume": "not judged",
+    "fun_produce": "not judged",
+    "fit": "no focus-sector word",
+    "named_thing": "named in the hook, with a number or twist"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "mon/85ef591c-5e60-4e77-b9e8-f0215786e463": {
+   "total": null,
+   "axes": {
+    "whys": null,
+    "scale": null,
+    "unique_angle": null,
+    "absurdity_humour": null,
+    "fun_consume": null,
+    "fun_produce": null,
+    "fit": 4,
+    "named_thing": 10
+   },
+   "type": "hero_mon",
+   "floors_failed": [
+    "a hero holds at least three documented whys before he picks (not read)",
+    "a hero reaches five whys, documented plus labelled inferred (not read)",
+    "a hero's ladder lands on an open question, no landing veto (not read)",
+    "a hero has at least one sound angle (not read)",
+    "a Monday follows the money: it needs a sourced money figure"
+   ],
+   "notes": [
+    "a hero's topic is in a focus sector",
+    "a hero has at least one primary source"
+   ],
+   "unread": [
+    "absurdity_humour",
+    "fun_consume",
+    "fun_produce",
+    "scale",
+    "unique_angle",
+    "whys"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 1.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "whys": "not probed",
+    "scale": "not judged",
+    "unique_angle": "no angle judged",
+    "absurdity_humour": "humour engine: fact None, angle None",
+    "fun_consume": "not judged",
+    "fun_produce": "not judged",
+    "fit": "focus sector only in the body",
+    "named_thing": "named in the hook, with a number or twist"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "wed/94eea865-1097-4eba-85db-7bf29a431c1e": {
+   "total": null,
+   "axes": {
+    "whys": null,
+    "scale": null,
+    "unique_angle": null,
+    "absurdity_humour": null,
+    "fun_consume": null,
+    "fun_produce": null,
+    "fit": 10,
+    "named_thing": 10
+   },
+   "type": "hero_wed",
+   "floors_failed": [
+    "a hero holds at least three documented whys before he picks (not read)",
+    "a hero reaches five whys, documented plus labelled inferred (not read)",
+    "a hero's ladder lands on an open question, no landing veto (not read)",
+    "a hero has at least one sound angle (not read)",
+    "a Wednesday shows how it works: at least one documented mechanism rung (not read)"
+   ],
+   "notes": [],
+   "unread": [
+    "absurdity_humour",
+    "fun_consume",
+    "fun_produce",
+    "scale",
+    "unique_angle",
+    "whys"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 1.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 1,
+    "sound_angle": null,
+    "money_figure_sourced": true,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "whys": "not probed",
+    "scale": "not judged",
+    "unique_angle": "no angle judged",
+    "absurdity_humour": "humour engine: fact None, angle None",
+    "fun_consume": "not judged",
+    "fun_produce": "not judged",
+    "fit": "focus sector and its economics in the topic",
+    "named_thing": "named in the hook, with a number or twist"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "wed/8c610414-e28b-4f4f-a535-bd85f0c827ec": {
+   "total": null,
+   "axes": {
+    "whys": null,
+    "scale": null,
+    "unique_angle": null,
+    "absurdity_humour": null,
+    "fun_consume": null,
+    "fun_produce": null,
+    "fit": 4,
+    "named_thing": 10
+   },
+   "type": "hero_wed",
+   "floors_failed": [
+    "a hero holds at least three documented whys before he picks (not read)",
+    "a hero reaches five whys, documented plus labelled inferred (not read)",
+    "a hero's ladder lands on an open question, no landing veto (not read)",
+    "a hero has at least one sound angle (not read)",
+    "a Wednesday shows how it works: at least one documented mechanism rung (not read)"
+   ],
+   "notes": [
+    "a hero's topic is in a focus sector"
+   ],
+   "unread": [
+    "absurdity_humour",
+    "fun_consume",
+    "fun_produce",
+    "scale",
+    "unique_angle",
+    "whys"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 1.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 1,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "whys": "not probed",
+    "scale": "not judged",
+    "unique_angle": "no angle judged",
+    "absurdity_humour": "humour engine: fact None, angle None",
+    "fun_consume": "not judged",
+    "fun_produce": "not judged",
+    "fit": "focus sector only in the body",
+    "named_thing": "named in the hook, with a number or twist"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "wed/bf0fddae-2fcf-4687-9079-190729234ed3": {
+   "total": null,
+   "axes": {
+    "whys": null,
+    "scale": null,
+    "unique_angle": null,
+    "absurdity_humour": null,
+    "fun_consume": null,
+    "fun_produce": null,
+    "fit": 10,
+    "named_thing": 10
+   },
+   "type": "hero_wed",
+   "floors_failed": [
+    "a hero holds at least three documented whys before he picks (not read)",
+    "a hero reaches five whys, documented plus labelled inferred (not read)",
+    "a hero's ladder lands on an open question, no landing veto (not read)",
+    "a hero has at least one sound angle (not read)",
+    "a Wednesday shows how it works: at least one documented mechanism rung (not read)"
+   ],
+   "notes": [],
+   "unread": [
+    "absurdity_humour",
+    "fun_consume",
+    "fun_produce",
+    "scale",
+    "unique_angle",
+    "whys"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 1.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 1,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "whys": "not probed",
+    "scale": "not judged",
+    "unique_angle": "no angle judged",
+    "absurdity_humour": "humour engine: fact None, angle None",
+    "fun_consume": "not judged",
+    "fun_produce": "not judged",
+    "fit": "focus sector and its economics in the topic",
+    "named_thing": "named in the hook, with a number or twist"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "wed/86c8a191-bd5b-4302-be00-2f5dea40561b": {
+   "total": null,
+   "axes": {
+    "whys": null,
+    "scale": null,
+    "unique_angle": null,
+    "absurdity_humour": null,
+    "fun_consume": null,
+    "fun_produce": null,
+    "fit": 1,
+    "named_thing": 10
+   },
+   "type": "hero_wed",
+   "floors_failed": [
+    "a hero holds at least three documented whys before he picks (not read)",
+    "a hero reaches five whys, documented plus labelled inferred (not read)",
+    "a hero's ladder lands on an open question, no landing veto (not read)",
+    "a hero has at least one sound angle (not read)",
+    "a Wednesday shows how it works: at least one documented mechanism rung (not read)"
+   ],
+   "notes": [
+    "a hero's topic is in a focus sector"
+   ],
+   "unread": [
+    "absurdity_humour",
+    "fun_consume",
+    "fun_produce",
+    "scale",
+    "unique_angle",
+    "whys"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 1.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 1,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "whys": "not probed",
+    "scale": "not judged",
+    "unique_angle": "no angle judged",
+    "absurdity_humour": "humour engine: fact None, angle None",
+    "fun_consume": "not judged",
+    "fun_produce": "not judged",
+    "fit": "no focus-sector word",
+    "named_thing": "named in the hook, with a number or twist"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "fri/388c764e-318d-4225-a931-d117a47f13ad": {
+   "total": null,
+   "axes": {
+    "whys": null,
+    "scale": null,
+    "unique_angle": null,
+    "absurdity_humour": null,
+    "fun_consume": null,
+    "fun_produce": null,
+    "fit": 10,
+    "named_thing": 10
+   },
+   "type": "hero_fri",
+   "floors_failed": [
+    "a hero holds at least three documented whys before he picks (not read)",
+    "a hero reaches five whys, documented plus labelled inferred (not read)",
+    "a hero's ladder lands on an open question, no landing veto (not read)",
+    "a hero has at least one sound angle (not read)",
+    "a Friday sets a claim against the evidence: at least one rung with a counter (not read)"
+   ],
+   "notes": [
+    "a hero has at least one primary source"
+   ],
+   "unread": [
+    "absurdity_humour",
+    "fun_consume",
+    "fun_produce",
+    "scale",
+    "unique_angle",
+    "whys"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 1.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": null,
+    "money_figure_sourced": true,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "whys": "not probed",
+    "scale": "not judged",
+    "unique_angle": "no angle judged",
+    "absurdity_humour": "humour engine: fact None, angle None",
+    "fun_consume": "not judged",
+    "fun_produce": "not judged",
+    "fit": "focus sector and its economics in the topic",
+    "named_thing": "named in the hook, with a number or twist"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "fri/1f5fa3cf-98e8-49f3-b180-190643b575f2": {
+   "total": null,
+   "axes": {
+    "whys": null,
+    "scale": null,
+    "unique_angle": null,
+    "absurdity_humour": null,
+    "fun_consume": null,
+    "fun_produce": null,
+    "fit": 7,
+    "named_thing": 10
+   },
+   "type": "hero_fri",
+   "floors_failed": [
+    "a hero holds at least three documented whys before he picks (not read)",
+    "a hero reaches five whys, documented plus labelled inferred (not read)",
+    "a hero's ladder lands on an open question, no landing veto (not read)",
+    "a hero has at least one sound angle (not read)",
+    "a Friday sets a claim against the evidence: at least one rung with a counter (not read)"
+   ],
+   "notes": [
+    "a hero has at least one primary source"
+   ],
+   "unread": [
+    "absurdity_humour",
+    "fun_consume",
+    "fun_produce",
+    "scale",
+    "unique_angle",
+    "whys"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 1.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": null,
+    "money_figure_sourced": true,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "whys": "not probed",
+    "scale": "not judged",
+    "unique_angle": "no angle judged",
+    "absurdity_humour": "humour engine: fact None, angle None",
+    "fun_consume": "not judged",
+    "fun_produce": "not judged",
+    "fit": "focus sector in the topic",
+    "named_thing": "named in the hook, with a number or twist"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "fri/d5a0ab6c-b7b8-4c1b-9e50-73c80e452833": {
+   "total": null,
+   "axes": {
+    "whys": null,
+    "scale": null,
+    "unique_angle": null,
+    "absurdity_humour": null,
+    "fun_consume": null,
+    "fun_produce": null,
+    "fit": 1,
+    "named_thing": 10
+   },
+   "type": "hero_fri",
+   "floors_failed": [
+    "a hero holds at least three documented whys before he picks (not read)",
+    "a hero reaches five whys, documented plus labelled inferred (not read)",
+    "a hero's ladder lands on an open question, no landing veto (not read)",
+    "a hero has at least one sound angle (not read)",
+    "a Friday sets a claim against the evidence: at least one rung with a counter (not read)"
+   ],
+   "notes": [
+    "a hero's topic is in a focus sector"
+   ],
+   "unread": [
+    "absurdity_humour",
+    "fun_consume",
+    "fun_produce",
+    "scale",
+    "unique_angle",
+    "whys"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 1.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 1,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "whys": "not probed",
+    "scale": "not judged",
+    "unique_angle": "no angle judged",
+    "absurdity_humour": "humour engine: fact None, angle None",
+    "fun_consume": "not judged",
+    "fun_produce": "not judged",
+    "fit": "no focus-sector word",
+    "named_thing": "named in the hook, with a number or twist"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "fri/87bbc5f0-1217-4e20-9150-ce3723a19c88": {
+   "total": null,
+   "axes": {
+    "whys": null,
+    "scale": null,
+    "unique_angle": null,
+    "absurdity_humour": null,
+    "fun_consume": null,
+    "fun_produce": null,
+    "fit": 4,
+    "named_thing": 10
+   },
+   "type": "hero_fri",
+   "floors_failed": [
+    "a hero holds at least three documented whys before he picks (not read)",
+    "a hero reaches five whys, documented plus labelled inferred (not read)",
+    "a hero's ladder lands on an open question, no landing veto (not read)",
+    "a hero has at least one sound angle (not read)",
+    "a Friday sets a claim against the evidence: at least one rung with a counter (not read)"
+   ],
+   "notes": [
+    "a hero's topic is in a focus sector"
+   ],
+   "unread": [
+    "absurdity_humour",
+    "fun_consume",
+    "fun_produce",
+    "scale",
+    "unique_angle",
+    "whys"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 1.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 1,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "whys": "not probed",
+    "scale": "not judged",
+    "unique_angle": "no angle judged",
+    "absurdity_humour": "humour engine: fact None, angle None",
+    "fun_consume": "not judged",
+    "fun_produce": "not judged",
+    "fit": "focus sector only in the body",
+    "named_thing": "named in the hook, with a number or twist"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "fri/4f8f23b2-8cb2-4498-b07c-243840f8a1ba": {
+   "total": null,
+   "axes": {
+    "whys": null,
+    "scale": null,
+    "unique_angle": null,
+    "absurdity_humour": null,
+    "fun_consume": null,
+    "fun_produce": null,
+    "fit": 4,
+    "named_thing": 10
+   },
+   "type": "hero_fri",
+   "floors_failed": [
+    "a hero holds at least three documented whys before he picks (not read)",
+    "a hero reaches five whys, documented plus labelled inferred (not read)",
+    "a hero's ladder lands on an open question, no landing veto (not read)",
+    "a hero has at least one sound angle (not read)",
+    "a Friday sets a claim against the evidence: at least one rung with a counter (not read)"
+   ],
+   "notes": [
+    "a hero's topic is in a focus sector"
+   ],
+   "unread": [
+    "absurdity_humour",
+    "fun_consume",
+    "fun_produce",
+    "scale",
+    "unique_angle",
+    "whys"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 1.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 1,
+    "sound_angle": null,
+    "money_figure_sourced": true,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "whys": "not probed",
+    "scale": "not judged",
+    "unique_angle": "no angle judged",
+    "absurdity_humour": "humour engine: fact None, angle None",
+    "fun_consume": "not judged",
+    "fun_produce": "not judged",
+    "fit": "focus sector only in the body",
+    "named_thing": "named in the hook, with a number or twist"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "tue/adwait": {
+   "total": null,
+   "axes": {
+    "absurdity_humour": null,
+    "fun_consume": null,
+    "named_thing": 7,
+    "fun_produce": null,
+    "unique_angle": null,
+    "fit": 1,
+    "scale": null,
+    "whys": null
+   },
+   "type": "offday_short",
+   "floors_failed": [
+    "a short leads on humour the engine can read (not read)",
+    "a short's joke never needs explaining (not read)",
+    "a short rests on at least one documented why (not read)",
+    "a short is on the beat: a focus-sector word in what it says (ruling offday_beat)"
+   ],
+   "notes": [],
+   "unread": [
+    "absurdity_humour",
+    "fun_consume",
+    "fun_produce",
+    "scale",
+    "unique_angle"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 2.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "absurdity_humour": "humour engine: fact None, angle None",
+    "fun_consume": "not judged",
+    "named_thing": "named in the body, with a number or twist",
+    "fun_produce": "not judged",
+    "unique_angle": "no angle judged",
+    "fit": "no focus-sector word",
+    "scale": "not judged",
+    "whys": "not probed"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "tue/selfedit": {
+   "total": null,
+   "axes": {
+    "absurdity_humour": null,
+    "fun_consume": null,
+    "named_thing": 7,
+    "fun_produce": null,
+    "unique_angle": null,
+    "fit": 4,
+    "scale": null,
+    "whys": null
+   },
+   "type": "offday_short",
+   "floors_failed": [
+    "a short leads on humour the engine can read (not read)",
+    "a short's joke never needs explaining (not read)",
+    "a short rests on at least one documented why (not read)"
+   ],
+   "notes": [],
+   "unread": [
+    "absurdity_humour",
+    "fun_consume",
+    "fun_produce",
+    "scale",
+    "unique_angle"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 2.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "absurdity_humour": "humour engine: fact None, angle None",
+    "fun_consume": "not judged",
+    "named_thing": "named in the body, with a number or twist",
+    "fun_produce": "not judged",
+    "unique_angle": "no angle judged",
+    "fit": "focus sector only in the body",
+    "scale": "not judged",
+    "whys": "not probed"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "tue/adprice": {
+   "total": null,
+   "axes": {
+    "utility": null,
+    "mechanism": null,
+    "named_thing": 7,
+    "fun_consume": null,
+    "fun_produce": null,
+    "fit": 1,
+    "absurdity_humour": null
+   },
+   "type": "explainer",
+   "floors_failed": [
+    "an off-day carousel, tip or how-to is for the reader's work: a focus-sector word in what it says (ruling offday_beat)"
+   ],
+   "notes": [],
+   "unread": [
+    "absurdity_humour",
+    "fun_consume",
+    "fun_produce",
+    "mechanism",
+    "utility"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 2.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "utility": "not judged",
+    "mechanism": "not probed",
+    "named_thing": "named, the number or twist in the body",
+    "fun_consume": "not judged",
+    "fun_produce": "not judged",
+    "fit": "no focus-sector word",
+    "absurdity_humour": "humour engine: fact None, angle None"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "tue/alphacard": {
+   "total": null,
+   "axes": {
+    "utility": null,
+    "mechanism": null,
+    "named_thing": 1,
+    "fun_consume": null,
+    "fun_produce": null,
+    "fit": 1,
+    "absurdity_humour": null
+   },
+   "type": "explainer",
+   "floors_failed": [
+    "an off-day carousel, tip or how-to is for the reader's work: a focus-sector word in what it says (ruling offday_beat)"
+   ],
+   "notes": [],
+   "unread": [
+    "absurdity_humour",
+    "fun_consume",
+    "fun_produce",
+    "mechanism",
+    "utility"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 2.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "utility": "not judged",
+    "mechanism": "not probed",
+    "named_thing": "nothing named",
+    "fun_consume": "not judged",
+    "fun_produce": "not judged",
+    "fit": "no focus-sector word",
+    "absurdity_humour": "humour engine: fact None, angle None"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "tue/teenhomework": {
+   "total": null,
+   "axes": {
+    "utility": null,
+    "mechanism": null,
+    "named_thing": 7,
+    "fun_consume": null,
+    "fun_produce": null,
+    "fit": 1,
+    "absurdity_humour": null
+   },
+   "type": "explainer",
+   "floors_failed": [
+    "an off-day carousel, tip or how-to is for the reader's work: a focus-sector word in what it says (ruling offday_beat)"
+   ],
+   "notes": [],
+   "unread": [
+    "absurdity_humour",
+    "fun_consume",
+    "fun_produce",
+    "mechanism",
+    "utility"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 2.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "utility": "not judged",
+    "mechanism": "not probed",
+    "named_thing": "named in the body, with a number or twist",
+    "fun_consume": "not judged",
+    "fun_produce": "not judged",
+    "fit": "no focus-sector word",
+    "absurdity_humour": "humour engine: fact None, angle None"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "tue/b33fcaf7-68bd-4474-91f6-1d423f11278e": {
+   "total": null,
+   "axes": {
+    "utility": null,
+    "mechanism": null,
+    "named_thing": 7,
+    "fun_consume": null,
+    "fun_produce": null,
+    "fit": 4,
+    "absurdity_humour": null
+   },
+   "type": "explainer",
+   "floors_failed": [],
+   "notes": [],
+   "unread": [
+    "absurdity_humour",
+    "fun_consume",
+    "fun_produce",
+    "mechanism",
+    "utility"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 2.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 1,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "utility": "not judged",
+    "mechanism": "not probed",
+    "named_thing": "named, the number or twist in the body",
+    "fun_consume": "not judged",
+    "fun_produce": "not judged",
+    "fit": "focus sector only in the body",
+    "absurdity_humour": "humour engine: fact None, angle None"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "thu/tidalpurge": {
+   "total": 72.0,
+   "axes": {
+    "utility": 5.0,
+    "mechanism": null,
+    "named_thing": 10,
+    "fun_consume": 7.0,
+    "fun_produce": 6.0,
+    "fit": 10,
+    "absurdity_humour": null
+   },
+   "type": "explainer",
+   "floors_failed": [],
+   "notes": [],
+   "unread": [
+    "absurdity_humour",
+    "mechanism"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 7.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "utility": "musicians learn the exact rule (fully AI tracks removed from 9 Dec, AI-assisted stays), but there are no steps to take and nothing checked on Tidal's own policy page.",
+    "mechanism": "not probed",
+    "named_thing": "named in the hook, with a number or twist",
+    "fun_consume": "the guess-the-number hook (29 million tracks, 96% never streamed) invites a reader to commit before the reveal, and the bots-will-notice line is a repeatable moment.",
+    "fun_produce": "the one-number-after pattern fits and there are two hard figures plus the TechCrunch report to show, but it is a stills quiz with no screen-proof object.",
+    "fit": "focus sector and its economics in the topic",
+    "absurdity_humour": "humour engine: fact None, angle None"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "thu/fincherrelip": {
+   "total": 54.0,
+   "axes": {
+    "utility": 3.0,
+    "mechanism": null,
+    "named_thing": 7,
+    "fun_consume": 7.0,
+    "fun_produce": 5.0,
+    "fit": 7,
+    "absurdity_humour": null
+   },
+   "type": "explainer",
+   "floors_failed": [],
+   "notes": [],
+   "unread": [
+    "absurdity_humour",
+    "mechanism"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 7.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "utility": "it is a sign of where film editing is heading, with nothing a reader can do or check today.",
+    "mechanism": "not probed",
+    "named_thing": "named, the number or twist in the body",
+    "fun_consume": "a famous exacting director plus a guess on how many lines were fixed is a strong hook, and the endless-takes line is a moment worth repeating.",
+    "fun_produce": "the only proof is a podcast quote and a 5% figure, so it is a quiz over stills with no film or screen evidence.",
+    "fit": "focus sector in the topic",
+    "absurdity_humour": "humour engine: fact None, angle None"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "thu/facefee": {
+   "total": 64.0,
+   "axes": {
+    "utility": 5.0,
+    "mechanism": null,
+    "named_thing": 7,
+    "fun_consume": 8.0,
+    "fun_produce": 6.0,
+    "fit": 7,
+    "absurdity_humour": null
+   },
+   "type": "explainer",
+   "floors_failed": [],
+   "notes": [],
+   "unread": [
+    "absurdity_humour",
+    "mechanism"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 7.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "utility": "actors and creators get a benchmark price before anyone asks to license their face, but there are no steps and the figures come from one outlet's survey.",
+    "mechanism": "not probed",
+    "named_thing": "named, the number or twist in the body",
+    "fun_consume": "the face-for-hire price guess ($15 to $700) is a natural send-to-a-friend question, and the played-himself line is genuinely funny.",
+    "fun_produce": "the microdrama Inevitable gives something real to show, and the price range fits the one-number-after pattern, but proof is still stills in a carousel.",
+    "fit": "focus sector in the topic",
+    "absurdity_humour": "humour engine: fact None, angle None"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "thu/reuterscut": {
+   "total": 61.3,
+   "axes": {
+    "utility": 5.0,
+    "mechanism": null,
+    "named_thing": 7,
+    "fun_consume": 6.0,
+    "fun_produce": 4.0,
+    "fit": 10,
+    "absurdity_humour": null
+   },
+   "type": "explainer",
+   "floors_failed": [],
+   "notes": [],
+   "unread": [
+    "absurdity_humour",
+    "mechanism"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 7.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "utility": "it ends on a question writers, photographers and musicians can put to their own contracts, which is usable but not a checked step.",
+    "mechanism": "not probed",
+    "named_thing": "named, the number or twist in the body",
+    "fun_consume": "the AI-read-every-story line is dry and good, but a union strike vote is a thinner guessing hook than a price or a share of a film.",
+    "fun_produce": "it can be made but only as a stills quiz on a union vote, with no screen or object to show.",
+    "fit": "focus sector and its economics in the topic",
+    "absurdity_humour": "humour engine: fact None, angle None"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "thu/wetaplan": {
+   "total": 61.5,
+   "axes": {
+    "absurdity_humour": null,
+    "fun_consume": 7.0,
+    "named_thing": 7,
+    "fun_produce": 4.0,
+    "unique_angle": null,
+    "fit": 7,
+    "scale": 5.0,
+    "whys": null
+   },
+   "type": "offday_short",
+   "floors_failed": [
+    "a short leads on humour the engine can read (not read)",
+    "a short's joke never needs explaining (not read)",
+    "a short rests on at least one documented why (not read)"
+   ],
+   "notes": [],
+   "unread": [
+    "absurdity_humour",
+    "unique_angle"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 6.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null
+   },
+   "why": {
+    "absurdity_humour": "humour engine: fact None, angle None",
+    "fun_consume": "the lawyer-who-banned-AI-now-rejects-you contradiction is an instantly shareable irony in a two-panel meme.",
+    "named_thing": "named, the number or twist in the body",
+    "fun_produce": "it is a two-panel meme from a single quote, easy to make but with nothing to show beyond the quote itself.",
+    "unique_angle": "no angle judged",
+    "fit": "focus sector in the topic",
+    "scale": "a Weta FX boss quoting a studio-wide AI requirement has a second-order effect on VFX houses, but it is one quote with no sourced figure.",
+    "whys": "not probed"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "sat/goodnews": {
+   "total": 64.7,
+   "axes": {
+    "uplift": 6.0,
+    "named_thing": 7,
+    "scale": 5.0,
+    "wonder": null,
+    "fun_produce": 5.0,
+    "fit": 7,
+    "evidence": 10
+   },
+   "type": "goodnews",
+   "floors_failed": [],
+   "notes": [],
+   "unread": [
+    "wonder"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 8.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null,
+    "goodnews_checks": true
+   },
+   "why": {
+    "uplift": "it names fans of a late singer, first-time filmmakers, football fans and podcasters, a modest group each, with the cover playing the comeback straight.",
+    "named_thing": "named, the number or twist in the body",
+    "scale": "it mixes a K-pop comeback, a Grand Prix with 40% first-time entrants and a 22 million subscriber channel, which touches many creators but mostly as isolated stories.",
+    "wonder": null,
+    "fun_produce": "each of six cards has its own checked photo, which is something to show, but it is a carousel with no single proof object or catalogue format.",
+    "fit": "focus sector in the topic",
+    "evidence": "every story sourced and dated"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "sat/voices": {
+   "total": 67.6,
+   "axes": {
+    "uplift": 7.0,
+    "named_thing": 7,
+    "scale": 5.0,
+    "wonder": null,
+    "fun_produce": 5.0,
+    "fit": 7,
+    "evidence": 10
+   },
+   "type": "goodnews",
+   "floors_failed": [],
+   "notes": [],
+   "unread": [
+    "wonder"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 8.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null,
+    "goodnews_checks": true
+   },
+   "why": {
+    "uplift": "it names a singing teacher who lost his voice to cancer, an ALS singer, sick children and independent artists, with concrete gains for each.",
+    "named_thing": "named in the body, with a number or twist",
+    "scale": "Spotify letting every artist block fakes and independent artists being paid when their songs train AI reach a whole sector, but the other three stories are individual.",
+    "wonder": null,
+    "fun_produce": "there are real photos for each of the five stories, but it stays a carousel with no format fit or on-screen proof beyond the photos.",
+    "fit": "focus sector in the topic",
+    "evidence": "every story sourced and dated"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "sat/screens": {
+   "total": 72.4,
+   "axes": {
+    "uplift": 7.0,
+    "named_thing": 7,
+    "scale": 5.0,
+    "wonder": null,
+    "fun_produce": 6.0,
+    "fit": 10,
+    "evidence": 10
+   },
+   "type": "goodnews",
+   "floors_failed": [],
+   "notes": [],
+   "unread": [
+    "wonder"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 8.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null,
+    "goodnews_checks": true
+   },
+   "why": {
+    "uplift": "blind viewers, a first-time solo developer and a filmmaker are named with a move a maker can copy, at modest scale.",
+    "named_thing": "named in the body, with a number or twist",
+    "scale": "a $450,000 prize, 200,000 game copies and Prime Video cutting audio description from weeks to hours are sourced figures, but each is one player or one maker.",
+    "wonder": null,
+    "fun_produce": "a lost 1938 film rebuilt from its stills is a strong visual with real before-and-after material, and each card has its own photo.",
+    "fit": "focus sector and its economics in the topic",
+    "evidence": "every story sourced and dated"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "sat/fans": {
+   "total": 67.1,
+   "axes": {
+    "uplift": 5.0,
+    "named_thing": 10,
+    "scale": 5.0,
+    "wonder": null,
+    "fun_produce": 5.0,
+    "fit": 7,
+    "evidence": 10
+   },
+   "type": "goodnews",
+   "floors_failed": [],
+   "notes": [],
+   "unread": [
+    "wonder"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 8.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null,
+    "goodnews_checks": true
+   },
+   "why": {
+    "uplift": "fans, live-subtitle users and a runner who built a free coach are helped, but the groups are broad and the benefits mostly viewing convenience.",
+    "named_thing": "named in the hook, with a number or twist",
+    "scale": "the Bundesliga reaching 200 nations and NASCAR sifting three million clips are real figures, but they are separate league deployments with no cross-sector effect.",
+    "wonder": null,
+    "fun_produce": "each card has its own photo and the 200-languages cover gag is visual, but there is no single proof object and no catalogue format.",
+    "fit": "focus sector in the topic",
+    "evidence": "every story sourced and dated"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  },
+  "sat/galleries": {
+   "total": 65.3,
+   "axes": {
+    "uplift": 5.0,
+    "named_thing": 10,
+    "scale": 4.0,
+    "wonder": null,
+    "fun_produce": 5.0,
+    "fit": 7,
+    "evidence": 10
+   },
+   "type": "goodnews",
+   "floors_failed": [],
+   "notes": [],
+   "unread": [
+    "wonder"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 8.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": null,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null,
+    "goodnews_checks": true
+   },
+   "why": {
+    "uplift": "authors on an AI publisher and conservators are helped, but the people are vague and the story is incomplete.",
+    "named_thing": "named in the hook, with a number or twist",
+    "scale": "a Berghain ritual, a painting restoration and an orchestra are notable but local, and 8,000 authors at 80% royalties is the only sector-wide figure.",
+    "wonder": null,
+    "fun_produce": "the Berghain night and the 1888 painting give real images to show, but only four stories are ready and one is still to find.",
+    "fit": "focus sector in the topic",
+    "evidence": "every story sourced and dated"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-26T12:34:22+00:00"
+  }
+ },
+ "unscored": [
+  "fri/1f5fa3cf-98e8-49f3-b180-190643b575f2",
+  "fri/388c764e-318d-4225-a931-d117a47f13ad",
+  "fri/4f8f23b2-8cb2-4498-b07c-243840f8a1ba",
+  "fri/87bbc5f0-1217-4e20-9150-ce3723a19c88",
+  "fri/d5a0ab6c-b7b8-4c1b-9e50-73c80e452833",
+  "mon/25eb28e1-928a-43bd-8aa8-18bb72174d89",
+  "mon/32ba9da8-3ed8-4e50-b923-e6358cc481e3",
+  "mon/85ef591c-5e60-4e77-b9e8-f0215786e463",
+  "mon/d28707bc-f546-452f-bac1-ad9ddf10ce8c",
+  "tue/adprice",
+  "tue/adwait",
+  "tue/alphacard",
+  "tue/b33fcaf7-68bd-4474-91f6-1d423f11278e",
+  "tue/selfedit",
+  "tue/teenhomework",
+  "wed/86c8a191-bd5b-4302-be00-2f5dea40561b",
+  "wed/8c610414-e28b-4f4f-a535-bd85f0c827ec",
+  "wed/94eea865-1097-4eba-85db-7bf29a431c1e",
+  "wed/bf0fddae-2fcf-4687-9079-190729234ed3"
+ ]
+}
