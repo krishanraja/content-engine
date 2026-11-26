@@ -403,6 +403,10 @@ class CompileTest(unittest.TestCase):
         from velib.compile import compile_cut  # noqa: PLC0415
         fixture = ROOT / 'fixtures' / 've' / 'my-test-19s'
         spec = load_json(fixture / 'spec.json')
+        # The shared fixture still names a theme and look the v5 ruling retired (main's retirement); this test is about
+        # the push, so it compiles on the live theme and no retired format look.
+        spec['theme'] = load_json(ROOT / 'config' / 'studio.json')['default_brand_theme']
+        spec['format'] = 'face-with-proof'
         spec['audio'] = dict(spec['audio'], master='dialogue')
         cut = spec['cuts']['proof-tall']
         for beat in cut['beats']:
