@@ -42,6 +42,23 @@ def with_deco(style):
     return page
 
 
+# The Receipt drawer and its skins are retired for new pieces (config/retired-styles.json, scripts/library/make_piece.py);
+# these tests keep the archive path, which build.py reaches only with --legacy.
+_LEGACY = None
+
+
+def setUpModule():
+    global _LEGACY
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts' / 'pages'))
+    import skins
+    _LEGACY = patch.object(skins, 'LEGACY', True)
+    _LEGACY.start()
+
+
+def tearDownModule():
+    _LEGACY.stop()
+
+
 @unittest.skipIf(sync_playwright is None, 'Playwright for Python is not installed (CI installs it)')
 class ReceiptOverlapTest(unittest.TestCase):
     def draw(self, style):
@@ -60,21 +77,23 @@ class ReceiptOverlapTest(unittest.TestCase):
                     b.close()
 
     def test_a_decoration_on_the_headline_is_refused(self):
-        shot, fit, _ = self.draw('left:60px;top:300px;width:600px;height:500px;background:#000')
+        # The archive drawer's v5_feed page sets the headline bottom-left in its safe-box column (y 894 to 1272 on tall).
+        shot, fit, _ = self.draw('left:60px;top:950px;width:600px;height:200px;background:#000')
         self.assertIsNone(shot)
         self.assertFalse(fit['ok'])
         self.assertEqual(fit['over'], ['deco'])
 
-    def test_a_decoration_on_the_logo_plate_is_refused(self):
-        # The plate sits at the foot of the safe box on tall (y 1320 is the safe box's floor since 18 Nov, clear of the
-        # Reel's caption), on the column's left edge.
-        shot, fit, _ = self.draw('left:60px;top:1270px;width:120px;height:40px;background:#000')
+    def test_a_decoration_on_the_wordmark_plate_is_refused(self):
+        # v5_feed carries no logo plate; its wordmark plate sits under the headline at the foot of the safe box on tall
+        # (y 1288 to 1320, 1320 being the safe box's floor since 18 Nov, clear of the Reel's caption). The decoration is
+        # placed inside the page's safe-box column, so it is anchored to that column's foot.
+        shot, fit, _ = self.draw('left:0;bottom:0;width:120px;height:20px;background:#000')
         self.assertIsNone(shot)
         self.assertFalse(fit['ok'])
         self.assertEqual(fit['over'], ['deco'])
 
     def test_the_same_decoration_clear_of_every_word_is_drawn(self):
-        shot, fit, _ = self.draw('left:0;right:0;bottom:0;height:120px;background:#000')
+        shot, fit, _ = self.draw('left:0;right:0;top:0;height:120px;background:#000')
         self.assertTrue(fit['ok'], fit)
         self.assertEqual(fit['over'], [])
         self.assertTrue(shot)
