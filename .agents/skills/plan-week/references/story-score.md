@@ -93,7 +93,8 @@ go in `docs/plans/<Monday>-week/` (`story/` for the score's own, `probe/` for th
     subagent with that skill and the brief only, write its reply to `story/council-<day>-reply.md`, run
     `story_score.py council-record <Monday> --day <day> docs/plans/<Monday>-week/story/council-<day>-reply.md`, then
     `order` again. A chair that says unknown leaves the call his.
-12. **The board** (core step 7). `board_feed.py gate` refuses, from config `from`, an open option with no story score,
+12. **The board** (core step 7). `board_feed.py gate` refuses, from config `from` (the board of 30 Nov, made by the
+    Sunday 29 Nov run; Krish, 2026-11-26: "Newgate, 30th of November"), an open option with no story score,
     an open day out of the score's order, a hero under 3 sourced whys (code `story`) and an option under its floor
     (code `story_floor`). Fix what it names and run it again; never edit a score by hand.
 
