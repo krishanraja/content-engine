@@ -8381,6 +8381,30 @@
            "label": "Plenty Bands! (Instrumental Version), Enophi",
            "line": "Over the carousel: a gym-energy track (Epidemic Sound, licensed).",
            "audio": "/api/board/sign-offs?file=1A9OBoBxV-fvNcIov0cZo6ON1H1RobJ0y"
+          },
+          {
+           "value": "liberty-city",
+           "label": "Liberty City, DonVayei",
+           "line": "Over the carousel: a gym-energy track (Epidemic Sound, licensed).",
+           "audio": "/api/board/sign-offs?file=1_vQvje3vezyzJpXKJ7iBidkAEqY-c7zr"
+          },
+          {
+           "value": "mind-bender",
+           "label": "Mind Bender, Philip Ayers",
+           "line": "Over the carousel: a gym-energy track (Epidemic Sound, licensed).",
+           "audio": "/api/board/sign-offs?file=1WDfa6K59mEEP3yAOa4J-ceBmBX4WMepF"
+          },
+          {
+           "value": "conclusion",
+           "label": "Conclusion, Max Anson",
+           "line": "Over the carousel: a gym-energy track (Epidemic Sound, licensed).",
+           "audio": "/api/board/sign-offs?file=1KVarSW53UNaXtPWz7mPVdL5g7K_vW7ng"
+          },
+          {
+           "value": "movie-instrumental",
+           "label": "Movie (Instrumental Version), Nic Hanson",
+           "line": "Over the carousel: a gym-energy track (Epidemic Sound, licensed).",
+           "audio": "/api/board/sign-offs?file=1i1Y3boJgyU__HEeEoHWWM90UWZ0fJJgJ"
           }
          ]
         },
@@ -9230,6 +9254,11 @@
          "multi": false,
          "required": true,
          "options": [
+          {
+           "value": "seize-it",
+           "label": "Seize It, Tape Machines",
+           "line": "Over the carousel: funky house, uplifting (Epidemic Sound, licensed)."
+          },
           {
            "value": "mojito",
            "label": "Mojito, AGST",
