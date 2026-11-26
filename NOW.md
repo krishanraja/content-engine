@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-23","week_target":20,"current":1,"current_as_of":"2026-11-25","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (0 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (5% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 20 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
+- The hub serves past editions. GET /api/hub/today?date=YYYY-MM-DD returns a published day's edition (404 when none) and ?archive=1 lists every edition date, so makeyourmindup.ai can give each day a permanent, indexable page. (2026-11-26)
 - The week fixture follows the v5 caption choices. The proof and cover guards use the live formats, and a missing FFmpeg reports an advisory error without stopping a cut. (2026-11-26)
 - The makeyourmindup v5 look is locked. The 122-template Library, brand book words, reskin plan and identity studies are here as proposals (draft PR #977). The Library is not agreed with Krish. The engine lock-out is draft PR #976 and its CI is red. The rebrand serves subscriber growth through a clearer front door. Nothing has published. (2026-11-25)
 - Covers, thumbnails and carousels now fill from the approved Library with scripts/library/make_piece.py; the v5_feed skin and the old Receipt cover path are retired behind --legacy. The Library gates still hold open template conflicts (wordmark on colour, why-card caption gaps, the 160 px colour floor) that need Krish's call, and the Receipt covers wait on the image-led cover redesign. (2026-11-26)
@@ -55,7 +56,7 @@ Older lines: `docs/history/2026-11-26-NOW-moved-1.md` (it names every earlier mo
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-26): Run Linux verification on the local repair commits when they reach CI.
+- Next (2026-11-26): makeyourmindup.ai's dated edition pages, desks and sitemap read these routes once the site's discoverability branch merges; the first automatic edition runs 27 Nov at 06:00 UTC.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
 - North Star check (2026-11-26): holds.

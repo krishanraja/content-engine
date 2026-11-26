@@ -4726,6 +4726,8 @@ The Content Engine's schedule, as the dashboard knows it.
 ### `apps/control-plane/lib/hub/store.ts`
 
 - `async function latest()`
+- `async function byDate(date: string)`
+- `async function editionDates(limit = 400)`
 - `async function discover(now: number)`
 - `async function markets(now: number, prior?: Ticker)`
 - `async function pieces()`
