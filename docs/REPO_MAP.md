@@ -374,6 +374,9 @@ _beat — the MYMU: Teardown beat gate (G0).
 - `const AVOID_BEAT`
 - `const FOCUS_BEAT`
 - `const ENTERPRISE_BEAT`
+- `const ECONOMICS_BEAT`
+- `const ECONOMICS_FIGURE`
+- `const READER`
 - `function onAvoidList(text: string): boolean`
 - `function inFocusSector(text: string): boolean`
 - `function neverBeat(headline: string): boolean`

@@ -120,6 +120,19 @@ export const AVOID_BEAT = keywordRegex(beat.avoid)
 export const FOCUS_BEAT = keywordRegex(beat.focus_sectors)
 /** Enterprise productivity, kept only with a focus-sector angle. */
 export const ENTERPRISE_BEAT = keywordRegex([beat.enterprise])
+/** The economics of AI inside the focus sectors (config/beat.json
+ *  economics_keywords): its keywords, and a money or share figure. */
+export const ECONOMICS_BEAT = keywordRegex([beat.economics_keywords])
+export const ECONOMICS_FIGURE = new RegExp(beat.economics_keywords.figure_pattern, 'i')
+
+/**
+ * Who the publication is for (config/beat.json reader). Krish approved the
+ * North Star reader line on 2026-11-26 ("I approve the lines"): the reader
+ * narrows to people who make the calls or make the work in the creative, arts,
+ * music, entertainment, media and sports industries. One wording, read by the
+ * relevance filter, the reader and buyer judges and the humour check.
+ */
+export const READER = beat.reader
 
 /** On the avoid list, the exception phrases ("job security", "royalty
  *  policy") taken out first. */
