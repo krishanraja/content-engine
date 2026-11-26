@@ -4680,6 +4680,14 @@ The Content Engine's schedule, as the dashboard knows it.
 - `function hasExactProductionApproval(meta: unknown): boolean`
 - `function storedProductionBriefs(outputs: unknown): StoredProductionBrief[]`
 
+### `apps/control-plane/lib/hub/announce.ts`
+
+After the daily edition is saved, makeyourmindup.ai is asked to tell IndexNow that today's edition page, the home page
+
+- `const INDEXNOW_ENDPOINT`
+- `type Announced = 'accepted' | 'skipped' | 'failed'`
+- `async function announceEdition(): Promise<Announced>`
+
 ### `apps/control-plane/lib/hub/articles.ts`
 
 - `async function readPage(input: string)`

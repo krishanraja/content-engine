@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-23","week_target":20,"current":1,"current_as_of":"2026-11-25","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (0 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (5% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 20 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
+- The 06:00 UTC hub edition now asks makeyourmindup.ai to announce the new edition, the home page and the six desks to IndexNow (Bing, whose index feeds ChatGPT search and Copilot) right after the snapshot saves. The step is additive: it never fails or repeats the edition, and it skips until MAKEYOURMINDUP_INDEXNOW_SECRET is set. (2026-11-26)
 - The hub serves past editions. GET /api/hub/today?date=YYYY-MM-DD returns a published day's edition (404 when none) and ?archive=1 lists every edition date, so makeyourmindup.ai can give each day a permanent, indexable page. (2026-11-26)
 - The week fixture follows the v5 caption choices. The proof and cover guards use the live formats, and a missing FFmpeg reports an advisory error without stopping a cut. (2026-11-26)
 - The makeyourmindup v5 look is locked. The 122-template Library, brand book words, reskin plan and identity studies are here as proposals (draft PR #977). The Library is not agreed with Krish. The engine lock-out is draft PR #976 and its CI is red. The rebrand serves subscriber growth through a clearer front door. Nothing has published. (2026-11-25)
@@ -50,13 +51,14 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-26 Krish, 2026-11-26, asked for makeyourmindup.ai to be the most discoverable page by search and AI engines and handed that to Growth. This moves the publication's subscriber North Star through discovery; it does not move this repository's asset count.
 - 2026-11-25 the call, its checks, odds, the scoreboard routes and crons are gone; research files a sourced why-ladder (meta.whys), WHY_LADDER blocks approval on a filed ladder, and the Short ends on the landing card bound from it.
 Older lines: `docs/history/2026-11-26-NOW-moved-1.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-26): makeyourmindup.ai's dated edition pages, desks and sitemap read these routes once the site's discoverability branch merges; the first automatic edition runs 27 Nov at 06:00 UTC.
+- Next (2026-11-26): On Krish's yes, set MAKEYOURMINDUP_INDEXNOW_SECRET on content-engine's Vercel project to the same value as INDEXNOW_SECRET on makeyourmindup's, then read the next edition run for indexnow: accepted.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
 - North Star check (2026-11-26): holds.

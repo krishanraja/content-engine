@@ -1,4 +1,0 @@
-Status: The 06:00 UTC hub edition now asks makeyourmindup.ai to announce the new edition, the home page and the six desks to IndexNow (Bing, whose index feeds ChatGPT search and Copilot) right after the snapshot saves. The step is additive: it never fails or repeats the edition, and it skips until MAKEYOURMINDUP_INDEXNOW_SECRET is set.
-Next: On Krish's yes, set MAKEYOURMINDUP_INDEXNOW_SECRET on content-engine's Vercel project to the same value as INDEXNOW_SECRET on makeyourmindup's, then read the next edition run for indexnow: accepted.
-Changed: Krish, 2026-11-26, asked for makeyourmindup.ai to be the most discoverable page by search and AI engines and handed that to Growth. This moves the publication's subscriber North Star through discovery; it does not move this repository's asset count.
-North Star check (2026-11-26): holds.
