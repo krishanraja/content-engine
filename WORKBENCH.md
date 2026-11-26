@@ -10,20 +10,29 @@ committed and nothing is pushed, posted, sent or spent. What it holds, commit by
 
 Where it stopped:
 
-- **Docs are current** with every commit to `0c2ad28f` and the state commit after it.
-- **The blind proof has not run.** Its frozen SHA in `docs/plans/proofs/2026-11-26-story-engine-v5/PROTOCOL.md` is
-  `c831787a`; `e3593a2f` (the carousel format) changed `idea_checks.py`, `story_score.py` and `config/story-score.json`
-  since, so `story_proof.py run` refuses until the SHA is moved again (as `ad5b10d9`, `13ecbe7c` and `4cfb7b6f` did,
-  each before any paid call) or Krish says otherwise. Then the paid run (at most $10, his yes), the tells check, the
-  sheet to his notes folder, his answers, the reveal.
+- **origin/main is merged in** (`795bc46f`), so the v5 Library (`scripts/library/make_piece.py`,
+  `scripts/covers/make_covers.py`, `docs/ve/cards/library/library.json`) is on this branch and every Library route runs
+  against it. The view contract is 1.35.1; control-center's pin (`tests/fixtures/board-view/PIN.json`) is to be moved to
+  the engine commit on main once this branch lands, as `check:view-contract` says.
+- **The locked Library lets some slots shrink below the format floor** (96 px glance, 34 px text):
+  `config/carousel-format.json` `library_shrink_known` lists them; raising their `min_size_px` is the Library's change
+  and waits on Krish. Any new disagreement fails `tests/carousel_format_test.py`.
+- **Impact zoom is committed on this branch** with its tests (`a24a87a4` and the quick-edit fix after it):
+  `config/ve/impact-zoom.json`, `scripts/velib/impact.py`, the renderer's `kit/impact.ts`, ve qc's `camera.impact`, and
+  quick-edit's pivotal push held to the same rows (hold cap, edges, per minute, stop words) with its own camera.impact
+  gate that fails the run.
+- **The blind proof has not run.** Its frozen SHA in `docs/plans/proofs/2026-11-26-story-engine-v5/PROTOCOL.md` is the
+  engine head after the review fixes and the merge, moved before any paid call; a change to an engine file
+  (`config/story-proof.json` `engine_files`) moves it again. Then the paid run (at most $10, his yes), the tells check,
+  the sheet to his notes folder, his answers, the reveal.
 - **Waiting on Krish:** the `CC_HARNESS_KEY` Actions secret (until then the cycle's connector touches queue in
-  `.cache/touch/outbox.jsonl`; `touch.py drain` sends them); the buyer judge, rewritten for the v5 reader or retired
-  (`config/beat.json` `reader.judges.buyer.flag`); merging this branch, the v5 Library (`library/gates-and-wiring`,
-  `b0cf8943`) and Growth's pull request 145.
-- **Not verified here:** the full Python and vitest suites (each ran past 10 minutes on this computer and was stopped
-  by earlier stages); the targeted tests each stage named pass.
-- **The worktree also holds another session's uncommitted impact-zoom work** (`scripts/velib/impact.py`, the renderer,
-  quick-edit, `docs/ve/`, its `config/failures.json` entry). It is not this branch's; leave it to that session.
+  `.cache/touch/outbox.jsonl` and on the week's `touches.jsonl`; `touch.py drain` sends them, and a refusal is logged
+  failed, never re-sent); the buyer judge, rewritten for the v5 reader or retired (`config/beat.json`
+  `reader.judges.buyer.flag`); merging this branch and Growth's pull request (`northstar/v5-reader`), whose videos hold
+  as `video_cover_in_cut_gap` until content-engine has a cover-in-cut route (`config/asset-routes.json`
+  `video-cover-in-cut`).
+- **Commit SHAs moved:** two commit bodies were reworded to name their learnings, so every commit from `fb0b75da`
+  (captions) on has a new SHA; docs name the new ones.
 
 ## Start here if you are picking up the video-production work (20 Nov 2026)
 
