@@ -9,6 +9,14 @@
 // Pure module on purpose: no supabase import, so scripts and guards can load
 // it without secrets. The OS rung of the goal ladder carries the same line as
 // data (goal:os:mission) so the ladder and the prompt cannot disagree.
+//
+// The face and the door are the mind/make diagnostic's buyer. The publication
+// (makeyourmindup) writes for its own reader, the North Star line Krish
+// approved on 2026-11-26 (config/beat.json reader, through _beat.ts READER;
+// _beat.ts imports only config, so this module stays pure). Since then every
+// path that generates publication content reads readerBlock(), never the face.
+
+import { READER } from './_beat.js'
 
 export const MISSION =
   'Build the company that gives leaders their edge back before what is coming takes it, and sell it at scale with my name on it.'
@@ -78,13 +86,24 @@ export function missionBlock(): string {
     `Purpose: ${PURPOSE}`,
     `The face: ${FACE}`,
     `The door: ${DOOR}`,
+    `The publication's reader: ${READER.audience_short}. Publication work is written for that reader, never the face.`,
     'The five jobs of the OS, in priority order:',
     ...JOBS.map(j => `${j.n}. ${j.label}${j.gate === 'now' ? '' : ' (gated, not yet open)'}: ${j.does}`),
     'Standards: ' + STANDARDS.join(' '),
   ].join('\n')
 }
 
-/** The face and the door alone, for drafts and pieces that write to one person. */
+/** The publication's reader (config/beat.json reader, approved 2026-11-26), for every path that generates
+ *  publication content: the weekly brief, its revisions and the production brief's default audience. */
+export function readerBlock(): string {
+  return [
+    `WHO THIS IS FOR: ${READER.intro}`,
+    `THE NORTH STAR: ${READER.lines[0]}`,
+    'Write for that reader. Name what it changes in their work and how it makes money, not for the industry in general. Cite a source for every claim about the world; a claim without a source is cut.',
+  ].join('\n')
+}
+
+/** The face and the door alone, for mind/make drafts that write to one person, never the publication. */
 export function faceBlock(): string {
   return [
     `WHO THIS IS FOR: ${FACE}`,

@@ -1408,6 +1408,7 @@ The North Star. Every reasoning path reads this first (api/_goals.ts
 - `function jobLabel(id: Job | string | null | undefined): string`
 - `const STANDARDS`
 - `function missionBlock(): string`
+- `function readerBlock(): string`
 - `function faceBlock(): string`
 
 ### `apps/control-plane/api/_modelProvider.ts`
@@ -3151,6 +3152,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function dayPosted(rows: ExtrasInputs['ticks'], day: string, live: LivePost[] = []): ViewPosted[]`
 - `function dayYes(picks: ExtrasInputs['picks'], day: string): ViewYes | null`
 - `function seriesOptions(i: ExtrasInputs, day: string, placed: boolean, onDay: Body | null = null): ViewOption[]`
+- `function closeCall(o: Body): string`
 - `function warned(o: Body): string`
 - `function tickNote(o: Body): string`
 - `function ideaLines(i: ExtrasInputs, day: string): ViewOption[]`
@@ -3252,6 +3254,9 @@ What every prompt the board copies out says about reporting back, and what the b
 - `const APPROVAL_RULE`
 - `const ROLES`
 - `const LEARNING_RULE`
+- `const CYCLE_RULE`
+- `function stageOf(step: string): { id: number; name: string } | null`
+- `function stageLine(t: WriteBackTarget): string`
 - `interface WriteBackTarget`
 - `function stepKey(raw: string | null | undefined): string`
 - `function writeBack(t: WriteBackTarget): string`

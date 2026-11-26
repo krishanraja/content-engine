@@ -8,6 +8,10 @@
 // citations. Momentum rewards day-spread and recency so a fading theme cannot
 // outrank a live one. Pure module: no I/O, no clients, unit-testable.
 
+// The reader the shifts are written for: config/beat.json reader (Krish, 2026-11-26). _beat.ts imports only config,
+// so this module stays pure.
+import { READER } from './_beat.js'
+
 export const WINDOW_DAYS = 21
 export const MIN_DAY_SPAN = 3
 export const MIN_SOURCES = 3
@@ -97,14 +101,14 @@ export function buildCorpus(items: CorpusItem[], cap = MAX_CORPUS): CorpusItem[]
 
 export function buildDetectionPrompt(corpus: CorpusItem[], windowDays = WINDOW_DAYS): { system: string; user: string } {
   const system = [
-    'You are a strategy analyst for Mindmake, writing for business leaders making real AI decisions.',
+    `You are a strategy analyst for the publication, writing for ${READER.audience_short}.`,
     `You are given DATED AI-native news items from the last ${windowDays} days.`,
-    `Identify up to ${TARGET_SHIFTS} STRUCTURAL SHIFTS: patterns that recur across many DISTINCT stories over MULTIPLE DAYS and tell a leader how the AI-native world, and therefore how their org, is changing.`,
+    `Identify up to ${TARGET_SHIFTS} STRUCTURAL SHIFTS: patterns that recur across many DISTINCT stories over MULTIPLE DAYS and tell that reader how AI is changing their work and how it makes money.`,
     'A shift is NOT a single event (one launch, one funding round); it is a movement you can see building across several dated stories.',
     'For each shift produce:',
     '- "title": a short, memorable name for the shift (MAX 9 words), e.g. "The rise of the forward-deployed engineer". No trailing punctuation, no em dashes.',
     '- "summary": what is changing, grounded in the stories (MAX 40 words), plain words, no hype, no em dashes.',
-    '- "implication": what a business leader should consider changing about how their org, team or budget is set up for AI (MAX 28 words). Advisory, concrete, no em dashes.',
+    '- "implication": what that reader should consider changing in how they make, price, license or get paid for their work because of it (MAX 28 words). Advisory, concrete, no em dashes.',
     `- "category": the single best-fit lane, one of: ${SHIFT_CATEGORIES.join(', ')}.`,
     '- "evidenceIds": the ids (from the input) of the 3-6 stories that evidence this shift. They MUST span at least 3 different "day" values and at least 3 different sources, or do not name the shift.',
     'HONESTY: ground every field strictly in the supplied stories. NEVER invent a fact, number, company or quote. If the stories do not support a durable shift, return fewer shifts (an empty list is acceptable) rather than forcing one.',
