@@ -1,0 +1,36 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why did TikTok release Likeness Detection and an AI content check worldwide in November 2026?",
+  "rungs": [
+    {"n": 1, "question": "Why did TikTok release these two AI detection tools now?",
+     "answer": "The one source places the release amid growing pushback against AI slop and deepfakes, and notes TikTok has labelled about five billion AI uploads. TikTok's own stated reason is not quoted in the source.",
+     "evidence": [
+       {"url": "https://digitalmusicnews.com/2026/11/23/tiktok-likeness-detection-release", "domain": "digitalmusicnews.com", "date": "2026-11-23", "quote": "The short-form mainstay just recently rolled out the fresh AI identification features, which arrive amid seemingly intensifying pushback against machine-generated slop."},
+       {"url": "https://digitalmusicnews.com/2026/11/23/tiktok-likeness-detection-release", "domain": "digitalmusicnews.com", "date": "2026-11-23", "quote": "TikTok says it’s labeled a staggering five billion or so artificial intelligence uploads to date."}
+     ],
+     "strength": "inferred",
+     "counter": {"text": "The same source says Likeness Detection is framed as building on existing deepfake-reporting and takedown options, which reads as continuity rather than a reaction: \"framed as building on an extensive collection of existing deepfake-reporting and -takedown options\"."},
+     "mechanism_type": null, "stop": null},
+    {"n": 2, "question": "Why does the pushback land on TikTok in particular?",
+     "answer": "TikTok's owner makes AI creation tools itself: CapCut, Dreamina, Hypic and Pippit. The check tool is aimed at content made with that same suite, so TikTok is both a maker and a host of the AI content it now labels.",
+     "evidence": [
+       {"url": "https://digitalmusicnews.com/2026/11/23/tiktok-likeness-detection-release", "domain": "digitalmusicnews.com", "date": "2026-11-23", "quote": "the tool aims to detect AI from across the TikTok/ByteDance product suite – referring to the video-sharing giant itself as well as CapCut, Dreamina, Hypic, and Pippit."}
+     ],
+     "strength": "inferred",
+     "counter": {"text": "none found; scope: the one source article, which gives no figure for how much AI content on TikTok comes from outside ByteDance's tools."},
+     "mechanism_type": null, "stop": null},
+    {"n": 3, "question": "Why can the check tool recognise content from ByteDance's own tools?",
+     "answer": "It reads marks those tools leave in the file: Content Credentials metadata and invisible watermarks. No visible watermark is needed. Whether it reads marks left by other companies' tools is not said in the source.",
+     "evidence": [
+       {"url": "https://digitalmusicnews.com/2026/11/23/tiktok-likeness-detection-release", "domain": "digitalmusicnews.com", "date": "2026-11-23", "quote": "the feature is said to zero in on “Content Credentials” metadata and “invisible watermarks” – meaning the physical watermarks needn’t be present – en route to identifying the use of the relevant models."}
+     ],
+     "strength": "inferred",
+     "counter": {"text": "none found; scope: the one source article. It does not link TikTok's own announcement, so the exact technical limits of the check were not read."},
+     "mechanism_type": "the model: detection by embedded provenance metadata and invisible watermarks",
+     "stop": "evidence_exhausted"}
+  ],
+  "landing": {
+    "shows": "The one readable source shows TikTok's check tool works by reading the provenance marks its owner's own AI tools embed, so it confirms ByteDance-made AI content, while Likeness Detection relies on creators verifying their ID with a third party such as Jumio. The source gives no stated motive from TikTok and links no primary announcement.",
+    "open_question": "If a check can only read the marks a company's own tools leave, what does a clean result say about a video made anywhere else?"
+  }
+}

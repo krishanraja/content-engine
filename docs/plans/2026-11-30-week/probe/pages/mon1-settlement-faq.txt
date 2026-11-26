@@ -1,0 +1,1412 @@
+Frequently Asked Questions
+
+Bartz, et al. v. Anthropic PBCBartz v Anthropic3:24-cv-5417
+
+Home
+Key Dates
+Important Documents
+FAQ
+Works List Lookup
+Learn About Your Four Options and Due Dates
+ English 
+English
+Français
+
+Frequently Asked Questions
+
+ Collapse All
+Table of Contents
+
+Important Update
+Basic Information
+Who Is in the Settlement?
+Benefits of the Settlement
+How to Get a Settlement Payment – Submitting a Claim Form
+The Lawyers Representing You
+Excluding Yourself from the Ongoing Lawsuit
+Objecting to the Settlement
+If You Do Nothing
+The Final Approval Hearing
+The Works List
+Getting More Information
+Additional Questions
+
+ For More Information
+Visit this website often to get the most up-to-date information.
+
+Questions? Contact Us.
+1 877-206-2314
+info@AnthropicCopyrightSettlement.com
+
+Anthropic Copyright Settlement c/o JND Legal Administration P.O. Box 91204 Seattle, WA 98111
+
+© 2026 JND Legal Administration. All rights reserved.
+
+Privacy Policy
+
+Anthropic Copyright Settlement
+
+c/o JND Legal Administration
+
+P.O. Box 91204
+
+Seattle, WA 98111
+
+The deadline to submit a claim was March 30, 2026. The deadline to exclude yourself (opt-out) or object passed on February 9, 2026. If you previously excluded your works, you can no longer reinclude them. The deadline to do so was March 9, 2026. Please read the complete Court-approved Notice for more information.
+
+This website is coming soon.
+
+Yes. The information in the Settlement Notice is only a summary of the Settlement.
+
+You can get more detailed information, including links to a copy of the Class Action Complaint, the notice, Claim Form, motion for preliminary settlement approval, responses to questions raised by the Court in connection with a preliminary approval hearing, preliminary approval order, motion for final settlement approval (when filed), and motion for attorneys’ fees and costs, the Settlement Agreement, and other important case documents at the Important Documents page.
+
+If you have questions regarding the Settlement or need personal assistance completing the Claim Form you can contact the Settlement Administrator at 877-206-2314 or info@AnthropicCopyrightSettlement.com.
+
+To learn more you can review this website or contact any of the lawyers listed in response to Question 37.
+
+You can access the Court’s Public Access to Court Electronic Records (PACER) system at https://ecf.cand.uscourts.gov/, or by visiting the office of the Clerk of the Court for the United States District Court for the Northern District of California, San Francisco Courthouse, from 9:00 a.m. to 4:00 p.m., Monday through Friday, excluding Court holidays.
+
+You may also seek the advice and counsel of your own attorney at your own expense, if you desire.
+
+Yes. The Settlement requires Anthropic to destroy all books that it downloaded from the LibGen or PiLiMi datasets and any copies of those books, subject to Anthropic’s existing legal preservation obligation or obligation pursuant to court order under either U.S. or international law.
+
+Anthropic also represented that neither the LibGen or PiLiMi datasets, nor any portions of those datasets, were in the training corpus of any of its commercially released large language models.
+
+To view the full benefits of the Class Action Settlement Agreement and Release, visit Important Documents.
+
+If one copyright owner submits a valid Claim Form that identifies another rightsholder, that other rightsholder may receive payment.
+
+If a copyright owner can’t be reached or does not respond after reasonable notice efforts, their claim to Settlement funds for the relevant work will be deemed forfeited. In such cases, the release of claims will still apply, meaning the owner will be bound by the Settlement and unable to pursue separate legal action regarding the covered conduct, but they will not receive any payment from the Settlement fund. The funds allocated for that work may be redistributed among other eligible claimants, consistent with the Settlement’s allocation plan.
+
+No rightsholder can file a Claim Form on behalf of any other rightsholder in the settlement. You must file your own Claim Form.
+
+If you opted out of the Settlement but wished to opt back in, you had to submit a re-inclusion request to the Settlement Administrator. The deadline to do so was March 9, 2026.
+
+If you opted out a work from the Settlement and another Class Member submits a claim for that same work, the Settlement Administrator attempted to notify all legal and beneficial owners of the work within five days of receiving a valid opt out request. Those copyright owners may have tried to contact you and encourage you to opt back in so that they can receive payment from the Settlement. You were prohibited from negotiating any “quid pro quo” with other rightsholders in exchange for re-inclusion. Any demands for payment in exchange for re-inclusion will be reported to the Court.
+
+If a copyright owner submitted a valid request for re-inclusion for a work, the Settlement Administrator attempted to notify all legal and beneficial owners of the work that a Class Member had requested to be re-included.
+
+No, the deadline to withdraw your Claim Form passed on February 9, 2026.
+
+Yes. If you are the legal or beneficial owner of more than one work in the LibGen or PiLiMi datasets that Anthropic downloaded, you can submit a single Claim Form that identifies the required information for all your works.
+
+It is highly recommended that Class Members with multiple works on the Works List submit a Claim Form with a list of the works in electronic form to the Settlement Administrator. For personal assistance, please contact the Settlement Administrator at 877-206-2314 or info@AnthropicCopyrightSettlement.com, or contact any of the lawyers listed in response to Question 37. The Claim Form also includes instructions for how to submit a list to the Settlement Administrator.
+
+This portal allows you to review:
+
+Payments issued
+
+Works for which payment is scheduled
+
+Allocation for Works with no disagreements and Works with disagreements
+
+When you log in, you will see only the options relevant to your Works. For example, if you have no Works for which payment is scheduled, no such Works will be listed.
+
+Payments Issued
+
+If payments have been issued for any of your Works, you will see the payment date and payment amount.
+
+Works Scheduled for Payment
+
+If you have Works for which payment is scheduled, you have seven days from the date of the notice to review the Works. During the seven-day review period, you may dispute any Works for which you do not agree with the allocation.
+
+To dispute a Work, please check the box to the left of the Work. When you have selected all Works you wish to dispute, click Next. You may only submit your disputes once, so please carefully review all Works before submitting your form. To save your changes, you must click Submit on the Certification Page.
+
+Any Works you dispute will be removed from the current distribution until the disagreement is resolved.
+
+If you do not dispute a Work, then the payment will be sent as scheduled, unless another claimant disputes the Work.
+
+Where the total allocation percentages for a Work for which payment is scheduled adds up to less than 100%, payments are being distributed to known claimants. The remainder will be paid once the non-filing rightsholder is identified.
+
+No Disagreements Page
+
+The No Disagreements Page contains works for which no allocation disagreement was identified based on the submitted claim information.
+
+Click “Expand” to see the current allocation for each rightsholder.
+
+If you agree with the allocations, click “No Changes.”
+
+If you disagree with the allocation for any work on this page, use the “Update Allocation” button to move the works to the Disagreements Page.
+
+Where the percentages for a work add up to less than 100%, the remainder will be paid once the non-filing rightsholder is identified.
+
+Disagreements Page
+
+The Disagreements Page contains works for which an allocation disagreement was identified based on the submitted claim information and works you moved to this page to review.
+
+Use the “Expand” button to review each claim submitted for the work. 
+
+The claimant name appears in bold, followed by the rightsholders included in that claim.
+
+If a blank space is next to a claimant or rightsholder name, it means that the claimant did not provide an allocation percentage.
+
+Click the “Update Allocation” button to identify rightsholders and indicate how you think the payment should be allocated.
+
+Update Allocation Screen
+
+For non-education works:
+
+Choose “Default”, “Alternative”, or "Withdraw".
+
+The Default Option will result in 50% of the payment being split equally among all authors and 50% of the payment being split equally among all publishers. If you choose default, you don’t need to allocate specific percentages.
+
+The Alternative Option allows you to assign a specific percentage to each rightsholder.
+
+The Withdraw Option allows you to withdraw your claim for a specific work.
+
+For all works:
+
+Use the Rightsholders dropdown to confirm rightsholders. You must make a selection for each row.
+
+Choose “yes” if you agree the rightsholder should receive a payment.
+
+Choose “no” if you think they are not a legal or beneficial owner of the work.
+
+Choose “duplicate” if a rightsholder is listed more than once. You must then indicate which row it duplicates.
+
+Choose "I don't know" if you are unsure whether the rightsholder listed is a legal or beneficial owner of a work.
+
+Allocate percentages to rightsholders marked “yes.”
+
+The percentages must total 100%.
+
+Upload supporting documentation for this work, if you choose to do so.
+
+Click “Update Allocation” to save your changes.
+
+Repeat these steps for each work on the Disagreements Page.
+
+Click “Next.”
+
+Certification Page
+
+Before clicking submit:
+
+Review the Summary carefully. It will display any changes you have made.
+
+Read the certification statements.
+
+Type your name to sign the form.
+
+Click “Submit.”
+
+Updates may not appear immediately in the portal, but you will receive a confirmation email with your changes.
+
+To submit your additional information, please visit the Update Information Portal.
+
+No, you are not required to agree to the Default Option. The Default Option may not be consistent with your contractual arrangement for the claimed work. You have the option to accept the Default Option or claim an alternative split. Other owners of your work will have the same option. The Claim Form specifies the circumstances under which you may be required to submit documentation.
+
+The Default Option does not apply to Education Works. The Claim Form includes a section for owners of Education Works to complete (see Question 27). That portion of the Claim Form calls for owners of Education Works to make a good-faith representation regarding the percentage of recovery they believe they are entitled to receive relative to other rightsholders. If owners of Education Works do not know the percentage recovery they and others are entitled to, they can so designate on the Claim Form. They can also upload a copy of any relevant publishing agreement(s) or other documents to the Settlement Administrator, who will determine the amount, if any, to which the claimant is entitled.
+
+No. You don’t have to attend, but you may at your own expense. You may also ask the Court for permission to speak and express your opinion about the Settlement. If the Court does not approve the Settlement or the parties decide to end it, it will be void and the lawsuit will continue.
+
+Exclude Yourself and all Rightsholders (“Opt Out”) from the Settlement
+
+The deadline to exclude yourself passed on February 9, 2026. This was the only option that allowed you to bring your own separate lawsuit against Anthropic for the claims this Settlement resolves.
+
+If you excluded yourself and all other rightsholders, you gave up the right to receive any payment from this Settlement and prevented all other legal and beneficial owners of your works from receiving any payment from this Settlement. If you excluded yourself and all other rightsholders from the Settlement, you could not have objected to it, and other legal and beneficial owners of your works also could not have objected to the Settlement.
+
+Justin Nelson
+
+Rohit Nath
+
+SUSMAN GODFREY L.L.P.
+
+1000 Louisiana Street, Suite 5100 
+
+Houston, TX 77002
+
+1900 Avenue of the Stars, Suite 1400
+
+Los Angeles, CA 90067
+
+The deadline has passed. Please see the Key Dates page for additional information regarding this deadline.
+
+Class Counsel and experts put the LibGen and PiLiMi files through two “matching” processes (a) to assess whether each file met the Class definition (as identified in Question 5) and (b) to improve, refine, and supplement the metadata contained in Anthropic’s files. Those two matching processes were based on (1) the ISBN(s) extracted from LibGen and PiLiMi text files, and (2) on metadata created by users of LibGen and PiLiMi.
+
+If you did not want your works on the Works List to be included in the Settlement, then you could have “opted out” of the Settlement. If you opted out a work from the Settlement, that means that you and any other legal or beneficial owners of that work will not receive any payment from the Settlement for that work. If one rightsholder opted out of the Settlement, the entire work, and the rest of the rightsholders for that work, are opted out as well. For example, if you are an author and chose to opt out your work, that means you will not receive any payment, your co-authors will not receive any payment, and your publisher will not receive payment. If you are a publisher and chose to opt out your book, that means that you will not receive any payment, and all authors of that book will not receive any payment.
+
+The deadline to opt out of the Settlement passed on February 9, 2026.
+
+When an owner submitted a valid opt out request for a particular work, the Settlement Administrator took reasonable steps to notify all other parties who may be legal or beneficial owners of the right to reproduce that same work, informing them that another Class Member has requested exclusion.
+
+If you received a notice, you may be a Class Member. Only the legal or beneficial owners of works in the LibGen or PiLiMi datasets that Anthropic downloaded are eligible to be Class Members. The Class does not include entities with a solely derivative-works right in a book that was in the LibGen or PiLiMi datasets (which might include derivative rights such as motion picture, merchandise, or audio book rights). Your work may have been in these datasets without your knowledge.
+
+Class Counsel have compiled a searchable database of books included in the Class and Settlement, available at Works List Lookup, www.AnthropicCopyrightSettlement.com/lookup.
+
+Searching this Works List is the only way to determine whether your work is included in the Settlement. The Works List Lookup allows you to search for works by author, title, publisher, copyright registration number, ISBN number, or ASIN to see if your work is included in the Class. If you are the legal or beneficial owner of a work that is in the Works List, then you are a Class Member.
+
+To make a claim to receive money from the Settlement, you had to submit a valid Claim Form. If you believe you are in the Class, you were strongly encouraged to submit a Claim Form. If you did not submit a Claim Form, it is possible that you will not be paid or will not receive the maximum possible monetary recovery. Please read and follow the instructions on the Claim Form carefully. All Class Members can receive personal assistance completing the Claim Form by contacting the Settlement Administrator at 877-206-2314, or info@AnthropicCopyrightSettlement.com, or by contacting any of the lawyers listed in response to Question 37.
+
+Quickly submit your Claim Form online or visit the Important Documents page to download a full Claim Form to complete and return by mail. Submitting your Claim Form online is recommended for ease and faster processing. Claim Forms had to be submitted online by March 30, 2026. Claim Forms submitted by mail had to be postmarked no later than March 30, 2026.
+
+Class Members can also request a Claim Form by calling toll-free 877-206-2314 or by writing to the Settlement Administrator at the following address:
+
+Plaintiffs and Anthropic have agreed that books on the Works List meet the requirements to participate in the Settlement. However, Class Members may be required to submit documentation to establish their status as a legal or beneficial owner of a work on the Works List. This documentation may include the operative contract(s) for the work and any relevant written communications with other potential owners in the work.
+
+To be clear, this does not mean the Claims Form must be jointly filed with other potential owners in the work. If you are a Class Member with a claim to a work, you only need to file your own claim. Claims by different rightsholders in the same work will be combined in the claims process.
+
+The deadline to object to the Settlement passed on February 9, 2026.
+
+Class Members who submit a valid Claim Form will be entitled to a payment from the Settlement. The amount of that payment will depend on several factors, including how many works on the Works List you own, how many other Class Members submit a valid Claim Form, and whether multiple Class Members submit a valid Claim Form for your work(s).
+
+Because no money will go back to Anthropic, the amount per work could increase depending on how many people claim.
+
+If someone else is a legal or beneficial owner of the same work as you, the per-work payment may be split among all those owners of the work (or title). Please read your Claim Form carefully to learn how payments will be determined.
+
+Finally, to further facilitate payments to Class Members, there are limited circumstances in which you will be paid even if you do not file a claim form. See Question 34.
+
+If all claimants for a given work do not agree on the percentage of recovery, or if any claimant does not know the amount to which they are entitled, the Settlement Administrator will notify each claimant of the situation. The claimants will then have an opportunity to meet and confer on the issue and can amend their request. If the claimants cannot resolve any disagreement, they may, within 30 days of being notified of the situation by the Settlement Administrator, confidentially submit the contractual basis for their position, including any supporting documents (for example, the relevant contract) to the Settlement Administrator. The Settlement Administrator will then work with the parties to resolve their dispute based on the supporting documents. The Settlement Administrator may require you to submit your contract. If the parties do not resolve their dispute, they may then submit the dispute to a Court-appointed Special Master at no cost to the claimants, and with no requirement to meet in person.
+
+The Special Master will endeavor to quickly resolve all disputes based on the law. The positions any claimant takes and the decisions of the Settlement Administrator or Special Master respecting them will not be discoverable by claimants in this same litigation for use as to other works in this litigation. Such procedure would be unworkable.
+
+The decisions of the Special Master, however, will mark the final end of that particular dispute and will bind without a right of appeal all claimants and potential claimants to the work occasioning that dispute. By not opting out, all Class Members who remain in this action are bound to this procedure.
+
+Also, all claim forms, all submissions in support thereof, and all decisions on them will be submitted confidentially and not publicly docketed but will be maintained by the Settlement Administrator and/or Special Master. And, all such records may be discoverable by third parties in other litigation for good cause and upon court order.
+
+Finally, notwithstanding anything above, what claim awards are distributed and to whom will be public information (such as in a table of payments that always shows amounts paid by legal name by copyright registration while redacting banking information and non-corporate contact information). Class Members are entitled to know the final approved plan of distribution and to whom the money is paid.
+
+If a Class Member did not opt out and does not submit a timely claim pursuant to the claims process, that Class Member will be bound by the allocations determined during the claims process and will receive only the allocations if any made there in favor of that Class Member.
+
+Plaintiffs will request an award of attorneys’ fees for Class Counsel of up to 25% of the Settlement Fund, and for reimbursement of Class Counsel’s costs and other expenses, to be paid from the Settlement Fund. Plaintiffs will post the motion for attorneys’ fees and costs on the Important Documents page. All amounts awarded shall be determined by the Court.
+
+Class Counsel will also ask the Court to award service payments of up to $50,000 to each of the Named Plaintiffs (Andrea Bartz Inc., Charles Graeber, and MJ+ KJ Inc.) for the time and effort they contributed to the case on behalf of Class Members. If approved by the Court, any service awards will be paid from the Settlement Fund.
+
+You may be a Class Member even if you did not receive an individual notice by mail or email.
+
+If you are a Class Member, you can submit a Claim Form or do nothing regardless of whether you received a notice by mail or email. The deadline to submit a Claim Form was March 30, 2026. The deadline to opt out or object passed on February 9, 2026. You can obtain a notice and Claim Form on the Important Documents page, by calling 877-206-2314, by emailing info@AnthropicCopyrightSettlement.com, or by contacting any of the lawyers listed in response to Question 37.
+
+If you are a Class Member and did not receive mail or email notice, you are still bound by the terms of the Settlement unless you, or another rightsholder for your work, opted out.
+
+If Notice was mailed or emailed to you, then you were listed as a potential Class Member. If you are still not sure whether you are included, you can get help by calling 877-206-2314, by emailing info@AnthropicCopyrightSettlement.com, or by contacting any of the lawyers listed in response to Question 37.
+
+No. If you are a Class Member, unless you excluded yourself from the ongoing lawsuit, you gave up your right to sue Anthropic for the claims resolved in the Settlement.
+
+No. If you excluded yourself and all rightsholders for a work, you will not receive any payment from the Settlement for that work, and all other legal and beneficial owners of that work will not receive payment from the Settlement. By opting out, you are telling the Court that you do not want to be part of the Settlement. You are only eligible to receive a payment from the Settlement if you stay in the Settlement.
+
+If you believe you are in the Class, you are strongly encouraged to submit a Claim Form. If you do not submit a Claim Form, it is possible that you will not be paid or will not receive the maximum possible monetary recovery. Filing a valid Claim Form is also the only way to have input into the allocation of the per-work award – meaning, for example, whether or not to accept the Default Option.
+
+However, if your work is a shared work (that is, it is not owned solely by a single rightsholder) and another rightsholder files a valid Claim Form and either (i) elects the Default Option or (ii) establishes that a different allocation percentage should apply, you will be sent a check for your share. The reason for this is to maximize the number of Class Members who get paid consistent with their rights in the work.
+
+Fairness Hearing
+
+The Court held a Final Approval Hearing to decide whether to approve the settlement. The hearing was on May 14, 2026, at 2:00 PT at the San Francisco Federal Courthouse, 450 Golden Gate Ave., Courtroom 12 – 19th Floor.
+
+Because the settlement of a class action decides the rights of all members of the Class, the Court must give final approval to the Settlement before it can take effect. Payments will only be made if the Court approves the Settlement and any appeals are resolved. At the Final Approval Hearing, the Court listened to Class Members who had asked to speak at the hearing.
+
+For more information, see FAQ 47, When and where will the Court decide whether to approve the Settlement?.
+
+The Works List only includes works that meet the Class definition (as identified in Question 5). For a variety of reasons, many of the books listed in The Atlantic’s list of LibGen files do not meet the Class definition. For example:
+
+Anthropic did not download any works from LibGen after July 2021. To compile its list, The Atlantic used metadata from LibGen as that database existed in 2025. Between July 2021 and 2025, millions of additional books were added to LibGen. Your work would not be part of the Class, and therefore not on the Works List, if it was (i) added to LibGen after July 2021 and (ii) not among the works Anthropic downloaded from PiLiMi in August 2022.
+
+The metadata for LibGen is known to contain errors, and it is possible that LibGen metadata used by the Atlantic is not accurate.
+
+As explained above in Question 5, a work falls within the Class definition only if it (i) has an ISBN or ASIN; (ii) was registered with the U.S. Copyright Office within five years of the work’s first publication; and (iii) was registered before being downloaded by Anthropic, or within three months of the work’s first publication. Many works in LibGen and PiLiMi were not registered or did not have an ISBN or ASIN. Such works are not part of the Class and therefore not on the Works List.
+
+To be clear: if a work you own is not listed on the Works List, this Settlement does not release any claims in connection with that work.
+
+If your work does not appear on the Works List, your work is not part of the settlement, your claims about that work are not being released, and you should not submit a claim for that work.
+
+On November 13, 2026, you should have received a notice if at least one of your claimed Works is scheduled for payment. Please log in using the link below and carefully review the details of any Works for which payments will be issued. You will need the Claim Number and PIN included in your notice.
+
+Payment Summary Portal
+
+If you disagree with the allocation for any Work scheduled for payment, you must dispute the payment by November 20, 2026. The Work will then be removed from the first distribution, but will still be eligible for subsequent distributions after any discrepancies are resolved.
+
+If you agree with the payment allocations, no further action is needed at this time.
+
+You may search the Works List online at www.AnthropicCopyrightSettlement.com/lookup
+
+On July 20, 2026, the Court granted final approval. A copy of the Court's order is available on the Important Documents page.
+
+Rachel Geman
+
+Daniel Hutchinson
+
+LIEFF CABRASER HEIMANN & BERNSTEIN, LLP
+
+275 Battery Street, 29th Floor
+
+San Francisco, CA 94111
+
+250 Hudson Street, 8th Floor
+
+New York, NY 10013
+
+Below are the four options available to you if you are a class member. You can check the official list of works involved in the settlement using the Works List Lookup. For more information, please read the complete, Court-approved Class Notice about the preliminarily approved settlement that the Court advises class members to read before deciding how to act.
+
+Any works for which disputes are not resolved before the first distribution of Settlement payments will not be included in the first distribution and will instead be included in a subsequent distribution. 
+
+For claims where all claimants do not agree on the appropriate allocation for a work, claimants may submit additional information supporting their proposed allocation.
+
+You can still log into the portal to review and make updates to these Works. If you would like help reaching out to other rightsholders for your Works, please contact the Settlement Administrator at info@AnthropicCopyrightSettlement.com or 1-877-206-2314.
+
+If rightsholders cannot resolve a disagreement by meeting and conferring, the disagreement can be submitted to the Court-appointed neutral Special Master for resolution. For more details about the Special Master, please review FAQ 26.
+
+Please check this website for updates.
+
+First, please read the complete, Court-approved Class Notice about the preliminarily approved settlement and the four options available to Class Members that the Court advises Class Members to read.
+
+You may be eligible to receive a cash payment if:
+
+You are a legal, beneficial, or sole owner of the exclusive right to reproduce a copyrighted work;
+
+The work is included in the Works List; and
+
+You are not a director, officer, or employee of Anthropic, PBC, and you are not personnel of federal agencies or of the United States District Court.
+
+Typically, a contract between a publisher and author establishes these rights. In some cases, a contract may specify whether and/or how litigation proceeds will be split between authors and publishers.
+
+For purposes of this claims process:
+
+If you are not sure, consult your contract or contact Class Counsel.
+
+We currently expect to send the first round of payments the week of November 23, 2026.
+
+Payments will be issued in multiple installments. The first installment will be about 70% of the total award for each Work. The remainder will be paid after Anthropic makes its final payment into the Settlement Fund. See FAQ 11 for more details.
+
+Payments will be issued consistent with the payment method selected on each validly submitted Claim Form. Please inform the Settlement Administrator of any updates to your payment information after the submission of your Claim Form, including your current address if you chose payment by check.
+
+A legal owner of a work holds the exclusive right to publish and reproduce that work. Often, the legal owner of the work is the publisher because it holds the right to reproduce by contract.
+
+A beneficial owner of a work is a former legal owner who assigned the exclusive right to publish and reproduce the work to another in exchange for royalty payments. Often, authors are beneficial owners.
+
+A sole owner holds all rights to reproduce the work. Examples of sole ownership include:
+
+File a ClaimFile an Opt OutFile an ObjectionDo Nothing
+
+Deadline to file a claim: March 30, 2026Deadline to file an opt out: February 9, 2026.Deadline to object: February 9, 2026No deadline but please review deadlines for other options.
+
+This deadline has passed.This deadline has passed.This deadline has passed.See below for more information regarding the implications of doing nothing if you are a class member.
+
+What this means:
+
+If you believe you are in the Class, you may have submitted a Claim Form. If you did not submit a Claim Form, it is possible that you will not be paid or will not receive the maximum possible monetary recovery. You could receive payment for each qualifying work you own.
+
+If you submitted a valid Claim Form, you gave up the right to sue Anthropic in a separate lawsuit about the legal claims this Settlement resolves.
+
+What this means:
+
+You may have excluded yourself and every other legal and beneficial owner of your work by February 9, 2026, which has passed. This was the only option that allowed you to bring your own separate lawsuit against Anthropic for the claims this Settlement resolves.
+
+If you excluded yourself and all other rightsholders, you gave up the right to receive any payment from this Settlement and prevented all other legal and beneficial owners of your works from receiving any payment from this Settlement. If you excluded yourself and all other rightsholders from the Settlement, you could not have objected to it, and other legal and beneficial owners of your works also could not have objected to the Settlement.
+
+What this means:
+
+You may have objected to the Settlement by February 9, 2026, which has passed, by writing to the Court and informing it why you do not think the Settlement should be approved. If you objected, you will still be bound by the Settlement if it is approved.
+
+If you objected, you may also file a Claim Form to receive a payment from this Settlement.
+
+What this means:
+
+If you do nothing, three potential outcomes may result, depending on what the other rightsholders for your work do.
+
+If another rightsholder for your work files a Claim Form confirming your right to payment, you may receive payment even if you do not submit a Claim Form.
+
+If another rightsholder for your work opted out your work, your work will be opted out of the Settlement.
+
+If no other rightsholder for your work does anything, you will not receive a payment from the Settlement, and you will give up your rights to sue Anthropic for the claims this Settlement resolves.
+
+The deadline to submit a Claim Form passed on March 30 2026.The deadline to Opt Out passed on February 9, 2026. The deadline to file an objection passed on February 9, 2026.
+What you must do:
+
+No action is required of you.
+
+We strongly encourage all possible claimants—i.e. all possible legal and/or beneficial owners—of a given work to file a claim regardless of which column their information appears in. Below we provide a short explanation of the meaning/sources of the different columns. For more information, on how the works list was created, please see FAQ 7, and FAQs 49-52.
+
+ISBN(s)/ASIN(s)
+
+These include the International Standard Book Number(s) (“ISBN(s)”) and/or Amazon Standard Identification Number(s) (“ASIN(s)”) which we were able to identify (generally from the raw text of the files downloaded by Anthropic, the metadata from the LibGen and/or PiLiMi files, or any ISBN(s) listed on the official copyright registration).
+
+ISBNs are either 10 or, more commonly, 13 digits. A given ISBN identifies a specific edition and format of a book.
+
+Note: there may be other ISBNs for your book which are not listed as they did not correspond to the specific edition and/or format of the file in question and/or were not listed on the copyright registration. That generally should not impact your rights to claim for a given work if you are otherwise a legal or beneficial owner of the work under the settlement.
+
+ASINs are 10 characters. By design, all 10-digit ISBNs are also valid ASINs. However, unlike ISBNs, ASINs may also start with letters, most commonly “B.”
+
+Copyright-Registered Title
+
+Copyright-Registered Author(s)
+
+Copyright-Registered Claimant(s)
+
+In general, each of these columns—“Copyright-Registered Title,” “Copyright-Registered Author(s),” and “Copyright-Registered Claimant(s)”—was sourced from the information listed on publicly available records of the United States Copyright Office associated with the “Copyright Registration Number.” We strongly encourage all possible claimants of a given work to file regardless of which column their information appears in.
+
+For materials registered after 1978 (including renewal registration), they can be viewed at https://publicrecords.copyright.gov/.
+
+For materials registered before 1978, they can be viewed either at https://www.copyright.gov/vcc/ or https://archive.org/details/copyrightrecords?tab=collection, though searching is more difficult.
+
+Identified Publisher(s)
+
+Identified Title
+
+Identified Author(s)
+
+In general, each of these columns—“Identified Publisher(s),” “Identified Title,” and “Identified Author(s)”—was sourced from publicly available databases of ISBN information, primarily Bowker Books Data and/or ISBNdb. Such databases are publishing industry-standard tools for compiling, tracking, and reporting publisher, title, and author information on a per-ISBN basis. The information in these columns was also supplemented with manual review where possible.
+
+Occasionally the information in these columns may differ from what is listed on the “Copyright-Registered” columns because of differences in a given edition or format of a work (e.g. a later edition of a textbook may have additional authors) or disagreement between the records. We strongly encourage all possible claimants of a given work to file regardless of which column their information appears in.
+
+Copyright Registration Number
+
+This is the Copyright Registration Number for the work which was identified in the official records of the United States Copyright Office.
+
+For materials registered after 1978 (including renewal registration), they can be viewed at https://publicrecords.copyright.gov/.
+
+For materials registered before 1978, they can be viewed either at https://www.copyright.gov/vcc/ or https://archive.org/details/copyrightrecords?tab=collection, though searching is more difficult.
+
+Education Work
+
+This column identifies whether a work is an “Education Work” for purposes of the settlement and claims process. Education Works are works published by education publishers. Education publishers specialize in creating and publishing works, including but not limited to textbooks, for the instruction of students and professionals, which are distributed for and through educational and professional markets. Please see FAQs 21-27 for more information.
+
+The Works List identifies works included in this Settlement. Anthropic downloaded approximately 7 million files from LibGen and PiLiMi. As part of the lawsuit, Anthropic produced those 7 million files to Plaintiffs’ attorneys. Plaintiffs’ attorneys used those 7 million files to create a “Works List” of all works that are part of the Class. Additional information regarding how the Works List was created, and why Works may or may not be included, can be found on the FAQ page beginning at FAQ 49.
+
+If your work is included, you may be eligible to File a Claim. If your search results in a large number of Works, you may reach out to BulkClaimFiling@AnthropicCopyrightSettlement.com for assistance in reviewing your works and filing a claim. 
+
+For additional tips regarding how to search, please see below:
+
+ISBN/ASIN: Search for only one ISBN or ASIN at a time.
+
+Title: Search for the full book title. If you are unable to find the book, remove any leading articles (i.e. “The”).
+
+Author: Search for the full author name. Search for only one author name at a time.
+
+Publisher: Search for the full publisher name. Search for only one publisher at a time.
+
+Object to the Settlement
+
+The deadline to object to the Settlement passed on February 9, 2026. If you objected to the Settlement, you will still be bound by the Settlement if it is approved.
+
+If you objected, you may also file a Claim Form to receive a payment from this Settlement.
+
+Re-inclusion Date
+
+The deadline to opt back in to the Settlement has passed. If you opted out but wished to opt back in, you had to do so by submitting a request for re-inclusion in the settlement by March 9, 2026. For more information about re-inclusion, see FAQ 41.
+
+If you stay in the Settlement Class, you do not need to hire your own lawyer. Class Counsel is working on behalf of the Class. However, if you want to be represented by your own lawyer, you may hire one at your own expense and cost. You may also appear for yourself without a lawyer.
+
+Submit a Claim Form
+
+If you believe you are in the Class, you may submit a Claim Form. If you do not submit a Claim Form, it is possible that you will not be paid or will not receive the maximum possible monetary recovery. You can receive payment for each qualifying work you own.
+
+If you submit a valid Claim Form, you will give up the right to sue Anthropic in a separate lawsuit about the legal claims this Settlement resolves.
+
+Please note: many of the below FAQs are about deadlines that have passed or are no longer applicable in light of the Court’s granting final approval of the Settlement on July 20, 2026, HERE. Because the Parties have informed the Court of their agreement that the Effective Date occurred, assuming that no late-filed appeal is permitted to go forward, payments are expected to begin shortly. Importantly, Question 35, which is “When and how will I receive a payment from the Settlement?” has been revised to now link to the current update.
+
+Unless you excluded yourself or another copyright owner excluded you, you will remain in the Class and the Settlement. If the Settlement is approved and becomes final, all the Court’s orders entered after the Order on Class Certification will apply to you and legally bind you. You will not be able to bring a lawsuit against Anthropic for any of the legal claims released by the Class Action Settlement Agreement.
+
+The specific rights you are giving up are called Released Claims (see Question 15, below).
+
+A Released Claim means a claim that you are giving up – releasing – in exchange for getting the benefits from the Settlement.
+
+Released Claims means any and all claims or causes of action for any relief of any kind including, but not limited to, actual damages, statutory damages, liquidated damages, penalties, injunctive relief, declaratory relief, attorneys’ fees and costs, expenses and interest, liabilities, demands, or lawsuits against the Released Parties arising from Defendant’s alleged past torrenting (including uploading and seeding), scanning, retention, and use of works, including training, research, development, and production of AI models and associated products and services of works on the Works List as of the date of preliminary approval of the Settlement. For purposes of clarity, no claims based on the output of AI models are released. For the avoidance of doubt, Released Claims extend only to past claims on the Works List. There will be no release of any claims for future reproduction, distribution and/or creation of derivative works of the works on the Works List. The release does not constitute, in any respect, a license to torrent, scan, or train AI models on any copyrighted works, or to create infringing outputs from AI models. Released Claims do not extend to any activity or conduct that occurs or occurred after August 25, 2025.
+
+You will also waive any rights or benefits available to you under the provisions of Section 1542 of the California Civil Code or any similar law, which generally preserves a releasing party’s right to bring any claims that could have been asserted in the action which were not known or suspected to exist at the time of executing the release and would have materially affected the settlement.
+
+Released Claims do not include any claims about works in Books3 or scanned books that do not appear on the Works List.
+
+You do not need to fully understand each column to file a claim. You may file a claim if you believe you are a legal or beneficial owner of a work on the Works List. For more information on how the Works List was created, please see Questions 7, and 49–55.
+
+The following bullets describe the Works List columns:
+
+ISBN(s)/ASIN(s): the entries in this column include the International Standard Book Number(s) (“ISBN(s)”) and/or Amazon Standard Identification Number(s) (“ASIN(s)”) that Class Counsel was able to identify. Class Counsel generally identified these numbers from some combination of (a) the raw text of the files downloaded by Anthropic, (b) the metadata associated with the LibGen and/or PiLiMi downloads, and (c) ISBN(s) listed on the official copyright registration or other publicly available databases of ISBN information, primarily Bowker Books Data and/or ISBNdb.
+
+ISBNs are either 10 digits or, more commonly, 13 digits. A given ISBN identifies a specific edition and format (e.g., e-book or trade paperback) of a book.
+
+Note: This column may contain a single ISBN or multiple ISBNs. Further, other ISBNs for a given work may exist that are not listed on the Works List because (1) those other ISBNs did not correspond to the specific edition and/or format of the file downloaded by Anthropic, (2) they were not identifiable within the files downloaded by Anthropic, and/or (3) they were not listed on the copyright registration. Each work on the Works List is eligible for a single Settlement payment, regardless of how many ISBNs are associated with that work.
+
+ASINs are 10 digits. By design, all 10-digit ISBNs are also valid ASINs. However, unlike ISBNs, ASINs may also start with letters, most commonly “B.” Each work on the Works List is eligible for a single per-work award (potentially split among multiple legal or beneficial owners), regardless of how many ASINs are associated with that work.
+
+“Copyright-Registered” Columns: In general, each of these columns—“Copyright-Registered Title,” “Copyright-Registered Author(s),” and “Copyright-Registered Claimant(s)”—was sourced from the information listed on publicly available records of the United States Copyright Office associated with the “Copyright Registration Number.”
+
+Works registered after 1978 (including renewal registrations) can be viewed at https://publicrecords.copyright.gov/.
+
+Works registered before 1978 can generally be viewed either at https://www.copyright.gov/vcc/ or https://archive.org/details/copyrightrecords?tab=collection, though the search interface can be more difficult to navigate for works registered before 1978.
+
+“Identified” Columns: In general, each of these columns—“Identified Publisher(s),” “Identified Title,” and “Identified Author(s)”—was sourced from publicly available databases of ISBN information, primarily Bowker Books Data and/or ISBNdb. Such databases are publishing industry-standard tools for compiling, tracking, and reporting publisher, title, and author information on a per-ISBN basis. The information in these columns was also supplemented with manual review where appropriate.
+
+Occasionally, the information in these “Identified” columns may differ from what is listed on the “Copyright-Registered” columns. This is often (but not always) due to a change in edition or format. For example, a later edition of a textbook may have additional authors. Claimants may file a claim for a given work at www.AnthropicCopyrightSettlement.com regardless of the column in which they find their information.
+
+“Copyright Registration Number”: This is the Copyright Registration Number for the work that was identified in the official records of the United States Copyright Office.
+
+Materials registered after 1978 (including renewal registrations) can be viewed at https://publicrecords.copyright.gov/.
+
+Materials registered before 1978 can be viewed either at https://www.copyright.gov/vcc/ or https://archive.org/details/copyrightrecords?tab=collection, though the search interface can be more difficult to navigate for works registered before 1978.
+
+“Education Work”: This column identifies whether a work is an “Education Work.” Education Works are those published by education publishers. Education publishers specialize in creating and publishing works, including but not limited to textbooks, for the instruction of students and professionals, which are distributed for and through educational and professional markets. Please see Questions 21–27 for more information.
+
+Under the Settlement, Anthropic has agreed to establish a non-reversionary Settlement Fund of one-billion-five-hundred-million dollars ($1,500,000,000). Anthropic will fund the Settlement Fund in four installments, including (1) three-hundred-million dollars ($300,000,000) paid on October 2, 2025, (2) three-hundred-million dollars ($300,000,000) paid no later than five (5) business days of entry of Final Approval, (3) four-hundred-fifty-million dollars ($450,000,000) paid by September 25, 2026, and (4) four-hundred-fifty-million dollars ($450,000,000) paid by September 27, 2027.
+
+The Settlement requires Anthropic to pay interest on its third and fourth payments, from September 25, 2025, until those third and fourth payments are made.
+
+This Settlement Fund will be divided equally across all Class Works for which copyright owner(s) submit a valid Claim Form. The Settlement Fund will also be used to pay for notice and administrative costs related to the Settlement, attorneys’ fees and expenses, and any service awards for the Class Representatives. Therefore, each unique work (or title) that Anthropic downloaded, for which a copyright owner submits a valid Claim Form, will be allocated the same amount of money from the Settlement.
+
+If you are a Class Member and you do nothing, there are three possible outcomes.
+
+First, if you do nothing but another rightsholder submits a Claim Form confirming that you are the legal or beneficial owner of a work on the Works List, you may receive payment without filing a Claim Form yourself. However, you should not rely on anyone else to submit a Claim Form for your works. The only way to ensure that you receive payment is by submitting a valid Claim Form.
+
+Second, if you do nothing but another rightsholder opted out your work from the Settlement, you will be opted out of the Settlement for that work too.
+
+Third, if you do nothing and all other rightsholders for your work also do nothing, you will not receive a payment from the Settlement. In addition, by staying in the Settlement Class, you give up your right to sue Anthropic on your own for the same legal claims released by the Settlement.
+
+If you cannot locate the publishing contract for a work, you should still complete the Claim Form, following all applicable instructions. If any questions arise, the publisher, the author or author’s estate can contact the Settlement Administrator at 877-206-2314, or info@AnthropicCopyrightSettlement.com, or contact any of the lawyers listed in response to Question 37.
+
+If you are unsure, you should still complete the Claim Form, following all applicable instructions. If any questions arise, the author can contact the Settlement Administrator at 877-206-2314, or info@AnthropicCopyrightSettlement.com, or contact any of the lawyers listed in response to Question 37.
+
+For works other than Education Works, if you want to claim an alternative contractual split instead of the Default Option, you must submit all requested information and documentation as specified in your Claim Form.
+
+If a dispute arises, the Court-appointed Settlement Administrator will coordinate with all rightsholders to help decide how much to pay each legal or beneficial owner based on the agreement(s) or other documents for your work. If the rightsholders do not agree, the final determination will be made by a Court-appointed Special Master. If you submit a claim, you thereby consent to the possibility that a Special Master will decide any disputes on which you cannot reach agreement with all other rightsholders. All decisions by the Special Master shall be final.
+
+Please provide as much information as you can. The Claim Form requires that you either (i) provide any contact information you have or can readily obtain (including, for example, by contacting someone you believe may have the contact information) for any other rightsholders or (ii) certify that you have already, separately submitted such contact information to the Settlement Administrator or to Class Counsel. Other rightsholders may include authors, co-authors, co-owners, and publishers of the identified work(s).
+
+The Default Option does not apply to Education Works. Education Works are works published by education publishers. Education publishers specialize in creating and publishing works, including but not limited to textbooks, for the instruction of students and professionals, which are distributed for and through educational and professional markets. The searchable directory of works accessible on this website identifies which works are Education Works. For any Education Works, you should fill out Section E of the Claim Form.
+
+The reason that the Default Option does not apply to Education Works is that contracts for Education Works are sufficiently diverse that a Default Option could be confusing for authors and publishers.
+
+If you have any questions about how to complete the Claim Form, please contact the Settlement Administrator at 877-206-2314, or info@AnthropicCopyrightSettlement.com, or contact any of the lawyers listed in response to Question 37.
+
+Please read the Claim Form carefully and follow the directions. If you have questions, you can get personal assistance by calling 877-206-2314, by emailing info@AnthropicCopyrightSettlement.com, or by contacting any of the lawyers listed in response to Question 37.
+
+You retain all of your rights for the books not included on the Works List. The Settlement does not affect your books not included on the Works List.
+
+A legal owner of a work holds the exclusive right to publish and reproduce that work in the U.S. Often, by contract, the legal owner of the work is the publisher because it holds the right to reproduce by contract.
+
+A beneficial owner of a work is a former legal owner who assigned the exclusive right to publish and reproduce the book to another in exchange for royalty payments. Often, authors are beneficial owners.
+
+A sole owner holds all rights to reproduce the book. Examples of sole ownership include:
+
+An author whose rights in the book have reverted from the publisher.
+
+An author whose rights assigned to the publisher have terminated.
+
+A self-published author who did not work with a co-author and never assigned rights to a publisher.
+
+A publisher that commissioned a work-for-hire, as defined in the Copyright Act.
+
+A publisher to which all rights in a book have been assigned, with no royalty obligations to an author or anyone else.
+
+Class Counsel have identified certain works on the Works List as Education Works for purposes of designating works that are not subject to the Default Option for splits between authors and publishers (described above in Question 21). For this purpose, Class Counsel have identified “Education Works” as works published by education publishers. Education publishers specialize in creating and publishing works, including but not limited to textbooks, for the instruction of students and professionals, which are distributed for and through educational and professional markets. The Works List Lookup identifies which works are Education Works. “Education Works” may not be the same as works published by a University Press.
+
+The Class includes legal or beneficial owners of the exclusive right to reproduce copies of a work that was included in the versions of the LibGen or PiLiMi datasets downloaded by Anthropic and is listed in the searchable database called the Works List (described below). A “work,” in this context, refers only to works that:
+
+✔ have an International Standard Book Number (ISBN) or Amazon Standard Identification Number (ASIN);
+
+✔ were registered with the United States Copyright Office within five years of the work's first publication; and
+
+✔ were registered before being downloaded by Anthropic, or within three months of the work's first publication.
+
+You do not need to be listed on the original Copyright Registration to be a Class Member. Exclusive licensees of reproduction rights under 17 U.S.C. § 106 are included if they meet the Class criteria. The Class includes publishers, authors (and estates thereof), academic institutions, or others if they are the legal owners of the reproduction right to a work or the beneficial owner of the rights. For example, a legal owner could be an author or publisher with the right to publish and reproduce a book. A beneficial owner could be an author who transferred legal ownership to a publisher in exchange for royalty payments. Excluded from the Class are the directors, officers, and employees of Anthropic, personnel of federal agencies, and district court personnel.
+
+It is possible that some works that you authored, published, or otherwise own are on the Works List while others that you authored, published, or otherwise own are not on the Works List. This Settlement does not affect your rights at all for works that are not on the Works List.
+
+The Settlement provides that for many types of works such as trade books and university press books, the payment, by default, will be split 50-50 between authors and publishers. This 50-50 split is called the Default Option.
+
+The Default Option does not apply to Education Works, as defined below in Question 22. The searchable directory of the Works List identifies which works are Education Works.
+
+If your work is not an Education Work, you may choose to accept the Default Option. If you do, your Claim Form will be valid even if you do not submit additional documentation in support of your claim. If all owners who submit a valid Claim Form accept the Default Option, that is how you and the others will be paid. If you accept the Default Option but another owner does not, you will be contacted by the Settlement Administrator to help reach a resolution.
+
+If multiple authors file valid claims for the same work, the authors’ share will be split equally among all authors who file a valid claim (unless one or more claimants validly specify otherwise). If multiple publishers file valid claims for the same work, the publishers’ share will be split equally among all publishers who file a valid claim (unless one or more claimants validly specify otherwise).
+
+Objecting is telling the Court you do not like something about the Settlement. You can object only if you stay in the Settlement Class (that is, if you do not exclude yourself and no other copyright owner excludes you). Requesting exclusion is telling the Court you do not want to be part of the Class or the Settlement, and that any other legal and beneficial owners of your works cannot be part of the Class or Settlement. If you excluded yourself, you cannot object to the Settlement because it no longer affects you, and any other legal and beneficial owners of your works cannot be part of the Settlement because it no longer affects them.
+
+The lawsuit alleges that Anthropic infringed copyrights by downloading datasets containing copyrighted books in violation of the federal Copyright Act. Anthropic denies all the allegations and denies that it did anything wrong. Anthropic argues that its use of the downloaded datasets was fair use. You can get more information about the lawsuit and view related court documents, including a copy of the Class Action Complaint, on the Important Documents page.
+
+In this lawsuit, Anthropic produced all the files it downloaded from LibGen and PiLiMi, and “metadata” files, which may describe the contents of these files.
+
+Class Counsel and experts then determined whether each work satisfied the Class definition in Question 5 by comparing Anthropic’s files downloaded from LibGen and PiLiMi with (1) United States Copyright Office records and (2) industry-wide ISBN databases. 
+
+In many cases, Class Counsel and experts used manual review to ensure that every book that satisfied the Class definition in Question 5 was included. See Questions 49–55 below for more information about the Works List and works that were included in the Works List.
+
+The circumstances under which publishers are sole owners include:
+
+The publisher commissioned a work-for-hire.
+
+Even if not a work-for-hire, the author has no rights to any payment for the book.
+
+The publisher and the author are the same: the book is self-published.
+
+The circumstances under which authors are sole owners include:
+
+The author and the publisher are the same: the book is self-published.
+
+The author assigned rights to the publisher, but those rights reverted back to the author because the book was out of print or the contract was otherwise terminated.
+
+The author gave the publisher only a non-exclusive license to publish, or rights that were term-limited, and the term has elapsed.
+
+If you are the sole copyright owner, you can claim the entire award. You may be asked to submit documentation to the Settlement Administrator to make this determination.
+
+The notice is designed and intended to provide written notice of this case and corresponding Settlement to everyone whose interest is likely to be affected by the Settlement, consistent with 17 U.S.C. § 501(b). A copy of the complaint is available on the Important Documents page. If you would like to receive a hard copy of the complaint, please contact the Settlement Administrator at 877-206-2314, or info@AnthropicCopyrightSettlement.com, or contact any of the lawyers listed in response to Question 37.
+
+Please see the Home page for the latest information on Settlement payments.
+
+The Court will hold a Final Approval Hearing to decide whether to approve the settlement. The hearing is currently scheduled to occur on May 14, 2026 at 2:00p.m. PT at the San Francisco Federal Courthouse, 450 Golden Gate Ave., Courtroom 12 – 19th Floor.
+
+The date and time of the Final Approval Hearing is subject to change without further notice to the Class, so please check this website for updates.
+
+Because the settlement of a class action decides the rights of all members of the Class, the Court must give final approval to the Settlement before it can take effect. Payments will only be made if the Court approves the Settlement and any appeals are resolved. At the Final Approval Hearing, the Court may, at its discretion, listen to Class Members who have asked to speak at the hearing.
+
+The date and time of the Final Approval Hearing is subject to change without further notice to the Class, so please check this website or the Court’s PACER site for updates.
+
+In our efforts to make the Works List as comprehensive and accurate as possible, Class Counsel drew from several different databases. In addition to author and publisher information, these databases often included information for individuals or entities who are associated with a work but may not own any rights to that particular work. For example, the databases may have identified a narrator of an audiobook who is not a legal or beneficial owner (and therefore not a Class Member).
+
+Though the Works List may reference individuals or entities you do not recognize, the presence of non-owners on the Works List has no effect on your ownership or your right to file a claim or the amount of payments due to legal and beneficial owners. The Settlement Administrator will determine the validity of each claim, including verifying that non-owners will not be paid. Anyone who thinks they may be a legal or
+
+beneficial owner of a work on the Works List may file a claim.
+
+In a class action, the court appoints lawyers to work on the case and represent the interests of all the Class Members. In this case, the Court appointed the following Class Counsel to represent the Class:
+
+You may contact Class Counsel to answer any questions about the Settlement. You may also contact the Settlement Administrator by calling 877-206-2314, or by emailing info@AnthropicCopyrightSettlement.com.
+
+Even though Anthropic downloaded approximately 7 million files from LibGen and PiLiMi, many of those files were duplicates of works, or unregistered works, or were empty, corrupted, or incomplete files.
+
+About 40% of the files Anthropic downloaded (approximately 3 million) were duplicates. Duplicate copies are not eligible to be in the Works List.
+
+Likewise, works not validly registered with the U.S. Copyright Office are not eligible to be in the Works List. Many of the works Anthropic downloaded were not registered. For example, non-English works have very low registration rates. Of the approximately 4 million unique works that Anthropic downloaded, around 2.5 million were written in languages other than English. Most of those 2.5 million non-English works were unregistered. In addition, many of the 1.5 million unique English works were not registered. And even among registered works, many failed to satisfy the date criteria in the Class definition, because registration occurred (i) more than five years after first publication or (ii) after Anthropic downloaded such works.
+
+Finally, many works failed validation tests. For example, the Works List does not include files that were empty, corrupted, or incomplete.
+
+If you received a notice, records show you may be the legal or beneficial copyright owner of a work that Anthropic downloaded from one of two websites: Library Genesis and Pirate Library Mirror.
+
+This means in most cases that you are a publisher or author of a book and (a) either own the exclusive right to publish and reproduce the book or (b) as an author, have granted the exclusive right to publish and reproduce the book to a publisher in exchange for royalty payments.
+
+The parties litigating Anthropic’s conduct in a class action lawsuit have reached a proposed Settlement that must be approved by the Court.
+
+The Court authorized the Notice because you have the right to know about the proposed Settlement of this class action lawsuit and about all your rights and options before the Court decides whether to grant final approval of the Settlement. The Notice explains the lawsuit, the Settlement, your legal rights, what benefits are available, who is eligible for the benefits, and how to receive those benefits.
+
+The Court and the parties want to ensure that all Class Members receive notice of their rights under this Settlement. If you are not the sole owner (as defined in Question 8 above), the Claim Form requires you to either (i) provide any contact information you have or can readily obtain for any other rightsholders or (ii) certify that you have already, separately submitted such contact information to the Settlement Administrator or to Class Counsel.
+
+For most works on the Works List, authors and publishers both own certain rights in the work. For example, the publisher may own the right to reproduce the work, while the author owns the right to receive royalty income from the use of the work.
+
+The goal of the claims process is to give each Class Member an appropriate share of the per-work award as contemplated under each Class Member’s contractual rights. Many publishing contracts provide that copyright infringement recoveries are shared equally between authors and publishers. So, whether you are an author or a publisher, you may need to share a portion of the proceeds from the Settlement with another party.
+
+The Claim Form requires you to specify what percentage of the per-work award you believe should be paid to you or to any other legal or beneficial owners of the work.
+
+As set forth in Questions 49–54, the information on the Works List was compiled from several publicly available sources, including from the copyright pages in printed books and from the works’ U.S. copyright registrations. Such records often already list an author’s real name (legal name) and the author’s pen name (pseudonym). And, persons with a claim to a given work may find that work best by searching for one name or the other.
+
+As a result and by court order, no real name will be removed from a work’s public listing in the Works List Lookup if it already is on the work’s public U.S. copyright registration or on the copyright page of the printed book. Also, court records are presumptively public. At the end of this Settlement, the record of final payments made to Class Members will be public and will include the real names of the recipients, again by court order.
+
+So, if your work was registered with the U.S. Copyright Office such that only your pseudonym (and NOT your real name) is revealed publicly on the U.S. copyright registration, then the Court will allow the Works List Lookup to be amended such that only your pseudonym (and NOT your real name) is revealed there, too. Otherwise, real names will remain publicly displayed on the Works List Lookup.
+
+For your request to be approved, you will need to provide:
+
+compelling reasons to remove your real name
+
+proof of your pen name (pseudonym) and your real name (legal name)
+
+proof you are the author in question who corresponds to both names
+
+any agreement from others like your publisher to the removal, and
+
+copies of the U.S. copyright registration for the work and of the copyright page of your work as published.
+
+Contact Class Counsel to make your request (they are listed in response to Question 37). Class Counsel will then submit your request on your behalf to the Court with all your submitted documents attached. That filing initially will be sealed.
+
+Please note that the Court may deny and unseal part or all of your request without further notice if the Court decides it was not made for sufficiently compelling reasons.
+
+Either way, if you file a claim for an award in this Settlement, you must then submit your legal name and your pseudonym for that purpose. And, if the Settlement is approved and if an award is paid to you, your real name will become public (see also Question 26).
+
+In a class action lawsuit, one or more people called “Named Plaintiffs” or “Class Representatives” sue on behalf of other people who have similar claims. Together, the people with similar claims are a “Class” and are called “Class Members.” In a class action, the court resolves the issues for all Class Members, except for those who exclude themselves from the Class. Each Class Member is bound by the result of the lawsuit, including any settlement. That means Class Members may not file their own lawsuits regarding the same claims that were decided in the class action.
+
+Here, the Class is defined by ownership of works that are listed on a searchable database available on this Settlement Website (the “Works List”).
+
+The only way to determine whether your work is included in the Settlement is by checking the Works List. The Works List Lookup allows you to search for works in the Class by author, title, publisher, ISBN number, ASIN number, or copyright registration number. If you are the legal or beneficial owner of a work that is in the Works List, then you are a Class Member.
+
+Some Class Members are legal or beneficial owners of some works that are on the Works List, and other works that are not on the Works List. Only works on the Works List are covered by the Settlement. This Settlement has no impact on works not included on the Works List.
+
+The Named Plaintiffs and Anthropic disagree over whether Anthropic has violated the law. The lawsuit has not gone to trial, and the Court has not decided in favor of the Named Plaintiffs or Anthropic. Instead, the Class Representatives and Anthropic have agreed to settle the Action. The Class Representatives believe that the Settlement Agreement offers significant benefits to all Class Members, and that the Settlement is fair, reasonable, adequate, and in the best interest of the Class Representatives and all Class Members.
+
+This class action settlement arises out of a lawsuit brought by various authors against Anthropic PBC (“Anthropic”) alleging that Anthropic violated the Copyright Act by downloading copyrighted works from online websites called Library Genesis (LibGen) and Pirate Library Mirror (PiLiMi) for purposes of training large language models (LLMs). Anthropic denies that it violated the Copyright Act and contends instead that such downloading and subsequent use was fair use under the Copyright Act. The plaintiffs contend that Anthropic’s downloading violated Section 106(1) of the Copyright Act, which gives a copyright owner the exclusive right to reproduce copies, or to license or transfer that right to others. Copying a work without permission is not copyright infringement if a defendant can show the copying was fair use. If the use is determined to be infringement, the Copyright Act provides for statutory damages of between $200 and $150,000 per work, depending on factors including the harm that was actually caused by the infringement, and whether the alleged infringer reasonably believed its use was fair or instead acted willfully. If the use was fair (or there was no copying), the defendant owes $0.
+
+Three authors sued Anthropic alleging copyright infringement. In June 2025, the district court ruled that using the books to train AI models was fair use and therefore not a violation of the Copyright Act but left for trial the question whether downloading and use of works from LibGen and PiLiMi was fair use.
+
+In July 2025, the District Court ruled that the individual plaintiffs (or their associated legal entities) could represent all beneficial and legal copyright owners of the exclusive right to reproduce copies of the works in question. This order was, however, conditional on further steps being taken. Anthropic sought to appeal both the fair use ruling and class certification ruling. The District Court and the Court of Appeals have not ruled on those requests.
+
+Trial was set to begin in December 2025. The parties then reached a settlement agreement. The litigation involved significant uncertainties. If the case had proceeded, it is possible the class could have been de-certified even before trial, with Class Members receiving nothing. If the case had gone to trial, it is possible the class could have lost on the issue of fair use, again with Class Members receiving nothing. Even if the class could have prevailed at trial and later on likely appeals, a jury might have awarded a wide range of amounts, to be paid only after the added expense and delay of the trial and its likely appeals.
+
+The resulting Settlement is the largest copyright class action settlement in history. It provides approximately $3,000 per work (not per Class Member), plus interest earned on the Settlement fund, less the Court-approved costs and fees taken out of the Settlement fund.
+
+Yes, the Settlement Administrator will notify you if someone else submits a valid Claim Form in connection with a work on the Works List for which you are identified as a potential rightsholder.
+
+If someone else also has some rights to the same work as you, the per-work award may be split among all legal or beneficial owners of the work. For example, if you are a publisher, authors who are legal or beneficial owners of the work may submit a Claim Form for the same work. Or, if you are an author, publishers and other authors who are legal or beneficial owners of the work may submit a Claim Form for the same work. The claims process will determine the amount of your Settlement payment.
+
+Vous pouvez consulter la Liste des œuvres en ligne à l'adresse suivante : www.AnthropicCopyrightSettlement.com/lookup
+
+Oui. Les informations contenues dans l'Avis de Règlement ne constituent qu’un sommaire du Règlement.
+
+Vous pouvez obtenir des informations plus détaillées, notamment des liens vers une copie de la demande de recours collectif, l’avis, le Formulaire de réclamation, la requête en approbation préliminaire du règlement, les réponses aux questions soulevées par le Tribunal dans le cadre d’une audience d’approbation préliminaire, l’ordonnance d’approbation préliminaire, la requête pour approbation finale du Règlement (lorsqu’elle sera déposée) et la requête en paiement des honoraires et frais d’avocat, l’Entente de Règlement d’autres documents importants relatifs à l’affaire sur la page Documents importants.
+
+Si vous avez des questions concernant le Règlement ou si vous avez besoin d’aide pour remplir le Formulaire de réclamation, vous pouvez contacter l’Administrateur du Règlement au 877-206-2314 ou à l’adresse info@AnthropicCopyrightSettlement.com.
+
+Pour plus d’informations sur le Règlement, vous pouvez consulter ce site web ou contacter l’un des avocats mentionnés dans la réponse à la question 37.
+
+Vous pouvez accéder au système PACER (Public Access to Court Electronic Records) du Tribunal au https://ecf.cand.uscourts.gov/, ou en vous rendant au bureau du greffier du Tribunal for the United District Court for the Northern District of California, San Francisco Courthouse, de 9 h à 16 h, du lundi au vendredi, sauf les jours fériés.
+
+Vous pouvez également demander l’avis et les conseils de votre propre avocat, à vos frais, si vous le souhaitez.
+
+Oui. Le Règlement oblige Anthropic à détruire tous les livres qu’elle a téléchargés à partir des ensembles de données LibGen ou PiLiMi, ainsi que toutes les copies de ces livres, sous réserve de l’obligation légale de conservation existante d’Anthropic ou de l’obligation découlant d’une ordonnance judiciaire en vertu du droit américain ou international.
+
+Anthropic a également déclaré que ni les ensembles de données LibGen ou PiLiMi, ni aucune partie de ces ensembles de données, ne figuraient dans le corpus d’entraînement de ses grands modèles de langage commercialisés.
+
+Pour connaître tous les avantages de l’Entente de règlement du recours collectif et de la Quittance, consultez la page Documents importants.
+
+Toutes les œuvres pour lesquelles les litiges ne seront pas réglés avant la première distribution des paiements au titre du Règlement ne seront pas incluses dans la première distribution et seront incluses dans une distribution ultérieure.
+
+Vous pouvez toujours vous connecter au portail pour examiner ces œuvres et y apporter des mises à jour. Si vous souhaitez obtenir de l’aide pour communiquer avec d’autres titulaires de droits concernant vos œuvres, veuillez contacter l’administrateur du règlement en écrivant à l’adresse info@AnthropicCopyrightSettlement.com ou au 1-877-206-2314.
+
+Si les titulaires de droits ne parviennent pas à régler un désaccord après en avoir discuté entre eux, ils peuvent le soumettre au maître spécial impartial nommé par le tribunal afin qu’il tranche la question. Pour plus de détails sur le maître spécial, veuillez consulter la FAQ 26.
+
+Veuillez consulter ce site Web pour connaître les mises à jour.
+
+Si un titulaire de droits d’auteur soumet un Formulaire de réclamation valide qui identifie un autre titulaire de droits, ce dernier pourrait recevoir un paiement.
+
+Si un titulaire de droits d’auteur ne peut être rejoint ou ne répond pas après des efforts raisonnables pour le contacter, sa réclamation pour le Fonds de règlement pour l’œuvre concernée sera considérée comme abandonnée. Dans ce cas, la quittance des réclamations restera applicable, ce qui signifie que le titulaire sera lié par le Règlement et ne pourra intenter aucune action en justice distincte concernant la conduite couverte, mais il ne recevra aucun paiement provenant du Fonds de règlement. Les fonds alloués à cette œuvre pourront être redistribués entre d’autres réclamants éligibles, conformément au plan d’attribution du Règlement.
+
+Aucun titulaire de droits ne peut déposer un Formulaire de réclamation au nom d’un autre titulaire de droits pour le règlement. Vous devez déposer votre propre Formulaire de réclamation.
+
+Si vous vous êtes désinscrit du Règlement mais souhaitiez vous y réinscrire, vous étiez tenu de soumettre une demande de reintegration au Règlement à l'Administrateur du Règlement. La date limite pour vous réinscrire a expiré le 9 mars 2026.
+
+Si vous avez exclu une œuvre du Règlement et qu’un autre Membre du Groupe soumet une réclamation pour cette même œuvre, l’Administrateur du Règlement a tenté d’informer tous les titulaires légaux et bénéficiaires de l’œuvre dans les cinq jours suivant la réception d’une demande d’exclusion valide. Ces titulaires de droits d’auteur ont peut-être essayé de vous contacter et vous encourager à vous réinscrire afin qu’ils puissent recevoir le paiement prévu par le Règlement. Il vous était interdit de négocier de « contrepartie » avec d’autres titulaires de droits en échange de la réintégration. Toute demande de paiement en échange d’une réintégration sera signalée au Tribunal.
+
+Si un titulaire de droits d’auteur a soumis une demande valide de réintégration d’une œuvre, l’Administrateur du Règlement a tenté d’informer tous les titulaires légaux et bénéficiaires de l’œuvre qu’un Membre du Groupe a demandé à être réintégrée.
+
+Non. la date limite pour retirer votre Formulaire de réclamation a expiré le 9 février 2026.
+
+Oui. Si vous êtes le titulaire légal ou bénéficiaire de plusieurs œuvres figurant dans les ensembles de données LibGen ou PiLiMi téléchargés par Anthropic, vous pouvez soumettre un seul Formulaire de réclamation contenant les informations requises pour toutes vos œuvres.
+
+Il est fortement recommandé aux Membres du Groupe ayant plusieurs œuvres figurant sur la Liste des œuvres de soumettre un Formulaire de réclamation accompagné d’une liste des œuvres sous forme électronique à l’Administrateur du Règlement. Pour obtenir une assistance personnalisée, veuillez contacter l’Administrateur du Règlement à 877-206-2314 ou sur info@AnthropicCopyrightSettlement.com, ou contacter l’un des avocats répertoriés en réponse à la question 37. Le Formulaire de réclamation comprend également des instructions sur la manière de soumettre une liste à l’Administrateur du Règlement.
+
+La date limite pour soumettre un Formulaire de réclamation a expiré le 30 mars 2026. La date limite pour vous exclure («opt out») ou s'opposer au Règlement a expiré le 9 février 2026. Si vous avez précédemment exclu vos œuvres, vous ne pouvez plus les réinclure. La date limite pour les réinclure a expiré le 9 mars 2026. Veuillez lire l'Avis intégral approuvé par le Tribunal pour en savoir plus.
+
+Le 13 novembre 2026, vous auriez dû recevoir un avis si un paiement est prévu pour au moins une des œuvres que vous avez réclamées. Veuillez vous connecter à l’aide du lien ci-dessous et examiner attentivement les détails de toute œuvre pour laquelle un paiement sera émis. Vous aurez besoin du numéro de réclamation et du NIP figurant dans l’avis.
+
+Portail du récapitulatif des paiements
+
+Si vous n’êtes pas d’accord avec la répartition pour une œuvre dont le paiement est planifié, vous devez contester le paiement d’ici le 20 novembre 2026. L’œuvre sera alors retirée de la première distribution, mais restera admissible aux distributions ultérieures une fois que toute divergence aura été résolue.
+
+Si vous acceptez la répartition des paiements, aucune autre mesure n’est nécessaire pour le moment.
+
+Pour soumettre vos informations supplémentaires, veuillez visiter le portail de mise à jour des renseignements.
+
+Non, vous n’êtes pas tenu d’accepter l’option par défaut. L’option par défaut peut ne pas être conforme à votre accord contractuel pour l’œuvre revendiquée. Vous avez la possibilité d’accepter l’option par défaut ou de demander un autre partage. Les autres titulaires de votre œuvre auront la même option. Le Formulaire de réclamation précise les circonstances dans lesquelles vous pouvez être tenu de fournir des documents
+
+L’option par défaut ne s’applique pas aux œuvres éducatives. Le Formulaire de réclamation comprend une section à remplir par les titulaires d’œuvres éducatives (voir la question 27). Cette partie du Formulaire de réclamation demande aux titulaires d’œuvres éducatives de faire une déclaration de bonne foi concernant le pourcentage de recouvrement auquel ils estiment avoir droit par rapport aux autres titulaires de droits. Si les titulaires d’œuvres éducatives ne connaissent pas le pourcentage de recouvrement auquel eux-mêmes et les autres ont droit, ils peuvent l’indiquer sur le Formulaire de réclamation. Ils peuvent également télécharger une copie de tout contrat d’édition ou autre document pertinent à l’Administrateur du Règlement, qui déterminera le montant, le cas échéant, auquel le demandeur a droit.
+
+Non. Vous n’êtes pas tenu d’y assister, mais vous pouvez le faire à vos frais. Vous pouvez également demander au Tribunal l’autorisation de prendre la parole et d’exprimer votre opinion sur le Règlement. Si le Tribunal n’approuve pas le Règlement ou si les parties décident d’y mettre fin, celui-ci sera nul et la poursuite suivra son cours.
+
+Ce portail vous permet de consulter :
+
+Les paiements émis
+
+Les œuvres pour lesquelles un paiement est prévu
+
+Les répartitions pour les œuvres sans désaccord et les œuvres avec désaccord
+
+Lorsque vous vous connectez au portail, vous verrez uniquement les options pertinentes à vos œuvres. Par exemple, si vous n’avez aucune œuvre pour laquelle un paiement est prévu, aucune œuvre de ce type ne sera affichée.
+
+Paiements émis
+
+Si des paiements ont été effectués pour l’une ou l’autre de vos œuvres, vous verrez la date de paiement et le montant du paiement.
+
+Œuvres dont le paiement est prévu
+
+Si vous avez des œuvres pour lesquelles un paiement est prévu, vous disposez de sept jours à compter de la date de l’avis pour examiner les œuvres. Durant la période d’examen de sept jours, vous pouvez contester toute œuvre pour laquelle vous n’êtes pas d’accord avec la répartition.
+
+Pour contester la répartition pour une œuvre, veuillez cocher la case à gauche de l’œuvre. Lorsque vous avez sélectionné toutes les œuvres que vous souhaitez contester, cliquez sur Suivant. Vous ne pouvez soumettre vos contestations qu’une seule fois; veuillez donc examiner attentivement toutes les œuvres avant de soumettre votre formulaire. Pour enregistrer vos modifications, vous devez cliquer sur Soumettre sur la page de certification.
+
+Toutes les œuvres que vous contestez seront retirées de la répartition actuelle jusqu’à ce que le désaccord soit résolu.
+
+Si vous ne contestez pas une œuvre, le paiement sera envoyé comme prévu, à moins qu’un autre demandeur ne conteste l’œuvre.
+
+Lorsque le total des pourcentages de répartition pour une œuvre dont le paiement est prévu totalise moins de 100 %, les paiements sont distribués aux demandeurs connus. Le solde sera versé une fois que le titulaire de droits n’ayant pas soumis de réclamation sera identifié.
+
+Page « Aucun désaccord »
+
+La page « Aucun désaccord » contient les œuvres pour lesquelles aucun désaccord sur les pourcentages de répartition n’a été relevé sur la base de la ou des réclamations soumises.
+
+Cliquez sur « Développer » pour voir la répartition actuelle pour chaque titulaire des droits.
+
+Si vous approuvez la répartition, cliquez sur « Aucune modification ».
+
+Si vous contestez la répartition de n’importe quelle œuvre figurant sur cette page, utilisez le bouton « Modifier la répartition » pour déplacer les œuvres sur la page « Désaccords ».
+
+Lorsque les pourcentages pour une œuvre totalisent moins de 100 %, le reste sera payé une fois que le titulaire de droits n'ayant pas soumis de réclamation sera identifié.
+
+Page « Désaccords »
+
+La page « Désaccords » contient des œuvres pour lesquelles un désaccord sur les pourcentages de répartition a été relevé sur la base de la ou des réclamations soumises et des œuvres que vous avez placées sur cette page pour qu’elles soient réexaminées.
+
+Utilisez le bouton « Développer » pour consulter chaque réclamation formulée au titre de l’œuvre. 
+
+Le nom du demandeur apparaît en gras suivi des titulaires des droits inclus dans la réclamation.
+
+S'il y a un espace vide à côté du nom d'un demandeur ou d'un titulaire de droits, cela signifie que le demandeur n'a pas fourni de pourcentage de répartition.
+
+Cliquez sur le bouton « Modifier la répartition » pour identifier les titulaires des droits et indiquer comment, selon vous, le paiement devrait être réparti.
+
+Écran de modification de la répartition
+
+Concernant les œuvres non éducatives :
+
+Choisissez « Par défaut » ou « Autre ».
+
+En sélectionnant l’option « Par défaut », 50 % du paiement sera réparti à parts égales entre tous les auteurs et 50 % du paiement sera réparti à parts égales entre tous les éditeurs. Si vous choisissez l’option « Par défaut », vous n’avez pas besoin d’attribuer de pourcentages spécifiques.
+
+L’option « Autre » vous permet d’attribuer un pourcentage spécifique à chaque titulaire des droits.
+
+L'option « Retirer » vous permet de retirer votre réclamation pour une certaine œuvre.
+
+Concernant toutes les œuvres :
+
+Utilisez le menu déroulant « Titulaires des droits » pour confirmer les titulaires des droits. Vous devez effectuer une sélection pour chaque ligne.
+
+Choisissez « oui » si vous acceptez que le titulaire des droits reçoive un paiement.
+
+Choisissez « non » si vous estimez qu’il n’est pas un titulaire légal ou bénéficiaire de l’œuvre.
+
+Choisissez « doublon » si un titulaire des droits est inscrit plus d’une fois. Vous devrez alors indiquer quelle ligne est dupliquée.
+
+Choisissez « je ne sais pas » si vous n’êtes pas certain que le titulaire des droits inscrit soit un titulaire légal ou bénéficiaire des droits d’auteur d’une œuvre.
+
+Attribuez des pourcentages aux titulaires des droits ayant la mention « oui ».
+
+Le total des pourcentages doit représenter 100 %.
+
+Téléversez les documents justificatifs pour l’œuvre concernée si vous le souhaitez.
+
+Cliquez sur « Modifier la répartition » pour enregistrer vos modifications.
+
+Répétez ces étapes pour chaque œuvre figurant sur la Page « Désaccords ».
+
+Cliquez sur « Suivant ».
+
+Page de certification
+
+Avant de cliquer sur « Soumettre » :
+
+Relisez attentivement le résumé. Il affichera les modifications que vous avez apportées.
+
+Lisez les déclarations de certification.
+
+Saisissez votre nom pour signer le formulaire.
+
+Cliquez sur « Soumettre ».
+
+Il est possible que les mises à jour n’apparaissent pas immédiatement dans le portail, mais vous recevrez un courriel de confirmation contenant vos modifications.
+
+Vous exclure vous-même et tous les titulaires de droits du Règlement (« retrait »)
+
+9 février 2026
+
+Vous pouvez vous exclure vous-même, ainsi que tous les autres propriétaires légaux et bénéficiaires de vos œuvres, en suivant les instructions ci-dessous au plus tard le 9 février 2026. Il s'agit de la seule option qui vous permet d'intenter votre propre action en justice contre Anthropic au sujet des réclamations visées par le présent Règlement.
+
+Si vous vous excluez vous-même et tous les autres titulaires de droits, vous renoncez au droit de recevoir tout paiement au titre du présent Règlement et empêchez tous les autres titulaires légaux et bénéficiaires de vos œuvres de recevoir tout paiement au titre du présent Règlement. Si vous vous excluez vous-même et tous les autres titulaires de droits du Règlement, vous ne pouvez pas vous y opposer, et les autres titulaires légaux et bénéficiaires de vos œuvres ne peuvent pas non plus s’opposer au Règlement.
+
+La date limite est dépassée. Pour plus d'informations sur cette date limite, veuillez consultez la page Dates importantes.
+
+Les Avocats du Groupe et les experts ont soumis les fichiers LibGen et PiLiMi à deux processus de « correspondance » (a) afin d’évaluer si chaque fichier répondait à la définition du Groupe (telle qu’identifiée à la question 5) et (b) afin d’améliorer, de raffiner et de compléter les métadonnées contenues dans les fichiers d’Anthropic. Ces deux processus de correspondance étaient basés sur (1) les numéros ISBN extraits des fichiers texte LibGen et PiLiMi, et (2) les métadonnées créées par les utilisateurs de LibGen et PiLiMi.
+
+Si vous ne souhaitez pas que vos œuvres figurant dans la Liste des œuvres soient incluses dans le Règlement, vous auriez pu vous « exclure » du Règlement. Si vous avez exclu une œuvre du Règlement, cela signifie que vous et tout autre titulaire légal ou bénéficiaire de cette œuvre ne recevrez aucun paiement du Règlement pour cette œuvre. Si un titulaire de droits s'est exclu du Règlement, l’œuvre dans son ensemble ainsi que les autres titulaires de droits pour cette œuvre sont également exclus. Par exemple, si vous êtes un auteur et que vous avez choisi d’exclure votre œuvre, cela signifie que vous ne recevrez aucun paiement, que vos coauteurs ne recevront aucun paiement et que votre éditeur ne recevra aucun paiement. Si vous êtes un éditeur et que vous avez choisi d’exclure votre livre, cela signifie que vous ne recevrez aucun paiement et que tous les auteurs de ce livre ne recevront aucun paiement.
+
+La date limite pour vous exclure du Règlement a expiré le 9 février 2026.
+
+Lorsqu’un titulaire a soumis une demande d’exclusion valide pour une œuvre particulière, l’Administrateur du Règlement a pris des mesures raisonnables pour informer toutes les autres parties qui pourraient être les titulaires légaux ou bénéficiaires du droit de reproduire cette même œuvre, en les informant qu’un autre Membre du Groupe a demandé à s’exclure.
+
+Si vous avez reçu un Avis, vous êtes peut-être Membre du Groupe. Seuls les titulaires légaux ou bénéficiaires des œuvres contenues dans les ensembles de données LibGen ou PiLiMi téléchargés par Anthropic peuvent être Membres du Groupe. Le Groupe n’inclut pas les entités qui détiennent uniquement un droit sur des œuvres dérivées d’un livre qui était contenu dans les ensembles de données LibGen ou PiLiMi (qui pourraient inclure des droits dérivés tels que des droits cinématographiques, des droits de marchandise ou des droits de livre audio). Votre œuvre a peut-être été incluse dans ces ensembles de données sans que vous le sachiez.
+
+Les Avocats du Groupe ont compilé une base de données consultable des livres inclus dans le Groupe et le Règlement, disponible à la section Recherche dans la Liste des œuvres au www.AnthropicCopyrightSettlement.com/lookup.
+
+Effectuer une recherche dans cette Liste des œuvres est la seule façon de déterminer si votre œuvre est incluse dans le Règlement. La section Recherche dans la Liste des œuvres vous permet de rechercher des œuvres par auteur, titre, éditeur, numéro d’enregistrement des droits d’auteur, numéro ISBN, ou ASIN afin de vérifier si votre œuvre fait partie du Groupe. Si vous êtes le titulaire légal ou bénéficiaire d’une œuvre figurant dans la Liste des œuvres, vous êtes alors un Membre du Groupe.
+
+Pour soumettre une réclamation afin de recevoir une somme d’argent aux termes du Règlement, vous deviez soumettre un Formulaire de réclamation valide. Si vous croyez que vous faites partie du Groupe, vous avez été fortement encouragés à soumettre un Formulaire de réclamation. Si vous n'avez pas soumis un Formulaire de réclamation, il est possible que vous ne soyez pas payé ou que vous ne receviez pas le montant maximum possible de recouvrement. Veuillez lire attentivement et suivre les instructions figurant sur le Formulaire de réclamation. Tous les Membres du Groupe peuvent bénéficier d’une assistance personnalisée pour remplir le Formulaire de réclamation en contactant l’Administrateur du Règlement au 877-206-2314 ou à l’adresse courriel info@AnthropicCopyrightSettlement.com, ou en contactant l’un des avocats répertoriés en réponse à la question 37.
+
+Rendez-vous àu Formulaire de réclamation en ligne pour soumettre rapidement votre demande ou consultez la page Documents importants pour télécharger un Formulaire de réclamation complet à remplir et à renvoyer par courrier postal. Il est recommandé de soumettre votre Formulaire de réclamation en ligne pour faciliter et accélérer le traitement. Les Formulaires de réclamation devaient être soumis en ligne au plus tard le 30 mars 2026. Les Formulaires de réclamation envoyés par courrier postal devaient être postés au plus tard le 30 mars 2026, le cachet de la poste faisant foi.
+
+Les Membres du Groupe peuvent également demander un Formulaire de réclamation en appelant le numéro sans frais 877-206-2314 ou en écrivant à l’Administrateur du Règlement à l’adresse suivante :
+
+Les Demandeurs et Anthropic ont convenu que les livres figurant sur la Liste des œuvres remplissent les conditions requises pour participer au Règlement. Toutefois, les Membres du Groupe peuvent être tenus de fournir des documents attestant leur statut de titulaire légal ou bénéficiaire d’une œuvre figurant sur la Liste des œuvres. Ces documents peuvent inclure le ou les contrats en vigueur pour l’œuvre et toute communication écrite pertinente avec d’autres titulaires potentiels de l’œuvre.
+
+Par souci de clarté, ceci ne signifie pas que le Formulaire de réclamation doit être déposé conjointement avec d’autres titulaires potentiels de l’œuvre. Si vous êtes un Membre du Groupe ayant une réclamation quant à une œuvre, vous n’avez qu’à déposer votre propre réclamation. Les réclamations d’autres ayants droit à la même œuvre seront combinées dans le même processus de réclamation.
+
+La date limite pour s'opposer au Règlement a expiré le 9 février 2026.
+
+Les Membres du Groupe qui soumettent un Formulaire de réclamation valide auront droit à un paiement provenant du Règlement. Le montant de ce paiement dépendra de plusieurs facteurs, notamment (i) le nombre d’œuvres figurant sur la Liste des œuvres que vous possédez, (ii) le nombre d’autres Membres du Groupe qui soumettent un Formulaire de réclamation valide, et (iii) le fait que plusieurs Membres du Groupe soumettent ou non un Formulaire de réclamation valide pour votre ou vos œuvres.
+
+Comme aucune somme ne sera reversée à Anthropic, le montant par œuvre pourrait augmenter en fonction du nombre de personnes qui font une demande.
+
+Si une autre personne est le titulaire légal ou bénéficiaire de la même œuvre que vous, le paiement par œuvre peut être réparti entre tous les titulaires de l’œuvre (ou du titre). Veuillez lire attentivement votre Formulaire de réclamation pour savoir comment les paiements seront déterminés.
+
+Enfin, afin de faciliter davantage les paiements aux Membres du Groupe, il existe des circonstances limitées dans lesquelles vous serez payé même si vous ne remplissez pas de Formulaire de réclamation. Voir la question 34.
+
+Si tous les réclamants pour une même œuvre ne s’entendent pas sur le pourcentage de recouvrement, ou si l’un des réclamants ne connaît pas le montant auquel il a droit, l’Administrateur du Règlement notifiera chaque réclamant de la situation. Les réclamants auront alors la possibilité de se rencontrer et de discuter de la question et pourront modifier leur demande. Si les réclamants ne parviennent pas à résoudre leur désaccord, ils peuvent, dans les 30 jours suivant la notification de la situation par l’Administrateur du Règlement, soumettre de manière confidentielle à l’Administrateur du Règlement les éléments contractuels justifiant leur position, y compris tout document justificatif (par exemple, le contrat pertinent). L’Administrateur du Règlement travaillera alors avec les parties pour résoudre leur différend sur la base des documents justificatifs. L’Administrateur du Règlement peut vous demander de lui soumettre votre contrat. Si les parties ne parviennent pas à résoudre leur différend, elles peuvent alors soumettre le différend à un Arbitre spécial nommé par le Tribunal, sans frais pour les réclamants et sans obligation de se rencontrer en personne.
+
+L’Arbitre spécial s’efforcera de résoudre rapidement tous les différends sur la base de la loi. Les positions adoptées par les réclamants et les décisions de l'Administrateur du Règlement ou de l’Arbitre spécial quant à celles-ci ne pourront être communiquées ni divulguées («not discoverable») à des réclamants dans le cadre du présent litige afin d’être utilisées à l’égard d'autres œuvres dans le cadre du présent litige. Une telle procédure serait impraticable.
+
+Les décisions de l’Arbitre spécial marqueront toutefois la fin définitive d’un différend particulier et lieront, sans droit d'appel, tous les réclamants et réclamants potentiels quant à l’œuvre à l'origine du différend. En ne s’excluant pas, tous les Membres du Groupe qui demeurent dans la présente action sont liés par cette procédure.
+
+De plus, tous les Formulaires de réclamation, toutes les pièces justificatives et toutes les décisions les concernant seront soumis de manière confidentielle et ne seront pas rendus publics, mais seront conservés par l'Administrateur du Règlement et/ou l’Arbitre spécial. Tous ces documents pourront être divulgués («discoverable») à des tiers dans le cadre d'autres litiges pour des motifs valables et sur ordonnance judiciaire.
+
+Enfin, nonobstant ce qui précède, les indemnités accordées et les bénéficiaires de celles-ci seront des informations publiques (par exemple, dans un tableau des paiements qui indique toujours les montants versés par nom légal et par enregistrement de droit d'auteur, tout en caviardant les coordonnées bancaires et non professionnelles). Les Membres du Groupe ont le droit de connaître le plan de distribution final approuvé et les bénéficiaires des paiements.
+
+Si un Membre du Groupe ne s’exclut pas et ne soumet pas une réclamation dans les délais prescrits aux termes du processus de réclamation, ce Membre du Groupe sera lié par les allocations déterminées dans le cadre du processus de réclamation et recevra uniquement les allocations, le cas échéant, faites en faveur de ce Membre du Groupe.
+
+Les Demandeurs demanderont le paiement des honoraires des Avocats du Groupe à concurrence de 25 % du Fonds de règlement, ainsi que le remboursement des frais et autres dépenses des Avocats du Groupe, qui seront payés à même le Fonds de règlement. Les Demandeurs publieront la requête relative aux honoraires et frais d’avocats sur la page Documents important. Tous les montants accordés seront déterminés par le Tribunal.
+
+Les Avocats du Groupe demanderont également au Tribunal d’accorder des indemnités de service pouvant atteindre 50 000 $ à chacun des Demandeurs nommés (Andrea Bartz Inc., Charles Graeber et MJ+ KJ Inc.) pour le temps et les efforts qu’ils ont consacrés à l’affaire au nom des Membres du Groupe. Si le Tribunal les approuve, toute indemnité de service sera payée à partir du Fonds de règlement.
+
+Vous pourriez être Membre du Groupe même si vous n’avez pas reçu un avis individuel par courrier postal ou par courriel.
+
+Si vous êtes un Membre du Groupe, vous pouvez soumettre un Formulaire de réclamation ou ne rien faire, que vous ayez reçu ou non un avis par courrier postal ou électronique. La date limite pour soumettre un Formulaire de réclamation a expiré le 30 mars 2026. La date limite pour s'exclure ou s'opposer a expiré le 9 février 2026. Vous pouvez obtenir un avis et un Formulaire de réclamation sur la page Documents importants, en appelant le 877-206-2314, en envoyant un courriel à info@AnthropicCopyrightSettlement.com, ou en contactant l’un des avocats mentionnés dans la réponse à lao question 37.
+
+Si vous êtes Membre du Groupe et que vous n’avez pas reçu d’avis par courrier postal ou courriel, vous êtes quand même lié par les termes du Règlement, sauf si vous, ou un autre titulaire des droits sur votre œuvre, vous êtes exclu.
+
+Si l’Avis vous a été envoyé par courrier postal ou électronique, cela signifie que vous avez été identifié comme un potentiel Membre du Groupe. Si vous n’êtes toujours pas sûr(e) d’être concerné(e), vous pouvez obtenir de l’aide en appelant le 877-206-2314, en envoyant un courriel à info@AnthropicCopyrightSettlement.com, ou en contactant l’un des avocats répertoriés en réponse à la question 37.
+
+Non. Si vous êtes Membre du Groupe, à moins que vous ne soyez exclu de la poursuite en cours, vous avez renoncé à votre droit de poursuivre Anthropic pour les réclamations juridiques réglées par le présent Règlement.
+
+Non. Si vous vous êtes exclu vous-même et tous les autres titulaires de droits pour une œuvre, vous ne recevrez aucun paiement aux termes du Règlement pour cette œuvre, et tous les autres titulaires légaux et bénéficiaires de cette œuvre ne recevront pas non plus de paiement aux termes du Règlement. En vous excluant, vous indiquez au Tribunal que vous ne souhaitez pas faire partie du Règlement. Vous n’êtes éligible pour recevoir un paiement aux termes du Règlement que si vous demeurez dans le Règlement.
+
+Si vous croyez faire partie du Groupe, vous êtes fortement encouragé à soumettre un Formulaire de réclamation. Si vous ne soumettez pas de Formulaire de réclamation, il est possible que vous ne soyez pas payé ou que vous ne receviez pas le montant maximum possible de recouvrement. Remplir un Formulaire de réclamation valide est également le seul moyen d’avoir votre mot à dire dans la répartition de l’indemnité par œuvre, c’est-à-dire, par exemple, d’accepter ou non l’option par défaut.
+
+Toutefois, si votre œuvre est une œuvre partagée (c’est-à-dire qu’elle n’appartient pas exclusivement à un seul titulaire de droits) et qu’un autre titulaire de droits remplit un Formulaire de réclamation valide et (i) choisit l’option par défaut ou (ii) établit qu’un pourcentage de répartition différent doit s’appliquer, vous recevrez un chèque correspondant à votre part. La raison en est de maximiser le nombre de Membres du Groupe qui reçoivent un paiement conformément à leurs droits sur l’œuvre.
+
+Audience d'approbation
+
+14 mai 2026 à 
+
+14 h (heure du Pacifique)
+
+Le Tribunal a tenu une Audience d’approbation finale afin de décider si elle approuve ou non le Règlement. L’audience a eu lieu le 14 mai 2026 à 14 h (heure du Pacifique) à la Cour fédérale de San Francisco, situé au 450 Golden Gate Ave., salle d’audience 12 – 19e étage.
+
+Puisque le Règlement d’un recours collectif détermine les droits de tous les Membres du Groupe, le Tribunal doit donner son approbation finale au Règlement avant qu'il puisse entrer en vigueur. Les paiements ne seront effectués que si le Tribunal approuve le Règlement et que tout appel est résolu. Lors de l’Audience d’approbation finale, le Tribunala entendu les Membres du Groupe qui ont demandé à prendre la parole lors de l'audience.
+
+Pour de plus amples renseignements, consultez la FAQ 47, Quand et où le Tribunal décidera-t-elle d'approuver ou non le Règlement?.
+
+La Liste des œuvres ne comprend que les œuvres qui répondent à la définition du Groupe (telle qu’identifiée à la question 5). Pour toutes sortes de raisons, plusieurs des livres figurant sur la liste des fichiers LibGen de The Atlantic ne répondent pas à la définition du Groupe. Par exemple :
+
+Anthropic n’a téléchargé aucune œuvre de LibGen après juillet 2021. Pour compiler sa liste, The Atlantic a utilisé les métadonnées de LibGen telles qu’elles existaient dans la base de données en 2025. Entre juillet 2021 et 2025, des millions d’autres livres ont été ajoutés à LibGen. Votre œuvre ne ferait pas partie du Groupe, et ne figurerait donc pas sur la Liste des œuvres, si (i) elle a été ajoutée à LibGen après juillet 2021 et (ii) elle ne se retrouve pas parmi les œuvres téléchargées par Anthropic à partir de PiLiMi en août 2022.
+
+Les médadonnées de LibGen sont connues pour contenir des erreurs, et il est possible que les métadonnées de LibGen utilisées par The Atlantic ne soient pas exactes.
+
+Comme expliqué ci-dessus dans la question 5, une œuvre n’est comprise dans la définition du Groupe que si elle : (i) possède un numéro ISBN ou ASIN; (ii) a été enregistrée auprès du U.S. Copyright Office dans les cinq ans suivant la première publication de l’œuvre; et (iii) a été enregistrée avant d’être téléchargée par Anthropic, ou dans les trois mois suivant la première publication de l’œuvre. De nombreuses œuvres comprises dans LibGen et PiLiMi n’étaient pas enregistrées ou ne disposaient pas d’un numéro ISBN ou ASIN. Ces œuvres ne font pas partie du Groupe et ne figurent donc pas sur la Liste des œuvres.
+
+Par souci de clarté : si une œuvre dont vous êtes titulaire de droits ne figure pas à la Liste des œuvres, ce Règlement ne quittance aucune réclamation liée à cette œuvre.
+
+Tout d'abord, veuillez consulter l'Avis complet, approuvé par le Tribunal, relatif à l'entente provisoirement approuvée. Le Tribunal vous recommande de lire cet Avis et de prendre connaissance des quatre options qui vous sont offertes.
+
+Vous pourriez être admissible à recevoir un paiement si :
+
+Vous êtes un titulaire légal, bénéficiaire ou unique du droit exclusif de reproduire une œuvre protégée par le droit d'auteur ;
+
+L'œuvre figure dans la Liste des œuvres ; et
+
+Vous n'êtes pas administrateur, dirigeant ou employé d'Anthropic PBC, et vous n'êtes pas membre du personnel d'agences fédérales ou du United States District Court.
+
+En règle générale, ces droits sont établis dans un contrat entre l'éditeur et l'auteur. Dans certains cas, le contrat peut préciser si et/ou comment les sommes obtenues au terme d’un litige seront réparties entre les auteurs et les éditeurs.
+
+Aux fins de la présente procédure de réclamation :
+
+En cas de doute, consultez votre contrat ou contactez les Avocats du Groupe
+
+Le 20 juillet 2026, le Tribunal a accordé son approbation définitive. Un exemplaire de l'ordonnance du Tribunal peut être consulté sur la page Documents importants.
+
+Soumettre un Formulaire de réclamationVous exclure du RèglementS'opposer au RèglementNe rien faire
+
+La date limite pour soumettre un Formulaire de réclamation: le 30 mars 2026La date limite pour vous exclure du Règlement: le 9 février 2026La date limite pour s'opposer au Règlement: le 9 février 2026Pas de date limite, mais veuillez vérifier les dates limites pour les autres options.
+
+Cette date limite a déjà expiré.Cette date limite a déjà expiré.Cette date limite a déjà expiré.Voir ci-dessous pour plus d'informations concernant les implications de ne rien faire si vous êtes un Membre du Groupe.
+
+Ce que cela signifie :
+
+Si vous pensez faire partie du Groupe, vous auriez pu soumettre un Formulaire de réclamation. Si vous n'avez pas soumis une Formulaire de réclamation, il est possible que vous ne soyez pas payé ou que vous ne receviez pas le montant maximal possible de compensation financière. Vous pouvez recevoir un paiement pour chaque œuvre admissible dont vous êtes titulaire.
+
+Si vous avez soumis une réclamation valide, vous avez renoncé au droit de poursuivre Anthropic dans le cadre d’un autre procès concernant les revendications juridiques réglées par le présent Règlement.
+
+Ce que cela signifie :
+
+Vous auriez pu vous-même exclure ainsi que tous les autres titulaires légaux et bénéficiaires de vos œuvres au plus tard le 9 février 2026, date désormais expiré. Il s'agissait de la seule option qui vous permettait d'intenter votre propre action en justice contre Anthropic au sujet des réclamations visées par le présent Règlement.
+
+Si vous vous êtes exclu vous-même ainsi que tous les autres titulaires de droits, vous avez renoncé au droit de recevoir tout paiement au titre du présent Règlement et empêché tous les autres propriétaires légaux et bénéficiaires de vos œuvres de recevoir tout paiement au titre du présent Règlement.
+
+Si vous vous êtes exclu vous-même ainsi que tous les autres titulaires de droits du Règlement, vous n'auriez pas pu vous opposer au Règlement, et les autres propriétaires légaux et bénéficiaires de vos œuvres n'auraient pas pu non plus s'y opposer.
+
+Ce que cela signifie :
+
+Vous auriez pu vous opposer au Règlement au plus tard le 9 février 2026, date désormais expiré, en écrivant au Tribunal et en lui indiquant les raisons pour lesquelles vous estimez que le Règlement ne devrait pas être approuvé. Vous serez toujours lié par le Règlement s’il est approuvé.
+
+Si vous vous y êtes opposé, vous pouvez également déposer un Formulaire de réclamation afin de recevoir un paiement au titre du Règlement.
+
+Ce que cela signifie :
+
+Si vous ne faites rien, trois issues sont possibles, selon ce que feront les autres titulaires de droits sur votre œuvre.
+
+Si un autre titulaire de droits sur votre œuvre dépose un Formulaire de réclamation confirmant votre droit à un paiement, vous pourriez recevoir un paiement même si vous ne soumettez pas de Formulaire de réclamation.
+
+Si un autre titulaire de droits sur votre œuvre a choisi de s’exclure, votre œuvre sera exclue du Règlement.
+
+Si aucun autre titulaire de droits pour votre œuvre n'agit, vous ne recevrez aucun paiement au titre du Règlement et vous renoncerez à votre droit de poursuivre Anthropic pour les réclamations légales quittancées par le présent Règlement.
+
+La date limite pour déposer une réclamation a expiré le 30 mars 2026.
+La date limite pour vous exclure a expiré le 9 février 2026.
+
+La date limite pour s'opposer au Règlement a expiré le 9 février 2026.
+Ce que vous devez faire :
+
+Aucune action n'est requise de votre part.
+
+Vous trouverez ci-dessous les quatres options qui vous sont offertes en tant que Membre du Groupe. Vous pouvez consulter la Liste des oeuvres incluses dans le Règlement en utilisant la Recherche dans la liste des œuvres. Pour plus d'informations, veuillez lire l'integralité de l'Avis, approuvé par le Tribunal, relatif à l'entente de Règlement provisoirement approuvée. Le Tribunal recommande aux Membres du Groupe de le lire attentivement avant de prendre toute décision.
+
+Nous encourageons fortement tous les réclamants possibles, c.-à-d. tous les propriétaires légaux et/ou bénéficiaires possibles d’une œuvre donnée, à déposer une demande, quelle que soit la colonne dans laquelle leurs renseignements apparaissent. Vous trouverez ci-dessous une brève explication de la signification et des sources des différentes colonnes. Pour en savoir plus sur la façon dont la Liste des œuvres a été créée, veuillez consulter la FAQ 7, et les FAQ 49 à 52.
+
+ISBN/ASIN
+
+Cela comprend le ou les numéros de livre international standard (« ISBN ») et/ou le ou les numéros d’identification standard d’Amazon (« ASIN ») que nous avons pu identifier (généralement à partir du texte brut des fichiers téléchargés par Anthropic, des métadonnées des fichiers LibGen et/ou PiLiMi, ou de tout ISBN inscrit au registre officiel des droits d’auteur).
+
+Les ISBN sont composés soit de 10 chiffres ou, le plus souvent, de 13 chiffres. Un ISBN donné identifie l’édition et le format spécifiques d’un livre.
+
+Remarque : il peut y avoir d’autres ISBN pour votre livre qui ne sont pas énumérés, car ils ne correspondent pas à l’édition et/ou au format spécifique du fichier en question et/ou qui n’étaient pas inscrits au registre des droits d’auteur. En principe, cela ne devrait pas avoir d’incidence sur vos droits de revendiquer une œuvre donnée si vous êtes par ailleurs le propriétaire légal ou bénéficiaire de l’œuvre en vertu du règlement.
+
+Les ASIN sont composés de 10 caractères. De par leur conception, tous les ISBN à 10 chiffres sont également des ASIN valides. Cependant, contrairement aux ISBN, les ASIN peuvent également commencer par des lettres, le plus souvent la lettre « B ».
+
+Titre protégé par le droit d’auteur
+
+Auteur(s) protégé(s) par le droit d’auteur
+
+Titulaire(s) des droits d’auteur enregistré(s)
+
+En général, chacune de ces colonnes—« Titre protégé par le droit d’auteur », « Auteur(s) protégé(s) sous droit d’auteur » et « Titulaire(s) des droits d’auteur enregistré(s) »—provient des renseignements figurant dans les dossiers publics du United States Copyright Office associés au « Numéro d’enregistrement du droit d’auteur ». Nous encourageons fortement tous les réclamants potentiels d’une œuvre donnée à déposer une demande, peu importe dans quelle colonne leurs renseignements apparaissent.
+
+Les éléments dont l’enregistrement date d’après 1978 (y compris l’inscription au renouvellement) peuvent être consultés à l’adresse https://publicrecords.copyright.gov/.
+
+Les éléments dont l’enregistrement date d’avant 1978 peuvent être consultés sur https://www.copyright.gov/vcc/ ou https://archive.org/details/copyrightrecords?tab=collection, bien que la recherche soit plus difficile.
+
+Éditeur(s) identifié(s)
+
+Titre identifié
+
+Auteur(s) identifié(s)
+
+En général, chacune de ces colonnes, « Éditeur(s) identifié(s) », « Titre identifié » et « Auteur(s) identifié(s) », provient de bases de données accessibles au public contenant des informations sur les numéros ISBN, principalement Bowker Books Data et/ou ISBNdb. De telles bases de données sont des outils conformes aux normes de l’industrie pour compiler, suivre et produire des rapports sur les renseignements relatifs aux éditeurs, aux titres et aux auteurs selon l’ISBN. Les informations contenues dans ces colonnes ont également été complétées par un examen manuel dans la mesure du possible.
+
+Parfois, les informations contenues dans ces colonnes peuvent différer de ce qui est indiqué dans les colonnes « Droit d’auteur enregistré » en raison de différences dans une édition ou un format donné d’une œuvre (p. ex., une édition ultérieure d’un manuel peut avoir des auteurs supplémentaires) ou de divergences entre les enregistrements. Nous encourageons fortement tous les réclamants potentiels d’une œuvre donnée à déposer une demande, peu importe dans quelle colonne leurs renseignements apparaissent.
+
+Numéro d’enregistrement du droit d’auteur
+
+Il s’agit du numéro d’enregistrement du droit d’auteur pour l’œuvre qui a été identifiée dans les dossiers officiels du United States Copyright Office.
+
+Les éléments dont l’enregistrement date d’après 1978 (y compris l’inscription au renouvellement) peuvent être consultés à l’adresse https://publicrecords.copyright.gov/.
+
+Les éléments dont l’enregistrement date d’avant 1978 peuvent être consultés sur https://www.copyright.gov/vcc/ ou https://archive.org/details/copyrightrecords?tab=collection, bien que la recherche soit plus difficile.
+
+Œuvre éducative
+
+Cette colonne indique si une œuvre est une « Œuvre éducative » aux fins du processus de règlement et de réclamation. Les Œuvres éducatives sont des œuvres publiées par des éditeurs spécialisés dans le domaine de l’éducation. Les éditeurs spécialisés dans l’éducation se consacrent à la création et à la publication d’ouvrages, notamment des manuels scolaires, destinés à l’enseignement des étudiants et des professionnels, qui sont distribués sur et par l’intermédiaire des marchés éducatifs et professionnels. Veuillez consulter les FAQ 21 à 27 pour plus d’informations.
+
+Justin Nelson
+
+Rohit Nath
+
+SUSMAN GODFREY L.L.P.
+
+1000 Louisiana Street, Suite 5100
+
+Houston, TX 77002
+
+1900 Avenue of the Stars, Suite 1400
+
+Los Angeles, CA 90067
+
+Nous prévoyons actuellement envoyer la première série de paiements la semaine du 23 novembre 2026.
+
+Les paiements seront effectués en plusieurs versements. Le premier versement devrait représenter environ 70 % du montant total accordé pour chaque œuvre. Le solde sera versé une fois qu’Anthropic aura effectué son paiement final au Fonds du Règlement. Consultez la FAQ 11 pour plus de détails.
+
+Les paiements seront versés conformément au mode de paiement sélectionné sur chaque Formulaire de réclamation transmis en bonne et due forme. Veuillez informer l’Administrateur du règlement de toute modification de vos données de paiement après l’envoi de votre Formulaire de réclamation, notamment s’agissant de votre adresse actuelle si vous choisissez le paiement par chèque.
+
+Le titulaire légal d'une œuvre détient le droit exclusif de publier et de reproduire cette œuvre. Souvent, le propriétaire légal de l'œuvre est l'éditeur, car il détient le droit de reproduction par contrat. 
+
+Le titulaire bénéficiaire d'une œuvre est l'ancien titulaire légal qui a cédé le droit exclusif de publier et de reproduire l'œuvre à un tiers en échange du paiement de redevances. Souvent, les auteurs sont les titulaires bénéficiaires.
+
+Le titulaire unique détient tous les droits de reproduction de l'œuvre. Voici quelques exemples de titre exclusif :
+
+Si votre œuvre ne figure pas dans la Liste des œuvres, elle ne fait pas partie du règlement, vos réclamations concernant cette œuvre ne sont pas quittancées et vous ne devez pas soumettre de réclamation pour cette œuvre.
+
+La Liste des œuvres identifie les œuvres incluses dans ce Règlement. Anthropic a téléchargé environ 7 millions de fichiers depuis LibGen et PiLiMi. Dans le cadre du procès, Anthropic a remis ces 7 millions de fichiers aux avocats des Demandeurs. Les avocats des Demandeurs ont utilisé ces 7 millions de fichiers pour créer une « Liste des œuvres » répertoriant toutes les œuvres faisant partie du Groupe. Des renseignements supplémentaires sur la façon dont la Liste des œuvres a été créée et pourquoi les œuvres peuvent être incluses ou non se trouvent sur la page FAQ à partir de FAQ 49.
+
+Si votre œuvre est incluse, vous pourriez être en droit de déposer une demande. Si votre recherche donne lieu à un grand nombre d’œuvres, vous pouvez communiquer avec BulkClaimFiling@AnthropicCopyrightSettlement.com pour obtenir de l’aide afin d’examiner vos œuvres et déposer une demande.
+
+Pour obtenir des conseils supplémentaires sur la recherche, veuillez consulter ci-dessous :
+
+ISBN/ASIN : Recherchez un seul ISBN ou ASIN à la fois.
+
+Titre : Recherchez le titre complet du livre. Si vous n’arrivez pas à trouver le livre, retirez les articles (c.-à-d. « le »).
+
+Auteur : Recherchez le nom complet de l’auteur. Recherchez un seul nom d’auteur à la fois.
+
+Éditeur : Recherchez le nom complet de l’éditeur. Recherchez un seul éditeur à la fois.
+
+S'opposer au Règlement
+
+9 février 2026
+
+Vous pouvez vous opposer au Règlement d’ici le 9 février 2026 en écrivant au Tribunal et en l’informant de la raison pour laquelle vous pensez que le Règlement ne devrait pas être approuvé. Vous serez toujours lié par le Règlement s’il est approuvé.
+
+Si vous vous y opposez, vous pouvez toujours remplir un Formulaire de réclamation pour recevoir un paiement dans le cadre de ce Règlement.
+
+Date de réintégration
+
+9 mars 2026
+
+La date limite pour vous réinscrire au Règlement a déjà expiré. Si vous vous en êtes désinscrit mais souhaitiez vous y réinscrire, vous étiez tenu de soumettre une demande de réintégration au Règlement au plus tard le 9 mars 2026. Pour plus d'informations sur la demande de réintégration, consultez la FAQ 41.
+
+Si vous restez dans le Groupe visé par le Règlement, vous n’avez pas besoin de faire appel à votre propre avocat. Les Avocats du Groupe travaillent au nom du Groupe. Toutefois, si vous souhaitez être représenté par votre propre avocat, vous pouvez en engager un à vos frais. Vous pouvez également vous représenter sans avocat.
+
+Soumettre un Formulaire de réclamation
+
+30 mars 2026
+
+Si vous croyez faire partie du Groupe, vous pouvez soumettre un Formulaire de réclamation. Si vous ne soumettez pas de Formulaire de réclamation, il est possible que vous ne soyez pas payé ou que vous ne receviez pas le montant maximum possible de recouvrement. Vous pouvez recevoir un paiement pour chaque œuvre admissible dont vous êtes titulaire.
+
+Si vous soumettez un Formulaire de réclamation valide, vous renoncez à votre droit de poursuivre Anthropic dans le cadre d’un autre procès concernant les revendications juridiques réglées par le présent Règlement.
+
+Veuillez noter que bon nombre des questions de la FAQ figurant ci-dessous concernent des échéances échues ou qui ne s’appliquent plus depuis que le Tribunal a exprimé son approbation définitive du Règlement le 20 juillet 2026, ICI. Puisque les Parties ont informé le Tribunal qu’elles conviennent que la Date d’entrée en vigueur est survenue, sous réserve qu’aucun appel déposé hors délai ne soit autorisé à suivre son cours, les paiements devraient commencer sous peu. Nota bene : la Question 35, « Quand et comment recevrai-je un paiement au titre du Règlement? » a été révisée afin de renvoyer à la dernière mise à jour.
+
+Sauf si vous vous êtes exclu ou si un autre titulaire de droits d’auteur vous a exclu, vous resterez dans le Groupe et dans le Règlement. Si le Règlement est approuvé et devient final, toutes les ordonnances du Tribunal émises après l’ordonnance sur la certification du groupe s’appliqueront à vous et vous lieront légalement. Vous ne pourrez pas intenter de poursuites contre Anthropic pour l’une des réclamations juridiques quittancées visées par l’Entente de règlement de recours collectif.
+
+Les droits spécifiques auxquels vous renoncez sont appelés « Réclamations quittancées » (voir la question 15 ci-dessous).
+
+Une Réclamation quittancée désigne une réclamation à laquelle vous renoncez en échange des avantages du Règlement.
+
+Les Réclamations quittancées désignent toutes les réclamations ou causes d’action pour tout type de réparation, y compris, les dommages et intérêts compensatoires, les dommages-intérêts prévus par la loi, les dommages-intérêts liquidés, les pénalités, les injonctions, les jugements déclaratoires, les honoraires et frais d’avocat, les débours et intérêts, les responsabilités, les demandes ou les poursuites judiciaires à l’encontre des Parties quittancées découlant du téléchargement illégal allégué passé du défendeur (y compris le téléchargement et le partage par seeding), de l’analyse, de la conservation et de l’utilisation des œuvres, y compris aux fins d’entraînement, de recherche, de développement et de production de modèles d’IA et de produits et services associés aux œuvres figurant sur la Liste des œuvres à la date de l’approbation préliminaire du Règlement. Pour plus de clarté, aucune revendication fondée sur les résultats des modèles d’IA n’est quittancée. Pour éviter toute ambiguïté, les Réclamations quittancées ne s’étendent qu’aux réclamations antérieures figurant sur la Liste des œuvres. Aucune réclamation ne sera acquittée pour la reproduction, la distribution et/ou la création futures d’œuvres dérivées des œuvres figurant sur la Liste des œuvres. La quittance ne constitue en aucun cas une licence d’utiliser la technologie torrent, d’analyser ou d’entraîner des modèles d’IA au moyen d’œuvres protégées par le droit d’auteur, ni de créer des résultats contrefaisants à partir de modèles d’IA. Les Réclamations quittancées ne s’étendent pas aux activités ou aux comportements qui se produisent ou qui se sont produits après le 25 août 2025.
+
+Vous renoncez également à tous les droits ou avantages dont vous disposez en vertu des dispositions de l’article 1542 du California Civil Code ou de toute loi similaire, qui préserve généralement le droit de la partie qui accorde la quittance à intenter toute action qui aurait pu être intentée dans le cadre du recours, mais dont l’existence n’était pas connue ou soupçonnée au moment de la signature de la quittance et qui aurait eu une incidence importante sur le règlement.
+
+Les Réclamations quittancées n’incluent pas les réclamations concernant les œuvres figurant dans Books3 ou les livres numérisés qui ne figurent pas sur la liste des œuvres.
+
+Il n’est pas nécessaire de comprendre parfaitement chaque colonne pour déposer une reclamation. Vous pouvez déposer une réclamation si vous croyez être le titulaire légal ou bénéficiaire d’une œuvre figurant à la Liste des œuvres. Pour plus d’informations sur la manière dont la Liste des œuvres a été créée, veuillez vous référer aux questions 7, et 49 à 55.
+
+Les points suivants décrivent les colonnes de la Liste des œuvres :
+
+ISBN(s)/ASIN(s): les entrées de cette colonne comprennent les International Standard Book Number(s) (« ISBN(s) ») et/ou les Amazon Standard Identification Number(s) (« ASIN(s) ») que les Avocats du Groupe ont pu identifier. Les Avocats du Groupe ont généralement identifié ces numéros à partir d’une combinaison (a) du texte brut des fichiers téléchargés par Anthropic, (b) des métadonnées associées aux téléchargements de LibGen et/ou PiLiMi, et (c) des numéros ISBN figurant dans l’enregistrement officiel de droits d’auteur ou dans d’autres bases de données publiques d’informations ISBN, principalement Bowker Books Data et/ou ISBNdb.
+
+Les numéros ISBN comportent soit 10 chiffres, soit, plus couramment, 13 chiffres. Un numéro ISBN donné identifie une édition et un format spécifiques (par exemple, livre électronique ou livre de poche) d’un livre.
+
+Remarque : cette colonne peut contenir un seul ou plusieurs numéros ISBN. En outre, il peut exister d’autres numéros ISBN pour une œuvre donnée qui ne figurent pas dans la Liste des œuvres, car (1) ces autres numéros ISBN ne correspondaient pas à l’édition et/ou au format spécifiques du fichier téléchargé par Anthropic, (2) ils n’étaient pas identifiables dans les fichiers téléchargés par Anthropic, et/ou (3) ils ne figuraient pas dans l’enregistrement du droit d’auteur. Chaque œuvre figurant sur la Liste des œuvres donne droit à un seul paiement aux termes du Règlement, peu importe le nombre de numéros ISBN associés à cette œuvre.
+
+Les numéros ASIN sont composés de 10 chiffres. De façon intentionnelle, tous les ISBN à 10 chiffres sont également des ASIN valides. Cependant, contrairement aux ISBN, les ASIN peuvent également commencer par des lettres, le plus souvent « B ». Chaque œuvre figurant sur la Liste des œuvres est éligible à une seule indemnité par œuvre (potentiellement partagée entre plusieurs titulaires légaux ou bénéficiaires), peu importe le nombre d’ASIN associés à cette œuvre.
+
+Colonnes « Copyright-Registered » (droit d’auteur enregistré) En général, chacune de ces colonnes (« Copyright-Registered Title », « Copyright-Registered Author(s) » et « Copyright-Registered Claimants(s) ») provienne des informations figurant dans les registres publics du United States Copyright Office associés au « Copyright Registration Number ».
+
+Les œuvres enregistrées après 1978 (y compris les renouvellements d’enregistrement) peuvent être consultées à l’adresse https://publicrecords.copyright.gov/.
+
+Les œuvres enregistrées avant 1978 peuvent généralement être consultées sur https://www.copyright.gov/vcc/ ou https://archive.org/details/copyrightrecords?tab=collection, bien que l’interface de recherche puisse être plus difficile à naviguer pour les œuvres enregistrées avant 1978
+
+Colonnes « Identified » (identifiés) En général, chacune de ces colonnes (« Identified Publisher(s) », « Identified Title » et « Identified Author(s) ») provienne de bases de données publiques contenant des informations sur les numéros ISBN, principalement Bowker Books Data et/ou ISBNdb. Ces bases de données sont des outils standard de l’industrie de l’édition qui permettent de compiler, de suivre et de communiquer des informations sur les éditeurs, les titres et les auteurs pour chaque numéro ISBN. Les informations contenues dans ces colonnes ont également été complétées par une vérification manuelle lorsque cela était nécessaire.
+
+Il arrive parfois que les informations contenues dans ces colonnes « Identified » diffèrent de celles figurant dans les colonnes « Copyright-Registered ». Cela est souvent (mais pas toujours) dû à un changement d’édition ou de format. Par exemple, une édition ultérieure d’un manuel scolaire peut comporter des auteurs supplémentaires. Les réclamants peuvent déposer une réclamation pour une oeuvre donnée au www.AnthropicCopyrightSettlement.com, quelle que soit la colonne dans laquelle ils trouvent leurs informations.
+
+« Copyright Registration Number » (numéro d’enregistrement du droit d’auteur)Il s’agit du numéro d’enregistrement du droit d’auteur attribué à l’œuvre identifiée dans les registres officiels du United States Copyright Office.
+
+Les documents enregistrés après 1978 (y compris les renouvellements d’enregistrement) peuvent être consultées à l’adresse https://publicrecords.copyright.gov/.
+
+Les documents enregistrés avant 1978 peuvent généralement être consultés sur https://www.copyright.gov/vcc/ ou https://archive.org/details/copyrightrecords?tab=collection, bien que l’interface de recherche puisse être plus difficile à naviguer pour les œuvres enregistrées avant 1978.
+
+« Education Work » (Œuvre éducative) Cette colonne indique si une œuvre est une « œuvre éducative ». Les œuvres éducatives sont celles publiées par des éditeurs spécialisés dans l’éducation. Les éditeurs spécialisés dans l’éducation se consacrent à la création et à la publication d’œuvres, incluant mais sans s’y limiter les manuels scolaires, destinées à l’enseignement des étudiants et des professionnels, qui sont distribuées pour et par le biais des marchés éducatifs et professionnels. Veuillez vous référer aux questions 21–27 pour plus d’informations.
+
+Dans le cadre du Règlement, Anthropic a accepté de créer un Fonds de règlement non réversible d’un milliard cinq cents millions de dollars (1 500 000 000 $). Anthropic financera le Fonds de règlement en quatre versements, dont (1) trois cents millions de dollars (300 000 000 $) versés le 2 octobre 2025, (2) trois cents millions de dollars (300 000 000 $) versés au plus tard cinq (5) jours ouvrables après l’entrée en vigueur de l’Approbation finale, (3) quatre cent cinquante millions de dollars (450 000 000 $) versés au plus tard le 25 septembre 2026, et (4) quatre cent cinquante millions de dollars (450 000 000 $) versés au plus tard le 27 septembre 2027.
+
+Le Règlement requiert qu’Anthropic paie des intérêts sur ses troisième et quatrième versements, à compter du 25 septembre 2025 jusqu’à ce que ces troisième et quatrième versements soient effectués.
+
+Ce Fonds de règlement sera réparti à parts égales entre toutes les œuvres du Groupe pour lesquelles le ou les titulaires de droits d’auteur auront soumis un Formulaire de réclamation valide. Le Fonds de règlement servira également à payer les frais d’avis et d’administration liés au Règlement, les honoraires et frais d’avocats, ainsi que les indemnités de service versées aux Représentants du groupe. Par conséquent, chaque œuvre unique (ou titre) téléchargée par Anthropic et pour laquelle un titulaire de droits d’auteur aura soumis un Formulaire de réclamation valide se verra attribuer le même montant provenant du Règlement.
+
+Si vous êtes Membre du Groupe et que vous ne faites rien, trois scénarios sont possibles.
+
+Premièrement, si vous ne faites rien mais qu’un autre titulaire de droits soumet un Formulaire de réclamation confirmant que vous êtes le titulaire légal ou bénéficiaire d’une œuvre figurant sur la Liste des œuvres, vous pouvez recevoir un paiement sans avoir à remplir vous-même un Formulaire de réclamation. Cependant, vous ne devriez pas compter sur quelqu’un d’autre pour soumettre un Formulaire de réclamation pour vos œuvres. La seule façon de vous assurer de recevoir un paiement est de soumettre un Formulaire de réclamation valide.
+
+Deuxièmement, si vous ne faites rien mais qu’un autre titulaire de droits a choisi d’exclure votre œuvre du Règlement, vous serez également exclu du règlement pour cette œuvre.
+
+Troisièmement, si vous ne faites rien et que tous les autres titulaires de droits sur votre œuvre ne font rien non plus, vous ne recevrez pas de paiement aux termes du Règlement. En outre, en restant dans le Groupe visé par le Règlement, vous renoncez à votre droit de poursuivre Anthropic de votre propre chef pour les mêmes réclamations légales quittancées par le Règlement.
+
+Si vous ne parvenez pas à retrouver le contrat d’édition d’une œuvre, vous devez tout de même remplir le Formulaire de réclamation en suivant toutes les instructions applicables. En cas de question, l’éditeur, l’auteur ou la succession de l’auteur peuvent contacter l’Administrateur du Règlement au 877-206-2314 ou au info@AnthropicCopyrightSettlement.com, ou encore contacter l’un des avocats répertoriés en réponse à la question 37.
+
+En cas de doute, vous devez tout de même remplir le Formulaire de réclamation en suivant toutes les instructions applicables. Pour toute question, l’auteur peut contacter l’Administrateur du Règlement au 877-206-2314 ou à l’adresse info@AnthropicCopyrightSettlement.com, ou contacter l’un des avocats répertoriés en réponse à la question 37.
+
+Pour les œuvres autres que les œuvres éducatives, si vous souhaitez demander une répartition contractuelle alternative à l’option par défaut, vous devez fournir toutes les informations et tous les documents demandés dans votre Formulaire de réclamation.
+
+En cas de différend, l’Administrateur du Règlement nommé par le Tribunal coordonnera avec tous les titulaires de droits afin de déterminer le montant à verser à chaque titulaire légal ou bénéficiaire sur la base du ou des accords ou autres documents relatifs à votre œuvre. Si les titulaires de droits ne parviennent pas à s’entendre, la décision finale sera prise par un Arbitre spécial nommé par le Tribunal. Si vous soumettez une réclamation, vous acceptez ainsi la possibilité qu’un Arbitre spécial tranche tout différend sur lequel vous ne parvenez pas à vous mettre d’accord avec tous les autres titulaires de droits. Toutes les décisions de l’Arbitre spécial sont finales.
+
+Veuillez fournir autant d’informations que possible. Le Formulaire de réclamation exige que vous (i) fournissiez toutes les coordonnées dont vous disposez ou que vous pouvez obtenir facilement (y compris, par exemple, en contactant une personne qui, selon vous, pourrait disposer de ces coordonnées) pour tout autre titulaire de droits ou (ii) certifiiez que vous avez déjà soumis séparément ces coordonnées à l’Administrateur du Règlement ou aux Avocats du Groupe. Les autres titulaires de droits peuvent inclure les auteurs, coauteurs, cotitulaires et éditeurs des œuvres identifiées.
+
+L’option par défaut ne s’applique pas aux œuvres éducatives. Les œuvres éducatives sont des œuvres publiées par des éditeurs spécialisés dans le domaine de l’éducation. Les éditeurs spécialisés dans le domaine de l’éducation se consacrent à la création et à la publication d’œuvres, incluant mais sans s’y limiter, aux manuels scolaires, destinées à l’enseignement des étudiants et des professionnels, qui sont distribuées sur et par le biais des marchés éducatifs et professionnels. Le répertoire consultable des œuvres accessible sur ce site web identifie les œuvres éducatives. Pour toute œuvre éducative, vous devez remplir la section E du Formulaire de réclamation.
+
+La raison pour laquelle l’option par défaut ne s’applique pas aux œuvres éducatives est que les contrats relatifs à ces œuvres sont suffisamment diversifiés pour que l’option par défaut puisse prêter à confusion pour les auteurs et les éditeurs.
+
+Si vous avez des questions sur la manière de remplir le Formulaire de réclamation, veuillez contacter l’Administrateur du Règlement au 877-206-2314 ou à l’adresse info@AnthropicCopyrightSettlement.com, ou contacter l’un des avocats répertoriés en réponse à la question 37.
+
+Veuillez lire attentivement le Formulaire de réclamation et suivre les instructions. Si vous avez des questions, vous pouvez obtenir une assistance personnalisée en appelant le 877-206-2314, en envoyant un courriel à info@AnthropicCopyrightSettlement.com, ou en contactant l’un des avocats répertoriés en réponse à la question 37.
+
+Vous conservez tous vos droits sur les livres qui ne figurent pas dans la Liste des œuvres. Le Règlement n’affecte pas vos livres qui ne figurent pas dans la Liste des œuvres.
+
+Le titulaire légal d’une œuvre détient le droit exclusif de publier et de reproduire cette œuvre aux États-Unis. Souvent, en vertu d’un contrat, le titulaire légal de l’œuvre est l’éditeur, car il détient le droit de reproduction par contrat.
+
+Le titulaire bénéficiaire d’une œuvre est l’ancien titulaire légal qui a cédé le droit exclusif de publier et de reproduire le livre à une autre personne en échange du paiement de redevances. Souvent, les auteurs sont les titulaires bénéficiaires.
+
+Un titulaire unique détient tous les droits de reproduction du livre. Voici quelques exemples de titre exclusif :
+
+Un auteur dont les droits sur le livre ont été rétrocédés par l’éditeur.
+
+Un auteur dont les droits cédés à l’éditeur ont pris fin.
+
+Un auteur auto-publié qui n’a pas travaillé avec un coauteur et n’a jamais cédé ses droits à un éditeur..
+
+Un éditeur qui a commandé une œuvre sur commande, telle que définie dans le Copyright Act.
+
+Un éditeur auquel tous les droits sur un livre ont été cédés, sans obligation de verser des redevances à l’auteur ou à toute autre personne.
+
+Les Avocats du Groupe ont identifié certaines œuvres sur la Liste des œuvres comme œuvres éducatives aux fins de désigner les œuvres qui ne sont pas soumises à l’option par défaut en cas de partage entre auteurs et éditeurs (décrit ci-dessus à la Question 21). À cette fin, les Avocats du Groupe ont identifié les « œuvres éducatives » comme étant des œuvres publiées par des éditeurs spécialisés dans l’éducation. Les éditeurs spécialisés dans l’éducation se consacrent à la création et la publication d’œuvres, y compris, mais sans s’y limiter, des manuels scolaires, destinés à l’enseignement des étudiants et des professionnels, qui sont distribués pour et par le biais des marchés éducatifs et professionnels. La fonction de recherche dans la Liste des œuvres permet d’identifier les œuvres éducatives. Les « œuvres éducatives » peuvent ne pas être les mêmes que les œuvres publiées par une presse universitaire.
+
+Le Groupe comprend les titulaires légaux ou bénéficiaires du droit exclusif de reproduire des copies d’une œuvre qui figurait dans les ensembles de données LibGen ou PiLiMi téléchargées par Anthropic et qui est répertoriée dans la base de données consultable appelée « Liste des œuvres » (décrite ci-dessous). Dans ce contexte, le terme « œuvre » désigne uniquement les œuvres qui :
+
+✔ ont un International Standard Book Number (ISBN) ou un Amazon Standard Identification Number (ASIN);
+
+✔ ont été enregistrées auprès du United States Copyright Office dans les cinq ans suivant la première publication de l’œuvre; et
+
+✔ ont été enregistrées avant d’être téléchargées par Anthropic, ou dans les trois mois suivant la première publication de l’œuvre.
+
+Il n’est pas nécessaire de figurer sur l’enregistrement original du droit d’auteur (Copyright Registration) pour être Membre du Groupe. Les titulaires de licences exclusives de droits de reproduction en vertu de l’article 17 U.S.C. § 106 sont inclus s’ils répondent aux critères du Groupe. Le Groupe comprend les éditeurs, les auteurs (et leurs ayants droit), les institutions universitaires ou autres s’ils sont les titulaires légaux du droit de reproduction d’une œuvre ou les titulaires bénéficiaires des droits. Par exemple, un titulaire légal peut être un auteur ou un éditeur ayant le droit de publier et de reproduire un livre. Un titulaire bénéficiaire peut être un auteur qui a transféré le titre légal à un éditeur en échange du paiement de redevances. Sont exclus du Groupe les administrateurs, dirigeants et employés d’Anthropic, le personnel des agences fédérales et le personnel du tribunal de district.
+
+Il est possible que certaines œuvres dont vous êtes l’auteur, que vous avez publiées, ou sur lesquelles vous avez un titre légal figurent dans la Liste des œuvres, alors que d’autres œuvres dont vous êtes l’auteur, que vous avez publiées ou sur lesquelles vous avez un titre légal ne figurent pas dans la Liste des œuvres. Ce règlement n’affecte aucunement vos droits quant aux œuvres qui ne figurent pas dans la Liste des œuvres.
+
+Le Règlement prévoit que pour de nombreux types d’œuvres, telles que les livres commerciaux et les livres universitaires, le paiement, par défaut, sera réparti à parts égales entre les auteurs et les éditeurs. Cette répartition à parts égales est appelée « option par défaut ».
+
+L’option par défaut ne s’applique pas aux œuvres éducatives telles que décrites ci-dessous à la question 22. Le répertoire consultable des œuvres accessible identifie les œuvres qui sont des œuvres éducatives.
+
+Si votre œuvre n’est pas une œuvre éducative, vous pouvez choisir d’accepter l’option par défaut. Si vous le faites, votre Formulaire de réclamation sera valide même si vous ne soumettez pas de documents supplémentaires à l’appui de votre réclamation. Si tous les titulaires qui soumettent un Formulaire de réclamation valide acceptent l’option par défaut, c’est ainsi que vous et les autres serez rémunérés. Si vous acceptez l’option par défaut mais qu’un autre titulaire ne l’accepte pas, l’Administrateur du Règlement vous contactera pour vous aider à trouver une solution.
+
+Si plusieurs auteurs déposent des réclamations valides pour la même œuvre, la part des auteurs sera répartie à parts égales entre tous les auteurs qui ont déposé une demande valide (sauf indication contraire valide d’un ou plusieurs réclamants). Si plusieurs éditeurs déposent des demandes valides pour la même œuvre, la part des éditeurs sera répartie à parts égales entre tous les éditeurs qui ont déposé une demande valide (sauf indication contraire valide d’un ou plusieurs réclamants).
+
+S’opposer, c’est dire au Tribunal qu’il y a quelque chose dans le Règlement que vous n’aimez pas. Vous ne pouvez opposer que si vous demeurez dans le Groupe visé par le Règlement (c’est-à-dire si vous ne vous excluez pas et qu’aucun autre titulaire de droits d’auteur ne vous exclut). Demander de s’exclure, c’est dire au Tribunal que vous ne souhaitez pas faire partie du Groupe ou du Règlement, et que tout autre titulaire légal et bénéficiaire de vos œuvres ne peut pas faire partie du Groupe ou du Règlement. Si vous vous excluez, vous ne pouvez pas vous opposer au Règlement, car il ne vous concerne plus, et tout autre titulaire légal et bénéficiaire de vos œuvres ne peut pas faire partie du Règlement, car il ne les concerne plus.
+
+Le recours allègue qu’Anthropic a enfreint les droits d’auteur en téléchargeant des ensembles de données contenant des livres protégés par le droit d’auteur, en violation du Copyright Act fédéral. Anthropic nie toutes les allégations et nie avoir commis une quelconque infraction. Anthropic fait valoir que son utilisation des ensembles de données téléchargés relevait du fair use. Vous pouvez obtenir plus d’informations sur le recours et consulter les documents judiciaires connexes, y compris une copie de la Demande de recours collectif au page Documents importants.
+
+Dans le cadre de ce recours, Anthropic a produit tous les fichiers qu’elle a téléchargé à partir de LibGen et PiLiMi, ainsi que les fichiers « métadonnées », qui peuvent décrire le contenu de ces fichiers.
+
+Les Avocats du Groupe et les experts ont ensuite déterminé si chaque œuvre répondait à la définition du Groupe à la question 5 en comparant les fichiers d’Anthropic téléchargés depuis LibGen et PiLiMi avec (1) les registres du United States Copyright Office et (2) les bases de données ISBN de l’ensemble du secteur.
+
+Dans de nombreux cas, les Avocats du Groupe et les experts ont procédé à un examen manuel afin de s’assurer que tous les livres répondant à la définition du Groupe dans la question 5 étaient inclus. Voir les questions 49 à 55 ci-dessous pour plus d’informations sur la Liste des œuvres et les œuvres qui y ont été inclus.
+
+Les circonstances dans lesquelles les éditeurs sont les titulaires uniques comprennent les cas suivants :
+
+L’éditeur a commandé une œuvre sur commande.
+
+Même s’il ne s’agit pas d’une œuvre sur commande, l’auteur n’a droit à aucun paiement pour le livre.
+
+L’éditeur et l’auteur sont la même personne : le livre est auto-publié.
+
+Les circonstances dans lesquelles les auteurs sont les titulaires uniques comprennent les cas suivants :
+
+L’éditeur et l’auteur sont la même personne : le livre est auto-publié.
+
+L’auteur a cédé ses droits à l’éditeur, mais ces droits lui ont été rétrocédés parce que le livre était épuisé ou que le contrat a été résilié pour une autre raison.
+
+L’auteur n’a accordé à l’éditeur qu’une licence non exclusive de publication ou des droits à durée limitée, et cette durée a expiré.
+
+Si vous êtes le titulaire unique des droits d’auteur, vous pouvez réclamer la totalité de l’indemnité. Il peut vous être demandé de fournir des documents à l’Administrateur du Règlement afin de permettre cette détermination.
+
+L'Avis est conçu et destiné à fournir un avis écrit de cette affaire et du Règlement correspondant à toutes les personnes susceptibles d’être concernées par le Règlement, conformément à l’article 17 U.S.C. § 501(b). Une copie de la demande est disponible à la page Documents importants. Si vous souhaitez recevoir une copie papier de la demande, veuillez contacter l’Administrateur du Règlement au 877-206-2314 ou à l’adresse info@AnthropicCopyrightSettlement.com, ou contacter l’un des avocats mentionnés en réponse à la question 37.
+
+Veuillez consulter la Page d'accueil pour avoir les renseignements les plus récents concernant les paiements du Règlement.
+
+Le Tribunal tiendra une Audience d’approbation finale pour décider s’il approuve le Règlement. L’audience est actuellement prévue pour le 14 mai 2026 à 14 h 00 (heure du Pacifique) au San Francisco Federal Courthouse, 450 Golden Gate Ave., salle d’audience 12 - 19e étage.
+
+La date et l’heure de l’Audience d’approbation finale sont susceptibles d’être modifiées sans préavis au Groupe, veuillez donc consulter ce site web pour obtenir des mises à jour.
+
+Étant donné que le règlement d’un recours collectif détermine les droits de tous les Membres du Groupe, le Tribunal doit donner son approbation finale au Règlement avant qu’il ne puisse entrer en vigueur. Les paiements ne seront effectués que si le Tribunal approuve le Règlement et que tous les appels, le cas échéant, sont résolus. Lors de l’Audience d’approbation finale, le Tribunal peut, à sa discrétion, entendre les Membres du Groupe qui ont demandé à prendre la parole lors de l’audience.
+
+La date et l’heure de l’Audience d’approbation finale sont susceptibles d’être modifiées sans préavis au Groupe. Veuillez donc consulter ce site web ou le site PACER du Tribunal pour obtenir les dernières informations.
+
+Dans le but de rendre la Liste des œuvres aussi complète et exacte que possible, les Avocats du Groupe ont puisé dans plusieurs bases de données différentes. Outre les informations sur les auteurs et les éditeurs, ces bases de données contenaient souvent des informations sur des personnes ou des entités associées à une œuvre, mais qui ne sont pas nécessairement titulaires de droits sur cette œuvre en particulier. Par exemple, les bases de données peuvent avoir identifié le narrateur d’un livre audio qui n’est pas le titulaire légal ou bénéficiaire (et qui n’est donc pas Membre du Groupe).
+
+Bien que la Liste des œuvres puisse faire référence à des personnes ou à des entités que vous ne reconnaissez pas, la présence de non-titulaires sur la Liste des œuvres n’a aucune incidence sur votre titre, votre droit de déposer une réclamation, ou sur le montant des paiements qui reviennent aux titulaires légaux et bénéficiaires. L’Administrateur du Règlement déterminera la validité de chaque réclamation, notamment en vérifiant que les non-titulaires ne seront pas payés. Quiconque croit être le titulaire légal ou bénéficiaire d’une œuvre figurant sur la Liste des œuvres peut déposer une réclamation.
+
+Dans le cadre d’un recours collectif, le tribunal nomme des avocats pour travailler sur l’affaire et représenter les intérêts de tous les Membres du Groupe. Dans cette affaire, le Tribunal a nommé les avocats suivants pour représenter le Groupe:
+
+Vous pouvez contacter les Avocats du Groupe pour obtenir des réponses à vos questions concernant le Règlement. Vous pouvez également contacter l’Administrateur du Règlement en appelant le 877-206-2314, ou en envoyant un courriel à info@AnthropicCopyrightSettlement.com.
+
+Même si Anthropic a téléchargé environ 7 millions de fichiers depuis LibGen et PiLiMi, bon nombre de ces fichiers étaient des doublons d’œuvres, des œuvres non enregistrées, ou des fichiers vides, corrompus ou incomplets.
+
+Environ 40 % des fichiers téléchargés par Anthropic (environ 3 millions) étaient des doublons. Les doublons ne peuvent pas figurer dans la Liste des œuvres.
+
+De même, les œuvres qui ne sont pas valablement enregistrées auprès du U.S. Copyright Office ne peuvent pas figurer dans la Liste des œuvres. Bon nombre des œuvres téléchargées par Anthropic n’étaient pas enregistrées. Par exemple, les œuvres qui ne sont pas en anglais ont des taux d’enregistrement très faibles. Sur les quelque 4 millions d’œuvres uniques téléchargées par Anthropic, environ 2,5 millions étaient rédigées dans des langues autres que l’anglais. La plupart de ces 2,5 millions d’œuvres qui n’étaient pas en anglais n’étaient pas enregistrées. En outre, bon nombre des 1,5 million d’œuvres uniques en anglais n’étaient pas enregistrées. Et même parmi les œuvres enregistrées, beaucoup ne répondaient pas aux critères de date définis dans la définition du Groupe, car l’enregistrement a eu lieu (i) plus de cinq ans après la première publication ou (ii) après le téléchargement de ces œuvres par Anthropic.
+
+Enfin, de nombreuses œuvres ont échoué aux tests de validation. Par exemple, la Liste des œuvres ne comprend pas les fichiers vides, corrompus ou incomplets.
+
+Si vous avez reçu un Avis, les registres indiquent que vous êtes peut-être le titulaire légal ou bénéficiaire des droits d’auteur d’une œuvre téléchargée par Anthropic à partir de l’un des deux sites web suivants : Library Genesis et Pirate Library Mirror.
+
+Cela signifie dans la plupart des cas que vous êtes l’éditeur ou l’auteur d’un livre et que (a) vous détenez le droit exclusif de publier et de reproduire le livre ou (b) en tant qu’auteur, vous avez accordé le droit exclusif de publier et de reproduire le livre à un éditeur en échange du paiement de redevances.
+
+Les parties qui ont intenté un recours collectif contre Anthropic ont conclu un Règlement proposé qui doit être approuvé par le Tribunal.
+
+Le Tribunal a autorisé l'Avis car vous avez le droit d’être informé du Règlement proposé pour ce recours collectif et de tous vos droits et options avant que le Tribunal ne se prononce sur l’approbation finale du Règlement. L'Avis explique le recours, le Règlement, vos droits légaux, les avantages disponibles, les personnes éligibles à ces avantages, et la manière de les obtenir.
+
+Le Tribunal et les parties souhaitent s’assurer que tous les Membres du Groupe reçoivent un avis de leurs droits en vertu du présent Règlement. Si vous n’êtes pas le titulaire unique (tel que défini dans la question 8 ci-dessus), le Formulaire de réclamation vous demande (i) de fournir les coordonnées dont vous disposez ou que vous pouvez facilement obtenir pour tout autre titulaire de droits, ou (ii) de certifier que vous avez déjà soumis séparément ces coordonnées à l’Administrateur du Règlement ou aux Avocats du Groupe.
+
+Pour la plupart des œuvres figurant sur la Liste des œuvres, les auteurs et les éditeurs détiennent tous deux certains droits sur l’œuvre. Par exemple, l’éditeur peut détenir le droit de reproduire l’œuvre, tandis que l’auteur détient le droit de percevoir des redevances pour l’utilisation de l’œuvre.
+
+L’objectif du processus de réclamation est de donner à chaque Membre du Groupe une part appropriée de l’indemnité par œuvre, conformément aux droits contractuels de chaque Membre du Groupe. De nombreux contrats d’édition prévoient que les indemnités pour violation du droit d’auteur sont partagées à parts égales entre les auteurs et les éditeurs. Ainsi, que vous soyez auteur ou éditeur, vous devrez peut-être partager une partie des montants obtenus du Règlement avec une autre partie.
+
+Le Formulaire de réclamation vous demande de préciser le pourcentage de l’indemnité par œuvre qui, selon vous, devrait vous être versé ou être versé à tout autre titulaire légal ou bénéficiaire de l’œuvre.
+
+Comme indiqué dans les questions 49–54, les informations figurant dans la Liste des œuvres ont été compilées à partir de plusieurs sources accessibles au public, notamment la page des droits d’auteur dans les livres imprimés et les enregistrements des droits d'auteur des œuvres aux États-Unis. Ces registres mentionnent souvent le nom réel (nom légal) et le nom de plume (pseudonyme) de l'auteur. En outre, les personnes qui revendiquent un droit sur une œuvre donnée peuvent trouver cette œuvre plus facilement en recherchant l'un ou l'autre nom.
+
+Par conséquent et en raison d’une ordonnance judiciaire, aucun nom réel ne sera supprimé de la liste publique des œuvres figurant dans la fonction de Recherche dans la Liste des œuvres si celui-ci figure déjà dans l'enregistrement public du droit d'auteur de l'œuvre aux États-Unis ou sur la page des droits d’auteur du livre imprimé. De plus, les dossiers judiciaires sont présumés publics. À la fin du présent Règlement, le registre des paiements finaux versés aux Membres du Groupe sera public et comprendra les noms réels des bénéficiaires de par une ordonnance judiciaire.
+
+Ainsi, si votre œuvre a été enregistrée auprès du U.S. Copyright Office de manière à ce que seul votre pseudonyme (et NON votre nom réel) soit révélé publiquement dans l'enregistrement des droits d'auteur aux États-Unis, le Tribunal autorisera alors la fonction de Recherche dans la Liste des œuvres à être modifiée pour que seul votre pseudonyme (et NON votre nom réel) y soit révélé. Autrement, les noms réels resteront affichés publiquement dans la fonction Recherche dans la Liste des œuvres.
+
+Pour que votre demande soit approuvée, vous devrez fournir :
+
+des raisons convaincantes pour supprimer votre nom réel;
+
+la preuve de votre nom de plume (pseudonyme) et de votre nom réel (nom légal);
+
+la preuve que vous êtes l'auteur en question qui correspond aux deux noms;
+
+tout accord d'autres personnes, comme votre éditeur, concernant la suppression; et
+
+des copies de l'enregistrement du droit d'auteur aux États-Unis pour l'œuvre et la page des droits d’auteur de votre œuvre telle qu'elle a été publiée.
+
+Contactez les Avocats du Groupe pour faire votre demande (ils sont indiqués en réponse à la question 37). Les Avocats du Groupe soumettront ensuite votre demande en votre nom au Tribunal, accompagnée de tous les documents que vous aurez fournis. Ce dossier sera initialement scellé.
+
+Veuillez noter que le Tribunal peut rejeter et retirer les scellés de tout ou partie de votre demande sans autre avis s'il estime qu'elle n'a pas été présentée pour des raisons suffisamment convaincantes.
+
+Dans tous les cas, si vous déposez une réclamation pour une indemnité dans le cadre du présent Règlement, vous devez alors fournir votre nom légal et votre pseudonyme à pour ce faire. De plus, si le Règlement est approuvé et qu'une indemnisation vous est versée, votre nom réel sera rendu public (voir également la question 26).
+
+Dans un recours collectif, une ou plusieurs personnes appelées « Demandeurs nommés » ou « Représentants du groupe » intentent une action en justice au nom d’autres personnes ayant des revendications similaires. Ensemble, les personnes ayant des revendications similaires forment un « Groupe » et sont appelées « Membres du Groupe ». Dans le cadre d’un recours collectif, le tribunal tranche les questions en litige pour tous les Membres du Groupe, à l’exception de ceux qui s’excluent du Groupe. Chaque Membre du Groupe est lié par l’issue du recours, y compris tout règlement. Cela signifie que les Membres du Groupe ne peuvent pas intenter leur propre recours concernant les mêmes revendications qui ont été tranchées dans le cadre du recours collectif.
+
+Ici, le Groupe est défini en fonction du titre légal des œuvres qui figurent sur une base de données consultable disponible sur le site web du Règlement (la « Liste des œuvres »).
+
+La seule façon de déterminer si votre œuvre fait partie du Règlement est de vérifier la Liste des œuvres. La Recherche dans la Liste des œuvres vous permet d’effectuer une recherche des œuvres faisant partie du Groupe par auteur, titre, éditeur, numéro ISBN, numéro ASIN, ou numéro d’enregistrement des droits d’auteur. Si vous être le titulaire légal ou bénéficiaire d’une œuvre figurant dans la Liste des œuvres, alors vous êtes un Membre du Groupe.
+
+Certains Membres du Groupe sont des titulaires légaux ou bénéficiaires de certaines œuvres qui figurent dans la Liste des œuvres, et d’autres œuvres qui ne figurent pas dans la Liste des œuvres. Seules les œuvres figurant dans la Liste des œuvres sont concernées par le Règlement. Ce Règlement n’a aucun impact sur les œuvres qui ne figurent pas dans la Liste des œuvres.
+
+Les Demandeurs nommés et Anthropic sont en désaccord sur la question de savoir si Anthropic a enfreint la loi. Le recours n’est pas allé à procès, et le Tribunal n’a pas statué en faveur des Demandeurs nommés ou d’Anthropic. Au lieu de cela, les Représentants du groupe et Anthropic ont convenu de régler le Recours. Les Représentants du groupe estiment que l’Entente de règlement offre des avantages significatifs à tous les Membres du groupe et que le Règlement est équitable, raisonnable, adéquat et dans le meilleur intérêt des Représentants du groupe et de tous les Membres du groupe.
+
+Ce règlement collectif découle d’un recours intenté par divers auteurs contre Anthropic PBC (« Anthropic ») alléguant qu’Anthropic a enfreint le Copyright Act en téléchargeant des œuvres protégées par le droit d’auteur à partir de sites web en ligne appelés Library Genesis (LibGen) et Pirate Library Mirror (PiLiMi) dans le but d’entraîner des grands modèles de langage (LLM). Anthropic nie avoir enfreint le Copyright Act et soutient au contraire que le téléchargement et l’utilisation qui en a été faite ensuite constituent un fair use selon le Copyright Act. Les demandeurs soutiennent que le téléchargement effectué par Anthropic a enfreint l’article 106(1) du Copyright Act, qui confère au titulaire du droit d’auteur le droit exclusif de reproduire des copies, ou de concéder sous licence ou de transférer ce droit à des tiers. La copie d’une œuvre sans autorisation ne constitue pas une violation du droit d’auteur si le défendeur peut démontrer que la copie constituait un fair use. Si l’utilisation est considérée comme constituant une violation, le Copyright Act prévoit des dommages-intérêts statutaires entre 200 $ et 150 000 $ par œuvre, en fonction de facteurs tels que le préjudice réellement causé par la violation et le fait que le violateur allégué ait raisonnablement estimé qu’il s’agissait d’un fair use ou ait agi de manière intentionnelle. Si l’utilisation était un fair use (ou s’il n’y a pas eu de copie), le défendeur ne doit rien payer (0 $).
+
+Trois auteurs ont poursuivi Anthropic en alléguant une violation du droit d’auteur. En juin 2025, le tribunal de district a jugé que l’utilisation des livres pour entraîner des modèles d’IA était un fair use et ne constituait donc pas une violation du Copyright Act, mais a laissé en suspens pour procès la question de savoir si le téléchargement et l’utilisation d’œuvres provenant de LibGen et PiLiMi constituaient un fair use.
+
+En juillet 2025, le tribunal de district a statué que les demandeurs individuels (ou leurs entités juridiques associées) pouvaient représenter tous les titulaires de droits d’auteur bénéficiaires et légaux du droit exclusif de reproduire des copies des œuvres en question. Cette ordonnance était toutefois subordonnée à la prise de mesures supplémentaires. Anthropic a cherché à faire appel à la fois de la décision relative au fair use et de la décision relative à la certification du groupe. Le tribunal de district et la cour d’appel ne se sont pas prononcés sur ces demandes.
+
+Le procès devait débuter en décembre 2025. Les parties ont alors conclu une entente de règlement. Le litige comportait des incertitudes importantes. Si l’affaire avait suivi son cours, il est possible que le Groupe ait été dé-certifié avant même le procès, et que les Membres du groupe n’obtiennent rien. Si l’affaire avait été à procès, il est possible que le Groupe ait perdu sur la question du fair use, et que Membres du groupe n’obtiennent rien non plus. Même si le Groupe avait eu gain de cause au procès et, plus tard, lors d’éventuels appels, le jury aurait pu accorder des montants très variables, qui n’auraient été versés qu’après des frais supplémentaires et des retards liés au procès et aux éventuels appels.
+
+Le Règlement qui en résulte est le plus important règlement collectif en matière de droit d’auteur de l’histoire. Il prévoit approximativement 3 000 $ par œuvre (et non par Membre du Groupe), plus les intérêts générés par le Fonds de règlement, et moins les frais et honoraires approuvés par le Tribunal qui sont soustraits du Fonds de règlement.
+
+Oui, l’Administrateur du Règlement vous informera si quelqu’un d’autre soumet un Formulaire de réclamation valide concernant une œuvre figurant sur la Liste des œuvres pour laquelle vous êtes identifié comme titulaire potentiel de droits.
+
+Si une autre personne détient également des droits sur la même œuvre que vous, l’indemnité par œuvre peut être répartie entre tous les titulaires légaux ou bénéficiaires de l’œuvre. Par exemple, si vous êtes éditeur, les auteurs qui sont les titulaires légaux ou bénéficiaires de l’œuvre peuvent soumettre un Formulaire de réclamation pour la même œuvre. Ou, si vous êtes auteur, les éditeurs et autres auteurs qui sont les titulaires légaux ou bénéficiaires de l’œuvre peuvent soumettre un Formulaire de réclamation pour la même œuvre. Le processus de réclamation déterminera le montant de votre paiement aux termes du Règlement.
+
+Bartz v Anthropic
+
+c/o JND Legal Administration
+
+P.O. Box 91204
+
+Seattle, WA 98111

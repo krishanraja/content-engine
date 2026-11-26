@@ -1,0 +1,122 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why is Gods Don't Give Gifts opening in cinemas on what its director calls an \"absurdly small\" budget?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why was the film made with diffusion video models instead of a conventional animation pipeline?",
+      "answer": "London says the film was too strange to win the roughly $150 million greenlight a conventional version would need, so without the hybrid pipeline it would not have been made at all. Only one site carries this, and it is his own account.",
+      "evidence": [
+        {
+          "url": "https://filmthreat.com/features/the-first-ai-animated-feature-film-in-theaters-gods-dont-give-gifts-director-zack-london-talks-about-the-future-of-cinema/",
+          "domain": "filmthreat.com",
+          "date": "2026-11-05",
+          "quote": "It doesn’t meet the benchmarks to get the $150 million greenlight that would be necessary to execute it the normal way."
+        },
+        {
+          "url": "https://filmthreat.com/features/the-first-ai-animated-feature-film-in-theaters-gods-dont-give-gifts-director-zack-london-talks-about-the-future-of-cinema/",
+          "domain": "filmthreat.com",
+          "date": "2026-11-05",
+          "quote": "This film just wouldn’t exist. It wouldn’t get greenlit. It’s too idiosyncratic and weird."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "Magica, a different site, says no budget figure has been published: \"The release reports disclose no production budget, marketing spend or confirmed screen count. They therefore provide no basis for calculating a break-even audience or measuring a cost saving against conventional animation.\" The $150 million is London's estimate of a film nobody costed."
+      },
+      "mechanism_type": "the money: the size of a studio greenlight against the cost of a model-led pipeline",
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why does a film made with AI video models still carry a co-writer, editors, colourists, a Foley artist, a sound team and voice actors?",
+      "answer": "Both sources say the writing, direction, voices and sound are human work, and London says his team was already working with Foley artists, musicians and voice actors before a cinema release was planned. The theatrical mix for cinema projection took the sound team four days in Stockholm.",
+      "evidence": [
+        {
+          "url": "https://filmthreat.com/features/the-first-ai-animated-feature-film-in-theaters-gods-dont-give-gifts-director-zack-london-talks-about-the-future-of-cinema/",
+          "domain": "filmthreat.com",
+          "date": "2026-11-05",
+          "quote": "London brought on a co-writer, contracted a post-production crew of traditional editors and colorists, and cast a dedicated ensemble of professional voice actors."
+        },
+        {
+          "url": "https://filmthreat.com/features/the-first-ai-animated-feature-film-in-theaters-gods-dont-give-gifts-director-zack-london-talks-about-the-future-of-cinema/",
+          "domain": "filmthreat.com",
+          "date": "2026-11-05",
+          "quote": "The sound team came to Stockholm, and we spent four days in a sound studio finalizing everything for DCP and theatrical…"
+        },
+        {
+          "url": "https://magica.com/news/fable-gods-dont-give-gifts-december-release-oscar-campaign",
+          "domain": "magica.com",
+          "date": "2026-10-06",
+          "quote": "Generative tools are extensively involved, but writing, direction, performance and artistic judgment remain human contributions in the reported process."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Magica notes the split between human and machine work is not broken down anywhere: \"The accounts do not give a detailed breakdown of the tools or their use across the finished film.\" So the human crew is documented, but how much of the picture the models made is not."
+      },
+      "mechanism_type": "the pipeline: drawings and generated images, then human writing, editing, colour, Foley, voice and theatrical sound",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why did a project built from online shorts become a cinema release?",
+      "answer": "London says producer Edward Saatchi persuaded him the work deserved a big screen. Saatchi runs Fable, the AI studio Magica names as taking the film to US and UK cinemas.",
+      "evidence": [
+        {
+          "url": "https://filmthreat.com/features/the-first-ai-animated-feature-film-in-theaters-gods-dont-give-gifts-director-zack-london-talks-about-the-future-of-cinema/",
+          "domain": "filmthreat.com",
+          "date": "2026-11-05",
+          "quote": "He gave me that little pep talk: ‘No, let’s make it happen. Let’s put this on a big screen because this deserves it.’”"
+        },
+        {
+          "url": "https://magica.com/news/fable-gods-dont-give-gifts-december-release-oscar-campaign",
+          "domain": "magica.com",
+          "date": "2026-10-06",
+          "quote": "London co-produces with Edward Saatchi, Fable Studio’s CEO"
+        },
+        {
+          "url": "https://magica.com/news/fable-gods-dont-give-gifts-december-release-oscar-campaign",
+          "domain": "magica.com",
+          "date": "2026-10-06",
+          "quote": "Fable is taking Gossip Goblin creator Zack London’s AI-assisted sci-fi anthology to U.S. and UK cinemas on December 4."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "The two sites disagree on who distributes it. Film Threat: \"Partnering with AGC Studios for international theatrical distribution and self-distributing domestically\". Magica, a month earlier: the release-date report \"had not disclosed a distributor.\""
+      },
+      "mechanism_type": "the deal: a producer's studio backing the theatrical release, with distribution described differently by each source",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why would Fable put an AI-made film into cinemas?",
+      "answer": "Magica says Fable has a commercial stake in AI entertainment catching on more widely: it makes the Showrunner generation technology and raised money in an Amazon-led round. The filmmakers say it is the first AI film to receive an MPA rating and to be campaigned for Best Animated Feature. Only one site says this.",
+      "evidence": [
+        {
+          "url": "https://magica.com/news/fable-gods-dont-give-gifts-december-release-oscar-campaign",
+          "domain": "magica.com",
+          "date": "2026-10-06",
+          "quote": "Fable also has a commercial interest in the wider adoption of AI entertainment."
+        },
+        {
+          "url": "https://magica.com/news/fable-gods-dont-give-gifts-december-release-oscar-campaign",
+          "domain": "magica.com",
+          "date": "2026-10-06",
+          "quote": "The filmmakers say it is the first AI film to receive an MPA rating"
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "London says the film is not a case for AI: \"I’m not out there trying to evangelize AI or tear down Hollywood. We wanted to tell the story at scale, and that’s what we’re doing.\" Magica also says the claim to be first in cinemas has been challenged, citing the AI documentary Post Truth opening at 58 locations in July 2025 (the distributor's own release would not load)."
+      },
+      "mechanism_type": "the money: a studio whose business is AI-generated entertainment",
+      "stop": "motive_not_mechanism"
+    }
+  ],
+  "landing": {
+    "shows": "The sources show a film that used AI video models in place of a studio animation budget, but kept human writing, editing, colour, voices and a four-day theatrical sound mix, and reached cinemas because its producer's AI studio backed it. The budget is described only as \"absurdly small\", with no figure published, so the cost saving is London's word alone.",
+    "open_question": "If the models replaced the animators but the sound, voices, edit and colour stayed human, which part of a feature film's cost did the AI actually remove?"
+  }
+}

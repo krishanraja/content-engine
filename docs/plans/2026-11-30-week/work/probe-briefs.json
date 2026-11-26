@@ -1,0 +1,122 @@
+[
+ {
+  "id": "554f7348-ecc3-45cb-888d-9a8afe61b9bf",
+  "what": "The $1.5 billion Bartz v. Anthropic settlement starts paying authors and publishers from the week of 23 November 2026. The first instalment is about 70% of each work's share, $2,203.56, with the rest due once the AI company makes its final payment of about $450 million. Messages from publishers describe a 50/50 split as the default, and tens of thousands of claims were corrected after authors and publishers ticked the wrong box.",
+  "urls": [
+   "https://authorsguild.org/news/anthropic-settlement-update-check-your-claim-by-november-20",
+   "https://authorsguild.org/advocacy/artificial-intelligence/what-authors-need-to-know-about-the-anthropic-settlement/",
+   "https://www.pcgamer.com/games/rpg/wizards-of-the-coast-to-pass-full-ai-copyright-payout-to-d-and-d-writers/",
+   "https://everythingedinburgh.com/games/news/wizards-of-the-coast-ai-settlement-payout-dnd-writers/"
+  ]
+ },
+ {
+  "id": "f5721a93-5b59-4d86-b53e-24bc70510d84",
+  "what": "Warner Music Group expects its licensing deals with AI music companies, Suno above all, to contribute materially to its subscription streaming revenue from fiscal 2027, which began on 1 October 2026. Warner settled with Suno and licensed it in November 2025, and Suno's v6 models launched on 9 September 2026 with Warner, BMG and Believe as partners. Warner has not said how the money is split with its artists.",
+  "urls": [
+   "https://www.musicbusinessworldwide.com/warner-music-expects-ai-music-deals-to-boost-subscription-streaming-revenue-from-late-2026/",
+   "https://www.musicbusinessworldwide.com/5-things-to-know-about-sunos-move-into-ai-video-the-distrokid-documents-and-the-fight-over-v6/",
+   "https://www.digitalmusicnews.com/2026/08/06/wmg-ai-licensing-deals-suno-cash/"
+  ]
+ },
+ {
+  "id": "013ae567-6e91-4c57-9128-9ce85eef667c",
+  "what": "ITV's GenAI Ads Manager, built with Streamr.AI and launched in October 2025, makes TV adverts from a firm's own brand assets for free. In its first year 16 businesses that had never advertised on TV used it, mostly with pause ads on ITVX, and five of them moved on to ITV's in-house creative team with bigger budgets. A team of trained staff checks every advert before it runs.",
+  "urls": [
+   "https://uk.themedialeader.com/itvs-generative-ai-ads-feature-used-by-16-new-to-tv-advertisers-in-debut-year/"
+  ]
+ },
+ {
+  "id": "80baed3f-3833-4bce-9afd-040a4868e562",
+  "what": "YourNeuroTune, an AI music company in Hilvarenbeek, supplies background music to more than 450 customers in four countries and told businesses that its catalogue needs no BumaStemra licence, even offering a template to cancel one. BumaStemra says the tracks are made with Suno and gave it until noon on 25 November to stop; on 25 November it said it would go to court.",
+  "urls": [
+   "https://www.ibtimes.co.uk/bumastemra-sues-dutch-ai-music-company-1834805",
+   "https://ioplus.nl/en/posts/functional-not-for-the-charts-yourneurotune-on-copyright-fees",
+   "https://eb.live/artikel/bumastemra-daagt-ai-muziekbedrijf-your-neurotune-voor-de-rechter",
+   "https://www.rd.nl/a/rechtszaak-buma-stemra-tegen-ai-muziekbedrijf",
+   "https://nieuws.nl/entertainment/bumastemra-gaat-rechtszaak-starten-tegen-ai-muziekbedrijf"
+  ]
+ },
+ {
+  "id": "cf6e7746-6ce2-4c68-904a-d1ae1988bef9",
+  "what": "Suno Bridge, in beta from 13 November 2026, runs beside Ableton Live 12 on a Mac and writes new AI instrument and vocal parts into a marked loop of the session, matched to its tempo, key, style and groove. To do that it uploads the Ableton project and its audio to the user's Suno account, where filters block material that belongs to rights holders. Each generation costs 10 credits on the $30-a-month Premier plan, which carries 10,000.",
+  "urls": [
+   "https://www.musicbusinessworldwide.com/suno-launches-bridge-an-app-that-drops-ai-stems-into-ableton-live/",
+   "https://help.suno.com/en/articles/14695169",
+   "https://suno.com/bridge"
+  ]
+ },
+ {
+  "id": "972b7721-4e4e-477f-b5cf-20164fd8260c",
+  "what": "Suno launched Visuals on 17 November 2026: it makes lyric videos, album art and clips of up to 15 seconds for songs made on Suno, which users can extend, edit and re-prompt. Its FAQ says it runs on H3 Move, a model based on MiniMax's H3 video model, and Suno says it added filters that block uploads and prompts depicting specific artists, public figures or copyrighted works.",
+  "urls": [
+   "https://www.musicbusinessworldwide.com/5-things-to-know-about-sunos-move-into-ai-video-the-distrokid-documents-and-the-fight-over-v6/"
+  ]
+ },
+ {
+  "id": "08442c41-534a-4523-9818-0884e2fc985a",
+  "what": "On 23 November 2026 TikTok made Likeness Detection available worldwide to eligible creators and public officials: they verify their ID through a third-party partner (Jumio in the US test) and are told about videos that may use their likeness. A second tool lets anyone, with no account, check whether a video, image or audio was made or edited with AI features in TikTok, CapCut, Dreamina, Hypic or Pippit, by reading Content Credentials and invisible watermarks.",
+  "urls": [
+   "https://digitalmusicnews.com/2026/11/23/tiktok-likeness-detection-release"
+  ]
+ },
+ {
+  "id": "8c6c717d-00b4-4d26-b837-06b89709220a",
+  "what": "Samantha Shokin's 50-second a cappella recording of \"Bre Petrunko\", a 19th-century Bulgarian folk song with no known writer, had about 125,000 views over four years. In October Media Nov Records, which runs about 500 YouTube channels mostly of repetitive electronic music with AI imagery, filed a copyright complaint; YouTube removed the video and rejected both of her counterclaims. It came back about 24 hours after 404 Media contacted Media Nov, which withdrew the claim and says it may still sue over the arrangement.",
+  "urls": [
+   "https://www.digitalmusicnews.com/2026/11/18/musician-copyright-claim-loop-ai-company/"
+  ]
+ },
+ {
+  "id": "16b1fd4f-3785-4842-9a2b-19ccfe889fa8",
+  "what": "Vertical Slice reported, and VGC followed on 25 November 2026, that Ubisoft developers pitching new games are asked how generative AI will be used, and that a team that does not want to use it has to justify why. Ubisoft says projects are not required to use it. Days earlier it opened Motherbrain, a generative AI subsidiary built from the team behind its Teammates demo, alongside another round of layoffs.",
+  "urls": [
+   "https://www.videogameschronicle.com/news/ubisoft-is-reportedly-requiring-developers-to-justify-not-using-generative-ai/",
+   "https://www.thebrief.news/en/standard/article/47780/ubisoft-says-its-developers-are-not-required-to-use-generative-ai",
+   "https://www.dualshockers.com/ubisoft-claims-it-encourages-but-doesn-t-require-generative-ai-usage-during-game-development/",
+   "https://www.psu.com/news/ubisoft-reportedly-encouraging-the-use-of-generative-ai-for-all-projects/"
+  ]
+ },
+ {
+  "id": "5d55e729-43fd-433b-b4e5-056f5329cb05",
+  "what": "A 2026 survey by Designer Fund and Foundation Capital of more than 900 designers found 91% use AI at least weekly, up from 54% a year earlier (reported 25 Nov 2026). The designers quoted describe using it for first drafts, storyboards and file preparation, then editing by hand: \"To get good results, I have to be methodical, very clear about the task, and thorough with my changes.\"",
+  "urls": [
+   "https://designerfund.com/blog/ai-in-design-2026",
+   "https://kesq.com/stacker-ai/2026/11/25/web-designers-share-how-theyve-adapted-to-ai-in-2026/"
+  ]
+ },
+ {
+  "id": "a4b34048-ab39-49da-a251-eaa58ebe2eaf",
+  "what": "Gods Don't Give Gifts, directed by Zack London (Gossip Goblin), opens in cinemas on 4 December 2026 as the first AI-animated feature in theatres. Film Threat describes a hybrid pipeline: London's own micron pen drawings, diffusion video models, then a co-writer, traditional editors and colourists, a Foley artist, a sound team that spent four days in a Stockholm studio on the theatrical mix, and a cast of professional voice actors. London calls the budget \"absurdly small\" against the $150 million a conventional version would have needed.",
+  "urls": [
+   "https://filmthreat.com/features/the-first-ai-animated-feature-film-in-theaters-gods-dont-give-gifts-director-zack-london-talks-about-the-future-of-cinema/",
+   "https://magica.com/news/fable-gods-dont-give-gifts-december-release-oscar-campaign",
+   "https://puck.news/ai/2026/7/the-first-ai-built-movie-is-coming-to-theaters"
+  ]
+ },
+ {
+  "id": "ac13c2b0-5426-4018-aaeb-eed82b9d0a6c",
+  "what": "At the first AI Music Awards, at The Mayan in Los Angeles on 13 November 2026, AI artist, song and album of the year went to Xania Monet, an AI-generated avatar. Her creator, Telisha \"Nikki\" Jones, says she wrote all of the lyrics and set them to music with AI. The winners were chosen by AI artists in the Sonic Intelligence Academy, and many nominees said they had stories to tell but lacked the skills to put them to music.",
+  "urls": [
+   "https://www.thestar.com.my/tech/tech-news/2026/11/14/new-awards-show-celebrates-ai-music-and-its-creators",
+   "https://variety.com/2026/music/features/inside-first-ai-music-awards-sonic-intelligence-academy-1236947847/",
+   "https://www.usnews.com/news/top-news/articles/2026-11-14/new-awards-show-celebrates-ai-music-and-its-creators",
+   "https://gvwire.com/2026/11/14/new-awards-show-celebrates-ai-music-and-its-creators/"
+  ]
+ },
+ {
+  "id": "grimesdeepseek",
+  "what": "Grimes made an album about AI and says she used no generative AI on it, apart from one song, \"DeepSeek\", whose lyrics were partly written by DeepSeek. It is the most honest AI credit in music this year.",
+  "urls": [
+   "https://www.stereogum.com/2496372/grimes-teases-new-album-psy-opera-claims-she-doesnt-use-generative-ai-in-her-music/news",
+   "https://www.nme.com/news/music/grimes-teases-new-album-psy-opera-made-without-generative-ai-but-says-ai-is-bigger-than-jesus-and-most-dangerous-thing-thats-ever-going-to-happen-3941577",
+   "https://music.mxdwn.com/2026/04/20/news/grimes-teases-forthcoming-album-psy-opera-says-she-doesnt-use-generative-ai-in-music-aside-from-lyrics-on-deepseek/amp/"
+  ]
+ },
+ {
+  "id": "hackertube",
+  "what": "Fed up with his YouTube recommendations, Andrej Karpathy had an AI build him a video site in about two hours: 6,454 videos picked from 43 million comments where real people recommended them. For a creator, it is a picture of discovery without the algorithm.",
+  "urls": [
+   "https://www.instagram.com/therundownai/p/DfQCWHZEreu/"
+  ]
+ }
+]

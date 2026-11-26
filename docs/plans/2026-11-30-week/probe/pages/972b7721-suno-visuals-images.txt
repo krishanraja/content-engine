@@ -1,0 +1,56 @@
+How do I create images with Suno Visuals?
+Knowledge Base
+Make Music Now!
+How can we help?
+Results
+No results found
+More results
+We use cookies to analyze website traffic and help improve our visitor experience. Privacy Policy
+Reject
+Accept
+In this article
+Selecting your image settingsDescribing your imageAdding reference imagesWhat's next?
+Home
+Creating Visuals
+How do I create images with Suno Visuals?
+Edited
+Need cover art for a song, or have an image in mind you'd like to create?
+With Suno Visuals, you can create images from a simple description or explore more detailed ideas. Head to your Create page, select Visuals → Image, and describe what you'd like to see. When you're happy with your prompt, select Create.
+You can also experiment with different image settings, artistic styles, and references to help shape your results. We'll explore those options below.or.
+Selecting your image settings
+At the top of the Create form, choose an image mode based on the speed and quality you're looking for.
+Mode
+Resolution
+Description
+Fast
+1K
+Quick drafts
+Standard
+1K
+Balanced quality
+Max
+2K
+Highest quality
+You can also choose an aspect ratio to fit your image: Square (1:1), Portrait (9:16), or Landscape (16:9).
+For more information about credit usage and generation costs, visit our Visuals Pricing page.
+Describing your image
+In the prompt field, describe what you'd like to create. Start with your main subject, then add details about the setting, lighting, colors, or artistic style.
+You can start simple:
+"A vintage folk album cover."
+Or add more detail:
+"A vintage illustrated album cover featuring a cat standing in a field of wildflowers at sunset, with warm golden lighting, soft painterly textures, and a nostalgic 1970s folk aesthetic."
+Want help developing your prompt? Select the Magic Wand to build on your existing description, or open the Style Guide to explore styles, colors, lighting, and effects you can add to your prompt.
+Adding reference images
+Want to guide your image with something you already have? You can add up to four reference images from your device or Visuals library using the image icon in the prompt field or by dragging them into the Create form.
+You can also refer to specific images in your prompt by typing @ and selecting the image you'd like to use. Describe how you want each reference to influence your result, whether that's the subject, setting, or overall style.
+Tip: If you've added reference images, the Magic Wand can use them when helping develop your prompt.
+What's next?
+Once you've created an image, you can keep exploring from your Visuals library:
+Edit: Make changes to your image by describing what you'd like to adjust. Your original image remains unchanged.
+Animate: Bring your image into the Video creator as the starting frame for a new video.
+You can also reuse your images as references for future creations, helping you develop consistent characters, settings, and visual styles.
+Try experimenting with different prompts, references, and settings to discover a look that feels right for your ideas!
+Cookie preferences
+Terms of ServicePrivacy PolicySuno on iOS
+Community GuidelinesBlogSuno on Android
+Leave us feedback

@@ -1,0 +1,79 @@
+AI Music Company That Told Businesses They No Longer Need to Pay Music Royalties Now Faces Legal Action | IBTimes UK
+ARTIFICIAL INTELLIGENCE
+Technology
+Artificial Intelligence
+BumaStemra demanded that Hilvarenbeek-based YourNeuroTune stop supplying AI-generated music commercially or face a lawsuit
+YourNeuroTune Official Website
+A Dutch artificial intelligence music company that encouraged businesses to stop paying certain music licensing fees is facing legal action over allegations that it sells music generated using AI trained on copyrighted works without the creators' permission.
+BumaStemra, a Dutch copyright organisation representing songwriters, composers, and music publishers, announced on Tuesday, 24 November 2026, that it was giving YourNeuroTune until noon on Wednesday, 25 November, to confirm it would cease supplying music generated using allegedly unauthorised training material.
+BumaStemra confirmed on Wednesday that it would take the matter to court after a lawyer representing YourNeuroTune indicated that the company would not cease its activities, Dutch technology publication Tweakers reported.
+YourNeuroTune supplies AI-generated background music to retailers, gyms, restaurants, and other commercial establishments.
+AI Music Company Encouraged Businesses to Stop Paying Royalties
+YourNeuroTune markets its service as an alternative to conventional background music, claiming that businesses exclusively using its catalogue of music outside BumaStemra's repertoire do not require a separate BumaStemra licence for that music.
+Its website provides customers with a template for requesting the cancellation of their existing BumaStemra licences, although it acknowledges that payments for neighbouring rights through Dutch organisation Sena remain a separate obligation.
+According to BumaStemra, YourNeuroTune removed some references to the copyright organisation from its website following the formal demand but was believed to be continuing to supply its music.
+Michiel Laan, commercial director at BumaStemra, accused the company of profiting from technology that relies on the creative work of the very people whose royalties it encourages businesses to avoid.
+'If you make money from music, you pay the creators,' Laan said in a statement.
+Read more
+Tidal's AI Purge Could Mistakenly Delete 290,000 Real Songs Due to 1% False-Positive Flaw in Detection Software
+Meta's Muse AI Accessed Signal Messages in Tests, Sent Employees Unexplained Bank Balances, Investigation Finds
+Meta's Own AI Agent Helps Businessman Sue Meta for $75,000 After Facebook Mistook It for a Hacker
+California Sues OpenAI as 'Public Nuisance' Over Alleged Safety Failures Following Hugging Face Hack
+Copyright Group Says Musicians Are Forced to Compete Against Their Own Work
+BumaStemra alleges that YourNeuroTune generates its tracks using Suno , a US-based artificial intelligence music platform that has faced multiple copyright lawsuits over its training practices.
+The organisation argues that musicians are being placed at a commercial disadvantage by technology allegedly developed using their compositions without authorisation. It also warned that AI-generated tracks can reproduce elements of existing copyrighted music .
+YourNeuroTune previously told Dutch current affairs programme Nieuwsuur that it would only address the substance of BumaStemra's allegations if the dispute went to court.
+In an interview with Dutch publication IO+ on 22 October, YourNeuroTune co-founder Sam Jansen said the company served more than 450 customers across four countries and maintained that it only used commercially licensed AI models.
+Jansen also said the company had developed its own technology to identify similarities between AI-generated tracks and existing copyrighted works before including them in its commercial catalogue.
+BumaStemra stressed that it does not oppose artificial intelligence itself, but rather the use of copyrighted material without permission or payment.
+AI Music Industry Faces Mounting Legal Challenges
+The Dutch dispute follows a significant copyright ruling against Suno in Germany earlier this year.
+On 31 July 2026, a Munich regional court largely upheld claims brought by German music rights organisation GEMA, finding that Suno had infringed copyright involving six musical compositions.
+The first-instance ruling also established Suno's liability for damages, although the amount remained to be determined. Suno disagreed with the ruling and said it was considering its legal options, including an appeal.
+Denmark's music copyright organisation Koda has also brought legal proceedings against Suno, while Universal Music Group and Sony Music Entertainment continue to pursue copyright claims against the company in the United States.
+Read more
+UK Strikes Back Against AI Child Abuse With Tough New Rules Threatening Tech Giants With 10% Revenue Fines
+Samsung Securities Uses AI K-Pop Group LUMINA to Promote Investing as Video Hits 3 Million Views
+AI 'Wild West' Causes a Gaming 'Civil War' as an Expert Warns Some Developers Should Be 'Very Worried'
+Three Men Indicted Over Alleged $129 Million AI Fraud Using Fake CEOs and Lawyers Worldwide
+© Copyright IBTimes 2026. All rights reserved.
+Request a Correction
+Editorial Guidelines
+Latest in Artificial Intelligence
+1
+Meghan Markle's As Ever £115 Advent Calendar Faces Scrutiny Following AI Art Claims
+2
+Trump's Treasury Tech Chief Faces Scrutiny for Vibecoding a Video Game With AI Agents Amid a Cybersecurity Breach
+3
+Anthropic Founders Pocket $2B as Stock Plunge Leaves Investors Facing Brutally Dismal Reality Check
+4
+John Motson Returns From the Dead as EA Sports Uses AI to Recreate Late BBC Icon's Voice for EA FC 27 Update
+5
+Anthropic CEO Warns AI Could Trigger Serious Employment Crisis Within Five Years
+Promoted in Artificial Intelligence
+1
+As AI Agents Take on Real Work, Zengyu (Zoe) Yan Is Engineering the Trust Infrastructure Enterprises Need
+2
+Two People Run a 6,000-Member Club. Pranay Periwal Built the AI That Makes It Possible.
+3
+How AI Is Changing the Economics of Online Discovery
+4
+Why Anshul Sawant Thinks the Future of AI May Be Smaller
+5
+Influencer Hero Launches AI 'Deep Research' That Vets Thousands of Creators From a Single Brief
+MOST POPULAR IN Artificial Intelligence
+1
+Anthropic's Own AI Safety Researcher Warns Almost All Humans Will Become 'Permanently Unemployable'
+2
+Google Files Patent for AI TV Channel That Clones Your Face and Voice, Turns Your Personal Data Into Ad-Filled Videos
+3
+Investors Handed SpaceX $44 Billion for AI Chips Just Before Elon Musk Warned of a 'Nuts' Cash Crunch Next Year
+4
+Anthropic CEO Dario Amodei Reportedly Floated Immersive Video Games to Keep AI-Displaced Workers From Revolting
+5
+Elon Musk Reportedly Renamed SpaceX AI Engineers' Group Chat 'Sell Compute Because We Can't Compete'
+6
+Anthropic CEO Warns AI Could Trigger Serious Employment Crisis Within Five Years
+7
+Bots Interviewing Bots: Viral Infinite Loop Exposes Flaws in Employers' AI Hiring Surge
+IBT VIDEO

@@ -1,0 +1,182 @@
+{
+ "https://authorsguild.org/news/anthropic-settlement-update-check-your-claim-by-november-20": {
+  "file": "mon1-ag-update.txt"
+ },
+ "https://authorsguild.org/advocacy/artificial-intelligence/what-authors-need-to-know-about-the-anthropic-settlement/": {
+  "file": "mon1-ag-guide.txt"
+ },
+ "https://www.pcgamer.com/games/rpg/wizards-of-the-coast-to-pass-full-ai-copyright-payout-to-d-and-d-writers/": {
+  "file": "mon1-pcgamer.txt"
+ },
+ "https://everythingedinburgh.com/games/news/wizards-of-the-coast-ai-settlement-payout-dnd-writers/": {
+  "file": "mon1-edinburgh.txt"
+ },
+ "http://www.anthropiccopyrightsettlement.com/": {
+  "file": "mon1-settlement-home.txt"
+ },
+ "https://www.anthropiccopyrightsettlement.com/faq": {
+  "file": "mon1-settlement-faq.txt"
+ },
+ "https://www.linkedin.com/feed/update/urn:li:activity:7529611634730778625/": {
+  "file": "mon1-linkedin-post.txt"
+ },
+ "https://www.musicbusinessworldwide.com/5-things-to-know-about-sunos-move-into-ai-video-the-distrokid-documents-and-the-fight-over-v6/": {
+  "file": "f5721a93-mbw-suno-v6-explains.txt"
+ },
+ "https://suno.com/blog/introducing-visuals": {
+  "file": "972b7721-suno-blog-introducing-visuals.txt"
+ },
+ "https://help.suno.com/en/articles/14661249": {
+  "file": "972b7721-suno-visuals-faq.txt"
+ },
+ "https://help.suno.com/en/articles/14661121": {
+  "file": "972b7721-suno-visuals-intro.txt"
+ },
+ "https://help.suno.com/en/categories/2839105-creating-visuals": {
+  "file": "972b7721-suno-help-creating-visuals.txt"
+ },
+ "https://suno.com/blog": {
+  "file": "972b7721-suno-blog-index.txt"
+ },
+ "https://help.suno.com/en": {
+  "file": "972b7721-suno-help-home.txt"
+ },
+ "https://help.suno.com/en/articles/14661185": {
+  "file": "972b7721-suno-visual-credits.txt"
+ },
+ "https://help.suno.com/en/articles/14661313": {
+  "file": "972b7721-suno-visuals-images.txt"
+ },
+ "https://help.suno.com/en/articles/14662785": {
+  "file": "972b7721-suno-visuals-videos.txt"
+ },
+ "https://filmthreat.com/features/the-first-ai-animated-feature-film-in-theaters-gods-dont-give-gifts-director-zack-london-talks-about-the-future-of-cinema/": {
+  "file": "a4b34048-filmthreat.txt"
+ },
+ "https://magica.com/news/fable-gods-dont-give-gifts-december-release-oscar-campaign": {
+  "file": "a4b34048-magica.txt"
+ },
+ "https://puck.news/ai/2026/7/the-first-ai-built-movie-is-coming-to-theaters": {
+  "unreadable": "403 bot challenge, page not served"
+ },
+ "https://www.globenewswire.com/news-release/2025/07/14/3115260/0/en/Post-Truth-Becomes-The-First-AI-generated-Film-Released-in-Theaters.html": {
+  "unreadable": "403 forbidden, page not served"
+ },
+ "https://godsdontgivegifts.com": {
+  "unreadable": "script-rendered page, only the title in the fetched text"
+ },
+ "https://www.musicbusinessworldwide.com/suno-launches-bridge-an-app-that-drops-ai-stems-into-ableton-live/": {
+  "file": "cf6e7746-mbw.txt"
+ },
+ "https://help.suno.com/en/articles/14695169": {
+  "file": "cf6e7746-suno-help.txt"
+ },
+ "https://suno.com/bridge": {
+  "file": "cf6e7746-suno-bridge.txt"
+ },
+ "https://suno.com/blog/introducing-bridge": {
+  "file": "cf6e7746-suno-blog.txt"
+ },
+ "https://suno.com/terms": {
+  "file": "cf6e7746-suno-terms.txt"
+ },
+ "https://www.videogameschronicle.com/news/ubisoft-is-reportedly-requiring-developers-to-justify-not-using-generative-ai/": {
+  "file": "16b1fd4f-vgc.txt"
+ },
+ "https://www.thebrief.news/en/standard/article/47780/ubisoft-says-its-developers-are-not-required-to-use-generative-ai": {
+  "file": "16b1fd4f-thebrief.txt"
+ },
+ "https://www.dualshockers.com/ubisoft-claims-it-encourages-but-doesn-t-require-generative-ai-usage-during-game-development/": {
+  "file": "16b1fd4f-dualshockers.txt"
+ },
+ "https://www.psu.com/news/ubisoft-reportedly-encouraging-the-use-of-generative-ai-for-all-projects/": {
+  "file": "16b1fd4f-psu.txt"
+ },
+ "https://www.verticalslice.news/ubisofts-internal-pitching-process-is-becoming-increasingly-ai-pilled/": {
+  "file": "16b1fd4f-verticalslice.txt"
+ },
+ "https://www.videogameschronicle.com/news/ubisoft-denies-requiring-developers-to-use-generative-ai/": {
+  "file": "16b1fd4f-vgc-denial.txt"
+ },
+ "https://designerfund.com/blog/ai-in-design-2026": {
+  "file": "5d55e729-designerfund.txt"
+ },
+ "https://kesq.com/stacker-ai/2026/11/25/web-designers-share-how-theyve-adapted-to-ai-in-2026/": {
+  "file": "5d55e729-kesq.txt"
+ },
+ "http://stateofaidesign.com/": {
+  "file": "5d55e729-stateofaidesign.txt"
+ },
+ "https://stateofaidesign.com/chapters/tools": {
+  "file": "5d55e729-stateofaidesign-chapters-tools.txt"
+ },
+ "https://stateofaidesign.com/chapters/craft": {
+  "file": "5d55e729-stateofaidesign-chapters-craft.txt"
+ },
+ "https://stateofaidesign.com/chapters/teams": {
+  "file": "5d55e729-stateofaidesign-chapters-teams.txt"
+ },
+ "https://stateofaidesign.com/about": {
+  "file": "5d55e729-stateofaidesign-about.txt"
+ },
+ "https://www.stereogum.com/2496372/grimes-teases-new-album-psy-opera-claims-she-doesnt-use-generative-ai-in-her-music/news": {
+  "file": "grimesde-stereogum.txt"
+ },
+ "https://www.nme.com/news/music/grimes-teases-new-album-psy-opera-made-without-generative-ai-but-says-ai-is-bigger-than-jesus-and-most-dangerous-thing-thats-ever-going-to-happen-3941577": {
+  "file": "grimesde-nme.txt"
+ },
+ "https://music.mxdwn.com/2026/04/20/news/grimes-teases-forthcoming-album-psy-opera-says-she-doesnt-use-generative-ai-in-music-aside-from-lyrics-on-deepseek/amp/": {
+  "file": "grimesde-mxdwn.txt"
+ },
+ "https://www.interviewmagazine.com/music/the-return-of-grimes": {
+  "unreadable": "HTTP 403 forbidden to fetch"
+ },
+ "https://www.digitalmusicnews.com/2026/11/18/musician-copyright-claim-loop-ai-company/": {
+  "file": "8c6c717d-dmn.txt"
+ },
+ "https://www.ibtimes.co.uk/bumastemra-sues-dutch-ai-music-company-1834805": {
+  "file": "80baed3f-ibtimes.txt"
+ },
+ "https://ioplus.nl/en/posts/functional-not-for-the-charts-yourneurotune-on-copyright-fees": {
+  "file": "80baed3f-ioplus.txt"
+ },
+ "https://eb.live/artikel/bumastemra-daagt-ai-muziekbedrijf-your-neurotune-voor-de-rechter": {
+  "unreadable": "403, Cloudflare challenge page"
+ },
+ "https://www.rd.nl/a/rechtszaak-buma-stemra-tegen-ai-muziekbedrijf": {
+  "file": "80baed3f-rd.txt"
+ },
+ "https://nieuws.nl/entertainment/bumastemra-gaat-rechtszaak-starten-tegen-ai-muziekbedrijf": {
+  "file": "80baed3f-nieuwsnl.txt"
+ },
+ "https://www.instagram.com/therundownai/p/DfQCWHZEreu/": {
+  "file": "hackertu-rundown-instagram.txt"
+ },
+ "https://uk.themedialeader.com/itvs-generative-ai-ads-feature-used-by-16-new-to-tv-advertisers-in-debut-year/": {
+  "file": "013ae567-medialeader-itv-genai.txt"
+ },
+ "https://www.thestar.com.my/tech/tech-news/2026/11/14/new-awards-show-celebrates-ai-music-and-its-creators": {
+  "file": "ac13c2b0-thestar.txt"
+ },
+ "https://variety.com/2026/music/features/inside-first-ai-music-awards-sonic-intelligence-academy-1236947847/": {
+  "file": "ac13c2b0-variety.txt"
+ },
+ "https://www.usnews.com/news/top-news/articles/2026-11-14/new-awards-show-celebrates-ai-music-and-its-creators": {
+  "unreadable": "connection failed twice, no response"
+ },
+ "https://gvwire.com/2026/11/14/new-awards-show-celebrates-ai-music-and-its-creators/": {
+  "unreadable": "403 bot challenge page"
+ },
+ "https://www.musicbusinessworldwide.com/warner-music-expects-ai-music-deals-to-boost-subscription-streaming-revenue-from-late-2026/": {
+  "file": "f5721a93-mbw-wmg-ai-deals.txt"
+ },
+ "https://www.digitalmusicnews.com/2026/08/06/wmg-ai-licensing-deals-suno-cash/": {
+  "file": "f5721a93-dmn-wmg-ai-cash.txt"
+ },
+ "https://finance.yahoo.com/quote/WMG/earnings/WMG-Q3-2026-earnings_call-662732.html": {
+  "unreadable": "returns 404, content unavailable"
+ },
+ "https://digitalmusicnews.com/2026/11/23/tiktok-likeness-detection-release": {
+  "file": "08442c41-dmn.txt"
+ }
+}

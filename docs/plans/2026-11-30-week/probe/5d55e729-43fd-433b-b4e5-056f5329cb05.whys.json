@@ -1,0 +1,110 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why did weekly AI use among the designers surveyed by Designer Fund and Foundation Capital rise from 54% to 91% in a year?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why did the weekly figure jump so far in one year?",
+      "answer": "The report says AI stopped being confined to early exploration and spread into every stage of design work, including delivery, code, QA and handoff. Designers also went from using three AI tools on average to seven.",
+      "evidence": [
+        {
+          "url": "https://designerfund.com/blog/ai-in-design-2026",
+          "domain": "designerfund.com",
+          "date": "2026-05-20",
+          "quote": "Now, AI has spread into all parts of the design process—and brought designers into areas that most didn’t touch, like coding, prototyping, and accessing business data at scale to influence decisions."
+        },
+        {
+          "url": "https://stateofaidesign.com/chapters/tools",
+          "domain": "stateofaidesign.com",
+          "date": null,
+          "quote": "In 2026, AI is used across every phase of design work, with 91% using AI for design tasks at least weekly, up from 54% in 2025."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Both pages come from the same two publishers. Their own methodology says the sample may lean towards keen adopters: \"Because of our distribution strategy, the sample may skew towards respondents who have embraced AI more than the average designer, or who work at companies that are actively supporting adoption. We present these findings as directional rather than as absolute benchmarks.\" (stateofaidesign.com/about)"
+      },
+      "mechanism_type": null,
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why did AI spread into the later stages, such as code and handoff?",
+      "answer": "AI coding tools let designers make code changes themselves instead of filing a ticket and waiting for an engineer. In the survey 76% had used an AI coding tool and half had shipped AI-made code to production.",
+      "evidence": [
+        {
+          "url": "https://stateofaidesign.com/chapters/craft",
+          "domain": "stateofaidesign.com",
+          "date": null,
+          "quote": "Designers can directly fix code issues. No more 'blocked on engineer' for front-end tweaks."
+        },
+        {
+          "url": "https://kesq.com/stacker-ai/2026/11/25/web-designers-share-how-theyve-adapted-to-ai-in-2026/",
+          "domain": "kesq.com",
+          "date": "2026-11-25",
+          "quote": "“When it’s something small, a fix or QA, I don’t need to wait for anyone,” she says. “I go into the code, fix it, open a PR, and it goes live.”"
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Both sources have ties to the tools. The report discloses: \"Disclosure: Anthropic, the creator of Claude, is a partner of the AI in Design 2026 survey.\" The KESQ piece is sponsored: \"This story was produced by Wix Studio and reviewed and distributed by Stacker.\", and every designer it quotes by employer works at Wix or uses AI site builders. Practice also varies: at DoorDash \"Everything goes through GitHub PR approvals\"."
+      },
+      "mechanism_type": "tooling: coding agents remove the hand-off queue between designer and engineer",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why, if use is this widespread, do designers still finish the work by hand?",
+      "answer": "The output is not reliable enough. Inconsistent output is the most cited challenge in the survey, and designers quoted describe AI first drafts as generic, so they set the direction themselves and edit the last stretch.",
+      "evidence": [
+        {
+          "url": "https://stateofaidesign.com/chapters/tools",
+          "domain": "stateofaidesign.com",
+          "date": null,
+          "quote": "At the same time, 62% cite inconsistent or unreliable output as their biggest challenge when using AI for design work."
+        },
+        {
+          "url": "https://kesq.com/stacker-ai/2026/11/25/web-designers-share-how-theyve-adapted-to-ai-in-2026/",
+          "domain": "kesq.com",
+          "date": "2026-11-25",
+          "quote": "“The design felt generic and predictable.”"
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Some designers start with AI rather than finish around it: \"AI is always my first tool, before I touch code or build a screen in a design tool\" (kesq.com). The report also says \"for resource-strapped companies in particular, AI has unlocked new levels of capability and quality that were too expensive to reach in the past.\" (stateofaidesign.com/chapters/craft)"
+      },
+      "mechanism_type": "model output quality: unreliable output keeps a human edit pass in the loop",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why would designers keep using tools whose output they must rework?",
+      "answer": "The sources point to pressure as well as gain: most respondents feel rising expectations on speed and output, and some describe that pressure in strong terms. Neither source says outright that this pressure caused the rise in use.",
+      "evidence": [
+        {
+          "url": "https://designerfund.com/blog/ai-in-design-2026",
+          "domain": "designerfund.com",
+          "date": "2026-05-20",
+          "quote": "73% of designers say they feel rising expectations around output, quality, and speed."
+        },
+        {
+          "url": "https://stateofaidesign.com/chapters/craft",
+          "domain": "stateofaidesign.com",
+          "date": null,
+          "quote": "AI is great, but the expectation of immense speed or 100x productivity has annihilated the joy and pride of the job."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "Other quotes describe choice and pleasure, not pressure: \"I enjoy designing. I’m not doing it because I have to. It’s what I love to do,\" (Gali Erez, Wix, kesq.com), and the report says \"most designers we surveyed reported more overall job satisfaction as a result of AI.\" (stateofaidesign.com/chapters/craft). Scope searched: the two given sources and the report's own pages (home, about, tools, craft, teams)."
+      },
+      "mechanism_type": "workplace expectation: faster teams raise the bar for speed, so not using AI falls behind",
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "The jump from 54% to 91% is real in this survey, but the sample is self-selected and the publishers call the figures directional. The rise tracks AI moving into code and handoff, where designers no longer wait on engineers. Unreliable output keeps a hand edit in the loop. Rising expectations point to pressure, but the sources never say pressure caused it. The survey ran in March 2026 and was published in May; the 25 November piece is sponsored by Wix and repeats the figure.",
+    "open_question": "If 62% of designers say unreliable output is their biggest problem, why do 91% still use AI every week: because it saves them time, or because their teams now expect it?"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "off-tue-photonstems": {"says": "An offer for a tool that splits any song into vocals, drums and bass on your laptop, on sale until 7 December.", "repeat": "new"},
+  "off-tue-splicecreate": {"says": "A free music-making studio with millions of sounds, but you have to pay to export your song.", "repeat": "new"},
+  "off-tue-djvoices": {"says": "Spotify's AI DJ now lets you mute it, and there are nine voices to pick from.", "repeat": "new"},
+  "off-tue-freeanimation": {"says": "Four free tools you can use to make animation instead of paying for expensive ones.", "repeat": "new"},
+  "off-tue-grimesdeepseek": {"says": "Grimes made an album about AI that has no AI in it, apart from one song.", "repeat": "same as: AI is already inside the songs people have on repeat, hidden in the credits."},
+  "off-tue-tplconfused": {"says": "A meme of Will Ferrell looking confused, about an AI mastering tool rating a demo higher than the single.", "repeat": "new"},
+  "off-tue-tplnogod": {"says": "A meme of Steve Carell shouting 'No, God, please, no' about a streaming app deleting 400 AI lo-fi albums.", "repeat": "new"},
+  "off-tue-tplpushthrough": {"says": "A meme of Jamie Lee Curtis worn out and pushing through, about fixing the hands in an AI music video.", "repeat": "new"},
+  "off-tue-tplwoke": {"says": "A joke meme about an AI co-writer in 2028 that wants a quiet room before it will write the chorus.", "repeat": "new"},
+  "off-thu-elevensoundcloud": {"says": "You can make a song in one app and post it to SoundCloud in one tap, with three months free.", "repeat": "new"},
+  "off-thu-videoplugin": {"says": "Your chatbot can now bring in a video-making app to help with your request.", "repeat": "new"},
+  "off-thu-hackertube": {"says": "A man built his own video site in two hours because he was tired of YouTube's recommendations.", "repeat": "new"},
+  "off-thu-klingthirty": {"says": "A tool that turns 15 of your photos into a 30-second film.", "repeat": "new"},
+  "off-thu-threecuts": {"says": "YouTube lets you upload three versions of a video and tells you which opening worked best.", "repeat": "new"},
+  "off-thu-tplchihuahua": {"says": "A meme of a Chihuahua singing off key, labelled as the AI artist of the year performing live.", "repeat": "new"},
+  "off-thu-tplarnold": {"says": "A meme of Arnold Schwarzenegger staring, about a session drummer watching an AI play his drum fill back.", "repeat": "new"},
+  "off-thu-tpldumbest": {"says": "A meme of Stephen A. Smith calling someone one of the dumbest folks on the planet, about a club's AI poster naming the wrong city.", "repeat": "new"},
+  "off-sat-goodnews": {"says": "A round-up of good things AI did this month, like helping makers reach millions and bringing back commentator John Motson's voice.", "repeat": "new"},
+  "off-sat-arenanight": {"says": "The Warriors' big screen can now answer fans' questions, with three more examples to find.", "repeat": "new"}
+}

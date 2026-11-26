@@ -1,0 +1,35 @@
+Home
+Artificial Intelligence (AI)
+Musician Caught In a YouTube Copyright Claim Loop Initiated by an AI Company Reaches Out to a Journalist for Help: ‘It Feels Like a Broken System’
+Ashley King November 18, 2026Photo Credit: Kelly Sikkema
+A musician recorded herself singing a traditional Bulgarian folk song and uploaded it onto YouTube. Four years later, after losing control of the copyright, getting shut out by YouTube and a ‘rights monetization’ company while watching it used repeatedly on popular DJ and AI-generated remixes, she finally wrestled some ownership back. It’s a depressing tale that draws the entire system into question.
+Musician and writer Samantha Shokin recorded herself singing a traditional Bulgarian folk song, an approximately 50-second a cappella version of “Bre Petrunko,” a 19th-century song described as having no known writer. She uploaded it to YouTube, where it gained around 125,000 views over the next four years.
+In October, YouTube removed the video after a copyright complaint from a company of which Shokin had never heard before.
+Media Nov Records describes itself as a music distribution and rights management company that operates approximately 500 YouTube channels, according to a report from 404 Media. The channels seemed to predominantly contain repetitive electronic music and AI-generated imagery. The company’s website referenced automated DMCA takedowns, YouTube Content ID management, and AI-powered content recognition. Records indicate the company is a little over a year old, despite its website suggesting an older history.
+Shokin submitted two counterclaims to YouTube, but the platform declined them both. Her original video remained offline until 404 Media contacted Media Nov for comment, which initially went unanswered. Finally, after claiming that Shokin’s and 404 Media’s emails had gone to spam, Media Nov responded, asking Shokin to supply original audio files, recording evidence, and publication dates to confirm her ownership of the recording.
+YouTube restored the video approximately 24 hours later. A spokesperson for Media Nov confirmed that they withdrew the complaint just minutes after Shokin provided the necessary verification. Notably, Media Nov claimed the reason for withdrawal was that the video had generated no revenue or views, yet 404 Media reported the view count at approximately 125,000.
+So what actually happened here?
+There are several layers of legality to sift through. 404 Media described “Bre Petrunko” as an old folk song with no known writer, but the status of particular arrangements may differ by version and jurisdiction. Musician Philip Koutev popularized a specific arrangement of the song in 1963, but Media Nov argued that rights in that arrangement must be distinguished from rights in any individual sound recording.
+“It’s ironic that they’re in the copyright business,” said Shokin. “It’s not the arrangement that’s in question; it’s the voice and performance. They clearly have no clue what they’re talking about.”
+Crucially, claiming an interest in an arrangement does not automatically establish ownership of a separate performance recorded by another artist. It is therefore curious that Media Nov claimed ownership over Shokin’s recording. The company stated the withdrawal does not waive any rights and that it intends to pursue legal action regarding the underlying copyright dispute.
+“That makes it really ridiculous,” said artist and copyright lawyer Alfred Steiner. “If it’s her voice and her playing instruments, what could she possibly be infringing if it’s a folk song from the 19th century?”
+“It sounds like they got scared and feel like this is not a battle worth fighting,” Shokin said.
+“Submitting a takedown request for rights that you don’t have can subject you to liability, which includes actual damages and costs and attorney’s fees,” Steiner explained. “Doing this on a slipshod, shotgun approach is inadvisable from my perspective. Of course, if all of the people you end up offending are small parties and don’t have the resources to respond through the court system, and you are a fly-by-night entity that is hard to pin down and nobody knows who you are, […] it can be difficult to get a remedy.”
+Ultimately, Shokin said she felt vindicated but expressed her frustration that it took her reaching out to a journalist before the company in question would listen to her.
+“They got my emails […] and they were just ignoring it,” Shokin said. “They only decided to respond because they got scared that it’ll be bad press. It’s just not great all around. The whole system is broken. It feels like a broken system.”
+Share on:
+Facebook
+Twitter
+LinkedIn
+Copy Link
+Related Posts
+DMN Pro ExclusiveNew Music Releases Tracker
+Paul Resnikoff November 20, 2026
+DMN Pro ExclusiveTencent Music Says AI Music Consumption Is ‘Negligible’. They’re Not the Only Streaming Platform Reporting This.
+Paul Resnikoff November 18, 2026
+Grammy-Winning Cover Band Removes 37 Tracks from YouTube/DSPs After Nintendo Licensing Problems
+Ashley King November 25, 2026
+Exclusive: Federal Judge Refuses to Dismiss Jason Isbell’s Class Action Against Suno as Expanded NIL Complaint Takes Center Stage
+Dylan Smith November 25, 2026
+-->Leave a Reply Cancel Reply
+You must be logged in to post a comment.

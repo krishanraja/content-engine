@@ -1,0 +1,139 @@
+You are an angle finder. You get some true news stories and one lens. For each story, write up to three angles
+through that lens: one or two plain sentences each, for a reader in creative work, the arts, music, entertainment,
+media or sport. You see nothing about who will read the stories or pick them, and you do not rank them.
+
+Lens: the most absurd true detail in the sources
+
+Story key: mon/554f7348-ecc3-45cb-888d-9a8afe61b9bf
+What happened: Authors Guild, 23 Nov 2026: "Only approximately 70 percent ($2,203.56) will be paid out now"; the final payment of about $450 million is due within about 30 days of Anthropic's IPO or a significant investment, and no later than September 2027; "tens of thousands of claims have been corrected".
+Sources:
+https://authorsguild.org/news/anthropic-settlement-update-check-your-claim-by-november-20
+
+Story key: mon/f5721a93-5b59-4d86-b53e-24bc70510d84
+What happened: Music Business Worldwide, 6 Aug 2026: Warner CEO Robert Kyncl expects AI "licensing deals to contribute materially to our subscription streaming revenue growth starting in fiscal '27", naming Suno, Stability AI, KLAY and Udio; fiscal 2027 began on 1 October 2026; Warner has expanded deals requiring fully gen-AI content to be identified and removed from pro rata royalty shares.
+Sources:
+https://www.musicbusinessworldwide.com/warner-music-expects-ai-music-deals-to-boost-subscription-streaming-revenue-from-late-2026/
+https://www.musicbusinessworldwide.com/5-things-to-know-about-sunos-move-into-ai-video-the-distrokid-documents-and-the-fight-over-v6/
+
+Story key: mon/013ae567-6e91-4c57-9128-9ce85eef667c
+What happened: The Media Leader UK, 9 Oct 2026: GenAI Ads Manager drew 16 new-to-TV small and medium-sized businesses in its first year; it is free for advertisers; five of the 16 later moved to ITV's in-house creative team with bigger TV budgets.
+Sources:
+https://uk.themedialeader.com/itvs-generative-ai-ads-feature-used-by-16-new-to-tv-advertisers-in-debut-year/
+
+Story key: mon/80baed3f-3833-4bce-9afd-040a4868e562
+What happened: IBTimes UK, 25 Nov 2026: YourNeuroTune's website offers customers a template to cancel existing BumaStemra licences; BumaStemra gave it until noon on 25 November and then said it would go to court; co-founder Sam Jansen said in October the company serves more than 450 customers across four countries. Michiel Laan of BumaStemra: "If you make money from music, you pay the creators."
+Sources:
+https://www.ibtimes.co.uk/bumastemra-sues-dutch-ai-music-company-1834805
+https://ioplus.nl/en/posts/functional-not-for-the-charts-yourneurotune-on-copyright-fees
+
+Story key: wed/cf6e7746-6ce2-4c68-904a-d1ae1988bef9
+What happened: Music Business Worldwide, 16 Nov 2026: Bridge "went live in beta on November 13"; each generation costs 10 Suno credits; Premier costs $30 a month with 10,000 credits; when a session is opened, Bridge uploads the Ableton project and its audio files to the user's Suno account.
+Sources:
+https://www.musicbusinessworldwide.com/suno-launches-bridge-an-app-that-drops-ai-stems-into-ableton-live/
+https://help.suno.com/en/articles/14695169
+
+Story key: wed/972b7721-4e4e-477f-b5cf-20164fd8260c
+What happened: Music Business Worldwide, 23 Nov 2026: Suno launched Visuals on 17 November; it runs on H3 Move, based on MiniMax's H3 video model; it makes lyric videos, album art and clips of up to 15 seconds; Suno added filters to block prompts that depict specific artists, public figures or copyrighted works.
+Sources:
+https://www.musicbusinessworldwide.com/5-things-to-know-about-sunos-move-into-ai-video-the-distrokid-documents-and-the-fight-over-v6/
+
+Story key: wed/08442c41-534a-4523-9818-0884e2fc985a
+What happened: Digital Music News, 23 Nov 2026: Likeness Detection is globally available to eligible creators and public officials, who "sign up by verifying their ID with a trusted third-party partner"; the checker covers TikTok, CapCut, Dreamina, Hypic and Pippit and looks for Content Credentials metadata and invisible watermarks; TikTok says it has labelled about five billion AI uploads.
+Sources:
+https://digitalmusicnews.com/2026/11/23/tiktok-likeness-detection-release
+
+Story key: wed/8c6c717d-00b4-4d26-b837-06b89709220a
+What happened: Digital Music News, 18 Nov 2026: Media Nov Records runs about 500 YouTube channels; YouTube removed the video in October and rejected both of Shokin's counterclaims; YouTube restored it about 24 hours after 404 Media contacted Media Nov. Shokin: "It feels like a broken system."
+Sources:
+https://www.digitalmusicnews.com/2026/11/18/musician-copyright-claim-loop-ai-company/
+
+Story key: fri/16b1fd4f-3785-4842-9a2b-19ccfe889fa8
+What happened: VGC, 25 Nov 2026: Ubisoft is reportedly asking developers pitching new games to outline how generative AI will be used; one source said "If you planned on not using it, you would have to have a reason"; Ubisoft says it encourages developers to use generative AI rather than mandate it; Motherbrain is "a dedicated subsidiary developing proprietary technologies for gameplay to empower creators" (Yves Guillemot).
+Sources:
+https://www.videogameschronicle.com/news/ubisoft-is-reportedly-requiring-developers-to-justify-not-using-generative-ai/
+
+Story key: fri/5d55e729-43fd-433b-b4e5-056f5329cb05
+What happened: KESQ (Stacker, Wix Studio), 25 Nov 2026: 91% of designers use AI at least weekly, up from 54% a year earlier, from a survey of more than 900 designers by Designer Fund and Foundation Capital.
+Sources:
+https://designerfund.com/blog/ai-in-design-2026
+https://kesq.com/stacker-ai/2026/11/25/web-designers-share-how-theyve-adapted-to-ai-in-2026/
+
+Story key: fri/a4b34048-ab39-49da-a251-eaa58ebe2eaf
+What happened: Film Threat, 5 Nov 2026: a "hybrid pipeline" with a co-writer, traditional post-production editors and colourists, a Foley artist, a sound team and a "dedicated ensemble of professional voice actors"; the sound team spent four days in a Stockholm studio on the theatrical mix; London: "This film just wouldn't exist. It wouldn't get greenlit."
+Sources:
+https://filmthreat.com/features/the-first-ai-animated-feature-film-in-theaters-gods-dont-give-gifts-director-zack-london-talks-about-the-future-of-cinema/
+
+Story key: fri/ac13c2b0-5426-4018-aaeb-eed82b9d0a6c
+What happened: Reuters, 14 Nov 2026: the night's top awards of AI artist, song and album of the year went to Xania Monet, an AI-generated avatar; Jones said she wrote all of the lyrics and then set them to music with the help of AI; winners were picked by AI artists who are members of the Sonic Intelligence Academy.
+Sources:
+https://www.thestar.com.my/tech/tech-news/2026/11/14/new-awards-show-celebrates-ai-music-and-its-creators
+https://variety.com/2026/music/features/inside-first-ai-music-awards-sonic-intelligence-academy-1236947847/
+
+Story key: tue/photonstems
+What happened: iZotope Photon pulls a finished song apart into its parts, and up to six voices out of one recording, on your own computer. It costs $259 until 7 December, against $349 after.
+Sources:
+https://www.newsshooter.com/2026/11/05/izotope-photon-gpu-powered-audio-processing-software/
+
+Story key: tue/splicecreate
+What happened: Splice Create is a free Mac music app with more than three million licensed sounds built in and an assistant you can talk to. Making is free; exporting and licensing need the $9.99-a-month plan.
+Sources:
+https://www.thefader.com/2026/11/06/splice-launches-its-own-daw-splice-create
+
+Story key: tue/djvoices
+What happened: Spotify's AI DJ now has nine new voices and a setting that cuts most of the talking between songs. For an artist, that means the DJ that introduces your track can now talk less and play more.
+Sources:
+https://techcrunch.com/2026/11/10/spotifys-ai-dj-gets-new-voices-personalities-and-an-option-for-less-chatter/
+
+Story key: tue/freeanimation
+What happened: Free, open-source tools now cover most of an animation studio: 2D animation, motion graphics, motion capture from a webcam and visual effects. We pick the four an animator can use this week and say what each replaces.
+Sources:
+https://www.instagram.com/syntaix.ai/p/DfUpCCLiSfS/
+
+Story key: tue/grimesdeepseek
+What happened: Grimes made an album about AI and says she used no generative AI on it, apart from one song, "DeepSeek", whose lyrics were partly written by DeepSeek. It is the most honest AI credit in music this year.
+Sources:
+https://www.stereogum.com/2496372/grimes-teases-new-album-psy-opera-claims-she-doesnt-use-generative-ai-in-her-music/news
+
+Story key: thu/elevensoundcloud
+What happened: ElevenMusic songs can now go straight to SoundCloud from the app, and SoundCloud Artist Pro members get three months of ElevenMusic Pro free. After that it is $9.99 a month, so check the renewal before you claim it.
+Sources:
+https://thenextweb.com/news/soundcloud-elevenmusic-ai-songs-direct-publishing
+
+Story key: thu/videoplugin
+What happened: A connector lets your chatbot call another app for you, like a guest at the table who does one job. Higgsfield's video tools now plug into ChatGPT and Claude this way: here is what that means and how to add it.
+Sources:
+https://www.instagram.com/evolving.ai/p/DftxXqrgIE4/
+
+Story key: thu/hackertube
+What happened: Fed up with his YouTube recommendations, Andrej Karpathy had an AI build him a video site in about two hours: 6,454 videos picked from 43 million comments where real people recommended them. For a creator, it is a picture of discovery without the algorithm.
+Sources:
+https://www.instagram.com/therundownai/p/DfQCWHZEreu/
+
+Story key: thu/klingthirty
+What happened: Kling 4.0 makes single AI video clips up to 30 seconds long from up to 15 of your own reference images or clips. For a small team, that is a storyboard you can watch.
+Sources:
+https://www.bernama.com/tv/news.php?id=2622573
+
+Story key: thu/threecuts
+What happened: YouTube lets creators test up to three different cuts of a video to see which opening holds viewers best, and an AI assistant gives feedback on drafts. Here is how a creator uses it on their next upload.
+Sources:
+https://techcrunch.com/2026/09/23/youtube-adds-new-creator-tools-like-video-a-b-testing-dynamic-thumbnails-and-live-dubbing/
+
+Story key: sat/goodnews
+What happened: "Englishman in New York" by @antrofrog follows an animated gentleman helping pedestrians, buskers and the pizza rat, made with Midjourney for the character and Seedance for the animation. "The Biblical Experience" by @samyazaspeaks moves through the Bible's best-known moments using classical paintings, camera moves and music. People used a new Claude model to build playable games and 3D worlds in hours, including a game painted with about 1.5 million brush strokes a frame and a ride through Van Gogh's Starry Night. EA Sports FC 27 added an optional AI-recreated John Motson from 26 November, built from his original recordings with generative AI, with his widow's and son's permission; EA paid the family for the rights.
+Sources:
+https://www.instagram.com/evolving.ai/reel/DfHwPJsgbeb/
+
+Story key: sat/arenanight
+What happened: Google Gemini is now the official AI assistant partner of the Golden State Warriors, the 2026 WNBA champion Valkyries and Chase Center, with interactive videoboard features inside the arena and digital features for fans at home.
+Sources:
+https://blog.google/products-and-platforms/products/gemini/gemini-golden-state/
+
+1. Every angle rests on one fact in "What happened". Copy that fact's words exactly into rests_on: never a
+   paraphrase, never a detail the story does not give.
+2. Funny is welcome when it is true: the joke is in the facts, never at a named person's expense, and it never needs
+   explaining.
+3. No predictions, odds, calls or dates for what will happen, and no advice.
+4. Reply with only JSON: {"<story key>": [{"lens": "most_absurd_true", "text": "...", "rests_on": "..."}]}
+
+Use British spelling. No em dashes and no exclamation marks.

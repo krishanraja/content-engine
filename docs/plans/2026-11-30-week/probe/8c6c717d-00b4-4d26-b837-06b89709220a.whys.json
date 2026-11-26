@@ -1,0 +1,105 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why did YouTube take down, and keep down, a singer's own recording of a folk song with no known writer?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why did YouTube take down a recording of a folk song with no known writer?",
+      "answer": "A company Shokin had never heard of, Media Nov Records, filed a copyright complaint against the video in October, and YouTube removed it on that complaint.",
+      "evidence": [
+        {
+          "url": "https://www.digitalmusicnews.com/2026/11/18/musician-copyright-claim-loop-ai-company/",
+          "domain": "digitalmusicnews.com",
+          "date": "2026-11-18",
+          "quote": "In October, YouTube removed the video after a copyright complaint from a company of which Shokin had never heard before."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "none found; the one source page (Digital Music News, 18 Nov 2026); the 404 Media report it cites is secondary reporting, not a primary record, so it was not followed"
+      },
+      "mechanism_type": "the rule: a platform takedown on a rights holder's complaint",
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why did Media Nov say it had rights in her recording?",
+      "answer": "Media Nov pointed to a 1963 arrangement of the song popularised by Philip Koutev, and argued that rights in an arrangement are separate from rights in any one recording. The page does not say Media Nov owns that arrangement.",
+      "evidence": [
+        {
+          "url": "https://www.digitalmusicnews.com/2026/11/18/musician-copyright-claim-loop-ai-company/",
+          "domain": "digitalmusicnews.com",
+          "date": "2026-11-18",
+          "quote": "Musician Philip Koutev popularized a specific arrangement of the song in 1963, but Media Nov argued that rights in that arrangement must be distinguished from rights in any individual sound recording."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "A copyright lawyer quoted on the same page rejects the basis: “If it’s her voice and her playing instruments, what could she possibly be infringing if it’s a folk song from the 19th century?” The page also says an interest in an arrangement does not automatically establish ownership of someone else's recording."
+      },
+      "mechanism_type": "the rule: arrangement rights versus sound-recording rights",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why would a company that size claim a small singer's video at all?",
+      "answer": "Media Nov runs about 500 YouTube channels and its website advertises automated DMCA takedowns, Content ID management and AI content recognition. The page points to claims made by machine at scale, but never says her claim was automated.",
+      "evidence": [
+        {
+          "url": "https://www.digitalmusicnews.com/2026/11/18/musician-copyright-claim-loop-ai-company/",
+          "domain": "digitalmusicnews.com",
+          "date": "2026-11-18",
+          "quote": "The company’s website referenced automated DMCA takedowns, YouTube Content ID management, and AI-powered content recognition."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "none found; the one source page (Digital Music News, 18 Nov 2026); the 404 Media report it cites is secondary reporting, not a primary record, so it was not followed. The page does not say how this particular claim was raised."
+      },
+      "mechanism_type": "the model: automated rights claiming across many channels",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why did the video come back?",
+      "answer": "After 404 Media asked Media Nov for comment, the company asked Shokin for her original files and dates, withdrew the complaint minutes after she supplied them, and YouTube restored the video about 24 hours later. Media Nov gave as its reason that the video earned no revenue or views.",
+      "evidence": [
+        {
+          "url": "https://www.digitalmusicnews.com/2026/11/18/musician-copyright-claim-loop-ai-company/",
+          "domain": "digitalmusicnews.com",
+          "date": "2026-11-18",
+          "quote": "A spokesperson for Media Nov confirmed that they withdrew the complaint just minutes after Shokin provided the necessary verification."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "Media Nov's stated reason conflicts with the record on the same page: “Notably, Media Nov claimed the reason for withdrawal was that the video had generated no revenue or views, yet 404 Media reported the view count at approximately 125,000.” It also says the withdrawal waives no rights and that it intends to pursue legal action."
+      },
+      "mechanism_type": "the rule: the claimant, not the platform, withdrawing a claim",
+      "stop": null
+    },
+    {
+      "n": 5,
+      "question": "Why did YouTube reject both of her counterclaims when the claim fell apart the moment she was asked for proof?",
+      "answer": "Nothing read answers this. The page reports that YouTube declined both counterclaims, but gives no reason from YouTube and no account of how its counterclaim review works.",
+      "evidence": [
+        {
+          "url": "https://www.digitalmusicnews.com/2026/11/18/musician-copyright-claim-loop-ai-company/",
+          "domain": "digitalmusicnews.com",
+          "date": "2026-11-18",
+          "quote": "Shokin submitted two counterclaims to YouTube, but the platform declined them both."
+        }
+      ],
+      "strength": "open",
+      "counter": {
+        "text": "none found; the one source page (Digital Music News, 18 Nov 2026); the 404 Media report it cites is secondary reporting, not a primary record, so it was not followed"
+      },
+      "mechanism_type": "the rule: YouTube's counterclaim review",
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "The one source shows a young rights company with about 500 channels, advertising automated takedowns, claiming her recording on the strength of a 1963 arrangement, YouTube removing it and turning down both of her counterclaims, and the claim being dropped only after a journalist got in touch and she sent her files. Every rung rests on a single site.",
+    "open_question": "If the claim was withdrawn minutes after she showed her files, what was YouTube checking when it turned down her two counterclaims?"
+  }
+}

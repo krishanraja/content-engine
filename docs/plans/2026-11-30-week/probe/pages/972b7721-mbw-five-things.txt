@@ -1,0 +1,162 @@
+5 things to know about Suno’s move into AI video, the DistroKid documents, and the fight over v6 - Music Business Worldwide
+Music Business Worldwide
+News
+Interviews  All Interviews
+Inspiring Women
+Key Songs In The Life Of
+Trailblazers
+World’s Greatest Managers
+World’s Greatest Songwriters
+Analysis  All Analysis
+MBW Explains
+MBW Views
+Tim’s Take
+Database
+Podcast
+Jobs
+MBW+  Subscribe
+Login
+5 things to know about Suno’s move into AI video, the DistroKid documents, and the fight over v6
+November 23, 2026
+By Mandy Dalugdug
+Credit: Mino Surkala/Shutterstock
+MBW Explains is a series in which we dig behind the headlines, via data and context, to improve your understanding of key stories. Only MBW+ subscribers have unlimited access to these articles. MBW Explains is supported by Reservoir.Continue to article...
+Suno is now making music videos.
+The AI music company launched Visuals on Tuesday (November 17).
+The tool generates video clips and images to accompany songs made on Suno’s platform.
+The launch came four days after Universal Music Group and Sony Music Entertainment filed papers opposing Suno’s bid to fully pause their second copyright lawsuit against it.
+A day before the launch, the two majors withdrew a court motion against DistroKid, after the distributor handed over documents on its AI-detection tool.
+Here are five things to know.
+1. Visuals is built on MiniMax technology – and three Hollywood studios are suing MiniMax
+According to an FAQ on Suno’s website, Visuals runs on a model called H3 Move.
+H3 Move is based on H3, a video model from Shanghai-based AI company MiniMax.
+Disney, Comcast’s Universal, and Warner Bros. Discovery sued MiniMax in federal court in California in September 2025.
+The studios allege that MiniMax’s Hailuo AI service generates images and videos of their characters, including Darth Vader and the Minions, from text prompts.
+On May 22, 2026, US District Judge Stanley Blumenfeld Jr. refused to dismiss that case.
+Visuals generates lyric videos, album art, and clips of up to 15 seconds, which users can extend, edit, and re-prompt with text.
+“Video had always been the logical next step in our vision, but until recently video generation was slow and too expensive for anyone to create but enterprises,” wrote Jack Brody, Suno’s Chief Product Officer, in a blog post. “A new generation of models changes that and opens video generation up to creative entertainment for everyone.”
+“We’ve adopted a suite of new text and visual filters intended to block uploads and prompts that try to use or create visual representations of specific artists, public figures, copyrighted works and IP,” Brody added. “This means that prompts that work on other video platforms may not work on Suno and that’s by design.”
+2. DistroKid has handed over documents on its AI-detection tool
+UMG and Sony told a federal court in Manhattan on Monday (November 16) that they were withdrawing their motion to make DistroKid comply with a subpoena.
+The labels want the subpoenaed material for their first lawsuit against Suno, filed in June 2024.
+“Since the Motion was filed, DistroKid has served supplemental responses and produced documents responsive to Narrowed Request Nos. 1 and 5,” the notice states.
+In their October 14 motion, the labels sought monthly counts of tracks that a third-party “prediction model” scored as “likely AI-generated, whether in whole or in part.”
+They also sought the streams and royalties earned by those tracks, and the number attributed to Suno.
+The November 16 notice does not say what the documents show.
+The data bears on Suno’s main defense, fair use, under which a court weighs, among other factors, whether a use harms the market for the original works.
+UMG and Sony told the court in October that the market effect of AI-generated music is “a central contested question” in the case.
+DistroKid is not the only outside company the labels have pursued for evidence.
+In California, NVIDIA’s venture capital arm, NVentures, is fighting UMG and Sony’s demand that it testify.
+Its November 10 motion describes NVentures as a “passive minority investor” in Suno.
+3. UMG and Sony want v6 examined now – not in 2028
+UMG and Sony filed their second lawsuit against Suno in Boston federal court on September 18.
+It covers 60,202 recordings.
+At the statutory maximum of USD $150,000 per work for willful infringement, that implies theoretical exposure of just over $9 billion.
+On October 30, Suno asked Judge F. Dennis Saylor IV to pause that case until he rules on summary judgment in the first one.
+Summary judgment motions in that case, which covers 560 recordings, are due by June 22, 2027.
+In a filing on November 13, the labels argued that under Suno’s plan, its 2025 and 2026 models, including v6, and its commercial conduct would be “examined nowhere until at least 2028.”
+“The danger to Plaintiffs is concrete,” the labels wrote. “By the time discovery into v6 could begin under Suno’s proposal, the engineers who built the models may have moved on, their recollections will have faded and the training pipelines they used may have changed significantly or been superseded.
+“Delay would not merely postpone building the record, it would degrade it.”
+The labels have instead proposed a partial stay, with discovery proceeding now on four subjects: Suno’s successor models, its licensing efforts, its business expansion, and its recent finances.
+4. The legal fights stretch well beyond the majors
+Elvis Presley Enterprises and other rightsholders sued Suno in federal court in California on November 6.
+Their complaint, which relies in part on Tennessee’s ELVIS Act, alleges that Suno trained its AI on Presley’s recordings and generates songs in a voice listeners recognize as his.
+Also on November 6, Eight Mile Style, which co-publishes hundreds of Eminem songs, filed a separate suit against Suno covering 269 compositions.
+A Suno spokesperson said in a statement: “Suno exists to help people create new, original music, not to trade on anyone’s name or likeness, and we prohibit any unauthorized use of an artist’s work.
+“To protect against this, we do not allow prompts for specific artists’ names and songs and work with third-party providers to screen uploaded audio files and lyrics for potential misuse. We are always working to strengthen our guardrails and we will continue to add new safeguards that protect artists and our users.”
+The two suits follow earlier copyright claims against Suno in the same court from Round Hill Music (August 17), Gerencia 360 Music (August 31), and Reservoir (October 21).
+Reservoir supports MBW Explains.
+Suno is also fighting a proposed class action brought by Jason Isbell and three other musicians, which it asked a judge in Boston to dismiss on November 3.
+5. WMG is a v6 partner – and expects AI deals to contribute materially from fiscal 2027
+Suno launched its v6 models on September 9, saying they were developed with partners including Warner Music Group, BMG, and Believe.
+WMG settled its lawsuit against Suno and licensed it in November 2025.
+“v6 was trained entirely from scratch, from the ground up,” Brody told MBW at launch.
+UMG and Sony’s second complaint alleges that v6 was trained in part on the outputs of Suno’s earlier models, which the labels say were built on their recordings.
+“Training a ‘new’ model on the outputs of an infringing model does not eliminate the infringement; it launders it, passing the value of Plaintiffs’ expression from the copied recordings into the tainted models, from those models into their outputs, and from those outputs into v6,” the complaint states. “…v6 is not a fresh start; it is the fruit of the same poisoned tree.”
+The complaint also cites Suno’s deals with WMG, BMG, and Believe, which it says “confirm that a functioning market exists for licensing sound recordings to train generative AI models.”
+On WMG’s earnings call on August 5, CEO Robert Kyncl said the company expected its “licensing deals to contribute materially to our subscription streaming revenue growth starting in fiscal ’27,” referring to WMG’s partnerships with AI firms Suno, Stability AI, KLAY, and Udio.
+WMG’s 2027 fiscal year began on October 1.
+Earlier in 2026, WMG said it expected the Suno partnership specifically to deliver “material top and bottom line growth” from fiscal 2027.
+That leaves Warner as a licensing partner on the v6 models that UMG and Sony are asking a Boston court to examine.
+Reservoir (Nasdaq: RSVR) is a publicly traded, global independent music company with operations across music publishing, recorded music, and artist management. Music Business Worldwide
+Analysis United States Explains MBW Explains Suno
+Related Posts
+Eminem co-publisher Eight Mile Style adds 108 allegedly infringing AI tracks to $47.7m Suno lawsuit, calling Suno’s denials ‘false’
+Michael Rapino talks Live Nation’s AI strategy, subscription ambitions for 14m-member All Access program – plus 3 other things to know from the firm’s 2026 Investor Presentation
+Universal and Sony fight Suno’s bid to freeze second lawsuit, warning its latest AI models could escape scrutiny until at least 2028
+Elvis Presley rightsholders amend Suno lawsuit, adding more than 100 allegedly infringing AI tracks
+Latest Music Industry Jobs
+Head of Music, Canada – Amazon Music, Music Industry
+Toronto, Canada  Amazon Music
+VP, Finance
+Connect Music
+LN Concerts, Accounting Manager
+Atlanta, United States  Live Nation ANZ
+Digital Audience Development Manager
+London  Deutsch Englische Freundschaft Ltd
+Manager, Artist Relations
+Los Angeles, New York, United States  Universal Music Group
+Digital Marketing & Content Coordinator
+Cult Nation
+Marketing Manager
+Cult Nation
+Publishing A&R Manager, Domino Publishing Company
+Los Angeles / Domino Recording Company
+A&R & Writer Acquisition Manager
+chaser publishing
+Manager, Business Intelligence / Data Analytics
+EXCELERATION SERVICES, LLC
+Music Catalog Acquisition Marketing and Business Development Intern
+New York / Seasons Music Group
+Junior Finance Assistant
+London / The Other Songs
+Music Business Worldwide
+Stay on top of the real stories shaping the music industry: Join over 60,000 industry professionals who rely on MBW's free emails for essential insights and breaking news.
+Receive MBW Industry Jobs
+MBW occasionally sends important promotional emails that involve strategic collaborations with industry partners. These emails form part of the service you elect to receive when you subscribe to any of MBW's free email services. MBW does not and will not share your data with any third-parties. You can unsubscribe from said promotional emails at any time.
+Sign Up   Close
+Popular Articles
+TikTok users watch the app for an average of 89 minutes per day – and there's 732m of them worldwide
+Warner Music Group launches Global Diversity, Equity and Inclusion Institute
+Coachella sues Walmart for trademark infringement over unlicensed festival merch
+Taylor Swift just crashed Ticketmaster's site and sold over 2 million tickets. To meet demand, she would have had to play 900 stadium shows.
+The Chicks join Jason Isbell's class action against Suno, as amended complaint adds 16 plaintiffs and targets v6
+Music Business Worldwide
+Who We Are
+What We Do
+Policies
+Terms Of Use
+Comments Policy
+Privacy Policy
+Cookie Declaration
+Contact Us
+Contact Us
+Advertise With Us
+Send Us News
+General Enquiries
+Report A Problem
+Follow Us
+Facebook
+LinkedIn
+Twitter
+RSS
+© 2025 Music Business Worldwide
+27 Old Gloucester Street, London, WC1N 3AX
+Website by 44 Bytes
+News
+Interviews All Interviews
+Inspiring Women
+Key Songs In The Life Of
+Trailblazers
+World’s Greatest Managers
+World’s Greatest Songwriters
+Analysis All Analysis
+MBW Explains
+MBW Views
+Tim’s Take
+Database
+Podcast
+Jobs
+MBW+ Subscribe
+Login
+Search

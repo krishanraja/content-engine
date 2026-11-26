@@ -1,0 +1,78 @@
+Introducing Visuals | Suno
+Black Friday SaleGet 30% offEnds in 4 daysBlack Friday SaleBlack Friday Sale30% offEnds in 4 days
+Blog
+/Product updates
+Introducing Visuals
+By Jack Brody, Chief Product Officer·Nov 17, 2026·3 min read
+Suno began with a simple belief: everyone is creative. With the right tools, people can make something original and feel the joy of bringing an idea to life. We see it every day on Suno, from people reviving their high school band’s songs to turning a voice memo into a wedding song.
+When we launched Speech in October, we took that idea – which we call creative entertainment – beyond music for the first time, so people could create poems, meditations and other spoken audio.
+Video had always been the logical next step in our vision, but until recently video generation was slow and too expensive for anyone to create but enterprises. A new generation of models changes that and opens video generation up to creative entertainment for everyone.
+So, today the creative canvas on Suno gets bigger. Meet Visuals: Suno’s newest creative tool built to bring your music to life.
+AstronautBirthday CakeBig HeadChrome DivaMetal ClayPink FluffSphere GirlContigoCrochetDiamondDiscoBlonde BobWax
+How it Works
+Visuals is a new way to turn anything that inspires you into an original story. With Visuals you can make new images and videos: Lyric videos that move with the beat or make your music feel even more personal. Album art that matches the sound in your head. A photo re-imagined into an inspiring video clip.
+We’ve optimized the model behind Visuals to complement your music. Video clips follow your song’s structure, pick up on your lyrics and lip sync right along with them.
+Drag any song from your library into the Visuals tab to make clips up to 15 seconds long. Then you can extend, edit and re-prompt with text.
+Staring at a blank canvas is the hardest part of any creative tool, so we’ve added original characters to get you going. Or start with an original image of your own.
+We’re launching today on web, iOS, and Android. Visuals will keep evolving as we see what you make with it. So go on, show us what your song looks like.
+How to use Visuals
+Visual credits are purchased separately from song credits. Purchase credits at suno.com/pricing/visuals, and learn more about Visuals at suno.com/visuals.
+Original Creation, By Design
+Earlier this year we shared our principles for building the future of music responsibly. Our goal is to build the world’s best platform for creative entertainment, in ways that expand possibilities for artists, rightsholders and the larger music ecosystem. From the beginning, we deliberately designed Suno to enable original creation, with guardrails to keep our tools from being used in ways that don’t conform to our principles.
+We’ve built Visuals the same way, with additional safeguards to protect artists from unauthorized use of their likenesses or works, on top of the ones we already have in place for music.
+We’ve adopted a suite of new text and visual filters intended to block uploads and prompts that try to use or create visual representations of specific artists, public figures, copyrighted works and IP. This means that prompts that work on other video platforms may not work on Suno and that’s by design.
+We then use these same filters and additional third-party tools to check generated videos or images for violations of our Community Guidelines, which prohibit a comprehensive range of harmful content. This step happens before the Visual is shown to the user, so we can catch concerning content early.
+We are continuing our work with Audible Magic, ACRCloud and Musixmatch to block uploads that contain copyrighted audio.
+We will use our labeling tools to apply embedded watermarks to Visuals before they can be shared off-platform.
+We are pairing these protections with in-platform user education. The first time a Suno user tries to upload a video or image to use with Visuals, we remind them the tool is for original creation, and to confirm they have the rights to any file they are trying to use.
+If we detect misuse of our products or it is reported to us, our Trust and Safety team investigates and takes action, which could include removing the content, restricting the account or – in the most severe cases – terminating it completely.
+We’re always working to strengthen our guardrails and will continue to add new safeguards that protect artists and our users as our technology evolves.
+Try it out
+Visuals will keep evolving as we see what you make with it. So go on, show us what your imagination looks like.
+Try Visuals
+Read more
+Product updates
+Suno Bridge: Your DAW, Suno-powered.
+By Team Suno·Nov 13, 2026
+Product updates
+Meet Chat: Our In-house Studio Assistant
+By Jake Bowman·Oct 29, 2026
+Product updates
+Introducing Speech (beta)
+By Jack Brody·Oct 1, 2026
+Product
+Studio
+Visuals
+MCP
+Bridge (beta)
+Voices
+Stem Separation
+Remix
+Custom Models
+Pricing
+iOS app ↗
+Android app ↗
+Resources
+Blog
+Release Notes
+Music Library
+AI Music Tools
+Suno Credentials
+Help Center ↗
+Contact Us ↗
+Company
+About
+Careers
+Safety
+© 2026 Suno, Inc.Terms
+Privacy
+Cookie Policy
+Community Guidelines
+Your Privacy Choices
+English
+Products
+Resources
+Pricing
+Careers
+Log inOpen App
+Log inJoin Suno for free

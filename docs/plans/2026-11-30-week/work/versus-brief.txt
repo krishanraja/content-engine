@@ -1,0 +1,7 @@
+You are an ordinary reader. Below is a short video someone saved, with their note, and a meme idea made from it. Does the meme idea add something the original does not (a newer setting, a sharper joke, a clearer world), yes or no, and one line of why?
+
+ORIGINAL: a YouTube short of a character waving people off because they need to think without being disturbed. The saver's note: "Could be a funny POV meme about Claude in two years' time when it's woke and needs to think without being disturbed".
+
+OURS: the same clip, captioned "POV: your AI co-writer in 2028 asking for a quiet room before the chorus", with two more caption ideas set in the edit suite and the studio.
+
+Reply with only JSON: {"adds": "yes" or "no", "why": "<one line>"}

@@ -1,0 +1,831 @@
+{
+  "013ae567-6e91-4c57-9128-9ce85eef667c": {
+    "schema": "whys-probe/1",
+    "documented": 0,
+    "inferred": 5,
+    "sites": 1,
+    "mechanism_rungs": 0,
+    "counter_rungs": 0,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [
+      "Why 1 needs a second source on a different domain",
+      "Why 2 needs a second source on a different domain",
+      "Why 3 needs a second source on a different domain",
+      "Why 4 needs a second source on a different domain",
+      "Why 5 needs a second source on a different domain",
+      "The ladder stands on one site (themedialeader.com): verbatim quotes on two sites at least"
+    ],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "themedialeader.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "themedialeader.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "themedialeader.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "themedialeader.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 5,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "themedialeader.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
+  },
+  "08442c41-534a-4523-9818-0884e2fc985a": {
+    "schema": "whys-probe/1",
+    "documented": 0,
+    "inferred": 3,
+    "sites": 1,
+    "mechanism_rungs": 0,
+    "counter_rungs": 0,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [
+      "Why 1 needs a second source on a different domain",
+      "Why 2 needs a second source",
+      "Why 3 needs a second source",
+      "The ladder stands on one site (digitalmusicnews.com): verbatim quotes on two sites at least"
+    ],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "digitalmusicnews.com"
+        ],
+        "mechanism": false,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "digitalmusicnews.com"
+        ],
+        "mechanism": false,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "digitalmusicnews.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
+  },
+  "16b1fd4f-3785-4842-9a2b-19ccfe889fa8": {
+    "schema": "whys-probe/1",
+    "documented": 2,
+    "inferred": 1,
+    "sites": 4,
+    "mechanism_rungs": 1,
+    "counter_rungs": 2,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "verticalslice.news",
+          "videogameschronicle.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "psu.com",
+          "videogameschronicle.com"
+        ],
+        "mechanism": false,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "dualshockers.com",
+          "psu.com",
+          "videogameschronicle.com"
+        ],
+        "mechanism": false,
+        "counter": true
+      }
+    ]
+  },
+  "554f7348-ecc3-45cb-888d-9a8afe61b9bf": {
+    "schema": "whys-probe/1",
+    "documented": 4,
+    "inferred": 1,
+    "sites": 4,
+    "mechanism_rungs": 4,
+    "counter_rungs": 4,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [
+      "Why 5 needs a second source"
+    ],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "anthropiccopyrightsettlement.com",
+          "authorsguild.org"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "anthropiccopyrightsettlement.com",
+          "authorsguild.org"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "anthropiccopyrightsettlement.com",
+          "authorsguild.org"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "authorsguild.org",
+          "everythingedinburgh.com",
+          "linkedin.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 5,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "authorsguild.org"
+        ],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
+  },
+  "5d55e729-43fd-433b-b4e5-056f5329cb05": {
+    "schema": "whys-probe/1",
+    "documented": 3,
+    "inferred": 1,
+    "sites": 3,
+    "mechanism_rungs": 2,
+    "counter_rungs": 3,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [
+      "Why 1 source 2 (stateofaidesign.com) has no date",
+      "Why 2 source 1 (stateofaidesign.com) has no date",
+      "Why 3 source 1 (stateofaidesign.com) has no date",
+      "Why 4 source 2 (stateofaidesign.com) has no date"
+    ],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "designerfund.com",
+          "stateofaidesign.com"
+        ],
+        "mechanism": false,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "kesq.com",
+          "stateofaidesign.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "kesq.com",
+          "stateofaidesign.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "designerfund.com",
+          "stateofaidesign.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
+  },
+  "80baed3f-3833-4bce-9afd-040a4868e562": {
+    "schema": "whys-probe/1",
+    "documented": 4,
+    "inferred": 0,
+    "sites": 4,
+    "mechanism_rungs": 3,
+    "counter_rungs": 4,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "ibtimes.co.uk",
+          "nieuws.nl",
+          "rd.nl"
+        ],
+        "mechanism": false,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "ibtimes.co.uk",
+          "rd.nl"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "ibtimes.co.uk",
+          "ioplus.nl"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "ibtimes.co.uk",
+          "rd.nl"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 5,
+        "claimed": "open",
+        "counted": "open",
+        "verified_sites": [],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
+  },
+  "8c6c717d-00b4-4d26-b837-06b89709220a": {
+    "schema": "whys-probe/1",
+    "documented": 0,
+    "inferred": 4,
+    "sites": 1,
+    "mechanism_rungs": 0,
+    "counter_rungs": 0,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [
+      "Why 1 needs a second source",
+      "Why 2 needs a second source",
+      "Why 3 needs a second source",
+      "Why 4 needs a second source",
+      "The ladder stands on one site (digitalmusicnews.com): verbatim quotes on two sites at least"
+    ],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "digitalmusicnews.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "digitalmusicnews.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "digitalmusicnews.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "digitalmusicnews.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 5,
+        "claimed": "open",
+        "counted": "open",
+        "verified_sites": [],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
+  },
+  "972b7721-4e4e-477f-b5cf-20164fd8260c": {
+    "schema": "whys-probe/1",
+    "documented": 2,
+    "inferred": 2,
+    "sites": 2,
+    "mechanism_rungs": 2,
+    "counter_rungs": 2,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "musicbusinessworldwide.com",
+          "suno.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "musicbusinessworldwide.com",
+          "suno.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "musicbusinessworldwide.com",
+          "suno.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "musicbusinessworldwide.com",
+          "suno.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
+  },
+  "a4b34048-ab39-49da-a251-eaa58ebe2eaf": {
+    "schema": "whys-probe/1",
+    "documented": 2,
+    "inferred": 2,
+    "sites": 2,
+    "mechanism_rungs": 2,
+    "counter_rungs": 2,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [
+      "Why 1 needs a second source on a different domain",
+      "Why 4 needs a second source on a different domain"
+    ],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "filmthreat.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "filmthreat.com",
+          "magica.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "filmthreat.com",
+          "magica.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "magica.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
+  },
+  "ac13c2b0-5426-4018-aaeb-eed82b9d0a6c": {
+    "schema": "whys-probe/1",
+    "documented": 3,
+    "inferred": 1,
+    "sites": 2,
+    "mechanism_rungs": 3,
+    "counter_rungs": 3,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "thestar.com.my",
+          "variety.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "thestar.com.my",
+          "variety.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "thestar.com.my",
+          "variety.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "thestar.com.my",
+          "variety.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
+  },
+  "cf6e7746-6ce2-4c68-904a-d1ae1988bef9": {
+    "schema": "whys-probe/1",
+    "documented": 3,
+    "inferred": 1,
+    "sites": 2,
+    "mechanism_rungs": 3,
+    "counter_rungs": 3,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [
+      "Why 4 needs a second source on a different domain"
+    ],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "musicbusinessworldwide.com",
+          "suno.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "musicbusinessworldwide.com",
+          "suno.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "musicbusinessworldwide.com",
+          "suno.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "musicbusinessworldwide.com"
+        ],
+        "mechanism": false,
+        "counter": true
+      }
+    ]
+  },
+  "f5721a93-5b59-4d86-b53e-24bc70510d84": {
+    "schema": "whys-probe/1",
+    "documented": 2,
+    "inferred": 2,
+    "sites": 2,
+    "mechanism_rungs": 2,
+    "counter_rungs": 2,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [
+      "Why 4 needs a second source on a different domain"
+    ],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "digitalmusicnews.com",
+          "musicbusinessworldwide.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "digitalmusicnews.com",
+          "musicbusinessworldwide.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "digitalmusicnews.com",
+          "musicbusinessworldwide.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "digitalmusicnews.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 5,
+        "claimed": "open",
+        "counted": "open",
+        "verified_sites": [],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
+  },
+  "grimesdeepseek": {
+    "schema": "whys-probe/1",
+    "documented": 2,
+    "inferred": 1,
+    "sites": 3,
+    "mechanism_rungs": 1,
+    "counter_rungs": 2,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "nme.com",
+          "stereogum.com"
+        ],
+        "mechanism": false,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "nme.com",
+          "stereogum.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "mxdwn.com",
+          "nme.com",
+          "stereogum.com"
+        ],
+        "mechanism": false,
+        "counter": true
+      }
+    ]
+  },
+  "hackertube": {
+    "schema": "whys-probe/1",
+    "documented": 0,
+    "inferred": 3,
+    "sites": 1,
+    "mechanism_rungs": 0,
+    "counter_rungs": 0,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [
+      "Why 1 needs a second source",
+      "Why 2 needs a second source on a different domain",
+      "Why 3 needs a second source on a different domain",
+      "The ladder stands on one site (instagram.com): verbatim quotes on two sites at least"
+    ],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "instagram.com"
+        ],
+        "mechanism": false,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "instagram.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "instagram.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "open",
+        "counted": "open",
+        "verified_sites": [],
+        "mechanism": false,
+        "counter": true
+      }
+    ]
+  }
+}

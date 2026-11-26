@@ -1,0 +1,1007 @@
+About AI in Design 2026
+
+About
+
+About
+
+Case Studies
+
+Case Studies
+
+Read the Report
+
+Read the Report
+
+Tools
+
+01
+
+Craft
+
+02
+
+Teams
+
+03
+
+©2026 Designer Fund, Foundation Capital. All rights reserved
+
+Sierra
+
+01
+
+Linear
+
+02
+
+Shopify
+
+03
+
+Stripe
+
+04
+
+Anthropic
+
+05
+
+Notion
+
+06
+
+Coming soon
+
+Framer
+
+07
+
+Coming soon
+
+©2026 Designer Fund, Foundation Capital. All rights reserved
+
+Menu
+
+Menu
+
+©2026 Designer Fund, Foundation Capital. All rights reserved
+
+Report Chapters
+
+Case Studies
+
+About
+
+Back
+
+Tools
+
+01
+
+Craft
+
+02
+
+Teams
+
+03
+
+Back
+
+Sierra
+
+01
+
+Linear
+
+02
+
+Shopify
+
+03
+
+Stripe
+
+04
+
+Anthropic
+
+05
+
+Notion
+
+06
+
+Coming soon
+
+Framer
+
+07
+
+Coming soon
+
+©2026 Designer Fund, Foundation Capital. All rights reserved
+
+Menu
+
+Menu
+
+©2026 Designer Fund, Foundation Capital. All rights reserved
+
+Report Chapters
+
+Case Studies
+
+About
+
+Back
+
+Tools
+
+01
+
+Craft
+
+02
+
+Teams
+
+03
+
+Back
+
+Sierra
+
+01
+
+Linear
+
+02
+
+Shopify
+
+03
+
+Stripe
+
+04
+
+Anthropic
+
+05
+
+Notion
+
+06
+
+Coming soon
+
+Framer
+
+07
+
+Coming soon
+
+©2026 Designer Fund, Foundation Capital. All rights reserved
+
+About this report
+
+(sCROLL)
+
+AI in Design 2026 is the second annual research project from Designer Fund and Foundation Capital on how design teams are working with AI.
+
+Last year, we launched the first edition of the report—one of the most widely shared resources in 2025 about AI’s impact on design in tech.
+
+Now, after the releases of new models and a swath of new tools, we ask the same questions: Which AI tools are design teams using most? What does a typical design workflow look like today? Are hiring criteria and org structures shifting in any meaningful way? We wanted to find concrete, usable answers.
+
+This report was created for design leaders making decisions on tooling, policies, and adoption; designers thinking about how their craft and careers should evolve; founders and product teams looking to understand how AI is changing how design gets done; and students and educators preparing for what’s next.
+
+(sCROLL)
+
+Research supported by
+
+This research was made possible by our partners, seven companies that shared how their design teams are working with AI today. Each partnered with us on an in-depth case study, created through filmed interviews and live workflow demos.
+
+Anthropic
+
+Framer
+
+Linear
+
+Notion
+
+shopify
+
+sierra
+
+stripe
+
+AI LAB
+
+AI safety and research company working to build reliable, interpretable, and steerable AI systems.
+
+AI LAB
+
+AI safety and research company working to build reliable, interpretable, and steerable AI systems.
+
+AI LAB
+
+AI safety and research company working to build reliable, interpretable, and steerable AI systems.
+
+PRODUCT DEVELOPMENT
+
+The product development system for teams and agents.
+
+PRODUCT DEVELOPMENT
+
+The product development system for teams and agents.
+
+PRODUCT DEVELOPMENT
+
+The product development system for teams and agents.
+
+COMMERCE
+
+A commerce platform that helps businesses sell online and in person.
+
+COMMERCE
+
+A commerce platform that helps businesses sell online and in person.
+
+COMMERCE
+
+A commerce platform that helps businesses sell online and in person.
+
+PAYMENTS
+
+Financial infrastructure that powers payments for businesses across the internet.
+
+PAYMENTS
+
+Financial infrastructure that powers payments for businesses across the internet.
+
+PAYMENTS
+
+Financial infrastructure that powers payments for businesses across the internet.
+
+SITE BUILDER
+
+The site builder designers love and teams rely on.
+
+SITE BUILDER
+
+The site builder designers love and teams rely on.
+
+SITE BUILDER
+
+The site builder designers love and teams rely on.
+
+WORKSPACE
+
+The AI workspace that works while you sleep.
+
+WORKSPACE
+
+The AI workspace that works while you sleep.
+
+WORKSPACE
+
+The AI workspace that works while you sleep.
+
+CUSTOMER EXPERIENCE
+
+Sierra helps businesses build better, more human customer experiences with AI.
+
+CUSTOMER EXPERIENCE
+
+Sierra helps businesses build better, more human customer experiences with AI.
+
+CUSTOMER EXPERIENCE
+
+Sierra helps businesses build better, more human customer experiences with AI.
+
+Interested in sponsoring future research? reach out to hello@designerfund.com.
+
+Founded in 2013
+
+Founded in 2013
+
+Designer Fund invests in early-stage startups that use design to improve health, sustainability, and prosperity for all. We back founders who treat design as a strategic advantage and help them build world-class teams, craft standout products and brands, and connect with a powerful community of designers. 
+
+Our investments include Stripe, Notion, Gusto, Linear, Commure, and Framer.
+
+Founded in 1995
+
+Founded in 1995
+
+Foundation Capital is a first-check investor built to support extraordinary technical founders as early as possible — often before there's revenue, product, or a line of code.
+
+Driven by deep conviction, we partner from day zero, helping founders make defining early choices and navigate their toughest challenges. For thirty years, we've stood beside builders who envision futures that seem impossible until they become inevitable.
+
+MADE BY
+
+This project was created through collaboration between researchers, writers, and designers across multiple teams.
+
+ROLE
+
+ROLE AND CREDITS
+
+CREDITS
+
+Project lead
+
+Robyn Park
+
+Project lead
+
+Robyn Park
+
+Executive producers
+
+Ben Blumenrose, Steve Vassallo
+
+Executive producers
+
+Ben Blumenrose, Steve Vassallo
+
+Editorial
+
+Nathalie Arbel
+
+Editorial
+
+Nathalie Arbel
+
+Research and data analysis
+
+Nili Metuki
+
+Research and data analysis
+
+Nili Metuki
+
+Identity and website design
+
+++hellohello
+
+Identity and website design
+
+++hellohello
+
+Creative direction
+
+Heather Phillips, ++hellohello
+
+Creative direction
+
+Heather Phillips, ++hellohello
+
+Video production
+
+Seed Stories
+
+Video production
+
+Seed Stories
+
+Program support
+
+Jackie Berardo
+
+Program support
+
+Jackie Berardo
+
+Dev Support
+
+Fabian Albert
+
+Dev Support
+
+Fabian Albert
+
+Media and distribution
+
+Kirsten Underwood, Will McTighe
+
+Media and distribution
+
+Kirsten Underwood, Will McTighe
+
+METHODOLOGY
+
+Survey
+
+906 designers in 60+ countries responded to our survey, fielded in March 2026. Respondents represented a mix of company stages, team sizes, disciplines, and seniority levels. 60% have over 10 years of professional design experience.
+
+The survey was created, distributed, and analyzed independent of our partners. We shared it via our social media channels, email newsletter, word of mouth, and broader networks of online communities for designers.
+
+Because of our distribution strategy, the sample may skew towards respondents who have embraced AI more than the average designer, or who work at companies that are actively supporting adoption. We present these findings as directional rather than as absolute benchmarks.
+
+By company size:
+
+Startups
+(1–50)
+
+42%
+
+Growth
+(51–500)
+
+25%
+
+Scale-up
+(501–2K)
+
+22%
+
+Enterprise
+(2,000+)
+
+12%
+
+Source: AI in Design survey, Q1 2026
+
+By work environment:
+
+71%
+
+16%
+
+12%
+
+In-house (71%)
+
+Freelance (16%)
+
+Agency (12%)
+
+Source: AI in Design survey, Q1 2026
+
+By role level:
+
+53%
+
+Individual contributors
+
+19%
+
+Managers/leads
+
+14%
+
+Executives
+
+12%
+
+Founders
+
+Source: AI in Design survey, Q1 2026
+
+By type of design work:
+
+(designers could select multiple)
+
+86%
+
+Product design
+
+37%
+
+Brand and marketing design
+
+32%
+
+UI/UX research
+
+23%
+
+Design engineering
+
+Source: AI in Design survey, Q1 2026
+
+Survey
+
+906 designers in 60+ countries responded to our survey, fielded in March 2026. Respondents represented a mix of company stages, team sizes, disciplines, and seniority levels. 60% have over 10 years of professional design experience.
+
+The survey was created, distributed, and analyzed independent of our partners. We shared it via our social media channels, email newsletter, word of mouth, and broader networks of online communities for designers.
+
+Because of our distribution strategy, the sample may skew towards respondents who have embraced AI more than the average designer, or who work at companies that are actively supporting adoption. We present these findings as directional rather than as absolute benchmarks.
+
+By company size:
+
+Startups
+(1–50)
+
+42%
+
+Growth
+(51–500)
+
+25%
+
+Scale-up
+(501–2K)
+
+22%
+
+Enterprise
+(2,000+)
+
+12%
+
+Source: AI in Design survey, Q1 2026
+
+By work environment:
+
+71%
+
+16%
+
+12%
+
+In-house (71%)
+
+Freelance (16%)
+
+Agency (12%)
+
+Source: AI in Design survey, Q1 2026
+
+By role level:
+
+53%
+
+Individual contributors
+
+19%
+
+Managers/leads
+
+14%
+
+Executives
+
+12%
+
+Founders
+
+Source: AI in Design survey, Q1 2026
+
+By type of design work:
+
+(designers could select multiple)
+
+86%
+
+Product design
+
+37%
+
+Brand and marketing design
+
+32%
+
+UI/UX research
+
+23%
+
+Design engineering
+
+Source: AI in Design survey, Q1 2026
+
+Survey
+
+906 designers in 60+ countries responded to our survey, fielded in March 2026. Respondents represented a mix of company stages, team sizes, disciplines, and seniority levels. 60% have over 10 years of professional design experience.
+
+The survey was created, distributed, and analyzed independent of our partners. We shared it via our social media channels, email newsletter, word of mouth, and broader networks of online communities for designers.
+
+Because of our distribution strategy, the sample may skew towards respondents who have embraced AI more than the average designer, or who work at companies that are actively supporting adoption. We present these findings as directional rather than as absolute benchmarks.
+
+By company size:
+
+Startups
+(1–50)
+
+42%
+
+Growth
+(51–500)
+
+25%
+
+Scale-up
+(501–2K)
+
+22%
+
+Enterprise
+(2,000+)
+
+12%
+
+Source: AI in Design survey, Q1 2026
+
+By work environment:
+
+71%
+
+16%
+
+12%
+
+In-house (71%)
+
+Freelance (16%)
+
+Agency (12%)
+
+Source: AI in Design survey, Q1 2026
+
+By role level:
+
+53%
+
+Individual contributors
+
+19%
+
+Managers/leads
+
+14%
+
+Executives
+
+12%
+
+Founders
+
+Source: AI in Design survey, Q1 2026
+
+By type of design work:
+
+(designers could select multiple)
+
+86%
+
+Product design
+
+37%
+
+Brand and marketing design
+
+32%
+
+UI/UX research
+
+23%
+
+Design engineering
+
+Source: AI in Design survey, Q1 2026
+
+Survey
+
+906 designers in 60+ countries responded to our survey, fielded in March 2026. Respondents represented a mix of company stages, team sizes, disciplines, and seniority levels. 60% have over 10 years of professional design experience.
+
+The survey was created, distributed, and analyzed independent of our partners. We shared it via our social media channels, email newsletter, word of mouth, and broader networks of online communities for designers.
+
+Because of our distribution strategy, the sample may skew towards respondents who have embraced AI more than the average designer, or who work at companies that are actively supporting adoption. We present these findings as directional rather than as absolute benchmarks.
+
+By company size:
+
+Startups
+(1–50)
+
+42%
+
+Growth
+(51–500)
+
+25%
+
+Scale-up
+(501–2K)
+
+22%
+
+Enterprise
+(2,000+)
+
+12%
+
+Source: AI in Design survey, Q1 2026
+
+By work environment:
+
+71%
+
+16%
+
+12%
+
+In-house (71%)
+
+Freelance (16%)
+
+Agency (12%)
+
+Source: AI in Design survey, Q1 2026
+
+By role level:
+
+53%
+
+Individual contributors
+
+19%
+
+Managers/leads
+
+14%
+
+Executives
+
+12%
+
+Founders
+
+Source: AI in Design survey, Q1 2026
+
+By type of design work:
+
+(designers could select multiple)
+
+86%
+
+Product design
+
+37%
+
+Brand and marketing design
+
+32%
+
+UI/UX research
+
+23%
+
+Design engineering
+
+Source: AI in Design survey, Q1 2026
+
+Interviews
+
+Companies interviewed: Anthropic, Stripe, Linear, Notion, DoorDash, Cursor, Samsara, Watershed, Airtable, Ramp, Grammarly, AirOps, Abridge, Flux, Framer, Maze, Miro, Shopify, Sierra, Substack, Superhuman
+
+25+ in-depth conversations with design practitioners and leaders
+
+Conducted February-April 2026. We selected interviewees at companies with a range of stages, team sizes, and approaches to AI adoption. About one-fifth work at companies who have supported this report as official partners.
+
+The report also features anonymous quotes from our survey, and are identified by the respondent’s role level and company stage.
+
+Interviews
+
+25+ in-depth conversations with design practitioners and leaders
+
+Conducted February-April 2026. We selected interviewees at companies with a range of stages, team sizes, and approaches to AI adoption. About one-fifth work at companies who have supported this report as official partners.
+
+The report also features anonymous quotes from our survey, and are identified by the respondent’s role level and company stage.
+
+Interviews
+
+Companies interviewed: Anthropic, Stripe, Linear, Notion, DoorDash, Cursor, Samsara, Watershed, Airtable, Ramp, Grammarly, AirOps, Abridge, Flux, Framer, Maze, Miro, Shopify, Sierra, Substack, Superhuman
+
+25+ in-depth conversations with design practitioners and leaders
+
+Conducted February-April 2026. We selected interviewees at companies with a range of stages, team sizes, and approaches to AI adoption. About one-fifth work at companies who have supported this report as official partners.
+
+The report also features anonymous quotes from our survey, and are identified by the respondent’s role level and company stage.
+
+Interviews
+
+Companies interviewed: Anthropic, Stripe, Linear, Notion, DoorDash, Cursor, Samsara, Watershed, Airtable, Ramp, Grammarly, AirOps, Abridge, Flux, Framer, Maze, Miro, Shopify, Sierra, Substack, Superhuman
+
+25+ in-depth conversations with design practitioners and leaders
+
+Conducted February-April 2026. We selected interviewees at companies with a range of stages, team sizes, and approaches to AI adoption. About one-fifth work at companies who have supported this report as official partners.
+
+The report also features anonymous quotes from our survey, and are identified by the respondent’s role level and company stage.
+
+External sources
+
+Survey
+
+50+
+
+Public sources reviewed for patterns and context
+
+We reviewed articles, posts, and newsletters from designers, engineers, founders, and hiring leaders to triangulate findings and surface emerging themes.
+
+External sources
+
+Survey
+
+50+
+
+Public sources reviewed for patterns and context
+
+We reviewed articles, posts, and newsletters from designers, engineers, founders, and hiring leaders to triangulate findings and surface emerging themes.
+
+External sources
+
+Survey
+
+50+
+
+Public sources reviewed for patterns and context
+
+We reviewed articles, posts, and newsletters from designers, engineers, founders, and hiring leaders to triangulate findings and surface emerging themes.
+
+External sources
+
+Survey
+
+50+
+
+Public sources reviewed for patterns and context
+
+We reviewed articles, posts, and newsletters from designers, engineers, founders, and hiring leaders to triangulate findings and surface emerging themes.
+
+For press inquiries, partnership opportunities, or questions about the research hello@designerfund.com
+
+Get new case studies & report markdown
+
+Download the markdown version of the report, ready to drop into any tool. Get notified as new case studies go live.
+
+Submit
+
+By subscribing, you agree to receive communications from Designer Fund and Foundation Capital in accordance with their privacy policies.
+
+Methodology
+
+This report draws from
+
+0
+
+Survey responses
+
+0+
+
+Interviews
+
+0+
+
+Public sources
+
+Report Partners
+
+Anthropic
+
+Framer
+
+Stripe
+
+Sierra
+
+Notion
+
+Shopify
+
+Linear
+
+Report
+
+Read the Report
+
+About
+
+Case Studies
+
+©2026 Designer Fund, Foundation Capital. All rights reserved
+
+Made in Framer by ++hellohello
+
+Get new case studies & report markdown
+
+Download the markdown version of the report, ready to drop into any tool. Get notified as new case studies go live.
+
+Submit
+
+By subscribing, you agree to receive communications from Designer Fund and Foundation Capital in accordance with their privacy policies.
+
+Methodology
+
+This report draws from
+
+0
+
+Survey responses
+
+0+
+
+Interviews
+
+0+
+
+Public sources
+
+Report Partners
+
+Anthropic
+
+Framer
+
+Stripe
+
+Sierra
+
+Notion
+
+Shopify
+
+Linear
+
+Report
+
+Read the Report
+
+About
+
+Case Studies
+
+©2026 Designer Fund, Foundation Capital. All rights reserved
+
+Made in Framer by ++hellohello
+
+Get new case studies & report markdown
+
+Download the markdown version of the report, ready to drop into any tool. Get notified as new case studies go live.
+
+Submit
+
+By subscribing, you agree to receive communications from Designer Fund and Foundation Capital in accordance with their privacy policies.
+
+Methodology
+
+This report draws from
+
+0
+
+Survey responses
+
+0+
+
+Interviews
+
+0+
+
+Public sources
+
+Report Partners
+
+Anthropic
+
+Framer
+
+Stripe
+
+Sierra
+
+Notion
+
+Shopify
+
+Linear
+
+Report
+
+Read the Report
+
+About
+
+Case Studies
+
+©2026 Designer Fund, Foundation Capital. All rights reserved
+
+Made in Framer by ++hellohello

@@ -1,0 +1,161 @@
+{
+ "week": "2026-11-30",
+ "candidates": [
+  {
+   "ref": "mon-1",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "mon-2",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "mon-3",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "mon-4",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "wed-1",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "wed-2",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "wed-3",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "wed-4",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "fri-1",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "fri-2",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "fri-3",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "fri-4",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-tue-photonstems",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-tue-splicecreate",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-tue-djvoices",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-tue-freeanimation",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-tue-grimesdeepseek",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-tue-tplconfused",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-tue-tplnogod",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-tue-tplpushthrough",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-tue-tplwoke",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-thu-elevensoundcloud",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-thu-videoplugin",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-thu-hackertube",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-thu-klingthirty",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-thu-threecuts",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-thu-tplchihuahua",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-thu-tplarnold",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-thu-tpldumbest",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-sat-goodnews",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-sat-arenanight",
+   "floored": false,
+   "reasons": []
+  }
+ ],
+ "unread": []
+}
