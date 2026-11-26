@@ -346,8 +346,8 @@ he ticks: `references/inspiration-piece.md`.
    **The quality bar, before an idea reaches him** (Krish, 2026-10-24:
    "most importantly focus on improving your own work quality"). Each day's
    ideas are four different stories, never four angles on one headline.
-   Each one's `so_what` names what the face (a senior leader who will not
-   admit they are not ready) does differently on Monday morning; its hook is
+   Each one's `so_what` names what the reader (`config/beat.json`: who makes
+   the calls or the work) does differently on Monday morning; its hook is
    a specific, surprising, checked fact, never a category. At least one idea
    a day comes from his own words or his Inspiration House when either has
    anything that fits, and one is a wildcard the engine would not usually
