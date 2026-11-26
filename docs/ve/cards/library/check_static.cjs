@@ -81,6 +81,9 @@ const result=vm.runInContext(`(()=>{
     const frame=sequenceArt(seq,t,probe);
     const shot=seq.shots.findLast(s=>s.start<=t),item=items.find(i=>i.id===(shot.slide||shot.item));
     if(quietShot(item,c))continue;
+    // The frame loop's rule: no caption while a shot pushes in over a quiet one (its first 10 frames).
+    const index=seq.shots.indexOf(shot), before=index&&t-shot.start<10?seq.shots[index-1]:null;
+    if(before&&quietShot(items.find(i=>i.id===(before.slide||before.item))))continue;
     if(!/[.?!]$/.test(c.words.at(-1)) || !frame.includes('data-layer="captions"') || (seq.height>seq.width)!==frame.includes('data-layer="platform-ui"'))throw Error('caption or platform layer');
     captionStates++;
    }catch(e){errors.push(name+' at '+t+' '+e.message)}

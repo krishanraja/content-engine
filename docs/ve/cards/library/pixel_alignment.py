@@ -8,6 +8,32 @@ from spacing import compare, include
 from standard import audit
 
 
+INK = (12, 21, 18)
+CREAM = (244, 239, 228)
+MINT = (126, 240, 192)
+# The flat fields an ink-tone wordmark may sit on: the rung colours (why 1, 2, 3) and the answer's mint.
+FIELDS = ((255, 106, 77), (255, 216, 77), (183, 166, 255), MINT)
+
+
+def flat_on(ground, colour, tolerance=25):
+    return all(colour[n]-tolerance <= lo and hi <= colour[n]+tolerance for n, (lo, hi) in enumerate(ground.getextrema()))
+
+
+def wordmark_ground_ok(ground, mark):
+    """STANDARD 6: a wordmark sits on ink in cream or mint, or on a rung or answer colour field in ink tone; never
+    cream on colour. The tone is read from the mark's own painted pixels (those that differ from the ground)."""
+    near = lambda p, c: max(abs(a-b) for a, b in zip(p, c)) <= 60
+    painted = [p for p, g in zip(mark.getdata(), ground.getdata()) if max(abs(a-b) for a, b in zip(p, g)) >= 60]
+    if not painted:
+        return False
+    share = lambda colours: sum(any(near(p, c) for c in colours) for p in painted)/len(painted)
+    if flat_on(ground, INK):
+        return share((CREAM, MINT)) >= .8
+    if any(flat_on(ground, field) for field in FIELDS):
+        return share((INK,)) >= .8
+    return False
+
+
 def difference_bounds(visible, hidden):
     difference = ImageChops.difference(visible.convert("RGB"), hidden.convert("RGB"))
     red, green, blue = difference.split()
@@ -68,8 +94,8 @@ def inspect_item(page, png, item, templates=None):
                                                        (bounds[3]-bounds[1])/scale))
                 if member in ('s3h','v4','v9'):
                     ground = Image.open(io.BytesIO(png_without)).convert('RGB').crop(bounds)
-                    if any(lo < ink-25 or hi > ink+25
-                           for (lo,hi),ink in zip(ground.getextrema(),(12,21,18))):
+                    mark = visible.crop((x,y,right,bottom)).crop(bounds)
+                    if not wordmark_ground_ok(ground, mark):
                         results.append(dict(element=member,passed=False,reason='STANDARD 6: wordmark outside ink'))
                 if member == 'source logo':
                     ground = Image.open(io.BytesIO(png_without)).convert('RGB').crop(bounds)

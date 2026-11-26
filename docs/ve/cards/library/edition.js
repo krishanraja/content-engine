@@ -34,7 +34,7 @@ function buildEdition(base, groups, pieces=base.pieces) {
     line('day_'+i,['Monday','Wednesday','Friday'][i],'Mono','label',17,1);
     line('piece_'+i,piece.title,'Anton','headline',39,Math.ceil(piece.title.length/34),44);
     line('summary_'+i,piece.summary,'Fraunces','body',26,Math.max(1,Math.ceil(piece.summary.length/39)),14,40);
-    const slot='photo_'+i;slots[slot]={role:'photo',required:true,imagery_style:piece.imagery_style??base.slots[slot]?.imagery_style??1,aspect:'16:9'};slot_order.push(slot);
+    const slot='photo_'+i;slots[slot]={...base.slots[slot],role:'photo',required:true,imagery_style:piece.imagery_style??base.slots[slot]?.imagery_style??1,aspect:'16:9'};slot_order.push(slot);
     scene.push({kind:'photo',slot,value:piece.cover,stock:cream,burn_axis:'bottom',rect:[X,y,B,164]});y+=183;
     const first='read_'+i,second='watch_'+i;
     const summary=previous,top=y;

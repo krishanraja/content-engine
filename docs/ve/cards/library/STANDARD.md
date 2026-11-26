@@ -11,6 +11,7 @@ The bar is the full look Krish locked on 25 Nov (`locked-full-look-where-it-goes
 ## Marks and logos
 5. **No floating chips.** A company logo is never a small chip dropped on a photo. It sits on a solid field (ink, cream or the card's colour), at least 56 px tall per 1080 px of width, on the type's left edge, as part of the type group, or it is left off the card.
 6. **One wordmark,** on ink, sized as a deliberate element of the composition: V4 at least 40% of the content width under a feed headline; S3h at least 60% of the content width on a close.
+   On ink the wordmark is cream or mint; on a rung or answer colour field (why cards, landings) it is set in ink tone, never cream on colour.
 
 ## Composition
 7. **No crammed corners and no dead bands.** No element is pushed into a corner with empty field beside it. No band thinner than 20% of the frame carries type. Every field the eye lands on is either content or a deliberate colour field balanced by the type.

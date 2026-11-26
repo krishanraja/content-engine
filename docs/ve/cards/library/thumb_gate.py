@@ -4,7 +4,7 @@ From the Divergence engine (26 Nov 2026, "160 px blur gate"): designers judge th
 meet them at about 160 px wide. This gate shrinks each rendered cover to 160 px (and 40 px) and fails it when it
 would read as muddy, colourless or illegible there. It measures pixels only, so it is a floor, never a taste verdict.
 
-    python thumb_gate.py                      every cover, thumbnail and title card in the latest render
+    python thumb_gate.py                      every cover and thumbnail in the latest render
     python thumb_gate.py path/to/cover.png    any image a production session made
 Exit code 1 when anything fails.
 
@@ -23,7 +23,9 @@ from PIL import Image, ImageFilter
 
 HERE = Path(__file__).resolve().parent
 OUT = HERE.parents[3] / ".scratch" / "library" / "out" / "items"
-COVER_LAYOUTS = ("cover-", "title", "howto-cover", "good-news-cover", "simple-advice-cover", "cover")
+COVER_LAYOUTS = ("cover-", "howto-cover", "good-news-cover", "simple-advice-cover", "cover")
+# Title cards (video-*-title) are frames inside a cut, seen full screen, never at 160 px, so they are not in scope.
+IN_VIDEO = ("video-vertical-", "video-wide-")
 
 
 def measure(path):
@@ -47,7 +49,9 @@ def targets():
         if item.get("status") == "retired":
             continue
         layout = item.get("layout", "")
-        if any(layout.startswith(p) for p in COVER_LAYOUTS) or item["id"].endswith(("-title", "-thumb", "-cover", "-card")):
+        if item["id"].startswith(IN_VIDEO):
+            continue
+        if any(layout.startswith(p) for p in COVER_LAYOUTS) or item["id"].endswith(("-thumb", "-cover", "-card")):
             png = OUT / f"{item['id']}.png"
             if png.exists():
                 yield item["id"], png

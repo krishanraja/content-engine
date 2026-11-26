@@ -62,7 +62,7 @@
       }
     },
     "headshot": {
-      "path": ".scratch/private/headshot.png",
+      "src": "",
       "width": 1024,
       "height": 1024,
       "focus": {
@@ -1523,7 +1523,7 @@
       "caption_surface": "colour",
       "spacing_pairs": [],
       "archetype": 2,
-      "headline_caption_gap": 40,
+      "headline_caption_gap": 243,
       "system": "poster+evidence (26 Nov 2026)"
     },
     {
@@ -1936,7 +1936,7 @@
       "caption_surface": "colour",
       "spacing_pairs": [],
       "archetype": 2,
-      "headline_caption_gap": 40,
+      "headline_caption_gap": 203,
       "system": "poster+evidence (26 Nov 2026)"
     },
     {
@@ -2364,7 +2364,7 @@
       "caption_surface": "colour",
       "spacing_pairs": [],
       "archetype": 2,
-      "headline_caption_gap": 40,
+      "headline_caption_gap": 198,
       "system": "poster+evidence (26 Nov 2026)"
     },
     {
@@ -5211,7 +5211,7 @@
           "kind": "text",
           "rect": [
             90,
-            668,
+            509,
             756,
             54
           ],
@@ -5228,7 +5228,7 @@
           "kind": "text",
           "rect": [
             90,
-            748,
+            589,
             756,
             546
           ],
@@ -5271,8 +5271,8 @@
       "inventory": "fix",
       "leads": "Type",
       "ink_stack": {
-        "top": 668,
-        "bottom": 1294,
+        "top": 509,
+        "bottom": 1135,
         "rhythm": [
           "group"
         ],
@@ -5964,7 +5964,7 @@
       "caption_surface": "colour",
       "spacing_pairs": [],
       "archetype": 2,
-      "headline_caption_gap": 40,
+      "headline_caption_gap": 98,
       "system": "poster+evidence (26 Nov 2026)"
     },
     {
@@ -6236,7 +6236,7 @@
       "caption_surface": "colour",
       "spacing_pairs": [],
       "archetype": 2,
-      "headline_caption_gap": 40,
+      "headline_caption_gap": 101,
       "system": "poster+evidence (26 Nov 2026)"
     },
     {
@@ -6535,7 +6535,7 @@
       "caption_surface": "colour",
       "spacing_pairs": [],
       "archetype": 2,
-      "headline_caption_gap": 40,
+      "headline_caption_gap": 98,
       "system": "poster+evidence (26 Nov 2026)"
     },
     {
@@ -19529,21 +19529,21 @@
         {
           "title": "Why did pop songs get shorter?",
           "summary": "Spotify counts a stream at 30 seconds.",
-          "cover": "evo-cover",
+          "cover": "ex-ai-answer",
           "article_url": null,
           "video_url": null
         },
         {
           "title": "Why cut the intro?",
           "summary": "US top-ten intros averaged five seconds in 2015.",
-          "cover": "evo-specimens",
+          "cover": "ex-ai-answer",
           "article_url": null,
           "video_url": null
         },
         {
           "title": "How long is a hit?",
           "summary": "Fortune reported a Hot 100 average of three and a half minutes.",
-          "cover": "still-jukebox",
+          "cover": "ex-paid-split",
           "article_url": null,
           "video_url": null
         }
@@ -24058,7 +24058,7 @@
         ],
         "caption_band": [
           90,
-          1143,
+          783.0,
           770,
           177
         ]
@@ -24584,7 +24584,7 @@
         ],
         "caption_band": [
           90,
-          1143,
+          783.0,
           770,
           177
         ]
@@ -25810,7 +25810,7 @@
           {
             "element": "body_1",
             "property": "enterY",
-            "start": 55,
+            "start": 53,
             "duration": 7,
             "from": 12.0,
             "to": 0,
@@ -25819,7 +25819,7 @@
           {
             "element": "label_1",
             "property": "enterY",
-            "start": 55,
+            "start": 53,
             "duration": 7,
             "from": 7.2,
             "to": 0,
@@ -37125,7 +37125,7 @@
             950,
             238.14
           ],
-          "value": "Ask it out loud and it tells you what is around you.",
+          "value": "Ask it out loud, and it tells you what is around you.",
           "slot": "body_1",
           "face": "Fraunces",
           "color": "#0C1512",
@@ -42127,9 +42127,9 @@
         {
           "start": 270,
           "words": [
-            "Visionably",
-            "reads",
-            "bank",
+            "Blind",
+            "people",
+            "read",
             "statements."
           ],
           "onsets": [
