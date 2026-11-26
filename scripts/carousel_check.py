@@ -1,5 +1,18 @@
 #!/usr/bin/env python3
-"""The ten-second swipe: a carousel's story must reach a complete layperson in ten seconds (Krish, 2026-11-13).
+"""Every carousel's check: the v5 3-second format, enforced as refusals (Krish, 2026-11-26), on the deck and the drawn cards.
+
+Krish, 26 Nov 2026: "Tell the Content-engine story intelligence for makeyourmindup v5 session that it is to enforce
+carousel formatting." A deck is carousel-deck/3 (scripts/carousel_format.py, config/carousel-format.json, from the
+locked Library's CAROUSEL-FORMAT.md): 4 to 7 slides in the Library set's order, the cover from make_covers.py, a glance
+line a slide, the takeaway close. A refusal fails the run. carousel-deck/1 and carousel-deck/2 are retired: their ten
+cards, 8 to 20 word sentences and "Follow for more" close break the format, so problems() refuses them by name, and
+their old checks stay below as legacy_problems() for the history only (no route reads it).
+
+    python3 scripts/carousel_check.py DECK.json         exit 0 the deck may be made, 1 with every reason
+    python3 scripts/carousel_check.py --cards [--deck DECK.json] [--receipt OUT.json] slide-01.png ... slide-NN.png
+                                                        the drawn slides: 4 to 7, as many as the deck, and the layout bars
+
+The history (the ten-second swipe this replaced; Krish, 2026-11-13).
 
 Krish, 13 Nov 2026, on the Thursday 12 Nov Git carousel: "Git carousel cards look terrible apart from the cover card and
 they also are not very easy to follow. Remember that a complete layperson is swiping through these cards at light speed
@@ -242,7 +255,21 @@ def landing_problems(deck: dict, cards: list) -> list[str]:
     return out
 
 
+RETIRED = SCHEMAS
+
+
 def problems(deck: dict) -> list[str]:
+    """The deck against the v5 format: [] when it may be made. A retired schema is refused by name."""
+    import carousel_format
+    if isinstance(deck, dict) and deck.get('schema') in RETIRED:
+        return [f'{deck["schema"]} is retired (Krish, 2026-11-26: enforce the carousel format): its ten cards, 8 to 20 '
+                'word sentences and "Follow for more" close break the 3-second format. Write the deck as '
+                f'{carousel_format.SCHEMA} (config/carousel-format.json) and make it with scripts/carousel_make.py']
+    return carousel_format.deck_problems(deck, lib=carousel_format.library())
+
+
+def legacy_problems(deck: dict) -> list[str]:
+    """The retired ten-second swipe (carousel-deck/1 and /2), kept for the history; no route reads it."""
     out: list[str] = []
     if deck.get('schema') not in SCHEMAS:
         out.append('not a carousel-deck/1 or carousel-deck/2 file')
@@ -325,27 +352,64 @@ def problems(deck: dict) -> list[str]:
     return out
 
 
+def cards_problems(paths: list, deck: dict | None = None) -> tuple[list[str], list[dict]]:
+    """The drawn slides: the format's count (and the deck's), then the layout bars."""
+    import carousel_format
+    import carousel_layout
+    found = carousel_format.drawn_problems(paths, deck=deck)
+    more, cards = carousel_layout.problems(paths)
+    return found + [p for p in more if p not in found], cards
+
+
+def receipt(paths: list, deck_path: str | None = None, found: list | None = None) -> dict:
+    """What the make route and the manifest read: passed, the slides' sha256s in order, the deck's sha256."""
+    import hashlib
+
+    def sha(p):
+        return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+    deck = json.loads(Path(deck_path).read_text(encoding='utf-8')) if deck_path else {}
+    return {'schema': 'carousel-receipt/1', 'passed': not found, 'problems': list(found or []),
+            'format': 'config/carousel-format.json', 'set': deck.get('set'), 'piece': deck.get('piece'),
+            'deck_sha256': sha(deck_path) if deck_path else None,
+            'slides': [{'file': Path(p).name, 'sha256': sha(p)} for p in paths]}
+
+
 def main(argv=None) -> int:
     argv = sys.argv[1:] if argv is None else argv
     if argv[:1] == ['--cards']:
-        import carousel_layout
-        found, cards = carousel_layout.problems(argv[1:])
+        rest, deck_path, out_path = list(argv[1:]), None, None
+        for flag in ('--deck', '--receipt'):
+            if flag in rest:
+                i = rest.index(flag)
+                value = rest[i + 1]
+                del rest[i:i + 2]
+                if flag == '--deck':
+                    deck_path = value
+                else:
+                    out_path = value
+        deck = json.loads(Path(deck_path).read_text(encoding='utf-8')) if deck_path else None
+        found, cards = cards_problems(rest, deck)
+        if deck is not None:
+            found = problems(deck) + found
         for p in found:
-            print(f'carousel_check: {p}')
+            print(f'carousel_check: REFUSED {p}')
+        if out_path:
+            Path(out_path).write_text(json.dumps(receipt(rest, deck_path, found), indent=1) + '\n', encoding='utf-8')
         if not found:
-            print(f'carousel_check: the {len(cards)} cards pass the cover, space, centring and richness bars '
+            print(f'carousel_check: the {len(cards)} slides pass the format count and the layout bars '
                   '(proxies: look at them at full size and at phone size before calling them done)')
         return 1 if found else 0
     if len(argv) != 1:
         print(__doc__)
         return 2
+    import carousel_format
     deck = json.loads(Path(argv[0]).read_text(encoding='utf-8'))
     found = problems(deck)
     for p in found:
-        print(f'carousel_check: {p}')
+        print(f'carousel_check: REFUSED {p}')
     if not found:
-        heads = ' / '.join(str(c.get('headline')) for c in deck['cards'])
-        print(f'carousel_check: passes the ten-second swipe: {heads}')
+        print(f'carousel_check: the deck holds the 3-second format ({len(deck["slides"])} slides, set {deck["set"]}); '
+              + carousel_format.library_note(carousel_format.library()))
     return 1 if found else 0
 
 

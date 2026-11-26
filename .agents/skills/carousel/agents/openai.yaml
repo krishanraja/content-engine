@@ -1,4 +1,4 @@
 interface:
   display_name: "Make a carousel"
-  short_description: "A carousel to the guaranteed floor every past failure built, with one named experiment above it"
+  short_description: "A carousel held to the 3-second format floor from the v5 Library, with one named experiment above it"
   default_prompt: "Use $carousel to make this carousel to the floor and try one new thing above it: piece_id: <uuid>."

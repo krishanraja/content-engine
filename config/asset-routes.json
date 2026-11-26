@@ -32,6 +32,8 @@
     "carousel": {
       "script": "scripts/library/make_piece.py",
       "argv": ["python", "scripts/library/make_piece.py", "{piece}", "--set", "{set}"],
+      "via": ["python", "scripts/carousel_make.py", "{piece}", "--set", "{set}", "--deck", "{deck}", "--out", "{out}"],
+      "via_rule": "A carousel is never made by calling make_piece.py alone: scripts/carousel_make.py checks the deck against config/carousel-format.json first (Krish, 2026-11-26: enforce the carousel format), calls make_piece.py and make_covers.py by path, checks the drawn slides and writes the receipt the manifest reads. asset_routes.py names and runs that route for every carousel kind.",
       "writes": "carousel/slide-NN.png and post-pack-files.json",
       "sets": ["piece", "good-news", "simple-advice", "how-to", "explainer", "quiz", "meme"],
       "rule": "Carousels come only from this command, in the set's registry order (library.json carousel_sets), to the 3-second swipe (CAROUSEL-FORMAT.md). It never invents words: every slot comes from the piece."

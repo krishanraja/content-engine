@@ -109,7 +109,7 @@ describe('the one route for carousels, memes, Notes images and off-day voiceover
       for (const words of ['scripts/post-pack/judge_assets.py ask', 'scripts/post-pack/channel_captions.py', 'Growth posts it']) expect(a.prompt).toContain(words)
     }
     if (still.kind !== 'prompt' || motion.kind !== 'prompt') throw new Error('not a prompt')
-    for (const words of ['scripts/carousel_check.py', 'carousel_check.py --cards', '8 to 20 words a stranger can follow', 'python scripts/library/make_piece.py <piece> --set <set>',
+    for (const words of ['scripts/carousel_check.py', 'carousel_check.py --cards', 'carousel-deck/3', 'config/carousel-format.json', 'scripts/carousel_make.py <piece> --set <set> --deck DECK.json', '4 to 7 slides', 'never "Follow for more"', 'A refusal fails the run', 'python scripts/library/make_piece.py <piece> --set <set>',
       'python scripts/covers/make_covers.py <piece> --out <folder>', 'covers.json', 'scripts/post-pack/asset_routes.py command', `"${LIBRARY_ABSENT}"`, 'never draw it another way',
       'licensed Commons photo', 'No badges', '10/10 judges', '3 Posts', 'inspiration cards Krish ticked']) {
       expect(still.prompt).toContain(words)
@@ -118,7 +118,7 @@ describe('the one route for carousels, memes, Notes images and off-day voiceover
       expect(motion.prompt).toContain(words)
     }
     // No Codex-built card for the pictures, no Growth renderer, no retired Library set.
-    for (const gone of ['scripts/ve.py card (kind carousel', 'codex/queue', '--set covers', '--set video']) expect(still.prompt).not.toContain(gone)
+    for (const gone of ['scripts/ve.py card (kind carousel', 'codex/queue', '--set covers', '--set video', 'carousel-deck/1', '8 to 20 words', 'at most 10 cards']) expect(still.prompt).not.toContain(gone)
     expect(routeLine('still')).not.toBe(routeLine('motion'))
     // A post neither route makes says the split: content-engine makes it, Growth posts it.
     expect(offdayHead(null)).toContain('content-engine makes this off-day post')

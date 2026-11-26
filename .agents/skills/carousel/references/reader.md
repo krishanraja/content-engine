@@ -1,6 +1,6 @@
 # A carousel's reader, and the Library it is made in
 
-Read from the `carousel` skill (`SKILL.md`, line 5 and steps 3 and 4).
+Read from the `carousel` skill (`SKILL.md`, its opening and steps 1 and 3).
 
 ## The reader's world (Ruling, Krish, 26 November 2026)
 
@@ -38,6 +38,9 @@ badges, labels, pills or toasts anywhere, sources as plain links and credits as 
 licensed photo of a named person in their own story (never beside an accusation against their company), then the real
 object, company or venue, then a photoreal still of the specific thing (no generated people, no readable logos or text).
 
-When `scripts/library/make_piece.py` is not on the checkout, stop and say "the v5 Library is not on this checkout yet";
-never fall back to a Codex card, a Higgsfield picture or any other renderer. The deck, the cold read and the checks of
-steps 1, 2 and 5 still apply.
+Every carousel goes through `python3 scripts/carousel_make.py <piece> --set <set> --deck DECK.json --out <folder>`,
+which holds the deck and the drawn slides to the 3-second format (`config/carousel-format.json`; Krish, 26 Nov 2026:
+"Tell the Content-engine story intelligence for makeyourmindup v5 session that it is to enforce carousel formatting")
+and calls both Library commands by path. When `scripts/library/make_piece.py` is not on the checkout it stops and says
+"the v5 Library is not on this checkout yet"; never fall back to a Codex card, a Higgsfield picture or any other
+renderer. The deck check of step 2 still applies.

@@ -47,7 +47,9 @@ SPEC.json (written by the session from the piece's record and its library folder
 
     {"piece_id": "<uuid>", "qa": {"state": "passed", "checked_at": "2026-11-09T07:00:00Z"},
      "assets": [{"name": "short_video", "drive_id": "...", "sha256": "..."}, ...],   # in the order he uses them
-     "channels": {"tiktok": {"words": "...", "alt_text": null, "assets": ["short_video"]}, ...}}
+     "channels": {"tiktok": {"words": "...", "alt_text": null, "assets": ["short_video"]}, ...},
+     "carousel_receipt": "carousel-receipt.json"}   # when it carries carousel_slide_<n>: scripts/carousel_make.py's
+                                                    # passing receipt, or the draft is refused (not approvable)
 """
 import argparse
 import hashlib
@@ -196,10 +198,50 @@ def cover_problems(ch, entry, by_name):
     return out
 
 
-def draft(spec):
-    """The draft manifest from SPEC: the closed shape without approval_sha256. Each asset's order is its place in SPEC."""
+CAROUSEL_SLIDE = 'carousel_slide'
+
+
+def carousel_problems(spec, base=Path('.')):
+    """A carousel is approvable only with its passing receipt (Krish, 2026-11-26: "Tell the Content-engine story
+    intelligence for makeyourmindup v5 session that it is to enforce carousel formatting"): SPEC's carousel_receipt (the
+    carousel-receipt.json scripts/carousel_make.py writes, or its path) passed, 4 to 7 slides (config/carousel-format.json),
+    its slides' sha256s those of SPEC's carousel_slide_<n> assets in order. [] when SPEC carries no carousel."""
+    slides = [a for a in spec.get('assets') or [] if isinstance(a, dict)
+              and asset_spec.asset_kind(str(a.get('name'))) == CAROUSEL_SLIDE]
+    if not slides:
+        return []
+    slides.sort(key=lambda a: int(asset_spec.NUMBERED.match(a['name']).group('n')))
+    rec = spec.get('carousel_receipt')
+    if isinstance(rec, str):
+        try:
+            rec = json.loads((Path(base) / rec).read_text(encoding='utf-8'))
+        except (OSError, ValueError):
+            rec = None
+    if not isinstance(rec, dict) or rec.get('schema') != 'carousel-receipt/1':
+        return ['the carousel carries no receipt ("carousel_receipt": the carousel-receipt.json python3 scripts/carousel_make.py '
+                'writes): a carousel that has not passed the format is not approvable']
+    out = []
+    if rec.get('passed') is not True:
+        out.append('the carousel failed the format (' + '; '.join(map(str, (rec.get('problems') or [])[:3]))
+                   + '): a carousel that fails is not approvable')
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    import carousel_format
+    span = carousel_format.rules()['slides']
+    if not span['min'] <= len(slides) <= span['max']:
+        out.append(f'{len(slides)} carousel slides: a carousel is {span["min"]} to {span["max"]}')
+    if [s.get('sha256') for s in rec.get('slides') or [] if isinstance(s, dict)] != [a.get('sha256') for a in slides]:
+        out.append('the carousel receipt is not for these slides: its sha256s are not the carousel_slide assets\', in order')
+    return out
+
+
+def draft(spec, base=Path('.')):
+    """The draft manifest from SPEC: the closed shape without approval_sha256. Each asset's order is its place in SPEC.
+    A SPEC with a carousel whose receipt did not pass is refused: it is not approvable (carousel_problems)."""
     if not isinstance(spec, dict):
         raise ManifestError('SPEC is {"piece_id", "qa", "assets": [...], "channels": {...}}')
+    held = carousel_problems(spec, base)
+    if held:
+        raise ManifestError('the carousel is not approvable:\n  ' + '\n  '.join(held))
     assets = [{'name': a.get('name'), 'drive_id': a.get('drive_id'), 'sha256': a.get('sha256'), 'order': n}
               for n, a in enumerate(spec.get('assets') or [], 1) if isinstance(a, dict)]
     channels = spec.get('channels') or {}
@@ -486,7 +528,7 @@ def main(argv=None):
             if voiced == 2:
                 print('piece_manifest: the voice check could not be asked, so nothing was written; say so on the day\'s tab', file=sys.stderr)
                 return 2
-            data = encode(draft(spec))
+            data = encode(draft(spec, Path(a.spec).parent if a.spec != '-' else Path('.')))
             Path(a.out).parent.mkdir(parents=True, exist_ok=True)
             Path(a.out).write_bytes(data)
             print(f'wrote {a.out}, sha256 {sha256(data)}; build the board with --publish-manifest DAY={a.out}')

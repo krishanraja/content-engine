@@ -71,8 +71,8 @@ class VisualCardsTakeTheOneRoute(unittest.TestCase):
     and Notes images go the same way. Ruling (Krish, 2026-11-26): content-engine makes every asset, from the locked v5
     Library, and Growth only posts it, so a card is written in content-engine for content-engine's own checkout (never
     Growth's retired renderer, render/ in growth-makeyourmindup). A card of one of these kinds is held to the brand
-    palette for its day and the inspiration cards Krish ticked, and a carousel's to a deck that passes
-    scripts/carousel_check.py, and it never carries the deck's words (a venture's card sits in a public repository)."""
+    palette for its day and the inspiration cards Krish ticked. A carousel card is retired (Krish, 2026-11-26): a
+    carousel is made only by the v5 Library through scripts/carousel_make.py."""
 
     DECK = 'docs/plans/2026-11-09-week/git-carousel/deck.json'
 
@@ -85,47 +85,20 @@ class VisualCardsTakeTheOneRoute(unittest.TestCase):
         fields.update(extra)
         return cards.write_card(Path(tmp) / 'c.md', **fields)
 
-    def test_a_carousel_card_carries_the_palette_the_references_and_the_deck_shape_but_none_of_its_words(self):
-        import json as _json
-        with tempfile.TemporaryDirectory() as tmp:
-            text = self.card(tmp).read_text(encoding='utf-8')
-        self.assertIn('## Brand (carousel, off, 2026-11-17', text)
-        self.assertIn('"close": "house_close_slide"', text)
-        self.assertIn('- 8ca0bd3d', text)
-        self.assertIn('## Deck (9 cards', text)
-        self.assertLessEqual(len(text.encode('utf-8')), 6144)
-        deck = _json.loads((ROOT / self.DECK).read_text(encoding='utf-8'))
-        for card in deck['cards']:
-            self.assertNotIn(card['headline'], text)
-
-    def test_a_carousel_card_names_the_body_face_and_the_one_he_rejected(self):
-        # Krish, 2026-11-18: "this font is crappy, i have given this feedback before". The deck check is patched: this
-        # test is about the card's type rule, not the deck's words.
-        sys.path.insert(0, str(ROOT / 'scripts'))
-        import carousel_check
-        with patch.object(carousel_check, 'problems', return_value=[]), tempfile.TemporaryDirectory() as tmp:
-            text = self.card(tmp).read_text(encoding='utf-8')
-        self.assertIn('## Type (Ruling, Krish, 2026-11-18)', text)
-        self.assertIn('Body sentences: Anton, uppercase', text)
-        self.assertIn('Never Archivo Black and never Archivo at weight 800 or heavier', text)
-        self.assertLessEqual(len(text.encode('utf-8')), 6144)
+    def test_a_carousel_card_is_retired_for_the_library_route(self):
+        # Krish, 2026-11-26: "Tell the Content-engine story intelligence for makeyourmindup v5 session that it is to
+        # enforce carousel formatting." A Codex-drawn carousel is a second renderer, so the kind refuses and names the route.
+        with tempfile.TemporaryDirectory() as tmp, self.assertRaises(SystemExit) as stop:
+            self.card(tmp)
+        said = str(stop.exception.code)
+        self.assertIn('a carousel card is retired', said)
+        self.assertIn('scripts/carousel_make.py', said)
+        self.assertIn('make_piece.py --set', said)
 
     def test_no_references_no_card(self):
         with tempfile.TemporaryDirectory() as tmp, self.assertRaises(SystemExit) as stop:
-            self.card(tmp, references=[])
+            self.card(tmp, kind='meme', deck=None, references=[])
         self.assertIn('F26', str(stop.exception.code))
-
-    def test_a_deck_that_fails_the_story_check_is_never_carded(self):
-        import json as _json
-        with tempfile.TemporaryDirectory() as tmp:
-            deck = _json.loads((ROOT / self.DECK).read_text(encoding='utf-8'))
-            deck['five_whys'] = deck['five_whys'][:2]
-            bad = Path(tmp) / 'deck.json'
-            bad.write_text(_json.dumps(deck), encoding='utf-8')
-            with self.assertRaises(SystemExit) as stop:
-                self.card(tmp, deck=str(bad))
-        self.assertIn('carousel_check', str(stop.exception.code))
-        self.assertIn('five times', str(stop.exception.code))
 
     def test_a_face_cover_card_names_its_channel_and_photos_and_wears_both_cover_sizes(self):
         with tempfile.TemporaryDirectory() as tmp:

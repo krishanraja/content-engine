@@ -2868,13 +2868,13 @@
         },
         {
           "file": "scripts/velib/cards.py",
-          "contains": "CAROUSEL_BODY_TYPE",
-          "how": "every carousel Codex card states the body face and bans the rejected one"
+          "contains": "CAROUSEL_RETIRED",
+          "how": "26 Nov 2026: no Codex card draws a carousel any more (Krish: enforce the carousel format); the locked v5 Library's templates fix the face, so ve card refuses the carousel kind and names scripts/carousel_make.py"
         },
         {
           "file": "tests/ve_cards_test.py",
-          "contains": "test_a_carousel_card_names_the_body_face_and_the_one_he_rejected",
-          "how": "the card text carries the rule"
+          "contains": "test_a_carousel_card_is_retired_for_the_library_route",
+          "how": "the retired carousel card refuses, so no card can name another face"
         },
         {
           "file": "docs/GROWTH-HANDOFF.md",

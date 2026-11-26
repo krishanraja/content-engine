@@ -8,7 +8,7 @@ good and aren't using the page space centrally or correctly. They look too bland
 has been put into the visual treatment."
 
 Run through the deck check: python3 scripts/carousel_check.py --cards card-1.png ... card-n.png (in order, the cover
-first). Exit 1 with every reason. The bars live in config/carousel-layout.json; the safe box is the brand palette's
+first). The v5 format's count comes first (config/carousel-format.json, 4 to 7 slides; Ruling, Krish, 2026-11-26). Exit 1 with every reason. The bars live in config/carousel-layout.json; the safe box is the brand palette's
 (config/brand-palette.json safe.feed_canvas and feed_margin_px), never a copy. Measured on the finished 1080x1350 PNGs:
 
   The cover (C)
@@ -32,7 +32,10 @@ Standard library plus Pillow and NumPy (requirements-ci.txt).
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 ROOT = Path(__file__).resolve().parents[1]
 BARS = ROOT / 'config' / 'carousel-layout.json'
@@ -143,7 +146,9 @@ def problems(paths: list, b: dict | None = None) -> tuple[list[str], list[dict]]
     if len(paths) < 2:
         return ['a deck needs a cover and at least one card after it'], []
     cards = [measure(p, b) for p in paths]
-    out: list[str] = []
+    # The v5 format's count (config/carousel-format.json; Krish, 2026-11-26: enforce the carousel format): 4 to 7.
+    import carousel_format
+    out: list[str] = carousel_format.drawn_problems(paths)
     cover, rest = cards[0], cards[1:]
     body_heads = sorted(c['headline_px'] for c in rest if c['headline_px'])
     median = body_heads[len(body_heads) // 2] if body_heads else 0

@@ -94,8 +94,9 @@ class RefusalTest(unittest.TestCase):
             for script in ('scripts/library/make_piece.py', 'scripts/covers/make_covers.py'):
                 (Path(root) / script).parent.mkdir(parents=True, exist_ok=True)
                 (Path(root) / script).write_text('')
-            self.assertEqual(asset_routes.command_for(self.routes, 'good-news-carousel', 'docs/plans/d', 'o', root=root),
-                             ['python', 'scripts/library/make_piece.py', 'docs/plans/d', '--set', 'good-news'])
+            # A carousel goes through carousel_make.py, which checks the deck before make_piece.py draws (Krish, 2026-11-26).
+            self.assertEqual(asset_routes.command_for(self.routes, 'good-news-carousel', 'docs/plans/d', 'o', root=root, deck='d.json'),
+                             ['python', 'scripts/carousel_make.py', 'docs/plans/d', '--set', 'good-news', '--deck', 'd.json', '--out', 'o'])
             self.assertEqual(asset_routes.command_for(self.routes, 'video-cover', 'docs/plans/d', 'o', root=root),
                              ['python', 'scripts/covers/make_covers.py', 'docs/plans/d', '--out', 'o'])
 

@@ -88,8 +88,13 @@ artwork: fill the slots, never move the frame, no per-piece look, no second rend
 
 - Covers and thumbnails: `python scripts/covers/make_covers.py <piece> --out <folder>` (writes `covers.json`, which
   post-pack reads as `cover_set`). make_piece.py's old cover and video sets are retired.
-- Carousels: `python scripts/library/make_piece.py <piece> --set <set>` (piece, good-news, simple-advice, how-to,
-  explainer, quiz, meme).
+- Carousels: only through `python3 scripts/carousel_make.py <piece> --set <set> --deck DECK.json --out <folder>`,
+  which holds the deck (`carousel-deck/3`) and the drawn slides to the 3-second format, `config/carousel-format.json`,
+  as refusals that fail the step (Krish, 26 Nov 2026: "Tell the Content-engine story intelligence for makeyourmindup v5
+  session that it is to enforce carousel formatting"), then calls `python scripts/library/make_piece.py <piece> --set
+  <set>` (piece, good-news, simple-advice, how-to, explainer, quiz, meme) and `make_covers.py` for slide 1 by path, and
+  writes `carousel-receipt.json`. 4 to 7 slides, the piece carousel 6, good news 4 items; the rest is the carousel skill's
+  floor. The manifest SPEC carries the passing receipt as `carousel_receipt`: a carousel that fails is not approvable.
 - Every asset kind Growth used to make, and the command and set that make it now: `config/asset-routes.json`.
   `python3 scripts/post-pack/asset_routes.py command <kind> --piece <piece> --out <folder>` prints it.
 - Not on this checkout yet (the Library lands from `library/gates-and-wiring`): stop and say "the v5 Library is not on
@@ -102,7 +107,8 @@ artwork: fill the slots, never move the frame, no per-piece look, no second rend
 ### The judges: asked by the make flow
 
 `python3 scripts/post-pack/judge_assets.py ask REQUEST.json --week <Monday>` sends `op: judge` for a carousel or a
-Short before it goes to Growth: every card's bytes and sha256, and a carousel's `carousel_check.py --cards` receipt.
+Short before it goes to Growth: every card's bytes and sha256, and a carousel's `carousel_check.py --cards --deck DECK.json`
+receipt.
 Exit 0 every judge passes; 1 fail (each judge's fix printed); 2 not asked, which holds and is never a pass. Growth keeps
 `op: bind` and `op: live`.
 

@@ -1652,7 +1652,74 @@ def goodnews_history(sources, earlier_ideas):
 
 SATURDAY_FROM = '2026-11-30'
 SATURDAY_KINDS = ('good_news',)  # Krish, 2026-11-19: Saturday is good-news carousels only (config/good-news.json saturday_kinds)
-SATURDAY_CARDS = (4, 10)  # a Saturday carousel's cards: at least four, at most ten (Buffer posts ten images at most)
+SATURDAY_CARDS = (4, 10)  # a Saturday carousel's cards before FORMAT_FROM: at least four, at most ten (Buffer posts ten)
+# The 3-second carousel format (config/carousel-format.json, from the locked Library's CAROUSEL-FORMAT.md; Krish,
+# 2026-11-26: "Tell the Content-engine story intelligence for makeyourmindup v5 session that it is to enforce carousel
+# formatting"). From its `from` board every carousel option on the board is held to it (code carousel_format, a gate
+# code): 4 to 7 cards, a Library set when it names one, a cover of 10 words or fewer, inside cards of 15 words or fewer
+# that state rather than ask, a close that never asks to follow; and the Saturday card flow is 4 to 7 cards.
+CAROUSEL_FORMAT = json.loads((Path(__file__).resolve().parents[2] / 'config' / 'carousel-format.json').read_text(encoding='utf-8'))
+FORMAT_FROM = CAROUSEL_FORMAT['from']
+FORMAT_CARDS = (CAROUSEL_FORMAT['slides']['min'], CAROUSEL_FORMAT['slides']['max'])
+CAROUSEL_KINDS = ('good_news', 'explainer', 'supporting')
+
+
+def saturday_cards(week):
+    """A Saturday carousel's card range on this board: the format's 4 to 7 from FORMAT_FROM, before it 4 to 10."""
+    return FORMAT_CARDS if str(week) >= FORMAT_FROM else SATURDAY_CARDS
+
+
+def is_carousel_option(o):
+    """An off-day option the board offers as a carousel: a good-news, explainer or supporting option with cards, a Library
+    set named, the weekly good news, or a format that says carousel."""
+    if not isinstance(o, dict):
+        return False
+    if o.get('set') or o.get('weekly') == 'good_news' or 'carousel' in str(o.get('format') or '').lower():
+        return True
+    return saturday_kind(o) in CAROUSEL_KINDS and isinstance(o.get('cards'), list) and bool(o.get('cards'))
+
+
+def carousel_format_findings(ideas, week):
+    """From FORMAT_FROM: every carousel option on the board holds the 3-second format before it is offered. Refusals,
+    each a gate line (code carousel_format)."""
+    if str(week) < FORMAT_FROM:
+        return []
+    F = CAROUSEL_FORMAT
+    lo, hi = FORMAT_CARDS
+    out = []
+    offdays = (ideas or {}).get('offdays') if isinstance((ideas or {}).get('offdays'), dict) else {}
+    word = lambda t: re.findall(r"[A-Za-z0-9£$€][A-Za-z0-9'’,.%+×£$€/-]*", str(t or ''))
+    for day, opts in offdays.items():
+        for o in opts if isinstance(opts, list) else []:
+            if not is_carousel_option(o):
+                continue
+            ref = f'off-{day}-{o.get("id")}'
+
+            def say(line, ref=ref):
+                out.append({'code': 'carousel_format', 'ref': ref, 'line': f'carousel_format: {ref} {line}'})
+            if o.get('set') is not None and o.get('set') not in F['sets']:
+                say(f'names set "{o.get("set")}"; a carousel is one of the Library\'s sets ({", ".join(F["sets"])})')
+            cards = [c for c in o.get('cards') or [] if isinstance(c, dict)]
+            if not cards:
+                continue
+            if not lo <= len(cards) <= hi:
+                say(f'has {len(cards)} cards; a carousel is {lo} to {hi} (the cover, 3 to 5 inside, the close)')
+            for n, c in enumerate(cards, 1):
+                said = str(c.get('words') or '')
+                low = said.lower()
+                if n == 1 and len(word(said)) > F['cover']['headline_words_max']:
+                    say(f'card 1 has {len(word(said))} words; the cover headline is {F["cover"]["headline_words_max"]} or fewer')
+                if 1 < n < len(cards):
+                    if len(word(said)) > F['inside']['slide_words_max']:
+                        say(f'card {n} has {len(word(said))} words; an inside card holds {F["inside"]["slide_words_max"]} at most')
+                    if '?' in said and saturday_kind(o) != 'quiz':
+                        say(f'card {n} asks a question; every inside card is a statement')
+                for row in F['never']:
+                    pat = row['pattern']
+                    hit = pat in said if row.get('literal') else re.search(r'(?<![a-z0-9])' + re.escape(pat) + r'(?![a-z0-9])', low)
+                    if hit:
+                        say(f'card {n} says "{pat}": {row["why"]}')
+    return out
 
 
 def saturday_kind(o):
@@ -1677,7 +1744,7 @@ def saturday_findings(ideas, week, flows=None, feed_urls=None, carousel_urls=Non
     offdays = (ideas or {}).get('offdays') if isinstance((ideas or {}).get('offdays'), dict) else {}
     feed = {canon_url(u) for u in feed_urls or [] if canon_url(u)}
     carousels = None if carousel_urls is None else {canon_url(u) for u in carousel_urls if canon_url(u)}
-    lo, hi = SATURDAY_CARDS
+    lo, hi = saturday_cards(week)
     out = []
 
     def say(ref, line):
@@ -1720,7 +1787,9 @@ def saturday_findings(ideas, week, flows=None, feed_urls=None, carousel_urls=Non
             say(ref, f'has {len(frames)} direction.frames; the direction follows the same card_flow ({len(flow)} frames)')
         if weekly:
             n = len([s for s in o.get('stories') or [] if isinstance(s, dict)])
-            if n and len(flow) < n + 2:
+            # From FORMAT_FROM the carousel carries the format's items (4); a fifth story found is a spare.
+            drawn = min(n, CAROUSEL_FORMAT['good_news']['items']) if str(week) >= FORMAT_FROM else n
+            if n and len(flow) < drawn + 2:
                 say(ref, f'follows a card_flow of {len(flow)} cards for {n} stories; its stories fill the middle cards, '
                          'so the flow holds a cover, a card for each story and a close')
     return out
@@ -2299,7 +2368,7 @@ def wildcard_findings(ideas, week, status=None, before=None, cfg=None):
 # and so does an open hero day with no wildcard, or one whose wildcard is unexplained or unchecked (wildcard_findings;
 # ruling wildcard, Krish, 2026-11-26).
 GATE_CODES = ('refused', 'warned_first', 'warning_line', 'return', 'repeat', 'aim', 'saturday', 'template', 'goodnews', 'off_beat',
-              'story', 'story_floor', 'wildcard')
+              'story', 'story_floor', 'wildcard', 'carousel_format')
 # What the checks say without failing anything: a warned option (it carries his words) and an idea from his tick on a
 # subject he refused (it carries the refusal; Ruling, Krish, 2026-11-12).
 NOTE_CODES = ('warned', 'his_tick', 'his_repeat')

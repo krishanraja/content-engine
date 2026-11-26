@@ -3,6 +3,22 @@
 Owner: content-engine. Taste authority: Krish Raja. Updated 5 November 2026; the brand elements rechecked on 12
 November 2026; how a carousel is made rewritten on 13 November 2026; his rulings of 14, 15 and 16 November 2026 added.
 
+**The 3-second carousel format wins over everything below (Ruling, Krish, 26 November 2026), and it is enforced.** His
+words, relayed verbatim: "Tell the Content-engine story intelligence for makeyourmindup v5 session that it is to enforce
+carousel formatting." The rules are rows in `config/carousel-format.json`, from the locked v5 Library's
+`CAROUSEL-FORMAT.md`, `TITLES.md` and `library.json`, and each is a refusal that fails the run, never a warning: 4 to 7
+slides (the cover, 3 to 5 inside, the close) in the Library set's registry order, the piece carousel 6, good news 4
+items; the cover from `make_covers.py`, its headline 10 words or fewer and 50 characters or fewer in his title shapes at
+120 px or more; each inside slide one glance line of 8 words or fewer at 96 px or more, 15 words at most, 50 across the
+inside, one dominant visual on half the slide, a statement; the close the takeaway (44 characters or fewer, two lines,
+its payoff in mint), the S3h wordmark and the site, never "Follow for more"; how-to one step a slide, 5 at most, the
+real screenshot, a prompt of 5 words or fewer; nothing below 34 px. A carousel is made only by
+`python3 scripts/carousel_make.py <piece> --set <set> --deck DECK.json --out <folder>`, which checks the deck
+(`carousel-deck/3`, `scripts/carousel_check.py`), calls `make_piece.py --set <set>` and `make_covers.py` by path,
+checks the drawn slides and writes the receipt the manifest needs before he can approve it. Where a section below says
+otherwise (ten cards, 8 to 20 word sentences, "Follow for more", an Anton body, a Codex card), it is history: the old
+deck schemas are refused and the Codex carousel card is retired.
+
 **The brand palette wins on every brand element** (Krish, 12 Nov 2026: "I approve the brand palette sheet, but only if
 it falls in line with the attached."): the cover's logo, the wordmark, the colour of each day and the last card come
 from `config/brand-palette.json` (`docs/production/BRAND_PALETTE.md`), and where a section below says otherwise on one

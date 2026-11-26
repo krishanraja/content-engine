@@ -9,7 +9,8 @@
 // carousels should now be done in Claude, but using the Codex plug in as per the other usual workflows"; memes, Notes
 // images and off-day voiceover shorts the same way), never by a scheduled job, a headless model run or a template engine:
 //
-//   still    a carousel, a meme image or a Notes image: the session writes the words and the story, fills the Library
+//   still    a carousel, a meme image or a Notes image: the session writes the words and the story, makes a carousel only
+//            through scripts/carousel_make.py (its deck held to config/carousel-format.json), which fills the Library
 //            set with scripts/library/make_piece.py and the cover with scripts/covers/make_covers.py (config/asset-routes.json
 //            names the command for each kind; scripts/post-pack/asset_routes.py refuses plainly when the Library is not on
 //            the checkout), asks the 10/10 judges itself (scripts/post-pack/judge_assets.py) and writes every channel's
@@ -61,16 +62,17 @@ const JUDGE_AND_CAPTIONS = 'Ask the 10/10 judges yourself before anything goes t
 
 const STILL = `Make it in this Claude session in krishanraja/content-engine, from the locked v5 Library. ${ROUTE_RULING} `
   + 'The route is content-engine docs/CAROUSEL-STANDARD.md, "How a carousel is made". '
-  + '1. Write the words and the story yourself. A carousel\'s deck comes first, as carousel-deck/1, '
-  + 'and passes python3 scripts/carousel_check.py DECK.json: five whys, the wider trend with an outside source, every card '
-  + 'after the cover one full plain sentence of 8 to 20 words a stranger can follow, at most 10 cards, ending on the palette\'s close: the takeaway, then "Follow for more" with the Make Your Mind Up wordmark centred under it. '
-  + '2. Make the pictures only with the Library: python scripts/library/make_piece.py <piece> --set <set> for the carousel, and its cover and thumbnails only with '
-  + 'python scripts/covers/make_covers.py <piece> --out <folder> (it writes covers.json, which post-pack reads as cover_set). '
-  + 'python3 scripts/post-pack/asset_routes.py command <kind> --piece <piece> --out <folder> names the command and set for each kind (config/asset-routes.json), '
+  + '1. Write the words and the story yourself. A carousel\'s deck comes first, as carousel-deck/3 (config/carousel-format.json, the Library\'s CAROUSEL-FORMAT.md; Krish, 2026-11-26: enforce the carousel format), '
+  + 'and passes python3 scripts/carousel_check.py DECK.json: 4 to 7 slides in the Library set\'s order (the piece carousel is 6), the cover from make_covers.py with a headline of 10 words or fewer and 50 characters or fewer in his title shapes, '
+  + 'each inside slide one glance line of 8 words or fewer at 96 px or more, 15 words at most a slide and 50 across the inside, one dominant visual on at least half the slide, every inside slide a statement, '
+  + 'and the close the takeaway (44 characters or fewer, two lines, its payoff in mint) with the S3h wordmark and the site, never "Follow for more" (the follow ask goes in the caption); nothing below 34 px. A refusal fails the run. '
+  + '2. Make it only with python3 scripts/carousel_make.py <piece> --set <set> --deck DECK.json --out <folder>: it checks the deck again, draws the set with python scripts/library/make_piece.py <piece> --set <set> and the first slide with '
+  + 'python scripts/covers/make_covers.py <piece> --out <folder> (it writes covers.json, which post-pack reads as cover_set), checks the drawn slides and writes carousel-receipt.json. '
+  + 'python3 scripts/post-pack/asset_routes.py command <kind> --piece <piece> --out <folder> --deck DECK.json names the route and set for each kind (config/asset-routes.json), '
   + `and refuses a kind the Library has no command for yet. If the command is not on this checkout, stop and say "${LIBRARY_ABSENT}"; never draw it another way. `
   + 'Pictures in the Library\'s order: a licensed Commons photo of a named person in their own story, then the real object, company or venue, then a photoreal still of the specific thing '
   + 'built by Codex through the Codex plugin (no generated people, no readable logos or text). No badges. '
-  + '3. Verify: the deck check again, the drawn cards with python3 scripts/carousel_check.py --cards, a look at every card at phone size, '
+  + '3. Verify: the drawn slides with python3 scripts/carousel_check.py --cards --deck DECK.json, a look at every slide at full size and at phone size, '
   + `the inspiration cards Krish ticked held beside them. ${JUDGE_AND_CAPTIONS}`
   + `4. File them in the post's 3 Posts folder. Krish approves; Growth posts it through its approved route. ${NEVER_HEADLESS}`
 
