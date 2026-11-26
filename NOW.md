@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-23","week_target":20,"current":1,"current_as_of":"2026-11-25","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (0 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (5% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 20 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
+- The standards check-in of 2026-11-26 grouped the new floor standards; config/floor-groups.json holds 85 groups, each new one seeded as a proposal for Krish on the pinned check-in page. (2026-11-26)
 - The standards check-in gives a new evolution in the no-prediction lineage (bold_predictions, predictions_committed) the ruled statement from config/floor-rulings.json, not his database amendment, which quotes his words after it; on 26 Nov bold_predictions_e261126 copied the amendment and tests/floor_rulings_test.py refused the check-in pull request #994. (2026-11-26)
 - tests/floor_groups_print_test.py passes again on main: its synthetic group was keyed house_brand, which the 25 Nov v5 ruling (config/floor-rulings.json v5_groups) now rewords, so the test printed the ruling's words instead of its own; the group is now corner_mark, which no ruling touches. (2026-11-26)
 - No branch is left unmerged: the hourly stray guard (.github/workflows/stray-guard.yml) deletes merged and closed-PR branches, opens a pull request for any branch idle six hours, marks drafts idle a day ready, merges green ones and lists the rest in one issue; AGENTS.md tells every session to read open pull requests first and land or delete its branch. (2026-11-26)
@@ -55,7 +56,7 @@ Older lines: `docs/history/2026-11-26-NOW-moved-4.md` (it names every earlier mo
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-26): Let #994 carry the ruled words for bold_predictions_e261126 and merge itself.
+- Next (2026-11-26): Krish answers the new items on the standards check-in page.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
 - North Star check (2026-11-26): holds.
