@@ -112,5 +112,18 @@ class RefusalTest(unittest.TestCase):
         self.assertEqual(asset_routes.main(['command', 'notes-image', '--piece', 'p', '--out', 'o']), 3)
 
 
+class CycleSplitTest(unittest.TestCase):
+    def test_growths_cycle_rows_only_receive_finished_assets_and_have_performance_read(self):
+        cycle = json.loads((ROOT / 'config' / 'cycle.json').read_text(encoding='utf-8'))
+        rows = [r for r in cycle['rows'] if r['system'] == 'growth-makeyourmindup']
+        self.assertEqual(sorted({r['direction'] for r in rows}), ['inform', 'read'])
+        for r in rows:
+            if r['direction'] == 'inform':
+                self.assertIn('finished, approved assets with their captions', r['what'])
+            else:
+                self.assertIn('performance', r['what'])
+            self.assertNotRegex(r['what'], r'(?i)growth (?:makes|made)')
+
+
 if __name__ == '__main__':
     unittest.main()
