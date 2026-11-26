@@ -9,7 +9,7 @@ limits were checked again against `main`; the run ledger was not read. On
 2026-11-16 the crons and the replay registry were checked again against
 `vercel.json` and `_jobs.ts`. On 2026-11-26 the reader, the judges' roster
 version, the Sunday story engine and the ownership split were added against
-branch `story/engine-v5` at `53ff7558` (not on `main` yet).
+branch `story/engine-v5` at `e3593a2f` (not on `main` yet).
 
 Scope: the editorial half of this repository, everything under
 `apps/control-plane/`. The Studio half is in `docs/STUDIO.md`. Why either
