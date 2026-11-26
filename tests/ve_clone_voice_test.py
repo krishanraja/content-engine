@@ -66,7 +66,7 @@ def voice_asset(sha: str = 'e' * 64, **extra) -> dict:
 
 def short(day: str = OFF_DAY, voice: dict | None = None, approve: dict | None = CLONE) -> dict:
     """The fixture made an off-day voiceover short: one 9:16 cut, taking the clone voice."""
-    spec = load_json(FIXTURE / 'spec.json')
+    spec = load_json(FIXTURE / 'spec-v5.json')
     spec['publish_day'] = day
     del spec['cuts']['proof-wide']
     spec['cuts']['proof-tall']['take'] = TAKE
@@ -79,7 +79,7 @@ def short(day: str = OFF_DAY, voice: dict | None = None, approve: dict | None = 
 
 def recorded(day: str = OFF_DAY) -> dict:
     """The same short, read from his own recorded voiceover."""
-    spec = load_json(FIXTURE / 'spec.json')
+    spec = load_json(FIXTURE / 'spec-v5.json')
     spec['publish_day'] = day
     del spec['cuts']['proof-wide']
     return spec
@@ -126,7 +126,7 @@ class TheSpecNamesTheCloneOnAnOffDayShortOnly(unittest.TestCase):
 
     def test_the_schema_refuses_every_other_shape(self):
         wide = short(voice=voice_asset())
-        wide['cuts']['proof-wide'] = copy.deepcopy(load_json(FIXTURE / 'spec.json')['cuts']['proof-wide'])
+        wide['cuts']['proof-wide'] = copy.deepcopy(load_json(FIXTURE / 'spec-v5.json')['cuts']['proof-wide'])
         wide['cuts']['proof-wide']['take'] = TAKE
         take_master = short(voice=voice_asset())
         take_master['audio']['master'] = 'take'
@@ -188,7 +188,7 @@ class CompileReadsTheCloneAsItReadsHim(unittest.TestCase):
         self.temp.cleanup()
 
     def edl(self, sha: str | None = None, take: str = TAKE, kept=()):
-        return {'piece': load_json(FIXTURE / 'spec.json')['piece_id'], 'cut': 'proof-tall', 'edit': {'remove': []}, 'speed': 1,
+        return {'piece': load_json(FIXTURE / 'spec-v5.json')['piece_id'], 'cut': 'proof-tall', 'edit': {'remove': []}, 'speed': 1,
                 'takes': {take: {'media': {'sha256': sha or self.sha}}}, 'segments': [{'take': take}],
                 'unscripted_kept': list(kept), 'joins': [], 'duration_frames': 600,
                 'conformed': {'picture': 'conformed.proof-tall.mp4', 'dialogue': 'dialogue.proof-tall.wav'}}

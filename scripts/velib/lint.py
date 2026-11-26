@@ -899,7 +899,8 @@ def lint(spec_path: Path) -> tuple[dict | None, list[str]]:
     guards.set_bind_day(showgate.effective_day(spec, ve_dir(spec_path)))
     try:
         from . import floor, grammar, piece_guards  # noqa: PLC0415
-        return spec, (crew_lints(spec) + title_line_lints(spec, spec_path) + guards.pre_critic_lints(spec, spec_path)
+        from .retirement import problems as retired_choices
+        return spec, (retired_choices(spec) + crew_lints(spec) + title_line_lints(spec, spec_path) + guards.pre_critic_lints(spec, spec_path)
                       + piece_guards.lints(spec, guards.bind_day(spec), Path(spec_path).parent)
                       + floor.lints(spec, Path(spec_path)) + grammar.lints(spec, Path(spec_path)))
     finally:

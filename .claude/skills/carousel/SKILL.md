@@ -6,6 +6,14 @@ model: opus
 
 # Make a carousel
 
+**Every carousel is filled from an approved Library carousel set**, never drawn freehand: `python3
+scripts/library/make_piece.py docs/plans/<plan> --set <set>` (sets: piece, good-news, simple-advice, how-to, explainer,
+quiz, meme; `docs/ve/cards/library/library.json`, `carousel_sets`). Read `docs/ve/cards/library/ART-DIRECTION.md`
+first, then `LIBRARY-GUIDE.md`, `PRODUCTION-PLAYBOOK.md` and `CAROUSEL-FORMAT.md`. The piece supplies every slot's
+words in its cover facts (`"library": {"<template id>": {"<slot>": "words"}}`) and its pictures (`"images"`, made per
+piece as IMAGERY.md says); make_piece refuses a slot the piece did not fill, and a template whose data device still
+carries the Library's sample numbers. The floor below still applies to what it renders.
+
 Krish, 2026-11-17: "we essentially need one skill the system uses by guarantee to meet minimum standards but can still
 use its creative freedom to improve upon and experiment with." So this skill has two halves. **The floor** is every
 lesson a past carousel paid for; each item names the check that enforces it, and no carousel ships with one unmet.
@@ -81,7 +89,8 @@ experiment with the floor itself; if an experiment needs a floor line broken, as
 3. Pictures for every card, real-world first: a real photo, screen or document the story names; else one photoreal
    scene per card on Higgsfield (`gpt_image_2_6`, 4:3, about 0.25 credits each, the house robot's photos as references
    when it appears; say the cost first). The company's official wordmark from Brandfetch when the story names one.
-4. Write the Codex card (`ve card`, kind `carousel`, with `references`, `date`, `deck`), the scenes and wordmarks copied
-   into its worktree and its goal carrying the house look's exact layout, and dispatch it.
+4. Fill the set: `python3 scripts/library/make_piece.py docs/plans/<plan> --set <set> --out <work folder>` with the
+   deck's words and the pictures in the cover facts' `"library"` block. It writes `carousel/slide-NN.png` and
+   `post-pack-files.json`. Codex makes only the per-piece pictures the slots take (a `ve card` for the plates).
 5. Verify: `carousel_check.py --cards`, the judges, a full-size and phone-size look. Fix and recheck the whole arc.
 6. File through `send.py` to `3 Posts`, report on the board, send Krish the cards, and record his words.

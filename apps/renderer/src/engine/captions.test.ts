@@ -11,7 +11,7 @@ import { EngineRenderPropsSchema } from './props'
 import fixture from '../../../../fixtures/ve/engine-core/props.json'
 
 const SAFE_TALL = { top: 270, right: 880, bottom: 1320 } // config/channel-safe-zones.json, every platform
-const HOUSE_FACES = /MYMU (Anton|Archivo|Fraunces|Plex Mono)/
+const HOUSE_FACES = /MYMU (Anton|Archivo|Fraunces)|DM Mono/
 const page = (texts: string[], swipeIndex: number | null = null) =>
   ({ fromFrame: 0, toFrame: 60, words: texts.map((text, i) => ({ text, atFrame: i * 8 })), swipeIndex })
 const render = (node: unknown) => JSON.stringify(node, (_k, v) => (typeof v === 'function' ? undefined : v))

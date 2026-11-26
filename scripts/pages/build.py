@@ -7,6 +7,11 @@ passed the fact gate.
     python build.py cover-facts.json --out OUTDIR --thumbs --options 3 --brief BRIEF.json [--past COVER ...]
     python build.py --self-test
 
+Covers and thumbnails are retired here: production makes them from the approved
+Library with scripts/library/make_piece.py (docs/ve/cards/library/LIBRARY-GUIDE.md).
+--cover and --thumbs refuse unless --legacy is given, to redraw an archived piece
+in the retired v5_feed skin and Receipt (config/retired-styles.json).
+
 Reads the piece's body markdown and a small JSON file of page facts (README.md
 has every field), and writes two self-contained files into OUTDIR:
 
@@ -550,7 +555,7 @@ def root_css(hs, accent):
             f'--cream: {t["cream"]}; --paper: #FBF8F1; --rule: #D9D3C4; --muted: #5B615C; --mint: {t["mint"]}; --mint-deep: #2F6B5C; '
             f'--butter: {PALETTE["butter"]}; --lilac: {PALETTE["lilac"]}; --coral: {PALETTE["coral"]}; --accent: {accent}; '
             '--anton: "Anton", Impact, "Arial Narrow", sans-serif; --sans: "Archivo", "Helvetica Neue", Arial, sans-serif; '
-            '--serif: "Fraunces", Georgia, "Times New Roman", serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace; '
+            '--serif: "Fraunces", Georgia, "Times New Roman", serif; --mono: "DM Mono", ui-monospace, Menlo, Consolas, monospace; '
             '--shadow: 6px 6px 0 var(--ink); }')
 
 
@@ -667,7 +672,7 @@ def render_page(facts, base, body, r, refresh):
 
 SUB_CSS = """
 :root { color-scheme: dark; --ink: #0C1512; --ink-soft: #16221D; --line: #363C38; --cream: #F4EFE4; --cream-2: #D1CEC4; --muted: #AEAEA5; --mint: #7EF0C0; --on: #07110C; --link: #0B5E43; --accent: ACCENT;
-  --anton: "Anton", Impact, sans-serif; --sans: "Archivo", "Helvetica Neue", Arial, sans-serif; --serif: "Source Serif 4", Georgia, serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
+  --anton: "Anton", Impact, sans-serif; --sans: "Archivo", "Helvetica Neue", Arial, sans-serif; --serif: "Fraunces", Georgia, serif; --mono: "DM Mono", ui-monospace, Menlo, monospace; }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--ink); color: var(--cream); font-family: var(--sans); }
 .wrap { max-width: 46rem; margin: 0 auto; padding-inline: 16px; padding-block: 28px 72px; display: flex; flex-direction: column; gap: 22px; }
@@ -1187,12 +1192,22 @@ def main():
     ap.add_argument('--brief', metavar='BRIEF.json', help='with --options: the thumbnail brief, written before any option is drawn')
     ap.add_argument('--past', action='append', default=[], metavar='COVER', help='with --options: a past posted cover on this machine, newest first (up to five)')
     ap.add_argument('--refresh-brand', action='store_true', help='fetch the logo images again now')
+    ap.add_argument('--legacy', action='store_true', help='with --cover or --thumbs: redraw an ARCHIVED piece in the retired skin and '
+                    'Receipt. New pieces take theirs from the Library: scripts/library/make_piece.py')
     ap.add_argument('--self-test', action='store_true', help='check that covers and thumbnails are the Receipt, the facts and the page check, with no browser')
     a = ap.parse_args()
     if a.self_test:
         sys.exit(self_test())
     if not a.facts:
         ap.error('give the facts file, or --self-test')
+    if a.legacy and not (a.cover or a.thumbs):
+        ap.error('--legacy only applies to --cover and --thumbs')
+    if a.cover or a.thumbs:
+        import skins
+        if a.legacy:
+            skins.allow_legacy()
+        else:
+            skins.refuse_without_library()
 
     out = Path(a.out) if a.out else brand.ROOT / '.cache' / 'pages' / Path(a.facts).resolve().parent.name
     raw = json.loads(Path(a.facts).read_text(encoding='utf-8'))

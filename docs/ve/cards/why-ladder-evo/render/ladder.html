@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+html,body{margin:0;height:100%;overflow:hidden}
+body{display:grid;place-items:center}
+canvas{display:block;max-width:100vw;max-height:100vh;width:auto;height:auto;visibility:hidden}
+</style>
+<canvas></canvas>
+<script>
+"use strict";
+window.ready = (async () => {
+  const read = async key => (await fetch("../" + key + ".json")).json();
+  const {tokens:t, piece:p} = window.ladderData || {tokens:await read("tokens"), piece:await read("piece")};
+  const {w,h,safe} = t.canvas, {x0:L,x1:R} = safe;
+  const {colour:c,type,lines,motion:m,rail:r} = t;
+  const rungColour = rung => c.rung_colours[(rung.n-1)%c.rung_colours.length];
+  const [first,second,last] = p.rungs, rival = second.challenger;
+  const params = new URLSearchParams(location.search), playing = params.get("play") === "1";
+  const canvas = document.querySelector("canvas");
+  canvas.width=w; canvas.height=h;
+  const g = canvas.getContext("2d");
+  document.body.style.background=c.ink;
+  document.title=p.title;
+  canvas.setAttribute("role","img");
+  const url = file => new URL("../../../../../"+file,location.href).href;
+
+  // Canvas does not expose variable axes. Install distinct faces with the
+  // editorial axis settings on the face itself, including the italic cut.
+  const axes = Object.entries(type.human.variation).map(([k,v])=>'"'+k+'" '+v).join(", ");
+  async function font(family,file,weight,style="normal",variationSettings="normal") {
+    const face = new FontFace(family,'url("'+url(file)+'")',{weight,style,variationSettings});
+    document.fonts.add(await face.load());
+  }
+  await Promise.all([
+    font(type.display.family,type.display.file,"400"),
+    font(type.human.family,type.human.files.upright,"100 900","normal",axes),
+    font(type.human.family,type.human.files.italic,"100 900","italic",axes),
+    font(type.label.family,type.label.files.regular,"400"),
+    font(type.label.family,type.label.files.medium,"500")
+  ]);
+  const images = new Map();
+  await Promise.all([p.cover.image,p.step_card_ground,p.landing.image,
+    t.wordmark.file,first.plate.image,rival.image,last.plate.image].map(async file=>{
+    const img=new Image(); img.src=url(file); await img.decode(); images.set(file,img);
+  }));
+  const grain = new Image();
+  grain.src="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>');
+  await grain.decode();
+
+  const holds=[2,1.5,3,3.5,3,3];
+  let frame=Infinity;
+  // Invert the time coordinate of the token curve before sampling its value.
+  const [ax,ay,bx,by]=m.ease.match(/[\d.]+/g).map(Number);
+  const cubic=(a,b,u)=>3*(1-u)**2*u*a+3*(1-u)*u*u*b+u**3;
+  function ease(frames,delay=0) {
+    const x=(frame-delay)/frames;
+    if(x<=0) return 0;
+    if(x>=1) return 1;
+    let lo=0,hi=1;
+    for(let i=0;i<16;i++) {
+      const u=(lo+hi)/2;
+      if(cubic(ax,bx,u)<x) lo=u; else hi=u;
+    }
+    return cubic(ay,by,(lo+hi)/2);
+  }
+  function rect(x,y,width,height,color) {
+    g.fillStyle=color; g.fillRect(x,y,width,height);
+  }
+  function line(points,color,width,dash=[],progress=1) {
+    const lengths=points.slice(1).map(([x,y],i)=>Math.hypot(x-points[i][0],y-points[i][1]));
+    let left=lengths.reduce((a,b)=>a+b,0)*progress;
+    g.save(); g.beginPath(); g.moveTo(...points[0]);
+    for(let i=0;i<lengths.length && left>0;i++) {
+      const k=Math.min(1,left/lengths[i]), [x,y]=points[i];
+      g.lineTo(x+(points[i+1][0]-x)*k,y+(points[i+1][1]-y)*k);
+      left-=lengths[i];
+    }
+    g.strokeStyle=color; g.lineWidth=width; g.setLineDash(dash); g.stroke(); g.restore();
+  }
+  function photo(file,x,y,width,height,push=false) {
+    const im=images.get(file);
+    const scale=Math.max(width/im.width,height/im.height)*
+      (push?m.photo_punch.scale_from+(m.photo_punch.scale_to-m.photo_punch.scale_from)*ease(m.photo_punch.frames):1);
+    const sw=width/scale,sh=height/scale;
+    g.drawImage(im,(im.width-sw)/2,(im.height-sh)/2,sw,sh,x,y,width,height);
+  }
+  function documentCard(file,b,x,y,width,height,contain=false,color=c.cream) {
+    const sw=b.x1-b.x0,sh=b.y1-b.y0;
+    const scale=contain?Math.min(width/sw,height/sh):width/sw;
+    const dh=Math.min(height,sh*scale);
+    g.drawImage(images.get(file),b.x0,b.y0,sw,dh/scale,
+      x+(width-sw*scale)/2,y+(contain?(height-dh)/2:0),sw*scale,dh);
+    border(x,y,width,height,color,lines.hairline);
+  }
+  function border(x,y,width,height,color,stroke,dash=[]) {
+    g.save(); g.strokeStyle=color; g.lineWidth=stroke; g.setLineDash(dash);
+    g.strokeRect(x+stroke/2,y+stroke/2,width-stroke,height-stroke); g.restore();
+  }
+  function ink(x=0,y=0,width=w,height=h) {
+    rect(x,y,width,height,c.ink);
+    g.save(); g.globalCompositeOperation="overlay"; g.globalAlpha=t.texture.grain_on_ink;
+    g.drawImage(grain,x,y,width,height,x,y,width,height); g.restore();
+  }
+  function style(role,over={}) {
+    const s={...type.roles[role],...over}, family=type[s.font];
+    g.font=(s.italic?"italic ":"")+(s.weight==="medium"?500:s.weight||400)+" "+s.size+'px "'+family.family+'"';
+    g.letterSpacing=((s.tracking_em??family.tracking_em??0)*s.size)+"px";
+    return {...s,letterCase:s.case??family.case};
+  }
+  const casing=(str,s)=>s.letterCase==="upper"?str.toUpperCase():s.letterCase==="lower"?str.toLowerCase():str;
+  function lettering(str,x,y,role,color=c.cream,opts={}) {
+    const s=style(role,opts), value=casing(String(str),s);
+    const metric=g.measureText(value);
+    g.textAlign=opts.align||"left"; g.fillStyle=color;
+    // Align cap tops to the grid while retaining a shared alphabetic baseline.
+    const cap=g.measureText("H").actualBoundingBoxAscent;
+    const animate=s.font==="display" && !opts.still;
+    const progress=animate?ease(m.anton_lines.frames,opts.delay??0):1;
+    if(!progress) return metric.width;
+    const rise=m.anton_lines.translate_y*(1-progress);
+    g.fillText(value,x,y+cap+rise,opts.width??w); g.textAlign="left";
+    return metric.width;
+  }
+  function paragraph(str,x,y,width,role,leading,over={}) {
+    const s=style(role,over), rows=[];
+    let row="";
+    for(const word of str.split(" ")) {
+      const next=row?row+" "+word:word;
+      if(row && g.measureText(casing(next,s)).width>width) { rows.push(row); row=word; }
+      else row=next;
+    }
+    rows.push(row);
+    rows.forEach((v,i)=>lettering(v,x,y+i*leading,role,over.color??c.cream,{...over,width,delay:(over.delay??0)+i*m.anton_lines.stagger}));
+    return rows.length*leading;
+  }
+  const dash=t.strength_tags.open.border.match(/\d+/g).map(Number);
+  function badge(value,x,y,strength,color=c.cream,align="left",over={}) {
+    const s=style("tag",over), [py,px]=s.padding;
+    const width=Math.ceil(g.measureText(casing(value,s)).width)+px*2;
+    const height=s.size+py*2;
+    if(align==="right") x-=width;
+    g.save(); g.globalAlpha*=t.strength_tags[strength]?.opacity??1;
+    border(x,y,width,height,color,s.border,strength===rival.strength?dash:[]);
+    lettering(value,x+px,y+(height-g.measureText("H").actualBoundingBoxAscent)/2,"tag",color,{...over,still:true});
+    g.restore(); return width;
+  }
+  function tagOpacity(start) {
+    const steps=m.tag_in.frames;
+    return Math.floor(Math.min(steps,Math.max(0,frame-start-m.leader_draw.frames)))/steps;
+  }
+  function callout(data,x,y,path,strength) {
+    const tagStyle=style("tag"), tagWidth=Math.ceil(g.measureText(casing(data.tag,tagStyle)).width)+2*tagStyle.padding[1];
+    const end=path[path.length-1], attach=end[0]>x?x+tagWidth:x;
+    line([...path.slice(0,-1),[attach,end[1]]],c.cream,lines.leader,[],ease(m.leader_draw.frames));
+    g.save(); g.globalAlpha=tagOpacity(0);
+    lettering(data.descriptor,x,y,"callout_small",c.cream,{still:true});
+    badge(data.tag,x,y+type.roles.callout_small.size,strength); g.restore();
+  }
+  function mark(bottom) {
+    const im=images.get(t.wordmark.file), mw=t.wordmark.width, mh=mw*im.height/im.width;
+    ink(R-mw,bottom-mh,mw,mh);
+    g.drawImage(im,R-mw,bottom-mh,mw,mh);
+  }
+  function node(x,y,radius,color,hollow=false) {
+    g.beginPath(); g.arc(x,y,radius,0,Math.PI*2);
+    if(hollow) {g.lineWidth=lines.leader; g.strokeStyle=color; g.stroke();}
+    else {g.fillStyle=color; g.fill();}
+  }
+  const nodeY=i=>300+i*r.rung_gap;
+  function rail(current,bottom) {
+    const x=L+r.node/2;
+    line([[x,r.y0],[x,bottom]],c.cream_20,lines.rail);
+    p.rungs.forEach((d,i)=>{
+      const active=d.n===current;
+      node(x,nodeY(i),r.node/2,active?rungColour(d):c.cream_20,!active);
+      if(active) lettering(d.n,x+r.label_x-r.x,nodeY(i)-r.node/2,"source");
+    });
+  }
+  function cover() {
+    photo(p.cover.image,0,0,w,h,true);
+    const d=p.cover.callout;
+    callout(d,L,300,[d.detail_xy,[220,350],[185,350]]);
+    const headlineY=1000;
+    lettering(p.section_label,L,headlineY-2*type.roles.section_label.size,"section_label",c.cream);
+    const words=p.title.split(" "), size=type.roles.cover_headline.size;
+    [words.slice(0,2),words.slice(2,4),words.slice(4)].forEach((row,i)=>
+      lettering(row.join(" "),L,headlineY+i*size*type.display.line,"cover_headline",c.cream,{width:R-L,delay:i*m.anton_lines.stagger}));
+    mark(safe.y1);
+  }
+  function step() {
+    const seam=1040,top=h-(h-seam)*ease(m.block_wipe.frames);
+    ink(); photo(p.step_card_ground,0,0,w,seam); rect(0,top,w,h-top,rungColour(first));
+    rail(first.n,seam);
+    g.save(); g.beginPath(); g.rect(0,top,w,h-top); g.clip();
+    if(frame<m.block_wipe.frames) { g.restore(); return; }
+    const why=p.title.split(" ")[0];
+    lettering(why+" "+first.n,L,seam+type.roles.section_label.size,"label",c.ink_on_colour);
+    paragraph(first.question,L,1120,R-L,"step_question",type.roles.step_question.size*type.display.line,{color:c.ink_on_colour,delay:m.block_wipe.frames});
+    g.restore();
+  }
+  function rightCallout(data,y,path,strength,color=c.cream,start=0) {
+    const s=style("tag");
+    const width=Math.ceil(g.measureText(casing(data.tag,s)).width)+2*s.padding[1];
+    const tagHeight=s.size+2*s.padding[0], centre=R-width/2;
+    line([...path,[centre,y-16],[centre,y]],color,lines.leader,[],ease(m.leader_draw.frames,start));
+    g.save(); g.globalAlpha=tagOpacity(start);
+    badge(data.tag,R,y,strength,color,"right");
+    lettering(data.descriptor,R,y+tagHeight+8,"callout_small",color,{align:"right",still:true});
+    g.restore();
+  }
+  function plate() {
+    ink(); rail(first.n,r.y1);
+    const d=first.plate,x=150,y=230,width=R-x,scale=width/(d.crop.x1-d.crop.x0);
+    const height=(d.crop.y1-d.crop.y0)*scale, bottom=y+height;
+    documentCard(d.image,d.crop,x,y,width,height);
+    const row=y+(d.focus_rows.y0-d.crop.y0)*scale, length=(d.focus_rows.y1-d.focus_rows.y0)*scale;
+    rect(x-lines.rail*2,row,lines.rail*2,length,rungColour(first));
+    const tagY=Math.max(bottom,1018)+24;
+    rightCallout(d.callout,tagY,[[R-lines.leader,row+length],[R-lines.leader,bottom+12]],first.strength);
+    paragraph(d.note,x,tagY+type.roles.tag.size+2*type.roles.tag.padding[0]+type.roles.callout_small.size+lines.rule*4+40,R-x,"plate_note",type.roles.plate_note.size);
+    lettering(first.source,x,tagY+402,"source",c.cream_70,{width:R-x});
+  }
+  function chartValue(value,x,y,align) {
+    const s=style("chart_number");
+    const baseline=y+g.measureText("H").actualBoundingBoxAscent;
+    const runs=value.split(/(s)/).filter(Boolean).map(text=>{
+      const size=text==="s"?s.size*.6:s.size;
+      style("chart_number",{size});
+      return {text,size,width:g.measureText(text).width};
+    });
+    if(align==="right") x-=runs.reduce((sum,run)=>sum+run.width,0);
+    g.fillStyle=c.ink_on_colour;
+    for(const run of runs) {
+      style("chart_number",{size:run.size});
+      g.fillText(run.text,x,baseline);
+      x+=run.width;
+    }
+  }
+  function challenger() {
+    const seam=900, butter=rungColour(second), x=150;
+    const [a,b]=second.plate.points, tick=m.number_tick;
+    const chartStart=m.block_wipe.frames;
+    const progress=ease(tick.frames,chartStart);
+    const endBeat=chartStart+tick.frames;
+    const claimBeat=endBeat+m.leader_draw.frames+m.tag_in.frames+m.card_slide.frames;
+    const top=seam*(1-ease(m.block_wipe.frames));
+    ink();
+    rect(0,top,w,seam-top,butter);
+    g.save(); g.beginPath(); g.rect(0,top,w,seam-top); g.clip();
+    if(frame>=chartStart) {
+      chartValue(a.text,x,260,"left");
+      lettering(a.x,x,440,"source",c.ink);
+      const dot=[R-300,600];
+      line([[x+260,485],dot],c.ink,lines.rail,[],progress);
+      if(progress===1) node(...dot,r.node/2,c.ink);
+      const countProgress=Math.min(1,(frame-chartStart)/tick.frames);
+      const number=Math.round(Number(tick.from)+(Number(tick.to)-Number(tick.from))*countProgress);
+      chartValue(b.text.replace(tick.to,String(number)),R,550,"right");
+      lettering(b.x,R,727,"source",c.ink,{align:"right"});
+      if(frame<claimBeat) rightCallout(second.plate.callout,782,[dot,[dot[0],714]],second.strength,c.ink,endBeat);
+      lettering(second.source,x,820,"source",c.ink);
+    }
+    g.restore();
+    // Carry the active rung across the seam onto ink so its butter node stays visible.
+    const railX=L+r.node/2;
+    line([[railX,seam],[railX,r.y1]],c.cream_20,lines.rail);
+    node(railX,seam+r.rung_gap/2,r.node/2,butter);
+    lettering(second.n,railX+r.node,seam+r.rung_gap/2-r.node/2,"source");
+    if(frame<claimBeat) return;
+    lettering(rival.connector,x,920,"dek");
+    const slide=ease(m.card_slide.frames,claimBeat);
+    const cardX=x+m.card_slide.distance*(1-slide);
+    const cardWidth=R-x-m.card_slide.distance;
+    documentCard(rival.image,rival.crop,cardX,1000,cardWidth,cardWidth*(rival.crop.y1-rival.crop.y0)/(rival.crop.x1-rival.crop.x0));
+    rightCallout(rival.callout,1310,[[697,1000+cardWidth*(rival.crop.y1-rival.crop.y0)/(rival.crop.x1-rival.crop.x0)],[697,1310]],rival.strength,c.cream,claimBeat+m.card_slide.frames);
+    lettering(rival.text,x,1340,"dek",c.cream,{width:535});
+    lettering(rival.source,x,1420,"source",c.cream_70);
+  }
+  function recap() {
+    rect(0,0,w,h,c.cream);
+    const gutter=r.node, pad=12, width=(R-L-pad)/2, height=(760-220-pad)/2;
+    const right=L+width+pad, y=220, lower=y+height+pad;
+    function cell(file,crop,x,top,parked=false) {
+      const labelSpace=parked?type.roles.callout_small.size+pad:0;
+      const sw=crop.x1-crop.x0, sh=crop.y1-crop.y0;
+      const scale=Math.min((width-2*pad)/sw,(height-2*pad-labelSpace)/sh);
+      border(x,top,width,height,c.ink,lines.hairline);
+      g.save();
+      if(parked) g.globalAlpha=.5;
+      g.drawImage(images.get(file),crop.x0,crop.y0,sw,sh,
+        x+(width-sw*scale)/2,top+(height-labelSpace-sh*scale)/2,sw*scale,sh*scale);
+      g.restore();
+      if(parked) lettering(rival.outcome,x+pad,top+height-pad-type.roles.callout_small.size,
+        "callout_small",c.ink,{still:true});
+    }
+    cell(first.plate.image,first.plate.thumb_crop,L,y);
+    border(right,y,width,height,c.ink,lines.hairline);
+    const [a,b]=second.plate.points, left=right+pad, endX=R-pad;
+    lettering(a.text,left,y+pad,"chart_number",c.ink,{size:type.roles.dek.size,case:"literal",still:true});
+    lettering(a.x,left,y+65,"source",c.ink,{size:r.node});
+    line([[left,y+126],[endX,y+150]],c.ink,lines.rail,[],ease(m.leader_draw.frames));
+    lettering(b.text,endX,y+162,"chart_number",c.ink,{size:type.roles.dek.size,case:"literal",still:true,align:"right"});
+    lettering(b.x,endX,y+205,"source",c.ink,{size:r.node,align:"right"});
+    cell(last.plate.image,last.plate.crop,L,lower);
+    cell(rival.image,rival.crop,right,lower,true);
+    const edge=R-56;
+    [first,second,rival,last].forEach((d,i)=>{
+      const top=820+i*r.rung_gap, parked=d===rival, x=L+(parked?80:0);
+      const progress=ease(m.recap_rows.frames,i*m.recap_rows.stagger);
+      if(!progress) return;
+      g.save(); g.globalAlpha=progress;
+      g.translate(0,r.node*(1-progress));
+      line([[x,top],[edge,top]],c.ink,lines.rule,parked?dash:[]);
+      if(!parked) {
+        const side=type.roles.recap_label.size;
+        rect(x,top+50,side,side,rungColour(d));
+        lettering(d.n,x+side/2,top+50+(side-type.roles.label.size)/2,"label",c.ink,{align:"center"});
+      }
+      const labelX=parked?x:L+60;
+      const tagWidth=badge(d.strength,edge,top+50,d.strength,c.ink,"right");
+      lettering(parked?d.recap_label:d.label,labelX,top+50,"recap_label",c.ink,{
+        italic:parked,width:edge-tagWidth-gutter-labelX
+      });
+      g.restore();
+    });
+    const end=820+4*r.rung_gap;
+    line([[L,end],[edge,end]],c.ink,lines.rule);
+    const top=820+r.rung_gap/2,bottom=end-r.rung_gap/2;
+    g.beginPath(); g.moveTo(edge+6,bottom);
+    g.bezierCurveTo(R,bottom,R,top,edge+6,top);
+    g.strokeStyle=c.ink; g.lineWidth=lines.leader; g.stroke();
+    line([[edge+16,top-6],[edge+6,top],[edge+16,top+6]],c.ink,lines.leader);
+    lettering(last.loop_label,edge,end+40,"callout_small",c.ink,{align:"right"});
+  }
+  function landing() {
+    const seam=900, top=h-(h-seam)*ease(m.block_wipe.frames);
+    ink(); photo(p.landing.image,0,0,w,seam);
+    rect(0,top,w,h-top,c.answer);
+    if(frame<m.block_wipe.frames) return;
+    const insight=type.roles.landing_insight, question=type.roles.landing_question;
+    lettering(p.landing.label,L,seam+insight.line,"section_label",c.ink);
+    const y=seam+2*insight.line;
+    const used=paragraph(p.landing.insight,L,y,R-L,"landing_insight",insight.line,{color:c.ink});
+    const ruleY=y+used+type.roles.tag.padding[0];
+    rect(L,ruleY,2*r.x,lines.rule,c.ink);
+    if(frame>=m.block_wipe.frames+m.landing.insight_then_pause_frames)
+      paragraph(p.landing.question,L,ruleY+type.roles.label.size,R-L,"landing_question",question.line,{color:c.ink});
+  }
+  const scenes=[cover,step,plate,challenger,recap,landing];
+  const descriptions=[p.title,first.question,first.plate.note,rival.text,last.loop_label,p.landing.insight];
+  function draw(i) {
+    scenes[i](); canvas.setAttribute("aria-label",descriptions[i]);
+    canvas.style.visibility="visible";
+  }
+  if(!playing) {
+    const i=Number(params.get("scene"))-1;
+    draw(Number.isInteger(i)&&scenes[i]?i:0);
+  } else {
+    const start=performance.now();
+    let lastTick=-1;
+    function play(now) {
+      const tick=Math.floor((now-start)*m.fps/1000);
+      if(tick!==lastTick) {
+        lastTick=tick;
+        let i=0, elapsed=tick/m.fps;
+        while(i<holds.length-1 && elapsed>=holds[i]) elapsed-=holds[i++];
+        frame=Math.min(holds[i],elapsed)*m.fps; draw(i);
+        if(i===holds.length-1 && elapsed>=holds[i]) return;
+      }
+      requestAnimationFrame(play);
+    }
+    play(start);
+  }
+})();
+</script>
+</html>
