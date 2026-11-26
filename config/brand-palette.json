@@ -215,7 +215,7 @@
       ]
     },
     "house_close_slide": {
-      "about": "A carousel's last slide: the piece's own takeaway in one or two lines, then \"Follow for more\" with the Make Your Mind Up wordmark centred under it (Ruling, Krish, 2026-11-18: \"The last card of the carousel should always have the Make Your Mind Up word mark centred under the Follow for more text, as opposed to the word mark in the bottom-right corner and an amateur call to action\"). No wordmark in the bottom-right corner on this card, never a bare call to action, never a thanks-for-swiping card.",
+      "about": "A carousel's last slide is the v5 format's close (config/carousel-format.json close; Ruling, Krish, 2026-11-26, carousel format): the piece's takeaway in one or two lines (44 characters or fewer, its payoff in mint), the S3h wordmark and the site, makeyourmindup.ai. It never says \"Follow for more\": the follow ask goes in the caption. No wordmark in the bottom-right corner, never a bare call to action, never a thanks-for-swiping card. This supersedes the 18 Nov close (the wordmark centred under \"Follow for more\").",
       "shapes": [
         "4x5",
         "9x16"

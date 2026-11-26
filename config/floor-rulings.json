@@ -25,6 +25,7 @@
   "retired": {
     "about": "Standards, rejections, a maker and group wording the floor keeps sending that Krish retired. scripts/floor_rulings.py takes them out of what every reader here sees, over every rebuild: each standard listed, and any standard whose wording matches pattern unless keep names it (a rebuild rewords and re-hashes standards, so a new id still matches); each record listed, from every maker's list (the record stays, as history); each format listed; and every group in a lineage (the group and its weekly evolutions, <key>_eYYMMDD) reads title and statement. The statement is the amendment he decided on 24 Nov (taste_floor_group_amendments for bold_predictions and predictions_committed). config/floor-groups.json carries the same words.",
     "ruling": "Ruling (Krish, 2026-11-24): the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores",
+    "superseded": {"s752807e871": "Ruling (Krish, 2026-11-26, carousel format): the close never says Follow for more; it carries the takeaway, the S3h wordmark and the site (config/carousel-format.json close). The 18 Nov standard, the wordmark centred under Follow for more, is superseded; the pattern takes out any rebuilt rewording of it."},
     "his_words": [
       {
         "said": "get rid of everything that suggests predictions, calls, dated, etc etc - we can keep the mon/wed/fri themes though, and just strengthen the differentiation in each",
@@ -34,17 +35,19 @@
     ],
     "formats": ["prediction"],
     "standards": [
-      "s08e19e659c", "s172d06ce8b", "s1949b94c5f", "s438120032e", "s6262d852ee", "s6eb417dd40", "s8183b5a9d6",
+      "s08e19e659c",
+      "s752807e871", "s172d06ce8b", "s1949b94c5f", "s438120032e", "s6262d852ee", "s6eb417dd40", "s8183b5a9d6",
       "s83075046d2", "s940c2c5a5c", "s9c6d02148a", "sa9f9134e89", "sb0e20f145c", "sd4d7f27990", "se49eca7e39",
       "secddf8b1ab", "sedf0fc1d56", "sf89aa11473"
     ],
-    "pattern": "\\bpredict|\\bconfidence (?:level|percentage|number)|\\bodds\\b|scorecard|\\b(?:final|running) score\\b|percentage likelihood|too close to call|checkable future event|near-term call|\\bforecast",
+    "pattern": "\\bpredict|\\bconfidence (?:level|percentage|number)|\\bodds\\b|scorecard|\\b(?:final|running) score\\b|percentage likelihood|too close to call|checkable future event|near-term call|\\bforecast|follow for more",
     "keep": {
       "sd6b5d7c66a": "Never close on a dated prediction: it holds the ruling",
       "s81fb5ec09f": "the close format agreed for the day, never a prediction by default: it holds the ruling"
     },
     "records": [
-      "r0296dca046", "r06d56194b6", "r1f67ec1023", "r333f6698df", "r4bfd68013f", "r621de3e411", "r6fac5978ce",
+      "r0296dca046",
+      "r8cd495894f", "r06d56194b6", "r1f67ec1023", "r333f6698df", "r4bfd68013f", "r621de3e411", "r6fac5978ce",
       "r820632256e", "r8e82b95e43", "raf599df208"
     ],
     "groups": {

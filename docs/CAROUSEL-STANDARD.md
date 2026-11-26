@@ -22,10 +22,13 @@ deck schemas are refused and the Codex carousel card is retired.
 **The brand palette wins on every brand element** (Krish, 12 Nov 2026: "I approve the brand palette sheet, but only if
 it falls in line with the attached."): the cover's logo, the wordmark, the colour of each day and the last card come
 from `config/brand-palette.json` (`docs/production/BRAND_PALETTE.md`), and where a section below says otherwise on one
-of them, the palette is right and the section is history. A carousel's last card is `house_close_slide`: the piece's
-takeaway in one or two lines, then "Follow for more" with the Make Your Mind Up wordmark centred under it, and no
-wordmark in the bottom-right corner on that card; Saturday's good news keeps his fixed good-news close. (Ruling, Krish, 2026-11-18: "The last card of the carousel should always have the "Make Your Mind Up" word mark centred under the "Follow for more" text, as opposed to the word mark in the bottom-right corner and an amateur call to action"; it replaces the 14 Nov "Subscribe free" close).
-`scripts/carousel_check.py` refuses a last card that says "Subscribe free" or lacks "Follow for more".
+of them, the palette is right and the section is history. A carousel's last card is the v5 close,
+`config/carousel-format.json` `close` (the palette's `house_close_slide` says the same): the piece's takeaway in one or
+two lines, its payoff in mint, then the S3h wordmark and the site, and never "Follow for more" (the follow ask goes in
+the caption). `scripts/carousel_check.py` refuses a deck whose close breaks those rows. The 18 Nov close (the wordmark
+centred under "Follow for more"; Ruling, Krish, 2026-11-18) and the 14 Nov "Subscribe free" close before it are history,
+superseded by the carousel format (Ruling, Krish, 2026-11-26), and the floor no longer serves the 18 Nov standard
+(`config/floor-rulings.json` `retired`).
 
 Who makes carousels (Ruling, Krish, 26 November 2026: "I believe that growth
 should move all asset production to Content Engine. I see no point in having a
