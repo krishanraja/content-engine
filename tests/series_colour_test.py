@@ -28,6 +28,11 @@ PICKED = ['Claude is eating', 'the jobs of its own humans']   # a cover title Kr
 
 class SeriesColourTest(unittest.TestCase):
     def setUp(self):
+        # The Receipt drawer is retired for new pieces (config/retired-styles.json); these tests keep its archive path.
+        import skins
+        legacy = patch.object(skins, 'LEGACY', True)
+        legacy.start()
+        self.addCleanup(legacy.stop)
         self.hs = brand.house()
         self.series = {c['name']: (c['day'], c['accent'].upper()) for c in self.hs['channels']}
 
@@ -91,6 +96,10 @@ class SeriesSkinRotationTest(unittest.TestCase):
     def setUp(self):
         import skins
         self.skins = skins
+        # The skins are retired for new pieces (config/retired-styles.json); these tests keep their archive path.
+        legacy = patch.object(skins, 'LEGACY', True)
+        legacy.start()
+        self.addCleanup(legacy.stop)
         self.hs = brand.house()
 
     def look(self, subchannel, date):
