@@ -103,6 +103,16 @@ Read and follow `C:/Users/krish/dev/mindmaker-os/ai-harness/contract/krish-opera
 
 Where anything goes in Krish's Drive is [`docs/DRIVE.md`](docs/DRIVE.md), the Drive map by folder ID (the 22 Oct layout; the home computers find each folder by its ID). Anything it does not place goes in `Inbox from My AI`, never loose. Never write loose files under his home folder; read-only inspection is fine. Task-specific write limits apply.
 
+## No branch is ever left unmerged (Ruling, Krish, 2026-11-26)
+
+Krish, 26 Nov 2026: "ensure stray branches may NEVER ever be left unmerged". Every session reads the open pull
+requests before it starts (), so it never works blind to unmerged work, and ends with its
+branch either merged (a ready pull request, never a draft left behind) or deleted. The stray guard
+(, every hour) enforces it: it deletes merged branches and branches whose pull
+request was closed, opens a pull request for any branch idle six hours without one, marks drafts idle a day ready,
+merges every ready pull request whose CI is green, and lists whatever it cannot land in one issue, "Stray branches and
+pull requests". A red pull request on that list is fixed or closed the same day.
+
 ## Every-session rules
 
 Read linked detail before domain work; every moved paragraph remains verbatim.
