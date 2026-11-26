@@ -37,12 +37,20 @@ SUBSTACK = 'https://mindmakerlive.substack.com'
 # (scripts/quick-edit/kit.py page_strap); delete this with the strap.
 AUTHOR = 'Krish Raja'
 
-# The live cover site serves these. `max_width` is the size inlined into a page
-# (a 2415-pixel masthead would add weight a reader never sees).
+# The v5 marks, from this repository (Krish locked v5 on 2026-11-25). The cover site stopped serving the old
+# /brand/*.png files with v5, so they are never fetched again.
+V5 = ROOT / 'assets' / 'brand' / 'makeyourmindup' / 'v5'
+LOCAL = {
+    'masthead': V5 / 'v9.svg',
+    'mark': V5 / 'd-face-off.svg',
+    'wordmark': V5 / 'v4.svg',
+}
+
+# The live cover site serves these. `max_width` is the size inlined into a page.
 REMOTE = {
-    'masthead': ('/brand/masthead.png', 1600),
-    'mark': ('/brand/mark.png', 400),
-    'wordmark': ('/brand/wordmark.png', 1400),
+    'masthead': (None, 1600),
+    'mark': (None, 400),
+    'wordmark': (None, 1400),
     'krish': ('/editor-closer-look.jpg', 160),
     'krish-pointing': ('/editor-pointing.jpg', 160),
     'krish-this-guy': ('/editor-this-guy.jpg', 160),
@@ -213,7 +221,9 @@ def font_css(extra=()):
 def fetch(name, refresh=False):
     """A brand image from the live cover site, through the local cache. Fresh
     copies are fetched once a week; if the site cannot be reached, the cached
-    copy is used and the tool says so."""
+    copy is used and the tool says so. The v5 marks are this repository's own files (LOCAL)."""
+    if name in LOCAL:
+        return LOCAL[name]
     rel, _ = REMOTE[name]
     CACHE.mkdir(parents=True, exist_ok=True)
     path = CACHE / Path(rel).name

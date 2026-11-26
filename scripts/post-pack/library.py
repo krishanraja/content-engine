@@ -8,7 +8,7 @@ can copy paste, video scripts, etc etc".
 
     makeyourmindup/
         1 Brand kit (permanent)/
-        2 Channel art (permanent)/
+        1 Brand kit (permanent)/Channel art/
         3 Posts/
             2026-10-05 Mon follow.the.money - Who gets paid/
                 READ ME.txt
@@ -39,9 +39,10 @@ import archive  # noqa: E402  the archive naming rule: safe_text, _shorten, file
 import brand  # noqa: E402  the house style: the live subchannels and their days
 
 BRAND_KIT = '1 Brand kit (permanent)'
-CHANNEL_ART = '2 Channel art (permanent)'
+# Channel art lives inside the brand kit since 26 Nov 2026; "2 Channel art (permanent)" is retired and refused.
+CHANNEL_ART = '1 Brand kit (permanent)/Channel art'
 POSTS = '3 Posts'
-TOP_FOLDERS = (BRAND_KIT, CHANNEL_ART, POSTS)
+TOP_FOLDERS = (BRAND_KIT, POSTS)
 PUBLISH, ARTICLE, COVERS, VIDEO, SOCIAL = POST_SECTIONS = ('0 Publish', '1 Article', '2 Covers and images', '3 Video', '4 Social')
 POST_README = 'READ ME.txt'
 PATH_MAX = 180  # the library root on Windows is about 62 characters; Windows stops a path at 260
@@ -210,7 +211,7 @@ REFUSALS = {
     'path_part_edge': 'a name starts or ends with a space, or ends with a dot',
     'path_reserved_name': 'a name is one Windows keeps for itself (CON, PRN, AUX, NUL, COM1, LPT1 and the like)',
     'path_part_too_long': f'a name is longer than {PART_MAX} characters',
-    'path_wrong_top_folder': f'it is outside "{BRAND_KIT}", "{CHANNEL_ART}" and "{POSTS}"',
+    'path_wrong_top_folder': f'it is outside "{BRAND_KIT}" and "{POSTS}" (channel art goes in "{CHANNEL_ART}")',
     'path_no_file': 'it names a folder, and a file is needed',
     'path_post_folder_invalid': 'the post folder is not named "YYYY-MM-DD Day subchannel - Subject" (or "YYYY-MM-DD Launch - Subject") with the day the date fell on',
     'path_post_section_invalid': f'inside a post folder a file goes in {", ".join(POST_SECTIONS)}, or is the {POST_README}',

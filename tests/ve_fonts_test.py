@@ -57,7 +57,7 @@ class BrandFontsTest(unittest.TestCase):
 
     def test_css_files_names_and_axes(self):
         css = fonts.css('../../assets/fonts/makeyourmindup')
-        expected = {'MYMU Anton', 'MYMU Archivo', 'MYMU Fraunces', 'MYMU Plex Mono'}
+        expected = {'MYMU Anton', 'MYMU Archivo', 'MYMU Fraunces', 'DM Mono'}
         self.assertEqual(set(re.findall(r"font-family: '([^']+)'", css)), expected)
         faces = [face for family in self.manifest['families'] for face in family['files']]
         self.assertEqual(css.count('@font-face'), len(faces))
@@ -72,7 +72,8 @@ class BrandFontsTest(unittest.TestCase):
         self.assertNotIn('https:', css)
         renderer_css = (ROOT / 'apps/renderer/src/house/fonts.css').read_text(encoding='utf-8')
         declared = set(re.findall(r"font-family\s*:\s*['\"]([^'\"]+)['\"]", renderer_css))
-        self.assertEqual(declared, expected)
+        # The renderer also keeps 'MYMU Plex Mono', for re-rendering pre-v5 cuts only (house/geometry.ts).
+        self.assertEqual(declared - {'MYMU Plex Mono'}, expected)
 
     def test_sync_from_temp_kit(self):
         manifest_path, destination, kit = self.sandbox()
@@ -88,7 +89,7 @@ class BrandFontsTest(unittest.TestCase):
     def test_sync_refuses_changed_byte_before_any_copy(self):
         manifest_path, destination, kit = self.sandbox()
         original_manifest = manifest_path.read_bytes()
-        name = 'IBMPlexMono-Bold.ttf'
+        name = 'DMMono-Medium.ttf'
         changed = bytearray((kit / name).read_bytes())
         changed[-1] ^= 1
         (kit / name).write_bytes(changed)

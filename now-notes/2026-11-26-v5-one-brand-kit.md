@@ -1,0 +1,3 @@
+Status: Drive's makeyourmindup brand lives in one folder, 1 Brand kit (permanent), the v5 kit unpacked from makeyourmindup's brand-kit zip; 2 Channel art (permanent) is retired and the engine, post pack and library sync refuse it (channel art is 1 Brand kit (permanent)/Channel art). Four on the Funky Flour is the main music track under every video (music.py main_first). The video font kit's data face is DM Mono. scripts/pages/brand.py reads the v5 marks from this repository instead of the old site PNGs, and channel-kit refuses to run.
+Next: After the library sync unpacks the v5 kit, check Drive's 1 Brand kit (permanent) holds it and nothing old outside _Archive.
+North Star check (2026-11-26): holds.
