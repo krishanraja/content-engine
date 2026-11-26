@@ -41,14 +41,18 @@ async function load() {
 }
 
 describe('the buyer test reaches the model', () => {
-  it('names who the reader is and what he is deciding', async () => {
+  // The reader narrowed on 2026-11-26 (Krish: "I approve the lines"): the
+  // commercial leader who might hire him for thirty days is retired, and the
+  // buyer test now pictures the North Star reader (relevance-reader.test.ts).
+  it('names who the reader is and what they are deciding', async () => {
     const { classifyRelevance } = await load()
     await classifyRelevance([{ id: '1', title: 'x' }], { apiKey: 'k' })
     const system: string = sent[0].system
     expect(system).toContain('not_interesting')
-    expect(system).toContain('commercial leader')
-    expect(system).toContain('thirty days')
-    expect(system).toContain('buying, pricing, positioning, hiring or building with AI')
+    expect(system).toContain('makes the calls or makes the work in the creative, arts, music, entertainment, media or sports industries')
+    expect(system).toContain('makes the work, prices it, licenses it, gets paid for it, hires for it or builds with AI')
+    expect(system).not.toContain('commercial leader')
+    expect(system).not.toContain('thirty days')
   })
 
   it('carries his own words for the register rather than a paraphrase', async () => {

@@ -37,7 +37,16 @@ ORIGIN = 'https://controlcenter.krishraja.com'
 CALLER = 'content-engine'
 TOKEN_ENV = 'ENGINE_OPERATOR_TOKEN'  # the engine's operator key, which Control Center already holds (Krish, 2026-11-17)
 EXIT = {'pass': 0, 'flagged': 1, 'unavailable': 2}
-AUDIENCE = 'Leaders and operators who follow AI news: smart, busy, not specialists'
+
+
+def audience():
+    """The humour engine's audience: the North Star reader, config/beat.json reader.audience_short (Krish approved the
+    reader line on 2026-11-26). One wording with the relevance filter and the judges, never a copy here."""
+    beat = json.loads((HERE.parents[1] / 'config' / 'beat.json').read_text(encoding='utf-8'))
+    return beat['reader']['audience_short']
+
+
+AUDIENCE = audience()
 FLAT = 'flat: no wit, opinion, sarcasm, exaggeration or analogy the engine can find (floor: never flat and purely factual)'
 EXPLAIN = 'needs explaining: it leans on more than one outside reference to land (floor: never a joke that needs outside explanation)'
 MISS = 'does not land: it reads as an attempt at a joke a stranger would not get'

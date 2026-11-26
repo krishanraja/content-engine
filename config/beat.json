@@ -1,5 +1,5 @@
 {
-  "_about": "The beat: which stories the engine brings Krish and which it leaves out. Ruling (Krish, 2026-11-24): the engine brings stories in his focus sectors (media, entertainment, content, arts, music, creator tech, with the economics of AI inside them) and not governance, regulation, security or data breaches. Ruling (Krish, 2026-11-25): sports is a focus sector too, beside the creative, arts, music, entertainment and media industries. Read by apps/control-plane/api/_beat.ts (the headline gate for the feed, the radar, investigations, creator posts and shift detection; avoid terms refuse a headline outright, focus terms keep a focus-sector headline that the release, launch or partnership rule would otherwise drop, and an enterprise productivity headline is kept only with a focus-sector angle), apps/control-plane/api/feed/ingest.ts (pool_categories_off_beat), apps/control-plane/api/_editorialRadar.ts (the lens prompt's beat block) and scripts/post-pack/idea_checks.py offbeat_findings (the Sunday gate, code off_beat: a board option on the avoid list with no focus-sector angle is refused). A keyword is a row here, never code. A keyword ending in * matches any ending (royalt* matches royalty and royalties); not_when phrases are taken out of the text before its keywords are read, so 'job security' is not a security story and 'state of the art' is not an art story. Changed only by a pull request carrying his ruling.",
+  "_about": "The beat: which stories the engine brings Krish and which it leaves out. Ruling (Krish, 2026-11-24): the engine brings stories in his focus sectors (media, entertainment, content, arts, music, creator tech, with the economics of AI inside them) and not governance, regulation, security or data breaches. Ruling (Krish, 2026-11-25): sports is a focus sector too, beside the creative, arts, music, entertainment and media industries. Read by apps/control-plane/api/_beat.ts (the headline gate for the feed, the radar, investigations, creator posts and shift detection; avoid terms refuse a headline outright, focus terms keep a focus-sector headline that the release, launch or partnership rule would otherwise drop, and an enterprise productivity headline is kept only with a focus-sector angle), apps/control-plane/api/feed/ingest.ts (pool_categories_off_beat), apps/control-plane/api/_editorialRadar.ts (the lens prompt's beat block) and scripts/post-pack/idea_checks.py offbeat_findings (the Sunday gate, code off_beat: a board option on the avoid list with no focus-sector angle is refused). The reader row (his approved North Star reader line, 2026-11-26) is read by apps/control-plane/api/_relevance.ts, the judge roster and scripts/post-pack/humour_check.py; economics_keywords by the story score. A keyword is a row here, never code. A keyword ending in * matches any ending (royalt* matches royalty and royalties); not_when phrases are taken out of the text before its keywords are read, so 'job security' is not a security story and 'state of the art' is not an art story. Changed only by a pull request carrying his ruling.",
   "from": "2026-11-30",
   "his_words": [
     {
@@ -18,6 +18,44 @@
     }
   ],
   "tone": "Positive spin: what AI lets makers, performers and the businesses around them do, earn and express. The economics of AI inside these sectors stays in: who gets paid, what it costs, who wins the market.",
+  "reader": {
+    "_about": "Who the publication is for: Krish's approved North Star reader line, verbatim, and the one wording every prompt reads for that reader. Read by apps/control-plane/api/_relevance.ts (intro, keep_line, media_line, buyer_test), apps/control-plane/api/_judges/roster.ts through _beat.ts READER (judges.reader and judges.buyer) and scripts/post-pack/humour_check.py (audience_short, the humour engine's audience). The goals, numbers and channels do not change; only the reader narrows. Changed only by a pull request carrying his ruling.",
+    "from": "2026-11-26",
+    "lines": [
+      "By December 2027, makeyourmindup is the publication the creative, arts, music, entertainment, media and sports industries pay to read on what AI is doing to how their work makes money. 50,000 people who make the calls or make the work read it, and the publication is worth owning on its own."
+    ],
+    "his_words": [
+      {
+        "at": "2026-11-26",
+        "said": "I approve the lines",
+        "note": "in the story-engine session, approving the makeyourmindup and growth-makeyourmindup North Star reader lines (side-session notes, mymu-v5-decisions.md lines 5-6). The growth line belongs to krishanraja/growth-makeyourmindup, not here."
+      }
+    ],
+    "ruling": "The reader narrows to people who make the calls or make the work in the creative, arts, music, entertainment, media and sports industries. The old reader, a commercial leader who might hire Krish for thirty days to build an AI brain or an AI go-to-market plan, is retired from the relevance filter and the judges.",
+    "audience_short": "People who make the calls or make the work in the creative, arts, music, entertainment, media and sports industries: smart, busy, not AI specialists",
+    "intro": "Its reader: people who make the calls or make the work in the creative, arts, music, entertainment, media and sports industries, reading on what AI is doing to how their work makes money.",
+    "keep_line": "- \"keep\": on the beat for that reader. An AI / agents / LLM story is kept when it reaches how work in the creative, arts, music, entertainment, media or sports industries is made, sold, watched or paid for, or when it moves the economics of AI those industries live inside (what models and tools cost, platform and marketplace dynamics, the builder economy, agents doing creative work). AI news with no line into those industries is not the beat: prefer \"not_interesting\" for it over \"keep\".",
+    "media_line": "Advertising, marketing and adtech are in bounds as the money of media: how a publisher, broadcaster, streamer, platform, creator, club or league is paid for attention. Consumer, retail and DTC stories are kept only when they carry a creative, arts, music, entertainment, media or sports angle.",
+    "buyer_test": {
+      "enforced": false,
+      "line": "- \"not_interesting\": on-topic for AI, but there is nothing here the reader would DO anything with. The reader makes the calls or makes the work in the creative, arts, music, entertainment, media or sports industries: the people who run a label, studio, publisher, broadcaster, club or league, and the musicians, artists, writers, performers, athletes and creators whose work it is. Ask: does this change how that person makes the work, prices it, licenses it, gets paid for it, hires for it or builds with AI? Mark not_interesting for AI news with no line into those industries, and for a one-off item with no second-order consequence: a personnel move, a version bump, an event listing, a quoted tweet, a syndicated video interview, a vendor announcement that repriced nothing.",
+      "register_line": "His words for what he wants instead: \"fun, and observant, and tying together multiple threads, shifts or themes, not just crappy unimportant one off news items\". And for the register: \"My tonality is commercial, positive, and visionary\", not \"governance, risk, safety, negative things, and overly technical things\".",
+      "unsure_line": "Only mark not_interesting when you are confident someone who makes the calls or makes the work in those industries would read it and have nothing to do differently."
+    },
+    "judges": {
+      "reader": {
+        "question": "Will the people this is written for actually read it?",
+        "rubric": "Score reach into the readership: people who make the calls or make the work in the creative, arts, music, entertainment, media and sports industries, from whoever runs the label, studio, publisher, club or league to the musician, artist, writer, performer, athlete or creator whose work it is. 10 means it speaks to something in their work or their money this quarter; 1 means it is for AI practitioners, generalist business readers, or nobody in particular. Do not reward flattery of that reader; reward usefulness to them. Judge the readership only. Whether one of them would pay to read it is the buyer judge and not yours.",
+        "evidence": "Name who in those industries this lands with, and the situation they are in."
+      },
+      "buyer": {
+        "question": "Would someone in these industries pay to read this?",
+        "rubric": "Score paying reach: whether a person who makes the calls or makes the work in the creative, arts, music, entertainment, media or sports industries would pay to keep reading a publication that runs this, because it shows them what AI is doing to how their work makes money. 10 means it lands on money they earn, spend, license or are owed, with something they could not get free elsewhere; 1 means it could run anywhere and nobody would pay for it. Judge paying reach only. Whether the wider readership enjoys it belongs to the reader judge, and the two of you disagreeing on one idea is a finding rather than a fault.",
+        "evidence": "Name the person who would pay, and the money in their work this lands on.",
+        "flag": "Rewritten from the retired thirty-day-build buyer (panel-v2). Whether the buyer judge is rewritten like this or retired is Krish's call; its key stays so calibration still joins."
+      }
+    }
+  },
   "model_piece": {
     "content_idea": "36886e0b-4b32-473b-be72-b0aef31fccef",
     "title": "a Reiki master wrote a UK number two",
@@ -77,6 +115,12 @@
     }
   ],
   "focus_not_when": ["state of the art", "art of", "game changer", "game theory", "org chart", "flow chart", "white label", "white-label", "ai studio", "copilot studio", "chip design", "chip designs", "streaming tokens", "token streaming", "cash runway", "financial runway", "runway to", "months of runway", "years of runway", "f1 score", "sports car", "sports cars", "sport utility"],
+  "economics_keywords": {
+    "label": "The economics of AI inside the focus sectors: who gets paid, what it costs, who wins the market",
+    "note": "Read with focus_sectors by the story score's fit axis. A keyword ending in * matches any ending; figure_pattern is a regular expression for a money or share figure.",
+    "keywords": ["paid", "pays", "payout*", "royalt*", "licens*", "licence*", "deal", "deals", "revenue*", "earn*", "income", "price", "prices", "pricing", "cost", "costs", "subscription*", "subscriber*", "valuation*", "acquisition*", "fee", "fees", "budget*", "residuals", "rights fee*", "market share"],
+    "figure_pattern": "(?:[$£€]\\s?\\d[\\d,.]*\\s?(?:k|m|bn|million|billion|thousand)?\\b|\\b\\d[\\d,.]*\\s?(?:million|billion|bn)\\b|\\b\\d+(?:\\.\\d+)?\\s?(?:percent|per cent|%))"
+  },
   "avoid": [
     {
       "kind": "governance",

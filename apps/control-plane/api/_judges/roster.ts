@@ -39,7 +39,16 @@
 // shapes he finishes is a fact about him as a writer. Which subjects he likes
 // is the thing the machine is supposed to be able to surprise him about.
 
-export const ROSTER_VERSION = 'panel-v2'
+import { READER } from '../_beat.js'
+
+// panel-v3 (2026-11-26): the reader and buyer judges read the North Star reader
+// Krish approved that day ("I approve the lines") from config/beat.json's reader
+// row, through _beat.ts. Same keys and same eight judges, so calibration still
+// joins and the ladder median is untouched; the buyer judge now asks whether
+// someone in those industries would pay to read it, in place of the retired
+// thirty-day-build buyer. Whether to keep that rewrite or retire the judge is
+// flagged for Krish (reader.judges.buyer.flag).
+export const ROSTER_VERSION = 'panel-v3'
 
 export type Gate = 'idea' | 'draft'
 
@@ -93,27 +102,19 @@ export const IDEA_JUDGES: Judge[] = [
       + 'Be concrete about who and what: if you cannot name the action, the score is low however clever the idea.',
     evidence: 'Name the reader and the specific thing they do or stop doing.',
   },
+  // The reader and the buyer are the North Star reader (config/beat.json
+  // reader.judges), one wording with the relevance filter and the humour check.
   {
     key: 'reader',
-    question: 'Will the leader this is written for actually read it?',
-    rubric:
-      'Score reach into the readership: a senior leader in a business doing roughly five to fifty million pounds '
-      + 'who will not admit, to anyone, that they are not ready for what is happening. 10 means it speaks to a '
-      + 'problem they have this quarter; 1 means it is for practitioners, peers, or nobody in particular. Do not '
-      + 'reward flattery of that reader; reward usefulness to them. Judge the readership only. Whether it reaches '
-      + 'anyone who might hire him is the buyer judge and not yours.',
-    evidence: 'Name the situation that reader is in where this lands.',
+    question: READER.judges.reader.question,
+    rubric: READER.judges.reader.rubric,
+    evidence: READER.judges.reader.evidence,
   },
   {
     key: 'buyer',
-    question: 'Does this reach someone who might hire him for a thirty-day build?',
-    rubric:
-      'Score commercial reach: a commercial leader who might engage Krish on a short-term basis to build an AI '
-      + 'brain or an AI go-to-market plan. 10 means it lands in front of a problem that engagement solves; 1 means '
-      + 'it is for an audience that will never buy anything. Judge commercial reach only. Whether the wider '
-      + 'readership enjoys it belongs to the reader judge, and the two of you disagreeing on one idea is a finding '
-      + 'rather than a fault.',
-    evidence: 'Name the situation a prospective client is in where this lands.',
+    question: READER.judges.buyer.question,
+    rubric: READER.judges.buyer.rubric,
+    evidence: READER.judges.buyer.evidence,
   },
   {
     key: 'connection',
