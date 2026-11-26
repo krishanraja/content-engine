@@ -631,6 +631,25 @@ class Spend(unittest.TestCase):
         self.assertAlmostEqual(ledger.spent(), RUBRIC['unit_costs']['humour_read'])
 
 
+class Floors(unittest.TestCase):
+    def test_an_explainer_with_no_steps_is_not_read_and_one_unchecked_step_fails(self):
+        self.assertIsNone(ss.steps_verifiable({'copy': 'How the ad price works.'}))
+        self.assertEqual(ss.floors_failed('explainer', {}, {'steps_verifiable': None}), [], 'no steps: the floor is not read')
+        unchecked = {'steps': [{'text': 'Open settings', 'checked': 'https://help.openai.com/x'}, {'text': 'Turn it off'}]}
+        self.assertFalse(ss.steps_verifiable(unchecked))
+        self.assertEqual(len(ss.floors_failed('explainer', {}, {'steps_verifiable': False})), 1)
+        self.assertTrue(ss.steps_verifiable({'steps': [{'text': 'Open settings', 'checked': 'https://help.openai.com/x'}]}))
+
+    def test_a_note_is_reported_and_never_fails(self):
+        checks = {'probe_documented': 3, 'probe_rungs': 5, 'landing_ok': True, 'primary_sources': 0, 'sound_angle': True,
+                  'money_figure_sourced': True}
+        failed, noted = ss.floor_lines('hero_mon', {'fit': 4, 'named_thing': 7}, checks)
+        self.assertEqual(failed, [])
+        self.assertEqual(set(noted), {"a hero's topic is in a focus sector", 'a hero has at least one primary source'})
+        failed, _ = ss.floor_lines('hero_mon', {'fit': 4, 'named_thing': 7}, dict(checks, money_figure_sourced=False))
+        self.assertEqual(failed, ['a Monday follows the money: it needs a sourced money figure'], 'a series floor stays hard')
+
+
 class Edition(unittest.TestCase):
     def item(self, iid, topic, own=True, date_='2026-11-24'):
         return {'id': iid, 'title': f'Spotify pays songwriters ${iid} million', 'summary': 'Spotify paid songwriters.', 'topic': topic,
@@ -781,6 +800,55 @@ class Cli(unittest.TestCase):
 class DryRun(unittest.TestCase):
     """The zero-spend dry run on a copy of the real 23 Nov board: every option scored on fakes, the order changes only
     on open days, and the real file is never written."""
+
+    def test_a_scored_and_ordered_23_nov_copy_holds_the_gate(self):
+        """The plan's verification: a realistic scored and ordered copy of 23 Nov (fake transports, middling judges, a
+        sourced probe for every option) passes the score's gate lines, bar a content floor the plan names; swapping
+        two open options or deleting a score fails with story."""
+        real = ROOT / 'docs' / 'plans' / f'{WEEK}-week'
+        plans = Path(tempfile.mkdtemp())
+        try:
+            folder = plans / f'{WEEK}-week'
+            (folder / 'story').mkdir(parents=True)
+            shutil.copy(real / 'ideas.json', folder / 'ideas.json')
+            shutil.copy(real / 'sources.json', folder / 'sources.json')
+            ideas = json.loads((folder / 'ideas.json').read_text(encoding='utf-8'))
+            ids = [str(o.get('id')).lower() for _k, _d, _m, o in ss.board(ideas)]
+            (folder / 'story' / 'probes.json').write_text(json.dumps({i: probe(3, 2) for i in ids}), encoding='utf-8')
+            run = lambda *argv, **kw: ss.main([argv[0], WEEK, '--plans', str(plans), *argv[1:]], kill=CLEAN, today='2026-11-26', **kw)  # noqa: E731
+            ledger = str(plans / 'spend.jsonl')
+            self.assertEqual(run('angles', '--provoke', '--judge', '--ledger', ledger, poster=Poster(), cap=UNDER), 0)
+            self.assertEqual(run('humour', '--ledger', ledger, read=lambda req: analysis()), 0)
+            rows = []
+            for key, _day, _main, _o in ss.board(ideas):
+                rows.append(f'## {key}')
+                rows += [f'{a}: 6/10 because the facts name it' for a in ('scale', 'fun_consume', 'fun_produce', 'uplift', 'utility')]
+            (folder / 'reply.md').write_text('\n'.join(rows), encoding='utf-8')
+            self.assertEqual(run('record', str(folder / 'reply.md')), 0)
+            self.assertEqual(run('score'), 0)
+            self.assertEqual(run('order', '--fresh', '--write'), 0)
+            scored = json.loads((folder / 'ideas.json').read_text(encoding='utf-8'))
+        finally:
+            shutil.rmtree(plans, ignore_errors=True)
+        cfg = dict(ic.STORY, **{'from': WEEK})
+        ladders = {i: {'schema': 'why-ladder/1', 'rungs': [{'n': n, 'evidence': [{'url': 'https://a.example/x'}]} for n in range(1, 6)]}
+                   for i in ids}
+        found = ic.story_findings(scored, WEEK, None, ladders, cfg)
+        self.assertEqual([f['line'] for f in found if f['code'] == 'story'], [], 'every option scored, every open day in order')
+        plan_floors = {f['reason'] for t in ('hero_mon', 'hero_wed', 'hero_fri') for f in RUBRIC['types'][t]['floors']}
+        for f in found:
+            self.assertTrue(any(r in f['line'] for r in plan_floors), f'only a series floor the plan names may refuse: {f["line"]}')
+        self.assertLessEqual(len(found), 2, [f['line'] for f in found])
+        swapped = json.loads(json.dumps(scored))
+        day, n = next((d, n) for d in ('mon', 'wed', 'fri') for n in range(len(swapped['days'][d]) - 1)
+                      if not swapped['days'][d][n]['story_score']['floors_failed'] and not swapped['days'][d][n + 1]['story_score']['floors_failed']
+                      and swapped['days'][d][n]['story_score']['total'] != swapped['days'][d][n + 1]['story_score']['total'])
+        opts = swapped['days'][day]
+        opts[n], opts[n + 1] = opts[n + 1], opts[n]
+        self.assertIn('story', [f['code'] for f in ic.story_findings(swapped, WEEK, None, ladders, cfg)])
+        removed = json.loads(json.dumps(scored))
+        removed['days']['fri'][0].pop('story_score')
+        self.assertIn('story', [f['code'] for f in ic.story_findings(removed, WEEK, None, ladders, cfg)])
 
     def test_the_23_nov_board_on_fakes(self):
         real = ROOT / 'docs' / 'plans' / f'{WEEK}-week'
