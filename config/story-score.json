@@ -9,6 +9,18 @@
     {"id": "reader", "at": "2026-11-26", "ruling": "The approved North Star reader line (config/beat.json reader), his words: \"I approve the lines\"."}
   ],
   "audience_from": "config/beat.json reader.audience_short",
+  "blind_view": {
+    "_about": "What the scorer and every blind judge may see of an option (story_score.blind_view): only the keep fields, and inside them never a drop_nested key. Where it came from, who asked for it, what anyone said of it and whether it was recommended are never seen; his-first on equal totals is the only place the order reads where an option came from.",
+    "keep": ["id", "title", "hook", "copy", "story", "so_what", "fact", "why_now", "pitch", "beats", "source", "sources", "stories", "format", "kind", "aim", "shape", "dive", "funny", "template", "direction", "cards", "topic", "topic_kind", "steps", "weekly", "whys"],
+    "drop_nested": ["from", "from_press", "from_inspiration", "learned_from", "read_back", "recommended", "source_kind", "source_tag", "his_via", "covers", "warning", "refused_before", "returns", "divergent", "story_score", "score", "near", "liked", "taste", "cues", "why_here", "said"]
+  },
+  "abstain": {"min_read_weight": 6, "note": "Of 10: an option whose read axes carry less weight than this is unscored (total null), never ranked on what little was read."},
+  "named_thing": {"twist_words": ["but", "yet", "instead", "while", "despite", "although", "even though", "turns out", "only to", "for free", "no one", "nobody"]},
+  "primary_sources": {
+    "_about": "A primary source is on the actor's own site (a name in the option's topic or fact is the site's name) or on a filing or paper host below.",
+    "filing_hosts": ["sec.gov", "companieshouse.gov.uk", "courtlistener.com", "arxiv.org", "doi.org", "europa.eu", "ipo.gov.uk", "uspto.gov", "copyright.gov"],
+    "second_level": ["co.uk", "org.uk", "ac.uk", "gov.uk", "com.au", "co.jp", "co.nz", "com.br", "co.in"]
+  },
   "scale": {"axis_min": 0, "axis_max": 10, "total_max": 100, "weights_sum": 10, "anchor_points": ["10", "7", "4", "1"]},
   "axes": [
     {
@@ -315,7 +327,9 @@
       {"id": "funniest_true", "brief": "the funniest true reading of the sourced facts, never a joke that costs credibility"},
       {"id": "most_absurd_true", "brief": "the most absurd true detail in the sources"}
     ],
-    "divergent": {"op": "provoke", "lane": "angles", "count": 3, "temperament": {"hero": "balanced", "offday": "wild"}, "per_hero_day": 2, "cliches": "divergent.worn(sources)"},
+    "divergent": {"op": "provoke", "lane": "angles", "count": 3, "temperament": {"hero": "balanced", "offday": "wild"}, "per_hero_day": 2, "cliches": "divergent.worn(sources)",
+      "problem": "Angles on one true story for {audience}. Each angle rests on a fact in the story as quoted below; never add a detail the story does not give. The story: {what}",
+      "score_problem": "Angles on true stories for {audience}. Which is the most original, useful and specific way to tell each story, judged on the words alone?"},
     "score_weights": {"originality": 0.35, "usefulness": 0.25, "specificity": 0.2, "humour": 0.2},
     "zero_on_status": ["rejected_archive", "rejected_gravity"],
     "humour_margin": 1.0,
@@ -325,6 +339,7 @@
       "comic_reading": ["supported"],
       "needs_explaining": false,
       "target_not_individual": true,
+      "individual_targets": ["individual", "named_individual", "person", "private_individual"],
       "usefulness_min": 5,
       "specificity_min": 6,
       "first_why_climbs": true,
@@ -343,9 +358,27 @@
     "chair": true,
     "seat_line": "Score n/10 (fact|assumption)",
     "barred_says": "close call, your pick",
+    "cleared": false,
     "barred_note": "The ai-harness council's When it runs section admits Krish's ask or the strategist only, so until a ruling adds this caller a close call shows as close call, your pick, never a silent pass (commit 0 readiness)."
   },
-  "ties": {"his_first": "equal totals only"},
+  "ties": {"his_first": "equal totals only", "his_kinds": ["his", "inspo"]},
+  "briefs": {
+    "_about": "The words of the briefs the blind judges and the council read (story_score.py brief and council-brief). Internal, never published.",
+    "judge": [
+      "You are a blind judge. You see one story at a time and nothing about who suggested it, who will pick it or what anyone said about it.",
+      "Score each axis named under a story from 0 to 10 against its anchors. Use the anchors as the scale: 10, 7, 4 and 1 are described; anything between is fine.",
+      "Reply with one line per axis, exactly: <axis>: <n>/10 because <the evidence in the story that earns it>.",
+      "Put the story's key on its own line before its scores, as: ## <key>.",
+      "Judge only what the story says. A number with no evidence after because is not counted. British spelling, no em dashes, no exclamation marks."
+    ],
+    "fun_produce": "For fun_produce, these are the formats the channel can make (catalogue) and what held people on the channels (growth evidence). Judge whether a format fits and whether there is something to show, not say.",
+    "council": [
+      "Two story options, A and B, for the same slot. They scored within a close margin. Only the facts on record are below: nothing about who suggested either, nor any earlier choice.",
+      "Run every seat: Offer, Attention, Experience, Scale, Distribution. For each seat write one line: <Seat>: A Score <n>/10 (fact|assumption); B Score <n>/10 (fact|assumption).",
+      "Then the chair's call on its own line: Chair: A, B or unknown, because <the reason>.",
+      "British spelling, no em dashes, no exclamation marks."
+    ]
+  },
   "budget_usd": 10,
   "unit_costs": {
     "_about": "Dollars reserved in the ledger before each call (.cache/story-score/spend.jsonl); the metered cost is recorded after. score_judge is the route's up-front estimate ($0.10) with headroom for up to 4 model calls at the model's price (commit 0 readiness, control-center api/_divergent.ts).",
@@ -383,5 +416,16 @@
     "bank_fields": ["id", "layer", "name", "how", "fits"],
     "never": ["krish_verdict", "krish_said", "from", "evidence", "status", "what_i_like_sheet", "recipes", "references"]
   },
-  "edition": {"min": 6, "max": 10, "topics": [2, 4], "per_topic": 3}
+  "edition": {"min": 6, "max": 10, "topics": [2, 4], "per_topic": 3},
+  "files": {
+    "_about": "Where the story score keeps its working files, inside docs/plans/<Monday>-week/. The spend ledger is under the gitignored .cache/.",
+    "dir": "story",
+    "scores": "scores.json",
+    "angles": "story/angles.json",
+    "reads": "story/reads.json",
+    "judged": "story/judged.json",
+    "probes": "story/probes.json",
+    "council": "story/council.json",
+    "ledger": ".cache/story-score/spend.jsonl"
+  }
 }

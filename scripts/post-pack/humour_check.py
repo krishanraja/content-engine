@@ -54,6 +54,7 @@ SURFACES = {
     'script': 'Format: a video script Krish speaks to camera, dry and reflective, about AI news',
     'joke': 'Format: one joke or aside offered for a video script, read on its own without the script',
     'funny': "Format: the humorous angle of a story idea for an AI publication, one line, read on its own",
+    'fact': 'Format: a plain sourced news fact, read on its own, no joke intended',
 }
 
 
@@ -129,6 +130,18 @@ def _needs_explaining(result):
     return len(jumps) > 1 or bool(result.get('missing_context')) or result.get('comic_reading') == 'insufficient_context'
 
 
+def labels(result):
+    """What the story score reads of one reading (scripts/post-pack/story_score.py): {comic_reading, attempted,
+    needs_explaining, mechanism[], target[]}, or None when the engine gave no reading. Labels only: the number each is
+    worth is a row in config/story-score.json humour_map, never here."""
+    if not isinstance(result, dict) or _unavailable(result):
+        return None
+    main = _labels(_main(result))
+    return {'comic_reading': result.get('comic_reading'), 'attempted': _attempted(result),
+            'needs_explaining': _needs_explaining(result), 'mechanism': list(main.get('mechanism') or []),
+            'target': list(main.get('target') or [])}
+
+
 def _unavailable(result):
     if result.get('comic_reading') is not None:
         return None
@@ -177,7 +190,7 @@ def read_line(line, surface, read, ref):
     why = _unavailable(result)
     if why:
         return {**out, 'status': 'unavailable', 'reason': why}
-    out.update(reading=result['comic_reading'], labels=_labels(_main(result)))
+    out.update(reading=result['comic_reading'], labels=_labels(_main(result)), engine=labels(result))
     if _needs_explaining(result):
         out['findings'].append(EXPLAIN)
     elif result['comic_reading'] != 'supported':
