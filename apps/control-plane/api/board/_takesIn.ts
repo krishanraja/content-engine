@@ -228,7 +228,7 @@ export function productionBrief(b: BriefInputs): string {
     + 'shows on his card. Keep working while he looks; whatever he changes, change before the full render.\n'
     + '7. ve renders the cut; ve qc and ve refs run; a separate reviewer watches and listens at full size against the approved words before it is called ready.\n'
     + '8. Covers and thumbnails are yours, made in this session without being asked (Krish, 2026-11-18: "a clear owner [...] it should not require a manual ask anywhere"): content-engine designs them, Growth only posts what he approved and checks it went out with the right cover, and Krish only picks. '
-    + 'Follow .agents/skills/cover-art/SKILL.md and run scripts/covers/make_covers.py on the piece. Review the wide and vertical images, '
+    + 'Make the wide and tall thumbnails of every cut and a cover for every channel this piece posts on. Follow .agents/skills/cover-art/SKILL.md and run scripts/covers/make_covers.py. Review the images, '
     + 'check their covers.json receipt and record his final pick. File the cuts, covers '
     + 'and their records on the piece and in its 3 Posts folder (docs/DRIVE.md). Krish approves; Growth posts.\n'
     + '9. Make the board true before you stop (Krish, 2026-11-18: "when a piece is produced, the session has to be told to file things properly to the drive and then never really bothers to update the board - this is unacceptable"). '
