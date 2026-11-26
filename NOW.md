@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-23","week_target":20,"current":1,"current_as_of":"2026-11-25","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (0 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (5% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 20 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
+- The stray guard leaves floor/rejections and inspo/new-drops alone, the branches the Rejections engine and the inspiration drops reuse. (2026-11-26)
 - config/beat.json carries sports as a focus sector (Ruling, Krish, 2026-11-25), so the feed, radar, ideas run and Sunday gate keep sports stories on the beat. Draft pull request, waiting for Krish's merge. (2026-11-25)
 - The publish kit's Substack step now publishes a piece to the web only (untick "Send via email and Substack app inbox"; opt-in readers through Advanced, "Only send to a specific audience segment", once their section exists; stop and ask Krish if the box is missing), and every subscribe line promises the weekly edition: "Get the week's pieces and the news that matters, in one email every Saturday" (Ruling, Krish, 2026-11-25; design in growth-makeyourmindup docs/plans/2026-11-25-weekly-edition/). The self-test refuses "send to everyone" and the retired line; docs/AMPLIFICATION.md and the ARTICLE_SUBSCRIBE_ASK example say the same. It also vendors growth's subscribe route with the weekly edition's tagged links (sha256 01f74de9, growth-makeyourmindup PR 144), so it merges after that pull request. Krish approved the weekly edition plan (25 Nov), so it lands now (26 Nov) instead of waiting for V1: Substack documents the web-only box for posts and podcasts, not Video posts, and if a Video post's publish screen has no such box, the publish step stops and asks Krish before publishing. (2026-11-25)
 - The standards check-in of 2026-11-26 grouped the new floor standards; config/floor-groups.json holds 85 groups, each new one seeded as a proposal for Krish on the pinned check-in page. (2026-11-26)
@@ -54,10 +55,10 @@ Older lines: `docs/history/2026-11-26-NOW-moved-5.md` (it names every earlier mo
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-25): Krish merges the sports beat pull request.
+- Next (2026-11-26): Fix or close anything the guard lists in its issue.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
-- North Star check (2026-11-25): holds.
+- North Star check (2026-11-26): holds.
 
 ## Read next
 
