@@ -19,7 +19,7 @@
   ],
   "tone": "Positive spin: what AI lets makers, performers and the businesses around them do, earn and express. The economics of AI inside these sectors stays in: who gets paid, what it costs, who wins the market.",
   "reader": {
-    "_about": "Who the publication is for: Krish's approved North Star reader line, verbatim, and the one wording every prompt reads for that reader. Read by apps/control-plane/api/_relevance.ts (intro, keep_line, media_line, buyer_test), apps/control-plane/api/_judges/roster.ts through _beat.ts READER (judges.reader and judges.buyer) and scripts/post-pack/humour_check.py (audience_short, the humour engine's audience). The goals, numbers and channels do not change; only the reader narrows. Changed only by a pull request carrying his ruling.",
+    "_about": "Who the publication is for: Krish's approved North Star reader line, verbatim, and the one wording every prompt reads for that reader. Read by apps/control-plane/api/_relevance.ts (intro, keep_line, media_line, buyer_test), apps/control-plane/api/_judges/roster.ts through _beat.ts READER (judges.reader and judges.buyer) and scripts/post-pack/humour_check.py (audience_short, the humour engine's audience; about, what a script is about); about is also read by scripts/post-pack/divergent.py (the repeat guard's problem line) and scripts/post-pack/meme_templates.py. The goals, numbers and channels do not change; only the reader narrows. Changed only by a pull request carrying his ruling.",
     "from": "2026-11-26",
     "lines": [
       "By December 2027, makeyourmindup is the publication the creative, arts, music, entertainment, media and sports industries pay to read on what AI is doing to how their work makes money. 50,000 people who make the calls or make the work read it, and the publication is worth owning on its own."
@@ -32,6 +32,7 @@
       }
     ],
     "ruling": "The reader narrows to people who make the calls or make the work in the creative, arts, music, entertainment, media and sports industries. The old reader, a commercial leader who might hire Krish for thirty days to build an AI brain or an AI go-to-market plan, is retired from the relevance filter and the judges.",
+    "about": "what AI is doing to how work in the creative, arts, music, entertainment, media and sports industries makes money",
     "audience_short": "People who make the calls or make the work in the creative, arts, music, entertainment, media and sports industries: smart, busy, not AI specialists",
     "intro": "Its reader: people who make the calls or make the work in the creative, arts, music, entertainment, media and sports industries, reading on what AI is doing to how their work makes money.",
     "keep_line": "- \"keep\": on the beat for that reader. An AI / agents / LLM story is kept when it reaches how work in the creative, arts, music, entertainment, media or sports industries is made, sold, watched or paid for, or when it moves the economics of AI those industries live inside (what models and tools cost, platform and marketplace dynamics, the builder economy, agents doing creative work). AI news with no line into those industries is not the beat: prefer \"not_interesting\" for it over \"keep\".",

@@ -39,19 +39,23 @@ TOKEN_ENV = 'ENGINE_OPERATOR_TOKEN'  # the engine's operator key, which Control 
 EXIT = {'pass': 0, 'flagged': 1, 'unavailable': 2}
 
 
+def reader():
+    return json.loads((HERE.parents[1] / 'config' / 'beat.json').read_text(encoding='utf-8'))['reader']
+
+
 def audience():
     """The humour engine's audience: the North Star reader, config/beat.json reader.audience_short (Krish approved the
     reader line on 2026-11-26). One wording with the relevance filter and the judges, never a copy here."""
-    beat = json.loads((HERE.parents[1] / 'config' / 'beat.json').read_text(encoding='utf-8'))
-    return beat['reader']['audience_short']
+    return reader()['audience_short']
 
 
 AUDIENCE = audience()
+ABOUT = reader()['about']  # what a script is about, config/beat.json reader.about (no longer "AI news": 2026-11-26)
 FLAT = 'flat: no wit, opinion, sarcasm, exaggeration or analogy the engine can find (floor: never flat and purely factual)'
 EXPLAIN = 'needs explaining: it leans on more than one outside reference to land (floor: never a joke that needs outside explanation)'
 MISS = 'does not land: it reads as an attempt at a joke a stranger would not get'
 SURFACES = {
-    'script': 'Format: a video script Krish speaks to camera, dry and reflective, about AI news',
+    'script': 'Format: a video script Krish speaks to camera, dry and reflective, about ' + ABOUT,
     'joke': 'Format: one joke or aside offered for a video script, read on its own without the script',
     'funny': "Format: the humorous angle of a story idea for an AI publication, one line, read on its own",
     'fact': 'Format: a plain sourced news fact, read on its own, no joke intended',
