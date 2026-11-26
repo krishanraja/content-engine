@@ -84,7 +84,7 @@ Each line names the commit or file it was checked in; none of it is live until t
 - **Every asset made here.** `config/asset-routes.json` and `asset_routes.py`, the captions step, the make flow's own
   judges, the Saturday Note, manifest schema 1.1 and the cycle's Growth rows (`c8ea47d5` to `9a6508e3`), and the
   carousel format enforced as refusals (`e3593a2f`). Each Library call refuses with "the v5 Library is not on this
-  checkout yet" until content-engine `library/gates-and-wiring` merges.
+  checkout yet" on a checkout without it; the Library is on main (#984) and merged into this branch.
 
 ## Broken or risky
 
@@ -128,7 +128,7 @@ Each is checked in the record that holds it; only his own words or presses close
 - **The blind proof** (branch `story/engine-v5`): his yes to the paid run (at most $10) once the frozen SHA question
   above is settled, then his answers on the sheet (`A++`, `A+`, `=`, `B+` or `B++` per pair) before the reveal.
 - **The buyer judge** (`config/beat.json` `reader.judges.buyer.flag`): keep its rewrite for the v5 reader, or retire it.
-- **Merging** `story/engine-v5` and the v5 Library (`library/gates-and-wiring`), and Growth's pull request 145.
+- **Merging** `story/engine-v5` (origin/main and its v5 Library are merged in) and Growth's pull request 145.
 - **Friday 13 Nov's creative sheet.** `docs/plans/2026-11-09-week/fri-preproduction/creative.json` has `signed: null`;
   nothing in its "after sign" list starts before he signs it.
 

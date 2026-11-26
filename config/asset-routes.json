@@ -10,7 +10,7 @@
     "checked_against": "library/gates-and-wiring b0cf8943: library.json carousel_sets and items, LIBRARY-GUIDE.md (retired templates), scripts/covers/cover_outputs.py OUTPUTS"
   },
   "absent": "the v5 Library is not on this checkout yet",
-  "absent_detail": "{script} is not on this checkout. It lands with the v5 Library (content-engine branch library/gates-and-wiring). Nothing else makes this asset: no other renderer, no Growth template, no hand-drawn stand-in. Wait for the Library to reach main, then run the command again.",
+  "absent_detail": "{script} is not on this checkout. The v5 Library is on content-engine main (b0cf8943, merged by #984); this checkout predates it or lacks it. Nothing else makes this asset: no other renderer, no Growth template, no hand-drawn stand-in. Wait for the Library to reach main, then run the command again.",
   "commands": {
     "covers": {
       "script": "scripts/covers/make_covers.py",

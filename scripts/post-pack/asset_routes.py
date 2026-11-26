@@ -6,7 +6,7 @@ kind growth-makeyourmindup used to make is a row in config/asset-routes.json, ma
 makes it now. The Library templates are the only artwork: covers and thumbnails come only from
 scripts/covers/make_covers.py, carousels only from scripts/library/make_piece.py --set <set>, always through
 scripts/carousel_make.py, which holds the deck and the drawn slides to config/carousel-format.json. Both land with the v5
-Library (content-engine branch library/gates-and-wiring); until they are on the checkout this refuses with the config's
+Library (on content-engine main since #984, b0cf8943); on a checkout without them this refuses with the config's
 `absent` words, and never falls back to another renderer.
 
     python3 scripts/post-pack/asset_routes.py list                          every kind, its status and its command

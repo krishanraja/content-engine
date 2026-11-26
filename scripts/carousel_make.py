@@ -7,7 +7,7 @@ carousel formatting." Every carousel content-engine makes goes through here (con
     python3 scripts/carousel_make.py <piece> --set <set> --deck DECK.json --out <folder>
 
 1. The Library must be on this checkout (scripts/library/make_piece.py and scripts/covers/make_covers.py, which land
-   with library/gates-and-wiring). Absent: it refuses with "the v5 Library is not on this checkout yet" (exit 2) and
+   on main since #984). Absent: it refuses with "the v5 Library is not on this checkout yet" (exit 2) and
    never falls back to another renderer.
 2. The deck (carousel-deck/3) must pass scripts/carousel_check.py: the set and piece it names are this run's, 4 to 7
    slides in the set's registry order, the cover from make_covers.py, the glance lines, the takeaway close. A refusal
