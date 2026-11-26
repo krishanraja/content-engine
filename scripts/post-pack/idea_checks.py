@@ -1999,6 +1999,23 @@ def status_key(day, main, o):
     return f'idea:{oid}' if main else f'off:{day}:{oid}'
 
 
+def keys_on(board_):
+    """The board_feed option_status key of every option on a board (the board as it stood before a re-run)."""
+    return {status_key(day, main, o) for _ref, day, main, o in board_raw(board_)} if isinstance(board_, dict) else set()
+
+
+def option_open(key, status, before=None):
+    """Whether an option is open (never answered): a board never shown (status None), an option the status reads as
+    open or held, or one the status does not name and the board before the run did not have (a new option a `days`
+    re-run made). An option on the board before that the status does not name is not known: never open. before: the
+    keys_on() of the board before the run, or None when there was none to read."""
+    if status is None:
+        return True
+    if key in status:
+        return status[key] in OPEN
+    return before is not None and key not in before
+
+
 def sourced_rungs(ladder):
     """How many rungs of a why-ladder/1 document carry at least one evidence item with an http(s) url."""
     rungs = (ladder or {}).get('rungs') if isinstance(ladder, dict) else None
@@ -2006,7 +2023,7 @@ def sourced_rungs(ladder):
         isinstance(e, dict) and re.match(r'^https?://', str(e.get('url') or '')) for e in r.get('evidence') or []))
 
 
-def story_findings(ideas, week, status=None, probes=None, cfg=None):
+def story_findings(ideas, week, status=None, probes=None, cfg=None, before=None):
     """From STORY_FROM, the story score's gate lines (code 'story' or 'story_floor'), each {code, ref, line}:
       - story: an open option with no story score, a score with no total, or a score from another rubric;
       - story: a day whose options are all open and do not stand in story_score.py order's order (by total, a floored
@@ -2017,7 +2034,8 @@ def story_findings(ideas, week, status=None, probes=None, cfg=None):
       - story_floor: an open option the floor refused or that fails one of its type's hard floors.
     status: board_feed option_status {key: status}, or None for a board never shown (every option open). An answered
     option is his: it is never checked, and a day with one is never checked for order (its presses name it by place).
-    The weekly good news is its own series and is left out."""
+    before: the week's ideas.json as it stood before a `days` re-run; an option on neither it nor the status is new, so
+    open (option_open). The weekly good news is its own series and is left out."""
     cfg = cfg or STORY
     if str(week) < str(cfg['from']):
         return []
@@ -2025,8 +2043,10 @@ def story_findings(ideas, week, status=None, probes=None, cfg=None):
     probes = {str(k).lower(): v for k, v in (probes or {}).items()}
     out = []
 
+    had = keys_on(before) if before is not None else None
+
     def is_open(day, main, o):
-        return status is None or status.get(status_key(day, main, o), 'unknown') in OPEN
+        return option_open(status_key(day, main, o), status, had)
 
     def label(ref, main, o):
         return f'{ref} ({str(o.get("id") or "")[:8]})' if main else ref

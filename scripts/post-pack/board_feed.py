@@ -708,15 +708,15 @@ def plans_reader(plans=None):
     return (lambda a: find(a) or ''), (lambda a: (lambda t: idea_checks.short_hash(idea_checks.norm(t)) if t else None)(find(a)))
 
 
-def wave1(ideas, sources, plans=None, p6=None, status=None):
+def wave1(ideas, sources, plans=None, p6=None, status=None, before=None):
     """The ideas quality plan's Wave 1 checks on a week's ideas.json against its sources.json (idea_checks.py): a
     subject he refused, a warned option placed first or shown without his words, a return no deeper, an option that
     calls itself his and points to nothing he typed, the vetoes the board lists, and from the 23 Nov board the shape
     (the plain question first, a research prompt, a source tag) and the house rules read; on every board, no repeat of
     what went out on the last three weeks' boards or of another option (Krish, 2026-11-16), and from the 23 Nov board
     each option's shape, aim, humour and lookalike. From the story score's `from` board, the story score's lines
-    (idea_checks.story_findings; status, when given, leaves his answered options and their days alone). Each finding is
-    {code, ref, line}."""
+    (idea_checks.story_findings; status, when given, leaves his answered options and their days alone, and before, the
+    board before a `days` re-run, names the options the run made new). Each finding is {code, ref, line}."""
     week = str((ideas or {}).get('week_start') or (sources or {}).get('week_start') or '')
     shown_text, earlier_text16 = plans_reader(plans)
     opts = idea_checks.board_options(ideas)
@@ -762,7 +762,7 @@ def wave1(ideas, sources, plans=None, p6=None, status=None):
     found += idea_checks.offbeat_findings(ideas, week)
     # The story score: every open option scored blind, each open day in its order, a hero holding three sourced whys
     # before the pick, and nothing under its floor (the story engine v5 plan; Ruling, Krish, 2026-11-26).
-    found += idea_checks.story_findings(ideas, week, status, probes_of(week, plans))
+    found += idea_checks.story_findings(ideas, week, status, probes_of(week, plans), before=before)
     return found
 
 
@@ -905,12 +905,12 @@ def gate_report(week, ideas_path=None, plans=None, base_path=None, days=None, st
     folder = Path(plans or ROOT / 'docs' / 'plans') / f'{wk}-week'
     sources = json.loads((folder / 'sources.json').read_text(encoding='utf-8'))
     ideas = json.loads(Path(ideas_path or folder / 'ideas.json').read_text(encoding='utf-8'))
-    found = wave1(ideas, sources, plans, status=status)
+    base = json.loads(Path(base_path).read_text(encoding='utf-8')) if base_path else None
+    found = wave1(ideas, sources, plans, status=status, before=base)
     problems = [f['line'] for f in found if f['code'] in idea_checks.GATE_CODES]
     before = []
     if base_path:
-        had = {f['line'] for f in wave1(json.loads(Path(base_path).read_text(encoding='utf-8')), sources, plans, status=status)
-               if f['code'] in idea_checks.GATE_CODES}
+        had = {f['line'] for f in wave1(base, sources, plans, status=status, before=base) if f['code'] in idea_checks.GATE_CODES}
         # A re-run of some days (sunday-ideas.yml `days`) answers for those days in full: a problem the board already had
         # on one of them still fails, since the run was there to make its open options again. Every other day's
         # problems are the week's own and only reported.
