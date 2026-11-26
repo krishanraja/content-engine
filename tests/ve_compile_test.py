@@ -641,8 +641,8 @@ class StingTest(unittest.TestCase):
 
 
 class StingCloseTest(unittest.TestCase):
-    """Every video ends on the plain v5 outro card (Ruling, Krish, 2026-11-26: "1 agreed"), and the intro sting closes no
-    cut dated from 26 Nov. The retired series close on the sting (Ruling, Krish, 2026-11-20) stays only for a series cut
+    """Every video ends on the v5 outro card, the Library's outro (Ruling, Krish, 2026-11-26: "1 agreed"), and the intro
+    sting closes no cut dated from 26 Nov. The retired series close on the sting (Ruling, Krish, 2026-11-20) stays only for a series cut
     dated 23 to 25 Nov, signed with it (F33): the clip at the END of the whole cut, never at the start, never on an off
     day. Stand-in clips, never his."""
 
@@ -664,7 +664,7 @@ class StingCloseTest(unittest.TestCase):
             spec['brand']['series'] = series
         return spec
 
-    def test_a_series_whole_cut_from_26_nov_ends_on_the_plain_v5_outro_card(self):
+    def test_a_series_whole_cut_from_26_nov_ends_on_the_v5_outro_card(self):
         for cut, frames in (('proof-wide', ENDING_FRAMES), ('proof-tall', 60)):
             with self.subTest(cut), self.env():
                 spec = self.spec('2026-11-27', cut)  # mind.the.gap on a Friday, its own day
@@ -673,7 +673,10 @@ class StingCloseTest(unittest.TestCase):
                 self.assertNotIn('sting', props['ending'])
                 self.assertNotIn('sting', props)  # nothing before the hook: the opening is unchanged
                 self.assertEqual(props['renderTheme'], 'makeyourmindup-v5')
-                self.assertTrue(props['ending']['days'])  # the series days row, as the plain card draws it
+                # The Library's outro (V5Outro.tsx): its own words, no tagline, no days row, no series name (Krish,
+                # 2026-11-26: "the sub brands do not need to feature").
+                self.assertEqual(props['ending'], {'fromFrame': props['ending']['fromFrame'], 'url': 'makeyourmindup.ai',
+                                                   'days': [], 'look': 'v5_outro'})
                 self.assertEqual(report['close'], 'v5_outro')
                 self.assertEqual(props['durationFrames'] - props['ending']['fromFrame'], frames)
                 self.assertEqual(ve_compile.ending_problems(props, spec), [])
@@ -698,6 +701,14 @@ class StingCloseTest(unittest.TestCase):
             closeless = copy.deepcopy(props)
             closeless.pop('ending')
             self.assertRegex(' '.join(ve_compile.ending_problems(closeless, spec)), 'has no close')
+            # The old statement card (no look) and a days row on the outro are refused from 26 Nov.
+            old_card = copy.deepcopy(props)
+            old_card['ending'] = {'fromFrame': props['ending']['fromFrame'], 'url': 'makeyourmindup.ai',
+                                  'tagline': 'Built to help you decide.', 'cta': 'Subscribe free', 'days': []}
+            self.assertRegex(' '.join(ve_compile.ending_problems(old_card, spec)), 'old statement card.*1 agreed')
+            days = copy.deepcopy(props)
+            days['ending']['days'] = [{'day': 'Fridays', 'colour': '#FF6A4D'}]
+            self.assertRegex(' '.join(ve_compile.ending_problems(days, spec)), 'no series days row')
 
     def test_a_series_cut_signed_23_to_25_nov_keeps_its_sting_close(self):
         for cut, shape, frames in (('proof-wide', '16x9', ENDING_FRAMES), ('proof-tall', '9x16', 60)):
@@ -724,6 +735,18 @@ class StingCloseTest(unittest.TestCase):
                 props = compile_cut(spec, 'proof-tall', timed_words(), FIXTURE)
                 self.assertNotIn('sting', props['ending'])
                 self.assertEqual(ve_compile.ending_problems(props, spec), [])
+                # From 26 Nov, series or off day, the close is the v5 outro; before, the statement card it was signed with.
+                self.assertEqual(props['ending'].get('look'), 'v5_outro' if day >= '2026-11-26' else None)
+
+    def test_a_cut_dated_before_26_nov_keeps_the_card_it_was_signed_with(self):
+        with self.env():
+            spec = self.spec('2026-11-20', 'proof-wide')  # mind.the.gap on a Friday, its own day
+            props = compile_cut(spec, 'proof-wide', timed_words(), FIXTURE)
+            self.assertEqual(list(props['ending']), ['fromFrame', 'url', 'tagline', 'cta', 'days'])
+            self.assertTrue(props['ending']['days'])  # the series days row it was signed with
+            outro = copy.deepcopy(props)
+            outro['ending'] = {'fromFrame': props['ending']['fromFrame'], 'url': 'makeyourmindup.ai', 'days': [], 'look': 'v5_outro'}
+            self.assertRegex(' '.join(ve_compile.ending_problems(outro, spec)), 'keeps the close it was signed with')
 
     def test_a_missing_clip_for_a_signed_cut_closes_plain_and_render_is_refused(self):
         with self.env(Path(self.temp.name) / 'no-clips-here'):

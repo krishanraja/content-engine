@@ -190,6 +190,11 @@ export const EngineRenderPropsSchema = z.object({
   ending: z.object({ fromFrame: Frame, url: z.string().min(1), ticker: z.boolean().default(true),
     tagline: z.string().min(1).optional(), cta: z.string().min(1).optional(),
     days: z.array(z.object({ day: z.string().min(1), colour: z.string().min(1) }).strict()).optional(),
+    /** 'v5_outro': the close is the Library's outro card (chrome/V5Outro.tsx; Ruling, Krish, 2026-11-26: "1 agreed"):
+     *  S3h, "Follow for more", the address and the climb bars, with no tagline, no days row and no series name. compile
+     *  sets it on every whole cut dated from 26 Nov (config/brand-palette.json series_close); props without it, every cut
+     *  dated before, draw the close they were signed with. */
+    look: z.literal('v5_outro').optional(),
     /** The retired series close on the intro sting (Ruling, Krish, 2026-11-20; retired by Ruling, Krish, 2026-11-26:
      *  "1 agreed"): kept only so a series cut dated 23 to 25 Nov, signed with it, still renders as signed (F33). Every
      *  other cut ends on the plain v5 outro card with no sting (EndingBand), and ve render refuses props that carry one
@@ -226,6 +231,10 @@ export const EngineRenderPropsSchema = z.object({
   }
   if (close && props.ending?.days && props.ending.days.length === 0) {
     context.addIssue({ code: 'custom', path: ['ending', 'sting'], message: 'an off-day cut closes on the mint statement card, never a series sting' })
+  }
+  // The v5 outro shows no sting and no series days (Ruling, Krish, 2026-11-26: "1 agreed"; chrome/V5Outro.tsx).
+  if (props.ending?.look === 'v5_outro' && (close || props.ending.days?.length)) {
+    context.addIssue({ code: 'custom', path: ['ending', 'look'], message: 'the v5 outro card carries no sting and no series days row' })
   }
   if (!props.sting) return
   // Only the 16:9 long cut of a weekly series piece wears it: the 9:16 short opens straight on its hook

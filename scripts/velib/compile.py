@@ -26,9 +26,11 @@ ENDING_FRAMES_BY_ASPECT = {'16:9': ENDING_FRAMES, '9:16': 60}
 # Krish, 10 Nov 2026: "The copy should read: "Built to help you decide."" (the same words as quick-edit's kit TAGLINE).
 _PALETTE = load_json(ROOT / 'config' / 'brand-palette.json')
 _CLOSE_COPY = _PALETTE['close_copy']  # the one copy of the close's words
-# Every video ends on the plain v5 outro card (Ruling, Krish, 2026-11-26: "1 agreed"; config/brand-palette.json
-# series_close): the ending band's plain card (EndingBand.tsx) drawn in the locked v5 look, never the intro sting.
+# Every video ends on the v5 outro card (Ruling, Krish, 2026-11-26: "1 agreed"; config/brand-palette.json
+# series_close): the Library's video-vertical-outro or video-wide-outro (V5Outro.tsx, props ending.look 'v5_outro'),
+# with S3h, "Follow for more", the address and the climb bars, no days row and no series name; never the intro sting.
 V5_CLOSE = _PALETTE['series_close']
+V5_OUTRO_LOOK = V5_CLOSE['outro']['look']
 V5_CLOSE_RULING = f'Ruling, Krish, {V5_CLOSE["from"]}: "{V5_CLOSE["words"]}"'
 ENDING_TAGLINE = _CLOSE_COPY['tagline']
 ENDING_CTA = _CLOSE_COPY['cta']
@@ -149,11 +151,12 @@ def carried_stings(value, marks: set[str], where: str = 'props') -> list[str]:
 
 
 def ending_problems(props: dict, spec: dict | None = None) -> list[str]:
-    """Why a whole cut's close is not the one the palette asks for it. Every video dated from 26 Nov ends on the plain v5
-    outro card (Ruling, Krish, 2026-11-26: "1 agreed"; config/brand-palette.json series_close): the ending band's plain
-    card, drawn in the locked v5 look (props.renderTheme makeyourmindup-v5), with no intro sting clip anywhere in the
-    props. A whole series cut dated 23 to 25 Nov was signed with the retired sting close and keeps it (F33): it closes
-    on the sting clip Krish saw. Empty for a piece dated before 23 Nov."""
+    """Why a whole cut's close is not the one the palette asks for it. Every video dated from 26 Nov ends on the v5 outro
+    card (Ruling, Krish, 2026-11-26: "1 agreed"; config/brand-palette.json series_close): the Library's outro, props
+    ending.look 'v5_outro' with no days row, drawn in the locked v5 look (props.renderTheme makeyourmindup-v5), with no
+    intro sting clip anywhere in the props. A whole series cut dated 23 to 25 Nov was signed with the retired sting close
+    and keeps it (F33): it closes on the sting clip Krish saw. A cut dated before 26 Nov never wears the v5 outro: it
+    keeps the close it was signed with."""
     if spec is None:
         return []
     ending = props.get('ending')
@@ -178,9 +181,13 @@ def ending_problems(props: dict, spec: dict | None = None) -> list[str]:
         hits = [hit for hit in carried_stings(props, marks) if not hit.startswith('props.ending.sting')]
         return [f'the props carry an intro sting clip at {", ".join(hits)}, beyond the close it was signed with'] if hits else []
     out = []
+    look = (ending or {}).get('look')
     if sting:
-        out.append(f'the props close on the intro sting, and the sting closes no cut: every video ends on the plain v5 outro '
+        out.append(f'the props close on the intro sting, and the sting closes no cut: every video ends on the v5 outro '
                    f'card ({V5_CLOSE_RULING}); run ve compile again')
+    if look and day < V5_CLOSE['from']:
+        out.append(f'the props close on the v5 outro card, and a cut dated {day or "without a date"} keeps the close it was '
+                   f'signed with (the v5 outro closes cuts dated from {V5_CLOSE["from"]}; F33); run ve compile again')
     hits = [hit for hit in carried_stings(props, marks) if not hit.startswith('props.ending.sting')]
     if day >= V5_CLOSE['from'] and hits:
         out.append(f'the props carry an intro sting clip at {", ".join(hits)}: no cut dated from {V5_CLOSE["from"]} carries '
@@ -191,8 +198,14 @@ def ending_problems(props: dict, spec: dict | None = None) -> list[str]:
                        f'({V5_CLOSE_RULING}); run ve compile again')
         elif props.get('renderTheme') != V5_CLOSE['theme']:
             out.append(f'this cut\'s close is drawn in {props.get("renderTheme") or "the pre-v5 theme"}, not the locked v5 '
-                       f'look ({V5_CLOSE["theme"]}): every video ends on the plain v5 outro card ({V5_CLOSE_RULING}); '
+                       f'look ({V5_CLOSE["theme"]}): every video ends on the v5 outro card ({V5_CLOSE_RULING}); '
                        'run ve compile again')
+        if ending and not sting and look != V5_OUTRO_LOOK:
+            out.append(f'this cut closes on the old statement card ("Built to help you decide.", the stacked mark and the days '
+                       f'row), not the v5 outro card, the Library\'s outro ({V5_CLOSE_RULING}); run ve compile again')
+        elif ending and ending.get('days'):
+            out.append('the v5 outro card carries no series days row and no series name (Krish, 2026-11-26: "the sub brands '
+                       'do not need to feature"); run ve compile again')
     return out
 
 
@@ -892,14 +905,20 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         if not close_ids.intersection(cut['beats'][-1]['uses']):
             raise ValueError('a whole v5 ladder must finish on its close card')
     if not cut.get('excerpt', False) and spec['format'] != 'why-ladder-v5':
-        props['ending'] = {'fromFrame': duration, 'url': props['series']['site'], 'tagline': ENDING_TAGLINE, 'cta': ENDING_CTA,
-                           'days': [{'day': house['channels'][c]['day'], 'colour': publication['channel_colors'][c]}
-                                    for c in house['channels'] if c in publication['channel_colors']] if not off else []}
+        props['ending'] = (
+            # From 26 Nov, the v5 outro card, the Library's (Ruling, Krish, 2026-11-26: "1 agreed"; V5Outro.tsx): its own
+            # words and S3h, no tagline, no days row, no series name (Krish, 2026-11-26: "the sub brands do not need to
+            # feature"). A cut dated before keeps the statement card it was signed with (F33).
+            {'fromFrame': duration, 'url': props['series']['site'], 'days': [], 'look': V5_OUTRO_LOOK}
+            if str(spec.get('publish_day') or '')[:10] >= V5_CLOSE['from'] else
+            {'fromFrame': duration, 'url': props['series']['site'], 'tagline': ENDING_TAGLINE, 'cta': ENDING_CTA,
+             'days': [{'day': house['channels'][c]['day'], 'colour': publication['channel_colors'][c]}
+                      for c in house['channels'] if c in publication['channel_colors']] if not off else []})
         if spec.get('style', {}).get('ending_ticker') is False:
             props['ending']['ticker'] = False  # no scrolling promise strip (Krish: no marquee)
-        # The plain v5 outro card (Ruling, Krish, 2026-11-26: "1 agreed"; EndingBand.tsx): 60 frames tall, 180 wide. Only
-        # a series cut dated 23 to 25 Nov keeps the retired sting close it was signed with (F33); without its clip here
-        # the props close on the plain card and ve render refuses them.
+        # The v5 outro card (Ruling, Krish, 2026-11-26: "1 agreed"; V5Outro.tsx): 60 frames tall, 180 wide. Only a series
+        # cut dated 23 to 25 Nov keeps the retired sting close it was signed with (F33); without its clip here the props
+        # close on the plain card and ve render refuses them.
         close_sting, close_why = close_sting_props(spec, cut, channel, off)
         if close_sting:
             props['ending']['sting'] = close_sting
