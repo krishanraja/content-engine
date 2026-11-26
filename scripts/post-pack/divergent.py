@@ -8,7 +8,11 @@ decides nothing: an option made from its spark is the engine's (`source_kind: en
 refute pass and reviewer as every option, and only Krish's presses put anything on a board.
 
     python3 divergent.py wildcard --problem "..." --sources SOURCES.json [--day mon] [--count 3] [--context "..."]
-        provoke: sparks for one day's wildcard slot (2 model calls, about $0.15), after the chain cap check
+        provoke: sparks for one day's wildcard slot at the wildcard row's temperament (wild; 2 model calls, about $0.15),
+        after the chain cap check
+    python3 divergent.py distance IDEAS.json --sources SOURCES.json [--write]
+        each hero day's wildcard scored against that day's other options and the worn ground (zero model calls:
+        `obvious` is given, no judge); --write records it on the option and in story/wildcards.json
     python3 divergent.py score IDEAS.json --sources SOURCES.json
         the repeat guard: every option on the board against what went out (zero model calls: `obvious` is given)
     python3 divergent.py record [ITEM ...] [--live SOURCES.json] [--items-file F] [--label L] [--lane NAME]
@@ -186,8 +190,15 @@ def _served(status, body):
     return 'divergent-thinker not served (%s%s)' % (status or 'unreachable', ', ' + str(body.get('error')) if isinstance(body, dict) and body.get('error') else '')
 
 
-def wildcard(problem, sources, *, count=3, context=None, day=None, poster=post, cap=chain_week, plans=None, kill_list=KILL_LIST):
-    """provoke: sparks for one day's wildcard slot. Refused over the chain cap; not served is never a pass."""
+def wildcard_cfg():
+    """The wildcard row of config/story-score.json (ruling wildcard, Krish, 2026-11-26)."""
+    return json.loads((ROOT / 'config' / 'story-score.json').read_text(encoding='utf-8'))['wildcard']
+
+
+def wildcard(problem, sources, *, count=3, context=None, day=None, poster=post, cap=chain_week, plans=None, kill_list=KILL_LIST,
+             temperament=None):
+    """provoke: sparks for one day's wildcard slot, at the wildcard row's temperament (wild) unless one is given.
+    Refused over the chain cap; not served is never a pass."""
     out = {'kind': 'wildcard', 'day': day, 'namespace': NAMESPACE, 'sparks': []}
     if not os.environ.get(TOKEN_ENV) and poster is post:
         return {**out, 'status': 'unavailable', 'reason': TOKEN_ENV + ' is not set: write the wildcard yourself'}
@@ -196,7 +207,10 @@ def wildcard(problem, sources, *, count=3, context=None, day=None, poster=post, 
     if not runs:
         return {**out, 'status': 'refused', 'reason': why + ': write the wildcard yourself'}
     body = {'op': 'provoke', 'problem': _clip(problem, 4000), 'count': max(1, min(int(count), 8)), 'target': 'writing',
-            'namespace': NAMESPACE, 'cliches': worn(sources, plans)[:MAX_CLICHES], 'bannedWords': banned_words(kill_list)}
+            'namespace': NAMESPACE, 'cliches': worn(sources, plans)[:MAX_CLICHES], 'bannedWords': banned_words(kill_list),
+            'temperament': temperament or wildcard_cfg()['temperament']}
+    if body['temperament'] not in TEMPERAMENTS:
+        raise ValueError('temperament is one of %s' % ', '.join(TEMPERAMENTS))
     if context:
         body['context'] = str(context)[:8000]
     status, answer = poster(body)
@@ -265,6 +279,123 @@ def score(ideas, sources, *, poster=post, plans=None):
     out['divergence_index'] = answer.get('divergenceIndex')
     out['status'] = 'flagged' if out['findings'] else 'pass'
     return out
+
+
+def wildcards_of(ideas, cfg=None):
+    """{day: ([(ref, option, text)] its wildcards, [text] the day's other options)} for each wildcard day (config
+    wildcard.days)."""
+    import idea_checks
+    cfg = cfg or wildcard_cfg()
+    days = (ideas or {}).get('days') if isinstance((ideas or {}).get('days'), dict) else {}
+    out = {}
+    for day in cfg['days']:
+        wild, rest = [], []
+        for n, o in enumerate(days.get(day) or [], 1):
+            if not isinstance(o, dict):
+                continue
+            if isinstance(o.get('wildcard'), dict):
+                wild.append((f'{day}-{n}', o, wildcard_text(o, cfg)))
+                continue
+            text = _clip(idea_checks.option_text_main(o) or o.get('hook') or o.get('title'), MAX_IDEA_CHARS)
+            if text and not o.get('weekly'):
+                rest.append(text)
+        out[day] = (wild, rest)
+    return out
+
+
+def wildcard_text(o, cfg=None):
+    """A wildcard's words as the engine reads them and its distance is hashed: the board's words with the row's
+    board_prefix taken off its pitch question (the label is the board's, never part of the story)."""
+    import idea_checks
+    cfg = cfg or wildcard_cfg()
+    pitch = o.get('pitch') if isinstance(o.get('pitch'), dict) else None
+    q = str((pitch or {}).get('question') or '')
+    if pitch is not None and q.startswith(cfg['board_prefix']):
+        o = {**o, 'pitch': {**pitch, 'question': q[len(cfg['board_prefix']):]}}
+    return _clip(idea_checks.option_text_main(o) or o.get('hook') or o.get('title'), MAX_IDEA_CHARS)
+
+
+def text_hash(text):
+    """The hash of the words a distance was read on: a wildcard reworded after its check is checked again."""
+    import idea_checks
+    return idea_checks.short_hash(idea_checks.norm(text))
+
+
+def distance(ideas, sources, *, poster=post, plans=None, cfg=None, now=None):
+    """Each hero day's wildcard scored against that day's other options and the worn ground, `obvious` given and no
+    judge, so the engine makes no model call. Divergent when the engine's status is in the row's divergent_statuses, or
+    when it is the engine's own spark already in the archive (own_spark). Not served is recorded as skipped, never as a
+    pass. {kind, status (pass | flagged | unavailable), days: {day: [record]}, findings}; each record is what --write
+    puts on the option as wildcard.distance: {status, divergent, text_hash, at} or {status: skipped, reason, at}."""
+    from datetime import datetime, timezone
+    cfg = cfg or wildcard_cfg()
+    rule = cfg['distance']
+    at = now or datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+    out = {'kind': 'distance', 'namespace': NAMESPACE, 'days': {}, 'findings': []}
+    week = (ideas or {}).get('week_start') or (sources or {}).get('week_start') or ''
+    about = json.loads((ROOT / 'config' / 'beat.json').read_text(encoding='utf-8'))['reader']['about']
+    worn_ground = worn(sources, plans)
+    keyless = not os.environ.get(TOKEN_ENV) and poster is post
+    unserved = []
+    for day, (wild, rest) in wildcards_of(ideas, cfg).items():
+        if not wild:
+            out['findings'].append({'day': day, 'why': f'{day} has no wildcard option: write one (references/divergent.md)'})
+            continue
+        obvious = _unique(rest + worn_ground)
+        answer = {}
+        if keyless:
+            why = TOKEN_ENV + ' is not set'
+        elif not obvious:
+            why = 'nothing to hold it against (no other option and no worn ground): no call made'
+        else:
+            body = at_will_body('score', problem=rule['problem'].format(day=day, about=about, week=week),
+                                ideas=[t for _r, _o, t in wild], obvious=obvious)
+            assert not spends(body), 'the distance check makes no model call'
+            status, answer = poster(body)
+            why = _served(status, answer)
+        recs = []
+        if why:
+            unserved.append(f'{day}: {why}')
+            for ref, _o, text in wild:
+                recs.append({'ref': ref, 'status': rule['skipped'], 'reason': why, 'text_hash': text_hash(text), 'at': at})
+            out['days'][day] = recs
+            continue
+        results = [r for r in answer.get('results') or [] if isinstance(r, dict)]
+        for (ref, o, text), r in zip(wild, results + [{}] * len(wild)):
+            st = r.get('status')
+            own = st == rule['own_spark'] and isinstance(o['wildcard'].get('divergent') or o.get('divergent'), dict)
+            ok = st in rule['divergent_statuses'] or own
+            recs.append({'ref': ref, 'status': 'own_spark' if own else st, 'divergent': ok, 'text_hash': text_hash(text), 'at': at})
+            if not ok:
+                out['findings'].append({'day': day, 'ref': ref, 'why': f'{ref} is not far from the obvious takes ({st or "no status"}: '
+                                        + (FLAG.get(st) or 'the engine did not call it divergent') + '); find a stranger story'})
+        out['days'][day] = recs
+    if unserved:
+        out['unserved'] = unserved
+    out['status'] = 'flagged' if out['findings'] else ('unavailable' if unserved else 'pass')
+    return out
+
+
+def write_distance(ideas_path, result):
+    """Put each record on its option as wildcard.distance and write the records to story/wildcards.json beside the
+    week's ideas.json (the cycle's stage 2 evidence). Only wildcard.distance changes on the board."""
+    path = Path(ideas_path)
+    ideas = json.loads(path.read_text(encoding='utf-8'))
+    days = ideas.get('days') or {}
+    for day, recs in (result.get('days') or {}).items():
+        opts = days.get(day) or []
+        for rec in recs:
+            n = int(rec['ref'].rsplit('-', 1)[1])
+            o = opts[n - 1] if 0 < n <= len(opts) else None
+            if isinstance(o, dict) and isinstance(o.get('wildcard'), dict):
+                o['wildcard']['distance'] = {k: v for k, v in rec.items() if k != 'ref'}
+    path.write_text(json.dumps(ideas, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')
+    files = json.loads((ROOT / 'config' / 'story-score.json').read_text(encoding='utf-8'))['files']
+    log = path.parent / files['wildcards']
+    log.parent.mkdir(parents=True, exist_ok=True)
+    log.write_text(json.dumps({k: result[k] for k in ('status', 'days', 'findings', 'unserved') if k in result},
+                              ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    return log
 
 
 def live_items(sources):
@@ -430,6 +561,11 @@ def main(argv=None, *, poster=post, cap=chain_week):
     w.add_argument('--day')
     w.add_argument('--count', type=int, default=3)
     w.add_argument('--context')
+    w.add_argument('--temperament', choices=TEMPERAMENTS, help='default: the wildcard row of config/story-score.json (wild)')
+    d = sub.add_parser('distance')
+    d.add_argument('ideas')
+    d.add_argument('--sources', required=True)
+    d.add_argument('--write', action='store_true', help='record it on each wildcard and in story/wildcards.json')
     _shared(sub.add_parser('map'), words=False)
     _shared(sub.add_parser('provoke'), count=True)
     _shared(sub.add_parser('challenge'), idea=True)
@@ -456,7 +592,11 @@ def main(argv=None, *, poster=post, cap=chain_week):
     try:
         if a.cmd == 'wildcard':
             result = wildcard(a.problem, _load(a.sources), count=a.count, context=a.context, day=a.day,
-                              poster=poster, cap=cap)
+                              poster=poster, cap=cap, temperament=a.temperament)
+        elif a.cmd == 'distance':
+            result = distance(_load(a.ideas), _load(a.sources), poster=poster)
+            if a.write:
+                result['written'] = str(write_distance(a.ideas, result))
         elif a.cmd == 'score' and a.ideas:
             if not a.sources:
                 p.error('the board guard takes IDEAS.json with --sources SOURCES.json')

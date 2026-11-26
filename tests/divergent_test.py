@@ -264,5 +264,97 @@ class AtWill(unittest.TestCase):
                 os.environ[dv.TOKEN_ENV] = old
 
 
+WILD = {'kind': 'obscure', 'why_unexpected': 'A brass band licensing its practice tapes is nowhere near the label deals.'}
+
+
+def wild_board():
+    return {'week_start': '2026-11-30', 'days': {
+        'mon': [{'id': 'a', 'so_what': 'Labels license songs to model makers.', 'story': 'Labels are paid.'},
+                {'id': 'w', 'so_what': 'A brass band licenses its practice tapes.', 'story': 'The band is paid per hour of tape.',
+                 'pitch': {'question': 'Wildcard: Why would a band sell its mistakes?'}, 'wildcard': dict(WILD)}],
+        'wed': [{'id': 'b', 'so_what': 'Studios test AI dubbing.'}],
+        'fri': [{'id': 'c', 'so_what': 'Clubs sell crowd noise.'},
+                {'id': 'v', 'so_what': 'A spark of ours.', 'wildcard': dict(WILD, divergent={'run_id': 'r1', 'spark': 'S'})}]}}
+
+
+class Distance(unittest.TestCase):
+    def test_the_wildcard_provokes_wild(self):
+        poster = Poster(200, {'ok': True, 'runId': 'r9', 'sparks': [{'rank': 1, 'title': 'T'}]})
+        dv.wildcard('P', SOURCES, poster=poster, cap=UNDER, plans=plans_dir(), day='mon')
+        self.assertEqual(poster.calls[0]['temperament'], 'wild')
+        dv.wildcard('P', SOURCES, poster=poster, cap=UNDER, plans=plans_dir(), temperament='balanced')
+        self.assertEqual(poster.calls[1]['temperament'], 'balanced')
+
+    def test_obvious_is_the_days_other_options_and_the_worn_ground_and_it_is_free(self):
+        poster = Poster(200, {'ok': True, 'results': [{'status': 'accepted'}]})
+        out = dv.distance(wild_board(), SOURCES, poster=poster, plans=plans_dir(), now='t')
+        mon, fri = poster.calls
+        for body in (mon, fri):
+            self.assertEqual(body['op'], 'score')
+            self.assertNotIn('judge', body)
+            self.assertFalse(dv.spends(body), 'obvious given and no judge: no model call')
+            self.assertIn('Robots now file their own expenses', body['obvious'])
+        self.assertIn('Labels license songs to model makers. Labels are paid.', mon['obvious'])
+        self.assertNotIn('Wildcard:', mon['ideas'][0], "the board's label is not the story")
+        self.assertIn('A brass band licenses its practice tapes.', mon['ideas'][0])
+        self.assertEqual(out['days']['mon'][0]['status'], 'accepted')
+        self.assertTrue(out['days']['mon'][0]['divergent'])
+        self.assertEqual([f['day'] for f in out['findings']], ['wed'], 'a day with no wildcard is said')
+        self.assertEqual(out['status'], 'flagged')
+
+    def test_pulled_to_the_obvious_is_flagged_and_its_own_spark_is_not(self):
+        poster = Poster(200, {'ok': True, 'results': [{'status': 'rejected_archive'}]})
+        board = wild_board()
+        board['days']['wed'].append({'id': 'x', 'so_what': 'Another', 'wildcard': dict(WILD)})
+        out = dv.distance(board, SOURCES, poster=poster, plans=plans_dir(), now='t')
+        self.assertEqual(out['days']['fri'][0]['status'], 'own_spark')
+        self.assertTrue(out['days']['fri'][0]['divergent'])
+        self.assertFalse(out['days']['mon'][0]['divergent'])
+        self.assertEqual(sorted(f['ref'] for f in out['findings']), ['mon-2', 'wed-2'])
+        self.assertEqual(dv.EXIT[out['status']], 1)
+
+    def test_not_served_is_recorded_skipped_never_a_pass(self):
+        board = wild_board()
+        board['days']['wed'].append({'id': 'x', 'so_what': 'Another', 'wildcard': dict(WILD)})
+        out = dv.distance(board, SOURCES, poster=Poster(503, {'ok': False}), plans=plans_dir(), now='t')
+        self.assertEqual(out['status'], 'unavailable')
+        self.assertEqual(dv.EXIT[out['status']], 2)
+        self.assertEqual({r['status'] for d in out['days'].values() for r in d}, {'skipped: not served'})
+        old = os.environ.pop(dv.TOKEN_ENV, None)
+        try:
+            keyless = dv.distance(board, SOURCES, plans=plans_dir(), now='t')
+        finally:
+            if old is not None:
+                os.environ[dv.TOKEN_ENV] = old
+        self.assertEqual(keyless['status'], 'unavailable')
+
+    def test_write_records_it_on_the_option_and_the_gate_reads_it(self):
+        import idea_checks as ic
+        folder = Path(tempfile.mkdtemp()) / '2026-12-07-week'
+        folder.mkdir()
+        board = wild_board()
+        board['week_start'] = '2026-12-07'
+        board['days']['wed'].append({'id': 'x', 'so_what': 'Another strange one', 'pitch': {'question': 'Wildcard: Why?'}, 'wildcard': dict(WILD)})
+        for d in ('fri',):
+            board['days'][d][1]['pitch'] = {'question': 'Wildcard: Why would a club sell silence?'}
+        path = folder / 'ideas.json'
+        path.write_text(json.dumps(board), encoding='utf-8')
+        poster = Poster(200, {'ok': True, 'results': [{'status': 'accepted'}]})
+        code = dv.main(['distance', str(path), '--sources', str(self._sources(folder)), '--write'], poster=poster)
+        self.assertEqual(code, 0)
+        after = json.loads(path.read_text(encoding='utf-8'))
+        rec = after['days']['mon'][1]['wildcard']['distance']
+        self.assertEqual((rec['status'], rec['divergent']), ('accepted', True))
+        self.assertNotIn('distance', after['days']['mon'][0], 'only the wildcard changes')
+        log = json.loads((folder / 'story' / 'wildcards.json').read_text(encoding='utf-8'))
+        self.assertEqual(sorted(log['days']), ['fri', 'mon', 'wed'])
+        cfg = dict(ic.STORY, **{'from': '2026-12-07'})
+        self.assertEqual(ic.wildcard_findings(after, '2026-12-07', cfg=cfg), [])
+
+    def _sources(self, folder):
+        p = folder / 'sources.json'
+        p.write_text(json.dumps(SOURCES), encoding='utf-8')
+        return p
+
 if __name__ == '__main__':
     unittest.main()

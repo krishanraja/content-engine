@@ -766,6 +766,9 @@ def wave1(ideas, sources, plans=None, p6=None, status=None, before=None):
     # The story score: every open option scored blind, each open day in its order, a hero holding three sourced whys
     # before the pick, and nothing under its floor (the story engine v5 plan; Ruling, Krish, 2026-11-26).
     found += idea_checks.story_findings(ideas, week, status, probes_of(week, plans), before=before)
+    # The day's wildcard: every open Monday, Wednesday and Friday carries one, explained and its distance read by the
+    # divergence engine (ruling wildcard, Krish, 2026-11-26).
+    found += idea_checks.wildcard_findings(ideas, week, status, before=before)
     # The cycle's stage 2 touches (config/cycle.json; Krish, 2026-11-26: every system involved at the right moment): a
     # required touch with no line on the week's touches.jsonl fails it too, from the story score's `from` board.
     if week:

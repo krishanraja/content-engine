@@ -920,5 +920,94 @@ class DryRun(unittest.TestCase):
         self.assertEqual((real / 'ideas.json').read_bytes(), before)
 
 
+C = '33333333-4444-4555-8666-777777777777'
+
+
+class Wildcard(unittest.TestCase):
+    """The day's wildcard is its own type (ruling wildcard, Krish, 2026-11-26): weights that lean on the angle and the
+    humour, the floors of truth, sources, beat and whys, no series floor, and an order that never drops it."""
+
+    FACT = Totals.FACT
+
+    def wild(self, oid=A, **kw):
+        return hero(oid, 'Warner licenses its songs to a model maker for $40 million', self.FACT,
+                    wildcard={'kind': 'strange', 'why_unexpected': 'x'}, **kw)
+
+    def test_the_rubric_row(self):
+        t = RUBRIC['types']['wildcard']
+        top = sorted(t['weights'], key=lambda a: -t['weights'][a])[:2]
+        self.assertEqual(set(top), {'unique_angle', 'absurdity_humour'})
+        floors = t['floors']
+        self.assertTrue(all(f.get('hard', True) for f in floors), 'a strange but thin story cannot hide behind the label')
+        self.assertEqual({f.get('check') or f.get('axis') for f in floors}, {'sound_angle', 'primary_sources', 'fit', 'probe_documented'})
+        self.assertEqual(next(f['value'] for f in floors if f.get('check') == 'probe_documented'), 3)
+        self.assertNotIn('wildcard', RUBRIC['hero_floors']['types'], 'no series floor')
+        self.assertIn('wildcard', [r['type'] for r in RUBRIC['type_rules']['rules']])
+        self.assertEqual(RUBRIC['wildcard']['temperament'], 'wild')
+        self.assertIn('wildcard', [r['id'] for r in RUBRIC['rulings']])
+        self.assertEqual(RUBRIC['files']['wildcards'], 'story/wildcards.json')
+
+    def test_types(self):
+        self.assertEqual(ss.option_type('mon', True, {'wildcard': {}}), 'wildcard')
+        self.assertEqual(ss.option_type('fri', True, {'wildcard': 'yes'}), 'hero_fri', 'only a wildcard object marks it')
+        self.assertEqual(ss.option_type('tue', False, {'wildcard': {}, 'aim': 'humour'}), 'offday_short', 'the wildcard is a hero day\'s')
+
+    def test_the_scorer_never_sees_what_the_label_says(self):
+        self.assertNotIn('wildcard', ss.blind_view(self.wild()))
+
+    def test_a_whole_wildcard_holds_its_floors_without_a_series_floor(self):
+        inp = full_inputs(A, key='wed/' + A)
+        inp['probes'] = {A: probe(3, 2, mech=0)}
+        s = ss.score_option('wed/' + A, 'wed', True, self.wild(), inp)
+        self.assertEqual(s['type'], 'wildcard')
+        self.assertEqual(s['floors_failed'], [], "a Wednesday's mechanism rung is the series' floor, not the wildcard's")
+        want = sum(w * s['axes'][a] for a, w in RUBRIC['types']['wildcard']['weights'].items())
+        self.assertAlmostEqual(s['total'], round(want, 1))
+
+    def test_a_strange_but_thin_story_cannot_hide_behind_the_label(self):
+        inp = full_inputs(A)
+        inp['probes'] = {A: probe(2, 3)}
+        thin = self.wild(url='https://www.someblog.example/post')
+        s = ss.score_option('mon/' + A, 'mon', True, thin, inp)
+        reasons = {f['reason'] for f in RUBRIC['types']['wildcard']['floors']}
+        failed = set(s['floors_failed'])
+        self.assertIn(next(r for r in reasons if r.startswith('whys')), failed)
+        self.assertIn(next(r for r in reasons if r.startswith('sources')), failed)
+        loose = full_inputs(A, rests='a detail the story never gave')
+        s = ss.score_option('mon/' + A, 'mon', True, self.wild(), loose)
+        self.assertIn(next(r for r in reasons if r.startswith('truth')), s['floors_failed'])
+
+    def test_the_order_places_it_anywhere_and_never_drops_it(self):
+        opts = [{'id': 'a'}, {'id': 'w', 'wildcard': {'kind': 'strange'}}, {'id': 'b'}]
+        keys = ['mon/a', 'mon/w', 'mon/b']
+        low = {'mon/a': scored(80), 'mon/w': scored(20, 'wildcard'), 'mon/b': scored(70)}
+        out, _call = ss.order_day(opts, low, keys)
+        self.assertEqual([o['id'] for o in out], ['a', 'b', 'w'], 'it need not beat the top score, and it stays')
+        failed = dict(low, **{'mon/w': scored(95, 'wildcard', floors_failed=['whys: thin'])})
+        out, _call = ss.order_day(opts, failed, keys)
+        self.assertEqual([o['id'] for o in out], ['a', 'b', 'w'], 'under its floor it goes last; the gate names it')
+        high = dict(low, **{'mon/w': scored(90, 'wildcard')})
+        out, _call = ss.order_day(opts, high, keys)
+        self.assertEqual([o['id'] for o in out], ['w', 'a', 'b'])
+
+    def test_its_angles_are_always_provoked(self):
+        plans = Path(tempfile.mkdtemp())
+        try:
+            folder = plans / f'{WEEK}-week'
+            (folder / 'story').mkdir(parents=True)
+            ideas = {'week_start': WEEK, 'days': {'mon': [hero(A, 'Warner signs with a model maker', 'Warner said it signed a deal.'),
+                                                          hero(B, 'Sony is paid $40 million', 'Sony said it was paid $40 million.', url='https://www.sony.com/x'),
+                                                          self.wild(C)], 'wed': [], 'fri': []}}
+            (folder / 'ideas.json').write_text(json.dumps(ideas), encoding='utf-8')
+            (folder / 'sources.json').write_text(json.dumps({'week_start': WEEK, 'recent_posts': []}), encoding='utf-8')
+            (folder / 'story' / 'probes.json').write_text(json.dumps({A: probe(4, 1), B: probe(4, 1), C: probe(1, 0)}), encoding='utf-8')
+            poster = Poster()
+            code = ss.main(['angles', WEEK, '--plans', str(plans), '--provoke', '--ledger', str(plans / 'spend.jsonl')],
+                           kill=CLEAN, today='2026-11-26', poster=poster, cap=UNDER)
+            self.assertEqual(code, 0)
+            self.assertEqual(sum(1 for b in poster.calls if b['op'] == 'provoke'), 3, "the day's top two and its wildcard")
+        finally:
+            shutil.rmtree(plans, ignore_errors=True)
+
 if __name__ == '__main__':
     unittest.main()

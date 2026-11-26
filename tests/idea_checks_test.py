@@ -1400,5 +1400,95 @@ class StoryGateTest(unittest.TestCase):
         self.assertEqual(version, ic.STORY['rubric_version'])
         self.assertEqual(board_feed.score_rank_of_pick({'days': {'mon': [main_option(id=A)]}}, {'mon': 'mon-1'}), ({'mon': None}, None))
 
+
+W = 'dddddddd-0000-4000-8000-000000000004'
+
+
+class WildcardGateTest(unittest.TestCase):
+    """The day's wildcard (ruling wildcard, Krish, 2026-11-26): from config/story-score.json `from`, every open Monday,
+    Wednesday and Friday carries a wildcard option, explained in one line, its pitch question opening on the board's
+    label, and its distance read by the divergence engine on its present words. Every option here is invented."""
+
+    WEEK = ic.STORY_FROM
+    ROW = ic.STORY['wildcard']
+
+    def wild(self, oid=W, *, distance='divergent', **kw):
+        import divergent
+        w = dict({'kind': 'strange', 'why_unexpected': 'A choir paid to stay out of training sets is far from the label deals everyone ran.'},
+                 **kw.pop('wildcard', {}))
+        o = main_option(id=oid, so_what='A choir is paid to keep its songs out of the models.',
+                        pitch={'question': self.ROW['board_prefix'] + 'Why would a choir pay to keep its songs out?'}, wildcard=w, **kw)
+        h = divergent.text_hash(divergent.wildcard_text(o, self.ROW))
+        if distance == 'divergent':
+            w['distance'] = {'status': 'accepted', 'divergent': True, 'text_hash': h, 'at': 't'}
+        elif distance == 'skipped':
+            w['distance'] = {'status': self.ROW['distance']['skipped'], 'reason': 'not served', 'text_hash': h, 'at': 't'}
+        elif distance == 'gravity':
+            w['distance'] = {'status': 'rejected_gravity', 'divergent': False, 'text_hash': h, 'at': 't'}
+        return o
+
+    def board(self, **days):
+        out = {d: [main_option(id=A), self.wild()] for d in ('mon', 'wed', 'fri')}
+        out.update(days)
+        return {'week_start': self.WEEK, 'days': out}
+
+    def lines(self, ideas, status=None, week=None):
+        return [f['line'] for f in ic.wildcard_findings(ideas, week or self.WEEK, status)]
+
+    def test_the_code_fails_the_run_from_the_config_date(self):
+        self.assertIn('wildcard', ic.GATE_CODES)
+        day_before = (date.fromisoformat(self.WEEK) - timedelta(days=7)).isoformat()
+        self.assertEqual(ic.wildcard_findings(self.board(mon=[main_option(id=A)]), day_before), [])
+        self.assertEqual(self.ROW['days'], ['mon', 'wed', 'fri'])
+        self.assertEqual(self.ROW['kinds'], ['divergent', 'strange', 'obscure', 'unexpected'])
+
+    def test_a_whole_board_passes(self):
+        self.assertEqual(self.lines(self.board()), [])
+
+    def test_a_hero_day_with_no_wildcard_refuses_the_board(self):
+        found = ic.wildcard_findings(self.board(wed=[main_option(id=A), main_option(id=B)]), self.WEEK)
+        self.assertEqual([(f['code'], f['ref']) for f in found], [('wildcard', 'wed')])
+        self.assertIn('has no wildcard option', found[0]['line'])
+        self.assertEqual(len(ic.wildcard_findings({'week_start': self.WEEK, 'days': {}}, self.WEEK)), 3, 'a missing day has none either')
+
+    def test_an_answered_day_is_his_and_never_checked(self):
+        ideas = self.board(wed=[main_option(id=A), main_option(id=B)])
+        self.assertEqual(self.lines(ideas, {f'idea:{A}': 'approved', f'idea:{B}': 'open', f'idea:{W}': 'open'}), [])
+
+    def test_the_kind_and_the_one_line_why(self):
+        bad = self.board(mon=[main_option(id=A), self.wild(wildcard={'kind': 'quirky'})])
+        self.assertTrue(any("wildcard.kind 'quirky'" in x for x in self.lines(bad)))
+        bare = self.board(mon=[main_option(id=A), self.wild(wildcard={'why_unexpected': ' '})])
+        self.assertTrue(any('no wildcard.why_unexpected' in x for x in self.lines(bare)))
+        long = self.board(mon=[main_option(id=A), self.wild(wildcard={'why_unexpected': 'x' * (self.ROW['why_max_chars'] + 1)})])
+        self.assertTrue(any('longer than one line' in x for x in self.lines(long)))
+        spark = self.board(mon=[main_option(id=A), self.wild(wildcard={'divergent': {'run_id': 'r1'}})])
+        self.assertTrue(any('without its run_id and spark' in x for x in self.lines(spark)))
+        whole = self.board(mon=[main_option(id=A), self.wild(wildcard={'divergent': {'run_id': 'r1', 'spark': 'S'}})])
+        self.assertEqual(self.lines(whole), [])
+
+    def test_the_board_shows_it_by_its_question_and_the_label_passes_the_pitch_check(self):
+        o = self.wild()
+        self.assertEqual(ic.question_problems(o['pitch']['question']), [], 'the label passes the pitch check')
+        o['pitch']['question'] = 'Why would a choir pay to keep its songs out?'
+        self.assertTrue(any('does not open on "Wildcard:"' in x for x in self.lines(self.board(mon=[o]))))
+
+    def test_distance_is_checked_never_asserted(self):
+        none = self.board(fri=[self.wild(distance=None)])
+        self.assertTrue(any('has no distance read' in x for x in self.lines(none)))
+        near = self.board(fri=[self.wild(distance='gravity')])
+        self.assertTrue(any("not far from the obvious takes" in x and 'rejected_gravity' in x for x in self.lines(near)))
+        self.assertEqual(self.lines(self.board(fri=[self.wild(distance='skipped')])), [],
+                         'not served: the session\'s why_unexpected stands, said in the summary')
+        reworded = self.wild()
+        reworded['so_what'] = 'A label is paid for its songs.'
+        self.assertTrue(any('reworded after its distance' in x for x in self.lines(self.board(fri=[reworded]))))
+
+    def test_wave1_holds_the_wildcard(self):
+        ideas = {'week_start': self.WEEK, 'days': {'mon': [main_option(id=A)], 'wed': [main_option(id=B)], 'fri': [main_option(id=C)]}}
+        with tempfile.TemporaryDirectory() as tmp:
+            found = [f for f in board_feed.wave1(ideas, sources(), tmp) if f['code'] == 'wildcard']
+        self.assertEqual([f['ref'] for f in found], ['mon', 'wed', 'fri'])
+
 if __name__ == '__main__':
     unittest.main()

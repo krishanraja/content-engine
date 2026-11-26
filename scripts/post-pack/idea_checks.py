@@ -2221,6 +2221,73 @@ def story_findings(ideas, week, status=None, probes=None, cfg=None, before=None)
     return out
 
 
+# The day's wildcard (ruling wildcard, Krish, 2026-11-26: "Just make sure my Monday, Wednesday, and Friday stories:
+# there's always one completely divergent, strange, obscure, or unexpected story suggestion that I could pick from.").
+# From the story score's `from` board each hero day he has not answered carries a wildcard option, its kind and its one
+# line of why it is unexpected, and a distance the divergence engine read on its present words (divergent.py distance
+# --write): divergent, the engine's own spark, or skipped because the engine was not served. Every word is read from
+# config/story-score.json wildcard; the score's own floors (types.wildcard) hold its truth, sources, beat and whys.
+
+def wildcard_findings(ideas, week, status=None, before=None, cfg=None):
+    """From STORY_FROM, the wildcard gate lines (code 'wildcard'), each {code, ref, line}: an open hero day with no
+    wildcard option, a wildcard with no kind from the row's kinds, no one-line why_unexpected, an engine spark without
+    its run id and spark, a pitch question that does not open on the row's board_prefix, no distance read, a distance
+    read on other words, or a distance the engine did not call divergent. A day with an answered option is his and is
+    never checked."""
+    cfg = cfg or STORY
+    if str(week) < str(cfg['from']):
+        return []
+    import divergent  # here: divergent imports this module
+    row = cfg['wildcard']
+    rule = row['distance']
+    had = keys_on(before) if before is not None else None
+    days = (ideas or {}).get('days') if isinstance((ideas or {}).get('days'), dict) else {}
+    out = []
+
+    def say(ref, line):
+        out.append({'code': 'wildcard', 'ref': ref, 'line': f'wildcard: {ref} {line}'})
+
+    for day in row['days']:
+        opts = [o for o in days.get(day) or [] if isinstance(o, dict)]
+        if any(not option_open(status_key(day, True, o), status, had) for o in opts):
+            continue
+        wild = [(n, o) for n, o in enumerate(days.get(day) or [], 1) if isinstance(o, dict) and isinstance(o.get('wildcard'), dict)]
+        if len(wild) < row['min_per_day']:
+            say(day, f'has no wildcard option: every Monday, Wednesday and Friday carries one divergent, strange, obscure or '
+                     'unexpected story he could pick (ruling wildcard); write it from divergent.py wildcard '
+                     '(.agents/skills/plan-week/references/divergent.md)')
+            continue
+        for n, o in wild:
+            ref = f'{day}-{n}'
+            w = o['wildcard']
+            if w.get('kind') not in row['kinds']:
+                say(ref, f'has wildcard.kind {w.get("kind")!r}, not one of {", ".join(row["kinds"])}')
+            why = str(w.get('why_unexpected') or '').strip()
+            if not why:
+                say(ref, 'has no wildcard.why_unexpected: one line of what makes it far from the obvious takes')
+            elif '\n' in why or len(why) > row['why_max_chars']:
+                say(ref, f'has a why_unexpected longer than one line ({row["why_max_chars"]} characters at most)')
+            spark = w.get('divergent')
+            if spark is not None and not (isinstance(spark, dict) and spark.get('run_id') and spark.get('spark')):
+                say(ref, 'carries wildcard.divergent without its run_id and spark')
+            question = str((o.get('pitch') or {}).get('question') or '') if isinstance(o.get('pitch'), dict) else ''
+            if not question.startswith(row['board_prefix']):
+                say(ref, f'has a pitch question that does not open on "{row["board_prefix"].strip()}", so the board does not show '
+                         'it as the day\'s wildcard')
+            d = w.get('distance')
+            text = divergent.wildcard_text(o, row)
+            if not isinstance(d, dict) or not d.get('status'):
+                say(ref, 'has no distance read: run divergent.py distance <ideas.json> --sources <sources.json> --write')
+            elif d.get('text_hash') != divergent.text_hash(text):
+                say(ref, 'was reworded after its distance was read: run divergent.py distance --write again')
+            elif d['status'] == rule['skipped']:
+                continue  # not served: the session's why_unexpected stands, said in the run summary
+            elif not d.get('divergent'):
+                say(ref, f'is not far from the obvious takes (the engine read {d["status"]!r} against the day\'s other options and '
+                         'what went out); find a stranger story')
+    return out
+
+
 # The findings that fail the Sunday run (board_feed.py gate): a subject he refused offered again, a warned option placed
 # first or shown without his words, a return that came back no deeper, a repeat of what went out (Krish, 2026-11-16),
 # from the 23 Nov board an option without its shape, aim, humour and lookalike, and from the 30 Nov board a Saturday
@@ -2228,9 +2295,11 @@ def story_findings(ideas, week, status=None, probes=None, cfg=None, before=None)
 # The rest of cover stays the run's to fix before it stops, as before. From the 30 Nov board an option off the beat
 # (offbeat_findings; Ruling, Krish, 2026-11-24) fails it too. From the story score's `from` board an open option with
 # no story score, an open day out of the score's order, a hero under three sourced whys (story) and an option that
-# fails its floor (story_floor) fail it too (story_findings; Ruling, Krish, 2026-11-26: his rejections are a floor only).
+# fails its floor (story_floor) fail it too (story_findings; Ruling, Krish, 2026-11-26: his rejections are a floor only),
+# and so does an open hero day with no wildcard, or one whose wildcard is unexplained or unchecked (wildcard_findings;
+# ruling wildcard, Krish, 2026-11-26).
 GATE_CODES = ('refused', 'warned_first', 'warning_line', 'return', 'repeat', 'aim', 'saturday', 'template', 'goodnews', 'off_beat',
-              'story', 'story_floor')
+              'story', 'story_floor', 'wildcard')
 # What the checks say without failing anything: a warned option (it carries his words) and an idea from his tick on a
 # subject he refused (it carries the refusal; Ruling, Krish, 2026-11-12).
 NOTE_CODES = ('warned', 'his_tick', 'his_repeat')

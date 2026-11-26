@@ -7,7 +7,8 @@
     {"id": "floor_only", "at": "2026-11-26", "ruling": "His taste is a floor only: his rejections refuse an option, never score it, and the judges stay blind (check-judges.ts section 4, tests/story_wall_test.py)."},
     {"id": "spend_ceiling", "at": "2026-11-26", "ruling": "The blind proof run spends at most $10, through the ledger, after the protocol is committed."},
     {"id": "reader", "at": "2026-11-26", "ruling": "The approved North Star reader line (config/beat.json reader), his words: \"I approve the lines\"."},
-    {"id": "offday_beat", "at": "2026-11-26", "ruling": "The off days are the reader's world too: a good-news carousel, a meme, a short and an off-day carousel each hold the fit floor as a hard floor (config/beat.json offdays), his words: \"Make sure all the good news suggestions and meme suggestions are also aligned to the new positioning, as well as the carousels.\""}
+    {"id": "offday_beat", "at": "2026-11-26", "ruling": "The off days are the reader's world too: a good-news carousel, a meme, a short and an off-day carousel each hold the fit floor as a hard floor (config/beat.json offdays), his words: \"Make sure all the good news suggestions and meme suggestions are also aligned to the new positioning, as well as the carousels.\""},
+    {"id": "wildcard", "at": "2026-11-26", "ruling": "Every Monday, Wednesday and Friday carries one wildcard option he could pick: a real, dated, primary-sourced story on the beat, far from the obvious takes, its distance checked by the divergence engine, never asserted (the wildcard row below; idea_checks.wildcard_findings), his words: \"Just make sure my Monday, Wednesday, and Friday stories: there's always one completely divergent, strange, obscure, or unexpected story suggestion that I could pick from.\""}
   ],
   "audience_from": "config/beat.json reader.audience_short",
   "blind_view": {
@@ -302,9 +303,19 @@
         {"check": "in_edition_week", "op": "==", "value": true, "reason": "an edition item is dated inside the edition week"},
         {"axis": "fit", "op": ">=", "value": 4, "reason": "an edition item is on the beat"}
       ]
+    },
+    "wildcard": {
+      "label": "The day's wildcard on a Monday, Wednesday or Friday (an option carrying wildcard; ruling wildcard)",
+      "weights": {"unique_angle": 2.5, "absurdity_humour": 2, "whys": 1.5, "scale": 1, "fun_consume": 1, "fit": 0.8, "named_thing": 0.6, "fun_produce": 0.6},
+      "floors": [
+        {"check": "sound_angle", "op": "==", "value": true, "reason": "truth: a wildcard's angle rests on its sourced fact; strange never adds a detail the source does not give"},
+        {"check": "primary_sources", "op": ">=", "value": 1, "reason": "sources: a wildcard rests on at least one primary source"},
+        {"axis": "fit", "op": ">=", "value": 4, "reason": "beat: a wildcard is in a focus sector, never off the beat for the sake of strangeness"},
+        {"check": "probe_documented", "op": ">=", "value": 3, "reason": "whys: a wildcard holds at least three documented whys before he picks"}
+      ]
     }
   },
-  "floor_rows": "A floor is hard unless it says hard false: a hard floor that fails puts the option last and fails the Sunday gate (story_floor). A floor marked hard false is a note: reported beside the score (story_score.notes) and in the Sunday summary, never failing the gate or moving the order. The plan's hard floors are the series floors (a Monday's sourced money figure, a Wednesday's mechanism rung, a Friday's counter rung), the whys floors, a short's and a meme's humour, and the template and good-news checks; fit on the off-day types (good news, meme, short, explainer) is hard by ruling offday_beat (Krish, 2026-11-26); a hero's fit and a primary source were added as floors without a ruling, so they are notes until Krish rules them hard. if_read: a floor whose value is not there (an explainer with no steps) is not read, never failed.",
+  "floor_rows": "A floor is hard unless it says hard false: a hard floor that fails puts the option last and fails the Sunday gate (story_floor). A floor marked hard false is a note: reported beside the score (story_score.notes) and in the Sunday summary, never failing the gate or moving the order. The plan's hard floors are the series floors (a Monday's sourced money figure, a Wednesday's mechanism rung, a Friday's counter rung), the whys floors, a short's and a meme's humour, and the template and good-news checks; fit on the off-day types (good news, meme, short, explainer) is hard by ruling offday_beat (Krish, 2026-11-26); a hero's fit and a primary source were added as floors without a ruling, so they are notes until Krish rules them hard. The wildcard's four floors (truth, sources, beat, whys) are hard by ruling wildcard (Krish, 2026-11-26), so a strange but thin story cannot hide behind the label; it has no series floor. if_read: a floor whose value is not there (an explainer with no steps) is not read, never failed.",
   "hero_floors": {
     "types": ["hero_mon", "hero_wed", "hero_fri"],
     "floors": [
@@ -323,6 +334,7 @@
       {"when": "offday template (idea_checks.is_template)", "type": "offday_meme"},
       {"when": "weekly good news, or a Saturday option", "type": "goodnews"},
       {"when": "off-day option with aim utility", "type": "explainer"},
+      {"when": "a Monday, Wednesday or Friday option carrying wildcard", "type": "wildcard"},
       {"when": "day mon", "type": "hero_mon"},
       {"when": "day wed", "type": "hero_wed"},
       {"when": "day fri", "type": "hero_fri"},
@@ -439,6 +451,21 @@
     "bank_fields": ["id", "layer", "name", "how", "fits"],
     "never": ["krish_verdict", "krish_said", "from", "evidence", "status", "what_i_like_sheet", "recipes", "references"]
   },
+  "wildcard": {
+    "_about": "The day's wildcard (ruling wildcard, Krish, 2026-11-26). Every hero day the board shows carries at least min_per_day options with \"wildcard\": {\"kind\": one of kinds, \"why_unexpected\": one line of what makes it far from the obvious takes, \"divergent\": {\"run_id\", \"spark\"} when it came from the engine, \"distance\": what divergent.py distance recorded}. It is a real, dated, primary-sourced story on the beat and passes the fact gate, the floor, its own floors in types.wildcard and the refute pass like any option. The order may place it anywhere and never drops it; it need not beat the day's top score. Its distance is checked, never asserted: divergent.py distance scores it free (obvious given, no judge) against the day's other options and the worn ground; a status in divergent_statuses is divergent, the engine's own spark in the archive (own_spark) is expected, anything else refuses the board (code wildcard, from the from date); not served is recorded as skipped and the session's why_unexpected stands, said in the run summary. The board shows it by board_prefix at the start of its pitch question (it passes idea_checks.question_problems).",
+    "days": ["mon", "wed", "fri"],
+    "min_per_day": 1,
+    "kinds": ["divergent", "strange", "obscure", "unexpected"],
+    "why_max_chars": 240,
+    "temperament": "wild",
+    "board_prefix": "Wildcard: ",
+    "distance": {
+      "divergent_statuses": ["accepted"],
+      "own_spark": "rejected_archive",
+      "skipped": "skipped: not served",
+      "problem": "The {day} story for a publication on {about}, for the week of {week}: an idea far from the obvious takes on it"
+    }
+  },
   "edition": {"min": 6, "max": 10, "topics": [2, 4], "per_topic": 3},
   "files": {
     "_about": "Where the story score keeps its working files, inside docs/plans/<Monday>-week/. The spend ledger is under the gitignored .cache/, one file per week ({week} is its Monday), so budget_usd and --budget-usd cap a week's run, not every week ever run; usd_per_day and divergent_ops_per_day are read from the same file. An explicit --ledger (the blind proof's .cache/proof/story-engine-v5/spend.jsonl) is read whole: the proof's $10 is for the whole proof.",
@@ -449,6 +476,7 @@
     "judged": "story/judged.json",
     "probes": "story/probes.json",
     "council": "story/council.json",
+    "wildcards": "story/wildcards.json",
     "ledger": ".cache/story-score/{week}.jsonl"
   }
 }
