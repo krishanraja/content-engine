@@ -7904,3 +7904,23 @@ Rotate the active runner receipt-signing credential without losing the
 
 - `const SECRET_PATTERNS: readonly RegExp[]`
 - `function containsCommittedSecret(body: string): boolean`
+
+### `scripts/whys-probe-check.ts`
+
+The whys probe check: does a story hold the five whys before Krish picks it?
+
+- `const PROBE_SCHEMA`
+- `const PROBE_SUFFIX`
+- `const PAGES_DIR`
+- `const PAGES_INDEX`
+- `type Counted`
+- `interface RungReading`
+- `interface ProbeResult`
+- `type Page = { text: string } | { unreadable: string }`
+- `type Pages = (url: string) => Page`
+- `function normalise(s: string): string`
+- `function urlKey(url: string): string`
+- `function probeCheck(ladder: WhyLadder, pages: Pages, parseProblems: string[] = []): ProbeResult`
+- `function ladderFromText(text: string): { ladder: WhyLadder | null; problems: string[] }`
+- `function pagesFrom(dir: string): Pages`
+- `function main(argv: string[], root: string): { code: number; out: unknown }`
