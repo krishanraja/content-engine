@@ -1,3 +1,5 @@
+import { setHouseDataFace } from '../house/geometry'
+import retiredStyles from '../../../../config/retired-styles.json'
 import { CharacterLayer } from './character'
 import { Fragment, type ReactElement } from 'react'
 import { z } from 'zod'
@@ -23,6 +25,7 @@ import { FOCUS_SCALE, LEAD_AFTER, TRANSITION_FRAMES, cameraAt, cameraStyle, flas
 import { GRAMMAR_GROW, regionSlots } from './kit/layout'
 import { boxStyle, isStaging, staged, stagingGeometry, trayRise } from './kit/staging'
 import { layoutSlots } from './kit/layout'
+import {LadderSequence} from './v5/Sequence'
 import { EngineAudio } from './audio'
 import { GradedBackdrop } from './treatments/Grade'
 import { band } from './captions/kit'
@@ -137,7 +140,18 @@ export function anchorSlots(uses: readonly string[], isProp: (id: string) => boo
 }
 
 export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean }) {
+  const v5 = props.renderTheme === 'makeyourmindup-v5' || props.format === 'why-ladder-v5'
+  setHouseDataFace(v5)
+  for (const {kind, id} of (v5 ? retiredStyles : [])) {
+    if ((kind === 'motion_style' && props.motion?.style === id) ||
+        (kind === 'format_look' && props.format === id) ||
+        (kind === 'caption_theme' && props.captionTheme === id) ||
+        (kind === 'device' && props.objects.some(object => object.device === id))) {
+      throw new Error(`${kind} ${id} is retired by the v5 ruling`)
+    }
+  }
   const frame = useEngineFrame()
+  if (props.format === 'why-ladder-v5') return <LadderSequence props={props} frame={frame} stem={stem}/>
   const objects = new Map(props.objects.map((object) => [object.obj, object]))
   const width = props.aspect === '9:16' ? 1080 : 1920
   const height = props.aspect === '9:16' ? 1920 : 1080

@@ -43,8 +43,8 @@ always on and mirror Drive. So:
 ```
 makeyourmindup\
   READ ME FIRST.txt
-  1 Brand kit (permanent)\      the unpacked brand kit: guidelines, logos, colours, tokens, fonts, photography, applications
-  2 Channel art (permanent)\    YouTube banner, watermark and description; Substack welcome copy; profile images
+  1 Brand kit (permanent)\      the unpacked v5 brand kit: logos, fonts, colours, and Channel art\ (every profile image
+                                 and its copy); Music, Photos, character, Intro sting, Style references
   3 Posts\
     2026-10-05 Mon follow.the.money - Who gets paid\
       READ ME.txt               what every file is for and where it goes
@@ -67,8 +67,8 @@ Windows and Drive by the archive rule (`scripts/quick-edit/archive.py`,
 reused, never copied) and cut at a space so the name stays within 100
 characters.
 
-The engine takes a file only inside `1 Brand kit (permanent)/`,
-`2 Channel art (permanent)/` or one post's folder, and inside a post folder
+The engine takes a file only inside `1 Brand kit (permanent)/` (channel art in its `Channel art/`)
+or one post's folder (`2 Channel art (permanent)` is retired since 26 Nov 2026), and inside a post folder
 only in its five sections or as its `READ ME.txt`. A name with a character
 Windows refuses, a `.` or `..` folder, a hidden name, a type the library does
 not hold or a path over 180 characters is refused with the reason. The rule
@@ -312,7 +312,7 @@ aloud once is still the last check.
 
 ```
 python scripts/post-pack/send.py ".cache/post-pack/2026-10-05 Mon follow.the.money - Who gets paid"
-python scripts/post-pack/send.py CHANNEL_ART_FOLDER --as "2 Channel art (permanent)" --purpose "..."
+python scripts/post-pack/send.py CHANNEL_ART_FOLDER --as "1 Brand kit (permanent)/Channel art" --purpose "..."
 python scripts/post-pack/send.py --brand-kit KIT_FOLDER_OR_ZIP
 ```
 

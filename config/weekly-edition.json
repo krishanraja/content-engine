@@ -1,0 +1,112 @@
+{
+  "_about": "The weekly edition, as rows (Krish, 2026-11-25: one email a week, \"makeyourmindup weekly\", every Saturday at 08:00 New York; the design is growth-makeyourmindup docs/plans/2026-11-25-weekly-edition/DESIGN.md, approved by him that day with every recommendation). It carries the week's live Monday, Wednesday and Friday pieces, then six to ten news items from the creative industries, chosen from the week's daily hub editions and each checked against its primary source, then a Pass it on line and one closing line. Read by scripts/edition/edition.py (gather, check, render, package), scripts/weekly_edition.py (the Friday run's guard), apps/control-plane/api/board/_edition.ts (the Saturday card and its one press, Approve for send) and tests/edition_test.py, which holds this file to its shape. A setting is a row here, never code. The package it describes is content-engine-edition/1, the contract shared with growth-makeyourmindup's Substack step: change that only in both places at once.",
+  "schema": "content-engine-weekly-edition-config/1",
+  "name": "makeyourmindup weekly",
+  "package_schema": "content-engine-edition/1",
+  "send": {
+    "day": "sat",
+    "time": "08:00",
+    "timezone": "America/New_York",
+    "why": "Krish, 2026-11-25, decision 3: Saturday 08:00 New York (13:00 London). Sunday stays rest (Ruling, Krish, 2026-11-02)."
+  },
+  "draft_run": {
+    "workflow": ".github/workflows/weekly-edition.yml",
+    "crons_utc": ["17 20 * * 5", "47 23 * * 5"],
+    "why": "Friday 15:17 and 18:47 New York in winter, after Friday's piece usually goes live (about 12:30): GitHub's schedule runs hours late, so it fires twice and the guard (scripts/weekly_edition.py) makes the second firing do nothing once the week's edition draft is on the board."
+  },
+  "news_window": {
+    "days": 7,
+    "ends": {"day": "fri", "time": "12:00", "timezone": "America/New_York"},
+    "why": "DESIGN.md section 3, rule 1: an item happened in the seven days to Friday 12:00 New York."
+  },
+  "sections": ["opener", "contents", "piece", "news", "pass_it_on", "close"],
+  "section_heads": {
+    "contents": "In this edition",
+    "news": "Also this week",
+    "pass_it_on": "Pass it on"
+  },
+  "subject": {"min_chars": 30, "max_chars": 70, "rule": "Led by the week's strongest story (decision 4), never by the change of rhythm."},
+  "preview_text": {"min_chars": 1, "max_chars": 120},
+  "words": {
+    "opener": {"min_sentences": 2, "max_sentences": 4, "max_words": 60},
+    "piece_summary": {"min_words": 50, "max_words": 80},
+    "news_item": {"min_sentences": 1, "max_sentences": 2},
+    "pass_it_on": {"max_sentences": 1},
+    "close": {"max_sentences": 1},
+    "total": {"min_words": 700, "max_words": 1000, "rule": "About five minutes to read. Over the most fails the check; under the least is said as a warning, since a week with one or two live pieces sends with what went live."}
+  },
+  "pieces": {
+    "min": 1,
+    "max": 3,
+    "days": ["mon", "wed", "fri"],
+    "day_words": {"mon": "Monday", "wed": "Wednesday", "fri": "Friday"},
+    "rule": "Only a piece that went live that week. A week with none sends no edition: it holds and asks Krish (DESIGN.md section 1)."
+  },
+  "news": {
+    "min_items": 6,
+    "max_items": 10,
+    "send_min_items": 4,
+    "per_topic_max": 2,
+    "topics_min": 2,
+    "topics_max": 4,
+    "rule": "Six to ten items, at most two a subsector, in two to four topics (the good-news group counts as one): the week in a few stories a subsector, as the Library's newsletter-weekly-edition lays them out (topic_0 to topic_3; docs/ve/cards/library/PRODUCTION-PLAYBOOK.md). An item whose primary source cannot be found, or does not say what the item says, is dropped, never softened; the edition still goes with at least four (DESIGN.md section 4, What stops a send).",
+    "from_hub": {
+      "route": "GET /api/board/<Monday>/edition/news",
+      "table": "hub_snapshots",
+      "rule": "Candidates are the week's daily hub items (the hub pipeline's one snapshot a day, the same items makeyourmindup.ai shows), read inside the news window, the same story once: the edition runs no gathering of its own (26 Nov 2026). A hub item carries its day only (YYYY-MM-DD, UTC), read as that day's start, so a week takes the stories dated Saturday to Friday and each day falls in exactly one week. A hub item is where an item may come from, never its source: its address is the report the hub's writer read, so each item is still checked against its own primary source, and one whose source cannot be found or does not say what the item says is dropped (DESIGN.md section 3)."
+    }
+  },
+  "topic_heads": {
+    "from": "config/hub-sources.json",
+    "list": "subsectors",
+    "key": "key",
+    "label": "label",
+    "leave_out": [],
+    "rule": "Each news group's topic is the label of one of the hub's subsectors, the rooms of makeyourmindup.ai, read from config/hub-sources.json by its key and in its order, never copied here, so the edition and the site cut the week the same way (Krish approved the hub on 26 Nov 2026: \"just keep it focused on the subsectors\"). A subsector key in leave_out is no head and its stories are no candidates: empty, so every room the hub has is in the edition, the sport room among them (it is not one of the beat's focus sectors). The beat's avoid list (config/beat.json) still refuses an item outright."
+  },
+  "good_news": {
+    "topic": "Good news",
+    "max_items": 3,
+    "from": "the week's Saturday good-news option (the Saturday good-news run's stories, each already checked against its primary source)"
+  },
+  "links": {
+    "contract": "growth-makeyourmindup specs/subscribe-route.json, key edition (the weekly edition contract of 25 Nov 2026, section 1)",
+    "utm_source": "newsletter",
+    "utm_medium": "email",
+    "utm_campaign": "weekly",
+    "utm_content_pattern": "^edition-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]{1,40}$",
+    "places": ["forward", "subscribe", "piece-mon", "piece-wed", "piece-fri", "video-mon", "video-wed", "video-fri", "note"],
+    "rule": "Every link in the weekly edition carries all four tags; utm_content is edition-<the Saturday, YYYY-MM-DD>-<place>. A subscribe link goes to the one page; a piece link goes to the piece's own address with the same four tags.",
+    "subscribe_page": "https://home.makeyourmindup.ai/subscribe",
+    "place_of": {"piece": "piece-{day}", "video": "video-{day}", "pass_it_on": "forward"},
+    "sources_untagged": "A news item's source_url is the primary source exactly as its publisher gives it: a citation, never one of the edition's own links, so it carries no tags."
+  },
+  "copy": {
+    "never_name": ["Krish", "mind/make", "mindmake", "CTRL"],
+    "rules": "No em dash, no en dash used as a dash, no exclamation mark, British spelling, plain facts, nothing vague or smart, every line makes sense read aloud (Krish, 2026-11-25: \"Copy like that which is vague and smart arse needs to be banned.\"). The opener is unsigned: makeyourmindup never names Krish, mind/make or CTRL.",
+    "copy_lint_surface": "channel_copy"
+  },
+  "library": {
+    "folder": "{edition_date} Sat edition - {name}",
+    "draft": "0 Publish/edition.draft.json",
+    "preview": "0 Publish/edition.preview.html",
+    "max_bytes": 262144,
+    "rule": "Filed like a post (the contract, section 3): 3 Posts/<folder>/0 Publish/, through scripts/post-pack/send.py, which the library's path rule checks (config/library-paths.cases.json, edition_label)."
+  },
+  "board": {
+    "day": "sat",
+    "press_doc": "sat-edition",
+    "press_kind": "approve_send",
+    "label": "Approve for send",
+    "label_changed": "Approve the new edition for send",
+    "item_kind": "edition",
+    "item_label": "Weekly edition",
+    "rule": "One press, Approve for send, bound to the draft's sha256; a press bound to another sha256 is refused (409 edition_changed). It proposes; only his press sends."
+  },
+  "template": {
+    "name": "newsletter-weekly-edition",
+    "library": "the v5 Library on main, docs/ve/cards/library/ (newsletter-weekly-edition)",
+    "approved": false,
+    "rule": "The template is in the v5 Library, whose look Krish locked on 25 Nov 2026. Wiring it into render is the next step, done as part of the v5 Substack branding, which lands before anything sends. Until then the preview is structure only, plain and accessible, real text throughout, and TEMPLATES in scripts/edition/edition.py is empty. approved turns true here only when that wiring lands and the template is registered there; render refuses a template until both hold, and nothing of the template is copied in or invented."
+  }
+}

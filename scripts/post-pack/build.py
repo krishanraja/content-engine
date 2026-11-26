@@ -200,7 +200,12 @@ def plan(post, base):
     subject = folder.split(' - ', 1)[1]
     # Its series, passed to the story gate; the series line itself is retired (house rule SERIES_OPENER, 2026-10-21).
     series = None if post.get('launch') else library.subchannel_name(post.get('subchannel')).replace('.', '_')
-    entries = post.get('files')
+    entries = post.get('files', [])
+    if post.get('cover_set') and isinstance(entries, list):
+        try:
+            entries = entries + visual_gate.cover_outputs.pack_entries(base / post['cover_set'], post.get('piece_id'))
+        except (ValueError, OSError, KeyError, TypeError) as exc:
+            raise PackError(str(exc)) from exc
     if not isinstance(entries, list) or not entries:
         raise PackError('"files" must list the files to include')
     planned = []

@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts' / 'post-pack'))
 from velib.lint import lint, no_name_pattern  # noqa: E402
 
-FIXTURE = json.loads((ROOT / 'fixtures/ve/my-test-19s/spec.json').read_text(encoding='utf-8'))
+FIXTURE = json.loads((ROOT / 'fixtures/ve/my-test-19s/spec-v5.json').read_text(encoding='utf-8'))
 
 
 FIXTURE_WORDS_TEXT = json.loads((ROOT / 'fixtures/ve/my-test-19s/script.words.json').read_text(encoding='utf-8'))['text']

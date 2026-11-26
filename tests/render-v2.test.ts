@@ -117,7 +117,7 @@ function evidenceManifest(approval: 'unreviewed' | 'approved' = 'unreviewed'): R
 
 function officialBrandFixture() {
   const registry = TreatmentRegistryV1Schema.parse(studioConfig)
-  const theme = registry.brand_themes.find((candidate) => candidate.theme_id === registry.default_brand_theme)
+  const theme = registry.brand_themes.find((candidate) => candidate.theme_id === 'mindmake-video-v1')
   if (!theme?.wordmarks?.lockup) throw new Error('active GitHub theme is missing its approved wordmark lockup')
   const series = theme.wordmarks.series.built_with_ai
   return {

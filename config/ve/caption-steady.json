@@ -1,6 +1,6 @@
 {
   "_about": "Each caption style measured on one-word pages, the pages of every face-with-proof cut (brand.captions \"word\"), against the caption rules Krish gave on 18 Nov 2026: \"We can't have each new word appear somewhere else on the screen, and we need the previous word to stick around for a tiny bit longer.\" Written by scripts/audit-caption-steady.ts in real Chromium; never edited by hand. anchor_moves: the new word's best anchor strays 100 px or more between pages (rule 1), which ve lint refuses for a word-mode cut (captions.steady). previous_word_kept: the word before is still on screen, dimmed, when the next lands (rule 2); a style that says false cuts it at once, and is a known gap, not a refusal.",
-  "measured": "2026-11-18",
+  "measured": "2026-11-26",
   "tool": "scripts/audit-caption-steady.ts",
   "pages": {
     "words": [
@@ -190,6 +190,12 @@
       "y_anchor_spread_px": 20,
       "previous_word_kept": false,
       "anchor_moves": false
+    },
+    "house-v5": {
+      "x_anchor_spread_px": 530,
+      "y_anchor_spread_px": 68,
+      "previous_word_kept": true,
+      "anchor_moves": true
     }
   }
 }

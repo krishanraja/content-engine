@@ -65,6 +65,16 @@ def placed(groups):
     return out
 
 
+def plain(text):
+    """Text for a proposed group with no long dash in it, so floor_group.check never refuses the week over one
+    (26 Nov: a new group's check, copied from its first standard, carried an em dash and the check-in stopped with
+    "its check has a long dash", so the floor pull request stayed red). A range of numbers takes "to"; any other long
+    dash becomes a comma."""
+    text = re.sub(r'(?<=\d)\s*[\u2013\u2014]\s*(?=\d)', ' to ', str(text or ''))
+    text = re.sub(r'\s*[\u2013\u2014]+\s*', ', ', text)
+    return re.sub(r',\s*([,.;:!?])', r'\1', text).strip(' ,')
+
+
 def decided_words(group, db_group):
     """The words he decided for a group: his latest amendment, else his correction, else the group's own words."""
     if db_group:
@@ -73,6 +83,18 @@ def decided_words(group, db_group):
         if db_group.get('status') == 'corrected' and db_group.get('decision_note'):
             return db_group['decision_note']
     return group.get('never_beneath')
+
+
+def ruled_words(key, rulings=None):
+    """The ruled statement for a group in a ruled lineage (config/floor-rulings.json "retired" groups: bold_predictions,
+    predictions_committed and their weekly evolutions), else None. His 24 Nov amendment in the database quotes his words
+    after the statement; the ruling keeps the statement alone, and tests/floor_rulings_test.py holds every group in the
+    lineage to it (26 Nov: the check-in's bold_predictions_e261126 copied the amendment and that test went red)."""
+    import floor_rulings
+    group = ((floor_rulings.load_rulings() if rulings is None else rulings).get('retired') or {}).get('groups') or {}
+    if group.get('statement') and floor_rulings.in_lineage(key, group.get('lineage') or []):
+        return group['statement']
+    return None
 
 
 def prune(floor, groups):
@@ -151,14 +173,14 @@ def propose(floor, groups, db_groups, week_of):
         if b['parent']:
             parent = by_key[b['parent']]
             evolves[key] = b['parent']
-            entry = {'key': key, 'title': f'{parent["title"]} (evolution, week of {week_of})'[:120],
-                     'never_beneath': decided_words(parent, db_groups.get(b['parent'])),
-                     'check': parent['check'], 'members': members, 'evolves': b['parent']}
+            entry = {'key': key, 'title': plain(f'{parent["title"]} (evolution, week of {week_of})')[:120],
+                     'never_beneath': plain(ruled_words(key) or decided_words(parent, db_groups.get(b['parent']))),
+                     'check': plain(parent['check']), 'members': members, 'evolves': b['parent']}
         else:
             theme = str(first.get('theme') or 'other').replace('_', ' ')
-            entry = {'key': key, 'title': f'New: {theme} (week of {week_of})'[:120],
-                     'never_beneath': str(first.get('never_beneath') or '').strip(),
-                     'check': str(first.get('check_before_delivery') or '').strip(), 'members': members}
+            entry = {'key': key, 'title': plain(f'New: {theme} (week of {week_of})')[:120],
+                     'never_beneath': plain(first.get('never_beneath')),
+                     'check': plain(first.get('check_before_delivery')), 'members': members}
             if b.get('near'):
                 entry['near'] = b['near']
         new_groups.append(entry)

@@ -23,9 +23,13 @@ route once he presses Approve for publish, publishes each step
 ## The idea
 
 **One home.** Each piece is one Substack **Video** post: the long video at the
-top and the whole article underneath. One email to subscribers, one link for
-every channel to point at. It replaces the separate video post and article.
-Why: a reader gets one email instead of two; the video and the words share
+top and the whole article underneath, and one link for every channel to point
+at. It replaces the separate video post and article. Since the weekly edition
+(Ruling, Krish, 2026-11-25) the post goes up on the web without an email: untick
+"Send via email and Substack app inbox" at Publish, and subscribers get the piece
+in the Saturday edition (growth-makeyourmindup
+`docs/plans/2026-11-25-weekly-edition/`). Why one post: a reader meets one page
+instead of two; the video and the words share
 one set of comments and one link; and only Substack's Video post type does the
 rest of the work below (an article with a video dropped in gets none of it).
 
@@ -72,7 +76,9 @@ page has a box for each link; paste it once and every Copy button carries it.
 make sure this is fixed moving forward." Posts from 2 to 11 November named
 makeyourmindup.ai but none linked the subscribe page, and the week brought 1 new
 subscriber against a target of 86. So every Copy button that can hold a link
-ends with "Get the next one in your inbox:" and the subscribe page,
+ends with "Get the week's pieces and the news that matters, in one email every
+Saturday:" (Ruling, Krish, 2026-11-25: the weekly edition; it replaced "Get the
+next one in your inbox:") and the subscribe page,
 `https://home.makeyourmindup.ai/subscribe`: the YouTube description and
 pinned comment, the LinkedIn first comment and the Spotify description. Each
 link carries the tags Growth credits a subscriber by, from Growth's one
@@ -80,7 +86,8 @@ subscribe route (`vendor/makeyourmindup/subscribe-route.json`, since 14
 November; `docs/GROWTH-HANDOFF.md`, "One subscribe route"): the channel
 (`utm_source`), `utm_medium`, `utm_campaign` and the post (`utm_content`, its
 board item and channel). A caption that cannot hold a clickable
-link (TikTok, Reels) ends with "Get the next one in your inbox: link in bio.",
+link (TikTok, Reels) ends with "Get the week's pieces and the news that matters,
+in one email every Saturday: link in bio.",
 and the profile link is the same page tagged `utm_content=bio`. The spoken close
 of a script is unchanged (house rule SCRIPT_CLOSE): a link is written, never
 said. `publish_kit.py` adds it, so every new publish page and board card

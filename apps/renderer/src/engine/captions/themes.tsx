@@ -392,7 +392,10 @@ const slam: Draw = (props, frame) => {
     </div>))
 }
 
+import {houseCaptions} from '../v5/HouseCaptions'
+
 export const THEMES: Record<Exclude<CaptionThemeName, 'art-directed'>, Draw> = {
+  'house-v5': houseCaptions,
   pop, karaoke, 'kinetic-01': kinetic01, 'kinetic-02': kinetic02, hustle, grape, beast, poppin, aarit, 'soft-ai': softAi,
   'gaming-stream': gaming, 'simple-one-word': oneWord, podcast, cinematic, slam, ...STYLES,
 }

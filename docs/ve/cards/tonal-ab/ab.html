@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Make Your Mind Up · colour and show art proofs</title>
+<base href="../../../../.scratch/tonal-ab/">
+<style>
+@font-face{font-family:Anton;src:url(Anton-Regular.ttf)}
+@font-face{font-family:Fraunces;src:url(Fraunces-Upright-Variable.ttf);font-weight:100 900}
+@font-face{font-family:Mono;src:url(DMMono-Regular.ttf)}
+*{box-sizing:border-box}
+:root{--ink:#0c1512;--cream:#f4efe4;--mint:#7ef0c0;--butter:#ffd84d}
+body{margin:0;color:var(--ink);font:24px Mono,monospace}
+main{width:2400px;height:1500px;overflow:hidden}
+.blocks{background:var(--ink);color:var(--cream);padding:48px 60px;display:grid;align-content:space-between;position:relative;isolation:isolate}
+.blocks::before,.lamp::before,.sweep::before{content:"";position:absolute;inset:0;background:url(paper.png);opacity:.07;pointer-events:none}
+.row{position:relative;display:grid;grid-template-columns:236px 243px 243px 691.2px 1fr;gap:40px;align-items:center}
+.row header{align-self:start;border-top:2px solid;padding-top:18px;font-size:36px}
+.frame,.panel{position:relative;overflow:hidden;color:var(--ink)}
+.frame{width:243px;height:432px}
+.frame img{position:absolute;inset:0;width:100%;height:100%}
+.field{position:absolute;inset:var(--seam) 0 0;background:var(--base)}
+.step{--base:#ff6a4d;--seam:54.1666667%}
+.answer{--base:#7ef0c0;--seam:46.875%}
+.panel{aspect-ratio:16/10;display:grid;grid-template-columns:1fr 1fr}
+.panel .half{position:relative;padding:30px 26px;display:flex;flex-direction:column;justify-content:space-between;background:var(--base);--base:#b7a6ff}
+.panel h2{position:relative;font:55px/.99 Anton;margin:0;text-transform:uppercase}
+.panel p,.panel blockquote{position:relative;margin:0;font:23px/1.27 Fraunces;font-variation-settings:"SOFT" 50,"WONK" 0}
+.panel aside{padding:30px 26px;background:var(--ink);color:var(--cream);display:flex;flex-direction:column;gap:24px;border:1px solid #46514b}
+.panel aside small{font:18px Mono}
+.zoom{height:432px;display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.zoom span{position:relative;background:var(--base)}
+.lilac{--base:#b7a6ff}
+:is(.field,.panel .half,.zoom span).lamp{background:radial-gradient(ellipse 85% 100% at 50% 0% in srgb,color-mix(in srgb,var(--base) 80%,white),var(--base) 70%,color-mix(in srgb,var(--base) 94%,black))}
+:is(.field,.panel .half,.zoom span).sweep{background:linear-gradient(to bottom in srgb,color-mix(in srgb,var(--base) 90%,white),var(--base) 50%,color-mix(in srgb,var(--base) 90%,black))}
+.show{background:var(--cream);padding:40px 72px;display:grid;grid-template-columns:1fr 1fr;gap:20px 80px}
+.proof{height:700px;display:flex;gap:36px;align-items:center}
+.sizes{height:700px;flex:1;border-top:2px solid;display:flex;flex-direction:column;align-items:start;padding-top:16px;gap:12px}
+.sizes h2{font:34px/1.15 Fraunces;margin:0 0 auto;font-variation-settings:"SOFT" 50,"WONK" 0}
+.sizes small{font:17px Mono}
+.sample{position:relative;overflow:hidden;flex:none}
+.art{width:700px;height:700px;position:absolute;inset:0;transform-origin:0 0;overflow:hidden}
+.art img{display:block}
+.current img,.burn .photo{width:100%;height:100%;object-fit:cover}
+.burn{background:var(--ink)}
+.burn .photo{object-position:center 35%;mask-image:linear-gradient(black 55%,transparent 89%)}
+.burn .mark{position:absolute;left:34px;bottom:33px;width:632px}
+.colour{background:var(--butter);padding:30px}
+.colour img{width:100%;height:356px;object-fit:cover;object-position:center 45%}
+.name{font:120px/.99 Anton;letter-spacing:-.025em;margin:20px 0 0}
+.type{background:var(--mint);padding:26px 34px}
+.type .name{font-size:173px;line-height:.98;margin:0;letter-spacing:-.032em}
+.type footer{position:absolute;left:36px;right:36px;bottom:33px;border-top:3px solid;padding-top:12px;font:42px/1.1 Fraunces;font-variation-settings:"SOFT" 50,"WONK" 0}
+</style>
+</head>
+<body><main></main>
+<script>
+const main=document.querySelector('main');
+const view=new URLSearchParams(location.search).get('view') || 'blocks-ab';
+const arts={
+ current:'<img src="current.jpg" alt="Current butter cover with an ink band">',
+ s1:'<img class="photo" src="evo-topdown.png" alt="Operating table with a record and surgical tools"><img class="mark" src="w0-clean.svg" alt="Make Your Mind Up">',
+ s2:'<img src="evo-topdown.png" alt="Record on the operating table"><div class="name">MAKE YOUR<br>MIND/UP</div>',
+ s3:'<div class="name">MAKE<br>YOUR<br>MIND UP</div><footer>AI, unpicked.</footer>'
+};
+const styles={current:'current',s1:'burn',s2:'colour',s3:'type'};
+function sample(id,size){
+ return '<div class="sample" style="width:'+size+'px;height:'+size+'px"><div class="art '+styles[id]+'" style="transform:scale('+size/700+')">'+arts[id]+'</div></div>';
+}
+function frame(style,number,treatment,alt){
+ return '<div class="frame '+style+'"><div class="field '+treatment+'"></div><img src="frame-'+number+'.png" alt="'+alt+'"></div>';
+}
+function row(label,treatment){
+ const zoom = '<div class="zoom" aria-label="Enlarged coral, mint and lilac surfaces">'+
+  ['step','answer','lilac'].map(colour=>'<span class="'+colour+' '+treatment+'"></span>').join('')+'</div>';
+ return '<section class="row"><header>'+label+'</header>'+frame('step',2,treatment,'WHY 1. When does a song start earning?')+frame('answer',6,treatment,"Songs didn't lose their attention span. They got a stopwatch. If streams paid by the minute, how fast would the guitar solo come back?")+ '<article class="panel"><div class="half '+treatment+'"><h2>Words on screen</h2><p>The words are dry, short and aimed at the hype, never at you.</p></div><aside><small>Examples</small><blockquote>“Paid at 0:30. Not a second sooner.”</blockquote><blockquote>“We all became goldfish.”</blockquote></aside></article>'+zoom+'</section>';
+}
+if(view==='blocks-ab'){
+ main.className='blocks'; main.innerHTML=row('flat','')+row('tonal lamp','lamp')+row('tonal sweep','sweep');
+}else if(view==='show-art'){
+ main.className='show';
+ for(const [id,label] of Object.entries({current:'current',s1:'S1 · Burn',s2:'S2 · Colour field',s3:'S3 · Type only'})){
+  main.insertAdjacentHTML('beforeend','<section class="proof">'+sample(id,700)+'<div class="sizes"><h2>'+label+'</h2><small>150 px</small>'+sample(id,150)+'<small>56 px</small>'+sample(id,56)+'</div></section>');
+ }
+}else if(Object.hasOwn(arts,view)){
+ main.style.width=main.style.height='3000px';main.innerHTML=sample(view,3000);
+}else{throw Error('Unknown proof '+view)}
+window.ready=(async()=>{
+ await Promise.all(['16px Anton','16px Mono','16px Fraunces'].map(face=>document.fonts.load(face)));
+ await document.fonts.ready;
+ await Promise.all([...document.images].map(img=>img.decode()));
+ const paper=new Image();paper.src='paper.png';await paper.decode();
+})();
+</script></body></html>

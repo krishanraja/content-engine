@@ -1492,6 +1492,10 @@ def thumb_problem(cut, path):
         got = f'{size[0]} x {size[1]}' if size else 'not a JPEG or PNG this can read'
         return f'{path.name} is {got}, not the {want[0]} x {want[1]} {shape} thumbnail the {cut} cut carries'
     try:
+        if path.with_name('covers.json').is_file():
+            from visual_gate import image_led_problems
+            issues = image_led_problems(path, 'youtube' if shape == 'wide' else 'tall')
+            return '; '.join(issues) or None
         receipt = json.loads((path.parent / THUMB_RECEIPT).read_text(encoding='utf-8'))
     except (OSError, ValueError):
         # A piece-specific treatment Krish approved can use a renderer other

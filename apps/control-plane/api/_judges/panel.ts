@@ -29,7 +29,7 @@ export interface DeterministicFinding {
 
 export interface PanelInput {
   gate: Gate
-  subjectTable: 'content_ideas' | 'weekly_briefs'
+  subjectTable: 'content_ideas' | 'weekly_briefs' | 'hub_snapshots'
   subjectId: string
   /** Exactly what is being judged. Verdicts bind to this hash. */
   artifact: string

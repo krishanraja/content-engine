@@ -45,9 +45,12 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `packages/moves/`
 - `scripts/`
 - `scripts/channel-kit/`
+- `scripts/covers/`
 - `scripts/cutgates/`
+- `scripts/edition/`
 - `scripts/hooks/`
 - `scripts/learning/`
+- `scripts/library/`
 - `scripts/overnight/`
 - `scripts/pages/`
 - `scripts/post-pack/`
@@ -125,6 +128,9 @@ Each is a Vercel handler under `apps/control-plane/api`; `_*.ts` files beside th
 - `/api/discover-creator-posts`
 - `/api/discover-lens-radar`
 - `/api/feed/ingest`
+- `/api/hub/edition`
+- `/api/hub/prices`
+- `/api/hub/today`
 - `/api/idea-queue`
 - `/api/inspiration/actions`
 - `/api/inspiration/candidates`
@@ -2345,6 +2351,9 @@ Every week's ideas board carries the meme templates (Ruling, Krish, 2026-11-19: 
 - `type GateKind = keyof typeof GATE_KINDS`
 - `const STYLE_VERDICTS`
 - `const PROOF_VERDICTS`
+- `const EDITION_DOC: string`
+- `const EDITION_KIND: string`
+- `function editionBody(id: string, body: Record<string, unknown>): boolean`
 - `const MIX_ID`
 - `function mixBody(body: Record<string, unknown>): boolean`
 - `const FEEL_ID`
@@ -2486,6 +2495,35 @@ Krish's decisions on a piece, read live from the records, so no session asks him
 - `function ownerDriveToken(env: Record<string, string | undefined> = process.env): Promise<string | null>`
 - `interface BoardDrive`
 - `function boardDrive(db: { storage: { from(b: string): any } }, opts: { token?: () => Promise<string | null>; fetch?: ty…`
+
+### `apps/control-plane/api/board/_edition.ts`
+
+- `const EDITION_SCHEMA: string`
+- `const EDITION_NAME: string`
+- `const EDITION_DAY`
+- `const EDITION_ITEM_KIND: string`
+- `const EDITION_ITEM_LABEL: string`
+- `const EDITION_MAX_BYTES: number`
+- `const EDITION_PATH`
+- `const sha256 = (b: Uint8Array | string) =>`
+- `function editionDate(week: string): string`
+- `function editionPaths(date: string): { folder: string; draft: string; preview: string }`
+- `interface EditionDraft`
+- `interface EditionRead`
+- `function parseEdition(bytes: Uint8Array, date: string): EditionDraft | null`
+- `async function readEdition(db: SupabaseClient, week: string): Promise<EditionRead | null>`
+- `interface EditionPress`
+- `interface ViewEdition`
+- `function editionView(found: EditionRead | null | undefined, picks: PickDoc[], week: string): ViewEdition | null`
+- `function editionApprovedLabel(v: ViewEdition): string | null`
+- `class EditionBindError`
+- `async function checkEditionBind(db: SupabaseClient, week: string, body: Body): Promise<void>`
+- `async function readPreview(db: SupabaseClient, found: EditionRead): Promise<Uint8Array | null>`
+- `const PREVIEW_POLICY`
+- `interface HubItem`
+- `interface HubWeek`
+- `class HubUnavailable`
+- `async function readHubWeek(db: SupabaseClient, week: string): Promise<HubWeek>`
 
 ### `apps/control-plane/api/board/_gate.ts`
 
@@ -2990,6 +3028,7 @@ The one state every item on a day is in (docs/PUBLISH_BOARDS.md, "Where everythi
 
 ### `apps/control-plane/api/board/_style.ts`
 
+- `const retiredStyle = (kind: string, id: unknown) =>`
 - `type StyleLayerKey = 'motion' | 'captions'`
 - `const STYLE_LAYERS: readonly StyleLayerKey[]`
 - `type RejectLayerKey = StyleLayerKey | 'treatment'`
@@ -3416,6 +3455,7 @@ What this deployment needs before it can do its job.
 POST /api/content-ideas/:id/fact-check run the fact gate on the current body
 
 - `default async function handler(req: VercelRequest, res: VercelResponse)`
+- `async function checkSourcedBody(body: string, url: string, content: string): Promise<FactCheck>`
 
 ### `apps/control-plane/api/content-ideas/[id]/final-pass.ts`
 
@@ -3535,6 +3575,18 @@ POST /api/content-ideas/:id/fact-check run the fact gate on the current body
 ### `apps/control-plane/api/feed/ingest.ts`
 
 - `export default withContentRun('feed_ingest', handler)`
+
+### `apps/control-plane/api/hub/edition.ts`
+
+- `export default withContentRun('hub_edition', handler)`
+
+### `apps/control-plane/api/hub/prices.ts`
+
+- `export default withContentRun('hub_prices', handler)`
+
+### `apps/control-plane/api/hub/today.ts`
+
+- `default async function handler(req: VercelRequest, res: VercelResponse)`
 
 ### `apps/control-plane/api/idea-queue.ts`
 
@@ -3870,6 +3922,7 @@ What the compiler looks for, as pure functions.
 - `const LIBRARY_POST_README`
 - `const LIBRARY_SUBCHANNELS`
 - `const LIBRARY_OFF_DAY`
+- `const LIBRARY_EDITION`
 - `const LIBRARY_CONTENT_TYPES: Readonly<Record<string, string>>`
 - `function libraryMimeTypes(): string[]`
 - `const LIBRARY_OPTIONAL_MIME_TYPES: readonly string[]`
@@ -4670,6 +4723,99 @@ The Content Engine's schedule, as the dashboard knows it.
 - `function productionBriefStatusLabel(status: string): string`
 - `function hasExactProductionApproval(meta: unknown): boolean`
 - `function storedProductionBriefs(outputs: unknown): StoredProductionBrief[]`
+
+### `apps/control-plane/lib/hub/announce.ts`
+
+After the daily edition is saved, makeyourmindup.ai is asked to tell IndexNow that today's edition page, the home page
+
+- `const INDEXNOW_ENDPOINT`
+- `type Announced = 'accepted' | 'skipped' | 'failed'`
+- `async function announceEdition(): Promise<Announced>`
+
+### `apps/control-plane/lib/hub/articles.ts`
+
+- `async function readPage(input: string)`
+- `function articleText(html: string)`
+- `async function readArticle(link: string)`
+
+### `apps/control-plane/lib/hub/editorial.ts`
+
+- `function outletCount(rows: Candidate[]): number`
+- `function shortlist(rows: Candidate[])`
+- `async function classify(rows: Candidate[]): Promise<Group[]>`
+- `async function writeEdition(rows: Candidate[])`
+
+### `apps/control-plane/lib/hub/feeds.ts`
+
+- `type Feed = { url: string; subsector: string; outlet: string }`
+- `type Candidate`
+- `const feeds: Feed[]`
+- `function onBeat(row: Candidate)`
+- `function plain(html: string)`
+- `function webUrl(raw: string, base?: string)`
+- `function parseFeed(xml: string, feed: Feed, now: number): Candidate[]`
+- `type Health`
+- `function feedHealth(url: string, today: string, hasStories: boolean, prior?: Health): Health`
+
+### `apps/control-plane/lib/hub/markets.ts`
+
+- `type Close`
+- `function validSymbol(symbol: string)`
+- `function parseYahoo(symbol: string, payload: any, now: number): Chart | null`
+- `async function fetchMarkets(now: number)`
+- `function equalWeight(histories: Point[][]): Index`
+- `function buildMarkets(now: number, saved: Close[], charts: Record<string, Chart | null>, prior?: Ticker)`
+
+### `apps/control-plane/lib/hub/pipeline.ts`
+
+- `async function refresh(mode: Mode, now: number)`
+- `function cron(mode: Mode)`
+
+### `apps/control-plane/lib/hub/snapshot.ts`
+
+- `function readSnapshot(payload: unknown): Snapshot | null`
+
+### `apps/control-plane/lib/hub/store.ts`
+
+- `async function latest()`
+- `async function byDate(date: string)`
+- `async function editionDates(limit = 400)`
+- `async function discover(now: number)`
+- `async function markets(now: number, prior?: Ticker)`
+- `async function pieces()`
+- `async function save(snapshot: Snapshot, revision?: string)`
+
+### `apps/control-plane/lib/hub/types.ts`
+
+- `const sectors`
+- `const stocks`
+- `const validSector = (key: unknown): key is string =>`
+- `const dayMs`
+- `const isoDay = (ms: number) =>`
+- `const userAgent`
+- `type Index`
+- `type Stock`
+- `type Ticker`
+- `type Image`
+- `type Entity = { name: string; wiki_title: string }`
+- `type Story`
+- `type Draft`
+- `type Attention`
+- `type Snapshot`
+- `async function mapLimit<T, U>(rows: T[], limit: number, fn: (row: T) => Promise<U>): Promise<U[]>`
+- `async function optional<T>(stage: string, fallback: T, read: () => Promise<T>): Promise<T>`
+
+### `apps/control-plane/lib/hub/wiki.ts`
+
+- `function commonsImage(info: any, kind: 'person' | 'company', accusation = false): Image | null`
+- `function parseViews(entity: Entity, payload: any, end: string): Attention | null`
+- `function wikiClient(deadline = Infinity)`
+- `function generateStill(brief: string): Image`
+- `async function chooseImage(draft: Draft, index: number, lookup: ReturnType<typeof wikiClient>['image'])`
+
+### `apps/control-plane/lib/readCatalogue.ts`
+
+- `async function readCatalogue(limit = 1000)`
 
 ### `apps/control-plane/scripts/check-aeo-packet-schema.ts`
 
@@ -6389,6 +6535,27 @@ JSON-value transport: escape values only; keys retain their original spelling.
 - `function subjectLiftParameters(strength: number)`
 - `function SubjectLift({ take, matte, frame, width, height, strength, tokens, id }: SubjectLiftProps): ReactElement<SVGPr…`
 
+### `apps/renderer/src/engine/v5/Cards.tsx`
+
+- `const enter = (frame: number, duration: number) =>`
+- `type CardProps`
+- `function Card({ id, params, format, frame, lineStarts, captionSpace }: CardProps)`
+- `const cardDevice: DeviceComponent`
+
+### `apps/renderer/src/engine/v5/HouseCaptions.tsx`
+
+- `function captionPages(input: Pages): Pages`
+- `function ladderCaptionBand(format: EngineRenderProps['aspect'])`
+- `const houseCaptions: Draw`
+
+### `apps/renderer/src/engine/v5/Previews.tsx`
+
+- `function V5Previews()`
+
+### `apps/renderer/src/engine/v5/Sequence.tsx`
+
+- `function LadderSequence({ props, frame, stem, }: { props: EngineRenderProps frame: number stem: boolean })`
+
 ### `apps/renderer/src/evidence-label.ts`
 
 - `type EvidenceLabelInput`
@@ -6411,6 +6578,8 @@ JSON-value transport: escape values only; keys retain their original spelling.
 
 ### `apps/renderer/src/house/geometry.ts`
 
+- `function setHouseDataFace(v5: boolean)`
+- `const V5_DATA_FONT`
 - `const HOUSE_FONTS`
 - `const HOUSE_FONT_FAMILIES`
 - `const HOUSE_GRAIN_IMAGE`
@@ -7076,6 +7245,13 @@ Artifact-bound user confirmation references.
 - `type ExperimentV2 = z.infer<typeof ExperimentV2Schema>`
 - `const ConfigChangeProposalV1Schema`
 - `type ConfigChangeProposalV1 = z.infer<typeof ConfigChangeProposalV1Schema>`
+
+### `packages/contracts/src/why-ladder-v5.ts`
+
+- `type SourceImage = z.infer<typeof image>`
+- `const v5Params`
+- `type V5Id = keyof typeof v5Params`
+- `function isV5Id(id: string): id is V5Id`
 
 ### `packages/contracts/src/whys.ts`
 

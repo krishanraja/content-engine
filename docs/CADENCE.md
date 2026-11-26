@@ -50,6 +50,10 @@ Ruling, Krish, 2026-11-13).
 | Monday, 06:30 | The final publish board: the live board shows the records, with each held item and its reason (Krish, 2026-10-28: "an overnight Codex run will actually produce me the final assets and the final publish board first thing Monday morning") | the overnight runner reports each cut made or held on its piece (Wave 2; until then the first session on Monday) |
 | Monday, about 45 minutes | He watches each cut at full size, signs off the article's facts, then presses **Approve for publish** or **Reject asset** (with a reason) for each day | Krish |
 | After his approval | Growth schedules each approved post and reads it back (Krish, 2026-10-28: "Approve each day Monday") | Growth |
+| Friday, 15:17 and again 18:47 (20:17 and 23:47 UTC), after Friday's piece goes live | **The weekly edition is drafted** (Krish, 2026-11-25: one email a week, "makeyourmindup weekly", every Saturday at 08:00): the week's live Monday, Wednesday and Friday pieces, then six to ten news items from the creative industries from the seven days to Friday 12:00, chosen from the week's daily hub editions (at most two a subsector) and each checked against its primary source, then a Pass it on line and one closing line. It is checked, rendered and packaged (`content-engine-edition/1`), filed in the library like a post, and on the Saturday card with its preview at the board's next read. The second firing does nothing once the first has put it there; the first holds without drafting while a piece picked for the week is not live yet. A week with no live piece sends no edition: it holds and the card says why | the weekly edition run: Claude Code in GitHub Actions on his subscription (`.github/workflows/weekly-edition.yml`, `.agents/skills/weekly-edition/SKILL.md`) |
+| Friday evening | Growth builds the Substack draft from that exact package and sends Substack's test email to Krish (draft only) | growth's Substack step (Codex on the worker, Substack's editor only) |
+| By Saturday 07:30 | **Approve for send**, one press on the Saturday card, bound to the draft's sha256; a draft that changed after his press needs his press again (`docs/PUBLISH_BOARDS.md`, "The weekly edition on Saturday") | Krish, about five minutes |
+| Saturday, 08:00 | **The edition sends.** Growth schedules it at 07:30 for 08:00 only when his press binds the package's sha256, and reads it back after the send. No press, or a changed edition: nothing is scheduled | growth, then Substack |
 
 **Zero Claude routines** (Ruling, Krish, 2026-10-29: "FYI, I want zero Claude
 routines. No Claude schedules of any kind in this architecture"). No claude.ai
@@ -60,7 +64,8 @@ board?"): the Sunday ideas run and each piece's make run Claude Code inside a
 GitHub Actions job on his subscription (`CLAUDE_CODE_OAUTH_TOKEN`, never an
 API key) and write to the board only through the engine API. GitHub's cron
 fires hours late, so the Sunday ideas run fires twice on Saturday (12:17 and
-20:47 UTC) and does nothing once the week's Ideas tab is live. The timed API calls (the
+20:47 UTC) and does nothing once the week's Ideas tab is live. The weekly edition run fires twice on Friday (20:17 and
+23:47 UTC) the same way, and does nothing once the week's edition is on the Saturday card. The timed API calls (the
 engine's Vercel crons, inspirationhouse's daily runs, the fact gate) stay, and
 this chain's metered API spend stays under $15 a week (Krish, 2026-10-29:
 "happy with $15 a week"; about $13.80 measured, 15 to 28 October). Nothing
@@ -76,7 +81,8 @@ Claude on a timer. Until Krish
 says otherwise, the plan's other scheduled jobs (the repair round on held
 cuts, which the overnight run starts after it builds the Monday board, and
 the 21:30 titles fallback, not built yet) write records only, and the live
-board shows what they did at its next read. Codex no
+board shows what they did at its next read. The Friday weekly edition run is one of them: it files the edition's
+package in the library, never builds or bumps a board, and the Saturday card shows it at its next read. Codex no
 longer cuts video: it makes pictures for named slots and never edits a cut
 (`docs/ve/ENGINE.md`, "Codex"). The engine assembles every cut.
 

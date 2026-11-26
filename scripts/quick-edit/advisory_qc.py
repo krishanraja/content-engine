@@ -26,7 +26,7 @@ ASPECT = {'9x16': '9:16', '16x9': '16:9'}
 def _row(measure):
     try:
         result = measure()
-    except Exception as error:  # noqa: BLE001 an advisory measure never stops a cut
+    except (Exception, SystemExit) as error:  # ve's CLI helpers exit when a required tool is missing
         return {'advisory': True, 'blocking': False, 'status': 'error', 'pass': None,
                 'reason': f'{type(error).__name__}: {error}'[:600]}
     status = result.get('status') or ('not_applicable' if result.get('applies') is False

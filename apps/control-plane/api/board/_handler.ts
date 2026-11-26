@@ -1,13 +1,14 @@
 import { TAKES_OP, boardNames, pickTakes, takesInOf, unclearLine } from './_takesIn.js'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { LIVE_ID, actor, growthWriter, collections, hisOnlyRefusal, monday, revision, validBody, validManifest, views, type Manifest, type View } from './_contracts.js'
+import { EDITION_DOC, LIVE_ID, actor, growthWriter, collections, hisOnlyRefusal, monday, revision, validBody, validManifest, views, type Manifest, type View } from './_contracts.js'
 import { PressError, afterPress, preparePress, type PressDeps } from './_presses.js'
 import { readPieces, recordPosted } from './_posted.js'
 import { carryDay } from './_carry.js'
 import { branchSha, readView, readWeekIdeas } from './_view.js'
 import { signMedia } from './_media.js'
 import { ManifestBindError, checkPublishBind } from './_manifest.js'
+import { EditionBindError, HubUnavailable, PREVIEW_POLICY, checkEditionBind, editionView, readEdition, readHubWeek, readPreview } from './_edition.js'
 import { ShowGateError, checkProofShown } from './_showGate.js'
 import { DRIVE_ID, boardDrive, filesOfPosts } from './_drivePosts.js'
 import { notModified, viewEtag } from './_viewContract.js'
@@ -195,6 +196,47 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         if (method !== 'POST') return res.status(405).json({ ok: false, error: 'method_not_allowed' })
         const result = op === 'offdays' ? await offerGrowth(db, week, req.body, await (deps.ideas ?? readWeekIdeas)(week)) : await reportPosts(db, week, req.body, deps.now ? new Date(deps.now()) : new Date(), deps.renamer ? deps.renamer() : await moveRenamer().catch(() => null))
         return res.status(result.status).json(result.body)
+      } catch { return res.status(503).json({ ok: false, error: 'board_store_unavailable' }) }
+    }
+    if (op === 'edition') {
+      // The week's edition (_edition.ts, contract 1.35.0), read only: GET /api/board/<Monday>/edition is the Saturday's
+      // edition as the view carries it, his press's state included; /edition/draft is the draft's exact bytes, whose
+      // sha256 his Approve for send binds; /edition/preview is its preview page; /edition/news is the week's daily hub
+      // items the Friday run chooses its news from (readHubWeek). His login, the engine operator's key, or Growth's
+      // key: growth's Substack step builds the Substack draft from these bytes and acts only on his press.
+      if (!actor(req) && !growthWriter(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })
+      if (method !== 'GET') return res.status(405).json({ ok: false, error: 'method_not_allowed' })
+      const week = scalar(req.query.week)
+      if (!monday(week)) return res.status(400).json({ ok: false, error: 'invalid_week' })
+      const file = scalar(req.query.id)
+      if (file && file !== 'draft' && file !== 'preview' && file !== 'news') return res.status(404).json({ ok: false, error: 'edition_file_not_found' })
+      try {
+        const db = await getDb()
+        if (file === 'news') {
+          try {
+            return res.status(200).json({ ok: true, week, ...(await readHubWeek(db, week)) })
+          } catch (error) {
+            if (error instanceof HubUnavailable) return res.status(503).json({ ok: false, error: 'hub_unavailable' })
+            throw error
+          }
+        }
+        const found = await readEdition(db, week)
+        if (!file) {
+          const picks = await db.from('board_documents').select('doc_id,body,updated_by,revision').eq('week', week).eq('collection', 'picks').eq('doc_id', EDITION_DOC)
+          if (picks.error) return res.status(503).json({ ok: false, error: 'board_store_unavailable' })
+          return res.status(200).json({ ok: true, week, edition: editionView(found, (picks.data || []) as never, week) })
+        }
+        if (!found) return res.status(404).json({ ok: false, error: 'edition_not_found' })
+        if (file === 'draft') {
+          res.setHeader('Content-Type', 'application/json; charset=utf-8')
+          res.setHeader('X-Content-SHA256', found.draft.sha256)
+          return res.status(200).send(Buffer.from(found.bytes))
+        }
+        const page = await readPreview(db, found)
+        if (!page) return res.status(404).json({ ok: false, error: 'edition_preview_not_found' })
+        res.setHeader('Content-Type', 'text/html; charset=utf-8')
+        res.setHeader('Content-Security-Policy', PREVIEW_POLICY)
+        return res.status(200).send(Buffer.from(page))
       } catch { return res.status(503).json({ ok: false, error: 'board_store_unavailable' }) }
     }
     if (op === 'build') {
@@ -672,6 +714,10 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
         // His Approve for publish binds the piece's manifest as it stands now (1.8.0, _manifest.ts).
         if (collection === 'picks' && /-publish$/.test(id)) {
           try { await checkPublishBind(db, incoming) } catch (e) { if (e instanceof ManifestBindError) throw new BoardError(e.status, e.message); throw e }
+        }
+        // His Approve for send binds the week's edition as it stands now (1.35.0, _edition.ts).
+        if (collection === 'picks' && id === EDITION_DOC) {
+          try { await checkEditionBind(db, week, incoming) } catch (e) { if (e instanceof EditionBindError) throw new BoardError(e.status, e.message); throw e }
         }
         // His Approve proof is refused until the proof carries its show receipt (_showGate.ts, config/ve/show-gate.json).
         if (collection === 'picks' && /-proof(-[0-9a-f]{8})?$/.test(id)) {
