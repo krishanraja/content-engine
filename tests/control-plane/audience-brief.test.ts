@@ -118,15 +118,15 @@ describe('Growth\'s audience brief of 16 Nov: changes 1 to 6 are enforced from t
   })
 })
 
-describe('a good-news option short of five stories reads when it says why (plan-week references/offdays.md)', () => {
-  test('four stories with stories_short read; four without it, or none, do not; five always do', () => {
+describe('a good-news option short of four stories reads when it says why (plan-week references/offdays.md; config/carousel-format.json good_news.items)', () => {
+  test('three stories with stories_short read; three without it, or none, do not; four always do, and a fifth is a spare', () => {
     const py5 = ['import sys, json', "sys.path.insert(0, 'scripts/post-pack')", 'import week_plan as wb',
       "s = {'headline': 'h', 'what': 'w', 'why': 'y', 'date': '2026-11-12', 'source': {'label': 'l', 'url': 'https://a'}, 'media': {'kind': 'photo', 'url': 'https://b'}}",
-      "print(json.dumps([wb.story_problems([s] * 4, 'only four on the topic this week'), wb.story_problems([s] * 4), wb.story_problems([], 'none'), wb.story_problems([s] * 5)]))"].join('\n')
+      "print(json.dumps([wb.story_problems([s] * 3, 'only three on the topic this week'), wb.story_problems([s] * 3), wb.story_problems([], 'none'), wb.story_problems([s] * 4), wb.story_problems([s] * 5)]))"].join('\n')
     const run = spawnSync(py, ['-c', py5], { encoding: 'utf8' })
     assert.equal(run.status, 0, run.stderr)
-    const [shortWithWhy, shortBare, none, five] = JSON.parse(run.stdout)
-    assert.deepEqual([shortWithWhy, five], [[], []])
+    const [shortWithWhy, shortBare, none, four, spare] = JSON.parse(run.stdout)
+    assert.deepEqual([shortWithWhy, four, spare], [[], [], []])
     assert.equal(shortBare.length, 1)
     assert.equal(none.length, 1)
   })

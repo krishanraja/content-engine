@@ -23,7 +23,7 @@ support Monday, Wednesday, or Friday. We have voiceovers, explainers, uplifting 
 | `supporting` (with `"supports": "mon"`, `"wed"` or `"fri"`) | Carousel for Monday's piece | A carousel that carries that day's piece further |
 | `voiceover` | Voiceover short | A short with his voice over motion graphics or footage. A piece he records keeps `"kind": "recorded"` (below) and reads as a Voiceover short |
 | `explainer` | Explainer | An explainer carousel or infographic that stands on its own |
-| `good_news` | Good news | Saturday's uplifting good news: one topic and five stories on it (below) |
+| `good_news` | Good news | Saturday's uplifting good news: four stories, a fifth a spare only (below) |
 | `meme` | Meme | A meme, a meme carousel or a meme video; from the 30 Nov board also a meme template (below, and `references/meme-roaster.md`) |
 
 An older plan with no `kind` is read from its format by one rule (`offdayKind`); a quiz or level-up carousel is a
@@ -295,7 +295,7 @@ translator now sounds exactly as fed up as I do", and a voiceover short): "I fee
 point of the Saturday suggestions. Each suggestion should be a carousel like one carousel from my Instagram Inspo sheet,
 not just one story." And his answer the same day: every Saturday suggestion is a full carousel modelled on one named
 carousel in his Instagram inspo sheet (the same card-by-card flow, our copy, brand and images); the weekly good news
-stays the five-story carousel and also follows a sheet carousel's card flow; memes move off Saturday into their own
+stays the good-news carousel (four stories since 26 Nov) and also follows a sheet carousel's card flow; memes move off Saturday into their own
 lane.
 
 From the 30 Nov board (earlier boards keep their shape):
@@ -307,7 +307,7 @@ From the 30 Nov board (earlier boards keep their shape):
   post URL in that week's `lookalike-input.json`, one the sheet holds as a carousel), its `lookalike.pattern` has a
   `card_flow` (`references/lookalike.md`), and its `cards` and `direction.frames` follow that card_flow card for card:
   the same count, 4 to 10 cards, each card doing that card's job in our words.
-- The weekly good news follows a pattern's card_flow too (its `lookalike.pattern`): its five stories fill the middle
+- The weekly good news follows a pattern's card_flow too (its `lookalike.pattern`): its four stories fill the middle
   cards, so the flow holds a cover, a card for each story and a close, and its cards and frames follow it one for one.
 
 `board_feed.py gate` fails the run on a Saturday option that breaks this (code `saturday`,
@@ -324,8 +324,8 @@ smarter or better or happier or more successful)." and "Can mix if no1 is implem
 
 From the 23 Nov board, every rule a row in `config/good-news.json`:
 
-- Saturday offers only good-news carousels (`kind` `good_news`, or the weekly series): at least three, each five great
-  things AI is doing for people in the creative, arts, music, entertainment, media and sports industries (from the story
+- Saturday offers only good-news carousels (`kind` `good_news`, or the weekly series): at least three, each four great
+  things AI is doing (his words said five; since 26 Nov the carousel carries four (a fifth found is a spare only, never drawn; `config/carousel-format.json` `good_news`, the Library's good-news set order: cover, four items, close)) for people in the creative, arts, music, entertainment, media and sports industries (from the story
   score's board, `config/beat.json` `offdays.good_news`). Each story says who it helps and how: `"helps": {"who": "<the people>", "how":
   "smarter" | "better" | "happier" | "more successful"}`. No meme, explainer or one-story carousel on Saturday; the
   ideas board holds one that slips through, with the reason (`_goodNews.ts`).
@@ -336,10 +336,10 @@ From the 23 Nov board, every rule a row in `config/good-news.json`:
 - No medicine-led carousel while the last four Saturdays carried two medical stories; any other carousel carries at most
   one medical story. Health stories dominate search results for "AI good news", so search each focus sector on its own
   (music, film and TV, games, creators, art and design, theatre and performance, sports, media, creative tools, licensing
-  and rights: `config/beat.json` `focus_sectors`) and pick the five best there. Each focus sector is a lead theme and a
+  and rights: `config/beat.json` `focus_sectors`) and pick the four best there, a fifth as a spare only. Each focus sector is a lead theme and a
   story `kind` of its own (`config/good-news.json` `sector_topics`), so the lead and repeat rules spread the Saturdays
   across the sectors.
-- A carousel short of five stories says `stories_to_find: true`, the board's "Find the other N stories".
+- A carousel short of four stories says `stories_to_find: true`, the board's "Find the other N stories".
 
 `board_feed.py gate` fails the run on any of these (code `goodnews`, `idea_checks.goodnews_findings`). Explainer and
 supporting carousels no longer go on Saturday (his ruling of 19 Nov over the 17 Nov rule); each good-news carousel but
@@ -396,15 +396,16 @@ scripts/saturday_goodnews.py check` names; a session can run the same steps):
    "successful business stories" are their businesses now: the reader is the North Star line in `config/beat.json`
    `reader` (26 Nov), not the general business leader of 16 Nov, and a success story in those industries may be the best
    of all. A story with no line into them (a hospital, a farm, a council) is not offered, however uplifting.
-   Then choose the five great things AI did for people in those industries this week (Ruling, Krish, 2026-11-19: "5 great things AI is
+   Then choose the four great things AI did for people in those industries this week (a fifth found is a spare only;
+   since 26 Nov the carousel carries four (a fifth found is a spare only, never drawn; `config/carousel-format.json` `good_news`, the Library's good-news set order: cover, four items, close)) (Ruling, Krish, 2026-11-19: "5 great things AI is
    doing for people (ideally things that make people smarter or better or happier or more successful)"; "Can mix if
    no1 is implemented properly", which supersedes the 13 Nov one-topic rule): they may share a topic or mix, write
    what joins them on the option as `"topic": "<a few plain words>"`, and make the option's hook say it. Never choose
-   a topic first and hunt for five: that is how 16 Nov found four. Each story is
+   a topic first and hunt for four. Each story is
    published in the seven days up to `stories_due` (today), or the thirty for one found in his sheet (step 0), none
    already run (`sources.json` `recent_offdays` urls). A Reddit thread, a video or a post is where a story was found
-   (`found`), never its source. Five is the post: four or fewer is not a good-news post yet, and the board says so
-   plainly on Saturday ("1 of 5 stories found"). Tag each story with its `kind`: from the story score's board its focus
+   (`found`), never its source. Four is the post: three or fewer is not a good-news post yet, and the board says so
+   plainly on Saturday ("1 of 4 stories found"). Tag each story with its `kind`: from the story score's board its focus
    sector, one of `music`, `film_tv`, `games`, `creators`, `arts_design`, `performance`, `sports`, `media`,
    `creative_tools` or `rights` (`config/beat.json` `focus_sectors`); the older kinds, `business`, `health`, `lab`, `science`, `work`,
    `money`, `learning`, `climate`, `creative`, `people`, `safety` or `other`, stay valid; the board shows the week's mix on the option
@@ -435,14 +436,14 @@ story it finds is about two weeks old by the Saturday it posts on. So before con
 checked against its source again through the fact gate (as every off-day news claim is, above), and one the source no
 longer carries is cut and named.
 
-**Filling an approved post to five.** When he approves a good-news post that holds fewer than five stories (an
+**Filling an approved post to four.** When he approves a good-news post that holds fewer than four stories (an
 uplifting option with one story of its own, as Sat 14 Nov's "AI found a mistake in a maths proof from 1986" was), its
 topic stands and his Approve stands: the board's "Find the other N stories" press starts
 `.github/workflows/saturday-goodnews.yml` with `fill: off-<day>-<id>`. The run then:
 
 1. reads the option's own story (its hook, copy and source) as the topic and the first story, and writes it as the
    first entry of `stories` when the option has none;
-2. finds the rest, to five, on that same topic, by steps 0 to 3 above (the seven days up to today, checked against
+2. finds the rest, to four, on that same topic, by steps 0 to 3 above (the seven days up to today, checked against
    each primary source, each with its own picture);
 3. writes them onto that option only, sets `stories_due` to today, and never changes its copy, hook, pitch or
    direction: his Approve is bound to those words (`_offdaySides.ts`), and a story list is not part of them;

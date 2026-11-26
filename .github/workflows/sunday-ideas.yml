@@ -28,7 +28,7 @@ name: Sunday ideas
 # good news included; the Thursday good-news schedule is retired). His words: "It should be refreshed once a week for
 # everything (including the Saturday post which currently runs on a thursday, we need to realign that so the ideas board
 # populates once a week in full, and Saturday's actual real good news story ideas are presented to me." So this run
-# also finds Saturday's five real good-news stories ("The Saturday good news" in plan-week references/offdays.md), each
+# also finds Saturday's four real good-news stories ("The Saturday good news" in plan-week references/offdays.md), each
 # checked against its primary source, with its stories due today. The trade-off, said plainly: this run fills the board
 # for the week that starts eight days after its Sunday, so a story it finds is about two weeks old by the Saturday it
 # posts on; before content-engine makes the Saturday post (Growth posts it), the fact gate checks every story against its source again.
@@ -233,7 +233,8 @@ jobs:
 
             The whole ideas board, once (Ruling, Krish, 2026-11-11: the ideas board fills once a week in full,
             Saturday's good news included): also find Saturday's good news now, following "The Saturday good news" in
-            .agents/skills/plan-week/references/offdays.md exactly: five real AI stories from the seven days up to
+            .agents/skills/plan-week/references/offdays.md exactly: four real AI stories (a fifth found is a spare
+            only; config/carousel-format.json good_news) from the seven days up to
             today, each checked against its primary source, each with its own real photo or clip, written onto that
             week's weekly good-news option with its stories_due set to today's date. His Instagram inspo sheet is a
             source for it as well as the web (Krish, 2026-11-16: "Good news stories can come from the Instagram inspo as
@@ -284,14 +285,16 @@ jobs:
 
             Saturday is only good-news carousels (Ruling, Krish, 2026-11-19: "Sat should just be good news carousels -
             5 great things AI is doing for people (ideally things that make people smarter or better or happier or more
-            successful)."): at least three, each five great things AI is doing for people in those industries, each story saying who it
+            successful)."): at least three, each four great things AI is doing for people in those industries (the
+            3-second carousel format carries four items, config/carousel-format.json good_news, in the Library's
+            good-news set order: cover, four items, close; a fifth found is a spare only), each story saying who it
             helps and how (helps: {"who", "how"}, how one of smarter, better, happier, more successful). A carousel may
             mix topics ("Can mix if no1 is implemented properly"). No two options led by one theme or carrying one
             story, no lead a Saturday carried in the four weeks before, no medicine-led carousel while the last four
             Saturdays already carried two medical stories, and at most one medical story in any other carousel. Health
             stories dominate search results for "AI good news", so search each focus sector on its own (music, film and
             TV, games, creators, art and design, theatre and performance, sports, media, creative tools, licensing and
-            rights) and pick the five best there; tag each story with its sector as its kind. No meme, explainer or
+            rights) and pick the four best there, a fifth as a spare only; tag each story with its sector as its kind. No meme, explainer or
             one-story carousel on Saturday.
             board_feed.py gate refuses the rest (goodnews).
 
