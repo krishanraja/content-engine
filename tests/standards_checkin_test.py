@@ -29,6 +29,32 @@ class Builder(unittest.TestCase):
         merged = dict(groups, groups=groups['groups'] + new)
         self.assertEqual(standards_checkin.floor_group.check(floor, merged), [])
 
+    def test_a_proposed_group_never_carries_a_long_dash(self):
+        # 26 Nov: a new group's check, copied from its first standard, carried an em dash, floor_group.check refused
+        # it ("its check has a long dash"), and the floor pull request stayed red.
+        em, en = '—', '–'
+        floor = {'standards': {
+            's0000000001': {'theme': 'cover', 'never_beneath': 'A cover stops the scroll.', 'check_before_delivery': 'Look.'},
+            's0000000002': {'theme': 'cover', 'never_beneath': 'A cover names who.', 'check_before_delivery': 'Look.'},
+            's0000000003': {'theme': 'cover', 'never_beneath': 'A cover looks like one.', 'check_before_delivery': 'Look.'},
+            's0000000004': {'theme': 'edit_av', 'never_beneath': f'Cuts land on the beat {em} never off it.',
+                            'check_before_delivery': f'Watch it twice {em} sound on, then 3{en}5 seconds muted.'}}}
+        groups = {'groups': [{'key': 'covers', 'title': 'Covers', 'never_beneath': 'Covers stop the scroll.',
+                              'check': 'Look.', 'members': ['s0000000001', 's0000000002']}],
+                  'operating': {'title': 'Ops', 'members': []}}
+        db = {'covers': {'status': 'approved', 'amendment': f'Covers stop the scroll {em} every time.'}}
+        new, _ = standards_checkin.propose(floor, groups, db, '2026-11-26')
+        by_key = {g['key']: g for g in new}
+        self.assertEqual(by_key['new_edit_av_261126']['check'], 'Watch it twice, sound on, then 3 to 5 seconds muted.')
+        self.assertEqual(by_key['new_edit_av_261126']['never_beneath'], 'Cuts land on the beat, never off it.')
+        self.assertEqual(by_key['covers_e261126']['never_beneath'], 'Covers stop the scroll, every time.')
+        for g in new:
+            for field in ('title', 'never_beneath', 'check'):
+                self.assertNotIn(em, g[field])
+                self.assertNotIn(en, g[field])
+        merged = dict(groups, groups=groups['groups'] + new)
+        self.assertEqual(standards_checkin.floor_group.check(floor, merged), [])
+
 
 if __name__ == '__main__':
     unittest.main()
