@@ -1,0 +1,32 @@
+{
+  "_about": "The story floor's rows (scripts/post-pack/story_floor.py; the story engine v5 plan, commit 3). The floor is the only reader of Krish's recorded rejections and returns pass or refused with the reasons, never a number, and never reorders (Ruling, Krish, 2026-11-26: taste is a floor only). It reads: his refusals and the vetoes that stand (idea_checks.refusals_from, refused_findings, active_vetoes), the beat's avoid list (idea_checks.off_beat), the kill list and config/rejected-lines.json on the words we would put in front of a reader, the rejection-floor standards listed in standards below (through scripts/floor.py), the formats and bank rows he marked not for us (config/style-references.json), and the free divergent repeat guard (score with obvious given and no judge: zero model calls). A check that cannot run is listed as unread: never a pass. story_score.py never imports this file or its module.",
+  "refuse_codes": ["refused"],
+  "note_codes": ["warned", "warned_first", "his_tick"],
+  "note_codes_why": "A soft refusal warns and never refuses until he approves P6 (idea_checks.P6_APPROVED); his own tick outranks an older refusal (Ruling, Krish, 2026-11-12). Neither is a floor.",
+  "own_words_fields": ["hook", "title", "copy", "story", "pitch.headline", "pitch.hook", "cards[].words"],
+  "own_words_why": "The kill list and the rejected lines read only the words we would put in front of a reader (idea_checks.option_words); a source's own headline in the gather pool is not ours and is not checked.",
+  "standards": {
+    "_about": "Rejection-floor standards that can be read on an idea before it is made, each by a pattern. Only the story_angle and predictions_framing themes are read here; a standard must exist in config/rejection-floor.json and be approved or reworded, or the row is listed unread. The other standards in those themes govern how a finished piece is written (close, confidence, caveats) and are held at production, not here.",
+    "themes": ["story_angle", "predictions_framing"],
+    "standings": ["approved", "reworded"],
+    "rows": [
+      {
+        "standard": "s81a2b228d6",
+        "on": "topic",
+        "pattern": "\\b(?:doom\\w*|apocalyp\\w*|(?:the )?end of (?:music|art|film|cinema|creativity|artists|actors|writers|musicians|hollywood|sport|sports|games|gaming)|(?:kill|kills|killing|killed|destroy|destroys|destroying) (?:music|art|film|cinema|creativity|hollywood|artists|actors|writers|musicians|sport|sports|games|gaming))\\b",
+        "reason": "frames a new AI tool with doomsaying"
+      }
+    ]
+  },
+  "formats": {
+    "from": "config/style-references.json",
+    "kinds": ["script", "production"],
+    "not_for_us": "not for us"
+  },
+  "repeat_guard": {
+    "problem": "Story ideas for makeyourmindup, a publication on AI in the creative, arts, music, entertainment, media and sports industries, for the week of {week}",
+    "refuse_statuses": ["rejected_archive", "rejected_gravity"],
+    "own_spark_status": "rejected_archive",
+    "own_spark_why": "an engine wildcard's own spark is in the archive by design (divergent.score)"
+  }
+}

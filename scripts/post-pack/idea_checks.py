@@ -1753,7 +1753,9 @@ def kill_list_vetoes(text):
     from pathlib import Path as _P
     script = _P(__file__).resolve().parents[2] / 'vendor' / 'makeyourmindup' / 'kill-list' / 'kill-list.mjs'
     try:
-        run = subprocess.run(['node', str(script), '--stdin'], input=str(text), capture_output=True, text=True, timeout=60)
+        # encoding: node reads and writes UTF-8; without it Windows pipes the locale's code page and an em dash passes.
+        run = subprocess.run(['node', str(script), '--stdin'], input=str(text), capture_output=True, text=True, encoding='utf-8',
+                             errors='replace', timeout=60)
     except (OSError, subprocess.SubprocessError) as error:
         return [f'the kill list could not run ({error})']
     if run.returncode == 0:
