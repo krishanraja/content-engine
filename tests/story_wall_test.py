@@ -141,6 +141,28 @@ class BlindView(unittest.TestCase):
         self.assertNotIn('planted', json.dumps(view))
         self.assertIn('why_here', o, 'the option itself is untouched')
 
+    # What told the blind judges an option was his on the real boards (inside kept fields, the source label included).
+    PROVENANCE = re.compile(r'you saved|your saved|the [^,.;:]{1,40} you asked for|\bas you asked\b|answers your ask|rebuilt on your|'
+                            r'your improve|rebuilt in our look from', re.I)
+
+    def test_no_provenance_wording_on_the_real_boards(self):
+        for week in ('2026-11-16', '2026-11-23'):
+            ideas = json.loads((ROOT / 'docs' / 'plans' / f'{week}-week' / 'ideas.json').read_text(encoding='utf-8'))
+            raw = json.dumps(ideas, ensure_ascii=False)
+            self.assertRegex(raw, self.PROVENANCE, f'{week}: the board carries the wording, so the check bites')
+            for key, _day, main, o in ss.board(ideas):
+                view = ss.blind_view(o)
+                for text in (json.dumps(view, ensure_ascii=False), ss.render_view(view, main)):
+                    m = self.PROVENANCE.search(text)
+                    self.assertIsNone(m, f'{week} {key}: {text[max(0, m.start() - 60):m.end() + 20] if m else ""}')
+
+    def test_strip_text_leaves_a_clean_string_alone(self):
+        s = 'Spotify pays songwriters $40m, and you get the bill.'
+        self.assertIs(ss.strip_text(s), s)
+        self.assertEqual(ss.strip_text('A carousel, rebuilt in our look from the reel you saved, with dated facts.'),
+                         'A carousel, with dated facts.')
+        self.assertEqual(ss.strip_text('Rebuilt on your Improve: the vote changed three rules.'), 'The vote changed three rules.')
+
     def test_the_scorer_reads_one_bit_of_the_floor(self):
         ideas = {'days': {'mon': [{'id': 'aa'}, {'id': 'bb'}], 'wed': [], 'fri': []}, 'offdays': {}}
         doc = {'candidates': [{'ref': 'mon-1', 'floored': True, 'reasons': ['he said it was boring']},

@@ -12,7 +12,25 @@
   "blind_view": {
     "_about": "What the scorer and every blind judge may see of an option (story_score.blind_view): only the keep fields, and inside them never a drop_nested key. Where it came from, who asked for it, what anyone said of it and whether it was recommended are never seen; his-first on equal totals is the only place the order reads where an option came from.",
     "keep": ["id", "title", "hook", "copy", "story", "so_what", "fact", "why_now", "pitch", "beats", "source", "sources", "stories", "format", "kind", "aim", "shape", "dive", "funny", "template", "direction", "cards", "topic", "topic_kind", "steps", "weekly", "whys"],
-    "drop_nested": ["from", "from_press", "from_inspiration", "learned_from", "read_back", "recommended", "source_kind", "source_tag", "his_via", "covers", "warning", "refused_before", "returns", "divergent", "story_score", "score", "near", "liked", "taste", "cues", "why_here", "said"]
+    "drop_nested": ["from", "from_press", "from_inspiration", "learned_from", "read_back", "recommended", "source_kind", "source_tag", "his_via", "covers", "warning", "refused_before", "returns", "divergent", "story_score", "score", "near", "liked", "taste", "cues", "why_here", "said"],
+    "strip_text": {
+      "_about": "Provenance wording inside the kept fields: words that say an option came from him (what he saved, asked for or improved). Applied to every string the blind view keeps, the source label included (story_score.strip_text); story_proof.strip_house runs the same rules first, then its card-only ones. patterns are taken out where they stand, in order; then a sentence still matching drop_sentences_matching is dropped. A string no rule touches comes back as it was.",
+      "patterns": [
+        ",?\\s*(?:rebuilt|remade|made|built) in our look from [^,:;.]{1,80}? you saved",
+        ",?\\s*explained as simply as [^,:;.]{1,80}? you saved",
+        "^(?:rebuilt|revised|made again) on your [^:]{1,40}:\\s*",
+        "\\s*[;,]\\s*[^;,.]{0,60}? you asked for(?=[.;,]|$)",
+        ",?\\s*as you asked(?=[.;,]|$)",
+        "(?:,\\s*)?(?:in )?the [^,:;.]{1,60}? you saved[:,]?\\s*",
+        "\\s*\\((?:his|your) [^)]{1,60}\\)"
+      ],
+      "drop_sentences_matching": [
+        "\\byou saved\\b",
+        "\\byour (?:saved|ask|note|press|pick|idea|improve|inspo|inspiration|sheet)\\b",
+        "\\bthe [^,.;:]{1,40} you asked for\\b",
+        "\\bhe (?:asked|said|picked|wants|saved)\\b"
+      ]
+    }
   },
   "abstain": {"min_read_weight": 6, "note": "Of 10: an option whose read axes carry less weight than this is unscored (total null), never ranked on what little was read."},
   "named_thing": {"twist_words": ["but", "yet", "instead", "while", "despite", "although", "even though", "turns out", "only to", "for free", "no one", "nobody"]},
