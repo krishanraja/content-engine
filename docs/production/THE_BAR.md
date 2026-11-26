@@ -53,7 +53,7 @@ His words lead (Krish, 28 Oct): "minimal random components and labels", "good mo
 
 The list he confirmed on 29 October (ruling 12) names the aims the same way: "Fri 23 + Mon 26 cuts, brand book, minimal random components, good motion, animation and visuals, simple, classy, on brand".
 
-The brand book is the reference for the look: `krishanraja/makeyourmindup`, `docs/brandbooknew/` (version 1.5), carried into this repository by `docs/STUDIO.md` and `config/ve/brand-tokens.json`, which own the palette, the type and the brand rules. Where this page names a colour, the brand book's value counts.
+The brand book is the reference for the look. Since Krish locked v5 on 25 November ("s3h is great, lock v5") that is the v5 brand kit: `krishanraja/makeyourmindup`, `brand-kit/` (`makeyourmindup-brand-kit.zip`, built by `scripts/brand-kit-v5/build.py`), with its marks in this repository at `assets/brand/makeyourmindup/v5`. It is carried into this repository by `docs/STUDIO.md` and `config/ve/brand-tokens.json`, which own the palette, the type and the brand rules. Where this page names a colour, the brand kit's value counts. The older brand book (`docs/brandbooknew/`, version 1.5) is retired and its files are gone.
 
 The cuts he named on 28 October are three finished files: Friday 23 October's tall voiceover cut (AI Passports) and Monday 26 October's wide and tall split-screen cuts (Character.AI). His 28 October words call them the floor; on 29 October he set the frame, and they sit here as what great looks like, to reach and to compare against. On 4 November he added Monday 2 November's wide and tall cuts as the Critic's first comparison ("Which files these are", below). The engine's reading of the first three at their best:
 

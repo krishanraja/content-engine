@@ -6,7 +6,9 @@
    page is used centrally, no empty band over 12%, nothing outside the safe box. `carousel_check.py --cards`.
 7. An original visual idea per story, real-world texture over a headline on a square. Real logos only for companies
    the card names, monochrome or on a light tile when dark. Real people in a generated picture recognisable, from
-   their real photos as references; a generated robot is only the house felt robot (`cover_scene.py check`).
+   their real photos as references. No generated robot: the picture is a real photo or a v5 still, never the felt
+   robot (retired with v5, 25 Nov 2026) and never a generic robot (`docs/ve/cards/library/FLOOR.md`;
+   `cover_scene.py check` refuses both).
 8. Body type at least 35 px of ink on the 1080 card. `carousel_check.py --cards`.
 
 **Cover: grabs the thumb** (15 Nov: "the front cover card does not look like a front cover")

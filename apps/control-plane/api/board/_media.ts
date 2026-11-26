@@ -99,7 +99,9 @@ export function findMedia(pieces: Body[], id: string): MediaFile | null {
 const LIBRARY = 'makeyourmindup'
 const BUCKET = 'content-library'
 const TTL = 600
-const TOP = /^(1 Brand kit|2 Channel art|3 Posts)\b/
+// The library's live top folders (LIBRARY_TOP_FOLDERS in ../library/_library.ts). "2 Channel art (permanent)" is retired
+// since 26 Nov 2026 and refused: channel art lives in "1 Brand kit (permanent)/Channel art".
+const TOP = /^(1 Brand kit|3 Posts)\b/
 
 /** Where a recorded path is in the library: as it is, and, for a path written relative to the post's own folder
  *  ("3 Video/fri13-5min-v3.mp4"), inside that folder ("3 Posts/<pack folder>/3 Video/..."). */

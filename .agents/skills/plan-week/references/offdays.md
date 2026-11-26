@@ -153,9 +153,10 @@ it is about (its title, hook, copy, pitch, topic, funny line, cards, and a templ
 it is office AI, refuses a good-news story outside the focus sectors, and holds the weekly good news to the avoid list
 (code `off_beat`, `idea_checks.offday_beat_findings`); the story score holds the same fit floor on every off-day type.
 
-A carousel's first `picture` (its cover) names a scene that is the story's object, place or moment, or the house robot
-doing something (`config/brand-robot.json`), never a made-up robot (Ruling, Krish, 2026-11-05: "either use the branded
-toy robot or are more creative than just a robot doing something"; `docs/CAROUSEL-STANDARD.md`).
+A carousel's first `picture` (its cover) names a scene that is the story's object, place or moment, never a robot:
+the felt robot is retired with the v5 look (25 Nov 2026) and a made-up robot was never allowed (Ruling, Krish,
+2026-11-05: "more creative than just a robot doing something"; `docs/CAROUSEL-STANDARD.md`,
+`docs/ve/cards/library/FLOOR.md`).
 
 **Read back before the tab, from the 9 Nov week** (Krish, 2026-11-02, of the 9 Nov off days: a Tuesday option
 "already being used this week", a meme "just a copy of a post from my inspo board but way worse", and of a Thursday

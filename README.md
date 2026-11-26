@@ -35,7 +35,7 @@ them by hand. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 | understand how the pieces fit, or who owns what | `docs/SYSTEM_MAP.md` |
 | design how a piece looks, sounds or moves, on any surface | `docs/production/THE_BAR.md`, the brand tokens (`config/ve/brand-tokens.json`), the signed motion standard (`docs/ve/MOTION_STANDARD.md`) and the style bank (the `motion` layer of `config/style-references.json`); each piece renders from the direction Krish signs (`docs/CREATIVE_DIRECTION.md`). `docs/CREATIVE_IDENTITY_UPGRADE.md` is the plan of 25 September and his decisions on it |
 | make a piece's web page, the copy that pastes into Substack and its cover image, or check that its artwork can be read on a phone | `scripts/pages/README.md` |
-| make the YouTube banner, watermark and channel description, the profile pictures, the Facebook cover, the X header or the Instagram highlight covers | `scripts/channel-kit/README.md` |
+| find the YouTube banner, the profile pictures, the Facebook cover, the X header, the Substack art or each profile's bio and description | Drive, `1 Brand kit (permanent) > Channel art` (built by krishanraja/makeyourmindup `scripts/brand-kit-v5/build.py`; `scripts/channel-kit/` is retired and refuses to run) |
 | see what each social profile carries (YouTube, Instagram, Facebook, Krish's TikTok and X) and what is left on them | `docs/AMPLIFICATION.md`, "The profiles every link lands on" |
 | put a post's assets, the brand kit or the channel art into Krish's asset library on Drive | `scripts/post-pack/README.md` |
 | use or change any name (a subchannel, a series, a state) | `docs/GLOSSARY.md` |

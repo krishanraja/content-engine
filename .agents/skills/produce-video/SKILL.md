@@ -104,7 +104,7 @@ review. Before telling Krish a video is ready, download both finished files and
 look at a frame every second of the whole cut, plus every quarter second of the
 intro and the outro, as one contact sheet per shape. Check: every word inside
 the frame at every moment of every animation, the brand faces only (Anton,
-Archivo, IBM Plex Mono), logos people recognise, badges and labels drawn the
+Archivo, Fraunces, DM Mono), logos people recognise, badges and labels drawn the
 same way, nothing half-built in the 9:16 layout, no kicker that uses another
 series' ground. If anything fails, say so and fix the engine, not just the file.
 

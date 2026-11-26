@@ -208,7 +208,8 @@ class FrozenTest(unittest.TestCase):
             self.assertEqual(ve.cmd_keyframes(args), 1)
 
     def test_lint_beat_order(self):
-        spec = json.loads((ROOT / 'fixtures/ve/my-test-19s/spec.json').read_text(encoding='utf-8'))
+        # The v5 fixture: the older one's format (scoreboard-test) is retired by the v5 ruling and lints as retired.
+        spec = json.loads((ROOT / 'fixtures/ve/my-test-19s/spec-v5.json').read_text(encoding='utf-8'))
         # Use the real fixture's valid format config, with only a synthetic lock.
         names = [b['id'] for b in next(iter(spec['cuts'].values()))['beats']]
         lock = {'formats': {spec['format']: {'beats': names}}}
