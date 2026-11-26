@@ -14,6 +14,15 @@
       ]
     },
     {
+      "source": "/api/hub/today",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=60, s-maxage=300, stale-while-revalidate=3600"
+        }
+      ]
+    },
+    {
       "source": "/api/publish/catalogue",
       "headers": [
         {
@@ -24,6 +33,14 @@
     }
   ],
   "crons": [
+    {
+      "path": "/api/hub/edition",
+      "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/hub/prices",
+      "schedule": "0 15 * * *"
+    },
     {
       "path": "/api/triage/sweep",
       "schedule": "0 3 * * *"
@@ -118,6 +135,12 @@
     }
   ],
   "functions": {
+    "api/hub/edition.ts": {
+      "maxDuration": 600
+    },
+    "api/hub/prices.ts": {
+      "maxDuration": 120
+    },
     "api/content-opportunities/refresh.ts": {
       "maxDuration": 300
     },
