@@ -257,5 +257,6 @@
       "Small linking words are set at six-tenths of the size",
       "Only a real hero word turns the box mint"
     ]
-  }
+  },
+  "house-v5": {"name": "House v5", "line": "Fraunces phrases over an ink burn, with the spoken word in mint.", "rules": ["Two to five words per page", "Sentence case, Fraunces 500"]}
 }

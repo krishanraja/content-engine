@@ -143,7 +143,7 @@ describe('the production plan on the card (contract 1.25.0; Krish, 2026-11-17: "
 
   it('the covers go through cover-art by channel, and the house logo only on the title frame and the close card (17 Nov)', () => {
     const prompt = String((card(withPlan()).next as Body).prompt)
-    for (const s of ['.agents/skills/cover-art/SKILL.md', 'docs/ve/cards/w-face-covers', 'the house logo appears only on the animated title frame and the close card',
+    for (const s of ['.agents/skills/cover-art/SKILL.md', 'scripts/covers/make_covers.py', 'the house logo appears only on the animated title frame and the close card',
       'logo_rule']) expect(prompt).toContain(s)
   })
 

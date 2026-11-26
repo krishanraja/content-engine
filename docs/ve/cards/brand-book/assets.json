@@ -1,0 +1,73 @@
+{
+  "assets": {
+    "library podcast-show-art": "../../../../.scratch/library/out/items/podcast-show-art.png",
+    "board full-look": "../../../../.scratch/identity-round2/out/full-look.png",
+    "library profile-ig-avatar": "../../../../.scratch/library/out/items/profile-ig-avatar.png",
+    "library profile-favicon-32": "../../../../.scratch/library/out/items/profile-favicon-32.png",
+    "library social-feed": "../../../../.scratch/library/out/items/social-feed.png",
+    "library newsletter-substack-email-header": "../../../../.scratch/library/out/items/newsletter-substack-email-header.png",
+    "library video-vertical-close": "../../../../.scratch/library/out/items/video-vertical-close.png",
+    "still evo-cover": "../../../../.scratch/why-ladder/assets/evo-cover.png",
+    "still evo-topdown": "../../../../.scratch/why-ladder/assets/evo-topdown.png",
+    "still evo-specimens": "../../../../.scratch/why-ladder/assets/evo-specimens.png",
+    "still still-timer": "../../../../.scratch/why-ladder/assets/still-timer.png",
+    "library video-vertical-title": "../../../../.scratch/library/out/items/video-vertical-title.png",
+    "library video-vertical-why-1": "../../../../.scratch/library/out/items/video-vertical-why-1.png",
+    "library video-vertical-document": "../../../../.scratch/library/out/items/video-vertical-document.png",
+    "library video-vertical-challenger": "../../../../.scratch/library/out/items/video-vertical-challenger.png",
+    "library video-vertical-recap": "../../../../.scratch/library/out/items/video-vertical-recap.png",
+    "library video-vertical-landing": "../../../../.scratch/library/out/items/video-vertical-landing.png",
+    "library carousel-why-1": "../../../../.scratch/library/out/items/carousel-why-1.png",
+    "library social-ig-reels-cover": "../../../../.scratch/library/out/items/social-ig-reels-cover.png",
+    "library social-youtube-thumb": "../../../../.scratch/library/out/items/social-youtube-thumb.png",
+    "library profile-youtube-banner": "../../../../.scratch/library/out/items/profile-youtube-banner.png",
+    "library podcast-episode-art": "../../../../.scratch/library/out/items/podcast-episode-art.png",
+    "library podcast-audiogram": "../../../../.scratch/library/out/items/podcast-audiogram.png",
+    "library newsletter-weekly-edition": "../../../../.scratch/library/out/items/newsletter-weekly-edition.png",
+    "library web-desktop": "../../../../.scratch/library/out/items/web-desktop.png",
+    "library web-mobile": "../../../../.scratch/library/out/items/web-mobile.png",
+    "library web-article": "../../../../.scratch/library/out/items/web-article.png"
+  },
+  "sheets": {
+    "video-vertical": {
+      "file": "../../../../.scratch/library/out/sheets/video-vertical.png",
+      "count": 18
+    },
+    "video-wide": {
+      "file": "../../../../.scratch/library/out/sheets/video-wide.png",
+      "count": 18
+    },
+    "carousel": {
+      "file": "../../../../.scratch/library/out/sheets/carousel.png",
+      "count": 13
+    },
+    "social": {
+      "file": "../../../../.scratch/library/out/sheets/social.png",
+      "count": 17
+    },
+    "profile": {
+      "file": "../../../../.scratch/library/out/sheets/profile.png",
+      "count": 27
+    },
+    "podcast": {
+      "file": "../../../../.scratch/library/out/sheets/podcast.png",
+      "count": 3
+    },
+    "newsletter": {
+      "file": "../../../../.scratch/library/out/sheets/newsletter.png",
+      "count": 8
+    },
+    "web": {
+      "file": "../../../../.scratch/library/out/sheets/web.png",
+      "count": 4
+    },
+    "email": {
+      "file": "../../../../.scratch/library/out/sheets/email.png",
+      "count": 1
+    },
+    "future": {
+      "file": "../../../../.scratch/library/out/sheets/future.png",
+      "count": 12
+    }
+  }
+}

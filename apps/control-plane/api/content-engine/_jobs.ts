@@ -52,6 +52,8 @@ export const JOBS: Readonly<Record<string, JobEntry>> = Object.freeze({
   publish_watch: { path: '/api/publish/watch', safety: 'replayable', note: 'Keyless read of the public Substack archive; marks a piece published only once and closes board items only once, so a replay changes nothing it already changed.' },
   recordings_drive_inbox: { path: '/api/library/recordings/drive-inbox', safety: 'replayable', note: 'Keyed by sha256: a recording already in the store is skipped, so a replay copies only what the next tick would.' },
   research_library_mirror: { path: '/api/research-library/sweep', safety: 'replayable', note: 'Keyed by the material: a copy already in the research library, or a row already in its index, is never made again, so a replay copies only what the next tick would. It only adds to Drive; in the index it removes only a later row of a material already listed.' },
+  hub_edition: { path: '/api/hub/edition', safety: 'replayable', note: 'Leases the day with hub_claim_run and skips a day already published, so a replay writes only an edition the schedule failed to write. Its model calls spend only on that one missing edition.' },
+  hub_prices: { path: '/api/hub/prices', safety: 'replayable', note: 'Keyless Yahoo closes; it rewrites only the ticker of the latest edition, so a replay changes nothing the next tick would not.' },
 })
 
 export const JOB_NAMES: readonly string[] = Object.freeze(Object.keys(JOBS).sort())

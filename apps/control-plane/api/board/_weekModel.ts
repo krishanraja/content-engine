@@ -17,6 +17,8 @@ import { canonicalUrl, titleNorm } from '../_text.js'
 import { offdayPieceId, videoOffday } from './_offdayPiece.js'
 import { productionBrief, takesInOf, takesLine, takesPress, type TakesIn } from './_takesIn.js'
 import { planBrief, planRunOf, planView, swapsOf, type ProductionPlan } from './_productionPlan.js'
+import { EDITION_ITEM_KIND, EDITION_ITEM_LABEL, EDITION_PATH, editionApprovedLabel, type ViewEdition } from './_edition.js'
+import { LIVE_BOARD_URL } from './_liveBoard.js'
 
 // The week model (contract 1.12.0): the one thing the Publish Board draws.
 //
@@ -1378,6 +1380,8 @@ export function weekModel(days: DayView[], m: ModelInputs): WeekModel {
     }
     // The scripts on every card that holds them (scriptsOnCard; Krish, 2026-11-17).
     for (let n = 0; n < items.length; n++) items[n] = scriptsOnCard(m, d, items[n])
+    // The week's edition on Saturday, with his one press, Approve for send (contract 1.35.0, _edition.ts).
+    if (d.edition) items.push(editionItem(d, d.edition))
     // The day after its own, an item not out is Late on its own next step, and says so first (_stage.ts, lateOn).
     if (lateOn(d.date, m.today)) for (const it of items) if (!it.missed && !it.passed && it.stage.key !== 'live' && it.stage.key !== 'scheduled' && !/^Late:/.test(it.line)) it.line = `${lateLine(d.label, m.today)} ${it.line}`
     const day: ModelDay = { day: d.day, date: d.date, label: d.label, series: SERIES_DAYS.includes(d.day) ? d.series : null, items,
@@ -1420,7 +1424,7 @@ export function weekModel(days: DayView[], m: ModelInputs): WeekModel {
   }
   return {
     version: 1,
-    kinds: [...OFFDAY_KINDS.map(k => ({ key: k.key, label: k.label })), { key: PIECE_KIND.key, label: PIECE_KIND.label }],
+    kinds: [...OFFDAY_KINDS.map(k => ({ key: k.key, label: k.label })), { key: PIECE_KIND.key, label: PIECE_KIND.label }, { key: EDITION_ITEM_KIND, label: EDITION_ITEM_LABEL }],
     piece_path: PIECE_PATH.map(s => ({ key: s.key, label: s.label })),
     post_path: POST_PATH.map(s => ({ key: s.key, label: s.label })),
     days: out,
@@ -1447,6 +1451,36 @@ function ideaOf(m: ModelInputs, d: DayView, o: ViewOption, w: { why: ModelIdea['
   }
 }
 
+/** The week's edition on Saturday (contract 1.35.0, _edition.ts): drafted by the Friday run, its one next action his
+ *  Approve for send bound to the draft's sha256 while it waits on him, then Growth's Substack step's. Its preview and
+ *  its draft open from the card (links, through Control Centre's own address, which carries his login), and its read
+ *  sheet holds the contents and every news item's primary source. */
+function editionItem(d: DayView, e: ViewEdition): ModelItem {
+  const approved = e.state === 'approved'
+  // Drafted is done once it is on the board; Approved for send once his press binds this draft.
+  const done = approved ? 2 : 1
+  const stage = EDITION_PATH[done - 1]
+  const path: ModelStep[] = EDITION_PATH.map((s, k) => ({ key: s.key, label: s.label, state: k < done ? 'done' : k === done ? 'current' : 'todo',
+    when: k === 1 && approved && e.approved_at ? e.approved_at.slice(0, 10) : null }))
+  const counts = `${e.pieces.length} ${e.pieces.length === 1 ? 'piece' : 'pieces'} and ${e.news.items} news ${e.news.items === 1 ? 'item' : 'items'}, each checked against its primary source`
+  const line = approved
+    ? `Approved for send. Growth's Substack step schedules it for 08:00 New York on ${d.label} and reads it back; nothing else is sent.`
+    : e.state === 'changed' ? (e.why || 'The edition changed after you approved it: approve again.')
+      : `Drafted: ${counts}. Read the preview, then Approve for send; nothing is sent until you do.`
+  const origin = new URL(LIVE_BOARD_URL).origin
+  const links = [...(e.files.preview ? [{ label: 'Read the preview', href: `${origin}${e.files.preview}` }] : []),
+    { label: 'The draft, its exact words', href: `${origin}${e.files.draft}` }]
+  return {
+    key: `edition:${e.edition_date}`, type: 'post', day: d.day, date: d.date, kind: EDITION_ITEM_KIND, kind_label: EDITION_ITEM_LABEL, title: e.subject,
+    approved: editionApprovedLabel(e), stage: { key: stage.key, label: stage.label },
+    path, missed: false, line, next: e.press as unknown as ModelAction | null, decision: Boolean(e.press),
+    others: e.files.preview ? [{ kind: 'open', label: 'Read the preview', href: e.files.preview } as unknown as PressAction] : [],
+    read: { so_what: e.preview_text, story: e.subject, why_now: null, fact: null, text: e.contents.join(' ') || null,
+      sources: e.sources.map(x => ({ label: x.label, href: x.href })), research: [], said: null },
+    piece_id: null, item: null, supports: null, move: null, links, stories: null, stories_planned: null,
+  }
+}
+
 /** Every rule the model keeps, for the tests and the guard: nothing on a day he did not approve, one action an item,
  *  a kind from the list, a path from the list, and good news with its five stories or saying how many it has. */
 export function modelProblems(model: WeekModel, days: DayView[]): string[] {
@@ -1456,6 +1490,13 @@ export function modelProblems(model: WeekModel, days: DayView[]): string[] {
     const d = days.find(x => x.day === md.day)
     for (const it of md.items) {
       if (!kinds.has(it.kind)) out.push(`${md.day} ${it.key}: kind ${it.kind} is not on the list`)
+      if (it.kind === EDITION_ITEM_KIND) {
+        // The week's edition: drafted by the Friday run, on Saturday only, its one press his Approve for send.
+        if (!d?.edition || it.key !== `edition:${d.edition.edition_date}`) out.push(`${md.day} ${it.key}: an edition item with no edition on the day`)
+        if (it.path.length !== EDITION_PATH.length) out.push(`${md.day} ${it.key}: not on the edition path`)
+        if (it.next && !(it.next.kind === 'press' && it.next.id === d?.edition?.press?.id)) out.push(`${md.day} ${it.key}: an edition whose next is not his Approve for send`)
+        continue
+      }
       if (it.type === 'post') {
         const o = d?.options.find(x => x.doc_id === it.key)
         if (!o || o.status !== 'approved' || o.outcome?.id !== 'approved') out.push(`${md.day} ${it.key}: on the day without his approval`)

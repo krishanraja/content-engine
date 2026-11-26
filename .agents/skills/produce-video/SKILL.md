@@ -722,22 +722,7 @@ make a feature for any other piece). What changes for it:
 
 ## 5. A thumbnail for every size
 
-Krish, 2026-10-12: "I always want a video thumbnail for all video sizes
-produced as an asset every time" (house rule THUMBNAIL_EVERY_SIZE): wide
-1280 x 720 for the long cut, tall 1080 x 1920 for the short cut, as the
-Receipt (house rule THE_RECEIPT, Krish, 2026-11-02: "inviolable"), never his
-face or a frame from a take. Read `.agents/skills/thumbnail-designer/SKILL.md`
-and follow it whole: two or three options from a brief (the cover standard,
-point 8), each checked, judged by a separate critic, put on his final review
-in a mock of his grid (never a question mid-production), and filed only once
-he picks there: his Pick on the board (view contract 1.16.0) or his words in
-a session, either recorded on the piece. The cuts never wait for it. Its
-`references/drawing.md` holds the drawing rules this step held (the browser,
-the real logos as SVG, a plan with no `logos/` folder). Until his pick is on
-the record no thumbnail is filed, posted or recorded: leave `--tall-thumb`,
-`--wide-thumb` and `--thumb` out of steps 7 to 9 and the step reads
-"thumbnail still to make". With it, `WORK/thumbs/` in steps 6 to 9 means
-`WORK/thumbs/options/<his pick>/`.
+Make both thumbnails with `python scripts/covers/make_covers.py PIECE --out WORK/thumbs`. Read `.agents/skills/thumbnail-designer/SKILL.md` for the review. Check the wide at 160 px and the tall in its grid crop. Carry the images and their receipt to final review. Record his pick and file each accepted thumbnail beside its cut. Until then, leave the thumbnail fields empty.
 
 ## 6. Check it from the report
 
@@ -830,10 +815,7 @@ page and into the pack. Send the archive folder only when all of these hold:
    Windows), so the JSON needs no escaping. A video's `logos` are the
    companies whose real logos are on screen in
    that cut: the logos of the pictures its cues show (`kit.json` and the
-   plan list the cues), never one more. A thumbnail's are the companies the
-   drawer drew: copy `thumbs.json`'s `companies`, one name per company (its
-   `logos` lists the drawn rows, such as "Warner Music Group and BMG", and
-   the gate reads those as both companies too). Then
+   plan list the cues), never one more. For each thumbnail, copy the logos listed on its own file entry in `covers.json`. Then run
    `python scripts/post-pack/visual_gate.py WORK/gate/post.json`. It must
    print **no line about a video or a thumbnail** ("declares no logo",
    "thumbs.json", "portrait", "the drawer drew no row or strip"). On this
@@ -878,10 +860,9 @@ the report and to Krish.
 
 With no thumbnail drawn for that cut, leave out `--thumb` and
 `--thumb-file`: the step then reads "thumbnail still to make", which is the
-truth. `--thumb` is refused without `--thumb-file`, the file `build.py
---thumbs` drew on this machine (`WORK/thumbs/...`, never a copy): it must be
+truth. `--thumb` is refused without `--thumb-file`, the file `scripts/covers/make_covers.py` drew on this machine (`WORK/thumbs/...`, never a copy): it must be
 that cut's shape (1280 x 720 for the long cut, 1080 x 1920 for the short)
-and listed, by its sha256 and shape, in the `thumbs.json` beside it.
+and listed by its hash and format in the passing `covers.json` beside it.
 `--thumb-url` (its https link in the library) goes with `--thumb-file`,
 never in place of it.
 

@@ -238,7 +238,7 @@ describe('the hook is the intro', () => {
     expect(brands.map((node) => (node.props.beat as EngineBeat).id)).toEqual([props.beats[0]!.id])
     for (const layout of ['STAGE', 'P1', 'P3', 'P6', 'F3'] as const) {
       const beat = { ...props.beats[0]!, layout }
-      const nodes = elements(BrandFrame({ props, beat, frame: 0 }))
+      const nodes = elements(BrandFrame({ props: { ...props, format: 'voice-led-pictures' }, beat, frame: 0 }))
       if (aspect === '9:16') {
         // Vertical video carries no wordmark, mark tile or series pill (Ruling, Krish, 2026-11-11).
         expect(nodes.filter((node) => node.type === StageHeader || node.type === MarkTile || node.type === ChannelPill)).toHaveLength(0)
@@ -258,7 +258,7 @@ describe('the logo only on the title frame and the close (Ruling, Krish, 2026-11
     expect(props.bodyLogo).toBe(false)
     for (const layout of ['STAGE', 'P1', 'P3', 'P6', 'F3'] as const) {
       const beat = { ...props.beats[0]!, layout }
-      const nodes = elements(BrandFrame({ props, beat, frame: 0 }))
+      const nodes = elements(BrandFrame({ props: { ...props, format: 'voice-led-pictures' }, beat, frame: 0 }))
       expect(nodes.filter((node) => node.type === MarkTile)).toHaveLength(0)
       if (layout === 'STAGE') {
         const header = nodes.filter((node) => node.type === StageHeader)
@@ -418,9 +418,9 @@ describe('motion styles in the composition', () => {
 
   it('draws a cut with no style, or a style that needs a device, exactly as before', () => {
     const house = drawn(staged())
-    expect(drawn(staged({ style: 'toy-3d' }))).toEqual(house)
+    expect(() => drawn({ ...staged({ style: 'toy-3d' }), renderTheme: 'makeyourmindup-v5' })).toThrow(/retired/)
     expect(house.flatMap(([, style]) => String(style).includes('scale(') ? [style] : [])).toEqual([])
-    expect(house.some(([, style]) => String(style).includes('radial-gradient(ellipse at center'))).toBe(true)
+    expect(house.some(([, style]) => String(style).includes('radial-gradient(ellipse at center'))).toBe(false)
     expect({ ...MOTION }).toEqual(HOUSE_MOTION)
   })
 
@@ -431,7 +431,7 @@ describe('motion styles in the composition', () => {
     expect(keynote.some(([, style]) => String(style).includes(`"background":"${fixture.tokens.inkDeep}"`))).toBe(true)
     expect(keynote.some(([, style]) => /"transform":"scale\(1\.0\d+\)"/.test(String(style)))).toBe(true)
     // A style on twos steps its graphics: frame 75 is the fifteenth of the beat, so devices hold frame 74.
-    expect(elements(FormatMaster(staged({ style: 'paper-cutout' }))).filter(n => n.type === DEVICES['fixture-device']).map(n => n.props.frame)).toEqual([74, 74])
+    expect(() => FormatMaster({ ...staged({ style: 'paper-cutout' }), renderTheme: 'makeyourmindup-v5' })).toThrow(/retired/)
     // living-ui dims everything but the proof (towards 40%) once the camera is on it; the proof stays whole.
     const living = elements(FormatMaster(staged({ style: 'living-ui' })))
     const wrappers = living.filter(n => isValidElement(n.props.children) && (n.props.children as ReactElement).type === DEVICES['fixture-device'])
@@ -555,4 +555,11 @@ it('keeps one presenter layer above WINDOW plates and uses the signed window geo
     const style = node.props.style as Record<string, unknown> | undefined
     return style?.left === 48 && style?.top === 1250 && style?.width === 330 && style?.height === 420
   })).toBe(true)
+})
+
+it('replays archived device and caption ids and refuses them on a new v5 render', () => {
+  const props = EngineRenderPropsSchema.parse(fixture)
+  expect(() => FormatMaster({ ...props, captionTheme: 'pop' })).not.toThrow()
+  expect(() => FormatMaster({ ...props, renderTheme: 'makeyourmindup-v5', captionTheme: 'pop' })).toThrow(/pop.*retired/)
+  expect(() => FormatMaster({ ...props, renderTheme: 'makeyourmindup-v5', objects: [{ ...props.objects[0]!, device: 'stamp' }] })).toThrow(/stamp.*retired/)
 })

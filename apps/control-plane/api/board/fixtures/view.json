@@ -1,6 +1,6 @@
 {
  "ok": true,
- "contract_version": "1.34.1",
+ "contract_version": "1.35.1",
  "week": "2026-11-16",
  "as_of": "2026-11-16T09:00:00.000Z",
  "days": [
@@ -1806,6 +1806,7 @@
     },
     "why": null
    },
+   "edition": null,
    "media": [
     {
      "id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -2468,6 +2469,7 @@
     }
    ],
    "manifest": null,
+   "edition": null,
    "media": [],
    "thumbs": null,
    "pieces": [],
@@ -2512,9 +2514,9 @@
         "at",
         "idea.at"
        ],
-       "done": "Approved. It is on the publish board for Tuesday 17 November; content-engine makes it and Growth posts it.",
+       "done": "Approved. It is on the publish board for Tuesday 17 November; Growth makes it.",
        "outcome": "approved",
-       "goes": "Goes onto the publish board for Tuesday 17 November. content-engine makes it from what you approved, and Growth posts it."
+       "goes": "Goes onto the publish board for Tuesday 17 November. Growth makes it from what you approved."
       },
       {
        "kind": "press",
@@ -4597,6 +4599,7 @@
     }
    ],
    "manifest": null,
+   "edition": null,
    "media": [],
    "thumbs": null,
    "pieces": [
@@ -4905,6 +4908,7 @@
     }
    ],
    "manifest": null,
+   "edition": null,
    "media": [],
    "thumbs": null,
    "pieces": [],
@@ -4949,9 +4953,9 @@
         "at",
         "idea.at"
        ],
-       "done": "Approved. It is on the publish board for Thursday 19 November; content-engine makes it and Growth posts it.",
+       "done": "Approved. It is on the publish board for Thursday 19 November; Growth makes it.",
        "outcome": "approved",
-       "goes": "Goes onto the publish board for Thursday 19 November. content-engine makes it from what you approved, and Growth posts it."
+       "goes": "Goes onto the publish board for Thursday 19 November. Growth makes it from what you approved."
       },
       {
        "kind": "press",
@@ -5312,9 +5316,9 @@
         "at",
         "idea.at"
        ],
-       "done": "Approved. It is on the publish board for Thursday 19 November; content-engine makes it and Growth posts it.",
+       "done": "Approved. It is on the publish board for Thursday 19 November; Growth makes it.",
        "outcome": "approved",
-       "goes": "Goes onto the publish board for Thursday 19 November. content-engine makes it from what you approved, and Growth posts it."
+       "goes": "Goes onto the publish board for Thursday 19 November. Growth makes it from what you approved."
       },
       {
        "kind": "press",
@@ -5703,9 +5707,9 @@
         "at",
         "idea.at"
        ],
-       "done": "Approved. It is on the publish board for Thursday 19 November; content-engine makes it and Growth posts it.",
+       "done": "Approved. It is on the publish board for Thursday 19 November; Growth makes it.",
        "outcome": "approved",
-       "goes": "Goes onto the publish board for Thursday 19 November. content-engine makes it from what you approved, and Growth posts it."
+       "goes": "Goes onto the publish board for Thursday 19 November. Growth makes it from what you approved."
       },
       {
        "kind": "press",
@@ -6035,7 +6039,7 @@
       {
        "state": "made",
        "channel": null,
-       "label": "Ready to post",
+       "label": "Made by Growth",
        "at": "2026-11-15T12:00:00.000Z",
        "due_at": null
       },
@@ -7710,6 +7714,7 @@
     }
    ],
    "manifest": null,
+   "edition": null,
    "media": [],
    "thumbs": {
     "set_sha256": "b46b01af2ca8e96a0e9fb16c01685bebd75768dbd28cf58150d1bef1f4ed1d8e",
@@ -8088,10 +8093,28 @@
    "kind": "Off day: Meme video",
    "title": "This week's good news",
    "stop": 2,
-   "who": "engine",
-   "runs_on": "content-engine makes the post from the stories shown, in a Claude session from the v5 Library",
-   "next": "This week's good news is in: 5 stories. content-engine makes the post, and its mock comes back for your yes",
+   "who": "growth",
+   "runs_on": "Growth makes the post from the stories shown",
+   "next": "This week's good news is in: 5 stories. Growth makes the post, and its mock comes back for your yes",
    "actions": [
+    {
+     "kind": "press",
+     "label": "Approve for send",
+     "collection": "picks",
+     "id": "sat-edition",
+     "revision": 0,
+     "body": {
+      "kind": "approve_send",
+      "day": "sat",
+      "edition_date": "2026-11-21",
+      "approved": true,
+      "edition_sha256": "e79b03c3a849d5b9ab64d4151cd41830391943b4452cb4ea16e4e5c1c638f389"
+     },
+     "stamp": [
+      "at"
+     ],
+     "done": "Approved for send: exactly this edition (\"The cheap model got dearer, and who pays for it\"). Growth's Substack step schedules it for 08:00 New York on Saturday; nothing else is sent."
+    },
     {
      "kind": "open",
      "label": "Read the stories",
@@ -8099,8 +8122,103 @@
     },
     {
      "kind": "prompt",
-     "label": "Copy the make prompt",
+     "label": "Copy prompt for Growth",
      "prompt": "Make the Saturday 2026-11-21 good-news post goodnews from the 5 stories on the content-engine board (week of 2026-11-16).\n\nMake it in a Claude session in krishanraja/content-engine on the ve route, with the Codex plugin building its picture…"
+    },
+    {
+     "kind": "press",
+     "label": "It's live",
+     "op": "live",
+     "body": {
+      "day": "sat",
+      "option": "off-sat-goodnews",
+      "title": "Option goodnews"
+     },
+     "words": {
+      "path": "url",
+      "ask": "The post's link",
+      "required": true
+     },
+     "choose": {
+      "path": "channels",
+      "ask": "Where did it go out?",
+      "multi": true,
+      "required": true,
+      "from_link": true,
+      "options": [
+       {
+        "value": "shorts",
+        "label": "YouTube Shorts",
+        "hosts": [
+         "youtube.com/shorts"
+        ]
+       },
+       {
+        "value": "tiktok",
+        "label": "TikTok",
+        "hosts": [
+         "tiktok.com"
+        ]
+       },
+       {
+        "value": "reels",
+        "label": "Instagram Reels",
+        "hosts": [
+         "instagram.com/reel"
+        ]
+       },
+       {
+        "value": "instagram",
+        "label": "Instagram",
+        "hosts": [
+         "instagram.com/p"
+        ]
+       },
+       {
+        "value": "linkedin",
+        "label": "LinkedIn",
+        "hosts": [
+         "linkedin.com"
+        ]
+       },
+       {
+        "value": "x",
+        "label": "X",
+        "hosts": [
+         "x.com",
+         "twitter.com"
+        ]
+       },
+       {
+        "value": "threads",
+        "label": "Threads",
+        "hosts": [
+         "threads.net",
+         "threads.com"
+        ]
+       },
+       {
+        "value": "facebook",
+        "label": "Facebook",
+        "hosts": [
+         "facebook.com",
+         "fb.watch"
+        ]
+       },
+       {
+        "value": "substack-notes",
+        "label": "Substack Notes",
+        "hosts": [
+         "substack.com/note",
+         "substack.com/@"
+        ]
+       }
+      ]
+     },
+     "stamp": [
+      "at"
+     ],
+     "done": "Recorded as live. The day is done, and Growth learns from the post."
     },
     {
      "kind": "prompt",
@@ -8129,6 +8247,73 @@
     }
    ],
    "manifest": null,
+   "edition": {
+    "kind": "edition",
+    "edition_date": "2026-11-21",
+    "name": "makeyourmindup weekly",
+    "subject": "The cheap model got dearer, and who pays for it",
+    "preview_text": "The week's piece, then the creative news, checked.",
+    "sha256": "e79b03c3a849d5b9ab64d4151cd41830391943b4452cb4ea16e4e5c1c638f389",
+    "checks": {
+     "voice": "pass",
+     "kill_list": "pass",
+     "sources": "pass",
+     "words": 312
+    },
+    "contents": [
+     "Monday: who pays when the cheap model gets dearer.",
+     "Also: music."
+    ],
+    "pieces": [
+     {
+      "day": "mon",
+      "label": "Monday: who pays",
+      "title": "Piece 8287. It says one thing."
+     }
+    ],
+    "news": {
+     "items": 1,
+     "topics": [
+      "Music"
+     ]
+    },
+    "sources": [
+     {
+      "label": "Example Records",
+      "href": "https://example.org/records"
+     }
+    ],
+    "files": {
+     "draft": "/api/board/2026-11-16/edition/draft",
+     "preview": "/api/board/2026-11-16/edition/preview"
+    },
+    "library": {
+     "draft": "3 Posts/2026-11-21 Sat edition - makeyourmindup weekly/0 Publish/edition.draft.json",
+     "preview": "3 Posts/2026-11-21 Sat edition - makeyourmindup weekly/0 Publish/edition.preview.html"
+    },
+    "state": "waiting",
+    "approved_at": null,
+    "approved_sha256": null,
+    "press": {
+     "kind": "press",
+     "label": "Approve for send",
+     "collection": "picks",
+     "id": "sat-edition",
+     "revision": 0,
+     "body": {
+      "kind": "approve_send",
+      "day": "sat",
+      "edition_date": "2026-11-21",
+      "approved": true,
+      "edition_sha256": "e79b03c3a849d5b9ab64d4151cd41830391943b4452cb4ea16e4e5c1c638f389"
+     },
+     "stamp": [
+      "at"
+     ],
+     "done": "Approved for send: exactly this edition (\"The cheap model got dearer, and who pays for it\"). Growth's Substack step schedules it for 08:00 New York on Saturday; nothing else is sent."
+    },
+    "why": null
+   },
    "media": [],
    "thumbs": null,
    "pieces": [],
@@ -8173,9 +8358,9 @@
         "at",
         "idea.at"
        ],
-       "done": "Approved. It is on the publish board for Saturday 21 November; content-engine makes it and Growth posts it.",
+       "done": "Approved. It is on the publish board for Saturday 21 November; Growth makes it.",
        "outcome": "approved",
-       "goes": "Goes onto the publish board for Saturday 21 November. content-engine makes it from what you approved, and Growth posts it."
+       "goes": "Goes onto the publish board for Saturday 21 November. Growth makes it from what you approved."
       },
       {
        "kind": "press",
@@ -8547,6 +8732,32 @@
      },
      "stamp": [],
      "done": "Picked. A session files it with the cuts."
+    }
+   ]
+  },
+  {
+   "key": "sat-edition:2026-11-21",
+   "day": "sat",
+   "label": "Sat 21",
+   "next": "Drafted: 1 piece and 1 news item, each checked against its primary source. Read the preview, then Approve for send; nothing is sent until you do.",
+   "actions": [
+    {
+     "kind": "press",
+     "label": "Approve for send",
+     "collection": "picks",
+     "id": "sat-edition",
+     "revision": 0,
+     "body": {
+      "kind": "approve_send",
+      "day": "sat",
+      "edition_date": "2026-11-21",
+      "approved": true,
+      "edition_sha256": "e79b03c3a849d5b9ab64d4151cd41830391943b4452cb4ea16e4e5c1c638f389"
+     },
+     "stamp": [
+      "at"
+     ],
+     "done": "Approved for send: exactly this edition (\"The cheap model got dearer, and who pays for it\"). Growth's Substack step schedules it for 08:00 New York on Saturday; nothing else is sent."
     }
    ]
   }
@@ -8972,6 +9183,10 @@
    {
     "key": "piece",
     "label": "The piece"
+   },
+   {
+    "key": "edition",
+    "label": "Weekly edition"
    }
   ],
   "piece_path": [
@@ -11750,11 +11965,136 @@
        },
        "saved": []
       }
+     },
+     {
+      "key": "edition:2026-11-21",
+      "type": "post",
+      "day": "sat",
+      "date": "2026-11-21",
+      "kind": "edition",
+      "kind_label": "Weekly edition",
+      "title": "The cheap model got dearer, and who pays for it",
+      "approved": null,
+      "stage": {
+       "key": "drafted",
+       "label": "Drafted"
+      },
+      "path": [
+       {
+        "key": "drafted",
+        "label": "Drafted",
+        "state": "done",
+        "when": null
+       },
+       {
+        "key": "approved",
+        "label": "Approved for send",
+        "state": "current",
+        "when": null
+       },
+       {
+        "key": "scheduled",
+        "label": "Scheduled",
+        "state": "todo",
+        "when": null
+       },
+       {
+        "key": "sent",
+        "label": "Sent",
+        "state": "todo",
+        "when": null
+       }
+      ],
+      "missed": false,
+      "line": "Drafted: 1 piece and 1 news item, each checked against its primary source. Read the preview, then Approve for send; nothing is sent until you do.",
+      "next": {
+       "kind": "press",
+       "label": "Approve for send",
+       "collection": "picks",
+       "id": "sat-edition",
+       "revision": 0,
+       "body": {
+        "kind": "approve_send",
+        "day": "sat",
+        "edition_date": "2026-11-21",
+        "approved": true,
+        "edition_sha256": "e79b03c3a849d5b9ab64d4151cd41830391943b4452cb4ea16e4e5c1c638f389"
+       },
+       "stamp": [
+        "at"
+       ],
+       "done": "Approved for send: exactly this edition (\"The cheap model got dearer, and who pays for it\"). Growth's Substack step schedules it for 08:00 New York on Saturday; nothing else is sent."
+      },
+      "decision": true,
+      "others": [
+       {
+        "kind": "open",
+        "label": "Read the preview",
+        "href": "/api/board/2026-11-16/edition/preview"
+       }
+      ],
+      "read": {
+       "so_what": "The week's piece, then the creative news, checked.",
+       "story": "The cheap model got dearer, and who pays for it",
+       "why_now": null,
+       "fact": null,
+       "text": "Monday: who pays when the cheap model gets dearer. Also: music.",
+       "sources": [
+        {
+         "label": "Example Records",
+         "href": "https://example.org/records"
+        }
+       ],
+       "research": [],
+       "said": null
+      },
+      "piece_id": null,
+      "item": null,
+      "supports": null,
+      "move": null,
+      "links": [
+       {
+        "label": "Read the preview",
+        "href": "https://controlcenter.krishraja.com/api/board/2026-11-16/edition/preview"
+       },
+       {
+        "label": "The draft, its exact words",
+        "href": "https://controlcenter.krishraja.com/api/board/2026-11-16/edition/draft"
+       }
+      ],
+      "stories": null,
+      "stories_planned": null,
+      "notes": {
+       "save": {
+        "kind": "press",
+        "label": "Save your note",
+        "collection": "comments",
+        "id": "desk-sat-notes-{t}",
+        "revision": 0,
+        "body": {
+         "thread_id": "{id}",
+         "anchor": "desk:sat:notes",
+         "use": "claude_notes",
+         "title": "The cheap model got dearer, and who pays for it",
+         "item": "edition:2026-11-21"
+        },
+        "words": {
+         "path": "text",
+         "ask": "Your note",
+         "required": true
+        },
+        "stamp": [
+         "at"
+        ],
+        "done": "Saved on the board, with the piece for good."
+       },
+       "saved": []
+      }
      }
     ],
-    "decisions": 0,
+    "decisions": 1,
     "ideas": 0,
-    "line": "One item in progress."
+    "line": "One decision for you."
    }
   ],
   "ideas": [
@@ -11809,9 +12149,9 @@
        "at",
        "idea.at"
       ],
-      "done": "Approved. It is on the publish board for Tuesday 17 November; content-engine makes it and Growth posts it.",
+      "done": "Approved. It is on the publish board for Tuesday 17 November; Growth makes it.",
       "outcome": "approved",
-      "goes": "Goes onto the publish board for Tuesday 17 November. content-engine makes it from what you approved, and Growth posts it."
+      "goes": "Goes onto the publish board for Tuesday 17 November. Growth makes it from what you approved."
      },
      {
       "kind": "press",
@@ -12169,9 +12509,9 @@
        "at",
        "idea.at"
       ],
-      "done": "Approved. It is on the publish board for Thursday 19 November; content-engine makes it and Growth posts it.",
+      "done": "Approved. It is on the publish board for Thursday 19 November; Growth makes it.",
       "outcome": "approved",
-      "goes": "Goes onto the publish board for Thursday 19 November. content-engine makes it from what you approved, and Growth posts it."
+      "goes": "Goes onto the publish board for Thursday 19 November. Growth makes it from what you approved."
      },
      {
       "kind": "press",
@@ -12529,9 +12869,9 @@
        "at",
        "idea.at"
       ],
-      "done": "Approved. It is on the publish board for Thursday 19 November; content-engine makes it and Growth posts it.",
+      "done": "Approved. It is on the publish board for Thursday 19 November; Growth makes it.",
       "outcome": "approved",
-      "goes": "Goes onto the publish board for Thursday 19 November. content-engine makes it from what you approved, and Growth posts it."
+      "goes": "Goes onto the publish board for Thursday 19 November. Growth makes it from what you approved."
      },
      {
       "kind": "press",

@@ -17,6 +17,7 @@ import {
   LIBRARY_POST_README,
   LIBRARY_POST_SECTIONS,
   LIBRARY_OFF_DAY,
+  LIBRARY_EDITION,
   LIBRARY_SUBCHANNELS,
   LIBRARY_TOP_FOLDERS,
   HEARTSIDE_POSTS,
@@ -47,6 +48,7 @@ interface Cases {
   post_readme: string
   subchannels: string[]
   off_day_label: string
+  edition_label: string
   path_max: number
   part_max: number
   max_bytes: number
@@ -68,6 +70,7 @@ describe('the library path rule, from the shared cases', () => {
     expect(LIBRARY_POST_README).toBe(cases.post_readme)
     expect([...LIBRARY_SUBCHANNELS].sort()).toEqual([...cases.subchannels].sort())
     expect(LIBRARY_OFF_DAY).toBe(cases.off_day_label)
+    expect(LIBRARY_EDITION).toBe(cases.edition_label)
     expect(LIBRARY_PATH_MAX).toBe(cases.path_max)
     expect(LIBRARY_PART_MAX).toBe(cases.part_max)
     expect(LIBRARY_MAX_BYTES).toBe(cases.max_bytes)

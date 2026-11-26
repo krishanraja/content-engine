@@ -54,27 +54,35 @@ describe('the week plan the board reads, from main and the week branch', () => {
 describe('the plan\'s next choices, before the channel\'s own', () => {
   const m = (id: string, ve_route = ['headline'], krish_verdict = 'untested'): MotionModule =>
     ({ id, name: `The ${id} style`, how: `How ${id} moves.`, rules: [], point_types: ['number'], formats: ['long_video', 'short_video'], fits: 'often', krish_verdict, ve_route })
-  const BANK = [m('swiss'), m('ladder', ['needs_device']), m('living-screen', ['needs_device']), m('ai-music-slam'), m('eating-jobs-ladder'), m('retro', ['headline'], 'not for us')]
-  const LOOKS = [{ id: 'face-with-proof', name: 'Face-led', pitch: 'His face.', status: 'proven' }, { id: 'kinetic-movement', name: 'Kinetic', pitch: 'Moves.', status: 'trial' },
+  const BANK = [m('swiss'), m('ladder', ['needs_device']), m('living-screen', ['needs_device']), m('dark-keynote'), m('eating-jobs-ladder'), m('retro', ['headline'], 'not for us')]
+  const LOOKS = [{ id: 'face-with-proof', name: 'Face-led', pitch: 'His face.', status: 'proven' }, { id: 'why-ladder-v5', name: 'Why ladder', pitch: 'Moves.', status: 'trial' },
     { id: 'data-story', name: 'Data story', pitch: 'Numbers.', status: 'trial' }]
   const inputs = (extra: Partial<StyleInputs> = {}): StyleInputs => ({ pieceId: FRI, meta: {}, formats: ['long_video', 'short_video'], points: null,
     motion: BANK, looks: LOOKS as never, recommendedLook: null, ...extra })
   const rec = (o: Array<{ id: string; recommended: boolean; why: string | null }>) => o.filter(x => x.recommended).map(x => [x.id, x.why])
 
+  it('shows a recorded retired pick without offering it for another pick', () => {
+    const style = dayStyle(inputs({ meta: { style: { motion: 'ai-music-slam', captions: 'receipt-chip' } } }))
+    expect(style.motion.picked).toBe('ai-music-slam')
+    expect(style.captions.picked).toBe('receipt-chip')
+    expect(style.motion.options.map(o => o.id)).not.toContain('ai-music-slam')
+    expect(style.captions.options.map(o => o.id)).not.toContain('receipt-chip')
+  })
+
   it('recommends the plan\'s first ready alternative when its motion was rejected on this piece, saying why', () => {
-    const s = dayStyle(inputs({ meta: { style: { rejected: { motion: ['living-screen'] } } }, recommendedMotion: 'living-screen', motionAlternatives: ['ladder', 'ai-music-slam'] }))
-    expect(rec(s.motion.options)).toEqual([['ai-music-slam', 'The production pick\'s next choice for this piece: its first, The living-screen style, is one you said Not this to.']])
-    expect(s.motion.options[0]!.id).toBe('ai-music-slam')
+    const s = dayStyle(inputs({ meta: { style: { rejected: { motion: ['living-screen'] } } }, recommendedMotion: 'living-screen', motionAlternatives: ['ladder', 'dark-keynote'] }))
+    expect(rec(s.motion.options)).toEqual([['dark-keynote', 'The production pick\'s next choice for this piece: its first, The living-screen style, is one you said Not this to.']])
+    expect(s.motion.options[0]!.id).toBe('dark-keynote')
   })
 
   it('does the same for a motion ve cannot draw or one he called not for us, and the channel\'s three only when none stands', () => {
     expect(rec(dayStyle(inputs({ recommendedMotion: 'living-screen', motionAlternatives: ['eating-jobs-ladder'] })).motion.options))
       .toEqual([['eating-jobs-ladder', 'The production pick\'s next choice for this piece: its first, The living-screen style, cannot be drawn yet.']])
     expect(rec(dayStyle(inputs({ recommendedMotion: 'retro', motionAlternatives: ['swiss'] })).motion.options)[0]![1]).toMatch(/called not for us/)
-    expect(rec(dayStyle(inputs({ recommendedMotion: 'ai-music-slam', motionAlternatives: ['swiss'] })).motion.options))
-      .toEqual([['ai-music-slam', 'The production pick recommended for this piece.']])
+    expect(rec(dayStyle(inputs({ recommendedMotion: 'dark-keynote', motionAlternatives: ['swiss'] })).motion.options))
+      .toEqual([['dark-keynote', 'The production pick recommended for this piece.']])
     expect(rec(dayStyle(inputs({ recommendedMotion: 'living-screen', motionAlternatives: ['ladder'] })).motion.options).map(x => x[0]))
-      .toEqual(['swiss', 'ai-music-slam', 'eating-jobs-ladder'])
+      .toEqual(['swiss', 'dark-keynote', 'eating-jobs-ladder'])
   })
 
   it('recommends the plan\'s next caption style when he said Not this to its first', () => {
@@ -84,8 +92,8 @@ describe('the plan\'s next choices, before the channel\'s own', () => {
   })
 
   it('recommends the plan\'s next look when he said Not this to its first, before the proven one', () => {
-    const s = dayStyle(inputs({ meta: { style: { rejected: { treatment: ['kinetic-movement'] } } }, recommendedLook: 'kinetic-movement', lookAlternatives: ['data-story'] }))
-    expect(rec(s.treatment.options)).toEqual([['data-story', 'The production pick\'s next choice for this piece: its first, Kinetic, is one you said Not this to.']])
-    expect(rec(dayStyle(inputs({ recommendedLook: 'kinetic-movement' })).treatment.options)).toEqual([['kinetic-movement', 'The Sunday room recommends it for this idea.']])
+    const s = dayStyle(inputs({ meta: { style: { rejected: { treatment: ['why-ladder-v5'] } } }, recommendedLook: 'why-ladder-v5', lookAlternatives: ['data-story'] }))
+    expect(rec(s.treatment.options)).toEqual([['data-story', 'The production pick\'s next choice for this piece: its first, Why ladder, is one you said Not this to.']])
+    expect(rec(dayStyle(inputs({ recommendedLook: 'why-ladder-v5' })).treatment.options)).toEqual([['why-ladder-v5', 'The Sunday room recommends it for this idea.']])
   })
 })

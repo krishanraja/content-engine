@@ -55,9 +55,10 @@ export const LIBRARY_MAX_BYTES = 2 * 1024 * 1024 * 1024
 export const LIBRARY_PATH_MAX = 180
 export const LIBRARY_PART_MAX = 100
 export const LIBRARY_BRAND_KIT = '1 Brand kit (permanent)'
-export const LIBRARY_CHANNEL_ART = '2 Channel art (permanent)'
+// Channel art lives inside the brand kit since 26 Nov 2026 (Krish: "collapse those two folders in to one"); the old top folder is refused.
+export const LIBRARY_CHANNEL_ART = '1 Brand kit (permanent)/Channel art'
 export const LIBRARY_POSTS = '3 Posts'
-export const LIBRARY_TOP_FOLDERS = [LIBRARY_BRAND_KIT, LIBRARY_CHANNEL_ART, LIBRARY_POSTS] as const
+export const LIBRARY_TOP_FOLDERS = [LIBRARY_BRAND_KIT, LIBRARY_POSTS] as const
 export const LIBRARY_POST_SECTIONS = ['0 Publish', '1 Article', '2 Covers and images', '3 Video', '4 Social'] as const
 export const LIBRARY_POST_README = 'READ ME.txt'
 /** The live subchannels as the brand writes them, from the Studio's series. */
@@ -65,6 +66,9 @@ export const LIBRARY_SUBCHANNELS = LIVE_SERIES.map((id) => id.replace(/_/g, '.')
 /** An off-day post has no series; its folder carries this label where a series name would go
  *  (config/library-paths.cases.json, off_day_label; Krish, 2026-11-03). */
 export const LIBRARY_OFF_DAY = 'off.day'
+/** The weekly edition is filed like a post, with this label where a series name would go (config/library-paths.cases.json,
+ *  edition_label; Krish, 2026-11-25: one email a week, "makeyourmindup weekly", every Saturday). */
+export const LIBRARY_EDITION = 'edition'
 
 // Every type a post, the brand kit or the channel art holds. The extension
 // decides the type, so a sender cannot choose one; the bucket allows exactly
@@ -155,7 +159,7 @@ export const CONTROL = /[\u0000-\u001f\u007f-\u009f]/
 export const RESERVED = /^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\..*)?$/i
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const
 const POST_FOLDER = new RegExp(
-  `^([0-9]{4})-([0-9]{2})-([0-9]{2}) (?:(${WEEKDAYS.join('|')}) (${[...LIBRARY_SUBCHANNELS, LIBRARY_OFF_DAY].map((name) => name.replace(/\./g, '\\.')).join('|')})|Launch) - \\S`,
+  `^([0-9]{4})-([0-9]{2})-([0-9]{2}) (?:(${WEEKDAYS.join('|')}) (${[...LIBRARY_SUBCHANNELS, LIBRARY_OFF_DAY, LIBRARY_EDITION].map((name) => name.replace(/\./g, '\\.')).join('|')})|Launch) - \\S`,
 )
 
 function refuse(refusal: LibraryPathRefusal): LibraryPathCheck {

@@ -1,4 +1,9 @@
-# channel-kit
+# channel-kit (retired with v5)
+
+Retired on 26 November 2026. Krish locked the v5 look on 25 November; this made the October profile look (day pills
+and colours, the Mindmake splashes avatar, a watermark), and both scripts now refuse to run. The v5 profile set is
+built by krishanraja/makeyourmindup `scripts/brand-kit-v5/build.py` and lives in Drive,
+`1 Brand kit (permanent) > Channel art`. What follows is the record of the old kit.
 
 Makes the YouTube channel's art in the makeyourmindup look: the banner, the
 watermark that sits in the corner of every video, a sheet showing what each
@@ -94,7 +99,7 @@ Where it comes from:
   first. It is a social picture: the brand kit's logo stays as it is.
 
 A rebuilt set goes to Krish's asset library with
-`python scripts/post-pack/send.py OUTDIR --as "2 Channel art (permanent)" --purpose "..."`
+`python scripts/post-pack/send.py OUTDIR --as "1 Brand kit (permanent)/Channel art" --purpose "..."`
 (`scripts/post-pack/README.md`). The set now in that folder was put there by
 hand on 2026-10-12, at Krish's request, with `READ ME - profiles.txt`
 saying which file goes where; keep that file in step.

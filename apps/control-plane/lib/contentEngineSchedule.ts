@@ -32,6 +32,8 @@ const WEEK = 24 * 7
 const FORTNIGHT = 24 * 14
 
 export const CONTENT_ENGINE_JOBS: ContentEngineJob[] = [
+  { job: 'hub_edition', path: '/api/hub/edition', label: 'Daily creative edition', everyHours: DAY, graceHours: 3 },
+  { job: 'hub_prices', path: '/api/hub/prices', label: 'Creative 24 price refresh', everyHours: DAY, graceHours: 3 },
   { job: 'feed_ingest',      path: '/api/feed/ingest',                   label: 'Feed ingest',           everyHours: DAY,  graceHours: 12 },
   { job: 'editorial_radar',  path: '/api/content-opportunities/refresh', label: 'Editorial radar',       everyHours: DAY,  graceHours: 12 },
   { job: 'triage_sweep',     path: '/api/triage/sweep',                  label: 'Triage sweep',          everyHours: DAY,  graceHours: 12 },

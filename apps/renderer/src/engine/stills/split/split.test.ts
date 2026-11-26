@@ -63,7 +63,7 @@ describe('round two regressions', () => {
   })
   it('puts the receipt end colour above ink and content in both fields', () => {
     const html = draw('receipt','close')
-    expect(html).toMatch(/data-close-upper="true" y="0" width="1080" height="1300" fill="#FFD84D"/i)
+    expect(html).toMatch(/data-close-upper="true" y="0" width="1080" height="1300" fill="#F4EFE4"/i)
     expect(html).toMatch(/data-close-lower="true" y="1300" width="1080" height="620" fill="#070D0B"/i)
     expect(html).toMatch(/x="120" y="450"/)
     expect(html).toContain('y="1460"')

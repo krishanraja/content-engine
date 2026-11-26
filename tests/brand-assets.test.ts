@@ -8,14 +8,14 @@ import { BrandWordmarkAssetV1Schema, TreatmentRegistryV1Schema, type BrandThemeV
 import { BRAND_MARK_MIRROR, brandWordmarkLegibilityIssues, brandWordmarkLegibilityReport, mirroredWordmarkUrl, officialWordmarkUrl, stageOfficialWordmarks } from '@mindmake/core'
 import studioConfig from '../config/studio.json'
 
-function activeTheme(): BrandThemeV1 {
+function officialWordmarkTheme(): BrandThemeV1 {
   const registry = TreatmentRegistryV1Schema.parse(studioConfig)
-  return registry.brand_themes.find((theme) => theme.theme_id === registry.default_brand_theme)!
+  return registry.brand_themes.find((theme) => theme.theme_id === 'mindmake-video-v1')!
 }
 
 describe('official brand wordmarks', () => {
   it('pins the real GitHub assets and clears the deterministic legibility floor', () => {
-    const theme = activeTheme()
+    const theme = officialWordmarkTheme()
     expect(theme.version).toBe(6)
     expect(theme.source.commit).toBe('2d24032681e41ef12ec46ce49780408d5c4eb405')
     expect(studioConfig.visual_story_director.design_authority.main_commit_verified).toBe(theme.source.commit)
@@ -74,7 +74,7 @@ describe('official brand wordmarks', () => {
   })
 
   it('uses the official series-only plate instead of rendering an illegible double stack', () => {
-    const theme = activeTheme()
+    const theme = officialWordmarkTheme()
     if (!theme.wordmarks?.lockup) throw new Error('active theme is missing official wordmarks')
     const compact = {
       ...theme,
@@ -90,7 +90,7 @@ describe('official brand wordmarks', () => {
   })
 
   it('rejects lettering geometry outside the pixels rendered by the alpha crop', () => {
-    const asset = activeTheme().wordmarks!.series.money_of_ai
+    const asset = officialWordmarkTheme().wordmarks!.series.money_of_ai
     expect(BrandWordmarkAssetV1Schema.safeParse({
       ...asset,
       letter_region: { ...asset.letter_region, y: asset.alpha_crop.y + asset.alpha_crop.height },
@@ -117,7 +117,7 @@ describe('official brand wordmarks', () => {
   it('downloads content-addressed assets, stages exact bytes and refuses a typed substitute', async () => {
     const bytes = Buffer.from('deterministic-official-png-fixture')
     const sha256 = createHash('sha256').update(bytes).digest('hex')
-    const base = activeTheme()
+    const base = officialWordmarkTheme()
     if (!base.wordmarks) throw new Error('active theme is missing official wordmarks')
     const fixtureMindmake = { ...base.wordmarks.mindmake, source_path: 'src/assets/fixture.png', sha256 }
     const fixtureSeries = { ...base.wordmarks.series.built_with_ai, source_path: 'src/assets/fixture.png', sha256 }
@@ -141,7 +141,7 @@ describe('official brand wordmarks', () => {
   })
 
   it('fails closed when GitHub bytes do not match the pinned asset hash', async () => {
-    const theme = activeTheme()
+    const theme = officialWordmarkTheme()
     const manifest = { branding: 'series', brand_theme: theme, series: 'money_of_ai' } as RenderManifestV1
     const runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-brand-mismatch-'))
     const previousRuntimeRoot = process.env.MINDMAKE_RUNTIME_ROOT
@@ -159,7 +159,7 @@ describe('official brand wordmarks', () => {
   it('accepts only inert hash-pinned SVG bytes and preserves the SVG extension', async () => {
     const bytes = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 2"><path d="M0 0h10v2H0z"/></svg>')
     const sha256 = createHash('sha256').update(bytes).digest('hex')
-    const base = activeTheme()
+    const base = officialWordmarkTheme()
     if (!base.wordmarks) throw new Error('active theme is missing official wordmarks')
     const svg = { ...base.wordmarks.mindmake, source_path: 'src/assets/fixture.svg', sha256, pixel_width: 10, pixel_height: 2, alpha_crop: { x: 0, y: 0, width: 10, height: 2 } }
     const png = { ...base.wordmarks.series.built_with_ai, source_path: 'src/assets/fixture.png', sha256 }
@@ -203,7 +203,7 @@ describe('official brand wordmarks', () => {
     // answer 404, and the same bytes are served by hash from Control Center.
     const bytes = Buffer.from('deterministic-official-png-fixture-for-the-mirror')
     const sha256 = createHash('sha256').update(bytes).digest('hex')
-    const base = activeTheme()
+    const base = officialWordmarkTheme()
     if (!base.wordmarks) throw new Error('active theme is missing official wordmarks')
     const fixture = { ...base.wordmarks.mindmake, source_path: 'src/assets/fixture.png', sha256 }
     const theme: BrandThemeV1 = { ...base, wordmarks: { ...base.wordmarks, mindmake: fixture, series: { money_of_ai: fixture, built_with_ai: fixture } } }
@@ -231,7 +231,7 @@ describe('official brand wordmarks', () => {
   })
 
   it('refuses mirror bytes that do not match the pin, and says when nothing answered', async () => {
-    const theme = activeTheme()
+    const theme = officialWordmarkTheme()
     const manifest = { branding: 'series', brand_theme: theme, series: 'money_of_ai' } as RenderManifestV1
     const runtimeRoot = await mkdtemp(join(tmpdir(), 'mindmake-brand-mirror-bad-'))
     const previousRuntimeRoot = process.env.MINDMAKE_RUNTIME_ROOT

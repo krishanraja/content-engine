@@ -49,34 +49,22 @@
     },
     {
       "role": "data",
-      "family": "IBM Plex Mono",
+      "family": "DM Mono",
       "files": [
         {
-          "file": "IBMPlexMono-Regular.ttf",
+          "file": "DMMono-Regular.ttf",
           "weight": "400",
           "style": "normal",
-          "sha256": "6a3412f058c7d8dfd9170c41e85ade48e5156ecb89356110ca57a0a27734af46"
+          "sha256": "55b4c98f123daebb3ed27947ba47b2af00554fc6284d639a540bcef5e6258ad2"
         },
         {
-          "file": "IBMPlexMono-Medium.ttf",
+          "file": "DMMono-Medium.ttf",
           "weight": "500",
           "style": "normal",
-          "sha256": "a9b4c49bb299e05b5f6c481e7fb5e78943d2793249a0c8874ab574a2d1ea6755"
-        },
-        {
-          "file": "IBMPlexMono-SemiBold.ttf",
-          "weight": "600",
-          "style": "normal",
-          "sha256": "d3c38e55c78f5b0f28009fddba4834ec503278936a5986032424c9bd2d23aa46"
-        },
-        {
-          "file": "IBMPlexMono-Bold.ttf",
-          "weight": "700",
-          "style": "normal",
-          "sha256": "ac27abd6450a64dd94467580a02fe6235156d5b92f2926ebbc8e7489df64e0be"
+          "sha256": "fd327daf461db87b44a87def475d251bf03b997f7c07d9680592d75dbbfaad0b"
         }
       ],
-      "license": "OFL-IBM-Plex-Mono.txt"
+      "license": "OFL-DM-Mono.txt"
     }
   ]
 }

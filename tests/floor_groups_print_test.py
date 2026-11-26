@@ -31,7 +31,7 @@ DOC = {
     'records': {},
 }
 GROUPS = [
-    {'key': 'house_brand', 'title': 'The house brand', 'standing': 'reworded',
+    {'key': 'corner_mark', 'title': 'The corner mark', 'standing': 'reworded',
      'statement': 'On a carousel the wordmark sits small in the bottom-right corner.', 'decided_on': '2026-11-15',
      'members': ['s1', 's2']},
     {'key': 'words_add', 'title': 'Words add', 'standing': 'approved',
@@ -54,7 +54,7 @@ class GroupWords(unittest.TestCase):
         doc = dict(DOC, groups=GROUPS)
         code, out = run(doc, '--format', 'carousel')
         self.assertEqual(code, 0)
-        self.assertIn('The house brand [house_brand; reworded by him, 2026-11-15]', out)
+        self.assertIn('The corner mark [corner_mark; reworded by him, 2026-11-15]', out)
         self.assertIn('bottom-right corner', out)
         self.assertIn('Members here: s1, s2', out)
         self.assertNotIn('Words add', out)  # touches no carousel standard
@@ -69,7 +69,7 @@ class GroupWords(unittest.TestCase):
     def test_check_refuses_a_group_with_an_unknown_member_or_no_words(self):
         bad = dict(DOC, groups=[dict(GROUPS[0], members=['s9']), {'key': 'x', 'standing': 'approved'}])
         problems = floor.check(bad)
-        self.assertIn('group house_brand: member s9 is not in standards', problems)
+        self.assertIn('group corner_mark: member s9 is not in standards', problems)
         self.assertTrue(any("group 'x' needs a key" in p for p in problems))
         self.assertEqual(floor.check(dict(DOC, groups=GROUPS)), [])
 

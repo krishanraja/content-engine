@@ -8,16 +8,10 @@ describe('the accent kit (Krish, 2026-11-20)', () => {
     expect(ACCENT_ROLES.sort()).toEqual(['big_moment', 'duotone_cutout', 'gradient'])
   })
 
-  it('gives an off-day cut nothing', () => {
-    expect(accentKit(false)).toBeNull()
-    expect(accentGradient('moment', false)).toBeNull()
-    expect(duotoneEmber(false)).toBeNull()
-  })
-
-  it('draws the moment gradient plum to ember to plum on a series day', () => {
-    const css = accentGradient('moment', true)!
-    expect(css.startsWith('linear-gradient(180deg, #1E0918 0%, #3B1232 12%, #B8321C 30%')).toBe(true)
-    expect(css.endsWith('#1E0918 100%)')).toBe(true)
-    expect(duotoneEmber(true)!.map((s) => s.colour)).toEqual(['#2A0C24', '#B8321C', '#FF8A5C', '#FFE3D1'])
+  it.each([true, false])('withholds the retired colours, gradients and duotone (series day %s)', (seriesDay) => {
+    expect(accentKit(seriesDay)).toBeNull()
+    expect(accentGradient('moment', seriesDay)).toBeNull()
+    expect(accentGradient('title', seriesDay)).toBeNull()
+    expect(duotoneEmber(seriesDay)).toBeNull()
   })
 })

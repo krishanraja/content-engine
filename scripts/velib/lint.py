@@ -385,9 +385,10 @@ def palette_lints(spec: dict) -> list[str]:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
     import brand_palette  # noqa: PLC0415
     from . import compile as ve_compile  # noqa: PLC0415
+    from . import accent_kit  # noqa: PLC0415
     when = spec.get('publish_day')
     if not when:
-        return []
+        return accent_kit.accent_problems(spec)
     palette = brand_palette.load()
     series = str((spec.get('brand') or {}).get('series') or '').replace('.', '_')
     day = brand_palette.day(when, palette)
@@ -410,8 +411,6 @@ def palette_lints(spec: dict) -> list[str]:
                             'seconds': getattr(ve_compile, 'ENDING_FRAMES_BY_ASPECT', {}).get(cut.get('aspect'), ve_compile.ENDING_FRAMES)
                             / ve_compile.FPS, 'days_row': kind == 'series' and not (closes_on_sting and shape == '9x16')}}
         out += [f'brand.palette cuts.{cut_id}: {p}' for p in brand_palette.check(record, palette)]
-    # The accent kit (Krish, 2026-11-20): big moments, gradients and duotone cut-outs on series days only.
-    from . import accent_kit  # noqa: PLC0415
     return out + accent_kit.accent_problems(spec)
 
 
@@ -899,7 +898,8 @@ def lint(spec_path: Path) -> tuple[dict | None, list[str]]:
     guards.set_bind_day(showgate.effective_day(spec, ve_dir(spec_path)))
     try:
         from . import floor, grammar, impact, piece_guards  # noqa: PLC0415
-        return spec, (impact.spec_lints(spec) + crew_lints(spec) + title_line_lints(spec, spec_path) + guards.pre_critic_lints(spec, spec_path)
+        from .retirement import problems as retired_choices
+        return spec, (retired_choices(spec) + impact.spec_lints(spec) + crew_lints(spec) + title_line_lints(spec, spec_path) + guards.pre_critic_lints(spec, spec_path)
                       + piece_guards.lints(spec, guards.bind_day(spec), Path(spec_path).parent)
                       + floor.lints(spec, Path(spec_path)) + grammar.lints(spec, Path(spec_path)))
     finally:
