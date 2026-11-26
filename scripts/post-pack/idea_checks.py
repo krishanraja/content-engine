@@ -2063,6 +2063,8 @@ def story_findings(ideas, week, status=None, probes=None, cfg=None, before=None)
         verified probe's documented rungs (story/probes.json, as the score's hero floor reads them) when there is one,
         else the raw ladder's rungs with a source url (probes: {option id: probe result or why-ladder/1}; the option's
         own `whys` when it carries one);
+      - story: one of a close call no council read decided whose card does not carry the close call (story_score
+        close_call, shown on the board: never a silent pass);
       - story_floor: an open option the floor refused or that fails one of its type's hard floors.
     status: board_feed option_status {key: status}, or None for a board never shown (every option open). An answered
     option is his: it is never checked, and a day with one is never checked for order (its presses name it by place).
@@ -2122,7 +2124,7 @@ def story_findings(ideas, week, status=None, probes=None, cfg=None, before=None)
                 continue  # an unscored option is already a line above
             keys = [ss.key_of(day, o) for o in opts]
             council = next((v for v in (s.get('council') for s in scores.values()) if isinstance(v, dict)), None)
-            want, _call = ss.order_day(opts, scores, keys, council, cfg)
+            want, call = ss.order_day(opts, scores, keys, council, cfg)
             for n, (have, should) in enumerate(zip(opts, want), 1):
                 if have is not should:
                     ref = f'{day}-{n}' if main else f'off-{day}-{have.get("id")}'
@@ -2130,6 +2132,13 @@ def story_findings(ideas, week, status=None, probes=None, cfg=None, before=None)
                     out.append({'code': 'story', 'ref': ref, 'line': f'story: {label(ref, main, have)} stands at place {n} of {day}, where '
                                 f'story_score.py order puts the option now at place {first}; run order on the open day'})
                     break
+            # A close call no council read decided is his pick, and his card says so: never a silent pass.
+            if call and call.get('says'):
+                for n, o in enumerate(opts, 1):
+                    if ss.key_of(day, o) in call['keys'] and not str((o.get('story_score') or {}).get('close_call') or '').strip():
+                        ref = f'{day}-{n}' if main else f'off-{day}-{o.get("id")}'
+                        out.append({'code': 'story', 'ref': ref, 'line': f'story: {label(ref, main, o)} is one of a close call on {day} '
+                                    f'({call["why"]}) and its card does not say "{call["says"]}"; run order on the open day'})
     return out
 
 

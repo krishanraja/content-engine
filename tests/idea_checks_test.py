@@ -1191,11 +1191,12 @@ class StoryGateTest(unittest.TestCase):
                          'a floored option placed first is out of order too')
 
     def test_his_option_goes_first_at_equal_totals_only(self):
-        his = main_option(id=A, source_kind='his', story_score=story(70))
-        engine = main_option(id=B, story_score=story(70))
+        cc = 'close call, your pick'
+        his = main_option(id=A, source_kind='his', story_score=story(70, close_call=cc))
+        engine = main_option(id=B, story_score=story(70, close_call=cc))
         self.assertEqual(self.run_(self.board(his, engine), probes=self.probes(A, B)), [])
         self.assertEqual([f['ref'] for f in self.run_(self.board(engine, his), probes=self.probes(A, B))], ['mon-1'])
-        lower = main_option(id=A, source_kind='his', story_score=story(69))
+        lower = main_option(id=A, source_kind='his', story_score=story(69, close_call=cc))
         self.assertEqual([f['ref'] for f in self.run_(self.board(lower, engine), probes=self.probes(A, B))], ['mon-1'],
                          'never above a higher total')
 
@@ -1203,8 +1204,20 @@ class StoryGateTest(unittest.TestCase):
         council = {'pair': [f'mon/{A}', f'mon/{B}'], 'winner': f'mon/{B}'}
         ideas = self.board(main_option(id=B, story_score=story(78, council=council)), main_option(id=A, story_score=story(80, council=council)))
         self.assertEqual(self.run_(ideas, probes=self.probes(A, B)), [])
-        bare = self.board(main_option(id=B, story_score=story(78)), main_option(id=A, story_score=story(80)))
+        cc = 'close call, your pick'
+        bare = self.board(main_option(id=B, story_score=story(78, close_call=cc)), main_option(id=A, story_score=story(80, close_call=cc)))
         self.assertEqual([f['ref'] for f in self.run_(bare, probes=self.probes(A, B))], ['mon-1'], 'without the council read it is out of order')
+
+    def test_a_close_call_no_council_decided_must_say_so_on_the_card(self):
+        ideas = self.board(main_option(id=A, story_score=story(80)), main_option(id=B, story_score=story(78)))
+        found = self.run_(ideas, probes=self.probes(A, B))
+        self.assertEqual([(f['code'], f['ref']) for f in found], [('story', 'mon-1'), ('story', 'mon-2')])
+        self.assertIn('close call, your pick', found[0]['line'])
+        cc = 'close call, your pick'
+        marked = self.board(main_option(id=A, story_score=story(80, close_call=cc)), main_option(id=B, story_score=story(78, close_call=cc)))
+        self.assertEqual(self.run_(marked, probes=self.probes(A, B)), [])
+        apart = self.board(main_option(id=A, story_score=story(90)), main_option(id=B, story_score=story(60)))
+        self.assertEqual(self.run_(apart, probes=self.probes(A, B)), [], 'not a close call: nothing to say')
 
     def test_the_order_story_score_writes_passes_its_own_gate(self):
         import story_score as ss
