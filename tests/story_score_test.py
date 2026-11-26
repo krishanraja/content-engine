@@ -522,5 +522,254 @@ class Records(unittest.TestCase):
         self.assertIn('higgsfield', text)
 
 
+class Spend(unittest.TestCase):
+    def setUp(self):
+        self.dir = Path(tempfile.mkdtemp())
+
+    def tearDown(self):
+        shutil.rmtree(self.dir, ignore_errors=True)
+
+    def cfg(self, **spend):
+        cfg = json.loads(json.dumps(RUBRIC))
+        cfg['spend'].update(spend)
+        return cfg
+
+    def view(self):
+        return ss.blind_view(hero(A, 'Warner is paid', 'Warner was paid.'))
+
+    def test_the_budget_refuses_before_the_poster_is_called(self):
+        poster = Poster()
+        ledger = ss.Ledger(self.dir / 'l.jsonl', 0.1, today='2026-11-26')
+        got = ss.provoke(self.view(), True, [], ledger, poster=poster, cap=UNDER)
+        self.assertEqual(got['status'], 'skipped')
+        self.assertIn('budget', got['reason'])
+        self.assertEqual(poster.calls, [], 'no call made')
+        results, skipped = ss.judge(['an angle'], [], ledger, poster=poster, cap=UNDER)
+        self.assertEqual((results, poster.calls), ([None], []))
+        self.assertTrue(skipped)
+
+    def test_never_above_the_ruling_and_the_day_caps(self):
+        self.assertEqual(ss.Ledger(None, 50).budget, RUBRIC['budget_usd'])
+        ledger = ss.Ledger(None, 10, self.cfg(usd_per_day=0.2), today='2026-11-26')
+        self.assertIsNotNone(ledger.reserve('provoke', 0.15)[0])
+        self.assertIsNone(ledger.reserve('provoke', 0.15)[0])
+        ledger = ss.Ledger(None, 10, self.cfg(divergent_ops_per_day=1), today='2026-11-26')
+        first, _ = ledger.reserve('provoke', 0.15, divergent=True)
+        self.assertIsNone(ledger.reserve('provoke', 0.15, divergent=True)[0])
+        ledger.settle(first, 0)
+        self.assertIsNotNone(ledger.reserve('provoke', 0.15, divergent=True)[0], 'a released reservation frees its place')
+
+    def test_the_ledger_persists_and_sums_metered_cost(self):
+        path = self.dir / 'l.jsonl'
+        ledger = ss.Ledger(path, 10, today='2026-11-26')
+        e, _ = ledger.reserve('score_judge', 0.3, divergent=True)
+        ledger.settle(e, 0.12)
+        again = ss.Ledger(path, 10, today='2026-11-26')
+        self.assertAlmostEqual(again.spent(), 0.12)
+        self.assertEqual(again.summary()['calls'], 1)
+
+    def test_the_chain_cap_comes_first_and_is_never_a_pass(self):
+        poster = Poster()
+        ledger = ss.Ledger(None, 10, today='2026-11-26')
+        got = ss.provoke(self.view(), True, [], ledger, poster=poster, cap=OVER)
+        self.assertEqual(got['status'], 'skipped')
+        self.assertEqual(poster.calls, [])
+        self.assertEqual(ledger.spent(), 0, 'a refused call is released')
+
+    def test_the_bodies_are_the_routes(self):
+        poster = Poster(scale=1)
+        ledger = ss.Ledger(None, 10, today='2026-11-26')
+        got = ss.provoke(self.view(), True, ['an old post'], ledger, poster=poster, cap=UNDER)
+        self.assertEqual(got['status'], 'ok')
+        body = poster.calls[0]
+        self.assertEqual((body['op'], body['namespace'], body['temperament'], body['count']), ('provoke', 'content-engine:angles', 'balanced', 3))
+        self.assertEqual(body['cliches'], ['an old post'])
+        results, skipped = ss.judge(['one', 'two'], ['the obvious take'], ledger, poster=poster, cap=UNDER)
+        body = poster.calls[1]
+        self.assertTrue(body['judge'])
+        self.assertEqual(body['obvious'], ['the obvious take'])
+        self.assertAlmostEqual(ss.judge_numbers(results[0])['originality'], 7.0, msg='a 0 to 1 scale is put on 0 to 10')
+        self.assertEqual(skipped, [])
+        self.assertAlmostEqual(ledger.spent(), 0.45)
+
+    def test_a_humour_read_reserves_and_an_unreachable_engine_spends_nothing(self):
+        ledger = ss.Ledger(None, 10, today='2026-11-26')
+        got, _why = ss.humour('Warner was paid twice.', 'fact', 'mon/a:fact', ledger, lambda req: analysis())
+        self.assertEqual(got['comic_reading'], 'supported')
+        self.assertAlmostEqual(ledger.spent(), RUBRIC['unit_costs']['humour_read'])
+        self.assertEqual(ss.humour('x', 'fact', 'r', ledger, None)[0], None)
+        self.assertAlmostEqual(ledger.spent(), RUBRIC['unit_costs']['humour_read'])
+
+
+class Edition(unittest.TestCase):
+    def item(self, iid, topic, own=True, date_='2026-11-24'):
+        return {'id': iid, 'title': f'Spotify pays songwriters ${iid} million', 'summary': 'Spotify paid songwriters.', 'topic': topic,
+                'date': date_, 'sources': [{'url': 'https://spotify.com/a', 'own_domain': own}, {'url': 'https://b.com', 'kind': 'secondary'}]}
+
+    def test_score_item_and_its_floors(self):
+        s = ss.score_item(self.item('1', 'music'), WEEK, judged={'scale': {'score': 8, 'because': 'a sector'}})
+        self.assertEqual(s['type'], 'edition_item')
+        self.assertEqual(s['floors_failed'], [])
+        self.assertIsNotNone(s['total'])
+        s = ss.score_item(self.item('2', 'music', own=False, date_='2026-11-01'), WEEK)
+        self.assertEqual(len(s['floors_failed']), 2)
+
+    def test_select_edition_holds_topics_and_counts(self):
+        items = [self.item(str(n), t) for n, t in enumerate(['music'] * 5 + ['film'] * 2 + ['sport', 'games', 'news'])]
+        judged = {it['id']: {'scale': {'score': 10 - int(it['id']) / 2, 'because': 'a sector'}} for it in items}
+        got = ss.select_edition(items, WEEK, judged=judged)
+        topics = [it['topic'] for it, _s in got['items']]
+        self.assertLessEqual(max(topics.count(t) for t in set(topics)), RUBRIC['edition']['per_topic'])
+        self.assertLessEqual(len(set(topics)), RUBRIC['edition']['topics'][1])
+        self.assertGreaterEqual(len(got['items']), RUBRIC['edition']['min'])
+        self.assertFalse(got['short'])
+        self.assertTrue(ss.select_edition(items[:2], WEEK, judged=judged)['short'])
+
+
+class Cli(unittest.TestCase):
+    """The whole Sunday chain on fakes: zero paid calls, a temp plans folder, the real board left alone."""
+
+    def setUp(self):
+        self.plans = Path(tempfile.mkdtemp())
+        self.folder = self.plans / f'{WEEK}-week'
+        self.folder.mkdir()
+        self.ledger = str(self.plans / 'spend.jsonl')
+
+    def tearDown(self):
+        shutil.rmtree(self.plans, ignore_errors=True)
+
+    def write(self, name, data):
+        p = self.folder / name
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(json.dumps(data, ensure_ascii=False), encoding='utf-8')
+        return p
+
+    def run_cli(self, *argv, **kw):
+        kw.setdefault('kill', CLEAN)
+        kw.setdefault('today', '2026-11-26')
+        return ss.main([argv[0], WEEK, '--plans', str(self.plans), *argv[1:]], **kw)
+
+    def judge_all(self, ideas):
+        rows = []
+        for key, day, main, o in ss.board(ideas):
+            tid = ss.option_type(day, main, o)
+            rows.append(f'## {key}')
+            rows += [f'{a}: 7/10 because it names the thing' for a in ('scale', 'fun_consume', 'fun_produce', 'uplift', 'utility')
+                     if RUBRIC['types'][tid]['weights'].get(a)]
+        p = self.folder / 'judge-reply.md'
+        p.write_text('\n'.join(rows), encoding='utf-8')
+        return p
+
+    def test_the_chain_end_to_end(self):
+        fact_a = 'Warner said it signed a deal with a model maker.'
+        fact_b = 'Sony said it was paid $40 million by the model maker for its songs.'
+        ideas = {'week_start': WEEK, 'days': {'mon': [hero(A, 'Warner signs with a model maker', fact_a),
+                                                      hero(B, 'Sony is paid $40 million for its songs', fact_b, url='https://www.sony.com/x')],
+                                              'wed': [], 'fri': []},
+                 'offdays': {'tue': [{'id': 'x', 'hook': 'Spotify asks singers to sing less', 'funny': 'Paid to be quiet.', 'aim': 'humour'}]}}
+        self.write('ideas.json', ideas)
+        self.write('sources.json', {'week_start': WEEK, 'recent_posts': [{'title': 'An old post about labels', 'date': '2026-11-10'}]})
+        self.write('story/angles.json', {'obvious': ['Labels sell out to AI'], 'options': {
+            f'mon/{B}': [{'lens': 'funniest_true', 'text': 'Sony is paid for songs the model already learnt', 'rests_on': 'it was paid $40 million'}]}})
+        self.write('story/probes.json', {A: probe(3, 2), B: probe(4, 1)})
+        poster = Poster()
+        self.assertEqual(self.run_cli('angles', '--provoke', '--judge', '--ledger', self.ledger, poster=poster, cap=UNDER), 0)
+        self.assertEqual([b['op'] for b in poster.calls], ['provoke', 'provoke', 'score'], "each hero day's top two, then one batch")
+        self.assertEqual(self.run_cli('humour', '--ledger', self.ledger, read=lambda req: analysis()), 0)
+        self.assertEqual(self.run_cli('record', str(self.judge_all(ideas))), 0)
+        self.assertEqual(self.run_cli('score'), 0)
+        self.assertEqual(self.run_cli('order'), 2, 'no status and not fresh: nothing is ordered blind')
+        self.assertEqual(self.run_cli('order', '--fresh', '--write'), 0)
+        after = json.loads((self.folder / 'ideas.json').read_text(encoding='utf-8'))
+        self.assertEqual([o['id'] for o in after['days']['mon']], [B, A], 'the sourced money story leads')
+        self.assertTrue(after['days']['mon'][0]['recommended'])
+        self.assertEqual(after['days']['mon'][0]['story_score']['rubric_version'], 'story-score/1')
+        self.assertEqual(json.loads((self.folder / 'scores.json').read_text(encoding='utf-8'))['unscored'], [])
+        summary = ss.Ledger(self.ledger, today='2026-11-26').summary()
+        self.assertLessEqual(summary['spent_usd'], RUBRIC['budget_usd'])
+        self.assertAlmostEqual(summary['spent_usd'], 0.6 + (summary['calls'] - 3) * 0.005, places=4)
+
+    def test_a_step_that_did_not_run_exits_2(self):
+        self.write('ideas.json', {'week_start': WEEK, 'days': {'mon': [hero(A, 'Warner signs', 'Warner signed.')], 'wed': [], 'fri': []}})
+        self.write('sources.json', {'recent_posts': []})
+        poster = Poster()
+        self.assertEqual(self.run_cli('angles', '--provoke', '--ledger', self.ledger, poster=poster, cap=OVER), 2)
+        self.assertEqual(poster.calls, [])
+        self.assertEqual(self.run_cli('score'), 2, 'unscored is never a pass')
+        self.assertEqual(self.run_cli('council-brief', '--day', 'mon'), 2, 'no close call to brief')
+
+    def test_council_brief_and_record(self):
+        ideas = {'week_start': WEEK, 'days': {'mon': [hero(A, 'Warner signs', 'Warner signed.'), hero(B, 'Sony signs', 'Sony signed.')],
+                                              'wed': [], 'fri': []}}
+        self.write('ideas.json', ideas)
+        self.write('scores.json', {'options': {f'mon/{A}': scored(80), f'mon/{B}': scored(78)}})
+        self.assertEqual(self.run_cli('order', '--fresh'), 0)
+        self.assertEqual(self.run_cli('council-brief', '--day', 'mon'), 0)
+        self.assertIn('## A', (self.folder / 'story' / 'council-mon.md').read_text(encoding='utf-8'))
+        asked = json.loads((self.folder / 'story' / 'council.json').read_text(encoding='utf-8'))['mon']
+        reply = '\n'.join(f'{s}: A Score 6/10 (fact); B Score 8/10 (fact)' for s in RUBRIC['council']['seats']) + '\nChair: B because it is bigger'
+        p = self.folder / 'reply.md'
+        p.write_text(reply, encoding='utf-8')
+        self.assertEqual(self.run_cli('council-record', '--day', 'mon', str(p)), 0)
+        rec = json.loads((self.folder / 'story' / 'council.json').read_text(encoding='utf-8'))['mon']
+        self.assertEqual(rec['winner'], asked['B'])
+        self.assertEqual(self.run_cli('order', '--fresh', '--write'), 0)
+        after = json.loads((self.folder / 'ideas.json').read_text(encoding='utf-8'))
+        self.assertEqual(after['days']['mon'][0]['id'], asked['B'].split('/')[1])
+        p.write_text('Chair: A', encoding='utf-8')
+        self.assertEqual(self.run_cli('council-record', '--day', 'mon', str(p)), 2, 'a council read missing its seats is never a pass')
+
+
+class DryRun(unittest.TestCase):
+    """The zero-spend dry run on a copy of the real 23 Nov board: every option scored on fakes, the order changes only
+    on open days, and the real file is never written."""
+
+    def test_the_23_nov_board_on_fakes(self):
+        real = ROOT / 'docs' / 'plans' / f'{WEEK}-week'
+        before = (real / 'ideas.json').read_bytes()
+        plans = Path(tempfile.mkdtemp())
+        try:
+            folder = plans / f'{WEEK}-week'
+            (folder / 'story').mkdir(parents=True)
+            shutil.copy(real / 'ideas.json', folder / 'ideas.json')
+            shutil.copy(real / 'sources.json', folder / 'sources.json')
+            ideas = json.loads((folder / 'ideas.json').read_text(encoding='utf-8'))
+            heroes = [o['id'].lower() for d in ('mon', 'wed', 'fri') for o in ideas['days'][d]]
+            (folder / 'story' / 'probes.json').write_text(json.dumps({h: probe(3, 2) for h in heroes}), encoding='utf-8')
+            run = lambda *argv, **kw: ss.main([argv[0], WEEK, '--plans', str(plans), *argv[1:]], kill=CLEAN, today='2026-11-26', **kw)  # noqa: E731
+            poster = Poster()
+            ledger = str(plans / 'spend.jsonl')
+            self.assertEqual(run('angles', '--provoke', '--judge', '--ledger', ledger, poster=poster, cap=UNDER), 0)
+            self.assertEqual(sum(1 for b in poster.calls if b['op'] == 'provoke'), 6)
+            self.assertEqual(sum(1 for b in poster.calls if b['op'] == 'score'), 1)
+            self.assertEqual(run('humour', '--ledger', ledger, read=lambda req: analysis()), 0)
+            rows = []
+            for key, _day, _main, _o in ss.board(ideas):
+                rows.append(f'## {key}')
+                rows += [f'{a}: 6/10 because the facts name it' for a in ('scale', 'fun_consume', 'fun_produce', 'uplift', 'utility')]
+            reply = folder / 'reply.md'
+            reply.write_text('\n'.join(rows), encoding='utf-8')
+            self.assertEqual(run('record', str(reply)), 0)
+            self.assertEqual(run('score'), 0)
+            scores = json.loads((folder / 'scores.json').read_text(encoding='utf-8'))['options']
+            self.assertEqual(len(scores), len(ss.board(ideas)))
+            self.assertTrue(all(s['total'] is not None for s in scores.values()))
+            first_mon = ideas['days']['mon'][0]['id'].lower()
+            status = {}
+            for _key, day, main, o in ss.board(ideas):
+                status[ss.status_key('days' if main else 'offdays', day, o)] = 'open'
+            status[f'idea:{first_mon}'] = 'approved'
+            sp = folder / 'status.json'
+            sp.write_text(json.dumps({'status': status}), encoding='utf-8')
+            self.assertEqual(run('order', '--status', str(sp), '--write'), 0)
+            after = json.loads((folder / 'ideas.json').read_text(encoding='utf-8'))
+            self.assertEqual(json.dumps(after['days']['mon']), json.dumps(ideas['days']['mon']), 'an answered day is untouched')
+            self.assertTrue(all('story_score' in o for d in ('wed', 'fri') for o in after['days'][d]))
+            self.assertLessEqual(ss.Ledger(ledger, today='2026-11-26').summary()['spent_usd'], RUBRIC['budget_usd'])
+        finally:
+            shutil.rmtree(plans, ignore_errors=True)
+        self.assertEqual((real / 'ideas.json').read_bytes(), before)
+
+
 if __name__ == '__main__':
     unittest.main()
