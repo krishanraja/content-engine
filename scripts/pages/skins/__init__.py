@@ -1,8 +1,34 @@
-"""Cover skin selection and platform crop geometry."""
+"""Cover skin selection and platform crop geometry.
+
+Retired for production (config/retired-styles.json, kind "skin" v5_feed and kind "cover_path" receipt): covers,
+thumbnails and carousels come from the approved Library through scripts/library/make_piece.py
+(docs/ve/cards/library/LIBRARY-GUIDE.md and PRODUCTION-PLAYBOOK.md). This module refuses to pick or load a skin
+unless the caller has asked for the legacy drawer on purpose, to redraw an archived piece: scripts/pages/build.py
+--legacy, or allow_legacy() in code.
+"""
 from __future__ import annotations
 
 import datetime as dt
 import importlib
+
+# Off unless a caller redraws an archived piece on purpose (build.py --legacy). Never set it for a new piece.
+LEGACY = False
+LIBRARY_ROUTE = ('covers and thumbnails come from the Library now: python scripts/library/make_piece.py <piece folder> '
+                 '--set covers (or --set video for the thumbnails). The v5_feed skin and the Receipt cover path are retired '
+                 '(config/retired-styles.json); pass --legacy to scripts/pages/build.py only to redraw an archived piece')
+
+
+def allow_legacy():
+    """Let this process draw with the retired skin, for an archived piece only."""
+    global LEGACY
+    LEGACY = True
+
+
+def refuse_without_library():
+    """Stop unless the legacy drawer was asked for by name (build.py --legacy)."""
+    if not LEGACY:
+        import brand
+        brand.fail(LIBRARY_ROUTE)
 
 ORDER = ('v5_feed',)
 FIRST_WEEK = dt.date(2026, 11, 9)
@@ -63,6 +89,7 @@ def week_of(facts):
 
 
 def pick(facts, look):
+    refuse_without_library()
     named = facts.get('skin', 'v5_feed')
     if named not in ORDER:
         import brand
@@ -72,6 +99,7 @@ def pick(facts, look):
 
 def load(skin_id):
     """The skin's module (skins/<id>.py)."""
+    refuse_without_library()
     if skin_id not in ORDER:
         import brand
         brand.fail(f'there is no series skin {skin_id!r}: the skins are {", ".join(ORDER)}')

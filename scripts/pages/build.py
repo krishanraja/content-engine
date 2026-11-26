@@ -7,6 +7,11 @@ passed the fact gate.
     python build.py cover-facts.json --out OUTDIR --thumbs --options 3 --brief BRIEF.json [--past COVER ...]
     python build.py --self-test
 
+Covers and thumbnails are retired here: production makes them from the approved
+Library with scripts/library/make_piece.py (docs/ve/cards/library/LIBRARY-GUIDE.md).
+--cover and --thumbs refuse unless --legacy is given, to redraw an archived piece
+in the retired v5_feed skin and Receipt (config/retired-styles.json).
+
 Reads the piece's body markdown and a small JSON file of page facts (README.md
 has every field), and writes two self-contained files into OUTDIR:
 
@@ -1187,12 +1192,22 @@ def main():
     ap.add_argument('--brief', metavar='BRIEF.json', help='with --options: the thumbnail brief, written before any option is drawn')
     ap.add_argument('--past', action='append', default=[], metavar='COVER', help='with --options: a past posted cover on this machine, newest first (up to five)')
     ap.add_argument('--refresh-brand', action='store_true', help='fetch the logo images again now')
+    ap.add_argument('--legacy', action='store_true', help='with --cover or --thumbs: redraw an ARCHIVED piece in the retired skin and '
+                    'Receipt. New pieces take theirs from the Library: scripts/library/make_piece.py')
     ap.add_argument('--self-test', action='store_true', help='check that covers and thumbnails are the Receipt, the facts and the page check, with no browser')
     a = ap.parse_args()
     if a.self_test:
         sys.exit(self_test())
     if not a.facts:
         ap.error('give the facts file, or --self-test')
+    if a.legacy and not (a.cover or a.thumbs):
+        ap.error('--legacy only applies to --cover and --thumbs')
+    if a.cover or a.thumbs:
+        import skins
+        if a.legacy:
+            skins.allow_legacy()
+        else:
+            skins.refuse_without_library()
 
     out = Path(a.out) if a.out else brand.ROOT / '.cache' / 'pages' / Path(a.facts).resolve().parent.name
     raw = json.loads(Path(a.facts).read_text(encoding='utf-8'))

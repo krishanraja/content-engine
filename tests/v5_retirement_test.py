@@ -38,6 +38,9 @@ class RetirementTest(unittest.TestCase):
             'composition': set(re.findall(r'<Composition\s+id="([^"]+)"', ''.join(p.read_text(encoding='utf-8') for p in [entries / 'Root.tsx', *(entries / 'border-control').glob('*entry.tsx')]))),
             'font': {'IBM Plex Mono', 'Source Serif 4', 'Newsreader', 'Instrument Serif'},
             'brand_asset': {p.name for p in (ROOT / 'scripts/quick-edit/kit').glob('*.html')} | {'tokens.css', 'colour.series', config('brand-robot')['retired']['id'], config('series-art')['retired']['id']},
+            # The old cover drawers: a module in scripts/pages that draws the post's covers or thumbnails.
+            'cover_path': {p.stem for p in (ROOT / 'scripts/pages').glob('*.py')
+                           if 'def draw_covers' in p.read_text(encoding='utf-8') and 'def draw_thumbs' in p.read_text(encoding='utf-8')},
         }
         for kind, name in retirement.registry():
             with self.subTest(kind=kind, name=name):
@@ -64,10 +67,18 @@ class RetirementTest(unittest.TestCase):
         self.assertTrue(any('pop' in line and 'retired' in line for line in errors))
 
     def test_feed(self):
-        self.assertEqual(skins.pick({}, {}), 'v5_feed')
-        with self.assertRaises(SystemExit):
-            skins.pick({'skin': 'neon'}, {})
-        document = skins.load('v5_feed').page((1080, 1920), (90, 240, 990, 1500), 'photo.jpg', 'A & B', '')
+        # Retired for production: without the legacy flag the skins refuse and name the Library route.
+        with patch.object(skins, 'LEGACY', False), self.assertRaisesRegex(SystemExit, 'make_piece.py'):
+            skins.pick({}, {})
+        with patch.object(skins, 'LEGACY', False), self.assertRaisesRegex(SystemExit, 'make_piece.py'):
+            skins.load('v5_feed')
+        with patch.object(skins, 'LEGACY', True):
+            self.assertEqual(skins.pick({}, {}), 'v5_feed')
+            with self.assertRaises(SystemExit):
+                skins.pick({'skin': 'neon'}, {})
+        with patch.object(skins, 'LEGACY', True):
+            feed = skins.load('v5_feed')
+        document = feed.page((1080, 1920), (90, 240, 990, 1500), 'photo.jpg', 'A & B', '')
         self.assertIn('A &amp; B', document)
         self.assertIn('transparent 55%', document)
         self.assertNotIn('class="pill"', document)
