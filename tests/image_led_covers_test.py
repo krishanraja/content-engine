@@ -1,11 +1,12 @@
 import json
+import math
 from pathlib import Path
 import sys
 import unittest
 from contextlib import nullcontext
 from unittest.mock import patch
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT / "scripts/covers"), str(ROOT / "scripts/post-pack")]
@@ -13,6 +14,7 @@ import cover_facts
 from cover_outputs import OUTPUTS, pack_entries
 import make_covers
 import proof
+import thumb_gate
 import visual_gate
 from frame_capture import workspace
 
@@ -102,6 +104,82 @@ class ImageLedCoversTest(unittest.TestCase):
             bounds = {"role": role, "top": t, "left": l, "bottom": b, "right": r}
             self.assertEqual(bool(make_covers.safe_area("vertical", [bounds])), i > 0)
 
+    def test_colour_floor_applies_to_both_vertical_aspects(self):
+        for width, height in [(160, 90), (1200, 630), (90, 160), (108, 135), (160, 160)]:
+            image = Image.new("RGB", (width, height), "white")
+            ImageDraw.Draw(image).rectangle((0, 0, width // 2, height), fill="black")
+            path = self.base / "greyscale.png"
+            image.save(path)
+            metrics, fails = make_covers.measure(path, {"cap_height_px": 7, "local_contrast": 4.5})
+            self.assertEqual(fails, ["colour"] if width < height else [])
+            self.assertEqual(metrics["colour"], 0)
+            self.assertEqual("cap_height_px" in metrics, width > height)
+
+    def test_wide_gate_keeps_global_floors_and_requires_bound_type_evidence(self):
+        path = self.base / "wide.png"
+        Image.new("RGB", (160, 90), "black").save(path)
+        self.assertEqual(make_covers.measure(path)[1], ["contrast", "light", "cap_height_px", "local_contrast"])
+        checker = Image.new("RGB", (40, 23), "black")
+        for y in range(23):
+            for x in range(40):
+                if (x + y) % 2:
+                    checker.putpixel((x, y), (255, 255, 255))
+        checker.resize((160, 90), Image.Resampling.NEAREST).save(path)
+        at_floor = {"cap_height_px": 7, "local_contrast": 4.5}
+        self.assertEqual(make_covers.measure(path, at_floor)[1], ["busy"])
+        for key in at_floor:
+            below = dict(at_floor)
+            below[key] = math.nextafter(at_floor[key], 0)
+            self.assertEqual(make_covers.measure(path, below)[1], ["busy", key])
+        (self.base / "covers.json").write_text(json.dumps({"files": [
+            {"format": "youtube", "sha256": "stale", "gate_160": {"metrics": at_floor}}]}))
+        self.assertEqual(make_covers.measure(path)[1], ["busy", "cap_height_px", "local_contrast"])
+
+    def test_type_measurement_uses_rendered_ink_and_each_glyphs_own_background(self):
+        font = ImageFont.truetype(str(ROOT / "assets/fonts/makeyourmindup/Fraunces-Upright-Variable.ttf"), 24)
+        cap = Image.new("L", (42, 38))
+        ImageDraw.Draw(cap).text((2, 0), "H", fill=255, font=font)
+        mask = Image.new("L", (320, 180))
+        centres = [(16, 20), (218, 20)]
+        boxes = []
+        for xy in centres:
+            draw = ImageDraw.Draw(mask)
+            draw.text(xy, "H", fill=255, font=font)
+            boxes.append(draw.textbbox(xy, "H", font=font))
+        bg = Image.new("RGB", mask.size, "black")
+        ImageDraw.Draw(bg).rectangle((160, 0, 319, 179), fill="white")
+        cover = Image.composite(Image.new("RGB", mask.size, "white"), bg, mask)
+        metrics = thumb_gate.type_metrics(cover, bg, mask, boxes, [cap])
+        self.assertGreaterEqual(metrics["cap_height_px"], 7)
+        self.assertEqual(metrics["local_contrast"], 1)
+        dark = Image.composite(Image.new("RGB", mask.size, "black"), bg, mask)
+        cover.paste(dark.crop((160, 0, 320, 180)), (160, 0))
+        metrics = thumb_gate.type_metrics(cover, bg, mask, boxes, [cap, cap.resize((16, 12))])
+        self.assertLess(metrics["cap_height_px"], 7)
+        self.assertGreaterEqual(metrics["local_contrast"], 4.5)
+
+    def test_local_srgb_contrast_at_the_boundary(self):
+        bg = Image.new("RGB", (160, 90), "white")
+        mask = Image.new("L", bg.size, 0)
+        ImageDraw.Draw(mask).rectangle((30, 20, 36, 26), fill=255)
+        cap = Image.new("L", (5, 7), 255)
+        for value, passes in [(118, True), (119, False)]:
+            cover = Image.composite(Image.new("RGB", bg.size, (value,) * 3), bg, mask)
+            m = thumb_gate.type_metrics(cover, bg, mask, [(30, 20, 37, 27)], [cap])
+            self.assertEqual(m["cap_height_px"], 7)
+            self.assertEqual(m["local_contrast"] >= 4.5, passes)
+
+    def test_mark_under_part_of_one_glyph_is_sampled(self):
+        bg = Image.new("RGB", (160, 90), "white")
+        ImageDraw.Draw(bg).rectangle((0, 24, 159, 28), fill="black")
+        mask = Image.new("L", bg.size, 0)
+        draw = ImageDraw.Draw(mask)
+        draw.rectangle((30, 20, 34, 23), fill=255)
+        draw.rectangle((30, 24, 34, 28), fill=246)
+        cover = Image.composite(Image.new("RGB", bg.size, "black"), bg, mask)
+        m = thumb_gate.type_metrics(cover, bg, mask, [(30, 20, 35, 29)], [mask.crop((30, 20, 35, 29))])
+        self.assertEqual(m["local_contrast"], 1)
+
     def test_missing_stills_hold_both_native_briefs(self):
         self.facts["image_led"]["stills"] = {}
         self.facts["image_led"]["previous_published"] = {"families": {"wide": "evidence", "vertical": "receipt"}}
@@ -132,13 +210,16 @@ class ImageLedCoversTest(unittest.TestCase):
             d.rectangle((0, 0, w//3, h), fill="red")
             d.rectangle((w//3, 0, 2*w//3, h), fill="white")
             im.save(dest)
-            return []
+            return [], {"cap_height_px": 9, "local_contrast": 8} if fmt in ("youtube", "substack") else None
 
         with patch.object(make_covers, "browser_session", return_value=nullcontext(object())), patch.object(make_covers, "screenshot", side_effect=shot):
             record = make_covers.build(self.base, out, ["wide", "vertical"])
         self.assertEqual(record["issues"], [])
         self.assertEqual(record["status"], "passed")
         entries = pack_entries(out / "covers.json", "story")
+        self.assertTrue(all(item["gate_160"]["fails"] == [] for item in record["files"]))
+        self.assertEqual(make_covers.measure(out / OUTPUTS["youtube"][0]),
+                         (record["files"][0]["gate_160"]["metrics"], []))
         self.assertEqual([(r.get("kind"), r.get("shape")) for r in entries[:4]],
                          [("thumbnail", "wide"), ("substack-cover", None), ("vertical-cover", None), ("thumbnail", "tall")])
         self.assertEqual(Path(entries[4]["file"]).relative_to(out).as_posix(), "carousel/slide-01.png")
@@ -159,7 +240,7 @@ class ImageLedCoversTest(unittest.TestCase):
         self.assertTrue(visual_gate.image_led_problems(wide, "youtube"))
         with self.assertRaisesRegex(ValueError, "does not match"):
             pack_entries(out / "covers.json")
-        with patch.object(make_covers, "browser_session", return_value=nullcontext(object())), patch.object(make_covers, "screenshot", side_effect=shot), patch.object(make_covers, "measure", return_value=({}, ["colour"])):
+        with patch.object(make_covers, "browser_session", return_value=nullcontext(object())), patch.object(make_covers, "screenshot", side_effect=shot), patch.object(make_covers, "measure", return_value=({}, ["local_contrast"])):
             held = make_covers.build(self.base, out, ["wide"])
         self.assertEqual(held["status"], "held")
         with self.assertRaisesRegex(ValueError, "held"):

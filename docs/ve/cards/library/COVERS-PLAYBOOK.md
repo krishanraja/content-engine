@@ -36,7 +36,15 @@ Read the immediately preceding **published** piece's `families` from its packed 
 | Shorts, Reels and TikTok | `cover-1080x1920.png` and `thumb-tall-1080x1920.jpg` |
 | Carousel | `carousel/slide-01.png` at 1080 by 1350 |
 
-The renderer writes `covers.json` with the families, facts, sources, credits, hashes and gate results. A passing run releases the files. Set the post's `cover_set` to the relative path to that receipt to pack all five. Partial shape runs are for individual exports. Inspect both wides at 160 px and the verticals at phone size. Check the rendered credit and source crop. The Library's existing colour, contrast, light and busy thresholds apply to the encoded wide files. A held set belongs in review.
+The renderer writes `covers.json` with the families, facts, sources, credits, hashes and gate results. A passing run releases the files. Set the post's `cover_set` to the relative path to that receipt to pack all five. Partial shape runs are for individual exports. Inspect both wides at 160 px and the verticals at phone size. Check the rendered credit and source crop. A held set belongs in review.
+
+### The 160 px gate
+
+On 26 November 2026 Krish approved the artwork with “I approve the new cover thumbnail systems, go”. His ruling keeps the editorial wide designs exact. The 10% colour minimum applies to the 9:16 and 4:5 covers. Across both systems the luminance spread must reach 0.55, the light area must reach 2.5%, and the 40 px edge density must stay below 0.42.
+
+For YouTube and Substack, the fitted headline must have a cap height of at least 7 px at 160 px wide and at least 4.5:1 contrast against its local background. The number-led family uses the lead figure. After saving the final artwork, Playwright renders an H in each fitted face and a copy of the scene with the hook ink hidden. The gate measures the smallest cap height and the lowest local contrast. It samples the interior of every letter, digit and symbol against the underlying pixels, using the strongest pixel where a thin glyph has no solid interior. That includes the marked clause and any photograph beneath the hook.
+
+Read `gate_160` on each of the five file entries in `covers.json`. Wide entries include `cap_height_px` and `local_contrast`. To recheck an exported wide with `python docs/ve/cards/library/thumb_gate.py PATH`, keep its matching receipt beside it. A wide without render evidence holds for a fresh render.
 
 <details>
 <summary>Archived v5 research and earlier cover proposals</summary>

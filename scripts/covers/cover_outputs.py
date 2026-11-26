@@ -27,7 +27,11 @@ def validate_file(source, fmt, data, logos=()):
     if (source.name != Path(name).name or row.get("dimensions") != list(size) or row.get("safe_area") != []
             or row.get("sha256") != hashlib.sha256(source.read_bytes()).hexdigest()):
         raise ValueError(f"covers.json does not match {source.name} as {fmt}")
-    if fmt in {"youtube", "substack"} and row.get("gate_160", {}).get("fails") != []:
+    gate = row.get("gate_160", {})
+    required = {"colour", "contrast", "light", "busy"}
+    if fmt in {"youtube", "substack"}:
+        required.update(("cap_height_px", "local_contrast"))
+    if gate.get("fails") != [] or not required.issubset(gate.get("metrics", {})):
         raise ValueError(f"{source.name} has no passing 160 px gate")
     if set(logos) - set(row["logos"]):
         raise ValueError(f"{source.name} declares a logo absent from its receipt")

@@ -22,6 +22,7 @@ sys.path.insert(0, str(LIBRARY))
 from thumb_gate import measure
 from frame_capture import workspace
 from proof import capture
+from wide_type import measure_wide_type
 
 
 def digest(path):
@@ -79,7 +80,8 @@ def screenshot(browser, html, fmt, output):
         regions = pg.evaluate("window.coverReady")
         kwargs = {"quality": 95} if output.suffix == ".jpg" else {}
         pg.screenshot(path=output, **kwargs)
-        return safe_area(fmt, regions)
+        wide_type = measure_wide_type(pg, output) if fmt in ("youtube", "substack") else None
+        return safe_area(fmt, regions), wide_type
     finally:
         pg.close()
 
@@ -152,7 +154,7 @@ def build(facts_path, out, systems, assets=None, review=None):
                 name, size = OUTPUTS[fmt]
                 dest = stage / name
                 dest.parent.mkdir(exist_ok=True)
-                problems = screenshot(get_browser(), doc, fmt, dest)
+                problems, wide_type = screenshot(get_browser(), doc, fmt, dest)
                 files = [(fmt, dest)]
                 if fmt == "vertical":
                     tall = stage / OUTPUTS["tall"][0]
@@ -162,10 +164,9 @@ def build(facts_path, out, systems, assets=None, review=None):
                 for channel, path in files:
                     item = {"format": channel, "file": OUTPUTS[channel][0], "dimensions": list(size),
                             "sha256": digest(path), "logos": logos, "safe_area": problems}
-                    if channel in ("youtube", "substack"):
-                        metrics, fails = measure(path)
-                        item["gate_160"] = {"metrics": metrics, "fails": fails}
-                        record["issues"].extend(f"{channel}: 160 px {failure}" for failure in fails)
+                    metrics, fails = measure(path, wide_type)
+                    item["gate_160"] = {"metrics": metrics, "fails": fails}
+                    record["issues"].extend(f"{channel}: 160 px {failure}" for failure in fails)
                     if channel == "youtube" and path.stat().st_size > 2 * 1024 * 1024:
                         record["issues"].append("YouTube thumbnail exceeds 2 MiB")
                     record["files"].append(item)
