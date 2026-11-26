@@ -854,6 +854,10 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
     Teleprompter try) is set aside before the approval is checked (`asWritten`), so Tue 17's `picks/tue-scripts-words`,
     held, still counts. A `send` written by anyone else is still refused.
 
+- **1.35.0 (25 Nov 2026)** added **`edition`** on each day (null but on Saturday) and the model item kind **`edition`**:
+  the week's edition, makeyourmindup weekly, with his one press, **Approve for send** (`picks/sat-edition`, kind
+  `approve_send`, bound to the draft's sha256), "The weekly edition on Saturday" below.
+
 - **1.30.0 (18 Nov 2026)** added to a piece's production `plan`: **`got`**, every file Krish got himself and dropped on
   the plan (`{ id, title, kind, content_type, beats, at, drive: { state, path } }`), **`folder`**, the piece's one post
   folder in `3 Posts` (or null before anything bound one), and on each `fetch` its own **`got`**. Krish, 2026-11-18:
@@ -1797,3 +1801,42 @@ Ruling (Krish, 2026-11-24): the signature format is the 5 Whys; get rid of every
 - **On the read sheet:** `read.whys` (`modelRead.whys`): the question, each rung's `n`, `question`, `strength`, `status` (`ok` or `needs_work`) with its problems and stop, the landing, and the ladder-wide problems. Absent for a piece with no ladder.
 - **The lock:** the story prompt and `corpusLines` ask for "## The Whys", one Why per beat, each citing its evidence; `scripts/post-pack/making.py` refuses a lock signed from 2026-11-25 whose Whys are missing or unsourced.
 - **Held by:** `tests/whys-contract.test.ts`, `tests/control-plane/board-whys-research.test.ts`, `tests/control-plane/board-view-contract.test.ts`.
+
+## The weekly edition on Saturday: Approve for send (contract 1.35.0)
+
+Krish, 2026-11-25 (growth-makeyourmindup `docs/plans/2026-11-25-weekly-edition/DESIGN.md`, approved with every
+recommendation): one email a week, **makeyourmindup weekly**, every Saturday at 08:00 New York, sent only on his press.
+The Friday run (`.github/workflows/weekly-edition.yml`, `.agents/skills/weekly-edition/SKILL.md`) drafts it and files
+the package in the library like a post: `3 Posts/<Saturday> Sat edition - makeyourmindup weekly/0 Publish/
+edition.draft.json` (`content-engine-edition/1`, `scripts/edition/edition.py package`) with `edition.preview.html` beside
+it. It writes records only; the live board shows the edition at its next read.
+
+- **In the view:** Saturday's `edition` (`apps/control-plane/api/board/_edition.ts`) is the library's newest ready copy
+  of the draft, its bytes checked against the sha256 the library recorded, with every check passed: `{ kind, edition_date,
+  name, subject, preview_text, sha256, checks, contents, pieces, news, sources, files: { draft, preview }, library,
+  state, approved_at, approved_sha256, press, why }`, or null. `state` is `waiting`, `approved` (his
+  `picks/sat-edition`, his login only, approved and bound to exactly this sha256) or `changed` (his press binds another
+  draft: `why` says so and the press reads "Approve the new edition for send"). While it waits, `press` leads Saturday's
+  `actions`, and the week model draws one Saturday item, kind `edition`, type `post`, on its own path (Drafted, Approved
+  for send, Scheduled, Sent), its next action the press, its links the preview and the draft through Control Centre's own
+  address, and its read sheet the contents and every news item's primary source.
+- **His press:** `PUT /api/board/<Monday>/picks/sat-edition` with `{ kind: approve_send, day: sat, edition_date,
+  approved: true, edition_sha256 }` and the time at `at`. The route refuses a hash that is not the draft as it stands now
+  (409 `edition_changed`), and a week with no edition filed or another Saturday (409 `edition_not_found`). `approved:
+  false` takes it back. Only his login presses it (`hisOnlyRefusal`).
+- **The files:** `GET /api/board/<Monday>/edition` (the item, his press's state included), `/edition/draft` (the exact
+  bytes, with `X-Content-SHA256`) and `/edition/preview` (the preview page, under a policy that runs nothing), on his
+  login, the engine key or Growth's key. Growth's Substack step builds from those bytes and schedules only when the item
+  says approved for exactly their sha256 (`docs/GROWTH-HANDOFF.md`, "The weekly edition package").
+- **The news it chooses from:** `GET /api/board/<Monday>/edition/news` is the week's daily hub editions, read only
+  (`readHubWeek`): the hub pipeline's `hub_snapshots` rows from the Friday before the week to its Friday, each item cut
+  to what the edition reads (`id, subsector, date, source, url, headline, dek, why, coverage`), a row that is not a good
+  snapshot said as `missing`, and 503 `hub_unavailable` when the table cannot be read. The Friday run's gather reads it
+  and runs no gathering of its own (26 Nov 2026); each item is still checked against its own primary source.
+- **Why not the off-day manifest's Approve for publish:** that press is `picks/<day>-publish`, one a day, which Saturday's
+  own post may need; it binds a piece's record (`checkPublishBind` reads `content_ideas`) and a file list in Growth's
+  `content-engine-piece-manifest/1` shape; and an off-day item reaches its day only through his Approve on its option, so
+  the edition would need two presses. The edition is no piece and has one press, so it is its own item, built on the
+  manifest's pattern (the library read, the sha256 bind, the three states and the 409).
+- **Held by:** `tests/control-plane/board-edition.test.ts`, `tests/control-plane/board-view-contract.test.ts`,
+  `tests/edition_test.py`.

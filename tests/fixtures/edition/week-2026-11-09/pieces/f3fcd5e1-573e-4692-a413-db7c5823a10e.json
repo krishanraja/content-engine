@@ -1,0 +1,14 @@
+{
+  "_about": "A fixture of GET /api/content-ideas?id=<piece> for Friday 13 Nov 2026, written by hand from the repository's own record of the piece (docs/plans/2026-11-13-friday/article.md), shortened.",
+  "ok": true,
+  "piece": {
+    "id": "f3fcd5e1-573e-4692-a413-db7c5823a10e",
+    "state": "published",
+    "lane_slot": "mind_the_gap",
+    "scheduled_for": "2026-11-13",
+    "idea": "Meta staff were ranked by AI use. They gamed it.",
+    "thesis": "Staff judged by how much AI they used used more of it, much of it on nothing. A rat bounty in Hanoi in 1902 shows why a count becomes the goal.",
+    "body": "At some of the biggest companies in tech, staff were judged, and then ranked, by how much AI they used.",
+    "updated_at": "2026-11-13T17:30:00Z"
+  }
+}

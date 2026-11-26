@@ -83,6 +83,9 @@ class LibraryError(ValueError):
 # An off-day post has no series; its folder carries this label where a series name would go
 # (config/library-paths.cases.json, off_day_label; Krish, 2026-11-03).
 OFF_DAY = json.loads(CASES.read_text(encoding='utf-8'))['off_day_label']
+# The weekly edition is filed like a post, with this label where a series name would go (config/library-paths.cases.json,
+# edition_label; Krish, 2026-11-25: one email a week, "makeyourmindup weekly", every Saturday; config/weekly-edition.json).
+EDITION = json.loads(CASES.read_text(encoding='utf-8'))['edition_label']
 # The days with no series: Tuesday, Thursday and Saturday (Sunday rests; Krish, 2026-11-02).
 OFF_WEEKDAYS = ('Tue', 'Thu', 'Sat')
 
@@ -108,7 +111,7 @@ def utf16_length(text):
 
 
 def _post_folder_pattern():
-    names = '|'.join(re.escape(name) for name in subchannels() + [OFF_DAY])
+    names = '|'.join(re.escape(name) for name in subchannels() + [OFF_DAY, EDITION])
     return re.compile(rf'([0-9]{{4}})-([0-9]{{2}})-([0-9]{{2}}) (?:({"|".join(WEEKDAYS)}) ({names})|Launch) - \S.*', re.S)
 
 
@@ -300,6 +303,7 @@ def check_cases(cases):
     check('content types', CONTENT_TYPES, cases['content_types'])
     check('subchannels', sorted(subchannels()), sorted(cases['subchannels']))
     check('off-day label', OFF_DAY, cases['off_day_label'])
+    check('edition label', EDITION, cases['edition_label'])
     for item in cases['paths']:
         check(f'path: {item["why"]}', refusal(item['path']), item.get('refused'))
     for item in cases['post_folders']:

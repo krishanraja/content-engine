@@ -10,6 +10,7 @@ import { LIVE_BOARD_URL, liveBoardUrl } from '../../apps/control-plane/api/board
 import { SCHEMA_PATH, compare, judge, validate } from '../../scripts/check-view-contract'
 import { assetsOf, type DriveFile } from '../../apps/control-plane/api/board/_drivePosts'
 import { parseDraft } from '../../apps/control-plane/api/board/_manifest'
+import { parseEdition, sha256 as editionSha } from '../../apps/control-plane/api/board/_edition'
 import { setDigest, THUMB_CHECKS } from '../../apps/control-plane/api/_thumbOptions'
 
 // The Publish Board view's contract (Ruling, Krish, 2026-11-11: "make sure this is built such that when I make other
@@ -55,6 +56,21 @@ const WHYS: Body = {
       stop: n === 3 ? 'evidence_exhausted' : null })),
     landing: { shows: 'The price follows who owns the meter.', open_question: 'Which of your tools is metered by someone else?' } },
   problems: [{ rung: 2, problem: 'Why 2 needs a second source' }],
+}
+
+/** The week's edition (1.35.0), as the Friday run packages it (content-engine-edition/1), cut to one piece and one item. */
+const EDITION: Body = {
+  schema: 'content-engine-edition/1', edition_date: '2026-11-21', week_of: WEEK, name: 'makeyourmindup weekly',
+  subject: 'The cheap model got dearer, and who pays for it', preview_text: 'The week\'s piece, then the creative news, checked.',
+  checks: { kill_list: 'pass', sources: 'pass', voice: 'pass', words: 312 },
+  sections: [
+    { kind: 'opener', text: 'This week we followed one price. Here it is.' },
+    { kind: 'contents', lines: ['Monday: who pays when the cheap model gets dearer.', 'Also: music.'] },
+    { kind: 'piece', day: 'mon', label: 'Monday: who pays', title: 'Piece 8287. It says one thing.', summary: 'A summary.', url: 'https://example.org/p/mon', video_url: null, cover: { url: 'https://example.org/c.png', alt: 'A cover.' } },
+    { kind: 'news', groups: [{ topic: 'Music', items: [{ text: 'A label licensed its catalogue.', source_name: 'Example Records', source_url: 'https://example.org/records', quote: 'We licensed it.', checked_at: '2026-11-20T15:00:00Z' }] }] },
+    { kind: 'pass_it_on', text: 'Forward it to one person.', url: 'https://home.makeyourmindup.ai/subscribe' },
+    { kind: 'close', text: 'That is the week.' },
+  ],
 }
 
 /** Friday's thumbnail options (1.16.0): three options, each file's review copy in Drive, the critic's pick B and C held. */
@@ -139,6 +155,11 @@ function full(): ViewInputs {
     drafts: { [MON]: parseDraft(Buffer.from(`${JSON.stringify({ schema: 'content-engine-piece-manifest/1', piece_id: MON, qa: { state: 'passed', checked_at: '2026-11-16T07:00:00Z' },
       assets: [{ name: 'short_video', drive_id: DRIVE.long, sha256: '1'.repeat(64), order: 1 }, { name: 'vertical_cover', drive_id: DRIVE.cover, sha256: '2'.repeat(64), order: 2 }],
       channels: { tiktok: { words: 'Synthetic caption.', alt_text: null, assets: ['short_video'] } } }, null, 1)}\n`), MON)! },
+    // 1.35.0: the week's edition on Saturday, waiting on his Approve for send (_edition.ts).
+    edition: (() => {
+      const bytes = Buffer.from(`${JSON.stringify(EDITION, null, 2)}\n`)
+      return { draft: parseEdition(bytes, '2026-11-21')!, bytes, preview: { object_key: 'files/preview.html', sha256: editionSha('preview') } }
+    })(),
     // 1.7.0: the week's posts in Drive: Monday's piece's post, and Tuesday's off-day post with a carousel, a meme video in
     // two versions and its words (_drivePosts.ts).
     drive_posts: [

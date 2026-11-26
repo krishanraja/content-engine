@@ -9,6 +9,7 @@
     "A post's folder: YYYY-MM-DD <Day> <subchannel> - <Subject>, with the day the date fell on (Mon, Tue, Wed, Thu, Fri, Sat or Sun) and the subchannel as the brand writes it; a launch post is YYYY-MM-DD Launch - <Subject>. The subject is made safe by the archive naming rule (config/archive-naming.cases.json) and cut at a space so the whole name stays within part_max.",
     "A canary, test, smoke-test, dry-run or fixture post is refused (path_test_folder), and a rendered video (mp4, mov, webm) inside a post goes only in 3 Video (path_render_outside_video); W3.5.",
     "Off-day posts (Tuesday, Thursday, Saturday) have no series, so their folder carries the label off.day where a series name would go: '2026-11-03 Tue off.day - AI agents translator' (Krish, 2026-11-03: \"get the drive and publish board fully up to date\"; off-day assets had no valid folder and were never filed).",
+    "The weekly edition (Krish, 2026-11-25: one email a week, \"makeyourmindup weekly\", every Saturday; config/weekly-edition.json) is filed like a post with the label edition where a series name would go: '2026-11-14 Sat edition - makeyourmindup weekly', its draft and preview in 0 Publish (the weekly edition contract of 25 Nov 2026, section 3).",
     "A second library, Heartside (Krish, 2026-11-03: \"Why don't you duplicate that Python script for Heartside then? We're going to need to do a lot more of this type of stuff moving forward\"): Heartside/03b_Social-Schedule on Drive (05_Social-Library until Krish renamed it on 2026-11-09; same folder ID), where each post's media goes in Posts/<post id>/<file> for Codex to post. A request names it with \"library\": \"heartside\"; without one it is makeyourmindup, and everything above is makeyourmindup's rule. The Windows-safety checks, content_types, path_max, part_max and max_bytes are shared; libraries.heartside holds its own folder rule and cases."
   ],
   "top_folders": [
@@ -29,6 +30,7 @@
     "under.the.hood"
   ],
   "off_day_label": "off.day",
+  "edition_label": "edition",
   "path_max": 180,
   "part_max": 100,
   "max_bytes": 2147483648,
@@ -418,6 +420,19 @@
     {
       "why": "off.day on a series day is still a valid label",
       "path": "3 Posts/2026-11-05 Thu off.day - No spending no sending/4 Social/still.jpg"
+    },
+    {
+      "why": "the weekly edition's draft, filed like a post (contract of 25 Nov 2026, section 3)",
+      "path": "3 Posts/2026-11-14 Sat edition - makeyourmindup weekly/0 Publish/edition.draft.json"
+    },
+    {
+      "why": "the weekly edition's preview beside its draft",
+      "path": "3 Posts/2026-11-14 Sat edition - makeyourmindup weekly/0 Publish/edition.preview.html"
+    },
+    {
+      "why": "the edition label still needs the day its date fell on",
+      "path": "3 Posts/2026-11-14 Fri edition - makeyourmindup weekly/0 Publish/edition.draft.json",
+      "refused": "path_post_folder_invalid"
     }
   ],
   "post_folders": [

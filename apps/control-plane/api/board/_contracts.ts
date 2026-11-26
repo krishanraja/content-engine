@@ -3,6 +3,7 @@ import { createHash, timingSafeEqual } from 'node:crypto'
 import type { VercelRequest } from '@vercel/node'
 import { hasEngineAccess, operatorBearerAllowed } from '../_auth.js'
 import { AUDIO_ID, audioBody } from './_audio.js'
+import weeklyEdition from '../../../../config/weekly-edition.json' with { type: 'json' }
 
 export const collections = ['ticks', 'links', 'edits', 'picks', 'queue', 'comments'] as const
 export type Collection = typeof collections[number]
@@ -132,6 +133,22 @@ function gateBody(kind: GateKind, body: Record<string, unknown>): boolean {
   return typeof body.module === 'string' && MODULE_ID.test(body.module) && picked.length === 1
     && (picked[0] as Record<string, unknown>).module === body.module
     && (!('reason' in body) || body.reason === null || words(body.reason))
+}
+// His Approve for send on the week's edition (contract 1.35.0, _edition.ts; Krish, 2026-11-25: one email a week,
+// "makeyourmindup weekly", every Saturday at 08:00 New York, sent only on his press): picks/sat-edition, kind
+// approve_send, the Saturday it sends on and the sha256 of the exact draft he read (edition_sha256), which the route binds
+// to the draft as it stands (checkEditionBind, 409 edition_changed). approved false takes it back. Both names are rows in
+// config/weekly-edition.json (board.press_doc, board.press_kind). His press only: a picks document with a kind is his.
+export const EDITION_DOC: string = weeklyEdition.board.press_doc
+export const EDITION_KIND: string = weeklyEdition.board.press_kind
+export function editionBody(id: string, body: Record<string, unknown>): boolean {
+  if (id !== EDITION_DOC || body.kind !== EDITION_KIND || body.day !== weeklyEdition.board.day || 'send' in body) return false
+  if (Object.keys(body).some(k => !['kind', 'day', 'edition_date', 'approved', 'edition_sha256', 'at'].includes(k))) return false
+  const date = String(body.edition_date)
+  const d = new Date(`${date}T00:00:00Z`)
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || isNaN(+d) || d.toISOString().slice(0, 10) !== date || d.getUTCDay() !== 6) return false
+  if (typeof body.approved !== 'boolean') return false
+  return body.approved === false ? (!('edition_sha256' in body) || SHA256.test(String(body.edition_sha256))) : SHA256.test(String(body.edition_sha256))
 }
 // His retrospective thoughts on a day's post (the Today view, layout A; Krish, 2026-10-29: "yes, go with A and your
 // recommendations and my feedback"; 2026-10-30: "the two feedback buttons need to just be an open text box for my
@@ -429,6 +446,8 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (collection === 'picks' && FEEL_ID.test(id)) return feelBody(id, body)
   if (collection === 'picks' && (id === MIX_ID || body.kind === 'mix')) return id === MIX_ID && mixBody(body)
   if (collection === 'picks' && (CREATIVE_ID.test(id) || body.kind === 'sign_creative')) return creativeBody(id, body)
+  // His Approve for send on the week's edition (picks/sat-edition, kind approve_send; contract 1.35.0).
+  if (collection === 'picks' && (id === EDITION_DOC || body.kind === EDITION_KIND)) return editionBody(id, body)
   // His pick of an off-day post's voice or track (picks/audio-<voice|bed>-<item>; contract 1.20.0, _audio.ts).
   if (collection === 'picks' && (AUDIO_ID.test(id) || body.kind === 'audio_pick')) return audioBody(id, body)
   // His swaps on a piece's production plan (picks/plan-<8 hex>, kind plan_swaps, bound to the plan's sha256; contract

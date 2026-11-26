@@ -1,0 +1,14 @@
+{
+  "_about": "A fixture of GET /api/content-ideas?id=<piece> for Monday 9 Nov 2026, written by hand from the repository's own record of the piece (its draft manifest's words), shortened.",
+  "ok": true,
+  "piece": {
+    "id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+    "state": "published",
+    "lane_slot": "follow_the_money",
+    "scheduled_for": "2026-11-09",
+    "idea": "When an AI app millions of people loved goes bust, who walks away with the money?",
+    "thesis": "Character.AI went bust on 12 October. Google had already paid a reported $2.7 billion to use its technology and hired its founders. Disney is offering jobs to some of its staff, and the lawsuits stay with what is left.",
+    "body": "Character.AI went bust on 12 October. The money had already followed the people.",
+    "updated_at": "2026-11-09T17:30:00Z"
+  }
+}

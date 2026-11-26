@@ -47,6 +47,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `scripts/channel-kit/`
 - `scripts/covers/`
 - `scripts/cutgates/`
+- `scripts/edition/`
 - `scripts/hooks/`
 - `scripts/learning/`
 - `scripts/library/`
@@ -2346,6 +2347,9 @@ Every week's ideas board carries the meme templates (Ruling, Krish, 2026-11-19: 
 - `type GateKind = keyof typeof GATE_KINDS`
 - `const STYLE_VERDICTS`
 - `const PROOF_VERDICTS`
+- `const EDITION_DOC: string`
+- `const EDITION_KIND: string`
+- `function editionBody(id: string, body: Record<string, unknown>): boolean`
 - `const MIX_ID`
 - `function mixBody(body: Record<string, unknown>): boolean`
 - `const FEEL_ID`
@@ -2487,6 +2491,35 @@ Krish's decisions on a piece, read live from the records, so no session asks him
 - `function ownerDriveToken(env: Record<string, string | undefined> = process.env): Promise<string | null>`
 - `interface BoardDrive`
 - `function boardDrive(db: { storage: { from(b: string): any } }, opts: { token?: () => Promise<string | null>; fetch?: ty…`
+
+### `apps/control-plane/api/board/_edition.ts`
+
+- `const EDITION_SCHEMA: string`
+- `const EDITION_NAME: string`
+- `const EDITION_DAY`
+- `const EDITION_ITEM_KIND: string`
+- `const EDITION_ITEM_LABEL: string`
+- `const EDITION_MAX_BYTES: number`
+- `const EDITION_PATH`
+- `const sha256 = (b: Uint8Array | string) =>`
+- `function editionDate(week: string): string`
+- `function editionPaths(date: string): { folder: string; draft: string; preview: string }`
+- `interface EditionDraft`
+- `interface EditionRead`
+- `function parseEdition(bytes: Uint8Array, date: string): EditionDraft | null`
+- `async function readEdition(db: SupabaseClient, week: string): Promise<EditionRead | null>`
+- `interface EditionPress`
+- `interface ViewEdition`
+- `function editionView(found: EditionRead | null | undefined, picks: PickDoc[], week: string): ViewEdition | null`
+- `function editionApprovedLabel(v: ViewEdition): string | null`
+- `class EditionBindError`
+- `async function checkEditionBind(db: SupabaseClient, week: string, body: Body): Promise<void>`
+- `async function readPreview(db: SupabaseClient, found: EditionRead): Promise<Uint8Array | null>`
+- `const PREVIEW_POLICY`
+- `interface HubItem`
+- `interface HubWeek`
+- `class HubUnavailable`
+- `async function readHubWeek(db: SupabaseClient, week: string): Promise<HubWeek>`
 
 ### `apps/control-plane/api/board/_gate.ts`
 
@@ -3879,6 +3912,7 @@ What the compiler looks for, as pure functions.
 - `const LIBRARY_POST_README`
 - `const LIBRARY_SUBCHANNELS`
 - `const LIBRARY_OFF_DAY`
+- `const LIBRARY_EDITION`
 - `const LIBRARY_CONTENT_TYPES: Readonly<Record<string, string>>`
 - `function libraryMimeTypes(): string[]`
 - `const LIBRARY_OPTIONAL_MIME_TYPES: readonly string[]`

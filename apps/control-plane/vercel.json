@@ -265,6 +265,14 @@
       "destination": "/api/board?week=:week&op=touch"
     },
     {
+      "source": "/api/board/:week/edition",
+      "destination": "/api/board?week=:week&op=edition"
+    },
+    {
+      "source": "/api/board/:week/edition/:id",
+      "destination": "/api/board?week=:week&op=edition&id=:id"
+    },
+    {
       "source": "/api/board/:week/:collection/:id",
       "destination": "/api/board?week=:week&collection=:collection&id=:id"
     },
