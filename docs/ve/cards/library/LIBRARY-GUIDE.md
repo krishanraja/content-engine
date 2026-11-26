@@ -5,9 +5,11 @@ Generated from `library.json` by `make_guide.py`. Read this before making any ar
 **Who makes what (Krish, 26 Nov 2026):** content-engine makes every asset here and writes its captions into the piece manifest; growth posts, schedules, distributes and measures. There is one engine and one template source: this Library.
 
 ## Read these before making anything
+- `ART-DIRECTION.md`: read it first. The owner's variety and imagery rules: imagery order, treatment rotation, type lanes, colour as signal, no badges, and mood.
 - `PRODUCTION-PLAYBOOK.md`: how to assemble every piece (hero vertical, long cut, carousel, covers, off-day, good news, weekly edition, Notes) from these templates, how to choose the cover family, every edge case per asset with the action, and what each refusal stamp means.
 - `STANDARD.md` (the poster and the evidence), `TITLES.md` (his title shapes), `COVERS-PLAYBOOK.md`, `CAROUSEL-FORMAT.md` (the 3-second swipe), `IMAGERY.md` (what may be pictured).
 - `SCRIPT-TO-MOTION.md` (beats that land on the spoken word, the four caption styles) and `MOTION-FLOOR.md` (the minimum standard for every cut).
+- `scripts/library/make_piece.py` (from the repository root) fills covers, thumbnails and carousel sets from a piece's cover facts and hands the files to post-pack.
 - `LOCKING.md` (what a locked template means). `EDGE-CASES.md` and the `ROUND-*`, `FIX*`, `CRITIQUE-*` and `BRIEF*` files are build history: never production instructions.
 
 ## The rule in one line

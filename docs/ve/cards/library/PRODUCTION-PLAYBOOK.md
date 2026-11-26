@@ -1,5 +1,7 @@
 # The production playbook: how to assemble every makeyourmindup piece from the Library, and every edge case
 
+Read ART-DIRECTION.md first: variety and imagery rules.
+
 For content-engine production sessions. Read this, `LIBRARY-GUIDE.md` (every template: where it is used and what to fill), `STANDARD.md`, `TITLES.md`, `SCRIPT-TO-MOTION.md`, `MOTION-FLOOR.md`, `CAROUSEL-FORMAT.md` and `IMAGERY.md` before making anything. When this playbook and a template disagree, the template's refusal wins: fix the input, never the frame.
 
 ## 1. The order of work for any piece
@@ -13,6 +15,8 @@ For content-engine production sessions. Read this, `LIBRARY-GUIDE.md` (every tem
 6. **Write captions into the piece manifest and hand over to growth to post.** Growth never makes assets (Krish, 26 Nov 2026).
 
 ## 2. What each piece is made of
+
+**Fill it with `make_piece.py`.** From the repository root, `python scripts/library/make_piece.py docs/plans/<day> --set covers` fills the five covers, `--set video` the two video thumbnails and `--set <carousel set>` a carousel, from the piece's `cover-facts.json` (its headline, company rows with their logos and verdict tags, and its proof). It builds the pack, renders it with `render.py --carousel-pack <pack> --items <ids>`, and writes the files under the names `scripts/post-pack/build.py` reads (`cover.png`, `cover-1200x630.png`, `cover-1200x675.png`, `cover-1080x1080.png`, `cover-1080x1920.png`, `thumbs/thumb-wide-1280x720.jpg`, `thumbs/thumb-tall-1080x1920.jpg`, `carousel/slide-NN.png`), each with its receipt and a `post-pack-files.json` of the post.json entries. It never invents words: every slot comes from the piece, or it stops and names the slot. The old drawer (`scripts/pages/build.py --cover` and `--thumbs`, the v5_feed skin) is retired and runs only with `--legacy`, for an archived piece.
 
 ### Hero piece (Mon, Wed, Fri)
 
