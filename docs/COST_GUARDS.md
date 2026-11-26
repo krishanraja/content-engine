@@ -105,12 +105,36 @@ The cap is enforced, as the proposal said, with no new table and no new cron (`a
 - It never stops the fact gate on a piece he picked: `chainAllows` answers that first, whatever the list says, and the
   fact gate is not on the list.
 
-## The judges on Growth's carousels and Shorts
+## The judges on every carousel and Short
 
-Every carousel and Short Growth makes is judged by the draft judges' panel before it is made (Ruling, Krish,
-2026-11-12: "Judge them; count passes."; `apps/control-plane/api/board/_judge.ts`). Free checks run first and fail a post
-without a model call; a post judged before answers from `asset_judgements` and pays nothing; at most `DAILY_CAP` (40)
-panels a day are paid for, then the route answers 429 and Growth holds the slot. Each row records its `cost_usd`.
+Every carousel and Short is judged by the draft judges' panel before it is handed to Growth (Ruling, Krish,
+2026-11-12: "Judge them; count passes."; `apps/control-plane/api/board/_judge.ts`). Since 26 Nov 2026 content-engine
+makes every asset, so its make flow asks itself (`scripts/post-pack/judge_assets.py ask`, on the engine operator's key;
+Ruling, Krish, 2026-11-26). Free checks run first and fail a post without a model call; a post judged before answers
+from `asset_judgements` and pays nothing; at most `DAILY_CAP` (40) panels a day are paid for, then the route answers 429,
+the step exits 2 and the slot is held, never passed. Each row records its `cost_usd`.
+
+## The story score's ledger and the blind proof's ceiling (branch `story/engine-v5`)
+
+The Sunday story engine's paid calls (divergence-engine `provoke` and judged `score`, the humour engine's reads, the
+council on close calls) go through one spend ledger per week, `.cache/story-score/<Monday>.jsonl` (gitignored;
+`config/story-score.json` `files.ledger`), written by `scripts/post-pack/story_score.py` and `scripts/post-pack/touch.py`:
+
+- **Reserve before the call.** Each call reserves its unit cost (`unit_costs`: provoke $0.15, judged score $0.30, free
+  score $0, humour read $0.005, council read $0.25) before its transport is touched, and is refused when it would pass
+  the week's `budget_usd` ($10), the day's $5 or the day's 18 divergent operations (`spend`), all read from that ledger.
+- **The chain first.** A divergent call is checked against the $15 weekly chain (`config/chain-cap.json`) before it is
+  made; over any cap the call is refused and the step is reported skipped, never passed.
+- **Settle to what was metered.** A served divergent call is settled to the route's own cost figure, else the chain's
+  change over the call when that is more than the reservation, never less; a settled cost over its reservation counts
+  at once. `python3 scripts/post-pack/story_score.py ledger [<Monday>]` prints the week.
+- **The blind proof's ceiling.** The proof of the engine spends at most $10 in all, through its own ledger
+  (`.cache/proof/story-engine-v5/spend.jsonl`, read whole), and only after its protocol is committed (Ruling, Krish,
+  2026-11-26, `spend_ceiling` in `config/story-score.json`; `config/story-proof.json` `budget_usd`;
+  `docs/plans/proofs/2026-11-26-story-engine-v5/PROTOCOL.md`). `story_proof.py run --dry` spends nothing. No paid proof
+  call has been made as of 26 Nov 2026.
+- **The cycle's paid touches** (a divergence-engine `challenge`, a credit reservation for a generation) reserve through
+  the chain cap and the same ledger first, and are skipped over either (`touch.py`).
 
 ## The environment is the floor: a setting only Krish can change
 

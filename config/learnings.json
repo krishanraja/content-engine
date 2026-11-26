@@ -603,12 +603,12 @@
       "on": "2026-10-19",
       "krish": "I just can't figure out how general business leaders would be helped immediately by knowing this. ... I'm not sure what this means for a layperson running a business.",
       "why": "Three Friday ideas (face and voice ownership, proving a video call is human, AI on $55 TV boxes) described a trend or a mechanism but gave a business leader nothing to do or decide, so he marked each curious but not convinced and queued none.",
-      "means": "Every idea carries, in one plain sentence, what a general business leader can do or decide differently right away. An idea that cannot say it is not offered. The so_what says what they find out; this test says what they do.",
+      "means": "Every idea carries, in one plain sentence, what a general business leader can do or decide differently right away. An idea that cannot say it is not offered. The so_what says what they find out; this test says what they do. Superseded in part on 26 Nov 2026: the reader is no longer a general business leader but the v5 reader Krish approved (config/beat.json reader), so the plan-week step is the reader test.",
       "status": "encoded",
       "encoded": [
         {
           "file": ".agents/skills/plan-week/SKILL.md",
-          "contains": "The business-leader test.",
+          "contains": "The reader test.",
           "how": "the plan-week step that screens each idea before it reaches the Ideas tab"
         }
       ]

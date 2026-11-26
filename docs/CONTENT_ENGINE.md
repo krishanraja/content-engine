@@ -7,7 +7,9 @@ crons and run ledger read back from the database, guards run locally. On
 2026-11-04 the route paths, crons, guards, checks, Studio handoff and library
 limits were checked again against `main`; the run ledger was not read. On
 2026-11-16 the crons and the replay registry were checked again against
-`vercel.json` and `_jobs.ts`.
+`vercel.json` and `_jobs.ts`. On 2026-11-26 the reader, the judges' roster
+version, the Sunday story engine and the ownership split were added against
+branch `story/engine-v5` at `53ff7558` (not on `main` yet).
 
 Scope: the editorial half of this repository, everything under
 `apps/control-plane/`. The Studio half is in `docs/STUDIO.md`. Why either
@@ -142,6 +144,21 @@ and each later tick reads the recorded failure first and fails at once,
 without a call, until the reset (or an hour, for a refusal with no reset)
 has passed. `POST /api/content-ideas/:id/judge` answers such a panel with 503
 `model_unavailable` and records nothing.
+
+**The reader every judge and filter reads (branch `story/engine-v5`).** The North Star reader Krish approved on
+2026-11-26 ("I approve the lines"; `docs/NORTH_STAR.md`) is one row, `config/beat.json` `reader`, read through
+`api/_beat.ts` (`READER`). The relevance classifier (`api/_relevance.ts`) keeps a story only when it speaks to what AI
+is doing to how work in the creative, arts, music, entertainment, media and sports industries makes money; it no
+longer keeps "anything about AI". The idea panel's `reader` and `buyer` judges take their question and rubric from
+the same row (`api/_judges/roster.ts`, `ROSTER_VERSION` `panel-v3`; same keys and eight scoring judges, so
+calibration still joins); the buyer judge now asks whether someone in those industries would pay to read it, and
+whether to keep that rewrite or retire the judge is waiting on Krish (`reader.judges.buyer.flag`). The old reader, a
+commercial leader who might hire Krish for thirty days, is retired for this publication.
+
+**The Sunday order is not this panel's.** The idea panel's scores (`judged_best` in `api/week/options.ts`) are an input
+the Sunday run may read; from the 7 Dec board the order of the week's options is the blind story score's
+(`scripts/post-pack/story_score.py`, `config/story-score.json`), after the story floor and the pre-pick whys probe
+(`docs/SYSTEM_MAP.md`, "The story engine"). His taste is a floor only and never ranks (Ruling, Krish, 2026-11-26).
 
 ### 3. Drafting and iteration
 
@@ -873,7 +890,9 @@ service account, `GOOGLE_DRIVE_FOLDER_ID`); the factory
     Claude Code makes the workroom, the draft, the pictures, the scripts
     and the pack, which the live publish board shows from the record
     (`docs/PUBLISH_BOARDS.md`); Krish records and approves
-    each post, and Growth posts what he approved (`docs/GROWTH-HANDOFF.md`).
+    each post, and Growth posts what he approved, with the captions
+    content-engine wrote into the manifest (`docs/GROWTH-HANDOFF.md`;
+    Ruling, Krish, 2026-11-26: content-engine makes every asset).
     The video is made with ve on a home computer (`docs/ve/RUNBOOK.md`;
     `.agents/skills/produce-video/SKILL.md` is the quick-edit fallback), and
     Codex makes pictures for named slots, never a cut. `MAKING_OWNERS` still
