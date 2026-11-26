@@ -193,7 +193,7 @@ reads (`docs/PUBLISH_BOARDS.md`); `board_feed.py cover` refuses a wrong shape
 and names it, and no page is published.
 
 **His presses.** On each option he presses the idea, the direction and, once
-Growth returns it, the mock: Approve, Improve (his words) or Reject (his
+content-engine has made it, the mock: Approve, Improve (his words) or Reject (his
 reason); the idea also takes File for later (Next week until 11 November) and
 Save as a trend (his words name the trend), so every idea ends in one of the
 five outcomes of the ideas gate (`docs/PUBLISH_BOARDS.md`, "The ideas gate"),
@@ -201,7 +201,7 @@ and only his Approve puts it on the publish board. Every option also has an open
 his own words on anything (Krish, 2026-11-02: "I still need to be able to provide
 actual feedback on anything in open text format"), saved exactly as typed in the
 record's `note`; it may be the exact text to put on the post ("it would contain
-the exact meme text to put above the meme video"), so Growth uses it word for
+the exact meme text to put above the meme video"), so the maker uses it word for
 word and nothing paraphrases it. Only text he puts in quotation marks is used
 exactly, on the picture or video; his other words are direction, never printed,
 and a quote that reads as what not to say is held for him (Krish, 2026-11-02:
@@ -212,12 +212,15 @@ what that side showed him. His Improve and Reject words go to his taste ledger
 by themselves (`apps/control-plane/api/board/_presses.ts`, `offdayReports`) and come back next
 Sunday in `offday_verdicts`. An Improve on the idea or the direction also
 starts a revision run (`.github/workflows/offday-revise.yml`, below), whose
-revised card goes live at the board's next build. Growth reads each option whose
-idea and direction he approved (`GET /api/board/<Monday>/pieces`, `offdays`),
-makes the mock from the direction exactly as shown, in a Claude session with
-the Codex plugin building it (`docs/CAROUSEL-STANDARD.md`, "How a carousel is
-made"), and returns it on the option as `mock` for his final yes; this repository cuts any
-snackable clip.
+revised card goes live at the board's next build. A content-engine make
+session reads each option whose idea and direction he approved (`GET
+/api/board/<Monday>/pieces`, `offdays`), makes the mock from the direction
+exactly as shown, from the locked v5 Library by its route (`config/asset-routes.json`;
+a carousel through `scripts/carousel_make.py`, `docs/CAROUSEL-STANDARD.md`, "How a
+carousel is made"), writes its captions and asks the judges, and returns it on the
+option as `mock` for his final yes; Growth posts it once he approves (Ruling, Krish,
+2026-11-26: content-engine makes every asset; Growth made the mocks until then). This
+repository cuts any snackable clip.
 
 **Revising one option** (the revision run, or a session asked to). What waits
 is what `python3 scripts/post-pack/offday_pending.py
@@ -232,7 +235,7 @@ the file reads (`board_feed.py cover <Monday>`). The side's hash
 changes with its words, so his old press reads as answered and he judges the
 new card when the live board next reads these ideas; a side already
 revised is never revised again from the same words. The revision run does not
-publish the board. A mock is Growth's to remake from his words, by the same route.
+publish the board. A mock is content-engine's to remake from his words, by the same route.
 
 **An off-day piece he records** (Ruling, Krish, 2026-10-29: an idea he drops in
 "should appear on my Sunday board for either Tuesday, Thursday, Saturday, or

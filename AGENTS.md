@@ -12,32 +12,30 @@ makeyourmindup's kill list from a pinned copy
 (`vendor/makeyourmindup/kill-list/`). Package, environment and credential
 names keep their `mindmake` spelling.
 
-Content-engine owns content production and all production standards,
-including carousel narrative, copy, design, rendering and creative QA.
-Growth-MakeYourMindUp owns posting strategy, amplification planning,
-social account management, authorised automatic distribution and channel
-performance. Read docs/GROWTH-HANDOFF.md for the brief/package boundary
-and docs/CAROUSEL-STANDARD.md for the transferred production requirements.
-Use existing editorial/Studio routes; do not build a social scheduler here
-or duplicate production standards in Growth. Public posting authority stays
-with Growth's approved publishing route, not this repository.
+Content-engine makes every asset (Ruling, Krish, 2026-11-26: "I believe that growth should move all asset
+production to Content Engine. I see no point in having a separate repository produce specific assets"; "I want
+everything to be one harmonious engine"): the hero pieces, carousels, memes, Substack Notes images and words, captions
+and titles per channel, covers, thumbnails, cuts and the weekly edition's package, with every production standard. It
+hands Growth finished, approved assets with their captions in the piece manifest. Growth-MakeYourMindUp grows the
+channel: posting, scheduling in Buffer, the edition's Substack placement, distribution, the subscribe route,
+measurement, learning, `mix.json` and experiments, and it reports performance back. It makes nothing. This supersedes
+the 26 October split, the Canva lane (retired), the 28 October ruling that Growth makes the derived carousels, Notes,
+memes and off-day posts, and the 19 November captions ruling. Read docs/GROWTH-HANDOFF.md, the contract. Do not build a
+social scheduler here; public posting authority stays with Growth's approved publishing route, not this repository.
 
-Carousels changed hands on 28 October (Ruling, Krish, 2026-10-28: "take over
-posting as well as creating new assets like carousels"). Growth now makes the
-derived carousels, Notes, memes and off-day posts itself, to this
-repository's `docs/CAROUSEL-STANDARD.md`, the rejection floor and the copy
-lint. Content-engine keeps the standard and makes the hero assets: the
-article, both cuts, thumbnails and covers.
+How assets are made: only from the locked v5 Library (26 Nov 2026), whose templates are the only artwork. Covers and
+thumbnails come only from `python scripts/covers/make_covers.py <piece> --out <folder>`; carousels only from
+`python scripts/library/make_piece.py <piece> --set <set>`, through `python3 scripts/carousel_make.py`, which enforces
+the carousel format (`config/carousel-format.json`) as refusals. `config/asset-routes.json` maps every asset kind to
+its command (`scripts/post-pack/asset_routes.py`); until the Library is on the checkout these refuse with "the v5
+Library is not on this checkout yet" and never fall back to another renderer. Each is made in a Claude session, never a
+scheduled job, a headless model run or another template engine. The route is `docs/CAROUSEL-STANDARD.md`, "How a
+carousel is made".
 
-How they are made (Ruling, Krish, 2026-11-13: "all the carousels should now be
-done in Claude, but using the Codex plug in as per the other usual
-workflows"; "memes and Notes images should go the same way"; "Off-day
-voiceover shorts should go the same way too"): every carousel, meme and Notes
-image is made in a Claude session, with the Codex plugin building it (a
-`ve card` of kind carousel, meme or notes_image), and every off-day voiceover
-short on the ve route from a Claude session. Never a scheduled job, a
-headless model run or a template engine. The route is
-`docs/CAROUSEL-STANDARD.md`, "How a carousel is made".
+The production cycle's touches of the other systems (divergence engine, humour engine, strategist, file archives,
+taste engine, internal auditor, Control Center, krish-clone, Higgsfield, makeyourmindup and Growth) are one registry,
+`config/cycle.json`, run by stage with `python3 scripts/post-pack/touch.py run STAGE`; prompts and skills name the
+stage, never the tools (`docs/SYSTEM_MAP.md`, "The production cycle").
 
 **Publish boards:** the one live board is Control Centre's Content tab (`python3 scripts/post-pack/live_board.py <Monday> [day]` prints its link); the old board pages at content.krishraja.com/board are retired for good and redirect to it (Ruling, Krish, 2026-11-13: the old publish boards are retired for good, and everything old in content-engine is retired). How every actor feeds it, reports to it and files on it: `docs/PUBLISH_BOARDS.md`. Older board instructions in this repository are history.
 

@@ -564,15 +564,15 @@ thumbnail and cover asset templates for Monday, Wednesday, and Friday"), which h
   them, telling a record drawn before the skins from its piece; a skin moved on to, or the plain series Receipt after
   all nine were tried, passes; nothing else may), `tests/series_colour_test.py`, `tests/receipt_overlap_test.py` and
   `tests/series_skins_test.py` (all nine skins drawn on Monday, Wednesday and Friday on all seven shapes, alone, with
-  logo rows and a strip, and under a long title, and a skin forced to fail moving the piece on). Growth holds its kit
-  to the same rule (its R125).
+  logo rows and a strip, and under a long title, and a skin forced to fail moving the piece on). Growth held its kit
+  to the same rule (its R125) until its renderer was deleted on 26 Nov 2026.
 
 ## The tall meme is centred (Ruling, Krish, 15 November 2026)
 
 His words: "The POV computer meme, it's not centralized on the screen." The 13 Nov meme sat 40 px left and 107 px high
 with a third of the screen empty below it. A tall meme is the brand palette's `meme_tall` (9x16), and
 `python3 scripts/layout_centre.py FILE` holds it (in `ve qc` on a tall meme, and in `send.py` before it is filed): the
-picture centred within 4 px across and within 48 px of y 920 (where Growth's tall templates centre the clip), the
+picture centred within 4 px across and within 48 px of y 920 (where Growth's tall templates centred the clip, before the v5 Library), the
 column's margins within 16 px of each other, every word and mark inside the clear box x 200 to 880, y 270 to 1320 and
 clear of every channel's buttons and caption area (`config/channel-safe-zones.json`), no empty band over 25% above it.
 
@@ -616,7 +616,8 @@ carousels do not exceed 10 cards in total, including cover and call to action?"
   tips, say) puts two on a card or drops to the strongest eight; it never runs past ten.
 - The checks hold it: the deck check (`scripts/carousel_check.py`, at most ten cards), the board
   (`week_plan.py` `OFF_CARDS` and `OFF_SLIDES`, at most ten) and Growth's carousel format (`social/formats/carousel.json`
-  `max_assets`, which its packaging and release checks read before anything reaches Buffer).
+  `max_assets`, which its packaging and release checks read before anything reaches Buffer). Since 26 Nov 2026 the
+  format is stricter: 4 to 7 slides (`config/carousel-format.json`, `scripts/carousel_format.py`).
 
 ## Seeing a finished carousel (Ruling, Krish, 3 November 2026)
 
