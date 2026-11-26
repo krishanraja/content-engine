@@ -1266,6 +1266,21 @@ class StoryGateTest(unittest.TestCase):
         ideas = {'week_start': self.WEEK, 'offdays': {'sat': [{'id': 'goodnews', 'weekly': 'good_news', 'title': 'Good news'}]}}
         self.assertEqual(self.run_(ideas), [])
 
+    def test_the_whys_line_reads_the_verified_probe_and_a_followed_branch(self):
+        ideas = self.board(main_option(id=A, story_score=story(80)), main_option(id=B, story_score=story(60)))
+        verified = {'schema': 'whys-probe/1', 'documented': 1, 'inferred': 2, 'rungs': []}
+        found = self.run_(ideas, probes={A: ladder(5), B: verified})
+        self.assertEqual([f['ref'] for f in found], ['mon-2'], 'quotes that failed the probe check do not count')
+        self.assertIn('holds 1 whys documented', found[0]['line'])
+        self.assertEqual([f['ref'] for f in self.run_(ideas, probes={A: ladder(5), B: {'error': 'no probe'}})], ['mon-2'])
+        self.assertEqual(self.run_(ideas, probes={A: ladder(5), B: dict(verified, documented=3)}), [])
+        branched = ladder(3)
+        branched['rungs'][1]['evidence'] = []
+        branched['rungs'][1]['branch'] = {'join': 'OR', 'followed': 1, 'answers': [{'answer': 'x', 'evidence': []},
+                                                                                     {'answer': 'y', 'evidence': ladder(1)['rungs'][0]['evidence']}]}
+        self.assertEqual(ic.sourced_rungs(branched), 3, "a split rung rests on the branch answer it follows")
+        self.assertEqual(ic.sourced_rungs({'whys': ladder(3)}), 3, 'a probe wrapped as {whys: ...} is read as ladderFromText reads it')
+
     def test_wave1_reads_the_weeks_probes(self):
         ideas = {'week_start': self.WEEK, 'days': {'mon': [main_option(id=A, story_score=story(80)), main_option(id=B, story_score=story(60))]}}
         with tempfile.TemporaryDirectory() as tmp:
@@ -1280,6 +1295,11 @@ class StoryGateTest(unittest.TestCase):
             self.assertIn('holds 1 whys', found[0]['line'])
             self.assertEqual([f for f in board_feed.wave1(ideas, sources(), tmp, status={f'idea:{A}': 'open', f'idea:{B}': 'approved'})
                               if f['code'] in ('story', 'story_floor')], [], 'his answered option is his')
+            story_dir = Path(tmp) / f'{self.WEEK}-week' / 'story'
+            story_dir.mkdir()
+            (story_dir / 'probes.json').write_text(json.dumps({A: {'schema': 'whys-probe/1', 'documented': 2}, B: {'schema': 'whys-probe/1', 'documented': 4}}))
+            found = [f for f in board_feed.wave1(ideas, sources(), tmp) if f['code'] in ('story', 'story_floor')]
+            self.assertEqual([f['ref'] for f in found], ['mon-1'], 'the verified probe wins over the raw ladder')
 
     def test_the_scorecard_measures_where_his_picks_fell(self):
         ideas = {'days': {'mon': [main_option(id=A, story_score=story(80)), main_option(id=B, story_score=story(80)),

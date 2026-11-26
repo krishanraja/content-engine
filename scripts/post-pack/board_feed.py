@@ -767,15 +767,24 @@ def wave1(ideas, sources, plans=None, p6=None, status=None, before=None):
 
 
 def probes_of(week, plans=None):
-    """{option id: why-ladder/1} from the week's pre-pick whys probes (docs/plans/<Monday>-week/probe/<id>.whys.json,
-    written by the whys-prober subagents; .agents/skills/plan-week/references/story-score.md). {} when there are none."""
-    folder = Path(plans or ROOT / 'docs' / 'plans') / f'{week}-week' / 'probe'
+    """{option id: probe} from the week's pre-pick whys probes: the verified result scripts/whys-probe-check.ts wrote to
+    story/probes.json (what the score's hero floor reads) where there is one, else the raw ladder the whys-prober wrote
+    to probe/<id>.whys.json (.agents/skills/plan-week/references/story-score.md). {} when there are none."""
+    week_folder = Path(plans or ROOT / 'docs' / 'plans') / f'{week}-week'
+    folder = week_folder / 'probe'
     out = {}
     for path in sorted(folder.glob('*.whys.json')) if folder.is_dir() else []:
         try:
             out[path.name[:-len('.whys.json')].lower()] = json.loads(path.read_text(encoding='utf-8'))
         except (OSError, ValueError):
             continue
+    try:
+        verified = json.loads((week_folder / idea_checks.STORY['files']['probes']).read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        verified = {}
+    for k, v in (verified if isinstance(verified, dict) else {}).items():
+        if idea_checks.verified_probe(v):
+            out[str(k).lower()] = v
     return out
 
 
