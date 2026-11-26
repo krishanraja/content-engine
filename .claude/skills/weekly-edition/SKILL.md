@@ -13,7 +13,7 @@ growth's Substack step builds the Substack draft from the package and schedules 
 package's sha256. You draft it. Nothing you do sends, schedules, publishes, posts or spends.
 
 Every setting is a row in `config/weekly-edition.json` (sections, word budgets, news counts, link tags, the library
-folder, the press); the topic heads are the focus sectors of `config/beat.json`, read by key. The tool is
+folder, the press); the topic heads are the hub's subsectors in `config/hub-sources.json`, read by key. The tool is
 `python3 scripts/edition/edition.py` (gather, link, check, render, package). Read both files once before you start.
 
 ## The walls
@@ -35,9 +35,10 @@ folder, the press); the topic heads are the focus sectors of `config/beat.json`,
 
 1. **Gather.** `python3 scripts/edition/edition.py gather --monday <Monday> --out docs/plans/<Monday>-week/edition/gathered.json`.
    It reads the engine's own routes and writes nothing to them: the week's live series pieces from their records (the
-   board's view and each piece's record), Saturday's good-news stories, and the news candidates from the beat-filtered
-   feed pool, each already placed under a topic head, inside the news window (the seven days to Friday 12:00 New York)
-   and off the avoid list. Say the counts and what it left out. When `send_holds` is true (no piece went live this
+   board's view and each piece's record), Saturday's good-news stories, and the news candidates from the week's daily
+   hub editions (the items makeyourmindup.ai showed; the edition gathers nothing of its own), each under its subsector,
+   inside the news window (the seven days to Friday 12:00 New York), off the avoid list, the same story once with its
+   coverage. Say the counts, the hub days missing (`hub`) and what it left out. When `send_holds` is true (no piece went live this
    week), the edition holds: report `blocked` with "No piece went live this week, so the edition holds and waits for
    Krish." and stop. A week with one or two live pieces sends with what went live. In the earlier scheduled run
    (the prompt names it, `17 20 * * 5`) only: when `not_live` lists a day with a `piece_id` (a piece picked for this
@@ -45,7 +46,7 @@ folder, the press); the topic heads are the focus sectors of `config/beat.json`,
    UTC run drafts the edition with it." and stop without packaging. The later run, a run by hand, and any run where
    no picked piece is waiting go on with what is live.
 
-2. **Read the other sources, in this order** (DESIGN.md section 3): the pool candidates in `gathered.json`; the good-news
+2. **Read the other sources, in this order** (DESIGN.md section 3): the hub candidates in `gathered.json`; the good-news
    stories (the good-news group, at most three); the ideas Krish filed for later or saved as a trend
    (`python3 scripts/engine.py GET /api/board/later --full`), when they happened in the window; anything he dropped in
    his Cold Ideas and Inspo folder that week, which the Friday run cannot read (no Drive connector there): say so in the
@@ -53,16 +54,17 @@ folder, the press); the topic heads are the focus sectors of `config/beat.json`,
 
 3. **Choose the items.** An item goes in only when all five hold (DESIGN.md section 3):
    1. it happened in the seven days to Friday 12:00 New York;
-   2. it sits on the beat (`config/beat.json` focus sectors, never the avoid list: governance, regulation, security,
+   2. it sits in one of the hub's subsectors, never on the beat's avoid list (governance, regulation, security,
       privacy, and enterprise productivity with no creative angle);
    3. it names one concrete thing: a company, a deal, a number, a product or a person;
    4. a reader in those industries would decide, buy, say or do something differently for knowing it;
    5. it is not one of the week's own pieces.
-   Aim for six to ten. The economics of AI inside these sectors stays in: who gets paid, what it costs, who wins.
+   Aim for six to ten, at most two a subsector. The economics of AI inside these sectors stays in: who gets paid,
+   what it costs, who wins.
 
 4. **Check each item against its primary source, the same day.** The primary source is the company's own
    announcement, the filing, the court record, the dataset or the official statement, never only an article about it.
-   Find it (web search finds the page; the candidate's own address is often a report about it), open it with web
+   Find it (web search finds the page; a hub candidate's `report_url` is the report the hub read), open it with web
    fetch and read it. Record:
    - `source_name`: who published it; `source_url`: its address exactly as published, with no tags;
    - `quote`: the words on that page that support the item, verbatim; every number in the item is in it, with its unit
@@ -84,7 +86,8 @@ folder, the press); the topic heads are the focus sectors of `config/beat.json`,
      `video_url` are the piece's live addresses from `gathered.json`, each made with
      `python3 scripts/edition/edition.py link <address> --date <Saturday> --place piece-<day>` (and `video-<day>`);
      `video_url` is null when the piece has no video.
-   - `news`: groups under the topic heads in `gathered.json` `heads`, in that order, each item one or two sentences
+   - `news`: groups under the topic heads in `gathered.json` `heads`, in that order, at most two items a subsector, each
+     item one or two sentences
      with its source fields; the good-news group, "Good news", last, at most three items.
    - `pass_it_on`: one sentence asking the reader to forward the edition to one person in their industry; its `url`
      is `python3 scripts/edition/edition.py link https://home.makeyourmindup.ai/subscribe --date <Saturday> --place forward`.

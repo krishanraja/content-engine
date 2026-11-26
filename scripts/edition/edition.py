@@ -6,14 +6,15 @@ recommendation): one email a week, "makeyourmindup weekly", every Saturday at 08
 Monday, Wednesday and Friday pieces, then six to ten news items from the creative industries, each checked against its
 primary source, then a Pass it on line and one closing line. content-engine produces and drafts it; growth's Substack
 step builds the Substack draft from the package and schedules it only on his press. Every setting is a row in
-config/weekly-edition.json; the topic heads are read from config/beat.json by key.
+config/weekly-edition.json; the topic heads are the hub's subsectors, read from config/hub-sources.json by key.
 
     python3 scripts/edition/edition.py gather  --monday YYYY-MM-DD [--fixture DIR] --out FILE
         What the week offers the edition, read and never written: the week's live series pieces from their records
         (GET /api/board/<Monday>/view and GET /api/content-ideas?id=<piece>), the Saturday good-news stories (the view's
-        weekly good-news option), and the news candidates from the beat-filtered pool (GET /api/week/options
-        include=sources), each placed under a topic head, inside the news window, off the avoid list. --fixture reads
-        the same three answers from files (view.json, sources.json, pieces/<id>.json), with no network.
+        weekly good-news option), and the news candidates from the week's daily hub editions (GET
+        /api/board/<Monday>/edition/news, the hub pipeline's hub_snapshots rows), each under its subsector's head,
+        inside the news window, off the beat's avoid list, the same story once. The edition runs no gathering of its
+        own. --fixture reads the same answers from files (view.json, hub-week.json, pieces/<id>.json), no network.
     python3 scripts/edition/edition.py link    URL --date YYYY-MM-DD --place PLACE
         One link with the edition's four tags (utm_content edition-<date>-<place>), the only way a link is written.
     python3 scripts/edition/edition.py check   DRAFT [--json]
@@ -53,6 +54,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 CONFIG_PATH = ROOT / 'config' / 'weekly-edition.json'
 BEAT_PATH = ROOT / 'config' / 'beat.json'
+HUB_SOURCES_PATH = ROOT / 'config' / 'hub-sources.json'
 KILL_LIST = ROOT / 'vendor' / 'makeyourmindup' / 'kill-list' / 'kill-list.mjs'
 for _path in (ROOT / 'scripts', ROOT / 'scripts' / 'post-pack', ROOT / 'scripts' / 'quick-edit'):
     if str(_path) not in sys.path:
@@ -102,18 +104,28 @@ def beat(path: Path = BEAT_PATH) -> dict:
     return json.loads(path.read_text(encoding='utf-8'))
 
 
-def topic_heads(cfg: dict | None = None, beat_cfg: dict | None = None) -> list[dict]:
-    """The news topic heads in the beat's own order: each focus sector's label, read by its key from config/beat.json,
-    then the good-news group's head."""
+def hub_sources(path: Path | None = None) -> dict:
+    """The hub pipeline's sources and subsectors (config/hub-sources.json), the six rooms of makeyourmindup.ai."""
+    path = path or HUB_SOURCES_PATH
+    if not path.is_file():
+        raise EditionError(f'{path.name} is not here: the hub pipeline (content-engine, hub/daily-pipeline) merges before '
+                           'the edition reads its subsectors and its rows')
+    return json.loads(path.read_text(encoding='utf-8'))
+
+
+def topic_heads(cfg: dict | None = None, heads_cfg: dict | None = None) -> list[dict]:
+    """The news topic heads in the hub's own order: each subsector's label, read by its key from
+    config/hub-sources.json, less any the edition leaves out, then the good-news group's head."""
     cfg = cfg or config()
-    beat_cfg = beat_cfg or beat()
+    heads_cfg = heads_cfg or hub_sources()
     th = cfg['topic_heads']
-    heads = [{'key': row[th['key']], 'label': row[th['label']]} for row in beat_cfg[th['list']]]
+    out = set(th.get('leave_out') or [])
+    heads = [{'key': row[th['key']], 'label': row[th['label']]} for row in heads_cfg[th['list']] if row[th['key']] not in out]
     return heads + [{'key': 'good_news', 'label': cfg['good_news']['topic']}]
 
 
-def head_labels(cfg: dict | None = None, beat_cfg: dict | None = None) -> list[str]:
-    return [h['label'] for h in topic_heads(cfg, beat_cfg)]
+def head_labels(cfg: dict | None = None, heads_cfg: dict | None = None) -> list[str]:
+    return [h['label'] for h in topic_heads(cfg, heads_cfg)]
 
 
 # ---------------------------------------------------------------- the week's dates
@@ -299,7 +311,7 @@ def kill_list_vetoes(text: str) -> list[str]:
 
 # ---------------------------------------------------------------- check
 
-def check(pkg, cfg: dict | None = None, beat_cfg: dict | None = None, kill=kill_list_vetoes) -> dict:
+def check(pkg, cfg: dict | None = None, heads_cfg: dict | None = None, kill=kill_list_vetoes) -> dict:
     """The draft against the contract. {'problems': [...], 'warnings': [...], 'checks': {voice, kill_list, sources,
     words}}; a draft is ready when problems is empty. Pure but for the kill list, which tests can stand in for."""
     cfg = cfg or config()
@@ -417,8 +429,9 @@ def check(pkg, cfg: dict | None = None, beat_cfg: dict | None = None, kill=kill_
 
     news = (by_kind.get('news') or [{}])[0]
     groups = news.get('groups')
-    heads = head_labels(cfg, beat_cfg)
+    heads = head_labels(cfg, heads_cfg)
     good = cfg['good_news']
+    per_topic = cfg['news']['per_topic_max']
     items_total = 0
     sources_ok = True
     if not isinstance(groups, list) or not groups:
@@ -432,7 +445,7 @@ def check(pkg, cfg: dict | None = None, beat_cfg: dict | None = None, kill=kill_
             continue
         topic = g.get('topic')
         if topic not in heads:
-            problems.append(f'news: topic {topic!r} is not a head from config/beat.json or {good["topic"]!r}')
+            problems.append(f'news: topic {topic!r} is not a subsector head from config/hub-sources.json or {good["topic"]!r}')
         if topic in seen:
             problems.append(f'news: topic {topic!r} twice; one group a topic')
         seen.add(topic)
@@ -442,6 +455,8 @@ def check(pkg, cfg: dict | None = None, beat_cfg: dict | None = None, kill=kill_
             continue
         if topic == good['topic'] and len(items) > good['max_items']:
             problems.append(f'news {topic}: {len(items)} items; at most {good["max_items"]}')
+        elif topic != good['topic'] and len(items) > per_topic:
+            problems.append(f'news {topic}: {len(items)} items; at most {per_topic} a subsector')
         for i, item in enumerate(items):
             where = f'news {topic} item {i + 1}'
             items_total += 1
@@ -645,10 +660,10 @@ def _engine_reader():
 
 def _fixture_reader(folder: Path):
     def read(path: str):
-        if '/view' in path:
+        if path.endswith('/edition/news'):
+            name = 'hub-week.json'
+        elif '/view' in path:
             name = 'view.json'
-        elif path.startswith('/api/week/options'):
-            name = 'sources.json'
         elif path.startswith('/api/content-ideas?id='):
             name = f'pieces/{path.split("=", 1)[1]}.json'
         else:
@@ -660,23 +675,17 @@ def _fixture_reader(folder: Path):
     return read
 
 
-def beat_of(text: str, beat_cfg: dict | None = None) -> dict:
-    """Where a candidate sits on the beat, read as the headline gate reads it (apps/control-plane/api/_beat.ts):
-    the avoid list refuses it outright, enterprise productivity only with a focus-sector angle, and it qualifies only
-    in a focus sector. {'on': bool, 'sector': key or None, 'label': head or None, 'why': words}."""
+def avoid_of(text: str, beat_cfg: dict | None = None) -> str | None:
+    """Why a story is on the beat's avoid list (config/beat.json: governance, regulation, security, privacy), read as
+    the headline gate reads it (apps/control-plane/api/_beat.ts), its own exception phrases included; None when it is
+    not. The hub has already placed the story in a subsector, so only the avoid list is read here."""
     b = beat_cfg or beat()
-    focus_text = keyword_pattern(b.get('focus_not_when')).sub(' ', text)
     avoid_text = keyword_pattern(b.get('avoid_not_when')).sub(' ', text)
     for row in b['avoid']:
         hit = keyword_pattern(row.get('keywords')).search(avoid_text)
         if hit:
-            return {'on': False, 'sector': None, 'label': None, 'why': f'on the avoid list ({row["label"].lower()}: "{hit.group(0)}")'}
-    sector = next((row for row in b['focus_sectors'] if keyword_pattern(row.get('keywords')).search(focus_text)), None)
-    if not sector:
-        ent = keyword_pattern(b['enterprise']['keywords']).search(text)
-        return {'on': False, 'sector': None, 'label': None,
-                'why': f'{b["enterprise"]["label"].lower()} ("{ent.group(0)}")' if ent else 'in none of the focus sectors'}
-    return {'on': True, 'sector': sector['sector'], 'label': sector['label'], 'why': f'in {sector["label"]}'}
+            return f'on the avoid list ({row["label"].lower()}: "{hit.group(0)}")'
+    return None
 
 
 def _when(text) -> dt.datetime | None:
@@ -687,9 +696,73 @@ def _when(text) -> dt.datetime | None:
     return t if t.tzinfo else t.replace(tzinfo=dt.timezone.utc)
 
 
-def gather(monday: dt.date, read, cfg: dict | None = None, beat_cfg: dict | None = None) -> dict:
+HUB_FIELDS = ('id', 'subsector', 'date', 'source', 'url', 'headline', 'dek')
+
+
+def _story_key(url: str) -> str:
+    """The same story's address however a feed wrote it: no fragment, no query, no trailing slash, lower-case host."""
+    parts = urllib.parse.urlsplit(url.strip())
+    return urllib.parse.urlunsplit((parts.scheme.lower(), parts.netloc.lower(), parts.path.rstrip('/'), '', ''))
+
+
+def hub_candidates(answer: dict, start: dt.datetime, end: dt.datetime, cfg: dict, heads_cfg: dict | None = None,
+                   beat_cfg: dict | None = None) -> tuple[list[dict], dict, dict]:
+    """The week's daily hub items as the edition's news candidates: each under its subsector's head, inside the news
+    window, off the avoid list, and the same story once however many days carried it (its coverage the most outlets
+    any day counted, its days every daily edition that ran it). Ordered by head, then coverage, days and date."""
+    heads = {h['key']: h['label'] for h in topic_heads(cfg, heads_cfg) if h['key'] != 'good_news'}
+    order = list(heads)
+    left_out = {'outside_window': 0, 'avoid_list': 0, 'no_subsector': 0, 'unreadable': 0, 'repeat': 0}
+    days = [d for d in answer.get('days') or [] if isinstance(d, dict) and isinstance(d.get('edition_date'), str)]
+    by_key: dict[str, dict] = {}
+    for day in sorted(days, key=lambda d: d['edition_date']):
+        left_out['unreadable'] += _count(day.get('skipped'), 0)
+        for it in day.get('items') or []:
+            if not isinstance(it, dict) or any(not isinstance(it.get(k), str) or not it[k].strip() for k in HUB_FIELDS) \
+                    or not it['url'].startswith('https://'):
+                left_out['unreadable'] += 1
+                continue
+            key = _story_key(it['url'])
+            seen = by_key.get(key) or next((c for c in by_key.values() if c['id'] == it['id']), None)
+            if seen:
+                left_out['repeat'] += 1
+                seen['coverage'] = max(seen['coverage'], _coverage(it))
+                if day['edition_date'] not in seen['days']:
+                    seen['days'].append(day['edition_date'])
+                continue
+            if it['subsector'] not in heads:
+                left_out['no_subsector'] += 1
+                continue
+            at = _when(it['date'])
+            if not at or not (start <= at <= end):
+                left_out['outside_window'] += 1
+                continue
+            if avoid_of(' '.join((it['headline'], it['dek'])), beat_cfg):
+                left_out['avoid_list'] += 1
+                continue
+            by_key[key] = {'id': it['id'], 'topic': heads[it['subsector']], 'subsector': it['subsector'],
+                           'headline': it['headline'], 'dek': it['dek'], 'why': it.get('why') or None,
+                           'report_source': it['source'], 'report_url': it['url'], 'date': it['date'],
+                           'coverage': _coverage(it), 'days': [day['edition_date']]}
+    candidates = sorted(by_key.values(), key=lambda c: (order.index(c['subsector']), -c['coverage'], -len(c['days']), c['date']))
+    hub = {'from': answer.get('from'), 'to': answer.get('to'),
+           'days_read': [d['edition_date'] for d in sorted(days, key=lambda d: d['edition_date'])],
+           'days_missing': list(answer.get('missing') or [])}
+    return candidates, left_out, hub
+
+
+def _count(n, floor: int) -> int:
+    return n if isinstance(n, int) and not isinstance(n, bool) and n >= floor else floor
+
+
+def _coverage(item: dict) -> int:
+    return _count(item.get('coverage'), 1)
+
+
+def gather(monday: dt.date, read, cfg: dict | None = None, heads_cfg: dict | None = None, beat_cfg: dict | None = None) -> dict:
     """What the week offers the edition, from the engine's own read routes (or a fixture of them). Reads only."""
     cfg = cfg or config()
+    heads_cfg = heads_cfg or hub_sources()
     beat_cfg = beat_cfg or beat()
     sat = edition_date(monday)
     start, end = news_window(monday, cfg)
@@ -719,44 +792,14 @@ def gather(monday: dt.date, read, cfg: dict | None = None, beat_cfg: dict | None
             good += [{'headline': st.get('headline'), 'what': st.get('what'), 'date': st.get('date'), 'source': st.get('source'),
                       'href': st.get('href'), 'option': o.get('id'), 'stories_fresh': o.get('stories_fresh')}
                      for st in o['stories'] if isinstance(st, dict)]
-    answer = read(f'/api/week/options?week_start={(monday + dt.timedelta(days=7)).isoformat()}&include=sources')
-    src = answer.get('sources') or {}
-    rows = [c for s in src.get('series') or [] for c in s.get('pool') or []] + list(src.get('unassigned') or [])
-    seen, candidates, left_out = set(), [], {'off_beat': 0, 'outside_window': 0, 'a_piece': 0, 'repeat': 0}
-    piece_ids = {p['piece_id'] for p in pieces}
-    for c in rows:
-        if not isinstance(c, dict):
-            continue
-        cid = str(c.get('id') or '')
-        url = c.get('source_url') or ''
-        key = url or cid
-        if key in seen:
-            left_out['repeat'] += 1
-            continue
-        seen.add(key)
-        if cid.lower() in piece_ids:
-            left_out['a_piece'] += 1
-            continue
-        at = _when(c.get('created_at'))
-        if not at or not (start <= at <= end):
-            left_out['outside_window'] += 1
-            continue
-        text = ' '.join(str(c.get(k) or '') for k in ('idea', 'thesis'))
-        b = beat_of(text, beat_cfg)
-        if not b['on']:
-            left_out['off_beat'] += 1
-            continue
-        candidates.append({'id': cid, 'headline': c.get('idea'), 'thesis': c.get('thesis'), 'source_url': url or None,
-                           'source_type': c.get('source_type'), 'found_at': c.get('created_at'), 'topic': b['label'], 'sector': b['sector'],
-                           'why_on_beat': b['why']})
-    candidates.sort(key=lambda c: (head_labels(cfg, beat_cfg).index(c['topic']), str(c['found_at'])))
+    answer = read(f'/api/board/{monday.isoformat()}/edition/news')
+    candidates, left_out, hub = hub_candidates(answer, start, end, cfg, heads_cfg, beat_cfg)
     return {'week_of': monday.isoformat(), 'edition_date': sat.isoformat(), 'name': cfg['name'],
             'news_window': {'from': start.isoformat(), 'to': end.isoformat()},
             'pieces': pieces, 'not_live': not_live, 'good_news': good, 'candidates': candidates, 'left_out': left_out,
-            'heads': head_labels(cfg, beat_cfg), 'library': library_paths(sat, cfg),
-            'send_holds': not pieces, 'rule': 'Candidates are where an item may come from, never its source: each item '
-            'is checked against its own primary source, and one whose source cannot be found or does not say what the '
-            'item says is dropped (DESIGN.md section 3).'}
+            'hub': hub, 'heads': head_labels(cfg, heads_cfg), 'per_topic_max': cfg['news']['per_topic_max'],
+            'library': library_paths(sat, cfg), 'send_holds': not pieces,
+            'rule': cfg['news']['from_hub']['rule']}
 
 
 # ---------------------------------------------------------------- the command line
@@ -773,7 +816,7 @@ def main(argv=None) -> int:
     sub = parser.add_subparsers(dest='command', required=True)
     g = sub.add_parser('gather')
     g.add_argument('--monday', required=True)
-    g.add_argument('--fixture', help='a folder holding view.json, sources.json and pieces/<id>.json: no network')
+    g.add_argument('--fixture', help='a folder holding view.json, hub-week.json and pieces/<id>.json: no network')
     g.add_argument('--out', required=True)
     lk = sub.add_parser('link')
     lk.add_argument('url')
@@ -799,7 +842,8 @@ def main(argv=None) -> int:
             Path(args.out).parent.mkdir(parents=True, exist_ok=True)
             Path(args.out).write_text(json.dumps(found, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
             print(f'edition gather, week of {monday}: {len(found["pieces"])} live piece(s), {len(found["good_news"])} good-news '
-                  f'stories, {len(found["candidates"])} news candidates on the beat ({found["left_out"]}); written to {args.out}')
+                  f'stories, {len(found["candidates"])} news candidates from {len(found["hub"]["days_read"])} daily hub '
+                  f'edition(s) ({found["left_out"]}); written to {args.out}')
             if found['send_holds']:
                 print('No piece went live this week: the edition holds and asks Krish (DESIGN.md section 1).')
             return 0

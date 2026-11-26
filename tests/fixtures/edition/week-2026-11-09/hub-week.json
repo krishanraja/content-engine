@@ -1,0 +1,187 @@
+{
+  "_about": "The answer of GET /api/board/2026-11-09/edition/news for the fixture week: the hub pipeline's daily snapshots from Friday 6 to Friday 13 November 2026, cut to what the edition reads (apps/control-plane/api/board/_edition.ts, readHubWeek). Invented stories at example.org. It holds one story the window opens after, one it closes before, the same story on two days under two spellings of its address, one on the beat's avoid list, one in no subsector, one item the route skipped, and three days with no snapshot.",
+  "ok": true,
+  "week": "2026-11-09",
+  "from": "2026-11-06",
+  "to": "2026-11-13",
+  "days": [
+    {
+      "edition_date": "2026-11-06",
+      "skipped": 0,
+      "items": [
+        {
+          "id": "hub-2026-11-01",
+          "subsector": "music",
+          "date": "2026-11-06T09:00:00Z",
+          "source": "Example Trade",
+          "url": "https://example.org/trade/story-01",
+          "headline": "A streaming service adds AI playlists",
+          "dek": "It ran before the week's window opened.",
+          "why": "It changes who gets paid in the subsector.",
+          "coverage": 2
+        }
+      ]
+    },
+    {
+      "edition_date": "2026-11-09",
+      "skipped": 0,
+      "items": [
+        {
+          "id": "hub-2026-11-02",
+          "subsector": "music",
+          "date": "2026-11-09T08:00:00Z",
+          "source": "Example Trade",
+          "url": "https://example.org/trade/label-licence",
+          "headline": "A label licenses its catalogue to an AI music app",
+          "dek": "Example Records is paid on every track the app makes with its recordings.",
+          "why": "It changes who gets paid in the subsector.",
+          "coverage": 4
+        },
+        {
+          "id": "hub-2026-11-03",
+          "subsector": "film_tv",
+          "date": "2026-11-09T10:00:00Z",
+          "source": "Example Trade",
+          "url": "https://example.org/trade/story-03",
+          "headline": "An animation studio cuts storyboard time with AI",
+          "dek": "Sample Animation says one episode now takes seven days to storyboard, not ten.",
+          "why": "It changes who gets paid in the subsector.",
+          "coverage": 2
+        },
+        {
+          "id": "hub-2026-11-04",
+          "subsector": "gaming",
+          "date": "2026-11-09T12:00:00Z",
+          "source": "Example Trade",
+          "url": "https://example.org/trade/story-04",
+          "headline": "A game ships with licensed AI voices",
+          "dek": "Demo Games paid the actors whose voices its minor characters use.",
+          "why": "It changes who gets paid in the subsector.",
+          "coverage": 3
+        },
+        {
+          "id": "hub-2026-11-05",
+          "subsector": "sport",
+          "date": "2026-11-09T14:00:00Z",
+          "source": "Example Trade",
+          "url": "https://example.org/trade/story-05",
+          "headline": "A football club cuts highlight clips with AI",
+          "dek": "Example United posts clips of every goal within ten minutes of the whistle.",
+          "why": "It changes who gets paid in the subsector.",
+          "coverage": 2
+        }
+      ]
+    },
+    {
+      "edition_date": "2026-11-10",
+      "skipped": 0,
+      "items": [
+        {
+          "id": "hub-2026-11-02",
+          "subsector": "music",
+          "date": "2026-11-09T08:00:00Z",
+          "source": "Example Trade",
+          "url": "https://EXAMPLE.org/trade/label-licence/?ref=feed#top",
+          "headline": "A label licenses its catalogue to an AI music app",
+          "dek": "Example Records is paid on every track the app makes with its recordings.",
+          "why": "It changes who gets paid in the subsector.",
+          "coverage": 6
+        },
+        {
+          "id": "hub-2026-11-06",
+          "subsector": "publishing_media",
+          "date": "2026-11-10T09:00:00Z",
+          "source": "Example Trade",
+          "url": "https://example.org/trade/story-06",
+          "headline": "A newsletter platform will pay writers for AI training",
+          "dek": "Specimen Press pays its writers when their archives are used to train AI.",
+          "why": "It changes who gets paid in the subsector.",
+          "coverage": 2
+        },
+        {
+          "id": "hub-2026-11-07",
+          "subsector": "art_design",
+          "date": "2026-11-10T11:00:00Z",
+          "source": "Example Trade",
+          "url": "https://example.org/trade/story-07",
+          "headline": "A gallery sells out a show of AI-assisted prints",
+          "dek": "The Placeholder Gallery sold every print by its twelve illustrators.",
+          "why": "It changes who gets paid in the subsector.",
+          "coverage": 1
+        },
+        {
+          "id": "hub-2026-11-08",
+          "subsector": "music",
+          "date": "2026-11-10T13:00:00Z",
+          "source": "Example Trade",
+          "url": "https://example.org/trade/story-08",
+          "headline": "Data breach at a music streaming service",
+          "dek": "A streaming service says user records were exposed.",
+          "why": "It changes who gets paid in the subsector.",
+          "coverage": 5
+        }
+      ]
+    },
+    {
+      "edition_date": "2026-11-11",
+      "skipped": 1,
+      "items": [
+        {
+          "id": "hub-2026-11-09",
+          "subsector": "weather",
+          "date": "2026-11-11T08:00:00Z",
+          "source": "Example Trade",
+          "url": "https://example.org/trade/story-09",
+          "headline": "A forecaster uses AI for rain maps",
+          "dek": "It sits in no subsector.",
+          "why": "It changes who gets paid in the subsector.",
+          "coverage": 1
+        },
+        {
+          "id": "hub-2026-11-10",
+          "subsector": "music",
+          "date": "2026-11-11T09:00:00Z",
+          "source": "Example Trade",
+          "url": "https://example.org/trade/story-10",
+          "headline": "A songwriters' group sets a rate for AI training",
+          "dek": "Example Songwriters asks for a fixed fee each time a song is used to train a model.",
+          "why": "It changes who gets paid in the subsector.",
+          "coverage": 1
+        }
+      ]
+    },
+    {
+      "edition_date": "2026-11-13",
+      "skipped": 0,
+      "items": [
+        {
+          "id": "hub-2026-11-11",
+          "subsector": "film_tv",
+          "date": "2026-11-13T18:00:00Z",
+          "source": "Example Trade",
+          "url": "https://example.org/trade/story-11",
+          "headline": "A broadcaster tests AI subtitles",
+          "dek": "It ran after the week's window closed.",
+          "why": "It changes who gets paid in the subsector.",
+          "coverage": 3
+        },
+        {
+          "id": "hub-2026-11-12",
+          "subsector": "gaming",
+          "date": "2026-11-13T10:00:00Z",
+          "source": "Example Trade",
+          "url": "https://example.org/trade/story-12",
+          "headline": "A games studio opens an AI art desk",
+          "dek": "Example Studio hires six artists to direct its AI concept art.",
+          "why": "It changes who gets paid in the subsector.",
+          "coverage": 2
+        }
+      ]
+    }
+  ],
+  "missing": [
+    "2026-11-07",
+    "2026-11-08",
+    "2026-11-12"
+  ]
+}

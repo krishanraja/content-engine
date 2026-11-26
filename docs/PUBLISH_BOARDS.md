@@ -1828,6 +1828,11 @@ it. It writes records only; the live board shows the edition at its next read.
   bytes, with `X-Content-SHA256`) and `/edition/preview` (the preview page, under a policy that runs nothing), on his
   login, the engine key or Growth's key. Growth's Substack step builds from those bytes and schedules only when the item
   says approved for exactly their sha256 (`docs/GROWTH-HANDOFF.md`, "The weekly edition package").
+- **The news it chooses from:** `GET /api/board/<Monday>/edition/news` is the week's daily hub editions, read only
+  (`readHubWeek`): the hub pipeline's `hub_snapshots` rows from the Friday before the week to its Friday, each item cut
+  to what the edition reads (`id, subsector, date, source, url, headline, dek, why, coverage`), a row that is not a good
+  snapshot said as `missing`, and 503 `hub_unavailable` when the table cannot be read. The Friday run's gather reads it
+  and runs no gathering of its own (26 Nov 2026); each item is still checked against its own primary source.
 - **Why not the off-day manifest's Approve for publish:** that press is `picks/<day>-publish`, one a day, which Saturday's
   own post may need; it binds a piece's record (`checkPublishBind` reads `content_ideas`) and a file list in Growth's
   `content-engine-piece-manifest/1` shape; and an off-day item reaches its day only through his Approve on its option, so

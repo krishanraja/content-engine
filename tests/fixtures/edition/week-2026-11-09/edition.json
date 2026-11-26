@@ -17,7 +17,7 @@
         "Monday: who walked away with the money when an AI app millions loved went bust.",
         "Wednesday: how a Reiki master came to write a UK number two with an AI music app.",
         "Friday: what happened when staff were ranked by how much AI they used.",
-        "Also: music, film and TV, games, creators, art and design, and three pieces of good news."
+        "Also: music, film and TV, gaming, publishing and media, art and design, and three pieces of good news."
       ]
     },
     {
@@ -75,7 +75,7 @@
           ]
         },
         {
-          "topic": "Film, TV and streaming",
+          "topic": "Film & TV",
           "items": [
             {
               "text": "Sample Animation says an AI tool cut the time it takes to storyboard one episode from ten days to seven. Its own artists still draw over every board before it goes to the director.",
@@ -87,7 +87,7 @@
           ]
         },
         {
-          "topic": "Games",
+          "topic": "Gaming",
           "items": [
             {
               "text": "Demo Games shipped a game whose minor characters speak with AI voices made from actors who licensed them for it. Each actor is paid a fee for every line, at rates the studio published in its announcement.",
@@ -99,7 +99,7 @@
           ]
         },
         {
-          "topic": "Creators and creator tech",
+          "topic": "Publishing & Media",
           "items": [
             {
               "text": "Specimen Press, a newsletter platform, will pay its writers when their archives are used to train AI, at a rate set out in its new terms. Writers who would rather not take part can switch it off in their settings.",
@@ -111,7 +111,7 @@
           ]
         },
         {
-          "topic": "Art and design",
+          "topic": "Art & Design",
           "items": [
             {
               "text": "The Placeholder Gallery sold every print in its show of AI-assisted work by twelve illustrators, its sales note says. Each artist kept the rights to their own images, and the gallery took its usual share.",

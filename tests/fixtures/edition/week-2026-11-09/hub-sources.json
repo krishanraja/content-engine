@@ -1,0 +1,29 @@
+{
+  "_about": "The hub's subsectors as config/hub-sources.json lists them (the hub pipeline's spec, 26 Nov 2026: music, film_tv, gaming, sport, publishing_media, art_design, in that order), for tests/edition_test.py and tests/control-plane/board-edition.test.ts. The edition reads the real file in production; tests/edition_test.py holds this copy to it once the hub pipeline has merged.",
+  "subsectors": [
+    {
+      "key": "music",
+      "label": "Music"
+    },
+    {
+      "key": "film_tv",
+      "label": "Film & TV"
+    },
+    {
+      "key": "gaming",
+      "label": "Gaming"
+    },
+    {
+      "key": "sport",
+      "label": "Sport"
+    },
+    {
+      "key": "publishing_media",
+      "label": "Publishing & Media"
+    },
+    {
+      "key": "art_design",
+      "label": "Art & Design"
+    }
+  ]
+}

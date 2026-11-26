@@ -29,6 +29,8 @@ function packaged(change = ''): Buffer {
     'import json, sys, tempfile, pathlib',
     'sys.path.insert(0, "scripts/edition")',
     'import edition as ed',
+    // The hub's subsectors, as the fixture copies config/hub-sources.json (which the hub pipeline brings).
+    'ed.HUB_SOURCES_PATH = pathlib.Path("tests/fixtures/edition/week-2026-11-09/hub-sources.json")',
     'd = json.loads(pathlib.Path("tests/fixtures/edition/week-2026-11-09/edition.json").read_text(encoding="utf-8")); d.pop("_about")',
     'change = sys.argv[1]',
     'if change: d["sections"][-1]["text"] = change',
@@ -128,7 +130,7 @@ describe('the Saturday carries the edition and his Approve for send, bound to it
 })
 
 /** A store holding the week's edition, its preview and his press, read through the same calls the board makes. */
-function store(bytes: Buffer, opts: { libSha?: string; none?: boolean; press?: Body } = {}) {
+function store(bytes: Buffer, opts: { libSha?: string; none?: boolean; press?: Body; hub?: Body[]; hubError?: boolean; asked?: Body } = {}) {
   const page = Buffer.from('<!doctype html><title>Preview</title>')
   const paths = editionPaths(SATURDAY)
   const rows: Record<string, Body> = {
@@ -140,10 +142,14 @@ function store(bytes: Buffer, opts: { libSha?: string; none?: boolean; press?: B
     const q: Body = {}
     for (const k of ['select', 'in', 'order', 'gte', 'lte', 'limit', 'not', 'is', 'like']) q[k] = () => q
     q.eq = (k: string, v: unknown) => { filters[k] = v; return q }
+    q.gte = (k: string, v: unknown) => { if (opts.asked) opts.asked[`${table} ${k} >=`] = v; return q }
+    q.lte = (k: string, v: unknown) => { if (opts.asked) opts.asked[`${table} ${k} <=`] = v; return q }
     q.maybeSingle = async () => ({ error: null, data: null })
     q.then = (resolve: (v: unknown) => void) => resolve(table === 'content_library_files'
       ? { error: null, data: opts.none ? [] : [rows[String(filters.path)]].filter(Boolean) }
-      : table === 'board_documents' ? { error: null, data: opts.press ? [opts.press] : [] } : { error: null, data: [] })
+      : table === 'board_documents' ? { error: null, data: opts.press ? [opts.press] : [] }
+      : table === 'hub_snapshots' ? (opts.hubError ? { error: { message: 'relation "public.hub_snapshots" does not exist' }, data: null } : { error: null, data: opts.hub ?? [] })
+      : { error: null, data: [] })
     return q
   }
   const files: Record<string, Buffer> = { 'files/draft.json': bytes, 'files/preview.html': page }
@@ -211,6 +217,38 @@ describe('the board refuses a press bound to anything but the edition as it stan
     expect((await get('draft', growth, store(bytes, { none: true }))).out).toEqual({ ok: false, error: 'edition_not_found' })
   })
 
+  it('GET /api/board/<Monday>/edition/news serves the week\'s daily hub items the Friday run chooses from, read only', async () => {
+    process.env.ACCESS_CODE = 'synthetic-board-test'
+    const item = (id: string, extra: Body = {}) => ({ id, subsector: 'music', date: '2026-11-10T09:00:00Z', source: 'Example Trade',
+      url: `https://example.org/trade/${id}`, headline: 'A label licenses its catalogue', dek: 'It is paid on every track.', why: 'It pays.',
+      coverage: 3, companies: ['Example Records'], tickers: [], image: { kind: null, url: null }, ...extra })
+    const snapshot = (date: string, items: Body[], extra: Body = {}) => ({ edition_date: date, payload: { ok: true, version: 1, edition_date: date, items, ...extra } })
+    const asked: Body = {}
+    const hub = [
+      snapshot('2026-11-09', [item('a'), item('b', { url: 'http://example.org/insecure' }), item('c', { headline: ' ' })]),
+      snapshot('2026-11-10', [item('d', { why: '', coverage: 0 })]),
+      snapshot('2026-11-11', [item('e')], { ok: false }),
+      snapshot('2026-11-12', [item('f')], { edition_date: '2026-11-01' }),
+    ]
+    const get = (db: unknown, headers: Body = { cookie: cookie() }) => call(db, { method: 'GET', headers, query: { week: WEEK, op: 'edition', id: 'news' } })
+    const news = await get(store(bytes, { hub, asked }))
+    expect(news.status).toBe(200)
+    // The eight daily editions the window can draw on: the Friday before the week to its Friday.
+    expect(asked).toEqual({ 'hub_snapshots edition_date >=': '2026-11-06', 'hub_snapshots edition_date <=': '2026-11-13' })
+    expect(news.out).toEqual({ ok: true, week: WEEK, from: '2026-11-06', to: '2026-11-13',
+      days: [
+        { edition_date: '2026-11-09', skipped: 2, items: [{ id: 'a', subsector: 'music', date: '2026-11-10T09:00:00Z', source: 'Example Trade',
+          url: 'https://example.org/trade/a', headline: 'A label licenses its catalogue', dek: 'It is paid on every track.', why: 'It pays.', coverage: 3 }] },
+        { edition_date: '2026-11-10', skipped: 0, items: [{ id: 'd', subsector: 'music', date: '2026-11-10T09:00:00Z', source: 'Example Trade',
+          url: 'https://example.org/trade/d', headline: 'A label licenses its catalogue', dek: 'It is paid on every track.', why: null, coverage: 1 }] },
+      ],
+      // A row that is not a good snapshot is said as missing, never read.
+      missing: ['2026-11-06', '2026-11-07', '2026-11-08', '2026-11-11', '2026-11-12', '2026-11-13'] })
+    expect(await get(store(bytes, { hubError: true }))).toMatchObject({ status: 503, out: { ok: false, error: 'hub_unavailable' } })
+    expect((await get(store(bytes, { hub }), {})).status).toBe(401)
+    expect((await call(store(bytes, { hub }), { method: 'POST', headers: { cookie: cookie(), origin: 'https://controlcenter.krishraja.com' }, query: { week: WEEK, op: 'edition', id: 'news' }, body: {} })).status).toBe(405)
+  })
+
   it('routes /api/board/<Monday>/edition[/<file>] to the edition before the board\'s collections', () => {
     const routes = (JSON.parse(readFileSync('apps/control-plane/vercel.json', 'utf8')).rewrites as Array<{ source: string; destination: string }>)
     const at = (source: string) => routes.findIndex(r => r.source === source)
@@ -227,7 +265,9 @@ describe('the package bytes are the same on both sides', () => {
     const draft = join(dir, 'draft.json')
     execFileSync('python3', ['-c', 'import json,sys,pathlib; d=json.loads(pathlib.Path("tests/fixtures/edition/week-2026-11-09/edition.json").read_text(encoding="utf-8")); d.pop("_about"); pathlib.Path(sys.argv[1]).write_text(json.dumps(d), encoding="utf-8")', draft])
     const out = join(dir, 'pack')
-    const printed = JSON.parse(execFileSync('python3', ['scripts/edition/edition.py', 'package', draft, '--out', out], { encoding: 'utf8' }))
+    // edition.py's command line, reading the fixture's copy of the hub's subsectors (config/hub-sources.json).
+    const cli = 'import pathlib, sys; sys.path.insert(0, "scripts/edition"); import edition as ed; ed.HUB_SOURCES_PATH = pathlib.Path("tests/fixtures/edition/week-2026-11-09/hub-sources.json"); sys.exit(ed.main(sys.argv[1:]))'
+    const printed = JSON.parse(execFileSync('python3', ['-c', cli, 'package', draft, '--out', out], { encoding: 'utf8' }))
     const bytes = readFileSync(join(out, '0 Publish', 'edition.draft.json'))
     expect(parseEdition(bytes, SATURDAY)!.sha256).toBe(printed.sha256)
     expect(printed.draft_path).toBe(editionPaths(SATURDAY).draft)

@@ -234,3 +234,48 @@ export async function readPreview(db: SupabaseClient, found: EditionRead): Promi
 
 /** The preview's content security policy: its own inline style and https pictures, nothing that runs. */
 export const PREVIEW_POLICY = "default-src 'none'; img-src https: data:; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'"
+
+// The week's daily hub items, for the edition's news (config/weekly-edition.json, news.from_hub; 26 Nov 2026: the
+// edition reads the hub's rows and runs no gathering of its own). The hub pipeline writes one snapshot a day to
+// hub_snapshots (edition_date, payload: the same JSON GET /api/hub/today serves). This reads the rows from the Friday
+// before the week to its Friday, the eight daily editions the news window (the seven days to Friday 12:00 New York)
+// can draw on, and cuts each item to what the edition reads. A row that is not a good snapshot is said as missing,
+// never read; an item missing a field the edition needs is counted as skipped. Read only.
+export interface HubItem {
+  id: string; subsector: string; date: string; source: string; url: string
+  headline: string; dek: string; why: string | null; coverage: number
+}
+export interface HubWeek { from: string; to: string; days: { edition_date: string; items: HubItem[]; skipped: number }[]; missing: string[] }
+export class HubUnavailable extends Error { constructor() { super('hub_unavailable') } }
+
+const HUB_TEXT = ['id', 'subsector', 'date', 'source', 'url', 'headline', 'dek'] as const
+const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/
+
+function hubItem(v: unknown): HubItem | null {
+  if (!isObj(v)) return null
+  if (HUB_TEXT.some(k => typeof v[k] !== 'string' || !(v[k] as string).trim())) return null
+  if (!String(v.url).startsWith('https://')) return null
+  const coverage = Number.isInteger(v.coverage) && (v.coverage as number) >= 1 ? v.coverage as number : 1
+  return { id: v.id as string, subsector: v.subsector as string, date: v.date as string, source: v.source as string,
+    url: v.url as string, headline: v.headline as string, dek: v.dek as string,
+    why: typeof v.why === 'string' && v.why.trim() ? v.why : null, coverage }
+}
+
+export async function readHubWeek(db: SupabaseClient, week: string): Promise<HubWeek> {
+  const day = (n: number) => new Date(Date.parse(`${week}T00:00:00Z`) + n * 86_400_000).toISOString().slice(0, 10)
+  const from = day(-3), to = day(4)
+  const { data, error } = await db.from('hub_snapshots').select('edition_date,payload')
+    .gte('edition_date', from).lte('edition_date', to).order('edition_date', { ascending: true })
+  if (error || !Array.isArray(data)) throw new HubUnavailable()
+  const days: HubWeek['days'] = []
+  for (const row of data as Body[]) {
+    const date = String(row.edition_date ?? '').slice(0, 10)
+    const p = row.payload
+    if (!ISO_DAY.test(date) || !isObj(p) || p.ok !== true || p.version !== 1 || p.edition_date !== date || !Array.isArray(p.items)) continue
+    const items = (p.items as unknown[]).map(hubItem)
+    days.push({ edition_date: date, items: items.filter((i): i is HubItem => i !== null), skipped: items.filter(i => i === null).length })
+  }
+  const read = new Set(days.map(d => d.edition_date))
+  const missing = Array.from({ length: 8 }, (_, i) => day(i - 3)).filter(d => !read.has(d))
+  return { from, to, days, missing }
+}

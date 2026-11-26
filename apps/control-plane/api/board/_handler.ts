@@ -8,7 +8,7 @@ import { carryDay } from './_carry.js'
 import { branchSha, readView, readWeekIdeas } from './_view.js'
 import { signMedia } from './_media.js'
 import { ManifestBindError, checkPublishBind } from './_manifest.js'
-import { EditionBindError, PREVIEW_POLICY, checkEditionBind, editionView, readEdition, readPreview } from './_edition.js'
+import { EditionBindError, HubUnavailable, PREVIEW_POLICY, checkEditionBind, editionView, readEdition, readHubWeek, readPreview } from './_edition.js'
 import { ShowGateError, checkProofShown } from './_showGate.js'
 import { DRIVE_ID, boardDrive, filesOfPosts } from './_drivePosts.js'
 import { notModified, viewEtag } from './_viewContract.js'
@@ -201,16 +201,25 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
     if (op === 'edition') {
       // The week's edition (_edition.ts, contract 1.35.0), read only: GET /api/board/<Monday>/edition is the Saturday's
       // edition as the view carries it, his press's state included; /edition/draft is the draft's exact bytes, whose
-      // sha256 his Approve for send binds; /edition/preview is its preview page. His login, the engine operator's key,
-      // or Growth's key: growth's Substack step builds the Substack draft from these bytes and acts only on his press.
+      // sha256 his Approve for send binds; /edition/preview is its preview page; /edition/news is the week's daily hub
+      // items the Friday run chooses its news from (readHubWeek). His login, the engine operator's key, or Growth's
+      // key: growth's Substack step builds the Substack draft from these bytes and acts only on his press.
       if (!actor(req) && !growthWriter(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })
       if (method !== 'GET') return res.status(405).json({ ok: false, error: 'method_not_allowed' })
       const week = scalar(req.query.week)
       if (!monday(week)) return res.status(400).json({ ok: false, error: 'invalid_week' })
       const file = scalar(req.query.id)
-      if (file && file !== 'draft' && file !== 'preview') return res.status(404).json({ ok: false, error: 'edition_file_not_found' })
+      if (file && file !== 'draft' && file !== 'preview' && file !== 'news') return res.status(404).json({ ok: false, error: 'edition_file_not_found' })
       try {
         const db = await getDb()
+        if (file === 'news') {
+          try {
+            return res.status(200).json({ ok: true, week, ...(await readHubWeek(db, week)) })
+          } catch (error) {
+            if (error instanceof HubUnavailable) return res.status(503).json({ ok: false, error: 'hub_unavailable' })
+            throw error
+          }
+        }
         const found = await readEdition(db, week)
         if (!file) {
           const picks = await db.from('board_documents').select('doc_id,body,updated_by,revision').eq('week', week).eq('collection', 'picks').eq('doc_id', EDITION_DOC)
