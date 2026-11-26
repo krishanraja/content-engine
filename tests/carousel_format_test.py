@@ -11,6 +11,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
@@ -369,6 +370,9 @@ class TheOneMakeRoute(unittest.TestCase):
             rec = carousel_make.make('docs/plans/2026-11-27', 'piece', self.deck_file(tmp), out, run=run, root=fake_root(tmp))
             self.assertTrue(rec['passed'])
             self.assertEqual(len(rec['slides']), 6)
+            self.assertEqual((rec['made_by'], rec['set']), ('carousel_make', 'piece'))
+            self.assertEqual(rec['first_slide_sha256'], hashlib.sha256(b'cover').hexdigest())
+            self.assertTrue(rec['deck_sha256'])
             self.assertTrue(json.loads((out / 'carousel-receipt.json').read_text())['passed'])
         self.assertEqual([c[1] for c in calls], ['scripts/library/make_piece.py', 'scripts/covers/make_covers.py'])
         self.assertEqual(calls[0][2:5], ['docs/plans/2026-11-27', '--set', 'piece'])
@@ -445,8 +449,10 @@ class APublishReadinessCheck(unittest.TestCase):
     def spec(self, n=6, passed=True, shas=None):
         import piece_manifest
         assets = [{'name': f'carousel_slide_{i}', 'drive_id': 'a' * 25, 'sha256': f'{i:x}' * 64} for i in range(1, n + 1)]
+        slides = shas or [a['sha256'] for a in assets]
         rec = {'schema': 'carousel-receipt/1', 'passed': passed, 'problems': [] if passed else ['slide 3: no glance'],
-               'slides': [{'sha256': s} for s in (shas or [a['sha256'] for a in assets])]}
+               'made_by': 'carousel_make', 'set': 'piece', 'deck_sha256': 'd' * 64, 'first_slide_sha256': slides[0],
+               'slides': [{'sha256': s} for s in slides]}
         return piece_manifest, {'piece_id': '11111111-2222-4333-8444-555555555555',
                                 'qa': {'state': 'passed', 'checked_at': '2026-11-30T07:00:00Z'}, 'assets': assets,
                                 'channels': {'instagram': {'words': 'w', 'alt_text': None, 'assets': [a['name'] for a in assets]}},
@@ -460,8 +466,9 @@ class APublishReadinessCheck(unittest.TestCase):
     def test_no_receipt_a_failed_one_the_wrong_slides_or_the_wrong_count_is_refused(self):
         pm, spec = self.spec()
         del spec['carousel_receipt']
-        with self.assertRaises(pm.ManifestError) as r:
-            pm.draft(spec)
+        with mock.patch.object(cf, 'absent_refusal', return_value=None):
+            with self.assertRaises(pm.ManifestError) as r:
+                pm.draft(spec)
         self.assertIn('the carousel is not approvable', str(r.exception))
         self.assertIn('carries no receipt', str(r.exception))
         pm, spec = self.spec(passed=False)
@@ -470,6 +477,32 @@ class APublishReadinessCheck(unittest.TestCase):
         self.assertIn('not for these slides', ' | '.join(pm.carousel_problems(spec)))
         pm, spec = self.spec(n=8)
         self.assertIn('8 carousel slides: a carousel is 4 to 7', ' | '.join(pm.carousel_problems(spec)))
+
+    def test_with_the_library_absent_the_refusal_says_so(self):
+        pm, spec = self.spec()
+        del spec['carousel_receipt']
+        with mock.patch.object(cf, 'absent_refusal', return_value='the v5 Library is not on this checkout yet: x'):
+            found = pm.carousel_problems(spec)
+        self.assertEqual(len(found), 1)
+        self.assertIn('the v5 Library is not on this checkout yet', found[0])
+
+    def test_a_deckless_receipt_or_one_from_another_maker_is_refused(self):
+        for drop in ('deck_sha256', 'set', 'made_by', 'first_slide_sha256'):
+            pm, spec = self.spec()
+            spec['carousel_receipt'][drop] = None
+            self.assertTrue(pm.carousel_problems(spec), drop)
+        pm, spec = self.spec()
+        spec['carousel_receipt']['made_by'] = 'carousel_check'
+        self.assertIn('not written by python3 scripts/carousel_make.py', ' | '.join(pm.carousel_problems(spec)))
+        with tempfile.TemporaryDirectory() as tmp:
+            paths = []
+            for n in range(1, 6):
+                f = Path(tmp) / f'slide-{n:02d}.png'
+                f.write_bytes(b'x')
+                paths.append(str(f))
+            out = Path(tmp) / 'r.json'
+            self.assertEqual(carousel_check.main(['--cards', '--receipt', str(out)] + paths), 2)
+            self.assertFalse(out.exists(), 'no deck, no receipt')
 
     def test_a_spec_with_no_carousel_is_untouched(self):
         pm, spec = self.spec()

@@ -217,19 +217,30 @@ def carousel_problems(spec, base=Path('.')):
             rec = json.loads((Path(base) / rec).read_text(encoding='utf-8'))
         except (OSError, ValueError):
             rec = None
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    import carousel_format
     if not isinstance(rec, dict) or rec.get('schema') != 'carousel-receipt/1':
+        # The real cause first: while the v5 Library is not on this checkout, carousel_make.py (the only receipt writer)
+        # refuses, so no carousel can carry a receipt yet.
+        absent = carousel_format.absent_refusal()
+        if absent:
+            return [f'the carousel carries no receipt because {absent}']
         return ['the carousel carries no receipt ("carousel_receipt": the carousel-receipt.json python3 scripts/carousel_make.py '
                 'writes): a carousel that has not passed the format is not approvable']
     out = []
     if rec.get('passed') is not True:
         out.append('the carousel failed the format (' + '; '.join(map(str, (rec.get('problems') or [])[:3]))
                    + '): a carousel that fails is not approvable')
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-    import carousel_format
+    if rec.get('made_by') != 'carousel_make' or not rec.get('deck_sha256') or not rec.get('set'):
+        out.append('the carousel receipt was not written by python3 scripts/carousel_make.py (it names no deck, no set or '
+                   'another maker): slides checked only for their count and layout are not approvable')
+    shas = [s.get('sha256') for s in rec.get('slides') or [] if isinstance(s, dict)]
+    if not rec.get('first_slide_sha256') or not shas or rec['first_slide_sha256'] != shas[0]:
+        out.append('the carousel receipt does not bind its first slide to the one make_covers.py recorded in covers.json')
     span = carousel_format.rules()['slides']
     if not span['min'] <= len(slides) <= span['max']:
         out.append(f'{len(slides)} carousel slides: a carousel is {span["min"]} to {span["max"]}')
-    if [s.get('sha256') for s in rec.get('slides') or [] if isinstance(s, dict)] != [a.get('sha256') for a in slides]:
+    if shas != [a.get('sha256') for a in slides]:
         out.append('the carousel receipt is not for these slides: its sha256s are not the carousel_slide assets\', in order')
     return out
 

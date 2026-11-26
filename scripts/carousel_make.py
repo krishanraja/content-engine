@@ -97,14 +97,18 @@ def make(piece, set_name, deck_path, out, run=subprocess.run, root=ROOT):
     slides = sorted(out.glob(route['slides_glob']))
     found = carousel_format.drawn_problems([str(p) for p in slides], fmt, deck)
     first = out / route['first_slide']
+    want = None
     if not first.is_file():
         found.append(f'no {route["first_slide"]}: the first slide comes from make_covers.py')
     else:
         want = _cover_sha(out, route['first_slide'])
-        if want and hashlib.sha256(first.read_bytes()).hexdigest() != want:
+        if not want:
+            found.append(f'covers.json records no sha256 for {route["first_slide"]}: the first slide comes only from make_covers.py')
+        elif hashlib.sha256(first.read_bytes()).hexdigest() != want:
             found.append(f'{route["first_slide"]} is not the slide covers.json records: the first slide comes only from '
                          'make_covers.py')
-    rec = carousel_check.receipt([str(p) for p in slides], str(deck_path), found)
+    rec = carousel_check.receipt([str(p) for p in slides], str(deck_path), found, made_by='carousel_make',
+                                 first_slide_sha256=want)
     (out / route['receipt']).write_text(json.dumps(rec, indent=1) + '\n', encoding='utf-8')
     if found:
         raise Refused('the drawn carousel does not hold the format:\n  ' + '\n  '.join(found))
