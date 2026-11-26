@@ -900,6 +900,19 @@ def narrative_gate(paths, piece_id, roots=None):
     return {'path': str(locks[0]), 'outline': lock_outline(text), 'signed': {'words': signed[0], 'on': signed[1], 'sha256': signed[2]}}
 
 
+def touch_findings(stage, lock_path, piece_id):
+    """The cycle's required touches for a stage (config/cycle.json, scripts/post-pack/touch.py) missing from the lock's
+    week's touches.jsonl, as findings {code: touch, ref, line}: stage 5 at the lock, stage 6 at the scripts. Only from the
+    story score's `from` week; a lock outside a docs/plans/<Monday>-week folder has no week, so nothing."""
+    import re
+    folder = Path(lock_path).resolve().parent
+    m = re.match(r'(\d{4}-\d{2}-\d{2})-week$', folder.name)
+    if not m:
+        return []
+    import touch
+    return touch.findings(stage, m.group(1), piece=piece_id, plans=folder.parent)
+
+
 def narrative_report(piece_id, path=None, roots=None):
     """`making.py PIECE narrative [LOCK]`: whether the piece's lock stands, as (exit code, lines). It writes nothing."""
     if not UUID.match(piece_id or ''):
@@ -921,6 +934,9 @@ def narrative_report(piece_id, path=None, roots=None):
         return 1, [f'narrative lock {locks[0]}: not ready'] + [f'  {w}' for w in body + sign] + to_sign
     import spine_check
     words, on, sha = lock_signature(text)
+    touches = touch_findings(5, locks[0], piece_id)
+    if touches:
+        return 1, [f"narrative lock {locks[0]}: signed, but the cycle's stage 5 touches are not on the log"] + [f"  {f['line']}" for f in touches]
     return 0, [f'narrative lock {locks[0]}: signed',
                f'  Signed by Krish: "{words}", {on}, lock sha256 {sha}',
                f'  spine: {spine_check.parse_outline(lock_outline(text))["spine"]}',
@@ -3118,6 +3134,9 @@ def main(argv=None, call=None):
         elif a.what == 'scripts':
             # From the week of 9 Nov the signed narrative lock comes first, and it is the outline's approval.
             lock = narrative_gate(a.args, a.piece_id)
+            touches = touch_findings(6, lock['path'], a.piece_id) if lock else []
+            if touches:
+                raise MakingError("the cycle's stage 6 touches are not on the log (config/cycle.json): " + '; '.join(f['line'] for f in touches))
             outline_gate(a.args, lock)
             spine = spine_gate(a.args, a.piece_id, call, lock)
             # The record first: checked_at stays put while the words do.
