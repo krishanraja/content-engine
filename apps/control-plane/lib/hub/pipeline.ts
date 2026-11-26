@@ -4,6 +4,7 @@ import { supabase } from '../../api/_supabase.js'
 import { readSnapshot } from './snapshot.js'
 import { latest, discover, markets, pieces, save } from './store.js'
 import { writeEdition } from './editorial.js'
+import { announceEdition } from './announce.js'
 import { buildMarkets } from './markets.js'
 import { chooseImage, wikiClient } from './wiki.js'
 import { isoDay, sectors, optional, type Attention, type Snapshot } from './types.js'
@@ -59,7 +60,8 @@ export async function refresh(mode: Mode, now: number) {
   await save(snapshot,mode === 'prices' ? stored.revision : undefined)
   const finished = await supabase.from('hub_runs').update({ complete: true }).eq('day',date).eq('mode',mode)
   if (finished.error) throw Error('run_record_failed')
-  return { edition_date: snapshot.edition_date, items: snapshot.items.length, stocks: Object.keys(snapshot.ticker.stocks).length }
+  const summary = { edition_date: snapshot.edition_date, items: snapshot.items.length, stocks: Object.keys(snapshot.ticker.stocks).length }
+  return mode === 'daily' ? { ...summary, indexnow: await announceEdition() } : summary
 }
 
 export function cron(mode: Mode) {

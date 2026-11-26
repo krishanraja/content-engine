@@ -78,7 +78,7 @@ it('persists the verified edition, serves it publicly, refreshes only prices and
 
   expect(await response()).toMatchObject({ code:503,body:{ok:false},headers:{'Cache-Control':'no-store'} })
   expect((await response('POST')).code).toBe(405)
-  await refresh('daily',now)
+  expect(await refresh('daily',now)).toMatchObject({ edition_date:'2026-11-26',items:8,indexnow:'skipped' })
   const morning = await response()
   expect(morning.code).toBe(200)
   expect(morning.headers).toMatchObject({ 'Access-Control-Allow-Origin':'*','Cache-Control':expect.stringContaining('s-maxage=300') })
