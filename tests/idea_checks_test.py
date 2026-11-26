@@ -6,6 +6,7 @@ import json
 import sys
 import tempfile
 import unittest
+from datetime import date, timedelta
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -1102,6 +1103,170 @@ class OffBeatTest(unittest.TestCase):
         self.assertTrue(board_feed.remakeable(line, ['mon']))
         self.assertFalse(board_feed.remakeable(line, ['wed']))
 
+
+
+def ladder(n, url=True):
+    """A why-ladder/1 probe with n rungs, each with one source (or none)."""
+    ev = [{'url': 'https://example.com/a', 'domain': 'example.com', 'date': '2026-12-01', 'quote': 'q'}] if url else [{'quote': 'q'}]
+    return {'schema': 'why-ladder/1', 'question': 'Why?', 'rungs': [{'n': k, 'question': 'Why?', 'answer': 'a', 'evidence': ev} for k in range(1, n + 1)]}
+
+
+def story(total, *, kind='hero_mon', failed=(), **kw):
+    """The story_score story_score.py order writes beside an option (story_score.compact)."""
+    return dict({'total': total, 'axes': {'whys': 7, 'scale': 7}, 'type': kind, 'floors_failed': list(failed),
+                 'rubric_version': ic.STORY['rubric_version'], 'at': '2026-12-06T09:00:00Z'}, **kw)
+
+
+A = 'aaaaaaaa-0000-4000-8000-000000000001'
+B = 'bbbbbbbb-0000-4000-8000-000000000002'
+C = 'cccccccc-0000-4000-8000-000000000003'
+
+
+class StoryGateTest(unittest.TestCase):
+    """The story engine v5 plan, commit 7: from config/story-score.json `from`, every open option carries the blind story
+    score, each open day stands in story_score.py order's order, a hero holds three sourced whys before he picks, and an
+    option under its floor fails the run. Every option here is invented."""
+
+    WEEK = ic.STORY_FROM
+
+    def board(self, *mains, off=()):
+        return {'week_start': self.WEEK, 'days': {'mon': list(mains)}, 'offdays': {'tue': list(off)} if off else {}}
+
+    def probes(self, *ids, n=5):
+        return {i: ladder(n) for i in ids}
+
+    def run_(self, ideas, status=None, probes=None, week=None):
+        return ic.story_findings(ideas, week or self.WEEK, status, probes)
+
+    def test_the_codes_fail_the_run_from_the_config_date(self):
+        self.assertIn('story', ic.GATE_CODES)
+        self.assertIn('story_floor', ic.GATE_CODES)
+        self.assertEqual(ic.STORY_FROM, json.loads((ROOT / 'config' / 'story-score.json').read_text(encoding='utf-8'))['from'])
+
+    def test_nothing_before_the_from_date(self):
+        ideas = self.board(main_option(id=A), main_option(id=B))
+        day_before = (date.fromisoformat(self.WEEK) - timedelta(days=7)).isoformat()
+        self.assertEqual(self.run_(ideas, week=day_before), [])
+        self.assertEqual(self.run_(ideas, week='2026-11-23'), [])
+
+    def test_a_scored_board_in_order_passes(self):
+        ideas = self.board(main_option(id=A, story_score=story(80)), main_option(id=B, story_score=story(60)),
+                           off=[off('meme1', 'https://e.com/1', story_score=story(70, kind='offday_meme')),
+                                off('meme2', 'https://e.com/2', story_score=story(40, kind='offday_meme'))])
+        self.assertEqual(self.run_(ideas, probes=self.probes(A, B)), [])
+
+    def test_an_unscored_option_is_refused(self):
+        ideas = self.board(main_option(id=A, story_score=story(80)), main_option(id=B),
+                           off=[off('meme1', 'https://e.com/1')])
+        found = self.run_(ideas, probes=self.probes(A, B))
+        self.assertEqual([(f['code'], f['ref']) for f in found], [('story', 'mon-2'), ('story', 'off-tue-meme1')])
+        self.assertTrue(found[0]['line'].startswith('story: mon-2 (bbbbbbbb) has no story score'), found[0]['line'])
+        self.assertTrue(all(board_feed.remakeable(f['line'], ['mon', 'tue']) for f in found), 'a days re-run can remake it')
+
+    def test_a_score_with_no_total_or_an_old_rubric_is_refused(self):
+        ideas = self.board(main_option(id=A, story_score=story(None)), main_option(id=B, story_score=story(60, rubric_version='story-score/0')))
+        lines = [f['line'] for f in self.run_(ideas, probes=self.probes(A, B))]
+        self.assertTrue(any('mon-1' in ln and 'no total' in ln for ln in lines), lines)
+        self.assertTrue(any('mon-2' in ln and 'story-score/0' in ln for ln in lines), lines)
+
+    def test_an_open_day_out_of_order_is_refused(self):
+        ideas = self.board(main_option(id=A, story_score=story(60)), main_option(id=B, story_score=story(80)))
+        found = self.run_(ideas, probes=self.probes(A, B))
+        self.assertEqual([(f['code'], f['ref']) for f in found], [('story', 'mon-1')])
+        self.assertIn('place 2', found[0]['line'])
+        offday = self.board(off=[off('meme1', 'https://e.com/1', story_score=story(40, kind='offday_meme')),
+                                 off('meme2', 'https://e.com/2', story_score=story(70, kind='offday_meme'))])
+        self.assertEqual([f['ref'] for f in self.run_(offday)], ['off-tue-meme1'])
+
+    def test_an_option_under_its_floor_goes_last_and_fails_the_run(self):
+        ideas = self.board(main_option(id=A, story_score=story(60)),
+                           main_option(id=B, story_score=story(90, failed=['a hero names one thing'])))
+        found = self.run_(ideas, probes=self.probes(A, B))
+        self.assertEqual([(f['code'], f['ref']) for f in found], [('story_floor', 'mon-2')])
+        self.assertIn('a hero names one thing', found[0]['line'])
+        floored = self.board(main_option(id=A, story_score=story(60)), main_option(id=B, story_score=story(None, floored=True)))
+        self.assertEqual([(f['code'], f['ref']) for f in self.run_(floored, probes=self.probes(A, B))], [('story_floor', 'mon-2')])
+        first = self.board(main_option(id=B, story_score=story(90, failed=['x'])), main_option(id=A, story_score=story(60)))
+        self.assertEqual(sorted(f['code'] for f in self.run_(first, probes=self.probes(A, B))), ['story', 'story_floor'],
+                         'a floored option placed first is out of order too')
+
+    def test_his_option_goes_first_at_equal_totals_only(self):
+        his = main_option(id=A, source_kind='his', story_score=story(70))
+        engine = main_option(id=B, story_score=story(70))
+        self.assertEqual(self.run_(self.board(his, engine), probes=self.probes(A, B)), [])
+        self.assertEqual([f['ref'] for f in self.run_(self.board(engine, his), probes=self.probes(A, B))], ['mon-1'])
+        lower = main_option(id=A, source_kind='his', story_score=story(69))
+        self.assertEqual([f['ref'] for f in self.run_(self.board(lower, engine), probes=self.probes(A, B))], ['mon-1'],
+                         'never above a higher total')
+
+    def test_a_council_read_decides_its_pair(self):
+        council = {'pair': [f'mon/{A}', f'mon/{B}'], 'winner': f'mon/{B}'}
+        ideas = self.board(main_option(id=B, story_score=story(78, council=council)), main_option(id=A, story_score=story(80, council=council)))
+        self.assertEqual(self.run_(ideas, probes=self.probes(A, B)), [])
+        bare = self.board(main_option(id=B, story_score=story(78)), main_option(id=A, story_score=story(80)))
+        self.assertEqual([f['ref'] for f in self.run_(bare, probes=self.probes(A, B))], ['mon-1'], 'without the council read it is out of order')
+
+    def test_the_order_story_score_writes_passes_its_own_gate(self):
+        import story_score as ss
+        ideas = self.board(main_option(id=A), main_option(id=B), main_option(id=C))
+        scores = {f'mon/{A}': story(50), f'mon/{B}': story(81), f'mon/{C}': story(79)}
+        new, report = ss.order_board(ideas, {k: dict(v, floored=False, humour_unread=False) for k, v in scores.items()}, None)
+        self.assertEqual(report['ordered'], ['mon'])
+        self.assertEqual(self.run_(new, probes=self.probes(A, B, C)), [])
+        swapped = json.loads(json.dumps(new))
+        swapped['days']['mon'][1], swapped['days']['mon'][2] = swapped['days']['mon'][2], swapped['days']['mon'][1]
+        self.assertEqual([f['code'] for f in self.run_(swapped, probes=self.probes(A, B, C))], ['story'])
+        removed = json.loads(json.dumps(new))
+        removed['days']['mon'][0].pop('story_score')
+        self.assertEqual([f['code'] for f in self.run_(removed, probes=self.probes(A, B, C))], ['story'])
+
+    def test_a_hero_under_three_sourced_whys_is_refused(self):
+        ideas = self.board(main_option(id=A, story_score=story(80)), main_option(id=B, story_score=story(60)))
+        found = self.run_(ideas, probes={A: ladder(5), B: ladder(2)})
+        self.assertEqual([(f['code'], f['ref']) for f in found], [('story', 'mon-2')])
+        self.assertIn('holds 2 whys', found[0]['line'])
+        unsourced = self.run_(ideas, probes={A: ladder(5), B: ladder(5, url=False)})
+        self.assertEqual([f['ref'] for f in unsourced], ['mon-2'], 'a rung with no source url is not a sourced why')
+        unprobed = self.run_(ideas, probes={A: ladder(5)})
+        self.assertEqual([f['ref'] for f in unprobed], ['mon-2'], 'no probe is never a pass')
+        own = self.board(main_option(id=A, story_score=story(80), whys=ladder(3)))
+        self.assertEqual(self.run_(own), [], "the option's own whys count when it carries them")
+
+    def test_an_answered_option_and_its_day_are_left_alone(self):
+        ideas = self.board(main_option(id=A, story_score=story(60)), main_option(id=B, story_score=story(80)), main_option(id=C))
+        status = {f'idea:{A}': 'approved', f'idea:{B}': 'open', f'idea:{C}': 'held'}
+        found = self.run_(ideas, status, probes=self.probes(A, B, C))
+        self.assertEqual([(f['code'], f['ref']) for f in found], [('story', 'mon-3')], 'only the open unscored option; the day is not ordered')
+        self.assertEqual(self.run_(ideas, {f'idea:{A}': 'approved', f'idea:{B}': 'rejected', f'idea:{C}': 'filed'}, probes={}), [])
+
+    def test_the_weekly_good_news_is_its_own_series(self):
+        ideas = {'week_start': self.WEEK, 'offdays': {'sat': [{'id': 'goodnews', 'weekly': 'good_news', 'title': 'Good news'}]}}
+        self.assertEqual(self.run_(ideas), [])
+
+    def test_wave1_reads_the_weeks_probes(self):
+        ideas = {'week_start': self.WEEK, 'days': {'mon': [main_option(id=A, story_score=story(80)), main_option(id=B, story_score=story(60))]}}
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = Path(tmp) / f'{self.WEEK}-week' / 'probe'
+            folder.mkdir(parents=True)
+            (folder / f'{A}.whys.json').write_text(json.dumps(ladder(5)))
+            (folder / f'{B.upper()}.whys.json').write_text(json.dumps(ladder(1)))
+            (folder / 'broken.whys.json').write_text('{')
+            self.assertEqual(set(board_feed.probes_of(self.WEEK, tmp)), {A, B})
+            found = [f for f in board_feed.wave1(ideas, sources(), tmp) if f['code'] in ('story', 'story_floor')]
+            self.assertEqual([f['ref'] for f in found], ['mon-2'])
+            self.assertIn('holds 1 whys', found[0]['line'])
+            self.assertEqual([f for f in board_feed.wave1(ideas, sources(), tmp, status={f'idea:{A}': 'open', f'idea:{B}': 'approved'})
+                              if f['code'] in ('story', 'story_floor')], [], 'his answered option is his')
+
+    def test_the_scorecard_measures_where_his_picks_fell(self):
+        ideas = {'days': {'mon': [main_option(id=A, story_score=story(80)), main_option(id=B, story_score=story(80)),
+                                  main_option(id=C, story_score=story(60))],
+                          'wed': [main_option(id=A), main_option(id=B)],
+                          'fri': [main_option(id=A, story_score=story(50)), main_option(id=B, story_score=story(70))]}}
+        ranks, version = board_feed.score_rank_of_pick(ideas, {'mon': 'mon-2', 'wed': 'wed-1', 'fri': 'fri-1'})
+        self.assertEqual(ranks, {'mon': 1, 'wed': None, 'fri': 2}, 'equal totals share a rank; an unscored pick is None')
+        self.assertEqual(version, ic.STORY['rubric_version'])
+        self.assertEqual(board_feed.score_rank_of_pick({'days': {'mon': [main_option(id=A)]}}, {'mon': 'mon-1'}), ({'mon': None}, None))
 
 if __name__ == '__main__':
     unittest.main()

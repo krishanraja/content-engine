@@ -1978,13 +1978,119 @@ def offbeat_findings(ideas, week):
     return out
 
 
+# The story score (the story engine v5 plan, commit 7; config/story-score.json). From its `from` board every open option
+# carries the blind story score, each open day stands in the order story_score.py order gives it, and a hero holds at
+# least three whys with a source before he picks. Ruling (Krish, 2026-11-26): his rejections are a floor only, never a
+# score, so this reads the score's own bits (total, type, floors failed, floored) and never his words or picks.
+
+def story_config():
+    return json.loads((Path(__file__).resolve().parents[2] / 'config' / 'story-score.json').read_text(encoding='utf-8'))
+
+
+STORY = story_config()
+STORY_FROM = STORY['from']
+STORY_WHYS_MIN = 3  # rungs with a source url on a hero's pre-pick probe (packages/contracts/src/whys.ts WHY_LADDER_MIN)
+OPEN = ('open', 'held')  # board_feed.REMAKE: an option he never answered
+
+
+def status_key(day, main, o):
+    """An option's key in board_feed option_status: idea:<id> on a publishing day, off:<day>:<id> on an off day."""
+    oid = str((o or {}).get('id') or '').lower()
+    return f'idea:{oid}' if main else f'off:{day}:{oid}'
+
+
+def sourced_rungs(ladder):
+    """How many rungs of a why-ladder/1 document carry at least one evidence item with an http(s) url."""
+    rungs = (ladder or {}).get('rungs') if isinstance(ladder, dict) else None
+    return sum(1 for r in rungs or [] if isinstance(r, dict) and any(
+        isinstance(e, dict) and re.match(r'^https?://', str(e.get('url') or '')) for e in r.get('evidence') or []))
+
+
+def story_findings(ideas, week, status=None, probes=None, cfg=None):
+    """From STORY_FROM, the story score's gate lines (code 'story' or 'story_floor'), each {code, ref, line}:
+      - story: an open option with no story score, a score with no total, or a score from another rubric;
+      - story: a day whose options are all open and do not stand in story_score.py order's order (by total, a floored
+        or floor-failing option last, his option first at equal totals only, a council read deciding its pair, a short
+        or meme unread for humour never first, the weekly series in its place);
+      - story: a hero option (Mon, Wed, Fri) whose pre-pick whys probe has fewer than STORY_WHYS_MIN rungs with a
+        source url (probes: {option id: why-ladder/1}; the option's own `whys` when it carries one);
+      - story_floor: an open option the floor refused or that fails one of its type's hard floors.
+    status: board_feed option_status {key: status}, or None for a board never shown (every option open). An answered
+    option is his: it is never checked, and a day with one is never checked for order (its presses name it by place).
+    The weekly good news is its own series and is left out."""
+    cfg = cfg or STORY
+    if str(week) < str(cfg['from']):
+        return []
+    import story_score as ss  # here, not at the top: story_score imports this module
+    probes = {str(k).lower(): v for k, v in (probes or {}).items()}
+    out = []
+
+    def is_open(day, main, o):
+        return status is None or status.get(status_key(day, main, o), 'unknown') in OPEN
+
+    def label(ref, main, o):
+        return f'{ref} ({str(o.get("id") or "")[:8]})' if main else ref
+
+    for ref, day, main, o in board_raw(ideas):
+        if o.get('weekly') or not is_open(day, main, o):
+            continue
+        s = o.get('story_score') if isinstance(o.get('story_score'), dict) else None
+        name = label(ref, main, o)
+        if s is None:
+            out.append({'code': 'story', 'ref': ref, 'line': f'story: {name} has no story score; run story_score.py score and order '
+                        '(.agents/skills/plan-week/references/story-score.md) before the board'})
+        elif s.get('rubric_version') != cfg['rubric_version']:
+            out.append({'code': 'story', 'ref': ref, 'line': f'story: {name} was scored on {s.get("rubric_version")!r}, not '
+                        f'{cfg["rubric_version"]}; score it again'})
+        elif s.get('total') is None and not s.get('floored'):
+            out.append({'code': 'story', 'ref': ref, 'line': f'story: {name} has a story score with no total (too few axes read); '
+                        'read the missing axes or replace it'})
+        if s and (s.get('floored') or s.get('floors_failed')):
+            why = '; '.join(str(f) for f in s.get('floors_failed') or []) or 'the floor refused it'
+            out.append({'code': 'story_floor', 'ref': ref, 'line': f'story_floor: {name} fails its floor ({why}); replace it or fix '
+                        'what the floor names'})
+        if main and day in ('mon', 'wed', 'fri'):
+            ladder = probes.get(str(o.get('id') or '').lower())
+            if ladder is None and isinstance(o.get('whys'), dict):
+                ladder = o['whys']
+            n = sourced_rungs(ladder)
+            if n < STORY_WHYS_MIN:
+                out.append({'code': 'story', 'ref': ref, 'line': f'story: {name} holds {n} whys with a source before the pick, under '
+                            f'{STORY_WHYS_MIN}; probe it (whys-probe-check) or replace it'})
+
+    for group, block in (('days', (ideas or {}).get('days')), ('offdays', (ideas or {}).get('offdays'))):
+        for day, opts in (block if isinstance(block, dict) else {}).items():
+            opts = [o for o in (opts if isinstance(opts, list) else []) if isinstance(o, dict)]
+            main = group == 'days'
+            movable = [o for o in opts if not o.get('weekly')]
+            if len(movable) < 2 or not all(is_open(day, main, o) for o in movable):
+                continue
+            scores = {ss.key_of(day, o): o['story_score'] for o in movable if isinstance(o.get('story_score'), dict)}
+            if len(scores) < len(movable):
+                continue  # an unscored option is already a line above
+            keys = [ss.key_of(day, o) for o in opts]
+            council = next((v for v in (s.get('council') for s in scores.values()) if isinstance(v, dict)), None)
+            want, _call = ss.order_day(opts, scores, keys, council, cfg)
+            for n, (have, should) in enumerate(zip(opts, want), 1):
+                if have is not should:
+                    ref = f'{day}-{n}' if main else f'off-{day}-{have.get("id")}'
+                    first = next(i for i, o in enumerate(opts, 1) if o is should)
+                    out.append({'code': 'story', 'ref': ref, 'line': f'story: {label(ref, main, have)} stands at place {n} of {day}, where '
+                                f'story_score.py order puts the option now at place {first}; run order on the open day'})
+                    break
+    return out
+
+
 # The findings that fail the Sunday run (board_feed.py gate): a subject he refused offered again, a warned option placed
 # first or shown without his words, a return that came back no deeper, a repeat of what went out (Krish, 2026-11-16),
 # from the 23 Nov board an option without its shape, aim, humour and lookalike, and from the 30 Nov board a Saturday
 # option that is not a sheet carousel followed card for card, or a meme template that is not whole (Krish, 2026-11-17).
 # The rest of cover stays the run's to fix before it stops, as before. From the 30 Nov board an option off the beat
-# (offbeat_findings; Ruling, Krish, 2026-11-24) fails it too.
-GATE_CODES = ('refused', 'warned_first', 'warning_line', 'return', 'repeat', 'aim', 'saturday', 'template', 'goodnews', 'off_beat')
+# (offbeat_findings; Ruling, Krish, 2026-11-24) fails it too. From the story score's `from` board an open option with
+# no story score, an open day out of the score's order, a hero under three sourced whys (story) and an option that
+# fails its floor (story_floor) fail it too (story_findings; Ruling, Krish, 2026-11-26: his rejections are a floor only).
+GATE_CODES = ('refused', 'warned_first', 'warning_line', 'return', 'repeat', 'aim', 'saturday', 'template', 'goodnews', 'off_beat',
+              'story', 'story_floor')
 # What the checks say without failing anything: a warned option (it carries his words) and an idea from his tick on a
 # subject he refused (it carries the refusal; Ruling, Krish, 2026-11-12).
 NOTE_CODES = ('warned', 'his_tick', 'his_repeat')
