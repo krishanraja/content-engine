@@ -7,6 +7,13 @@ Files moved here keep their body verbatim under a Historical banner.
 
 ## 2026-11-26
 
+- documented on branch `story/engine-v5` (not on `main`): the v5 reader and its North Star line, sports on the beat,
+  the story engine (floor, blind score, angles, the pre-pick whys probe, close calls, per-type rubric, the wildcard, the
+  gate codes), the blind proof's protocol, the production cycle (`config/cycle.json`, `touch.py`, the outbox and
+  `CC_HARNESS_KEY`), the off days on the reader's beat, the kill list's Windows encoding fix
+  (`kill-list-windows-encoding` in `config/failures.json`) and the 26 Nov split: content-engine makes every asset,
+  Growth posts it. `docs/GROWTH-HANDOFF.md` now opens on that contract; its 28 Oct section is kept below it as history.
+  NOW.md is not edited on a branch: the closeout note is `now-notes/2026-11-26-story-engine-v5.md`.
 - reconciled at `f03dcbc`: NOW.md re-stamped from `6bbfa12`; sessions had folded their own closeout notes through `f03dcbc` (234 non-steward commits) and none was left to fold. The NOW.md audit failed `where_too_many` (9 bullets in "Where it is right now", limit 8; this run counted 11 in the working tree). Three bullets moved here: the standards check-in bullet (2026-11-23, a done event whose record is `config/floor-groups.json`), the StyleStill covers bullet (2026-11-16, the oldest, and history of how the covers got there) and the standards page test bullet (2026-11-23, a fix that says how the floor pull requests got unblocked, not where things are). The creative beat bullet said its mandates migration was not applied; `699bb736` applied it on 2026-11-25, and the bullet now says so. The digest's stale stamps were left as they are: their bodies were not rechecked in this run.
 - rolled from NOW.md, verbatim:
   The standards check-in of 2026-11-23 grouped the new floor standards; config/floor-groups.json holds 78 groups, each new one seeded as a proposal for Krish on the pinned check-in page. (2026-11-23)

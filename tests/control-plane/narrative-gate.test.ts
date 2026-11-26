@@ -2,8 +2,9 @@ import { spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
+import cycle from '../../config/cycle.json' with { type: 'json' }
 
 // scripts/post-pack/making.py, the narrative gate. Krish, 2026-10-28: "Claude interviews me on all three ideas to
 // nail down the narrative arc, make it really powerful, useful, and fun to consume, and really find the deeper story
@@ -151,6 +152,11 @@ describe('the narrative gate in making.py', () => {
 
   it('passes a lock signed from 25 Nov whose every Why cites its evidence, the last one an open question', () => {
     const { path, scripts } = write('whys', lock30(signedNow, WHYS))
+    // The 30 Nov week is gated (config/story-score.json from; Ruling, Krish, 2026-11-26: "Newgate, 30th of November"),
+    // so the cycle's required stage 5 and 6 touches are on the week's log, as touch.py run 5 and run 6 write them.
+    const touched = cycle.rows.filter(r => r.required && [5, 6].includes(Number(r.stage)))
+      .map(r => JSON.stringify({ id: r.id, piece: PIECE, status: 'done' }) + '\n').join('')
+    writeFileSync(join(dirname(path), 'touches.jsonl'), touched)
     const check = making([PIECE, 'narrative', path])
     expect(check.status, check.stdout + check.stderr).toBe(0)
     const result = making([PIECE, 'scripts', ...scripts])

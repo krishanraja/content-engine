@@ -3,21 +3,41 @@
 Owner: content-engine. Taste authority: Krish Raja. Updated 5 November 2026; the brand elements rechecked on 12
 November 2026; how a carousel is made rewritten on 13 November 2026; his rulings of 14, 15 and 16 November 2026 added.
 
+**The 3-second carousel format wins over everything below (Ruling, Krish, 26 November 2026), and it is enforced.** His
+words, relayed verbatim: "Tell the Content-engine story intelligence for makeyourmindup v5 session that it is to enforce
+carousel formatting." The rules are rows in `config/carousel-format.json`, from the locked v5 Library's
+`CAROUSEL-FORMAT.md`, `TITLES.md` and `library.json`, and each is a refusal that fails the run, never a warning: 4 to 7
+slides (the cover, 3 to 5 inside, the close) in the Library set's registry order, the piece carousel 6, good news 4
+items; the cover from `make_covers.py`, its headline 10 words or fewer and 50 characters or fewer in his title shapes at
+120 px or more; each inside slide one glance line of 8 words or fewer at 96 px or more, 15 words at most, 50 across the
+inside, one dominant visual on half the slide, a statement; the close the takeaway (44 characters or fewer, two lines,
+its payoff in mint), the S3h wordmark and the site, never "Follow for more"; how-to one step a slide, 5 at most, the
+real screenshot, a prompt of 5 words or fewer; nothing below 34 px. A carousel is made only by
+`python3 scripts/carousel_make.py <piece> --set <set> --deck DECK.json --out <folder>`, which checks the deck
+(`carousel-deck/3`, `scripts/carousel_check.py`), calls `make_piece.py --set <set>` and `make_covers.py` by path,
+checks the drawn slides and writes the receipt the manifest needs before he can approve it. Where a section below says
+otherwise (ten cards, 8 to 20 word sentences, "Follow for more", an Anton body, a Codex card), it is history: the old
+deck schemas are refused and the Codex carousel card is retired.
+
 **The brand palette wins on every brand element** (Krish, 12 Nov 2026: "I approve the brand palette sheet, but only if
 it falls in line with the attached."): the cover's logo, the wordmark, the colour of each day and the last card come
 from `config/brand-palette.json` (`docs/production/BRAND_PALETTE.md`), and where a section below says otherwise on one
-of them, the palette is right and the section is history. A carousel's last card is `house_close_slide`: the piece's
-takeaway in one or two lines, then "Follow for more" with the Make Your Mind Up wordmark centred under it, and no
-wordmark in the bottom-right corner on that card; Saturday's good news keeps his fixed good-news close. (Ruling, Krish, 2026-11-18: "The last card of the carousel should always have the "Make Your Mind Up" word mark centred under the "Follow for more" text, as opposed to the word mark in the bottom-right corner and an amateur call to action"; it replaces the 14 Nov "Subscribe free" close).
-`scripts/carousel_check.py` refuses a last card that says "Subscribe free" or lacks "Follow for more".
+of them, the palette is right and the section is history. A carousel's last card is the v5 close,
+`config/carousel-format.json` `close` (the palette's `house_close_slide` says the same): the piece's takeaway in one or
+two lines, its payoff in mint, then the S3h wordmark and the site, and never "Follow for more" (the follow ask goes in
+the caption). `scripts/carousel_check.py` refuses a deck whose close breaks those rows. The 18 Nov close (the wordmark
+centred under "Follow for more"; Ruling, Krish, 2026-11-18) and the 14 Nov "Subscribe free" close before it are history,
+superseded by the carousel format (Ruling, Krish, 2026-11-26), and the floor no longer serves the 18 Nov standard
+(`config/floor-rulings.json` `retired`).
 
-Who makes carousels (Ruling, Krish, 28 October 2026: "take over posting as
-well as creating new assets like carousels"): Growth-MakeYourMindUp makes the
-derived carousels, to this standard, the rejection floor
-(`python3 scripts/floor.py --format carousel`) and the copy lint
-(`config/copy-lint.json`). Content-engine keeps this standard: a change to it
-is made here, never in Growth. Whoever makes one makes it by the one route
-below, "How a carousel is made".
+Who makes carousels (Ruling, Krish, 26 November 2026: "I believe that growth
+should move all asset production to Content Engine. I see no point in having a
+separate repository produce specific assets"; it supersedes the 28 October
+split): content-engine makes every carousel, to this standard, the rejection
+floor (`python3 scripts/floor.py --format carousel`) and the copy lint
+(`config/copy-lint.json`), and hands Growth the finished cards with their
+captions in the piece manifest; Growth posts them. A carousel is made by the one
+route below, "How a carousel is made".
 
 Status: approved production reference. On 26 October 2026 Krish approved the
 complete eight-card Grok Bot vs Muse revision 03 as the production pilot,
@@ -31,6 +51,11 @@ length or fixed visual template. Publishing approval remains separate.
 His words, asked whether to retire the Studio's old carousel commands: "all the carousels should now be done in Claude, but
 using the Codex plug in as per the other usual workflows". Then, the same day: "memes and Notes images should go the
 same way", and "Off-day voiceover shorts should go the same way too".
+
+**From 26 November 2026 the pictures come only from the locked v5 Library** (Krish: "I approve the new cover thumbnail
+systems, go"; `docs/ve/cards/library/`, branch `library/gates-and-wiring` until it reaches main). The Library templates
+are the only artwork: no second renderer, no per-piece look, no Codex-built card. Steps 2 to 4 below are that change;
+`config/asset-routes.json` maps every asset kind Growth used to make to its Library command and set.
 
 So there is one route. A carousel is made in a Claude session that someone opens, usually from the board item's "Copy
 prompt for Claude" (`itemPrompt` in `apps/control-plane/api/board/_weekModel.ts` writes it, with the route from
@@ -46,31 +71,31 @@ headless model run or a template engine. The Studio's old carousel commands are 
    and `python3 scripts/carousel_check.py DECK.json` passes before anything is drawn. Everything follows this
    standard, the brand palette (`config/brand-palette.json`, `docs/production/BRAND_PALETTE.md`) and the rejection
    floor (`python3 scripts/floor.py --format carousel`).
-2. **Claude writes one Codex card for the deck** with `python3 scripts/ve.py card FIELDS.json`, kind `carousel`, naming
-   the day it posts (`date`), the deck (`deck`) and the inspiration cards Krish ticked for it (`references`, their
-   ids). `ve card` refuses a deck that fails the check and a card with no references (F26), and writes into the card
-   the brand palette's record for that day and format and the deck's shape: how many cards and what each one does,
-   never its words.
-3. **Claude sends the card to Codex through the Codex plugin**, as `ve` does for every card: `ve dispatch` where Codex is on
-   the machine. A card for Growth's renderer (`render/` in growth-makeyourmindup, kind `carousel`;
-   Codex use is never booked or counted) goes in that repository's `codex/queue/<id>.md` on the session's `claude/` branch, and
-   the Codex lane on Krish's home computer builds it through the same plugin (`docs/ve/RUNBOOK.md`, S2;
-   `config/codex-lanes.json`). Codex is the visual asset maker (Ruling, Krish, 2026-10-28): it never decides taste.
-4. **Codex builds the card images in code** from the card: each card's look as code, rendered to pictures, held to the
-   brand tokens. The words are placeholders in the code; the session puts the deck's words in when it renders.
-5. **Claude verifies them**: `ve verify-card` (or the lane's own run of it) for the card's acceptance, the deck check
-   again on the words as drawn, the drawn cards with `python3 scripts/carousel_check.py --cards card-1.png ...`
-   ("The cover and the page", below), the 10/10 judges below, shown every card, (`POST /api/board/<Monday>/judge`, the panel Growth's maker
-   asks), and a look at every card at full size and at phone size.
-   Codex's own report is never proof.
+2. **Claude fills the Library set from the piece**: `python scripts/library/make_piece.py <piece> --set <set>` (the
+   sets are `library.json` `carousel_sets`: piece, good-news, simple-advice, how-to, explainer, quiz, meme;
+   `python3 scripts/post-pack/asset_routes.py command <kind> --piece <piece> --out <folder>` names the set for each
+   kind). It never invents words: every slot comes from the piece.
+3. **The cover and the first slide come from the cover systems**: `python scripts/covers/make_covers.py <piece> --out
+   <folder>`, which writes `covers.json` (post-pack reads it as `cover_set`). Pictures follow the imagery order
+   (`docs/ve/cards/library/ART-DIRECTION.md`): a licensed Commons photo of a named person in their own story, then the
+   real object, company or venue, then a photoreal still of the specific thing built by Codex through the Codex plugin
+   (no generated people, no readable logos or text). No badges.
+4. **Absent Library, no carousel**: while `scripts/library/make_piece.py` or `scripts/covers/make_covers.py` is not on
+   the checkout, stop and say "the v5 Library is not on this checkout yet". Never draw it another way.
+5. **Claude verifies them**: the deck check again on the words as drawn, the drawn cards with
+   `python3 scripts/carousel_check.py --cards card-1.png ...` ("The cover and the page", below), a look at every card at
+   full size and at phone size, then the 10/10 judges below, asked by the make flow itself
+   (`python3 scripts/post-pack/judge_assets.py ask REQUEST.json --week <Monday>`, `op: judge`). Then the captions:
+   `python3 scripts/post-pack/channel_captions.py` writes each channel's words and title into the manifest after a
+   blind read.
 6. **Claude files them** in the post's `3 Posts` folder with `scripts/post-pack/send.py` and reports on the piece or
    the board as `docs/PUBLISH_BOARDS.md` says ("Sessions and materials"; the cards go back as `slides` with their
    `drive`, "Seeing a finished carousel" below).
-7. **Krish approves; Growth posts it** through its approved route, as today.
+7. **Krish approves; Growth posts it** through its approved route, and makes nothing.
 
-Memes and Notes images take the same route, with the card's kind `meme` or `notes_image` and no deck: the session
-writes the words and the direction, Codex builds the picture in code, and the session verifies it against the meme
-and Notes rules below and the palette. Off-day voiceover shorts, and meme videos, take the video engine's route in a
+Memes and Notes images take the same route with no deck: a meme carousel is the Library's `meme` set; a single meme
+image, a tall meme with its clip and a Notes image (`social-meme`, `social-meme-video`, `social-note-image`) have no
+Library command yet (`config/asset-routes.json` lists them as gaps), so they are not made another way. Off-day voiceover shorts, and meme videos, take the video engine's route in a
 content-engine session: the session writes the script and the signed spec, Codex builds the devices and plates from
 cards, `ve` renders, and a separate reviewer watches and listens before it is called ready (`docs/ve/ENGINE.md`,
 `docs/ve/RUNBOOK.md`). The voice is an ElevenLabs voice from `config/voice-bank.json` (his Krish v2 voice by default,
@@ -95,7 +120,8 @@ is built, the deck's renderer calls `scripts/velib/still_treatments.py`. `docs/v
 ## Every carousel passes the 10/10 judges (Ruling, Krish, 12 November 2026)
 
 Krish: "Judge them; count passes. Every Growth carousel goes through the same 10/10 judges, and each one that passes and goes live counts." Whoever makes it, a carousel is judged
-before it is made for posting: Growth's maker asks `POST /api/board/<Monday>/judge`, the draft judges' panel reads its
+before it is handed to Growth: the make flow asks `POST /api/board/<Monday>/judge` itself
+(`scripts/post-pack/judge_assets.py`; Ruling, Krish, 2026-11-26), the draft judges' panel reads its
 exact words with its claim and is shown every card (from 15 Nov: the request carries the cards and a passing
 `carousel_check.py --cards` receipt for them, or it is refused unpaid), and a pass means every judge passes it, each
 scoring at least 7, none killing or abstaining: 10 of 10 judges, the bar docs/NORTH_STAR.md names. Until 15 Nov a pass
@@ -381,8 +407,8 @@ to"". He asked for it to be "the final card for all good news carousels permanen
   Anton line in mint, then "by combining your ideas + AI,".
 - The house sign finishes the sentence: "follow for more" in lower case, directly above the centred house mark. This
   is the one card where the sign is lower case.
-- Growth's kit `render/pieces/off-sat-goodnews` holds the words in its close template, and a test refuses any other
-  close.
+- The Library's `carousel-good-news-close` holds the words (set `good-news`, `make_piece.py --set good-news`); Growth's
+  old kit for it is retired with the Library lock.
 
 ## Brand mark on news, roundup and text-led carousels (Ruling, Krish, 3 November 2026)
 
@@ -539,15 +565,15 @@ thumbnail and cover asset templates for Monday, Wednesday, and Friday"), which h
   them, telling a record drawn before the skins from its piece; a skin moved on to, or the plain series Receipt after
   all nine were tried, passes; nothing else may), `tests/series_colour_test.py`, `tests/receipt_overlap_test.py` and
   `tests/series_skins_test.py` (all nine skins drawn on Monday, Wednesday and Friday on all seven shapes, alone, with
-  logo rows and a strip, and under a long title, and a skin forced to fail moving the piece on). Growth holds its kit
-  to the same rule (its R125).
+  logo rows and a strip, and under a long title, and a skin forced to fail moving the piece on). Growth held its kit
+  to the same rule (its R125) until its renderer was deleted on 26 Nov 2026.
 
 ## The tall meme is centred (Ruling, Krish, 15 November 2026)
 
 His words: "The POV computer meme, it's not centralized on the screen." The 13 Nov meme sat 40 px left and 107 px high
 with a third of the screen empty below it. A tall meme is the brand palette's `meme_tall` (9x16), and
 `python3 scripts/layout_centre.py FILE` holds it (in `ve qc` on a tall meme, and in `send.py` before it is filed): the
-picture centred within 4 px across and within 48 px of y 920 (where Growth's tall templates centre the clip), the
+picture centred within 4 px across and within 48 px of y 920 (where Growth's tall templates centred the clip, before the v5 Library), the
 column's margins within 16 px of each other, every word and mark inside the clear box x 200 to 880, y 270 to 1320 and
 clear of every channel's buttons and caption area (`config/channel-safe-zones.json`), no empty band over 25% above it.
 
@@ -573,8 +599,8 @@ Tuesday meme is likely to be more random but needs to be lightly subtly skinned 
 ## The Saturday carousel (Ruling, Krish, 4 November 2026)
 
 His words: "Saturday's carousel should have the standards of the first one that's coming up this Saturday." The first
-is the good-news carousel for Saturday 7 November 2026 (`docs/plans/2026-11-02-week/sat-revised.md`; Growth's kit
-`render/pieces/off-sat-goodnews/`).
+is the good-news carousel for Saturday 7 November 2026 (`docs/plans/2026-11-02-week/sat-revised.md`); from 26 November
+it is made from the Library's `good-news` set.
 
 - Its style is its own: a photo-led cover, one card per story, a closing card.
 - It carries exactly five stories about real people who benefited from AI, each checked against its primary source
@@ -591,7 +617,8 @@ carousels do not exceed 10 cards in total, including cover and call to action?"
   tips, say) puts two on a card or drops to the strongest eight; it never runs past ten.
 - The checks hold it: the deck check (`scripts/carousel_check.py`, at most ten cards), the board
   (`week_plan.py` `OFF_CARDS` and `OFF_SLIDES`, at most ten) and Growth's carousel format (`social/formats/carousel.json`
-  `max_assets`, which its packaging and release checks read before anything reaches Buffer).
+  `max_assets`, which its packaging and release checks read before anything reaches Buffer). Since 26 Nov 2026 the
+  format is stricter: 4 to 7 slides (`config/carousel-format.json`, `scripts/carousel_format.py`).
 
 ## Seeing a finished carousel (Ruling, Krish, 3 November 2026)
 
@@ -623,7 +650,7 @@ too literal with imagery and screenshots? More so, the visual standard, theming,
 
 The format: five to ten jobs AI does well now, one per card. Each card shows the tools that do the job, a real image of
 it being done, one prompt to paste and three steps. The reader leaves with an action, where to click; the Saturday good
-news leaves a feeling. Growth makes it (28 October ruling) by the route above, "How a carousel is made"; the lines below
+news leaves a feeling. content-engine makes it (Ruling, Krish, 2026-11-26) by the route above, "How a carousel is made"; the lines below
 are what its card holds Codex to and what the session checks before filing it.
 
 - **Jobs, not launches.** Each card is a job a worker has ("Catch up on a long thread"), with two to four tools that do

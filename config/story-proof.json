@@ -1,0 +1,131 @@
+{
+ "_about": "The blind proof of the story engine v5 (scripts/post-pack/story_proof.py; docs/plans/proofs/2026-11-26-story-engine-v5/PROTOCOL.md). The evaluator, never a scorer: it may read his picks to pair cards, and story_score.py never imports it. The thresholds live in PROTOCOL.md, frozen before any paid call; this file holds the harness's wording and limits only.",
+ "proof_id": "story-engine-v5",
+ "weeks": [
+  "2026-11-16",
+  "2026-11-23"
+ ],
+ "cache_dir": ".cache/proof/story-engine-v5",
+ "docs_dir": "docs/plans/proofs/2026-11-26-story-engine-v5",
+ "budget_usd": 10,
+ "engine_files": [
+  "scripts/post-pack/story_score.py",
+  "scripts/post-pack/story_floor.py",
+  "scripts/whys-probe-check.ts",
+  "config/story-score.json",
+  "config/story-floor.json",
+  "config/beat.json",
+  "scripts/post-pack/idea_checks.py",
+  "scripts/post-pack/humour_check.py",
+  "scripts/post-pack/divergent.py",
+  "config/style-references.json",
+  "packages/contracts/src/whys.ts"
+ ],
+ "series_day": {
+  "follow_the_money": "mon",
+  "under_the_hood": "wed",
+  "mind_the_gap": "fri"
+ },
+ "slots": {
+  "hero": [
+   "mon",
+   "wed",
+   "fri"
+  ],
+  "offday": [
+   "tue",
+   "thu"
+  ],
+  "saturday": [
+   "sat"
+  ]
+ },
+ "slot_names": {
+  "mon": "Monday",
+  "tue": "Tuesday",
+  "wed": "Wednesday",
+  "thu": "Thursday",
+  "fri": "Friday",
+  "sat": "Saturday"
+ },
+ "taste_keys": [
+  "why_here",
+  "taste",
+  "cues",
+  "krish_verdict",
+  "krish_said",
+  "what_i_like_sheet",
+  "said",
+  "liked",
+  "his_via",
+  "his_words",
+  "source_kind",
+  "from",
+  "from_press",
+  "from_inspiration",
+  "recommended",
+  "covers",
+  "warning",
+  "refused_before",
+  "returns",
+  "near",
+  "near_drop",
+  "score",
+  "story_score",
+  "read_back",
+  "learned_from"
+ ],
+ "card": {
+  "what_happened_words": 35,
+  "angle_words": 25,
+  "fields": [
+   "Slot",
+   "What happened",
+   "The angle",
+   "Source"
+  ],
+  "house_labels": [
+   "Follow the money",
+   "Under the hood",
+   "Mind the gap",
+   "Good news",
+   "His pick",
+   "Your pick",
+   "Recommended",
+   "Weekly series",
+   "Off day",
+   "Hero"
+  ],
+  "drop_sentences_matching": [
+   "\\boptions?\\b",
+   "\\bthe board\\b"
+  ],
+  "cut_mark": "...",
+  "strip_patterns": [
+   "^[^:.]{3,90}?,\\s+\\d{1,2}\\s+[A-Z][a-z]{2,8}\\s+\\d{4}[^:]{0,80}:\\s*",
+   "^(?:one|two|three|four|five|six|seven|eight|nine|ten|\\d+) cards for \\w+'s [^:]{1,60}:\\s*"
+  ],
+  "_about": "One renderer for both sides of a pair (story_proof.card): the slot, what happened (the sourced fact) and the angle, each cut to its word limit, and the source's site only. The blind view's provenance rules (config/story-score.json blind_view.strip_text: what he saved, asked for or improved) run first, then these card-only ones: strip_patterns (a leading 'Publication, date:' prefix, since the source line names the site; which day's question a card serves), then a sentence that talks about the board is dropped, then the house labels. With no engine angle, the option's own angle stands, else its title."
+ },
+ "pool_draft": {
+  "_about": "A gather-pool story as a draft option for Arm S: the scorer reads these fields only (story_score blind_view keeps them). The title is the idea's first sentence. Each hero day keeps its board options and adds its series pool's best shortlist_per_day stories by fit plus named_thing (the Sunday procedure's deterministic shortlist, no call); the stories with no series (unassigned), best first, fill each day's places left, Monday, Wednesday, Friday in turn. So the paid steps read a bounded pool.",
+  "title_words": 24,
+  "shortlist_per_day": 4,
+  "unassigned": true
+ },
+ "answers": {
+  "grades": [
+   "A++",
+   "A+",
+   "=",
+   "B+",
+   "B++"
+  ],
+  "line": "Pnn: A++|A+|=|B+|B++ ; seen before? y/n ; would make A? y/n B? y/n ; note:"
+ },
+ "sheet": {
+  "title": "Story engine blind proof",
+  "intro": "Each pair is two stories for the same slot of a past week. Which would you rather make and read? Answer each pair on its line: A++ or B++ for a clear win, A+ or B+ for a lean, = for no difference. Say whether you have seen either before, and whether you would make each. Notes are optional. Nothing here is on the board.",
+  "tells_intro": "Each pair below is two stories for the same slot. One was chosen by a new story engine and one was on the old board. For each pair say which card you think the new engine chose, as `Pnn: A` or `Pnn: B`, with one short reason. Judge only what is on the cards."
+ }
+}

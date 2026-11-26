@@ -2,7 +2,7 @@
 
 Status: Current
 Owner: Krish Raja
-Last verified: 2026-11-12 against `main` at `02184d34` for every term (each checked against the code or config it names), with `venture_formats`, `format_aliases`, the `content_ideas` state check and the tables named here read back from the database the same day; caption styles, the ideas gate and the lookalike step rechecked on 16 Nov against `main` at `4fcf48fb`
+Last verified: 2026-11-12 against `main` at `02184d34` for every term (each checked against the code or config it names), with `venture_formats`, `format_aliases`, the `content_ideas` state check and the tables named here read back from the database the same day; caption styles, the ideas gate and the lookalike step rechecked on 16 Nov against `main` at `4fcf48fb`; the story engine, the cycle and the 26 Nov split added against branch `story/engine-v5` at `46bb11bc`
 
 Terms as this repository uses them. Where a word means different things in the
 two halves, both meanings are given. Read "Names" first: most misreadings of
@@ -201,6 +201,60 @@ Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); th
 - **Dress.** The wordmark and series tag on a frame. Wide cuts wear it; a tall cut's content never does, and its
   outro card keeps the wordmark (Krish, 11 Nov 2026).
 
+## The story engine and the production cycle (branch `story/engine-v5`)
+
+- **The reader (v5).** The people who make the calls or make the work in the
+  creative, arts, music, entertainment, media and sports industries, reading on
+  what AI is doing to how their work makes money. The approved North Star line is
+  in `docs/NORTH_STAR.md`; the row every reader of it reads is `config/beat.json`
+  `reader` (`audience_short`, `about`, `keep_line`, `media_line`, `buyer_test`).
+  The old reader, a commercial leader who might hire Krish, is retired for this
+  publication.
+- **The beat.** `config/beat.json`: the focus sectors (sports among them since
+  25 Nov), the avoid list, the economics keywords and the off-day worlds
+  (`offdays`). A topic on the avoid list with no focus angle is `off_beat`.
+- **Story engine.** The three stages every Sunday option passes before the board:
+  the floor, the blind score and close calls (`docs/SYSTEM_MAP.md`, "The story
+  engine").
+- **Story floor.** `scripts/post-pack/story_floor.py`: the only code that reads
+  his rejections; it answers pass or refused with reasons, never a number. His
+  taste is a floor only (Ruling, Krish, 2026-11-26).
+- **Story score.** `scripts/post-pack/story_score.py` over `config/story-score.json`
+  (`story-score/1`): anchored 0 to 10 axes weighted per content type to a total
+  out of 100, with hard floors per type. It orders the open days; it never
+  reads picks, taste, cues, why_here or verdicts.
+- **Blind view.** `blind_view()`: the only shape in which the scorer sees an
+  option, with provenance fields and wording stripped.
+- **Per-type rubric.** The weights and floors for each content type in
+  `config/story-score.json` `types`: hero_mon, hero_wed, hero_fri, offday_short,
+  offday_meme, goodnews, explainer, edition_item and wildcard.
+- **Angle.** One of the ways into a story, pooled from in-session lens subagents
+  and divergence-engine `provoke`, scored blind in one judged `score`; the
+  funniest wins only when it is sound and close to the best.
+- **Whys probe.** The pre-pick `why-ladder/1` a blind subagent writes from an
+  option's own sources, checked by `scripts/whys-probe-check.ts`
+  (`docs/FIVE-WHYS.md`, "Before the pick").
+- **Close call, council.** When a slot's top two are within the margin, a blind
+  council (ai-harness `skills/council`) reads A against B; when it cannot, the
+  card says "close call, your pick".
+- **Wildcard.** On every Monday, Wednesday and Friday, at least one option that
+  is completely divergent, strange, obscure or unexpected, labelled "Wildcard: ",
+  scored as its own type and checked for distance (Ruling, Krish, 2026-11-26).
+- **Gate codes `story`, `story_floor`, `wildcard`, `off_beat`, `carousel_format`,
+  `touch`.** What `board_feed.py gate` refuses a board on from the rubric's
+  `from` date: a missing or out-of-order score, a floored option on the board, a
+  hero day with no checked wildcard, an off-beat option, a carousel deck that
+  breaks the format, a required touch of the cycle missing.
+- **Blind proof.** The A/B test of the engine against the 16 and 23 Nov boards,
+  frozen at a committed engine SHA before any paid call
+  (`docs/plans/proofs/2026-11-26-story-engine-v5/PROTOCOL.md`).
+- **Production cycle, stage, touch.** `config/cycle.json`: the cycle's stages 0
+  to 10 and every read or inform of another system at each, run by
+  `scripts/post-pack/touch.py`; one line per touch in the week's
+  `touches.jsonl`.
+- **Outbox.** `.cache/touch/outbox.jsonl`: connector touches queued while
+  `CC_HARNESS_KEY` is not set; `touch.py drain` sends them.
+
 ## Operations
 
 - **Publish board.** The week in Control Centre's Content tab, at
@@ -213,7 +267,31 @@ Video is made with the ve engine (`docs/ve/ENGINE.md`, `docs/ve/RUNBOOK.md`); th
   read and written with `scripts/post-pack/making.py`.
 - **Hero assets, off days.** The article, both cuts, thumbnails and covers this
   engine makes for Monday, Wednesday and Friday; Tuesday, Thursday and
-  Saturday posts are Growth's.
+  Saturday are the off days. Since 26 Nov 2026 this engine makes the off-day
+  posts too, and every other asset; Growth posts them (`docs/GROWTH-HANDOFF.md`).
+- **The split (26 Nov 2026).** Content-engine makes every asset and hands Growth
+  finished, approved assets with their captions in the piece manifest;
+  growth-makeyourmindup grows the channel and reports performance back
+  (Ruling, Krish, 2026-11-26).
+- **v5 Library.** The locked set of templates that is the only artwork for every
+  still (covers, thumbnails, carousels, memes, Notes images), drawn by
+  `scripts/covers/make_covers.py` and `scripts/library/make_piece.py --set <set>`.
+  It lands on `main` separately; until then every route refuses with "the v5
+  Library is not on this checkout yet".
+- **Asset routes.** `config/asset-routes.json`: every asset kind mapped to its
+  Library command, fixed artwork, retired (the Canva lane) or a named gap;
+  `scripts/post-pack/asset_routes.py` prints or runs the command.
+- **Carousel deck.** `carousel-deck/3`: a carousel as the Library will draw it,
+  written before anything is drawn and checked against
+  `config/carousel-format.json` by `scripts/carousel_format.py`; refusals fail
+  the run. `scripts/carousel_make.py` is the one route a carousel is made by.
+- **Captions step.** `scripts/post-pack/channel_captions.py`: each channel's
+  words, subscribe line and YouTube title, written at make time into the
+  manifest's SPEC, read blind and voice-checked; Growth posts them as they are.
+- **Piece manifest 1.1.** `content-engine-piece-manifest/1.1`, the minor version
+  that adds a per-channel `title`.
+- **Saturday Note.** The Substack Note that points at the weekly edition, made by
+  `scripts/post-pack/saturday_note.py` with its two tagged links.
 - **3 Posts.** The Drive folder that holds one folder per post, everything
   ready for posting.
 - **Run ledger.** `content_engine_runs`, one row per cron run.

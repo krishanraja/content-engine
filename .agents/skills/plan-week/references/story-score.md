@@ -1,0 +1,306 @@
+# Step 6d: score, floor and order (the story score)
+
+Kept here, not in `.agents/skills/plan-week/SKILL.md`, so the core stays under its byte cap
+(scripts/check_skill_core.py). The core keeps step 6d and points here. This file is the whole Sunday procedure: it
+replaces the old funny-lines step (`.agents/skills/plan-week/references/funny-lines.md`, kept for history), whose
+humour reads now run inside step 8 below.
+
+Every content type starts from the biggest, most important, most absurd, funniest or most interesting story, with a
+unique angle that holds the 5 Whys and is fun to make and to read, for the reader in `config/beat.json` (`reader`).
+Three stages, every number a row in `config/story-score.json` (`rubric_version` `story-score/1`), never in code:
+
+1. **The floor** (`scripts/post-pack/story_floor.py`): the only code that reads his recorded rejections. It says pass
+   or refused, with the reasons, and never gives a number.
+2. **The blind score** (`scripts/post-pack/story_score.py`): eight anchored 0 to 10 axes (scale, absurdity_humour,
+   unique_angle, whys, fit, named_thing, fun_consume, fun_produce), weighted per type (Mon, Wed and Fri heroes, the
+   day's wildcard, the off-day short and meme, the good news, the explainer) to a total out of 100, with hard floors per
+   type.
+3. **The council**, on close calls only (a slot's top two within `close.margin`, or the fun-against-weight fork).
+
+Rulings behind it: his taste is a floor only, never a score, and the judge wall stays (Krish, 2026-11-26); the
+signature format is the 5 Whys, with nothing that suggests predictions, calls, dates, odds or scores (Krish,
+2026-11-24); the beat is AI in media, entertainment, arts, music, sports and creator tech (Krish, 2026-11-24).
+
+## The wall: what no judge, subagent or score ever sees
+
+His rejections are a floor only; never a score. So nothing below passes a judge, a lens, a prober or the council his
+picks, his words, his presses, `why_here`, `recommended`, `source_kind`, `from`, `taste_rules`, feedback cues, style
+verdicts (`krish_verdict`, `krish_said`, `what_i_like_sheet`), a scorecard or the triage readback. Give a subagent
+only what its brief below says. `story_score.py` sees each option through `blind_view()` (config `blind_view`), and
+`tests/story_wall_test.py` holds the code to that. His option goes first only at equal totals, and that is the one
+place where an option came from is read.
+
+## The day's wildcard (every Monday, Wednesday and Friday)
+
+Ruling (Krish, 2026-11-26): "Just make sure my Monday, Wednesday, and Friday stories: there's always one completely
+divergent, strange, obscure, or unexpected story suggestion that I could pick from." So every hero day carries at least
+one option marked as its wildcard, and the gate refuses a board without one (code `wildcard`, from config `from`). Its
+words are rows in `config/story-score.json` (`wildcard`, `types.wildcard`), never here.
+
+1. **Generate it first, wild.** Before writing the day's other options, run `divergent.py wildcard` for the day
+   (`references/divergent.md`): it provokes at temperament `wild`, with the worn ground as cliches. Pick at most one
+   spark that is on the beat (a focus sector in `config/beat.json`, nothing on its avoid list).
+2. **Then research it like any option.** A real, dated story with a primary source, its fact checked against the
+   source the same day; the same floor, whys probe (step 4), angles, humour reads, judges, refute pass and reviewer as
+   every option. Strangeness never excuses an unsourced claim, a prediction, odds or a dated call. No spark survives,
+   or exit 2: find the strangest true story in the pool yourself and research it the same way.
+3. **Mark it.** On the option: `"wildcard": {"kind": "divergent|strange|obscure|unexpected", "why_unexpected": "<one
+   line: what makes it far from the obvious takes>"}`, plus `"divergent": {"run_id", "spark"}` inside it when it came
+   from the engine (and `source_kind` `engine`, never his). Its pitch question opens on `Wildcard: ` (config
+   `wildcard.board_prefix`; it passes the pitch check), so the board shows it as the day's wildcard. The label is the
+   board's: never carry it into anything written after the pick.
+4. **Check its distance; never assert it.** Once the day's options are written: `python3 scripts/post-pack/divergent.py
+   distance docs/plans/<Monday>-week/ideas.json --sources docs/plans/<Monday>-week/sources.json --write`. It scores each
+   wildcard against that day's other options and the worn ground (`obvious` given, no judge: free) and records the read
+   on the option (`wildcard.distance`) and in `story/wildcards.json`. Exit 1: a wildcard sits close to the obvious
+   takes; find a stranger story, not new words for the same one. A wildcard reworded after its check is checked again.
+   Exit 2 (not served) records `skipped: not served`: the session's `why_unexpected` stands, and the run's summary says
+   so.
+5. **Its own type.** The score reads it as type `wildcard`: weights lean on unique_angle and absurdity_humour, and its
+   floors are truth (a sound angle on its sourced fact), sources (a primary source), the beat (fit) and the whys (at
+   least 3 documented). It has no series floor and need not beat the day's top score: the order may place it anywhere
+   and never drops it, and its angles are always provoked in step 6. A wildcard under a floor is replaced by another
+   wildcard, never unmarked to pass.
+
+## Where it runs in the Sunday procedure
+
+Steps 1 to 3 run once the gather's pool is in (steps 1 to 3 of the core, before you write options). Steps 4 to 11 run
+once `ideas.json` holds the week's options (step 4 of the core), and step 12 is the core's step 7. All working files
+go in `docs/plans/<Monday>-week/` (`story/` for the score's own, `probe/` for the whys probes); the spend ledger is
+`.cache/story-score/<Monday>.jsonl` (one per week), gitignored.
+
+1. **Gather.** `board_feed.py gather` and `cover`, as the core says. The gather also reads the week's stories from the
+   daily news hub (`sources.json` `hub`: the hub's items from the seven days before the week, curated per subsector),
+   or says why it was skipped. Use them as pool candidates beside the series pools, each chased to where it was first
+   reported like any other.
+2. **The floor.** `python3 scripts/post-pack/story_floor.py <Monday> --pool --json`. Leave out every candidate it
+   refuses, and say how many and why in one line each on the run's summary. Once the options are in `ideas.json`, run it
+   again without `--pool` and write its JSON, as printed, to `docs/plans/<Monday>-week/story/floor.json`. Exit 2 means a
+   check did not run: say which, and never call a candidate it did not read a pass.
+3. **The deterministic shortlist.** Write the floor's survivors into `ideas.json` as the day's draft options and run
+   `python3 scripts/post-pack/story_score.py score <Monday> --floor docs/plans/<Monday>-week/story/floor.json`. At this
+   stage it exits 2, since nothing is judged yet: read only `fit`, `named_thing` and the `primary_sources` check in
+   `docs/plans/<Monday>-week/scores.json`. Keep for each hero day the candidates that clear the hero floor those give
+   (named_thing at least 5), best first by fit and with a primary source where the pool has one, up to the day's option
+   count plus two. A candidate under a hard floor is replaced from the pool, not argued for. The hard floors below are
+   never argued with and never met by rewording. An off-day explainer (aim `utility`) may carry `steps: [{"text",
+   "checked": "<https vendor document>"}]`; when it does, every step needs its checked link (a note until a ruling
+   names it), and with no steps the floor is not read.
+
+## The hard floors, each made honest (Krish, 2026-11-26)
+
+His words: "I want a high-quality flexible engine that has learned from all its past mistakes and is upgraded now."
+Every hard floor in `config/story-score.json` names a ruling (his words and the date) or a recorded failure, passes on
+an honestly built board, and cannot be met by adding words without the fact changing (failure
+`scripts-regressed-below-ai-music`: caps that could be met by stripping names pushed the writer to game them).
+
+- **A hero is in a focus sector** (fit 7). A sector keyword or one of the sector's named entities (`config/beat.json`
+  `focus_sectors[].entities`) must sit in the topic sentence that carries the fact. A clause that only appends a
+  sector word ("..., which matters for musicians", "what it means for film") counts for nothing (config `fit`). If a
+  story is not in the sectors, replace it; never reword it in. The wildcard slot (`wildcard: true`) needs fit 4.
+- **A hero has a primary source.** Chase every fact to where it was first reported, which was always the rule ("each
+  checked against its primary source"): put that outlet's url in the option's `first_reported`, or mark that source
+  `kind: "original"`. The actor's own site and a filing or official data host count too. An aggregator or syndicator
+  (`primary_sources.never_primary`: Yahoo News and Finance, MSN, Google News, NewsBreak, Flipboard, Ground News and the
+  rest) never counts, whatever its kind says: go past it to the outlet it copied.
+- **A short and a meme are on the beat** (fit 4), and **at least half a good-news carousel's stories are in a focus
+  sector** (in what each story says happened, never in who it helps).
+- **A thin week, never an empty board.** When fewer than 3 options for a hero day pass every floor after the gather,
+  gather once more (the hub, the series pools, the trade press). If still fewer than 3 pass, the day may carry the 2
+  that do: write `"thin_week": {"<day>": {"regathered": true}}` in `ideas.json` and run `order`, which writes the plain
+  line on each card. The floors are never relaxed, and one passing option is never a day.
+4. **The whys probe**, below: one blind `whys-prober` subagent per hero candidate and per off-day short (a short's floor
+   needs one documented why). It costs nothing.
+5. **The probe check.** `node --import tsx scripts/whys-probe-check.ts <Monday>`, and write its JSON, as printed, to
+   `docs/plans/<Monday>-week/story/probes.json` (the score reads it from there). A hero that holds fewer than 3
+   documented whys, or fewer than 5 documented plus inferred, or whose landing fails, is under its floor: replace it, or
+   probe another source for the same story. The gate refuses a hero with fewer than 3 sourced whys.
+6. **The angles.** Start three blind lens subagents, one per lens in config `angle.lenses` (`series`, `funniest_true`,
+   `most_absurd_true`), each with the lens brief below and every option's key, sourced fact and links. Write what they
+   return, with each option's own `funny` line as one more angle (lens `funny`), into `docs/plans/<Monday>-week/story/angles.json` as
+   `{"options": {"<day>/<option id>": [{"lens", "text", "rests_on"}]}, "obvious": ["<the plain headline of each option>"]}`.
+   Then `python3 scripts/post-pack/story_score.py angles <Monday> --provoke --judge --budget-usd 3`: it adds divergent
+   sparks (`provoke`, lane `angles`, the worn takes as cliches) for each hero day's top two and its wildcard only, and scores the whole
+   pool blind in one batched judged `score`. Paid: about $0.15 a provoke and $0.30 reserved for each judged batch.
+7. **The soundness rule** is in the code: an angle counts only when its `rests_on` is quoted word for word from the
+   option's sourced fact, the judge found it useful and specific enough, its humour targets no named individual, and on
+   a hero the first why climbs. The funniest or most absurd true angle wins only when it is sound and within
+   `angle.humour_margin` of the best. Never pick an angle by hand over the code's choice.
+8. **The humour reads** (this absorbs the funny lines). `python3 scripts/post-pack/story_score.py humour <Monday>
+   --budget-usd 3`: one humour-engine read of each option's plain fact (surface `fact`), each off day's funny line and
+   every pooled angle, about $0.005 each. A funny line read as not a joke, not supported or needing explaining is
+   rewritten from the sourced fact and read again. A short or meme whose humour was not read is never placed first.
+9. **The blind axis judges.** `python3 scripts/post-pack/story_score.py brief <Monday>` writes
+   `story/judge-brief.md`. Start one `Task` subagent whose whole prompt is that file, and nothing else. It replies with
+   `## <key>` lines and `<axis>: <n>/10 because <evidence>` lines. Write the reply to `story/judge.md` and run
+   `python3 scripts/post-pack/story_score.py record <Monday> docs/plans/<Monday>-week/story/judge.md`. A score with no
+   evidence after `because` is not counted. It costs nothing.
+10. **Score and order.** `python3 scripts/post-pack/story_score.py score <Monday> --floor
+    docs/plans/<Monday>-week/story/floor.json`, then `python3 scripts/post-pack/story_score.py order <Monday> --fresh
+    --write` on a board he has never seen. On a re-run of some days, order with `--status` and the status file the
+    workflow wrote before the run, and `--before` with the ideas.json it copied then (the run's prompt names both), never
+    `--fresh`: only a day whose options are all open is ordered (an option on neither file is new, so open), and an
+    answered day keeps its places (its presses name options by place). If the order moved a publishing
+    day, write that day's options again through `/api/week/options` (core step 4) with `rank` as the new place and
+    `recommended` on the first, so the engine and `ideas.json` agree.
+11. **The council, on close calls only.** `order` prints each close call. While `council.cleared` is false in
+    `config/story-score.json` (the ai-harness council's When it runs section admits Krish's ask or the strategist
+    only), do not run it: the card says "close call, your pick", and that is the answer, never a silent pass. Once a
+    ruling sets it true, for each close call (at most `council.max_per_week`): `story_score.py council-brief <Monday>
+    --day <day>` writes `story/council-<day>.md`; WebFetch
+    `https://raw.githubusercontent.com/krishanraja/ai-harness/main/skills/council/SKILL.md`, start one `Task`
+    subagent with that skill and the brief only, write its reply to `story/council-<day>-reply.md`, run
+    `story_score.py council-record <Monday> --day <day> docs/plans/<Monday>-week/story/council-<day>-reply.md`, then
+    `order` again. A chair that says unknown leaves the call his.
+12. **The board** (core step 7). `board_feed.py gate` refuses, from config `from` (the board of 30 Nov, made by the
+    Sunday 29 Nov run; Krish, 2026-11-26: "Newgate, 30th of November"), an open option with no story score,
+    an open day out of the score's order, a hero under 3 sourced whys (code `story`), an option under its floor
+    (code `story_floor`) and an open hero day with no wildcard, or one with no kind, no one-line why_unexpected, no
+    `Wildcard: ` question or no distance read on its present words (code `wildcard`). Fix what it names and run it
+    again; never edit a score or a distance by hand.
+
+## The cycle's touches (stages 0 to 2)
+
+Which system the Sunday run reads from or informs (Control Center's instruction and brief, the strategist's memo,
+growth-makeyourmindup's reviews, the research library, the floor, the makeyourmindup kill list, the divergence and
+humour engines) is said once, by stage, in `config/cycle.json`; this file names the stage and never lists the tools
+again (Krish, 2026-11-26). Run each stage as the procedure reaches it, from the repository root:
+
+    python3 scripts/post-pack/touch.py run 0 --week <Monday>                           as the run starts
+    python3 scripts/post-pack/touch.py run 1 --week <Monday> --set topic="<topic>"     after the gather, per topic
+    python3 scripts/post-pack/touch.py run 2 --week <Monday>                           after step 12's order
+
+Every touch writes one line to `docs/plans/<Monday>-week/touches.jsonl`. `board_feed.py gate` also refuses, from
+config `from`, a required stage 2 touch with no line there (code `touch`). With no `CC_HARNESS_KEY` (the Actions run),
+a connector touch is queued, never dropped; the Sunday room drains it (`touch.py drain --week <Monday>`). Exit 2 is
+logged skipped, never done.
+
+## Spend and exit 2
+
+- Paid steps are the wildcard sparks (`divergent.py wildcard`, about $0.15 a day), 6 (`angles --provoke --judge`),
+  8 (`humour`) and 11 (the council read, once cleared). The wildcard's distance and steps 2 to 5, 7, 9, 10 and 12 cost
+  nothing. A normal Sunday is under $2.50.
+- Every paid call is reserved in the ledger before its transport is touched. It is refused past `--budget-usd` (pass
+  3 unless Krish names another figure; never above `budget_usd`), past `spend.usd_per_day`, past
+  `spend.divergent_ops_per_day`, and past the weekly divergent chain cap (`config/chain-cap.json`), which is checked
+  first. `python3 scripts/post-pack/story_score.py ledger` prints what was spent. The ledger is under `.cache/`, so a
+  workflow run starts it empty.
+- Exit 2 from any step means something was not read: the engine was not served, a cap refused a call, a page could not
+  be read, or an option was left unscored. It is never a pass. Carry on with what was read: an unread axis abstains,
+  and an option whose read axes weigh under `abstain.min_read_weight` is unscored, so replace it or read it again.
+  Never fill a missing read from memory.
+
+## What the run's summary says
+
+One short block: how many candidates the floor refused and why, and each hard floor's refusals by name; how many options were probed, with each unreadable
+source named apart from a story that could not hold the whys; each day's order and each option's total; each close
+call and whether the council read it or it stays "close call, your pick"; each day's wildcard, its kind, its why
+unexpected and its distance (or "skipped: not served", with the session's why unexpected standing); every step that exited 2 and what it
+skipped; and the ledger's spend against its budget.
+
+## The lens brief (paste as each lens subagent's prompt)
+
+The subagent is blind, like the prober: each story's key, sourced fact and links, and one lens. Nothing else.
+
+```text
+You are an angle finder. You get some true news stories and one lens. For each story, write up to three angles
+through that lens: one or two plain sentences each, for a reader in creative work, the arts, music, entertainment,
+media or sport. You see nothing about who will read the stories or pick them, and you do not rank them.
+
+Lens: <the lens's brief, from config/story-score.json angle.lenses>
+
+For each story:
+Story key: <day>/<option id>
+What happened: <the option's sourced fact, as written>
+Sources: <the option's source links, one per line>
+
+1. Every angle rests on one fact in "What happened". Copy that fact's words exactly into rests_on: never a
+   paraphrase, never a detail the story does not give.
+2. Funny is welcome when it is true: the joke is in the facts, never at a named person's expense, and it never needs
+   explaining.
+3. No predictions, odds, calls or dates for what will happen, and no advice.
+4. Reply with only JSON: {"<story key>": [{"lens": "<lens id>", "text": "...", "rests_on": "..."}]}
+
+Use British spelling. No em dashes and no exclamation marks.
+```
+
+## The whys probe (before he picks)
+
+Every option that survives `story_floor.py` on a hero day (Mon, Wed, Fri), and every off-day short, gets a probe: one
+blind subagent per option reads that option's own sources and climbs as many Whys as the evidence holds. It runs
+in-session, so it costs nothing. The probe is judged by the same reader as the post-pick ladder, so a story that
+cannot hold the whys is found before the board, not after.
+
+1. For each option, start one `whys-prober` subagent with the brief below. Fill in only the option's id, its
+   "what happened" line and its source links. Give it nothing else.
+2. It writes `docs/plans/<Monday>-week/probe/<option_id>.whys.json` and caches every page it read under
+   `docs/plans/<Monday>-week/probe/pages/`.
+3. Run `node --import tsx scripts/whys-probe-check.ts <Monday>` (or `<Monday> <option_id>` for one). It prints, per
+   option, `{documented, inferred, sites, mechanism_rungs, counter_rungs, landing_ok, unreadable[], problems[]}`.
+4. `story_score.py` reads that output from `story/probes.json` for the `whys` axis and the hero floors in
+   `config/story-score.json` (at least 3 documented, at least 5 documented plus inferred, landing ok). Do not apply the
+   floors by hand.
+5. A probe whose pages could not be read is not a story that fails the whys: say which sources were unreadable on the
+   run's summary, and try another source for the same story if one exists. Exit 2 from the check (no probe, no ladder)
+   is never a pass: say which option was not probed.
+
+How the check counts, so the brief can be honest about it:
+
+- A rung is **documented** only when its quotes are found word for word in the cached pages, on at least two sites
+  (ir.label.com and label.com are one site).
+- A rung with one verbatim quote, or verbatim quotes on one site only, counts as **inferred**. A paraphrase is
+  downgraded; nothing is ever upgraded.
+- A rung none of whose quotes is in its page does not count.
+- The landing is ok only when it says what this shows and ends on an open question, with no forecast, odds, confidence
+  or lesson (`landingVetoes` in `packages/contracts/src/whys.ts`).
+
+### The whys-prober brief (paste as the subagent's prompt)
+
+The subagent is blind. Never add the option's other fields, other options, the reader's or anyone's preferences,
+earlier picks, refusals, verdicts, scores, why it was chosen, or what anyone said about it. It sees one story and its
+sources, nothing more.
+
+```text
+You are a whys-prober. You get one news story and its source links. Your job is to find out how far the story's
+evidence goes when you keep asking "why?", and to write that down honestly. You are not judging whether the story is
+good, funny or worth making. You see no other story and nothing about who will read it.
+
+Story id: <option_id>
+What happened: <one line, as the option states it>
+Sources: <the option's source links, one per line>
+
+1. Read each source. Follow a link from a source only when it is the primary record the source cites (a filing, a
+   company's own announcement, a court document, the study itself). Do not search the open web for other takes.
+2. Save the text of every page you read, as fetched, to docs/plans/<Monday>-week/probe/pages/<short-name>.txt, and add
+   it to docs/plans/<Monday>-week/probe/pages/index.json as "<url>": {"file": "<short-name>.txt"}. If a page will not
+   load, is behind a paywall or is empty, add "<url>": {"unreadable": "<why, in a few words>"} instead. Never guess
+   what an unreadable page says.
+3. Start from the plain question the story raises ("Why did X do Y?") and climb one Why at a time. Each Why gets:
+   - one answer of 60 words or fewer, in plain words;
+   - its evidence: for each source the url, the domain, the page's date, and a quote copied word for word from the
+     saved page (never a paraphrase, never stitched from two places);
+   - its strength: "documented" when two sources on two different sites say it, "inferred" when the sources point to
+     it but do not say it outright, "open" when nothing you read answers it;
+   - the strongest counter-evidence you found, or "none found" with the scope you searched;
+   - mechanism_type when the answer says how something works (the money, the model, the contract, the rule).
+4. Stop where the evidence stops. Five Whys is the target, not a rule: three honest Whys that stop with a reason
+   ("evidence_exhausted", "out_of_scope", "motive_not_mechanism") are worth more than five padded ones. Never climb past
+   an open Why.
+5. Land on what the ladder shows and one open question handed to the reader, ending with "?".
+6. Never predict, forecast, give odds or chances, make a call, put a date on what will happen, say how confident you
+   are, or tell anyone what they should do. Describe what the sources show, and nothing that has not happened.
+7. Write the ladder to docs/plans/<Monday>-week/probe/<option_id>.whys.json in this shape and nothing else:
+
+{
+  "schema": "why-ladder/1",
+  "question": "Why ...?",
+  "rungs": [
+    {"n": 1, "question": "Why ...?", "answer": "...",
+     "evidence": [{"url": "...", "domain": "...", "date": "YYYY-MM-DD", "quote": "..."}],
+     "strength": "documented", "counter": {"text": "..."}, "mechanism_type": "...", "stop": null}
+  ],
+  "landing": {"shows": "...", "open_question": "...?"}
+}
+
+Use British spelling. No em dashes and no exclamation marks. Reply with only the file path and the number of Whys.
+```

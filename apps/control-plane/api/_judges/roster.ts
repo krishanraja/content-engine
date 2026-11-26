@@ -39,13 +39,28 @@
 // shapes he finishes is a fact about him as a writer. Which subjects he likes
 // is the thing the machine is supposed to be able to surprise him about.
 
-export const ROSTER_VERSION = 'panel-v2'
+import { READER } from '../_beat.js'
+
+// panel-v3 (2026-11-26): the reader and buyer judges read the North Star reader
+// Krish approved that day ("I approve the lines") from config/beat.json's reader
+// row, through _beat.ts. Same keys and same eight judges, so calibration still
+// joins and the ladder median is untouched. Ruling (Krish, 2026-11-26): the
+// buyer judge is kept as the paying-reader judge (label "Paying reader"): would
+// someone who makes the calls or makes the work in these industries pay for
+// this, because it tells them how their work makes money in a way they could
+// not get free elsewhere this week. The retired thirty-day-build buyer stays
+// retired. Its key stays 'buyer' so stored verdicts still join, and whether its
+// scores ever ranked his picks is reported (config/judges.json
+// review), never taken on faith.
+export const ROSTER_VERSION = 'panel-v3'
 
 export type Gate = 'idea' | 'draft'
 
 export interface Judge {
   /** Stable key. Appears in judge_verdicts.judge and in calibration. */
   key: string
+  /** The name a person reads where the judge is shown; the key when absent. */
+  label?: string
   /** The one question this judge owns, in Krish's words. */
   question: string
   /** What the judge is told to do. One axis, explicitly not the others. */
@@ -93,27 +108,21 @@ export const IDEA_JUDGES: Judge[] = [
       + 'Be concrete about who and what: if you cannot name the action, the score is low however clever the idea.',
     evidence: 'Name the reader and the specific thing they do or stop doing.',
   },
+  // The reader and the paying reader (key buyer) are the North Star reader (config/beat.json
+  // reader.judges), one wording with the relevance filter and the humour check.
   {
     key: 'reader',
-    question: 'Will the leader this is written for actually read it?',
-    rubric:
-      'Score reach into the readership: a senior leader in a business doing roughly five to fifty million pounds '
-      + 'who will not admit, to anyone, that they are not ready for what is happening. 10 means it speaks to a '
-      + 'problem they have this quarter; 1 means it is for practitioners, peers, or nobody in particular. Do not '
-      + 'reward flattery of that reader; reward usefulness to them. Judge the readership only. Whether it reaches '
-      + 'anyone who might hire him is the buyer judge and not yours.',
-    evidence: 'Name the situation that reader is in where this lands.',
+    label: READER.judges.reader.label,
+    question: READER.judges.reader.question,
+    rubric: READER.judges.reader.rubric,
+    evidence: READER.judges.reader.evidence,
   },
   {
     key: 'buyer',
-    question: 'Does this reach someone who might hire him for a thirty-day build?',
-    rubric:
-      'Score commercial reach: a commercial leader who might engage Krish on a short-term basis to build an AI '
-      + 'brain or an AI go-to-market plan. 10 means it lands in front of a problem that engagement solves; 1 means '
-      + 'it is for an audience that will never buy anything. Judge commercial reach only. Whether the wider '
-      + 'readership enjoys it belongs to the reader judge, and the two of you disagreeing on one idea is a finding '
-      + 'rather than a fault.',
-    evidence: 'Name the situation a prospective client is in where this lands.',
+    label: READER.judges.buyer.label,
+    question: READER.judges.buyer.question,
+    rubric: READER.judges.buyer.rubric,
+    evidence: READER.judges.buyer.evidence,
   },
   {
     key: 'connection',

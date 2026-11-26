@@ -129,6 +129,29 @@ kill list blocks those under `preach_pattern`, which cannot be appealed.
 - **A Why that only repeats the last answer.** Stop (`stop: "restatement"`);
   the ladder has reached its root.
 
+## Before the pick: the whys probe (story engine v5, from the 7 Dec board)
+
+Until the story engine, a ladder was first built after Krish picked a story, so a story that could not hold five whys
+reached the board and failed only once he had chosen it. Now every Sunday option is probed before the board is built
+(branch `story/engine-v5`; the gap list is `docs/proposals/2026-11-26-story-engine-gaps.md`, items 10 to 12):
+
+- **A blind whys-prober** (a subagent with the option's own sources and nothing else: no picks, no taste, no other
+  option) writes an option-level `whys` in the `why-ladder/1` shape above and caches every page it read under
+  `docs/plans/<Monday>-week/probe/pages/`. Its brief is `.agents/skills/plan-week/references/story-score.md`,
+  "The whys probe (before he picks)".
+- **The check holds every quote to its page.** `npx tsx scripts/whys-probe-check.ts <Monday> [<option_id>]` reads the
+  probe with the same reader as the post-pick ladder (`checkWhyLadder`, `landingVetoes`, `siteOf` from
+  `packages/contracts/src/whys.ts`). A rung counts as documented only when quotes found verbatim in their cached pages
+  span at least two sites; one verbatim quote, or one site, makes it inferred; a paraphrase is downgraded, never
+  upgraded; a rung whose pages could not be read is reported apart, never as a story that cannot hold the whys. Exit 2
+  (no probe, no ladder) is never a pass.
+- **The floors.** The blind story score (`config/story-score.json`, `hero_floors`) refuses a Monday, Wednesday or Friday
+  hero with fewer than three documented whys, fewer than five documented and labelled-inferred rungs, or a landing with
+  a veto; on the hero types the whys axis carries the heaviest weight, level with scale. Per series: Monday needs a sourced money figure,
+  Wednesday a mechanism rung, Friday a claim-against-evidence counter.
+- **After the pick nothing changes:** the research still files the sourced ladder in `meta.whys`, and `WHY_LADDER`
+  still blocks approval without it. The probe only decides which stories reach him.
+
 ## Research requirements
 
 Research backs each Why, not the piece as a whole.
@@ -268,5 +291,7 @@ records and are never edited.
   `parseWhyLadder`, `checkWhyLadder`).
 - Publish check: `WHY_LADDER`, in the publish checks.
 - Learning: `why-ladder-close` in `config/learnings.json`.
+- Before the pick: `scripts/whys-probe-check.ts` and the story score's `hero_floors` (`config/story-score.json`),
+  held at the board's gate as code `story` from the rubric's `from` date.
 - The no-call sweep: no "our call", "how sure", "odds" or "dated call" in copy
   or chrome, outside history files and the internals named above.

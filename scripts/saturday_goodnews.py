@@ -48,8 +48,9 @@ sys.path.insert(0, str(HERE / 'post-pack'))
 from sunday_ideas import monday_arg  # noqa: E402  the one check of a typed Monday
 
 NEW_YORK = ZoneInfo('America/New_York')
-# The weekly good news holds five stories (week_plan.STORY_COUNT, plan-week references/offdays.md).
-STORY_COUNT = 5
+# The weekly good news holds the carousel's four items (week_plan.STORY_COUNT, config/carousel-format.json good_news;
+# Krish, 2026-11-26: enforce the carousel format); it held five before.
+STORY_COUNT = json.loads((ROOT / 'config' / 'carousel-format.json').read_text(encoding='utf-8'))['good_news']['items']
 
 
 FILL = re.compile(r'^off-(mon|tue|wed|thu|fri|sat)-[A-Za-z0-9][A-Za-z0-9_.:-]{0,59}$')

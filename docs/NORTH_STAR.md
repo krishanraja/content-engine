@@ -160,6 +160,21 @@ The publication is **makeyourmindup** (Krish, 2026-09-25): hosted on Substack,
 with its cover page at makeyourmindup.ai. How it looks, sounds and moves on every
 surface is in `docs/CREATIVE_IDENTITY_UPGRADE.md`.
 
+Its North Star, and the reader it is written for (approved by Krish on
+2026-11-26, "I approve the lines"):
+
+> By December 2027, makeyourmindup is the publication the creative, arts, music, entertainment, media and sports industries pay to read on what AI is doing to how their work makes money. 50,000 people who make the calls or make the work read it, and the publication is worth owning on its own.
+
+Only the reader narrows. The engine's horizon, its number, the subchannels and
+their cadence above and below do not change. The face in Mindmake's own canon
+(the senior leader quoted above) stays Mindmake's; for this publication and
+everything the engine chooses, the reader is the people who make the calls or
+make the work in those industries. The line is held as data in
+`config/beat.json` (its `reader` row), which the relevance filter
+(`apps/control-plane/api/_relevance.ts`), the reader and paying-reader (key buyer) judges
+(`apps/control-plane/api/_judges/roster.ts`, `panel-v3`) and the humour check
+(`scripts/post-pack/humour_check.py`) all read, so no prompt keeps its own copy.
+
 Three subchannels, each with a standing question and a mandate that decides
 the structure and the close of every piece. The mandates are authoritative
 only in `venture_formats`; the lines below are orientation.

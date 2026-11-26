@@ -3,6 +3,7 @@ import { supabase } from '../../_supabase.js'
 import { guardEngine } from '../../_auth.js'
 import { sanitizeVoice } from '../../_content.js'
 import { recordShip } from '../../_ships.js'
+import { READER } from '../../_beat.js'
 
 // POST /api/briefs/:week/push   body: { channels: string[] }
 //
@@ -100,7 +101,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       target_channel: channel,
       title: brief.title || `Publication ${week}`,
       hook,
-      target_audience: 'Business leaders making real AI decisions',
+      target_audience: READER.audience_short,
       contrarian_angle: angle,
       draft_seed: draft,
       full_draft: draft,

@@ -2,6 +2,7 @@ import { CAPTION_THEMES } from './captions/names'
 import { z } from 'zod'
 import { EngineMotionSchema } from './kit/motionProfiles'
 import { EngineIngredientsSchema } from './kit/ingredients'
+import { EngineImpactSchema } from './kit/impact'
 import { EngineLayoutSchema } from './kit/layout'
 
 /** What `ve compile` hands the renderer for one cut: everything already resolved to frames on ONE clock.
@@ -205,6 +206,9 @@ export const EngineRenderPropsSchema = z.object({
   /** The transitions, camera and energy chosen per piece (spec style.transitions, style.camera, style.energy;
    *  kit/ingredients.ts); absent means every beat cuts under a still camera, as before. */
   ingredients: EngineIngredientsSchema.optional(),
+  /** Impact zoom: small pushes onto his face on the cut's most impactful words, drawn on his take only (kit/impact.ts;
+   *  Krish, 2026-11-26: "Zoom for impact ... classy and subtle rather than too aggressive"). Absent: his take holds still. */
+  impact: EngineImpactSchema.optional(),
   /** How a graphics-only beat uses the frame (spec style.layout; kit/layout.ts); absent means the layouts' own slots. */
   layout: EngineLayoutSchema.optional(),
   /** The series sting, only straight after the hook (`atFrame`, the hook's last frame + 1): a new design that plays

@@ -58,6 +58,34 @@ When this page and the code disagree, the code wins: fix this page.
 - **The failure loop.** `engine_incidents` holds 3 rows; the weekly job (`engine-learning-weekly.yml`) reads it with
   the failure and learning registers (`docs/learning/README.md`).
 
+## On branch `story/engine-v5`, not on `main` (checked 26 Nov 2026 against `46bb11bc`)
+
+Each line names the commit or file it was checked in; none of it is live until the branch merges.
+
+- **The reader.** `config/beat.json` carries sports as a focus sector (25 Nov) and the `reader` row with the North Star
+  line Krish approved on 26 Nov ("I approve the lines"; `docs/NORTH_STAR.md`). `_relevance.ts`, the reader and buyer
+  judges (`panel-v3`) and `humour_check.py` read it (`5ca87d1b`).
+- **The story engine.** The floor (`1c89d076`), the blind score's rubric and core (`b5646db0`, `ac1c1411`, `a8089bd9`),
+  the pre-pick whys probe check (`f0c6ee1d`), the Sunday gate's `story` and `story_floor` codes from the rubric's `from`
+  date, 2026-12-07 (`18602a2a`), close calls on the option card (`76d1a43a`), the off days on the reader's beat
+  (`4a027b9d`, `7976f8ab`) and a checked wildcard on every Monday, Wednesday and Friday (`5a36cb70`). The procedure is
+  `.agents/skills/plan-week/references/story-score.md`, wired into `sunday-ideas.yml`.
+- **The blind proof.** Harness and protocol committed before any paid call (`e42ab3cd`;
+  `docs/plans/proofs/2026-11-26-story-engine-v5/PROTOCOL.md`, frozen SHA `5a36cb70`). No paid run has been made: the
+  proof's cache holds the two weeks' pools and old picks only, and no sheet has gone to Krish. Since the freeze,
+  `46bb11bc` changed three engine files (`idea_checks.py`, `story_score.py`, `config/story-score.json`), so a real run
+  refuses until the frozen SHA is moved again or that change is taken out.
+- **The production cycle.** `config/cycle.json` and `scripts/post-pack/touch.py` (`e8c56bdc`, `84c6a18e`); connector
+  touches queue in `.cache/touch/outbox.jsonl` while `CC_HARNESS_KEY` is unset, and the two workflows pass the secret
+  through once it exists.
+- **The kill list on Windows.** `idea_checks.kill_list_vetoes` passes `encoding='utf-8'` to node (`1c89d076`), so an
+  em dash is vetoed on Windows too (`test_the_real_kill_list_runs`; `config/failures.json`
+  `kill-list-windows-encoding`).
+- **Every asset made here.** `config/asset-routes.json` and `asset_routes.py`, the captions step, the make flow's own
+  judges, the Saturday Note, manifest schema 1.1 and the cycle's Growth rows (`b8721b05` to `a8db096f`), and the
+  carousel format enforced as refusals (`46bb11bc`). Each Library call refuses with "the v5 Library is not on this
+  checkout yet" on a checkout without it; the Library is on main (#984) and merged into this branch.
+
 ## Broken or risky
 
 - **Full verify on `main`** is red from 16 Nov 08:08 UTC (issue #746, open): its `board-web` job ("Board sessions on a
@@ -95,6 +123,12 @@ Each is checked in the record that holds it; only his own words or presses close
 - **His answers on the week of 9 Nov's ideas board** (the live view, 16 Nov): Thu 12's `otherside` and one option on
   Fri 13 are still open; Wed 11's `tablefortwo`, Thu 12's `agentnotsetup` and Sat 14's `goodnews` and `spotai` are held,
   not approved by him. `beststicker` is approved, and the view shows it on Fri 13.
+- **The `CC_HARNESS_KEY` secret** (branch `story/engine-v5`): Control Center's harness key as an Actions secret here, so
+  the cycle's connector touches are sent, not queued in the outbox.
+- **The blind proof** (branch `story/engine-v5`): his yes to the paid run (at most $10) once the frozen SHA question
+  above is settled, then his answers on the sheet (`A++`, `A+`, `=`, `B+` or `B++` per pair) before the reveal.
+- **The buyer judge** (`config/beat.json` `reader.judges.buyer.flag`): keep its rewrite for the v5 reader, or retire it.
+- **Merging** `story/engine-v5` (origin/main and its v5 Library are merged in) and Growth's pull request 145.
 - **Friday 13 Nov's creative sheet.** `docs/plans/2026-11-09-week/fri-preproduction/creative.json` has `signed: null`;
   nothing in its "after sign" list starts before he signs it.
 

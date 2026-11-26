@@ -26,15 +26,25 @@
 
 import { JUDGE_MODEL } from './_models.js'
 import * as meter from './_meter.js'
+// The reader, the keep line, the media line and the buyer test are rows in
+// config/beat.json (its `reader` row), never code here: Krish approved the
+// North Star reader line on 2026-11-26 ("I approve the lines"). A direct JSON
+// import, as _beat.ts does, keeps this module dependency-light.
+import beat from '../../../config/beat.json' with { type: 'json' }
+
+const READER = beat.reader
 
 /**
  * `not_interesting` is the buyer test, added 2026-09-23 and deliberately NOT
- * acted on yet by any caller.
+ * acted on yet by any caller (config/beat.json reader.buyer_test.enforced is
+ * false).
  *
  * The other two verdicts ask what a story is ABOUT. This one asks whether the
- * person Krish sells to would care, which is the question every gate in the
- * system was missing: the inspiration sweep's 2,000-word bar scores voice,
- * pillar fit, evidence and novelty and never once mentions his customer.
+ * publication's reader would care. Since 2026-11-26 that reader is the North
+ * Star's: people who make the calls or make the work in the creative, arts,
+ * music, entertainment, media and sports industries. Until then it was a
+ * commercial leader who might hire Krish for thirty days; that reader is
+ * retired.
  *
  * It is recorded and not enforced because a new refusal has to be measured
  * before it is trusted. The pool corpus is what the synthesis engine reads
@@ -66,7 +76,9 @@ export interface RelevanceVerdict {
 // The user's policy (2026-06-17), encoded as the muted vertical set. KEEP
 // anything with an AI / agents / economics angle; these are cut only when the
 // card is primarily about the domain on its OWN terms. Consumer / retail / DTC
-// / adtech are intentionally NOT here — they stay in-bounds.
+// / adtech are intentionally NOT here: since 2026-11-26 the prompt's media line
+// (config/beat.json reader.media_line) keeps adtech as the money of media and
+// consumer stories only with a focus-sector angle.
 export const DEFAULT_MUTED_VERTICALS = [
   'finance',            // traditional finance, markets, banking, personal finance, fintech-as-vertical
   'tax',
@@ -110,23 +122,24 @@ function policyPrompt(muted: readonly string[], surface: string): string {
     : surface === 'visibility' ? 'speaking / visibility targets'
     : 'network contacts'
   return [
-    `You are a relevance filter for Krish Raja's triage. Krish publishes "MYMU" and "Signal & Noise": sharp, executive-level writing about the ECONOMICS of AI, autonomous agents, the builder economy, AI-native operating, and platform / marketplace / VC dynamics.`,
+    `You are a relevance filter for Krish Raja's triage. Krish publishes "MYMU" and "Signal & Noise": sharp writing about the ECONOMICS of AI, autonomous agents, the builder economy, AI-native operating, and platform / marketplace / VC dynamics. ${READER.intro}`,
     ``,
     `You are filtering ${subject}. For each item return one verdict:`,
     ``,
-    `- "keep": on-brand. ANYTHING about AI / agents / LLMs, the economics of AI, the builder economy, AI-native operating, or platform / marketplace / VC dynamics. Consumer, retail, DTC, advertising and adtech are IN-BOUNDS: keep them.`,
+    `${READER.keep_line} ${READER.media_line}`,
     `- "keep", first of all: AI in media, entertainment, arts, music, sports and creator tech, including their economics (who gets paid, royalties, licensing, rights, what a studio, label, publisher, club, league or creator earns or spends). These are Krish's focus sectors.`,
     ``,
     `- "off_vertical": the item is PRIMARILY about one of these domains on its OWN terms, NOT through an AI / agent lens: ${muted.join(', ')}. (finance = traditional finance, markets, banking, personal finance, fintech-as-a-vertical; law = legal / litigation / regulation-as-news; crypto = web3 / blockchain / tokens.) If the SAME topic is framed as an AI / agents story, KEEP it instead, with two exceptions: governance_regulation (AI governance, regulation, compliance, policy, the EU AI Act, executive orders) and security_breach (security, privacy, surveillance, data leaks, breaches, deepfake fraud) are off_vertical even when the story is about AI, unless it is mainly a media, entertainment, arts, music, sports or creator story, such as a copyright or licensing fight over AI music.`,
     ``,
     `- "too_technical": low-level engineering / infrastructure / devops with no strategic angle — cloud-ops (AWS / GCP / Azure), Kubernetes, database internals, framework release notes, library changelogs. BUT keep builder-economy "how we built X with agents" strategic-technical pieces.`,
     ``,
-    // The buyer test, in Krish's own words. Everything here is quoted from the
-    // edit ledger or from him directly, not inferred: this is the one criterion
-    // no other gate in the system holds, and a paraphrase of it would drift.
-    `- "not_interesting": on-topic for AI, but there is nothing here a reader would DO anything with. Krish's reader is a commercial leader who might hire him for thirty days to build an AI brain or an AI go-to-market plan. He is asking: does this change how that person thinks about buying, pricing, positioning, hiring or building with AI? Mark not_interesting for a one-off item with no second-order consequence: a personnel move, a version bump, an event listing, a quoted tweet, a syndicated video interview, a vendor announcement that repriced nothing. His words for what he wants instead: "fun, and observant, and tying together multiple threads, shifts or themes, not just crappy unimportant one off news items". And for the register: "My tonality is commercial, positive, and visionary", not "governance, risk, safety, negative things, and overly technical things".`,
+    // The buyer test, for the North Star reader, with Krish's own words for the
+    // register quoted from the edit ledger and from him directly, not inferred:
+    // this is the one criterion no other gate in the system holds, and a
+    // paraphrase of it would drift. Recorded, not enforced.
+    `${READER.buyer_test.line} ${READER.buyer_test.register_line}`,
     ``,
-    `When unsure, prefer "keep" with low confidence. Only mark off_vertical / too_technical when you are confident the item has no AI / agent / economics angle Krish would write about. Only mark not_interesting when you are confident a commercial leader would read it and have nothing to do differently.`,
+    `When unsure, prefer "keep" with low confidence. Only mark off_vertical / too_technical when you are confident the item has no AI / agent / economics angle Krish would write about. ${READER.buyer_test.unsure_line}`,
     ``,
     `Return ONLY a JSON array, one object per item, same order and ids:`,
     `[{"id":"<id>","verdict":"keep|off_vertical|too_technical|not_interesting","vertical":"<one muted key or null>","confidence":0.0-1.0,"rationale":"<=12 words"}]`,

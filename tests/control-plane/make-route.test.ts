@@ -1,12 +1,14 @@
 import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { NEVER_HEADLESS, ROUTE_RULING, makeRoute, routeLine } from '../../apps/control-plane/api/board/_makeRoute'
+import { LIBRARY_ABSENT, NEVER_HEADLESS, ROUTE_RULING, makeRoute, routeLine } from '../../apps/control-plane/api/board/_makeRoute'
 import { OFFDAY_KINDS, captionOf, itemPrompt, offdayHead } from '../../apps/control-plane/api/board/_weekModel'
 
 // The one route for a carousel, a meme, a Notes image and an off-day voiceover short (Rulings, Krish, 2026-11-13: "all
 // the carousels should now be done in Claude, but using the Codex plug in as per the other usual workflows"; "memes and
-// Notes images should go the same way"; "Off-day voiceover shorts should go the same way too"). Every prompt the board
+// Notes images should go the same way"; "Off-day voiceover shorts should go the same way too"). From 26 Nov content-engine
+// makes every asset from the locked v5 Library and Growth only posts it (Ruling, Krish, 2026-11-26: "I believe that growth
+// should move all asset production to Content Engine"). Every prompt the board
 // copies out for one of them, and every document that tells a session how to make one, says the route; the retired
 // routes (the Studio's carousel commands and their renderer, Growth's Saturday art-direction run) are named nowhere
 // outside docs/history and this guard. `findings` is the guard; the last block proves it can fail on the old words.
@@ -26,6 +28,20 @@ export const HEADLESS: Array<[RegExp, string]> = [
   [/\bcodex exec\b|@openai\/codex|codex login --with-api-key/i, 'a headless Codex run'],
   [/\bin (?:the )?Canva\b[^.\n]{0,40}\b(?:memes?|notes? images?)\b|\b(?:memes?|notes? images?)\b[^.\n]{0,40}\bin Canva\b/i, 'memes or Notes images made in Canva'],
 ]
+
+/** Growth making an asset, by every name it went by (Ruling, Krish, 2026-11-26: content-engine makes it, Growth posts it). */
+export const GROWTH_MAKES: Array<[RegExp, string]> = [
+  [/\bGrowth (?:makes|made)\b|\bMade by Growth\b/i, 'Growth making an asset'],
+  [/render\/(?:templates|pieces|KIT)|growth\.py run kit|codex\/queue\/ on your claude\/ branch|for a card in growth-makeyourmindup/, "Growth's retired renderer or kit queue"],
+  [/make_piece\.py[^\n]{0,40}--set (?:covers|video)\b/, 'the retired make_piece.py cover and video sets'],
+]
+
+/** Where the new split must already be said: the board's code and fixtures, the scripts, the workflows, the skills, the
+ *  config and the documents that tell a session how to make one. learnings.json and failures.json are the record (never
+ *  rewritten); config/asset-routes.json names Growth's retired renderer as retired; this guard and the tests that pin
+ *  the old words as refused are the guard. The docs stage rewrites the rest of docs/. */
+const SAYS_THE_SPLIT = /^(?:apps\/control-plane\/api\/|scripts\/|\.github\/workflows\/|\.agents\/skills\/|\.claude\/skills\/|config\/)/
+const SPLIT_RECORD = new Set(['config/learnings.json', 'config/failures.json', 'config/asset-routes.json'])
 
 /** The text a session reads, with the blocks ai-harness renders (and owns) left out. */
 export function ownText(text: string): string {
@@ -88,17 +104,39 @@ describe('the one route for carousels, memes, Notes images and off-day voiceover
       expect(a.prompt).toContain('Codex plugin')
       expect(a.prompt).toContain('Keep the board current as you work')
       expect(findings('prompt', a.prompt)).toEqual([])
+      expect(findings('prompt', a.prompt, GROWTH_MAKES)).toEqual([])
+      // The make flow asks the judges and writes the captions itself; Growth posts.
+      for (const words of ['scripts/post-pack/judge_assets.py ask', 'scripts/post-pack/channel_captions.py', 'Growth posts it']) expect(a.prompt).toContain(words)
     }
     if (still.kind !== 'prompt' || motion.kind !== 'prompt') throw new Error('not a prompt')
-    for (const words of ['scripts/carousel_check.py', 'carousel_check.py --cards', '8 to 20 words a stranger can follow', 'scripts/ve.py card', 'config/brand-palette.json', '10/10 judges', '3 Posts', 'inspiration cards Krish ticked']) {
+    for (const words of ['scripts/carousel_check.py', 'carousel_check.py --cards', 'carousel-deck/3', 'config/carousel-format.json', 'scripts/carousel_make.py <piece> --set <set> --deck DECK.json', '4 to 7 slides', 'never "Follow for more"', 'A refusal fails the run', 'python scripts/library/make_piece.py <piece> --set <set>',
+      'python scripts/covers/make_covers.py <piece> --out <folder>', 'covers.json', 'scripts/post-pack/asset_routes.py command', `"${LIBRARY_ABSENT}"`, 'never draw it another way',
+      'licensed Commons photo', 'No badges', '10/10 judges', '3 Posts', 'inspiration cards Krish ticked']) {
       expect(still.prompt).toContain(words)
     }
-    for (const words of ['ve route', 'docs/ve/ENGINE.md', 'signed spec', 've verify-card', 'separate reviewer watches and listens', 'The voice comes from where it comes from today']) {
+    for (const words of ['ve route', 'docs/ve/ENGINE.md', 'signed spec', 've verify-card', 'separate reviewer watches and listens', 'The voice comes from where it comes from today', 'scripts/covers/make_covers.py']) {
       expect(motion.prompt).toContain(words)
     }
+    // No Codex-built card for the pictures, no Growth renderer, no retired Library set.
+    for (const gone of ['scripts/ve.py card (kind carousel', 'codex/queue', '--set covers', '--set video', 'carousel-deck/1', '8 to 20 words', 'at most 10 cards']) expect(still.prompt).not.toContain(gone)
     expect(routeLine('still')).not.toBe(routeLine('motion'))
-    // A post neither route makes keeps the plain hand-off to Growth.
-    expect(offdayHead(null)).toContain('Growth makes and posts off-day posts')
+    // A post neither route makes says the split: content-engine makes it, Growth posts it.
+    expect(offdayHead(null)).toContain('content-engine makes this off-day post')
+    expect(offdayHead(null)).toContain('Growth (krishanraja/growth-makeyourmindup) posts it and makes nothing')
+    expect(findings('head', offdayHead(null), GROWTH_MAKES)).toEqual([])
+  })
+
+  it('says the new split everywhere a session or the board reads it: content-engine makes it, Growth posts it', () => {
+    const files = execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' }).split('\0').filter(Boolean)
+      .filter(f => (SAYS_THE_SPLIT.test(f) || TELLS_HOW.includes(f)) && !SPLIT_RECORD.has(f) && /\.(md|ts|tsx|mjs|js|py|json|ya?ml)$/.test(f))
+      .filter(f => !['docs/GROWTH-HANDOFF.md', 'docs/PUBLISH_BOARDS.md', 'AGENTS.md'].includes(f))
+    expect(files.length).toBeGreaterThan(100)
+    const found = files.flatMap(f => {
+      let text: string
+      try { text = read(f) } catch { return [] }
+      return findings(f, text, GROWTH_MAKES)
+    })
+    expect(found).toEqual([])
   })
 
   it('every document that tells a session how one is made says the route and names no retired one', () => {
@@ -142,6 +180,12 @@ describe('the one route for carousels, memes, Notes images and off-day voiceover
     expect(findings('old', 'This is the current-state record of the Mindmake Carousel Engine (the `studio carousel` commands).')).toHaveLength(2)
     expect(findings('old', 'python3 growth.py run artdirect check render/pieces/off-sat-goodnews')).toHaveLength(1)
     expect(findings('old', 'Growth makes Substack Notes and memes in Canva, the formats content-engine does not cover')).toHaveLength(1)
+    // The split before 26 Nov: Growth made the assets, on its own renderer and kit queue.
+    expect(findings('old', old, GROWTH_MAKES)).toHaveLength(1)
+    expect(findings('old', "label: p.state === 'made' ? 'Made by Growth' : 'Scheduled'", GROWTH_MAKES)).toHaveLength(1)
+    expect(findings('old', 'plugin: ve dispatch, or, for a card in growth-makeyourmindup, its codex/queue/ on your claude/ branch', GROWTH_MAKES)).toHaveLength(1)
+    expect(findings('old', "Growth's kit `render/pieces/off-sat-goodnews` holds the words", GROWTH_MAKES)).toHaveLength(1)
+    expect(findings('old', 'python scripts/library/make_piece.py docs/plans/mon --set covers', GROWTH_MAKES)).toHaveLength(1)
     expect(findings('old', 'npm install --global @openai/codex@0.165.0 && printenv OPENAI_API_KEY | codex login --with-api-key')).toHaveLength(1)
     // The generated canon block is ai-harness's to change, so it is left out of a file's own text.
     expect(findings('AGENTS.md', '<!-- krish-canon:start x -->\n`docs/CAROUSEL_ENGINE_STATE.md`\n<!-- krish-canon:end -->')).toEqual([])

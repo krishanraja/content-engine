@@ -68,7 +68,9 @@ what kind of thing doesn't fly with me, rather than implement incredibly specifi
 - **The scorecard.** After his presses, `python3 scripts/post-pack/board_feed.py scorecard <Monday>` counts his real
   presses on that board, each count beside its written rule and each label beside his exact words, and writes
   `docs/plans/<Monday>-week/scorecard.json` (ids, labels and counts only). Read it into the triage readback (step 8),
-  its counts and labels beside his words; he can overrule any label. The history test (`scripts/post-pack/ideas_history.py check`) replays every check on his past
+  its counts and labels beside his words; he can overrule any label. It records each judge's rank of his pick
+  (`judge_rank_of_pick`, beside `score_rank_of_pick`); after 4 scored weeks a judge no better than chance gets a review
+  line, "retire or rewrite" (config/judges.json `review`). Say it in the readback; nothing retires itself. The history test (`scripts/post-pack/ideas_history.py check`) replays every check on his past
   boards; a new check joins only when it still passes.
 
 ## The second part (items 4, 6, 8, 10 and 12), from the 23 Nov board

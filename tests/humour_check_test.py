@@ -50,6 +50,26 @@ class Script(unittest.TestCase):
         self.assertIn('provider_unreachable', r['reason'])
 
 
+class Audience(unittest.TestCase):
+    """The humour engine's audience is the North Star reader (Krish approved the line on 2026-11-26), read from
+    config/beat.json, never a copy in the script."""
+
+    def test_the_audience_is_the_reader_row(self):
+        beat = json.loads((ROOT / 'config' / 'beat.json').read_text(encoding='utf-8'))
+        self.assertEqual(hc.AUDIENCE, beat['reader']['audience_short'])
+        self.assertIn('creative, arts, music, entertainment, media and sports industries', hc.AUDIENCE)
+        self.assertNotIn('follow AI news', hc.AUDIENCE)
+
+    def test_a_script_is_about_the_readers_world_not_ai_news(self):
+        beat = json.loads((ROOT / 'config' / 'beat.json').read_text(encoding='utf-8'))
+        self.assertTrue(hc.SURFACES['script'].endswith(beat['reader']['about']))
+        self.assertNotIn('AI news', hc.SURFACES['script'])
+
+    def test_every_request_carries_it(self):
+        body = hc.request(['A line.'], 'funny', 'ce:t')
+        self.assertIn(hc.AUDIENCE, json.dumps(body))
+
+
 class Lines(unittest.TestCase):
     def test_each_joke_is_read_alone(self):
         seen = []

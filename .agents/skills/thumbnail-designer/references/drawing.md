@@ -45,8 +45,8 @@ read on this machine counts, recorded by its sha256; a past post is never drawn 
 - Where they live: each posted video's designed cover is its piece's thumbnail on its making record
   (`video_assets[].thumbnail`, its Drive link), which the live board lists per day as media with a Drive link
   (`GET /api/board/<Monday>/view`, `media`), and from 15 Nov the piece manifest names it per channel
-  (`cover: {asset, sha256}`). Growth's carousels and off-day posts are on the same grid; Growth's own records say
-  which went out (`GET /api/board/<Monday>/pieces`).
+  (`cover: {asset, sha256}`). The carousels and off-day posts (content-engine's to make since 26 Nov 2026) are on the same grid; Growth's
+  records say which went out (`GET /api/board/<Monday>/pieces`).
 - Fetch each through the Drive connector or `GET /api/board/<Monday>/media/<id>` into the work folder, then pass them
   as `--past` (newest first). `python3 scripts/pages/thumb_options.py mock WORK/thumbs --past ...` draws the mock again
   later; it removes the old verdict, so the critic looks again.

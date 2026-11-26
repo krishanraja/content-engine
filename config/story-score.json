@@ -1,0 +1,520 @@
+{
+  "_about": "The story score: how every Sunday option is scored blind and ordered, as rows (the story engine v5 plan, 26 Nov 2026; docs/proposals/2026-11-26-story-engine-gaps.md). Three stages in a fixed order: the floor (scripts/post-pack/story_floor.py, config/story-floor.json: the only reader of his rejections, pass or refused, never a number), the blind score (scripts/post-pack/story_score.py: anchored 0-10 axes, weighted per content type out of 100, with hard floors per type) and the council on close calls only. Taste is a floor only (Ruling, Krish, 2026-11-26): nothing here reads his picks, his approved taste, why_here, cues, scorecards or his verdicts on formats, and nothing is tuned from his picks automatically. Weights and anchors are a first proposal from the growth evidence below and the rulings; only Krish changes them, by a pull request. A weight, anchor, floor, margin or cost is a row here, never code.",
+  "rubric_version": "story-score/1",
+  "from": "2026-11-30",
+  "from_note": "The first board the Sunday gate holds to the score (codes story and story_floor): the board of 30 Nov, made by the Sunday 29 Nov run (ruling gate_from). Earlier boards keep the order they were made in.",
+  "rulings": [
+    {"id": "floor_only", "at": "2026-11-26", "ruling": "His taste is a floor only: his rejections refuse an option, never score it, and the judges stay blind (check-judges.ts section 4, tests/story_wall_test.py)."},
+    {"id": "spend_ceiling", "at": "2026-11-26", "ruling": "The blind proof run spends at most $10, through the ledger, after the protocol is committed."},
+    {"id": "reader", "at": "2026-11-26", "ruling": "The approved North Star reader line (config/beat.json reader), his words: \"I approve the lines\"."},
+    {"id": "carousel_format_enforced", "at": "2026-11-26", "ruling": "Every carousel holds the 3-second carousel format as a refusal floor (config/carousel-format.json, from the locked Library's CAROUSEL-FORMAT.md), his words relayed verbatim: \"Tell the Content-engine story intelligence for makeyourmindup v5 session that it is to enforce carousel formatting.\" A carousel option that breaks it is under the floor."},
+    {"id": "offday_beat", "at": "2026-11-26", "ruling": "The off days are the reader's world too: a good-news carousel, a meme, a short and an off-day carousel each hold the fit floor as a hard floor (config/beat.json offdays), his words: \"Make sure all the good news suggestions and meme suggestions are also aligned to the new positioning, as well as the carousels.\""},
+    {"id": "wildcard", "at": "2026-11-26", "ruling": "Every Monday, Wednesday and Friday carries one wildcard option he could pick: a real, dated, primary-sourced story on the beat, far from the obvious takes, its distance checked by the divergence engine, never asserted (the wildcard row below; idea_checks.wildcard_findings), his words: \"Just make sure my Monday, Wednesday, and Friday stories: there's always one completely divergent, strange, obscure, or unexpected story suggestion that I could pick from.\""},
+    {"id": "gate_from", "at": "2026-11-26", "said": "Newgate, 30th of November.", "ruling": "The story gate starts on the board of 30 Nov: the Sunday 29 Nov run is the first one gated."},
+    {"id": "floors_honest_and_hard", "at": "2026-11-26", "said": "I want a high-quality flexible engine that has learned from all its past mistakes and is upgraded now.", "ruling": "The three demoted floors are hard again, each made honest: a hero's topic in a focus sector (fit 7, a wildcard 4), a hero's primary source (defined properly) and an off-day short or meme on the beat (fit 4), with good news at least half in the sectors. Every hard floor cites a ruling or a recorded failure, passes on a realistic honest board, and cannot be met by adding words without the fact changing (failure scripts-regressed-below-ai-music)."},
+    {"id": "paying_reader", "at": "2026-11-26", "said": "On questions 1 and 3 I need your judgement in detail. I want a high-quality flexible engine that has learned from all its past mistakes and is upgraded now.", "ruling": "The buyer judge is kept as the paying-reader judge (config/beat.json reader.judges.buyer); every judge's rank of his picks is recorded and reviewed (config/judges.json review)."}
+  ],
+  "audience_from": "config/beat.json reader.audience_short",
+  "blind_view": {
+    "_about": "What the scorer and every blind judge may see of an option (story_score.blind_view): only the keep fields, and inside them never a drop_nested key. Where it came from, who asked for it, what anyone said of it and whether it was recommended are never seen; his-first on equal totals is the only place the order reads where an option came from.",
+    "keep": ["id", "title", "hook", "copy", "story", "so_what", "fact", "why_now", "pitch", "beats", "source", "sources", "stories", "format", "kind", "aim", "shape", "dive", "funny", "template", "direction", "cards", "topic", "topic_kind", "steps", "weekly", "whys", "first_reported"],
+    "drop_nested": ["from", "from_press", "from_inspiration", "learned_from", "read_back", "recommended", "source_kind", "source_tag", "his_via", "covers", "warning", "refused_before", "returns", "divergent", "story_score", "score", "near", "liked", "taste", "cues", "why_here", "said"],
+    "strip_text": {
+      "_about": "Provenance wording inside the kept fields: words that say an option came from him (what he saved, asked for or improved). Applied to every string the blind view keeps, the source label included (story_score.strip_text); story_proof.strip_house runs the same rules first, then its card-only ones. patterns are taken out where they stand, in order; then a sentence still matching drop_sentences_matching is dropped. A string no rule touches comes back as it was.",
+      "patterns": [
+        ",?\\s*(?:rebuilt|remade|made|built) in our look from [^,:;.]{1,80}? you saved",
+        ",?\\s*explained as simply as [^,:;.]{1,80}? you saved",
+        "^(?:rebuilt|revised|made again) on your [^:]{1,40}:\\s*",
+        "\\s*[;,]\\s*[^;,.]{0,60}? you asked for(?=[.;,]|$)",
+        ",?\\s*as you asked(?=[.;,]|$)",
+        "(?:,\\s*)?(?:in )?the [^,:;.]{1,60}? you saved[:,]?\\s*",
+        "\\s*\\((?:his|your) [^)]{1,60}\\)"
+      ],
+      "drop_sentences_matching": [
+        "\\byou saved\\b",
+        "\\byour (?:saved|ask|note|press|pick|idea|improve|inspo|inspiration|sheet)\\b",
+        "\\bthe [^,.;:]{1,40} you asked for\\b",
+        "\\bhe (?:asked|said|picked|wants|saved)\\b"
+      ]
+    }
+  },
+  "abstain": {"min_read_weight": 6, "note": "Of 10: an option whose read axes carry less weight than this is unscored (total null), never ranked on what little was read."},
+  "fit": {
+    "_about": "How the fit axis reads a topic (story_score.fit_axis; Ruling, Krish, 2026-11-26, floor C1). A sector counts when a focus-sector keyword or one of the sector's named entities (config/beat.json focus_sectors[].entities) sits in the topic sentence that carries the fact. Keyword stuffing never counts (failure scripts-regressed-below-ai-music: caps that could be met by changing words pushed the writer to game them): a clause that only appends a sector word after the fact is taken out first (appended); a sentence that is only a framing is dropped (framing); and when any topic sentence names a thing or a figure from the option's fact, only those sentences are read. The 10 anchor still needs the economics in a sentence that counts.",
+    "appended": [
+      ",?\\s*\\b(?:which|and that|that|this|and this|it)\\s+(?:matters|counts|is (?:big|huge|important|key|relevant|news|a big deal)|means (?:a lot|something|plenty))\\s+(?:to|for)\\b[^.;:!?]*",
+      "\\s*[,;:(-]\\s*(?:(?:and\\s+)?what (?:it|this|that) means|(?:big|huge|good|bad|important|relevant|key)(?: news)?|a (?:lesson|warning|signal|wake-up call)|(?:with\\s+)?(?:lessons|implications|consequences))\\s+(?:to|for)\\b[^.;:!?)]*\\)?",
+      ",?\\s*\\b(?:with|and)\\s+(?:an?\\s+)?(?:\\w+\\s+)?(?:angle|twist|lens|spin)\\s+(?:for|on)\\b[^.;:!?]*",
+      "\\s*[,;:-]\\s*[^,;:.!?]{0,40}\\b(?:take note|are watching|should care|should worry|should pay attention|beware|look out)\\b[^.;:!?]*"
+    ],
+    "framing": [
+      "^\\s*(?:and\\s+)?(?:why|what|how)\\s+(?:it|this|that)\\s+(?:matters|means|lands)\\b",
+      "^\\s*[^.!?]{0,40}\\b(?:take note|are watching|should care|should worry|should pay attention|beware|look out)\\b[^.!?]*[.!?]?\\s*$",
+      "^\\s*(?:the\\s+)?(?:\\w+\\s+){0,2}(?:angle|lens|takeaway)\\s*:"
+    ]
+  },
+  "named_thing": {"twist_words": ["but", "yet", "instead", "while", "despite", "although", "even though", "turns out", "only to", "for free", "no one", "nobody"]},
+  "primary_sources": {
+    "_about": "Primary, defined properly (Ruling, Krish, 2026-11-26, floor C2; the old definition, a filing host or the actor's own domain, failed 17 of 25 real heroes because original trade reporting never counted): the actor's own site (a name in the option's topic or fact is the site's name), a filing or official data host below, or the outlet that first reported the fact (the option's first_reported url, or a source whose kind is in original_kinds). A source whose host is on never_primary (an aggregator or syndicator, by the whole host or a host under it) is never primary, whatever else holds. The Sunday session chases a fact to where it was first reported (.agents/skills/plan-week/references/story-score.md).",
+    "filing_hosts": ["sec.gov", "companieshouse.gov.uk", "courtlistener.com", "arxiv.org", "doi.org", "europa.eu", "ipo.gov.uk", "uspto.gov", "copyright.gov", "ons.gov.uk", "bls.gov", "census.gov", "data.gov", "ofcom.org.uk", "fcc.gov", "ftc.gov", "gov.uk", "eurostat.ec.europa.eu", "wipo.int"],
+    "original_kinds": ["original"],
+    "attribution": [
+      "\\b(?:[Aa]ccording to|[Rr]eported by|[Ff]irst reported by|[Tt]old|[Vv]ia|[Pp]er)\\s+(?:the\\s+)?(?:[A-Z][\\w&'.-]*\\s?){1,4}",
+      "(?:\\b[Tt]he\\s+)?(?:[A-Z][\\w&'.-]*\\s){1,4}(?:reported|reports|first reported|revealed|broke the news|has learned|learned)\\b",
+      "(?:\\b[A-Z][\\w&'.-]*\\s?){1,4},\\s*\\d{1,2}\\s+[A-Z][a-z]+\\s+\\d{4}\\b(?:\\s*\\([^)]*\\))?\\s*:"
+    ],
+    "never_primary": ["news.yahoo.com", "finance.yahoo.com", "sports.yahoo.com", "uk.news.yahoo.com", "msn.com", "news.google.com", "newsbreak.com", "flipboard.com", "ground.news", "inkl.com", "headtopics.com", "smartnews.com", "newsnow.co.uk", "newsnow.com", "apple.news", "news.apple.com", "pressreader.com", "biztoc.com", "techmeme.com", "muckrack.com", "allsides.com", "feedly.com", "newsbreakapp.com", "aol.com", "ca.news.yahoo.com", "head-topics.com", "ampproject.org"],
+    "second_level": ["co.uk", "org.uk", "ac.uk", "gov.uk", "com.au", "co.jp", "co.nz", "com.br", "co.in"]
+  },
+  "scale": {"axis_min": 0, "axis_max": 10, "total_max": 100, "weights_sum": 10, "anchor_points": ["10", "7", "4", "1"]},
+  "axes": [
+    {
+      "id": "scale",
+      "label": "Scale and importance",
+      "source": "blind_judge",
+      "anchors": {
+        "10": "Changes money, rights or work for a whole sector or for millions of fans and creators, with a sourced figure.",
+        "7": "A major named player's move with a measurable second-order effect on others in the sector.",
+        "4": "One notable company or creator, with a local consequence.",
+        "1": "Trivia, a personnel move or a version bump."
+      }
+    },
+    {
+      "id": "absurdity_humour",
+      "label": "Absurd or funny on its own true facts",
+      "source": "humour",
+      "blend": {"fact": 0.5, "angle": 0.5},
+      "anchors": {
+        "10": "The plain sourced fact is absurd on its face and the best sound angle reads as supported humour, no explaining needed.",
+        "7": "The fact carries a clear incongruity or reversal a stranger gets at once.",
+        "4": "A wry detail is there but needs a line of set-up.",
+        "1": "Nothing funny in the facts; any joke would cost credibility."
+      }
+    },
+    {
+      "id": "unique_angle",
+      "label": "A unique angle",
+      "source": "divergent_judge",
+      "anchors": {
+        "10": "Nobody else is telling it this way, it is specific to this story and the reader can use it today.",
+        "7": "A fresh, specific take with one rival telling it nearby.",
+        "4": "A familiar take with one specific detail added.",
+        "1": "The take every outlet already ran."
+      }
+    },
+    {
+      "id": "whys",
+      "label": "Holds the five whys",
+      "source": "probe",
+      "formula": "min(10, 2 x documented rungs + 1 x labelled inferred rungs), from scripts/whys-probe-check.ts",
+      "anchors": {
+        "10": "Five documented rungs across at least two sites, each quote found verbatim in its page, and an open landing.",
+        "7": "Three documented rungs plus labelled inferred ones that reach five, landing open.",
+        "4": "Two documented rungs; the ladder stops before the money or the mechanism.",
+        "1": "No rung survives its source."
+      }
+    },
+    {
+      "id": "fit",
+      "label": "On the beat, with its economics",
+      "source": "deterministic",
+      "reads": ["config/beat.json focus_sectors", "config/beat.json economics_keywords"],
+      "anchors": {
+        "10": "A focus-sector keyword and an economics keyword or money figure in the topic itself.",
+        "7": "A focus-sector keyword in the topic.",
+        "4": "A focus-sector keyword only in the body.",
+        "1": "No focus-sector keyword anywhere (the avoid list is the floor's, not a score)."
+      }
+    },
+    {
+      "id": "named_thing",
+      "label": "One named, concrete thing",
+      "source": "deterministic",
+      "anchors": {
+        "10": "The hook names a concrete product, work, deal or person, plus a number or a twist.",
+        "7": "Named and concrete, with a number or twist in the body only.",
+        "4": "Named, but no number and no twist.",
+        "1": "Abstract framing with nothing named (the losing pattern in growth_evidence)."
+      }
+    },
+    {
+      "id": "fun_consume",
+      "label": "Fun to read or watch",
+      "source": "blind_judge",
+      "anchors": {
+        "10": "A stranger would send it to a friend before finishing it.",
+        "7": "Holds a busy reader to the end, with one moment worth repeating.",
+        "4": "Useful but flat; read once and forgotten.",
+        "1": "A chore to get through."
+      }
+    },
+    {
+      "id": "fun_produce",
+      "label": "Fun to make",
+      "source": "blind_judge",
+      "reads": ["format_catalogue", "growth_evidence"],
+      "anchors": {
+        "10": "A format in the catalogue fits it, with an on-screen proof object and a show moment the growth evidence says holds people.",
+        "7": "A catalogue format fits and there is one thing to show, not just say.",
+        "4": "It can be made, but only as a talking head over stills.",
+        "1": "A talking-head summary of an abstraction; nothing to show."
+      }
+    },
+    {
+      "id": "uplift",
+      "label": "Uplift",
+      "source": "blind_judge",
+      "types": ["goodnews"],
+      "anchors": {
+        "10": "Clearly makes named people smarter, better, happier or more successful, at scale (config/good-news.json bar.helps).",
+        "7": "Clearly helps a named group, at a modest scale.",
+        "4": "Helps, but the people helped are vague.",
+        "1": "Not good news for anyone in particular."
+      }
+    },
+    {
+      "id": "wonder",
+      "label": "Wonder",
+      "source": "humour",
+      "types": ["goodnews"],
+      "anchors": {
+        "10": "Reads as delight: a reader says out loud that they did not know that was possible.",
+        "7": "A clear surprise in the facts.",
+        "4": "Pleasant, expected.",
+        "1": "Routine."
+      }
+    },
+    {
+      "id": "evidence",
+      "label": "Evidence",
+      "source": "deterministic",
+      "types": ["goodnews"],
+      "anchors": {
+        "10": "Every story has a primary source from the actor itself or a peer-reviewed paper, dated inside the window.",
+        "7": "Every story has a primary source; one is undated.",
+        "4": "Some stories rest on a secondary report.",
+        "1": "Mostly secondary or unsourced."
+      }
+    },
+    {
+      "id": "utility",
+      "label": "Useful today",
+      "source": "blind_judge",
+      "types": ["explainer"],
+      "anchors": {
+        "10": "A reader in the sectors can do the thing today, with steps checked on the vendor's own documents.",
+        "7": "Usable this week with one sign-up or setting.",
+        "4": "Interesting but needs tools the reader does not have.",
+        "1": "Nothing to do with it."
+      }
+    },
+    {
+      "id": "mechanism",
+      "label": "How it works, made clear",
+      "source": "probe",
+      "types": ["explainer"],
+      "anchors": {
+        "10": "Three documented rungs, at least one a mechanism rung, explaining how it works in plain words.",
+        "7": "One documented mechanism rung, clearly put.",
+        "4": "The mechanism is asserted, not shown.",
+        "1": "No mechanism given."
+      }
+    },
+    {
+      "id": "sourcing",
+      "label": "Primary sourcing",
+      "source": "deterministic",
+      "types": ["edition_item"],
+      "anchors": {
+        "10": "The actor's own domain or a filing, plus an independent second source.",
+        "7": "The actor's own domain or a filing.",
+        "4": "A reputable secondary report that links the primary.",
+        "1": "Aggregator or unsourced."
+      }
+    },
+    {
+      "id": "freshness",
+      "label": "Freshness",
+      "source": "deterministic",
+      "types": ["edition_item"],
+      "anchors": {
+        "10": "Dated inside the edition week and first reported this week.",
+        "7": "Dated inside the edition week.",
+        "4": "Last week, with a new development this week.",
+        "1": "Older than two weeks."
+      }
+    }
+  ],
+  "checks": {
+    "probe_documented": "Documented rungs from scripts/whys-probe-check.ts (quote verbatim in the cached page).",
+    "probe_rungs": "Documented plus labelled inferred rungs.",
+    "landing_ok": "The probe's landing is an open question with no landingVetoes (packages/contracts/src/whys.ts).",
+    "primary_sources": "Primary sources as config primary_sources defines them: the actor's own site, a filing or official data host, or where the fact was first reported (first_reported, or a source of kind original), never an aggregator on never_primary.",
+    "sound_angle": "At least one angle passed the soundness gate (angle.soundness).",
+    "money_figure_sourced": "A money figure (config/beat.json economics_keywords figure_pattern) quoted verbatim in the sourced fact.",
+    "mechanism_rungs": "Documented probe rungs with mechanism_type set.",
+    "counter_rungs": "Documented probe rungs whose counter is non-empty: a claim set against the evidence.",
+    "comic_reading": "The humour engine's comic_reading on the plain fact or the chosen line.",
+    "needs_explaining": "The humour engine needs more than one cultural or topical jump, or has missing context.",
+    "template_ok": "idea_checks.template_problems is empty and the captions pass the kill list.",
+    "goodnews_checks": "idea_checks.goodnews_findings finds nothing on the option.",
+    "goodnews_sector_share": "The share of a carousel's stories whose own words (headline, title, what, story, hook; never who it helps) carry a focus-sector keyword or named entity (story_score.goodnews_sector_share); null with no stories.",
+    "carousel_format": "idea_checks.carousel_format_findings finds nothing on a carousel option (config/carousel-format.json); null when the option is not a carousel.",
+    "steps_verifiable": "Every step in the option's steps ([{text, checked: <https vendor document>}]) is checked on the vendor's own documents; null when the option gives no steps.",
+    "primary_source_own_domain": "The primary source is the actor's own domain or a filing.",
+    "in_edition_week": "Dated inside the edition week."
+  },
+  "types": {
+    "hero_mon": {
+      "label": "Monday hero, follow.the.money",
+      "weights": {"whys": 2, "scale": 2, "unique_angle": 1.5, "absurdity_humour": 1.2, "fun_consume": 1, "fun_produce": 0.8, "fit": 0.8, "named_thing": 0.7},
+      "floors": [
+        {"check": "money_figure_sourced", "op": "==", "value": true, "reason": "a Monday follows the money: it needs a sourced money figure", "ruling": "Krish, 2026-11-24: \"we can still keep a focus on the economics of AI but in these focus sectors\" (config/beat.json his_words)"}
+      ]
+    },
+    "hero_wed": {
+      "label": "Wednesday hero, under.the.hood",
+      "weights": {"whys": 2, "scale": 2, "unique_angle": 1.5, "absurdity_humour": 1.2, "fun_consume": 1, "fun_produce": 0.8, "fit": 0.8, "named_thing": 0.7},
+      "floors": [
+        {"check": "mechanism_rungs", "op": ">=", "value": 1, "reason": "a Wednesday shows how it works: at least one documented mechanism rung", "ruling": "Krish, 2026-11-24: \"the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores\" (config/floor-rulings.json)"}
+      ]
+    },
+    "hero_fri": {
+      "label": "Friday hero, mind.the.gap",
+      "weights": {"whys": 2, "scale": 2, "unique_angle": 1.5, "absurdity_humour": 1.2, "fun_consume": 1, "fun_produce": 0.8, "fit": 0.8, "named_thing": 0.7},
+      "floors": [
+        {"check": "counter_rungs", "op": ">=", "value": 1, "reason": "a Friday sets a claim against the evidence: at least one rung with a counter", "failure": "packaging-loses-the-story"}
+      ]
+    },
+    "offday_short": {
+      "label": "Off-day short (Tuesday and Thursday video)",
+      "weights": {"absurdity_humour": 2.5, "fun_consume": 2, "named_thing": 1.5, "fun_produce": 1.5, "unique_angle": 1, "fit": 1, "scale": 0.5, "whys": 0},
+      "floors": [
+        {"check": "comic_reading", "op": "in", "value": ["supported", "ambiguous"], "reason": "a short leads on humour the engine can read", "failure": "wed18-not-funny-not-codex"},
+        {"check": "needs_explaining", "op": "==", "value": false, "reason": "a short's joke never needs explaining", "failure": "script-line-he-could-not-narrate"},
+        {"check": "probe_documented", "op": ">=", "value": 1, "reason": "a short rests on at least one documented why", "ruling": "Krish, 2026-11-24: \"the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores\" (config/floor-rulings.json)"},
+        {"axis": "fit", "op": ">=", "value": 4, "reason": "a short is on the beat", "ruling": "Krish, 2026-11-25: \"All of these with the explicit repositioning and narrower focus in to the creative, arts, music, entertainment, media and sports industries\"; and Krish, 2026-11-26 (ruling offday_beat): \"Make sure all the good news suggestions and meme suggestions are also aligned to the new positioning, as well as the carousels\""}
+      ]
+    },
+    "offday_meme": {
+      "label": "Off-day meme template",
+      "weights": {"absurdity_humour": 3.5, "fun_consume": 2, "unique_angle": 1.5, "named_thing": 1, "fun_produce": 1, "fit": 1},
+      "floors": [
+        {"check": "comic_reading", "op": "in", "value": ["supported"], "reason": "a meme's humour reads as supported", "failure": "wed18-not-funny-not-codex"},
+        {"check": "needs_explaining", "op": "==", "value": false, "reason": "a meme never needs explaining", "failure": "script-line-he-could-not-narrate"},
+        {"check": "template_ok", "op": "==", "value": true, "reason": "a template is whole and its captions pass the kill list", "failure": "ideas-board-repeats-work-and-drops-templates"},
+        {"axis": "fit", "op": ">=", "value": 4, "reason": "a meme is on the beat", "ruling": "Krish, 2026-11-25: \"All of these with the explicit repositioning and narrower focus in to the creative, arts, music, entertainment, media and sports industries\"; and Krish, 2026-11-26 (ruling offday_beat): \"Make sure all the good news suggestions and meme suggestions are also aligned to the new positioning, as well as the carousels\""}
+      ]
+    },
+    "goodnews": {
+      "label": "Saturday good news carousel",
+      "weights": {"uplift": 2.5, "named_thing": 1.5, "scale": 1.5, "wonder": 1.5, "fun_produce": 1, "fit": 1, "evidence": 1},
+      "floors": [
+        {"check": "goodnews_checks", "op": "==", "value": true, "reason": "the existing good-news checks stay the floor (config/good-news.json)", "failure": "saturday-good-news-not-good-news"},
+        {"check": "goodnews_sector_share", "op": ">=", "value": 0.5, "reason": "at least half a good-news carousel's stories are in a focus sector", "ruling": "Krish, 2026-11-25: \"All of these with the explicit repositioning and narrower focus in to the creative, arts, music, entertainment, media and sports industries\""},
+        {"axis": "fit", "op": ">=", "value": 4, "reason": "the good news is people in the focus sectors doing, earning or making more with AI (ruling offday_beat)", "ruling": "Krish, 2026-11-26 (ruling offday_beat): \"Make sure all the good news suggestions and meme suggestions are also aligned to the new positioning, as well as the carousels\""},
+        {"check": "carousel_format", "op": "==", "value": true, "if_read": true, "reason": "a carousel option holds the 3-second carousel format (config/carousel-format.json; ruling carousel_format_enforced)", "ruling": "Krish, 2026-11-26 (ruling carousel_format_enforced): \"Tell the Content-engine story intelligence for makeyourmindup v5 session that it is to enforce carousel formatting.\""}
+      ]
+    },
+    "explainer": {
+      "label": "Explainer or how-to (an off-day option with aim utility)",
+      "weights": {"utility": 2.5, "mechanism": 1.5, "named_thing": 1.5, "fun_consume": 1.5, "fun_produce": 1, "fit": 1, "absurdity_humour": 1},
+      "floors": [
+        {"check": "steps_verifiable", "op": "==", "value": true, "if_read": true, "hard": false, "reason": "every step is checked on the vendor's own documents", "unruled": "No ruling or recorded failure names this yet, so it is a note until one does (tests/story_floor_rules_test.py)."},
+        {"axis": "fit", "op": ">=", "value": 4, "reason": "an off-day carousel, tip or how-to is for the reader's work: a focus-sector word in what it says (ruling offday_beat)", "ruling": "Krish, 2026-11-26 (ruling offday_beat): \"Make sure all the good news suggestions and meme suggestions are also aligned to the new positioning, as well as the carousels\""},
+        {"check": "carousel_format", "op": "==", "value": true, "if_read": true, "reason": "a carousel option holds the 3-second carousel format (config/carousel-format.json; ruling carousel_format_enforced)", "ruling": "Krish, 2026-11-26 (ruling carousel_format_enforced): \"Tell the Content-engine story intelligence for makeyourmindup v5 session that it is to enforce carousel formatting.\""}
+      ]
+    },
+    "edition_item": {
+      "label": "Weekly edition news item (the adapter for PR 980; that branch is not touched from here)",
+      "weights": {"scale": 3, "sourcing": 2, "fit": 1.5, "named_thing": 1, "absurdity_humour": 1, "unique_angle": 1, "freshness": 0.5},
+      "floors": [
+        {"check": "primary_source_own_domain", "op": "==", "value": true, "reason": "an edition item rests on the actor's own domain or a filing", "ruling": "Krish, 2026-11-26: \"I want a high-quality flexible engine that has learned from all its past mistakes and is upgraded now.\""},
+        {"check": "in_edition_week", "op": "==", "value": true, "reason": "an edition item is dated inside the edition week", "ruling": "Krish, 2026-11-02: \"find the actual good news on Sunday ... so that the news items are fresh\" (docs/CADENCE.md)"},
+        {"axis": "fit", "op": ">=", "value": 4, "reason": "an edition item is on the beat", "ruling": "Krish, 2026-11-26, approving the daily hub: \"just keep it focused on the subsectors\" (content-engine #982, the weekly edition reading it)"}
+      ]
+    },
+    "wildcard": {
+      "label": "The day's wildcard on a Monday, Wednesday or Friday (an option carrying wildcard; ruling wildcard)",
+      "weights": {"unique_angle": 2.5, "absurdity_humour": 2, "whys": 1.5, "scale": 1, "fun_consume": 1, "fit": 0.8, "named_thing": 0.6, "fun_produce": 0.6},
+      "floors": [
+        {"check": "sound_angle", "op": "==", "value": true, "reason": "truth: a wildcard's angle rests on its sourced fact; strange never adds a detail the source does not give", "ruling": "Krish, 2026-11-26 (ruling wildcard): \"Just make sure my Monday, Wednesday, and Friday stories: there's always one completely divergent, strange, obscure, or unexpected story suggestion that I could pick from.\""},
+        {"check": "primary_sources", "op": ">=", "value": 1, "reason": "sources: a wildcard rests on at least one primary source", "ruling": "Krish, 2026-11-26 (ruling wildcard): \"Just make sure my Monday, Wednesday, and Friday stories: there's always one completely divergent, strange, obscure, or unexpected story suggestion that I could pick from.\""},
+        {"axis": "fit", "op": ">=", "value": 4, "reason": "beat: a wildcard is in a focus sector, never off the beat for the sake of strangeness", "ruling": "Krish, 2026-11-26 (ruling wildcard): \"Just make sure my Monday, Wednesday, and Friday stories: there's always one completely divergent, strange, obscure, or unexpected story suggestion that I could pick from.\""},
+        {"check": "probe_documented", "op": ">=", "value": 3, "reason": "whys: a wildcard holds at least three documented whys before he picks", "ruling": "Krish, 2026-11-26 (ruling wildcard): \"Just make sure my Monday, Wednesday, and Friday stories: there's always one completely divergent, strange, obscure, or unexpected story suggestion that I could pick from.\""}
+      ]
+    }
+  },
+  "floor_rows": "A floor is hard unless it says hard false: a hard floor that fails puts the option last and fails the Sunday gate (story_floor). A floor marked hard false is a note: reported beside the score (story_score.notes) and in the Sunday summary, never failing the gate or moving the order. Every hard floor names its source: a ruling (his words and the date) or a failure (an id in config/failures.json), and tests/story_floor_rules_test.py refuses a hard floor without one (ruling floors_honest_and_hard). Each hard floor is honest: it cites its source, passes on a realistic, honestly built board, and cannot be met by adding words without the fact changing (the fit axis reads only the sentence that carries the fact, config fit; a primary source is where the fact was first reported, never an aggregator). The wildcard's four floors (truth, sources, beat, whys) are hard by ruling wildcard (Krish, 2026-11-26), so a strange but thin story cannot hide behind the label; it has no series floor. A floor with no source yet says unruled and stays a note. if_read: a floor whose value is not there (an explainer with no steps) is not read, never failed.",
+  "hero_floors": {
+    "types": ["hero_mon", "hero_wed", "hero_fri"],
+    "floors": [
+      {"check": "probe_documented", "op": ">=", "value": 3, "reason": "a hero holds at least three documented whys before he picks", "ruling": "Krish, 2026-11-24: \"the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores\" (config/floor-rulings.json)"},
+      {"check": "probe_rungs", "op": ">=", "value": 5, "reason": "a hero reaches five whys, documented plus labelled inferred", "ruling": "Krish, 2026-11-24: \"the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores\" (config/floor-rulings.json)"},
+      {"check": "landing_ok", "op": "==", "value": true, "reason": "a hero's ladder lands on an open question, no landing veto", "ruling": "Krish, 2026-11-24: \"the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores\" (config/floor-rulings.json)"},
+      {"axis": "fit", "op": ">=", "value": 7, "reason": "a hero's topic is in a focus sector", "wildcard": "wildcard_fit_min", "wildcard_reason": "a wildcard hero is at least near the beat", "ruling": "Krish, 2026-11-26: \"I want a high-quality flexible engine that has learned from all its past mistakes and is upgraded now.\" Of 26 hero options on the 16 and 23 Nov boards, none was in the creative or sports sectors."},
+      {"axis": "named_thing", "op": ">=", "value": 5, "reason": "a hero names one concrete thing", "ruling": "Krish, 2026-11-16: \"apply 1 to 6 from the next piece you make this week\" (learning audience-one-concrete-thing: one named, concrete thing)"},
+      {"check": "primary_sources", "op": ">=", "value": 1, "reason": "a hero has at least one primary source", "ruling": "Krish, 2026-11-26: \"I want a high-quality flexible engine that has learned from all its past mistakes and is upgraded now.\" The old definition failed 17 of 25 real heroes; primary is now defined properly (primary_sources)."},
+      {"check": "sound_angle", "op": "==", "value": true, "reason": "a hero has at least one sound angle", "failure": "packaging-loses-the-story"}
+    ],
+    "wildcard_fit_min": 4,
+    "wildcard_note": "The wildcard option (option.wildcard true: the protected strange-story slot another branch is building) needs only fit 4, not 7; every other floor stands.",
+    "thin_week": {
+      "_about": "Never an empty board, never a relaxed floor. When fewer than min_passing options for a hero day pass every hard floor after the gather and one re-gather (ideas.json thin_week.<day>.regathered true, written by the session after its second gather), the day may carry thin_min options that each pass every floor, and every option's card says so (story_score.thin_week, written by order). The floors are never relaxed.",
+      "min_passing": 3,
+      "thin_min": 2,
+      "says": "a thin week: only two options passed every floor after a second gather"
+    }
+  },
+  "type_rules": {
+    "_about": "Which type an option is scored as. First match wins.",
+    "rules": [
+      {"when": "offday template (idea_checks.is_template)", "type": "offday_meme"},
+      {"when": "weekly good news, or a Saturday option", "type": "goodnews"},
+      {"when": "off-day option with aim utility", "type": "explainer"},
+      {"when": "a Monday, Wednesday or Friday option carrying wildcard", "type": "wildcard"},
+      {"when": "day mon", "type": "hero_mon"},
+      {"when": "day wed", "type": "hero_wed"},
+      {"when": "day fri", "type": "hero_fri"},
+      {"when": "any other off-day option", "type": "offday_short"}
+    ],
+    "days": {"mon": "hero_mon", "wed": "hero_wed", "fri": "hero_fri", "tue": "offday_short", "thu": "offday_short", "sat": "goodnews"}
+  },
+  "humour_map": {
+    "_about": "The humour engine's labels as a 0-10 score (humour_check.py labels). An unread humour axis is null: it abstains, the option is marked humour unread, and it is never rank 1 on a short or meme day. An unavailable read is never a pass.",
+    "base": {"supported": 6, "ambiguous": 3, "not_supported_attempted": 1, "not_attempted": 0},
+    "needs_explaining_cap": 2,
+    "mechanism_bonus": {
+      "2": ["absurd_reasoning", "self_defeating_logic", "reversal", "irony"],
+      "1": ["incongruity", "misdirection", "literalisation", "understatement", "personification"],
+      "0": ["exaggeration", "sarcasm", "ambiguity", "callback"]
+    },
+    "cap": 10,
+    "unavailable": null,
+    "unread_never_first_on": ["offday_short", "offday_meme"]
+  },
+  "absurd_mechanisms": ["absurd_reasoning", "self_defeating_logic", "reversal", "incongruity", "irony"],
+  "angle": {
+    "lenses": [
+      {"id": "series", "brief": "the series lens: the money (Monday), how it works (Wednesday), the claim against the evidence (Friday)"},
+      {"id": "funniest_true", "brief": "the funniest true reading of the sourced facts, never a joke that costs credibility"},
+      {"id": "most_absurd_true", "brief": "the most absurd true detail in the sources"}
+    ],
+    "divergent": {"op": "provoke", "lane": "angles", "count": 3, "temperament": {"hero": "balanced", "offday": "wild"}, "per_hero_day": 2, "cliches": "divergent.worn(sources)",
+      "problem": "Angles on one true story for {audience}. Each angle rests on a fact in the story as quoted below; never add a detail the story does not give. The story: {what}",
+      "score_problem": "Angles on true stories for {audience}. Which is the most original, useful and specific way to tell each story, judged on the words alone?"},
+    "score_weights": {"originality": 0.35, "usefulness": 0.25, "specificity": 0.2, "humour": 0.2},
+    "zero_on_status": ["rejected_archive", "rejected_gravity"],
+    "humour_margin": 1.0,
+    "humour_margin_note": "On the 0-10 angle score: the funniest or most absurd true angle (comic_reading supported, mechanism in absurd_mechanisms) wins over the best angle only when sound and within this margin.",
+    "soundness": {
+      "rests_on_verbatim": true,
+      "comic_reading": ["supported"],
+      "needs_explaining": false,
+      "target_not_individual": true,
+      "individual_targets": ["individual", "named_individual", "person", "private_individual"],
+      "usefulness_min": 5,
+      "specificity_min": 6,
+      "first_why_climbs": true,
+      "clean_of": ["kill list", "config/rejected-lines.json", "copy lint"]
+    }
+  },
+  "close": {
+    "margin": 5,
+    "margin_note": "Of 100: a slot's top two within this are a close call.",
+    "fork": {"within": 8, "lead": 3, "fun_axes": ["absurdity_humour"], "weight_axes": ["scale", "whys"]},
+    "fork_note": "Also close: both within 8 and one leads on absurdity_humour by 3 or more while the other leads on scale or whys by 3 or more."
+  },
+  "council": {
+    "max_per_week": 5,
+    "seats": ["Offer", "Attention", "Experience", "Scale", "Distribution"],
+    "chair": true,
+    "seat_line": "Score n/10 (fact|assumption)",
+    "barred_says": "close call, your pick",
+    "cleared": false,
+    "barred_note": "The ai-harness council's When it runs section admits Krish's ask or the strategist only, so until a ruling adds this caller a close call shows as close call, your pick, never a silent pass (commit 0 readiness)."
+  },
+  "ties": {"his_first": "equal totals only", "his_kinds": ["his", "inspo"]},
+  "briefs": {
+    "_about": "The words of the briefs the blind judges and the council read (story_score.py brief and council-brief). Internal, never published.",
+    "judge": [
+      "You are a blind judge. You see one story at a time and nothing about who suggested it, who will pick it or what anyone said about it.",
+      "Score each axis named under a story from 0 to 10 against its anchors. Use the anchors as the scale: 10, 7, 4 and 1 are described; anything between is fine.",
+      "Reply with one line per axis, exactly: <axis>: <n>/10 because <the evidence in the story that earns it>.",
+      "Put the story's key on its own line before its scores, as: ## <key>.",
+      "Judge only what the story says. A number with no evidence after because is not counted. British spelling, no em dashes, no exclamation marks."
+    ],
+    "fun_produce": "For fun_produce, these are the formats the channel can make (catalogue) and what held people on the channels (growth evidence). Judge whether a format fits and whether there is something to show, not say.",
+    "council": [
+      "Two story options, A and B, for the same slot. They scored within a close margin. Only the facts on record are below: nothing about who suggested either, nor any earlier choice.",
+      "Run every seat: Offer, Attention, Experience, Scale, Distribution. For each seat write one line: <Seat>: A Score <n>/10 (fact|assumption); B Score <n>/10 (fact|assumption).",
+      "Then the chair's call on its own line: Chair: A, B or unknown, because <the reason>.",
+      "British spelling, no em dashes, no exclamation marks."
+    ]
+  },
+  "budget_usd": 10,
+  "unit_costs": {
+    "_about": "Dollars reserved in the week's ledger before each call (files.ledger). After a served divergent call the reservation is settled to the metered cost: the route's own cost figure when its answer gives one, else the chain's change over the call (divergent.chain_week) when that is more than the reservation, never less, since the chain may lag; with neither, the reservation stands and the call's metered field says so. A humour read keeps its reservation: the humour engine's answer names no cost. A settled cost over its reservation counts at once, so the next call is refused when it leaves no room. score_judge is the route's up-front estimate ($0.10) with headroom for up to 4 model calls at the model's price (commit 0 readiness, control-center api/_divergent.ts).",
+    "provoke": 0.15,
+    "score_judge": 0.3,
+    "score_free": 0,
+    "humour_read": 0.005,
+    "council_read": 0.25
+  },
+  "spend": {
+    "divergent_ops_per_day": 18,
+    "usd_per_day": 5,
+    "chain_week_usd": 15,
+    "note": "Under the route's 20 quick ops and $5 a day, and the $15 weekly chain (config/chain-cap.json). The chain cap is checked first; over any cap the call is refused and the step is reported skipped, never passed."
+  },
+  "growth_evidence": {
+    "_about": "Performance data, not taste: what held people on the channels, read only from krishanraja/growth-makeyourmindup. Read by the fun_produce judge and the named_thing anchors.",
+    "source": {"repo": "krishanraja/growth-makeyourmindup", "path": "docs/reviews/2026-11-16-what-works.md", "blob_sha": "ce359aeb17ce8035e1d3646270ba5fb9eccfc331", "read_on": "2026-11-26", "window": "139 posts, 5 Oct to 14 Nov 2026"},
+    "rows": [
+      {"id": "named_then_money", "kind": "pattern", "line": "Open on one named, concrete thing (a product, a deal, a song, a refund), then follow the money or a surprise; the reader recognises it or could use it today."},
+      {"id": "higgsfield", "kind": "winner", "line": "Instagram video on Higgsfield, the $1B company, 8 Oct", "metric": "44.6 s average watch, 111 interactions per 1,000"},
+      {"id": "disney_founders", "kind": "winner", "line": "Google paid $2.7 billion for the founders and Disney paying for the rest, 9 Nov", "metric": "39.7 s average watch"},
+      {"id": "uk_number_two", "kind": "winner", "line": "The UK number two song that started as an AI demo, 11 Nov", "metric": "28.5 s average watch, 4 shares"},
+      {"id": "duet_first", "kind": "winner", "line": "A product that messages you first, 4 Nov", "metric": "124 interactions per 1,000 against a pooled channel rate of 33, 4 shares"},
+      {"id": "disney_character_ai", "kind": "winner", "line": "The Disney and Character.AI money story as a YouTube Short, 9 Nov: who got paid, named", "metric": "266 views, 24 times the channel median"},
+      {"id": "workplace_absurdity", "kind": "winner", "line": "Workplace absurdity on TikTok: big employers ranking staff by how much AI they used", "metric": "40 interactions per 1,000 against a channel rate of 7"},
+      {"id": "video_beats_stills", "kind": "format", "line": "Instagram video is the best organic format", "metric": "median exposure 116 for a video, 25 for a carousel, 23 for a single image; 9 of 10 organic shares"},
+      {"id": "abstract_loses", "kind": "loser", "line": "Abstract framing, the two-passports post", "metric": "17.5 s average watch, no shares"}
+    ]
+  },
+  "format_catalogue": {
+    "_about": "What the fun_produce judge may see of config/style-references.json: format and bank rows reduced to these fields only. His verdicts, his words, where a format came from, the recipes and his likes sheet are never sent; a format he marked not for us is removed by the floor first.",
+    "from": "config/style-references.json",
+    "format_fields": ["id", "name", "pitch", "fits", "modules"],
+    "bank_fields": ["id", "layer", "name", "how", "fits"],
+    "never": ["krish_verdict", "krish_said", "from", "evidence", "status", "what_i_like_sheet", "recipes", "references"]
+  },
+  "wildcard": {
+    "_about": "The day's wildcard (ruling wildcard, Krish, 2026-11-26). Every hero day the board shows carries at least min_per_day options with \"wildcard\": {\"kind\": one of kinds, \"why_unexpected\": one line of what makes it far from the obvious takes, \"divergent\": {\"run_id\", \"spark\"} when it came from the engine, \"distance\": what divergent.py distance recorded}. It is a real, dated, primary-sourced story on the beat and passes the fact gate, the floor, its own floors in types.wildcard and the refute pass like any option. The order may place it anywhere and never drops it; it need not beat the day's top score. Its distance is checked, never asserted: divergent.py distance scores it free (obvious given, no judge) against the day's other options and the worn ground; a status in divergent_statuses is divergent, the engine's own spark in the archive (own_spark) is expected, anything else refuses the board (code wildcard, from the from date); not served is recorded as skipped and the session's why_unexpected stands, said in the run summary. The board shows it by board_prefix at the start of its pitch question (it passes idea_checks.question_problems).",
+    "days": ["mon", "wed", "fri"],
+    "min_per_day": 1,
+    "kinds": ["divergent", "strange", "obscure", "unexpected"],
+    "why_max_chars": 240,
+    "temperament": "wild",
+    "board_prefix": "Wildcard: ",
+    "distance": {
+      "divergent_statuses": ["accepted"],
+      "own_spark": "rejected_archive",
+      "skipped": "skipped: not served",
+      "problem": "The {day} story for a publication on {about}, for the week of {week}: an idea far from the obvious takes on it"
+    }
+  },
+  "edition": {"min": 6, "max": 10, "topics": [2, 4], "per_topic": 3},
+  "files": {
+    "_about": "Where the story score keeps its working files, inside docs/plans/<Monday>-week/. The spend ledger is under the gitignored .cache/, one file per week ({week} is its Monday), so budget_usd and --budget-usd cap a week's run, not every week ever run; usd_per_day and divergent_ops_per_day are read from the same file. An explicit --ledger (the blind proof's .cache/proof/story-engine-v5/spend.jsonl) is read whole: the proof's $10 is for the whole proof.",
+    "dir": "story",
+    "scores": "scores.json",
+    "angles": "story/angles.json",
+    "reads": "story/reads.json",
+    "judged": "story/judged.json",
+    "probes": "story/probes.json",
+    "council": "story/council.json",
+    "wildcards": "story/wildcards.json",
+    "ledger": ".cache/story-score/{week}.jsonl"
+  }
+}

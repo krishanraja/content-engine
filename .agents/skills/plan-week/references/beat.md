@@ -14,3 +14,10 @@ music and creator tech, the economics of AI inside them, with a positive
 spin. Not governance, regulation, security, privacy or breaches, and not
 enterprise productivity with no creative angle: `board_feed.py gate` refuses
 such an option (`off_beat`) from the 30 Nov board.
+
+**The off days are the reader's world too** (Krish, 2026-11-26: "Make sure all the good news suggestions and meme
+suggestions are also aligned to the new positioning, as well as the carousels."). The good news, the memes and meme
+templates, and every off-day carousel, tip, how-to and short are written for the reader in `config/beat.json` `reader`,
+by the lines in `config/beat.json` `offdays` (`references/offdays.md`, "Every off day is the reader's world"). From the
+story score's board `board_feed.py gate` refuses one with no focus-sector word, an office one as such, and a good-news
+story outside the focus sectors (`off_beat`, `idea_checks.offday_beat_findings`).

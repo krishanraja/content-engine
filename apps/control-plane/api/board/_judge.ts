@@ -6,11 +6,12 @@ import { ROSTER_VERSION } from '../_judges/roster.js'
 import { copyLint, copyLintReason } from '../_copyLint.js'
 import { houseRulesBlock } from '../_houseRules.js'
 
-// content-engine's 10/10 judges on every Growth carousel and Short (Ruling, Krish, 2026-11-12: "Judge them; count
-// passes. Every Growth carousel goes through the same 10/10 judges, and each one that passes and goes live counts.").
+// content-engine's 10/10 judges on every carousel and Short (Ruling, Krish, 2026-11-12: "Judge them; count passes.
+// Every Growth carousel goes through the same 10/10 judges, and each one that passes and goes live counts.").
 //
-// Growth asks before a carousel or a Short is saved or handed off (growth-makeyourmindup engine/run/judges.py), on its
-// own board key, at POST /api/board/<Monday>/judge:
+// content-engine makes every asset (Ruling, Krish, 2026-11-26), so its make flow asks before a carousel or a Short is
+// handed to Growth (scripts/post-pack/judge_assets.py, on the engine operator's key, recorded as written by
+// content-engine); Growth keeps bind and live on its own key. Both reach POST /api/board/<Monday>/judge:
 //   {op: judge, item, format, channel, concept_id?, claim?, words, assets: [{name, sha256}]}
 //       the draft judges' panel (the same roster, rubric and READY_AT bar a draft is judged on) reads the post's exact
 //       words with what it carries; a copy-lint hit fails it before any model is paid. It passes only when the panel
@@ -38,7 +39,7 @@ import { houseRulesBlock } from '../_houseRules.js'
 // served again (BAR, in the recorded roster_version).
 
 export const JUDGED_FORMATS = ['carousel', 'short-video'] as const
-/** Panels a day: Growth makes three or four posts a day, about half of them carousels or Shorts. */
+/** Panels a day: three or four posts go out a day, about half of them carousels or Shorts. */
 export const DAILY_CAP = 40
 /** The bar a recorded verdict was judged to; a verdict to an older bar is judged again, never served. */
 export const BAR = 'every-judge-passes-2026-11-15'
@@ -108,7 +109,7 @@ export function postArtifact(b: Body): string {
       : `Pictures: ${assets.map(a => a.name).join(', ') || 'none'}`].filter(Boolean).join('\n')
 }
 
-const CONTEXT = ['This is a derived post Growth made from a piece the publication already published: a carousel or a Short on',
+const CONTEXT = ['This is a derived post made from a piece the publication already published: a carousel or a Short on',
   'a social channel. Judge it as the publication\'s own post on that channel, to the same bar as any draft: would the',
   'reader stop, understand the one point, and want the full piece. You are shown its pictures: judge them as hard as the',
   'words. A carousel\'s first card must look like a front cover and nothing like the cards after it; every card after it',

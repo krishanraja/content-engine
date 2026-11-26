@@ -684,8 +684,8 @@ python scripts/quick-edit/make.py WORK/kit/short.json --out WORK/short --only 9x
   Neither ever blocks a render.
 - **No hit sounds yet.** No sound is approved, so add none to a cut
   today. The route follows Krish's pick of 2026-10-29, "Only the big
-  moment": one sound under a piece's biggest moment (a low thud as BANKRUPT
-  slams in, say) and nothing anywhere else, chosen from a small set played
+  moment": one sound under a piece's biggest moment
+  and nothing anywhere else, chosen from a small set played
   to him first (`ve sfx audition`, from `config/sfx-candidates.json`), and
   used only once he approves it by ear (`config/sfx-approved.json`, empty
   today). make.py refuses any `sfx` row in a config that is not in that
@@ -904,9 +904,9 @@ Read `.agents/skills/produce-video/references/opening.md` before you plan a cut'
 
 ## Walls
 
-- Nothing here posts, publishes, spends or deletes, and nothing is sent to
-  anyone. `send.py` only files work in Krish's own library, by his standing
-  instruction.
+- Nothing here posts, publishes, spends, deletes or sends to anyone;
+  `send.py` only files in Krish's library, by his standing instruction.
+- Stage 7: `.agents/skills/produce-video/references/cycle.md`.
 - No cut is finished, filed or recorded without its audio treatment and its
   one outro card, in both sizes, from a design Krish approved
   (`STORY_INTRO_OUTRO`, `config/story-intro-outro.json`): until then the

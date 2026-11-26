@@ -314,10 +314,28 @@ export function seriesOptions(i: ExtrasInputs, day: string, placed: boolean, onD
       : pressed ? { id: pressed, label: OUTCOMES[pressed], at: typeof press?.at === 'string' ? press.at : null, words: pressWords } : null
     // The plain question first (house rules STORY_ARC and BIG_PICTURE; the ideas quality plan, item 7), then the headline.
     const question = isObj(o.pitch) ? cut(o.pitch.question, 200) : ''
-    return { id: String(o.id || pick), doc_id: pick, title: question || headlineOf(story) || cut(o.so_what, 200), text: warned(o) + tickNote(o) + cut(o.so_what, 600),
+    return { id: String(o.id || pick), doc_id: pick, title: question || headlineOf(story) || cut(o.so_what, 200), text: warned(o) + closeCall(o) + thinWeek(o) + tickNote(o) + cut(o.so_what, 600),
       format: null, source: isObj(o.source) ? cut(o.source.label, 200) || null : typeof o.source === 'string' ? cut(o.source, 200) : null,
       status, said: said ? cut(said, 600) : null, actions, outcome, ...(held ? { held } : {}) }
   })
+}
+
+/** The story score's close call on an option (ideas.json `story_score.close_call`, written by story_score.py order when
+ *  a slot's top two scored within its margin and no council read decided them; config/story-score.json council): said
+ *  first, so a close call is his pick and never a silent pass. Empty when there is none. */
+export function closeCall(o: Body): string {
+  const s = isObj(o.story_score) ? o.story_score : null
+  const says = s && typeof s.close_call === 'string' ? s.close_call.trim().replace(/[.\s]+$/, '') : ''
+  return says ? `${says[0]!.toUpperCase()}${says.slice(1)}. ` : ''
+}
+
+/** The thin-week line on a hero option (ideas.json `story_score.thin_week`, written by story_score.py order when only two
+ *  options on the day passed every floor after one re-gather; config/story-score.json hero_floors.thin_week): said on
+ *  the card, plainly, so a short day is never silent. The floors are never relaxed. Empty when there is none. */
+export function thinWeek(o: Body): string {
+  const s = isObj(o.story_score) ? o.story_score : null
+  const says = s && typeof s.thin_week === 'string' ? s.thin_week.trim().replace(/[.\s]+$/, '') : ''
+  return says ? `${says[0]!.toUpperCase()}${says.slice(1)}. ` : ''
 }
 
 /** The warning line on an option he warned off in another press (ideas.json `warning`, his words exactly, checked by
@@ -420,7 +438,7 @@ export function offdayList(ideas: Body | null, queue: ExtrasInputs['queue'], day
 
 /** The week's off-day options for a day, each as the full board shows it, with the five presses on its idea saved to the
  *  same queue/off-<day>-<id> record the full board writes (week_board.py; the desk's ReviewCard). Approve puts it on the
- *  publish board for its day; Growth makes it. An option a session wrote as decided is held until he presses: his words
+ *  publish board for its day; content-engine makes it and Growth posts it. An option a session wrote as decided is held until he presses: his words
  *  in a session are shown, never read as his press (Krish, 2026-11-11: only his Approved crosses). */
 export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
   // The day's options from the one place their day lives (_offdayItems.ts): the plan's and the approvals carried here
@@ -478,7 +496,7 @@ export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
     const twinWhere = twin ? (twin.date ? dateLabel(twin.date) : 'your Ideas for Later') : ''
     const approveIt = press('idea', 'approve', `Approve for ${dayShort(i.week, day)}`,
       twin ? `Approved. The one post moved here from ${twinWhere}; it is on the publish board for ${dayWords(i.week, day)} only.`
-        : `Approved. It is on the publish board for ${dayWords(i.week, day)}; Growth makes it.`, 'approved')
+        : `Approved. It is on the publish board for ${dayWords(i.week, day)}; content-engine makes it and Growth posts it.`, 'approved')
     if (twin) approveIt.goes = `Moves the one post here from ${twinWhere}, onto the publish board for ${dayWords(i.week, day)}. It is never on two days.`
     if (!approval || ideaOpen) {
       actions.push(
@@ -488,7 +506,7 @@ export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
         press('idea', 'trend', 'Save as a trend', 'Saved with its trend, for a wider piece.', 'trend'),
         press('idea', 'next_week', 'File for later', 'Filed for later. It comes back on a later ideas board.', 'filed'))
     } else if (s.direction_sha256 && (!direction || s.revised?.side === 'direction')) {
-      actions.push(press('direction', 'approve', 'Approve the direction', 'Approved. Growth makes it.'), press('direction', 'improve', 'Improve the direction', 'Saved. The revise run brings the new version back here.'),
+      actions.push(press('direction', 'approve', 'Approve the direction', 'Approved. content-engine makes it; Growth posts it.'), press('direction', 'improve', 'Improve the direction', 'Saved. The revise run brings the new version back here.'),
         press('direction', 'reject', 'Reject the direction', 'Rejected, with your reason.'))
     }
     const pitch = s.pitch ? [s.pitch.see, s.pitch.lands].filter(Boolean).join(' ') : ''
@@ -496,7 +514,7 @@ export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
     const said = !approval && decided ? `Said in a session, not pressed here: ${decided}` : approval ? approval.words || ownWords : ownWords
     const outcome = approval ? { id: 'approved' as const, label: approvedLabel(approval), at: approval.decided_at, words: approval.words }
       : pressed ? { id: pressed, label: OUTCOMES[pressed], at: typeof (idea as Body | null)?.at === 'string' ? String((idea as Body).at) : null, words: typeof idea?.words === 'string' ? idea.words : null } : null
-    const out: ViewOption = { id: s.id, doc_id: docId, title: s.hook || cut(s.copy, 200) || s.id, text: tickNote(o) + cut(pitch || s.copy, 600), format: s.format || null,
+    const out: ViewOption = { id: s.id, doc_id: docId, title: s.hook || cut(s.copy, 200) || s.id, text: closeCall(o) + tickNote(o) + cut(pitch || s.copy, 600), format: s.format || null,
       source: s.source || null, status, said, actions, outcome, ...(held ? { held } : {}), post: driveFolderIdOf(o.drive) ?? placed.row?.drive_folder ?? null }
     if (known) {
       out.item = { key: placed.key, version: placed.version, source: placed.source, state: placed.state, origin_week: placed.origin_week }

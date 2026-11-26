@@ -166,8 +166,40 @@ def off_face(video: str, pages: list, *, style: str = 'house', aspect: str = '9:
         if hits:
             on_face.append({'at_s': round(frame / fps, 2), 'text': page_text(page)[:40], 'caption': list(box),
                             'face': list(hits[0])})
-    return {'value': {'pages': len(pages), 'on_face': on_face[:12], 'count': len(on_face)}, 'target': target,
+    # An impact push grows his face on its frames (props.impact, velib/impact.py): every pushed frame is read, not one a
+    # page, so a caption the pushed face reaches is found (config/ve/impact-zoom.json qc.off_face_step_frames).
+    pushed = impact_frames(props, eligible)
+    for frame, page in pushed:
+        beat = next((b for b in (beats or []) if b['fromFrame'] <= frame < b['toFrame']), {})
+        if props is not None and props.get('captionTheme'):
+            from . import keepout  # noqa: PLC0415
+            box = tuple(keepout.caption_box(props, page, beat or {'layout': None}))
+        else:
+            box = caption_box(page, style, aspect, region, layout=beat.get('layout'),
+                              plate=(beat.get('plate') or {}).get('source'))
+        hits = [f for f in detector(grab(frame)) if overlap(box, grown(f))]
+        if hits:
+            on_face.append({'at_s': round(frame / fps, 2), 'text': page_text(page)[:40], 'caption': list(box),
+                            'face': list(hits[0]), 'impact': True})
+    return {'value': {'pages': len(pages), 'on_face': on_face[:12], 'count': len(on_face),
+                      **({'impact_frames': len(pushed)} if pushed else {})}, 'target': target,
             'pass': not on_face}
+
+
+def impact_frames(props: dict | None, pages: list) -> list[tuple[int, dict]]:
+    """(frame, page) for every frame of every impact push with a caption page on screen."""
+    hits = ((props or {}).get('impact') or {}).get('hits') or []
+    if not hits:
+        return []
+    from . import impact  # noqa: PLC0415
+    step = max(1, int(impact.load()['qc']['off_face_step_frames']))
+    out = []
+    for hit in hits:
+        for frame in range(hit['fromFrame'], hit['toFrame'], step):
+            page = next((p for p in pages if p['fromFrame'] <= frame < p['toFrame']), None)
+            if page is not None:
+                out.append((frame, page))
+    return out
 
 
 # ---------------------------------------------------------------- his whole head inside the camera band

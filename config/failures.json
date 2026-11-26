@@ -2868,13 +2868,13 @@
         },
         {
           "file": "scripts/velib/cards.py",
-          "contains": "CAROUSEL_BODY_TYPE",
-          "how": "every carousel Codex card states the body face and bans the rejected one"
+          "contains": "CAROUSEL_RETIRED",
+          "how": "26 Nov 2026: no Codex card draws a carousel any more (Krish: enforce the carousel format); the locked v5 Library's templates fix the face, so ve card refuses the carousel kind and names scripts/carousel_make.py"
         },
         {
           "file": "tests/ve_cards_test.py",
-          "contains": "test_a_carousel_card_names_the_body_face_and_the_one_he_rejected",
-          "how": "the card text carries the rule"
+          "contains": "test_a_carousel_card_is_retired_for_the_library_route",
+          "how": "the retired carousel card refuses, so no card can name another face"
         },
         {
           "file": "docs/GROWTH-HANDOFF.md",
@@ -4725,6 +4725,52 @@
           "contains": "export const LEARNING_RULE",
           "how": "writeBack carries ROLES and LEARNING_RULE in every session prompt, and the board-sessions test fails if either is missing",
           "test": "npx vitest run tests/control-plane/board-sessions.test.ts"
+        }
+      ]
+    },
+    {
+      "id": "impact-zoom-too-aggressive",
+      "on": "2026-11-26",
+      "krish": "Can you make sure that on the most impactful words in any video, there's some form of camera zooming to emulate a world-class professional? Zoom for impact. We should bake in all the obvious edge cases and have it be classy and subtle rather than too aggressive. (26 Nov 2026)",
+      "what": "No ve cut pushed in on the words that carry the claim, and quick-edit's pivotal-line framing jumped to 82% of the frame (1.22x) with no ease.",
+      "symptom": "A talking-head cut held one framing through its biggest line, or snapped tight on it like a punch.",
+      "cause": "Emphasis only reached the captions; the only camera moves were the ingredient camera (which scales the graphics too, and whose punch the Library bans) and quick-edit's TIGHT window.",
+      "status": "guarded",
+      "mode": "motion",
+      "guard_level": "gate",
+      "surface": "ve compile, ve qc and quick-edit's episode framings",
+      "guards": [
+        {
+          "file": "scripts/velib/impact.py",
+          "contains": "def problems(",
+          "how": "compile plans the pushes from config/ve/impact-zoom.json and refuses props past the caps, the rate, the spacing or onto a banned beat; ve qc reports camera.impact",
+          "test": "python tests/ve_impact_test.py"
+        },
+        {
+          "file": "scripts/quick-edit/episode.py",
+          "contains": "IMPACT_TO = IMPACT",
+          "how": "the pivotal-line framing reads the same config and eases in and out; TIGHT is gone",
+          "test": "python scripts/quick-edit/episode.py --self-test"
+        }
+      ]
+    },
+    {
+      "id": "kill-list-windows-encoding",
+      "on": "2026-11-26",
+      "krish": "Not his words: found by the story engine v5 gap list (docs/proposals/2026-11-26-story-engine-gaps.md), which he approved as the plan on 26 Nov 2026; the kill list is makeyourmindup's, held to its vendored copy.",
+      "what": "On a Windows home computer the kill list passed words it should have vetoed: an em dash went through, and tests/idea_checks_test.py test_the_real_kill_list_runs failed there.",
+      "symptom": "idea_checks.kill_list_vetoes('My agent — again') returned no veto on Windows while it vetoed on Linux.",
+      "cause": "kill_list_vetoes ran node vendor/makeyourmindup/kill-list/kill-list.mjs with text=True and no encoding, so Python piped the words in the locale's code page and node read a mangled character, not an em dash.",
+      "status": "guarded",
+      "mode": "encoding",
+      "guard_level": "gate",
+      "surface": "the Sunday ideas gate (board_feed.py gate), the story floor and the captions checks, every caller of idea_checks.kill_list_vetoes",
+      "guards": [
+        {
+          "file": "scripts/post-pack/idea_checks.py",
+          "contains": "capture_output=True, text=True, encoding='utf-8'",
+          "how": "kill_list_vetoes passes encoding='utf-8' (errors='replace') to node, so the words reach the kill list as written on every machine (1c89d076)",
+          "test": "python3 tests/idea_checks_test.py TemplateTest.test_the_real_kill_list_runs"
         }
       ]
     }

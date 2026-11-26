@@ -26,7 +26,7 @@ format is refused before it renders. Only Krish changes the palette, and only in
 | The wide close | `statement_card`: from 26 Nov the Library's `video-wide-outro`: the four bars fill the frame and drop into the staircase, S3h lands, then the words; settled by 2.4 s, 6 s, held for YouTube's end screen. A cut dated before 26 Nov keeps the statement card it was signed with ("Built to help you decide.", masthead, days on a series day, Subscribe free, address) | ve `apps/renderer/src/engine/chrome/V5Outro.tsx`; the old card in `EndingBand.tsx` and `scripts/quick-edit/kit/endcard.html` (wide) |
 | The tall close | `statement_beat`: from 26 Nov the Library's `video-vertical-outro`, its 90 frames played inside the 2 s beat, settled by 1.33 s, inside the Library's content box x 145 to 935, y 87 to 1353. A cut dated before 26 Nov keeps the ink beat it was signed with, every word inside the tall core box x 120 to 820, y 330 to 1180 | ve `V5Outro.tsx`; its length `ENDING_FRAMES_BY_ASPECT` in `scripts/velib/compile.py`; the old beat in `EndingBand.tsx` (`ENDING_TIMING_TALL`) and `scripts/quick-edit/kit/endcard.html` (tall) |
 | The sting | Retired for good as an opening (Ruling, Krish, 2026-11-12: "Nothing before the hook, ever. Remove the sting exception for good."): no cut carries anything before its hook. From 23 to 25 Nov the same clips were the series close, retired on 26 Nov (above) | `config/intro-sting.json` (`retired` as an opening, `close.status` retired; the clips stay in the Drive brand kit, unused by any new cut) |
-| The carousel close | `house_close_slide`: the piece's takeaway, then "Follow for more" with the wordmark centred under it (Krish, 18 Nov) | krishanraja/growth-makeyourmindup `render/templates/carousel-close.html` |
+| The carousel close | `house_close_slide`: the v5 close (`config/carousel-format.json` `close`): the takeaway, the S3h wordmark and the site, never "Follow for more" (Krish, 26 Nov, carousel format; it supersedes the 18 Nov close) | the locked v5 Library's carousel close (`make_piece.py --set <set>`; `docs/CAROUSEL-STANDARD.md`). Growth's `render/templates/carousel-close.html` drew it until Growth's renderer was deleted on 26 Nov 2026 |
 
 ## The days
 
@@ -75,8 +75,8 @@ bottom-right corner, and its picture centred on the screen by the bars in `forma
 | quick-edit (`scripts/quick-edit/make.py`) | `palette_problems`, before any render, for every dated cut | Stops with `Brand palette (config/brand-palette.json): ...` |
 | The day runner (`scripts/produce_day.py`) | Through make.py; it no longer swaps in any outro of its own | The same stop |
 | ve (`scripts/velib/lint.py`) | `palette_lints`, the `brand.palette` lint, read from compile's own close length and sting position | `ve lint` fails |
-| Growth's carousels | `engine/run/kits.py` `OWN_CLOSE`: a piece kit may not ship its own close | `python growth.py run kit check`, the acceptance of the Codex card that builds the kit, refuses it |
-| Tests | `tests/brand_palette_test.py` here; `tests/test_render_templates.py` `FollowsThePalette` in Growth | CI fails |
+| Carousels (since 26 Nov 2026, content-engine) | the v5 Library's templates fix the close; `scripts/carousel_make.py` and `config/carousel-format.json` refuse a deck whose last slide is not the set's close | the run fails before anything is drawn. Growth's `engine/run/kits.py` `OWN_CLOSE` held its piece kits until its renderer was deleted on 26 Nov 2026 |
+| Tests | `tests/brand_palette_test.py` and `tests/carousel_format_test.py` here | CI fails |
 
 The palette binds every piece dated from **16 Nov 2026** (`applies_from`). Fri 13 Nov is made on a frozen engine (F33).
 
@@ -92,7 +92,7 @@ One-off piece scripts (`docs/plans/*/rebuild`, `short-composite`, `build_cut.py`
 ## Changing the palette
 
 1. Only Krish's own words change it. Quote them, dated, in the palette's `approved` block and in the commit body as `Ruling (Krish, YYYY-MM-DD): ...`.
-2. Change `config/brand-palette.json` first. Then change the maker that draws it (kit, ve, Growth), then the tests.
+2. Change `config/brand-palette.json` first. Then change the maker that draws it (kit, ve, the v5 Library), then the tests.
 3. A one-off exception for one piece is `"palette_exception": "Krish, YYYY-MM-DD: <his words>"` in that cut's config. make.py prints it and lets the cut through. Nothing else lets a cut through.
 4. Never add a close, intro, mark position or colour anywhere except the palette.
 

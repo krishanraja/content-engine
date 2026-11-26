@@ -33,6 +33,11 @@ const CODE = [...files('scripts', (p) => /\.(py|ts|mts|mjs|cjs|js|ps1|sh|cmd|bat
   ...files('apps/control-plane/api', (p) => /\.(ts|mts|js)$/.test(p))]
 // The only secrets a workflow that runs Claude Code may name: his subscription, the board, and GitHub's own token.
 const CLAUDE_SECRETS = new Set(['CLAUDE_CODE_OAUTH_TOKEN', 'ENGINE_OPERATOR_TOKEN', 'GITHUB_TOKEN'])
+// The cycle's connector key (config/cycle.json, scripts/post-pack/touch.py): a harness emitter key, named only in the two
+// runs that make pieces of the cycle. Unset until Krish adds the secret (his call); without it touch.py queues, never sends.
+const CYCLE_SECRET: Record<string, string> = {
+  '.github/workflows/sunday-ideas.yml': 'CC_HARNESS_KEY', '.github/workflows/make-piece.yml': 'CC_HARNESS_KEY',
+}
 // A paid source's key may sit in a workflow that runs Claude only inside one named step of its own, which the Claude
 // step cannot read (a step's env is its own). Ruling (Krish, 2026-11-17): "run Apify weekly in the Sunday ideas run".
 const STEP_SECRETS: Record<string, Array<{ secret: string; step: string }>> = {
@@ -98,7 +103,7 @@ describe('zero Claude routines (Krish, 2026-10-29)', () => {
       // No other secret reaches it: a key under another name would pass the API_KEY patterns.
       const named = [...text.matchAll(/secrets\.([A-Za-z0-9_]+)/g)].map((m) => m[1]!)
       const fenced = STEP_SECRETS[path] ?? []
-      expect(named.filter((name) => !CLAUDE_SECRETS.has(name) && !fenced.some((f) => f.secret === name)), path).toEqual([])
+      expect(named.filter((name) => !CLAUDE_SECRETS.has(name) && name !== CYCLE_SECRET[path] && !fenced.some((f) => f.secret === name)), path).toEqual([])
       // A fenced key appears only in its own step, never in the Claude step or any other.
       for (const { secret, step } of fenced) {
         const holding = stepsOf(text).filter((st) => st.block.includes(`secrets.${secret}`)).map((st) => st.name)

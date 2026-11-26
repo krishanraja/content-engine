@@ -30,7 +30,7 @@ Every option is held to these, and none of them is the session's to relax:
   person named in their own story, never beside an accusation against their company, always credited. Never his face
   on a brand cover, never a frame from a take.
   On his own accounts (TikTok, X, LinkedIn, Threads, Substack Notes) and the face arm of the YouTube test, the cover is
-  face-led instead: his cutout headshot large, drawn by Codex from a `ve card` of kind `cover`, never a frame from a take
+  face-led instead, also from make_covers.py, never a frame from a take; the Codex `ve card` of kind `cover` is retired
   (Ruling, Krish, 2026-11-17: "yes to the face plan"; `docs/production/COVER-STANDARD.md`, "Face-led covers").
 - **The cover standard** (`docs/production/COVER-STANDARD.md`, approved 9 Nov: "approve the cover standard as
   written"): read it whole. The headline leads, at most 7 words; at most three parts besides it; logos only for the

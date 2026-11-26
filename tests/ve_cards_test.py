@@ -67,86 +67,56 @@ if __name__ == '__main__':
 
 
 class VisualCardsTakeTheOneRoute(unittest.TestCase):
-    """Ruling (Krish, 2026-11-13): every carousel is made in a Claude session, with the Codex plugin building it, as in
-    the other usual workflows; memes and Notes images go the same way. A card of one of these kinds is held to the brand
-    palette for its day and the inspiration cards Krish ticked, and a carousel's to a deck that passes
-    scripts/carousel_check.py, and it never carries the deck's words (a venture's card sits in a public repository)."""
+    """Ruling (Krish, 2026-11-13): every carousel is made in a Claude session, as in the other usual workflows; memes
+    and Notes images go the same way. Ruling (Krish, 2026-11-26): content-engine makes every asset, from the locked v5
+    Library, and Growth only posts it, so a card is written in content-engine for content-engine's own checkout (never
+    Growth's retired renderer, render/ in growth-makeyourmindup). A card of one of these kinds is held to the brand
+    palette for its day and the inspiration cards Krish ticked. A carousel card is retired (Krish, 2026-11-26): a
+    carousel is made only by the v5 Library through scripts/carousel_make.py."""
 
     DECK = 'docs/plans/2026-11-09-week/git-carousel/deck.json'
 
     def card(self, tmp, **extra):
         from velib import cards
         fields = dict(card_id='carousel-x', kind='carousel', title='t', goal='g', contract='c',
-                      acceptance='python3 -c "pass"', write_allow=['render/pieces/x/**'], read=['render/KIT.md'],
+                      acceptance='python3 -c "pass"', write_allow=['.cache/library/carousel-x/**'],
+                      read=['docs/ve/cards/library/LIBRARY-GUIDE.md', 'docs/ve/cards/library/CAROUSEL-FORMAT.md'],
                       cwd=str(Path(tmp) / 'wt'), date='2026-11-17', references=['8ca0bd3d'], deck=self.DECK)
         fields.update(extra)
         return cards.write_card(Path(tmp) / 'c.md', **fields)
 
-    def test_a_carousel_card_carries_the_palette_the_references_and_the_deck_shape_but_none_of_its_words(self):
-        import json as _json
-        with tempfile.TemporaryDirectory() as tmp:
-            text = self.card(tmp).read_text(encoding='utf-8')
-        self.assertIn('## Brand (carousel, off, 2026-11-17', text)
-        self.assertIn('"close": "house_close_slide"', text)
-        self.assertIn('- 8ca0bd3d', text)
-        self.assertIn('## Deck (9 cards', text)
-        self.assertLessEqual(len(text.encode('utf-8')), 6144)
-        deck = _json.loads((ROOT / self.DECK).read_text(encoding='utf-8'))
-        for card in deck['cards']:
-            self.assertNotIn(card['headline'], text)
-
-    def test_a_carousel_card_names_the_body_face_and_the_one_he_rejected(self):
-        # Krish, 2026-11-18: "this font is crappy, i have given this feedback before". The deck check is patched: this
-        # test is about the card's type rule, not the deck's words.
-        sys.path.insert(0, str(ROOT / 'scripts'))
-        import carousel_check
-        with patch.object(carousel_check, 'problems', return_value=[]), tempfile.TemporaryDirectory() as tmp:
-            text = self.card(tmp).read_text(encoding='utf-8')
-        self.assertIn('## Type (Ruling, Krish, 2026-11-18)', text)
-        self.assertIn('Body sentences: Anton, uppercase', text)
-        self.assertIn('Never Archivo Black and never Archivo at weight 800 or heavier', text)
-        self.assertLessEqual(len(text.encode('utf-8')), 6144)
-
-    def test_no_references_no_card(self):
+    def test_a_carousel_card_is_retired_for_the_library_route(self):
+        # Krish, 2026-11-26: "Tell the Content-engine story intelligence for makeyourmindup v5 session that it is to
+        # enforce carousel formatting." A Codex-drawn carousel is a second renderer, so the kind refuses and names the route.
         with tempfile.TemporaryDirectory() as tmp, self.assertRaises(SystemExit) as stop:
-            self.card(tmp, references=[])
-        self.assertIn('F26', str(stop.exception.code))
+            self.card(tmp)
+        said = str(stop.exception.code)
+        self.assertIn('a carousel card is retired', said)
+        self.assertIn('scripts/carousel_make.py', said)
+        self.assertIn('make_piece.py --set', said)
 
-    def test_a_deck_that_fails_the_story_check_is_never_carded(self):
-        import json as _json
-        with tempfile.TemporaryDirectory() as tmp:
-            deck = _json.loads((ROOT / self.DECK).read_text(encoding='utf-8'))
-            deck['five_whys'] = deck['five_whys'][:2]
-            bad = Path(tmp) / 'deck.json'
-            bad.write_text(_json.dumps(deck), encoding='utf-8')
-            with self.assertRaises(SystemExit) as stop:
-                self.card(tmp, deck=str(bad))
-        self.assertIn('carousel_check', str(stop.exception.code))
-        self.assertIn('five times', str(stop.exception.code))
+    def test_a_cover_card_is_retired_for_make_covers(self):
+        # Krish, 2026-11-26: "I approve the new cover thumbnail systems, go." Covers and thumbnails come only from
+        # make_covers.py: no Codex face-led cover, no Receipt drawer.
+        with tempfile.TemporaryDirectory() as tmp, self.assertRaises(SystemExit) as stop:
+            self.card(tmp, kind='cover', deck=None, channel='tiktok', date='2026-11-16', photos=['a.png'])
+        said = str(stop.exception.code)
+        self.assertIn('a cover card is retired', said)
+        self.assertIn('scripts/covers/make_covers.py <piece> --out <folder>', said)
 
-    def test_a_face_cover_card_names_its_channel_and_photos_and_wears_both_cover_sizes(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            text = self.card(tmp, kind='cover', deck=None, channel='tiktok', date='2026-11-16',
-                             photos=['.cache/photos/Denim-jacket headshot on transparent background.png']).read_text(encoding='utf-8')
-        self.assertIn('## Brand (thumbnail_wide, series, 2026-11-16', text)
-        self.assertIn('## Brand (cover_tall, series, 2026-11-16', text)
-        self.assertIn('## Face (channel tiktok', text)
-        self.assertIn('never a circle', text)
-        self.assertIn('Denim-jacket headshot', text)
-        self.assertLessEqual(len(text.encode('utf-8')), 6144)
+    def test_a_meme_and_a_notes_image_card_are_retired_as_library_gaps(self):
+        for kind, route in (('meme', 'meme-square'), ('notes_image', 'notes-image')):
+            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as tmp, self.assertRaises(SystemExit) as stop:
+                self.card(tmp, kind=kind, deck=None)
+            said = str(stop.exception.code)
+            self.assertIn(f'a {kind} card is retired', said)
+            self.assertIn('not made another way', said)
+            self.assertIn(f'kind {route}', said)
 
-    def test_a_face_cover_is_refused_for_a_receipt_channel_or_without_photos(self):
-        for extra, said in ((dict(channel='instagram', photos=['a.png']), 'Receipt'), (dict(channel='x', photos=[]), 'photos')):
-            with self.subTest(said=said), tempfile.TemporaryDirectory() as tmp, self.assertRaises(SystemExit) as stop:
-                self.card(tmp, kind='cover', deck=None, date='2026-11-16', **extra)
-            self.assertIn(said, str(stop.exception.code))
-
-    def test_a_meme_and_a_notes_image_wear_their_own_palette_and_need_no_deck(self):
-        for kind in ('meme', 'notes_image'):
-            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as tmp:
-                text = self.card(tmp, kind=kind, deck=None, spend_id='f2bfdae8').read_text(encoding='utf-8')
-                self.assertIn(f'## Brand ({kind}, off, 2026-11-17', text)
-                self.assertIn('"close": "none"', text)
-                # Codex is not counted (Ruling, Krish, 2026-11-17): a booking passed in is never written onto the card.
-                self.assertNotIn('spend_id', text)
-                self.assertNotIn('## Deck', text)
+    def test_the_board_prompt_names_no_second_renderer(self):
+        text = (ROOT / 'apps' / 'control-plane' / 'api' / 'board' / '_writeBack.ts').read_text(encoding='utf-8')
+        roles = text[text.index('export const ROLES'):text.index('export const LEARNING_RULE')]
+        self.assertNotIn('ve.py card', roles)
+        self.assertNotRegex(roles, r'Codex generates the visual assets')
+        for named in ('scripts/carousel_make.py', 'make_covers.py', 'config/asset-routes.json', 'photoreal still'):
+            self.assertIn(named, roles)

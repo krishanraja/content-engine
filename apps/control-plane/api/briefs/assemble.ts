@@ -7,7 +7,8 @@ import { realSource } from '../shifts/detect.js'
 import { loadStandingNotes, standingNotesPrompt } from '../_briefNotes.js'
 import { goalsSpine } from '../_goals.js'
 import { SYNTHESIS_MODEL } from '../_models.js'
-import { faceBlock } from '../_mission.js'
+import { readerBlock } from '../_mission.js'
+import { READER } from '../_beat.js'
 import { askForBrief } from './_ask.js'
 import { withContentRun } from '../_runs.js'
 
@@ -69,9 +70,10 @@ function clip(input: string, max: number): string {
 // the face, names what is coming for that leader in the next two quarters,
 // and cites a source for every claim about the world. A claim without a
 // source is cut, not softened.
+// The reader is the North Star line (config/beat.json reader, Krish, 2026-11-26), no longer the mind/make face.
 const BRIEF_FACE = [
-  'WHO IT IS FOR (one swing): write this for the face named above, not for a general audience.',
-  'The piece must say, in plain words, what is coming for that leader and their business in the next two quarters, and what to do first.',
+  'WHO IT IS FOR (one swing): write this for the reader named above, not for a general audience.',
+  'The piece must say, in plain words, what AI is changing in their work and how it makes money, and what they can do first.',
   'Every claim about the world carries a source from the stories supplied. A claim without a source is cut. Do not soften it into a hedge; remove it.',
 ].join('\n')
 
@@ -179,12 +181,12 @@ export async function runAssemble(force = false) {
   const channelMandate = corpusForChannel(corpus, 'publication', 3000)
 
   const system = [
-    'You write the Publication weekly brief for business leaders making real AI decisions. You write in the publication\'s voice and never name its maker (house rule NO_NAME).',
+    `You write the Publication weekly brief for ${READER.audience_short}. You write in the publication's voice and never name its maker (house rule NO_NAME).`,
     voice ? `VOICE:\n${voice}` : '',
     channelMandate ? `CHANNEL MANDATE:\n${channelMandate}` : '',
     standingNotesPrompt(standingNotes),
     goals.prompt,
-    faceBlock(),
+    readerBlock(),
     BRIEF_FACE,
     BRIEF_SHAPE,
     BRIEF_LENS,

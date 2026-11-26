@@ -828,7 +828,11 @@ def considered_findings(ideas):
     return out
 
 
-GOOD_NEWS_KINDS = ('business', 'health', 'lab', 'science', 'work', 'money', 'learning', 'climate', 'creative', 'people', 'safety', 'other')
+# A good-news story's kind. From the story score's board the good news is people in the focus sectors doing, earning or
+# making more with AI (Krish, 2026-11-26; config/beat.json offdays.good_news), so each focus sector of config/beat.json
+# is a kind too (music, sports, film_tv ...): a sector is a row there, never here.
+GOOD_NEWS_KINDS = ('business', 'health', 'lab', 'science', 'work', 'money', 'learning', 'climate', 'creative', 'people', 'safety', 'other') + \
+    tuple(row['sector'] for row in json.loads((Path(__file__).resolve().parents[2] / 'config' / 'beat.json').read_text(encoding='utf-8'))['focus_sectors'])
 
 
 def goodnews_mix_findings(ideas):
@@ -1481,7 +1485,14 @@ COPY_RUN = 7
 # stuff."). Every rule reads config/good-news.json, so a new topic, limit or keyword is a row there.
 
 def good_news_config():
-    return json.loads((Path(__file__).resolve().parents[2] / 'config' / 'good-news.json').read_text(encoding='utf-8'))
+    """config/good-news.json, its topics led by the focus sectors of config/beat.json when it says sector_topics (Krish,
+    2026-11-26: the good news is the reader's world), so a music carousel is led by music, not by culture in general."""
+    root = Path(__file__).resolve().parents[2] / 'config'
+    cfg = json.loads((root / 'good-news.json').read_text(encoding='utf-8'))
+    if cfg.get('sector_topics'):
+        sectors = json.loads((root / 'beat.json').read_text(encoding='utf-8'))['focus_sectors']
+        cfg['topics'] = [{'kind': r['sector'], 'label': r['label'], 'keywords': list(r.get('keywords') or [])} for r in sectors] + cfg['topics']
+    return cfg
 
 
 GOOD_NEWS = good_news_config()
@@ -1499,11 +1510,12 @@ def is_good_news(o):
 
 
 def topic_kind_of(text):
-    """The good-news topic a text is about, by the keywords in config/good-news.json (most hits wins), or None."""
+    """The good-news topic a text is about, by the keywords in config/good-news.json (most hits wins; on a tie the first
+    row, so a focus sector before the general rows), or None. A keyword ending in * matches any ending, as in beat.json."""
     t = ' ' + re.sub(r'[^a-z0-9 ]+', ' ', str(text or '').lower()) + ' '
     best, n = None, 0
     for row in GOOD_NEWS['topics']:
-        hits = sum(t.count(f' {k} ') for k in row.get('keywords') or [])
+        hits = len(keyword_pattern(row.get('keywords')).findall(t)) if row.get('keywords') else 0
         if hits > n:
             best, n = row['kind'], hits
     return best
@@ -1640,7 +1652,74 @@ def goodnews_history(sources, earlier_ideas):
 
 SATURDAY_FROM = '2026-11-30'
 SATURDAY_KINDS = ('good_news',)  # Krish, 2026-11-19: Saturday is good-news carousels only (config/good-news.json saturday_kinds)
-SATURDAY_CARDS = (4, 10)  # a Saturday carousel's cards: at least four, at most ten (Buffer posts ten images at most)
+SATURDAY_CARDS = (4, 10)  # a Saturday carousel's cards before FORMAT_FROM: at least four, at most ten (Buffer posts ten)
+# The 3-second carousel format (config/carousel-format.json, from the locked Library's CAROUSEL-FORMAT.md; Krish,
+# 2026-11-26: "Tell the Content-engine story intelligence for makeyourmindup v5 session that it is to enforce carousel
+# formatting"). From its `from` board every carousel option on the board is held to it (code carousel_format, a gate
+# code): 4 to 7 cards, a Library set when it names one, a cover of 10 words or fewer, inside cards of 15 words or fewer
+# that state rather than ask, a close that never asks to follow; and the Saturday card flow is 4 to 7 cards.
+CAROUSEL_FORMAT = json.loads((Path(__file__).resolve().parents[2] / 'config' / 'carousel-format.json').read_text(encoding='utf-8'))
+FORMAT_FROM = CAROUSEL_FORMAT['from']
+FORMAT_CARDS = (CAROUSEL_FORMAT['slides']['min'], CAROUSEL_FORMAT['slides']['max'])
+CAROUSEL_KINDS = ('good_news', 'explainer', 'supporting')
+
+
+def saturday_cards(week):
+    """A Saturday carousel's card range on this board: the format's 4 to 7 from FORMAT_FROM, before it 4 to 10."""
+    return FORMAT_CARDS if str(week) >= FORMAT_FROM else SATURDAY_CARDS
+
+
+def is_carousel_option(o):
+    """An off-day option the board offers as a carousel: a good-news, explainer or supporting option with cards, a Library
+    set named, the weekly good news, or a format that says carousel."""
+    if not isinstance(o, dict):
+        return False
+    if o.get('set') or o.get('weekly') == 'good_news' or 'carousel' in str(o.get('format') or '').lower():
+        return True
+    return saturday_kind(o) in CAROUSEL_KINDS and isinstance(o.get('cards'), list) and bool(o.get('cards'))
+
+
+def carousel_format_findings(ideas, week):
+    """From FORMAT_FROM: every carousel option on the board holds the 3-second format before it is offered. Refusals,
+    each a gate line (code carousel_format)."""
+    if str(week) < FORMAT_FROM:
+        return []
+    F = CAROUSEL_FORMAT
+    lo, hi = FORMAT_CARDS
+    out = []
+    offdays = (ideas or {}).get('offdays') if isinstance((ideas or {}).get('offdays'), dict) else {}
+    word = lambda t: re.findall(r"[A-Za-z0-9£$€][A-Za-z0-9'’,.%+×£$€/-]*", str(t or ''))
+    for day, opts in offdays.items():
+        for o in opts if isinstance(opts, list) else []:
+            if not is_carousel_option(o):
+                continue
+            ref = f'off-{day}-{o.get("id")}'
+
+            def say(line, ref=ref):
+                out.append({'code': 'carousel_format', 'ref': ref, 'line': f'carousel_format: {ref} {line}'})
+            if o.get('set') is not None and o.get('set') not in F['sets']:
+                say(f'names set "{o.get("set")}"; a carousel is one of the Library\'s sets ({", ".join(F["sets"])})')
+            cards = [c for c in o.get('cards') or [] if isinstance(c, dict)]
+            if not cards:
+                continue
+            if not lo <= len(cards) <= hi:
+                say(f'has {len(cards)} cards; a carousel is {lo} to {hi} (the cover, 3 to 5 inside, the close)')
+            for n, c in enumerate(cards, 1):
+                said = str(c.get('words') or '')
+                low = said.lower()
+                if n == 1 and len(word(said)) > F['cover']['headline_words_max']:
+                    say(f'card 1 has {len(word(said))} words; the cover headline is {F["cover"]["headline_words_max"]} or fewer')
+                if 1 < n < len(cards):
+                    if len(word(said)) > F['inside']['slide_words_max']:
+                        say(f'card {n} has {len(word(said))} words; an inside card holds {F["inside"]["slide_words_max"]} at most')
+                    if '?' in said and saturday_kind(o) != 'quiz':
+                        say(f'card {n} asks a question; every inside card is a statement')
+                for row in F['never']:
+                    pat = row['pattern']
+                    hit = pat in said if row.get('literal') else re.search(r'(?<![a-z0-9])' + re.escape(pat) + r'(?![a-z0-9])', low)
+                    if hit:
+                        say(f'card {n} says "{pat}": {row["why"]}')
+    return out
 
 
 def saturday_kind(o):
@@ -1665,7 +1744,7 @@ def saturday_findings(ideas, week, flows=None, feed_urls=None, carousel_urls=Non
     offdays = (ideas or {}).get('offdays') if isinstance((ideas or {}).get('offdays'), dict) else {}
     feed = {canon_url(u) for u in feed_urls or [] if canon_url(u)}
     carousels = None if carousel_urls is None else {canon_url(u) for u in carousel_urls if canon_url(u)}
-    lo, hi = SATURDAY_CARDS
+    lo, hi = saturday_cards(week)
     out = []
 
     def say(ref, line):
@@ -1708,7 +1787,9 @@ def saturday_findings(ideas, week, flows=None, feed_urls=None, carousel_urls=Non
             say(ref, f'has {len(frames)} direction.frames; the direction follows the same card_flow ({len(flow)} frames)')
         if weekly:
             n = len([s for s in o.get('stories') or [] if isinstance(s, dict)])
-            if n and len(flow) < n + 2:
+            # From FORMAT_FROM the carousel carries the format's items (4); a fifth story found is a spare.
+            drawn = min(n, CAROUSEL_FORMAT['good_news']['items']) if str(week) >= FORMAT_FROM else n
+            if n and len(flow) < drawn + 2:
                 say(ref, f'follows a card_flow of {len(flow)} cards for {n} stories; its stories fill the middle cards, '
                          'so the flow holds a cover, a card for each story and a close')
     return out
@@ -1753,7 +1834,9 @@ def kill_list_vetoes(text):
     from pathlib import Path as _P
     script = _P(__file__).resolve().parents[2] / 'vendor' / 'makeyourmindup' / 'kill-list' / 'kill-list.mjs'
     try:
-        run = subprocess.run(['node', str(script), '--stdin'], input=str(text), capture_output=True, text=True, timeout=60)
+        # encoding: node reads and writes UTF-8; without it Windows pipes the locale's code page and an em dash passes.
+        run = subprocess.run(['node', str(script), '--stdin'], input=str(text), capture_output=True, text=True, encoding='utf-8',
+                             errors='replace', timeout=60)
     except (OSError, subprocess.SubprocessError) as error:
         return [f'the kill list could not run ({error})']
     if run.returncode == 0:
@@ -1976,13 +2059,338 @@ def offbeat_findings(ideas, week):
     return out
 
 
+# The story score (the story engine v5 plan, commit 7; config/story-score.json). From its `from` board every open option
+# carries the blind story score, each open day stands in the order story_score.py order gives it, and a hero holds at
+# least three whys with a source before he picks. Ruling (Krish, 2026-11-26): his rejections are a floor only, never a
+# score, so this reads the score's own bits (total, type, floors failed, floored) and never his words or picks.
+
+def story_config():
+    return json.loads((Path(__file__).resolve().parents[2] / 'config' / 'story-score.json').read_text(encoding='utf-8'))
+
+
+STORY = story_config()
+STORY_FROM = STORY['from']
+STORY_WHYS_MIN = 3  # rungs with a source url on a hero's pre-pick probe (packages/contracts/src/whys.ts WHY_LADDER_MIN)
+OPEN = ('open', 'held')  # board_feed.REMAKE: an option he never answered
+
+
+
+# The reader's world on the off days (Ruling, Krish, 2026-11-26: "Make sure all the good news suggestions and meme
+# suggestions are also aligned to the new positioning, as well as the carousels."). From the story score's `from` board
+# every off-day option, the weekly good news and the meme templates included, carries a focus-sector word somewhere in
+# what it says it is about (a dull, neutral one with none is refused, an office one says so), each good-news story is
+# itself in a focus sector, and the weekly good news is held to the avoid list too (offbeat_findings leaves it out). An
+# option he records (kind recorded) is his own words and is never refused here. Every line reads config/beat.json offdays.
+
+OFFDAY_BEAT = BEAT.get('offdays') or {}
+BEAT_OFFICE = keyword_pattern(OFFDAY_BEAT.get('office_keywords'))
+
+
+def focus_angle(text):
+    """Whether some words carry a focus-sector keyword, the exception phrases read first ('state of the art' is not art)."""
+    return bool(BEAT_FOCUS.search(BEAT_FOCUS_EXCEPT.sub(' ', str(text or ''))))
+
+
+def offday_words(o):
+    """Everything an off-day option says it is about: its words on the board, its topic and humour, a template's title
+    and why it works, and its cards' words. A template's caption ideas are drafts for his own caption and are not read:
+    its world is named in its funny line and why_it_works, as the blind story score reads it (story_score.body_text)."""
+    tpl = o.get('template') if isinstance(o.get('template'), dict) else {}
+    cards = [c.get('words') for c in o.get('cards') or [] if isinstance(c, dict)]
+    parts = [option_text_off(o), o.get('topic'), o.get('funny'), o.get('dive'),
+             tpl.get('title'), tpl.get('why_it_works'), tpl.get('moment'), *cards]
+    return ' '.join(str(p) for p in parts if p)
+
+
+def story_words(st):
+    """A good-news story's own words: its headline, what happened, why it matters and who it helps."""
+    helps = st.get('helps') if isinstance(st.get('helps'), dict) else {}
+    return ' '.join(str(p) for p in (st.get('headline'), st.get('title'), st.get('what'), st.get('why'), helps.get('who')) if p)
+
+
+def offday_beat_findings(ideas, week):
+    """From STORY_FROM: an off-day option with no focus-sector word in offday_words is refused (office AI said as
+    such), a good-news story with none in its own words is refused, and the weekly good news on the avoid list with no
+    focus-sector angle is refused. An option offbeat_findings already refuses is not said twice."""
+    if str(week) < STORY_FROM:
+        return []
+    said = OFFDAY_BEAT.get('refusals') or {}
+    out = []
+
+    def say(ref, line):
+        out.append({'code': 'off_beat', 'ref': ref, 'line': f'off_beat: {ref} {line}'})
+
+    offdays = (ideas or {}).get('offdays') if isinstance((ideas or {}).get('offdays'), dict) else {}
+    for day, opts in offdays.items():
+        for o in opts if isinstance(opts, list) else []:
+            if not isinstance(o, dict) or o.get('kind') == 'recorded':
+                continue
+            ref = f'off-{day}-{o.get("id")}'
+            hit = off_beat(' '.join(str(p) for p in (option_topic(o, False), o.get('topic')) if p))
+            if hit and not o.get('weekly'):
+                continue  # offbeat_findings says it
+            if hit:
+                say(ref, f'is about "{hit[1]}" ({hit[0].lower()}) with no focus-sector angle; the good news is the reader\'s world too '
+                         '(Ruling, Krish, 2026-11-26; config/beat.json). Find the creative angle or replace it')
+            stories = [st for st in o.get('stories') or [] if isinstance(st, dict)]
+            words = offday_words(o)
+            if not focus_angle(words) and not (stories and all(focus_angle(story_words(st)) for st in stories)):
+                say(ref, said.get('office') if BEAT_OFFICE.search(words) else said.get('dull'))
+            for i, st in enumerate(stories, 1):
+                if not focus_angle(story_words(st)):
+                    say(ref, f'story {i} ("{str(st.get("headline") or st.get("title") or "")[:60]}") {said.get("story")}')
+    return out
+
+def status_key(day, main, o):
+    """An option's key in board_feed option_status: idea:<id> on a publishing day, off:<day>:<id> on an off day."""
+    oid = str((o or {}).get('id') or '').lower()
+    return f'idea:{oid}' if main else f'off:{day}:{oid}'
+
+
+def keys_on(board_):
+    """The board_feed option_status key of every option on a board (the board as it stood before a re-run)."""
+    return {status_key(day, main, o) for _ref, day, main, o in board_raw(board_)} if isinstance(board_, dict) else set()
+
+
+def option_open(key, status, before=None):
+    """Whether an option is open (never answered): a board never shown (status None), an option the status reads as
+    open or held, or one the status does not name and the board before the run did not have (a new option a `days`
+    re-run made). An option on the board before that the status does not name is not known: never open. before: the
+    keys_on() of the board before the run, or None when there was none to read."""
+    if status is None:
+        return True
+    if key in status:
+        return status[key] in OPEN
+    return before is not None and key not in before
+
+
+def _has_url(evidence):
+    return any(isinstance(e, dict) and re.match(r'^https?://', str(e.get('url') or '')) for e in evidence or [])
+
+
+def sourced_rungs(ladder):
+    """How many rungs of a why-ladder/1 document carry at least one evidence item with an http(s) url: the rung's own,
+    or on a split rung the branch answer it follows (packages/contracts/src/whys.ts checkWhyLadder). A probe file that
+    wraps the ladder as {whys: {...}} is read as ladderFromText reads it."""
+    if isinstance(ladder, dict) and ladder.get('schema') is None and isinstance(ladder.get('whys'), dict):
+        ladder = ladder['whys']
+    rungs = (ladder or {}).get('rungs') if isinstance(ladder, dict) else None
+    n = 0
+    for r in rungs or []:
+        if not isinstance(r, dict):
+            continue
+        b = r.get('branch') if isinstance(r.get('branch'), dict) else None
+        answers = b.get('answers') if b and isinstance(b.get('answers'), list) else []
+        k = b.get('followed', 0) if b else None
+        followed = answers[k] if b and isinstance(k, int) and 0 <= k < len(answers) and isinstance(answers[k], dict) else None
+        n += bool(_has_url(followed.get('evidence')) if followed else _has_url(r.get('evidence')))
+    return n
+
+
+def verified_probe(entry):
+    """Whether a probe entry is scripts/whys-probe-check.ts output (story/probes.json: documented rungs counted only
+    when the quote is verbatim in the cached page), not a raw why-ladder."""
+    return isinstance(entry, dict) and (isinstance(entry.get('documented'), int) and not isinstance(entry.get('documented'), bool)
+                                        or set(entry) == {'error'})
+
+
+def whys_held(entry):
+    """(rungs, how): a verified probe's documented rungs (an error holds none), else a raw ladder's sourced rungs."""
+    if verified_probe(entry):
+        return (0 if 'error' in entry else entry['documented']), 'documented in their cached pages'
+    return sourced_rungs(entry), 'with a source'
+
+
+def story_findings(ideas, week, status=None, probes=None, cfg=None, before=None):
+    """From STORY_FROM, the story score's gate lines (code 'story' or 'story_floor'), each {code, ref, line}:
+      - story: an open option with no story score, a score with no total, or a score from another rubric;
+      - story: a day whose options are all open and do not stand in story_score.py order's order (by total, a floored
+        or floor-failing option last, his option first at equal totals only, a council read deciding its pair, a short
+        or meme unread for humour never first, the weekly series in its place);
+      - story: a hero option (Mon, Wed, Fri) whose pre-pick whys probe holds fewer than STORY_WHYS_MIN whys: the
+        verified probe's documented rungs (story/probes.json, as the score's hero floor reads them) when there is one,
+        else the raw ladder's rungs with a source url (probes: {option id: probe result or why-ladder/1}; the option's
+        own `whys` when it carries one);
+      - story: one of a close call no council read decided whose card does not carry the close call (story_score
+        close_call, shown on the board: never a silent pass);
+      - story_floor: an open option the floor refused or that fails one of its type's hard floors;
+      - story: an open hero day with fewer than hero_floors.thin_week.min_passing options that pass every floor, unless
+        it is a thin week (ideas.json thin_week.<day>.regathered after one re-gather, at least thin_min passing, and
+        every option's card saying so in story_score.thin_week). The floors are never relaxed.
+    status: board_feed option_status {key: status}, or None for a board never shown (every option open). An answered
+    option is his: it is never checked, and a day with one is never checked for order (its presses name it by place).
+    before: the week's ideas.json as it stood before a `days` re-run; an option on neither it nor the status is new, so
+    open (option_open). The weekly good news is its own series and is left out."""
+    cfg = cfg or STORY
+    if str(week) < str(cfg['from']):
+        return []
+    import story_score as ss  # here, not at the top: story_score imports this module
+    probes = {str(k).lower(): v for k, v in (probes or {}).items()}
+    out = []
+
+    had = keys_on(before) if before is not None else None
+
+    def is_open(day, main, o):
+        return option_open(status_key(day, main, o), status, had)
+
+    def label(ref, main, o):
+        return f'{ref} ({str(o.get("id") or "")[:8]})' if main else ref
+
+    for ref, day, main, o in board_raw(ideas):
+        if o.get('weekly') or not is_open(day, main, o):
+            continue
+        if o.get('from_inspiration'):
+            # His tick outranks the gate (Ruling, Krish, 2026-11-12): the Inspiration piece run places the idea from his
+            # ticked card unscored and unprobed, after the day's other options, and only his Approve places it.
+            continue
+        s = o.get('story_score') if isinstance(o.get('story_score'), dict) else None
+        name = label(ref, main, o)
+        if s is None:
+            out.append({'code': 'story', 'ref': ref, 'line': f'story: {name} has no story score; run story_score.py score and order '
+                        '(.agents/skills/plan-week/references/story-score.md) before the board'})
+        elif s.get('rubric_version') != cfg['rubric_version']:
+            out.append({'code': 'story', 'ref': ref, 'line': f'story: {name} was scored on {s.get("rubric_version")!r}, not '
+                        f'{cfg["rubric_version"]}; score it again'})
+        elif s.get('total') is None and not s.get('floored'):
+            out.append({'code': 'story', 'ref': ref, 'line': f'story: {name} has a story score with no total (too few axes read); '
+                        'read the missing axes or replace it'})
+        if s and (s.get('floored') or s.get('floors_failed')):
+            why = '; '.join(str(f) for f in s.get('floors_failed') or []) or 'the floor refused it'
+            out.append({'code': 'story_floor', 'ref': ref, 'line': f'story_floor: {name} fails its floor ({why}); replace it or fix '
+                        'what the floor names'})
+        if main and day in ('mon', 'wed', 'fri'):
+            ladder = probes.get(str(o.get('id') or '').lower())
+            if ladder is None and isinstance(o.get('whys'), dict):
+                ladder = o['whys']
+            n, how = whys_held(ladder)
+            if n < STORY_WHYS_MIN:
+                out.append({'code': 'story', 'ref': ref, 'line': f'story: {name} holds {n} whys {how} before the pick, under '
+                            f'{STORY_WHYS_MIN}; probe it (whys-probe-check) or replace it'})
+
+    for group, block in (('days', (ideas or {}).get('days')), ('offdays', (ideas or {}).get('offdays'))):
+        for day, opts in (block if isinstance(block, dict) else {}).items():
+            # An idea from his tick stands after the day's other options (inspiration_act.py place appends it) and is
+            # never ordered: the rest of the day is read as it stood.
+            opts = [o for o in (opts if isinstance(opts, list) else []) if isinstance(o, dict) and not o.get('from_inspiration')]
+            main = group == 'days'
+            movable = [o for o in opts if not o.get('weekly')]
+            # Never an empty board, never a relaxed floor: an open hero day, every option scored, carries min_passing options
+            # that pass every floor, or a thin week says so on every card (config hero_floors.thin_week).
+            thin = (cfg.get('hero_floors') or {}).get('thin_week') or {}
+            if (main and day in ('mon', 'wed', 'fri') and thin and all(is_open(day, main, o) for o in movable)
+                    and all(isinstance(o.get('story_score'), dict) for o in movable)):
+                passing = sum(1 for o in movable if ss.passes(o.get('story_score')))
+                marked = ((ideas or {}).get('thin_week') or {}).get(day) if isinstance((ideas or {}).get('thin_week'), dict) else None
+                said = all(str((o.get('story_score') or {}).get('thin_week') or '').strip() for o in movable)
+                if passing < thin['min_passing'] and not (isinstance(marked, dict) and marked.get('regathered') is True
+                                                          and passing >= thin['thin_min'] and said):
+                    out.append({'code': 'story', 'ref': day, 'line': f'story: {day} carries {passing} option(s) that pass every floor; a hero day '
+                                f'carries {thin["min_passing"]}, or after one re-gather a thin week of {thin["thin_min"]} with the card saying so '
+                                '(ideas.json thin_week, then order); the floors are never relaxed'})
+            if len(movable) < 2 or not all(is_open(day, main, o) for o in movable):
+                continue
+            scores = {ss.key_of(day, o): o['story_score'] for o in movable if isinstance(o.get('story_score'), dict)}
+            if len(scores) < len(movable):
+                continue  # an unscored option is already a line above
+            keys = [ss.key_of(day, o) for o in opts]
+            council = next((v for v in (s.get('council') for s in scores.values()) if isinstance(v, dict)), None)
+            want, call = ss.order_day(opts, scores, keys, council, cfg)
+            for n, (have, should) in enumerate(zip(opts, want), 1):
+                if have is not should:
+                    ref = f'{day}-{n}' if main else f'off-{day}-{have.get("id")}'
+                    first = next(i for i, o in enumerate(opts, 1) if o is should)
+                    out.append({'code': 'story', 'ref': ref, 'line': f'story: {label(ref, main, have)} stands at place {n} of {day}, where '
+                                f'story_score.py order puts the option now at place {first}; run order on the open day'})
+                    break
+            # A close call no council read decided is his pick, and his card says so: never a silent pass.
+            if call and call.get('says'):
+                for n, o in enumerate(opts, 1):
+                    if ss.key_of(day, o) in call['keys'] and not str((o.get('story_score') or {}).get('close_call') or '').strip():
+                        ref = f'{day}-{n}' if main else f'off-{day}-{o.get("id")}'
+                        out.append({'code': 'story', 'ref': ref, 'line': f'story: {label(ref, main, o)} is one of a close call on {day} '
+                                    f'({call["why"]}) and its card does not say "{call["says"]}"; run order on the open day'})
+    return out
+
+
+# The day's wildcard (ruling wildcard, Krish, 2026-11-26: "Just make sure my Monday, Wednesday, and Friday stories:
+# there's always one completely divergent, strange, obscure, or unexpected story suggestion that I could pick from.").
+# From the story score's `from` board each hero day he has not answered carries a wildcard option, its kind and its one
+# line of why it is unexpected, and a distance the divergence engine read on its present words (divergent.py distance
+# --write): divergent, the engine's own spark, or skipped because the engine was not served. Every word is read from
+# config/story-score.json wildcard; the score's own floors (types.wildcard) hold its truth, sources, beat and whys.
+
+def wildcard_findings(ideas, week, status=None, before=None, cfg=None):
+    """From STORY_FROM, the wildcard gate lines (code 'wildcard'), each {code, ref, line}: an open hero day with no
+    wildcard option, a wildcard with no kind from the row's kinds, no one-line why_unexpected, an engine spark without
+    its run id and spark, a pitch question that does not open on the row's board_prefix, no distance read, a distance
+    read on other words, or a distance the engine did not call divergent. A day with an answered option is his and is
+    never checked."""
+    cfg = cfg or STORY
+    if str(week) < str(cfg['from']):
+        return []
+    import divergent  # here: divergent imports this module
+    row = cfg['wildcard']
+    rule = row['distance']
+    had = keys_on(before) if before is not None else None
+    days = (ideas or {}).get('days') if isinstance((ideas or {}).get('days'), dict) else {}
+    out = []
+
+    def say(ref, line):
+        out.append({'code': 'wildcard', 'ref': ref, 'line': f'wildcard: {ref} {line}'})
+
+    for day in row['days']:
+        opts = [o for o in days.get(day) or [] if isinstance(o, dict)]
+        if any(not option_open(status_key(day, True, o), status, had) for o in opts):
+            continue
+        wild = [(n, o) for n, o in enumerate(days.get(day) or [], 1) if isinstance(o, dict) and isinstance(o.get('wildcard'), dict)]
+        if len(wild) < row['min_per_day']:
+            say(day, f'has no wildcard option: every Monday, Wednesday and Friday carries one divergent, strange, obscure or '
+                     'unexpected story he could pick (ruling wildcard); write it from divergent.py wildcard '
+                     '(.agents/skills/plan-week/references/divergent.md)')
+            continue
+        for n, o in wild:
+            ref = f'{day}-{n}'
+            w = o['wildcard']
+            if w.get('kind') not in row['kinds']:
+                say(ref, f'has wildcard.kind {w.get("kind")!r}, not one of {", ".join(row["kinds"])}')
+            why = str(w.get('why_unexpected') or '').strip()
+            if not why:
+                say(ref, 'has no wildcard.why_unexpected: one line of what makes it far from the obvious takes')
+            elif '\n' in why or len(why) > row['why_max_chars']:
+                say(ref, f'has a why_unexpected longer than one line ({row["why_max_chars"]} characters at most)')
+            spark = w.get('divergent')
+            if spark is not None and not (isinstance(spark, dict) and spark.get('run_id') and spark.get('spark')):
+                say(ref, 'carries wildcard.divergent without its run_id and spark')
+            question = str((o.get('pitch') or {}).get('question') or '') if isinstance(o.get('pitch'), dict) else ''
+            if not question.startswith(row['board_prefix']):
+                say(ref, f'has a pitch question that does not open on "{row["board_prefix"].strip()}", so the board does not show '
+                         'it as the day\'s wildcard')
+            d = w.get('distance')
+            text = divergent.wildcard_text(o, row)
+            if not isinstance(d, dict) or not d.get('status'):
+                say(ref, 'has no distance read: run divergent.py distance <ideas.json> --sources <sources.json> --write')
+            elif d.get('text_hash') != divergent.text_hash(text):
+                say(ref, 'was reworded after its distance was read: run divergent.py distance --write again')
+            elif d['status'] == rule['skipped']:
+                continue  # not served: the session's why_unexpected stands, said in the run summary
+            elif not d.get('divergent'):
+                say(ref, f'is not far from the obvious takes (the engine read {d["status"]!r} against the day\'s other options and '
+                         'what went out); find a stranger story')
+    return out
+
+
 # The findings that fail the Sunday run (board_feed.py gate): a subject he refused offered again, a warned option placed
 # first or shown without his words, a return that came back no deeper, a repeat of what went out (Krish, 2026-11-16),
 # from the 23 Nov board an option without its shape, aim, humour and lookalike, and from the 30 Nov board a Saturday
 # option that is not a sheet carousel followed card for card, or a meme template that is not whole (Krish, 2026-11-17).
 # The rest of cover stays the run's to fix before it stops, as before. From the 30 Nov board an option off the beat
-# (offbeat_findings; Ruling, Krish, 2026-11-24) fails it too.
-GATE_CODES = ('refused', 'warned_first', 'warning_line', 'return', 'repeat', 'aim', 'saturday', 'template', 'goodnews', 'off_beat')
+# (offbeat_findings; Ruling, Krish, 2026-11-24) fails it too. From the story score's `from` board an open option with
+# no story score, an open day out of the score's order, a hero under three sourced whys (story) and an option that
+# fails its floor (story_floor) fail it too (story_findings; Ruling, Krish, 2026-11-26: his rejections are a floor only),
+# and so does an open hero day with no wildcard, or one whose wildcard is unexplained or unchecked (wildcard_findings;
+# ruling wildcard, Krish, 2026-11-26).
+GATE_CODES = ('refused', 'warned_first', 'warning_line', 'return', 'repeat', 'aim', 'saturday', 'template', 'goodnews', 'off_beat',
+              'story', 'story_floor', 'wildcard', 'carousel_format')
 # What the checks say without failing anything: a warned option (it carries his words) and an idea from his tick on a
 # subject he refused (it carries the refusal; Ruling, Krish, 2026-11-12).
 NOTE_CODES = ('warned', 'his_tick', 'his_repeat')

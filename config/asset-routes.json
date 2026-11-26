@@ -1,0 +1,84 @@
+{
+  "_about": "Every asset kind growth-makeyourmindup used to make, mapped to the v5 Library command and set that makes it in content-engine now. Ruling (Krish, 2026-11-26): \"I believe that growth should move all asset production to Content Engine. I see no point in having a separate repository produce specific assets.\" Then: \"I want everything to be one harmonious engine.\" The v5 Library is locked (26 Nov 2026; Krish: \"I approve the new cover thumbnail systems, go\"), so Growth's HTML renderer, templates, kit.css, fit.js, fonts, brand PNGs, piece kits, kits.py, tall_meme.py and video_cover.py are retired, never moved: the Library templates are the only artwork. scripts/post-pack/asset_routes.py reads this file, prints the command for a kind, and refuses when the Library is not on the checkout. tests/asset_routes_test.py holds it to the Library's registry.",
+  "schema": "content-engine-asset-routes/1",
+  "split": "content-engine makes every asset (hero pieces, carousels, memes, Substack Notes images and words, captions and titles per channel, covers, thumbnails, cuts, the weekly edition package) and hands Growth finished, approved assets with their captions in the piece manifest; growth-makeyourmindup grows the channel: it posts, schedules in Buffer, places the edition in Substack, distributes, runs the subscribe route, measures and reports performance back.",
+  "library": {
+    "registry": "docs/ve/cards/library/library.json",
+    "guide": "docs/ve/cards/library/LIBRARY-GUIDE.md",
+    "playbook": "docs/ve/cards/library/PRODUCTION-PLAYBOOK.md",
+    "locked": "library/gates-and-wiring at b0cf8943, 26 Nov 2026",
+    "checked_against": "library/gates-and-wiring b0cf8943: library.json carousel_sets and items, LIBRARY-GUIDE.md (retired templates), scripts/covers/cover_outputs.py OUTPUTS"
+  },
+  "absent": "the v5 Library is not on this checkout yet",
+  "absent_detail": "{script} is not on this checkout. The v5 Library is on content-engine main (b0cf8943, merged by #984); this checkout predates it or lacks it. Nothing else makes this asset: no other renderer, no Growth template, no hand-drawn stand-in. Wait for the Library to reach main, then run the command again.",
+  "commands": {
+    "covers": {
+      "script": "scripts/covers/make_covers.py",
+      "argv": ["python", "scripts/covers/make_covers.py", "{piece}", "--out", "{out}"],
+      "writes": "covers.json, read by post-pack as cover_set",
+      "outputs": {
+        "substack": "cover-1200x630.png",
+        "youtube": "thumb-wide-1280x720.jpg",
+        "vertical": "cover-1080x1920.png",
+        "tall": "thumb-tall-1080x1920.jpg",
+        "carousel": "carousel/slide-01.png"
+      },
+      "families": {
+        "wide": ["portrait", "evidence", "number", "object"],
+        "vertical": ["portrait", "receipt", "figure"]
+      },
+      "rule": "Covers and thumbnails come only from this command. The family pick is automatic: the first family the facts support that differs from the previous published piece's. make_piece.py --set covers and --set video are retired."
+    },
+    "carousel": {
+      "script": "scripts/library/make_piece.py",
+      "argv": ["python", "scripts/library/make_piece.py", "{piece}", "--set", "{set}"],
+      "via": ["python", "scripts/carousel_make.py", "{piece}", "--set", "{set}", "--deck", "{deck}", "--out", "{out}"],
+      "via_rule": "A carousel is never made by calling make_piece.py alone: scripts/carousel_make.py checks the deck against config/carousel-format.json first (Krish, 2026-11-26: enforce the carousel format), calls make_piece.py and make_covers.py by path, checks the drawn slides and writes the receipt the manifest reads. asset_routes.py names and runs that route for every carousel kind.",
+      "writes": "carousel/slide-NN.png and post-pack-files.json",
+      "sets": ["piece", "good-news", "simple-advice", "how-to", "explainer", "quiz", "meme"],
+      "rule": "Carousels come only from this command, in the set's registry order (library.json carousel_sets), to the 3-second swipe (CAROUSEL-FORMAT.md). It never invents words: every slot comes from the piece."
+    }
+  },
+  "statuses": {
+    "route": "made by a Library command and set",
+    "fixed": "fixed Library artwork, rendered once by the Library itself; nothing is made per piece",
+    "retired": "no longer made; the reason says why",
+    "gap": "the Library has no command for it yet; listed for the rebrand session, never drawn another way"
+  },
+  "kinds": [
+    {"kind": "piece-carousel", "growth": "render/templates/carousel-cover.html, carousel-body.html, carousel-close.html; render/pieces/carousel-<piece>/ kits", "status": "route", "command": "carousel", "set": "piece", "templates": ["carousel-cover", "carousel-chart", "carousel-document", "carousel-why-3", "carousel-why-1", "carousel-close"], "first_slide": "covers", "note": "The first slide is the image-led cover from make_covers.py (carousel/slide-01.png). A per-piece kit look is retired: variety comes from ART-DIRECTION.md's rotations, never a new look per piece."},
+    {"kind": "carousel-cover", "growth": "render/templates/carousel-cover.html", "status": "route", "command": "carousel", "set": "piece", "templates": ["carousel-cover"], "first_slide": "covers"},
+    {"kind": "carousel-body", "growth": "render/templates/carousel-body.html", "status": "route", "command": "carousel", "set": "explainer", "templates": ["carousel-body"]},
+    {"kind": "carousel-close", "growth": "render/templates/carousel-close.html", "status": "route", "command": "carousel", "set": "piece", "templates": ["carousel-close"]},
+    {"kind": "good-news-carousel", "growth": "render/pieces/off-sat-goodnews/ (cover, item, close)", "status": "route", "command": "carousel", "set": "good-news", "templates": ["carousel-good-news-cover", "carousel-good-news-item", "carousel-good-news-item-2", "carousel-good-news-item-3", "carousel-good-news-item-4", "carousel-good-news-close"], "note": "Four items by default, five only if all fit the word limits. Each item uses the story's own credited real photograph."},
+    {"kind": "good-news-close", "growth": "render/pieces/off-sat-goodnews/templates/close.html", "status": "route", "command": "carousel", "set": "good-news", "templates": ["carousel-good-news-close"]},
+    {"kind": "simple-advice-carousel", "growth": "an off-day carousel kit (Codex card, kind carousel)", "status": "route", "command": "carousel", "set": "simple-advice", "templates": ["carousel-simple-advice-cover", "carousel-simple-advice-item", "carousel-simple-advice-close"]},
+    {"kind": "how-to-carousel", "growth": "an off-day carousel kit (Codex card, kind carousel)", "status": "route", "command": "carousel", "set": "how-to", "templates": ["carousel-howto-cover", "carousel-howto-step", "carousel-simple-advice-close"]},
+    {"kind": "explainer-carousel", "growth": "an off-day carousel kit (Codex card, kind carousel)", "status": "route", "command": "carousel", "set": "explainer", "templates": ["carousel-cover", "carousel-body", "carousel-explainer-step", "carousel-versus", "carousel-close"]},
+    {"kind": "quiz-carousel", "growth": "an off-day carousel kit (Codex card, kind carousel)", "status": "route", "command": "carousel", "set": "quiz", "templates": ["carousel-simple-advice-cover", "carousel-quiz-question", "carousel-quiz-answer", "carousel-simple-advice-close"]},
+    {"kind": "meme-carousel", "growth": "an off-day meme kit (Codex card, kind meme)", "status": "route", "command": "carousel", "set": "meme", "templates": ["carousel-cover", "carousel-meme", "carousel-close"]},
+    {"kind": "versus-card-tall", "growth": "render/templates/versus-card-tall.html", "status": "route", "command": "carousel", "set": "explainer", "templates": ["carousel-versus"]},
+    {"kind": "number-card-tall", "growth": "render/templates/number-card-tall.html", "status": "route", "command": "carousel", "set": "piece", "templates": ["carousel-chart"]},
+    {"kind": "video-cover", "growth": "engine/run/video_cover.py (the designed tall cover for a cut)", "status": "route", "command": "covers", "outputs": ["vertical", "tall"], "note": "The cover and the tall thumbnail come from make_covers.py; the manifest names the cover per channel (cover, cover_offset_ms). Growth keeps only its thumbnailOffset release gate."},
+    {"kind": "video-thumbnail", "growth": "engine/run/video_cover.py and the library thumbnail", "status": "route", "command": "covers", "outputs": ["youtube", "tall"]},
+    {"kind": "substack-cover", "growth": "the piece's cover for Substack", "status": "route", "command": "covers", "outputs": ["substack"]},
+    {"kind": "meme-square", "growth": "render/templates/meme-square.html", "status": "gap", "library_template": "social-meme", "gap": "A single 1080 x 1080 meme image: the Library has social-meme, but make_piece.py fills carousel sets only (set meme makes a meme carousel), so no command fills one image."},
+    {"kind": "meme-vertical", "growth": "render/templates/meme-vertical.html", "status": "gap", "library_template": "social-meme-tall", "gap": "A single 1080 x 1920 meme image: the Library has social-meme-tall, and no command fills it."},
+    {"kind": "tall-meme-with-clip", "growth": "render/templates/meme-tall.html and engine/run/tall_meme.py (the clip centred in a fixed window)", "status": "gap", "library_template": "social-meme-video", "gap": "A tall meme with its clip: the Library has social-meme-video, and no command fills it or places a clip in its window. The reskin route (docs/MEME-STANDARD.md) composes a meme template's clip today."},
+    {"kind": "video-cover-in-cut", "growth": "engine/run/video_cover.py append_cover (the cover appended as the cut's closing second, thumbnailOffset its middle)", "status": "gap", "library_template": null, "gap": "Building the designed cover into the delivered cut as its closing frames, so cover_offset_ms can be set: make_covers.py writes the cover image, and no Library command appends it to a cut."},
+    {"kind": "notes-image", "growth": "a Notes image kit (Codex card, kind notes_image)", "status": "gap", "library_template": "social-note-image", "gap": "A Substack Notes image: the Library has social-note-image (with copy-substack-note for the words), and no command fills it. A Note goes out as words only until it has one."},
+    {"kind": "versus-card", "growth": "render/templates/versus-card.html (1200 x 675)", "status": "gap", "library_template": "social-versus", "gap": "A single versus post: the Library has social-versus (1080 x 1350, no wide shape), and no command fills one image."},
+    {"kind": "number-card", "growth": "render/templates/number-card.html (1314 x 1080)", "status": "gap", "library_template": "social-number", "gap": "A single number post: the Library has social-number, and no command fills one image; its threshold device still carries the template's own data (make_piece.py FIXED_DEVICES)."},
+    {"kind": "evidence-card", "growth": "render/templates/evidence-card.html (1280 x 820)", "status": "gap", "library_template": "social-receipt", "gap": "A single evidence post: the Library has social-receipt and newsletter-figure-document, and no command fills one image."},
+    {"kind": "chapter-card", "growth": "render/templates/chapter-card.html (1920 x 1080)", "status": "gap", "library_template": "video-wide-chapter", "gap": "A chapter card in a long cut: the Library has video-wide-chapter, and no per-piece command fills a video template (make_piece.py --set video is retired)."},
+    {"kind": "chapter-card-vertical", "growth": "render/templates/chapter-card-vertical.html (1080 x 1920)", "status": "gap", "library_template": "video-vertical-chapter", "gap": "A chapter card in a vertical cut: the Library has video-vertical-chapter, and no per-piece command fills it."},
+    {"kind": "profile-art", "growth": "render/templates/profile-art.html", "status": "fixed", "library_template": "profile-ig-avatar", "note": "Profile pictures, banners and highlights are fixed Library artwork (profile-*), made once by the Library, never per piece."},
+    {"kind": "quote-card", "growth": "render/templates/quote-card.html and social/formats/quote-card.json", "status": "retired", "library_template": "social-quote", "reason": "The Canva lane is retired (Krish, 2026-11-26: \"Canva is crap so we don't use that anymore\"). The Library's social-quote exists if it comes back; it has no command yet."},
+    {"kind": "receipt-card", "growth": "render/templates/receipt-card.html and social/formats/receipt-card.json", "status": "retired", "library_template": "social-receipt", "reason": "The Canva lane is retired (Krish, 2026-11-26)."},
+    {"kind": "scorecard", "growth": "render/templates/scorecard.html and social/formats/scorecard.json", "status": "retired", "library_template": null, "reason": "The Canva lane is retired (Krish, 2026-11-26); the Library has no scorecard."},
+    {"kind": "poll-question", "growth": "render/templates/poll-question.html and social/formats/poll.json", "status": "retired", "library_template": "social-poll-question", "reason": "The Canva lane is retired (Krish, 2026-11-26)."},
+    {"kind": "poll-result", "growth": "render/templates/poll-result.html and social/formats/poll.json", "status": "retired", "library_template": "social-poll-result", "reason": "The Canva lane is retired (Krish, 2026-11-26)."},
+    {"kind": "story-frame", "growth": "render/templates/story-frame.html and social/formats/story-frame.json", "status": "retired", "library_template": "social-ig-story-hook", "reason": "The Canva lane is retired (Krish, 2026-11-26)."},
+    {"kind": "synthetic-kit", "growth": "render/pieces/synthetic-receipt-tape/ (an invented example of a kit's shape)", "status": "retired", "library_template": null, "reason": "A piece kit was a per-piece look, and per-piece looks are retired with the Library lock: the templates are the only artwork."}
+  ]
+}

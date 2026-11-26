@@ -64,9 +64,18 @@ VOICE_REPAIR = ('highpass=f=80,'
                 'acompressor=threshold=0.1:ratio=2.5:attack=12:release=180:knee=3:makeup=1.6')
 FILTERS = ('afftdn', 'equalizer', 'deesser', 'acompressor', 'atempo')
 
-PUSH = 0.90      # the slight push: 90% of the frame, about 11% closer
-TIGHT = 0.82     # the closer framing for a pivotal line
+PUSH = 0.90      # the slight push under a hidden cut: 90% of the frame, about 11% closer
 HOLD_S = 1.5     # a framing is held at least this long, so it never flicks
+
+# The pivotal line's push is ve's impact zoom, from the same config rows (config/ve/impact-zoom.json; Krish,
+# 2026-11-26: "Zoom for impact ... classy and subtle rather than too aggressive"). It retires TIGHT, a jump to 82% of
+# the frame (1.22x) laid on with no ease. The push eases out from his word's onset, holds through the line, and eases
+# back; one that starts on a hidden cut keeps that cut's hard change, so the join stays hidden.
+IMPACT = json.loads((Path(__file__).resolve().parents[2] / 'config' / 've' / 'impact-zoom.json').read_text(encoding='utf-8'))
+IMPACT_TO = IMPACT['scale']['push_to'][IMPACT['quick_edit']['aspect']]
+CLOSE = round(1 / IMPACT_TO, 4)                   # the closer framing for a pivotal line: 1.05x, not 1.22x
+CLOSE_ON_PUSH = round(PUSH / IMPACT_TO, 4)        # the same push from the hidden-cut framing
+IMPACT_SCALES = (CLOSE, CLOSE_ON_PUSH)
 SPEED_RANGE = (1.0, 1.35)
 
 
@@ -128,11 +137,92 @@ def sped_source(src, out, factor, fps=30, even=False):
 
 # ---------------------------------------------------------------- framing
 
+def impact_window(start, phrase_end, total):
+    """(s, e) of a pivotal line's push: from his word's onset, held through the
+    line (at least hold_min_s, at most hold_max_s past the push), then released
+    over release_s."""
+    t = IMPACT['timing']
+    held = min(max(phrase_end, start + t['push_s'] + t['hold_min_s']), start + t['push_s'] + t['hold_max_s'])
+    return round(start, 3), round(min(total, held + t['release_s']), 3)
+
+
+def impact_onset(words):
+    """The index in `words` (a pivotal line's words, in order) of the first one
+    that is not a stop word (config words.stop), or None: a push never lands on
+    "the" or "and"."""
+    stop = set(IMPACT['words']['stop'])
+    for i, w in enumerate(words):
+        if re.sub(r"[^a-z0-9']", '', str(w).lower()) not in stop:
+            return i
+    return None
+
+
+def _per_minute_ok(starts, cap):
+    starts = sorted(starts)
+    return all(sum(1 for t in starts if s <= t < s + 60) <= cap for s in starts)
+
+
+def spaced_impacts(emphasis, total=None):
+    """(kept, dropped): pivotal lines at least min_gap_s apart, none starting
+    before the one before has released, none inside the cut's first
+    cut_start_s or last cut_end_s (when `total` is given), and at most
+    per_minute in any minute (ve's spacing and edges rows)."""
+    sp, ed = IMPACT['spacing'], IMPACT['edges']
+    cap = sp['per_minute'][IMPACT['quick_edit']['aspect']]
+    kept, dropped = [], []
+    for s, e in sorted(emphasis):
+        if total is not None and (s < ed['cut_start_s'] or e > total - ed['cut_end_s']):
+            dropped.append((s, e))
+        elif kept and (s - kept[-1][0] < sp['min_gap_s'] or s < kept[-1][1]):
+            dropped.append((s, e))
+        elif not _per_minute_ok([k[0] for k in kept] + [s], cap):
+            dropped.append((s, e))
+        else:
+            kept.append((s, e))
+    return kept, dropped
+
+
+def impact_problems(windows, total, joins=(), fps=30):
+    """quick-edit's camera.impact row: the pivotal pushes in `windows` (the
+    framing windows) checked by ve's own measure (velib/impact.py problems):
+    scale against hard_cap, the rate, the spacing, per minute and the edges.
+    [] when nothing is wrong."""
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from velib import impact as ve_impact
+    t = IMPACT['timing']
+    spans = []
+    for a, b, sc in sorted(windows):
+        if sc not in IMPACT_SCALES:
+            continue
+        if spans and abs(spans[-1][1] - a) < 1e-6:
+            spans[-1][1] = b
+        else:
+            spans.append([a, b])
+    hidden = {round(j, 3) for j in joins}
+    frames = round(total * fps)
+    hits = []
+    for a, b in spans:
+        f0, f1 = round(a * fps), round(b * fps)
+        cut = round(b, 3) in hidden
+        peak = min(f1, f0 + max(1, round(t['push_s'] * fps)))
+        hold = f1 if cut else max(peak, f1 - round(t['release_s'] * fps))
+        hits.append({'w': 0, 'word': f'{a:.2f}s', 'fromFrame': f0, 'peakFrame': peak, 'holdTo': hold, 'toFrame': f1,
+                     'scale': IMPACT_TO, 'strength': 'normal', 'release': 'cut' if cut else 'ease'})
+    if not hits:
+        return []
+    props = {'aspect': IMPACT['quick_edit']['aspect'], 'fps': fps, 'durationFrames': frames,
+             'beats': [{'id': 'take', 'fromFrame': 0, 'toFrame': frames + 1, 'layout': 'FULL'}],
+             'impact': {'pushEase': t['push_ease'], 'releaseEase': t['release_ease'],
+                        'joins': sorted(h['toFrame'] for h in hits if h['release'] == 'cut'), 'hits': hits}}
+    return ve_impact.problems(props, IMPACT, fps=fps)
+
+
 def framing_windows(segs, total, emphasis=(), hold=HOLD_S, prefer=()):
     """[(s, e, scale)] on the edited clock: a push from one hidden cut to the
     next, alternating with the base framing, never changed again within
-    `hold` seconds; then each emphasis window at TIGHT over whatever was
-    there. Only windows that are not the base framing are returned.
+    `hold` seconds; then each emphasis window, the impact push, 1.05x closer
+    than whatever framing was there (CLOSE over the base, CLOSE_ON_PUSH over a
+    push). Only windows that are not the base framing are returned.
     `prefer`: joins made by a cut row (a stumble taken out), which have their
     change first; a plain pause cut within `hold` of one gives way to it."""
     cuts = [round(g['off'], 3) for g in segs[1:]]
@@ -153,7 +243,7 @@ def framing_windows(segs, total, emphasis=(), hold=HOLD_S, prefer=()):
     if level:
         out.append((start, total, PUSH))
     for s, e in sorted(emphasis):
-        cut = []
+        cut, under = [], []
         for a, b, sc in out:
             if b <= s or a >= e:
                 cut.append((a, b, sc))
@@ -162,7 +252,17 @@ def framing_windows(segs, total, emphasis=(), hold=HOLD_S, prefer=()):
                 cut.append((a, s, sc))
             if b > e:
                 cut.append((e, b, sc))
-        out = sorted(cut + [(s, e, TIGHT)])
+            under.append((max(a, s), min(b, e)))
+        # The push is relative to the framing under it: over a pushed stretch it closes in from there, never out.
+        parts, t = [], s
+        for a, b in sorted(under):
+            if a > t:
+                parts.append((t, a, CLOSE))
+            parts.append((a, b, CLOSE_ON_PUSH))
+            t = b
+        if t < e:
+            parts.append((t, e, CLOSE))
+        out = sorted(cut + parts)
     return [(round(a, 3), round(b, 3), sc) for a, b, sc in out if b - a >= 0.2]
 
 
@@ -177,9 +277,37 @@ def framing_crop(cw, ch, face, scale):
     return w, h, x, y
 
 
-def framing_graph(src, dst, windows, cw, ch, face):
+def _ease_expr(name, x):
+    """ve's impact curves (velib/impact.py ease) as an ffmpeg expression of x, clipped to 0..1."""
+    x = f'clip({x},0,1)'
+    if name == 'easeOutCubic':
+        return f'(1-pow(1-{x},3))'
+    if name == 'easeInOutCubic':
+        return f'if(lt({x},0.5),4*pow({x},3),1-pow(2-2*{x},3)/2)'
+    raise EpisodeError(f'impact ease {name} is not easeOutCubic or easeInOutCubic')
+
+
+def impact_zoom_expr(spans, under, joins=()):
+    """zoompan's zoom for one impact framing over its windows `spans`: the
+    framing under it (1/under) at rest, IMPACT_TO closer at the peak. It eases
+    out from each window's start and eases back by its end, except where that
+    edge is a hidden cut (in `joins`), which keeps its hard change."""
+    t = IMPACT['timing']
+    hidden = {round(j, 3) for j in joins}
+    terms = []
+    for a, b in spans:
+        up = '1' if round(a, 3) in hidden else _ease_expr(t['push_ease'], f'(it-{a:.3f})/{t["push_s"]}')
+        down = '1' if round(b, 3) in hidden else _ease_expr(t['release_ease'], f'({b:.3f}-it)/{t["release_s"]}')
+        terms.append(f'gte(it,{a:.3f})*lt(it,{b:.3f})*{up}*{down}')
+    return f'{1 / under:.5f}*(1+{IMPACT_TO - 1:.4f}*({"+".join(terms)}))'
+
+
+def framing_graph(src, dst, windows, cw, ch, face, joins=(), fps=30):
     """Filter-graph lines that lay each non-base framing over the stream
-    `src` (a label without brackets), at its own size, into `dst`."""
+    `src` (a label without brackets), at its own size, into `dst`. An impact
+    framing (IMPACT_SCALES) is drawn moving: zoompan eases it in about his face
+    from the framing under it and back out (impact_zoom_expr); `joins` are the
+    hidden cuts, where it changes hard instead."""
     if not windows:
         return [f'[{src}]null[{dst}]']
     scales = sorted({sc for _, _, sc in windows}, reverse=True)
@@ -188,7 +316,13 @@ def framing_graph(src, dst, windows, cw, ch, face):
     for k, sc in enumerate(scales):
         w, h, x, y = framing_crop(cw, ch, face, sc)
         en = '+'.join(f'between(t,{a},{b - 0.001:.3f})' for a, b, s in windows if s == sc)
-        lines.append(f'[fz{k}]crop={w}:{h}:{x}:{y},scale={cw}:{ch}:flags=lanczos,setsar=1[fs{k}]')
+        if sc in IMPACT_SCALES:
+            under = 1.0 if sc == CLOSE else PUSH
+            z = impact_zoom_expr([(a, b) for a, b, s in windows if s == sc], under, joins)
+            fc = face[0] + face[1] / 2
+            lines.append(f"[fz{k}]zoompan=z='{z}':x='(iw-iw/zoom)/2':y='{fc}*(1-1/zoom)':d=1:s={cw}x{ch}:fps={fps},setsar=1[fs{k}]")
+        else:
+            lines.append(f'[fz{k}]crop={w}:{h}:{x}:{y},scale={cw}:{ch}:flags=lanczos,setsar=1[fs{k}]')
         nxt = dst if k == len(scales) - 1 else f'fo{k}'
         lines.append(f"[{cur}][fs{k}]overlay=0:0:enable='{en}'[{nxt}]")
         cur = nxt
@@ -421,23 +555,74 @@ def _sniff_self_test(checks):
         checks.append(('a burst inside a word is never touched', sniffs(src, [{'s': 0.2, 'e': 2.8}], rate), []))
 
 
+def _impact_render_check():
+    """(still before the push, moved during it): a small test picture through framing_graph, read back frame by frame."""
+    import numpy as np
+    w, h, fps = 320, 180, 30
+    g = framing_graph('0:v', 'out', [(0.8, 1.9, CLOSE)], w, h, [40, 100], fps=fps)
+    raw = subprocess.run(['ffmpeg', '-v', 'error', '-f', 'lavfi', '-i', f'testsrc2=size={w}x{h}:rate={fps}:duration=2.2',
+                          '-filter_complex', ';'.join([f'[0:v]setpts=N/({fps}*TB)[0v]'] + [x.replace('[0:v]', '[0v]', 1) for x in g]),
+                          '-map', '[out]', '-f', 'rawvideo', '-pix_fmt', 'gray', '-'], capture_output=True, check=True).stdout
+    src = subprocess.run(['ffmpeg', '-v', 'error', '-f', 'lavfi', '-i', f'testsrc2=size={w}x{h}:rate={fps}:duration=2.2',
+                          '-f', 'rawvideo', '-pix_fmt', 'gray', '-'], capture_output=True, check=True).stdout
+    out = np.frombuffer(raw, np.uint8).reshape(-1, h, w).astype(int)
+    ref = np.frombuffer(src, np.uint8).reshape(-1, h, w).astype(int)
+    still = bool(np.abs(out[10] - ref[10]).mean() < 0.5)
+    moved = bool(np.abs(out[45] - ref[45]).mean() > 2.0)
+    return still, moved
+
+
 def self_test():
     checks = []
     segs = [{'off': 0.0}, {'off': 2.0}, {'off': 2.8}, {'off': 6.0}, {'off': 9.0}]
     wins = framing_windows(segs, 12.0)
     checks.append(('a push from one hidden cut to the next, held at least 1.5 s; a cut sooner keeps its framing',
                    wins, [(2.0, 6.0, PUSH), (9.0, 12.0, PUSH)]))
-    checks.append(('a pivotal line is closer, over whatever framing was there',
-                   framing_windows(segs, 12.0, [(5.0, 7.0)]), [(2.0, 5.0, PUSH), (5.0, 7.0, TIGHT), (9.0, 12.0, PUSH)]))
+    checks.append(('a pivotal line is pushed 1.05x closer than whatever framing was there, never out from a push',
+                   framing_windows(segs, 12.0, [(5.0, 7.0)]),
+                   [(2.0, 5.0, PUSH), (5.0, 6.0, CLOSE_ON_PUSH), (6.0, 7.0, CLOSE), (9.0, 12.0, PUSH)]))
+    checks.append(('the pivotal push is the impact zoom, not the old 0.82 (1.22x): 1.05x, under the hard cap',
+                   (CLOSE, round(1 / CLOSE_ON_PUSH, 4) < IMPACT['scale']['hard_cap'] * round(1 / PUSH, 4), 1 / CLOSE <= IMPACT['scale']['hard_cap']),
+                   (0.9524, True, True)))
+    checks.append(('a pivotal line is pushed from its word, held through it (at least hold_min_s, at most hold_max_s), then released',
+                   (impact_window(5.0, 5.4, 60.0), impact_window(5.0, 8.0, 60.0), impact_window(59.0, 59.5, 60.0)),
+                   ((5.0, 6.87), (5.0, 8.47), (59.0, 60.0))))
+    checks.append(('a pivotal line held past hold_max_s releases at the cap, not at the phrase end',
+                   impact_window(5.0, 20.0, 60.0), (5.0, round(5.0 + 0.37 + 2.4 + 0.7, 3))))
+    checks.append(('pivotal lines closer than min_gap_s, or before the last has released, are dropped and named',
+                   spaced_impacts([(10.0, 12.0), (5.0, 7.0), (7.5, 8.5)]), ([(5.0, 7.0), (10.0, 12.0)], [(7.5, 8.5)])))
+    checks.append(("no push in the cut's first cut_start_s or last cut_end_s",
+                   spaced_impacts([(0.1, 2.0), (10.0, 12.0), (58.0, 59.8)], total=60.0), ([(10.0, 12.0)], [(0.1, 2.0), (58.0, 59.8)])))
+    many = [(5.0 + 4.5 * k, 6.9 + 4.5 * k) for k in range(8)]
+    checks.append(('at most per_minute pushes in any minute on the long cut',
+                   len(spaced_impacts(many, total=120.0)[0]), IMPACT['spacing']['per_minute'][IMPACT['quick_edit']['aspect']]))
+    checks.append(("a push never lands on a stop word: it moves to the line's first content word, or there is none",
+                   (impact_onset(['the', 'singers', 'get']), impact_onset(['and', 'so'])), (1, None)))
+    good = framing_windows(segs, 60.0, [(10.0, 12.07)])
+    checks.append(("the quick-edit camera.impact row passes a spaced, capped push (ve's own measure)",
+                   impact_problems(good, 60.0, joins=[g['off'] for g in segs[1:]]), []))
+    crowded = [(10.0, 12.07, CLOSE), (11.0, 13.07, CLOSE), (40.0, 42.07, 0.7)]
+    bad = impact_problems(crowded, 60.0)
+    checks.append(('the row fails pushes too close together, a push in the last cut_end_s and anything past hard_cap',
+                   (any('closer than' in x for x in bad), any('first' in x and 'last' in x for x in impact_problems([(59.0, 60.0, CLOSE)], 60.0))),
+                   (True, True)))
+    expr = impact_zoom_expr([(5.0, 7.0)], 1.0)
+    hidden = impact_zoom_expr([(5.0, 7.0)], PUSH, joins=[5.0])
+    checks.append(('the push eases out from the word and eases back; on a hidden cut it changes hard, from the framing under it',
+                   ('(1-pow(1-clip((it-5.000)' in expr, 'if(lt(clip((7.000-it)' in expr, '(it-5.000)' in hidden,
+                    hidden.startswith(f'{1 / PUSH:.5f}*')), (True, True, False, True)))
     checks.append(('a join made by a cut row has its change first; the pause cut 1.08 s before it gives way',
                    framing_windows([{'off': 0.0}, {'off': 5.0}, {'off': 6.08}, {'off': 9.0}], 12.0, prefer=[6.08]),
                    [(6.08, 9.0, PUSH)]))
     w, h, x, y = framing_crop(1080, 1920, [200, 900], PUSH)
     checks.append(('the push zooms about his face and stays inside the frame, even sizes',
                    (w, h, x, y, x + w <= 1080, y + h <= 1920), (972, 1728, 54, 64, True, True)))
-    g = framing_graph('0:v', 'vf', [(2.0, 6.0, PUSH), (5.0, 7.0, TIGHT)], 1080, 1920, [200, 900])
-    checks.append(('two framings: one split, two crops, laid in order, ending at the label asked for',
-                   (g[0], g[-1].endswith('[vf]'), sum('crop=' in x for x in g)), ('[0:v]split=3[fb][fz0][fz1]', True, 2)))
+    g = framing_graph('0:v', 'vf', [(2.0, 5.0, PUSH), (5.0, 7.0, CLOSE)], 1080, 1920, [200, 900])
+    checks.append(('two framings: one split, the hidden-cut push a still crop, the impact push a moving zoom, ending at the label',
+                   (g[0], g[-1].endswith('[vf]'), sum('crop=' in x for x in g), sum('zoompan=' in x for x in g)),
+                   ('[0:v]split=3[fb][fz0][fz1]', True, 1, 1)))
+    checks.append(('the impact push renders: ffmpeg runs the graph, the frame is still before the push and moved in it',
+                   _impact_render_check(), (True, True)))
     checks.append(('no framing is a plain pass-through', framing_graph('a', 'b', [], 10, 10, [0, 10]), ['[a]null[b]']))
     toks = [{'w': w, 's': i * 0.4, 'e': i * 0.4 + 0.3} for i, w in enumerate('This is one sentence. And here is another one that goes on.'.split())]
     text = srt(toks, offset=3.0)

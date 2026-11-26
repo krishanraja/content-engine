@@ -184,7 +184,7 @@ export function feelBody(id: string, body: Record<string, unknown>): boolean {
 export const SCORE_ID = /^score-([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/
 export const SCORE_BASES = ['at_publish', 'hindsight'] as const
 // Layout v4 (Krish, 2026-11-07: "It also doesn't allow me to give feedback for every day of publishing stuff last week,
-// say, for example, the off days"): a post with no piece yet (an off day Growth made) is scored on the board as
+// say, for example, the off days"): a post with no piece yet (an off-day post) is scored on the board as
 // picks/score-<date>[-<slot>], with its date and title; it files no piece_scores row until it has a piece.
 export const SCORE_DATE_ID = /^score-(\d{4}-\d{2}-\d{2})(?:-([a-z0-9][a-z0-9_-]{0,39}))?$/
 const SCORE_DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat']
@@ -433,7 +433,7 @@ export function validBody(collection: string, id: string, body: unknown): boolea
   if (!validId(id) || !object(body) || Buffer.byteLength(JSON.stringify(body)) > 256 * 1024) return false
   if ('at' in body && (typeof body.at !== 'string' || !Number.isFinite(Date.parse(body.at)))) return false
   const day = (v: unknown) => ['mon', 'wed', 'fri'].includes(String(v))
-  // A box may sit on any day: an off-day post Growth makes has its own boxes (2026-10-30).
+  // A box may sit on any day: an off-day post has its own boxes (2026-10-30).
   const anyDay = (v: unknown) => ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].includes(String(v))
   const text = (k: string, max = 150000) => typeof body[k] === 'string' && (body[k] as string).length <= max
   if (collection === 'ticks') return typeof body.done === 'boolean' && anyDay(body.day) && text('piece_id', 100) && text('step', 80) && text('label', 300) && id === `${body.day}-${body.step}`

@@ -1,0 +1,11 @@
+{
+  "_about": "Judge accountability, as rows (Ruling, Krish, 2026-11-26: the buyer judge is kept as the paying reader, and no judge or rule survives on faith; rank1_picked was 0 on both scored weeks). Each board's scorecard records, per judge, the rank its scoring gave his actual pick (scripts/post-pack/board_feed.py judge_rank_of_pick: the panel's judges by key, the paying reader on key buyer included, and the story score's blind judges as story:<axis>), beside score_rank_of_pick. Kept out of config/story-score.json: it reads his picks, and the blind scorer never does (tests/story_score_test.py, the wall).",
+  "review": {
+    "after_weeks": 4,
+    "chance": "(of + 1) / 2: the mean rank a judge would give his pick by drawing at random among the options it scored that day, averaged over the same picks",
+    "rule": "After after_weeks scored weeks, a judge whose mean rank of his picks is no better than chance (equal or worse) gets a review line on the Monday learn step (board_feed.py scorecard, judge_review).",
+    "line": "retire or rewrite",
+    "acts": false,
+    "acts_note": "Reported only. Nothing retires or rewrites a judge by itself; that is Krish's call, by a pull request."
+  }
+}

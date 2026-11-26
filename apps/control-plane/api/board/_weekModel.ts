@@ -435,11 +435,11 @@ function readOf(raw: Body | null, extra: { title?: string; text?: string | null;
   }
 }
 
-/** How an off-day post is made, before the write-back: its route (a carousel, a meme or a Notes image in a Claude
- *  session with the Codex plugin; a voiceover short or a meme video on the ve route; Ruling, Krish, 2026-11-13;
- *  _makeRoute.ts), else the plain hand-off to Growth. */
+/** How an off-day post is made, before the write-back: its route (a carousel, a meme or a Notes image from the v5
+ *  Library in a Claude session; a voiceover short or a meme video on the ve route; Rulings, Krish, 2026-11-13 and
+ *  2026-11-26; _makeRoute.ts), else the plain split: content-engine makes it, Growth posts it. */
 export function offdayHead(route: MakeRoute | null, template: ViewTemplate | null = null, caption: string | null = null): string {
-  if (!route) return 'Growth makes and posts off-day posts (krishanraja/growth-makeyourmindup), to content-engine docs/CAROUSEL-STANDARD.md and the rejection floor. Make or post exactly what Krish approved, nothing else.\n\n'
+  if (!route) return 'content-engine makes this off-day post in a Claude session, from the locked v5 Library (config/asset-routes.json), to content-engine docs/CAROUSEL-STANDARD.md and the rejection floor, with its captions; Growth (krishanraja/growth-makeyourmindup) posts it and makes nothing. Make exactly what Krish approved, nothing else.\n\n'
   const clip = route === 'reskin' && template
     ? `The clip to download and reskin: ${template.clip.url}\nIts page: ${template.clip.page}\nFound on ${template.found.label || template.found.place}${template.found.url ? ` (${template.found.url})` : ''}; credit: ${template.credit || 'name the original poster from the page'}.\n`
       + `${template.what_happens ? `What happens in it: ${template.what_happens}\n` : ''}${template.clip.seconds ? `Its length: about ${template.clip.seconds} seconds.\n` : ''}`
@@ -890,8 +890,9 @@ function publishLines(files: ModelAsset[]): string {
   return files.map((f, i) => `${i + 1}. ${ASSET_KIND_WORD[f.kind] ?? f.kind}: ${f.name}${f.folder ? ` (${f.folder})` : ''} ${bufferUrl(f.url)}${f.slides.length ? ` [${f.slides.length} slides: ${f.slides.map(x => bufferUrl(x.url)).join(' ')}]` : ''}`).join('\n')
 }
 /** The Publish prompt's head: everything a session needs to schedule the post with no question to Krish. The channels and
- *  the four daily slots are Growth's (vendor/makeyourmindup/mix.json); the captions are written here, in Growth's account
- *  voices (Krish, 2026-11-19: he has never chosen channels, times or captions: Growth knows them). */
+ *  the four daily slots are Growth's (vendor/makeyourmindup/mix.json); the captions are the ones content-engine wrote at
+ *  make time (scripts/post-pack/channel_captions.py; Ruling, Krish, 2026-11-26), in the account voices (Krish,
+ *  2026-11-19: he has never chosen channels, times or captions). */
 function publishHead(kind: string, dateWord: string): string {
   const p = placementFor(kind)
   const channels = p ? `${channelWords(p)} (${p.channels.map(c => `${c.name}: ${c.format}`).join('; ')})` : 'the channels of the Make Your Mind Up lane this kind of post belongs to in growth-makeyourmindup mix.json'
@@ -901,7 +902,7 @@ function publishHead(kind: string, dateWord: string): string {
     + `1. Channels: ${channels}: Growth's own placement for this kind of post, Make Your Mind Up's channels only (never Heartside's, fulltime.fm's, yourdoghasnotes' or Krish's LinkedIn). Confirm each with get_account and list_channels. `
     + 'A channel that is not connected, or whose route Growth holds (Buffer TikTok short video is held: social/guides/buffer.md), is skipped and named in your report; it never stops the other channels. '
     + `2. Time: Growth's four daily slots, ${times}, New York time, on the card's day (${dateWord}). For each channel read its scheduled posts for that day from Buffer and take the first slot not taken that is more than 90 minutes away; if none is left, the next day's first. Set dueAt in New York time with its UTC offset. `
-    + '3. Captions: write each channel\'s own caption yourself now, from the card\'s idea, claim and files only. Instagram and YouTube speak as the publication; X and TikTok are personal: sincere, warm and humble, first person allowed, Krish\'s name never in the text (growth-makeyourmindup docs/ACCOUNT-VOICE.md). '
+    + '3. Captions: use each channel\'s words and title exactly as content-engine wrote them at make time into the piece manifest (scripts/post-pack/channel_captions.py). Only if the card has none, write them now with that step, from the card\'s idea, claim and files only. Instagram and YouTube speak as the publication; X and TikTok are personal: sincere, warm and humble, first person allowed, Krish\'s name never in the text (config/channel-captions.json). '
     + 'No em dashes, no hashtags, no emojis, no links, never ask for a share, like or follow, and never the tag off.day, off-day or Off day anywhere (Krish, 2026-11-19: never on any post); check each personal caption with check_voice and every caption with the copy lint (config/copy-lint.json). File all of them on the piece with add_piece_material before you schedule. '
     + '4. Files: Buffer fetches each file from an https address. The addresses below are Drive download addresses (https://drive.google.com/uc?export=download&id=...), the same form Buffer took for the 18 Nov explainer\'s eight images; use them exactly. '
     + 'Drive\'s share pages are for people, so "there is no public link" is not a blocker. Open each file from its address and check it is the finished one first (the right images in order, the covers and thumbnails); if a file is missing, wrong or unreadable, stop and report blocked naming it; never schedule a different file. A video goes as a video asset, with its designed cover\'s frame as thumbnailOffset. '

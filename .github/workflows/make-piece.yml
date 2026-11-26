@@ -117,12 +117,15 @@ jobs:
         uses: anthropics/claude-code-action@v1
         env:
           ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+          # The cycle's connector touches (config/cycle.json). Unset until Krish adds the secret: touch.py then queues
+          # them on the week's touches.jsonl for a session with the connector to drain, never drops them.
+          CC_HARNESS_KEY: ${{ secrets.CC_HARNESS_KEY }}
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ github.token }}
           claude_args: >-
             --max-turns 600
-            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/board_session.py:*),Bash(python3 scripts/post-pack/live_board.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_web.py touch:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(python3 scripts/post-pack/title_check.py:*),Bash(python3 scripts/post-pack/narration_diff.py:*),Bash(python3 scripts/post-pack/voice_check.py:*),Bash(python3 scripts/post-pack/story_check.py:*),Bash(python3 scripts/post-pack/ai_scan.py:*),Bash(python3 scripts/post-pack/creative_direction.py:*),Bash(python3 scripts/post-pack/edit_sweep.py:*),Bash(python3 scripts/post-pack/teleprompter_send.py:*),Bash(python3 scripts/pages/build.py:*),Bash(python3 scripts/voice/spoken_rules.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Bash(git log:*),Bash(git add:*),Bash(git commit:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),Edit(WORKBENCH.md),Write(WORKBENCH.md),WebSearch,WebFetch,Task,TodoWrite"
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/touch.py:*),Bash(python3 scripts/post-pack/board_session.py:*),Bash(python3 scripts/post-pack/live_board.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_web.py touch:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(python3 scripts/post-pack/title_check.py:*),Bash(python3 scripts/post-pack/narration_diff.py:*),Bash(python3 scripts/post-pack/voice_check.py:*),Bash(python3 scripts/post-pack/story_check.py:*),Bash(python3 scripts/post-pack/ai_scan.py:*),Bash(python3 scripts/post-pack/creative_direction.py:*),Bash(python3 scripts/post-pack/edit_sweep.py:*),Bash(python3 scripts/post-pack/teleprompter_send.py:*),Bash(python3 scripts/pages/build.py:*),Bash(python3 scripts/voice/spoken_rules.py:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Bash(git log:*),Bash(git add:*),Bash(git commit:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),Edit(WORKBENCH.md),Write(WORKBENCH.md),WebSearch,WebFetch,Task,TodoWrite"
             --disallowedTools "Read(//proc/**)"
           prompt: |
             piece_id: ${{ steps.piece.outputs.id }}
@@ -143,6 +146,12 @@ jobs:
             not there, report that one question on the piece as blocked with your best guess, write a short note under docs/plans
             naming exactly what was missing, commit it, and stop. Never end a run without a commit: a run with no
             commit goes red.
+
+            The cycle's touches (config/cycle.json; .agents/skills/make-piece/references/cycle.md): at each stage you
+            reach, run python3 scripts/post-pack/touch.py run <stage> --week <Monday> --piece <the piece id> with the
+            values that stage takes, for example before recording scripts: python3 scripts/post-pack/touch.py run 6
+            --week <Monday> --piece <the piece id> --set long=<long.md> --set short=<short.md>. making.py refuses the
+            scripts while a required stage 6 touch is missing. A touch it cannot send is queued, never dropped.
 
             How this run's tools work (two runs on 4 Nov 2026 lost their work to these): the allowed commands match
             only the start of a command, so run each python3 command on its own, with the piece id written out, and no

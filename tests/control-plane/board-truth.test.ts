@@ -30,7 +30,7 @@ describe('where everything is', () => {
     const ok = { state: 'approved' as const, label: 'Approved', at: null, links: [] }
     const d = (over: Record<string, unknown>) => ({ day: 'tue', date: '2026-11-10', label: 'Tue 10', who: 'missed', next: 'Missed: Tue 10 has passed', options: [], pieces: [], ...over })
     expect(truthProblems([d({})], '2026-11-12')).toEqual([])
-    expect(truthProblems([d({ who: 'growth', next: 'Approved. Growth makes it' })], '2026-11-12'))
+    expect(truthProblems([d({ who: 'growth', next: 'Approved. content-engine makes it, and Growth posts it on the day' })], '2026-11-12'))
       .toEqual(['tue: a past day shown as with Growth', 'tue: a past day not out does not say it was missed'])
     expect(truthProblems([d({ options: [{ id: 'a' }], pieces: [{ id: 'p', stage: { ...ok, state: 'someday' } }] })], '2026-11-12'))
       .toEqual(['tue a: no stage', 'tue piece p: no stage'])

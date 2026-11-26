@@ -20,9 +20,12 @@ Ruling, Krish, 2026-11-13).
   and two cuts (the 5-minute and the 90-second). They go live on Monday S+8,
   Wednesday S+10 and Friday S+12.
 - **Tuesday, Thursday and Saturday: off-day posts** on Instagram,
-  TikTok and YouTube Shorts: memes, uplifting AI news carousels, simple advice
-  on levelling up with AI, and short clips from past weeks. Growth owns this
-  lane and makes the posts. He approves them in the same Sunday session
+  TikTok and YouTube Shorts: memes, good news carousels, simple advice
+  on levelling up with AI, and short clips from past weeks, all for the
+  reader's world (studios, labels, creators, clubs and leagues, `config/beat.json`
+  `offdays`). Content-engine makes the posts and Growth posts them (Ruling,
+  Krish, 2026-11-26: content-engine makes every asset; Growth made them from
+  28 October to 26 November). He approves them in the same Sunday session
   (Krish, 2026-10-28: "I'm happy to plan the Tuesday, Thursday, Saturday, and
   Sunday content within the Sunday ideas session if you give me a few options
   to approve as you do the Mon/wed/fri"). Sunday is a rest day and nothing is
@@ -35,7 +38,7 @@ Ruling, Krish, 2026-11-13).
 
 | When | What happens | Who |
 |---|---|---|
-| Saturday, ready by Sunday 06:00 | The Sunday ideas board: at least four options for each of Monday, Wednesday and Friday, with last week's "next week" items first, and 4 to 6 off-day options for each of Tuesday, Thursday and Saturday, each read back by two fresh readers (Krish, 2026-10-28: "on a Sunday, Claude Code proactively brings me ideas") | the Sunday ideas run: Claude Code in GitHub Actions on his subscription (`.github/workflows/sunday-ideas.yml`); Growth for the off days |
+| Saturday, ready by Sunday 06:00 | The Sunday ideas board: at least four options for each of Monday, Wednesday and Friday, with last week's "next week" items first, and 4 to 6 off-day options for each of Tuesday, Thursday and Saturday, each read back by two fresh readers (Krish, 2026-10-28: "on a Sunday, Claude Code proactively brings me ideas") | the Sunday ideas run: Claude Code in GitHub Actions on his subscription (`.github/workflows/sunday-ideas.yml`), off days included. From the 7 Dec board (branch `story/engine-v5`) the run also makes the cycle's stage 0 to 2 touches, floors every option, probes its whys, scores it blind and orders the open days, names close calls and carries one checked wildcard on each of Monday, Wednesday and Friday (`.agents/skills/plan-week/references/story-score.md`); the gate keeps the week off the board until all of it holds |
 | Saturday, the same run | The Saturday good news for the week the run plans, which starts eight days after its Sunday: five real stories on one topic from the seven days before the run, each checked against its primary source, with its own photo or clip, put on that week's board (Krish, 2026-11-02: "find the actual good news on Sunday ... so that the news items are fresh") | the Sunday ideas run, its good-news step |
 | Sunday, by 10:00 | One press on every idea, one of the five outcomes of the ideas gate (`docs/PUBLISH_BOARDS.md`, from 11 November): approve it for a day (with a note if he likes), file it for later, reject it, save it as a trend, or improve it for a future piece. The off-day options take the same five | Krish, about 15 minutes |
 | Sunday, 10:00 to 11:45 | The interview, one question at a time, ending in one signed narrative lock per piece (Krish, 2026-10-28: "Claude interviews me on all three ideas to nail down the narrative arc") | the Sunday room session, with Krish |
@@ -124,7 +127,8 @@ The render and filing steps below describe the fallback workflow. A schema 2 dir
 - **Every piece goes to** Substack and YouTube, then YouTube Shorts, TikTok
   and Instagram (`docs/AMPLIFICATION.md`). LinkedIn and Spotify stay
   available as optional steps; WhatsApp and Substack Notes left the board
-  on 14 October (Growth makes Notes since 28 October).
+  on 14 October (Growth made Notes from 28 October; content-engine makes them,
+  the Saturday Note to the weekly edition included, since 26 November).
 
 ## The week (before 1 November)
 

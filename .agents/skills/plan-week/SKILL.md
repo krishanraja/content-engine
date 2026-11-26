@@ -284,8 +284,9 @@ he ticks: `references/inspiration-piece.md`.
    words verbatim; `use_origin` says whether his words, a rule or a model
    guess named the use, and a `model_guess` is never quoted as his reading.
    Say the cue counts in your reply. When `empty` says the cues table is
-   not there yet, say so and carry on. His taste
-   steers this ranking only; never pass it to a judge. Most ideas arrive
+   not there yet, say so and carry on. His rejections
+   are a floor only; never a score, and never pass his cues to a judge.
+   Most ideas arrive
    with no series yet (`unassigned`: 77 of 89 on 21 Oct, when
    under.the.hood's pool was empty), so read `unassigned` too and place
    each idea in the series whose mandate it fits, or leave it out; the
@@ -345,8 +346,8 @@ he ticks: `references/inspiration-piece.md`.
    **The quality bar, before an idea reaches him** (Krish, 2026-10-24:
    "most importantly focus on improving your own work quality"). Each day's
    ideas are four different stories, never four angles on one headline.
-   Each one's `so_what` names what the face (a senior leader who will not
-   admit they are not ready) does differently on Monday morning; its hook is
+   Each one's `so_what` names what the reader (`config/beat.json`: who makes
+   the calls or the work) does differently on Monday morning; its hook is
    a specific, surprising, checked fact, never a category. At least one idea
    a day comes from his own words or his Inspiration House when either has
    anything that fits, and one is a wildcard the engine would not usually
@@ -375,11 +376,12 @@ he ticks: `references/inspiration-piece.md`.
    `ideas-pass-the-business-leader-test`, `simplify-and-unpack-the-concept`,
    `follow-the-money-traces-the-money`, `no-repeat-topic-within-weeks` and
    `reading-his-board-marks`). Apply these before an idea reaches the tab:
-   - *The business-leader test.* Say, in one plain sentence, what a general
-     business leader can do or decide differently right away because of the
-     idea. If you cannot, he will mark it curious-not-convinced ("I just
-     can't figure out how general business leaders would be helped
-     immediately by knowing this"), so do not offer it.
+   - *The reader test.* Say, in one plain sentence, what the reader
+     (`config/beat.json` reader) can do or decide differently right away
+     because of the idea, off days included. If you cannot, he marks it
+     curious-not-convinced (19 Oct, of the old reader: "I just can't figure
+     out how general business leaders would be helped immediately by
+     knowing this"), so do not offer it.
    - *Simple first, then unpacked.* A concept idea opens with its plain
      version ("a bake-off that anyone can understand") and then unpacks each
      party's own motive ("Why is Disney going after it, and why is Google
@@ -414,14 +416,14 @@ he ticks: `references/inspiration-piece.md`.
    each checked against its primary source, `stories_due` today (the trade-off is said, as the reference says). From 30 Nov every Saturday option is a sheet carousel
    followed card for card (Ruling, Krish, 2026-11-17: "Each suggestion should be a carousel like one carousel from my
    Instagram Inspo sheet"), and memes are 6 to 10 templates on Tue and Thu (`references/meme-roaster.md`). Since 19 Nov Saturday is good-news carousels only (`references/offdays.md`).
-   Growth makes what he approved. **His own
+   content-engine makes, Growth posts. **His own
    ideas go here as pieces he records** (Ruling, Krish, 2026-10-29): every
    idea he dropped in (`must_cover`, `kind: his_idea`) is a recorded off-day
    option, one 90-second cut said to camera or as a voiceover, unless his
    words name Monday, Wednesday or Friday. Follow the reference's last part:
    the script, its story check, two fresh readers, then `kind: recorded`.
    His Approve schedules it and sends the script to Teleprompter itself.
-4. Write each day's options, best first, one recommended:
+4. Write each day's options, best first by the story score (6d), one recommended:
    `python3 scripts/engine.py POST /api/week/options @options.json` with
    `{"week_start": "<Monday>", "series": "<slug>", "options": [{"id": "<uuid>", "rank": 1, "pitch": "two or three plain sentences", "why_now": "the dated event, with its date", "recommended": true, "covers": ["<must_cover id>"]}]}`.
    `covers` is the board idea's own `covers` list, unchanged: the engine keeps it on the piece (`meta.covers`, never
@@ -467,8 +469,8 @@ he ticks: `references/inspiration-piece.md`.
    he gave them. The lock is what he signs; the make session then judges it
    and declares it in `config/long-cuts.json` quoting those words
    (`make-piece`, "A longer long cut"). Never propose one to fill time.
-6d. **The funny lines** (humour-engine on call): before the board, read each option's `funny` with
-   `humour_check.py ideas`: `.agents/skills/plan-week/references/funny-lines.md`.
+6d. **Score, floor and order** before the board, funny lines included:
+   `.agents/skills/plan-week/references/story-score.md`.
 7. **Put the week on the live board**, last, once the options are written
    (Ruling, Krish, 2026-11-11: one live board, in Control Centre). The live board draws the week from
    `GET /api/board/<Monday>/view`, which reads `ideas.json` (each publishing

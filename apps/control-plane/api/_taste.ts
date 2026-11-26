@@ -8,7 +8,9 @@
 // pushing a topic up the slate (the anti-echo rule).
 //
 // Drafting and revising only. A judge, ranker or scorer must never read this:
-// scripts/check-taste-reader.ts fails CI if one does.
+// apps/control-plane/scripts/check-judges.ts section 4 (TASTE_READ) fails CI if
+// a TypeScript judge, ranker or scorer does, and tests/story_wall_test.py holds
+// the same wall for the Python story scorer.
 //
 // It fails quiet by design: no claims, or an unreadable store, returns '' and
 // the prompt is exactly what it was before the ledger existed.

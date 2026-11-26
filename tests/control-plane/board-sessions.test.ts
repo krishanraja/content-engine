@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { createHash } from 'node:crypto'
 import { withApprovals } from './_approvals'
 import { buildView, type ViewInputs } from '../../apps/control-plane/api/board/_view'
-import { LEARNING_RULE, ROLES, WALLS, WRITE_BACK_HEAD, attachOverlay, stepKey, withWriteBack, writeBack } from '../../apps/control-plane/api/board/_writeBack'
+import { CYCLE_RULE, LEARNING_RULE, ROLES, stageOf, WALLS, WRITE_BACK_HEAD, attachOverlay, stepKey, withWriteBack, writeBack } from '../../apps/control-plane/api/board/_writeBack'
 import { StoreError, addText, confirmFile, listing, parseReport, parseScope, writerOf, type StoreDb } from '../../apps/control-plane/api/_pieceStore'
 import { createSessionsHandler } from '../../apps/control-plane/api/content-ideas/sessions'
 
@@ -61,8 +61,23 @@ describe('every copied prompt carries how to report back, with no key in it', ()
     // The walls ride in every copied prompt (Ruling, Krish, 2026-11-11): the one place, the archive, and only his Approve places an idea.
     expect(writeBack({ pieceId: MON, week: WEEK, day: 'mon', step: 'board' })).toContain(WALLS)
     expect(WALLS).toMatch(/only place to put the work[\s\S]*retired and redirect here[\s\S]*Never post or publish[\s\S]*only Krish's Approve places it/)
-    expect(ROLES).toMatch(/Codex generates the visual assets[\s\S]*Claude writes the words[\s\S]*arbitrates the standards[\s\S]*Codex's own report is never proof/)
+    expect(ROLES).toMatch(/only from the v5 Library commands[\s\S]*carousel_make\.py[\s\S]*make_covers\.py[\s\S]*Codex builds only a photoreal still[\s\S]*Claude writes the words[\s\S]*arbitrates the standards[\s\S]*never proof/)
+    expect(ROLES).not.toMatch(/ve\.py card/)
     expect(LEARNING_RULE).toMatch(/record_harness_observation[\s\S]*internal-auditor[\s\S]*Only Krish's preference or inspiration goes to report_to_taste_engine[\s\S]*a defect never does/)
+  })
+
+  it('names the cycle stage and its touch.py command, never a list of tools (config/cycle.json)', () => {
+    expect(CYCLE_RULE).toMatch(/config\/cycle\.json[\s\S]*touch\.py run <stage>[\s\S]*queued for touch\.py drain, never dropped/)
+    expect(stageOf('scripts')).toMatchObject({ id: 6, name: 'Scripts' })
+    expect(stageOf('Storyboard')?.id).toBe(7)
+    expect(stageOf('nothing-like-a-step')).toBeNull()
+    const piece = writeBack({ pieceId: MON, week: WEEK, day: 'mon', step: 'lock' })
+    expect(piece).toContain(`This step is stage 5, Narrative lock: python3 scripts/post-pack/touch.py run 5 --week ${WEEK} --piece ${MON}`)
+    const day = writeBack({ pieceId: null, week: WEEK, day: 'tue', step: 'post' })
+    expect(day).toContain(`stage 9, Distribution: python3 scripts/post-pack/touch.py run 9 --week ${WEEK}\n`)
+    const other = writeBack({ pieceId: MON, week: WEEK, day: 'mon', step: 'next' })
+    expect(other).toContain(CYCLE_RULE)
+    expect(other).not.toContain('This step is stage')
   })
 })
 

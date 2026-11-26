@@ -11,7 +11,7 @@ name: Saturday good news
 #
 # Built like the Sunday ideas run: Claude Code runs inside this job on his subscription (CLAUDE_CODE_OAUTH_TOKEN, never
 # an API key), writing to the board only through the engine API (ENGINE_OPERATOR_TOKEN). It follows "The Saturday good
-# news" in .agents/skills/plan-week/references/offdays.md: five real AI stories from the seven days up to the day it
+# news" in .agents/skills/plan-week/references/offdays.md: four real AI stories from the seven days up to the day it
 # runs, each checked on its own page, each with its own picture or clip, written onto the week's good-news option and
 # put on the live board, so his five presses work as on any off-day option. It proposes; only his Approve puts the
 # post on the publish board (the ideas gate).
@@ -47,7 +47,7 @@ on:
         type: boolean
         default: false
       fill:
-        description: 'off-<day>-<id>: an approved good-news post with fewer than five stories, filled to five on its own topic'
+        description: 'off-<day>-<id>: an approved good-news post with fewer than four stories, filled to four on its own topic'
         required: false
 
 concurrency:
@@ -161,8 +161,8 @@ jobs:
             Run python3 scripts/check_failures.py and python3 scripts/floor.py first.
 
             Fill: "${{ steps.guard.outputs.fill }}". When it names an option (off-<day>-<id>), this run fills that
-            approved good-news post to five stories on its own topic and does nothing else: follow "Filling an approved
-            post to five" in the section "The Saturday good news" of .agents/skills/plan-week/references/offdays.md,
+            approved good-news post to four stories on its own topic (config/carousel-format.json good_news) and does
+            nothing else: follow "Filling an approved post to four" in the section "The Saturday good news" of .agents/skills/plan-week/references/offdays.md,
             write the stories onto that option only (its existing story first), never change its copy, hook, pitch or
             direction (his Approve is bound to those words), then run board_feed.py gather and cover.
 
@@ -177,8 +177,15 @@ jobs:
             good news stories. What about Reddit, YouTube, or LinkedIn? Given that it's business leaders, we might want
             some successful business stories as well. In fact successful business stories might be really good."):
             gather at least fifteen candidates from at least three of the news, Reddit, YouTube, LinkedIn, his sheet and
-            his saved cards, written on the option as candidates, and count a business that succeeded with AI, with the
-            number that shows it, as good news. Then choose the topic where five strong candidates meet and find those five
+            his saved cards, written on the option as candidates. The good news is config/beat.json offdays.good_news:
+            people in the creative, arts, music, entertainment, media and sports industries doing, earning or making
+            more with AI, a business of theirs that succeeded with AI included, with the number that shows it (the
+            reader narrowed to those industries on 2026-11-26, config/beat.json reader; Krish, 2026-11-26: "Make sure
+            all the good news suggestions and meme suggestions are also aligned to the new positioning"). A story with
+            no line into those industries is not offered, and board_feed.py gate refuses it (off_beat). Then choose the
+            topic where four strong candidates meet and find those four, a fifth found as a spare only (the
+            3-second carousel format carries four items, config/carousel-format.json good_news, in the Library's
+            good-news set order: cover, four items, close)
             (from the seven days up to ${{ steps.guard.outputs.due }}, today, or the thirty for his sheet, each
             with a real photo or clip of the thing itself the post can embed), check each against its
             primary source, write them into that week's docs/plans/<Monday>-week/ideas.json on the weekly good-news

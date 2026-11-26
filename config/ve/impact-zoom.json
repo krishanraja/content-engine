@@ -1,0 +1,80 @@
+{
+  "_about": "Impact zoom: a slow, small push onto his face on the most impactful word of a line, the way a world-class editor would, then a release. One feature, read by ve (velib/impact.py plans it at compile, apps/renderer/src/engine/kit/impact.ts draws it on the take layer only) and by quick-edit (scripts/quick-edit/episode.py's emphasis framings). Every number is a row here, never a constant in code. Krish, 2026-11-26: \"Can you make sure that on the most impactful words in any video, there's some form of camera zooming to emulate a world-class professional? Zoom for impact. We should bake in all the obvious edge cases and have it be classy and subtle rather than too aggressive.\" The Library's motion floor allows it as the word-anchored exception (MOTION-FLOOR F14: a faster zoom starts on the word naming its target and stops at 1.5x; conflict 20: \"1.5x; slow push only on his face\"); these values sit far below that cap. Never a punch, zoom-through, whip, flash or shake (F15), never with another camera move (F6).",
+  "krish": "Krish, 2026-11-26: \"Zoom for impact ... classy and subtle rather than too aggressive.\"",
+  "set": "2026-11-26",
+  "scale": {
+    "_why": "How close the push goes, as a scale of his take (1.05 is 5% closer). A tall cut is seen on a phone held close, so it takes one point more. One strong push per cut, on its single biggest word. The hard cap is what QC refuses past, whatever the spec pins.",
+    "push_to": { "16:9": 1.05, "9:16": 1.06 },
+    "strong_to": { "16:9": 1.08, "9:16": 1.10 },
+    "hard_cap": 1.15,
+    "min_effective": 1.02,
+    "library_cap": 1.5
+  },
+  "timing": {
+    "_why": "Seconds, so a cut at any frame rate keeps the same feel (11 frames and 21 frames at 30 fps). The push starts on the onset of the word itself and eases out; the hold runs through the phrase; the release eases in and out, or resets hidden under the next picture cut. The rate cap is what QC refuses past: an ease-out push of 1.10 over 0.37 s moves fastest on its first frame, about 0.81 a second, so 1.0 a second leaves a margin and refuses anything snappier.",
+    "push_s": 0.37,
+    "push_ease": "easeOutCubic",
+    "hold_min_s": 0.8,
+    "hold_max_s": 2.4,
+    "release_s": 0.7,
+    "release_ease": "easeInOutCubic",
+    "max_rate_per_s": 1.0
+  },
+  "spacing": {
+    "_why": "Rare enough to stay special: at least 4 s from one impact's onset to the next, at most 6 a minute on a short and 4 on a long cut, and never a second push before the first has released.",
+    "min_gap_s": 4.0,
+    "per_minute": { "9:16": 6, "16:9": 4 },
+    "merge_within_s": 2.0,
+    "release_before_next": true
+  },
+  "edges": {
+    "_why": "Where an impact never goes. The first 0.3 s and last 0.5 s of a cut are left alone; nothing within 0.3 s of a device event (an ingredient hit) or of the title moment; the release completes before any beat change that is not a picture cut, before a transition and before the end card.",
+    "cut_start_s": 0.3,
+    "cut_end_s": 0.5,
+    "event_guard_s": 0.3,
+    "transition_guard_s": 0.1,
+    "disfluency_guard_s": 0.5
+  },
+  "beats": {
+    "_why": "Only a beat that shows his own take full frame with nothing drawn over it but the captions: never b-roll, a WINDOW or SPLIT beat, a staged beat (his take in a staging's box), a screen recording, a graphic or a plate. A shot type, when the beat names one, must be one of allow_shots.",
+    "ban_layouts": ["WINDOW", "SPLIT", "STAGE"],
+    "ban_staging_modes": ["band", "stage", "tray", "pillar"],
+    "allow_shots": ["anchor"],
+    "allow_devices": [],
+    "ambient_cameras_block": ["drift", "phased", "punch"]
+  },
+  "alignment": {
+    "_why": "A word is only trusted to land a push when both aligners agree on its onset (the conformed clock's b_onset_s within 2 frames) or its aligner score is at least score_min. A plain words file with neither is unrated: it never gets an automatic impact, only one a human pins.",
+    "agree_within_s": 0.067,
+    "score_min": 0.6,
+    "unrated_auto": false
+  },
+  "face": {
+    "_why": "The push is anchored on his eyes, so his eye line stays where the take put it (the virtual camera's eye line, 0.34 of the frame, is the target it is read against) and his face grows in place. Low confidence means no push: the face track must see him on at least min_coverage of its samples across the impact, and his face may not move more than max_drift of its own width. The quality floor is the virtual camera's (packages/core/src/virtual-camera.ts qualityFloor): the push never upscales his take past 1 / quality_floor source pixels per output pixel, so a 9:16 crop of a 16:9 take, with less headroom, shrinks the push or skips it.",
+    "eye_line": 0.34,
+    "eye_from_top": 0.4,
+    "min_coverage": 0.8,
+    "max_drift": 0.25,
+    "quality_floor": 0.9,
+    "face_margin": 0.10
+  },
+  "words": {
+    "_why": "The candidates: the cut's captions.emphasis, then the words the caption kit's hero score finds (apps/renderer/src/engine/captions/kit.ts heroScore: a number, a reversal, a content word), with a lift for the hook's words and the why-ladder's landing. Never a stop word. One per caption page. stop and reversal are the caption kit's own lists, held equal to kit.ts by tests/ve_impact_test.py.",
+    "min_score": 4,
+    "emphasis_bonus": 2,
+    "hook_bonus": 1,
+    "landing_bonus": 2,
+    "strong_min_score": 7,
+    "stop": ["the", "a", "an", "and", "or", "but", "of", "to", "in", "on", "at", "for", "with", "from", "by", "as", "it", "its", "is", "was", "are", "were", "be", "been", "being", "have", "has", "had", "should", "would", "could", "will", "can", "may", "might", "must", "do", "does", "did", "they", "them", "their", "we", "our", "you", "your", "i", "me", "my", "he", "she", "his", "her", "him", "that", "this", "these", "those", "there", "here", "just", "so", "very", "really", "then", "than", "if", "when", "what", "which", "who", "how", "about", "into", "over", "up", "down", "out", "all", "some", "any", "more", "most", "much", "many", "also", "too", "even", "still", "only"],
+    "reversal": ["no", "never", "not", "none", "nothing", "nobody", "without", "instead", "yet"],
+    "reversal_suffix": "n't"
+  },
+  "qc": {
+    "_why": "ve qc reads the compiled props (camera.impact) and, on the rendered file, checks the captions off his face on every impact frame (captions.off_face).",
+    "off_face_step_frames": 1
+  },
+  "quick_edit": {
+    "_why": "quick-edit's emphasis framings (episode.py) take the same push, timing and cap as ve, in place of the old TIGHT framing of 0.82 (a 1.22x jump, too aggressive). A push that starts on a hidden join keeps that join's hard change, so the join stays hidden.",
+    "aspect": "16:9"
+  }
+}

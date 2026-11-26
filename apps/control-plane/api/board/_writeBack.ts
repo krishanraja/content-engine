@@ -10,6 +10,7 @@
 // machine already holds (scripts/engine.py). Both land on the same routes and the same database rules.
 
 import { DECISIONS_RULE, decisionsText, type PieceDecisions } from './_decisions.js'
+import cycle from '../../../../config/cycle.json' with { type: 'json' }
 
 type Body = Record<string, unknown>
 const obj = (v: unknown): v is Body => Boolean(v) && typeof v === 'object' && !Array.isArray(v)
@@ -51,11 +52,17 @@ export const APPROVAL_RULE = 'When Krish approves the narrative lock or the scri
   + 'with when and where he typed them: the board counts his approval only from there, never from this chat or a draft file.'
 
 /** Who does what, said in every copied prompt so a session never has to infer it from AGENTS.md (Ruling, Krish, 2026-11-23:
- *  Codex generates the assets, Claude arbitrates the standards and oversees; the split itself is his of 2026-11-15). */
-export const ROLES = 'Who does what: Codex generates the visual assets from cards (devices, plates, and carousel, meme and Notes images: '
-  + 'python3 scripts/ve.py card, then ve dispatch or ve lane queue). Claude writes the words and the creative direction, makes the article '
+ *  Codex generates, Claude arbitrates the standards and oversees; the split itself is his of 2026-11-15). Since the v5
+ *  Library (Krish, 2026-11-26: "I approve the new cover thumbnail systems, go") its templates are the only artwork: a
+ *  carousel, meme, Notes image, cover or thumbnail comes only from a Library command (config/asset-routes.json), never a
+ *  Codex card, so a prompt names no second renderer. */
+export const ROLES = 'Who does what: carousels, memes, Notes images, covers and thumbnails come only from the v5 Library commands, by '
+  + 'config/asset-routes.json (python3 scripts/post-pack/asset_routes.py): python3 scripts/carousel_make.py, which runs make_piece.py --set '
+  + '<set> and make_covers.py, and make_covers.py for every cover and thumbnail; a kind the routes mark a gap is not made another way. '
+  + 'Codex builds only a photoreal still of the specific thing when no licensed photo exists (no generated people, no readable logos '
+  + 'or text) and the video devices and plates from their cards. Claude writes the words and the creative direction, makes the article '
   + 'figures, arbitrates the standards (python3 scripts/check_failures.py, python3 scripts/floor.py --format <maker>, get_approved_taste) and '
-  + 'checks everything Codex returns before it counts. Codex\'s own report is never proof. A step with no visual asset needs no card.'
+  + 'verifies everything that comes back before it counts. A maker\'s own report is never proof.'
 
 /** Where a lesson goes (Ruling, Krish, 2026-11-23: engine failures and best practices reach the internal-auditor; the taste
  *  system holds only preference and inspiration). */
@@ -64,6 +71,31 @@ export const LEARNING_RULE = 'Send what you learn to the right place as you find
   + 'repeated_manual_step or successful_pattern), and the internal-auditor reviews it for an engine upgrade. Only Krish\'s preference or '
   + 'inspiration goes to report_to_taste_engine, in his exact words; a defect never does. If one correction holds both, send each part to its '
   + 'place. If the observation tool is not connected, put the lesson in your done report.'
+
+/** Which systems a step reads from or informs (archives, divergence, humour, strategist, growth, makeyourmindup, krish-clone,
+ *  Higgsfield, credits, taste, auditor) is said once, by stage, in config/cycle.json (Krish, 2026-11-26: every system
+ *  involved at the right moment, in the most streamlined way); a prompt names the stage and never lists the tools again. */
+export const CYCLE_RULE = 'The systems this step reads from or informs are its stage\'s touches in config/cycle.json, never a list from memory: '
+  + 'in a checkout, run python3 scripts/post-pack/touch.py run <stage> --week <Monday> (with --piece <id> for a piece) and '
+  + 'touch.py check <stage> before you report done; a connector touch it cannot send is queued for touch.py drain, never dropped.'
+
+const STEPS = (cycle as { steps: Record<string, unknown> }).steps
+const STAGES = (cycle as { stages: Array<{ id: number; name: string }> }).stages
+
+/** The cycle stage a board step is (config/cycle.json steps), or null for a step it does not name. */
+export function stageOf(step: string): { id: number; name: string } | null {
+  const k = stepKey(step)
+  const id = typeof STEPS[k] === 'number' ? STEPS[k] as number : null
+  return id === null ? null : STAGES.find(s => s.id === id) ?? null
+}
+
+/** The stage line for one step: the touch.py command with this prompt's own week and piece filled in. */
+export function stageLine(t: WriteBackTarget): string {
+  const stage = stageOf(t.step)
+  if (!stage) return CYCLE_RULE
+  const cmd = `python3 scripts/post-pack/touch.py run ${stage.id} --week ${t.week}${t.pieceId ? ` --piece ${t.pieceId}` : ''}`
+  return `${CYCLE_RULE} This step is stage ${stage.id}, ${stage.name}: ${cmd}`
+}
 
 export interface WriteBackTarget { pieceId: string | null; week: string; day: string; step: string; decisions?: PieceDecisions | null; schedule?: boolean }
 
@@ -96,7 +128,7 @@ export function writeBack(t: WriteBackTarget): string {
     + `${t.pieceId ? 6 : 5}. ${t.schedule ? WALLS_SCHEDULE : WALLS}\n`
     + `${t.pieceId ? 7 : 6}. ${CLOSE_LOOP}\n`
     + `${t.pieceId ? 8 : 7}. ${ROLES}\n`
-    + `${t.pieceId ? 9 : 8}. ${LEARNING_RULE}\n`
+    + `${t.pieceId ? 9 : 8}. ${LEARNING_RULE} ${stageLine(t)}\n`
     + 'Nothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, '
     + 'and the script uses the engine key this machine already holds.'
 }

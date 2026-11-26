@@ -64,7 +64,8 @@ describe('one live board: the view carries everything the old board showed', () 
     const gitbroke = opt('gitbroke', { decided: 'Signed off for publishing next week (Krish, 4 Nov). Growth posts it.', direction: { look: 'Infographic' } })
     const approved = buildView(week({ approvals: [approval(WEEK, 'thu', 'gitbroke', { doc: 'queue/off-thu-gitbroke', option_sha256: offdaySides(gitbroke).idea_sha256, decided_at: '2026-11-03T11:56:26Z' })] }))
     const thu = day(approved, 'thu')
-    expect(thu.who).toBe('growth')
+    // Before its day, content-engine makes it (Ruling, Krish, 2026-11-26); Growth has it to post once it is made or due.
+    expect(thu.who).toBe('engine')
     expect(thu.next).toMatch(/Approved/)
     expect(thu.detail[0]).toEqual({ h: 'Approved by you', p: 'Tue 3 Nov, 06:56' })
     const o = thu.options.find(x => x.id === 'gitbroke')!
@@ -89,8 +90,8 @@ describe('one live board: the view carries everything the old board showed', () 
     expect(stale.options.find(o => o.id === 'goodnews')?.stories_fresh).toBe(false)
     // Found by the week's ideas run (the Saturday nine days before its Monday) or later: this week's stories.
     const fresh = day(buildView(gnApproved('2026-10-31')), 'sat')
-    expect(fresh.who).toBe('growth')
-    expect(fresh.next).toMatch(/5 stories/)
+    expect(fresh.who).toBe('engine')
+    expect(fresh.next).toMatch(/5 stories. content-engine makes the post/)
     const gn = fresh.options.find(o => o.id === 'goodnews')!
     expect(gn.stories_fresh).toBe(true)
     expect(gn.stories).toHaveLength(5)

@@ -1,6 +1,6 @@
 import type { CameraKeyframeV1, CameraPlanV1, NarrativeBeatV1, SourceVisualAnalysisV1 } from '@mindmake/contracts'
 
-interface NormalizedBounds { x: number; y: number; width: number; height: number }
+export interface NormalizedBounds { x: number; y: number; width: number; height: number }
 interface BoundsSample { at_ms: number; bounds: NormalizedBounds; confidence: number }
 interface TimedDirection { track_id?: string; start_ms: number; end_ms: number; direction?: string; confidence?: number; target?: { x?: number; y?: number } }
 
@@ -47,11 +47,14 @@ const DEFAULT_POLICY: VirtualCameraPolicy = {
   outputWidth: 1080, outputHeight: 1920, sampleIntervalMs: 250, minimumConfidence: 0.58, qualityFloor: 0.9, absoluteMaxZoom: 1.5, subjectZoom: 1.08, emphasisZoom: 1.18, leadRoomFraction: 0.12, eyeLine: 0.34, maximumPanPerSecond: 0.24, maximumZoomPerSecond: 0.18, jitterThreshold: 0.008, smoothing: 0.45,
 }
 
+/** The virtual camera's policy defaults; ve's impact zoom reads its qualityFloor (config/ve/impact-zoom.json). */
+export const VIRTUAL_CAMERA_POLICY: Readonly<VirtualCameraPolicy> = DEFAULT_POLICY
+
 function clamp(value: number, minimum: number, maximum: number): number { return Math.min(maximum, Math.max(minimum, value)) }
 function rounded(value: number): number { return Number(value.toFixed(6)) }
 function smoothstep(value: number): number { const bounded = clamp(value, 0, 1); return bounded * bounded * (3 - 2 * bounded) }
 
-function baseCropForSource(width: number, height: number, outputWidth: number, outputHeight: number): NormalizedBounds {
+export function baseCropForSource(width: number, height: number, outputWidth: number, outputHeight: number): NormalizedBounds {
   const sourceAspect = width / height
   const outputAspect = outputWidth / outputHeight
   if (sourceAspect > outputAspect) {
@@ -62,7 +65,9 @@ function baseCropForSource(width: number, height: number, outputWidth: number, o
   return { x: 0, y: (1 - cropHeight) / 2, width: 1, height: cropHeight }
 }
 
-function maximumSafeZoom(baseCrop: NormalizedBounds, sourceWidth: number, sourceHeight: number, policy: VirtualCameraPolicy): number {
+/** The most a crop may zoom before one source pixel covers more than 1 / qualityFloor output pixels. ve's impact zoom
+ *  (scripts/velib/impact.py safe_zoom, config/ve/impact-zoom.json face.quality_floor) reads the same rule. */
+export function maximumSafeZoom(baseCrop: NormalizedBounds, sourceWidth: number, sourceHeight: number, policy: VirtualCameraPolicy): number {
   const horizontal = baseCrop.width * sourceWidth / (policy.outputWidth * policy.qualityFloor)
   const vertical = baseCrop.height * sourceHeight / (policy.outputHeight * policy.qualityFloor)
   return Math.max(1, Math.min(policy.absoluteMaxZoom, horizontal, vertical))

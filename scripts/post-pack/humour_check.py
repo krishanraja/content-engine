@@ -37,14 +37,28 @@ ORIGIN = 'https://controlcenter.krishraja.com'
 CALLER = 'content-engine'
 TOKEN_ENV = 'ENGINE_OPERATOR_TOKEN'  # the engine's operator key, which Control Center already holds (Krish, 2026-11-17)
 EXIT = {'pass': 0, 'flagged': 1, 'unavailable': 2}
-AUDIENCE = 'Leaders and operators who follow AI news: smart, busy, not specialists'
+
+
+def reader():
+    return json.loads((HERE.parents[1] / 'config' / 'beat.json').read_text(encoding='utf-8'))['reader']
+
+
+def audience():
+    """The humour engine's audience: the North Star reader, config/beat.json reader.audience_short (Krish approved the
+    reader line on 2026-11-26). One wording with the relevance filter and the judges, never a copy here."""
+    return reader()['audience_short']
+
+
+AUDIENCE = audience()
+ABOUT = reader()['about']  # what a script is about, config/beat.json reader.about (no longer "AI news": 2026-11-26)
 FLAT = 'flat: no wit, opinion, sarcasm, exaggeration or analogy the engine can find (floor: never flat and purely factual)'
 EXPLAIN = 'needs explaining: it leans on more than one outside reference to land (floor: never a joke that needs outside explanation)'
 MISS = 'does not land: it reads as an attempt at a joke a stranger would not get'
 SURFACES = {
-    'script': 'Format: a video script Krish speaks to camera, dry and reflective, about AI news',
+    'script': 'Format: a video script Krish speaks to camera, dry and reflective, about ' + ABOUT,
     'joke': 'Format: one joke or aside offered for a video script, read on its own without the script',
     'funny': "Format: the humorous angle of a story idea for an AI publication, one line, read on its own",
+    'fact': 'Format: a plain sourced news fact, read on its own, no joke intended',
 }
 
 
@@ -120,6 +134,18 @@ def _needs_explaining(result):
     return len(jumps) > 1 or bool(result.get('missing_context')) or result.get('comic_reading') == 'insufficient_context'
 
 
+def labels(result):
+    """What the story score reads of one reading (scripts/post-pack/story_score.py): {comic_reading, attempted,
+    needs_explaining, mechanism[], target[]}, or None when the engine gave no reading. Labels only: the number each is
+    worth is a row in config/story-score.json humour_map, never here."""
+    if not isinstance(result, dict) or _unavailable(result):
+        return None
+    main = _labels(_main(result))
+    return {'comic_reading': result.get('comic_reading'), 'attempted': _attempted(result),
+            'needs_explaining': _needs_explaining(result), 'mechanism': list(main.get('mechanism') or []),
+            'target': list(main.get('target') or [])}
+
+
 def _unavailable(result):
     if result.get('comic_reading') is not None:
         return None
@@ -168,7 +194,7 @@ def read_line(line, surface, read, ref):
     why = _unavailable(result)
     if why:
         return {**out, 'status': 'unavailable', 'reason': why}
-    out.update(reading=result['comic_reading'], labels=_labels(_main(result)))
+    out.update(reading=result['comic_reading'], labels=_labels(_main(result)), engine=labels(result))
     if _needs_explaining(result):
         out['findings'].append(EXPLAIN)
     elif result['comic_reading'] != 'supported':

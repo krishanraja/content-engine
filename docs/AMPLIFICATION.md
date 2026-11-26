@@ -182,7 +182,8 @@ mechanic, a two-option poll the reader answers the day a piece goes out,
 under a new name Krish will choose ("rename, don't kill"); until he names it,
 it is not built. None of these is a ruling; the standing five above
 are what the engine enforces. Ask Krish before building any of them. Since
-28 October the derived carousels are Growth's to make (`docs/GROWTH-HANDOFF.md`).
+28 October to 26 November the derived carousels were Growth's to make; since 26 November content-engine makes every
+asset and Growth posts it (Ruling, Krish, 2026-11-26; `docs/GROWTH-HANDOFF.md`).
 
 ## What the platforms do (checked 2026-10-09)
 

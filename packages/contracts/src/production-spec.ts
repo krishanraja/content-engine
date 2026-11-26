@@ -135,12 +135,20 @@ export const VeCutSchema = z.object({
     pauses: z.object({ longer_than_s: z.number().min(0.4).max(3), said: z.string().min(12) }).strict().optional(),
   }).strict().refine((v) => v.speed === 1 || !!v.speed_said, { message: "a speed change needs Krish's words in speed_said", path: ['speed_said'] }),
   captions: z.object({ region: z.string().min(1).default('default'), emphasis: z.array(WordSchema).default([]) }).strict(),
+  /** Impact zoom (Krish, 2026-11-26: "Zoom for impact ... classy and subtle rather than too aggressive";
+   *  config/ve/impact-zoom.json): the words a human or the narrative lock pins a push on, in place of the automatic
+   *  choice. compile refuses a pin that breaks a hard rule (a banned beat, a cut, the spacing). */
+  impact: z.array(z.object({ at_w: WordSchema, strength: z.enum(['normal', 'strong']).default('normal') }).strict()).max(12).optional(),
+  /** No impact zoom on this cut at all. */
+  impact_off: z.literal(true).optional(),
   beats: z.array(VeBeatSchema).min(1),
   music: VeCutMusicSchema.optional(),
   /** A cut's own music bed when the piece's bed cannot hold this cut's length to the one bed shape (Wed 18, 18 Nov 2026:
    *  Mind Bender, 3:20, looped under a 4:55 long cut and lost its loud open). Same ledger rules as audio.bed. */
   bed: z.object({ ledger_id: z.string().min(1), reason: z.string().min(12) }).strict().optional(),
 }).strict()
+  .refine((v) => !(v.impact_off && v.impact?.length), { message: 'a cut pins impact pushes or turns them off, not both', path: ['impact_off'] })
+  .refine((v) => (v.impact ?? []).filter((pin) => pin.strength === 'strong').length <= 1, { message: 'one strong impact push a cut, on its single biggest word', path: ['impact'] })
 
 export const VeDatasetSchema = z.object({
   id: SlugSchema,

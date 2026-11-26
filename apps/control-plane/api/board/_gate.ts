@@ -91,7 +91,7 @@ export function optionSha(o: { so_what?: unknown; story?: unknown }): string {
 export function goes(outcome: Outcome, week: string, day: string, offday = false): string {
   switch (outcome) {
     case 'approved': return offday
-      ? `Goes onto the publish board for ${dayWords(week, day)}. Growth makes it from what you approved.`
+      ? `Goes onto the publish board for ${dayWords(week, day)}. content-engine makes it from what you approved, and Growth posts it.`
       : `Goes onto the publish board for ${dayWords(week, day)} as the day's piece.`
     case 'filed': return 'Filed with today\'s date. It comes back on a later ideas board, or when you ask for it.'
     case 'rejected': return 'Rejected. Your reason is kept as a cue the next ideas run reads, and goes to your taste ledger in your words.'

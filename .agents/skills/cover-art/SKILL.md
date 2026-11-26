@@ -1,6 +1,6 @@
 ---
 name: cover-art
-description: "Make a piece's cover art for every channel it posts on, by the channel strategy Krish approved on 17 Nov 2026, rendered by the approved image-led cover systems with scripts/covers/make_covers.py: the face-free covers on the brand accounts (Instagram, Facebook, Substack), a face-led cover on his own accounts (TikTok, X, LinkedIn, Threads, Substack Notes), and both on YouTube as an A/B test. Face-led covers rotate between two variants: his real cutout with the piece's own figure, and a generated headshot panel with a generated scene. Codex draws them from a ve card of kind cover; a separate critic judges them; Krish picks. Use when a piece needs its covers or thumbnails for more than one channel, or when Krish asks for cover art, face covers or the cover rotation. Not for the working thumbnails drawn before he records (make-piece), carousel cards, memes or Notes images; the Receipt itself is drawn by thumbnail-designer, which this skill calls."
+description: "Make a piece's cover art for every channel it posts on, by the channel strategy Krish approved on 17 Nov 2026, rendered by the approved image-led cover systems with scripts/covers/make_covers.py: the face-free covers on the brand accounts (Instagram, Facebook, Substack), a face-led cover on his own accounts (TikTok, X, LinkedIn, Threads, Substack Notes), and both on YouTube as an A/B test. Face-led covers rotate between two variants: his real cutout with the piece's own figure, and a generated headshot panel with a generated scene. the ve cover card and the Receipt drawer are retired; a separate critic judges them; Krish picks. Use when a piece needs its covers or thumbnails for more than one channel, or when Krish asks for cover art, face covers or the cover rotation. Not for the working thumbnails drawn before he records (make-piece), carousel cards, memes or Notes images."
 model: opus
 ---
 
@@ -69,9 +69,8 @@ has approved that still in his own words, and generated scenes with no people, t
 2. **Face-free shapes:** `python3 scripts/covers/make_covers.py docs/plans/<plan> --out DIR` for every brand-account
    cover and the YouTube and tall thumbnails (thumbnail-designer runs the options round). The 160 px gate runs inside
    it; a held `covers.json` names what failed.
-3. **Face-led shapes:** pick the week's variant; gather the photo (and, for generated, the approved headshot and the
-   scene); copy them into the card's worktree; write one `ve card` of kind `cover` (`scripts/velib/cards.py`; fields:
-   `channel`, `photos`, `date`, `references`) and dispatch it to Codex (`python scripts/ve.py dispatch <card> --wait`).
+3. **Face-led shapes:** from the same make_covers.py run, never drawn another way; the `ve card` of kind `cover` is
+   retired (ve card refuses it). A shape it does not draw is a gap to name.
 4. **Check it yourself:** look at every file at full size, rerun `channel_safe.py`, and confirm no photo edge shows.
    Codex's own report is never proof. Then the antislop PASS/FAIL report (`.agents/skills/antislop/ADAPTER.md` first, then the skills it names) on each file: fix each FAIL no house rule
    overrules.

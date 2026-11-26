@@ -1,0 +1,146 @@
+# Story engine v5: the blind proof protocol
+
+Written and committed on 26 Nov 2026, before any paid call. Nothing in this file changes after the first paid call. A change after that point is a new proof with a new protocol file.
+
+Frozen engine SHA: `810fc45e5a239d0bca90fc0caa402027759ea2a2`
+
+This is the head of `story/engine-v5` with the engine complete (commits 0 to 8) and the review fixes of 26 Nov in, the proof harness's own last fix included. It was moved from `518f173e` before any paid call, while the protocol could still change: the review fixes touched engine files (the blind view's provenance rules, the floors, the ledger, the angle ids, the gate's whys line), and the tells bar became two-sided. It moved again from `1c900f72`, still before any paid call, when the off days were aligned to the reader (Krish, 2026-11-26: "Make sure all the good news suggestions and meme suggestions are also aligned to the new positioning, as well as the carousels."): the fit floor became hard on the off-day types, the gate gained offday_beat_findings, the good news is led by the focus sectors, and the humour read and the repeat guard read the reader's subject (`config/beat.json` reader.about). The off-day and Saturday pairs are scored under those floors. It moved again from `7976f8ab`, still before any paid call, when every Monday, Wednesday and Friday was given a checked wildcard (Krish, 2026-11-26: "Just make sure my Monday, Wednesday, and Friday stories: there's always one completely divergent, strange, obscure, or unexpected story suggestion that I could pick from."): an option carrying `wildcard` is scored as its own type with its own floors, the gate gained wildcard_findings and divergent.py a free distance check. No option on the 16 or 23 Nov boards carries `wildcard`, so no pair's score changes. It moved again from `5a36cb70`, still before any paid call, to the head of `story/engine-v5` after the review fixes of 26 Nov and the merge of origin/main: `idea_checks.py`, `story_score.py` and `config/story-score.json` gained the carousel-format floor (an off-day carousel option holds the 3-second format, `config/carousel-format.json`; Krish, 2026-11-26: "Tell the Content-engine story intelligence for makeyourmindup v5 session that it is to enforce carousel formatting."), which reads only from the format's `from` week (2026-11-30); `story_findings` leaves an option placed from his Inspiration tick alone (`from_inspiration`), and no option on the 16 or 23 Nov boards carries one; and main's locked v5 look marked nine style formats not for us in `config/style-references.json`, which the floor reads only for an option's script, production or experiment format: the one the 16 Nov board names, `ai-music-slam`, is a motion pick, which the floor does not read. So no pair's score moves. A real run (`story_proof.py run` without `--dry`) refuses if any engine file differs from the frozen SHA. The engine files are listed in `config/story-proof.json` `engine_files`: `story_score.py`, `story_floor.py`, `whys-probe-check.ts`, `config/story-score.json`, `config/story-floor.json`, `config/beat.json`, and what the score's results also depend on, `idea_checks.py`, `humour_check.py`, `divergent.py`, `config/style-references.json` and `packages/contracts/src/whys.ts`. It moved again from `84b6e669`, still before any paid call, when the 30 Nov rulings (the gate on the board of 30 Nov, the honest hard floors, the paying-reader judge) and main were merged in: the final engine.
+
+## What is being tested
+
+The question is whether the story engine chooses stories Krish would rather make and read than the ones the old board led with or the ones he picked. The test is blind, run on two past weeks, with the thresholds below fixed in advance.
+
+## Pools
+
+Each week is read as it stood just before his first press on its own options (`scripts/post-pack/ideas_history.py` `FIRST_PRESS`, read from git), and only what was known before the board counts (`BOARDS`):
+
+| Week | Known before (gather) | Board as pressed at | Board options (Mon/Wed/Fri) |
+| --- | --- | --- | --- |
+| 16 Nov | 2026-11-07T23:59:59 | 2026-11-09T13:05:00 | 4 / 4 / 4 |
+| 23 Nov | 2026-11-16T12:54:11 | 2026-11-19T09:57:00 | 4 / 4 / 5 |
+
+- On 23 Nov, the outcome rows before 19 Nov are a piece placed from the 16 Nov board and an off-day approval that moved with it. They are not presses on this board. His Friday pick was added on 17 Nov, so the board he pressed is the one that stood on 19 Nov.
+- `story_proof.py pool` strips every option and pool story through `story_score.blind_view`. It stops if any key in `config/story-proof.json` `taste_keys` survives, at any depth.
+- Pool stories created after the gather cutoff are dropped.
+
+## Arms
+
+- **Arm S, full selection.** Each hero day keeps its board options and adds pool stories:
+  - its series pool's best stories, by the deterministic shortlist (fit plus named_thing, no call), up to `shortlist_per_day` (4);
+  - then the stories with no series (unassigned), best first, filling the places left on Monday, Wednesday and Friday in turn.
+
+  In the 16 Nov gather the series pools were empty, so its pool stories are all unassigned ones. Off days and Saturday have no pool lane, so Arm S re-ranks their board options only.
+- **Arm R, re-rank only.** The old board's options, scored and ordered by the same engine.
+
+Each arm runs the full engine in a working copy under the gitignored `.cache/proof/story-engine-v5/live/arm-<S|R>/`:
+
+1. the floor (`story_floor.floor`);
+2. `story_score.py angles --provoke --judge`;
+3. `humour`;
+4. `score` with the floor;
+5. `order --fresh --write`.
+
+The session supplies the blind judges (`story/judged.json`, from `story_score.py brief`) and the whys probes (`story/probes.json`, from the blind prober and `scripts/whys-probe-check.ts`), exactly as on a Sunday. A pool story that is still a bare headline is written up by the session as a full option (a sourced fact and its own angle) from its source, before scoring, with the same brief as the Sunday run and no sight of the board. A run without them exits 2 and spends nothing.
+
+The engine's choice for a slot is the first option of the day as ordered. On an off day or a Saturday, that means the first option that is not a weekly series.
+
+## Pairing
+
+The old picks come from his final picks document (`picks/<day>`, the last press on it, a press taken back leaving nothing), by idea_id. They are read once, read-only, from `GET /api/board/<Monday>/outcomes`, or given as a picks file (`old --picks`). Where `scorecard.json` disagrees, the final picks document holds, and the conflict is listed.
+
+The pairs are:
+
+- **per hero slot (Mon, Wed, Fri of each week)**:
+  - the engine's choice against the board's lead (the first option as he saw it), `hero_vs_lead`;
+  - the engine's choice against his pick, `hero_vs_pick`;
+- **per off day (Tue, Thu)**: the engine's choice against the board's lead, `offday_vs_lead`;
+- **Saturday**: the engine's first non-weekly Saturday option against the board's, `saturday_vs_lead`. The weekly good-news carousel keeps its place in both arms.
+
+That makes 18 pairs by design. Some pairs are not shown:
+
+- **The same story on both sides**: a tie, not shown. It counts as `=` (0.5).
+- **His pick is the board's lead**: the same pair as `hero_vs_lead`. It is shown once and not counted twice.
+- **No pick on the board he pressed**, or **nothing to pair** (no non-weekly Saturday option): no pair, so the count falls.
+
+Three of the 18 cannot form on these weeks, whatever the engine chooses (read from the picks and the boards with `old`):
+
+- **16 Nov Friday, `hero_vs_pick`.** His final Friday pick (c00cd4e0) is the board's lead, so it is the same pair as `hero_vs_lead`.
+  - `scorecard.json` says fri-4 (b019dbf8), written before he moved the pick on 13 Nov. The final picks document holds.
+- **16 Nov Saturday.** At his first press, Saturday held only the weekly good news, so there is nothing to pair.
+- **23 Nov Monday, `hero_vs_pick`.** No Monday pick is on the board he pressed: the Monday piece was placed from the 16 Nov board.
+
+So at most 15 pairs form. A tie (the same story on both sides) is not shown and counts 0.5.
+
+The zero-spend dry run (`run --dry` on both weeks and both arms, fake transports, flat middling inputs) runs every step and pairs 11 of the 15. The other four are ties under those flat inputs. Its choices mean nothing; it proves the plumbing only. It reserved $1.45 to $1.71 a run in a throwaway ledger, with 7 divergent ops a run.
+
+## Blinding
+
+- There is one card renderer for both sides (`story_proof.card`). It has four fields:
+  - Slot;
+  - What happened (the sourced fact, at most 35 words);
+  - The angle (the engine's chosen angle, else the option's own, at most 25 words);
+  - Source (the site only).
+- House labels, board notes (what a card was rebuilt from, which day's question it serves) and a leading "Publication, date:" prefix are stripped from both sides (`config/story-proof.json` `card`).
+- The order is a seeded shuffle, with exactly half the pairs New = A (the lower half when the count is odd).
+- The key (`key.json`) is sealed in the gitignored `.cache/proof/story-engine-v5/`. The sheet prints only its sha256.
+- `story_proof.py sheet` writes the sheet only into the gitignored cache (`.cache/proof/story-engine-v5/sheet.md`).
+- Before Krish sees the sheet, a fresh subagent with no context gets the tells packet (cards only, `story_proof.py tells`). It must fail to tell new from old: near chance on both sides, inside the tells bar below. A reader who tells them apart with the labels the wrong way round has still told them apart. If it can tell, only the renderer is changed (never the engine or the choices), the sheet is made again, and the check is run again.
+- Only then does `story_proof.py release --out` copy the sheet to `C:\Users\krish\AppData\Roaming\Claude\side-session-notes\local_6966f40e-b46e-4f8b-90f0-7ef4708dbbf1\story-engine-blind-proof.md`. It refuses unless `tells.json` passed on the current key's sha256. `record` and `reveal` refuse until that release took place, and a released sheet cannot be keyed again. The sheet never goes to the board (its presses would pollute the scorecard and the learning) and never into an artifact.
+- Krish answers each pair `Pnn: A++|A+|=|B+|B++ ; seen before? y/n ; would make A? y/n B? y/n ; note:`.
+- `reveal` checks the key against the printed hash and refuses while any shown pair is unanswered.
+
+## Thresholds
+
+```json
+{
+ "thresholds": {
+  "new_preferred": {"of": 18, "at_least": 13, "inconclusive_from": 11},
+  "hero_vs_lead": {"of": 6, "at_least": 4},
+  "new_on_refused_subject": {"at_most": 0},
+  "tells": {"of": 18, "below": 13, "above": 5},
+  "equal_counts": 0.5
+ }
+}
+```
+
+- `=` counts 0.5, and so does a tie not shown. A++ and A+ both count only as "A preferred" (B++ and B+ likewise). Strength is recorded but not weighted.
+- **Pass.** All three of these hold:
+  - New is preferred in at least 13 of 18 pairs;
+  - New wins at least 4 of the 6 hero pairs against the board's lead;
+  - no New card is on a subject the floor refuses with what was known before the board.
+- **Inconclusive.** 11 or 12 of 18. This is not a fail.
+- **Fail.** Anything else.
+- When fewer pairs form than a bar was written for, the bar scales and rounds up: at least `ceil(13 n / 18)` of `n`, and `ceil(4 m / 6)` of `m` hero-lead pairs. The tells bar is two-sided: more than 5 and fewer than 13 of 18 right (6 to 12) passes. It scales the same way: fewer than `ceil(13 n / 18)` right and more than `n - ceil(13 n / 18)`.
+
+## Secondary measures (reported, not pass or fail)
+
+- Arm R: the rank of each of his picks when the old options are re-ranked, against the old board's `rank1_picked`. That was 0 on both weeks' scorecards, though the final picks document now puts the 16 Nov Friday pick first.
+- The would-make rate, new against old.
+- "Seen before", split out, since recognition biases a preference.
+- Blind-check accuracy, from the tells check.
+- Spend: the ledger total, estimated against metered, and the chain-week change.
+
+## Spend
+
+- **Hard cap: $10** for the whole proof. This is the ledger `.cache/proof/story-engine-v5/spend.jsonl`, `--budget-usd`, never above `config/story-proof.json` `budget_usd`.
+- **Estimate: about $1.5 to $1.8 a run**, about $6.6 for both arms on both weeks (dry-run reservations), plus at most $0.25 a council read if the council clears this caller.
+- **The humour engine allows 200 reads a day.** The 23 Nov week's two arms need about 206 (115 and 91), so its Arm R runs on a later day.
+- **Before each real run** (none spend before this check):
+  - the frozen-engine check;
+  - the proof budget against the run's estimate;
+  - `divergent.chain_week()`, which must show room under the $15 weekly chain for the estimate.
+- **The route's $5 a day and 18 divergent ops a day bind** (each run makes 7 divergent ops). So the 16 Nov week runs on one day and the 23 Nov week on the next.
+
+## Limits
+
+- **Hindsight.** He has seen these weeks, so the 30 Nov board is the forward hold-out. Its scorecard's `score_rank_of_pick` is the live measure.
+- **Recognition.** He may recognise cards from two or three weeks ago, hence the "seen before" split.
+- **Position bias.** The old picks were made on boards shown in the old order.
+- **The old beat.** The old pools were gathered for the old "anything about AI" reader. A pool gap is recorded as a loss, never filled by a forced pick.
+- **Small sample.** At most 18 pairs, so 11 or 12 is inconclusive, not a fail.
+
+## No tuning on these weeks
+
+- No weight, anchor, floor, keyword or prompt changes on the strength of these two weeks' results, before or after the reveal.
+- The rubric is tuned only by Krish, in config rows, never automatically from picks.
+- `results.json` is committed beside this file after the reveal. It holds ids, letters and counts only, never his words.

@@ -380,6 +380,9 @@ _beat — the MYMU: Teardown beat gate (G0).
 - `const AVOID_BEAT`
 - `const FOCUS_BEAT`
 - `const ENTERPRISE_BEAT`
+- `const ECONOMICS_BEAT`
+- `const ECONOMICS_FIGURE`
+- `const READER`
 - `function onAvoidList(text: string): boolean`
 - `function inFocusSector(text: string): boolean`
 - `function neverBeat(headline: string): boolean`
@@ -1411,6 +1414,7 @@ The North Star. Every reasoning path reads this first (api/_goals.ts
 - `function jobLabel(id: Job | string | null | undefined): string`
 - `const STANDARDS`
 - `function missionBlock(): string`
+- `function readerBlock(): string`
 - `function faceBlock(): string`
 
 ### `apps/control-plane/api/_modelProvider.ts`
@@ -2655,6 +2659,7 @@ How an off-day post is made, said once for every prompt the board copies out (th
 - `function makeRoute(kind: string | null | undefined, format: string | null | undefined, template = false): MakeRoute | n…`
 - `const ROUTE_RULING`
 - `const NEVER_HEADLESS`
+- `const LIBRARY_ABSENT`
 - `function routeLine(route: MakeRoute): string`
 
 ### `apps/control-plane/api/board/_manifest.ts`
@@ -2665,6 +2670,7 @@ How an off-day post is made, said once for every prompt the board copies out (th
 - `interface ManifestPress`
 - `const sha256 = (b: Uint8Array | string) =>`
 - `function draftPath(piece: Body): string | null`
+- `const MANIFEST_SCHEMAS`
 - `function parseDraft(bytes: Uint8Array, pieceId: string): Draft | null`
 - `async function readDrafts(db: SupabaseClient, pieces: Body[]): Promise<Map<string, Draft>>`
 - `function dayManifest(draft: Draft | undefined, picks: Array<{ doc_id: string; body: Body; updated_by: string; revision?…`
@@ -3187,6 +3193,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function dayPosted(rows: ExtrasInputs['ticks'], day: string, live: LivePost[] = []): ViewPosted[]`
 - `function dayYes(picks: ExtrasInputs['picks'], day: string): ViewYes | null`
 - `function seriesOptions(i: ExtrasInputs, day: string, placed: boolean, onDay: Body | null = null): ViewOption[]`
+- `function closeCall(o: Body): string`
 - `function warned(o: Body): string`
 - `function tickNote(o: Body): string`
 - `function ideaLines(i: ExtrasInputs, day: string): ViewOption[]`
@@ -3288,6 +3295,9 @@ What every prompt the board copies out says about reporting back, and what the b
 - `const APPROVAL_RULE`
 - `const ROLES`
 - `const LEARNING_RULE`
+- `const CYCLE_RULE`
+- `function stageOf(step: string): { id: number; name: string } | null`
+- `function stageLine(t: WriteBackTarget): string`
 - `interface WriteBackTarget`
 - `function stepKey(raw: string | null | undefined): string`
 - `function writeBack(t: WriteBackTarget): string`
@@ -6250,6 +6260,15 @@ Direct port of ref/H/build.py: eight unknowns, h22 fixed at one.
 - `function homography(src: readonly Point[], dst: readonly Point[]): Homography`
 - `function matrix3d(h: Homography): string`
 
+### `apps/renderer/src/engine/kit/impact.ts`
+
+- `const IMPACT_EASES`
+- `const EngineImpactSchema`
+- `type EngineImpact = z.infer<typeof EngineImpactSchema>`
+- `function ease(name: (typeof IMPACT_EASES)[number], t: number): number`
+- `function impactAt(impact: EngineImpact | undefined, frame: number): { scale: number; originX: number; originY: number }`
+- `function impactStyle(impact: EngineImpact | undefined, frame: number): Record<string, string> | undefined`
+
 ### `apps/renderer/src/engine/kit/ingredients.ts`
 
 - `const ENERGIES`
@@ -8005,10 +8024,14 @@ The producer supplies work. An independently provisioned reviewer signs evidence
 
 ### `packages/core/src/virtual-camera.ts`
 
+- `interface NormalizedBounds`
 - `interface VirtualCameraPolicy`
 - `interface VirtualCameraSolveInput`
 - `interface VirtualCameraSolution`
 - `type CameraPlanTemplate = Omit<CameraPlanV1, 'keyframes' | 'confidence'>`
+- `const VIRTUAL_CAMERA_POLICY: Readonly<VirtualCameraPolicy>`
+- `function baseCropForSource(width: number, height: number, outputWidth: number, outputHeight: number): NormalizedBounds`
+- `function maximumSafeZoom(baseCrop: NormalizedBounds, sourceWidth: number, sourceHeight: number, policy: VirtualCameraPo…`
 - `function solveVirtualCamera(input: VirtualCameraSolveInput): VirtualCameraSolution`
 - `function materializeCameraPlan(template: CameraPlanTemplate, solution: VirtualCameraSolution): CameraPlanV1`
 
@@ -8089,3 +8112,23 @@ Rotate the active runner receipt-signing credential without losing the
 
 - `const SECRET_PATTERNS: readonly RegExp[]`
 - `function containsCommittedSecret(body: string): boolean`
+
+### `scripts/whys-probe-check.ts`
+
+The whys probe check: does a story hold the five whys before Krish picks it?
+
+- `const PROBE_SCHEMA`
+- `const PROBE_SUFFIX`
+- `const PAGES_DIR`
+- `const PAGES_INDEX`
+- `type Counted`
+- `interface RungReading`
+- `interface ProbeResult`
+- `type Page = { text: string } | { unreadable: string }`
+- `type Pages = (url: string) => Page`
+- `function normalise(s: string): string`
+- `function urlKey(url: string): string`
+- `function probeCheck(ladder: WhyLadder, pages: Pages, parseProblems: string[] = []): ProbeResult`
+- `function ladderFromText(text: string): { ladder: WhyLadder | null; problems: string[] }`
+- `function pagesFrom(dir: string): Pages`
+- `function main(argv: string[], root: string): { code: number; out: unknown }`

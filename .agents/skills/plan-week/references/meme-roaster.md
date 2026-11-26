@@ -42,15 +42,22 @@ traits, so this file cannot stand in for them. Never copy them into this reposit
 2. **The week's moments.** Search the web for the pop-culture moments of the week (a film, a match, a launch, a
    viral clip people are already remixing). A moment with a clip people reuse is a candidate with place
    `pop_culture` and `moment` set, dated ("The final whistle at the 29 Nov derby, 2026-11-29").
-3. **Pick 6 to 10.** Keep the clips whose action maps cleanly onto an AI situation the reader has lived: agents doing
-   too much or too little, copilots, chatbots, AI at work, AI hype. The test is one sentence: "this is what happens
-   when ...". From at least two kinds of place. A clip that needs its own explanation, is only funny with its sound on
-   (most people watch muted), or shows a private person in a moment they would not want spread is cut.
+3. **Pick 6 to 10.** Keep the clips whose action maps cleanly onto an AI situation the reader has lived. The reader is
+   the North Star line in `config/beat.json` `reader` (Krish, 2026-11-26), and a meme's subject is
+   `config/beat.json` `offdays.meme` (the gather writes both into the candidates as `write_for`): AI in the studio, the
+   label, the session, the shoot, the edit, the gallery, the stage, the tour, the club, the league, the matchday and the
+   creator's channel, and the AI hype around them. Never office or enterprise AI (the inbox, the spreadsheet, the
+   meeting, the boss, the copilot at work), however good the clip (Krish, 2026-11-26: "Make sure all the good news
+   suggestions and meme suggestions are also aligned to the new positioning"). The test is one sentence: "this is what
+   happens when ..." in that world. From at least two kinds of place. A clip that needs its own explanation, is only funny
+   with its sound on (most people watch muted), or shows a private person in a moment they would not want spread is cut.
 4. **Say why it works.** For each: `what_happens` (one plain line: what the viewer sees), `why_it_works` (one line:
-   the humour mechanism and why it fits an AI caption) and `mechanism`, the humour engine's ids
-   (`idea_checks.MECHANISMS`, from krishanraja/humour-engine `schemas/ontology.json`).
+   the humour mechanism and the reader's world it fits, named: "every AI mastering tool a label buys") and `mechanism`,
+   the humour engine's ids (`idea_checks.MECHANISMS`, from krishanraja/humour-engine `schemas/ontology.json`). Its
+   `funny` line names that world too: from the story score's board `board_feed.py gate` refuses a template whose words
+   name nothing in the focus sectors (`off_beat`; the caption ideas are drafts for him and are not read).
 5. **Draft 2 to 4 caption ideas.** In his traits, read live: one observation, a stupid premise, a slightly cruel
-   payoff aimed at the AI or the hype, never a person. Surprise over the setup: no predictable pun. Use what the viewer
+   payoff aimed at the AI or the hype, never a person, set in the reader's world of step 3. Surprise over the setup: no predictable pun. Use what the viewer
    can see in the clip; no off-screen premise (no invoice, contract or job the picture does not show). At most 20
    words, no em dash, no handle and nobody from the clip's credit, and each passes
    `python3 scripts/post-pack/copy_lint.py --applies-to channel_copy` and `node
@@ -75,7 +82,7 @@ traits, so this file cannot stand in for them. Never copy them into this reposit
               "found": {"place": "sheet" | "card" | "reddit" | "instagram" | "tiktok" | "youtube" | "pop_culture", "label": "<where>", "url": "<https>"},
               "credit": "<who made the original>",
               "what_happens": "<one plain line: what the viewer sees>",
-              "why_it_works": "<one line: the humour mechanism and why it fits an AI caption>",
+              "why_it_works": "<one line: the humour mechanism and the reader's world it fits>",
               "mechanism": ["reversal", "personification"],
               "moment": "<the pop-culture moment it rides, dated, or null>",
               "date": "YYYY-MM-DD"},

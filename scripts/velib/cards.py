@@ -118,21 +118,45 @@ def _piece_motion(fields: dict) -> None:
         sys.exit(f've card: {spec_path} names no style.motion; pick one from the bank before a card goes to Codex')
 
 
-# The one route for a carousel, a meme or a Notes image (Ruling, Krish, 2026-11-13: "all the carousels should now be
-# done in Claude, but using the Codex plug in as per the other usual workflows"; then "memes and Notes images should go
-# the same way"; docs/CAROUSEL-STANDARD.md, "How a carousel is made"). The Claude session writes the words, the story
-# and the direction first, then one card of one of these kinds; Codex builds the pictures in code through the plugin
-# (ve dispatch here, or the Codex lane for a venture's own card) and the session verifies them. ve card holds the card
-# to the brand palette for its day and to the inspiration cards Krish ticked (F26), and a carousel's to its deck, which
-# must pass scripts/carousel_check.py before anything is drawn. The deck's words never go into the card: a venture's
-# card sits in a public repository, so the card carries only the deck's shape.
+# The visual kinds (Ruling, Krish, 2026-11-13; then "memes and Notes images should go the same way"). The Claude session
+# writes the words first, then one card; Codex builds in code through the plugin and the session verifies it. ve card
+# holds the card to the brand palette for its day and to the inspiration cards Krish ticked (F26).
 VISUAL_KINDS = ('carousel', 'meme', 'notes_image', 'cover')
+# A carousel card is retired (Krish, 2026-11-26: "Tell the Content-engine story intelligence for makeyourmindup v5 session
+# that it is to enforce carousel formatting"): a carousel is made only by the v5 Library's make_piece.py --set <set>, its
+# first slide by make_covers.py, through scripts/carousel_make.py, which holds it to config/carousel-format.json. A Codex
+# card that draws a carousel would be a second renderer, so ve card refuses the kind.
+CAROUSEL_RETIRED = ('ve card: a carousel card is retired. A carousel is made only by the v5 Library: python3 '
+                    'scripts/carousel_make.py <piece> --set <set> --deck DECK.json --out <folder> (make_piece.py --set '
+                    '<set>, its first slide from make_covers.py, held to config/carousel-format.json by '
+                    'scripts/carousel_check.py). Codex builds only a photoreal still of the specific thing.')
 # A face-led cover (Ruling, Krish, 2026-11-17: "yes to the face plan", "actually use codex to draw"): his own accounts
 # (TikTok, X, LinkedIn, Threads, Substack Notes) and the face arm of the YouTube test carry his cutout headshot large,
 # like the Rio Meets reference; Instagram, Facebook and Substack keep the Receipt. The card names the channel and the
 # photos (from scripts/post-pack/photos.py), and is held to the palette's thumbnail_wide and cover_tall formats and the
 # cover standard (docs/production/COVER-STANDARD.md).
 FACE_CHANNELS = ('tiktok', 'x', 'linkedin', 'threads', 'substack-notes', 'youtube')
+# The cover, meme and Notes image cards are retired with the carousel's (Krish, 2026-11-26: "I approve the new cover
+# thumbnail systems, go"; the Library's templates are the only artwork). Covers and thumbnails come only from
+# make_covers.py; a single meme image and a Notes image are gaps in config/asset-routes.json, never drawn another way.
+COVER_RETIRED = ('ve card: a cover card is retired. Every cover and thumbnail comes only from the v5 Library: python '
+                 'scripts/covers/make_covers.py <piece> --out <folder> (routed by config/asset-routes.json). No Codex face-led '
+                 'cover and no Receipt drawer.')
+
+
+def _gap_retired(kind: str, route_kind: str) -> str:
+    """ve card's refusal for a kind the Library has no command for yet, in config/asset-routes.json's own words."""
+    try:
+        rows = load_json(ROOT / 'config' / 'asset-routes.json')['kinds']
+        gap = next(r.get('gap') for r in rows if r.get('kind') == route_kind)
+    except (OSError, KeyError, StopIteration, ValueError):
+        gap = 'the v5 Library has no command for it yet'
+    return (f've card: a {kind} card is retired. {gap} It is not made another way: no Codex card, no hand-drawn '
+            f'stand-in (config/asset-routes.json, kind {route_kind}).')
+
+
+RETIRED = {'cover': lambda: COVER_RETIRED, 'meme': lambda: _gap_retired('meme', 'meme-square'),
+           'notes_image': lambda: _gap_retired('notes_image', 'notes-image')}
 # A carousel's body sentences (Krish, 2026-11-18, of the shipped ChatGPT ads carousel: "this font is crappy, i have given this
 # feedback before"; he approved the same deck set in Anton, uppercase, with "go"). "Type only from the brand tokens" let
 # Archivo at its heaviest through, since Archivo is a brand token, so the card names the face outright.
@@ -142,9 +166,14 @@ CAROUSEL_BODY_TYPE = ('Body sentences: Anton, uppercase, the same face as the co
 
 
 def visual_sections(fields: dict) -> str:
-    """The card's own Brand, References and (for a carousel) Deck sections; refuses what the route forbids."""
+    """The card's own Brand and References sections; refuses what the route forbids."""
     import datetime
     kind = fields['kind']
+    if kind == 'carousel':
+        sys.exit(CAROUSEL_RETIRED)
+    if kind in RETIRED:
+        sys.exit(RETIRED[kind]())
+    fields.pop('deck', None)
     refs = fields.pop('references', None)
     refs = [str(r).strip() for r in (refs if isinstance(refs, (list, tuple)) else [refs] if refs else []) if str(r).strip()]
     if not refs:
@@ -190,24 +219,6 @@ def visual_sections(fields: dict) -> str:
            'Colours and type only from the brand tokens; the mark is the official file, sized and placed, never type.\n'
            '\n## References (the inspiration cards Krish ticked; build to them, never copy them)\n'
            + ''.join(f'- {r}\n' for r in refs))
-    deck_path = fields.pop('deck', None)
-    if kind == 'carousel':
-        if not deck_path:
-            sys.exit('ve card: a carousel card names its deck ("deck": a carousel-deck/1 file); the words come first')
-        import carousel_check
-        deck = load_json(ROOT / deck_path if not Path(deck_path).is_absolute() else Path(deck_path))
-        problems = carousel_check.problems(deck)
-        if problems:
-            sys.exit('ve card: the deck does not pass scripts/carousel_check.py, so nothing is drawn yet:\n  '
-                     + '\n  '.join(problems))
-        cards = deck.get('cards') or []
-        roles = {n: step for step, at in (deck.get('arc') or {}).items()
-                 for n in (at if isinstance(at, list) else [at]) if isinstance(n, int)}
-        out += (f'\n## Deck ({len(cards)} cards; the words are fixed and passed scripts/carousel_check.py)\n'
-                + ''.join(f'- card {n}: {"cover" if n == 1 else "last card" if n == len(cards) else roles.get(n, "body")}'
-                          f', one picture of its point\n' for n in range(1, len(cards) + 1))
-                + 'Template every card with placeholders; the session fills in the deck\'s words when it renders.\n'
-                + '\n## Type (Ruling, Krish, 2026-11-18)\n' + CAROUSEL_BODY_TYPE)
     return out
 
 

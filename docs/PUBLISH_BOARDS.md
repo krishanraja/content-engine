@@ -144,9 +144,9 @@ Publish Board draws `model` and nothing else on a day.
 - **Good news is one post, five stories on one topic.** The Saturday item lists its stories in full (headline, what,
   why it matters, source, date) and how many of five it holds (`stories`, `stories_planned`; the board says "1 of 5 stories
   found"). One that holds fewer has as its next action "Find
-  the other N stories", `saturday-goodnews.yml` with `fill: off-<day>-<id>`, which fills that approved post to five
+  the other N stories", `saturday-goodnews.yml` with `fill: off-<day>-<id>`, which fills that approved post to four (config/carousel-format.json good_news)
   on its own topic and changes none of the words his Approve is bound to (plan-week `references/offdays.md`, "Filling
-  an approved post to five").
+  an approved post to four").
 - **The read sheet** (`read` on every item and idea): its story, why now, the fact, its sources and the research on
   file, read-only, with its one action. Control Centre opens it from a card, and `#/content?idea=<id>` opens it for
   that idea; the old content composer is never reached from the board.
@@ -414,7 +414,7 @@ the item has none yet), `scheduled` on a channel for a time, `live` on a channel
 (a scheduled post taken back). It is merged into the item's record (`posts`): one made, and per channel its latest
 scheduled or live post; a live post is never undone by a later scheduled report. Live needs the channel and the link,
 and Growth never reports a post it did not post. The board shows it: the option's `posts` (contract 1.9.0), the day's
-`posted` (`by: growth`, with each link), the day's line ("Approved. Growth made it", "Growth scheduled it on Instagram,
+`posted` (`by: growth`, with each link), the day's line ("Ready to post: Growth posts it on the day", "Growth scheduled it on Instagram,
 TikTok"), and an approved option Growth reports live makes the day done ("Live on Instagram, TikTok. Growth posted it,
 Tue 10 Nov, 13:25") with no It's live left to press.
 
@@ -423,9 +423,10 @@ Growth never over his row, moves append only) and `tests/control-plane/board-mov
 his press only, a move read back from the view, Growth's read, the Drive folder, the library and what is still
 scheduled, and Growth's own made, scheduled and live posts making the day done).
 
-**Growth asks the judges here too** (`POST /api/board/<Monday>/judge` on Growth's key; Ruling, Krish, 2026-11-12:
-"Judge them; count passes."): every carousel and Short is judged by the draft judges' panel before Growth makes it, a
-pass is bound to its Buffer post, and every sent post is reported so the judged ones count as live
+**The judges, before Growth gets it** (`POST /api/board/<Monday>/judge`; Ruling, Krish, 2026-11-12: "Judge them;
+count passes."): every carousel and Short is judged by the draft judges' panel before it is handed to Growth (since
+26 Nov 2026 content-engine's make flow asks, `scripts/post-pack/judge_assets.py`, on the engine operator's key), a pass
+is bound to its Buffer post by Growth, and every sent post is reported so the judged ones count as live
 (`docs/GROWTH-HANDOFF.md`, "Every carousel and Short through the 10/10 judges"; `asset_judgements`).
 
 ## One post, one item (Ruling, Krish, 2026-11-12)
@@ -659,6 +660,16 @@ again is a line "Not offered again: <subject>" with his words and one press, "Of
 `unveto`, his alone: `press_is_his`); each return or ask held back is a line "Held back: ..." with its reason. Status
 `not offered again`, `given back` or `held back`.
 
+**The story score's order (branch `story/engine-v5`, from the 7 Dec board).** Before the board is built, every option
+passes the story floor (his rejections refuse it, with reasons, never a number), is scored blind
+(`scripts/post-pack/story_score.py`, `config/story-score.json`) with the pre-pick whys probe, and the open days are put
+in that order; a day he already answered keeps its order. The gate fails a board whose scores are missing or out of
+order (`story`), that carries a floored option (`story_floor`), a hero day with no checked wildcard (`wildcard`, the
+option's question starting "Wildcard: "), an option off the beat or an off-day option outside the reader's world (`off_beat`), a carousel deck that
+breaks the format (`carousel_format`) or a required stage 2 touch missing (`touch`). A close call no council decided is
+said first on its option card, "close call, your pick" (`_viewExtras.ts` `closeCall`); the gate refuses one whose card
+does not carry it. The procedure: `.agents/skills/plan-week/references/story-score.md`.
+
 **The scorecard**: `python3 scripts/post-pack/board_feed.py scorecard <Monday>` reads his presses on that board
 (`GET /api/board/<Monday>/outcomes`, read-only, the engine key: `idea_outcomes`, or for a board before the gate its
 `board_history`, triage marks and queue cues) and writes `docs/plans/<Monday>-week/scorecard.json`: each count with
@@ -853,6 +864,9 @@ Control Centre draws the week from one feed, `GET /api/board/<Monday>/view`. Its
   - A typed approval now counts after the server has answered it: the `send` the server writes on the document (its
     Teleprompter try) is set aside before the approval is checked (`asWritten`), so Tue 17's `picks/tue-scripts-words`,
     held, still counts. A `send` written by anyone else is still refused.
+
+- **1.35.1 (26 Nov 2026)** changes only a description: the post folder's, which says content-engine makes every asset
+  and Growth posts it (Ruling, Krish, 2026-11-26). No field is added, removed or retyped.
 
 - **1.35.0 (25 Nov 2026)** added **`edition`** on each day (null but on Saturday) and the model item kind **`edition`**:
   the week's edition, makeyourmindup weekly, with his one press, **Approve for send** (`picks/sat-edition`, kind
@@ -1298,6 +1312,10 @@ old board page's Approve for publish bound its sha256; the live board's view car
 
 ## The Publish step on a finished post (week model, 18 Nov 2026)
 
+Since 26 Nov 2026 the words are no longer Growth's: content-engine writes every channel's caption and title at make
+time and Growth posts them as the manifest carries them (Ruling, Krish, 2026-11-26, which retired his 19 Nov captions
+words below; `docs/GROWTH-HANDOFF.md`). Growth still places the post: its channels and its time.
+
 **Growth places it; nobody asks Krish (Krish, 2026-11-19: "I've never decided the channels before. They are just known by the growth repository. Post time, I've never decided before. Caption always gets generated by the growth repository.").** The Publish prompt names the channels and formats of the post's Growth lane and its four daily slots, both read from `vendor/makeyourmindup/mix.json` (growth-makeyourmindup's `mix.json`, vendored byte for byte and pinned by sha256 in `tests/control-plane/growth-placement.test.ts`; `apps/control-plane/api/board/_growthPlacement.ts` only maps a board kind to a lane). The session writes each channel's caption in Growth's account voices (`docs/ACCOUNT-VOICE.md`), files them on the piece, and gives Buffer each file as a Drive download address (`https://drive.google.com/uc?export=download&id=...`), which Buffer accepts (the 18 Nov explainer's eight images went in this way). A missing channel list, time, caption or "public link" is never a reason to stop. A channel Growth holds (TikTok short video) is skipped and named, never the whole post. Still not built: a Publish press that schedules with no session at all. That needs Growth's maker to take a finished post from the board as its input; the walls (`docs/GROWTH-HANDOFF.md`, Growth's `docs/PUBLISHING-AUTHORITY.md`) say who may call Buffer, so it waits on his ruling.
 
 
@@ -1621,7 +1639,7 @@ writes them; a document whose `updated_by` is not Krish is never his.
 | Take a press back | Ideas, the same press again | `queue/<pick>` `{use: null}` | records the answer as withdrawn | nothing reads it as a press |
 | Approve, Improve, Reject or Next week on an off-day option's idea, direction or returned mock (Ruling, Krish, 2026-11-01: "Mock looks right, lock it and build it"; it replaces the one mix press of 2026-10-30) | Ideas, Off days, each option | `queue/off-<day>-<option>` `{use: "offday", idea, direction, mock}`, each side `{verdict, words, sha256, at, shown}`; Improve and Reject need his words | his Improve and Reject words filed to `taste_reports`; an Improve not asked before sends an `offday-revise` dispatch (`.github/workflows/offday-revise.yml`) | Growth reads the approved options from `GET /api/board/<Monday>/pieces` (`offdays`); Sunday reads every verdict back as `offday_verdicts` |
 | Move to… on an off-day item (Ruling, Krish, 2026-11-12: any off-day post or idea moves to any day at his press) | Every off-day option, on any day, and his Ideas for Later | `POST /api/board/<Monday>/move` `{item, version, from, to}`: his Approve for the new day (`queue/off-<day>-<option>` in its week) and his approval taken off the old one (`moved`), in one transaction with the row in `offday_items` | the post's Drive folder renamed to its new date by ID; a piece he records moves `scheduled_for` and its research index rows | Growth reads it on its new day from `GET /api/board/<Monday>/pieces`; what Growth still has scheduled on the old day is said on the item ("Moving an off-day item to any day", above) |
-| Approve or Skip an off-day option (boards before the week's mix) | Ideas, Off days (any day of the week) | `queue/off-<day>-<option>` `{use: "offday", day, approved, copy_sha256, format, source, option_id}` | nothing | Growth makes and schedules what he approved, only while `copy_sha256` is the copy it holds |
+| Approve or Skip an off-day option (boards before the week's mix) | Ideas, Off days (any day of the week) | `queue/off-<day>-<option>` `{use: "offday", day, approved, copy_sha256, format, source, option_id}` | nothing | content-engine makes what he approved and Growth schedules it (Growth made it until 26 Nov 2026), only while `copy_sha256` is the copy it holds |
 | Approve or Skip an off-day piece he records (Ruling, Krish, 2026-10-29) | Ideas, Off days | the same, with `kind: "recorded"`, `piece_id`, `series`, `style`, `script` (the exact words he saw), `script_sha256` (worked out by the server), `folder_title`, `title`, `readers` | the server puts the piece on that day in its series, in flight, one short cut (`placeOffday`), sends the words to Teleprompter with his press as the approval and records the send; a Skip after an Approve takes it off the day unless recorded | the board shows what the send did (`send`); the recordings lane then waits for his short take |
 | Approve scripts | Drafts | `picks/<day>-scripts` `{kind: "approve_scripts", day, piece_id, approved, texts: {cut: words}, scripts: {cut: sha256}, titles: {cut}, folder_title, folder_id?, script_ids?}` | works out `scripts` from `texts` (refused as `approval_hash_mismatch` when the press brings others); his own press sends his words at once and names any check still to run in `send.checks` (F49); a session's carried approval sends only words the piece's making record shows the scripts' check passed and two fresh readers read back (the gate `teleprompter_send.py plan` holds a session to), else holds them; sends with `sendApprovedScripts`, writes a send that read back to the piece's making record, and writes its answer into the same document as `send` `{status: sent, held, no_key, refused or error, folder_id?, scripts?, error?, recorded?, record_error?, checks?, at, by}` and answers a plain `line` | `teleprompter_send.py plan` (the `approvals` view); on `held`, `no_key`, `refused` or `error` a session checks the words if they need it, then sends exactly those words through the connector; on `sent` with `recorded: false` a session records it with `teleprompter_send.py record` and the ids in `send` |
 | Titles | Record | `picks/<day>-titles` `{kind: "titles", day, piece_id?, picks: {long_title?, short_title?, long_thumbnail?, short_thumbnail?}}` | writes the long_title pick to `content_ideas.title`, the title of record the board shows over the pitch, and answers `title` `{recorded, waits_on_migration or failed}` (2026-10-31) | produce-video's Sunday-night run and the title round (the `titles` view); the home computers' overnight run starts once every picked day has one (`overnight.py due`). The press itself starts nothing |
@@ -1668,8 +1686,9 @@ the newest-500 window and out of the block unless he wrote on or routed one (`co
 them before the board reads it: the file's own shape (at least four ideas a publishing day, each with what a business
 person finds out, its story, why now, its fact and its linked source, `scripts/post-pack/week_plan.py`), every
 `must_cover` id carried or accounted for, the style rules and the Wave 1 checks. The gather stops when the route has
-no `inspiration` block. His taste steers this sourcing and ranking only; the
-judges stay blind.
+no `inspiration` block. His taste steers this sourcing only; the
+judges stay blind, and from the 7 Dec board the order is the blind story score's, never his taste (Ruling, Krish,
+2026-11-26: his taste is a floor only; "What he refused stays refused", "The story score's order").
 
 Videos: every piece is a 90-second and a 5-minute video. A 15-minute feature
 appears as a third cut only on a piece Krish called one for
@@ -1723,7 +1742,8 @@ day's options and Saturday's five real, sourced stories, each checked against it
 the day it found them. Its guard (`scripts/sunday_ideas.py built`) counts the week as built only when the view carries
 all of it. The trade-off, said plainly: the run fills the board for the week that starts eight days after its Sunday,
 so a story it finds is about two weeks old by the Saturday it posts on (it is dated within the seven days up to the
-run); before Growth makes the Saturday post, the fact gate checks every story against its source again.
+run); before the Saturday post is made (by content-engine since 26 Nov 2026), the fact gate checks every story against
+its source again.
 `.github/workflows/saturday-goodnews.yml` stays, by hand only (the board's "Find the stories now" press, or Run
 workflow), to find them again for a week; it has no schedule. The Monday final board is no built page: the live board
 reads the week's records, and the overnight runner reports each cut made or held on its piece (Wave 2; until then the

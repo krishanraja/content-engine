@@ -344,6 +344,11 @@ COVER_SET = (
     ('vertical-cover', 'cover-1080x1920.png', (1080, 1920)),
 )
 SUBSTACK_COVER_FILE = COVER_SET[0][1]
+# Covers and thumbnails come only from the v5 Library's cover systems (Ruling, Krish, 2026-11-26; config/asset-routes.json):
+# make_covers.py writes covers.json, which a post's cover_set names. Until the Library is on the checkout, say so.
+COVER_ROUTE = ('Make the covers with python scripts/covers/make_covers.py <piece> --out <folder> and name its covers.json '
+               'as the post cover_set (config/asset-routes.json); if that script is not on this checkout, the v5 Library '
+               'is not on this checkout yet, and no other drawer stands in for it')
 
 
 def cover_set_or_refuse(planned):
@@ -378,10 +383,10 @@ def cover_set_or_refuse(planned):
                 raise PackError(f'the cover {item["source"].name} could not be opened as a picture ({e})')
             if got != size:
                 raise PackError(f'the cover {item["source"].name} is {got[0]} x {got[1]}; as {KINDS[kind][1]} it must be '
-                                f'{size[0]} x {size[1]}. Draw it with scripts/pages/build.py COVER_FACTS --cover')
+                                f'{size[0]} x {size[1]}. {COVER_ROUTE}')
     if missing:
         raise PackError(f'the cover has none of these beside it ({cover["source"].parent}): {", ".join(missing)}. Every post carries a cover '
-                        'for every place it is shown. Draw them all again with scripts/pages/build.py COVER_FACTS --cover')
+                        'for every place it is shown. ' + COVER_ROUTE)
 
 
 def thumb_size_or_refuse(source, shape, label):
