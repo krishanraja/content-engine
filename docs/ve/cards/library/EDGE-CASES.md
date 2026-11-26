@@ -1,3 +1,5 @@
+> **Superseded build history (26 Nov 2026).** Production sessions follow `PRODUCTION-PLAYBOOK.md` and `LIBRARY-GUIDE.md`, never this file.
+
 # Library hardening: one alignment system, and every edge case
 
 Edit library.html, library.json, render.py and NOTES.md in this folder only. Do not commit. Do not launch Chromium.
