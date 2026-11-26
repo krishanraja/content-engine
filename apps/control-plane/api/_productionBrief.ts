@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto'
-import { FACE } from './_mission.js'
+import { READER } from './_beat.js'
 import { checkWhyLadder, type WhyLadder } from '../../../packages/contracts/src/whys.js'
 
 export const PRODUCTION_BRIEF_SCHEMA_VERSION = 1 as const
@@ -274,11 +274,11 @@ export function buildProductionBrief(input: {
   const candidate = jsonRecord(route.candidate)
   const sourceUrls = uniqueUrls(candidate.source_urls, meta.sources, row.source_url)
   const thesis = normalizedText(row.thesis) || normalizedText(row.body).split(/\n\n+/)[0] || normalizedText(row.idea)
-  const audience = textFrom(candidate, 'audience_problem', series === 'money_of_ai'
-    ? 'Enterprise leaders making commercial decisions about AI'
-    : series === 'built_with_ai'
-      ? 'AI-native operators and builders deciding how to work'
-      : FACE)
+  // The publication's reader (config/beat.json reader, Krish, 2026-11-26) unless the candidate names its own; the
+  // Built With AI subchannel keeps its own audience.
+  const audience = textFrom(candidate, 'audience_problem', series === 'built_with_ai'
+    ? 'AI-native operators and builders deciding how to work'
+    : READER.audience_short)
   const payoff = textFrom(candidate, 'honest_payoff', thesis)
   const visual = textFrom(candidate, 'visual_proof', textFrom(meta, 'visual_suggestion'))
   const landing = productionLanding(row.meta)

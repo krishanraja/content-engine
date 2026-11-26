@@ -7,6 +7,7 @@ import { loadStandingNotes, standingNotesPrompt } from '../../_briefNotes.js'
 import { locateSpan } from '../../_selection.js'
 import { buildHumourSystem, isHumourRegister } from '../../_humor.js'
 import { SYNTHESIS_MODEL } from '../../_models.js'
+import { READER } from '../../_beat.js'
 
 // POST /api/briefs/:week/revise   body: { mode?, value?, hint?, instruction?, selection? }
 //
@@ -84,7 +85,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const system = [
     humour
       ? buildHumourSystem({ register: b.value as string, voice, channelCorpus: '', materialsBlock: '' })
-      : 'You edit the publication weekly brief, for business leaders. You write in the publication\'s voice and never name its maker (house rule NO_NAME).',
+      : `You edit the publication weekly brief, for ${READER.audience_short}. You write in the publication's voice and never name its maker (house rule NO_NAME).`,
     humour ? '' : (voice ? `VOICE:\n${voice}` : ''),
     humour ? '' : VOICE_GUARDRAILS,
     standingNotesPrompt(standingNotes),
