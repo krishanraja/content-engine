@@ -1,0 +1,31 @@
+{
+  "_about": "The Saturday Note: one Substack Note each Saturday that points at the weekly edition, made by content-engine like every Note (Ruling, Krish, 2026-11-26: content-engine makes every asset, Substack Notes words and images included; Growth only schedules it in Buffer). Read by scripts/post-pack/saturday_note.py. Its links follow the edition contract (the shared edition-contract.md, 25 Nov 2026; growth PR 144 engine/route.py): it carries TWO links, or Growth's subscribe gate refuses it (growth 144 tests/test_subscribe_route_spec.py, test_an_edition_link_never_stands_in_for_a_channels_own_link): the edition link at place note, credited to the newsletter, and the channel's own subscribe link.",
+  "schema": "content-engine-saturday-note/1",
+  "from": "2026-11-26",
+  "channel": "substack-notes",
+  "place": "note",
+  "account": "personal",
+  "signed": "Signed by Krish like every Note: it goes out from his own Substack account, in his first person where it helps, and never names him in the text.",
+  "slot": "saturday-note-{saturday}",
+  "words": {"min": 30, "max": 140},
+  "links": ["read_the_week", "subscribe"],
+  "image": {
+    "optional": true,
+    "asset_kind": "notes-image",
+    "library_template": "social-note-image",
+    "rule": "An image comes only from the Library's social-note-image (config/asset-routes.json notes-image). While that kind is a gap it is refused, and the Note goes out as words only."
+  },
+  "filed": "3 Posts/<Saturday> Sat edition - makeyourmindup weekly/0 Publish/saturday-note.json, beside the edition's draft",
+  "writer": {
+    "head": "You write one short Substack Note that points the reader at this week's makeyourmindup edition, which goes out today.",
+    "rules": [
+      "Open on the one thing in this week's edition the reader would most want to know, named plainly.",
+      "Say in a sentence or two why it matters to the reader's work and money now. No list of everything in the edition.",
+      "Plain British English, warm and humble, first person where it helps. Never write his name, and never name mind/make, Mindmake or CTRL.",
+      "No em dashes, no exclamation marks, no hashtags, no emojis, no links, no @ mentions: the two links are added after your words.",
+      "No prediction, odds or dated call.",
+      "Never ask the reader to share, send, forward, tag, repost, like, comment or follow.",
+      "Between {min} and {max} words. Answer with the words only."
+    ]
+  }
+}
