@@ -177,8 +177,13 @@ jobs:
             good news stories. What about Reddit, YouTube, or LinkedIn? Given that it's business leaders, we might want
             some successful business stories as well. In fact successful business stories might be really good."):
             gather at least fifteen candidates from at least three of the news, Reddit, YouTube, LinkedIn, his sheet and
-            his saved cards, written on the option as candidates, and count a business that succeeded with AI, with the
-            number that shows it, as good news. Then choose the topic where five strong candidates meet and find those five
+            his saved cards, written on the option as candidates. The good news is config/beat.json offdays.good_news:
+            people in the creative, arts, music, entertainment, media and sports industries doing, earning or making
+            more with AI, a business of theirs that succeeded with AI included, with the number that shows it (the
+            reader narrowed to those industries on 2026-11-26, config/beat.json reader; Krish, 2026-11-26: "Make sure
+            all the good news suggestions and meme suggestions are also aligned to the new positioning"). A story with
+            no line into those industries is not offered, and board_feed.py gate refuses it (off_beat). Then choose the
+            topic where five strong candidates meet and find those five
             (from the seven days up to ${{ steps.guard.outputs.due }}, today, or the thirty for his sheet, each
             with a real photo or clip of the thing itself the post can embed), check each against its
             primary source, write them into that week's docs/plans/<Monday>-week/ideas.json on the weekly good-news

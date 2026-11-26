@@ -376,11 +376,12 @@ he ticks: `references/inspiration-piece.md`.
    `ideas-pass-the-business-leader-test`, `simplify-and-unpack-the-concept`,
    `follow-the-money-traces-the-money`, `no-repeat-topic-within-weeks` and
    `reading-his-board-marks`). Apply these before an idea reaches the tab:
-   - *The business-leader test.* Say, in one plain sentence, what a general
-     business leader can do or decide differently right away because of the
-     idea. If you cannot, he will mark it curious-not-convinced ("I just
-     can't figure out how general business leaders would be helped
-     immediately by knowing this"), so do not offer it.
+   - *The reader test.* Say, in one plain sentence, what the reader
+     (`config/beat.json` reader) can do or decide differently right away
+     because of the idea, off days included. If you cannot, he marks it
+     curious-not-convinced (19 Oct, of the old reader: "I just can't figure
+     out how general business leaders would be helped immediately by
+     knowing this"), so do not offer it.
    - *Simple first, then unpacked.* A concept idea opens with its plain
      version ("a bake-off that anyone can understand") and then unpacks each
      party's own motive ("Why is Disney going after it, and why is Google
