@@ -83,6 +83,7 @@ class TheSettings(unittest.TestCase):
         self.assertEqual((w['total']['min_words'], w['total']['max_words']), (700, 1000))
         self.assertEqual((CONFIG['news']['min_items'], CONFIG['news']['max_items'], CONFIG['news']['send_min_items']), (6, 10, 4))
         self.assertEqual(CONFIG['news']['per_topic_max'], 2)
+        self.assertEqual((CONFIG['news']['topics_min'], CONFIG['news']['topics_max']), (2, 4))
         self.assertEqual((CONFIG['news']['from_hub']['route'], CONFIG['news']['from_hub']['table']),
                          ('GET /api/board/<Monday>/edition/news', 'hub_snapshots'))
         self.assertEqual((CONFIG['pieces']['min'], CONFIG['pieces']['max'], CONFIG['pieces']['days']), (1, 3, ['mon', 'wed', 'fri']))
@@ -274,7 +275,7 @@ class Check(unittest.TestCase):
     def test_the_fixture_draft_is_clean(self):
         result = ed.check(draft())
         self.assertEqual((result['problems'], result['warnings']), ([], []))
-        self.assertEqual(result['checks'], {'voice': 'pass', 'kill_list': 'pass', 'sources': 'pass', 'words': 704})
+        self.assertEqual(result['checks'], {'voice': 'pass', 'kill_list': 'pass', 'sources': 'pass', 'words': 705})
 
     def test_the_real_kill_list_runs_and_vetoes(self):
         if not shutil.which('node'):
@@ -376,6 +377,19 @@ class Check(unittest.TestCase):
         music['items'].pop()
         self.assertFalse(any('a subsector' in p for p in problems(d)))
 
+    def test_two_to_four_topics_as_the_librarys_template_lays_them_out(self):
+        # The locked Library's newsletter-weekly-edition has topic_0 to topic_3, and PRODUCTION-PLAYBOOK says two to four.
+        def topics(n):
+            d = draft()
+            item = section(d, 'news')['groups'][0]['items'][0]
+            labels = [row['label'] for row in HUB['subsectors']]
+            section(d, 'news')['groups'] = [{'topic': labels[i], 'items': [copy.deepcopy(item)]} for i in range(n)]
+            return [p for p in problems(d) if 'topics' in p]
+        self.assertEqual(topics(1), ['news: 1 topics; an edition has 2 to 4, the good-news group among them'])
+        self.assertEqual(topics(2), [])
+        self.assertEqual(topics(4), [])
+        self.assertEqual(topics(5), ['news: 5 topics; an edition has 2 to 4, the good-news group among them'])
+
     def test_a_package_cannot_claim_checks_it_did_not_pass(self):
         d = draft()
         d['checks'] = {'voice': 'pass', 'kill_list': 'pass', 'sources': 'pass', 'words': 1}
@@ -408,7 +422,7 @@ class RenderAndPackage(unittest.TestCase):
             self.assertEqual(data, (json.dumps(pkg, ensure_ascii=False, sort_keys=True, indent=2) + '\n').encode('utf-8'))
             self.assertTrue(data.endswith(b'}\n') and b'\r' not in data)
             self.assertEqual(list(pkg), sorted(pkg))
-            self.assertEqual(pkg['checks'], {'kill_list': 'pass', 'sources': 'pass', 'voice': 'pass', 'words': 704})
+            self.assertEqual(pkg['checks'], {'kill_list': 'pass', 'sources': 'pass', 'voice': 'pass', 'words': 705})
             self.assertEqual(done['draft_path'], '3 Posts/2026-11-14 Sat edition - makeyourmindup weekly/0 Publish/edition.draft.json')
             self.assertTrue((out / '0 Publish' / 'edition.preview.html').read_text(encoding='utf-8').startswith('<!doctype html>'))
             self.assertEqual(ed.check(pkg, kill=CLEAN)['problems'], [])

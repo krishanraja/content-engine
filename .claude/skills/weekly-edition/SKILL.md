@@ -86,7 +86,8 @@ folder, the press); the topic heads are the hub's subsectors in `config/hub-sour
      `video_url` are the piece's live addresses from `gathered.json`, each made with
      `python3 scripts/edition/edition.py link <address> --date <Saturday> --place piece-<day>` (and `video-<day>`);
      `video_url` is null when the piece has no video.
-   - `news`: groups under the topic heads in `gathered.json` `heads`, in that order, at most two items a subsector, each
+   - `news`: two to four groups (the good-news group counts as one; the Library's template has four topic places),
+     under the topic heads in `gathered.json` `heads`, in that order, at most two items a subsector, each
      item one or two sentences
      with its source fields; the good-news group, "Good news", last, at most three items.
    - `pass_it_on`: one sentence asking the reader to forward the edition to one person in their industry; its `url`
@@ -106,7 +107,8 @@ folder, the press); the topic heads are the hub's subsectors in `config/hub-sour
 
 7. **Render and read it.** `python3 scripts/edition/edition.py render docs/plans/<Monday>-week/edition/edition.json --out docs/plans/<Monday>-week/edition/edition.preview.html`,
    then read the preview whole, as Krish will, and fix anything that does not read plainly. The preview is structure
-   only: the v5 Library's newsletter template is not approved, so render draws none (it refuses a template name).
+   only: the v5 Library's newsletter template is not wired into render yet (that lands with the v5 Substack
+   branding, before anything sends), so render draws none (it refuses a template name).
 
 8. **Package.** `python3 scripts/edition/edition.py package docs/plans/<Monday>-week/edition/edition.json --out docs/plans/<Monday>-week/edition/pack`.
    It refuses while check finds a problem, fills the `checks`, writes the contract's canonical bytes, and prints the

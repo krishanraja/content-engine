@@ -234,7 +234,8 @@ none of it.
    `config/weekly-edition.json`.
 2. **Where it is.** The library, like a post: `3 Posts/<edition_date> Sat edition - makeyourmindup weekly/0 Publish/
    edition.draft.json`, with `edition.preview.html` beside it (structure only: the v5 Library's
-   `newsletter-weekly-edition` template is not approved, so nothing of it is drawn). The library's sync puts both in
+   `newsletter-weekly-edition` template is not wired into render until the v5 Substack branding, so nothing of it
+   is drawn). The library's sync puts both in
    his Drive.
 3. **Reading it.** The week's view (`GET /api/board/<Monday>/view`) carries it on Saturday as `edition` (contract
    1.35.0), and `GET /api/board/<Monday>/edition` returns the same item on Growth's own key. The exact bytes are at

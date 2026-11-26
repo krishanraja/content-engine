@@ -25,8 +25,9 @@ config/weekly-edition.json; the topic heads are the hub's subsectors, read from 
         Exit 0 clean, 1 with problems, 2 unreadable.
     python3 scripts/edition/edition.py render  DRAFT --out preview.html
         A plain, accessible preview: real text throughout, structure only. The v5 Library's newsletter template is
-        not approved, so nothing of it is drawn here; render() takes a template name and refuses one that is not
-        approved in config/weekly-edition.json and registered in TEMPLATES (the hook it plugs into once he approves).
+        not wired into render yet (that is part of the v5 Substack branding, before anything sends), so nothing of it
+        is drawn here; render() takes a template name and refuses one that is not approved in
+        config/weekly-edition.json and registered in TEMPLATES (the hook it plugs into).
     python3 scripts/edition/edition.py package DRAFT --out DIR
         The package as the contract says: canonical bytes (UTF-8, keys sorted, two-space indent, a trailing newline)
         with its checks filled in, its sha256 over those exact bytes, the preview beside it, and the library path
@@ -85,8 +86,9 @@ SECTION_KEYS = {
     'close': ('kind', 'text'),
 }
 CHECK_KEYS = ('voice', 'kill_list', 'sources', 'words')
-# The v5 Library's templates, by name, once Krish approves one (config/weekly-edition.json template). None is approved
-# on 25 Nov 2026, so none is registered: render() draws structure only until then.
+# The v5 Library's templates, by name, once one is wired in (config/weekly-edition.json template). The Library's look is
+# locked (25 Nov 2026), and newsletter-weekly-edition is wired in with the v5 Substack branding, so none is registered
+# yet: render() draws structure only until then.
 TEMPLATES: dict = {}
 
 
@@ -432,12 +434,15 @@ def check(pkg, cfg: dict | None = None, heads_cfg: dict | None = None, kill=kill
     heads = head_labels(cfg, heads_cfg)
     good = cfg['good_news']
     per_topic = cfg['news']['per_topic_max']
+    topics_min, topics_max = cfg['news']['topics_min'], cfg['news']['topics_max']
     items_total = 0
     sources_ok = True
     if not isinstance(groups, list) or not groups:
         problems.append('news: groups missing')
         groups = []
         sources_ok = False
+    if groups and not (topics_min <= len(groups) <= topics_max):
+        problems.append(f'news: {len(groups)} topics; an edition has {topics_min} to {topics_max}, the good-news group among them')
     seen = set()
     for g in groups:
         if not isinstance(g, dict):
@@ -528,14 +533,14 @@ def check(pkg, cfg: dict | None = None, heads_cfg: dict | None = None, kill=kill
 # ---------------------------------------------------------------- render
 
 def render(pkg: dict, template: str | None = None, cfg: dict | None = None) -> str:
-    """The preview page: plain HTML, real text throughout, structure only. A template is drawn only once Krish approves
-    it (config/weekly-edition.json template.approved) and it is registered in TEMPLATES; that is the hook the v5
-    Library's newsletter-weekly-edition plugs into, and nothing of it is copied or invented here."""
+    """The preview page: plain HTML, real text throughout, structure only. A template is drawn only once it is wired in
+    (config/weekly-edition.json template.approved) and registered in TEMPLATES; that is the hook the v5 Library's
+    newsletter-weekly-edition plugs into with the v5 Substack branding, and nothing of it is copied or invented here."""
     cfg = cfg or config()
     if template is not None:
         if not cfg['template']['approved'] or template != cfg['template']['name'] or template not in TEMPLATES:
-            raise EditionError(f'the template {template!r} is not approved (config/weekly-edition.json template); the preview '
-                               'draws structure only until Krish approves the Library')
+            raise EditionError(f'the template {template!r} is not wired in (config/weekly-edition.json template); the preview '
+                               'draws structure only until the v5 Substack branding wires it into render')
         return TEMPLATES[template](pkg, cfg)
     e = html.escape
     heads = cfg['section_heads']
@@ -550,8 +555,8 @@ def render(pkg: dict, template: str | None = None, cfg: dict | None = None) -> s
            '.note{font:14px/1.5 Arial,Helvetica,sans-serif;color:#444;border:1px solid #999;padding:.5rem .75rem}'
            'a{color:#0645ad}</style>',
            '</head>', '<body>',
-           '<!-- The v5 Library newsletter template is not approved (config/weekly-edition.json template): this preview is the '
-           'edition\'s structure only, in plain HTML. edition.py render(template=...) is where an approved template plugs in. -->',
+           '<!-- The v5 Library newsletter template is not wired in yet (config/weekly-edition.json template): this preview is the '
+           'edition\'s structure only, in plain HTML. edition.py render(template=...) is where the template plugs in. -->',
            '<p class="note">Preview of the weekly edition, structure only. Nothing here is sent until Krish presses Approve for send.</p>',
            '<header>', f'<p>{e(pkg.get("name", ""))}, {e(_long_date(pkg.get("edition_date")))}</p>',
            f'<h1>{e(pkg.get("subject", ""))}</h1>', f'<p><em>{e(pkg.get("preview_text", ""))}</em></p>', '</header>', '<main>']
@@ -829,7 +834,7 @@ def main(argv=None) -> int:
     r = sub.add_parser('render')
     r.add_argument('draft')
     r.add_argument('--out', required=True)
-    r.add_argument('--template', help='an approved v5 Library template (none is approved yet)')
+    r.add_argument('--template', help='a v5 Library template wired into render (none is yet)')
     p = sub.add_parser('package')
     p.add_argument('draft')
     p.add_argument('--out', required=True)

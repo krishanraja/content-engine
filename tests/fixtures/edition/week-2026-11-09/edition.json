@@ -17,7 +17,7 @@
         "Monday: who walked away with the money when an AI app millions loved went bust.",
         "Wednesday: how a Reiki master came to write a UK number two with an AI music app.",
         "Friday: what happened when staff were ranked by how much AI they used.",
-        "Also: music, film and TV, gaming, publishing and media, art and design, and three pieces of good news."
+        "Also: music, film and TV, gaming, and three pieces of good news."
       ]
     },
     {
@@ -71,6 +71,13 @@
               "source_url": "https://example.org/records/news/ai-licence",
               "quote": "We have licensed our catalogue to an AI music app, paid on every track it makes in our style.",
               "checked_at": "2026-11-13T15:10:00Z"
+            },
+            {
+              "text": "Example Songwriters, a group of working songwriters in London, asked AI companies for a fixed fee each time one of its members' songs is used to train a model. It published the rate it wants on its own site and says its members can sign up to collect it from January.",
+              "source_name": "Example Songwriters",
+              "source_url": "https://example.org/songwriters/training-rate",
+              "quote": "We ask for a fixed fee each time a member's song is used to train a model, at the rate set out below.",
+              "checked_at": "2026-11-13T15:20:00Z"
             }
           ]
         },
@@ -95,30 +102,13 @@
               "source_url": "https://example.org/demo-games/voices",
               "quote": "Every actor is paid for every line their licensed voice speaks.",
               "checked_at": "2026-11-13T15:30:00Z"
-            }
-          ]
-        },
-        {
-          "topic": "Publishing & Media",
-          "items": [
+            },
             {
-              "text": "Specimen Press, a newsletter platform, will pay its writers when their archives are used to train AI, at a rate set out in its new terms. Writers who would rather not take part can switch it off in their settings.",
-              "source_name": "Specimen Press",
-              "source_url": "https://example.org/specimen-press/terms",
-              "quote": "Writers are paid when their archive is used for training, and can opt out at any time.",
-              "checked_at": "2026-11-13T15:40:00Z"
-            }
-          ]
-        },
-        {
-          "topic": "Art & Design",
-          "items": [
-            {
-              "text": "The Placeholder Gallery sold every print in its show of AI-assisted work by twelve illustrators, its sales note says. Each artist kept the rights to their own images, and the gallery took its usual share.",
-              "source_name": "The Placeholder Gallery",
-              "source_url": "https://example.org/placeholder-gallery/show",
-              "quote": "Every print in the show has sold. The artists keep all rights to their images.",
-              "checked_at": "2026-11-13T15:50:00Z"
+              "text": "Example Studio hired six artists to direct the concept art its AI tools make for its next game. The studio says every picture that ships in the game is chosen and finished by one of the six.",
+              "source_name": "Example Studio",
+              "source_url": "https://example.org/studio/jobs/ai-art-desk",
+              "quote": "Six artists will direct the concept art our AI tools make, and every picture that ships is chosen and finished by one of them.",
+              "checked_at": "2026-11-13T15:30:00Z"
             }
           ]
         },

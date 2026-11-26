@@ -47,7 +47,9 @@
     "max_items": 10,
     "send_min_items": 4,
     "per_topic_max": 2,
-    "rule": "Six to ten items, at most two a subsector: the week in a few stories a subsector. An item whose primary source cannot be found, or does not say what the item says, is dropped, never softened; the edition still goes with at least four (DESIGN.md section 4, What stops a send).",
+    "topics_min": 2,
+    "topics_max": 4,
+    "rule": "Six to ten items, at most two a subsector, in two to four topics (the good-news group counts as one): the week in a few stories a subsector, as the Library's newsletter-weekly-edition lays them out (topic_0 to topic_3; docs/ve/cards/library/PRODUCTION-PLAYBOOK.md). An item whose primary source cannot be found, or does not say what the item says, is dropped, never softened; the edition still goes with at least four (DESIGN.md section 4, What stops a send).",
     "from_hub": {
       "route": "GET /api/board/<Monday>/edition/news",
       "table": "hub_snapshots",
@@ -103,8 +105,8 @@
   },
   "template": {
     "name": "newsletter-weekly-edition",
-    "library": "the v5 Library (content-engine branch look/v5-library-system, docs/ve/cards/library/)",
+    "library": "the v5 Library on main, docs/ve/cards/library/ (newsletter-weekly-edition)",
     "approved": false,
-    "rule": "Not approved by Krish yet: the preview is structure only, plain and accessible, real text throughout. scripts/edition/edition.py render refuses a template until it is approved here and registered there; nothing of the template is copied in or invented."
+    "rule": "The template is in the v5 Library, whose look Krish locked on 25 Nov 2026. Wiring it into render is the next step, done as part of the v5 Substack branding, which lands before anything sends. Until then the preview is structure only, plain and accessible, real text throughout, and TEMPLATES in scripts/edition/edition.py is empty. approved turns true here only when that wiring lands and the template is registered there; render refuses a template until both hold, and nothing of the template is copied in or invented."
   }
 }

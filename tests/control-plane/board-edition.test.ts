@@ -52,8 +52,8 @@ describe('the edition the Friday run packages is the edition the board reads', (
     const e = parseEdition(bytes, SATURDAY)!
     expect(e.sha256).toBe(createHash('sha256').update(bytes).digest('hex'))
     expect([e.subject, e.pieces.map(p => p.day), e.news.items, e.news.topics.length, e.checks]).toEqual([
-      'Who got paid when an AI app went bust, and a UK number two', ['mon', 'wed', 'fri'], 8, 6,
-      { voice: 'pass', kill_list: 'pass', sources: 'pass', words: 704 }])
+      'Who got paid when an AI app went bust, and a UK number two', ['mon', 'wed', 'fri'], 8, 4,
+      { voice: 'pass', kill_list: 'pass', sources: 'pass', words: 705 }])
     expect(e.sources[0]).toEqual({ label: 'Example Records', href: 'https://example.org/records/news/ai-licence' })
     expect(e.contents).toHaveLength(4)
     expect(editionDate(WEEK)).toBe(SATURDAY)
