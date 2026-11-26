@@ -109,6 +109,6 @@ kind `cover` (`scripts/velib/cards.py`), checked with `scripts/channel_safe.py` 
 | Design every cut's wide and tall thumbnails and every channel's cover (Mon, Wed, Fri pieces and any video) | **content-engine**: the production session (`cover-art`, `thumbnail-designer`, a separate critic) | Step 8 of the one post-production prompt (`_takesIn.ts`); a cut is Produced only with its thumbnails on the record (`makingSteps`), and `piece_manifest.py draft` refuses a video channel with no cover, so the Approve for publish press never appears without them |
 | Pick among the options | **Krish**, in his own words, on the board | The only human step |
 | Post them, hold a post whose cover is missing, and check it went out with the right cover | **Growth** (growth-makeyourmindup) | Reads the sealed manifest; designs none |
-| A derived carousel's cover (card 1) | **Growth**, in its own carousel route (`docs/CAROUSEL-STANDARD.md`) | Part of making the carousel |
+| A carousel's cover (card 1) | **content-engine** (Ruling, Krish, 2026-11-26: content-engine makes every asset), only from `python scripts/covers/make_covers.py <piece> --out <folder>`, through `scripts/carousel_make.py` (`docs/CAROUSEL-STANDARD.md`) | Part of making the carousel; Growth made it from 28 Oct to 26 Nov 2026 |
 
-Growth's own record says the same (growth-makeyourmindup `docs/ENGINE-BOUNDARY.md`, `docs/OPERATING_MODEL.md` step 6).
+Growth's own record says the same (growth-makeyourmindup `docs/ENGINE-BOUNDARY.md`, its dated top section of 26 Nov 2026).
