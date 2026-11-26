@@ -67,8 +67,10 @@ if __name__ == '__main__':
 
 
 class VisualCardsTakeTheOneRoute(unittest.TestCase):
-    """Ruling (Krish, 2026-11-13): every carousel is made in a Claude session, with the Codex plugin building it, as in
-    the other usual workflows; memes and Notes images go the same way. A card of one of these kinds is held to the brand
+    """Ruling (Krish, 2026-11-13): every carousel is made in a Claude session, as in the other usual workflows; memes
+    and Notes images go the same way. Ruling (Krish, 2026-11-26): content-engine makes every asset, from the locked v5
+    Library, and Growth only posts it, so a card is written in content-engine for content-engine's own checkout (never
+    Growth's retired renderer, render/ in growth-makeyourmindup). A card of one of these kinds is held to the brand
     palette for its day and the inspiration cards Krish ticked, and a carousel's to a deck that passes
     scripts/carousel_check.py, and it never carries the deck's words (a venture's card sits in a public repository)."""
 
@@ -77,7 +79,8 @@ class VisualCardsTakeTheOneRoute(unittest.TestCase):
     def card(self, tmp, **extra):
         from velib import cards
         fields = dict(card_id='carousel-x', kind='carousel', title='t', goal='g', contract='c',
-                      acceptance='python3 -c "pass"', write_allow=['render/pieces/x/**'], read=['render/KIT.md'],
+                      acceptance='python3 -c "pass"', write_allow=['.cache/library/carousel-x/**'],
+                      read=['docs/ve/cards/library/LIBRARY-GUIDE.md', 'docs/ve/cards/library/CAROUSEL-FORMAT.md'],
                       cwd=str(Path(tmp) / 'wt'), date='2026-11-17', references=['8ca0bd3d'], deck=self.DECK)
         fields.update(extra)
         return cards.write_card(Path(tmp) / 'c.md', **fields)

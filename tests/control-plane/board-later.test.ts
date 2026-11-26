@@ -146,12 +146,13 @@ describe('an off-day option approved onto another board', () => {
     const list = offdayList({ offdays: { tue: [off('other')] } }, queue, 'tue')
     expect(list.map(x => x.id)).toEqual(['other', 'trendy'])
     expect(offdaySides(list[1]).idea_sha256).toBe(s.idea_sha256)
-    // On the week's view, it is approved and Growth makes it.
+    // On the week's view, it is approved: content-engine makes it and Growth posts it.
     const v = buildView(withApprovals({ week: '2026-11-16', now: NOW, pieces: [], picks: [], history: [], runs: {}, north_star: null, locks: {}, queue,
       ideas: { offdays: { tue: [off('other')] } }, approvals: [{ ...approval('2026-11-16', 'tue', 'trendy'), option_sha256: s.idea_sha256 }] }))
     const tue = v.days.find(d => d.day === 'tue')!
     expect(tue.options.find(x => x.id === 'trendy')?.status).toBe('approved')
-    expect(tue.who).toBe('growth')
+    expect(tue.who).toBe('engine')
+    expect(tue.next).toMatch(/content-engine makes it, and Growth posts it on the day/)
   })
 })
 

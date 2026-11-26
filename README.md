@@ -5,8 +5,8 @@
 
 The engine behind Krish Raja's media business: makeyourmindup, his
 publication (hosted on Substack, with its cover page at makeyourmindup.ai), and
-the hero assets made from it (the article, both cuts, thumbnails and covers;
-Growth makes the derived carousels, Notes and off-day posts). It finds what is worth saying, judges
+every asset made from it (the article, both cuts, thumbnails, covers, carousels, memes, Notes and
+off-day posts, with their captions; growth-makeyourmindup posts them, Ruling, Krish, 2026-11-26). It finds what is worth saying, judges
 it, routes it to the right subchannel, drafts it in Krish's voice to that
 subchannel's mandate, cuts it for each channel and produces the media, and it
 learns from every decision Krish makes along the way. Krish makes every
@@ -55,7 +55,7 @@ them by hand. Current state: `NOW.md` (short) and `docs/STATE.md` (full).
 | feed, report to or file on the week's publish board (the one live board, in Control Centre's Content tab) | `docs/PUBLISH_BOARDS.md` |
 | make or check any intro, outro, icon, wordmark, sting or end card | `docs/production/BRAND_PALETTE.md` (the rules are `config/brand-palette.json` only) |
 | make or check a cover or thumbnail | `docs/production/COVER-STANDARD.md`; a recorded piece's thumbnails: `.agents/skills/thumbnail-designer/SKILL.md` |
-| read the carousel standard, or make a carousel, meme or Notes image (Growth makes them; each is made in a Claude session with the Codex plugin building it) | `docs/CAROUSEL-STANDARD.md`, "How a carousel is made" |
+| read the carousel standard, or make a carousel, meme or Notes image (content-engine makes them in a Claude session from the v5 Library, `config/asset-routes.json`; Growth posts them) | `docs/CAROUSEL-STANDARD.md`, "How a carousel is made" |
 | run anything that costs tokens or money | `docs/COST_GUARDS.md` |
 | consult divergent-thinker at will (a piece's angle, an off-day idea, a shoot's wildest version, a familiar title, what published) | `docs/DIVERGENT.md` |
 | refresh the weekly standards check-in | `docs/STANDARDS-CHECKIN.md` |

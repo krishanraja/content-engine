@@ -369,7 +369,7 @@ describe('Growth marks its own off-day posts on the board, from its own record',
     const { db, t } = fakeDb({ offday_items: [shell], board_documents: [shellDoc] })
     const report = (posts: Body[]) => reportPosts(db, W, { posts }, now)
     expect((await report([{ option: 'off-tue-shell', state: 'made', at: '2026-11-09T20:00:00Z' }])).body).toEqual({ ok: true, items: 1, unknown: 0 })
-    expect(viewOf(t).days.find(d => d.day === 'tue')!.next).toMatch(/^Approved\. Growth made it; it schedules it for the day/)
+    expect(viewOf(t).days.find(d => d.day === 'tue')!.next).toMatch(/^Approved\. It is made and with Growth, which schedules it for the day/)
     const channels = ['instagram', 'facebook', 'tiktok', 'youtube', 'threads', 'x']
     await report(channels.map((c, k) => ({ option: 'off-tue-shell', state: 'scheduled', channel: c, due_at: `2026-11-10T17:${30 + k}:00Z`, buffer_post_id: `b${k}` })))
     const scheduled = viewOf(t).days.find(d => d.day === 'tue')!

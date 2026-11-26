@@ -162,7 +162,7 @@ export function piecesByDay(week: string, raw: Body[]): Array<{ day: PostedDay; 
 }
 
 /** Which piece sits on which day of the week, and its boxes. A piece is on a day when it is scheduled for that date,
- *  not buried or dropped, and his approval holds it there (the ideas gate, _gate.ts: Growth makes and posts only what
+ *  not buried or dropped, and his approval holds it there (the ideas gate, _gate.ts: content-engine makes, and Growth posts, only what
  *  he approved). When two share a date, a series day keeps the piece of its own series, an off day the piece whose
  *  meta.offday names that date, then the one changed last; one piece a day, as Growth reads it. When his approvals
  *  cannot be read, nothing is handed over (503 approvals_unavailable), never everything. */
@@ -183,14 +183,14 @@ export async function readPieces(db: SupabaseClient, week: string): Promise<{ st
     }
     return entry
   })
-  // His one press on the week's filler (picks/mix, Ruling, Krish, 2026-10-30): Growth makes and posts within this mix,
+  // His one press on the week's filler (picks/mix, Ruling, Krish, 2026-10-30): content-engine makes and Growth posts within this mix,
   // and only once approved is true. Null until he presses.
   const pressed = await db.from('board_documents').select('body').eq('week', week).eq('collection', 'picks').eq('doc_id', 'mix').maybeSingle()
   if (pressed.error) return { status: 503, body: { ok: false, error: 'board_store_unavailable' } }
   const m = isObj(pressed.data) && isObj(pressed.data.body) ? pressed.data.body : null
   const mix = m && m.kind === 'mix' ? { approved: m.approved === true, days: m.days, mix_sha256: m.mix_sha256, at: m.at ?? null } : null
   // Each off-day option he approved (Ruling, Krish, 2026-11-01: each option is judged on its own, idea and direction):
-  // Growth makes the mock from the direction he approved, exactly as it was shown (shown), and puts it back on the card.
+  // content-engine makes the mock from the direction he approved (Ruling, Krish, 2026-11-26), exactly as it was shown (shown), and puts it back on the card.
   // An option counts once its idea is approved and its direction, if it had one, is too; a returned mock he has not
   // yet approved is said in mock.
   const off = await db.from('board_documents').select('doc_id,body,updated_by').eq('week', week).eq('collection', 'queue').like('doc_id', 'off-%')
@@ -217,10 +217,10 @@ export async function readPieces(db: SupabaseClient, week: string): Promise<{ st
       idea: idea.shown ?? null, direction: dir ? dir.shown ?? null : null,
       mock: mock ? { verdict: mock.verdict ?? null, words: mock.words ?? null } : null,
       // His open words on the option, exactly as typed (Krish, 2026-11-02: "it would contain the exact meme text to
-      // put above the meme video"): Growth makes the post with them.
+      // put above the meme video"): content-engine makes the post with them.
       note: isObj(b.note) && typeof b.note.words === 'string' ? b.note.words : null,
       approved_at: dir?.at ?? idea.at ?? null,
-      // Where its day lives (2026-11-12): the item, the version a move names and its date, so Growth makes and posts it
+      // Where its day lives (2026-11-12): the item, the version a move names and its date, so content-engine makes it and Growth posts it
       // on that day and nowhere else; moved_from when he moved it here from another day.
       item: placed.item?.item ?? null, version: placed.item?.version ?? null, date: dayDate(week, String(row.doc_id).slice(4, 7) as PostedDay),
       moved_from: isObj(b.moved) && typeof b.moved.from_week === 'string' ? { week: b.moved.from_week, day: b.moved.from_day ?? null } : null }]

@@ -214,7 +214,7 @@ def coverage_problems(data, sources):
 # The off days (Krish, 2026-10-28: "I'm happy to plan the Tuesday, Thursday, Saturday, and Sunday content within the
 # Sunday ideas session if you give me a few options to approve as you do the Mon/wed/fri"): two or three options a
 # day, from ideas.json's `offdays`, each with its format, its source and its draft copy, and his Approve or Skip, saved
-# in queue/off-<day>-<option> bound to the copy he saw (copy_sha256). Growth makes and schedules what he approved.
+# in queue/off-<day>-<option> bound to the copy he saw (copy_sha256). content-engine makes what he approved and Growth schedules it.
 OFF_DAYS = (('tue', 'Tuesday', 1), ('thu', 'Thursday', 3), ('sat', 'Saturday', 5))
 
 
@@ -369,7 +369,7 @@ def off_rich(o, problems, label):
     mock = o.get('mock')
     if mock is not None:
         if not isinstance(mock, dict) or not str(mock.get('url') or '').startswith('https://'):
-            problems.append(f'{label}: mock is {{"url" (https, the image Growth made), "note"}}')
+            problems.append(f'{label}: mock is {{"url" (https, the image content-engine made), "note"}}')
         else:
             row['mock'] = {'url': mock['url'], 'note': _line(mock.get('note'), 300)}
     # A finished file Krish takes away from the card (Krish, 2026-11-02: "put the translator video on the board as a

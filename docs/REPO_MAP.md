@@ -2621,6 +2621,7 @@ How an off-day post is made, said once for every prompt the board copies out (th
 - `function makeRoute(kind: string | null | undefined, format: string | null | undefined, template = false): MakeRoute | n…`
 - `const ROUTE_RULING`
 - `const NEVER_HEADLESS`
+- `const LIBRARY_ABSENT`
 - `function routeLine(route: MakeRoute): string`
 
 ### `apps/control-plane/api/board/_manifest.ts`
@@ -2631,6 +2632,7 @@ How an off-day post is made, said once for every prompt the board copies out (th
 - `interface ManifestPress`
 - `const sha256 = (b: Uint8Array | string) =>`
 - `function draftPath(piece: Body): string | null`
+- `const MANIFEST_SCHEMAS`
 - `function parseDraft(bytes: Uint8Array, pieceId: string): Draft | null`
 - `async function readDrafts(db: SupabaseClient, pieces: Body[]): Promise<Map<string, Draft>>`
 - `function dayManifest(draft: Draft | undefined, picks: Array<{ doc_id: string; body: Body; updated_by: string; revision?…`

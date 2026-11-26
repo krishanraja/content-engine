@@ -396,7 +396,7 @@ export function laterPresses(i: LaterInputs, s: Shown, today: string): { actions
     ...(ask ? { words: { path: 'idea.words', ask, required: true } } : {}), stamp: ['at', 'idea.at'], done, outcome, goes: goes(outcome, week, s.day, true) })
   const target = !s.weekly && s.day !== 'sun' ? freeDay(i, s.day, 'offday', today) : null
   if (s.weekly) held = 'A week\'s good news is made of that week\'s stories, so it cannot go on another week; each ideas run brings a new one.'
-  else if (target) actions.push(press(target, 'approve', `Approve for ${dayShort(target, s.day)}`, `Approved. It is on the publish board for ${dayWords(target, s.day)}; Growth makes it.`, 'approved', null))
+  else if (target) actions.push(press(target, 'approve', `Approve for ${dayShort(target, s.day)}`, `Approved. It is on the publish board for ${dayWords(target, s.day)}; content-engine makes it and Growth posts it.`, 'approved', null))
   else held = s.day === 'sun' ? 'Sunday is a rest day now, so it cannot go on a Sunday.' : `Every ${dayWords(weekOf(today), s.day).split(' ')[0]} in the next ${AHEAD} weeks has an approved post, so it waits for a free one.`
   actions.push(
     press(s.week, 'next_week', 'File for later', 'Filed for later. It comes back on a later ideas board.', 'filed', null),

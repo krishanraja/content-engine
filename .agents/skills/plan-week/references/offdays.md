@@ -428,7 +428,7 @@ scripts/saturday_goodnews.py check` names; a session can run the same steps):
    retired for good.
 
 **The trade-off, said plainly.** The run fills the board for the week that starts eight days after its Sunday, so a
-story it finds is about two weeks old by the Saturday it posts on. So before Growth makes the post, each story is
+story it finds is about two weeks old by the Saturday it posts on. So before content-engine makes the post, each story is
 checked against its source again through the fact gate (as every off-day news claim is, above), and one the source no
 longer carries is cut and named.
 
@@ -449,5 +449,5 @@ It never writes a second good-news option, never approves anything and never mov
 the topic in the window is said on the option (`"stories_short": "<why>"`) and on the board, never padded with a story
 off the topic.
 
-Growth makes the carousel from the stories as shown, in a Claude session with the Codex plugin building it (`docs/CAROUSEL-STANDARD.md`, "How a carousel is made"), and its mock comes back for his final yes as with any off day.
+content-engine makes the carousel from the stories as shown, in a Claude session from the v5 Library's `good-news` set (`python scripts/library/make_piece.py <piece> --set good-news`, its cover from `scripts/covers/make_covers.py`; `docs/CAROUSEL-STANDARD.md`, "How a carousel is made"; Ruling, Krish, 2026-11-26), and its mock comes back for his final yes as with any off day. Growth posts it. When the Library is not on the checkout the session says "the v5 Library is not on this checkout yet" and draws nothing another way.
 
