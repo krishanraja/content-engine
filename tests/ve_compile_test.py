@@ -426,6 +426,7 @@ class CompileTest(unittest.TestCase):
             report = {}
             props = compile_cut(spec, 'proof-tall', timed_words(), FIXTURE, report=report)
         sounded = [e for e in props['events'] if e.get('sfx')]
+        self.assertEqual(report.pop('impact')['hits'], 0)   # a plain words file is unrated: no automatic push
         self.assertEqual(report, {'lint': 'clean', 'sfx_missing': [], 'opening': 'hook',
                                   'face_keepout': {'source': 'missing', 'beats': 0}})
         self.assertEqual(props['audio']['sfx'], [
@@ -458,7 +459,7 @@ class CompileTest(unittest.TestCase):
                 patch('velib.compile.Path.is_file', return_value=False), redirect_stdout(io.StringIO()):
             self.assertEqual(ve.cmd_compile(args), 0)
         report = writes['compile.proof-tall.json']
-        self.assertEqual(set(report), {'lint', 'sfx_missing', 'opening', 'props_sha256', 'take_frame', 'face_keepout'})
+        self.assertEqual(set(report), {'lint', 'sfx_missing', 'opening', 'props_sha256', 'take_frame', 'face_keepout', 'impact'})
         self.assertEqual(report['lint'], 'clean')
         # Where the take frame came from: measured by ve ingest, typed on an older spec, or not ingested yet.
         self.assertEqual(report['take_frame'], {'source': 'not_ingested'})

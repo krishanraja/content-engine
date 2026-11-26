@@ -223,6 +223,29 @@ Krish, of the habits short that passed every gating row and was still NOT READY:
 - **composition on generated pictures.** A word OCR finds on a `photo_plate` drawn from a still counts only at confidence 90 or more and four letters or more (`config/ve/qc-ocr.json`). Screen recordings, footage and type the engine draws over a picture keep the house rule.
 - **Not changed.** The close card's "Subscribe free" line measures 17 px against the house's 18 px floor; whether the card or the floor moves is Krish's call, so the row still fails.
 
+## Impact zoom (26 Nov 2026)
+
+Krish, 2026-11-26: "Zoom for impact ... classy and subtle rather than too aggressive." The numbers are
+`config/ve/impact-zoom.json`; the standard is `docs/ve/MOTION_STANDARD.md`, "Impact zoom".
+- **Plan.** `ve compile` plans the pushes (`scripts/velib/impact.py plan`) after the captions, layout and ending are set and
+  before the face keep-out, and writes them to `props.impact` (`pushEase`, `releaseEase`, the EDL's `joins`, and per push
+  `fromFrame`, `peakFrame`, `holdTo`, `toFrame`, `scale`, `strength`, `release`, `originX`/`originY` at his eyes). The
+  compile report's `impact` row says how many, which words, and why each candidate was skipped.
+- **Words.** `cuts.<cut>.captions.emphasis` plus the caption kit's hero score (`captions/kit.ts heroScore`, its stop and
+  reversal lists held equal to the config by `tests/ve_impact_test.py`), lifted on the hook and the landing. A plain
+  `--words` file carries no aligner agreement, so it gets no automatic push; the conformed EDL's words (`b_onset_s`) do.
+  `cuts.<cut>.impact: [{at_w, strength}]` pins words instead; `impact_off: true` turns them off; `ve lint` names a pin on
+  a beat that never carries a push.
+- **Draw.** `apps/renderer/src/engine/kit/impact.ts` scales his take's video about his eyes inside the take layer
+  (`FormatMaster.tsx takeLayer`), outside the segment's own crop or face lift, so the matted subject over type set behind
+  him moves with it frame for frame and nothing else does. A cut without `props.impact` draws the tree it always did.
+- **Keep-out and QC.** `velib/keepout.py` grows his face box by the push on its frames, so a caption the pushed face
+  reaches is refused at compile; the planner already skips such a word. `ve qc` adds `camera.impact` (the props' scale,
+  rate, spacing and beats, `impact.problems`) and reads `captions.off_face` on every pushed frame
+  (`qc_faces.impact_frames`). There is no rendered-frame zoom measure yet: the frame QC samples cannot see a 5% push.
+- **Not yet.** A take with a `segment.crop` gets no push until the keep-out models the crop; a guest's take gets none
+  until the spec can say who is speaking (`assets[].speaker`); a cut with a WINDOW beat or an ambient camera gets none.
+
 ## Hand-built composites
 
 A one-off composite (Ruling, Krish, 2026-11-10: "One-off composite") is built outside ve, so none of ve's gates see

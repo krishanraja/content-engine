@@ -19,6 +19,7 @@ import re
 from pathlib import Path
 
 from .common import ROOT, load_json
+from . import impact
 
 FPS = 30
 MARGIN = 0.10   # qc_faces.MARGIN: hair, chin and a moving head stay clear too
@@ -134,7 +135,8 @@ def take_box(mode: str | None, aspect: str, beat: dict) -> tuple | None:
 FACE_LIFT = 1.1   # FormatMaster.faceLift: a tall cut's take is framed 1.1 from its box's bottom centre
 
 
-def to_frame(norm: list[float], box: tuple, take_frame: dict | None, lift: float = 1.0) -> tuple[int, int, int, int]:
+def to_frame(norm: list[float], box: tuple, take_frame: dict | None, lift: float = 1.0,
+             margin: float = MARGIN) -> tuple[int, int, int, int]:
     """A face box in shares of the take, as drawn into `box` by cover (the take fills the box, centred) and scaled `lift`
     from the box's bottom centre (FormatMaster's faceLift on a tall cut: his face sits higher than the cover alone puts
     it, step 5 found the keep-out 80 px low), clipped to the box and grown by MARGIN."""
@@ -154,7 +156,7 @@ def to_frame(norm: list[float], box: tuple, take_frame: dict | None, lift: float
     if x1 <= x0 or y1 <= y0:
         return (0, 0, 0, 0)
     w, h = x1 - x0, y1 - y0
-    return (int(x0 - w * MARGIN), int(y0 - h * MARGIN), int(w * (1 + 2 * MARGIN)), int(h * (1 + 2 * MARGIN)))
+    return (int(x0 - w * margin), int(y0 - h * margin), int(w * (1 + 2 * margin)), int(h * (1 + 2 * margin)))
 
 
 def _union(boxes: list[tuple]) -> tuple | None:
@@ -221,7 +223,15 @@ def apply(props: dict, spec: dict, cut_id: str, *, edl: dict | None, tracks: dic
                 box = take_box(mode, aspect, spec_beats.get(beat['id'], beat))
                 if box is not None:
                     lift = FACE_LIFT if aspect == '9:16' and not any(seg.get('crop') for seg in props.get('segments') or []) else 1.0
-                    by_beat.setdefault(beat['id'], []).append(to_frame(sample['box'], box, take_frame, lift))
+                    face = to_frame(sample['box'], box, take_frame, lift)
+                    # An impact push (props.impact, velib/impact.py) grows his face about its eyes on these frames: the
+                    # keep-out grows with it, so nothing is drawn where the pushed face reaches.
+                    hit = impact.hit_at(props.get('impact'), frame)
+                    if hit is not None and face[2] > 0:
+                        scale = impact.scale_at(props['impact'], frame)
+                        x, y, w, h = impact.scaled_box(face, (box[0] + hit['originX'], box[1] + hit['originY']), scale)
+                        face = (int(x), int(y), int(w), int(h))
+                    by_beat.setdefault(beat['id'], []).append(face)
     problems = []
     for beat in props['beats']:
         keep = _union(by_beat.get(beat['id'], []))

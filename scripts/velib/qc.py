@@ -436,6 +436,10 @@ def run_qc(path: str, format_id: str, targets: dict | None = None, *,
     checks['plate.head_in_band'] = {'value': None, 'target': 'his whole head inside the camera band', 'pass': None,
                                     'status': 'not applicable'}
     checks['channel.safe_zones'] = {'value': None, 'target': 'nothing under a channel button', 'pass': None, 'status': 'advisory'}
+    # Impact zoom (config/ve/impact-zoom.json; Krish, 2026-11-26: "Zoom for impact ... classy and subtle rather than too
+    # aggressive"): the pushes in the cut's props, measured frame by frame against the caps, the spacing and the beats.
+    from . import impact as impact_mod
+    checks['camera.impact'] = impact_mod.qc_row(frame_props)
     from . import qc_sync, qc_joins, qc_captions, qc_brand, qc_cues, qc_audio, qc_gates, qc_faces, qc_channel, qc_as_shot, qc_opening, qc_composition
     optional = [
         # The opening (Krish, 2026-11-05: "I think it should go at the start of the longer wide videos 100%,"): the

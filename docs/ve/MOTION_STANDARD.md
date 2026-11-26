@@ -55,6 +55,27 @@ Rules that follow:
 An entrance is one move that lands and holds while the voice explains it: a card rises 40 to 60 px and fades in over 4
 to 7 frames; a ring or waveform keeps moving underneath. A move that restarts on no cue is decoration (failure F05).
 
+## Impact zoom: a push for the word that matters (26 Nov 2026)
+
+Krish, 2026-11-26: "Can you make sure that on the most impactful words in any video, there's some form of camera
+zooming to emulate a world-class professional? Zoom for impact. We should bake in all the obvious edge cases and have it
+be classy and subtle rather than too aggressive."
+
+| What | Standard (config/ve/impact-zoom.json) |
+|---|---|
+| How close | 1.05x on a wide cut, 1.06x on a tall one; one strong push a cut, on its single biggest word, at 1.08x wide and 1.10x tall; never past 1.15x (the library's cap is 1.5x, MOTION-FLOOR F14) |
+| When | starts on the onset of the word itself, eases out over 0.37 s (11 frames at 30 fps), holds through the phrase for at least 0.8 s and at most 2.4 s, eases back in and out over 0.7 s (21 frames), or resets hidden under the next picture cut |
+| How often | at least 4 s apart, at most 6 a minute on a short and 4 on a long cut, never a second push before the first has released |
+| Where | his own take full frame with nothing over it but the captions; never b-roll, a WINDOW or SPLIT beat, a staged beat, a screen recording, a graphic or a plate; never across a cut, with another camera move (F6) or a device event, through a transition, the title moment or the end card, or in the first 0.3 s or last 0.5 s of a cut |
+| Which word | the cut's emphasis and the caption kit's hero words (a number, a reversal, a content word), lifted on the hook and the why-ladder's landing; never a stop word; the best one on a caption page; one of any within 2 s; only where both aligners agree on its onset; never a fumbled, unscripted or retaken word |
+| His face | anchored on his eyes, so his eye line stays put and his face grows in place; only when the face track holds him steadily (80% of samples, drift under a quarter of his face's width); only the active speaker; never past the take's own resolution (the virtual camera's quality floor, 0.9) |
+| What moves | his take only: the captions, the graphics and the frame stay still (F57) |
+
+The push is a push, never a punch: the fastest frame of the strongest push moves about 0.81 a second, and `ve qc`
+refuses anything past 1.0 a second (`camera.impact`). A spec may pin its own words (`cuts.<cut>.impact`) or turn the
+pushes off (`impact_off`); a pin that breaks a hard rule is refused at compile. A cut where no word qualifies has none.
+quick-edit's pivotal lines (`emphasis`) take the same push, timing and spacing, in place of the old 1.22x jump.
+
 ## Captions: the georgia build
 
 | What | Measured | Our canvas |

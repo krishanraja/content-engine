@@ -4729,6 +4729,32 @@
       ]
     },
     {
+      "id": "impact-zoom-too-aggressive",
+      "on": "2026-11-26",
+      "krish": "Can you make sure that on the most impactful words in any video, there's some form of camera zooming to emulate a world-class professional? Zoom for impact. We should bake in all the obvious edge cases and have it be classy and subtle rather than too aggressive. (26 Nov 2026)",
+      "what": "No ve cut pushed in on the words that carry the claim, and quick-edit's pivotal-line framing jumped to 82% of the frame (1.22x) with no ease.",
+      "symptom": "A talking-head cut held one framing through its biggest line, or snapped tight on it like a punch.",
+      "cause": "Emphasis only reached the captions; the only camera moves were the ingredient camera (which scales the graphics too, and whose punch the Library bans) and quick-edit's TIGHT window.",
+      "status": "guarded",
+      "mode": "motion",
+      "guard_level": "gate",
+      "surface": "ve compile, ve qc and quick-edit's episode framings",
+      "guards": [
+        {
+          "file": "scripts/velib/impact.py",
+          "contains": "def problems(",
+          "how": "compile plans the pushes from config/ve/impact-zoom.json and refuses props past the caps, the rate, the spacing or onto a banned beat; ve qc reports camera.impact",
+          "test": "python tests/ve_impact_test.py"
+        },
+        {
+          "file": "scripts/quick-edit/episode.py",
+          "contains": "IMPACT_TO = IMPACT",
+          "how": "the pivotal-line framing reads the same config and eases in and out; TIGHT is gone",
+          "test": "python scripts/quick-edit/episode.py --self-test"
+        }
+      ]
+    },
+    {
       "id": "kill-list-windows-encoding",
       "on": "2026-11-26",
       "krish": "Not his words: found by the story engine v5 gap list (docs/proposals/2026-11-26-story-engine-gaps.md), which he approved as the plan on 26 Nov 2026; the kill list is makeyourmindup's, held to its vendored copy.",

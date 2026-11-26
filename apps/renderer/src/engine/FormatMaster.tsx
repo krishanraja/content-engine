@@ -18,6 +18,7 @@ import { beatMotion, focusMotion, groundTexture, halftoneTexture, keepsOutgoing,
 import { focusRoom, placed } from './kit/focus'
 import { Brackets, PaperTexture, SketchFrame, TORN_DEVICES, TornFilter, TornSeam, cutoutPose, darkGround, scanLines, splitGroundColour, tokensFor } from './kit/overlays'
 import { HeroType, heroArea, heroLayout, heroPhrase } from './kit/heroType'
+import { impactStyle } from './kit/impact'
 import { FOCUS_SCALE, LEAD_AFTER, TRANSITION_FRAMES, cameraAt, cameraStyle, flashAt, hitFrames, leadMoveAt, leadStyle, leads } from './kit/ingredients'
 import { GRAMMAR_GROW, regionSlots } from './kit/layout'
 import { boxStyle, isStaging, staged, stagingGeometry, trayRise } from './kit/staging'
@@ -178,10 +179,15 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
 
   // His take, drawn once as the picture and, through the subject matte, once more over the type set behind him (the depth
   // layer): the same box, the same crop and lift, frame for frame, so he lands exactly on himself.
+  // Impact zoom (kit/impact.ts): a push about his eyes on the take layer only, composed outside the segment's own crop or
+  // face lift, so the captions, graphics and frame stay still. With no props.impact the tree is the one it always was.
+  const impact = props.impact ? impactStyle(props.impact, frame) : undefined
+  const pushed = (video: ReactElement) => props.impact
+    ? <AbsoluteFill data-impact={impact ? 'push' : 'rest'} style={impact}>{video}</AbsoluteFill> : video
   const takeLayer = (src: string | undefined, transparent: boolean, keyPrefix: string) => props.segments.map((segment, index) => (
         <Sequence key={`${keyPrefix}-${index}`} from={segment.fromFrame} durationInFrames={segment.durationFrames}>
           <AbsoluteFill style={{ overflow: 'hidden', ...(faceState?.box ?? camera ?? stagedTake ?? {}), ...(faceState ? { borderRadius: 210 * faceState.windowed, border: `${6 * faceState.windowed}px solid ${props.tokens.cream}`, boxSizing: 'border-box' as const, boxShadow: `${10 * faceState.windowed}px ${10 * faceState.windowed}px 0 ${props.tokens.inkDeep}`, transform: `scale(${faceState.scale})`, transformOrigin: 'center center' } : {}) }}>
-            <OffthreadVideo
+            {pushed(<OffthreadVideo
               src={src ?? segment.src}
               trimBefore={segment.trimBeforeFrames}
               muted
@@ -196,7 +202,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
                   transform: `scale(${faceLift(props.aspect, faceState?.windowed ?? 0)})`,
                 } : {}),
               }}
-            />
+            />)}
             {!transparent && profile?.ground.texture === 'halftone' && <AbsoluteFill style={halftoneTexture(props.tokens)} />}
           </AbsoluteFill>
         </Sequence>

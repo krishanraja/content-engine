@@ -7827,10 +7827,14 @@ The producer supplies work. An independently provisioned reviewer signs evidence
 
 ### `packages/core/src/virtual-camera.ts`
 
+- `interface NormalizedBounds`
 - `interface VirtualCameraPolicy`
 - `interface VirtualCameraSolveInput`
 - `interface VirtualCameraSolution`
 - `type CameraPlanTemplate = Omit<CameraPlanV1, 'keyframes' | 'confidence'>`
+- `const VIRTUAL_CAMERA_POLICY: Readonly<VirtualCameraPolicy>`
+- `function baseCropForSource(width: number, height: number, outputWidth: number, outputHeight: number): NormalizedBounds`
+- `function maximumSafeZoom(baseCrop: NormalizedBounds, sourceWidth: number, sourceHeight: number, policy: VirtualCameraPo…`
 - `function solveVirtualCamera(input: VirtualCameraSolveInput): VirtualCameraSolution`
 - `function materializeCameraPlan(template: CameraPlanTemplate, solution: VirtualCameraSolution): CameraPlanV1`
 
