@@ -293,6 +293,49 @@ def read_status(wk, call):
     return option_status(view, outcomes), None
 
 
+HUB_FIELDS = ('id', 'subsector', 'date', 'source', 'url', 'headline', 'dek', 'why', 'companies', 'coverage')
+HUB_ROUTES = ('/api/board/{week}/edition/news', '/api/hub/today')
+
+
+def hub_items(answer):
+    """The hub's story items in an answer: a daily snapshot ({items}) or a week of them ({days: [{edition_date, items}]})."""
+    if not isinstance(answer, dict):
+        return []
+    rows = list(answer.get('items') or [])
+    for d in answer.get('days') or []:
+        rows += [dict(i, date=i.get('date') or d.get('edition_date')) for i in (d.get('items') or []) if isinstance(i, dict)] if isinstance(d, dict) else []
+    return [{k: r.get(k) for k in HUB_FIELDS if r.get(k) is not None} for r in rows if isinstance(r, dict) and r.get('url') and r.get('headline')]
+
+
+def hub_source(wk, read):
+    """The week's stories from makeyourmindup.ai's daily news hub (content-engine #982: GET /api/hub/today, the latest
+    hub_snapshots row, curated per subsector; and, once the weekly edition's route is merged, a week of the rows at
+    GET /api/board/<Monday>/edition/news), read by HTTP from the board's base url the way the other gather reads are.
+    Items from the seven days before the week, the same story once (by url). {read_from, items, skipped}: when no route
+    answers, skipped says why and the gather goes on, so a thin pool is said, never silent."""
+    start = date.fromisoformat(wk)
+    window = ((start - timedelta(days=7)).isoformat(), start.isoformat())
+    if read is None:
+        return {'read_from': [], 'items': [], 'skipped': 'no board reader (a test or an offline run)'}
+    got, read_from, why = {}, [], []
+    for route in HUB_ROUTES:
+        path = route.format(week=wk)
+        try:
+            items = hub_items(read(path))
+        except Exception as error:  # an unreachable or unmerged route is a reason, never a failed gather
+            why.append(f'{path}: {str(error)[:120]}')
+            continue
+        read_from.append(path)
+        for it in items:
+            if window[0] <= str(it.get('date') or window[0])[:10] < window[1]:
+                got.setdefault(str(it['url']).strip().lower(), it)
+    items = sorted(got.values(), key=lambda i: (str(i.get('subsector') or ''), -(i.get('coverage') or 0)))
+    skipped = None if read_from else ('the hub could not be read: ' + '; '.join(why))
+    if read_from and not items:
+        skipped = f'the hub answered with no stories dated {window[0]} to {window[1]}'
+    return {'read_from': read_from, 'items': items, 'skipped': skipped}
+
+
 def gather(week, call=None, out_dir=None, read=None):
     """(path written, summary lines). call: (method, path, body) -> (status, text), the engine key by default."""
     call = call or making._engine_call
@@ -370,6 +413,9 @@ def gather(week, call=None, out_dir=None, read=None):
         'unvetoed': sources.get('unvetoed') if isinstance(sources.get('unvetoed'), list) else [],
         # The house rules the ideas are held to, as the judges and writers read them: BIG_PICTURE and STORY_ARC.
         'house_rules': sources.get('house_rules') if isinstance(sources.get('house_rules'), list) else [],
+        # The week's stories from the daily news hub, curated per subsector (Ruling, Krish, 2026-11-26: a thin pool is
+        # never an empty board; hub_source). Skipped with its reason when the hub cannot be read.
+        'hub': hub_source(wk, read),
     }
     folder = Path(out_dir) if out_dir else ROOT / 'docs' / 'plans' / f'{wk}-week'
     folder.mkdir(parents=True, exist_ok=True)
@@ -387,6 +433,8 @@ def gather(week, call=None, out_dir=None, read=None):
     oc = out['outcomes']
     lines.append('  his answers on earlier boards: ' + (', '.join(f'{k} {len(oc.get(k) or [])}' for k in ('filed', 'rejected', 'trend', 'improved'))
                                                        if oc else 'none in the engine\'s answer') + f'; given back {len(out["unvetoed"])}')
+    hub = out['hub']
+    lines.append(f'  daily hub: {len(hub["items"])} stories from the week before' + (f'; skipped: {hub["skipped"]}' if hub['skipped'] else ''))
     lines.append('  house rules: ' + (', '.join(str(r.get('id')) for r in out['house_rules']) or 'none in the engine\'s answer (the route predates them)'))
     lines.append(f'  recent posts: {len(posts)} on the {RECENT_POST_WEEKS} boards before the week, {len(out["earlier_options"])} options those boards offered'
                  + (f'; NOT READ: {out["recent_posts_error"]} (the gate fails until a gather reads them)' if post_errors else ''))
@@ -892,7 +940,7 @@ def gate(week, ideas_path=None, plans=None):
     return report['problems'], report['warned']
 
 
-GATE_SUBJECT = re.compile(r'^[^:]+:\s+(?:off-(?P<oday>mon|tue|wed|thu|fri|sat)-(?P<oid>[A-Za-z0-9_-]+)|(?P<day>mon|tue|wed|thu|fri|sat)-\d+(?:\s+\((?P<pid>[0-9a-f]{8})\))?)')
+GATE_SUBJECT = re.compile(r'^[^:]+:\s+(?:off-(?P<oday>mon|tue|wed|thu|fri|sat)-(?P<oid>[A-Za-z0-9_-]+)|(?P<day>mon|tue|wed|thu|fri|sat)-\d+(?:\s+\((?P<pid>[0-9a-f]{8})\))?|(?P<bday>mon|wed|fri)\s)')
 
 
 def remakeable(line, days, status=None):
@@ -904,11 +952,11 @@ def remakeable(line, days, status=None):
     m = GATE_SUBJECT.match(line)
     if not m:
         return False
-    day = m.group('oday') or m.group('day')
+    day = m.group('oday') or m.group('day') or m.group('bday')
     if day not in days:
         return False
-    if status is None:
-        return True
+    if status is None or m.group('bday'):
+        return True  # a line about a whole hero day (the thin week) is said only while every option on it is open
     if m.group('oday'):
         return status.get(f'off:{day}:{m.group("oid").lower()}') in REMAKE
     pid = m.group('pid')
@@ -1031,7 +1079,7 @@ JUDGE_RANK_RULE = ("Each judge's rank of his pick among its day's options that j
                    'with how many it scored ({"rank", "of"}); a judge that did not score the pick has none. The panel\'s judges are '
                    "read from each option's `judges` ({key: score}) or docs/plans/<Monday>-week/judges.json ({option id: {key: "
                    "score}}), the story score's blind judges from story_score.axes as story:<axis>. Reported, never acted on: "
-                   'config/story-score.json judges.review.')
+                   'config/judges.json review.')
 
 
 def judge_scores(ideas, panel=None):
@@ -1090,10 +1138,10 @@ def judge_labels():
 
 
 def judge_review(cards, cfg=None):
-    """The review lines (config/story-score.json judges.review): after after_weeks scored weeks, a judge whose mean rank of
+    """The review lines (config/judges.json review): after after_weeks scored weeks, a judge whose mean rank of
     his picks is no better than chance (the mean of (of + 1) / 2 over the same picks) gets the review line. Reported only:
     nothing auto-retires a judge (Ruling, Krish, 2026-11-26: no judge or rule survives on faith)."""
-    rule = ((cfg or idea_checks.STORY).get('judges') or {}).get('review') or {}
+    rule = (cfg or json.loads((ROOT / 'config' / 'judges.json').read_text(encoding='utf-8'))).get('review') or {}
     after, line = int(rule.get('after_weeks') or 4), str(rule.get('line') or 'retire or rewrite')
     seen = {}
     for card in cards or []:
@@ -1177,7 +1225,7 @@ def scorecard(week, call=None, plans=None, write=True):
         path = Path(plans or ROOT / 'docs' / 'plans') / f'{wk}-week' / 'scorecard.json'
         path.write_text(json.dumps(card, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')
         lines.append(f'wrote {path}')
-    # The Monday learn step's judge review (config/story-score.json judges.review): reported, nothing retires itself.
+    # The Monday learn step's judge review (config/judges.json review): reported, nothing retires itself.
     lines += judge_review([c for c in scorecards(plans) if c.get('week') != wk] + [card])
     return card, lines
 

@@ -50,8 +50,8 @@ import { READER } from '../_beat.js'
 // this, because it tells them how their work makes money in a way they could
 // not get free elsewhere this week. The retired thirty-day-build buyer stays
 // retired. Its key stays 'buyer' so stored verdicts still join, and whether its
-// scores ever ranked his picks is reported (config/story-score.json
-// judges.review), never taken on faith.
+// scores ever ranked his picks is reported (config/judges.json
+// review), never taken on faith.
 export const ROSTER_VERSION = 'panel-v3'
 
 export type Gate = 'idea' | 'draft'

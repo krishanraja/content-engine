@@ -1,6 +1,6 @@
 """Judge accountability (Ruling, Krish, 2026-11-26: the buyer judge is kept as the paying reader, and no judge or rule
 survives on faith; rank1_picked was 0 on both scored weeks). board_feed.py records, per judge, the rank its scoring gave
-his actual pick (judge_rank_of_pick), and after config judges.review.after_weeks scored weeks a judge no better than
+his actual pick (judge_rank_of_pick), and after config/judges.json review.after_weeks scored weeks a judge no better than
 chance gets a review line, reported only. Every option below is invented."""
 import json
 import sys
@@ -65,7 +65,7 @@ class JudgeRank(unittest.TestCase):
 
 class Review(unittest.TestCase):
     def setUp(self):
-        self.rule = ic.STORY['judges']['review']
+        self.rule = json.loads((ROOT / 'config' / 'judges.json').read_text(encoding='utf-8'))['review']
 
     def test_the_rule_is_a_config_row_and_acts_on_nothing(self):
         self.assertEqual(self.rule['after_weeks'], 4)

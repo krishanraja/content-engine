@@ -176,21 +176,74 @@ ECON = ic.keyword_pattern((ic.BEAT.get('economics_keywords') or {}).get('keyword
 FIGURE = re.compile((ic.BEAT.get('economics_keywords') or {}).get('figure_pattern') or r'(?!)', re.I)
 
 
+FOCUS_ENTITIES = ic.keyword_pattern([e for row in ic.BEAT['focus_sectors'] for e in row.get('entities') or []])
+
+
 def focus_in(text):
-    return bool(ic.BEAT_FOCUS.search(ic.BEAT_FOCUS_EXCEPT.sub(' ', _s(text))))
+    """A focus-sector keyword or one of a sector's named entities (config/beat.json focus_sectors[].entities) in the
+    words, the exception phrases taken out first."""
+    bare = ic.BEAT_FOCUS_EXCEPT.sub(' ', _s(text))
+    return bool(ic.BEAT_FOCUS.search(bare) or FOCUS_ENTITIES.search(bare))
 
 
-def fit_axis(view, main):
-    """(score, evidence): 10 a focus sector and an economics word or money figure in the topic, 7 a focus sector in
-    the topic, 4 a focus sector only in the body, 1 none (the avoid list is the floor's, never a score)."""
-    topic, body = topic_text(view, main), body_text(view, main)
-    if focus_in(topic):
-        if ECON.search(topic) or FIGURE.search(topic):
-            return 10, 'focus sector and its economics in the topic'
-        return 7, 'focus sector in the topic'
-    if focus_in(body):
+def _fit_rules(cfg):
+    spec = cfg.get('fit') or {}
+    return ([re.compile(p, re.I) for p in spec.get('appended') or []],
+            [re.compile(p, re.I) for p in spec.get('framing') or []])
+
+
+def unstuffed(sentence, cfg=None):
+    """A topic sentence without what only appends a sector word after the fact (config fit.appended), or '' for a
+    sentence that is only a framing (config fit.framing): keyword stuffing never earns fit."""
+    appended, framing = _fit_rules(cfg or RUBRIC)
+    s = _s(sentence)
+    if any(p.search(s) for p in framing):
+        return ''
+    for p in appended:
+        s = p.sub('', s)
+    return s
+
+
+def topic_sentences(view, main):
+    """The topic's sentences, part by part (the parts ic.option_topic reads: title, hook, and on a hero its plain
+    question, headline, pitch hook and the story's first sentence), so two parts never run into one sentence."""
+    pitch = view.get('pitch') if isinstance(view.get('pitch'), dict) else {}
+    parts = [view.get('title'), view.get('hook')]
+    if main:
+        parts += [pitch.get('question'), pitch.get('headline'), pitch.get('hook'), (ic.sentences(view.get('story') or '') or [''])[0]]
+    return [s for p in parts if p for s in ic.sentences(_s(p)) if s.strip()]
+
+
+def fact_marks(view, main):
+    """What carries the option's fact: the names and figures in its sourced fact (fact_text), lower-cased."""
+    fact = fact_text(view, main)
+    marks = {n.lower() for n in ic.names(fact) if len(n) > 2}
+    marks |= {m.group(0).lower() for m in FIGURE.finditer(fact)}
+    marks |= set(re.findall(r'\d[\d,.]*\d|\d', fact))
+    return marks
+
+
+def fit_axis(view, main, cfg=None):
+    """(score, evidence): 10 a focus sector and an economics word or money figure in the same topic sentence, 7 a focus
+    sector in the topic, 4 a focus sector only in the body, 1 none (the avoid list is the floor's, never a score).
+    A sector counts in the topic only in a sentence that carries the fact (Ruling, Krish, 2026-11-26, floor C1): what
+    only appends a sector word is taken out first (unstuffed), and when any topic sentence names a thing or a figure
+    from the fact, only those sentences are read, so adding words without the fact changing never earns fit."""
+    cfg = cfg or RUBRIC
+    sents = [(s, unstuffed(s, cfg)) for s in topic_sentences(view, main)]
+    marks = fact_marks(view, main)
+    carries = [(s, u) for s, u in sents if u and any(re.search(r'(?<!\w)' + re.escape(m) + r'(?!\w)', u.lower()) for m in marks)]
+    read = carries if carries else [(s, u) for s, u in sents if u]
+    hits = [u for _s0, u in read if focus_in(u)]
+    if hits:
+        if any(ECON.search(u) or FIGURE.search(u) for u in hits):
+            return 10, 'focus sector and its economics in the sentence that carries the fact'
+        return 7, 'focus sector in the sentence that carries the fact'
+    if any(focus_in(u) for _s0, u in sents):
+        return 4, 'a focus-sector word only beside the fact, never in the sentence that carries it'
+    if focus_in(body_text(view, main)):
         return 4, 'focus sector only in the body'
-    return 1, 'no focus-sector word'
+    return 1, 'no focus-sector word or entity'
 
 
 def _twist(cfg):
@@ -232,28 +285,104 @@ def site_of(url, cfg=None):
     return '.'.join(parts[-n:]) if host else ''
 
 
-def urls_of(view):
-    out = []
+def sources_of(view):
+    """[(url, kind)] for every source the option carries, once each by url: its source, sources and stories' sources."""
+    out = {}
     for s in [view.get('source')] + list(view.get('sources') or []) + [st.get('source') for st in view.get('stories') or [] if isinstance(st, dict)]:
         if isinstance(s, dict) and (s.get('url') or s.get('href')):
-            out.append(str(s.get('url') or s.get('href')))
-    return list(dict.fromkeys(out))
+            out.setdefault(str(s.get('url') or s.get('href')), str(s.get('kind') or '').lower() or None)
+    return list(out.items())
+
+
+def urls_of(view):
+    return [u for u, _k in sources_of(view)]
+
+
+def host_of(url):
+    return re.sub(r'^www\d?\.', '', (re.match(r'^[a-z]+://([^/:?#]+)', _s(url).strip().lower()) or [None, ''])[1])
+
+
+def never_primary(url, cfg=None):
+    """On config primary_sources.never_primary (an aggregator or syndicator: news.yahoo.com, msn.com and the rest), by
+    the whole host or a host under it."""
+    host = host_of(url)
+    return any(host == h or host.endswith('.' + h) for h in (cfg or RUBRIC).get('primary_sources', {}).get('never_primary') or [])
+
+
+def first_reported_url(view):
+    fr = view.get('first_reported')
+    url = fr.get('url') if isinstance(fr, dict) else fr
+    return str(url) if isinstance(url, str) and re.match(r'^https?://', url.strip()) else None
+
+
+def _same_url(a, b):
+    norm = lambda u: re.sub(r'[#?].*$', '', host_of(u) + '/' + re.sub(r'^[a-z]+://[^/]+/?', '', _s(u).strip().lower())).rstrip('/')  # noqa: E731
+    return norm(a) == norm(b)
+
+
+def site_names(text, cfg=None):
+    """The names a site could carry, squashed (letters and digits, lower case): every name in the words (ic.names), and
+    every run of one to three capitalised words, so AI Futures is aifutures though ic.names drops AI. An outlet named
+    only as the one that reported it (config primary_sources.attribution: "The Register reported", "according to CNBC")
+    is taken out first: the outlet that tells the story is not the actor."""
+    text = _s(text)
+    for p in (cfg or RUBRIC).get('primary_sources', {}).get('attribution') or []:
+        text = re.sub(p, ' ', text)
+    out = {re.sub(r'[^a-z0-9]', '', n.lower()) for n in ic.names(text)}
+    words = re.findall(r"[A-Za-z0-9][A-Za-z0-9&'.-]*", text)
+    for i in range(len(words)):
+        for j in range(i + 1, min(i + 3, len(words)) + 1):
+            run = words[i:j]
+            if all(w[0].isupper() for w in run):
+                out.add(re.sub(r'[^a-z0-9]', '', ''.join(run).lower()))
+    out.discard('')
+    return out
+
+
+def own_site(label, names):
+    """The site is the actor's own: its name is a name in the option (warner.com is Warner), or one starts the other and
+    both are at least five letters (aifutures.org is the AI Futures Project)."""
+    if not label:
+        return False
+    return label in names or any(len(label) >= 5 and len(n) >= 5 and (n.startswith(label) or label.startswith(n)) for n in names)
 
 
 def primary_sources(view, main=True, cfg=None):
-    """How many of the option's sources are primary: on a filing or paper host, or on the actor's own site (a name in
-    its topic or fact is the site's name)."""
+    """How many of the option's sources are primary (config primary_sources; Ruling, Krish, 2026-11-26, floor C2): the
+    actor's own site (a name in its topic or fact is the site's name), a filing or official data host, or the outlet
+    that first reported the fact (the option's first_reported url, or a source of kind original). A source on
+    never_primary (an aggregator or syndicator) is never primary, whatever else holds."""
     cfg = cfg or RUBRIC
-    hosts = set((cfg.get('primary_sources') or {}).get('filing_hosts') or [])
-    names = {re.sub(r'[^a-z0-9]', '', n.lower()) for n in ic.names(topic_text(view, main) + ' ' + fact_text(view, main))}
-    names.discard('')
+    spec = cfg.get('primary_sources') or {}
+    hosts = set(spec.get('filing_hosts') or [])
+    original = set(spec.get('original_kinds') or ['original'])
+    names = site_names(topic_text(view, main) + ' ' + fact_text(view, main), cfg)
+    first = first_reported_url(view)
+    rows = sources_of(view)
+    if first and not any(_same_url(u, first) for u, _k in rows):
+        rows.append((first, 'original'))
     n = 0
-    for u in urls_of(view):
+    for u, kind in rows:
+        if never_primary(u, cfg):
+            continue
         site = site_of(u, cfg)
         label = re.sub(r'[^a-z0-9]', '', site.split('.')[0])
-        if site in hosts or any(site.endswith('.' + h) or site == h for h in hosts) or (label and label in names):
+        if (site in hosts or any(site.endswith('.' + h) or site == h for h in hosts) or own_site(label, names)
+                or kind in original or (first and _same_url(u, first))):
             n += 1
     return n
+
+
+def goodnews_sector_share(view, main=False):
+    """The share of a good-news carousel's stories that are in a focus sector (a keyword or a named entity in what the
+    story says happened: its headline, title, what, story or hook; never who it helps, a label that could be written in
+    without the fact changing), None when it carries no stories (Ruling, Krish, 2026-11-25: the narrower focus holds on
+    every content type)."""
+    stories = [st for st in view.get('stories') or [] if isinstance(st, dict)]
+    if not stories:
+        return None
+    words = lambda st: ' '.join(_s(st.get(k)) for k in ('headline', 'title', 'what', 'story', 'hook'))  # noqa: E731
+    return round(sum(1 for st in stories if focus_in(words(st))) / len(stories), 2)
 
 
 def steps_verifiable(view):
@@ -507,20 +636,26 @@ def _holds(value, op, want):
     raise ValueError(op)
 
 
-def floors_for(tid, cfg=None):
+def floors_for(tid, cfg=None, wildcard=False):
+    """The type's floors, a hero's shared floors first. On a wildcard option (option.wildcard true: the protected
+    strange-story slot) a floor naming a hero_floors row in `wildcard` takes that row's value instead (wildcard_fit_min:
+    fit 4, not 7); every other floor stands."""
     cfg = cfg or RUBRIC
     out = list(cfg['types'][tid].get('floors') or [])
     if tid in cfg['hero_floors']['types']:
         out = list(cfg['hero_floors']['floors']) + out
+    if wildcard:
+        out = [dict(f, value=cfg['hero_floors'][f['wildcard']], reason=f.get('wildcard_reason') or f['reason'])
+               if f.get('wildcard') else f for f in out]
     return out
 
 
-def floor_lines(tid, axes, checks, cfg=None):
+def floor_lines(tid, axes, checks, cfg=None, wildcard=False):
     """(failed, noted): the reasons of every hard floor the option does not hold (a floor whose value was not read
     fails, said as unread, unless the floor is if_read), and of every floor marked hard false that it does not hold,
     which are reported beside the score and never fail it."""
     failed, noted = [], []
-    for f in floors_for(tid, cfg):
+    for f in floors_for(tid, cfg, wildcard):
         value = axes.get(f['axis']) if 'axis' in f else checks.get(f['check'])
         if value is None and f.get('if_read'):
             continue
@@ -529,9 +664,9 @@ def floor_lines(tid, axes, checks, cfg=None):
     return failed, noted
 
 
-def floors_failed(tid, axes, checks, cfg=None):
+def floors_failed(tid, axes, checks, cfg=None, wildcard=False):
     """The reasons of every hard floor the option does not hold (floor_lines)."""
-    return floor_lines(tid, axes, checks, cfg)[0]
+    return floor_lines(tid, axes, checks, cfg, wildcard)[0]
 
 
 def total_of(tid, axes, cfg=None):
@@ -562,7 +697,7 @@ def score_option(key, day, main, o, inputs=None, cfg=None, at=None):
     hero = tid in HERO
 
     axes, why = {}, {}
-    axes['fit'], why['fit'] = fit_axis(view, main)
+    axes['fit'], why['fit'] = fit_axis(view, main, cfg)
     axes['named_thing'], why['named_thing'] = named_axis(view, main, cfg)
     axes['whys'], why['whys'] = whys_axis(probe)
     axes['mechanism'], why['mechanism'] = mechanism_axis(probe)
@@ -608,13 +743,14 @@ def score_option(key, day, main, o, inputs=None, cfg=None, at=None):
         'comic_reading': comic.get('comic_reading') if comic else None,
         'needs_explaining': bool(comic.get('needs_explaining')) if comic else None,
         'steps_verifiable': steps_verifiable(view),
+        'goodnews_sector_share': goodnews_sector_share(view, main) if tid == 'goodnews' else None,
     }
     checks.update((inputs.get('checks') or {}).get(key) or {})
 
     weights = cfg['types'][tid]['weights']
     scored_axes = {a: axes.get(a) for a in weights}
     total, rw, unread = total_of(tid, scored_axes, cfg)
-    failed, noted = floor_lines(tid, scored_axes, checks, cfg)
+    failed, noted = floor_lines(tid, scored_axes, checks, cfg, wildcard=view.get('wildcard') is True)
     floored = key in set(inputs.get('floored') or ())
     humour_unread = fact_score is None and angle_part is None
     return {
@@ -645,10 +781,10 @@ def floored_keys(floor_doc, ideas):
 
 def compact(s):
     """What goes into ideas.json beside the option: the total, the axes, the type and the floors it failed, and the bits
-    the Sunday gate (idea_checks.story_findings) needs to check the order again: floored, humour unread, the close call
-    and the council read that decided a pair."""
+    the Sunday gate (idea_checks.story_findings) needs to check the order again: floored, humour unread, the close call,
+    the council read that decided a pair and the thin-week line."""
     out = {k: s[k] for k in ('total', 'axes', 'type', 'floors_failed', 'rubric_version', 'at')}
-    for k in ('floored', 'humour_unread', 'close_call', 'council', 'notes'):
+    for k in ('floored', 'humour_unread', 'close_call', 'council', 'notes', 'thin_week'):
         if s.get(k):
             out[k] = s[k]
     return out
@@ -732,6 +868,26 @@ def order_day(opts, scores, keys, council=None, cfg=None):
     return out, call
 
 
+def passes(s):
+    """A scored option that holds every hard floor and the floor did not refuse."""
+    return isinstance(s, dict) and not s.get('floored') and not s.get('floors_failed') and s.get('total') is not None
+
+
+def thin_says(ideas, group, day, opts, scores, cfg=None):
+    """The thin-week line for a hero day (config hero_floors.thin_week), or None: fewer than min_passing of its options
+    pass every floor, the session marked the day regathered (ideas.json thin_week.<day>.regathered: one re-gather was
+    run), and at least thin_min pass. The floors are never relaxed: an option under one still fails the gate."""
+    cfg = cfg or RUBRIC
+    rule = cfg['hero_floors'].get('thin_week') or {}
+    if group != 'days' or day not in ('mon', 'wed', 'fri') or not rule:
+        return None
+    marked = ((ideas or {}).get('thin_week') or {}).get(day) if isinstance((ideas or {}).get('thin_week'), dict) else None
+    n = sum(1 for o in opts if isinstance(o, dict) and not o.get('weekly') and passes(scores.get(key_of(day, o))))
+    if isinstance(marked, dict) and marked.get('regathered') is True and rule['thin_min'] <= n < rule['min_passing']:
+        return rule['says']
+    return None
+
+
 def order_board(ideas, scores, status, council=None, cfg=None, before=None):
     """(new ideas, report). Only open days are ordered; the first movable option is recommended. before: the board as it
     stood before a `days` re-run (an option on neither it nor the status is new, so open). report: {ordered, kept,
@@ -754,6 +910,7 @@ def order_board(ideas, scores, status, council=None, cfg=None, before=None):
                 report.setdefault('unscored', []).append(day)
                 continue
             ordered, call = order_day(opts, scores, keys, (council or {}).get(day), cfg)
+            thin = thin_says(new, group, day, ordered, scores, cfg)
             before = [key_of(day, o) for o in opts]
             after = [key_of(day, o) for o in ordered]
             if before != after:
@@ -772,6 +929,8 @@ def order_board(ideas, scores, status, council=None, cfg=None, before=None):
                             s['close_call'] = call['says']
                         if call and key_of(day, o) in call['keys'] and call.get('council'):
                             s['council'] = {'pair': list(call['keys']), 'winner': call['council']}
+                        if thin:
+                            s['thin_week'] = thin
                         o['story_score'] = compact(s)
             block[day] = ordered
             report['ordered'].append(day)
