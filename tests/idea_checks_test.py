@@ -1130,7 +1130,8 @@ class OffdayBeatTest(unittest.TestCase):
         self.assertIn('off_beat', ic.GATE_CODES)
         for key in ('line', 'good_news', 'meme', 'carousel', 'office_keywords', 'refusals'):
             self.assertTrue(ic.BEAT['offdays'].get(key), key)
-        self.assertEqual(self.found({'tue': [{'id': 'eggs', 'title': 'My AI agent bought 72 eggs'}]}, '2026-11-30'), [],
+        before = (date.fromisoformat(ic.STORY_FROM) - timedelta(days=7)).isoformat()
+        self.assertEqual(self.found({'tue': [{'id': 'eggs', 'title': 'My AI agent bought 72 eggs'}]}, before), [],
                          'boards before the story score keep the beat they were made with')
 
     def test_an_office_meme_is_refused_and_says_so(self):
@@ -1217,8 +1218,11 @@ class StoryGateTest(unittest.TestCase):
     def probes(self, *ids, n=5):
         return {i: ladder(n) for i in ids}
 
-    def run_(self, ideas, status=None, probes=None, week=None):
-        return ic.story_findings(ideas, week or self.WEEK, status, probes)
+    def run_(self, ideas, status=None, probes=None, week=None, thin=False):
+        """The story lines; the day-level thin-week line (a hero day under three options that pass every floor) is left
+        out unless thin, since these boards carry two options a day to test the rest (ThinWeekTest tests it)."""
+        found = ic.story_findings(ideas, week or self.WEEK, status, probes)
+        return found if thin else [f for f in found if f['ref'] not in ('mon', 'wed', 'fri')]
 
     def test_the_codes_fail_the_run_from_the_config_date(self):
         self.assertIn('story', ic.GATE_CODES)
@@ -1414,7 +1418,9 @@ class StoryGateTest(unittest.TestCase):
             (folder / f'{B.upper()}.whys.json').write_text(json.dumps(ladder(1)))
             (folder / 'broken.whys.json').write_text('{')
             self.assertEqual(set(board_feed.probes_of(self.WEEK, tmp)), {A, B})
-            found = [f for f in board_feed.wave1(ideas, sources(), tmp) if f['code'] in ('story', 'story_floor')]
+            # A two-option day also says it is thin (ThinWeekTest); only the option lines are read here.
+            per_option = lambda found: [f for f in found if f['ref'] not in ('mon', 'wed', 'fri')]  # noqa: E731
+            found = per_option(f for f in board_feed.wave1(ideas, sources(), tmp) if f['code'] in ('story', 'story_floor'))
             self.assertEqual([f['ref'] for f in found], ['mon-2'])
             self.assertIn('holds 1 whys', found[0]['line'])
             self.assertEqual([f for f in board_feed.wave1(ideas, sources(), tmp, status={f'idea:{A}': 'open', f'idea:{B}': 'approved'})
@@ -1422,7 +1428,7 @@ class StoryGateTest(unittest.TestCase):
             story_dir = Path(tmp) / f'{self.WEEK}-week' / 'story'
             story_dir.mkdir()
             (story_dir / 'probes.json').write_text(json.dumps({A: {'schema': 'whys-probe/1', 'documented': 2}, B: {'schema': 'whys-probe/1', 'documented': 4}}))
-            found = [f for f in board_feed.wave1(ideas, sources(), tmp) if f['code'] in ('story', 'story_floor')]
+            found = per_option(f for f in board_feed.wave1(ideas, sources(), tmp) if f['code'] in ('story', 'story_floor'))
             self.assertEqual([f['ref'] for f in found], ['mon-1'], 'the verified probe wins over the raw ladder')
 
     def test_the_scorecard_measures_where_his_picks_fell(self):
@@ -1524,6 +1530,48 @@ class WildcardGateTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             found = [f for f in board_feed.wave1(ideas, sources(), tmp) if f['code'] == 'wildcard']
         self.assertEqual([f['ref'] for f in found], ['mon', 'wed', 'fri'])
+
+
+class ThinWeekTest(unittest.TestCase):
+    """Never an empty board, never a relaxed floor (Ruling, Krish, 2026-11-26; config hero_floors.thin_week): an open hero
+    day carries three options that pass every floor, or, after one re-gather, two that do with every card saying it is a
+    thin week. Every option here is invented."""
+
+    WEEK = ic.STORY_FROM
+    SAYS = ic.STORY['hero_floors']['thin_week']['says']
+
+    def lines(self, ideas):
+        probes = {i: ladder(5) for i in (A, B, C)}
+        return [f for f in ic.story_findings(ideas, self.WEEK, None, probes) if f['ref'] == 'mon']
+
+    def day(self, *scores, thin=None):
+        opts = [main_option(id=i, story_score=s) for i, s in zip((A, B, C), scores)]
+        return dict({'week_start': self.WEEK, 'days': {'mon': opts}}, **({'thin_week': thin} if thin else {}))
+
+    def test_three_passing_options_hold(self):
+        self.assertEqual(self.lines(self.day(story(80), story(70), story(60))), [])
+
+    def test_two_passing_without_a_regather_fail(self):
+        found = self.lines(self.day(story(80), story(70), story(60, failed=["a hero's topic is in a focus sector"])))
+        self.assertEqual(len(found), 1)
+        self.assertIn('mon carries 2 option(s) that pass every floor', found[0]['line'])
+        self.assertTrue(board_feed.remakeable(found[0]['line'], ['mon']), 'a days re-run of Monday is there to fix it')
+
+    def test_a_thin_week_after_a_regather_says_so_on_every_card(self):
+        said = dict(thin_week=self.SAYS)
+        ok = self.day(story(80, **said), story(70, **said), thin={'mon': {'regathered': True}})
+        self.assertEqual(self.lines(ok), [])
+        unsaid = self.day(story(80, **said), story(70), thin={'mon': {'regathered': True}})
+        self.assertEqual(len(self.lines(unsaid)), 1, 'a card that does not say so fails')
+        one = self.day(story(80, **said), story(70, failed=['x'], **said), thin={'mon': {'regathered': True}})
+        self.assertEqual(len(self.lines(one)), 1, 'one passing option is never a board')
+
+    def test_the_floors_are_never_relaxed(self):
+        said = dict(thin_week=self.SAYS)
+        ideas = self.day(story(80, **said), story(70, **said), story(60, failed=['x'], **said), thin={'mon': {'regathered': True}})
+        found = ic.story_findings(ideas, self.WEEK, None, {i: ladder(5) for i in (A, B, C)})
+        self.assertIn('story_floor', [f['code'] for f in found], 'an option under a floor still fails on a thin week')
+
 
 if __name__ == '__main__':
     unittest.main()

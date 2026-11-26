@@ -1,5 +1,5 @@
 {
-  "_about": "The beat: which stories the engine brings Krish and which it leaves out. Ruling (Krish, 2026-11-24): the engine brings stories in his focus sectors (media, entertainment, content, arts, music, creator tech, with the economics of AI inside them) and not governance, regulation, security or data breaches. Ruling (Krish, 2026-11-25): sports is a focus sector too, beside the creative, arts, music, entertainment and media industries. Read by apps/control-plane/api/_beat.ts (the headline gate for the feed, the radar, investigations, creator posts and shift detection; avoid terms refuse a headline outright, focus terms keep a focus-sector headline that the release, launch or partnership rule would otherwise drop, and an enterprise productivity headline is kept only with a focus-sector angle), apps/control-plane/api/feed/ingest.ts (pool_categories_off_beat), apps/control-plane/api/_editorialRadar.ts (the lens prompt's beat block) and scripts/post-pack/idea_checks.py offbeat_findings (the Sunday gate, code off_beat: a board option on the avoid list with no focus-sector angle is refused). The reader row (his approved North Star reader line, 2026-11-26) is read by apps/control-plane/api/_relevance.ts, the judge roster and scripts/post-pack/humour_check.py; economics_keywords by the story score. A keyword is a row here, never code. A keyword ending in * matches any ending (royalt* matches royalty and royalties); not_when phrases are taken out of the text before its keywords are read, so 'job security' is not a security story and 'state of the art' is not an art story. Changed only by a pull request carrying his ruling.",
+  "_about": "The beat: which stories the engine brings Krish and which it leaves out. Ruling (Krish, 2026-11-24): the engine brings stories in his focus sectors (media, entertainment, content, arts, music, creator tech, with the economics of AI inside them) and not governance, regulation, security or data breaches. Ruling (Krish, 2026-11-25): sports is a focus sector too, beside the creative, arts, music, entertainment and media industries. Read by apps/control-plane/api/_beat.ts (the headline gate for the feed, the radar, investigations, creator posts and shift detection; avoid terms refuse a headline outright, focus terms keep a focus-sector headline that the release, launch or partnership rule would otherwise drop, and an enterprise productivity headline is kept only with a focus-sector angle), apps/control-plane/api/feed/ingest.ts (pool_categories_off_beat), apps/control-plane/api/_editorialRadar.ts (the lens prompt's beat block) and scripts/post-pack/idea_checks.py offbeat_findings (the Sunday gate, code off_beat: a board option on the avoid list with no focus-sector angle is refused). The reader row (his approved North Star reader line, 2026-11-26) is read by apps/control-plane/api/_relevance.ts, the judge roster and scripts/post-pack/humour_check.py; economics_keywords by the story score. focus_sectors[].entities are each sector's named companies, bodies, platforms, guilds, leagues and venues (real names only), read with the keywords by the story score's fit axis only (scripts/post-pack/story_score.py focus_in; Ruling, Krish, 2026-11-26): a topic that names one is in that sector. A keyword or an entity is a row here, never code. A keyword ending in * matches any ending (royalt* matches royalty and royalties); not_when phrases are taken out of the text before its keywords are read, so 'job security' is not a security story and 'state of the art' is not an art story. Changed only by a pull request carrying his ruling.",
   "from": "2026-11-30",
   "his_words": [
     {
@@ -45,15 +45,21 @@
     },
     "judges": {
       "reader": {
+        "label": "Reader",
         "question": "Will the people this is written for actually read it?",
-        "rubric": "Score reach into the readership: people who make the calls or make the work in the creative, arts, music, entertainment, media and sports industries, from whoever runs the label, studio, publisher, club or league to the musician, artist, writer, performer, athlete or creator whose work it is. 10 means it speaks to something in their work or their money this quarter; 1 means it is for AI practitioners, generalist business readers, or nobody in particular. Do not reward flattery of that reader; reward usefulness to them. Judge the readership only. Whether one of them would pay to read it is the buyer judge and not yours.",
+        "rubric": "Score reach into the readership: people who make the calls or make the work in the creative, arts, music, entertainment, media and sports industries, from whoever runs the label, studio, publisher, club or league to the musician, artist, writer, performer, athlete or creator whose work it is. 10 means it speaks to something in their work or their money this quarter; 1 means it is for AI practitioners, generalist business readers, or nobody in particular. Do not reward flattery of that reader; reward usefulness to them. Judge the readership only. Whether one of them would pay for it is the paying-reader judge and not yours.",
         "evidence": "Name who in those industries this lands with, and the situation they are in."
       },
       "buyer": {
-        "question": "Would someone in these industries pay to read this?",
-        "rubric": "Score paying reach: whether a person who makes the calls or makes the work in the creative, arts, music, entertainment, media or sports industries would pay to keep reading a publication that runs this, because it shows them what AI is doing to how their work makes money. 10 means it lands on money they earn, spend, license or are owed, with something they could not get free elsewhere; 1 means it could run anywhere and nobody would pay for it. Judge paying reach only. Whether the wider readership enjoys it belongs to the reader judge, and the two of you disagreeing on one idea is a finding rather than a fault.",
-        "evidence": "Name the person who would pay, and the money in their work this lands on.",
-        "flag": "Rewritten from the retired thirty-day-build buyer (panel-v2). Whether the buyer judge is rewritten like this or retired is Krish's call; its key stays so calibration still joins."
+        "label": "Paying reader",
+        "question": "Would someone who makes the calls or makes the work in these industries pay for this?",
+        "rubric": "Score paying reach: whether someone who makes the calls or makes the work in the creative, arts, music, entertainment, media or sports industries would pay for this, because it tells them something about how their work makes money that they could not get free elsewhere this week. 10 means they would forward it to their boss; 7 means they would pay to keep reading a publication that runs it; 4 means it is useful, but they could find the same thing free this week; 1 means it is free news they already saw. Judge paying reach only. Whether the wider readership reads it belongs to the reader judge, and the two of you disagreeing on one idea is a finding rather than a fault.",
+        "evidence": "Name the person who would pay, the money in their work this tells them about, and why they could not get it free elsewhere this week.",
+        "ruling": {
+          "at": "2026-11-26",
+          "said": "On questions 1 and 3 I need your judgement in detail. I want a high-quality flexible engine that has learned from all its past mistakes and is upgraded now.",
+          "ruling": "Kept, as the paying-reader judge. The North Star says these industries pay to read and the publication is worth owning on its own; no other judge tests pay-to-read, and the reader judge tests read-for-free. The old buyer (a commercial leader who might hire Krish within thirty days) tested the consultancy's buyer, which leaks across ventures, so it stays retired. The key stays buyer so stored verdicts, calibration and the check-judges invariants still join; every label says Paying reader. Its question is answered in the judges' accountability (config/judges.json review), never on faith."
+        }
       }
     }
   },
@@ -84,55 +90,65 @@
     {
       "sector": "music",
       "label": "Music",
-      "keywords": ["music", "musician*", "song", "songs", "songwriter*", "singer*", "rapper*", "album", "albums", "chart", "charts", "chart-topping", "uk number", "number one hit", "top 40", "billboard", "label", "labels", "record label*", "royalt*", "spotify", "suno", "udio", "grammy*"]
+      "keywords": ["music", "musician*", "song", "songs", "songwriter*", "singer*", "rapper*", "album", "albums", "chart", "charts", "chart-topping", "uk number", "number one hit", "top 40", "billboard", "label", "labels", "record label*", "royalt*", "spotify", "suno", "udio", "grammy*"],
+      "entities": ["Universal Music", "Universal Music Group", "UMG", "Warner Music", "Warner Music Group", "Sony Music", "BMG", "Kobalt", "Concord Music", "Apple Music", "Amazon Music", "YouTube Music", "Deezer", "SoundCloud", "Bandcamp", "TuneCore", "DistroKid", "Live Nation", "Ticketmaster", "AEG Presents", "RIAA", "IFPI", "ASCAP", "PRS for Music", "GEMA", "SACEM", "Musicians' Union", "Brit Awards", "Eurovision", "Glastonbury", "Coachella", "Epidemic Sound"]
     },
     {
       "sector": "film_tv",
       "label": "Film, TV and streaming",
-      "keywords": ["film", "films", "filmmaker*", "movie", "movies", "cinema", "hollywood", "box office", "tv", "television", "studio", "studios", "streaming", "streamer", "streamers", "screenwriter*", "animation", "animator*", "visual effects", "vfx"]
+      "keywords": ["film", "films", "filmmaker*", "movie", "movies", "cinema", "hollywood", "box office", "tv", "television", "studio", "studios", "streaming", "streamer", "streamers", "screenwriter*", "animation", "animator*", "visual effects", "vfx"],
+      "entities": ["Warner Bros", "Warner Bros. Discovery", "Paramount Pictures", "Paramount Global", "Universal Pictures", "Sony Pictures", "Lionsgate", "A24", "Pixar", "DreamWorks", "NBCUniversal", "Comcast", "HBO", "Hulu", "Prime Video", "Apple TV", "BBC", "ITV", "Channel 4", "Canal Plus", "Roku", "SAG-AFTRA", "Writers Guild", "WGA", "Directors Guild", "BAFTA", "Academy Awards", "Oscars", "Sundance", "Cannes Film Festival", "IMAX", "Motion Picture Association"]
     },
     {
       "sector": "games",
       "label": "Games",
-      "keywords": ["game", "games", "gaming", "gamer", "gamers", "video game*", "game studio*"]
+      "keywords": ["game", "games", "gaming", "gamer", "gamers", "video game*", "game studio*"],
+      "entities": ["Electronic Arts", "Activision", "Activision Blizzard", "Blizzard Entertainment", "Ubisoft", "Take-Two Interactive", "Rockstar Games", "Epic Games", "Fortnite", "Roblox", "Unity Technologies", "Unreal Engine", "Nintendo", "PlayStation", "Xbox", "Riot Games", "Minecraft", "Mojang", "Krafton", "Bungie", "Square Enix", "Capcom", "Sega", "Bandai Namco", "Game Developers Conference"]
     },
     {
       "sector": "creators",
       "label": "Creators and creator tech",
-      "keywords": ["creator", "creators", "creator economy", "creator tool*", "influencer*", "youtuber*", "podcast*", "newsletter*", "publisher", "publishers", "publishing", "author", "authors", "novelist*", "book", "books", "writer", "writers", "content creator*"]
+      "keywords": ["creator", "creators", "creator economy", "creator tool*", "influencer*", "youtuber*", "podcast*", "newsletter*", "publisher", "publishers", "publishing", "author", "authors", "novelist*", "book", "books", "writer", "writers", "content creator*"],
+      "entities": ["Penguin Random House", "HarperCollins", "Simon & Schuster", "Hachette", "Macmillan Publishers", "Bloomsbury Publishing", "Elsevier", "Springer Nature", "Authors Guild", "Society of Authors", "Kindle Direct Publishing", "Substack", "Patreon", "MrBeast", "Kajabi", "OnlyFans", "Spotify for Podcasters"]
     },
     {
       "sector": "arts_design",
       "label": "Art and design",
-      "keywords": ["art", "arts", "artist", "artists", "artwork*", "gallery", "galleries", "museum*", "design", "designs", "designer", "designers", "illustrat*", "photograph*", "fashion"]
+      "keywords": ["art", "arts", "artist", "artists", "artwork*", "gallery", "galleries", "museum*", "design", "designs", "designer", "designers", "illustrat*", "photograph*", "fashion"],
+      "entities": ["Tate Modern", "Tate Britain", "Louvre", "MoMA", "Museum of Modern Art", "Metropolitan Museum", "Guggenheim", "Serpentine Galleries", "Christie's", "Sotheby's", "Art Basel", "Frieze London", "Frieze New York", "Venice Biennale", "Royal Academy", "National Gallery", "Arts Council England", "National Endowment for the Arts", "Getty Images", "Shutterstock", "DACS", "Pantone"]
     },
     {
       "sector": "performance",
       "label": "Theatre and performance",
-      "keywords": ["theatre", "theater", "broadway", "west end", "performer", "performers", "actor", "actors", "actress*", "dancer*", "comedian*", "comedy", "musical", "live show*"]
+      "keywords": ["theatre", "theater", "broadway", "west end", "performer", "performers", "actor", "actors", "actress*", "dancer*", "comedian*", "comedy", "musical", "live show*"],
+      "entities": ["National Theatre", "Royal Shakespeare Company", "Royal Opera House", "Cirque du Soleil", "Lincoln Center", "Barbican Centre", "Southbank Centre", "Edinburgh Fringe", "Tony Awards", "Olivier Awards", "Actors Equity", "Sadler's Wells", "Hamilton musical"]
     },
     {
       "sector": "sports",
       "label": "Sports",
-      "keywords": ["sport", "sports", "sportsperson*", "athlete*", "football", "footballer*", "soccer", "rugby", "cricket", "cricketer*", "tennis", "golf", "golfer*", "basketball", "baseball", "nba", "nfl", "mlb", "nhl", "premier league", "champions league", "formula 1", "formula one", "olympic*", "paralympic*", "world cup", "sports rights", "broadcast rights", "stadium*", "matchday"]
+      "keywords": ["sport", "sports", "sportsperson*", "athlete*", "football", "footballer*", "soccer", "rugby", "cricket", "cricketer*", "tennis", "golf", "golfer*", "basketball", "baseball", "nba", "nfl", "mlb", "nhl", "premier league", "champions league", "formula 1", "formula one", "olympic*", "paralympic*", "world cup", "sports rights", "broadcast rights", "stadium*", "matchday"],
+      "entities": ["FIFA", "UEFA", "LaLiga", "Bundesliga", "Serie A", "Major League Soccer", "WNBA", "PGA Tour", "LIV Golf", "Wimbledon", "ATP Tour", "WTA", "International Cricket Council", "IPL", "World Rugby", "Six Nations", "International Olympic Committee", "DAZN", "ESPN", "Sky Sports", "TNT Sports", "NASCAR", "UFC", "WWE", "Manchester United", "Manchester City", "Liverpool FC", "Real Madrid", "FC Barcelona", "Bayern Munich"]
     },
     {
       "sector": "media",
       "label": "Media and entertainment",
-      "keywords": ["media", "entertainment", "journalis*", "newsroom*", "magazine*", "broadcast*", "advertising creative"]
+      "keywords": ["media", "entertainment", "journalis*", "newsroom*", "magazine*", "broadcast*", "advertising creative"],
+      "entities": ["New York Times", "Washington Post", "The Guardian", "Financial Times", "Wall Street Journal", "News Corp", "Axel Springer", "Condé Nast", "Hearst", "Reuters", "Associated Press", "Daily Mail", "Dotdash Meredith", "BuzzFeed", "Vox Media", "Ziff Davis", "Gannett", "WPP", "Omnicom", "Publicis", "Interpublic", "Dentsu", "Havas", "Ogilvy", "BBDO", "TBWA", "McCann", "Saatchi", "Wieden+Kennedy", "VaynerMedia", "Cannes Lions", "S4 Capital", "The Trade Desk"]
     },
     {
       "sector": "creative_tools",
       "label": "Creative tools and platforms",
-      "keywords": ["youtube", "tiktok", "instagram", "netflix", "disney", "midjourney", "runway", "sora", "veo", "elevenlabs", "adobe", "firefly", "canva", "pika", "kling", "audiobook*", "voice actor*"]
+      "keywords": ["youtube", "tiktok", "instagram", "netflix", "disney", "midjourney", "runway", "sora", "veo", "elevenlabs", "adobe", "firefly", "canva", "pika", "kling", "audiobook*", "voice actor*"],
+      "entities": ["Stability AI", "Luma AI", "Ideogram", "Leonardo.ai", "Descript", "CapCut", "Figma", "Lightricks", "Synthesia", "HeyGen", "Higgsfield", "Moonvalley", "Wonder Dynamics", "Krea AI"]
     },
     {
       "sector": "rights",
       "label": "Licensing and rights, the money of creative work",
-      "keywords": ["licens*", "licence*", "copyright*", "residuals"]
+      "keywords": ["licens*", "licence*", "copyright*", "residuals"],
+      "entities": ["Copyright Office", "Intellectual Property Office", "WIPO", "Copyright Clearance Center", "Created by Humans", "ProRata", "Fairly Trained"]
     }
   ],
-  "focus_not_when": ["state of the art", "art of", "game changer", "game theory", "org chart", "flow chart", "white label", "white-label", "ai studio", "copilot studio", "chip design", "chip designs", "streaming tokens", "token streaming", "cash runway", "financial runway", "runway to", "months of runway", "years of runway", "f1 score", "sports car", "sports cars", "sport utility"],
+  "focus_not_when": ["state of the art", "art of", "game changer", "game theory", "org chart", "flow chart", "white label", "white-label", "ai studio", "copilot studio", "chip design", "chip designs", "streaming tokens", "token streaming", "cash runway", "financial runway", "runway to", "months of runway", "years of runway", "f1 score", "sports car", "sports cars", "sport utility", "buying a tv", "buy a tv", "a tv or a laptop", "project's authors", "paper's authors", "report's authors", "study's authors", "study authors", "small labels", "clothing labels", "price labels", "warning labels", "nutrition labels"],
   "economics_keywords": {
     "label": "The economics of AI inside the focus sectors: who gets paid, what it costs, who wins the market",
     "note": "Read with focus_sectors by the story score's fit axis. A keyword ending in * matches any ending; figure_pattern is a regular expression for a money or share figure.",

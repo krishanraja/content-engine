@@ -130,7 +130,7 @@ export const ECONOMICS_FIGURE = new RegExp(beat.economics_keywords.figure_patter
  * North Star reader line on 2026-11-26 ("I approve the lines"): the reader
  * narrows to people who make the calls or make the work in the creative, arts,
  * music, entertainment, media and sports industries. One wording, read by the
- * relevance filter, the reader and buyer judges and the humour check.
+ * relevance filter, the reader and paying-reader (key buyer) judges and the humour check.
  */
 export const READER = beat.reader
 

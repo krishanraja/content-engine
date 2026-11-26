@@ -37,7 +37,7 @@ class Rubric(unittest.TestCase):
     def test_version_and_dates(self):
         self.assertEqual(RUBRIC['rubric_version'], 'story-score/1')
         self.assertRegex(RUBRIC['from'], r'^20\d\d-\d\d-\d\d$')
-        self.assertIn(RUBRIC['from'], ('2026-11-30', '2026-12-07'))
+        self.assertEqual(RUBRIC['from'], '2026-11-30', 'Ruling, Krish, 2026-11-26: "Newgate, 30th of November"')
 
     def test_axes_are_unique_and_anchored(self):
         self.assertEqual(len(self.axes), len(RUBRIC['axes']), 'axis ids are unique')
@@ -242,6 +242,47 @@ class Deterministic(unittest.TestCase):
         self.assertIsNone(ss.money_figure(v))
         self.assertEqual(ss.primary_sources(ss.blind_view(hero(A, 'Warner licenses', 'x', url='https://blog.example.com/a'))), 0)
         self.assertEqual(ss.site_of('https://news.bbc.co.uk/x'), 'bbc.co.uk')
+
+    def test_primary_is_where_the_fact_was_first_reported_never_an_aggregator(self):
+        """Ruling, Krish, 2026-11-26, floor C2: primary is the actor's own site, a filing or official data host, or the
+        outlet that first reported the fact; never an aggregator or syndicator."""
+        trade = 'https://www.musicbusinessworldwide.com/suno-deal'
+        story = lambda **kw: ss.blind_view(hero(A, 'Suno pays labels', 'Suno paid labels.', url=kw.pop('url', 'https://blog.example.com/a'), **kw))  # noqa: E731
+        self.assertEqual(ss.primary_sources(story()), 0, 'a blog that only retells it')
+        self.assertEqual(ss.primary_sources(story(first_reported=trade)), 1, 'the first report counts, as a url')
+        self.assertEqual(ss.primary_sources(story(url=trade, first_reported={'url': trade + '?utm=x'})), 1, 'the same url once')
+        self.assertEqual(ss.primary_sources(story(sources=[{'url': trade, 'kind': 'original'}])), 1, 'a source of kind original')
+        for agg in ('https://finance.yahoo.com/news/suno', 'https://www.msn.com/en-gb/x', 'https://news.google.com/articles/x',
+                    'https://uk.news.yahoo.com/y', 'https://ground.news/article/z'):
+            self.assertTrue(ss.never_primary(agg), agg)
+            self.assertEqual(ss.primary_sources(story(url=agg, first_reported=agg)), 0, f'never primary: {agg}')
+            self.assertEqual(ss.primary_sources(story(url=agg, sources=[{'url': agg, 'kind': 'original'}])), 0, f'not even as original: {agg}')
+        self.assertEqual(ss.primary_sources(story(url='https://www.ons.gov.uk/x')), 1, 'an official data host')
+        own = ss.blind_view(hero(A, 'The AI Futures Project says AI builds AI', 'The AI Futures Project said so.', url='https://blog.aifutures.org/p'))
+        self.assertEqual(ss.primary_sources(own), 1, "the actor's own site, by its name")
+        self.assertEqual(ss.primary_sources(story(url='https://www.msn.com/suno')), 0, 'msn is never Suno')
+        self.assertEqual(ss.primary_sources(story(first_reported='not a url')), 0)
+
+    def test_fit_reads_named_entities_in_the_sentence_that_carries_the_fact(self):
+        fit = lambda hook, fact: ss.fit_axis(ss.blind_view(hero(A, hook, fact, story=fact, so_what=hook)), True)  # noqa: E731
+        self.assertEqual(fit('Ubisoft lays off 200 staff to build its own models', 'Ubisoft cut 200 jobs.')[0], 7, 'an entity, no economics')
+        self.assertEqual(fit('Warner Music licenses its catalogue to a start-up for $40 million', 'Warner Music was paid $40 million.')[0], 10)
+        self.assertEqual(fit('The FA signs an AI deal with DAZN', 'DAZN signed it.')[0], 10, 'a sports broadcaster, and a deal')
+        self.assertEqual(fit('A start-up trains a model on old demos', 'A start-up trained it.')[0], 1)
+
+    def test_keyword_stuffing_never_earns_fit(self):
+        """Failure scripts-regressed-below-ai-music: a floor that can be met by changing words is gamed. Adding a sector
+        word after the fact, without the fact changing, never lifts fit to a hero's 7."""
+        fact = 'Microsoft cut Copilot prices by 20 percent on Tuesday.'
+        base = 'Microsoft cuts Copilot prices by 20 percent'
+        fit = lambda hook: ss.fit_axis(ss.blind_view(hero(A, hook, fact, story=fact, so_what=hook)), True)[0]  # noqa: E731
+        self.assertLess(fit(base), 7)
+        for stuffed in (base + ', which matters for musicians', base + ': what it means for film studios',
+                        base + '. Why it matters for musicians.', base + ', and musicians are watching',
+                        base + '. Musicians, take note.', base + ' (big news for record labels)',
+                        base + ', with lessons for publishers', base + '. Artists should care.'):
+            self.assertLess(fit(stuffed), 7, stuffed)
+        self.assertEqual(fit('Microsoft cuts Copilot prices for Spotify by 20 percent'), 10, 'a fact about a sector counts')
 
     def test_whys_and_mechanism_from_the_probe(self):
         self.assertEqual(ss.whys_axis(probe(3, 2))[0], 8)
@@ -631,13 +672,18 @@ class Spend(unittest.TestCase):
         self.assertAlmostEqual(ledger.spent(), RUBRIC['unit_costs']['humour_read'])
 
 
+def fit_reason(kind):
+    return [f for f in RUBRIC['types'][kind]['floors'] if f.get('axis') == 'fit'][0]['reason']
+
+
 class Floors(unittest.TestCase):
     def test_an_explainer_with_no_steps_is_not_read_and_one_unchecked_step_fails(self):
         self.assertIsNone(ss.steps_verifiable({'copy': 'How the ad price works.'}))
         self.assertEqual(ss.floors_failed('explainer', {'fit': 7}, {'steps_verifiable': None}), [], 'no steps: the floor is not read')
         unchecked = {'steps': [{'text': 'Open settings', 'checked': 'https://help.openai.com/x'}, {'text': 'Turn it off'}]}
         self.assertFalse(ss.steps_verifiable(unchecked))
-        self.assertEqual(len(ss.floors_failed('explainer', {'fit': 7}, {'steps_verifiable': False})), 1)
+        failed, noted = ss.floor_lines('explainer', {'fit': 7}, {'steps_verifiable': False})
+        self.assertEqual((failed, len(noted)), ([], 1), 'unruled, so a note until a ruling or a failure names it')
         self.assertTrue(ss.steps_verifiable({'steps': [{'text': 'Open settings', 'checked': 'https://help.openai.com/x'}]}))
 
     def test_the_off_days_hold_the_fit_floor_hard(self):
@@ -658,14 +704,31 @@ class Floors(unittest.TestCase):
         cards = {'id': 'c', 'hook': 'Three prompts', 'cards': [{'words': 'A songwriter splits the demo into stems.'}]}
         self.assertEqual(ss.fit_axis(ss.blind_view(cards), False)[0], 4)
 
-    def test_a_note_is_reported_and_never_fails(self):
+    def test_the_three_floors_are_hard_again(self):
+        """Ruling, Krish, 2026-11-26: a hero in a focus sector, a hero's primary source and a short or meme on the beat
+        are hard again, each made honest."""
         checks = {'probe_documented': 3, 'probe_rungs': 5, 'landing_ok': True, 'primary_sources': 0, 'sound_angle': True,
                   'money_figure_sourced': True}
         failed, noted = ss.floor_lines('hero_mon', {'fit': 4, 'named_thing': 7}, checks)
-        self.assertEqual(failed, [])
-        self.assertEqual(set(noted), {"a hero's topic is in a focus sector", 'a hero has at least one primary source'})
-        failed, _ = ss.floor_lines('hero_mon', {'fit': 4, 'named_thing': 7}, dict(checks, money_figure_sourced=False))
+        self.assertEqual(set(failed), {"a hero's topic is in a focus sector", 'a hero has at least one primary source'})
+        self.assertEqual(noted, [])
+        failed, _ = ss.floor_lines('hero_mon', {'fit': 7, 'named_thing': 7}, dict(checks, primary_sources=1, money_figure_sourced=False))
         self.assertEqual(failed, ['a Monday follows the money: it needs a sourced money figure'], 'a series floor stays hard')
+        short = {'comic_reading': 'supported', 'needs_explaining': False, 'probe_documented': 1}
+        self.assertEqual(ss.floors_failed('offday_short', {'fit': 1}, short), [fit_reason('offday_short')])
+        self.assertEqual(ss.floors_failed('offday_meme', {'fit': 1}, {'comic_reading': 'supported', 'needs_explaining': False, 'template_ok': True}),
+                         [fit_reason('offday_meme')])
+
+    def test_a_wildcard_hero_needs_fit_4_and_nothing_else_relaxes(self):
+        checks = {'probe_documented': 3, 'probe_rungs': 5, 'landing_ok': True, 'primary_sources': 1, 'sound_angle': True,
+                  'money_figure_sourced': True}
+        self.assertEqual(RUBRIC['hero_floors']['wildcard_fit_min'], 4)
+        self.assertEqual(ss.floors_failed('hero_mon', {'fit': 4, 'named_thing': 7}, checks, wildcard=True), [])
+        self.assertEqual(ss.floors_failed('hero_mon', {'fit': 1, 'named_thing': 7}, checks, wildcard=True), ['a wildcard hero is at least near the beat'])
+        self.assertEqual(ss.floors_failed('hero_mon', {'fit': 4, 'named_thing': 7}, dict(checks, primary_sources=0), wildcard=True),
+                         ['a hero has at least one primary source'])
+        o = hero(A, 'A startup trains a model on old demos', 'A startup trained it.', wildcard=True)
+        self.assertNotIn('wildcard', ss.blind_view(o), 'the floor reads the type; the scorer never sees the label')
 
 
 class Edition(unittest.TestCase):
@@ -821,8 +884,10 @@ class DryRun(unittest.TestCase):
 
     def test_a_scored_and_ordered_23_nov_copy_holds_the_gate(self):
         """The plan's verification: a realistic scored and ordered copy of 23 Nov (fake transports, middling judges, a
-        sourced probe for every option) passes the score's gate lines, bar a content floor the plan names; swapping
-        two open options or deleting a score fails with story."""
+        sourced probe for every option) carries every option's score in order; what it fails is a hard floor, for the
+        reason that floor names (the 23 Nov heroes were mostly off the sectors and rest on secondary reports: the
+        floors are right to refuse them, tests/story_honest_board_test.py); swapping two open options or deleting a
+        score fails with story."""
         real = ROOT / 'docs' / 'plans' / f'{WEEK}-week'
         plans = Path(tempfile.mkdtemp())
         try:
@@ -852,19 +917,15 @@ class DryRun(unittest.TestCase):
         ladders = {i: {'schema': 'why-ladder/1', 'rungs': [{'n': n, 'evidence': [{'url': 'https://a.example/x'}]} for n in range(1, 6)]}
                    for i in ids}
         found = ic.story_findings(scored, WEEK, None, ladders, cfg)
-        self.assertEqual([f['line'] for f in found if f['code'] == 'story'], [], 'every option scored, every open day in order')
-        plan_floors = {f['reason'] for t in ('hero_mon', 'hero_wed', 'hero_fri') for f in RUBRIC['types'][t]['floors']}
-        # The 23 Nov board was made for the old reader: an off-day option with no line into the focus sectors is refused
-        # by the off days' fit floor (ruling offday_beat, Krish, 2026-11-26), which is the point of it.
-        beat_floors = {f['reason'] for t in ('goodnews', 'offday_meme', 'offday_short', 'explainer')
-                       for f in RUBRIC['types'][t]['floors'] if f.get('axis') == 'fit'}
-        heroes = [f for f in found if not any(r in f['line'] for r in beat_floors)]
-        for f in heroes:
-            self.assertTrue(any(r in f['line'] for r in plan_floors), f'only a series floor the plan names may refuse: {f["line"]}')
-        self.assertLessEqual(len(heroes), 2, [f['line'] for f in heroes])
+        per_option = [f['line'] for f in found if f['code'] == 'story' and f['ref'] not in ('mon', 'wed', 'fri')]
+        self.assertEqual(per_option, [], 'every option scored, every open day in order')
+        hard = {f['reason'] for t in RUBRIC['types'] for f in ss.floors_for(t) if f.get('hard', True)}
+        for f in found:
+            if f['code'] == 'story_floor':
+                self.assertTrue(any(r in f['line'] for r in hard), f'only a hard floor refuses, by its reason: {f["line"]}')
         swapped = json.loads(json.dumps(scored))
         day, n = next((d, n) for d in ('mon', 'wed', 'fri') for n in range(len(swapped['days'][d]) - 1)
-                      if not swapped['days'][d][n]['story_score']['floors_failed'] and not swapped['days'][d][n + 1]['story_score']['floors_failed']
+                      if bool(swapped['days'][d][n]['story_score']['floors_failed']) == bool(swapped['days'][d][n + 1]['story_score']['floors_failed'])
                       and swapped['days'][d][n]['story_score']['total'] != swapped['days'][d][n + 1]['story_score']['total'])
         opts = swapped['days'][day]
         opts[n], opts[n + 1] = opts[n + 1], opts[n]
