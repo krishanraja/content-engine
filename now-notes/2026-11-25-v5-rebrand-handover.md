@@ -1,3 +1,0 @@
-Status: The makeyourmindup v5 look is locked. The 122-template Library, brand book words, reskin plan and identity studies are here as proposals (draft PR #977). The Library is not agreed with Krish. The engine lock-out is draft PR #976 and its CI is red. The rebrand serves subscriber growth through a clearer front door. Nothing has published.
-Next: A new session (another Claude account) picks up from Drive Ventures/Temp, "2026-11-25 makeyourmindup rebrand handover", HANDOVER - start here.md. It agrees the whole Library and the video animation system with Krish, then lands #976, ports the templates to growth-makeyourmindup and makeyourmindup, archives the v1.x kit, ships the site, writes the cowork prompts and reskins old posts.
-North Star check (2026-11-25): holds.
