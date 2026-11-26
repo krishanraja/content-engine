@@ -926,3 +926,459 @@ class Ledger:
     def summary(self):
         return {'budget_usd': self.budget, 'spent_usd': self.spent(), 'today': self.today, 'today_usd': self.spent(self.today),
                 'today_divergent_ops': self.ops(self.today), 'calls': sum(1 for r in self.rows if 'id' in r)}
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Transports (paid): divergent provoke and judged score, humour reads. Each reserves first; a refusal or an engine that
+# is not served is returned as skipped with its reason, never a pass.
+
+
+def provoke(view, main, worn, ledger, *, poster=None, cap=None, cfg=None):
+    import divergent
+    cfg = cfg or RUBRIC
+    spec = cfg['angle']['divergent']
+    body = divergent.at_will_body('provoke', problem=spec['problem'].format(audience=audience(), what=fact_text(view, main)[:1500]),
+                                  context=render_view(view, main)[:4000], cliches=worn, count=spec['count'],
+                                  temperament=spec['temperament']['hero' if main else 'offday'], lane=spec['lane'])
+    entry, why = ledger.reserve('provoke', cfg['unit_costs']['provoke'], divergent=True, note=view.get('id'))
+    if entry is None:
+        return {'status': 'skipped', 'reason': why}
+    got = divergent.at_will(body, **{k: v for k, v in (('poster', poster), ('cap', cap)) if v is not None})
+    if got.get('status') not in SERVED:
+        ledger.settle(entry, 0)
+        return {'status': 'skipped', 'reason': got.get('reason') or got.get('status')}
+    sparks = [s for s in (got.get('result') or {}).get('sparks') or [] if isinstance(s, dict)]
+    return {'status': 'ok', 'sparks': sparks, 'run_id': (got.get('result') or {}).get('runId')}
+
+
+def judge(texts, obvious, ledger, *, poster=None, cap=None, cfg=None):
+    """One batched divergent `score` with judge:true over every pooled angle (chunks of the route's limit, each its own
+    reservation). [result or None per text], plus the reasons for any chunk skipped."""
+    import divergent
+    cfg = cfg or RUBRIC
+    spec = cfg['angle']['divergent']
+    out, skipped = [None] * len(texts), []
+    for i in range(0, len(texts), divergent.MAX_IDEAS):
+        chunk = texts[i:i + divergent.MAX_IDEAS]
+        body = divergent.at_will_body('score', problem=spec['score_problem'].format(audience=audience()), ideas=chunk,
+                                      obvious=obvious, judge=True, lane=spec['lane'])
+        entry, why = ledger.reserve('score_judge', cfg['unit_costs']['score_judge'], divergent=True)
+        if entry is None:
+            skipped.append(why)
+            continue
+        got = divergent.at_will(body, **{k: v for k, v in (('poster', poster), ('cap', cap)) if v is not None})
+        if got.get('status') not in SERVED:
+            ledger.settle(entry, 0)
+            skipped.append(got.get('reason') or got.get('status'))
+            continue
+        for n, r in enumerate((got.get('result') or {}).get('results') or []):
+            if i + n < len(out):
+                out[i + n] = r
+    return out, skipped
+
+
+def humour(text, surface, ref, ledger, read, cfg=None):
+    """(labels or None, why). One humour-engine read on its own."""
+    import humour_check
+    cfg = cfg or RUBRIC
+    if read is None:
+        return None, 'humour engine not reachable: run humour_check.py doctor'
+    if not str(text or '').strip():
+        return None, 'nothing to read'
+    entry, why = ledger.reserve('humour_read', cfg['unit_costs']['humour_read'], note=ref)
+    if entry is None:
+        return None, why
+    got = humour_check.read_line(str(text)[:500], surface, read, ref)
+    if got.get('status') == 'unavailable':
+        ledger.settle(entry, 0)
+        return None, got.get('reason')
+    return got.get('engine'), 'read'
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# The weekly edition (the contract for PR 980; that branch is not touched from here)
+
+
+def score_item(item, week=None, reads=None, judged=None, cfg=None, at=None):
+    """One edition news item as edition_item. The adapter for scripts/edition/edition.py (PR 980): give each candidate
+    as {id, title, summary, topic, date, first_reported?, development?, sources: [{url, kind: primary|filing|
+    secondary|aggregator, own_domain?: bool}], angle_score?: 0-10}; reads: the humour engine's labels for the item's
+    fact ({fact, angle}); judged: {scale: {score, because}}. Returns the same story_score shape as a board option."""
+    cfg = cfg or RUBRIC
+    reads, judged = reads or {}, judged or {}
+    view = {'title': item.get('title'), 'hook': item.get('title'), 'fact': item.get('summary'), 'sources': item.get('sources') or []}
+    axes = {}
+    axes['fit'], _ = fit_axis(view, False)
+    axes['named_thing'], _ = named_axis(view, False, cfg)
+    axes['sourcing'], _ = sourcing_axis(item)
+    axes['freshness'], _ = freshness_axis(item, week) if week else (None, 'no week')
+    j = judged.get('scale')
+    axes['scale'] = float(j['score']) if isinstance(j, dict) and j.get('score') is not None else None
+    axes['absurdity_humour'] = blend({'fact': humour_score(reads.get('fact'), cfg), 'angle': humour_score(reads.get('angle'), cfg)},
+                                     axis_cfg('absurdity_humour', cfg)['blend'])
+    axes['unique_angle'] = float(item['angle_score']) if isinstance(item.get('angle_score'), (int, float)) else None
+    weights = cfg['types']['edition_item']['weights']
+    scored = {a: axes.get(a) for a in weights}
+    srcs = [s for s in item.get('sources') or [] if isinstance(s, dict)]
+    checks = {'primary_source_own_domain': any(s.get('own_domain') or s.get('kind') in ('primary', 'filing') for s in srcs),
+              'in_edition_week': (axes['freshness'] or 0) >= 7 if axes.get('freshness') is not None else None}
+    total, rw, unread = total_of('edition_item', scored, cfg)
+    return {'total': total, 'axes': scored, 'type': 'edition_item', 'floors_failed': floors_failed('edition_item', scored, checks, cfg),
+            'unread': unread, 'checks': checks, 'rubric_version': cfg['rubric_version'], 'at': at or now_iso()}
+
+
+def select_edition(items, week=None, reads=None, judged=None, cfg=None):
+    """{items: [(item, story_score)], short, notes}: the best items by total, floored ones left out, at most per_topic a
+    topic and at most the topics' upper bound, up to edition.max; short when fewer than edition.min or topics pass."""
+    cfg = cfg or RUBRIC
+    ed = cfg['edition']
+    reads, judged = reads or {}, judged or {}
+    scored = [(it, score_item(it, week, reads.get(it.get('id')), judged.get(it.get('id')), cfg)) for it in items]
+    ok = [(it, s) for it, s in scored if not s['floors_failed'] and s['total'] is not None]
+    ok.sort(key=lambda p: -p[1]['total'])
+    chosen, per = [], {}
+    for it, s in ok:
+        topic = str(it.get('topic') or 'other')
+        if per.get(topic, 0) >= ed['per_topic'] or (topic not in per and len(per) >= ed['topics'][1]):
+            continue
+        chosen.append((it, s))
+        per[topic] = per.get(topic, 0) + 1
+        if len(chosen) >= ed['max']:
+            break
+    notes = []
+    if len(chosen) < ed['min']:
+        notes.append(f'{len(chosen)} items pass; an edition has at least {ed["min"]}')
+    if len(per) < ed['topics'][0]:
+        notes.append(f'{len(per)} topic(s); an edition spans at least {ed["topics"][0]}')
+    return {'items': chosen, 'short': bool(notes), 'notes': notes, 'left_out': [it.get('id') for it, s in scored if (it, s) not in chosen]}
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# CLI
+
+
+def week_dir(week, plans=None):
+    return Path(plans or PLANS) / f'{week}-week'
+
+
+def file_of(week, name, plans=None, cfg=None):
+    cfg = cfg or RUBRIC
+    return week_dir(week, plans) / cfg['files'][name]
+
+
+def load(path, default=None):
+    p = Path(path)
+    return json.loads(p.read_text(encoding='utf-8')) if p.exists() else default
+
+
+def save(path, data):
+    p = Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(data, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')
+
+
+def board_checks(ideas, week, kill=None):
+    """The checks that need the whole board or the kill list: template_ok and goodnews_checks."""
+    out = {}
+    gn = ic.goodnews_findings(ideas, week) if week else []
+    for key, day, main, o in board(ideas):
+        c = {}
+        if not main and ic.is_template(o):
+            c['template_ok'] = not ic.template_problems(o, kill)
+        if ic.is_good_news(o) or (not main and day == 'sat'):
+            oid = str(o.get('id') or '')
+            c['goodnews_checks'] = not any(re.search(r'(?<![A-Za-z0-9_-])' + re.escape(oid) + r'(?![A-Za-z0-9_-])', str(f.get('ref'))) for f in gn) if oid else None
+        out[key] = c
+    return out
+
+
+def inputs_for(week, ideas, plans=None, *, floor=None, probes=None, kill=None, lint=None, cfg=None):
+    cfg = cfg or RUBRIC
+    angles = load(file_of(week, 'angles', plans, cfg), {}) or {}
+    return {'probes': {str(k).lower(): v for k, v in (load(probes or file_of(week, 'probes', plans, cfg), {}) or {}).items()},
+            'reads': load(file_of(week, 'reads', plans, cfg), {}) or {},
+            'angles': angles.get('pooled') or {},
+            'judged': load(file_of(week, 'judged', plans, cfg), {}) or {},
+            'checks': board_checks(ideas, week, kill),
+            'floored': floored_keys(load(floor, {}) if floor else {}, ideas),
+            'kill': kill, 'lint': lint}
+
+
+def _lint(text):
+    import copy_lint
+    return copy_lint.copy_lint(text, 'channel_copy')
+
+
+def cmd_angles(a, ideas, plans, ledger, poster, cap, kill, cfg):
+    """Pool the session's lens angles, each option's own angle and (with --provoke) divergent sparks for each hero
+    day's top two, then (with --judge) score the pool blind in one batched judged call."""
+    import divergent
+    path = file_of(a.week, 'angles', plans, cfg)
+    doc = load(path, {}) or {}
+    lens = doc.get('options') or {}
+    pooled, unread = {}, []
+    sources = load(week_dir(a.week, plans) / 'sources.json', {}) or {}
+    worn = divergent.worn(sources, plans)
+    provisional = score_board(ideas, inputs_for(a.week, ideas, plans, kill=kill, cfg=cfg), cfg)
+    tops = set()
+    for day in ('mon', 'wed', 'fri'):
+        rows = [(k, s) for k, s in provisional.items() if k.startswith(day + '/') and not s['floors_failed'] and s['total'] is not None]
+        rows += [(k, s) for k, s in provisional.items() if k.startswith(day + '/') and (s['floors_failed'] or s['total'] is None)]
+        rows.sort(key=lambda r: (bool(r[1]['floors_failed']), r[1]['total'] is None, -(r[1]['total'] or 0)))
+        tops |= {k for k, _s in rows[:cfg['angle']['divergent']['per_hero_day']]}
+    for key, day, main, o in board(ideas):
+        view = blind_view(o, cfg)
+        pool = []
+        own = own_angle(view, main)
+        if own:
+            pool.append({'lens': 'own', 'text': own, 'rests_on': _s(view.get('fact')) or None})
+        pool += [dict(x) for x in lens.get(key) or [] if isinstance(x, dict) and x.get('text')]
+        if a.provoke and key in tops:
+            got = provoke(view, main, worn, ledger, poster=poster, cap=cap, cfg=cfg)
+            if got['status'] != 'ok':
+                unread.append(f'{key} provoke: {got["reason"]}')
+            for s in got.get('sparks') or []:
+                text = ' '.join(_s(s.get(k)) for k in ('title', 'mechanism') if s.get(k)).strip()
+                if text:
+                    pool.append({'lens': 'divergent', 'text': text, 'rests_on': s.get('rests_on'), 'run_id': got.get('run_id')})
+        for n, x in enumerate(pool, 1):
+            x['id'] = f'{key}#{n}'
+        pooled[key] = pool
+    if a.judge:
+        flat = [x for k in pooled for x in pooled[k]]
+        results, skipped = judge([x['text'] for x in flat], doc.get('obvious') or [], ledger, poster=poster, cap=cap, cfg=cfg)
+        unread += [f'judged score: {w}' for w in skipped]
+        for x, r in zip(flat, results):
+            x['judge'] = judge_numbers(r) if r is not None else None
+    else:
+        old = {x.get('id'): x.get('judge') for k in (doc.get('pooled') or {}) for x in doc['pooled'][k]}
+        for k in pooled:
+            for x in pooled[k]:
+                x['judge'] = old.get(x['id'])
+    doc.update(pooled=pooled, unread=unread, at=now_iso())
+    save(path, doc)
+    print(json.dumps({'angles': sum(len(v) for v in pooled.values()), 'provoked': sorted(tops) if a.provoke else [],
+                      'unread': unread, 'ledger': ledger.summary()}, indent=1, ensure_ascii=False))
+    return 2 if unread else 0
+
+
+def cmd_humour(a, ideas, plans, ledger, read, cfg):
+    """Read each option's plain fact (surface fact), an off day's funny line, and every pooled angle."""
+    path = file_of(a.week, 'reads', plans, cfg)
+    reads = load(path, {}) or {}
+    pooled = (load(file_of(a.week, 'angles', plans, cfg), {}) or {}).get('pooled') or {}
+    unread, n = [], 0
+    for key, day, main, o in board(ideas):
+        view = blind_view(o, cfg)
+        r = reads.setdefault(key, {'fact': None, 'line': None, 'angles': {}})
+        jobs = [('fact', fact_text(view, main), 'fact', None)]
+        if not main and view.get('funny'):
+            jobs.append(('line', view['funny'], 'funny', None))
+        jobs += [('angle', x['text'], 'funny', x['id']) for x in pooled.get(key) or []]
+        for slot, text, surface, aid in jobs:
+            if a.max is not None and n >= a.max:
+                unread.append(f'{key} {slot}: over --max {a.max}')
+                continue
+            labels, why = humour(text, surface, f'{key}:{aid or slot}', ledger, read, cfg)
+            n += 1
+            if labels is None:
+                unread.append(f'{key} {slot}{" " + aid if aid else ""}: {why}')
+            if aid:
+                r.setdefault('angles', {})[aid] = labels
+            else:
+                r[slot] = labels
+    save(path, reads)
+    print(json.dumps({'reads': n, 'unread': unread, 'ledger': ledger.summary()}, indent=1, ensure_ascii=False))
+    return 2 if unread else 0
+
+
+def cmd_brief(a, ideas, plans, cfg):
+    axes = [x.strip() for x in a.axes.split(',') if x.strip()]
+    for x in axes:
+        if axis_cfg(x, cfg)['source'] != 'blind_judge':
+            raise SystemExit(f'{x} is not a blind-judge axis')
+    items = []
+    for key, day, main, o in board(ideas):
+        tid = option_type(day, main, o, cfg)
+        want = [x for x in axes if cfg['types'][tid]['weights'].get(x)]
+        if want:
+            items.append((key, blind_view(o, cfg), main, want))
+    out = week_dir(a.week, plans) / cfg['files']['dir'] / 'judge-brief.md'
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(judge_brief(items, axes, cfg), encoding='utf-8')
+    print(out)
+    return 0
+
+
+def cmd_record(a, plans, cfg):
+    axes = [x['id'] for x in cfg['axes'] if x['source'] == 'blind_judge']
+    got, problems = parse_judge(Path(a.file).read_text(encoding='utf-8'), axes)
+    path = file_of(a.week, 'judged', plans, cfg)
+    judged = load(path, {}) or {}
+    for k, v in got.items():
+        judged.setdefault(k, {}).update(v)
+    if got:
+        save(path, judged)
+    print(json.dumps({'recorded': {k: sorted(v) for k, v in got.items()}, 'problems': problems}, indent=1, ensure_ascii=False))
+    return 2 if problems or not got else 0
+
+
+def read_status(a):
+    if a.fresh:
+        return None, None
+    if not a.status:
+        return False, 'give --status (board_feed status JSON) or --fresh (the board was never shown): nothing is ordered blind'
+    import board_feed
+    try:
+        return board_feed.merged_status(a.status), None
+    except ValueError as e:
+        return False, str(e)
+
+
+def cmd_score(a, ideas, ideas_path, plans, kill, cfg):
+    scores = score_board(ideas, inputs_for(a.week, ideas, plans, floor=a.floor, probes=a.probes, kill=kill, lint=_lint, cfg=cfg), cfg)
+    unscored = sorted(k for k, s in scores.items() if s['total'] is None and not s['floored'])
+    save(file_of(a.week, 'scores', plans, cfg), {'rubric_version': cfg['rubric_version'], 'week': a.week, 'at': now_iso(),
+                                                 'options': scores, 'unscored': unscored})
+    print(json.dumps({k: {'total': s['total'], 'type': s['type'], 'floors_failed': s['floors_failed'], 'unread': s['unread'],
+                          'floored': s['floored']} for k, s in scores.items()}, indent=1, ensure_ascii=False))
+    return 2 if unscored else 0
+
+
+def cmd_order(a, ideas, ideas_path, plans, cfg):
+    status, why = read_status(a)
+    if status is False:
+        print(why, file=sys.stderr)
+        return 2
+    doc = load(file_of(a.week, 'scores', plans, cfg))
+    if not doc:
+        print('no scores.json: run story_score.py score first', file=sys.stderr)
+        return 2
+    council = {d: v for d, v in (load(file_of(a.week, 'council', plans, cfg), {}) or {}).items() if isinstance(v, dict)}
+    new, report = order_board(ideas, doc['options'], status, council, cfg)
+    if a.write:
+        save(ideas_path, new)
+    doc['close_calls'] = report['close_calls']
+    save(file_of(a.week, 'scores', plans, cfg), doc)
+    print(json.dumps(report, indent=1, ensure_ascii=False))
+    return 0
+
+
+def cmd_council_brief(a, ideas, plans, cfg):
+    doc = load(file_of(a.week, 'scores', plans, cfg), {}) or {}
+    call = next((c for c in doc.get('close_calls') or [] if c.get('day') == a.day), None)
+    if not call:
+        print(f'{a.day}: no close call in scores.json (run order first)', file=sys.stderr)
+        return 2
+    rows = {key: (day, main, o) for key, day, main, o in board(ideas)}
+    k_a, k_b = ab_pair(a.day, *call['keys'])
+    views = [(blind_view(rows[k][2], cfg), rows[k][1]) for k in (k_a, k_b)]
+    angles = tuple(((doc['options'].get(k) or {}).get('angle') or {}).get('text') for k in (k_a, k_b))
+    text = council_brief(a.day, views[0][0], views[1][0], views[0][1], views[1][1], angles, cfg)
+    out = week_dir(a.week, plans) / cfg['files']['dir'] / f'council-{a.day}.md'
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(text, encoding='utf-8')
+    path = file_of(a.week, 'council', plans, cfg)
+    council = load(path, {}) or {}
+    council[a.day] = {'A': k_a, 'B': k_b, 'pair': [k_a, k_b], 'status': 'asked', 'cleared': bool(cfg['council'].get('cleared'))}
+    save(path, council)
+    print(out)
+    if not cfg['council'].get('cleared'):
+        print(f'the council has not cleared this caller: the card says "{cfg["council"]["barred_says"]}" unless Krish asks for the read',
+              file=sys.stderr)
+    return 0
+
+
+def cmd_council_record(a, plans, cfg):
+    path = file_of(a.week, 'council', plans, cfg)
+    council = load(path, {}) or {}
+    asked = council.get(a.day)
+    if not isinstance(asked, dict) or not asked.get('A'):
+        print(f'{a.day}: no council brief was written', file=sys.stderr)
+        return 2
+    got, problems = parse_council(Path(a.file).read_text(encoding='utf-8'), cfg)
+    if problems:
+        print(json.dumps({'problems': problems}, indent=1), file=sys.stderr)
+        return 2
+    winner = asked.get(got['chair']) if got['chair'] in ('A', 'B') else None
+    asked.update(seats=got['seats'], chair=got['chair'], because=got['because'], winner=winner, status='read',
+                 says=None if winner else cfg['council']['barred_says'], at=now_iso())
+    council[a.day] = asked
+    save(path, council)
+    print(json.dumps(asked, indent=1, ensure_ascii=False))
+    return 0
+
+
+def main(argv=None, *, poster=None, cap=None, read=None, kill=None, plans=None, today=None):
+    cfg = RUBRIC
+    ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
+    sub = ap.add_subparsers(dest='cmd', required=True)
+
+    def wk(p):
+        p.add_argument('week', help='the Monday, YYYY-MM-DD')
+        p.add_argument('--ideas', help='ideas.json (default docs/plans/<Monday>-week/ideas.json)')
+        p.add_argument('--plans', help='the plans folder (default docs/plans)')
+        return p
+
+    def paid(p):
+        p.add_argument('--budget-usd', type=float, help=f'at most this, never above budget_usd ({cfg["budget_usd"]})')
+        p.add_argument('--ledger', help='the spend ledger (default .cache/story-score/spend.jsonl)')
+        return p
+
+    g = paid(wk(sub.add_parser('angles')))
+    g.add_argument('--provoke', action='store_true')
+    g.add_argument('--judge', action='store_true')
+    h = paid(wk(sub.add_parser('humour')))
+    h.add_argument('--max', type=int)
+    b = wk(sub.add_parser('brief'))
+    b.add_argument('--axes', default='scale,fun_consume,fun_produce,uplift,utility')
+    r = wk(sub.add_parser('record'))
+    r.add_argument('file')
+    s = wk(sub.add_parser('score'))
+    s.add_argument('--floor', help="the floor's --json output")
+    s.add_argument('--probes', help='whys-probe-check.ts output (default story/probes.json)')
+    s.add_argument('--write', action='store_true', help='accepted for symmetry; score writes scores.json only')
+    o = wk(sub.add_parser('order'))
+    o.add_argument('--status', nargs='+', help='board_feed status JSON read(s) of the week')
+    o.add_argument('--fresh', action='store_true', help='the board was never shown: every day is open')
+    o.add_argument('--write', action='store_true', help='write the ordered ideas.json (default: print the report only)')
+    cb = wk(sub.add_parser('council-brief'))
+    cb.add_argument('--day', required=True)
+    cr = wk(sub.add_parser('council-record'))
+    cr.add_argument('--day', required=True)
+    cr.add_argument('file')
+    lg = sub.add_parser('ledger')
+    lg.add_argument('--ledger')
+    a = ap.parse_args(argv)
+
+    if a.cmd == 'ledger':
+        print(json.dumps(Ledger(a.ledger or ROOT / cfg['files']['ledger'], cfg=cfg, today=today, write=False).summary(), indent=1))
+        return 0
+    plans_dir = Path(a.plans) if a.plans else Path(plans) if plans else PLANS
+    ideas_path = Path(a.ideas) if a.ideas else week_dir(a.week, plans_dir) / 'ideas.json'
+    if a.cmd in ('record', 'council-record'):
+        return cmd_record(a, plans_dir, cfg) if a.cmd == 'record' else cmd_council_record(a, plans_dir, cfg)
+    if not ideas_path.exists():
+        print(f'no ideas at {ideas_path}', file=sys.stderr)
+        return 2
+    ideas = load(ideas_path)
+    kill = kill or ic.kill_list_vetoes
+    if a.cmd in ('angles', 'humour'):
+        ledger = Ledger(a.ledger or ROOT / cfg['files']['ledger'], a.budget_usd, cfg, today)
+        if a.cmd == 'angles':
+            return cmd_angles(a, ideas, plans_dir, ledger, poster, cap, kill, cfg)
+        if read is None:
+            import humour_check
+            read = humour_check.reader()
+        return cmd_humour(a, ideas, plans_dir, ledger, read, cfg)
+    if a.cmd == 'brief':
+        return cmd_brief(a, ideas, plans_dir, cfg)
+    if a.cmd == 'score':
+        return cmd_score(a, ideas, ideas_path, plans_dir, kill, cfg)
+    if a.cmd == 'order':
+        return cmd_order(a, ideas, ideas_path, plans_dir, cfg)
+    return cmd_council_brief(a, ideas, plans_dir, cfg)
+
+
+if __name__ == '__main__':
+    sys.exit(main())
