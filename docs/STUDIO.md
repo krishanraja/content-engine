@@ -232,20 +232,26 @@ placeholder `PENDING_CC_COMMIT`. An active theme cannot carry the placeholder
 at all. The theme now pins control-center `7dac4ce` (on `main` since
 2026-09-28), the commit that added the stacked logo.
 
-Where the brand lives: the makeyourmindup brand kit and brand book (v1.5 on
-2026-10-05; it changed only the subchannels' days and the order they are
-listed in, so the logos, colours and type are v1.4's) are in
-`krishanraja/makeyourmindup`, `docs/brandbooknew/`:
-`makeyourmindup-brand-kit.zip` holds everything, and
-`makeyourmindup-brand-book.zip` holds the book as a PDF and as page images.
-`npm run brand-kit` in that repository rebuilds both. The pinned mark,
-horizontal logo and stacked logo hash-match the kit's (identical in v1.4 and v1.5)
-`logos/mark/makeyourmindup-mark-transparent.png`,
-`logos/horizontal/makeyourmindup-horizontal-transparent-1200w.png` and
-`logos/stacked/makeyourmindup-stacked-transparent.png`. The book says the
-logo is the name, never part of a sentence. If a rebuild ever changes a
-file, copy it into control-center, pin the new commit and hashes in the
-theme, and render the proof again.
+Where the brand lives: since Krish locked the v5 look on 25 Nov 2026, the
+one brand kit is `krishanraja/makeyourmindup`, `brand-kit/`:
+`makeyourmindup-brand-kit.zip` holds the logos, fonts (Anton, Archivo,
+Fraunces, DM Mono), colours and channel art, and
+`scripts/brand-kit-v5/build.py` in that repository rebuilds it. The same kit
+is in Drive as "1 Brand kit (permanent)". The marks the engine draws are in
+this repository at `assets/brand/makeyourmindup/v5`: `d-face-off.svg` (the
+icon), `v4.svg` (the wordmark), `v9.svg` (the horizontal lockup) and
+`v10.svg` (the stacked lockup), with `-ink` variants for light grounds. The
+active theme `makeyourmindup-v5` in `config/studio.json` pins them by path and
+sha256. The logo is the name, never part of a sentence. If a rebuild ever
+changes a mark, copy it into `assets/brand/makeyourmindup/v5`, pin the new
+hash in the theme, and render the proof again.
+
+The record before v5: the brand kit and brand book v1.5 (2026-10-05) were in
+`krishanraja/makeyourmindup`, `docs/brandbooknew/`, and the
+`makeyourmindup-video-v1` theme above pinned the kit's mark, horizontal logo
+and stacked logo PNGs through control-center. That folder is retired and its
+zips are removed; the v1 theme and its pins stay only so pre-v5 cuts can be
+read and re-rendered.
 
 Switching it on, from Krish's machine (a cloud session is read-only for the
 Studio, `docs/ENGINE_SESSION.md`):

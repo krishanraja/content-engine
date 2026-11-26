@@ -21,7 +21,7 @@ inside it.
 | The two-tone headline | `headline` `tone: [{line, word}]` (mint, no box), `reveal: "blur"` (each word sharpens from 8 px in 3 f, 4 f apart), `shadow: true` over the wall |
 | The event tape | `marquee` `mode: "tape"`: `items[0]` the display line, `items[1]` the filing line (the source, additive); two tapes in the series colour at -6 and +5 degrees from opposite sides, 12 chips once, gone by 1.2 s |
 | Loops on the recording | `photo_plate` `markStyle: "loop"`, `markColour: "channel"`, `keepMarks: true`, `frame: true`, its `regions` the items he names; each `mark` event on the word that names it (8 f, a 3 px echo 3 f later) |
-| The source line | each device's own source (Plex Mono), always under its evidence |
+| The source line | each device's own source (DM Mono, the v5 mono), always under its evidence |
 | The caption slab | the captions theme, unchanged (captions are their own choice) |
 
 A `scribble` may also wear `colour: "channel"` (the design lock allows it since 20 Nov). `mint_ring` stays mint: it is the

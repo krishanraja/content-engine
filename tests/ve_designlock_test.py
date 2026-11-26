@@ -267,11 +267,12 @@ class DesignLockTest(unittest.TestCase):
         self.assertIn('## Recipe: The Ladder', text)
         self.assertIn('mon02-wide', text)
         self.assertLess(text.index('## Recipe'), text.index('## Acceptance'))
-        self.assertNotIn('## Recipe', cards.write_card(self.root / 'paper.md', motion_style='paper-cutout', **self.fields()).read_text())
+        # A motion style with no saved recipe gets no Recipe section (paper-cutout, the old example, is retired by v5).
+        self.assertNotIn('## Recipe', cards.write_card(self.root / 'swiss.md', motion_style='swiss-kinetic-type', **self.fields()).read_text())
         meta = cards.parse_card(path)
         self.assertEqual(meta['motion_style'], 'data-story')
         self.assertEqual(meta['acceptance'], ['python test.py'])
-        for bad in ('live-scoreboard', 'no-such-style'):
+        for bad in ('live-scoreboard', 'no-such-style', 'paper-cutout'):
             with self.assertRaises(SystemExit):
                 cards.write_card(self.root / f'{bad}.md', motion_style=bad, **self.fields())
         plain = cards.write_card(self.root / 'plain.md', **self.fields()).read_text()
@@ -324,9 +325,19 @@ class DesignLockTest(unittest.TestCase):
     def test_cli_legacy_lint(self):
         # The fixture names no recipe, so a copy of it freezes before the recipe floor (velib.floor.RECIPE_FROM); with no
         # lock it would freeze "today" and turn red on a date. Binding is tested in ve_quality_floor_test.py.
+        # The v5 fixture, set to a format with a config but no design lock that the v5 ruling did not retire: the old
+        # fixture's own format (scoreboard-test) is retired and lints as retired (config/retired-styles.json).
+        retired = {row['id'] for row in json.loads((ROOT / 'config/retired-styles.json').read_text(encoding='utf-8'))
+                   if row['kind'] == 'format_look'}
+        legacy = sorted(p.stem for p in (ROOT / 'config/ve/formats').glob('*.json')
+                        if p.stem not in designlock.load()['formats'] and p.stem not in retired)
+        self.assertTrue(legacy, 'a live format with no design lock to lint as legacy')
+        spec = json.loads((ROOT / 'fixtures/ve/my-test-19s/spec-v5.json').read_text(encoding='utf-8'))
+        spec['format'] = legacy[0]
         with tempfile.TemporaryDirectory() as temp:
             piece = Path(temp) / 'piece'
             shutil.copytree(ROOT / 'fixtures/ve/my-test-19s', piece)
+            (piece / 'spec.json').write_text(json.dumps(spec), encoding='utf-8')
             (piece / 've').mkdir()
             (piece / 've' / 'engine.json').write_text(json.dumps({'at': '2026-11-19T00:00:00Z'}), encoding='utf-8')
             result = self.cli('lint', str(piece / 'spec.json'))

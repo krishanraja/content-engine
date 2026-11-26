@@ -538,7 +538,10 @@ class TheBar(unittest.TestCase):
                        # Krish decided it on 2026-11-11: no mark over any tall cut's animated content (the outro card keeps it).
                        'Vertical video carries no mark, wordmark or series tag at all'):
             self.assertIn(source, branding)
-        self.assertIn('`docs/brandbooknew/`', part(AIMS))
+        # The v5 brand kit is the reference since 25 Nov 2026; the older brand book (docs/brandbooknew/) is retired.
+        self.assertIn('`brand-kit/` (`makeyourmindup-brand-kit.zip`', part(AIMS))
+        self.assertIn('`assets/brand/makeyourmindup/v5`', part(AIMS))
+        self.assertIn('`docs/brandbooknew/`, version 1.5) is retired', part(AIMS))
         # The question rested on a premise the book does not support, and the rulings say so.
         self.assertIn("The question's premise was wrong: the book itself does not ask for a mark tile on every beat",
                       ruling_line(3))

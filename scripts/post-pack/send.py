@@ -54,15 +54,14 @@ from library import BRAND_KIT, LibraryError  # noqa: E402
 MANIFEST = '.pack.json'
 CLUTTER = {'thumbs.db', 'desktop.ini', '__pycache__'}
 KIT_FOLDER = 'makeyourmindup-brand-kit'  # the folder inside the published kit's zip
-# What each part of the brand kit is for, by its first folder.
+# What each part of the brand kit is for, by its first folder (lower case). The v5 kit (krishanraja/makeyourmindup
+# brand-kit/makeyourmindup-brand-kit.zip, built by scripts/brand-kit-v5/build.py) has four: logos, fonts, colours and
+# Channel art. The v4 parts (guidelines, tokens, photography, applications) went with the v5 lock (25 Nov 2026).
 BRAND_KIT_PURPOSES = {
-    'guidelines': 'The brand book: how makeyourmindup looks and sounds. Read it before making anything new.',
     'logos': 'An official logo file. Use it as it is: never redraw, retype or tilt the logo.',
-    'colours': 'The colour palette, with every colour\'s code.',
-    'tokens': 'The design tokens (colours, type, spacing) for code and design tools.',
     'fonts': 'A brand font, with its open licence. Install it to set type in the house style.',
-    'photography': 'Approved photography for makeyourmindup.',
-    'applications': 'The brand applied: Substack, social, email and website artwork, ready to use.',
+    'colours': 'The colour palette, with every colour\'s code, and the colour tokens for code and design tools.',
+    'channel art': 'A profile image or banner for one channel, or the bios and descriptions, ready to upload as it is.',
 }
 BRAND_KIT_DEFAULT = 'Part of the makeyourmindup brand kit.'
 
@@ -503,10 +502,15 @@ def self_test():
         zipped = tmp / 'kit.zip'
         with zipfile.ZipFile(zipped, 'w') as z:
             z.writestr(f'{KIT_FOLDER}/logos/mark/mark.png', b'logos/mark/mark.png')
-            z.writestr(f'{KIT_FOLDER}/tokens/tokens.json', b'{}')
+            z.writestr(f'{KIT_FOLDER}/colours/tokens.json', b'{}')
+            z.writestr(f'{KIT_FOLDER}/Channel art/avatar-1080.png', b'avatar')
         unpacked = unzip(zipped, tmp / 'from-zip')
-        check('a zip unpacks into the same plan', [t for t, _, _ in plan(kit_root(unpacked), brand_kit=True)],
-              ['1 Brand kit (permanent)/logos/mark/mark.png', '1 Brand kit (permanent)/tokens/tokens.json'])
+        zip_plan = plan(kit_root(unpacked), brand_kit=True)
+        check('a zip unpacks into the same plan', [t for t, _, _ in zip_plan],
+              ['1 Brand kit (permanent)/Channel art/avatar-1080.png', '1 Brand kit (permanent)/colours/tokens.json',
+               '1 Brand kit (permanent)/logos/mark/mark.png'])
+        check('channel art in the v5 kit says it is a profile image', zip_plan[0][2], BRAND_KIT_PURPOSES['channel art'])
+        check('no v4 part of the kit is still named', sorted(BRAND_KIT_PURPOSES), ['channel art', 'colours', 'fonts', 'logos'])
         evil = tmp / 'evil.zip'
         with zipfile.ZipFile(evil, 'w') as z:
             z.writestr('../../escape.txt', b'x')
