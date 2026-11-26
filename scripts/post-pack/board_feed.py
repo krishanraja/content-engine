@@ -763,6 +763,11 @@ def wave1(ideas, sources, plans=None, p6=None, status=None, before=None):
     # The story score: every open option scored blind, each open day in its order, a hero holding three sourced whys
     # before the pick, and nothing under its floor (the story engine v5 plan; Ruling, Krish, 2026-11-26).
     found += idea_checks.story_findings(ideas, week, status, probes_of(week, plans), before=before)
+    # The cycle's stage 2 touches (config/cycle.json; Krish, 2026-11-26: every system involved at the right moment): a
+    # required touch with no line on the week's touches.jsonl fails it too, from the story score's `from` board.
+    if week:
+        import touch
+        found += touch.findings(2, week, plans=plans)
     return found
 
 
@@ -875,8 +880,14 @@ def lookalike_of(week, plans=None):
     return patterns, urls, warnings
 
 
+# What fails the Sunday run: idea_checks.GATE_CODES, and from the story score's `from` board a required stage 2 touch
+# missing from the week's touches.jsonl (touch; config/cycle.json, scripts/post-pack/touch.py). Kept here, beside the one
+# reader that adds it, so the blind proof's frozen idea_checks.py is unchanged.
+GATE_CODES = idea_checks.GATE_CODES + ('touch',)
+
+
 def gate(week, ideas_path=None, plans=None):
-    """The findings that fail the Sunday run (idea_checks.GATE_CODES), each a line, and the warnings shown beside them."""
+    """The findings that fail the Sunday run (GATE_CODES), each a line, and the warnings shown beside them."""
     report = gate_report(week, ideas_path, plans)
     return report['problems'], report['warned']
 
@@ -916,10 +927,10 @@ def gate_report(week, ideas_path=None, plans=None, base_path=None, days=None, st
     ideas = json.loads(Path(ideas_path or folder / 'ideas.json').read_text(encoding='utf-8'))
     base = json.loads(Path(base_path).read_text(encoding='utf-8')) if base_path else None
     found = wave1(ideas, sources, plans, status=status, before=base)
-    problems = [f['line'] for f in found if f['code'] in idea_checks.GATE_CODES]
+    problems = [f['line'] for f in found if f['code'] in GATE_CODES]
     before = []
     if base_path:
-        had = {f['line'] for f in wave1(base, sources, plans, status=status, before=base) if f['code'] in idea_checks.GATE_CODES}
+        had = {f['line'] for f in wave1(base, sources, plans, status=status, before=base) if f['code'] in GATE_CODES}
         # A re-run of some days (sunday-ideas.yml `days`) answers for those days in full: a problem the board already had
         # on one of them still fails, since the run was there to make its open options again. Every other day's
         # problems are the week's own and only reported.
