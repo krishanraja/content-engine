@@ -329,11 +329,11 @@ read `.agents/skills/make-piece/references/long-cut.md`.
 3a. **Does the wit land** (Krish, 2026-11-17: humour-engine on call, "go ahead on both"). Two floor standards ask
    what a rule cannot grade: never a script left "flat and purely factual", and never "a joke or dry-wit option in a
    script that needs outside explanation to be understood on its own". Run
-   `python3 scripts/post-pack/humour_check.py script long.md` and the same for `short.md` (one call each), and
+   `python3 scripts/post-pack/humour_check.py script long.md` and the same for `short.md`, and
    `humour_check.py joke --file jokes.txt` on the joke options offered beside the script, each read alone. Exit 1:
    rewrite the paragraph or cut the joke it names, then run it again. Exit 2 (unavailable) is never a pass: say so
    where the scripts go to Krish. It judges whether a joke is understood, never whether it is good; that is his.
-   `humour_check.py doctor` first in a session that has not used it.
+   Stages 4-8 run `touch.py`: `.agents/skills/make-piece/references/cycle.md`.
 3c. **The teaching check, automatic and silent** (Krish, 2026-11-17: "I really like her teaching style, her fluency
    of speech, how she doesn't talk down to anyone, but how she makes boring things so interesting"; Krish, 2026-11-18:
    "The Hannah Fry skill should invoke automatically but silently behind the scenes"). On every script any session

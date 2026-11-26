@@ -10,6 +10,7 @@
 // machine already holds (scripts/engine.py). Both land on the same routes and the same database rules.
 
 import { DECISIONS_RULE, decisionsText, type PieceDecisions } from './_decisions.js'
+import cycle from '../../../../config/cycle.json' with { type: 'json' }
 
 type Body = Record<string, unknown>
 const obj = (v: unknown): v is Body => Boolean(v) && typeof v === 'object' && !Array.isArray(v)
@@ -65,6 +66,31 @@ export const LEARNING_RULE = 'Send what you learn to the right place as you find
   + 'inspiration goes to report_to_taste_engine, in his exact words; a defect never does. If one correction holds both, send each part to its '
   + 'place. If the observation tool is not connected, put the lesson in your done report.'
 
+/** Which systems a step reads from or informs (archives, divergence, humour, strategist, growth, makeyourmindup, krish-clone,
+ *  Higgsfield, credits, taste, auditor) is said once, by stage, in config/cycle.json (Krish, 2026-11-26: every system
+ *  involved at the right moment, in the most streamlined way); a prompt names the stage and never lists the tools again. */
+export const CYCLE_RULE = 'The systems this step reads from or informs are its stage\'s touches in config/cycle.json, never a list from memory: '
+  + 'in a checkout, run python3 scripts/post-pack/touch.py run <stage> --week <Monday> (with --piece <id> for a piece) and '
+  + 'touch.py check <stage> before you report done; a connector touch it cannot send is queued for touch.py drain, never dropped.'
+
+const STEPS = (cycle as { steps: Record<string, unknown> }).steps
+const STAGES = (cycle as { stages: Array<{ id: number; name: string }> }).stages
+
+/** The cycle stage a board step is (config/cycle.json steps), or null for a step it does not name. */
+export function stageOf(step: string): { id: number; name: string } | null {
+  const k = stepKey(step)
+  const id = typeof STEPS[k] === 'number' ? STEPS[k] as number : null
+  return id === null ? null : STAGES.find(s => s.id === id) ?? null
+}
+
+/** The stage line for one step: the touch.py command with this prompt's own week and piece filled in. */
+export function stageLine(t: WriteBackTarget): string {
+  const stage = stageOf(t.step)
+  if (!stage) return CYCLE_RULE
+  const cmd = `python3 scripts/post-pack/touch.py run ${stage.id} --week ${t.week}${t.pieceId ? ` --piece ${t.pieceId}` : ''}`
+  return `${CYCLE_RULE} This step is stage ${stage.id}, ${stage.name}: ${cmd}`
+}
+
 export interface WriteBackTarget { pieceId: string | null; week: string; day: string; step: string; decisions?: PieceDecisions | null; schedule?: boolean }
 
 const STEP = /^[a-z][a-z0-9_-]{0,40}$/
@@ -96,7 +122,7 @@ export function writeBack(t: WriteBackTarget): string {
     + `${t.pieceId ? 6 : 5}. ${t.schedule ? WALLS_SCHEDULE : WALLS}\n`
     + `${t.pieceId ? 7 : 6}. ${CLOSE_LOOP}\n`
     + `${t.pieceId ? 8 : 7}. ${ROLES}\n`
-    + `${t.pieceId ? 9 : 8}. ${LEARNING_RULE}\n`
+    + `${t.pieceId ? 9 : 8}. ${LEARNING_RULE} ${stageLine(t)}\n`
     + 'Nothing on file is ever deleted or overwritten, so add, never replace. No key belongs in this prompt: the connector is already signed in, '
     + 'and the script uses the engine key this machine already holds.'
 }
