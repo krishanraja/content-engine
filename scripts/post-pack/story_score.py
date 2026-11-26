@@ -1141,6 +1141,12 @@ def _lint(text):
     return copy_lint.copy_lint(text, 'channel_copy')
 
 
+def angle_id(key, lens, text):
+    """An angle's id: <key>#<a hash of its lens and words>, so a judge or humour read keyed by it belongs to those words
+    and to no other angle when the pool changes."""
+    return f'{key}#' + hashlib.sha256(f'{key}|{_s(lens)}|{_norm(text)}'.encode('utf-8')).hexdigest()[:12]
+
+
 def cmd_angles(a, ideas, plans, ledger, poster, cap, kill, cfg):
     """Pool the session's lens angles, each option's own angle and (with --provoke) divergent sparks for each hero
     day's top two, then (with --judge) score the pool blind in one batched judged call."""
@@ -1158,6 +1164,8 @@ def cmd_angles(a, ideas, plans, ledger, poster, cap, kill, cfg):
         rows += [(k, s) for k, s in provisional.items() if k.startswith(day + '/') and (s['floors_failed'] or s['total'] is None)]
         rows.sort(key=lambda r: (bool(r[1]['floors_failed']), r[1]['total'] is None, -(r[1]['total'] or 0)))
         tops |= {k for k, _s in rows[:cfg['angle']['divergent']['per_hero_day']]}
+    earlier = doc.get('pooled') or {}
+    provoked = []
     for key, day, main, o in board(ideas):
         view = blind_view(o, cfg)
         pool = []
@@ -1165,17 +1173,23 @@ def cmd_angles(a, ideas, plans, ledger, poster, cap, kill, cfg):
         if own:
             pool.append({'lens': 'own', 'text': own, 'rests_on': _s(view.get('fact')) or None})
         pool += [dict(x) for x in lens.get(key) or [] if isinstance(x, dict) and x.get('text')]
-        if a.provoke and key in tops:
+        # Sparks already paid for are carried forward with their run id; a key that has them is not provoked again.
+        sparks = [dict(x) for x in earlier.get(key) or [] if isinstance(x, dict) and x.get('lens') == 'divergent' and x.get('text')]
+        if a.provoke and key in tops and not sparks:
+            provoked.append(key)
             got = provoke(view, main, worn, ledger, poster=poster, cap=cap, cfg=cfg)
             if got['status'] != 'ok':
                 unread.append(f'{key} provoke: {got["reason"]}')
             for s in got.get('sparks') or []:
                 text = ' '.join(_s(s.get(k)) for k in ('title', 'mechanism') if s.get(k)).strip()
                 if text:
-                    pool.append({'lens': 'divergent', 'text': text, 'rests_on': s.get('rests_on'), 'run_id': got.get('run_id')})
-        for n, x in enumerate(pool, 1):
-            x['id'] = f'{key}#{n}'
-        pooled[key] = pool
+                    sparks.append({'lens': 'divergent', 'text': text, 'rests_on': s.get('rests_on'), 'run_id': got.get('run_id')})
+        pool += [{k: v for k, v in x.items() if k not in ('id', 'judge')} for x in sparks]
+        seen = {}
+        for x in pool:
+            x['id'] = angle_id(key, x.get('lens'), x['text'])
+            seen.setdefault(x['id'], x)
+        pooled[key] = list(seen.values())
     if a.judge:
         flat = [x for k in pooled for x in pooled[k]]
         results, skipped = judge([x['text'] for x in flat], doc.get('obvious') or [], ledger, poster=poster, cap=cap, cfg=cfg)
@@ -1183,13 +1197,14 @@ def cmd_angles(a, ideas, plans, ledger, poster, cap, kill, cfg):
         for x, r in zip(flat, results):
             x['judge'] = judge_numbers(r) if r is not None else None
     else:
-        old = {x.get('id'): x.get('judge') for k in (doc.get('pooled') or {}) for x in doc['pooled'][k]}
+        # A judge read stays with the words it judged: the id is a hash of the key, the lens and the text.
+        old = {x.get('id'): x.get('judge') for k in earlier for x in earlier[k] if isinstance(x, dict)}
         for k in pooled:
             for x in pooled[k]:
                 x['judge'] = old.get(x['id'])
     doc.update(pooled=pooled, unread=unread, at=now_iso())
     save(path, doc)
-    print(json.dumps({'angles': sum(len(v) for v in pooled.values()), 'provoked': sorted(tops) if a.provoke else [],
+    print(json.dumps({'angles': sum(len(v) for v in pooled.values()), 'provoked': provoked,
                       'unread': unread, 'ledger': ledger.summary()}, indent=1, ensure_ascii=False))
     return 2 if unread else 0
 
