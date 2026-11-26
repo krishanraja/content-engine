@@ -10,7 +10,14 @@ copied from its main at 38fada1 into config/schema/piece-manifest.schema.json:
      "qa": {"state": "passed" | "held" | "failed", "checked_at"},
      "assets": [{"name", "drive_id", "sha256", "order"}],
      "channels": {channel: {"words", "alt_text": [text, ...] | null, "assets": [name, ...],
-                            "cover": {"asset", "sha256", "cover_offset_ms": int | null}}}}
+                            "cover": {"asset", "sha256", "cover_offset_ms": int | null},
+                            "title": "..."  (1.1 only)}}}
+
+Minor version 1.1 (2026-11-26): the captions step (scripts/post-pack/channel_captions.py; Ruling, Krish, 2026-11-26,
+content-engine writes the captions at make time) adds an optional per-channel "title", the channel's post title (a
+YouTube title). A manifest whose channels carry a title says schema content-engine-piece-manifest/1.1; one without
+stays /1, byte for byte as before. Growth's verifier (engine/run/piece_manifest.py) must accept /1.1 and the optional
+title before a titled manifest is dispatched to it.
 
 Every posted video carries its designed cover (Ruling, Krish, 2026-11-15; docs/production/COVER-STANDARD.md, "Every
 posted video carries its designed cover"). A channel that posts a video (instagram, facebook, tiktok, youtube, threads,
@@ -54,6 +61,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import asset_spec  # noqa: E402  config/asset-spec.json: the asset names the engine produces now
 
 SCHEMA = 'content-engine-piece-manifest/1'
+# Minor version 1.1: an optional per-channel title (the captions step). A manifest with no title stays /1.
+SCHEMA_TITLED = 'content-engine-piece-manifest/1.1'
+SCHEMAS = (SCHEMA, SCHEMA_TITLED)
+TITLE_MAX = 100
 SCHEMA_FILE = Path(__file__).resolve().parents[2] / 'config' / 'schema' / 'piece-manifest.schema.json'
 # Growth's closed vocabularies (growth-makeyourmindup engine/run/release.py CHANNELS, engine/run/handoff.py, 38fada1).
 CHANNELS = ('substack-notes', 'threads', 'x', 'instagram', 'facebook', 'tiktok', 'youtube', 'linkedin')
@@ -107,8 +118,8 @@ def problems(value, draft=False):
     keys = {'schema', 'piece_id', 'qa', 'assets', 'channels'} | (set() if draft else {'approval_sha256'})
     if not isinstance(value, dict) or set(value) != keys:
         return [f'the keys are exactly {sorted(keys)}']
-    if value['schema'] != SCHEMA:
-        out.append(f'schema is {SCHEMA}')
+    if value['schema'] not in SCHEMAS:
+        out.append(f'schema is {SCHEMA} (or {SCHEMA_TITLED} when a channel carries a title)')
     if not isinstance(value['piece_id'], str) or not PIECE_ID.match(value['piece_id']):
         out.append('piece_id is the piece\'s id')
     if not draft and not (isinstance(value['approval_sha256'], str) and HEX64.match(value['approval_sha256'])):
@@ -145,7 +156,7 @@ def problems(value, draft=False):
         if ch not in CHANNELS:
             out.append(f'{ch}: not one of Growth\'s channels ({", ".join(CHANNELS)})')
             continue
-        if not isinstance(e, dict) or not {'words', 'alt_text', 'assets'} <= set(e) <= {'words', 'alt_text', 'assets', 'cover'} \
+        if not isinstance(e, dict) or not {'words', 'alt_text', 'assets'} <= set(e) <= {'words', 'alt_text', 'assets', 'cover', 'title'} \
                 or not (isinstance(e['words'], str) and e['words'].strip()) \
                 or not isinstance(e['assets'], list) or any(n not in names for n in e['assets']) or len(set(e['assets'])) != len(e['assets']):
             out.append(f'{ch}: words, alt_text and assets (names from assets, each once)')
@@ -153,6 +164,11 @@ def problems(value, draft=False):
         alt = e['alt_text']
         if alt is not None and not (isinstance(alt, list) and len(alt) == len(e['assets']) and all(isinstance(t, str) for t in alt)):
             out.append(f'{ch}: alt_text is null or one text per asset, in order')
+        if 'title' in e:
+            if value['schema'] != SCHEMA_TITLED:
+                out.append(f'{ch}: a title needs schema {SCHEMA_TITLED}')
+            elif not (isinstance(e['title'], str) and e['title'].strip() and len(e['title']) <= TITLE_MAX):
+                out.append(f'{ch}: title is the post title, at most {TITLE_MAX} characters')
         out.extend(cover_problems(ch, e, {a['name']: a for a in assets if isinstance(a, dict) and 'name' in a}))
     return out
 
@@ -186,10 +202,12 @@ def draft(spec):
         raise ManifestError('SPEC is {"piece_id", "qa", "assets": [...], "channels": {...}}')
     assets = [{'name': a.get('name'), 'drive_id': a.get('drive_id'), 'sha256': a.get('sha256'), 'order': n}
               for n, a in enumerate(spec.get('assets') or [], 1) if isinstance(a, dict)]
-    out = {'schema': SCHEMA, 'piece_id': spec.get('piece_id'), 'qa': spec.get('qa'), 'assets': assets,
+    channels = spec.get('channels') or {}
+    titled = any(isinstance(e, dict) and 'title' in e for e in channels.values()) if isinstance(channels, dict) else False
+    out = {'schema': SCHEMA_TITLED if titled else SCHEMA, 'piece_id': spec.get('piece_id'), 'qa': spec.get('qa'), 'assets': assets,
            'channels': {ch: {'words': e.get('words'), 'alt_text': e.get('alt_text'), 'assets': e.get('assets') or [],
-                             **({'cover': e['cover']} if 'cover' in e else {})}
-                        if isinstance(e, dict) else e for ch, e in (spec.get('channels') or {}).items()}}
+                             **({'cover': e['cover']} if 'cover' in e else {}), **({'title': e['title']} if 'title' in e else {})}
+                        if isinstance(e, dict) else e for ch, e in channels.items()}}
     bad = problems(out, draft=True)
     if bad:
         raise ManifestError('the manifest is not Growth\'s shape:\n  ' + '\n  '.join(bad))
@@ -323,6 +341,12 @@ def self_test():
             check(f'the draft refuses {why}', False)
         except ManifestError:
             pass
+    titled = draft(dict(spec, channels=dict(spec['channels'], youtube={'words': 'Synthetic caption.', 'alt_text': None,
+                                                                       'assets': ['short_video'], 'title': 'A synthetic title',
+                                                                       'cover': {'asset': 'vertical_cover', 'sha256': '2' * 64, 'cover_offset_ms': 89500}})))
+    check('a channel title makes the draft minor version 1.1, and none leaves it 1',
+          titled['schema'] == SCHEMA_TITLED and d['schema'] == SCHEMA and problems(titled, draft=True) == [])
+    check('a title under schema 1 is refused', problems(dict(titled, schema=SCHEMA), draft=True) != [])
     approval = {'id': 'mon-publish', 'updated_by': 'Krish',
                 'body': {'kind': 'approve_publish', 'day': 'mon', 'piece_id': piece, 'approved': True, 'manifest_sha256': sha256(db), 'at': '2026-11-09T07:40:00Z'}}
     m = seal(db, approval)

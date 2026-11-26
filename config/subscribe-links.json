@@ -1,0 +1,33 @@
+{
+  "_about": "The subscribe route's shape, for the links content-engine now writes into finished words (the captions step and the Saturday Note; Ruling, Krish, 2026-11-26: content-engine makes every asset, captions included). Growth owns the route: growth-makeyourmindup specs/subscribe-route.json (mymu-subscribe-route/1) and engine/route.py subscribe_url, item_content and edition_url (growth PR 144). Growth's file is vendored byte for byte at vendor/makeyourmindup/subscribe-route.json and scripts/post-pack/subscribe_links.py reads it; this file holds the lines and places, and the weekly edition's `edition` block until content-engine PR 979 brings it into the vendored copy (built from the contract shape in the shared edition-contract.md, 25 Nov 2026). tests/subscribe_links_test.py fails if the two ever disagree.",
+  "schema": "mymu-subscribe-route/1",
+  "page": "https://home.makeyourmindup.ai/subscribe",
+  "medium": "social",
+  "campaign": "growth",
+  "utm_content_pattern": "^[a-z0-9][a-z0-9_-]{0,63}$",
+  "profile_link_channels": ["instagram", "tiktok"],
+  "sources": {
+    "substack-notes": ["substack", "substack-notes"],
+    "threads": ["threads"],
+    "x": ["twitter", "x"],
+    "instagram": ["instagram"],
+    "facebook": ["facebook"],
+    "tiktok": ["tiktok"],
+    "youtube": ["youtube"]
+  },
+  "edition": {
+    "utm_source": "newsletter",
+    "utm_medium": "email",
+    "utm_campaign": "weekly",
+    "utm_content_pattern": "^edition-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]{1,40}$",
+    "places": ["forward", "subscribe", "piece-mon", "piece-wed", "piece-fri", "video-mon", "video-wed", "video-fri", "note"]
+  },
+  "edition_page_places": ["forward", "subscribe"],
+  "edition_target_places": ["piece-mon", "piece-wed", "piece-fri", "video-mon", "video-wed", "video-fri"],
+  "lines": {
+    "subscribe": "Subscribe: {url}",
+    "profile": "Subscribe: link in bio.",
+    "read_the_week": "Read the week: {url}"
+  },
+  "krish_click_only": ["linkedin"]
+}

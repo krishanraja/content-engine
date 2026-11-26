@@ -18,9 +18,10 @@ describe('piece manifest (W2.8)', () => {
     expect(r.status, r.stdout + r.stderr).toBe(0)
     expect(r.stdout).toMatch(/piece_manifest self-test passed/)
   })
-  it('the schema is Growth\'s closed shape, content-engine-piece-manifest/1', () => {
+  it('the schema is Growth\'s closed shape, content-engine-piece-manifest/1, and /1.1 with a channel title', () => {
     const schema = JSON.parse(readFileSync(join(ROOT, 'config', 'schema', 'piece-manifest.schema.json'), 'utf8'))
-    expect(schema.properties.schema.const).toBe('content-engine-piece-manifest/1')
+    expect(schema.properties.schema.enum).toEqual(['content-engine-piece-manifest/1', 'content-engine-piece-manifest/1.1'])
+    expect(schema.properties.channels.additionalProperties.properties.title.maxLength).toBe(100)
     expect(schema.additionalProperties).toBe(false)
     expect(schema.required).toEqual(['schema', 'piece_id', 'approval_sha256', 'qa', 'assets', 'channels'])
   })
