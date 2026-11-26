@@ -2754,7 +2754,7 @@
       "on": "2026-11-16",
       "krish": "apply 1 to 6 from the next piece you make this week",
       "why": "Video cross-posted to Threads, X and Facebook reached a median of 5 to 11 people. The one written Note, on Claude Duet, reached 208 against a Notes median of 4 and brought the only subscriber of the run. Feeds that are read reward words written to be read.",
-      "means": "Every piece ships a written edition beside its videos: a post of 3 to 6 short lines for X and Threads (at most 280 characters) and a written opinion of 60 to 180 words for Substack Notes, each opening on the named thing and its business stake, carrying only checked facts and no link. Content-engine writes the words and files them on the piece; Growth makes the posts from them and writes the Notes for the other days (the 28 Oct ruling keeps posting and Notes with Growth).",
+      "means": "Every piece ships a written edition beside its videos: a post of 3 to 6 short lines for X and Threads (at most 280 characters) and a written opinion of 60 to 180 words for Substack Notes, each opening on the named thing and its business stake, carrying only checked facts and no link. Content-engine writes every Note's words and files them on the piece, the Saturday Note included (scripts/post-pack/saturday_note.py), and Growth posts them.",
       "status": "encoded",
       "brief": {
         "material": "cbb90470-7d90-4f54-8d98-cf6ec704b5f2",
@@ -2786,7 +2786,8 @@
           "contains": "## The written edition (after the fact gate, before the pack)",
           "how": "the make-piece step and its filing for Growth"
         }
-      ]
+      ],
+      "superseded_note": "26 Nov 2026 (Ruling, Krish: content-engine makes every asset; Growth grows the channel): the earlier wording, that Growth makes the posts and writes the Notes for the other days under the 28 Oct ruling, is retired."
     },
     {
       "id": "audience-article-subscribe-ask",
@@ -3038,6 +3039,51 @@
           "file": "tests/ve_matte_pod_test.py",
           "contains": "def test_a_model_without_a_pin_is_refused_before_any_spend",
           "how": "no unpinned model, no spend without his yes, the pod terminated on every path"
+        }
+      ]
+    },
+    {
+      "id": "content-engine-makes-every-asset",
+      "on": "2026-11-26",
+      "krish": "I believe that growth should move all asset production to Content Engine. I see no point in having a separate repository produce specific assets. (26 Nov 2026)",
+      "why": "Two repositories made assets, so carousels, memes, Notes, covers and captions had two routes, two looks and two sets of checks, and a reader could not tell which one was current.",
+      "means": "Content-engine makes every asset from the v5 Library (config/asset-routes.json) and hands Growth finished, approved assets with their captions in the piece manifest; Growth posts, schedules and measures them and reports performance back. Nothing is drawn another way.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "docs/GROWTH-HANDOFF.md",
+          "contains": "Content-engine makes every asset",
+          "how": "the contract both repositories read"
+        },
+        {
+          "file": "scripts/post-pack/asset_routes.py",
+          "contains": "def command_for(",
+          "how": "each asset kind routes to its one Library command"
+        },
+        {
+          "file": "tests/asset_routes_test.py",
+          "contains": "def test",
+          "how": "the routes are checked against the Library registry"
+        }
+      ]
+    },
+    {
+      "id": "captions-at-make-time",
+      "on": "2026-11-26",
+      "krish": "I believe that growth should move all asset production to Content Engine. (26 Nov 2026; it retires the 19 Nov ruling that Growth generates the captions)",
+      "why": "Captions written by Growth after the piece was approved were never read against the piece's checked facts, so a caption could carry a claim the piece did not.",
+      "means": "Per-channel captions and titles are written in content-engine at make time by channel_captions.py, checked for claim, length, the copy lint and the voice, and recorded in the piece manifest; Growth posts them as written.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "scripts/post-pack/channel_captions.py",
+          "contains": "def channel_findings(",
+          "how": "the per-channel checks"
+        },
+        {
+          "file": "tests/channel_captions_test.py",
+          "contains": "def test",
+          "how": "the writer, the checks and the manifest record"
         }
       ]
     }
