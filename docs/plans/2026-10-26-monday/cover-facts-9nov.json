@@ -110,6 +110,7 @@
   "still_subject": "A cardboard archive box containing bankruptcy filings",
   "figure": {
    "value": "$20M",
+   "headline_from": "cover",
    "caption": "Disney's price for what is left, in the court filing",
    "source": "court_filing"
   },

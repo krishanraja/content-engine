@@ -62,7 +62,7 @@ def safe_area(fmt, regions):
                 top, bottom = 240, 1680
             elif role == "proof":
                 right = 930
-                top, bottom = 240, 1680
+                top, bottom = 330, 1180
         if fmt == "carousel" and role in ("text", "mark"):
             left, right = 34, width - 34
         if (rect["left"] < left - 0.5 or rect["right"] > right + 0.5 or

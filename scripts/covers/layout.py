@@ -57,6 +57,8 @@ def document(facts, base, fmt, family, still=None, proof=None):
     colour = SERIES[facts["subchannel"]]
     when = date.fromisoformat(facts["date"])
     text = " ".join(lines((cover if fmt == "substack" else thumbs)["headline"]))
+    if family == "figure" and art["figure"].get("headline_from") == "cover":
+        text = " ".join(lines(cover["headline"]))
     if family == "portrait" and not wide:
         text = facts["headline"]
     marked = facts.get("video_title_emphasis") if family == "portrait" else None

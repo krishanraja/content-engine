@@ -5,6 +5,8 @@ from pathlib import Path
 import re
 from urllib.parse import urlsplit
 
+from PIL import Image
+
 FAMILIES = {"wide": ("portrait", "evidence", "number", "object"),
             "vertical": ("portrait", "receipt", "figure")}
 SERIES = {"mind.the.gap": "#FF6A4D", "under.the.hood": "#B7A6FF",
@@ -33,23 +35,45 @@ def person_eligible(person, base):
                 and (base / person["image"]).is_file())
 
 
+def latest_published(entries, facts):
+    before = date.fromisoformat(facts["date"])
+    published = [row for row in entries if (row.get("status") == "published" or row.get("published_at"))
+                 and date.fromisoformat(row["date"]) < before]
+    return max(published, key=lambda row: (row["date"], row.get("published_at") or ""), default=None)
+
+
 def previous_families(facts, base):
     """Read the latest earlier published record, or the editor's recorded predecessor."""
     art = facts.get("image_led", {})
     record = art.get("previous_published")
     if record is None and art.get("catalogue"):
-        entries = read(base / art["catalogue"])
-        before = date.fromisoformat(facts["date"])
-        published = [row for row in entries if row.get("status") == "published"
-                     and date.fromisoformat(row["date"]) < before]
-        record = max(published, key=lambda row: (row["date"], row.get("published_at", "")), default=None)
+        record = latest_published(read(base / art["catalogue"]), facts)
     if record is None:
         post = base / "post.json"
         record = read(post).get("previous_published") if post.is_file() else None
+    if record is None:
+        known = []
+        for path in base.parent.glob("*/post.json"):
+            row = read(path)
+            if row.get("date") and (row.get("published_at") or row.get("status") == "published"):
+                known.append(dict(row, folder=path.parent))
+        prior = latest_published(known, facts)
+        if prior:
+            folder = prior["folder"]
+            record = {"date": prior["date"], "source": f"{folder.name}/post.json", "families": {}}
+            if prior.get("cover_set"):
+                prior_receipt = read(folder / prior["cover_set"])
+                if prior_receipt.get("status") != "passed":
+                    raise ValueError("The preceding published post points to a held cover receipt.")
+                record["families"] = prior_receipt["families"]
     if not record:
         return {"families": {}, "source": "No previous image-led family recorded"}
     if isinstance(record, str):
-        record = read(base / record)
+        path = base / record
+        prior = read(path)
+        if prior.get("status") not in (None, "passed", "published"):
+            raise ValueError("The previous published piece must reference a completed cover set.")
+        record = {"source": str(record), "families": prior["families"], "date": prior.get("date")}
     families = record["families"]
     if any(k not in FAMILIES or v not in FAMILIES[k] for k, v in families.items()):
         raise ValueError("Unrecognised family in previous_published.")
@@ -95,5 +119,10 @@ def resolve_stills(facts, base, families, briefs):
                      f"Compose natively at {aspect}.")
             briefs.append({"system": system, "aspect": aspect, "brief": brief})
     for row in briefs:
-        stills[row["system"]] = Path(generate_still(row["brief"], row["aspect"])).resolve(strict=True)
+        generated = Path(generate_still(row["brief"], row["aspect"])).resolve(strict=True)
+        w, h = map(int, row["aspect"].split(":"))
+        with Image.open(generated) as image:
+            if image.width * h != image.height * w:
+                raise ValueError(f"Generate the {row['system']} still natively at {row['aspect']}.")
+        stills[row["system"]] = generated
     return stills

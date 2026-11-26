@@ -66,6 +66,18 @@ class ImageLedCoversTest(unittest.TestCase):
         self.facts["image_led"]["catalogue"] = "catalogue.json"
         self.assertEqual(cover_facts.previous_families(self.facts, self.base), rows[2])
 
+    def test_reads_preceding_published_post_pack(self):
+        prior = self.base / "monday"
+        current = self.base / "wednesday"
+        prior.mkdir()
+        current.mkdir()
+        (prior / "post.json").write_text(json.dumps({"date": "2026-11-09", "status": "published", "cover_set": "covers.json"}))
+        (prior / "covers.json").write_text(json.dumps({"status": "passed", "families": {"wide": "evidence", "vertical": "receipt"}}))
+        last = cover_facts.previous_families(self.facts, current)
+        self.assertEqual(last["families"], {"wide": "evidence", "vertical": "receipt"})
+        self.assertEqual(cover_facts.pick(self.facts, current, "wide", last["families"]), "number")
+        self.assertEqual(cover_facts.pick(self.facts, current, "vertical", last["families"]), "figure")
+
     def test_every_template_uses_local_art_and_escaped_channel_words(self):
         self.facts["image_led"]["person"] = self.person
         for system, families in cover_facts.FAMILIES.items():
@@ -130,6 +142,17 @@ class ImageLedCoversTest(unittest.TestCase):
         self.assertEqual([(r.get("kind"), r.get("shape")) for r in entries[:4]],
                          [("thumbnail", "wide"), ("substack-cover", None), ("vertical-cover", None), ("thumbnail", "tall")])
         self.assertEqual(Path(entries[4]["file"]).relative_to(out).as_posix(), "carousel/slide-01.png")
+        import build as pack_builder
+        post = {"date": "2026-11-10", "subject": "A verified pack", "subchannel": "mind_the_gap",
+                "piece_id": "story", "cover_set": "out/covers.json"}
+        post_path = self.base / "post.json"
+        post_path.write_text(json.dumps(post))
+        packed = pack_builder.build(post_path, out=self.base / "archive")
+        archive = Path(packed["path"])
+        self.assertEqual(json.loads((archive / "2 Covers and images/covers.json").read_text()), record)
+        self.assertEqual((archive / "2 Covers and images/substack-cover-1200x630.png").read_bytes(),
+                         (out / OUTPUTS["substack"][0]).read_bytes())
+        self.assertEqual(len(list(archive.rglob("slide-01.png"))), 1)
         wide = out / OUTPUTS["youtube"][0]
         self.assertEqual(visual_gate.image_led_problems(wide, "youtube"), [])
         wide.write_bytes(b"altered")
