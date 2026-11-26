@@ -24,6 +24,22 @@ export async function latest() {
   }
 }
 
+// One published edition by its date, for the site's dated edition pages. A malformed row is treated as missing.
+export async function byDate(date: string) {
+  const { data, error } = await supabase.from('hub_snapshots').select('edition_date,payload').eq('edition_date',date).maybeSingle()
+  if (error) throw Error('snapshot_read_failed')
+  if (!data) return null
+  const snapshot = readSnapshot(data.payload)
+  return snapshot && snapshot.edition_date === date ? snapshot : null
+}
+
+// Every published edition date, newest first, for the site's archive and sitemap.
+export async function editionDates(limit = 400) {
+  const { data, error } = await supabase.from('hub_snapshots').select('edition_date').order('edition_date',{ ascending: false }).limit(limit)
+  if (error) throw Error('snapshot_read_failed')
+  return (data ?? []).map(row => String(row.edition_date))
+}
+
 export async function discover(now: number) {
   const today = isoDay(now)
   const { data, error } = await supabase.from('hub_feed_health').select('*')
