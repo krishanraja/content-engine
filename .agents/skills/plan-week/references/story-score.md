@@ -13,7 +13,8 @@ Three stages, every number a row in `config/story-score.json` (`rubric_version` 
    or refused, with the reasons, and never gives a number.
 2. **The blind score** (`scripts/post-pack/story_score.py`): eight anchored 0 to 10 axes (scale, absurdity_humour,
    unique_angle, whys, fit, named_thing, fun_consume, fun_produce), weighted per type (Mon, Wed and Fri heroes, the
-   off-day short and meme, the good news, the explainer) to a total out of 100, with hard floors per type.
+   day's wildcard, the off-day short and meme, the good news, the explainer) to a total out of 100, with hard floors per
+   type.
 3. **The council**, on close calls only (a slot's top two within `close.margin`, or the fun-against-weight fork).
 
 Rulings behind it: his taste is a floor only, never a score, and the judge wall stays (Krish, 2026-11-26); the
@@ -28,6 +29,38 @@ verdicts (`krish_verdict`, `krish_said`, `what_i_like_sheet`), a scorecard or th
 only what its brief below says. `story_score.py` sees each option through `blind_view()` (config `blind_view`), and
 `tests/story_wall_test.py` holds the code to that. His option goes first only at equal totals, and that is the one
 place where an option came from is read.
+
+## The day's wildcard (every Monday, Wednesday and Friday)
+
+Ruling (Krish, 2026-11-26): "Just make sure my Monday, Wednesday, and Friday stories: there's always one completely
+divergent, strange, obscure, or unexpected story suggestion that I could pick from." So every hero day carries at least
+one option marked as its wildcard, and the gate refuses a board without one (code `wildcard`, from config `from`). Its
+words are rows in `config/story-score.json` (`wildcard`, `types.wildcard`), never here.
+
+1. **Generate it first, wild.** Before writing the day's other options, run `divergent.py wildcard` for the day
+   (`references/divergent.md`): it provokes at temperament `wild`, with the worn ground as cliches. Pick at most one
+   spark that is on the beat (a focus sector in `config/beat.json`, nothing on its avoid list).
+2. **Then research it like any option.** A real, dated story with a primary source, its fact checked against the
+   source the same day; the same floor, whys probe (step 4), angles, humour reads, judges, refute pass and reviewer as
+   every option. Strangeness never excuses an unsourced claim, a prediction, odds or a dated call. No spark survives,
+   or exit 2: find the strangest true story in the pool yourself and research it the same way.
+3. **Mark it.** On the option: `"wildcard": {"kind": "divergent|strange|obscure|unexpected", "why_unexpected": "<one
+   line: what makes it far from the obvious takes>"}`, plus `"divergent": {"run_id", "spark"}` inside it when it came
+   from the engine (and `source_kind` `engine`, never his). Its pitch question opens on `Wildcard: ` (config
+   `wildcard.board_prefix`; it passes the pitch check), so the board shows it as the day's wildcard. The label is the
+   board's: never carry it into anything written after the pick.
+4. **Check its distance; never assert it.** Once the day's options are written: `python3 scripts/post-pack/divergent.py
+   distance docs/plans/<Monday>-week/ideas.json --sources docs/plans/<Monday>-week/sources.json --write`. It scores each
+   wildcard against that day's other options and the worn ground (`obvious` given, no judge: free) and records the read
+   on the option (`wildcard.distance`) and in `story/wildcards.json`. Exit 1: a wildcard sits close to the obvious
+   takes; find a stranger story, not new words for the same one. A wildcard reworded after its check is checked again.
+   Exit 2 (not served) records `skipped: not served`: the session's `why_unexpected` stands, and the run's summary says
+   so.
+5. **Its own type.** The score reads it as type `wildcard`: weights lean on unique_angle and absurdity_humour, and its
+   floors are truth (a sound angle on its sourced fact), sources (a primary source), the beat (fit) and the whys (at
+   least 3 documented). It has no series floor and need not beat the day's top score: the order may place it anywhere
+   and never drops it, and its angles are always provoked in step 6. A wildcard under a floor is replaced by another
+   wildcard, never unmarked to pass.
 
 ## Where it runs in the Sunday procedure
 
@@ -61,7 +94,7 @@ go in `docs/plans/<Monday>-week/` (`story/` for the score's own, `probe/` for th
    return, with each option's own `funny` line as one more angle (lens `funny`), into `docs/plans/<Monday>-week/story/angles.json` as
    `{"options": {"<day>/<option id>": [{"lens", "text", "rests_on"}]}, "obvious": ["<the plain headline of each option>"]}`.
    Then `python3 scripts/post-pack/story_score.py angles <Monday> --provoke --judge --budget-usd 3`: it adds divergent
-   sparks (`provoke`, lane `angles`, the worn takes as cliches) for each hero day's top two only, and scores the whole
+   sparks (`provoke`, lane `angles`, the worn takes as cliches) for each hero day's top two and its wildcard only, and scores the whole
    pool blind in one batched judged `score`. Paid: about $0.15 a provoke and $0.30 reserved for each judged batch.
 7. **The soundness rule** is in the code: an angle counts only when its `rests_on` is quoted word for word from the
    option's sourced fact, the judge found it useful and specific enough, its humour targets no named individual, and on
@@ -94,8 +127,10 @@ go in `docs/plans/<Monday>-week/` (`story/` for the score's own, `probe/` for th
     `story_score.py council-record <Monday> --day <day> docs/plans/<Monday>-week/story/council-<day>-reply.md`, then
     `order` again. A chair that says unknown leaves the call his.
 12. **The board** (core step 7). `board_feed.py gate` refuses, from config `from`, an open option with no story score,
-    an open day out of the score's order, a hero under 3 sourced whys (code `story`) and an option under its floor
-    (code `story_floor`). Fix what it names and run it again; never edit a score by hand.
+    an open day out of the score's order, a hero under 3 sourced whys (code `story`), an option under its floor
+    (code `story_floor`) and an open hero day with no wildcard, or one with no kind, no one-line why_unexpected, no
+    `Wildcard: ` question or no distance read on its present words (code `wildcard`). Fix what it names and run it
+    again; never edit a score or a distance by hand.
 
 ## The cycle's touches (stages 0 to 2)
 
@@ -115,8 +150,9 @@ logged skipped, never done.
 
 ## Spend and exit 2
 
-- Paid steps are 6 (`angles --provoke --judge`), 8 (`humour`) and 11 (the council read, once cleared). Steps 2 to 5,
-  7, 9, 10 and 12 cost nothing. A normal Sunday is under $2.
+- Paid steps are the wildcard sparks (`divergent.py wildcard`, about $0.15 a day), 6 (`angles --provoke --judge`),
+  8 (`humour`) and 11 (the council read, once cleared). The wildcard's distance and steps 2 to 5, 7, 9, 10 and 12 cost
+  nothing. A normal Sunday is under $2.50.
 - Every paid call is reserved in the ledger before its transport is touched. It is refused past `--budget-usd` (pass
   3 unless Krish names another figure; never above `budget_usd`), past `spend.usd_per_day`, past
   `spend.divergent_ops_per_day`, and past the weekly divergent chain cap (`config/chain-cap.json`), which is checked
@@ -131,7 +167,8 @@ logged skipped, never done.
 
 One short block: how many candidates the floor refused and why; how many options were probed, with each unreadable
 source named apart from a story that could not hold the whys; each day's order and each option's total; each close
-call and whether the council read it or it stays "close call, your pick"; every step that exited 2 and what it
+call and whether the council read it or it stays "close call, your pick"; each day's wildcard, its kind, its why
+unexpected and its distance (or "skipped: not served", with the session's why unexpected standing); every step that exited 2 and what it
 skipped; and the ledger's spend against its budget.
 
 ## The lens brief (paste as each lens subagent's prompt)

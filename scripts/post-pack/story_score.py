@@ -59,6 +59,7 @@ STYLES = ROOT / 'config' / 'style-references.json'
 PLANS = ROOT / 'docs' / 'plans'
 SERVED = ('ok', 'pass', 'flagged')
 HERO = ('hero_mon', 'hero_wed', 'hero_fri')
+WILDCARD = 'wildcard'  # the day's wildcard on a hero day (ruling wildcard, Krish, 2026-11-26): its own type, read as a hero
 DAY_GROUPS = (('days', ('mon', 'wed', 'fri')),)
 
 
@@ -487,9 +488,18 @@ def choose_angle(angles, cfg=None):
 # Types, floors and totals
 
 
+def is_wildcard(day, main, o, cfg=None):
+    """Whether an option is the day's wildcard: a Monday, Wednesday or Friday option carrying a wildcard object (config
+    wildcard.days). Only the label is read here; what it says (why_unexpected, the spark) never reaches the scorer."""
+    cfg = cfg or RUBRIC
+    return bool(main) and day in (cfg.get('wildcard') or {}).get('days', ()) and isinstance((o or {}).get('wildcard'), dict)
+
+
 def option_type(day, main, o, cfg=None):
     """config type_rules, first match wins."""
     cfg = cfg or RUBRIC
+    if is_wildcard(day, main, o, cfg):
+        return WILDCARD
     if not main and ic.is_template(o):
         return 'offday_meme'
     if ic.is_good_news(o) or (not main and day == 'sat'):
@@ -565,7 +575,7 @@ def score_option(key, day, main, o, inputs=None, cfg=None, at=None):
     probe = (inputs.get('probes') or {}).get(str(view.get('id') or '').lower()) or (inputs.get('probes') or {}).get(_s(view.get('id')))
     reads = (inputs.get('reads') or {}).get(key) or {}
     judged = (inputs.get('judged') or {}).get(key) or {}
-    hero = tid in HERO
+    hero = tid in HERO or tid == WILDCARD
 
     axes, why = {}, {}
     axes['fit'], why['fit'] = fit_axis(view, main)
@@ -1241,6 +1251,8 @@ def cmd_angles(a, ideas, plans, ledger, poster, cap, kill, cfg):
         rows += [(k, s) for k, s in provisional.items() if k.startswith(day + '/') and (s['floors_failed'] or s['total'] is None)]
         rows.sort(key=lambda r: (bool(r[1]['floors_failed']), r[1]['total'] is None, -(r[1]['total'] or 0)))
         tops |= {k for k, _s in rows[:cfg['angle']['divergent']['per_hero_day']]}
+        # The day's wildcard is always provoked: its type leans on unique_angle, and it need not be in the day's top two.
+        tops |= {k for k, s in provisional.items() if k.startswith(day + '/') and s['type'] == WILDCARD}
     earlier = doc.get('pooled') or {}
     provoked = []
     for key, day, main, o in board(ideas):
