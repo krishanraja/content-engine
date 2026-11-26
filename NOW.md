@@ -34,6 +34,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-23","week_target":20,"current":1,"current_as_of":"2026-11-25","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (0 published, and 1 Growth carousels and Shorts that passed the 10/10 judges and went live, in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (5% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 1, against 20 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
+- The daily creative edition pipeline is implemented for local review. The cover can read a versioned snapshot and keep its last good edition through an upstream failure. (2026-11-26)
 - Story-arc cards make no prediction: where_this_goes now holds the landing, what the arc shows plus one open question ending in a question mark (compose prompt, card lint and arc score), and the lint refuses a forecast to a date, stated odds or confidence, and a landing with no question (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores). The score's forward_claim component is now landing, same weight; stored cards keep the field name and still read. (2026-11-25)
 - The 5 Whys is live (PR 970; Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores). The three venture_formats mandates are why-ladder mandates with THE BEAT, the claim_scoreboard and claims_due views are dropped, and control-center's pillar:creative_economy is live with the shared avoid list on all six pillars; all applied 2026-11-25 on Krish's yes and checked on the live rows. (2026-11-25)
 - The control plane carries no prediction machinery (Ruling, Krish, 2026-11-24: the signature format is the 5 Whys; get rid of everything that suggests predictions, calls, dated, odds or scores). The CALL, CALL_HORIZON and CLEAR_STANCE checks, the 19 Nov opt-in, the confidence guard, the fact gate's forecast set-asides, packages/contracts/src/call.ts, the scoreboard, the call-market and odds routes and the claims sweep and its two crons are gone, and every reader of venture_formats.mandate drops the old prediction close as it reads the row. (2026-11-24)
@@ -51,10 +52,10 @@ Older lines: `docs/history/2026-11-25-NOW-moved-2.md` (it names every earlier mo
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-25): none; the next composed arcs land on a question.
+- Next (2026-11-26): Claude reviews the pipeline and prepares the needs-krish draft pull request.
 - House close (2026-11-10): kit and ve close on the statement card, "Built to help you decide." (`docs/production/CLOSING.md`). Krish approved the engine change for Wed 11 Nov (`docs/plans/2026-11-11-wednesday/ve/engine-exceptions.json`). He hears the first cut with it at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
-- North Star check (2026-11-25): holds.
+- North Star check (2026-11-26): holds.
 
 ## Read next
 
