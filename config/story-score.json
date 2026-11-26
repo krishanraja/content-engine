@@ -399,7 +399,7 @@
   },
   "budget_usd": 10,
   "unit_costs": {
-    "_about": "Dollars reserved in the ledger before each call (.cache/story-score/spend.jsonl); the metered cost is recorded after. score_judge is the route's up-front estimate ($0.10) with headroom for up to 4 model calls at the model's price (commit 0 readiness, control-center api/_divergent.ts).",
+    "_about": "Dollars reserved in the week's ledger before each call (files.ledger). After a served divergent call the reservation is settled to the metered cost: the route's own cost figure when its answer gives one, else the chain's change over the call (divergent.chain_week) when that is more than the reservation, never less, since the chain may lag; with neither, the reservation stands and the call's metered field says so. A humour read keeps its reservation: the humour engine's answer names no cost. A settled cost over its reservation counts at once, so the next call is refused when it leaves no room. score_judge is the route's up-front estimate ($0.10) with headroom for up to 4 model calls at the model's price (commit 0 readiness, control-center api/_divergent.ts).",
     "provoke": 0.15,
     "score_judge": 0.3,
     "score_free": 0,
@@ -436,7 +436,7 @@
   },
   "edition": {"min": 6, "max": 10, "topics": [2, 4], "per_topic": 3},
   "files": {
-    "_about": "Where the story score keeps its working files, inside docs/plans/<Monday>-week/. The spend ledger is under the gitignored .cache/.",
+    "_about": "Where the story score keeps its working files, inside docs/plans/<Monday>-week/. The spend ledger is under the gitignored .cache/, one file per week ({week} is its Monday), so budget_usd and --budget-usd cap a week's run, not every week ever run; usd_per_day and divergent_ops_per_day are read from the same file. An explicit --ledger (the blind proof's .cache/proof/story-engine-v5/spend.jsonl) is read whole: the proof's $10 is for the whole proof.",
     "dir": "story",
     "scores": "scores.json",
     "angles": "story/angles.json",
@@ -444,6 +444,6 @@
     "judged": "story/judged.json",
     "probes": "story/probes.json",
     "council": "story/council.json",
-    "ledger": ".cache/story-score/spend.jsonl"
+    "ledger": ".cache/story-score/{week}.jsonl"
   }
 }
