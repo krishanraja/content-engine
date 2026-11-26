@@ -2065,7 +2065,10 @@ def story_findings(ideas, week, status=None, probes=None, cfg=None, before=None)
         own `whys` when it carries one);
       - story: one of a close call no council read decided whose card does not carry the close call (story_score
         close_call, shown on the board: never a silent pass);
-      - story_floor: an open option the floor refused or that fails one of its type's hard floors.
+      - story_floor: an open option the floor refused or that fails one of its type's hard floors;
+      - story: an open hero day with fewer than hero_floors.thin_week.min_passing options that pass every floor, unless
+        it is a thin week (ideas.json thin_week.<day>.regathered after one re-gather, at least thin_min passing, and
+        every option's card saying so in story_score.thin_week). The floors are never relaxed.
     status: board_feed option_status {key: status}, or None for a board never shown (every option open). An answered
     option is his: it is never checked, and a day with one is never checked for order (its presses name it by place).
     before: the week's ideas.json as it stood before a `days` re-run; an option on neither it nor the status is new, so
@@ -2117,6 +2120,19 @@ def story_findings(ideas, week, status=None, probes=None, cfg=None, before=None)
             opts = [o for o in (opts if isinstance(opts, list) else []) if isinstance(o, dict)]
             main = group == 'days'
             movable = [o for o in opts if not o.get('weekly')]
+            # Never an empty board, never a relaxed floor: an open hero day, every option scored, carries min_passing options
+            # that pass every floor, or a thin week says so on every card (config hero_floors.thin_week).
+            thin = (cfg.get('hero_floors') or {}).get('thin_week') or {}
+            if (main and day in ('mon', 'wed', 'fri') and thin and all(is_open(day, main, o) for o in movable)
+                    and all(isinstance(o.get('story_score'), dict) for o in movable)):
+                passing = sum(1 for o in movable if ss.passes(o.get('story_score')))
+                marked = ((ideas or {}).get('thin_week') or {}).get(day) if isinstance((ideas or {}).get('thin_week'), dict) else None
+                said = all(str((o.get('story_score') or {}).get('thin_week') or '').strip() for o in movable)
+                if passing < thin['min_passing'] and not (isinstance(marked, dict) and marked.get('regathered') is True
+                                                          and passing >= thin['thin_min'] and said):
+                    out.append({'code': 'story', 'ref': day, 'line': f'story: {day} carries {passing} option(s) that pass every floor; a hero day '
+                                f'carries {thin["min_passing"]}, or after one re-gather a thin week of {thin["thin_min"]} with the card saying so '
+                                '(ideas.json thin_week, then order); the floors are never relaxed'})
             if len(movable) < 2 or not all(is_open(day, main, o) for o in movable):
                 continue
             scores = {ss.key_of(day, o): o['story_score'] for o in movable if isinstance(o.get('story_score'), dict)}

@@ -3040,6 +3040,31 @@
           "how": "no unpinned model, no spend without his yes, the pod terminated on every path"
         }
       ]
+    },
+    {
+      "id": "floors-honest-and-hard",
+      "on": "2026-11-26",
+      "krish": "Newgate, 30th of November. On questions 1 and 3 I need your judgement in detail. I want a high-quality flexible engine that has learned from all its past mistakes and is upgraded now.",
+      "why": "Three story-score floors (a hero in a focus sector, a hero's primary source, an off-day short on the beat) had been demoted to notes because none cited a ruling, and one could not be met by a real board: the old primary-source rule failed 17 of 25 real heroes because original trade reporting never counted, and 0 of 26 hero options on the 16 and 23 Nov boards were in the creative or sports sectors. The older lesson is failure scripts-regressed-below-ai-music: caps that could be met by stripping names pushed the writer to game them.",
+      "means": "Every hard floor in config/story-score.json cites a ruling (his words and the date) or a recorded failure, passes on a realistic, honestly built board, and cannot be met by adding words without the fact changing. A floor with no source is a note and says unruled. The fit axis reads only the topic sentence that carries the fact, with named entities per sector and stuffing patterns as rows; a primary source is the actor's own site, a filing or official data host, or where the fact was first reported, never an aggregator; a thin week carries two passing options with a line on the card, and the floors are never relaxed.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "tests/story_floor_rules_test.py",
+          "contains": "def test_every_hard_floor_carries_a_ruling_or_a_failure",
+          "how": "no hard floor without a ruling or a failures.json id; a note says why it is not hard"
+        },
+        {
+          "file": "config/story-score.json",
+          "contains": "\"id\": \"floors_honest_and_hard\"",
+          "how": "the ruling, and each hard floor's ruling or failure field"
+        },
+        {
+          "file": "tests/story_score_test.py",
+          "contains": "def test_keyword_stuffing_never_earns_fit",
+          "how": "a sector word appended after the fact never lifts fit to a hero's floor"
+        }
+      ]
     }
   ]
 }
