@@ -88,7 +88,7 @@ it means for every stage and the rules that keep the learning honest are in
 | Half | Where | What it does |
 |---|---|---|
 | **The content engine** | `apps/control-plane/`, deployed as the Vercel project `content-engine` | collects and researches ideas, judges them with a blind panel, routes them to a subchannel, drafts and rewrites to the mandate, runs the final checks, cuts channel copy, builds production briefs, and keeps the ledger the engine learns from |
-| **Production** | `scripts/ve.py` (ve, the video engine), `scripts/quick-edit/` (the fallback), `apps/renderer/`; the Studio in `packages/` and `apps/runner/` | makes both cuts of each piece from Krish's takes, with their thumbnails and covers, and files them for posting by a person (carousels are Growth's, to `docs/CAROUSEL-STANDARD.md`); the Studio's hash-gated stations on his Windows machine are a separate route that is not how videos are made today |
+| **Production** | `scripts/ve.py` (ve, the video engine), `scripts/quick-edit/` (the fallback), `apps/renderer/`; the Studio in `packages/` and `apps/runner/` | makes both cuts of each piece from Krish's takes, with their thumbnails and covers, and every other asset (carousels, memes, Notes and each channel's captions, stills only from the v5 Library, `config/asset-routes.json`), and hands them to Growth to post in the piece manifest (Ruling, Krish, 2026-11-26; `docs/GROWTH-HANDOFF.md`); the Studio's hash-gated stations on his Windows machine are a separate route that is not how videos are made today |
 
 Control Center (`krishanraja/control-center`) is where Krish works; it reaches
 the engine through rewrites and reads the shared Supabase database directly.
