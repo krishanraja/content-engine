@@ -2302,7 +2302,7 @@
         },
         {
           "file": "docs/CAROUSEL-STANDARD.md",
-          "contains": "A generated cover shows the house robot or no robot at all",
+          "contains": "A generated cover shows no robot at all",
           "how": "the carousel standard every carousel maker follows, Growth included"
         }
       ]
