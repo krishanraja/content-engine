@@ -5235,6 +5235,18 @@ The caption styles ve can draw, picked per piece with brand.caption_theme; with 
 - `export { REGIONS as THEME_REGION } from '../captions/kit'`
 - `function ThemedCaption({ props, theme, frame = 0 }: { props: EngineRenderProps; theme: CaptionThemeName; frame?: number…`
 
+### `apps/renderer/src/engine/chrome/V5Outro.tsx`
+
+- `const V5_OUTRO_BARS`
+- `const V5_OUTRO_WORDS`
+- `const V5_OUTRO_MARK`
+- `const V5_OUTRO: Record<EngineRenderProps['aspect'], Shape>`
+- `const V5_OUTRO_TRACKS`
+- `function libraryEase(value: number): number`
+- `function v5OutroModel(props: EngineRenderProps, frame: number)`
+- `function v5OutroBars(props: EngineRenderProps, model: NonNullable<ReturnType<typeof v5OutroModel>>)`
+- `function V5Outro({ props, frame }: { props: EngineRenderProps; frame: number }): React.ReactElement | null`
+
 ### `apps/renderer/src/engine/chrome/WhyStep.tsx`
 
 - `interface WhyStepProps`
