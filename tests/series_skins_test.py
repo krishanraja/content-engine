@@ -39,6 +39,15 @@ import receipt  # noqa: E402
 import skins  # noqa: E402
 from skins import _kit  # noqa: E402
 
+
+def setUpModule():
+    import skins
+    from unittest.mock import patch
+    legacy = patch.object(skins, "LEGACY", True)
+    legacy.start()
+    unittest.addModuleCleanup(legacy.stop)
+
+
 try:
     from playwright.sync_api import sync_playwright
 except ImportError:  # pragma: no cover

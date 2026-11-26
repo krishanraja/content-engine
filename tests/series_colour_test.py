@@ -20,6 +20,15 @@ sys.path.insert(0, str(ROOT / 'scripts' / 'pages'))
 import brand  # noqa: E402
 import receipt  # noqa: E402
 
+
+def setUpModule():
+    import skins
+    from unittest.mock import patch
+    legacy = patch.object(skins, "LEGACY", True)
+    legacy.start()
+    unittest.addModuleCleanup(legacy.stop)
+
+
 # A week in which every day is named: Monday 9 November 2026 to Saturday 14 November 2026.
 WEEK = {'Monday': '2026-11-09', 'Tuesday': '2026-11-10', 'Wednesday': '2026-11-11',
         'Thursday': '2026-11-12', 'Friday': '2026-11-13', 'Saturday': '2026-11-14'}
