@@ -231,7 +231,7 @@
     "needs_explaining": "The humour engine needs more than one cultural or topical jump, or has missing context.",
     "template_ok": "idea_checks.template_problems is empty and the captions pass the kill list.",
     "goodnews_checks": "idea_checks.goodnews_findings finds nothing on the option.",
-    "steps_verifiable": "Every step is checked on the vendor's own documents.",
+    "steps_verifiable": "Every step in the option's steps ([{text, checked: <https vendor document>}]) is checked on the vendor's own documents; null when the option gives no steps.",
     "primary_source_own_domain": "The primary source is the actor's own domain or a filing.",
     "in_edition_week": "Dated inside the edition week."
   },
@@ -264,7 +264,7 @@
         {"check": "comic_reading", "op": "in", "value": ["supported", "ambiguous"], "reason": "a short leads on humour the engine can read"},
         {"check": "needs_explaining", "op": "==", "value": false, "reason": "a short's joke never needs explaining"},
         {"check": "probe_documented", "op": ">=", "value": 1, "reason": "a short rests on at least one documented why"},
-        {"axis": "fit", "op": ">=", "value": 4, "reason": "a short is on the beat"}
+        {"axis": "fit", "op": ">=", "value": 4, "hard": false, "reason": "a short is on the beat"}
       ]
     },
     "offday_meme": {
@@ -287,7 +287,7 @@
       "label": "Explainer or how-to (an off-day option with aim utility)",
       "weights": {"utility": 2.5, "mechanism": 1.5, "named_thing": 1.5, "fun_consume": 1.5, "fun_produce": 1, "fit": 1, "absurdity_humour": 1},
       "floors": [
-        {"check": "steps_verifiable", "op": "==", "value": true, "reason": "every step is checked on the vendor's own documents"}
+        {"check": "steps_verifiable", "op": "==", "value": true, "if_read": true, "reason": "every step is checked on the vendor's own documents"}
       ]
     },
     "edition_item": {
@@ -300,15 +300,16 @@
       ]
     }
   },
+  "floor_rows": "A floor is hard unless it says hard false: a hard floor that fails puts the option last and fails the Sunday gate (story_floor). A floor marked hard false is a note: reported beside the score (story_score.notes) and in the Sunday summary, never failing the gate or moving the order. The plan's hard floors are the series floors (a Monday's sourced money figure, a Wednesday's mechanism rung, a Friday's counter rung), the whys floors, a short's and a meme's humour, and the template and good-news checks; fit, a primary source and a short on the beat were added as floors without a ruling, so they are notes until Krish rules them hard. if_read: a floor whose value is not there (an explainer with no steps) is not read, never failed.",
   "hero_floors": {
     "types": ["hero_mon", "hero_wed", "hero_fri"],
     "floors": [
       {"check": "probe_documented", "op": ">=", "value": 3, "reason": "a hero holds at least three documented whys before he picks"},
       {"check": "probe_rungs", "op": ">=", "value": 5, "reason": "a hero reaches five whys, documented plus labelled inferred"},
       {"check": "landing_ok", "op": "==", "value": true, "reason": "a hero's ladder lands on an open question, no landing veto"},
-      {"axis": "fit", "op": ">=", "value": 7, "reason": "a hero's topic is in a focus sector"},
+      {"axis": "fit", "op": ">=", "value": 7, "hard": false, "reason": "a hero's topic is in a focus sector"},
       {"axis": "named_thing", "op": ">=", "value": 5, "reason": "a hero names one concrete thing"},
-      {"check": "primary_sources", "op": ">=", "value": 1, "reason": "a hero has at least one primary source"},
+      {"check": "primary_sources", "op": ">=", "value": 1, "hard": false, "reason": "a hero has at least one primary source"},
       {"check": "sound_angle", "op": "==", "value": true, "reason": "a hero has at least one sound angle"}
     ]
   },

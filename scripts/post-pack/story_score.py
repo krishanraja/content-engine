@@ -257,9 +257,11 @@ def primary_sources(view, main=True, cfg=None):
 
 
 def steps_verifiable(view):
+    """True when every step carries an https vendor document it was checked on, False when one does not, None when the
+    option gives no steps (not read: the explainer floor holds only steps that are there)."""
     steps = view.get('steps')
     if not isinstance(steps, list) or not steps:
-        return False
+        return None
     return all(isinstance(s, dict) and re.match(r'^https://', _s(s.get('checked') or s.get('source'))) for s in steps)
 
 
@@ -513,14 +515,23 @@ def floors_for(tid, cfg=None):
     return out
 
 
-def floors_failed(tid, axes, checks, cfg=None):
-    """The reasons of every floor the option does not hold; a floor whose value was not read fails, said as unread."""
-    out = []
+def floor_lines(tid, axes, checks, cfg=None):
+    """(failed, noted): the reasons of every hard floor the option does not hold (a floor whose value was not read
+    fails, said as unread, unless the floor is if_read), and of every floor marked hard false that it does not hold,
+    which are reported beside the score and never fail it."""
+    failed, noted = [], []
     for f in floors_for(tid, cfg):
         value = axes.get(f['axis']) if 'axis' in f else checks.get(f['check'])
+        if value is None and f.get('if_read'):
+            continue
         if not _holds(value, f['op'], f['value']):
-            out.append(f['reason'] + (' (not read)' if value is None else ''))
-    return out
+            (failed if f.get('hard', True) else noted).append(f['reason'] + (' (not read)' if value is None else ''))
+    return failed, noted
+
+
+def floors_failed(tid, axes, checks, cfg=None):
+    """The reasons of every hard floor the option does not hold (floor_lines)."""
+    return floor_lines(tid, axes, checks, cfg)[0]
 
 
 def total_of(tid, axes, cfg=None):
@@ -603,11 +614,11 @@ def score_option(key, day, main, o, inputs=None, cfg=None, at=None):
     weights = cfg['types'][tid]['weights']
     scored_axes = {a: axes.get(a) for a in weights}
     total, rw, unread = total_of(tid, scored_axes, cfg)
-    failed = floors_failed(tid, scored_axes, checks, cfg)
+    failed, noted = floor_lines(tid, scored_axes, checks, cfg)
     floored = key in set(inputs.get('floored') or ())
     humour_unread = fact_score is None and angle_part is None
     return {
-        'total': total, 'axes': scored_axes, 'type': tid, 'floors_failed': failed, 'unread': unread,
+        'total': total, 'axes': scored_axes, 'type': tid, 'floors_failed': failed, 'notes': noted, 'unread': unread,
         'floored': floored, 'humour_unread': humour_unread, 'read_weight': rw, 'checks': checks,
         'why': {a: why.get(a) for a in weights},
         'angle': {'id': chosen.get('id'), 'lens': chosen.get('lens'), 'text': chosen.get('text'), 'rule': choice['rule']} if chosen else None,
@@ -637,7 +648,7 @@ def compact(s):
     the Sunday gate (idea_checks.story_findings) needs to check the order again: floored, humour unread, the close call
     and the council read that decided a pair."""
     out = {k: s[k] for k in ('total', 'axes', 'type', 'floors_failed', 'rubric_version', 'at')}
-    for k in ('floored', 'humour_unread', 'close_call', 'council'):
+    for k in ('floored', 'humour_unread', 'close_call', 'council', 'notes'):
         if s.get(k):
             out[k] = s[k]
     return out

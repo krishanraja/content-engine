@@ -44,9 +44,12 @@ go in `docs/plans/<Monday>-week/` (`story/` for the score's own, `probe/` for th
 3. **The deterministic shortlist.** Write the floor's survivors into `ideas.json` as the day's draft options and run
    `python3 scripts/post-pack/story_score.py score <Monday> --floor docs/plans/<Monday>-week/story/floor.json`. At this
    stage it exits 2, since nothing is judged yet: read only `fit`, `named_thing` and the `primary_sources` check in
-   `docs/plans/<Monday>-week/scores.json`. Keep for each hero day the candidates that clear the hero floors those give (fit at least 7,
-   named_thing at least 5, at least one primary source), up to the day's option count plus two. A candidate that fails
-   them is replaced from the pool, not argued for.
+   `docs/plans/<Monday>-week/scores.json`. Keep for each hero day the candidates that clear the hero floor those give
+   (named_thing at least 5), best first by fit and with a primary source where the pool has one, up to the day's option
+   count plus two. A candidate under a hard floor is replaced from the pool, not argued for. Fit under 7, no primary
+   source and a short off the beat are notes (`notes` in the score, `hard: false` in config): say them in the summary,
+   they never fail the gate. An off-day explainer (aim `utility`) may carry `steps: [{"text", "checked": "<https
+   vendor document>"}]`; when it does, every step needs its checked link, and with no steps the floor is not read.
 4. **The whys probe**, below: one blind `whys-prober` subagent per hero candidate and per off-day short (a short's floor
    needs one documented why). It costs nothing.
 5. **The probe check.** `node --import tsx scripts/whys-probe-check.ts <Monday>`, and write its JSON, as printed, to
