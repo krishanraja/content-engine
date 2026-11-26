@@ -285,7 +285,8 @@ he ticks: `references/inspiration-piece.md`.
    guess named the use, and a `model_guess` is never quoted as his reading.
    Say the cue counts in your reply. When `empty` says the cues table is
    not there yet, say so and carry on. His rejections
-   are a floor only; never a score. Most ideas arrive
+   are a floor only; never a score, and never pass his cues to a judge.
+   Most ideas arrive
    with no series yet (`unassigned`: 77 of 89 on 21 Oct, when
    under.the.hood's pool was empty), so read `unassigned` too and place
    each idea in the series whose mandate it fits, or leave it out; the
