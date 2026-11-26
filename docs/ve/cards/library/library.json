@@ -16268,25 +16268,26 @@
       "width": 800,
       "height": 800,
       "safe_zones": {
+        "safe": "circle: the wordmark bounding box fits inside 86% of the inscribed circle",
         "content_box": [
-          60,
-          60,
-          680,
-          680
+          0,
+          0,
+          800,
+          800
         ]
       },
-      "layout": "icon",
-      "use": "Youtube avatar in the channel identity",
+      "layout": "avatar-wordmark",
+      "use": "YouTube profile picture: the square wordmark, centred so YouTube's circle never cuts a letter.",
       "rules": [
         "v5 palette and grain",
-        "Anton / Fraunces / DM Mono",
-        "D icon"
+        "S3h, the square wordmark with the D inside it",
+        "corners inside the circular crop with a 14% margin"
       ],
       "status": "proposed",
       "grid_profile": "profile-youtube-avatar",
       "slots": {},
       "slot_order": [],
-      "wordmarks": 0,
+      "wordmarks": 1,
       "day": "permanent",
       "lane": "permanent",
       "channels": [
@@ -16297,10 +16298,10 @@
       "leads": "Icon",
       "alignment": {
         "columns": {
-          "left-148": 148.0
+          "lockup-left": 153.27844562054625
         },
         "members": {
-          "d": "left-148"
+          "s3h": "lockup-left"
         }
       },
       "spacing_pairs": [],
@@ -17085,25 +17086,26 @@
       "width": 320,
       "height": 320,
       "safe_zones": {
+        "safe": "circle: the wordmark bounding box fits inside 86% of the inscribed circle",
         "content_box": [
-          24,
-          24,
-          272,
-          272
+          0,
+          0,
+          320,
+          320
         ]
       },
-      "layout": "icon",
-      "use": "Facebook avatar in the channel identity",
+      "layout": "avatar-wordmark",
+      "use": "Facebook profile picture: the square wordmark, centred so Facebook's circle never cuts a letter.",
       "rules": [
         "v5 palette and grain",
-        "Anton / Fraunces / DM Mono",
-        "D icon"
+        "S3h, the square wordmark with the D inside it",
+        "corners inside the circular crop with a 14% margin"
       ],
       "status": "proposed",
       "grid_profile": "profile-facebook-avatar",
       "slots": {},
       "slot_order": [],
-      "wordmarks": 0,
+      "wordmarks": 1,
       "day": "permanent",
       "lane": "permanent",
       "channels": [
@@ -17114,10 +17116,10 @@
       "leads": "Icon",
       "alignment": {
         "columns": {
-          "left-59.2": 59.2
+          "lockup-left": 61.311378248218496
         },
         "members": {
-          "d": "left-59.2"
+          "s3h": "lockup-left"
         }
       },
       "spacing_pairs": [],
