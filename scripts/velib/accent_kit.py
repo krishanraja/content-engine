@@ -1,10 +1,7 @@
-"""The accent kit: five warm colours for big moments, gradients and duotone cut-outs on series days only.
+"""Refuse the archived accent kit when a spec names one of its colours or effects.
 
-Krish approved on 2026-11-20 (the polish board): ember, ember_deep, plum, plum_deep and peach join the brand kit, scoped to
-big moments, gradients and duotone cut-outs on Monday, Wednesday and Friday only; off days are unchanged (mint, never
-coral). The values live once, in config/ve/brand-tokens.json accent_kit; config/brand-palette.json colour.accent names
-them. A spec names an accent only as the value of one of its role keys (accent_kit.role_keys: "ground" for a big moment,
-"gradient", "duotone"), never in hex (ve lint brand.no_hex) and never anywhere else. ve lint runs accent_problems.
+config/brand-palette.json keeps its original series-day roles under retired.accent.
+config/ve/brand-tokens.json retains the values and gives the kit no eligible days under v5.
 
     python3 -m velib.accent_kit SPEC.json        (from scripts/)
 """
@@ -69,7 +66,9 @@ def accent_problems(spec: dict) -> list[str]:
             out.append(f'brand.accent {path}: the accent kit ({", ".join(sorted(k["colours"]))}) is only the whole value of a '
                        f'{"/".join(k["role_keys"])} key (big moments, gradients, duotone cut-outs; Krish, 2026-11-20)')
             continue
-        if day is False:
+        if not k['days']:
+            out.append(f'brand.accent {path}: {text} is retired by the v5 palette')
+        elif day is False:
             out.append(f'brand.accent {path}: {text} on an off day; the accent kit is for Monday, Wednesday and Friday only, '
                        'and off days stay mint (Krish, 2026-11-20; config/brand-palette.json colour.off)')
     return out

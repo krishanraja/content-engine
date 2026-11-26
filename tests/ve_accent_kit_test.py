@@ -1,6 +1,4 @@
-"""The accent kit (Krish approved on 2026-11-20, the polish board): ember, ember_deep, plum, plum_deep and peach, for big
-moments, gradients and duotone cut-outs on Monday, Wednesday and Friday only. config/ve/brand-tokens.json accent_kit,
-config/brand-palette.json colour.accent, scripts/velib/accent_kit.py."""
+"""The v5 palette retires the 20 November series-day accents and keeps their approved values in the archive."""
 import json
 import sys
 import unittest
@@ -24,19 +22,19 @@ class AccentKit(unittest.TestCase):
         self.assertEqual({k: colours[k] for k in ('ember', 'ember_deep', 'plum', 'plum_deep', 'peach')},
                          {'ember': '#E2551F', 'ember_deep': '#B8321C', 'plum': '#3B1232', 'plum_deep': '#1E0918', 'peach': '#FFB48F'})
         palette = json.loads((ROOT / 'config' / 'brand-palette.json').read_text(encoding='utf-8'))
-        self.assertEqual(palette['colour']['accent']['days'], accent_kit.kit()['days'])
-        self.assertEqual(sorted(palette['colour']['accent']['roles']), sorted(accent_kit.kit()['roles']))
-        self.assertEqual(accent_kit.kit()['days'], ['monday', 'wednesday', 'friday'])
+        archived = palette['retired']['accent']
+        self.assertEqual(archived['days'], ['monday', 'wednesday', 'friday'])
+        self.assertEqual(sorted(archived['roles']), sorted(accent_kit.kit()['roles']))
+        self.assertNotIn('accent', palette['colour'])
+        self.assertEqual(accent_kit.kit()['days'], [])
 
-    def test_in_its_roles_on_a_series_day_it_passes(self):
-        good = spec('2026-11-27', moment={'ground': 'moment_gradient'}, cutout={'duotone': 'duotone_ember'})
-        self.assertEqual(accent_kit.accent_problems(good), [])
-        self.assertEqual([p for p in palette_lints(good) if 'accent' in p], [])
-
-    def test_on_an_off_day_it_is_refused(self):
-        off = spec('2026-11-26', moment={'ground': 'moment_gradient'})  # a Thursday
-        self.assertRegex(' '.join(accent_kit.accent_problems(off)), 'off day')
-        self.assertTrue([p for p in palette_lints(off) if p.startswith('brand.accent')])
+    def test_its_former_roles_are_refused_on_series_days_off_days_and_undated_specs(self):
+        for day in ('2026-11-27', '2026-11-26', None):
+            with self.subTest(day=day):
+                cut = spec(day, moment={'ground': 'moment_gradient'}, cutout={'duotone': 'duotone_ember'})
+                problems = [p for p in palette_lints(cut) if p.startswith('brand.accent')]
+                self.assertEqual(len(problems), 2)
+                self.assertTrue(all('retired' in p for p in problems), problems)
 
     def test_outside_its_roles_it_is_refused(self):
         for name, params in {'type in ember': {'colour': 'ember'}, 'a plum caption': {'caption': 'plum'}}.items():
