@@ -882,6 +882,17 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
                            'title_behind': bool((props.get('titleMoment') or {}).get('behind'))}
     if depth_problems:
         raise ValueError('; '.join(depth_problems))
+    # Impact zoom (Krish, 2026-11-26: "Zoom for impact ... classy and subtle rather than too aggressive"): a small push
+    # onto his face on the cut's most impactful words, on the take layer only, planned and measured by velib/impact.py
+    # from config/ve/impact-zoom.json. Planned before the keep-out, so the keep-out grows with the pushed face.
+    from . import impact as impact_mod  # noqa: PLC0415
+    planned = impact_mod.plan(spec, cut_id, rows, words, props, edl=edl, faces=faces, take_frame=take_frame, fps=FPS,
+                              report=report)
+    if planned:
+        props['impact'] = planned
+        impact_problems = impact_mod.problems(props)
+        if impact_problems:
+            raise ValueError('; '.join(impact_problems))
     # Nothing is drawn over his face (Krish, 2026-11-19: "the card generates over my face"): the face keep-out per beat from
     # the take's face track (faces: take -> its boxes, velib/keepout.py), and a refusal of anything compile places on it.
     from . import keepout  # noqa: PLC0415

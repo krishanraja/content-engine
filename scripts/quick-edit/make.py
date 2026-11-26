@@ -1612,7 +1612,7 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
         fw_out = 1080
         nr = len(runs_of(wins))
         g.append(f'[v0]split={1 + max(nr, 1)}[sp0]' + ''.join(f'[fcs{i}]' for i in range(max(nr, 1))))
-        g.extend(episode.framing_graph('sp0', 'sp', framing, cw, ch, cfg['face']))
+        g.extend(episode.framing_graph('sp0', 'sp', framing, cw, ch, cfg['face'], joins=cfg.get('_framing_joins') or (), fps=FPS))
         g.append(f"[sp]scale=1080:{round(ch * 1080 / cw)}:flags=lanczos,crop=1080:1920,unsharp=5:5:0.6[s1]")
         for i in range(max(nr, 1)):
             g.append(f"[fcs{i}]crop={bw}:{bh}:{bx}:{by},scale=1080:920:flags=lanczos,unsharp=5:5:0.5[fc{i}]")
@@ -1625,7 +1625,7 @@ def video_graph(cfg, asp, P, out, edited, total, wins, ws, crop, intro, end, mix
         fr = n
         n += 1
         sw = round(cw * 1080 / ch)
-        g.extend(episode.framing_graph('v0', 'spf', framing, cw, ch, cfg['face']))
+        g.extend(episode.framing_graph('v0', 'spf', framing, cw, ch, cfg['face'], joins=cfg.get('_framing_joins') or (), fps=FPS))
         g.append(f"[spf]scale={sw}:1080:flags=lanczos,unsharp=5:5:0.4[spk]")
         g.append(f"[{fr}:v]format=rgba[fr]")
         # The speaker eases aside as a picture comes in, and back as it goes.
@@ -1759,7 +1759,7 @@ def episode_extras(cfg, P, ws, wins, toks, tl):
     framing = cfg.get('_framing') or []
     said = {'captions_burned': cfg.get('captions', True) is not False, 'caption_lines': srt_text.count(' --> '),
             'chapters': lines, 'voice': cfg.get('voice') or 'plain',
-            'framings': {'push': sum(1 for *_, s in framing if s == episode.PUSH), 'close': sum(1 for *_, s in framing if s == episode.TIGHT)},
+            'framings': {'push': sum(1 for *_, s in framing if s == episode.PUSH), 'close': sum(1 for *_, s in framing if s in episode.IMPACT_SCALES)},
             'end_screen_from_s': round(tl['total_s'] - cfg['end_screen_s'], 2) if cfg.get('end_screen_s') else None}
     return said, warns, {'srt': srt_text, 'chapters': '\n'.join(lines) + '\n' if lines else None}
 
@@ -2529,13 +2529,30 @@ def main():
         a = find_loose(ws, e['start'])
         b = find_loose(ws, e['end'], after=ws[a[0]]['s']) if a else None
         if a and b:
-            emphasis.append((snap_to_join(max(0.0, ws[a[0]]['s'] - 0.1), ws[a[0]]['s'], segs), round(min(total, ws[b[1]]['e'] + 0.3), 3)))
+            # The impact push (config/ve/impact-zoom.json, as ve): from his word's onset, or the hidden cut just before it.
+            # Never on a stop word: it lands on the line's first content word, or the line keeps its framing.
+            on = episode.impact_onset([w['w'] for w in ws[a[0]:b[1] + 1]])
+            if on is None:
+                early.append(f'the emphasis "{e["start"]}" ... "{e["end"]}" holds only stop words, so that line keeps its framing')
+                continue
+            at = ws[a[0] + on]['s']
+            emphasis.append(episode.impact_window(snap_to_join(at, at, segs), ws[b[1]]['e'], total))
         else:
             early.append(f'the emphasis "{e["start"]}" ... "{e["end"]}" was not found in what he said, so that line keeps its framing')
+    emphasis, crowded = episode.spaced_impacts(emphasis, total=total)
+    for at, _end in crowded:
+        early.append(f'the emphasis at {at // 60:.0f}:{at % 60:05.2f} is closer than {episode.IMPACT["spacing"]["min_gap_s"]:g} s to '
+                     "another, starts before it has released, sits in the cut's first or last moments or is one too many "
+                     'for the minute, so that line keeps its framing')
+    cfg['_framing_joins'] = [g['off'] for g in segs[1:]]
     if cfg.get('reframe') or emphasis:
         # A join made by a cut row has its framing change first; a plain pause cut gives way to it.
         cfg['_framing'] = episode.framing_windows(segs if cfg.get('reframe') else segs[:1], total, emphasis,
                                                   prefer=removal_joins(segs, cuts) if cfg.get('reframe') else ())
+        # quick-edit's camera.impact row: ve's own measure of the pushes (velib/impact.py problems), and it fails the run.
+        impact_bad = episode.impact_problems(cfg['_framing'], total, joins=cfg['_framing_joins'], fps=FPS)
+        if impact_bad:
+            sys.exit('Impact zoom gate (camera.impact): ' + '; '.join(impact_bad[:6]))
         bare = bare_joins(segs, cfg['_framing'], wins, 1 / FPS) if cfg.get('reframe') else []
         if bare:
             early.append(f'{len(bare)} hidden cut(s) have no framing change and no picture over them, so a viewer may see the jump: '
