@@ -97,7 +97,7 @@ artwork: fill the slots, never move the frame, no per-piece look, no second rend
   floor. The manifest SPEC carries the passing receipt as `carousel_receipt`: a carousel that fails is not approvable.
 - Every asset kind Growth used to make, and the command and set that make it now: `config/asset-routes.json`.
   `python3 scripts/post-pack/asset_routes.py command <kind> --piece <piece> --out <folder>` prints it.
-- Not on this checkout yet (the Library lands from `library/gates-and-wiring`): stop and say "the v5 Library is not on
+- Not on this checkout (the Library is on main since #984; update the checkout): stop and say "the v5 Library is not on
   this checkout yet". A kind the routes list as a gap (a single meme image, a tall meme with its clip, a Notes image,
   a cover built into a cut) is not made another way: say so.
 - Imagery order: a licensed Commons photo of a named person in their own story (never beside an accusation against

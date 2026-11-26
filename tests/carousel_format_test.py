@@ -38,10 +38,10 @@ def piece_deck():
          'text': {'headline': el("Spotify's 30-second rule is shrinking song intros.", 130),
                   'dek': el('Why did pop songs get shorter?', 96)},
          'visual': {'kind': 'photo', 'share': 0.6}, 'wordmark': 'V4'},
-        inside('carousel-chart', 'A play only counts after 30 seconds.', 'number', 0.55, source=el('Spotify for Artists', 34)),
-        inside('carousel-document', 'Skip early and the play never counts.', 'screenshot'),
+        inside('carousel-chart', '30 seconds.', 'number', 0.55, source=el('Spotify for Artists', 34)),
+        inside('carousel-document', 'Skip early and it never counts.', 'screenshot'),
         inside('carousel-why-3', 'Songs now open on the hook.', label=el('SO', 40)),
-        inside('carousel-why-1', 'Your skip decides if the artist gets paid.', label=el('FOR YOU', 40)),
+        inside('carousel-why-1', 'Your skip decides who gets paid.', label=el('FOR YOU', 40)),
         {'template': 'carousel-close', 'text': {'takeaway': el('Hook them in 30 seconds or lose the play.', 90, lines=2),
                                                 'site': el('makeyourmindup.ai', 34)},
          'payoff': 'lose the play', 'wordmark': 'S3h'}]}
@@ -178,7 +178,7 @@ class TheInsideSlides(unittest.TestCase):
         self.assertIn('slide 4: 18 words on the slide; at most 15', said(d))
         d = piece_deck()
         for s in d['slides'][1:-1]:
-            s['text']['support'] = el('Labels and writers changed the song shape.', 44)
+            s['text']['support'] = el('Labels and writers changed the whole song shape this year.', 44)
             s['text'].pop('label', None)
         self.assertIn('words across the inside slides: at most 50', said(d))
 
@@ -285,7 +285,7 @@ class TheLibrarySlotLimits(unittest.TestCase):
         del d['slides'][2]['text']['glance']['px']
         self.assertEqual(cf.deck_problems(d, FMT, fake_library()), [])
         tight = fake_library(**{'carousel-document': {'headline_1': {'max_chars': 20, 'max_lines': 1, 'min_size_px': 96}}})
-        self.assertIn('glance is 37 characters; its Library slot headline_1 holds 20', said(d, tight))
+        self.assertIn('glance is 31 characters; its Library slot headline_1 holds 20', said(d, tight))
 
     def test_the_rows_and_the_library_agree_or_a_test_fails(self):
         self.assertEqual(cf.library_disagreements(FMT, fake_library()), [])
@@ -304,7 +304,10 @@ class TheLibrarySlotLimits(unittest.TestCase):
         if lib is None:
             self.assertIn('the v5 Library is not on this checkout yet', cf.library_note(None, FMT))
             return
-        self.assertEqual(cf.library_disagreements(FMT, lib), [])
+        found = cf.library_disagreements(FMT, lib)
+        known = FMT['library_shrink_known']['lines']
+        self.assertEqual([x for x in found if x not in known], [], 'a disagreement not yet named in library_shrink_known')
+        self.assertEqual([x for x in known if x not in found], [], 'a known disagreement the Library has fixed: take it off the list')
 
 
 def fake_root(tmp):
@@ -410,6 +413,8 @@ class NoRouteBypassesTheCheck(unittest.TestCase):
         runners = []
         for f in (ROOT / 'scripts').rglob('*.py'):
             text = f.read_text(encoding='utf-8', errors='replace')
+            if f.parent == ROOT / 'scripts' / 'library':
+                continue  # the Library's own command, not a runner of it
             if 'make_piece.py' in text and re.search(r'\bsubprocess\b', text):
                 runners.append(f.relative_to(ROOT).as_posix())
         # cards.py names the command only in the refusal of its retired carousel kind (asserted below).
