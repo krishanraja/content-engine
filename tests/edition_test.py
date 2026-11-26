@@ -5,6 +5,10 @@ docs/plans/2026-11-25-weekly-edition/DESIGN.md, approved with every recommendati
 config/weekly-edition.json is held to its shape here (C3), scripts/edition/edition.py is run on a fixture week (C4: the
 week of 9 Nov 2026, the dry run's week, written by hand in tests/fixtures/edition/week-2026-11-09/, its news invented),
 and scripts/weekly_edition.py and .github/workflows/weekly-edition.yml are held to the run's walls (C5).
+
+The news comes from the week's daily hub editions (26 Nov 2026: the edition reads the hub pipeline's rows and runs no
+gathering of its own), under the hub's subsectors. The subsectors are read here from the fixture's copy of
+config/hub-sources.json, which the hub pipeline brings, and the copy is held to the real file once it is here.
 """
 import copy
 import datetime as dt
@@ -29,6 +33,9 @@ import weekly_edition as we  # noqa: E402
 FIXTURE = ROOT / 'tests' / 'fixtures' / 'edition' / 'week-2026-11-09'
 CONFIG = json.loads((ROOT / 'config' / 'weekly-edition.json').read_text(encoding='utf-8'))
 BEAT = json.loads((ROOT / 'config' / 'beat.json').read_text(encoding='utf-8'))
+REAL_HUB_SOURCES = ed.HUB_SOURCES_PATH
+ed.HUB_SOURCES_PATH = FIXTURE / 'hub-sources.json'
+HUB = json.loads(ed.HUB_SOURCES_PATH.read_text(encoding='utf-8'))
 WORKFLOW = (ROOT / '.github' / 'workflows' / 'weekly-edition.yml').read_text(encoding='utf-8')
 MONDAY = dt.date(2026, 11, 9)
 SATURDAY = '2026-11-14'
@@ -50,6 +57,14 @@ def problems(d, kill=CLEAN):
     return ed.check(d, kill=kill)['problems']
 
 
+def cli(*args, encoding='utf-8'):
+    """scripts/edition/edition.py's command line, run as its own process, reading the fixture's subsectors."""
+    code = ('import pathlib, sys; sys.path.insert(0, "scripts/edition"); import edition as ed; '
+            'ed.HUB_SOURCES_PATH = pathlib.Path(sys.argv[1]); sys.exit(ed.main(sys.argv[2:]))')
+    return subprocess.run([sys.executable, '-c', code, str(FIXTURE / 'hub-sources.json'), *args], cwd=ROOT,
+                          capture_output=True, text=True, encoding=encoding)
+
+
 class TheSettings(unittest.TestCase):
     """C3: config/weekly-edition.json. A setting is a row there, never code."""
 
@@ -67,28 +82,43 @@ class TheSettings(unittest.TestCase):
         self.assertEqual((w['news_item']['min_sentences'], w['news_item']['max_sentences']), (1, 2))
         self.assertEqual((w['total']['min_words'], w['total']['max_words']), (700, 1000))
         self.assertEqual((CONFIG['news']['min_items'], CONFIG['news']['max_items'], CONFIG['news']['send_min_items']), (6, 10, 4))
+        self.assertEqual(CONFIG['news']['per_topic_max'], 2)
+        self.assertEqual((CONFIG['news']['from_hub']['route'], CONFIG['news']['from_hub']['table']),
+                         ('GET /api/board/<Monday>/edition/news', 'hub_snapshots'))
         self.assertEqual((CONFIG['pieces']['min'], CONFIG['pieces']['max'], CONFIG['pieces']['days']), (1, 3, ['mon', 'wed', 'fri']))
         self.assertEqual(set(CONFIG['pieces']['day_words']), set(CONFIG['pieces']['days']))
         self.assertEqual(CONFIG['good_news'], {**CONFIG['good_news'], 'topic': 'Good news', 'max_items': 3})
         self.assertEqual(CONFIG['news_window']['days'], 7)
         self.assertEqual(CONFIG['news_window']['ends'], {'day': 'fri', 'time': '12:00', 'timezone': 'America/New_York'})
 
-    def test_the_topic_heads_are_read_from_the_beat_by_key_never_copied(self):
+    def test_the_topic_heads_are_the_hubs_subsectors_read_by_key_never_copied(self):
         th = CONFIG['topic_heads']
-        self.assertEqual((th['from'], th['list'], th['key'], th['label']), ('config/beat.json', 'focus_sectors', 'sector', 'label'))
+        self.assertEqual((th['from'], th['list'], th['key'], th['label']), ('config/hub-sources.json', 'subsectors', 'key', 'label'))
+        # Every room the hub has is in the edition, Sport among them, until a key is put in leave_out.
+        self.assertEqual(th['leave_out'], [])
         heads = ed.topic_heads()
-        self.assertEqual([h['key'] for h in heads[:-1]], [row['sector'] for row in BEAT['focus_sectors']])
-        self.assertEqual([h['label'] for h in heads[:-1]], [row['label'] for row in BEAT['focus_sectors']])
+        self.assertEqual([h['key'] for h in heads[:-1]], [row['key'] for row in HUB['subsectors']])
+        self.assertEqual([h['label'] for h in heads[:-1]], [row['label'] for row in HUB['subsectors']])
         self.assertEqual(heads[-1], {'key': 'good_news', 'label': 'Good news'})
         text = json.dumps(CONFIG)
-        for row in BEAT['focus_sectors']:
-            self.assertNotIn(row['label'], text, 'a head is read from config/beat.json, never copied into the edition config')
+        for row in HUB['subsectors']:
+            self.assertNotIn(row['label'], text, 'a head is read from config/hub-sources.json, never copied into the edition config')
         avoid = {row['label'] for row in BEAT['avoid']} | {BEAT['enterprise']['label']}
         self.assertFalse(avoid & set(ed.head_labels()))
-        # A sector that joins the beat is a head at once.
-        more = copy.deepcopy(BEAT)
-        more['focus_sectors'].append({'sector': 'sport', 'label': 'Sport', 'keywords': ['sport']})
-        self.assertIn('Sport', ed.head_labels(CONFIG, more))
+        # A subsector the hub adds is a head at once.
+        more = copy.deepcopy(HUB)
+        more['subsectors'].append({'key': 'theatre', 'label': 'Theatre'})
+        self.assertIn('Theatre', ed.head_labels(CONFIG, more))
+
+    def test_without_the_hubs_file_the_edition_says_the_hub_merges_first(self):
+        with tempfile.TemporaryDirectory() as t:
+            with self.assertRaisesRegex(ed.EditionError, 'the hub pipeline .* merges before'):
+                ed.hub_sources(Path(t) / 'hub-sources.json')
+
+    @unittest.skipUnless(REAL_HUB_SOURCES.is_file(), 'config/hub-sources.json arrives with the hub pipeline (hub/daily-pipeline)')
+    def test_the_fixtures_subsectors_are_the_hubs_own(self):
+        real = json.loads(REAL_HUB_SOURCES.read_text(encoding='utf-8'))
+        self.assertEqual([(r['key'], r['label']) for r in real['subsectors']], [(r['key'], r['label']) for r in HUB['subsectors']])
 
     def test_the_link_tags_are_growths_edition_route(self):
         links = CONFIG['links']
@@ -145,7 +175,8 @@ class TheDates(unittest.TestCase):
 
 
 class Gather(unittest.TestCase):
-    """C4 gather, offline: the fixture week's records, through the same read paths the run uses."""
+    """C4 gather, offline: the fixture week's records and its daily hub editions, through the same read paths the run
+    uses."""
 
     def setUp(self):
         self.read = ed._fixture_reader(FIXTURE)
@@ -161,20 +192,43 @@ class Gather(unittest.TestCase):
         # Growth's own posted link joins the piece's links once.
         self.assertIn('https://example.org/video/wed-5-minutes', [x['href'] for x in g['pieces'][1]['links']])
         self.assertEqual(len(g['good_news']), 3)
+        # The hub's items, under its subsectors in the hub's order, the most covered first.
         self.assertEqual([(c['topic'], c['id'][-2:]) for c in g['candidates']], [
-            ('Music', '01'), ('Film, TV and streaming', '04'), ('Games', '06'), ('Creators and creator tech', '08'), ('Art and design', '10')])
-        self.assertEqual(g['left_out'], {'off_beat': 4, 'outside_window': 1, 'a_piece': 1, 'repeat': 1})
+            ('Music', '02'), ('Music', '10'), ('Film & TV', '03'), ('Gaming', '04'), ('Gaming', '12'), ('Sport', '05'),
+            ('Publishing & Media', '06'), ('Art & Design', '07')])
+        self.assertEqual(g['left_out'], {'outside_window': 2, 'avoid_list': 1, 'no_subsector': 1, 'unreadable': 1, 'repeat': 1})
         self.assertEqual(g['heads'], ed.head_labels())
+        self.assertEqual(g['per_topic_max'], 2)
+        self.assertEqual(g['hub'], {'from': '2026-11-06', 'to': '2026-11-13', 'days_read': ['2026-11-06', '2026-11-09', '2026-11-10', '2026-11-11', '2026-11-13'],
+                                    'days_missing': ['2026-11-07', '2026-11-08', '2026-11-12']})
+        # The same story on two days, its address spelt two ways, is one candidate: the most outlets any day counted, both days.
+        first = g['candidates'][0]
+        self.assertEqual((first['coverage'], first['days'], first['report_url'], first['report_source']),
+                         (6, ['2026-11-09', '2026-11-10'], 'https://example.org/trade/label-licence', 'Example Trade'))
+        self.assertEqual(set(first), {'id', 'topic', 'subsector', 'headline', 'dek', 'why', 'report_source', 'report_url', 'date', 'coverage', 'days'})
+        self.assertIn('never its source', g['rule'])
         self.assertEqual(g['library']['draft'], '3 Posts/2026-11-14 Sat edition - makeyourmindup weekly/0 Publish/edition.draft.json')
 
-    def test_the_avoid_list_refuses_outright_and_a_focus_sector_is_needed(self):
-        self.assertFalse(ed.beat_of('Data breach at a streaming service')['on'])
-        self.assertFalse(ed.beat_of('Lawmakers debate a new AI regulation bill')['on'])
-        self.assertFalse(ed.beat_of('Enterprise copilot lifts office productivity')['on'])
-        self.assertFalse(ed.beat_of('Quarterly earnings beat forecasts at a chip maker')['on'])
-        self.assertEqual(ed.beat_of('A label licenses its catalogue to an AI music app')['label'], 'Music')
+    def test_the_beats_avoid_list_still_refuses_a_hub_story_outright(self):
+        self.assertIn('security', ed.avoid_of('Data breach at a streaming service'))
+        self.assertIn('regulation', ed.avoid_of('Lawmakers debate a new AI regulation bill'))
+        self.assertIsNone(ed.avoid_of('A label licenses its catalogue to an AI music app'))
         # The beat's own exception phrases: job security is not a security story.
-        self.assertTrue(ed.beat_of('Musicians ask about job security as AI songs chart')['on'])
+        self.assertIsNone(ed.avoid_of('Musicians ask about job security as AI songs chart'))
+
+    def test_a_subsector_left_out_is_no_head_and_its_stories_no_candidates(self):
+        cfg = copy.deepcopy(CONFIG)
+        cfg['topic_heads']['leave_out'] = ['sport']
+        self.assertNotIn('Sport', ed.head_labels(cfg))
+        g = ed.gather(MONDAY, self.read, cfg)
+        self.assertNotIn('Sport', [c['topic'] for c in g['candidates']])
+        self.assertEqual((len(g['candidates']), g['left_out']['no_subsector']), (7, 2))
+
+    def test_a_hub_answer_with_no_rows_gives_no_candidates_and_says_every_day_missing(self):
+        start, end = ed.news_window(MONDAY)
+        days = [f'2026-11-{d:02d}' for d in range(6, 14)]
+        candidates, left_out, hub = ed.hub_candidates({'from': days[0], 'to': days[-1], 'days': [], 'missing': days}, start, end, CONFIG)
+        self.assertEqual((candidates, sum(left_out.values()), hub['days_read'], hub['days_missing']), ([], 0, [], days))
 
     def test_a_week_with_a_piece_not_live_sends_with_what_went_live_and_one_with_none_holds(self):
         view = json.loads((FIXTURE / 'view.json').read_text(encoding='utf-8'))
@@ -194,12 +248,10 @@ class Gather(unittest.TestCase):
     def test_the_command_line_reads_a_fixture(self):
         with tempfile.TemporaryDirectory() as t:
             out = Path(t) / 'gathered.json'
-            run = subprocess.run([sys.executable, 'scripts/edition/edition.py', 'gather', '--monday', '2026-11-09', '--fixture', str(FIXTURE), '--out', str(out)],
-                                 cwd=ROOT, capture_output=True, text=True, encoding='utf-8')
+            run = cli('gather', '--monday', '2026-11-09', '--fixture', str(FIXTURE), '--out', str(out))
             self.assertEqual(run.returncode, 0, run.stderr)
-            self.assertEqual(len(json.loads(out.read_text(encoding='utf-8'))['candidates']), 5)
-            self.assertEqual(subprocess.run([sys.executable, 'scripts/edition/edition.py', 'gather', '--monday', '2026-11-10', '--fixture', str(FIXTURE), '--out', str(out)],
-                                            cwd=ROOT, capture_output=True, text=True).returncode, 2)
+            self.assertEqual(len(json.loads(out.read_text(encoding='utf-8'))['candidates']), 8)
+            self.assertEqual(cli('gather', '--monday', '2026-11-10', '--fixture', str(FIXTURE), '--out', str(out)).returncode, 2)
 
 
 class Links(unittest.TestCase):
@@ -306,13 +358,23 @@ class Check(unittest.TestCase):
         def with_items(n):
             d = draft()
             item = section(d, 'news')['groups'][0]['items'][0]
-            section(d, 'news')['groups'] = [{'topic': 'Music', 'items': [copy.deepcopy(item) for _ in range(n)]}]
+            labels = [row['label'] for row in HUB['subsectors']]
+            section(d, 'news')['groups'] = [{'topic': labels[i // 2], 'items': [copy.deepcopy(item) for _ in range(min(2, n - i))]}
+                                            for i in range(0, n, 2)]
             return ed.check(d, kill=CLEAN)
         self.assertTrue(any('at most 10' in p for p in with_items(11)['problems']))
         self.assertTrue(any('at least 4' in p for p in with_items(3)['problems']))
         five = with_items(5)
         self.assertFalse(any('items' in p for p in five['problems']), five['problems'])
         self.assertTrue(any('under the 6' in w for w in five['warnings']))
+
+    def test_at_most_two_items_a_subsector(self):
+        d = draft()
+        music = section(d, 'news')['groups'][0]
+        music['items'] = [copy.deepcopy(music['items'][0]) for _ in range(3)]
+        self.assertIn('news Music: 3 items; at most 2 a subsector', problems(d))
+        music['items'].pop()
+        self.assertFalse(any('a subsector' in p for p in problems(d)))
 
     def test_a_package_cannot_claim_checks_it_did_not_pass(self):
         d = draft()
@@ -371,7 +433,7 @@ class RenderAndPackage(unittest.TestCase):
             out = Path(t) / 'pack'
             ed.package(draft(), out, kill=CLEAN)
             path = out / '0 Publish' / 'edition.draft.json'
-            run = lambda *a: subprocess.run([sys.executable, 'scripts/edition/edition.py', 'check', str(path), *a], cwd=ROOT, capture_output=True, text=True, encoding='utf-8')  # noqa: E731
+            run = lambda *a: cli('check', str(path), *a)  # noqa: E731
             if shutil.which('node'):
                 self.assertEqual(run('--date', SATURDAY).returncode, 0, run('--date', SATURDAY).stdout)
             wrong = run('--date', '2026-11-21')

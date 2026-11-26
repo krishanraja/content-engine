@@ -1,5 +1,5 @@
 {
-  "_about": "The weekly edition, as rows (Krish, 2026-11-25: one email a week, \"makeyourmindup weekly\", every Saturday at 08:00 New York; the design is growth-makeyourmindup docs/plans/2026-11-25-weekly-edition/DESIGN.md, approved by him that day with every recommendation). It carries the week's live Monday, Wednesday and Friday pieces, then six to ten news items from the creative industries, each checked against its primary source, then a Pass it on line and one closing line. Read by scripts/edition/edition.py (gather, check, render, package), scripts/weekly_edition.py (the Friday run's guard), apps/control-plane/api/board/_edition.ts (the Saturday card and its one press, Approve for send) and tests/edition_test.py, which holds this file to its shape. A setting is a row here, never code. The package it describes is content-engine-edition/1, the contract shared with growth-makeyourmindup's Substack step: change that only in both places at once.",
+  "_about": "The weekly edition, as rows (Krish, 2026-11-25: one email a week, \"makeyourmindup weekly\", every Saturday at 08:00 New York; the design is growth-makeyourmindup docs/plans/2026-11-25-weekly-edition/DESIGN.md, approved by him that day with every recommendation). It carries the week's live Monday, Wednesday and Friday pieces, then six to ten news items from the creative industries, chosen from the week's daily hub editions and each checked against its primary source, then a Pass it on line and one closing line. Read by scripts/edition/edition.py (gather, check, render, package), scripts/weekly_edition.py (the Friday run's guard), apps/control-plane/api/board/_edition.ts (the Saturday card and its one press, Approve for send) and tests/edition_test.py, which holds this file to its shape. A setting is a row here, never code. The package it describes is content-engine-edition/1, the contract shared with growth-makeyourmindup's Substack step: change that only in both places at once.",
   "schema": "content-engine-weekly-edition-config/1",
   "name": "makeyourmindup weekly",
   "package_schema": "content-engine-edition/1",
@@ -46,14 +46,21 @@
     "min_items": 6,
     "max_items": 10,
     "send_min_items": 4,
-    "rule": "Six to ten items. An item whose primary source cannot be found, or does not say what the item says, is dropped, never softened; the edition still goes with at least four (DESIGN.md section 4, What stops a send)."
+    "per_topic_max": 2,
+    "rule": "Six to ten items, at most two a subsector: the week in a few stories a subsector. An item whose primary source cannot be found, or does not say what the item says, is dropped, never softened; the edition still goes with at least four (DESIGN.md section 4, What stops a send).",
+    "from_hub": {
+      "route": "GET /api/board/<Monday>/edition/news",
+      "table": "hub_snapshots",
+      "rule": "Candidates are the week's daily hub items (the hub pipeline's one snapshot a day, the same items makeyourmindup.ai shows), read inside the news window, the same story once: the edition runs no gathering of its own (26 Nov 2026). A hub item is where an item may come from, never its source: its address is the report the hub's writer read, so each item is still checked against its own primary source, and one whose source cannot be found or does not say what the item says is dropped (DESIGN.md section 3)."
+    }
   },
   "topic_heads": {
-    "from": "config/beat.json",
-    "list": "focus_sectors",
-    "key": "sector",
+    "from": "config/hub-sources.json",
+    "list": "subsectors",
+    "key": "key",
     "label": "label",
-    "rule": "Each news group's topic is the label of one of the beat's focus sectors, read from config/beat.json by its key and in its order, never copied here, so a sector that joins the beat (sport, once it does) is a head at once. The beat's avoid list is never a head."
+    "leave_out": [],
+    "rule": "Each news group's topic is the label of one of the hub's subsectors, the rooms of makeyourmindup.ai, read from config/hub-sources.json by its key and in its order, never copied here, so the edition and the site cut the week the same way (Krish approved the hub on 26 Nov 2026: \"just keep it focused on the subsectors\"). A subsector key in leave_out is no head and its stories are no candidates: empty, so every room the hub has is in the edition, the sport room among them (it is not one of the beat's focus sectors). The beat's avoid list (config/beat.json) still refuses an item outright."
   },
   "good_news": {
     "topic": "Good news",
