@@ -55,11 +55,15 @@ export function draftPath(piece: Body): string | null {
   return pack ? `3 Posts/${pack}/0 Publish/manifest.draft.json` : null
 }
 
+/** The piece manifest's schema ids: /1, and /1.1 when a channel carries a title (scripts/post-pack/piece_manifest.py). */
+export const MANIFEST_SCHEMAS = ['content-engine-piece-manifest/1', 'content-engine-piece-manifest/1.1']
+
 /** A draft's bytes read as the board shows it, or null when it is not a draft of this piece in Growth's shape. */
 export function parseDraft(bytes: Uint8Array, pieceId: string): Draft | null {
   let d: unknown
   try { d = JSON.parse(Buffer.from(bytes).toString('utf8')) } catch { return null }
-  if (!isObj(d) || d.schema !== 'content-engine-piece-manifest/1' || 'approval_sha256' in d) return null
+  // Minor version 1.1 (2026-11-26): an optional per-channel title from the captions step; the board reads both.
+  if (!isObj(d) || !MANIFEST_SCHEMAS.includes(String(d.schema)) || 'approval_sha256' in d) return null
   if (String(d.piece_id).toLowerCase() !== pieceId.toLowerCase()) return null
   const assets = (Array.isArray(d.assets) ? d.assets : []).filter(isObj)
     .filter(a => typeof a.name === 'string' && typeof a.drive_id === 'string' && /^[A-Za-z0-9_-]{10,100}$/.test(a.drive_id) && typeof a.sha256 === 'string' && SHA.test(a.sha256))

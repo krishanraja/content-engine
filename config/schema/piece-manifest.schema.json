@@ -14,7 +14,11 @@
   ],
   "properties": {
     "schema": {
-      "const": "content-engine-piece-manifest/1"
+      "enum": [
+        "content-engine-piece-manifest/1",
+        "content-engine-piece-manifest/1.1"
+      ],
+      "description": "Minor version 1.1 (2026-11-26) adds an optional per-channel title, written by content-engine's captions step (scripts/post-pack/channel_captions.py). A manifest whose channels carry no title stays /1. Growth's verifier must accept /1.1 before a titled manifest is dispatched to it."
     },
     "piece_id": {
       "type": "string",
@@ -153,9 +157,39 @@
                 "description": "Where in the cut the same cover is built in as its closing frames, or null."
               }
             }
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Schema 1.1 only: the channel's post title (a YouTube title), written with the words at make time."
           }
         }
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "schema": {
+            "const": "content-engine-piece-manifest/1"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "channels": {
+            "additionalProperties": {
+              "not": {
+                "required": [
+                  "title"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }
