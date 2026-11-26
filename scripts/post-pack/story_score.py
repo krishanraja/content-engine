@@ -79,22 +79,48 @@ def now_iso(now=None):
 # What the scorer may see of an option
 
 
-def _drop(node, drop):
+def _strip_rules(cfg):
+    spec = (cfg.get('blind_view') or {}).get('strip_text') or {}
+    return ([re.compile(p, re.I) for p in spec.get('patterns') or []],
+            [re.compile(p, re.I) for p in spec.get('drop_sentences_matching') or []])
+
+
+def strip_text(text, cfg=None):
+    """The words without provenance wording (config blind_view.strip_text): what he saved, asked for or improved is
+    taken out where it stands, then a sentence still saying so is dropped. A string no rule touches is returned as it
+    was."""
+    cfg = cfg or RUBRIC
+    if not isinstance(text, str):
+        return text
+    subs, drops = _strip_rules(cfg)
+    if not any(p.search(text) for p in subs + drops):
+        return text
+    t = text
+    for p in subs:
+        t = p.sub('', t).strip()
+    if any(p.search(t) for p in drops):
+        t = ' '.join(s for s in ic.sentences(t) if not any(p.search(s) for p in drops))
+    t = re.sub(r'\s{2,}', ' ', t).strip(' ,;:-')
+    return t[:1].upper() + t[1:]
+
+
+def _clean(node, drop, cfg):
     if isinstance(node, dict):
-        return {k: _drop(v, drop) for k, v in node.items() if k not in drop}
+        return {k: _clean(v, drop, cfg) for k, v in node.items() if k not in drop}
     if isinstance(node, list):
-        return [_drop(v, drop) for v in node]
-    return node
+        return [_clean(v, drop, cfg) for v in node]
+    return strip_text(node, cfg)
 
 
 def blind_view(option, cfg=None):
-    """The option as the scorer and every blind judge see it: config blind_view.keep fields only, and never a
-    drop_nested key at any depth. A copy: the option itself is untouched."""
+    """The option as the scorer and every blind judge see it: config blind_view.keep fields only, never a drop_nested
+    key at any depth, and no provenance wording in any string it keeps (strip_text). A copy: the option itself is
+    untouched."""
     cfg = cfg or RUBRIC
     spec = cfg['blind_view']
     keep, drop = set(spec['keep']), set(spec['drop_nested'])
     o = option if isinstance(option, dict) else {}
-    return {k: _drop(v, drop) for k, v in o.items() if k in keep}
+    return {k: _clean(v, drop, cfg) for k, v in o.items() if k in keep}
 
 
 def key_of(day, o):

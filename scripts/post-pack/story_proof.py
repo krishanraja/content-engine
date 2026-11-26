@@ -451,11 +451,11 @@ def run(week, arm, *, dry=False, budget_usd=None, plans=None, cache=None, poster
 
 
 def strip_house(text, cfg=None):
-    """The words without the board's own labels: whole sentences that talk about the board are dropped, and a house
-    label is taken out wherever it stands."""
+    """The words without provenance or the board's own labels: the blind view's rules first (story_score.strip_text),
+    then whole sentences that talk about the board are dropped, and a house label is taken out wherever it stands."""
     cfg = cfg or CFG
     c = cfg['card']
-    text = str(text or '').strip()
+    text = ss.strip_text(str(text or '').strip())
     for p in c.get('strip_patterns') or []:
         text = re.sub(p, '', text, flags=re.I).strip()
     drop = [re.compile(p, re.I) for p in c['drop_sentences_matching']]
