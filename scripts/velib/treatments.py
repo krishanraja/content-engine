@@ -22,7 +22,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 BANK_PATH = ROOT / 'config' / 've' / 'treatments.json'
-ROLES = ('hook', 'anchor', 'bridge', 'pivot', 'payoff', 'call')
+ROLES = ('hook', 'anchor', 'bridge', 'pivot', 'payoff', 'why', 'landing')
 STILL_KINDS = ('cover', 'carousel', 'notes_image', 'meme')
 # Which still treatment needs which content; a still without it never gets it.
 STILL_NEEDS = {'subject-lift': 'face', 'still-duotone': 'photo', 'still-glow': 'number', 'still-sweep': 'receipt'}

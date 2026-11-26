@@ -89,7 +89,8 @@ TRACK_FIELDS = (
 # days: the series days whose weekly rotation the track is in ('mon', 'wed', 'fri'); carousel: the off-day carousel
 # group it plays over ('good_news' or 'tips'). Ruling (Krish, 2026-11-17): series music rotates week by week, treated
 # the same way every time; good-news carousels get funky house, advice and tips carousels a gym track.
-OPTIONAL_FIELDS = ('loopable', 'drive_file_id', 'for', 'beats', 'days', 'carousel')
+# main: the track tried first for every video (main_first; Krish, 2026-11-26).
+OPTIONAL_FIELDS = ('loopable', 'drive_file_id', 'for', 'beats', 'days', 'carousel', 'main')
 SERIES_DAYS = ('mon', 'wed', 'fri')
 CAROUSEL_GROUPS = ('good_news', 'tips')
 LEVEL_KEYS = ('intro_lufs', 'bed_lufs', 'outro_lufs', 'ramp_down_s', 'ramp_up_s', 'final_integrated_lufs', 'tolerance_lu', 'max_true_peak_dbtp')
@@ -298,11 +299,23 @@ def day_pool(data, when):
     return pool[at:] + pool[:at]
 
 
+def main_first(turn, data):
+    """The main track first, then the rest in their order. Ruling (Krish, 2026-11-26): Four on the Funky Flour is "the
+    new main track behind my videos", so an approved track marked "main" is tried first for every video; the
+    rotation only decides when it cannot play (its licence, or a cut longer than it can cover)."""
+    mains = [t for t in data.get('tracks', []) if t.get('status') == 'approved' and t.get('main')]
+    return mains + [t for t in turn if t not in mains]
+
+
 def rotation(piece, data, use='series', when=None):
-    """Every approved track for `use`, in the order this piece tries them. A series piece with a date on a series day
-    takes that day's weekly rotation (day_pool) when the day has one; otherwise by id, starting at a stable index from
-    the piece. The index is taken over all approved tracks, before any is checked against a cut, so the order is
-    the piece's alone and never depends on which cut is asking."""
+    """Every approved track for `use`, in the order this piece tries them, the main track first (main_first). A series
+    piece with a date on a series day takes that day's weekly rotation (day_pool) when the day has one; otherwise by
+    id, starting at a stable index from the piece. The index is taken over all approved tracks, before any is checked
+    against a cut, so the order is the piece's alone and never depends on which cut is asking."""
+    return main_first(_rotation(piece, data, use, when), data)
+
+
+def _rotation(piece, data, use='series', when=None):
     if use == 'series' and when:
         pool = day_pool(data, when)
         if pool:
@@ -331,6 +344,10 @@ def pick(seconds, piece=None, platforms=(), data=None, today=None, use='series',
     # A track that plays the whole length straight first; else one that starts
     # again under a crossfade, so the bed never drops out for want of length.
     turn = rotation(piece, data, use, when)
+    # The main track plays whenever its licence allows, starting again under the crossfade on a cut longer than it.
+    for track in turn:
+        if track.get('main') and not problems(track, platforms, today, seconds):
+            return track, skipped
     for track in turn:
         if not problems(track, platforms, today, seconds) and covers(track, seconds):
             return track, skipped

@@ -153,7 +153,9 @@ def style_problems(data, formats=None):
                 fmt = formats[kind].get(fid)
                 if not fmt:
                     out.append(f'{weekday} idea {n}: style.{kind} {fid!r} is not a {kind} format in the bank')
-                elif fmt.get('krish_verdict') == 'not for us':
+                elif fmt.get('krish_verdict') == 'not for us' and str((data or {}).get('week_start') or '9999') >= str(fmt.get('not_for_us_from_week') or ''):
+                    # A verdict with not_for_us_from_week (dated-prediction, Ruling, Krish, 2026-11-24) binds from that
+                    # week's plan on; a week already planned and in flight is not refused mid-week.
                     out.append(f'{weekday} idea {n}: style.{kind} {fid!r} is marked not for us; never offer it again')
             scripts.add(st.get('script'))
             week_production.append(st.get('production'))
@@ -164,7 +166,7 @@ def style_problems(data, formats=None):
             fmt = formats['script'].get(ex.get('format')) or formats['production'].get(ex.get('format'))
             if not fmt:
                 out.append(f'{weekday} idea {n}: style.experiment {ex.get("format")!r} is not a format in the bank')
-            elif fmt.get('krish_verdict') == 'not for us':
+            elif fmt.get('krish_verdict') == 'not for us' and str((data or {}).get('week_start') or '9999') >= str(fmt.get('not_for_us_from_week') or ''):
                 out.append(f'{weekday} idea {n}: style.experiment {ex.get("format")!r} is marked not for us')
             elif fmt.get('status') in ('experimental', 'trial') and ex.get('format') not in (st.get('script'), st.get('production')):
                 experiments += 1

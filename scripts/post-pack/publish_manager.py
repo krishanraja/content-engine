@@ -339,7 +339,7 @@ def check(src):
     return sum(1 for i in resolve_images(m, src.parent, md) if i.get('after_heading'))
 
 
-TOKENS ='\n'.join(l for l in (Path(__file__).resolve().parent / 'tokens.css').read_text(encoding='utf-8').splitlines() if l.startswith((':root', '@media')))
+TOKENS = ':root{--bg:#F4EFE4;--ink:#0C1512;--card:#F4EFE4;--line:#0C1512;--muted:#16221D;--mint:#7EF0C0;--ok:#0C1512;--bad:#0C1512}'
 CSS = '\n' + TOKENS + '\n' + r'''*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Archivo,system-ui,-apple-system,sans-serif}
 main{max-width:820px;margin:0 auto;padding:24px 16px 96px}
 .kick{font:12px "IBM Plex Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}

@@ -451,7 +451,10 @@ def lessons_text(data=None):
     lines = ['What Krish likes in a title (config/title-verdicts.json):']
     lines += [f'  - {l["lesson"]}' for l in data.get('lessons', [])]
     lines.append('Picked:')
-    lines += [f'  + "{v["title"]}" ({v["surface"]}): {v["why"]}' for v in data.get('verdicts', []) if v.get('verdict') == 'picked']
+    # A pick a later ruling superseded (its "superseded" field, e.g. the 19 Oct price prediction, superseded by the
+    # 2026-11-24 ruling against predictions) stays in the file as the record but is never taught as a model.
+    lines += [f'  + "{v["title"]}" ({v["surface"]}): {v["why"]}' for v in data.get('verdicts', [])
+              if v.get('verdict') == 'picked' and not v.get('superseded')]
     lines.append('Rejected:')
     lines += [f'  - "{v["title"]}" ({v["surface"]}): {v["why"]}' for v in data.get('verdicts', []) if v.get('verdict') != 'picked']
     return '\n'.join(lines)
@@ -495,6 +498,14 @@ def self_test():
             record_verdict('Amazon locked Muse out. Walmart let it in.', 'rejected', 'flat', 'no, boring', 'card')
             check('gate: a later rejection wins, with his words', any('no, boring' in p for p in gate('Amazon locked Muse out. Walmart let it in.')), True)
             check('lessons list his picked and rejected titles', 'Amazon locked Muse out' in lessons_text(), True)
+            sup = {'lessons': [], 'verdicts': [
+                {'title': 'My AI price prediction for the end of 2026', 'surface': 'card', 'verdict': 'picked', 'why': 'w',
+                 'superseded': {'on': '2026-11-24', 'by': 'the ruling against predictions'}},
+                {'title': 'Keep the freedom to switch', 'surface': 'card', 'verdict': 'picked', 'why': 'w'},
+                {'title': 'My prediction for 2027', 'surface': 'card', 'verdict': 'rejected', 'why': 'w'}]}
+            check('lessons skip a superseded pick', 'price prediction' in lessons_text(sup), False)
+            check('lessons keep a live pick and a rejection',
+                  ('Keep the freedom' in lessons_text(sup), 'My prediction for 2027' in lessons_text(sup)), (True, True))
             record_verdict('GOOGLE PAID $2.7B FIRST', 'picked', 'a test fixture', 'yes', 'thumbnail')
             record_verdict('GOOGLE PAID $2.7B FIRST', 'picked', 'a test fixture', 'all recommended', 'cover')
             check('a line picked for a second surface keeps the first pick',

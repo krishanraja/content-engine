@@ -30,6 +30,15 @@ because Krish asked for "my mindmake icon but with splashes of these colors".
 
 It only makes files; nothing is uploaded or changed on any profile.
 """
+import sys as _sys
+
+# Retired with v5 (Krish locked it on 2026-11-25): this made the October profile look (day pills and colours, the
+# Mindmake splashes avatar, a watermark). The v5 profile set is built by makeyourmindup's
+# scripts/brand-kit-v5/build.py and lives in Drive, 1 Brand kit (permanent)/Channel art.
+if __name__ == '__main__':
+    _sys.exit('channel-kit is retired with v5: build the profile set with makeyourmindup scripts/brand-kit-v5/build.py; '
+              'it is in Drive, 1 Brand kit (permanent)/Channel art')
+
 import argparse
 import base64
 import importlib.util

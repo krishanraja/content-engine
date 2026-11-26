@@ -12,7 +12,7 @@ CSS_FAMILIES = {
     'display': 'MYMU Anton',
     'structure': 'MYMU Archivo',
     'dek': 'MYMU Fraunces',
-    'data': 'MYMU Plex Mono',
+    'data': 'DM Mono',  # v5 (2026-11-25); the renderer keeps 'MYMU Plex Mono' only for pre-v5 cuts
 }
 
 

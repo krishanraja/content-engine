@@ -54,9 +54,14 @@ def _hash(*paths: Path) -> str:
     return digest.hexdigest()[:16]
 
 
-def floor_version(path: Path = FLOOR) -> str:
-    """The floor as read: the hash of config/rejection-floor.json (the file changes only by a merged pull request)."""
-    return _hash(path)
+RULINGS = ROOT / 'config' / 'floor-rulings.json'
+
+
+def floor_version(path: Path = FLOOR, rulings: Path = RULINGS) -> str:
+    """The floor as read: config/rejection-floor.json with the rulings every reader applies over it
+    (config/floor-rulings.json, which can retire standards), hashed together. Either changes only by a merged pull
+    request, and either makes a receipt stale."""
+    return _hash(path, rulings) if Path(rulings).is_file() else _hash(path)
 
 
 def failures_version(failures: Path = FAILURES, learnings: Path = LEARNINGS) -> str:

@@ -188,13 +188,23 @@ def _footage_boxes(props, frame):
     return boxes
 
 
-def call_card_tokens(props, beat) -> set:
-    """The dated call card is engine chrome that takes the caption zone for the whole call beat, as captions do."""
-    call = props.get('call')
-    if not call or beat.get('role') != 'call':
+def landing_card_tokens(props, beat) -> set:
+    """The landing card is engine chrome that takes the caption zone for the whole landing beat, as captions do: its
+    kicker (chrome/LandingCard.tsx LANDING_KICKER), what this shows and the open question."""
+    landing = beat.get('landing')
+    if beat.get('role') != 'landing' or not landing:
         return set()
-    text = f"The call Our call. {call['statement']} {call['due']} {call['confidencePercent']}% sure due"
+    text = f"What this shows {landing['shows']} {landing['open_question']}"
     return set(qc_captions._tokens(text))
+
+
+def why_step_tokens(props, beat) -> set:
+    """A why beat's step (chrome/WhyStep.tsx) is engine chrome: WHY n, the rung's question and its strength words."""
+    why = beat.get('why')
+    if beat.get('role') != 'why' or not why:
+        return set()
+    words = {'documented': 'documented', 'inferred': 'inferred', 'open': 'open question'}.get(why.get('strength'), '')
+    return set(qc_captions._tokens(f"Why {why['n']} {why['question']} {words}"))
 
 
 def composition_checks(video, props, lock) -> dict:
@@ -209,7 +219,7 @@ def composition_checks(video, props, lock) -> dict:
                    if page['fromFrame'] <= at < page['toFrame']
                    for word in page['words']
                    for token in qc_captions._tokens(word['text'] if isinstance(word, dict) else str(word))}
-        allowed |= call_card_tokens(props, beat)
+        allowed |= landing_card_tokens(props, beat) | why_step_tokens(props, beat)
         beat_lock, exempt = lock, _footage_boxes(props, at)
         if beat.get('layout') == 'SPLIT':
             # A SPLIT beat's caption sits in the frozen split zone; the house zone there is his face and hands.
