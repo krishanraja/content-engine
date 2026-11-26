@@ -429,7 +429,7 @@ export function offdayList(ideas: Body | null, queue: ExtrasInputs['queue'], day
 
 /** The week's off-day options for a day, each as the full board shows it, with the five presses on its idea saved to the
  *  same queue/off-<day>-<id> record the full board writes (week_board.py; the desk's ReviewCard). Approve puts it on the
- *  publish board for its day; Growth makes it. An option a session wrote as decided is held until he presses: his words
+ *  publish board for its day; content-engine makes it and Growth posts it. An option a session wrote as decided is held until he presses: his words
  *  in a session are shown, never read as his press (Krish, 2026-11-11: only his Approved crosses). */
 export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
   // The day's options from the one place their day lives (_offdayItems.ts): the plan's and the approvals carried here
@@ -487,7 +487,7 @@ export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
     const twinWhere = twin ? (twin.date ? dateLabel(twin.date) : 'your Ideas for Later') : ''
     const approveIt = press('idea', 'approve', `Approve for ${dayShort(i.week, day)}`,
       twin ? `Approved. The one post moved here from ${twinWhere}; it is on the publish board for ${dayWords(i.week, day)} only.`
-        : `Approved. It is on the publish board for ${dayWords(i.week, day)}; Growth makes it.`, 'approved')
+        : `Approved. It is on the publish board for ${dayWords(i.week, day)}; content-engine makes it and Growth posts it.`, 'approved')
     if (twin) approveIt.goes = `Moves the one post here from ${twinWhere}, onto the publish board for ${dayWords(i.week, day)}. It is never on two days.`
     if (!approval || ideaOpen) {
       actions.push(
@@ -497,7 +497,7 @@ export function offdayOptions(i: ExtrasInputs, day: string): ViewOption[] {
         press('idea', 'trend', 'Save as a trend', 'Saved with its trend, for a wider piece.', 'trend'),
         press('idea', 'next_week', 'File for later', 'Filed for later. It comes back on a later ideas board.', 'filed'))
     } else if (s.direction_sha256 && (!direction || s.revised?.side === 'direction')) {
-      actions.push(press('direction', 'approve', 'Approve the direction', 'Approved. Growth makes it.'), press('direction', 'improve', 'Improve the direction', 'Saved. The revise run brings the new version back here.'),
+      actions.push(press('direction', 'approve', 'Approve the direction', 'Approved. content-engine makes it; Growth posts it.'), press('direction', 'improve', 'Improve the direction', 'Saved. The revise run brings the new version back here.'),
         press('direction', 'reject', 'Reject the direction', 'Rejected, with your reason.'))
     }
     const pitch = s.pitch ? [s.pitch.see, s.pitch.lands].filter(Boolean).join(' ') : ''

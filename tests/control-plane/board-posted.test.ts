@@ -219,7 +219,7 @@ describe('GET /api/board/<Monday>/pieces', () => {
   }
   it('hands Growth only what his approval holds (the ideas gate), and nothing when his approvals cannot be read', async () => {
     // Krish, 2026-11-11: "I shouldn't end up seeing random ideas in the publish board that I never wanted there and that
-    // I didn't approve to move to the publish board". Growth makes and posts only what he approved.
+    // I didn't approve to move to the publish board". content-engine makes, and Growth posts, only what he approved.
     const without = APPROVALS.filter(a => a.idea_id !== C && a.idea_id !== 'off-thu-plain')
     const sha = 'b'.repeat(64)
     const plain = { doc_id: 'off-thu-plain', body: { use: 'offday', day: 'thu', option_id: 'plain', idea: { verdict: 'approve', words: null, sha256: sha, at: 'x', shown: { hook: 'Plain' } } } }

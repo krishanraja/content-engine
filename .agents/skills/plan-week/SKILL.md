@@ -416,7 +416,7 @@ he ticks: `references/inspiration-piece.md`.
    each checked against its primary source, `stories_due` today (the trade-off is said, as the reference says). From 30 Nov every Saturday option is a sheet carousel
    followed card for card (Ruling, Krish, 2026-11-17: "Each suggestion should be a carousel like one carousel from my
    Instagram Inspo sheet"), and memes are 6 to 10 templates on Tue and Thu (`references/meme-roaster.md`). Since 19 Nov Saturday is good-news carousels only (`references/offdays.md`).
-   Growth makes what he approved. **His own
+   content-engine makes, Growth posts. **His own
    ideas go here as pieces he records** (Ruling, Krish, 2026-10-29): every
    idea he dropped in (`must_cover`, `kind: his_idea`) is a recorded off-day
    option, one 90-second cut said to camera or as a voiceover, unless his

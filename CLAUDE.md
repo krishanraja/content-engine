@@ -26,7 +26,7 @@ reading it whole. It is about 335 KB (some 80k tokens).
 | Video | `docs/ve/ENGINE.md`, then `docs/ve/RUNBOOK.md` (`docs/ve/STATUS.md` says what ve can do today; `docs/ve/INGREDIENTS.md` for caption styles, motion styles, transitions, camera, energy and `ve pace`; `docs/ve/TREATMENTS.md` for the effects applied by rule, video and stills) |
 | The week's publish board | `docs/PUBLISH_BOARDS.md` |
 | Any intro, outro, icon, wordmark, sting or end card, on any day or format | `docs/production/BRAND_PALETTE.md` (the rules are `config/brand-palette.json` only) |
-| The carousel standard (Growth makes the carousels) | `docs/CAROUSEL-STANDARD.md` |
+| The carousel standard (content-engine makes every asset from the v5 Library; Growth posts) | `docs/CAROUSEL-STANDARD.md` |
 | The Studio runner or the renderer | `docs/STUDIO.md`, then `docs/ENGINE_SESSION.md` |
 | What works, what is broken, what waits on Krish | `NOW.md`, `docs/STATE.md` |
 | How the pieces fit, who owns what | `docs/SYSTEM_MAP.md` |

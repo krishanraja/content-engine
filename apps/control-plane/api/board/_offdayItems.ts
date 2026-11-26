@@ -368,7 +368,7 @@ export function elsewhereLines(r: OffdayItem | null, now: Date): string[] {
 export interface ViewGrowthPost { state: PostState; channel: string | null; label: string; at: string | null; due_at: string | null; href?: string }
 export function viewPosts(r: OffdayItem | null): ViewGrowthPost[] {
   return (r?.posts ?? []).filter(p => p.state !== 'cancelled').map(p => ({ state: p.state, channel: p.channel,
-    label: p.state === 'made' ? 'Made by Growth' : `${p.state === 'live' ? 'Live' : 'Scheduled'} on ${channelWord(p.channel)}`, at: p.at || null, due_at: p.due_at,
+    label: p.state === 'made' ? 'Ready to post' : `${p.state === 'live' ? 'Live' : 'Scheduled'} on ${channelWord(p.channel)}`, at: p.at || null, due_at: p.due_at,
     ...(p.state === 'live' && p.url ? { href: p.url } : {}) }))
 }
 /** The channels an item is live on, from Growth's record. */

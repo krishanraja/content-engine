@@ -823,10 +823,10 @@ function offDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayCore
         actions: [{ kind: 'run', label: 'Find the stories now', job: 'saturday-goodnews', input: { week }, runs_on: GH('saturday-goodnews') }] }
     }
     const n = Array.isArray(weekly.o.stories) ? weekly.o.stories.length : 0
-    return { ...base, kind: gnKind, title: String(weekly.o.hook || "This week's good news").slice(0, 140), stop: 2, who: 'growth', runs_on: 'Growth makes the post from the stories shown',
-      next: `This week's good news is in: ${n} stories. Growth makes the post, and its mock comes back for your yes`,
+    return { ...base, kind: gnKind, title: String(weekly.o.hook || "This week's good news").slice(0, 140), stop: 2, who: date <= todayNY(i.now) ? 'growth' : 'engine', runs_on: 'content-engine makes the post from the stories shown, in a Claude session from the v5 Library',
+      next: `This week's good news is in: ${n} stories. content-engine makes the post, and its mock comes back for your yes`,
       actions: [{ kind: 'open', label: 'Read the stories', href: optionsTab(week, day) },
-        { kind: 'prompt', label: 'Copy prompt for Growth', prompt: `Make the ${DAY_NAME[day]} ${date} good-news post ${String(weekly.o.id)} from the ${n} stories on the content-engine board (week of ${week}).\n\n${offdayHead(makeRoute('good_news', String(weekly.o.format || ''))).trimEnd()}` }] }
+        { kind: 'prompt', label: 'Copy the make prompt', prompt: `Make the ${DAY_NAME[day]} ${date} good-news post ${String(weekly.o.id)} from the ${n} stories on the content-engine board (week of ${week}).\n\n${offdayHead(makeRoute('good_news', String(weekly.o.format || ''))).trimEnd()}` }] }
   }
   // An Improve still waits on its revision, unless his words in a session settled the option (`decided`): that settles
   // what it waits on, never whether it is approved (Thu 12 Nov showed "Your Improve has not come back" on a card he had
@@ -854,14 +854,15 @@ function offDay(i: ViewInputs, day: PostedDay, piece: Body | undefined): DayCore
       next: back.length > 1 ? `${back.length} revised versions are back. Approve, improve again or reject each` : 'The revised version is back. Approve it, improve it again or reject it',
       reviews, actions: [{ kind: 'review', label: back.length > 1 ? `Review the ${back.length} revised versions` : 'Review the revised version' }] }
   }
-  // Where Growth is with it, from its own record: scheduled (with when and where), made, or still to make.
+  // Where it is, from Growth's own record: scheduled (with when and where), ready to post, or still to make (content-engine
+  // makes it; Growth posts it: Ruling, Krish, 2026-11-26).
   const record = recordOf(o)?.posts ?? []
   const queued = record.filter(p => p.state === 'scheduled' && p.due_at && p.due_at.slice(0, 10) >= date.slice(0, 10))
   const made = record.some(p => p.state === 'made')
-  return { ...base, kind, title, stop: queued.length ? 3 : 2, who: 'growth', runs_on: 'Growth makes the approved off-day post',
+  return { ...base, kind, title, stop: queued.length ? 3 : 2, who: queued.length || made || date <= todayNY(i.now) ? 'growth' : 'engine', runs_on: 'content-engine makes the approved off-day post; Growth posts it',
     next: queued.length ? `Approved. Growth scheduled it on ${[...new Set(queued.map(p => channelWord(p.channel)))].join(', ')}`
-      : made ? 'Approved. Growth made it; it schedules it for the day' : 'Approved. Growth makes it and posts it on the day',
-    actions: [{ kind: 'prompt', label: 'Copy prompt for Growth', prompt: `Make the ${DAY_NAME[day]} ${date} off-day post ${String(o.id)} that Krish approved on the content-engine board (week of ${week}).\n\n${offdayHead(makeRoute(offdayKind(o).kind, String(o.format || ''))).trimEnd()}` }] }
+      : made ? 'Approved. It is made and with Growth, which schedules it for the day' : 'Approved. content-engine makes it, and Growth posts it on the day',
+    actions: [{ kind: 'prompt', label: 'Copy the make prompt', prompt: `Make the ${DAY_NAME[day]} ${date} off-day post ${String(o.id)} that Krish approved on the content-engine board (week of ${week}).\n\n${offdayHead(makeRoute(offdayKind(o).kind, String(o.format || ''))).trimEnd()}` }] }
 }
 
 /** The Claude prompt for a day's next step (Krish, 2026-11-09: "every next action needs to have a Claude prompt as at

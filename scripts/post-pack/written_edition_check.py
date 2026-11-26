@@ -5,7 +5,7 @@ Ruling (Krish, 2026-11-16), of Growth's audience brief of 16 Nov (Control Center
 "apply 1 to 6 from the next piece you make this week". Video cross-posted to Threads, X and Facebook reached a median
 of 5 to 11 people; the one written Substack Note reached 208 against a Notes median of 4 and brought the only
 subscriber of the run. So every piece ships words made to be read, beside its videos. Content-engine writes them;
-Growth makes the posts from them (docs/GROWTH-HANDOFF.md).
+the captions step writes each channel's final words from them and Growth posts them (Ruling, Krish, 2026-11-26).
 
 The file is the piece's plan folder's written-edition.md, two sections:
 

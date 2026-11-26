@@ -109,7 +109,7 @@ export function postArtifact(b: Body): string {
       : `Pictures: ${assets.map(a => a.name).join(', ') || 'none'}`].filter(Boolean).join('\n')
 }
 
-const CONTEXT = ['This is a derived post Growth made from a piece the publication already published: a carousel or a Short on',
+const CONTEXT = ['This is a derived post made from a piece the publication already published: a carousel or a Short on',
   'a social channel. Judge it as the publication\'s own post on that channel, to the same bar as any draft: would the',
   'reader stop, understand the one point, and want the full piece. You are shown its pictures: judge them as hard as the',
   'words. A carousel\'s first card must look like a front cover and nothing like the cards after it; every card after it',

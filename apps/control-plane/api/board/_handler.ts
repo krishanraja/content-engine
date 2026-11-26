@@ -178,7 +178,7 @@ export function createBoardHandler(getDb: () => Promise<SupabaseClient>, deps: P
     if (op === 'offdays' || op === 'offday-posts') {
       // Growth's half of the one place an off-day item's day lives (_offdayItems.ts; Ruling, Krish, 2026-11-12): GET
       // offdays reads the week's items where they are now; POST offdays offers Growth's own options for the week (they
-      // reach the board offered, his press approves them); POST offday-posts writes back what Growth made, scheduled
+      // reach the board offered, his press approves them); POST offday-posts writes back what Growth has ready to post, scheduled
       // (with its time) and posted (with its link) for each, from its own record, so the board shows it out and says
       // plainly what is still scheduled for a day an item left. Growth's key only.
       if (!growthWriter(req)) return res.status(401).json({ ok: false, error: 'unauthorized' })

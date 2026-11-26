@@ -31,7 +31,7 @@ name: Sunday ideas
 # also finds Saturday's five real good-news stories ("The Saturday good news" in plan-week references/offdays.md), each
 # checked against its primary source, with its stories due today. The trade-off, said plainly: this run fills the board
 # for the week that starts eight days after its Sunday, so a story it finds is about two weeks old by the Saturday it
-# posts on; before Growth makes the Saturday post, the fact gate checks every story against its source again.
+# posts on; before content-engine makes the Saturday post (Growth posts it), the fact gate checks every story against its source again.
 # saturday-goodnews.yml stays, by hand only, to find them again.
 #
 # The ideas gate (Krish, 2026-11-11: "I shouldn't end up seeing random ideas in the publish board that I never wanted

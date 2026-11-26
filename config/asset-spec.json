@@ -12,8 +12,8 @@
     "square_cover": {"format": "carousel", "frame": [1080, 1080], "source": "scripts/post-pack/publish_manager.py COVER_ROLES['square-cover']"},
     "share_card_cover": {"format": "substack_article", "frame": [1200, 675], "source": "scripts/post-pack/publish_manager.py COVER_ROLES['share-card-cover']"},
     "article_figure": {"format": "substack_article", "frame": null, "numbered": true, "source": "the article's figures (docs/CREATIVE_DIRECTION.md)", "open": "no figure size is set in code"},
-    "carousel_slide": {"format": "carousel", "frame": null, "numbered": true, "source": "Growth makes it to docs/CAROUSEL-STANDARD.md", "open": "no slide size is set in this repository; Krish or Growth names it"},
-    "meme": {"format": "meme", "frame": null, "source": "Growth's off-day lane", "open": "no meme size is set anywhere yet"}
+    "carousel_slide": {"format": "carousel", "frame": null, "numbered": true, "source": "content-engine makes it from the v5 Library (scripts/library/make_piece.py <piece> --set <set>; config/asset-routes.json) to docs/CAROUSEL-STANDARD.md", "open": "the Library's carousel templates are 1080 x 1350; this file takes the size once the Library is on main"},
+    "meme": {"format": "meme", "frame": null, "source": "content-engine's off-day lane (the Library's meme set; config/asset-routes.json)", "open": "no meme size is set anywhere yet"}
   },
   "formats": {
     "substack_article": {
