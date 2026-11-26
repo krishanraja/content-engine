@@ -2,9 +2,9 @@
 
 Written and committed on 26 Nov 2026, before any paid call. Nothing in this file changes after the first paid call. A change after that point is a new proof with a new protocol file.
 
-Frozen engine SHA: `313eef68db0db3e7f27a1e220cecd17ced03bbc4`
+Frozen engine SHA: `6d4f231efc434a2c4c70e04814dd4682c2a8f50c`
 
-This is the head of `story/engine-v5` with the engine complete (commits 0 to 8). The proof harness (`scripts/post-pack/story_proof.py`, `config/story-proof.json`) lands in the commit that carries this file. A real run (`story_proof.py run` without `--dry`) refuses if any engine file differs from the frozen SHA. The engine files are listed in `config/story-proof.json` `engine_files`: `story_score.py`, `story_floor.py`, `whys-probe-check.ts`, `config/story-score.json`, `config/story-floor.json` and `config/beat.json`.
+This is the head of `story/engine-v5` with the engine complete (commits 0 to 8) and the review fixes of 26 Nov in, the proof harness's own last fix included. It was moved from `313eef68` before any paid call, while the protocol could still change: the review fixes touched engine files (the blind view's provenance rules, the floors, the ledger, the angle ids, the gate's whys line), and the tells bar became two-sided. A real run (`story_proof.py run` without `--dry`) refuses if any engine file differs from the frozen SHA. The engine files are listed in `config/story-proof.json` `engine_files`: `story_score.py`, `story_floor.py`, `whys-probe-check.ts`, `config/story-score.json`, `config/story-floor.json`, `config/beat.json`, and what the score's results also depend on, `idea_checks.py`, `humour_check.py`, `divergent.py`, `config/style-references.json` and `packages/contracts/src/whys.ts`.
 
 ## What is being tested
 
@@ -83,8 +83,9 @@ The zero-spend dry run (`run --dry` on both weeks and both arms, fake transports
 - House labels, board notes (what a card was rebuilt from, which day's question it serves) and a leading "Publication, date:" prefix are stripped from both sides (`config/story-proof.json` `card`).
 - The order is a seeded shuffle, with exactly half the pairs New = A (the lower half when the count is odd).
 - The key (`key.json`) is sealed in the gitignored `.cache/proof/story-engine-v5/`. The sheet prints only its sha256.
-- Before Krish sees the sheet, a fresh subagent with no context gets the tells packet (cards only, `story_proof.py tells`). It must fail to tell new from old: fewer right than the tells bar below. If it can tell, only the renderer is changed (never the engine or the choices), the sheet is made again, and the check is run again.
-- The sheet goes to `C:\Users\krish\AppData\Roaming\Claude\side-session-notes\local_6966f40e-b46e-4f8b-90f0-7ef4708dbbf1\story-engine-blind-proof.md`. It never goes to the board (its presses would pollute the scorecard and the learning) and never into an artifact.
+- `story_proof.py sheet` writes the sheet only into the gitignored cache (`.cache/proof/story-engine-v5/sheet.md`).
+- Before Krish sees the sheet, a fresh subagent with no context gets the tells packet (cards only, `story_proof.py tells`). It must fail to tell new from old: near chance on both sides, inside the tells bar below. A reader who tells them apart with the labels the wrong way round has still told them apart. If it can tell, only the renderer is changed (never the engine or the choices), the sheet is made again, and the check is run again.
+- Only then does `story_proof.py release --out` copy the sheet to `C:\Users\krish\AppData\Roaming\Claude\side-session-notes\local_6966f40e-b46e-4f8b-90f0-7ef4708dbbf1\story-engine-blind-proof.md`. It refuses unless `tells.json` passed on the current key's sha256. `record` and `reveal` refuse until that release took place, and a released sheet cannot be keyed again. The sheet never goes to the board (its presses would pollute the scorecard and the learning) and never into an artifact.
 - Krish answers each pair `Pnn: A++|A+|=|B+|B++ ; seen before? y/n ; would make A? y/n B? y/n ; note:`.
 - `reveal` checks the key against the printed hash and refuses while any shown pair is unanswered.
 
@@ -96,7 +97,7 @@ The zero-spend dry run (`run --dry` on both weeks and both arms, fake transports
   "new_preferred": {"of": 18, "at_least": 13, "inconclusive_from": 11},
   "hero_vs_lead": {"of": 6, "at_least": 4},
   "new_on_refused_subject": {"at_most": 0},
-  "tells": {"of": 18, "below": 13},
+  "tells": {"of": 18, "below": 13, "above": 5},
   "equal_counts": 0.5
  }
 }
@@ -109,7 +110,7 @@ The zero-spend dry run (`run --dry` on both weeks and both arms, fake transports
   - no New card is on a subject the floor refuses with what was known before the board.
 - **Inconclusive.** 11 or 12 of 18. This is not a fail.
 - **Fail.** Anything else.
-- When fewer pairs form than a bar was written for, the bar scales and rounds up: at least `ceil(13 n / 18)` of `n`, and `ceil(4 m / 6)` of `m` hero-lead pairs. The tells bar scales the same way: fewer than `ceil(13 n / 18)` right.
+- When fewer pairs form than a bar was written for, the bar scales and rounds up: at least `ceil(13 n / 18)` of `n`, and `ceil(4 m / 6)` of `m` hero-lead pairs. The tells bar is two-sided: more than 5 and fewer than 13 of 18 right (6 to 12) passes. It scales the same way: fewer than `ceil(13 n / 18)` right and more than `n - ceil(13 n / 18)`.
 
 ## Secondary measures (reported, not pass or fail)
 
