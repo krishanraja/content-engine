@@ -6248,6 +6248,15 @@ Direct port of ref/H/build.py: eight unknowns, h22 fixed at one.
 - `function homography(src: readonly Point[], dst: readonly Point[]): Homography`
 - `function matrix3d(h: Homography): string`
 
+### `apps/renderer/src/engine/kit/impact.ts`
+
+- `const IMPACT_EASES`
+- `const EngineImpactSchema`
+- `type EngineImpact = z.infer<typeof EngineImpactSchema>`
+- `function ease(name: (typeof IMPACT_EASES)[number], t: number): number`
+- `function impactAt(impact: EngineImpact | undefined, frame: number): { scale: number; originX: number; originY: number }`
+- `function impactStyle(impact: EngineImpact | undefined, frame: number): Record<string, string> | undefined`
+
 ### `apps/renderer/src/engine/kit/ingredients.ts`
 
 - `const ENERGIES`
