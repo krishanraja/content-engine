@@ -157,6 +157,12 @@ def _gap_retired(kind: str, route_kind: str) -> str:
 
 RETIRED = {'cover': lambda: COVER_RETIRED, 'meme': lambda: _gap_retired('meme', 'meme-square'),
            'notes_image': lambda: _gap_retired('notes_image', 'notes-image')}
+# A carousel's body sentences (Krish, 2026-11-18, of the shipped ChatGPT ads carousel: "this font is crappy, i have given this
+# feedback before"; he approved the same deck set in Anton, uppercase, with "go"). "Type only from the brand tokens" let
+# Archivo at its heaviest through, since Archivo is a brand token, so the card names the face outright.
+CAROUSEL_BODY_TYPE = ('Body sentences: Anton, uppercase, the same face as the cover and the close, the card\'s key figure or '
+                      'phrase in mint, a DM Mono kicker above. Never Archivo Black and never Archivo at weight 800 or '
+                      'heavier on a card.\n')
 
 
 def visual_sections(fields: dict) -> str:

@@ -46,7 +46,7 @@ the music: the bed sits under him (MUSIC_BED) and never sets when a picture move
 |---|---|
 | A white stage | Grounds are ink with the theme's light wash, never flat white (MOTION_STANDARD.md, Look; `config/ve/design-lock.json` colour_rules, ground ink). |
 | Violet or coral as an accent | Mint is the answer colour; a series colour is identity only, never a status or a warning (design lock colour_rules); an off day never wears lilac or coral (`config/brand-palette.json`, colour). |
-| A font outside `config/ve/fonts.json` | The house faces are Anton, Archivo, Fraunces and IBM Plex Mono; the brand grows only by a proposal to Krish, never into an AI cliché (MOTION_STANDARD.md, "The brand may evolve"). |
+| A font outside `config/ve/fonts.json` | The house faces are Anton, Archivo, Fraunces and DM Mono (IBM Plex Mono is retired with v5); the brand grows only by a proposal to Krish, never into an AI cliché (MOTION_STANDARD.md, "The brand may evolve"). |
 | Small UI in big empty space | A device on a graphic beat spans 80 to 90% of the width (MOTION_STANDARD rule 1); the frame outside the captions is at least 80% filled (design lock `fill_min_pct`). |
 | A sound on every hit | One sound, on the big moment only (THE_BAR ruling 11; `ve lint` `sound.one_moment`); nothing plays before Krish approves it by ear. |
 | Music not from the licensed ledger | Only an approved track in `config/music-library.json` (MUSIC_BED). |

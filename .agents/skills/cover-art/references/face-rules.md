@@ -4,8 +4,10 @@ Read by the cover-art skill before a face-led cover is drawn or checked.
 
 1. **The headline leads** (`docs/production/COVER-STANDARD.md`, points 1 to 6): the largest thing, at most 7 words,
    the quiet series label above it, the series colour, bright over the near-black ground.
-2. **The wordmark is the official file**, `apps/cover/public/brand/wordmark.png` in krishanraja/makeyourmindup (sha256
-   `f896cc62...`, as `config/brand-palette.json` marks it), scaled only, on the near-black only (it disappears on
+2. **The wordmark is the official v5 file**, `assets/brand/makeyourmindup/v5/v4.svg` in this repository (sha256
+   `89ce526d4f63c9c2869d054236dfbe1014f77c5f0fac641ee278cf0cf07f4abe`, as `config/brand-palette.json` marks it and the
+   `makeyourmindup-v5` theme in `config/studio.json` pins it; the v4 PNG at makeyourmindup `apps/cover/public/brand/wordmark.png`
+   is retired and gone), scaled only, on the near-black only (it disappears on
    yellow), left-aligned on the headline's edge, under it (Krish, 2026-11-17: "we do need the makeyourmindup wordmark
    somewhere that looks good and aligned properly").
 3. **His shoulders are never cut off on the colour** (Krish, 2026-11-17: "the fact that my shoulders cut off is

@@ -185,10 +185,10 @@ class CaptionOverContent(unittest.TestCase):
         self.assertEqual(pf.caption_box_drawn(props, [self.ONE], self.ONE), (70, 290, 940, 230))
 
 
-def props_with(captions):
+def props_with(captions, spec=None):
     sys.path.insert(0, str(ROOT / 'tests'))
     import ve_proof_test as t  # noqa: PLC0415
-    spec = t.whole()
+    spec = t.whole(spec)
     props = t.props_for(spec)
     props['brand'] = {'mark': {'src': 'mark.png'}}
     props['tokens'] = {'cream': '#F5EBCD'}
@@ -273,9 +273,9 @@ class CompareWithApproved(unittest.TestCase):
         self.dir = Path(self.tmp.name) / 've'
         self.dir.mkdir()
         t.guards.freeze(self.dir, now=t.FROZEN_BEFORE_THE_FLOOR)  # the real lock, so ve proof stays on this engine
-        self.spec = copy.deepcopy(t.FIXTURE)
+        self.spec = copy.deepcopy(t.V5_FIXTURE)  # the v5 look: the retired scoreboard-test format refuses to compile
         self.write_spec(self.spec)
-        (self.dir / f'props.{t.CUT}.json').write_text(json.dumps(props_with(t.props_for(self.spec)['captions'])), encoding='utf-8')
+        (self.dir / f'props.{t.CUT}.json').write_text(json.dumps(props_with(t.props_for(self.spec)['captions'], self.spec)), encoding='utf-8')
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -284,7 +284,7 @@ class CompareWithApproved(unittest.TestCase):
         (self.dir / 'spec.json').write_text(json.dumps(spec), encoding='utf-8')
 
     def args(self, **extra):
-        return types.SimpleNamespace(spec=str(self.dir / 'spec.json'), cut=self.t.CUT, beat='b2-key', props=None, assets_dir=None,
+        return types.SimpleNamespace(spec=str(self.dir / 'spec.json'), cut=self.t.CUT, beat='face', props=None, assets_dir=None,
                                      scale=1.0, no_qc=True, **extra)
 
     def render(self, colour):

@@ -310,15 +310,12 @@ from it:
 - **Colours, days and stickers** come from the house style in
   `config/studio.json`, the values the Studio renders with. When the schedule
   changes there, the pill, the strip and the subscribe line follow.
-- **Fonts**: Anton, Archivo, Fraunces italic, IBM Plex Mono and, for the
-  page's and the email's body text, Source Serif 4 are read from
-  `node_modules/@fontsource*`, packages the repository already pins, and
-  inlined. They are byte for byte the files the first pages used,
-  which came from Google Fonts. That beats committing font files (a second copy to keep
-  in step) and fetching them from Google Fonts at build time (a network call
-  and a cache for files the repository already has). IBM Plex Mono's 600 is
-  left out on purpose: the approved pages had none, so their labels drew at
-  700.
+- **Fonts** (`FONT_FILES` in `brand.py`): Anton, Archivo and Fraunces italic
+  are read from `node_modules/@fontsource*`, packages the repository already
+  pins, and DM Mono (the v5 mono; IBM Plex Mono is retired) and upright
+  Fraunces from `assets/fonts/makeyourmindup/`; all are inlined. That beats
+  fetching them from Google Fonts at build time (a network call and a cache
+  for files the repository already has).
 - **Logos** (the wordmark, the masthead, the mark, from
   `https://www.makeyourmindup.ai/brand/`) are fetched from the live site and
   cached in `.cache/makeyourmindup/`, which git ignores. No face is drawn: the

@@ -4,6 +4,7 @@ Ruling (Krish, 2026-11-12): "I approve the brand palette sheet, but only if it f
 config/brand-palette.json, scripts/brand_palette.py, docs/production/SOCIAL-BEST-PRACTICES-2026.md.
 """
 import copy
+import hashlib
 import json
 import sys
 import unittest
@@ -35,9 +36,29 @@ class Manifest(unittest.TestCase):
         self.assertLessEqual(p['closes']['statement_beat']['seconds_max'], 2.0)
         self.assertEqual(p['safe']['tall_core'], [120, 330, 820, 1180])
 
-    def test_the_marks_are_the_brand_repository_files(self):
+    def test_the_marks_are_the_v5_files(self):
+        # Krish locked v5 on 2026-11-25: the marks are this repository's v5 SVGs, pinned by sha256 (the v4 PNGs are gone).
         p = brand_palette.load()
-        self.assertEqual(p['marks']['icon']['sha256'], '4a45152311ff552a1fd08307a78e8e49c0c699663d73c35687c52887f782fb4a')
+        self.assertEqual(p['marks']['icon']['sha256'], 'ec9ca040a7c7f5862c6683df6b88adcf4cc62fc977bcfb46ebc9c0c68745661b')
+        self.assertEqual(p['marks']['wordmark']['file'], 'assets/brand/makeyourmindup/v5/v4.svg')
+        for key in ('icon', 'masthead', 'wordmark'):
+            mark = p['marks'][key]
+            self.assertTrue(mark['file'].startswith('assets/brand/makeyourmindup/v5/'), key)
+            self.assertEqual(hashlib.sha256((ROOT / mark['file']).read_bytes()).hexdigest(), mark['sha256'], key)
+            for sha in mark.get('same_drawing') or []:
+                ink = ROOT / mark['file'].replace('.svg', '-ink.svg')
+                self.assertEqual(hashlib.sha256(ink.read_bytes()).hexdigest(), sha, key)
+
+    def test_the_studio_v5_pins_are_the_committed_bytes(self):
+        # 26 Nov 2026: the v5 theme pinned d-face-off.svg by the hash of a CRLF checkout, so the Studio's own byte check
+        # (packages/core/src/brand-assets.ts) would refuse the committed LF file. Every v5 mark pin is the file's own hash.
+        studio = json.loads((ROOT / 'config' / 'studio.json').read_text(encoding='utf-8'))
+        pins = [a for t in studio['brand_themes'] for a in (t.get('publication') or {}).values()
+                if isinstance(a, dict) and str(a.get('source_path', '')).startswith('assets/brand/makeyourmindup/v5/')]
+        self.assertGreaterEqual(len(pins), 3)
+        for a in pins:
+            self.assertNotIn(bytes([13, 10]), (ROOT / a['source_path']).read_bytes(), a['source_path'])
+            self.assertEqual(hashlib.sha256((ROOT / a['source_path']).read_bytes()).hexdigest(), a['sha256'], a['source_path'])
 
     def test_the_attached_corpus_is_kept(self):
         self.assertTrue((ROOT / 'docs' / 'production' / 'SOCIAL-BEST-PRACTICES-2026.md').is_file())
