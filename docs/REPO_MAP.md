@@ -3194,6 +3194,7 @@ His takes are in the Inbox (view contract 1.23.0; Krish, 2026-11-17: "whenever I
 - `function dayYes(picks: ExtrasInputs['picks'], day: string): ViewYes | null`
 - `function seriesOptions(i: ExtrasInputs, day: string, placed: boolean, onDay: Body | null = null): ViewOption[]`
 - `function closeCall(o: Body): string`
+- `function thinWeek(o: Body): string`
 - `function warned(o: Body): string`
 - `function tickNote(o: Body): string`
 - `function ideaLines(i: ExtrasInputs, day: string): ViewOption[]`
