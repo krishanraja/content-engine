@@ -314,7 +314,7 @@ export function seriesOptions(i: ExtrasInputs, day: string, placed: boolean, onD
       : pressed ? { id: pressed, label: OUTCOMES[pressed], at: typeof press?.at === 'string' ? press.at : null, words: pressWords } : null
     // The plain question first (house rules STORY_ARC and BIG_PICTURE; the ideas quality plan, item 7), then the headline.
     const question = isObj(o.pitch) ? cut(o.pitch.question, 200) : ''
-    return { id: String(o.id || pick), doc_id: pick, title: question || headlineOf(story) || cut(o.so_what, 200), text: warned(o) + closeCall(o) + tickNote(o) + cut(o.so_what, 600),
+    return { id: String(o.id || pick), doc_id: pick, title: question || headlineOf(story) || cut(o.so_what, 200), text: warned(o) + closeCall(o) + thinWeek(o) + tickNote(o) + cut(o.so_what, 600),
       format: null, source: isObj(o.source) ? cut(o.source.label, 200) || null : typeof o.source === 'string' ? cut(o.source, 200) : null,
       status, said: said ? cut(said, 600) : null, actions, outcome, ...(held ? { held } : {}) }
   })
@@ -326,6 +326,15 @@ export function seriesOptions(i: ExtrasInputs, day: string, placed: boolean, onD
 export function closeCall(o: Body): string {
   const s = isObj(o.story_score) ? o.story_score : null
   const says = s && typeof s.close_call === 'string' ? s.close_call.trim().replace(/[.\s]+$/, '') : ''
+  return says ? `${says[0]!.toUpperCase()}${says.slice(1)}. ` : ''
+}
+
+/** The thin-week line on a hero option (ideas.json `story_score.thin_week`, written by story_score.py order when only two
+ *  options on the day passed every floor after one re-gather; config/story-score.json hero_floors.thin_week): said on
+ *  the card, plainly, so a short day is never silent. The floors are never relaxed. Empty when there is none. */
+export function thinWeek(o: Body): string {
+  const s = isObj(o.story_score) ? o.story_score : null
+  const says = s && typeof s.thin_week === 'string' ? s.thin_week.trim().replace(/[.\s]+$/, '') : ''
   return says ? `${says[0]!.toUpperCase()}${says.slice(1)}. ` : ''
 }
 

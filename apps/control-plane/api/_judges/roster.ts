@@ -44,10 +44,14 @@ import { READER } from '../_beat.js'
 // panel-v3 (2026-11-26): the reader and buyer judges read the North Star reader
 // Krish approved that day ("I approve the lines") from config/beat.json's reader
 // row, through _beat.ts. Same keys and same eight judges, so calibration still
-// joins and the ladder median is untouched; the buyer judge now asks whether
-// someone in those industries would pay to read it, in place of the retired
-// thirty-day-build buyer. Whether to keep that rewrite or retire the judge is
-// flagged for Krish (reader.judges.buyer.flag).
+// joins and the ladder median is untouched. Ruling (Krish, 2026-11-26): the
+// buyer judge is kept as the paying-reader judge (label "Paying reader"): would
+// someone who makes the calls or makes the work in these industries pay for
+// this, because it tells them how their work makes money in a way they could
+// not get free elsewhere this week. The retired thirty-day-build buyer stays
+// retired. Its key stays 'buyer' so stored verdicts still join, and whether its
+// scores ever ranked his picks is reported (config/judges.json
+// review), never taken on faith.
 export const ROSTER_VERSION = 'panel-v3'
 
 export type Gate = 'idea' | 'draft'
@@ -55,6 +59,8 @@ export type Gate = 'idea' | 'draft'
 export interface Judge {
   /** Stable key. Appears in judge_verdicts.judge and in calibration. */
   key: string
+  /** The name a person reads where the judge is shown; the key when absent. */
+  label?: string
   /** The one question this judge owns, in Krish's words. */
   question: string
   /** What the judge is told to do. One axis, explicitly not the others. */
@@ -102,16 +108,18 @@ export const IDEA_JUDGES: Judge[] = [
       + 'Be concrete about who and what: if you cannot name the action, the score is low however clever the idea.',
     evidence: 'Name the reader and the specific thing they do or stop doing.',
   },
-  // The reader and the buyer are the North Star reader (config/beat.json
+  // The reader and the paying reader (key buyer) are the North Star reader (config/beat.json
   // reader.judges), one wording with the relevance filter and the humour check.
   {
     key: 'reader',
+    label: READER.judges.reader.label,
     question: READER.judges.reader.question,
     rubric: READER.judges.reader.rubric,
     evidence: READER.judges.reader.evidence,
   },
   {
     key: 'buyer',
+    label: READER.judges.buyer.label,
     question: READER.judges.buyer.question,
     rubric: READER.judges.buyer.rubric,
     evidence: READER.judges.buyer.evidence,

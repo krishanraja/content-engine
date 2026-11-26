@@ -69,7 +69,10 @@ once `ideas.json` holds the week's options (step 4 of the core), and step 12 is 
 go in `docs/plans/<Monday>-week/` (`story/` for the score's own, `probe/` for the whys probes); the spend ledger is
 `.cache/story-score/<Monday>.jsonl` (one per week), gitignored.
 
-1. **Gather.** `board_feed.py gather` and `cover`, as the core says. Nothing here changes what is read.
+1. **Gather.** `board_feed.py gather` and `cover`, as the core says. The gather also reads the week's stories from the
+   daily news hub (`sources.json` `hub`: the hub's items from the seven days before the week, curated per subsector),
+   or says why it was skipped. Use them as pool candidates beside the series pools, each chased to where it was first
+   reported like any other.
 2. **The floor.** `python3 scripts/post-pack/story_floor.py <Monday> --pool --json`. Leave out every candidate it
    refuses, and say how many and why in one line each on the run's summary. Once the options are in `ideas.json`, run it
    again without `--pool` and write its JSON, as printed, to `docs/plans/<Monday>-week/story/floor.json`. Exit 2 means a
@@ -79,10 +82,33 @@ go in `docs/plans/<Monday>-week/` (`story/` for the score's own, `probe/` for th
    stage it exits 2, since nothing is judged yet: read only `fit`, `named_thing` and the `primary_sources` check in
    `docs/plans/<Monday>-week/scores.json`. Keep for each hero day the candidates that clear the hero floor those give
    (named_thing at least 5), best first by fit and with a primary source where the pool has one, up to the day's option
-   count plus two. A candidate under a hard floor is replaced from the pool, not argued for. Fit under 7, no primary
-   source and a short off the beat are notes (`notes` in the score, `hard: false` in config): say them in the summary,
-   they never fail the gate. An off-day explainer (aim `utility`) may carry `steps: [{"text", "checked": "<https
-   vendor document>"}]`; when it does, every step needs its checked link, and with no steps the floor is not read.
+   count plus two. A candidate under a hard floor is replaced from the pool, not argued for. The hard floors below are
+   never argued with and never met by rewording. An off-day explainer (aim `utility`) may carry `steps: [{"text",
+   "checked": "<https vendor document>"}]`; when it does, every step needs its checked link (a note until a ruling
+   names it), and with no steps the floor is not read.
+
+## The hard floors, each made honest (Krish, 2026-11-26)
+
+His words: "I want a high-quality flexible engine that has learned from all its past mistakes and is upgraded now."
+Every hard floor in `config/story-score.json` names a ruling (his words and the date) or a recorded failure, passes on
+an honestly built board, and cannot be met by adding words without the fact changing (failure
+`scripts-regressed-below-ai-music`: caps that could be met by stripping names pushed the writer to game them).
+
+- **A hero is in a focus sector** (fit 7). A sector keyword or one of the sector's named entities (`config/beat.json`
+  `focus_sectors[].entities`) must sit in the topic sentence that carries the fact. A clause that only appends a
+  sector word ("..., which matters for musicians", "what it means for film") counts for nothing (config `fit`). If a
+  story is not in the sectors, replace it; never reword it in. The wildcard slot (`wildcard: true`) needs fit 4.
+- **A hero has a primary source.** Chase every fact to where it was first reported, which was always the rule ("each
+  checked against its primary source"): put that outlet's url in the option's `first_reported`, or mark that source
+  `kind: "original"`. The actor's own site and a filing or official data host count too. An aggregator or syndicator
+  (`primary_sources.never_primary`: Yahoo News and Finance, MSN, Google News, NewsBreak, Flipboard, Ground News and the
+  rest) never counts, whatever its kind says: go past it to the outlet it copied.
+- **A short and a meme are on the beat** (fit 4), and **at least half a good-news carousel's stories are in a focus
+  sector** (in what each story says happened, never in who it helps).
+- **A thin week, never an empty board.** When fewer than 3 options for a hero day pass every floor after the gather,
+  gather once more (the hub, the series pools, the trade press). If still fewer than 3 pass, the day may carry the 2
+  that do: write `"thin_week": {"<day>": {"regathered": true}}` in `ideas.json` and run `order`, which writes the plain
+  line on each card. The floors are never relaxed, and one passing option is never a day.
 4. **The whys probe**, below: one blind `whys-prober` subagent per hero candidate and per off-day short (a short's floor
    needs one documented why). It costs nothing.
 5. **The probe check.** `node --import tsx scripts/whys-probe-check.ts <Monday>`, and write its JSON, as printed, to
@@ -126,7 +152,8 @@ go in `docs/plans/<Monday>-week/` (`story/` for the score's own, `probe/` for th
     subagent with that skill and the brief only, write its reply to `story/council-<day>-reply.md`, run
     `story_score.py council-record <Monday> --day <day> docs/plans/<Monday>-week/story/council-<day>-reply.md`, then
     `order` again. A chair that says unknown leaves the call his.
-12. **The board** (core step 7). `board_feed.py gate` refuses, from config `from`, an open option with no story score,
+12. **The board** (core step 7). `board_feed.py gate` refuses, from config `from` (the board of 30 Nov, made by the
+    Sunday 29 Nov run; Krish, 2026-11-26: "Newgate, 30th of November"), an open option with no story score,
     an open day out of the score's order, a hero under 3 sourced whys (code `story`), an option under its floor
     (code `story_floor`) and an open hero day with no wildcard, or one with no kind, no one-line why_unexpected, no
     `Wildcard: ` question or no distance read on its present words (code `wildcard`). Fix what it names and run it
@@ -165,7 +192,7 @@ logged skipped, never done.
 
 ## What the run's summary says
 
-One short block: how many candidates the floor refused and why; how many options were probed, with each unreadable
+One short block: how many candidates the floor refused and why, and each hard floor's refusals by name; how many options were probed, with each unreadable
 source named apart from a story that could not hold the whys; each day's order and each option's total; each close
 call and whether the council read it or it stays "close call, your pick"; each day's wildcard, its kind, its why
 unexpected and its distance (or "skipped: not served", with the session's why unexpected standing); every step that exited 2 and what it
