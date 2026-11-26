@@ -402,15 +402,17 @@ def palette_lints(spec: dict) -> list[str]:
         if not shape:
             continue
         sting = 'none'
-        # Every cut ends on the plain v5 outro card (Ruling, Krish, 2026-11-26: "1 agreed"; EndingBand.tsx). A series cut
-        # dated 23 to 25 Nov keeps the retired sting close it was signed with (F33); the palette leaves that close unchecked.
+        # Every cut dated from 26 Nov ends on the v5 outro card, the Library's outro, with no days row (Ruling, Krish,
+        # 2026-11-26: "1 agreed"; V5Outro.tsx). A series cut dated 23 to 25 Nov keeps the retired sting close it was signed
+        # with (F33); the palette leaves that close unchecked. One dated before keeps the statement card's days row.
         closes_on_sting = kind == 'series' and ve_compile._intro().close_wanted(shape, series, when)
+        days_row = kind == 'series' and str(when)[:10] < ve_compile.V5_CLOSE['from'] and not (closes_on_sting and shape == '9x16')
         ids = ('sting_card', 'sting_beat') if closes_on_sting else ('statement_card', 'statement_beat')
         record = {'date': when, 'format': 'long_cut' if shape == '16x9' else 'short_cut', 'shape': shape, 'kind': kind,
                   'opening': 'hook', 'sting': sting,
                   'close': {'id': ids[0] if shape == '16x9' else ids[1], 'sting': bool(closes_on_sting),
                             'seconds': getattr(ve_compile, 'ENDING_FRAMES_BY_ASPECT', {}).get(cut.get('aspect'), ve_compile.ENDING_FRAMES)
-                            / ve_compile.FPS, 'days_row': kind == 'series' and not (closes_on_sting and shape == '9x16')}}
+                            / ve_compile.FPS, 'days_row': days_row}}
         out += [f'brand.palette cuts.{cut_id}: {p}' for p in brand_palette.check(record, palette)]
     return out + accent_kit.accent_problems(spec)
 

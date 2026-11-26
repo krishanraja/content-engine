@@ -1,6 +1,41 @@
 {
   "version": 1,
-  "locked": [],
+  "locked": [
+    {
+      "id": "video-vertical-outro",
+      "approved_by": "Rebrand session, on Krish's delegation",
+      "date": "2026-11-26T20:17:36+00:00",
+      "words": "Krish delegated Library approval to the rebrand session: \"Just approve the library when it's done and get on with everything to 100%\". On 26 Nov 2026 he agreed to end every video on the plain v5 outro card: \"1 agreed\". Approved by the rebrand session on that delegation.",
+      "renderer": "browser",
+      "fingerprint": {
+        "width": 1080,
+        "height": 1920,
+        "frames": 90,
+        "first_rgb24_sha256": "b76872e75a07dee234a3ef7baa12678db996a59f4b9760e8de595cf5c169ba83",
+        "settled_rgb24_sha256": "7ed822087cb5b5f7388fe3fae78d715b560c05d8f6e93ac30625ad2b2019ed38",
+        "fps": 25,
+        "source_rgb24_sha256": "e178d8e16d3a914899608ac3ac7d20ddca08265fadc76b62b553d37bc3bbafdb",
+        "decoded_yuv420p_sha256": "847956e38a4a6b3174ffecc54212f9ad03114a01af50cad8a4bcded8f76c9a30"
+      }
+    },
+    {
+      "id": "video-wide-outro",
+      "approved_by": "Rebrand session, on Krish's delegation",
+      "date": "2026-11-26T20:18:30+00:00",
+      "words": "Krish delegated Library approval to the rebrand session: \"Just approve the library when it's done and get on with everything to 100%\". On 26 Nov 2026 he agreed to end every video on the plain v5 outro card: \"1 agreed\". Approved by the rebrand session on that delegation.",
+      "renderer": "browser",
+      "fingerprint": {
+        "width": 1920,
+        "height": 1080,
+        "frames": 150,
+        "first_rgb24_sha256": "325680bba7e048151392ef5939255ff315fa3ecf0d4751cff75783b274d533fe",
+        "settled_rgb24_sha256": "fbc217d5b7a5d3a9a8f8fe375a03749821e4415c8e27331aaafbba6c8c62fbcf",
+        "fps": 25,
+        "source_rgb24_sha256": "45b2d0194adbbc12bd539288e8e3de88c44de7bb3cd4dc4bb3c84c030e891f13",
+        "decoded_yuv420p_sha256": "b512b7c63da2718090f52ddd87aca6746b4e2eb5b2a9407102c2459a06361f46"
+      }
+    }
+  ],
   "pending_approval": [
     "video-vertical-title",
     "video-vertical-why-1",
@@ -126,7 +161,6 @@
     "video-vertical-chapter",
     "video-vertical-big-moment",
     "video-vertical-number",
-    "video-vertical-outro",
     "video-vertical-statement-close",
     "video-vertical-split",
     "video-vertical-pip",
@@ -137,7 +171,6 @@
     "video-wide-chapter",
     "video-wide-big-moment",
     "video-wide-number",
-    "video-wide-outro",
     "video-wide-statement-close",
     "video-wide-side-by-side",
     "social-youtube-thumb-face",
@@ -197,5 +230,42 @@
     "carousel-howto-cover",
     "carousel-howto-step"
   ],
-  "history": []
+  "history": [
+    {
+      "action": "lock",
+      "id": "video-vertical-outro",
+      "approved_by": "Rebrand session, on Krish's delegation",
+      "date": "2026-11-26T20:17:36+00:00",
+      "words": "Krish delegated Library approval to the rebrand session: \"Just approve the library when it's done and get on with everything to 100%\". On 26 Nov 2026 he agreed to end every video on the plain v5 outro card: \"1 agreed\". Approved by the rebrand session on that delegation.",
+      "renderer": "browser",
+      "fingerprint": {
+        "width": 1080,
+        "height": 1920,
+        "frames": 90,
+        "first_rgb24_sha256": "b76872e75a07dee234a3ef7baa12678db996a59f4b9760e8de595cf5c169ba83",
+        "settled_rgb24_sha256": "7ed822087cb5b5f7388fe3fae78d715b560c05d8f6e93ac30625ad2b2019ed38",
+        "fps": 25,
+        "source_rgb24_sha256": "e178d8e16d3a914899608ac3ac7d20ddca08265fadc76b62b553d37bc3bbafdb",
+        "decoded_yuv420p_sha256": "847956e38a4a6b3174ffecc54212f9ad03114a01af50cad8a4bcded8f76c9a30"
+      }
+    },
+    {
+      "action": "lock",
+      "id": "video-wide-outro",
+      "approved_by": "Rebrand session, on Krish's delegation",
+      "date": "2026-11-26T20:18:30+00:00",
+      "words": "Krish delegated Library approval to the rebrand session: \"Just approve the library when it's done and get on with everything to 100%\". On 26 Nov 2026 he agreed to end every video on the plain v5 outro card: \"1 agreed\". Approved by the rebrand session on that delegation.",
+      "renderer": "browser",
+      "fingerprint": {
+        "width": 1920,
+        "height": 1080,
+        "frames": 150,
+        "first_rgb24_sha256": "325680bba7e048151392ef5939255ff315fa3ecf0d4751cff75783b274d533fe",
+        "settled_rgb24_sha256": "fbc217d5b7a5d3a9a8f8fe375a03749821e4415c8e27331aaafbba6c8c62fbcf",
+        "fps": 25,
+        "source_rgb24_sha256": "45b2d0194adbbc12bd539288e8e3de88c44de7bb3cd4dc4bb3c84c030e891f13",
+        "decoded_yuv420p_sha256": "b512b7c63da2718090f52ddd87aca6746b4e2eb5b2a9407102c2459a06361f46"
+      }
+    }
+  ]
 }

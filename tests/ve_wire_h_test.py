@@ -37,6 +37,19 @@ def staging_directory():
         shutil.rmtree(directory)
 
 
+class RetiredByV5(unittest.TestCase):
+    def test_format_h_is_retired_and_refused(self):
+        # The v5 lock (25 Nov 2026, config/retired-styles.json) retired the hand-held-screen look and its devices
+        # (scribble, sticker, stamp), so compiling this 23 Oct fixture is refused. The contract tests below stay as the
+        # record of Format H and run only if the look is ever un-retired.
+        spec = load_json(FIXTURE / 'spec.json')
+        words = load_json(FIXTURE / 'words.test.json')['words']
+        with self.assertRaisesRegex(ValueError, 'retired by the v5 ruling'):
+            compile_cut(spec, 'proof-tall', words, ROOT)
+
+
+@unittest.skipIf(any(r.get('id') == 'hand-held-screen' for r in load_json(ROOT / 'config/retired-styles.json')),
+                 'hand-held-screen is retired by the v5 lock (config/retired-styles.json)')
 class WireHTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
