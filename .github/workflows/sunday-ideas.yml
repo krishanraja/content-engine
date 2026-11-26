@@ -205,13 +205,16 @@ jobs:
         uses: anthropics/claude-code-action@v1
         env:
           ENGINE_OPERATOR_TOKEN: ${{ secrets.ENGINE_OPERATOR_TOKEN }}
+          # The cycle's connector touches (config/cycle.json). Unset until Krish adds the secret: touch.py then queues
+          # them on the week's touches.jsonl for the Sunday room to drain, never drops them.
+          CC_HARNESS_KEY: ${{ secrets.CC_HARNESS_KEY }}
           MONDAY: ${{ steps.guard.outputs.monday }}
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ github.token }}
           claude_args: >-
             --max-turns 400
-            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/sunday_ideas.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/lookalike.py:*),Bash(python3 scripts/post-pack/divergent.py:*),Bash(python3 scripts/post-pack/meme_templates.py gather:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/live_board.py:*),Bash(python3 scripts/post-pack/board_session.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(python3 scripts/post-pack/story_floor.py:*),Bash(python3 scripts/post-pack/story_score.py:*),Bash(node --import tsx scripts/whys-probe-check.ts:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
+            --allowedTools "Bash(python3 scripts/check_failures.py:*),Bash(python3 scripts/floor.py:*),Bash(python3 scripts/engine.py:*),Bash(python3 scripts/sunday_ideas.py:*),Bash(python3 scripts/post-pack/board_web.py read:*),Bash(python3 scripts/post-pack/board_feed.py:*),Bash(python3 scripts/post-pack/lookalike.py:*),Bash(python3 scripts/post-pack/divergent.py:*),Bash(python3 scripts/post-pack/meme_templates.py gather:*),Bash(python3 scripts/post-pack/making.py:*),Bash(python3 scripts/post-pack/live_board.py:*),Bash(python3 scripts/post-pack/board_session.py:*),Bash(python3 scripts/post-pack/copy_lint.py:*),Bash(python3 scripts/post-pack/story_floor.py:*),Bash(python3 scripts/post-pack/story_score.py:*),Bash(python3 scripts/post-pack/touch.py:*),Bash(node --import tsx scripts/whys-probe-check.ts:*),Bash(node vendor/makeyourmindup/kill-list/kill-list.mjs:*),Bash(git status:*),Bash(git diff:*),Read,Glob,Grep,Edit(docs/plans/**),Write(docs/plans/**),WebSearch,WebFetch,Task,TodoWrite"
             --disallowedTools "Read(//proc/**)"
           prompt: |
             The Sunday ideas run for the week starting Monday ${{ steps.guard.outputs.monday }}, fired by GitHub Actions
@@ -320,6 +323,11 @@ jobs:
             says (step 6d: the floor, the whys probe, the angles, the humour reads, the blind judges, then story_score.py
             score and order; on a re-run of some days, order with --status ${{ runner.temp }}/status.json and --before
             ${{ runner.temp }}/ideas-before.json, never --fresh).
+            The cycle's touches (config/cycle.json; .agents/skills/plan-week/references/story-score.md, "The cycle's
+            touches"): run python3 scripts/post-pack/touch.py run 0 --week <Monday> as you start, python3
+            scripts/post-pack/touch.py run 1 --week <Monday> after the gather (with --set topic="<topic>" per candidate
+            topic before researching it), and python3 scripts/post-pack/touch.py run 2 --week <Monday> after the order.
+            A touch it cannot send is queued, never dropped; say each stage's queued and skipped lines in your reply.
             board_feed.py gate must pass before you stop: the workflow runs it again and keeps the week off the live
             board while a subject he refused is offered, a warned option leads its day, a return comes back no
             deeper, an option repeats what went out or another option, or an option lacks its shape, aim, humour or

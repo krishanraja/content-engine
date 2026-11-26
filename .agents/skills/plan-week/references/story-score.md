@@ -97,6 +97,22 @@ go in `docs/plans/<Monday>-week/` (`story/` for the score's own, `probe/` for th
     an open day out of the score's order, a hero under 3 sourced whys (code `story`) and an option under its floor
     (code `story_floor`). Fix what it names and run it again; never edit a score by hand.
 
+## The cycle's touches (stages 0 to 2)
+
+Which system the Sunday run reads from or informs (Control Center's instruction and brief, the strategist's memo,
+growth-makeyourmindup's reviews, the research library, the floor, the makeyourmindup kill list, the divergence and
+humour engines) is said once, by stage, in `config/cycle.json`; this file names the stage and never lists the tools
+again (Krish, 2026-11-26). Run each stage as the procedure reaches it, from the repository root:
+
+    python3 scripts/post-pack/touch.py run 0 --week <Monday>                           as the run starts
+    python3 scripts/post-pack/touch.py run 1 --week <Monday> --set topic="<topic>"     after the gather, per topic
+    python3 scripts/post-pack/touch.py run 2 --week <Monday>                           after step 12's order
+
+Every touch writes one line to `docs/plans/<Monday>-week/touches.jsonl`. `board_feed.py gate` also refuses, from
+config `from`, a required stage 2 touch with no line there (code `touch`). With no `CC_HARNESS_KEY` (the Actions run),
+a connector touch is queued, never dropped; the Sunday room drains it (`touch.py drain --week <Monday>`). Exit 2 is
+logged skipped, never done.
+
 ## Spend and exit 2
 
 - Paid steps are 6 (`angles --provoke --judge`), 8 (`humour`) and 11 (the council read, once cleared). Steps 2 to 5,
