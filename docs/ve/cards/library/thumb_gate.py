@@ -81,7 +81,15 @@ def bound_type_metrics(path):
     return {}
 
 
-def measure(path, wide_type=None, *, is_cover=True):
+# Krish approved the vertical image-led families exactly (2026-11-26). The receipt and portrait-window families sit on
+# an ink ground by design, so the colour and light floors judge them against the retired colour-block covers. They are
+# held to contrast and busy instead. The figure family is a single series-colour field and keeps the colour floor.
+INK_GROUND_VERTICAL = ("receipt", "portrait")
+
+
+def measure(path, wide_type=None, *, is_cover=True, vertical_family=None, sidebar=True):
+    """`sidebar` is False for a wide image never shown at 160 px (the Substack cover, shown at full card width),
+    which then skips only the 160 px type measure. The YouTube thumbnail always keeps it."""
     im = Image.open(path).convert("RGB")
     small = thumbnail(im)
     px = list(small.getdata()); n = len(px)
@@ -93,14 +101,16 @@ def measure(path, wide_type=None, *, is_cover=True):
     busy = sum(1 for v in stamp.getdata() if v > 60) / (stamp.width * stamp.height)
     result = {"colour": round(colour, 3), "contrast": round(contrast, 3), "light": round(light, 3), "busy": round(busy, 3)}
     vertical = im.width * 16 == im.height * 9 or im.width * 5 == im.height * 4
-    fails = [k for k, ok in (("colour", not vertical or colour >= .10), ("contrast", contrast >= .55),
-                             ("light", light >= .025), ("busy", busy < .42)) if not ok]
+    ink_ground = vertical and vertical_family in INK_GROUND_VERTICAL
+    fails = [k for k, ok in (("colour", not vertical or ink_ground or colour >= .10), ("contrast", contrast >= .55),
+                             ("light", ink_ground or light >= .025), ("busy", busy < .42)) if not ok]
     if is_cover and im.width > im.height:
         evidence = bound_type_metrics(Path(path)) if wide_type is None else wide_type
         for name, floor in (("cap_height_px", 7), ("local_contrast", 4.5)):
             value = evidence.get(name)
             result[name] = value
-            if not isinstance(value, (int, float)) or not math.isfinite(value) or value < floor:
+            # Recorded for every wide cover; it fails only an image people meet at 160 px.
+            if sidebar and (not isinstance(value, (int, float)) or not math.isfinite(value) or value < floor):
                 fails.append(name)
     return result, fails
 

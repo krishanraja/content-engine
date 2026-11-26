@@ -49,6 +49,21 @@ def headline(text, clause, fmt):
     return escape(text)
 
 
+def wide_headline(facts, fmt, family, text):
+    """Wide covers set the headline in Fraunces sentence case, as approved (Krish, 26 Nov 2026).
+
+    The capitals lines in cover-facts are the Anton kickers for vertical covers. A wide cover takes
+    `image_led.wide_headline[fmt]` when the piece sets one, then the piece's own title. The portrait family
+    always carries the title, with `video_title_emphasis` marked."""
+    chosen = facts.get("image_led", {}).get("wide_headline", {}).get(fmt)
+    if chosen:
+        return chosen
+    title = facts.get("video_title") or facts.get("headline")
+    if family == "portrait" or (title and text == text.upper()):
+        return title or text
+    return text
+
+
 def document(facts, base, fmt, family, still=None, proof=None):
     width, height = OUTPUTS[fmt][1]
     art = facts.get("image_led", {})
@@ -57,6 +72,8 @@ def document(facts, base, fmt, family, still=None, proof=None):
     colour = SERIES[facts["subchannel"]]
     when = date.fromisoformat(facts["date"])
     text = " ".join(lines((cover if fmt == "substack" else thumbs)["headline"]))
+    if wide:
+        text = wide_headline(facts, fmt, family, text)
     if family == "figure" and art["figure"].get("headline_from") == "cover":
         text = " ".join(lines(cover["headline"]))
     if family == "portrait" and not wide:

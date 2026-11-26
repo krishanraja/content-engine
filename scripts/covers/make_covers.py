@@ -164,7 +164,9 @@ def build(facts_path, out, systems, assets=None, review=None):
                 for channel, path in files:
                     item = {"format": channel, "file": OUTPUTS[channel][0], "dimensions": list(size),
                             "sha256": digest(path), "logos": logos, "safe_area": problems}
-                    metrics, fails = measure(path, wide_type)
+                    vertical_family = families.get("vertical") if fmt in ("vertical", "carousel") else None
+                    metrics, fails = measure(path, wide_type, vertical_family=vertical_family,
+                                             sidebar=channel != "substack")
                     item["gate_160"] = {"metrics": metrics, "fails": fails}
                     record["issues"].extend(f"{channel}: 160 px {failure}" for failure in fails)
                     if channel == "youtube" and path.stat().st_size > 2 * 1024 * 1024:

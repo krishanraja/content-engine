@@ -91,7 +91,10 @@ class ImageLedCoversTest(unittest.TestCase):
                     self.assertNotIn("fonts.googleapis", doc)
                     self.assertNotIn(".codex-input", doc)
                     if fmt in ("youtube", "substack"):
-                        self.assertIn("Video &amp; hook" if fmt == "youtube" else "Article &lt;&amp;&gt;", doc)
+                        # The wide portrait family carries the piece title beside its subject (approved 26 Nov 2026).
+                        words = "Piece" if family == "portrait" else (
+                            "Video &amp; hook" if fmt == "youtube" else "Article &lt;&amp;&gt;")
+                        self.assertIn(words, doc)
                     if family == "portrait":
                         self.assertIn("Photo: Photographer, CC BY-SA 4.0, via Wikimedia Commons", doc)
                     if system == "vertical":
@@ -114,6 +117,31 @@ class ImageLedCoversTest(unittest.TestCase):
             self.assertEqual(fails, ["colour"] if width < height else [])
             self.assertEqual(metrics["colour"], 0)
             self.assertEqual("cap_height_px" in metrics, width > height)
+
+    def test_ink_ground_vertical_and_substack_scope(self):
+        path = self.base / "ink.png"
+        image = Image.new("RGB", (90, 160), "black")
+        ImageDraw.Draw(image).rectangle((0, 0, 44, 160), fill=(120, 120, 120))
+        image.save(path)
+        for family in ("receipt", "portrait"):
+            self.assertNotIn("colour", make_covers.measure(path, vertical_family=family)[1])
+            self.assertNotIn("light", make_covers.measure(path, vertical_family=family)[1])
+        self.assertIn("colour", make_covers.measure(path, vertical_family="figure")[1])
+        wide = self.base / "substack.png"
+        Image.new("RGB", (160, 84), "black").save(wide)
+        self.assertNotIn("cap_height_px", make_covers.measure(wide, sidebar=False)[1])
+        self.assertIn("cap_height_px", make_covers.measure(wide)[1])
+
+    def test_wide_headline_is_sentence_case(self):
+        import layout
+        facts = {"video_title": "AI music or human music?", "image_led": {}}
+        self.assertEqual(layout.wide_headline(facts, "youtube", "evidence", "AI MUSIC OR HUMAN MUSIC?"),
+                         "AI music or human music?")
+        self.assertEqual(layout.wide_headline(facts, "substack", "evidence", "Meta staff gamed it."),
+                         "Meta staff gamed it.")
+        self.assertEqual(layout.wide_headline(facts, "youtube", "portrait", "Short hook."), facts["video_title"])
+        facts["image_led"]["wide_headline"] = {"youtube": "They faked AI use."}
+        self.assertEqual(layout.wide_headline(facts, "youtube", "evidence", "X"), "They faked AI use.")
 
     def test_wide_gate_keeps_global_floors_and_requires_bound_type_evidence(self):
         path = self.base / "wide.png"

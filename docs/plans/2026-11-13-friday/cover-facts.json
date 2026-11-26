@@ -94,6 +94,7 @@
  },
  "video_length": "5:21",
  "image_led": {
+  "wide_headline": {"youtube": "They faked AI use."},
   "still_subject": "A workstation running the token-count leaderboard",
   "still_position": [
    62,
