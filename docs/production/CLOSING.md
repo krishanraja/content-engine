@@ -1,5 +1,7 @@
 # How every video ends
 
+From Thu 26 Nov 2026 every whole cut closes on the Library's outro instead (`video-wide-outro` and `video-vertical-outro`: S3h, "Follow for more", makeyourmindup.ai and the climb bars, no tagline; Ruling, Krish, 2026-11-26: "1 agreed"). `docs/production/BRAND_PALETTE.md`, "The series close", is the rule. This page describes the statement card that cuts dated before 26 Nov keep.
+
 Krish, 10 Nov 2026, on the Fri 13 Nov piece's cards: "This house card looks awful. The copy should read: "Built to help you decide." And the component spacing and where all the components are are ridiculously poorly designed. Can you spin off a sub-session to upgrade these cards permanently and come up with a much more powerful closing strategy?"
 
 He was shown three directions as stills and 6 second clips (A, the masthead: an editorial card; B, the band: his last caption growing into a band in the series colour; C, the statement: the tagline as the picture). He picked **C: the statement** on 10 Nov 2026. This page is the close that every video now ends on. It works inside the floor: one opening and one close (never 7), and a spoken outro pointing to the full article plus a visible call to action (`config/rejection-floor.json`, `s463635e2ea`).
