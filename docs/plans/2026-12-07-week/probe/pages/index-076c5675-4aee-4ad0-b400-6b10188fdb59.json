@@ -1,0 +1,11 @@
+{
+  "https://www.izotope.com/en/products/nectar.html": {
+    "file": "izotope-nectar-product.txt"
+  },
+  "https://www.musicradar.com/music-tech/izotopes-nectar-5-introduces-a-clever-new-way-to-add-effects-to-vocals-one-word-at-a-time": {
+    "file": "musicradar-nectar5-moments.txt"
+  },
+  "https://izotope.com/community/blog/introducing-izotope-nectar-5": {
+    "file": "izotope-blog-introducing-nectar5.txt"
+  }
+}
