@@ -1,4 +1,0 @@
-Status: The Library's static check runs on a clean checkout again: no live part of library.json, library.html, the review page or the guide names a retired cover template, verify_static.py skips the local bank-prompts comparison when that file is absent, and test_locking.py passes; 65 older gate failures in live v5 templates remain, listed in docs/ve/cards/library/verify-static-known.json.
-Changed: tests/library_static_test.py runs verify_static.py on every pull request that touches the Library and fails on any error outside that list, or on a listed one that is fixed.
-Next: Krish decides the 65 listed design and words failures (poster safe boxes, the carousel cover rule, good-news words, meme crops, the podcast thumbnail V4, simple-advice contrast) and the website mock's empty latest-covers row.
-North Star check (2026-11-27): holds.
