@@ -1,0 +1,107 @@
+Suno adds AI video to its music app, with filters for artists’ faces
+Skip to content
+Toggle Navigation
+News
+Events
+TNW Conference
+All Events
+Newsletters
+Advertise with us
+Jobs
+Contact
+News
+News
+News
+News
+Latest
+Deep tech
+Sustainability
+Ecosystems
+Data and security
+Fintech and ecommerce
+Future of work
+More
+Startups and technology
+Investors and funding
+Government and policy
+Corporates and innovation
+Artificial Intelligence
+Suno adds AI video to its music app, with filters for artists’ faces
+Visuals makes lyric videos and album art for users' songs, but blocks prompts that copy real people.
+November 17, 2026 - 4:34 pm GMT
+Add as a preferred source
+Read more TNW news
+Credit: Reputation Resolutions
+AI music company Suno has launched Visuals, which makes images and video clips of up to 15 seconds to match users’ songs, including lyric videos that lip-sync. It is on the web now, uses separate credits, and comes with filters meant to block likenesses of artists, public figures and copyrighted work.
+AI music company Suno has launched Visuals, a tool that makes images and short videos to go with users’ songs, it announced on Tuesday. Users can create lyric videos, album art and clips of up to 15 seconds. It is on the web now, with iOS and Android apps due in the next few weeks.
+Suno says its video model is built around music. Clips follow a song’s structure, pick up on its lyrics and lip-sync to them. Users can start from Suno’s own characters or upload an image, then extend and edit clips with text prompts.
+Visuals runs on its own credits, bought separately from song credits. It follows Suno’s Speech tool, launched in October for spoken audio such as poems and meditations.
+New filters will block prompts and uploads that try to show specific artists, public figures or copyrighted characters, Suno says. Videos will also carry hidden watermarks before they can be shared outside Suno. ByteDance added similar guardrails to its Seedance video tool in March.
+“This means that prompts that work on other video platforms may not work on Suno and that’s by design,” the company wrote.
+Those guardrails come as Suno fights fresh legal battles. Last week, Elvis Presley’s music owners and Eminem’s publisher sued Suno, and the Presley suit claims it misused his voice.
+Suno has been trying to look more legitimate. It launched music models trained on licensed songs from Warner and BMG in September, and plans audio watermarks for its tracks. Investors valued the company at $5.4B in June.
+Story by
+Ana Maria Constantin
+With expertise in digital marketing, product management, and branding &amp; identity, Ana Maria Constantin develops strategies that resonate (show all)
+With expertise in digital marketing, product management, and branding & identity, Ana Maria Constantin develops strategies that resonate with our target audience in the software/SaaS industry. Collaboration and teamwork are paramount to her, as she loves empowering her colleagues to achieve outstanding results and unlock their full potential.
+Get the TNW newsletter
+Get the most important tech news in your inbox each week.
+Email address
+Subscribe
+Website
+Thanks! Check your inbox to confirm your subscription.
+By subscribing you agree to our Privacy Statement.
+Published
+November 17, 2026 - 4:34 pm UTC
+Back to top
+Get more TNW on Google
+Add as a preferred source
+Read more TNW news
+Follow on Google
+@thenextweb
+Story by a
+Ana Maria Constantin
+Popular articles
+1
+Magnific passes $300M ARR and may raise outside money next year
+2
+Microsoft puts Word, Excel and PowerPoint inside Copilot at Ignite
+3
+Everful raises $48.5M for AI agents that source products from factories
+4
+Microsoft says MAI Code 2 matches 98% of GPT-6.1 Sol at 40% of the price
+5
+The Apple executive behind the iPhone’s Camera app has left
+Get the TNW newsletter
+✕ Close
+Get the TNW newsletter
+Get the most important tech news in your inbox each week.
+Email address
+Subscribe
+Website
+Thanks! Check your inbox to confirm your subscription.
+By subscribing you agree to our Privacy Statement.
+Related Articles
+artificial-intelligence
+Magnific passes $300M ARR and may raise outside money next year
+microsoft
+Microsoft puts Word, Excel and PowerPoint inside Copilot at Ignite
+artificial-intelligence
+Everful raises $48.5M for AI agents that source products from factories
+microsoft
+Microsoft says MAI Code 2 matches 98% of GPT-6.1 Sol at 40% of the price
+apple
+The Apple executive behind the iPhone’s Camera app has left
+The heart of tech
+More TNW
+Media
+Events
+Newsletters
+About TNW
+Advertise with us
+Terms & Conditions
+Cookie Statement
+Privacy Statement
+Consent Preferences
+A Tekpon Company
+Copyright © 2006—2026, Cogneve, INC. Made with <3 in Amsterdam.

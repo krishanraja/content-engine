@@ -1,0 +1,140 @@
+{
+ "schema": "why-ladder/1",
+ "question": "Why is Zack London taking an AI-animated feature, Gods Don't Give Gifts, into cinemas himself on 4 December 2026?",
+ "rungs": [
+  {
+   "n": 1,
+   "question": "Why did London make the film with AI tools rather than a conventional animation pipeline?",
+   "answer": "London says the film would never have been greenlit the normal way: it is too odd to earn the roughly $150 million a conventional version would need. AI tools let a small team make it at that scale without writing to a budget or answering to executives.",
+   "evidence": [
+    {
+     "url": "https://filmthreat.com/features/the-first-ai-animated-feature-film-in-theaters-gods-dont-give-gifts-director-zack-london-talks-about-the-future-of-cinema/",
+     "domain": "filmthreat.com",
+     "date": "2026-11-05",
+     "quote": "It doesn’t meet the benchmarks to get the $150 million greenlight that would be necessary to execute it the normal way."
+    },
+    {
+     "url": "https://www.thewrap.com/industry-news/tech/ai-film-gods-dont-give-gifts-youtube-grimes-gossip-goblin/",
+     "domain": "thewrap.com",
+     "date": "2026-11-05",
+     "quote": "“AI means I don’t have to write scripts with a budget in mind,” he said."
+    },
+    {
+     "url": "https://www.screendaily.com/news/agc-to-launch-sales-on-ai-rendered-sci-fi-from-youtuber-gossip-goblin/5221672.article",
+     "domain": "screendaily.com",
+     "date": "2026-10-22",
+     "quote": "AI was a tool to help us tell our story at scale, while still being able to maintain our core artistic vision without having to compromise or answer to other parties"
+    }
+   ],
+   "strength": "documented",
+   "counter": {
+    "text": "Magica notes the release reports give no budget, so the saving cannot be measured: \"They therefore provide no basis for calculating a break-even audience or measuring a cost saving against conventional animation.\" The $150 million figure and the \"absurdly small\" budget are London's own words, not disclosed numbers."
+   },
+   "mechanism_type": "production cost",
+   "stop": null
+  },
+  {
+   "n": 2,
+   "question": "Why can a film made this cheaply reach cinemas without a studio behind it?",
+   "answer": "It is not going through a studio. Fable and Gossip Goblin are releasing it in the US themselves, using a booker to get screens, the route Markiplier used for Iron Lung. AGC handles international sales and WME Independent consults on the theatrical plan.",
+   "evidence": [
+    {
+     "url": "https://www.thewrap.com/industry-news/tech/ai-film-gods-dont-give-gifts-youtube-grimes-gossip-goblin/",
+     "domain": "thewrap.com",
+     "date": "2026-11-05",
+     "quote": "will follow Fischbach’s strategy of working with a booker to independently get the movie into theaters."
+    },
+    {
+     "url": "https://filmthreat.com/features/the-first-ai-animated-feature-film-in-theaters-gods-dont-give-gifts-director-zack-london-talks-about-the-future-of-cinema/",
+     "domain": "filmthreat.com",
+     "date": "2026-11-05",
+     "quote": "Partnering with AGC Studios for international theatrical distribution and self-distributing domestically through a passionate, direct-to-audience grassroots network"
+    },
+    {
+     "url": "https://www.screendaily.com/news/agc-to-launch-sales-on-ai-rendered-sci-fi-from-youtuber-gossip-goblin/5221672.article",
+     "domain": "screendaily.com",
+     "date": "2026-10-22",
+     "quote": "Gods Don’t Give Gifts will open in US cinemas on December 4 on under 1,000 screens via Fable alongside Gossip Goblin, and will get an awards season push."
+    }
+   ],
+   "strength": "documented",
+   "counter": {
+    "text": "As of 6 October Magica reported no distributor and no confirmed screen count: \"The release reports disclose no production budget, marketing spend or confirmed screen count.\" TheWrap gives Saatchi's target as nearly 1,000 theatres to start and Screen says under 1,000 screens. Both are plans, not confirmed bookings."
+   },
+   "mechanism_type": "self-distribution via a booker",
+   "stop": null
+  },
+  {
+   "n": 3,
+   "question": "Why does that self-distribution route depend on London's online following?",
+   "answer": "With no studio marketing machine, the bet is that existing fans create the demand that makes cinemas take the film, as demand did for Iron Lung. London has a large YouTube base, a trailer with millions of views, and an ambassador programme and street team drawn from his community.",
+   "evidence": [
+    {
+     "url": "https://www.thewrap.com/industry-news/tech/ai-film-gods-dont-give-gifts-youtube-grimes-gossip-goblin/",
+     "domain": "thewrap.com",
+     "date": "2026-11-05",
+     "quote": "Demand to see Fischbach’s “Iron Lung” led to more theaters picking up his film, which ultimately made more than $50 million at the global box office."
+    },
+    {
+     "url": "https://www.thewrap.com/industry-news/tech/ai-film-gods-dont-give-gifts-youtube-grimes-gossip-goblin/",
+     "domain": "thewrap.com",
+     "date": "2026-11-05",
+     "quote": "As a result, “Gods Don’t Give Gifts” isn’t entering theaters cold and benefits from an established base that understands the universe"
+    },
+    {
+     "url": "https://filmthreat.com/features/the-first-ai-animated-feature-film-in-theaters-gods-dont-give-gifts-director-zack-london-talks-about-the-future-of-cinema/",
+     "domain": "filmthreat.com",
+     "date": "2026-11-05",
+     "quote": "London has activated an ambassador program and street team directly through his community at godsdontgivegifts.com, turning his audience into active partners in the rollout."
+    },
+    {
+     "url": "https://www.screendaily.com/news/agc-to-launch-sales-on-ai-rendered-sci-fi-from-youtuber-gossip-goblin/5221672.article",
+     "domain": "screendaily.com",
+     "date": "2026-10-22",
+     "quote": "The creator commands 1.4million followers on his Gossip Goblin YouTube channel and the trailer has passed 15million views since it launched on October 6."
+    }
+   ],
+   "strength": "documented",
+   "counter": {
+    "text": "Magica: \"Those totals describe the online property’s reach; they do not measure unique potential ticket buyers or advance sales.\" TheWrap also reports resistance to AI films among younger audiences, and gives 1.6 million subscribers where Screen gives 1.4 million."
+   },
+   "mechanism_type": "audience-led theatrical demand",
+   "stop": null
+  },
+  {
+   "n": 4,
+   "question": "Why is Fable, an AI studio, producing and releasing the film?",
+   "answer": "The sources point to two reasons without settling either. Film Threat quotes London saying Saatchi persuaded him the work deserved a big screen. Magica says Fable has a commercial stake in AI entertainment catching on. No source gives Fable's deal terms or what it earns from this film.",
+   "evidence": [
+    {
+     "url": "https://magica.com/news/fable-gods-dont-give-gifts-december-release-oscar-campaign",
+     "domain": "magica.com",
+     "date": "2026-10-06",
+     "quote": "Fable also has a commercial interest in the wider adoption of AI entertainment."
+    },
+    {
+     "url": "https://filmthreat.com/features/the-first-ai-animated-feature-film-in-theaters-gods-dont-give-gifts-director-zack-london-talks-about-the-future-of-cinema/",
+     "domain": "filmthreat.com",
+     "date": "2026-11-05",
+     "quote": "He gave me that little pep talk: ‘No, let’s make it happen. Let’s put this on a big screen because this deserves it.’”"
+    },
+    {
+     "url": "https://www.screendaily.com/news/agc-to-launch-sales-on-ai-rendered-sci-fi-from-youtuber-gossip-goblin/5221672.article",
+     "domain": "screendaily.com",
+     "date": "2026-10-22",
+     "quote": "Edward Saatchi’s Amazon-based Fable produces Gods Don’t Give Gifts"
+    }
+   ],
+   "strength": "inferred",
+   "counter": {
+    "text": "Magica separates the studio's funding from the film: \"The funding report concerns the studio, not a disclosed budget for Gods Don’t Give Gifts.\" Puck's report was unreadable (bot challenge), so its account was not checked."
+   },
+   "mechanism_type": "producer incentive",
+   "stop": "evidence_exhausted"
+  }
+ ],
+ "landing": {
+  "shows": "The ladder shows a stated cost argument (a film London says could not win a $150 million greenlight, made with AI tools and a small human crew) joined to a release model borrowed from creator films like Iron Lung, where an online following is meant to pull the film onto screens. The budget, screen count and Fable's terms are not disclosed. The 'first in theatres' claim is disputed: Magica cites Post Truth, a Turkish AI documentary that opened at 58 locations in July 2025. A Screen headline dated 25 November refers to an Academy animation ruling on the film; that article was not read.",
+  "open_question": "If the budget stays undisclosed, what would count as evidence that the AI route made this film cheaper rather than simply possible?"
+ }
+}

@@ -1,0 +1,63 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why is BumaStemra taking YourNeuroTune to court?",
+  "rungs": [
+    {"n": 1,
+     "question": "Why is BumaStemra going to court now?",
+     "answer": "BumaStemra gave YourNeuroTune until noon on Wednesday 25 November to say it would stop supplying the music. Before the deadline, the company's lawyer said it would not, so BumaStemra announced it would go to the judge.",
+     "evidence": [
+       {"url": "https://www.rd.nl/a/rechtszaak-buma-stemra-tegen-ai-muziekbedrijf", "domain": "rd.nl", "date": "2026-11-26", "quote": "YourNeuroTune had tot woensdag 12.00 uur de tijd om aan te geven dat het de genoemde activiteit zou staken. Al voor die deadline liet de advocaat van dit bedrijf weten dat dit niet gaat gebeuren. Daarom stapt BumaStemra naar de rechter."},
+       {"url": "https://nieuws.nl/entertainment/bumastemra-gaat-rechtszaak-starten-tegen-ai-muziekbedrijf", "domain": "nieuws.nl", "date": "2026-11-25", "quote": "De Nederlandse belangenbehartiger van muziekmakers had het bedrijf een ultimatum gegeven om te stoppen met het leveren van muziek die is gemaakt met een AI-model, maar heeft inmiddels van een advocaat te horen gekregen dat dit niet zal gebeuren."},
+       {"url": "https://www.ibtimes.co.uk/bumastemra-sues-dutch-ai-music-company-1834805", "domain": "ibtimes.co.uk", "date": "2026-11-25", "quote": "BumaStemra confirmed on Wednesday that it would take the matter to court after a lawyer representing YourNeuroTune indicated that the company would not cease its activities, Dutch technology publication Tweakers reported."}
+     ],
+     "strength": "documented",
+     "counter": {"text": "None found that disputes the sequence, within the four readable sources. No source says a case has been filed yet; the reports describe an announced step. The eb.live page was unreadable."},
+     "mechanism_type": null,
+     "stop": null},
+    {"n": 2,
+     "question": "Why did BumaStemra demand that YourNeuroTune stop?",
+     "answer": "BumaStemra says the tracks are made with Suno, a model trained on existing music without the makers' permission, and that YourNeuroTune tells its customers they no longer need to pay BumaStemra. It calls this unlawful: the company earns from music built on its members' work while steering customers away from paying them.",
+     "evidence": [
+       {"url": "https://www.rd.nl/a/rechtszaak-buma-stemra-tegen-ai-muziekbedrijf", "domain": "rd.nl", "date": "2026-11-26", "quote": "BumaStemra noemt de werkwijze van YourNeuroTune onrechtmatig, omdat het bedrijf heeft vastgesteld dat gebruik is gemaakt van Suno. Dit is een AI-model dat is getraind op bestaande muziek, zonder toestemming van de makers."},
+       {"url": "https://www.ibtimes.co.uk/bumastemra-sues-dutch-ai-music-company-1834805", "domain": "ibtimes.co.uk", "date": "2026-11-25", "quote": "Michiel Laan, commercial director at BumaStemra, accused the company of profiting from technology that relies on the creative work of the very people whose royalties it encourages businesses to avoid."}
+     ],
+     "strength": "documented",
+     "counter": {"text": "YourNeuroTune's co-founder said in October that it works only with models under commercial licence: \"We work only with models under commercial licence.\" (ioplus.nl, 2026-10-22). It told Nieuwsuur it would only answer the substance in court (ibtimes.co.uk)."},
+     "mechanism_type": "the claim (unlicensed training data behind a commercial product)",
+     "stop": null},
+    {"n": 3,
+     "question": "Why does YourNeuroTune say its customers need no BumaStemra licence?",
+     "answer": "Its case rests on the rule that copyright needs a human author. It says purely machine-made tracks fall outside the repertoire collecting societies manage, so a business playing only its catalogue owes BumaStemra nothing for that music. It offers a template to cancel the licence, while saying Sena's neighbouring-rights payments remain separate.",
+     "evidence": [
+       {"url": "https://ioplus.nl/en/posts/functional-not-for-the-charts-yourneurotune-on-copyright-fees", "domain": "ioplus.nl", "date": "2026-10-22", "quote": "Underpinning the entire economic model is a fundamental European legal principle: copyright requires a human author. Purely machine-generated compositions fall outside the mandatory repertoire of traditional collecting societies, creating substantial savings for venue owners without infringing on artists' statutory rights."},
+       {"url": "https://www.ibtimes.co.uk/bumastemra-sues-dutch-ai-music-company-1834805", "domain": "ibtimes.co.uk", "date": "2026-11-25", "quote": "YourNeuroTune markets its service as an alternative to conventional background music, claiming that businesses exclusively using its catalogue of music outside BumaStemra's repertoire do not require a separate BumaStemra licence for that music."}
+     ],
+     "strength": "documented",
+     "counter": {"text": "BumaStemra's Laan: \"Ook als er een AI-model achter de draaitafel staat, kan er muziek van onze leden uit de speakers komen.\" (rd.nl, 2026-11-26). The human-authorship reasoning itself is stated only in the IO+ interview; IBTimes states the outside-the-repertoire claim without the reason."},
+     "mechanism_type": "the rule (copyright needs a human author; collecting-society repertoire and licence fees)",
+     "stop": null},
+    {"n": 4,
+     "question": "Why would the training data matter if the output has no human author?",
+     "answer": "BumaStemra gives two reasons. AI music can reproduce existing works, so members' music may still be what plays. And makers must compete with a product built on their own work without being paid for it.",
+     "evidence": [
+       {"url": "https://www.rd.nl/a/rechtszaak-buma-stemra-tegen-ai-muziekbedrijf", "domain": "rd.nl", "date": "2026-11-26", "quote": "Hierdoor moeten diezelfde makers concurreren met een product dat op hun eigen werk is gebouwd, zonder dat ze er iets voor terugkrijgen. Bovendien kan AI-muziek bestaande werken reproduceren."},
+       {"url": "https://www.ibtimes.co.uk/bumastemra-sues-dutch-ai-music-company-1834805", "domain": "ibtimes.co.uk", "date": "2026-11-25", "quote": "The organisation argues that musicians are being placed at a commercial disadvantage by technology allegedly developed using their compositions without authorisation. It also warned that AI-generated tracks can reproduce elements of existing copyrighted music ."}
+     ],
+     "strength": "documented",
+     "counter": {"text": "YourNeuroTune says it screens every track against copyright-protected works before release: \"We have developed our own technology to compare tracks against a large catalogue of existing copyright-protected works, examining similarities in both the audio and melodic content,\" (ioplus.nl, 2026-10-22). IBTimes reports the Munich court found in July 2026 that Suno infringed copyright in six compositions, a ruling Suno disputes."},
+     "mechanism_type": "the model (training on existing music and the risk of reproducing it)",
+     "stop": null},
+    {"n": 5,
+     "question": "Why do the two sides disagree on the model: were the tracks made with Suno, and under what licence?",
+     "answer": "Nothing read answers it. BumaStemra says it has established that Suno was used; YourNeuroTune says it uses only commercially licensed models. No source shows which model made the tracks, what licence YourNeuroTune holds, or what that licence covers.",
+     "evidence": [],
+     "strength": "open",
+     "counter": {"text": "None found within the four readable sources; no primary record (BumaStemra's own statement, a filing or YourNeuroTune's reply) was linked from them."},
+     "mechanism_type": "the contract (model licence terms)",
+     "stop": "evidence_exhausted"}
+  ],
+  "landing": {
+    "shows": "The ladder shows a dispute over two linked rules. YourNeuroTune's fee saving depends on machine-made music having no human author and so sitting outside BumaStemra's repertoire. BumaStemra answers that the music comes from a model trained on its members' work and can reproduce it. The facts that would join the two, which model made the tracks and on what licence, are not in the sources.",
+    "open_question": "If a track has no human author but its model learned from human songs, who is owed for playing it in a gym?"
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why did an AI-generated avatar, Xania Monet, take three of the top awards at the first AI Music Awards?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why did Xania Monet win artist, song and album of the year?",
+      "answer": "The winners were picked by AI artists inside the Sonic Intelligence Academy. Artists who registered their tracks in its Verified Registry nominated their peers across 25 categories and then voted. Monet's song had already been the first by an AI act on a Billboard radio chart.",
+      "evidence": [
+        {
+          "url": "https://www.thestar.com.my/tech/tech-news/2026/11/14/new-awards-show-celebrates-ai-music-and-its-creators",
+          "domain": "thestar.com.my",
+          "date": "2026-11-14",
+          "quote": "AI artists who are members of the Sonic Intelligence Academy, a company that created AI music charts and tools to identify"
+        },
+        {
+          "url": "https://variety.com/2026/music/features/inside-first-ai-music-awards-sonic-intelligence-academy-1236947847/",
+          "domain": "variety.com",
+          "date": "2026-11-14",
+          "quote": "Registered artists then nominate their peers in the 25 categories up for consideration"
+        },
+        {
+          "url": "https://www.thestar.com.my/tech/tech-news/2026/11/14/new-awards-show-celebrates-ai-music-and-its-creators",
+          "domain": "thestar.com.my",
+          "date": "2026-11-14",
+          "quote": "Billboard said the R&B song was the first by an AI-based act to earn a spot"
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "None found that disputes the result. Variety notes only registered artists could take part, so the vote was a peer vote within SIQA's own pool. Searched the two readable sources (The Star's Reuters copy and Variety); US News and GV Wire would not load."
+      },
+      "mechanism_type": "rule: peer nomination and vote among registered artists",
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why do AI artists have their own academy and awards to vote in?",
+      "answer": "The Sonic Intelligence Academy was set up in January to counter the mainstream industry's aversion to AI music. It wants to be the AI counterpart to the Recording Academy behind the Grammys, and it launched its own AI-only charts after some in the industry opposed AI songs on Billboard's charts.",
+      "evidence": [
+        {
+          "url": "https://variety.com/2026/music/features/inside-first-ai-music-awards-sonic-intelligence-academy-1236947847/",
+          "domain": "variety.com",
+          "date": "2026-11-14",
+          "quote": "it has worked to establish an awards program to counter the mainstream music industry’s aversion to AI"
+        },
+        {
+          "url": "https://variety.com/2026/music/features/inside-first-ai-music-awards-sonic-intelligence-academy-1236947847/",
+          "domain": "variety.com",
+          "date": "2026-11-14",
+          "quote": "it hopes to be an AI counterpart to the longstanding Recording Academy that governs the Grammy Awards"
+        },
+        {
+          "url": "https://www.thestar.com.my/tech/tech-news/2026/11/14/new-awards-show-celebrates-ai-music-and-its-creators",
+          "domain": "thestar.com.my",
+          "date": "2026-11-14",
+          "quote": "a field that has ‌sparked criticism and lawsuits while also gaining millions of streams and landing on music charts"
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "The Star's Reuters copy reports the field is landing on music charts, and Billboard did chart Monet, so the mainstream has not shut AI acts out entirely. Only Variety states SIQA's purpose. Searched the two readable sources (The Star's Reuters copy and Variety); US News and GV Wire would not load."
+      },
+      "mechanism_type": "institution: a parallel academy, registry and chart",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why is the mainstream music industry against AI music?",
+      "answer": "Record labels and artists have sued AI companies, including Suno and Udio, saying they trained their models on copyrighted songs without permission. Musicians also worry AI music crowds out human artists and takes paid work from producers, singers, engineers and songwriters.",
+      "evidence": [
+        {
+          "url": "https://www.thestar.com.my/tech/tech-news/2026/11/14/new-awards-show-celebrates-ai-music-and-its-creators",
+          "domain": "thestar.com.my",
+          "date": "2026-11-14",
+          "quote": "arguing that they are illegally using copyrighted works to train their models"
+        },
+        {
+          "url": "https://variety.com/2026/music/features/inside-first-ai-music-awards-sonic-intelligence-academy-1236947847/",
+          "domain": "variety.com",
+          "date": "2026-11-14",
+          "quote": "lawsuits by artists and record labels against generators like Suno and Udio over copyright infringement"
+        },
+        {
+          "url": "https://www.thestar.com.my/tech/tech-news/2026/11/14/new-awards-show-celebrates-ai-music-and-its-creators",
+          "domain": "thestar.com.my",
+          "date": "2026-11-14",
+          "quote": "Musicians worry that AI-generated music blocks human artists from gaining traction and takes work from producers"
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "The Star's Reuters copy reports that the AI companies say they are protected by the fair use doctrine in US copyright law, which allows unlicensed use in some cases. Neither source reports any court ruling."
+      },
+      "mechanism_type": "legal: copyright in model training data",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why do these creators make music with AI despite the lawsuits and the backlash?",
+      "answer": "Many nominees said they had stories to tell but lacked the skills to set them to music, and many said they could not afford studio musicians and the other resources a track needs. They describe AI as the tool that filled that gap.",
+      "evidence": [
+        {
+          "url": "https://www.thestar.com.my/tech/tech-news/2026/11/14/new-awards-show-celebrates-ai-music-and-its-creators",
+          "domain": "thestar.com.my",
+          "date": "2026-11-14",
+          "quote": "did not have all of the skills needed to put them to music"
+        },
+        {
+          "url": "https://variety.com/2026/music/features/inside-first-ai-music-awards-sonic-intelligence-academy-1236947847/",
+          "domain": "variety.com",
+          "date": "2026-11-14",
+          "quote": "Many who produce music with AI say they did so because they could not afford the studio musicians and resources required to bring their tracks to life"
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Monet's creator is not short of backing: Variety reports \"a $3 million record deal Jones received\", so the skills and cost reason does not fit every winner. Searched the two readable sources (The Star's Reuters copy and Variety); US News and GV Wire would not load."
+      },
+      "mechanism_type": "cost: AI replaces paid session musicians and production skills",
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "Monet won a peer vote run by an academy that AI creators built because the mainstream industry, fighting copyright suits and fearing for its jobs, keeps AI music at a distance. The creators say AI gives them the skills and musicians they could not otherwise afford. Neither source says how the copyright suits have been decided.",
+    "open_question": "If the songs that make an award like this possible came from models trained on other musicians' work, whose craft is the trophy really honouring?"
+  }
+}

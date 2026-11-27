@@ -1,0 +1,185 @@
+Suno Visuals turns AI music into images and short videos
+KarloBag•eu
+Your bag full of experiences.
+Sports▾
+AI sports predictions
+Tickets
+News
+Music▾
+News
+Festival tickets
+Concert tickets
+Stand-up▾
+News
+Stand-up tickets
+Travel▾
+News
+Travel alerts
+Guides
+Travel blog
+Culture
+Gastro
+Hotels
+Events▾
+News
+Entertainment▾
+News (all)
+Film and TV
+TV and Reality
+Celebrities and Royals
+Influencers and Social Media
+Fashion and Red Carpet
+Viral and Pop Culture
+HR
+EN
+DE
+PL
+FR
+ES
+EUR €
+▾
+EUR €
+USD $
+GBP £
+CHF
+PLN zł
+HUF Ft
+CZK Kč
+☰
+Home
+/
+Music
+/
+Suno Visuals links AI-generated music with images and 15-second videos as copyright safeguards expand
+Music
+Suno Visuals links AI-generated music with images and 15-second videos as copyright safeguards expand
+Suno launched Visuals on the web on November 17, 2026, letting users pair AI-generated songs with images and videos up to 15 seconds long. iOS and Android versions are expected in the coming weeks, while new filters aim to block depictions of real performers and protected characters.
+18 Nov 2026
+·
+By
+Culture & events desk
+·
+7 min read
+Share
+KarloBag.eu / AI illustration
+AI illustration — this image is not a real photograph and does not depict an actual event. What does AI illustration mean?
+Suno launches Visuals: AI music gets images and video clips up to 15 seconds long
+The Suno platform has expanded its music-generation tools with a feature called Visuals, which enables users to create images, animated scenes and short video content associated with songs produced through the service. The new feature combines music and visual production in a single environment, allowing users to move from a song to shareable content without needing a separate video-editing program. According to the company's official announcement, individual video clips can last up to 15 seconds and can be edited and extended. Visuals was introduced on November 17, 2026, and is available on the web, while versions for iOS and Android are expected over the next few weeks.
+From a song to a short video
+Users can select a song from their Suno library, start creating a video clip and use a text description to guide the scene they want to generate. According to Suno, the video follows the structure of the selected section of the song, takes the lyrics into account and can synchronize a character's movements with the vocals. Each individual clip can last a maximum of 15 seconds and, after generation, can be edited, extended or regenerated using new text instructions.
+Visuals also includes the creation of cover artwork, standalone illustrations and song-lyrics visualizations. Users can start with a text description or a reference photograph, adjust the appearance and create a lyric video using selected fonts and colors. Multiple clips can be connected and extended in an editor with a timeline, making it possible to assemble a longer video from shorter segments.
+A separate credit system has been introduced for visual content. Image and video credits are separate from those used for music creation, and their consumption depends on video duration and the selected quality. Suno states that all users can purchase additional Visuals credits, while paid subscribers receive a certain allocation for testing the feature during a limited period. Purchased visual credits do not expire, according to the official support center.
+H3 Move connects Visuals to MiniMax's model
+The H3 Move model powers the new feature. Suno states that it is based on the H3 model developed by Chinese technology company MiniMax, subsequently adapted for the platform's needs and supplemented with additional safeguards. Suno has not published more detailed technical information about the model. This connection is also significant because of the legal context surrounding the development of image- and video-generation tools.
+Companies associated with Disney, Universal and Warner Bros. have filed a separate lawsuit related to Hailuo AI, a service for generating images and videos. According to a court document from a US federal court in California, the plaintiffs voluntarily dismissed their claims against MiniMax without prejudice after it was clarified that MiniMax is not a separate legal entity but rather the name under which SXJT operates. The remaining defendants in the proceedings are SXJT and Nanonoble. The plaintiffs allege that Hailuo AI can generate depictions of recognizable characters from their films and that copyrighted works were used to train the model and encourage users to create content that infringes copyright. These are allegations made by the parties, not violations established by a court.
+Federal Judge Stanley Blumenfeld Jr. rejected the defendants' motions to dismiss the lawsuit on May 22, 2026. This allowed the proceedings to continue, but did not constitute a final decision on whether copyright infringement had occurred. The rejection of the motions means that the court did not accept, at that stage, the arguments seeking to stop the proceedings; it does not mean that SXJT or Nanonoble have already been found liable. The case is relevant to Suno because of the model on which H3 Move is based, but the technological connection does not mean that Suno is a party to that lawsuit or that the court's decision concerns Visuals.
+Suno introduces filters while also facing lawsuits
+Alongside the launch of Visuals, Suno highlighted safeguards designed to prevent the unauthorized use of real people's identities and copyrighted works. According to the company, text and visual filters are intended to block prompts and uploaded files aimed at depicting specific performers, public figures, protected characters, copyrighted works and other intellectual property. These restrictions apply both to requests for generating new depictions and to images or videos that users want to use as templates.
+The company states that generated images and videos are also checked before being shown to users. For this purpose, it uses its own filters and third-party tools to detect content that violates community guidelines. Regarding uploaded audio, Suno says it continues to work with Audible Magic, ACRCloud and Musixmatch to identify and block copyrighted audio recordings. It also plans to embed watermarks in visual materials before they are shared outside the platform. When users upload an image or video for the first time, they are shown a reminder that they may only use materials for which they have the appropriate rights.
+Suno states that its trust and safety team investigates cases of misuse, whether detected by the system or reported by users and rights holders. Possible measures include removing content, restricting accounts or terminating them in more serious cases. The effectiveness of these rules will depend on how reliably the filters identify attempts to bypass restrictions and how quickly the system responds to reports. Automated checks can reduce risk, but they do not eliminate the need for clear rules and procedures for resolving disputed cases.
+Legal disputes directly involving Suno also remain unresolved. Universal Music Group and Sony Music Entertainment are continuing proceedings against the company over the alleged unauthorized use of sound recordings to train music models. Warner Music Group, which was among the original plaintiffs, entered into a partnership with Suno in November 2025 concerning licensed AI-generated music, resolving its earlier dispute with the company. According to an overview of court filings updated on November 16, 2026, the proceedings continued by UMG and Sony are still in the evidence-exchange phase, with no decision on the merits of the claims. In September 2026, they also initiated a new proceeding concerning 60.202 recordings. Allegations of copyright infringement remain claims made by the plaintiffs and are not facts established by a final court judgment.
+What the new feature means for creators and rights holders
+Visuals arrives at a time when the boundaries between music, image and video production are increasingly overlapping. For independent creators and smaller production teams, the ability to create cover artwork, animated lyrics and several short video clips from a single song can simplify the preparation of content for publication. At the same time, combining different media in one system increases the number of situations in which questions arise concerning rights to voices, characters, photographs, music or visual templates. The practical value of the tool will therefore depend not only on the quality of the generated scenes but also on the clarity of its rules, the reliability of its checks and the way reports from rights holders are handled.
+For Suno, the launch of Visuals is also a test of trust: the company must demonstrate that its safeguards can function in a system that generates several types of content. The dispute connected with Hailuo AI and the lawsuits concerning the training of music models do not mean that Visuals is inherently unlawful, but they demonstrate why the origin of models, the permissibility of input materials and control over generated results will remain important issues in the development of generative artificial intelligence.
+Sources:
+- Suno – official introduction of the Visuals tool and description of safeguards
+- Suno Help Center – FAQ about the H3 Move model, availability and credits
+- US federal court – May 22, 2026, decision in Disney and others v. MiniMax
+- DataPacts – overview of record labels' lawsuits against Suno and the status of proceedings as of November 16, 2026
+Note: This content was prepared with the assistance of artificial intelligence tools.
+Tags
+Suno
+Visuals
+AI music
+artificial intelligence
+video generation
+copyright
+MiniMax
+By
+Culture & events desk
+Related articles
+Nick Cave on AI-generated music: the clash between human experience and songs created by algorithms alone
+11 Nov 2026
+Warner Music Group on the TIME100 list because of its approach to artificial intelligence and the protection of music authors today
+4 May 2026
+Judge Rejects Suno Bid to Dismiss Jason Isbell Lawsuit as 16 More Artists Join in AI Identity Dispute
+26 Nov 2026
+BumaStemra takes legal action against YourNeuroTune over commercial AI music distribution in the Netherlands
+25 Nov 2026
+Tidal bans fully AI-generated songs and plans to remove 29 million tracks from its streaming music catalog
+25 Nov 2026
+Sports
+Brandon Aiyuk joins Washington Commanders practice squad as NFL comeback begins, with active roster spot still to earn
+26 Nov 2026
+Jerko Leko after Dinamo's 0-2 defeat to Bayer: no collapse, as the second-half response offers hope
+26 Nov 2026
+Daron Russell leaves Anadolu Efes for a reported two-year move to Maxima Roma in Italy's EuroCup project
+26 Nov 2026
+Serbia drawn with Poland, England and France for U21 EURO as Mirković warns of tough group for 2027 finals
+26 Nov 2026
+Stand-up
+Zoran Kesić brings 'Priče i pesme' to Belgrade's MTS Hall for a night of satire, music and live comedy
+26 Nov 2026
+Shane Gillis addresses Saturday Night Live monologue backlash and grades his own performance a C-minus
+14 Nov 2026
+Noel Fielding breaks silence on Russell Brand case, condemns his crimes and regrets their past jokes
+14 Nov 2026
+Tony Bauer on short bowel syndrome: childhood hospital stays, changes in treatment and life in stand-up comedy
+13 Nov 2026
+Travel
+Daruvar Spa wins health tourism award after investment of more than 20 million euros in Croatia in 2026
+26 Nov 2026
+Vienna's expanded Sisi Museum opens 12 new rooms and reveals previously inaccessible Hofburg apartments
+26 Nov 2026
+Zagreb Advent 2026: New Light Installations, Ice Skating and Festive Events Across the City's Squares
+26 Nov 2026
+Novi Sad International Tourism Fair: winter breaks, New Year trips and summer 2027 deals up to 40% off
+26 Nov 2026
+Events
+Yoko Ono in Zagreb: The Room of Your Own Making exhibition at MSU from December 2026 to May 2027, with participatory art
+20 Nov 2026
+Ice Wonderland in Varaždin Rescheduled for 26 November 2026 After Forecast Heavy Rain Delays the Opening
+18 Nov 2026
+Sužan on Krk marks Village Day and Our Lady of Health feast with a mass and evening music by Kožne jakne
+18 Nov 2026
+Design District 2026 in Rovinj: 170+ brands, design conferences and exhibitions across three days
+17 Nov 2026
+Newsletter — top events of the week
+One email per week featuring top events, concerts, sports fixtures and price-drop alerts. Nothing more.
+Subscribe
+No spam. One-click unsubscribe. GDPR compliant.
+About the portal
+About us
+Editorial team
+Imprint
+Advertising
+Registered digital media
+ISSN 3043-839X
+Sections
+Sports
+Music
+Stand-up
+Travel
+Events
+Entertainment
+Tickets
+Sports
+Concerts
+Festivals
+Stand-up
+Help & legal
+Contact
+Terms of use
+Privacy
+Cookies
+Sitemap
+RSS feed
+KarloBag.eu — electronic publication entered in the Register of Electronic Publication Providers of the Agency for Media (Agencija za medije), ISSN 3043-839X.
+Publisher: CRODODO, obrt za e-usluge, vl. Domagoj Skledar, Vilima Korajca 5, Zagreb, Croatia · Editor-in-chief: Domagoj Skledar
+KarloBag.eu · Your bag full of experiences.
+·
+© 2022–2026 CroDodo — Domagoj Skledar
+·
+Continuing the CroDodo.com publishing project established in 2004.
+·
+Privacy settings

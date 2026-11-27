@@ -1,0 +1,84 @@
+How do I create videos with Suno Visuals?
+Knowledge Base
+Make Music Now!
+How can we help?
+Results
+No results found
+More results
+We use cookies to analyze website traffic and help improve our visitor experience. Privacy Policy
+Reject
+Accept
+In this article
+Choosing a video modeDescribing your videoAdding music, characters, frames, and referencesUsing reference imagesAdjusting your video settingsWant your character to sing? Use Lip SyncEditing, Customizing, and Building on Your VideoExploring the Visuals Editor
+Home
+Creating Visuals
+How do I create videos with Suno Visuals?
+Edited
+Want to bring your music to life through video?
+You can start directly from a song by opening its action menu (…) and selecting Create Visual → Video Clip. Or head to your Create page, select Visuals → Video, and describe a scene you'd like to create.
+Bring in music, introduce characters, or use reference images to guide what happens on screen. Once you're ready, select Create.
+Below, we'll explore the different options available to help you create and shape your videos, plus a few ways to build on them once they're ready
+Choosing a video mode
+Select a video mode at the top of the Create form. Each mode offers a different balance of quality and credit usage.
+Mode
+Resolution
+Description
+Fast
+480p
+Quick drafts
+Standard
+720p
+Balanced quality
+For details on generation costs, visit our Visuals Pricing page.
+Describing your video
+In the prompt field, describe what you'd like to happen. Think about the characters, setting, actions, and camera movements that will shape your scene.
+For example:
+"A crowd sways beneath colorful concert lights as the camera slowly moves through the audience toward a glowing stage, with atmospheric haze and cinematic lighting."
+Want help developing your prompt? Select the Magic Wand to build on your description, or open the Style Guide to explore visual styles, camera movements, lighting, and effects.
+Adding music, characters, frames, and references
+Your prompt is a starting point. From there, you can add audio, introduce a character, or guide the visuals with start and end frames and references.
+Feature
+What it does
++ Audio
+Choose a song from your Suno library or upload audio, then select which part to feature.
++ Character
+Add a character using an image from your Visuals library or an uploaded reference image.
+Start and End Frames
+Add to guide how your video clip begins and ends.
+References
+Add to guide characters, settings, objects, style, and other visual details.
+Using reference images
+Reference images help Suno understand specific details you'd like to include in your video. You can add them using the image icon in the prompt field or by dragging images into the Create form.
+To guide how each image is used, type @ in your prompt and select a reference. You can then describe which elements you'd like to bring into your scene.
+For example:
+"Use the forest setting from @image1 with the colors and lighting from @image2."
+Tip: The Magic Wand can also use your reference images when helping develop your prompt, bringing their visual details into your description.
+Adjusting your video settings
+Under More Options, you can adjust:
+Lip Sync
+Animate singing or speech using your audio.
+Duration
+Choose a clip length from 5 to 15 seconds.
+Aspect Ratio
+Vertical (9:16) • Square (1:1) • Landscape (16:9) • Classic (4:3) • Portrait (3:4)
+Want your character to sing? Use Lip Sync
+For the best results:
+Choose a section of audio with clear singing or speech.
+Describe a shot that keeps your character’s face and mouth clearly visible.
+Add a character with + Character if you have a specific character in mind.
+Editing, Customizing, and Building on Your Video
+Your finished clip is automatically saved to your Visuals library, where you can preview, download, share, or continue creating.
+To make changes, select Edit on your clip and describe what you'd like to adjust, such as the background, lighting, character actions, or visual style.
+Want to display lyrics on your video? Open your video, select the Lyrics icon beside the preview, and turn on Show Lyrics. From there, you can choose how your lyrics appear, including their style, position, font, and color.
+To make your video longer, select Extend to open the Visuals Editor.
+Exploring the Visuals Editor
+Want to take your video further? The Visuals Editor brings your clips and music together on a timeline, giving you more ways to build and shape your creations.
+From the Editor, you can:
+Build your sequence: Extend clips, generate new images or videos, and bring in creations from your Visuals library.
+Edit your clips: Trim, split, rearrange, or adjust your footage to shape how your video unfolds.
+Work with music and lyrics: Add music, arrange your scenes alongside audio, and customize how on-screen lyrics appear.
+You can also use text prompts to make changes as you explore different ideas.
+Cookie preferences
+Terms of ServicePrivacy PolicySuno on iOS
+Community GuidelinesBlogSuno on Android
+Leave us feedback

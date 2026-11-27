@@ -1,0 +1,178 @@
+ITV’s generative AI ads feature attracts 16 new-to-TV advertisers in debut year | The Media Leader UK
+Skip to content
+News
+Topics
+Data and Measurement
+Agencies
+TV Advertising
+Platforms and AI
+Media
+Brands and Marketers
+Connected TV
+Publishing
+Audio
+OOH
+Policy and Regulation
+Cinema
+Opinion
+Events
+Specials
+Data & Research
+Podcast
+Newsletters
+Search
+News
+Topics
+Data and Measurement
+Agencies
+TV Advertising
+Platforms and AI
+Media
+Brands and Marketers
+Connected TV
+Publishing
+Audio
+OOH
+Policy and Regulation
+Cinema
+Opinion
+Events
+Specials
+Data & Research
+Podcast
+LinkedIn
+Instagram
+Newsletters
+LinkedIn
+Instagram
+Search
+Close search
+Search
+News
+Topics
+Data and Measurement
+Agencies
+TV Advertising
+Platforms and AI
+Media
+Brands and Marketers
+Connected TV
+Publishing
+Audio
+OOH
+Policy and Regulation
+Cinema
+Opinion
+Events
+Specials
+Data & Research
+Podcast
+Home
+News
+TV Advertising
+TV Advertising
+ITV’s generative AI ads feature attracts 16 new-to-TV advertisers in debut year
+By
+Jack Benjamin
+•
+October 9, 2026
+•
+5 minutes
+The brands that have used the tool include a variety of small business types, from dentists and gardening companies to local councils. The campaigns have primarily run on ITVX.
+Share
+More from the author
+IP addresses ‘no longer useful’ for location targeting at scale
+Read more
+Jack Benjamin
+is a senior reporter for The Media Leader and host of The Media Leader podcast.
+ITV’s GenAI Ads Manager has drawn 16 new-to-TV small- and medium-sized enterprises (SMEs) to buy TV campaigns with the broadcaster in its first year.
+The brands that have used the tool range from dentists and gardening companies to local councils. The campaigns have primarily run on ITVX, which offers granular audience targeting options that appeal to smaller local businesses.
+The most popular TV ad format for these businesses was not 30-second spots, however, but rather pause ads that use static AI-generated imagery.
+ITV launched the generative AI production service last October to use AI to “democratise” TV advertising by reducing the cost and time it takes to produce TV assets. The service can create TV ad spots within seconds from uploaded brand assets, and it is free of charge for advertisers.
+The feature was built in partnership with Streamr.AI and is managed in collaboration with ITV Commercial’s creative production team. The entire ITV commercial team has been trained on how to use the platform, with Jason Spencer, ITV’s business development director, explaining at the time of launch that salespeople would use the tool as a “door opener” for new-to-TV advertisers, particularly those with budgets under £10k.
+Spencer acknowledged in conversation with The Media Leader that the 16 SMEs could be perceived as “quite a light number” but argued it represented “good progress”, noting that the use of generative AI for ad creative has started to normalise within the past year. He also pointed to GenAI Ads’ usefulness as an “additive” lead generation tool that has helped to prove to small businesses that TV can be a legitimate media option.
+“The biggest challenge, we find, is the perception barrier,” Spencer said, referring to the impression that TV advertising is too expensive and challenging for smaller businesses relative to digital platforms like Google and Meta. He explained ITV’s go-to-market strategy for attracting investment from SMEs is “horses for courses”, with the GenAI Ads Manager just one option for new-to-TV brands.
+He noted that five of the 16 businesses that used the GenAI Ads Manager later moved to ITV’s in-house creative team with an expanded TV budget.
+‘Concierge service’, not self-serve
+Part of the reason for the relatively slow uptake is that ITV currently runs it as a “concierge” service rather than a self-serve platform. If ITV embraced a self-serve model, Spencer explained, the broadcaster could likely scale to thousands of SME advertisers, but at the cost of quality control.
+Self-service platforms like Meta have, for example, come under scrutiny for reportedly running ads promoting child sexual abuse.
+Currently, all ads created with ITV’s generative AI tools are checked for quality by creative production lead Alan Hall and his team of “Super Users” — staff of trained ITV salespeople — before running. Spencer argued this provides the right level of friction required for quality assurance without compromising the improved speed and ease of production facilitated by AI tools.
+Hall’s team already manually produces around 1,000 ads each year for 200 new-to-TV advertisers, and now uses AI tools to reduce costs and speed up the process.
+Spencer said he does not have a specific target number of new-to-TV advertisers using GenAI Ads Manager. Success for the initiative, he added, will not be defined by the number of businesses creating AI TV ads with ITV, but rather how many new-to-TV advertisers graduate from using the generative AI platform to more formal TV advertising production, expanding their budgets as their businesses grow.
+Looking forward, ITV is continuing to work with Streamr.AI to develop new AI tools and ad formats for TV advertisers. One such tool in development would allow brands to “extend the usage” of their existing social video assets by adapting them into an ad unit that runs on ITV’s YouTube channel.
+Process and results
+Spencer shared two ads made using the GenAI Ads Manager with The Media Leader. One, a 30-second spot for tutoring service Justin Craig Education, ran on ITVX and was addressably targeted by postcode within drivetime.
+Hall described the AI-led production process to The Media Leader: “The first version was created in our Streamr.AI platform in around 20 seconds using the client’s website link. Streamr pulled in images, added the QR code, voiceover and music, creating the initial ad. The ITV Streamr Super User then reviewed it, added the logo and refined the script and images, with the option to use different images, music or AI-generated voiceovers. Google Veo 3.1 was then used within Streamr to bring the images to life and create the video scenes.
+“The finished 30-second ad required very few changes from the client, who also collated permissions for the people featured.”
+Caroline Stanton, Justin Craig Education’s marketing manager, was positive about the outcome. “TV advertising had previously seemed unaffordable, but enabling us to make our first ad free of charge and almost instantly using ITV’s GenAI production platform changed our minds,” she said. “Animating our own still images and working closely with us on perfecting the script and selecting voiceovers was amazing, and our ad looked great on-screen.”
+A second ad shared with The Media Leader is a pause ad for Salisbury Racecourse, which Spencer said has been ITV’s “best returning customer using GenAI for pause ads”. It followed a similar production process, with Streamr.AI creating a suitable image from supplied brand assets that featured an automatically generated QR code. According to Hall, the entire process took a handful of minutes.
+The quality is doubtlessly greater than ITV’s initial proofs of concept of generative AI ads, first unveiled two years ago — even if the end result includes details that betray its AI production, such as inconsistent lighting.
+Spencer stressed that the GenAI creative production developments are just one part of a wider commercial strategy, inclusive of the industry-wide Universal Ads marketplace and in-development outcomes measurement panel Lantern, aimed at attracting SMEs to drive commercial growth.
+ITV previously forecast flat total advertising revenue growth in the first nine months of 2026, with 3% growth in H1 expected to be offset by a 5% anticipated decline in Q3. The modest result has occurred even as this summer’s FIFA World Cup helped drive strong 8% growth in Q2.
+Sky has proposed to acquire ITV’s Media & Entertainment business for £1.6bn, a deal which awaits regulatory approval.
+Share this article
+Explore more topics
+AI, ITV, News, Newsline, Platforms and AI, TV, TV Advertising, UK
+You might also like
+Mishal Husain: ‘Video podcasts should not become the new TV’
+Charli West
+•
+November 26, 2026
+•
+1 minute
+Want to get involved in the discussion?
+Comments (0)+
+Related articles
+Opinion
+The room where it happens: Why industry events matter for people between roles
+Steve Doyle
+•
+November 26, 2026
+•
+4 minutes
+OOH
+Lloyds sees brand uplift from first i-Media vehicle-targeting OOH campaign
+Charli West
+•
+November 26, 2026
+•
+5 minutes
+Opinion
+Inside Track is both right and wrong
+Nick Manning
+•
+November 26, 2026
+•
+6 minutes
+Opinion
+Why Star Trek’s optimism still matters to audiences and advertisers
+Phil Rowley
+•
+November 26, 2026
+•
+4 minutes
+Newsletters
+Subscribe today
+More on TV Advertising_
+More
+How AGF and Amazon Prime Video enable comparable total video measurement in Germany
+7 minutes
+Netflix, Amazon and Disney boost UK subs in Q3
+2 minutes
+ITV reports ‘weakened’ ad demand in H2 as it plans £30m in additional cost savings
+3 minutes
+‘A deal of that nature needs scrutiny’: Channel 4 and Paramount respond to ITV/Sky deal
+3 minutes
+Newsletters subscription
+Get the best of The Media Leader, straight to your inbox.
+Follow our social media channels for the latest updates
+LinkedIn
+X
+YouTube
+Instagram
+©
+2026
+Mediatel Limited trading as Adwanted UK. Legal information
+About
+Contact us
+Privacy and cookie settings

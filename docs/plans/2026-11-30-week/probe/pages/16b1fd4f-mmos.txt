@@ -1,0 +1,108 @@
+
+ Ubisoft staff must reportedly justify skipping generative AI in pitches - MMOs.com
+Home
+News
+MMORPG
+MMO
+Mobile
+Industry
+Crypto Games
+GameList
+Reviews
+F2P MMORPGs
+F2P MMOs
+Browser Games
+Subscription
+Buy-to-Play
+Mobile Games
+Previews
+Columns
+Videos
+First Looks
+Group Videos
+Podcast
+Extra
+News Recap
+Music
+Giveaways
+You are here:
+Home
+News
+Industry
+Ubisoft staff must reportedly justify skipping generative AI in pitches 
+Ubisoft staff must reportedly justify skipping generative AI in pitches 
+November 26, 2026 Petra Valkenburg 
+ Comments
+Ubisoft developers pitching new projects must reportedly explain how generative AI would speed up their work, and anyone who wants to leave it out has to explain that choice in detail, several current Ubisoft employees told Vertical Slice on condition of anonymity. The report, carried by GamesIndustry.biz on November 25, 2026, claims pitches that do not set out how generative AI would help will not be approved.
+The burden of proof, flipped
+If the account holds, it inverts the usual dynamic in studio tooling decisions. Developers elsewhere are asked to justify bringing AI into a workflow; at Ubisoft, reportedly, not using it is the choice that has to be defended. One employee described the shift bluntly: "If you planned on not using it, you would have to have a reason."
+Sources described leadership as not outright mandating generative AI but all-in on the technology, with one saying the company believes it is now unavoidable and that most players do not mind it, with only a vocal few objecting. Another employee said the attitude shift means staff "feel cornered by generative AI all the time."
+Smaller teams, faster pitches
+Staff have reportedly pushed Ubisoft for more modest projects built by compact teams rather than another round of huge triple-A releases, and the leaders who sign off on pitches are said to present generative AI as the way to get there: prototypes built faster by small lean agile teams, iterated on and discarded quickly to sift out the good ideas. Ubisoft has not publicly confirmed any of this, and had not responded to requests for comment when the report was published.
+The claims land the week after the launch of Motherbrain, the publisher's new generative AI subsidiary and home to the team that made Teammates, its first playable generative AI project. They also come as the publisher's workforce keeps shrinking. Ubisoft's latest fiscal report puts headcount at 15,500 as of September 2026, down 5,200 from 20,700 in September 2022, with 166 staff laid off at the Montreal and Quebec studios shortly before the most recent earnings announcement and studios in Winnipeg and Belgrade closed in June 2026. Employees told Vertical Slice that morale is low, with one citing cost-cutting and a five-day return-to-office mandate.
+The report follows a growing pattern of player pushback against generative AI in games, as when House House confirmed limited AI use on Big Walk and faced Steam backlash.
+Share this post:
+Share on Facebook
+Share on X (Twitter)
+Share on Reddit 
+Related:
+ $post = $orig_post;
+ wp_reset_query();
+ ?>
+Industry
+News 
+Search
+ Search for:
+News
+ The Elder Scrolls Online Dropping Subscription Fee on March 17, 2015 
+ Red Stone Global Relaunched through Developer L&K Logic 
+ SMITE Season 2 Patch Notes Released 
+ RuneScape Increases Subscription Fee from $7.95 to $9.49 Starting March 1 
+Highest Rated Games
+Path of Exile 
+ (3.89 / 5)
+Elder Scrolls Online 
+ (3.83 / 5)
+Thang Online 
+ (3.76 / 5)
+Guild Wars 2 
+ (3.75 / 5)
+Dungeon Fighter Online 
+ (3.74 / 5)
+Star Wars: The Old Republic 
+ (3.73 / 5)
+Blade and Soul 
+ (3.70 / 5)
+Black Desert Online 
+ (3.66 / 5)
+Peria Chronicles 
+ (3.66 / 5)
+Grim Dawn 
+ (3.66 / 5)
+MMO Roulette
+Industry News
+ You Can Finally Get Your Hands On A Nintendo Switch Today 
+ Huayi Brothers Media Corporation Is Making A Movie Based On Onmyoji 
+ Dungeon Fighter Online Is A Bigger Franchise Than Star Wars with $8.7B in Lifetime Sales 
+MMOs.com 
+Our goal is to catalog every single MMO on the net and curate every game page with reviews, screenshots, videos, music, and more. We review free to play MMORPGs, MMOs, pay to play subscription MMORPGs, Buy to Play MMORPGs, Browser MMOs, and even Mobile MMORPGs. We want to make it as easy as possible for our users to discover new MMOs and MMORPGs to play.
+Find Us On: 
+MMOs.com Youtube
+MMOs.com Twitter
+MMOs.com Facebook
+MMOs.com Soundcloud
+MMOs.com Twitch
+Latest Reviews
+ MapleStory 2 
+ Age of Wushu 
+ Allods Online 
+ TOME: Immortal Arena 
+ Angels Online 
+Latest Columns
+ Player Housing in MMORPGs 
+ The Oldest MMORPGs in Gaming History 
+ Pay to Win in MMORPGs 
+ Mac Compatible MMOs & MMORPGs 
+ Linux Compatible MMOs & MMORPGs 
+ Copyright © MMOs.com 2025 The #1 MMO and MMORPG Game site on the Net.
+About Us - Privacy Policy - Contact Us / Advertise - MMORPG Terms. 

@@ -1,0 +1,57 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why does Warner Music Group expect its AI licensing deals, Suno above all, to add materially to its subscription streaming revenue from fiscal 2027?",
+  "rungs": [
+    {"n": 1,
+     "question": "Why does Warner expect AI companies to add to its subscription streaming revenue at all?",
+     "answer": "Warner has signed licensing partnerships with the AI music firms Suno, Stability AI, KLAY and Udio. On its August 2026 earnings call, chief executive Robert Kyncl said these deals would contribute materially to subscription streaming revenue growth from fiscal 2027, and the acting finance chief named Suno as the most notable of them.",
+     "evidence": [
+       {"url": "https://www.fool.com/earnings/call-transcripts/2026/08/13/warner-music-group-wmg-q3-2026-earnings-call-transcript/", "domain": "fool.com", "date": "2026-08-13", "quote": "We've developed new monetization frameworks like our partnerships with Suno, Stability AI, KLAY, and Udio, expect our licensing deals to contribute materially to our subscription streaming revenue growth starting in fiscal 2027."},
+       {"url": "https://www.musicbusinessworldwide.com/warner-music-expects-ai-music-deals-to-boost-subscription-streaming-revenue-from-late-2026/", "domain": "musicbusinessworldwide.com", "date": "2026-08-06", "quote": "Dickler echoed that outlook on the call, telling analysts the company had “new licensing deals with AI companies, most notably Suno,” which it expected to “provide nice contribution starting next fiscal year.”"},
+       {"url": "https://www.digitalmusicnews.com/2026/08/06/wmg-ai-licensing-deals-suno-cash/", "domain": "digitalmusicnews.com", "date": "2026-08-06", "quote": "“We’ve developed new monetization frameworks like our partnerships with Suno, Stability AI, KLAY, and Udio, [and] expect our licensing deals to contribute materially to our subscription streaming revenue growth starting in fiscal 2027,” said Kyncl during the company’s earnings call."}
+     ],
+     "strength": "documented",
+     "counter": {"text": "On the same call Kyncl described AI music as a small share of listening on Deezer: \"the consumption is somewhere between 1% and 3% and the monetization is a fraction of that\" (fool.com, 2026-08-13). That figure is about AI uploads on one streaming service, not Warner's licence income."},
+     "mechanism_type": "licensing contract",
+     "stop": null},
+    {"n": 2,
+     "question": "Why does the contribution start in fiscal 2027 and not earlier?",
+     "answer": "The sources place the timing next to Suno's planned switch to a model trained on licensed music, due later in 2026. In August Suno had not yet launched such a model; its v6 models arrived on 9 September 2026 with Warner named as a partner. No source says outright that the revenue waits on that switch.",
+     "evidence": [
+       {"url": "https://www.musicbusinessworldwide.com/warner-music-expects-ai-music-deals-to-boost-subscription-streaming-revenue-from-late-2026/", "domain": "musicbusinessworldwide.com", "date": "2026-08-06", "quote": "Despite inking an agreement with WMG in November, Suno is yet to launch a generation model fully trained on licensed copyrights."},
+       {"url": "https://www.fool.com/earnings/call-transcripts/2026/08/13/warner-music-group-wmg-q3-2026-earnings-call-transcript/", "domain": "fool.com", "date": "2026-08-13", "quote": "Robert Kyncl: Sure. One, on Suno, the plan remains exactly as it was, which is for them to transition to a license model later this year."},
+       {"url": "https://www.musicbusinessworldwide.com/5-things-to-know-about-sunos-move-into-ai-video-the-distrokid-documents-and-the-fight-over-v6/", "domain": "musicbusinessworldwide.com", "date": "2026-11-23", "quote": "Suno launched its v6 models on September 9, saying they were developed with partners including Warner Music Group, BMG, and Believe."}
+     ],
+     "strength": "inferred",
+     "counter": {"text": "Universal and Sony dispute that v6 is a clean licensed model: \"UMG and Sony’s second complaint alleges that v6 was trained in part on the outputs of Suno’s earlier models, which the labels say were built on their recordings.\" (musicbusinessworldwide.com, 2026-11-23)."},
+     "mechanism_type": "licensing contract",
+     "stop": null},
+    {"n": 3,
+     "question": "Why is Suno moving to a licensed model with Warner in the first place?",
+     "answer": "Warner sued Suno, then settled in November 2025, the first major label to do so, and licensed it. Kyncl says that contract commits Suno to the licensed model, and he cited a Munich court ruling of 31 July 2026, which found Suno had infringed by training on compositions from the German collecting society GEMA's repertoire.",
+     "evidence": [
+       {"url": "https://www.musicbusinessworldwide.com/warner-music-expects-ai-music-deals-to-boost-subscription-streaming-revenue-from-late-2026/", "domain": "musicbusinessworldwide.com", "date": "2026-08-06", "quote": "Kyncl said that decision “effectively confirmed the Warner Music Group contract and strategy, which has committed Suno to transition to a licensed model.”"},
+       {"url": "https://www.fool.com/earnings/call-transcripts/2026/08/13/warner-music-group-wmg-q3-2026-earnings-call-transcript/", "domain": "fool.com", "date": "2026-08-13", "quote": "There was also the Munich court decision last week, which effectively confirmed the Warner Music Group contract and strategy, which has committed Suno to transition to a license model."},
+       {"url": "https://www.musicbusinessworldwide.com/warner-music-expects-ai-music-deals-to-boost-subscription-streaming-revenue-from-late-2026/", "domain": "musicbusinessworldwide.com", "date": "2026-08-06", "quote": "Warner was the first major to settle its copyright case with Suno, in November 2025, striking a licensing partnership that also saw the AI firm acquire concert-discovery platform Songkick from the company."}
+     ],
+     "strength": "documented",
+     "counter": {"text": "Suno still contests the other majors' claims: in the Universal and Sony case its \"main defense\" is fair use (musicbusinessworldwide.com, 2026-11-23), and Universal and Sony remain in litigation with Suno, so the licensed route is Warner's arrangement, not an industry-wide one."},
+     "mechanism_type": "settlement and licensing contract",
+     "stop": null},
+    {"n": 4,
+     "question": "How does the Suno money reach Warner, and how much of it reaches Warner's artists?",
+     "answer": "Nothing read answers this. The terms of the Warner and Suno agreement have not been published, and a judge refused Universal and Sony's request for a copy. On the call Kyncl spoke of guardrails and protections for artists and of artist permissioning for AI partners, but gave no payment terms or artist share.",
+     "evidence": [
+       {"url": "https://www.digitalmusicnews.com/2026/08/06/wmg-ai-licensing-deals-suno-cash/", "domain": "digitalmusicnews.com", "date": "2026-08-06", "quote": "The details of their agreement remain hush-hush, and that’s never been more true since a judge denied Sony and UMG’s request to obtain a copy of the contract."},
+       {"url": "https://www.fool.com/earnings/call-transcripts/2026/08/13/warner-music-group-wmg-q3-2026-earnings-call-transcript/", "domain": "fool.com", "date": "2026-08-13", "quote": "Robert Kyncl: What it takes is operationalizing the permissioning process. That's really what it is."}
+     ],
+     "strength": "open",
+     "counter": {"text": "none found; scope: the five listed sources (two Music Business Worldwide articles, the Digital Music News article reached by both of its links, and The Motley Fool transcript of the fiscal Q3 2026 call). The permissioning remark answered a question about KLAY, not Suno."},
+     "mechanism_type": "licensing contract",
+     "stop": "evidence_exhausted"}
+  ],
+  "landing": {
+    "shows": "Warner's executives said on the record that AI licensing, led by Suno, would add materially to subscription streaming revenue from fiscal 2027, and the sources line the timing up with Suno's switch to a licensed model, which Warner says its settlement contract requires and which v6 claims to be. The terms of that contract, including how payments flow and what share reaches artists, are not public in anything read, and Universal and Sony contest whether v6 is clean.",
+    "open_question": "If the Suno contract stays confidential, how would a Warner artist find out what their recordings earn from it?"
+  }
+}

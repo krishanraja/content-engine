@@ -1,0 +1,244 @@
+
+AI Music Company Claims It Owns a Musician's Recording, and YouTube Takes Her Video Down - Gadget Review
+Skip to content
+When you buy through our links, you’re supporting our mission.
+x
+Tech
+Personal Tech
+Gadgets
+TVs
+Projectors
+Speakers
+Bluetooth Speakers
+Soundbars
+Computing
+Computer Monitors
+Gaming Monitors
+Printers
+Routers
+Emerging Tech
+AI
+Cryptocurrency
+Gaming
+Gaming Headsets
+Gaming Chairs
+Mobile & Watches
+Smartphones
+Watches
+Cell Phone Insurance
+Vehicles
+Cars
+Trucks
+SUVs
+Electric Vehicles
+Motorcycles
+Personal Transport
+Watercraft & Aviation
+Boats
+Flying
+Motorhomes
+Home & Office
+Home Appliances
+Vacuum Cleaners
+Robot Vacuums
+Home Security
+Air Conditioners
+Furniture & Living Spaces
+Office Chairs
+Kitchen
+Culture
+Toys
+Outdoor
+Camping
+Travel
+Survival
+Tools
+Innovations
+Military
+Science
+Architecture
+Inventions
+Cybersecurity
+DISCOVER
+News
+MORE
+Deals
+Gifts
+Search
+Home / Emerging Tech / AI
+AI Music Company Claims It Owns a Musician’s Recording, and YouTube Takes Her Video Down
+Bulgarian folk singer Samantha Shokin lost 125,000 views overnight when an AI-linked firm filed a claim on a song with no known author
+Read Next:
+Man Claiming To Be Fired Rockstar Engineer Says GTA 6 Is Secretly Tracking Player Behavior and Reporting It to Take-Two
+Nikshep Myle
+Nikshep Myle
+LinkedIn
+Nikshep Myle has been a dedicated writer for Gadget Review for over 2 years and has contributed his writing to other publications as well, including TechRadar, Tom’s Guide and Android Police. Outside the digital world, Nikshep is a strong believer in optimizing health, well-being, and curiosity. He finds joy in gaming, exploring new music, and embarking on travel adventures. In Nikshep’s world, technology seamlessly intertwines with personal well-being and a vibrant array of interests.
+All Articles by Nikshep Myle
+→
+By
+Nikshep Myle
+Nikshep Myle
+LinkedIn
+Nikshep Myle has been a dedicated writer for Gadget Review for over 2 years and has contributed his writing to other publications as well, including TechRadar, Tom’s Guide and Android Police. Outside the digital world, Nikshep is a strong believer in optimizing health, well-being, and curiosity. He finds joy in gaming, exploring new music, and embarking on travel adventures. In Nikshep’s world, technology seamlessly intertwines with personal well-being and a vibrant array of interests.
+All Articles by
+Nikshep Myle
+→
+Nov 17, 2026
+·
+3 min read
+Image: Wikimedia Commons
+Key Takeaways
+Key Takeaways
+Media Nov Records removed a creator’s folk song recording using automated DMCA tools without proven ownership.
+YouTube rejected two counter-notifications before a journalist’s inquiry prompted Media Nov to withdraw its complaint.
+Structural asymmetry lets claimants file takedowns instantly while creators bear the burden of proving their own ownership.
+Samantha Shokin recorded herself singing a traditional Bulgarian folk song. Four years and roughly 125,000 views later, a company she had never heard of had it removed.
+During the pandemic, Shokin recorded an approximately 50-second a cappella version of “Bre Petrunko,” a traditional Bulgarian folk song described by 404 Media as having no known writer. She uploaded it to SoundCloud, then to YouTube, where it accumulated roughly 125,000 views over four years, according to 404 Media.
+In October, YouTube removed the video after a copyright complaint from Media Nov Records.
+What Media Nov Records Appears to Be
+404 Media described a company built around AI imagery, automated rights tools, and a claimed history that corporate records did not support.
+According to 404 Media, Media Nov described itself as a music-distribution and rights-management company operating approximately 500 channels. The outlet reported seeing AI-generated imagery and repetitive electronic music across the channels it examined.
+Media Nov’s website referenced automated DMCA takedowns, YouTube Content ID management, and AI-powered content recognition. Corporate records indicated a recent founding, according to 404 Media, despite website claims suggesting a much older history.
+Two Counter-Notifications. Both Declined.
+Shokin followed YouTube’s established process and was turned away twice before a journalist’s inquiry changed the outcome.
+Shokin submitted two counter-notifications to YouTube. The platform declined both.
+The video remained offline until 404 Media contacted Media Nov for comment. The company then asked Shokin to supply original audio files, recording evidence, and publication dates to verify her ownership of the recording she had made herself.
+Minutes later, Media Nov withdrew the complaint. YouTube restored the video roughly 24 hours after the withdrawal, with a spokesperson confirming the restoration followed the claimant’s withdrawal, as reported by 404 Media.
+A Discrepancy Worth Noting
+Media Nov’s explanation for withdrawing the complaint conflicts directly with the view count reported by 404 Media.
+Media Nov’s stated reason for withdrawal was that the video had generated no revenue or views. 404 Media reported the view count at approximately 125,000.
+That contradiction is a matter of documented record. What it reflects about Media Nov’s intent has not been established.
+The Copyright Layers Involved
+The dispute involves at least three distinct legal interests, and no court has resolved any of them.
+The legal picture involves multiple layers. 404 Media described “Bre Petrunko” as an old folk song with no known writer; the status of particular arrangements may differ by jurisdiction and version.
+Musician and conductor Philip Koutev popularized a specific arrangement of the song in 1963, according to 404 Media. Media Nov argued that rights in that arrangement must be distinguished from rights in any individual sound recording.
+Claiming an interest in an arrangement does not automatically establish ownership over a separate performance recorded independently by another artist. Media Nov stated the withdrawal does not waive any rights and said it intends to pursue legal proceedings.
+The System Working as Designed
+This case exposes a structural asymmetry: initiating a takedown requires far less than reversing one.
+The deeper problem this case surfaces is structural. A claimant can initiate a platform-level removal without first obtaining a court judgment or demonstrating ownership to any independent authority.
+In this case, Media Nov asked Shokin to provide original audio files, recording evidence, and publication dates to recover content she had personally made. Automated audio-matching tools can identify similarities between recordings, but they are poorly suited to resolving layered questions about traditional songs, copyrighted arrangements, and independently owned recordings that share the same chain. Hollywood Actors and other entertainers face similar digital content ownership risks in an era of automated rights enforcement.
+YouTube restored the video after the journalist’s inquiry preceded the claimant’s withdrawal. The underlying rights questions were not resolved by that outcome.
+The Burden Runs Backward
+Shokin’s video is back online; the rights dispute, by Media Nov’s own account, is not over.
+Shokin’s video is back online. The underlying rights dispute, per Media Nov’s own statements, remains open.
+This case illustrates a recurring asymmetry for creators working with traditional material: a takedown can be filed quickly, the counter-notification process can stall, and the creator may be asked to prove ownership of work she personally produced.
+Share this
+You Might Also Like_
+• New York Imposes Five-Year Ban on AI Chatbot Toys for Kids
+• MIT Physicist Claims Anthropic Staff Discussed World Takeover
+• The World’s First Wooden Data Center Is Powered by 100% Renewable Electricity – 75% Hydropower and 25% Wind
+Our Editorial Process
+At Gadget Review, our guides, reviews, and news are driven by thorough human expertise and use our Trust Rating system and the True Score. AI assists in refining our editorial process, ensuring that every article is engaging, clear and succinct. See how we write our content here →
+Join over 150k Readers
+Join 150,000+ readers discovering the coolest gadgets, smart buying guides, and the tech news that actually matters.
+LATEST Lists_
+8 Lessons to Build Trust in Your Motorcycle
+Nov 25, 2026
+9 of the Best Gifts for Toddlers That Encourage Active, Screen-Free Play
+Nov 25, 2026
+17 Black Friday Home & Kitchen Gadget Deals Worth Buying in 2026, From Smart Ovens to Smart Thermostats
+Nov 25, 2026
+Why Trust Gadget Review
+With over 25 years of experience, our editorial process is built on human expertise, ensuring that every article is reliable and trustworthy. AI helps us shape our content to be as succinct and engaging as possible.
+Learn more about our commitment to integrity in our Code of Ethics.
+LATEST NEWS_
+The FCC Authorized SpaceX To Deploy a Million Satellites
+Rex Edison
+·
+23 hours ago
+This Wristwatch Draws the Time in Powder, Then Redraws It When the Minute Changes
+Annemarije de Boer
+·
+23 hours ago
+Disney+ Tripled to $21.49 and Netflix Hit $19.99: How Streaming Bills Outran Inflation by Over 20 Percentage Points
+Alex Barrientos
+·
+23 hours ago
+Five Games, Five Platforms: How to Stream Every 2026 NFL Thanksgiving Matchup
+Al Landes
+·
+23 hours ago
+Allstate Systems Went Dark for Days Before Thanksgiving
+Nikshep Myle
+·
+23 hours ago
+Latest Buying Guides_
+10 Best Red Light Therapy Devices
+6 Best Balance Bikes for Toddlers
+Best Cars
+Best Credit Cards Cell Phone Insurance
+Best Software Apps
+Latest Reviews_
+BodyPark ATOM Review: The AI Form Coach That Gives Back What You Put In
+82
+Absolutely Fresh
+Alex Barrientos
+Aotos Flux X26 Pro Review: A Weekend Toy That Looks Like a Motorcycle
+84
+Absolutely Fresh
+C. da Costa
+ZenoWell Luna Plus Vagus Nerve Stimulator Review
+80
+Absolutely Fresh
+C. da Costa
+INIU Outdoor Rugged 20000 Power Bank Review
+89
+Absolutely Fresh
+C. da Costa
+Foxwell NT919 BT Review
+92
+Cosmic Wonder
+Alex Barrientos
+LATEST Resource Articles_
+How to Connect Speakers to a Receiver
+How to Use Aux Mode in a Bluetooth Speaker
+How to Make Speakers Bluetooth
+How to Connect Bluetooth Speakers to a PC
+How to Connect Bluetooth Speakers to an Xbox One
+ALL CATEGORIES_
+TVs
+Soundbars
+Office Chairs
+Gaming Chairs
+Speakers
+Printers
+Computer Monitors
+Gaming Headsets
+Routers
+Projectors
+Vacuum Cleaners
+Air Conditioners
+Can You Trust What You Read Online?
+Fake reviews are taking over tech journalism—45% of publications are faking product tests.
+Sign up now for exclusive access to Gadget Review’s bombshell investigation. Plus, stay ahead with our daily newsletter, packed with news, lists, and deals you can trust.
+We’re on a mission to fix the broken Product Review system.
+1321 Upland Dr. PMB 18642
+Houston, Texas 77043 USA
+(737) 471-4266‬
+[email protected]
+Partner with us
+Advertising Options
+INSIDE GR
+Why We Exist
+How We Get Our Data
+How We Test The Testers
+How We Score
+How We Make Money
+Partnerships
+Code of Ethics
+Do Not Sell My Info
+Limit Use of My Data
+Contact Us
+CATEGORIES
+Categories In Progress
+Latest Reviews
+TVs
+Soundbars
+Computer Monitors
+Gaming Headsets
+Speakers
+Vehicles
+Made with
+© 2026 All Rights Reserved  |  Gadget Review
+Accessibility • Privacy Policy • Cookie Policy • Disclaimer • Terms of Use

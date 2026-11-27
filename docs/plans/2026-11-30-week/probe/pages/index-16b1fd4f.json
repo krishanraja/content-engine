@@ -1,0 +1,10 @@
+{
+ "https://www.videogameschronicle.com/news/ubisoft-is-reportedly-requiring-developers-to-justify-not-using-generative-ai/": {"unreadable": "HTTP 403 forbidden to automated fetch"},
+ "https://www.thebrief.news/en/standard/article/47780/ubisoft-says-its-developers-are-not-required-to-use-generative-ai": {"file": "16b1fd4f-thebrief.txt"},
+ "https://www.dualshockers.com/ubisoft-claims-it-encourages-but-doesn-t-require-generative-ai-usage-during-game-development/": {"file": "16b1fd4f-dualshockers.txt"},
+ "https://www.psu.com/news/ubisoft-reportedly-encouraging-the-use-of-generative-ai-for-all-projects/": {"file": "16b1fd4f-psu.txt"},
+ "https://gamingbolt.com/ubisoft-encourages-the-use-of-generative-ai-asks-devs-to-justify-not-using-it-rumor": {"file": "16b1fd4f-gamingbolt.txt"},
+ "https://mmos.com/news/industry/ubisoft-generative-ai-pitch-justification-report": {"file": "16b1fd4f-mmos.txt"},
+ "https://www.verticalslice.news/ubisofts-internal-pitching-process-is-becoming-increasingly-ai-pilled/": {"file": "16b1fd4f-verticalslice.txt", "note": "full story beyond opening paragraphs is behind a paid subscription"},
+ "https://news.ubisoft.com/en-us/article/3mWlITIuWuu0MoVuR6o8ps/ubisoft-reveals-teammates-an-ai-experiment-to-change-the-game": {"file": "16b1fd4f-ubisoft-teammates.txt"}
+}

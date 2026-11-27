@@ -1,0 +1,52 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why are Ubisoft teams reportedly asked to justify not using generative AI when they pitch a game?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why are pitch teams asked to say how they will use generative AI?",
+      "answer": "Anonymous Ubisoft staff told Vertical Slice that leadership wants generative AI used to speed up and streamline production, and that pitches which neither explain its use nor justify leaving it out do not get the go-ahead. Ubisoft's statement says projects are not required to use it and does not address the pitch claim directly.",
+      "evidence": [
+        {"url": "https://www.verticalslice.news/ubisofts-internal-pitching-process-is-becoming-increasingly-ai-pilled/", "domain": "verticalslice.news", "date": "2026-11-25", "quote": "Ubisoft is requiring internal teams pitching projects to explain how they will leverage generative AI to accelerate and streamline production."},
+        {"url": "https://www.psu.com/news/ubisoft-reportedly-encouraging-the-use-of-generative-ai-for-all-projects/", "domain": "psu.com", "date": "2026-11-26", "quote": "Vertical Slice’s Chris Kerr spoke to sources that claim Ubisoft wants its teams to use generative AI to speed up development times, although some people are reluctant to do so."},
+        {"url": "https://gamingbolt.com/ubisoft-encourages-the-use-of-generative-ai-asks-devs-to-justify-not-using-it-rumor", "domain": "gamingbolt.com", "date": "2026-11-26", "quote": "According to Vertical Slice, multiple sources have claimed that the company wants to use generative AI across all of its teams to make game development a speedier process."}
+      ],
+      "strength": "documented",
+      "counter": {"text": "Ubisoft's statement, carried by Vertical Slice and The Brief: \"This doesn’t mean that projects are required to use generative AI.\" Every report traces back to the same anonymous Vertical Slice sources; the full Vertical Slice story is behind a paywall and VGC returned 403, so neither was read in full."},
+      "mechanism_type": "rule: pitch approval gate",
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why does leadership treat generative AI as the default rather than an option?",
+      "answer": "Sources say leadership sees generative AI as unavoidable and is all-in on it. One source adds that staff asked for smaller projects with compact teams, and the leaders who approve pitches present generative AI as the way to build and discard prototypes faster.",
+      "evidence": [
+        {"url": "https://www.psu.com/news/ubisoft-reportedly-encouraging-the-use-of-generative-ai-for-all-projects/", "domain": "psu.com", "date": "2026-11-26", "quote": "it is highly encouraged due to the fact Ubisoft views AI development as “unavoidable.”"},
+        {"url": "https://gamingbolt.com/ubisoft-encourages-the-use-of-generative-ai-asks-devs-to-justify-not-using-it-rumor", "domain": "gamingbolt.com", "date": "2026-11-26", "quote": "However, it is encouraged, with the company seeing its proliferation in the games industry as “unavoidable.”"},
+        {"url": "https://mmos.com/news/industry/ubisoft-generative-ai-pitch-justification-report", "domain": "mmos.com", "date": "2026-11-26", "quote": "the leaders who sign off on pitches are said to present generative AI as the way to get there: prototypes built faster by small lean agile teams, iterated on and discarded quickly to sift out the good ideas."}
+      ],
+      "strength": "documented",
+      "counter": {"text": "Ubisoft says the choice sits with each team: \"Teams need to determine whether, and how, these technologies make sense for the game they want to make and the experience they want to create for players.\" The small-teams account appears only on mmos.com, and mmos.com says Ubisoft has not publicly confirmed it."},
+      "mechanism_type": "model: faster prototyping with smaller teams",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why would Ubisoft want faster, smaller production now?",
+      "answer": "The sources place the push beside a restructuring: Motherbrain, a generative AI subsidiary building proprietary gameplay technology for other Ubisoft teams, described as part of a new operating model, alongside layoffs and a headcount fall. No source says Ubisoft links the pitch rule to cost cutting; that link is drawn by commentators.",
+      "evidence": [
+        {"url": "https://gamingbolt.com/ubisoft-encourages-the-use-of-generative-ai-asks-devs-to-justify-not-using-it-rumor", "domain": "gamingbolt.com", "date": "2026-11-26", "quote": "as a dedicated subsidiary developing proprietary technologies for gameplay to empower creators and open up new possibilities for richer, more immersive and engaging player experiences"},
+        {"url": "https://www.dualshockers.com/ubisoft-claims-it-encourages-but-doesn-t-require-generative-ai-usage-during-game-development/", "domain": "dualshockers.com", "date": "2026-11-26", "quote": "being an important part of their “new operating model”."},
+        {"url": "https://mmos.com/news/industry/ubisoft-generative-ai-pitch-justification-report", "domain": "mmos.com", "date": "2026-11-26", "quote": "Ubisoft's latest fiscal report puts headcount at 15,500 as of September 2026, down 5,200 from 20,700 in September 2022"}
+      ],
+      "strength": "inferred",
+      "counter": {"text": "Ubisoft's own framing is creative, not financial: the Teammates announcement says \"The goal is not to replace creatives, but rather to find ways to enhance it\". Ubisoft's half-year earnings report, where Motherbrain was disclosed, was not linked by any source and was not read."},
+      "mechanism_type": "operating model: restructuring around an in-house generative AI subsidiary",
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "Several outlets, all relying on anonymous staff speaking to Vertical Slice, report a pitch process where leaving generative AI out has to be justified, driven by a leadership view that the technology is unavoidable and speeds prototyping. Ubisoft denies any requirement but does not address the pitch claim. The sources place this beside Motherbrain, layoffs and a shrinking workforce, without showing a stated link.",
+    "open_question": "If a pitch must explain why it leaves generative AI out, is that still a choice each team makes freely?"
+  }
+}

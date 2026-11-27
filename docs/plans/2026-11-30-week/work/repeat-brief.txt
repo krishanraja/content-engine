@@ -1,0 +1,234 @@
+You are checking a list of proposed posts against posts that already went out. For each proposed post, answer one question: does it tell the same story as one of the earlier posts, the same news or the same advice to the same reader, under any words? Answer "new" or "same_story", name the earlier post's key when same, and give one line of why.
+
+Reply with only JSON: {"checked": [{"ref": "<ref>", "verdict": "new" or "same_story", "of": "<earlier key or empty>", "why": "<one line>"}]}
+
+PROPOSED
+
+mon-1
+  Hook: From this week, writers whose books trained Anthropic's AI are being paid about $2,203.56 a book, and the default split hands half of it to the publisher.
+  Story or picture: The $1.5 billion Bartz v. Anthropic settlement starts paying authors and publishers from the week of 23 November 2026. The first instalment is about 70% of each work's share, $2,203.56, with the rest due once the AI company makes its final payment of about $450 million. Messages from publishers desc
+  Copy: Writers whose books trained an AI start receiving money this week, and the split with their publisher decides whether a cheque is worth $2,203 or half of it: anyone with a book contract now knows whic
+
+mon-2
+  Hook: Warner Music says its AI licensing deals, Suno above all, will add material money to its streaming revenue from this financial year.
+  Story or picture: Warner Music Group expects its licensing deals with AI music companies, Suno above all, to contribute materially to its subscription streaming revenue from fiscal 2027, which began on 1 October 2026. Warner settled with Suno and licensed it in November 2025, and Suno's v6 models launched on 9 Septem
+  Copy: A major label now counts AI song apps as a source of streaming money from this financial year, so every artist on a licensed catalogue has a new line of income whose size nobody has published yet.
+
+mon-3
+  Hook: ITV's AI tool turned a college's website link into a 30-second TV spot in about 20 seconds, for nothing; five of the 16 first-timers then paid for more.
+  Story or picture: ITV's GenAI Ads Manager, built with Streamr.AI and launched in October 2025, makes TV adverts from a firm's own brand assets for free. In its first year 16 businesses that had never advertised on TV used it, mostly with pause ads on ITVX, and five of them moved on to ITV's in-house creative team wit
+  Copy: A broadcaster is giving away AI-made adverts to win small firms that never bought TV before, and a third of them went on to pay for more: anyone selling attention now has a cheaper way to land a first
+
+mon-4
+  Hook: YourNeuroTune offered more than 450 shops, gyms and cafes AI background music and a template to cancel their music-rights licence; the songwriters' society is now taking it to court.
+  Story or picture: YourNeuroTune, an AI music company in Hilvarenbeek, supplies background music to more than 450 customers in four countries and told businesses that its catalogue needs no BumaStemra licence, even offering a template to cancel one. BumaStemra says the tracks are made with Suno and gave it until noon 
+  Copy: Shops, gyms and restaurants were offered AI background music as a way to cancel their music-rights licence, and a songwriters' society is suing to stop it: every venue paying for music now has a cheap
+
+wed-1
+  Hook: Suno Bridge writes a new AI part into a loop of your Ableton session for 10 credits, and to do it, it uploads the whole project.
+  Story or picture: Suno Bridge, in beta from 13 November 2026, runs beside Ableton Live 12 on a Mac and writes new AI instrument and vocal parts into a marked loop of the session, matched to its tempo, key, style and groove. To do that it uploads the Ableton project and its audio to the user's Suno account, where filt
+  Copy: A producer can now ask an AI for a bass line that fits a song already on their timeline, for 10 credits, and the AI has to read the whole session to do it: anyone in a studio knows what they hand over
+
+wed-2
+  Hook: Suno Visuals makes lyric videos, album art and 15-second clips, and Suno's own FAQ says it runs on a model based on MiniMax's H3.
+  Story or picture: Suno launched Visuals on 17 November 2026: it makes lyric videos, album art and clips of up to 15 seconds for songs made on Suno, which users can extend, edit and re-prompt. Its FAQ says it runs on H3 Move, a model based on MiniMax's H3 video model, and Suno says it added filters that block uploads 
+  Copy: An AI music app now makes the video, the cover and the clips too, on a video model built by another company, so an artist knows whose engine is drawing their artwork and why some prompts are refused.
+
+wed-3
+  Hook: TikTok's Likeness Detection flags videos that may use a creator's face, once they verify their ID with a third party; its new AI checker reads hidden labels, and only from its own apps.
+  Story or picture: On 23 November 2026 TikTok made Likeness Detection available worldwide to eligible creators and public officials: they verify their ID through a third-party partner (Jumio in the US test) and are told about videos that may use their likeness. A second tool lets anyone, with no account, check whether
+  Copy: Creators can now have TikTok watch for videos that use their face without consent, after handing their ID to a third party, and anyone can check whether a clip was made with TikTok's own AI tools: a c
+
+wed-4
+  Hook: A singer's recording of "Bre Petrunko", a Bulgarian folk song with no known writer, was pulled from YouTube on a claim from Media Nov Records, which runs about 500 channels, and her two appeals failed.
+  Story or picture: Samantha Shokin's 50-second a cappella recording of "Bre Petrunko", a 19th-century Bulgarian folk song with no known writer, had about 125,000 views over four years. In October Media Nov Records, which runs about 500 YouTube channels mostly of repetitive electronic music with AI imagery, filed a cop
+  Copy: A recording of a song with no known writer was taken off YouTube by Media Nov Records, which runs about 500 channels, and the appeals failed twice: anyone who records traditional or public-domain musi
+
+fri-1
+  Hook: Ubisoft says its developers do not have to use generative AI; developers say a pitch without it now has to explain why.
+  Story or picture: Vertical Slice reported, and VGC followed on 25 November 2026, that Ubisoft developers pitching new games are asked how generative AI will be used, and that a team that does not want to use it has to justify why. Ubisoft says projects are not required to use it. Days earlier it opened Motherbrain, a
+  Copy: At one of the biggest game publishers, AI is officially optional and in practice needs a reason to skip: anyone running a studio or a team can see how "encouraged" becomes the rule.
+
+fri-2
+  Hook: In a survey of more than 900 designers, 91% use AI at least weekly, up from 54% a year ago, and the ones who explain it describe more checking, not less.
+  Story or picture: A 2026 survey by Designer Fund and Foundation Capital of more than 900 designers found 91% use AI at least weekly, up from 54% a year earlier (reported 25 Nov 2026). The designers quoted describe using it for first drafts, storyboards and file preparation, then editing by hand: "To get good results,
+  Copy: Nine in ten designers now use AI every week, up from about half a year ago, while the designers themselves describe careful, methodical work: anyone hiring or briefing a designer knows the gap between
+
+fri-3
+  Hook: Gods Don't Give Gifts opens on 4 December as the first AI-animated feature in cinemas, and its director lists the co-writer, editors, colourists, Foley artist and voice actors who made it with him.
+  Story or picture: Gods Don't Give Gifts, directed by Zack London (Gossip Goblin), opens in cinemas on 4 December 2026 as the first AI-animated feature in theatres. Film Threat describes a hybrid pipeline: London's own micron pen drawings, diffusion video models, then a co-writer, traditional editors and colourists, a
+  Copy: The film billed as the first AI-animated feature in cinemas opens on 4 December, and its own director lists the human co-writer, editors, colourists, Foley artist and voice cast behind it: anyone pric
+
+fri-4
+  Hook: Xania Monet, an AI avatar, swept the first AI Music Awards; her creator says she wrote every lyric herself.
+  Story or picture: At the first AI Music Awards, at The Mayan in Los Angeles on 13 November 2026, AI artist, song and album of the year went to Xania Monet, an AI-generated avatar. Her creator, Telisha "Nikki" Jones, says she wrote all of the lyrics and set them to music with AI. The winners were chosen by AI artists 
+  Copy: The first AI music awards crowned an "AI artist" whose creator wrote all the words, with AI artists casting the votes: anyone labelling or judging AI work can see how far the label sits from who did t
+
+off-tue-photonstems
+  Hook: Take any song apart on your own laptop. $259 until 7 December.
+  Story or picture: A finished track splitting into vocals, drums, bass and the rest, card by card.
+  Copy: iZotope Photon pulls a finished song apart into its parts, and up to six voices out of one recording, on your own computer. It costs $259 until 7 December, against $349 after.
+
+off-tue-splicecreate
+  Hook: A free music studio with 3 million sounds. The catch is the export button.
+  Story or picture: A beat being built from the sample library by voice, then the export button with a padlock.
+  Copy: Splice Create is a free Mac music app with more than three million licensed sounds built in and an assistant you can talk to. Making is free; exporting and licensing need the $9.99-a-month plan.
+
+off-tue-djvoices
+  Hook: Spotify's AI DJ can finally stop talking.
+  Story or picture: A radio presenter's microphone with a mute switch, then nine name badges.
+  Copy: Spotify's AI DJ now has nine new voices and a setting that cuts most of the talking between songs. For an artist, that means the DJ that introduces your track can now talk less and play more.
+
+off-tue-freeanimation
+  Hook: An animation studio for $0: four free tools that do the expensive jobs.
+  Story or picture: A studio desk where each expensive box is swapped for a free one.
+  Copy: Free, open-source tools now cover most of an animation studio: 2D animation, motion graphics, motion capture from a webcam and visual effects. We pick the four an animator can use this week and say what each replaces.
+
+off-tue-grimesdeepseek
+  Hook: Grimes made an album about AI with no AI in it. Except one song.
+  Story or picture: A record sleeve with a credits list, one line glowing.
+  Copy: Grimes made an album about AI and says she used no generative AI on it, apart from one song, "DeepSeek", whose lyrics were partly written by DeepSeek. It is the most honest AI credit in music this year.
+
+off-tue-tplconfused
+  Hook: Will Ferrell: "I guess I'm feeling a little confused"
+  Story or picture: Will Ferrell looks around, lost, and says he is feeling a little confused.
+  Copy: Will Ferrell looks around, lost, and says he is feeling a little confused. It becomes understatement in the studio: the producer reading an AI mastering report that rates the demo higher than the single.
+
+off-tue-tplnogod
+  Hook: Steve Carell: "No, God, please, no"
+  Story or picture: Steve Carell, as Michael Scott, shouts "No, God, please, no" at the sky.
+  Copy: Steve Carell, as Michael Scott, shouts "No, God, please, no" at the sky. It becomes exaggeration at the record label: the A&R team watching a streaming app delete 29 million songs, including their lo-fi playlist.
+
+off-tue-tplpushthrough
+  Hook: Jamie Lee Curtis: "I don't know what day it is, I'm just trying to push through"
+  Story or picture: Jamie Lee Curtis, frazzled, says she does not know what day or time it is and is just trying to push through.
+  Copy: Jamie Lee Curtis, frazzled, says she does not know what day or time it is and is just trying to push through. It becomes deadpan for the edit suite: the editor on day three of fixing the AI's hands in every frame of a music video.
+
+off-tue-tplwoke
+  Hook: POV: the AI that needs to think without being disturbed
+  Story or picture: A character waves off anyone who comes near because they need to think, undisturbed.
+  Copy: A character waves off anyone who comes near because they need to think, undisturbed. It becomes personification in the studio: the AI collaborator that refuses to render the track until it has had its quiet time.
+
+off-thu-elevensoundcloud
+  Hook: Make a song in one app, post it in another, in one tap. Three months free.
+  Story or picture: A song flying from one phone app straight onto a SoundCloud page.
+  Copy: ElevenMusic songs can now go straight to SoundCloud from the app, and SoundCloud Artist Pro members get three months of ElevenMusic Pro free. After that it is $9.99 a month, so check the renewal before you claim it.
+
+off-thu-videoplugin
+  Hook: Your chatbot just invited a video studio to the table.
+  Story or picture: A board table of apps as people, one passing a note by pigeon to the video studio.
+  Copy: A connector lets your chatbot call another app for you, like a guest at the table who does one job. Higgsfield's video tools now plug into ChatGPT and Claude this way: here is what that means and how to add it.
+
+off-thu-hackertube
+  Hook: He got tired of YouTube's picks, so he built a video site in two hours.
+  Story or picture: A wall of video thumbnails, each pinned up by a hand rather than a machine.
+  Copy: Fed up with his YouTube recommendations, Andrej Karpathy had an AI build him a video site in about two hours: 6,454 videos picked from 43 million comments where real people recommended them. For a creator, it is a picture of discovery without the alg
+
+off-thu-klingthirty
+  Hook: Thirty seconds of film from 15 of your own pictures.
+  Story or picture: Fifteen photos on a corkboard becoming one moving shot.
+  Copy: Kling 4.0 makes single AI video clips up to 30 seconds long from up to 15 of your own reference images or clips. For a small team, that is a storyboard you can watch.
+
+off-thu-threecuts
+  Hook: Upload three versions. YouTube tells you which opening worked.
+  Story or picture: Three thumbnails racing, one pulling ahead.
+  Copy: YouTube lets creators test up to three different cuts of a video to see which opening holds viewers best, and an AI assistant gives feedback on drafts. Here is how a creator uses it on their next upload.
+
+off-thu-tplchihuahua
+  Hook: The singing Chihuahua
+  Story or picture: A Chihuahua throws its head back and sings, fully committed and slightly off key.
+  Copy: A Chihuahua throws its head back and sings, fully committed and slightly off key. It becomes incongruity at the awards: the AI artist of the year giving its acceptance song.
+
+off-thu-tplarnold
+  Hook: Arnold Schwarzenegger is watching
+  Story or picture: Arnold Schwarzenegger stares, unblinking, nodding slowly to a dance track.
+  Copy: Arnold Schwarzenegger stares, unblinking, nodding slowly to a dance track. It becomes deadpan at the gig: the session musician watching the AI band play their part, note for note.
+
+off-thu-tpldumbest
+  Hook: Stephen A. Smith: "you might be one of the dumbest folks on the planet"
+  Story or picture: Stephen A. Smith turns slowly to camera and, affectionately, calls someone one of the dumbest folks on earth.
+  Copy: Stephen A. Smith turns slowly to camera and, affectionately, calls someone one of the dumbest folks on earth. It becomes precise cruelty aimed at the hype: the sports pundit reacting to the club's AI-made matchday poster with the stadium in the wrong
+
+off-sat-goodnews
+  Hook: This month AI helped makers reach millions, and gave fans Motty back.
+  Story or picture: A gentleman with an umbrella helping New Yorkers, a painted Bible epic, a game world in brush strokes and a commentary box with John Motson's coat on the chair.
+  Copy: An animator, a filmmaker, game makers and football fans all got something from AI this month that millions chose to watch, play or hear. Each one credits the people behind it.
+
+off-sat-arenanight
+  Hook: The Warriors' big screen now talks back. Three more to find.
+  Story or picture: A packed arena, the giant videoboard answering a fan's question.
+  Copy: The Warriors, the champion Valkyries and Chase Center put Gemini into the game night itself, through interactive videoboard features fans can join. Three more stories of a better night at the game are still to find.
+
+EARLIER POSTS
+
+piece:8287846b-6618-4a19-9fb8-23ad4eca2718 (2026-11-23): Oracle files to sell $20B in new stock, bonds to finance AI buildout
+  Oracle files to sell $20B in new stock, bonds to finance AI buildout Oracle is raising $20 billion more to build for AI on top of $125 billion of debt, and says customer prepayments are part of how it gets to positive cash flow in 2028: a cloud supplier asking you to pay up front may be asking you to fund its build. Headline: Oracle is borrowing to build AI, and its customers' prepayments are part
+
+off-mon-fortytoone (2026-11-23): After the midterms, AI has to find somewhere else to live.
+  After the midterms, AI has to find somewhere else to live. Four cards. One: in the 3 November midterms, Ballotpedia counted 41 local votes in 10 states on data centres, and 40 went against building. Two: people fear a giant data centre pushes up their power bill. Three: the ways round, AI making its own power, small sites beside spare power, and AI small enough to run on your own devices. Four: AI
+
+off-tue-alphacard (2026-11-24): $75,000 for an AI school day. Here is the receipt.
+  $75,000 for an AI school day. Here is the receipt. A cover of a school report card printed like a till receipt, then one card each for the fee, the promise, the result and the public schools buying in, and a last card of four questions. Everyone has paid for something that promised a miracle; this one has the numbers. Claude Code, 2026-11-18 06:59 UTC (done, ideas): MCP explainer carousel idea (b3
+
+piece:bf0fddae-2fcf-4687-9079-190729234ed3 (2026-11-25): Canva, Adobe or Claude: who owns design in 2028? At Adobe MAX on 10 Nov, Adobe made Firefly an AI creative studio, put agents in Illustrator
+  Canva, Adobe or Claude: who owns design in 2028? At Adobe MAX on 10 Nov, Adobe made Firefly an AI creative studio, put agents in Illustrator The design tools your team pays for are turning into agents that work for each other: before renewing Canva or Adobe seats, ask which one your other AI tools can drive. At Adobe MAX on 10 Nov, Adobe made Firefly an AI creative studio, put agents in Illustrato
+
+piece:4f8f23b2-8cb2-4498-b07c-243840f8a1ba (2026-11-27): So what: Your staff and customers will soon be building small tools without knowing it, because ChatGPT and Claude now answer ordinary quest
+  So what: Your staff and customers will soon be building small tools without knowing it, because ChatGPT and Claude now answer ordinary quest Your staff and customers are about to start making small tools every week without knowing it, because ChatGPT and Claude now answer everyday questions with a working calculator or chart, and almost nobody checks the sums inside. Since 8 Oct 2026, ChatGPT's In
+
+piece:388c764e-318d-4225-a931-d117a47f13ad (2026-11-27): Jack Clark told the IMF the singularity has begun. The benchmark data he used is the part nobody is writing about.
+  Jack Clark told the IMF the singularity has begun. The benchmark data he used is the part nobody is writing about. Anthropic co-founder Jack Clark told IMF and World Bank annual meetings that AI-driven discovery is now outrunning humanity's ability to follow. His evidence: Humanity's Last Exam scores went from 8% to 67.7% since 2025; FrontierMath from 2% to 94%. Those are not projections. They are
+
+piece:db9f9f6a-1092-49be-8024-f335e060305a (2026-11-18): Build or buy your tools in an AI world?
+  Build or buy your tools in an AI world? In a survey by Retool, which sells tools for building, a third of its users said they had already swapped a software subscription for something they built, and Starbucks is building AI tools that could replace some of a $400 million software bill: the build-or-buy choice now turns on who maintains the thing, not who writes it. Headline: Everyone thinks they 
+
+off-thu-701a2c55-7400-4dc8-99cb-d6001147ae16 (2026-11-19): Which of your habits will cost you your job once AI is at work?
+  Which of your habits will cost you your job once AI is at work? AI can't be blamed or sacked, so the people who keep their jobs are the ones who check its work and put their own name on it, and the habits that cost jobs are waiting to be told, passing work on unchecked and blaming the computer. Him to camera asking which of your habits will cost you your job, then naming three habits that do and t
+
+off-thu-adsswitch (2026-11-19): Free ChatGPT has ads now. Here is what switching them off costs you.
+  Free ChatGPT has ads now. Here is what switching them off costs you. A phone showing a ChatGPT answer with a Sponsored card tucked under it, and the house robot holding a price tag that reads £0, then cards that show who sees the ads, the off switch and its price in lost features. Most people use the free plan, and nobody has told them the ads have a switch or what the switch costs. Claude Code (c
+
+off-thu-tpl-cat (2026-11-19): Cat counting cash
+  Cat counting cash A ginger cat sits upright on a green screen and counts a thick wad of cash, paw by paw. Personification: a cat doing accounts is absurd, and it maps onto any AI company taking your money for a tiny job. "POV: Anthropic counting what you paid it to summarize an email."
+
+piece:c00cd4e0-e1bb-4c60-b36f-cea92897e38c (2026-11-20): Will your AI auditor find your missing money, or the skeletons in your closet?
+  Will your AI auditor find your missing money, or the skeletons in your closet? Every new instrument has overturned things people were sure of, and AI with a strict checker beside it has started doing the same to maths: the facts your business repeats most are the ones most worth re-checking. Headline: AI's first big job may be finding what we got wrong. Hook: "For 40 years, a step in one of the bi
+
+piece:b019dbf8-8051-4cab-9b5e-2ad77b3f5118 (2026-11-20): Where does AI get built when towns say no?
+  Where does AI get built when towns say no? The midterms turned AI into a vote about the electricity bill. Whether AI gets built in America, and how fast and how cheaply, is now being decided by voters and local councils; Washington and the tech companies no longer get the last word. So the builders are looking for ways round, and those ways round will change what AI looks like and where it lives. 
+
+off-fri-tpl-pigeon (2026-11-20): Pigeon doctor walks in
+  Pigeon doctor walks in A man with a pigeon's head, in a doctor's coat and stethoscope, struts down a backstage corridor like he owns it. Unearned confidence made visible: a pigeon in a doctor's coat is exactly an AI that read one article. "POV: ChatGPT is reviewing your contract after reading one blog post about law."
+
+off-sat-goodnews (2026-11-21): This week AI helped people speak, sign and get around.
+  This week AI helped people speak, sign and get around. A cover with a hilarious generated scene of the house robot as a tour guide waving a flag for a crowd, then one card per story: a woman with ALS hearing her own voice again, a sign-language app that works both ways, and an AI guide steering a blind walker round a bin. Three real people's days made easier, each shown with its own photo. Claude 
+
+piece:b358e788-209f-427b-a84d-1f79a8ebb430 (2026-11-09): When an AI app millions of people loved goes bust, who walks away with the money? Google paid billions for the people; Disney is bidding mil
+  When an AI app millions of people loved goes bust, who walks away with the money? Google paid billions for the people; Disney is bidding mil If an AI company you rely on goes bust, its technology is sold to the highest bidder and the people who used it get nothing from the sale. When an AI app millions of people loved goes bust, who walks away with the money? Google paid billions for the people; D
+
+off-tue-shell (2026-11-10): Character.AI went bust. Here is who got what.
+  Character.AI went bust. Here is who got what. Three cards. Google got the brains for $2.7 billion in 2024. Disney opened the bidding at $20 million for what was left. The users got nothing from the sale. The gap between $2.7 billion and nothing is the whole story, in one swipe.
+
+off-tue-mcpskin (2026-11-10): Your AI was reading the whole phone book to make one call.
+  Your AI was reading the whole phone book to make one call. A voiceover with moving graphics. An AI agent loads the manual for every tool it might use before it starts, like reading a phone book to make one call. Anthropic had it write a few lines of code to fetch only what it needed, and one task fell from 150,000 tokens to 2,000. The phone book picture makes a technical change obvious, and the nu
+
+off-tue-homework (2026-11-10): Home Depot makes its AIs mark each other's homework.
+  Home Depot makes its AIs mark each other's homework. Two panels. Panel one: a pupil marking their own test with a big tick. Panel two: a robot labelled Google writes the answer, and a robot labelled OpenAI marks it. Everyone knows why you never mark your own test, and a huge company runs its AI on that rule. Let's run this one as well and play on the hilarity of this topic. I think we have the opp
+
+piece:36886e0b-4b32-473b-be72-b0aef31fccef (2026-11-11): AI is already inside the songs people have on repeat, hidden in the credits. Movin' To The Sun started as a Suno demo, was rebuilt by HUGEL
+  AI is already inside the songs people have on repeat, hidden in the credits. Movin' To The Sun started as a Suno demo, was rebuilt by HUGEL AI is already inside songs people have on repeat, hidden in the credits, and music is the first industry deciding in public who gets credit and paid when AI did one step of the work. Headline: You have probably danced to a song that started as an AI demo. Hook
+
+off-thu-gitbroke (2026-11-12): Anthropic's AI wrote so much code Git could not keep up.
+  Anthropic's AI wrote so much code Git could not keep up. Five cards. In May Anthropic merged about 2,500 code changes a day; by September it was over 30,000. Seven people spent five months building a replacement made for AI agents. One bar that runs off the card shows the change faster than any sentence. There are other replacements emerging for Git as well and this should cover that topic as to w
+
+piece:f3fcd5e1-573e-4692-a413-db7c5823a10e (2026-11-13): Meta staff were ranked by AI use. They gamed it.
+  Meta staff were ranked by AI use. They gamed it. Companies told staff to use more AI and started counting it, so people found ways to burn AI without getting more done; now Amazon says the count itself is the problem. Headline: Companies started ranking staff by how much AI they burn. You can guess what happened next. Hook: "The story goes that a city once paid a bounty for every dead cobra, so pe
+
+off-fri-beststicker (2026-11-13): Your AI thinks it's the best. Guess who told it.
+  Your AI thinks it's the best. Guess who told it. Six cards. Cover: a robot proudly pressing an I'M THE BEST sticker onto its own chest, a sheet of the same stickers on the desk, while the office behind it is broken and on fire. Then the post-Enron auditor rule, Home Depot (Google answers, OpenAI judges), Microsoft (GPT writes, Claude checks), the study in one line, and the rule on the last card ab
+
+off-fri-povteach (2026-11-13): POV: your AI agent using your computer without being set up properly by you
+  POV: your AI agent using your computer without being set up properly by you The short you saved on 3 Nov, unchanged. Above it, your caption word for word: "POV: your AI agent using your computer without being set up properly by you". A credit line names Geek Creative Agency. Anyone who has let an AI agent loose on their computer knows the feeling of watching it go wrong.
+
+off-sat-oldproof (2026-11-14): AI found a mistake in a maths proof from 1986, its makers say.
+  AI found a mistake in a maths proof from 1986, its makers say. Four cards. Axiom says its AI agents spent 24 days rewriting about 15,000 pages of famous maths in a form a computer can check, and found counterexamples to a step in a proof from 1986. A 40-year-old mistake found by AI is a story people retell. Real-world stories only, but with a hilarious generated cover page

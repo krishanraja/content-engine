@@ -1,0 +1,135 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why did ITV build a tool that makes TV adverts for small firms for free?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why did ITV start making TV adverts for small firms from their own brand assets?",
+      "answer": "To cut the cost and time of making a TV advert, which ITV and its technology partner present as what kept small businesses off TV. The tool pulls images and text from a firm's website or social pages and turns them into an advert in seconds.",
+      "evidence": [
+        {
+          "url": "https://uk.themedialeader.com/itvs-generative-ai-ads-feature-used-by-16-new-to-tv-advertisers-in-debut-year/",
+          "domain": "uk.themedialeader.com",
+          "date": "2026-10-09",
+          "quote": "ITV launched the generative AI production service last October to use AI to “democratise” TV advertising by reducing the cost and time it takes to produce TV assets."
+        },
+        {
+          "url": "https://www.magnite.com/press/itv-launches-genai-ads-manager-powered-by-magnites-streamr-ai/",
+          "domain": "magnite.com",
+          "date": "2025-10-09",
+          "quote": "to make TV advertising more accessible for any small business which previously wouldn’t have been able to tap into its power to grow their business"
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "The 2025 launch release describes \"a low-cost entry level tailored package\", while the 2026 reports say the service is free, so the sources differ on what advertisers pay."
+      },
+      "mechanism_type": "production cost",
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why would cheaper production bring firms to TV that had never used it?",
+      "answer": "ITV says the main obstacle is a belief that TV is too expensive and difficult for small firms compared with Google and Meta. One advertiser says a free, near-instant first advert changed its mind. Only The Media Leader reports this explanation.",
+      "evidence": [
+        {
+          "url": "https://uk.themedialeader.com/itvs-generative-ai-ads-feature-used-by-16-new-to-tv-advertisers-in-debut-year/",
+          "domain": "uk.themedialeader.com",
+          "date": "2026-10-09",
+          "quote": "“The biggest challenge, we find, is the perception barrier,” Spencer said, referring to the impression that TV advertising is too expensive and challenging for smaller businesses relative to digital platforms like Google and Meta."
+        },
+        {
+          "url": "https://uk.themedialeader.com/itvs-generative-ai-ads-feature-used-by-16-new-to-tv-advertisers-in-debut-year/",
+          "domain": "uk.themedialeader.com",
+          "date": "2026-10-09",
+          "quote": "TV advertising had previously seemed unaffordable, but enabling us to make our first ad free of charge and almost instantly using ITV’s GenAI production platform changed our minds"
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "Spencer himself says 16 firms in a year could be seen as \"quite a light number\"; none of the three sources measures how many firms the perception barrier keeps away from TV."
+      },
+      "mechanism_type": null,
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why would ITV give the adverts away instead of charging for them?",
+      "answer": "The free advert works as a way in. Salespeople use it to open talks with firms spending under ten thousand pounds, and ITV says success means firms moving on to its in-house creative team with larger budgets. Five of the 16 have done so.",
+      "evidence": [
+        {
+          "url": "https://uk.themedialeader.com/itvs-generative-ai-ads-feature-used-by-16-new-to-tv-advertisers-in-debut-year/",
+          "domain": "uk.themedialeader.com",
+          "date": "2026-10-09",
+          "quote": "salespeople would use the tool as a “door opener” for new-to-TV advertisers, particularly those with budgets under £10k."
+        },
+        {
+          "url": "https://www.exchangewire.com/blog/2026/10/14/digest-apple-wins-early-access-to-openai-evidence-tencent-raises-5-7bn-in-bond-sale/",
+          "domain": "exchangewire.com",
+          "date": "2026-10-14",
+          "quote": "five of the 16 advertisers have since moved to its in-house creative team with larger budgets."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "No source gives the size of the larger budgets, what ITV spends running the service, or whether the five would have moved on without it, so the payback is not shown."
+      },
+      "mechanism_type": "the money: free production as lead generation for paid airtime and creative work",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why has the tool drawn only 16 firms in its first year?",
+      "answer": "ITV runs it as a hands-on concierge service, not self-serve, and trained staff check every advert before it airs. ITV says self-serve could reach thousands of advertisers but would give up quality control.",
+      "evidence": [
+        {
+          "url": "https://uk.themedialeader.com/itvs-generative-ai-ads-feature-used-by-16-new-to-tv-advertisers-in-debut-year/",
+          "domain": "uk.themedialeader.com",
+          "date": "2026-10-09",
+          "quote": "If ITV embraced a self-serve model, Spencer explained, the broadcaster could likely scale to thousands of SME advertisers, but at the cost of quality control."
+        },
+        {
+          "url": "https://www.exchangewire.com/blog/2026/10/14/digest-apple-wins-early-access-to-openai-evidence-tencent-raises-5-7bn-in-bond-sale/",
+          "domain": "exchangewire.com",
+          "date": "2026-10-14",
+          "quote": "ITV runs the tool as a hands-on service rather than a self-serve platform, with every ad reviewed for quality before it airs."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "The 2025 launch release spoke of \"enabling thousands of SMEs to create broadcast-ready ads in seconds\"; Spencer also says ITV has no set sign-up target, so the count is not described as a shortfall."
+      },
+      "mechanism_type": "the rule: human review before every advert runs",
+      "stop": null
+    },
+    {
+      "n": 5,
+      "question": "Why does ITV keep a human check on every advert?",
+      "answer": "ITV says the check is the friction needed for quality. Every TV advert must also pass Clearcast clearance under the broadcast advertising code, which the tool was built around. No source says regulatory clearance is why the human review stays.",
+      "evidence": [
+        {
+          "url": "https://uk.themedialeader.com/itvs-generative-ai-ads-feature-used-by-16-new-to-tv-advertisers-in-debut-year/",
+          "domain": "uk.themedialeader.com",
+          "date": "2026-10-09",
+          "quote": "Spencer argued this provides the right level of friction required for quality assurance without compromising the improved speed and ease of production facilitated by AI tools."
+        },
+        {
+          "url": "https://www.magnite.com/press/itv-launches-genai-ads-manager-powered-by-magnites-streamr-ai/",
+          "domain": "magnite.com",
+          "date": "2025-10-09",
+          "quote": "As with all TV advertising, any advertisements generated by the platform will be cleared by ClearCast before appearing on TV."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "Magnite says its model produces code-compliant commercials automatically and that this \"reduces the clearance process\", which points away from regulation as the reason for the human step."
+      },
+      "mechanism_type": "the rule: broadcast clearance and in-house quality review",
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "The sources show the free AI adverts working as a door opener: they remove the production cost that ITV says puts small firms off TV, and the stated aim is to move firms on to paid creative work, which five of 16 have done. ITV keeps a trained person checking every advert, and says that choice is what holds the numbers low.",
+    "open_question": "If the model already writes adverts to the broadcast code, what is the trained person checking every advert actually catching?"
+  }
+}

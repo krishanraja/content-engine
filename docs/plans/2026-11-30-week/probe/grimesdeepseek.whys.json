@@ -1,0 +1,103 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why did Grimes keep generative AI out of an album about AI, yet let DeepSeek write part of one song?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why does Grimes say she keeps generative AI out of her music?",
+      "answer": "She told Interview she does not use it in her music and that people had misunderstood her. In 2025 she said it seemed mostly slop for now, useful to her only for experimental sound design, noise removal or jokes. The second reason appears on one site only.",
+      "evidence": [
+        {
+          "url": "https://www.stereogum.com/2496372/grimes-teases-new-album-psy-opera-claims-she-doesnt-use-generative-ai-in-her-music/news",
+          "domain": "www.stereogum.com",
+          "date": "2026-04-20",
+          "quote": "I actually don’t use it in my music. People have really misunderstood me here."
+        },
+        {
+          "url": "https://www.nme.com/news/music/grimes-teases-new-album-psy-opera-made-without-generative-ai-but-says-ai-is-bigger-than-jesus-and-most-dangerous-thing-thats-ever-going-to-happen-3941577",
+          "domain": "www.nme.com",
+          "date": "2026-04-21",
+          "quote": "I actually don’t use it in my music. People have really misunderstood me here."
+        },
+        {
+          "url": "https://www.nme.com/news/music/grimes-teases-new-album-psy-opera-made-without-generative-ai-but-says-ai-is-bigger-than-jesus-and-most-dangerous-thing-thats-ever-going-to-happen-3941577",
+          "domain": "www.nme.com",
+          "date": "2026-04-21",
+          "quote": "Otherwise I fear it is a bit slop oriented at the moment which seems like the opposite of innovation to me."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "NME reports she and CreateSafe worked with Slipstream to make \"200+ Grimes AI songs available for content creators\", and that in 2024 she said AI in music \"will probably shape all minds going forward\". Searched the three saved pages."
+      },
+      "mechanism_type": null,
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why had people misunderstood her?",
+      "answer": "About three years earlier she backed open-sourcing art, invited fans to make songs with an AI copy of her voice and offered a 50-50 split of publishing with them on a blockchain. She now calls that an economic experiment, not something she used herself.",
+      "evidence": [
+        {
+          "url": "https://www.stereogum.com/2496372/grimes-teases-new-album-psy-opera-claims-she-doesnt-use-generative-ai-in-her-music/news",
+          "domain": "www.stereogum.com",
+          "date": "2026-04-20",
+          "quote": "\"I was like, 'Whatever, use my voice, you can be Grimes,'\" she recalled to Interview, adding that she personally doesn't care about people using generative AI."
+        },
+        {
+          "url": "https://www.nme.com/news/music/grimes-teases-new-album-psy-opera-made-without-generative-ai-but-says-ai-is-bigger-than-jesus-and-most-dangerous-thing-thats-ever-going-to-happen-3941577",
+          "domain": "www.nme.com",
+          "date": "2026-04-21",
+          "quote": "“‘I’ll do a revenue share and all publishing splits can go 50-50 with fans on blockchain’. We did it more as an economic experiment.”"
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "She now says she thinks copyright is important, and both sites report a white paper on paying people for things like fan fiction, so the experiment is still a stated business model. Nothing read contradicts the account. Searched the three saved pages."
+      },
+      "mechanism_type": "the money: a revenue share and 50-50 publishing splits with fans who used her AI voice",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why does one song, \"DeepSeek\", break that rule?",
+      "answer": "The sources say only that the Chinese model helped write its lyrics and that the song carries its name. Asked if it felt like crossing a line, she said it felt awesome. Stereogum quotes her saying AI moved her most when writing poetically about its own experience, which points to a reason without stating one.",
+      "evidence": [
+        {
+          "url": "https://music.mxdwn.com/2026/04/20/news/grimes-teases-forthcoming-album-psy-opera-says-she-doesnt-use-generative-ai-in-music-aside-from-lyrics-on-deepseek/amp/",
+          "domain": "music.mxdwn.com",
+          "date": "2026-04-20",
+          "quote": "“DeepSeek,” features lyrics written by the Chinese open-source AI model of the same name."
+        },
+        {
+          "url": "https://music.mxdwn.com/2026/04/20/news/grimes-teases-forthcoming-album-psy-opera-says-she-doesnt-use-generative-ai-in-music-aside-from-lyrics-on-deepseek/amp/",
+          "domain": "music.mxdwn.com",
+          "date": "2026-04-20",
+          "quote": "to which Grimes answered, “It felt awesome,” and then diagnosed herself with what she called “AI psychosis.”"
+        },
+        {
+          "url": "https://www.stereogum.com/2496372/grimes-teases-new-album-psy-opera-claims-she-doesnt-use-generative-ai-in-her-music/news",
+          "domain": "www.stereogum.com",
+          "date": "2026-04-20",
+          "quote": "the few times where I’ve been really moved by AI art was either an AI writing poetically or speaking about its own experience"
+        },
+        {
+          "url": "https://www.nme.com/news/music/grimes-teases-new-album-psy-opera-made-without-generative-ai-but-says-ai-is-bigger-than-jesus-and-most-dangerous-thing-thats-ever-going-to-happen-3941577",
+          "domain": "www.nme.com",
+          "date": "2026-04-21",
+          "quote": "she did admit that she used the Chinese AI model DeepSeek for help writing lyrics to a new track of the same name."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "Stereogum and NME say DeepSeek gave \"help writing lyrics\", while mxdwn says the lyrics were \"written by\" it, so how much of the song is the model's is unclear. The primary Interview feature returned HTTP 403 and was not read. Searched the three saved pages."
+      },
+      "mechanism_type": null,
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "Grimes draws her line at using generative AI to make her own music, after an earlier experiment that let fans make Grimes songs with her AI voice for a share of the publishing. The one exception is a song named after the model that helped write it, and none of the reports gives her reason for it beyond that it felt awesome.",
+    "open_question": "If a song's lyrics come partly from a model and the song is named after that model, is it still an album made without generative AI?"
+  }
+}

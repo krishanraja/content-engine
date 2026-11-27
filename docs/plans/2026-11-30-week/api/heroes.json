@@ -1,0 +1,757 @@
+{
+ "mon": [
+  {
+   "id": "554f7348-ecc3-45cb-888d-9a8afe61b9bf",
+   "source_kind": "engine",
+   "source_tag": "engine_research",
+   "so_what": "Writers whose books trained an AI start receiving money this week, and the split with their publisher decides whether a cheque is worth $2,203 or half of it: anyone with a book contract now knows which clause to read.",
+   "story": "The $1.5 billion Bartz v. Anthropic settlement starts paying authors and publishers from the week of 23 November 2026. The first instalment is about 70% of each work's share, $2,203.56, with the rest due once the AI company makes its final payment of about $450 million. Messages from publishers describe a 50/50 split as the default, and tens of thousands of claims were corrected after authors and publishers ticked the wrong box.",
+   "why_now": "Authors Guild, 23 Nov 2026: first payments expected the week of 23 November.",
+   "fact": "Authors Guild, 23 Nov 2026: \"Only approximately 70 percent ($2,203.56) will be paid out now\"; the final payment of about $450 million is due within about 30 days of Anthropic's IPO or a significant investment, and no later than September 2027; \"tens of thousands of claims have been corrected\".",
+   "source": {
+    "label": "Authors Guild, Anthropic Settlement Update: Payments Start November 23 (23 Nov 2026)",
+    "url": "https://authorsguild.org/news/anthropic-settlement-update-check-your-claim-by-november-20",
+    "kind": "original"
+   },
+   "first_reported": "https://authorsguild.org/news/anthropic-settlement-update-check-your-claim-by-november-20",
+   "beats": [
+    "A cheque arrives for a book an AI read without asking.",
+    "How $1.5 billion becomes $2,203.56 on one book.",
+    "The split: who decided the publisher takes half.",
+    "The box thousands of writers ticked wrong.",
+    "What this shows about who owns a book once an AI has read it."
+   ],
+   "pitch": {
+    "question": "When a computer learns from your book, who gets the money: you, or the company that printed it?",
+    "headline": "An AI firm is paying $2,203 a book. The publisher may keep half.",
+    "hook": "From this week, writers whose books trained Anthropic's AI are being paid about $2,203.56 a book, and the default split hands half of it to the publisher.",
+    "examples": [
+     "$2,203.56 per work now, about 70% of each share.",
+     "A final payment of about $450 million still to come.",
+     "Tens of thousands of claims corrected after writers and publishers picked the wrong option."
+    ],
+    "chain": [
+     "An AI company copied millions of books to train its model.",
+     "Writers sued, and the company agreed to pay $1.5 billion.",
+     "The money is paid per book, so each book gets a share.",
+     "A book has two owners on paper: the writer and the publisher.",
+     "The default rule splits each share 50/50.",
+     "So the contract a writer signed years ago decides their cheque today."
+    ],
+    "take": "The money is real, and it follows the paperwork: what this shows is that a book contract signed before AI now decides who is paid for AI. Which clause in your own contract has never been read with that in mind?"
+   },
+   "style": {
+    "script": "follow-the-receipt",
+    "production": "receipt-animation",
+    "experiment": {
+     "format": "data-story",
+     "why": "Draw one book's share as a single receipt: $1.5 billion down to $2,203.56, then the 50/50 line."
+    }
+   },
+   "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When a computer learns from your book, who gets the money: you, or the company that printed it? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 12 November to 30 November 2026 on: the Bartz v. Anthropic settlement payments, the amount per work, the default author and publisher split, how disputes and out-of-print works are handled, and which publishers have chosen to pass their share to writers. Work through the 5 Whys, starting from the plain question: Why 1 asks who pays, and why the price moved. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+   "shape": "story",
+   "dive": "The settlement pays per book, and the 50/50 default between author and publisher decides each writer's cheque.",
+   "aim": "interest",
+   "funny": "The first AI royalty cheque for most novelists comes with a co-signer: their publisher.",
+   "lookalike": {
+    "pattern": "money-twist",
+    "beats": "https://www.instagram.com/evolving.ai/p/DclkakZAHdk/",
+    "our_take": "The post followed one star's windfall; we follow one ordinary book's cheque, and the clause that halves it."
+   },
+   "recommended": true
+  },
+  {
+   "id": "f5721a93-5b59-4d86-b53e-24bc70510d84",
+   "source_kind": "engine",
+   "source_tag": "trade_press",
+   "so_what": "A major label now counts AI song apps as a source of streaming money from this financial year, so every artist on a licensed catalogue has a new line of income whose size nobody has published yet.",
+   "story": "Warner Music Group expects its licensing deals with AI music companies, Suno above all, to contribute materially to its subscription streaming revenue from fiscal 2027, which began on 1 October 2026. Warner settled with Suno and licensed it in November 2025, and Suno's v6 models launched on 9 September 2026 with Warner, BMG and Believe as partners. Warner has not said how the money is split with its artists.",
+   "why_now": "Fiscal 2027, the year Warner said AI licensing turns material, began on 1 October 2026; Warner repeated the guidance with its results on 19 November (Music Business Worldwide, 23 Nov 2026).",
+   "fact": "Music Business Worldwide, 6 Aug 2026: Warner CEO Robert Kyncl expects AI \"licensing deals to contribute materially to our subscription streaming revenue growth starting in fiscal '27\", naming Suno, Stability AI, KLAY and Udio; fiscal 2027 began on 1 October 2026; Warner has expanded deals requiring fully gen-AI content to be identified and removed from pro rata royalty shares.",
+   "source": {
+    "label": "Music Business Worldwide, Warner Music expects AI music deals to boost subscription streaming revenue (6 Aug 2026)",
+    "url": "https://www.musicbusinessworldwide.com/warner-music-expects-ai-music-deals-to-boost-subscription-streaming-revenue-from-late-2026/",
+    "kind": "original"
+   },
+   "first_reported": "https://www.musicbusinessworldwide.com/warner-music-expects-ai-music-deals-to-boost-subscription-streaming-revenue-from-late-2026/",
+   "sources": [
+    {
+     "label": "Music Business Worldwide, 23 Nov 2026, on the fiscal 2027 guidance",
+     "url": "https://www.musicbusinessworldwide.com/5-things-to-know-about-sunos-move-into-ai-video-the-distrokid-documents-and-the-fight-over-v6/"
+    }
+   ],
+   "beats": [
+    "A label that sued an AI app now books it as income.",
+    "How a licence turns AI songs into streaming money.",
+    "Why it counts from this financial year.",
+    "The line nobody has published: the artists' share.",
+    "What this shows about where a song's money now comes from."
+   ],
+   "pitch": {
+    "question": "When a record label lets an AI app learn from its songs, how does that become money, and who gets it?",
+    "headline": "Warner Music now counts an AI song app as income.",
+    "hook": "Warner Music says its AI licensing deals, Suno above all, will add material money to its streaming revenue from this financial year.",
+    "examples": [
+     "Warner settled with Suno and licensed it in November 2025.",
+     "Suno's v6 models launched on 9 September 2026 with Warner, BMG and Believe as partners.",
+     "Warner has not said how the money is split with artists."
+    ],
+    "chain": [
+     "An AI app needs songs to learn from.",
+     "A label owns the recordings and sues, then signs a licence.",
+     "The app pays the label for the catalogue.",
+     "The label books it beside its streaming money.",
+     "Artists are paid from what the label receives.",
+     "So the artist's share depends on a contract term nobody has published."
+    ],
+    "take": "The licence turns a lawsuit into a revenue line; what it shows is that AI songs now pay the catalogues they learned from. How much of that reaches the person who made the original recording?"
+   },
+   "style": {
+    "script": "random-headline",
+    "production": "data-story",
+    "experiment": {
+     "format": "receipt-animation",
+     "why": "Trace one licence fee from the AI app to the label to the artist as three receipts."
+    }
+   },
+   "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When a record label lets an AI app learn from its songs, how does that become money, and who gets it? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 12 November to 30 November 2026 on: Warner Music Group's AI licensing deals with Suno, Udio, Stability AI and KLAY, what the fiscal 2027 guidance says, how AI licensing revenue is shared with artists, and what other labels and distributors pay artists for AI training. Work through the 5 Whys, starting from the plain question: Why 1 asks who pays, and why the price moved. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+   "shape": "story",
+   "dive": "A licence turns an AI app's training into a fee the label books as streaming revenue, and the artist's share is set by a contract term nobody has published.",
+   "aim": "interest",
+   "funny": "The label that sued the AI app now hopes it does very well.",
+   "lookalike": {
+    "pattern": "money-twist",
+    "beats": "https://www.instagram.com/evolving.ai/p/DfsIpdXgBA1/",
+    "our_take": "The post showed a seller paying its buyers' bills; we show a label turning the app it sued into income, and ask where the artist sits."
+   }
+  },
+  {
+   "id": "013ae567-6e91-4c57-9128-9ce85eef667c",
+   "source_kind": "engine",
+   "source_tag": "trade_press",
+   "so_what": "A broadcaster is giving away AI-made adverts to win small firms that never bought TV before, and a third of them went on to pay for more: anyone selling attention now has a cheaper way to land a first customer.",
+   "story": "ITV's GenAI Ads Manager, built with Streamr.AI and launched in October 2025, makes TV adverts from a firm's own brand assets for free. In its first year 16 businesses that had never advertised on TV used it, mostly with pause ads on ITVX, and five of them moved on to ITV's in-house creative team with bigger budgets. A team of trained staff checks every advert before it runs.",
+   "why_now": "The Media Leader UK, 9 Oct 2026, on the tool's first year.",
+   "fact": "The Media Leader UK, 9 Oct 2026: GenAI Ads Manager drew 16 new-to-TV small and medium-sized businesses in its first year; it is free for advertisers; five of the 16 later moved to ITV's in-house creative team with bigger TV budgets.",
+   "source": {
+    "label": "The Media Leader UK, ITV's generative AI ads feature attracts 16 new-to-TV advertisers in debut year (9 Oct 2026)",
+    "url": "https://uk.themedialeader.com/itvs-generative-ai-ads-feature-used-by-16-new-to-tv-advertisers-in-debut-year/",
+    "kind": "original"
+   },
+   "first_reported": "https://uk.themedialeader.com/itvs-generative-ai-ads-feature-used-by-16-new-to-tv-advertisers-in-debut-year/",
+   "beats": [
+    "A TV channel makes your first advert for nothing.",
+    "How the free advert is made in about 20 seconds.",
+    "Why a broadcaster gives it away.",
+    "Five in 16 came back with real budgets.",
+    "What this shows about how attention gets sold now."
+   ],
+   "pitch": {
+    "question": "Why would a broadcaster make your first advert for nothing?",
+    "headline": "ITV makes your first TV advert for free. A third came back to pay.",
+    "hook": "ITV's AI tool turned a college's website link into a 30-second TV spot in about 20 seconds, for nothing; five of the 16 first-timers then paid for more.",
+    "examples": [
+     "A first advert made from a website link in about 20 seconds.",
+     "Salisbury Racecourse keeps coming back for AI pause ads.",
+     "Every advert is checked by a trained team before it runs."
+    ],
+    "chain": [
+     "Small firms think TV is too dear.",
+     "A free AI advert removes the first cost.",
+     "The advert runs on ITVX, targeted by postcode.",
+     "Some firms see results and want a bigger campaign.",
+     "Those move to the paid creative team.",
+     "So the free advert is the shop window for the paid one."
+    ],
+    "take": "The AI advert is the sample; the human-made campaign is the sale. What this shows is a broadcaster using AI to find customers, and the open question is what that does to the price of a first advert everywhere else."
+   },
+   "style": {
+    "script": "follow-the-receipt",
+    "production": "face-with-proof",
+    "experiment": {
+     "format": "the-usable-rule",
+     "why": "Close on the one rule a small studio or club could copy: give the first piece away and sell the second."
+    }
+   },
+   "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: Why would a broadcaster make your first advert for nothing? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 1 October 2025 to 30 November 2026 on: ITV's GenAI Ads Manager with Streamr.AI, how many advertisers used it, how many moved to paid production, what other broadcasters and streamers offer small advertisers with AI, and what a first TV campaign costs. Work through the 5 Whys, starting from the plain question: Why 1 asks who pays, and why the price moved. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+   "shape": "story",
+   "dive": "A free AI-made advert lowers the cost of a first TV campaign, and the paid human-made campaign is where the broadcaster makes its money.",
+   "aim": "utility",
+   "funny": "A broadcaster gives away the advert to sell you the advert.",
+   "lookalike": {
+    "pattern": "tool-unlock",
+    "beats": "https://www.instagram.com/evolving.ai/p/DftxXqrgIE4/",
+    "our_take": "The post listed what a free trial gives you; we show what the free trial is for, from the seller's side."
+   }
+  },
+  {
+   "id": "80baed3f-3833-4bce-9afd-040a4868e562",
+   "source_kind": "engine",
+   "source_tag": "trade_press",
+   "wildcard": {
+    "kind": "obscure",
+    "why_unexpected": "A Dutch firm sold gyms AI background music as a way to stop paying songwriters, and the songwriters' society is taking it to court: the money of muzak, far from the usual label and app stories."
+   },
+   "so_what": "Shops, gyms and restaurants were offered AI background music as a way to cancel their music-rights licence, and a songwriters' society is suing to stop it: every venue paying for music now has a cheaper offer and a legal question attached.",
+   "story": "YourNeuroTune, an AI music company in Hilvarenbeek, supplies background music to more than 450 customers in four countries and told businesses that its catalogue needs no BumaStemra licence, even offering a template to cancel one. BumaStemra says the tracks are made with Suno and gave it until noon on 25 November to stop; on 25 November it said it would go to court.",
+   "why_now": "IBTimes UK, 25 Nov 2026, citing Tweakers and Nieuwsuur; BumaStemra's deadline was noon on 25 November.",
+   "fact": "IBTimes UK, 25 Nov 2026: YourNeuroTune's website offers customers a template to cancel existing BumaStemra licences; BumaStemra gave it until noon on 25 November and then said it would go to court; co-founder Sam Jansen said in October the company serves more than 450 customers across four countries. Michiel Laan of BumaStemra: \"If you make money from music, you pay the creators.\"",
+   "source": {
+    "label": "IBTimes UK, AI Music Company That Told Businesses They No Longer Need to Pay Music Royalties Now Faces Legal Action (25 Nov 2026)",
+    "url": "https://www.ibtimes.co.uk/bumastemra-sues-dutch-ai-music-company-1834805"
+   },
+   "first_reported": "https://eb.live/artikel/bumastemra-daagt-ai-muziekbedrijf-your-neurotune-voor-de-rechter",
+   "sources": [
+    {
+     "label": "IO+, Functional, not for the charts: YourNeuroTune on copyright fees (22 Oct 2026)",
+     "url": "https://ioplus.nl/en/posts/functional-not-for-the-charts-yourneurotune-on-copyright-fees"
+    }
+   ],
+   "beats": [
+    "The music in your gym may have been made to dodge a bill.",
+    "How a venue pays for the songs it plays.",
+    "The pitch: play our AI tracks and cancel your licence.",
+    "The songwriters' answer, and the court date.",
+    "What this shows about who gets paid for background music now."
+   ],
+   "pitch": {
+    "question": "Wildcard: Who gets paid for the music playing in a gym, and what happens when a computer writes it?",
+    "headline": "A Dutch firm sold gyms AI music so they could stop paying songwriters.",
+    "hook": "YourNeuroTune offered more than 450 shops, gyms and cafes AI background music and a template to cancel their music-rights licence; the songwriters' society is now taking it to court.",
+    "examples": [
+     "A ready-made letter to cancel a BumaStemra licence.",
+     "A noon deadline on 25 November, and a court case after it.",
+     "The society says the tracks come from Suno."
+    ],
+    "chain": [
+     "A gym plays music, so it pays a licence.",
+     "The licence money goes to the songwriters.",
+     "An AI firm offers music with no songwriter.",
+     "No songwriter, it says, means no licence.",
+     "The songwriters say the AI learned from their songs.",
+     "So a court will say whether background music still pays the people who wrote it."
+    ],
+    "take": "The cheapest song in a shop is the one nobody claims; what this shows is a fight over whether AI music has a songwriter at all. Who should a cafe pay when the playlist was generated?"
+   },
+   "style": {
+    "script": "everyday-debate",
+    "production": "voice-led-pictures",
+    "experiment": {
+     "format": "fry-talking-head",
+     "why": "Told to camera from a gym, one machine at a time, as a mystery about who wrote the music."
+    }
+   },
+   "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: Who gets paid for the music playing in a gym, and what happens when a computer writes it? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 1 October to 30 November 2026 on: YourNeuroTune's offer to businesses, BumaStemra's court action, what a Dutch gym or cafe pays for a music licence, the Munich GEMA ruling against Suno, and other AI background-music services in Europe. Work through the 5 Whys, starting from the plain question: Why 1 asks who pays, and why the price moved. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+   "shape": "story",
+   "dive": "A venue's music licence pays songwriters, and an AI catalogue sold as licence-free tests whether AI music has a songwriter to pay.",
+   "aim": "interest",
+   "funny": "The background music is so background it comes with a letter to cancel the people who wrote it.",
+   "lookalike": {
+    "pattern": "new-rule-for-ai-art",
+    "beats": "https://www.instagram.com/evolving.ai/p/Dcno5uwADrV/",
+    "our_take": "The post covered a chart rule for AI songs; we follow the money in the room where nobody chose the song: the gym."
+   }
+  }
+ ],
+ "wed": [
+  {
+   "id": "cf6e7746-6ce2-4c68-904a-d1ae1988bef9",
+   "source_kind": "engine",
+   "source_tag": "trade_press",
+   "so_what": "A producer can now ask an AI for a bass line that fits a song already on their timeline, for 10 credits, and the AI has to read the whole session to do it: anyone in a studio knows what they hand over when they press generate.",
+   "story": "Suno Bridge, in beta from 13 November 2026, runs beside Ableton Live 12 on a Mac and writes new AI instrument and vocal parts into a marked loop of the session, matched to its tempo, key, style and groove. To do that it uploads the Ableton project and its audio to the user's Suno account, where filters block material that belongs to rights holders. Each generation costs 10 credits on the $30-a-month Premier plan, which carries 10,000.",
+   "why_now": "Music Business Worldwide, 16 Nov 2026; Bridge went live in beta on 13 November.",
+   "fact": "Music Business Worldwide, 16 Nov 2026: Bridge \"went live in beta on November 13\"; each generation costs 10 Suno credits; Premier costs $30 a month with 10,000 credits; when a session is opened, Bridge uploads the Ableton project and its audio files to the user's Suno account.",
+   "source": {
+    "label": "Music Business Worldwide, Suno launches Bridge, an app that drops AI stems into Ableton Live (16 Nov 2026)",
+    "url": "https://www.musicbusinessworldwide.com/suno-launches-bridge-an-app-that-drops-ai-stems-into-ableton-live/",
+    "kind": "original"
+   },
+   "first_reported": "https://suno.com/bridge",
+   "sources": [
+    {
+     "label": "Suno Help, Getting started with Suno Bridge",
+     "url": "https://help.suno.com/en/articles/14695169"
+    }
+   ],
+   "beats": [
+    "Mark eight bars, press a button, get a new part that fits.",
+    "How it knows the song: it uploads your session.",
+    "What the filter blocks, and what it lets through.",
+    "What 10 credits buys, and what a month costs.",
+    "What this shows about where a song lives while it is being made."
+   ],
+   "pitch": {
+    "question": "How does a computer write a part that fits a song it has only just heard?",
+    "headline": "Suno now writes your next eight bars inside Ableton.",
+    "hook": "Suno Bridge writes a new AI part into a loop of your Ableton session for 10 credits, and to do it, it uploads the whole project.",
+    "examples": [
+     "A loop from bar 9 to bar 16 comes back as an eight-bar part on the first beat of bar 9.",
+     "Filters block the parts of a project that belong to rights holders.",
+     "10 credits a part, 10,000 credits a month on the $30 plan."
+    ],
+    "chain": [
+     "A producer marks a loop in the timeline.",
+     "Bridge uploads the project so the AI can hear it.",
+     "The AI reads tempo, key, style and groove.",
+     "It writes a new part to fit that section.",
+     "The part drops back onto the timeline in sync.",
+     "So the song now lives on two computers while it is made."
+    ],
+    "take": "The clever part is the listening, and the listening is an upload. What would you change in how you work if every session you open is also sent somewhere?"
+   },
+   "style": {
+    "script": "head-to-head",
+    "production": "scoreboard-test",
+    "experiment": {
+     "format": "kinetic-movement",
+     "why": "Show the eight bars arriving on the timeline in real time, cut to the beat of the part it writes."
+    }
+   },
+   "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: How does a computer write a part that fits a song it has only just heard? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 12 November to 30 November 2026 on: Suno Bridge: how it reads a session, what it uploads, how its copyright filters work, its credit cost and plan price, and how it compares with Ableton's own stem tools and other AI parts generators. Work through the 5 Whys, starting from the plain question: Why 1 asks how it is built, and what broke. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+   "shape": "story",
+   "dive": "Bridge uploads the session so the model can read its tempo, key and groove, then writes a part for the marked loop and drops it back in sync.",
+   "aim": "utility",
+   "funny": "The bass player who never misses a session also takes a copy of every session home.",
+   "lookalike": {
+    "pattern": "tool-unlock",
+    "beats": "https://www.instagram.com/evolving.ai/p/DfxJW8mAElc/",
+    "our_take": "The post listed prompts to try; we open the tool up and show what it reads before it plays."
+   },
+   "recommended": true
+  },
+  {
+   "id": "972b7721-4e4e-477f-b5cf-20164fd8260c",
+   "source_kind": "engine",
+   "source_tag": "trade_press",
+   "so_what": "An AI music app now makes the video, the cover and the clips too, on a video model built by another company, so an artist knows whose engine is drawing their artwork and why some prompts are refused.",
+   "story": "Suno launched Visuals on 17 November 2026: it makes lyric videos, album art and clips of up to 15 seconds for songs made on Suno, which users can extend, edit and re-prompt. Its FAQ says it runs on H3 Move, a model based on MiniMax's H3 video model, and Suno says it added filters that block uploads and prompts depicting specific artists, public figures or copyrighted works.",
+   "why_now": "Music Business Worldwide, 23 Nov 2026; Visuals launched on 17 November.",
+   "fact": "Music Business Worldwide, 23 Nov 2026: Suno launched Visuals on 17 November; it runs on H3 Move, based on MiniMax's H3 video model; it makes lyric videos, album art and clips of up to 15 seconds; Suno added filters to block prompts that depict specific artists, public figures or copyrighted works.",
+   "source": {
+    "label": "Music Business Worldwide, 5 things to know about Suno's move into AI video (23 Nov 2026)",
+    "url": "https://www.musicbusinessworldwide.com/5-things-to-know-about-sunos-move-into-ai-video-the-distrokid-documents-and-the-fight-over-v6/",
+    "kind": "original"
+   },
+   "first_reported": "https://suno.com",
+   "beats": [
+    "Your song now comes with a music video, made by the same app.",
+    "Under the hood: another company's video model.",
+    "Why the prompt that works elsewhere is refused here.",
+    "15 seconds, then extend, edit and re-prompt.",
+    "What this shows about who draws an artist's picture now."
+   ],
+   "pitch": {
+    "question": "When a music app starts making your videos too, whose machine is doing the drawing?",
+    "headline": "Suno makes your music video now. Another company's model draws it.",
+    "hook": "Suno Visuals makes lyric videos, album art and 15-second clips, and Suno's own FAQ says it runs on a model based on MiniMax's H3.",
+    "examples": [
+     "Lyric videos, album art and clips of up to 15 seconds.",
+     "A model called H3 Move, based on MiniMax's H3 video model.",
+     "Filters that refuse real artists, public figures and copyrighted works."
+    ],
+    "chain": [
+     "An artist makes a song in the app.",
+     "The app offers a video and a cover for it.",
+     "A video model from another company draws the frames.",
+     "Suno adds its own filters on top.",
+     "Some prompts that work elsewhere are refused.",
+     "So the look of the song depends on two companies' rules."
+    ],
+    "take": "The video button is one click, and there are two companies behind it. What would you build differently if you knew whose model was drawing your artwork?"
+   },
+   "style": {
+    "script": "from-my-own-fleet",
+    "production": "voice-led-pictures",
+    "experiment": {
+     "format": "scoreboard-test",
+     "why": "Run one prompt through Visuals and a rival and score what each refuses and what each makes."
+    }
+   },
+   "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When a music app starts making your videos too, whose machine is doing the drawing? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 12 November to 30 November 2026 on: Suno Visuals, its H3 Move model and its MiniMax base, its filters, its clip limits and price, and how other music apps make videos and covers for songs. Work through the 5 Whys, starting from the plain question: Why 1 asks how it is built, and what broke. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+   "shape": "story",
+   "dive": "Visuals wraps a video model based on MiniMax's H3 in Suno's own filters, so what an artist can draw depends on both.",
+   "aim": "interest",
+   "funny": "The music app learned to make videos, and brought a friend who does the actual drawing.",
+   "lookalike": {
+    "pattern": "made-in-hours",
+    "beats": "https://www.instagram.com/evolving.ai/p/DfuWseGgGfl/",
+    "our_take": "The post marvelled at what a model can make; we show which model is inside the button."
+   }
+  },
+  {
+   "id": "08442c41-534a-4523-9818-0884e2fc985a",
+   "source_kind": "engine",
+   "source_tag": "trade_press",
+   "so_what": "Creators can now have TikTok watch for videos that use their face without consent, after handing their ID to a third party, and anyone can check whether a clip was made with TikTok's own AI tools: a creator knows what each check can and cannot see.",
+   "story": "On 23 November 2026 TikTok made Likeness Detection available worldwide to eligible creators and public officials: they verify their ID through a third-party partner (Jumio in the US test) and are told about videos that may use their likeness. A second tool lets anyone, with no account, check whether a video, image or audio was made or edited with AI features in TikTok, CapCut, Dreamina, Hypic or Pippit, by reading Content Credentials and invisible watermarks.",
+   "why_now": "Digital Music News, 23 Nov 2026.",
+   "fact": "Digital Music News, 23 Nov 2026: Likeness Detection is globally available to eligible creators and public officials, who \"sign up by verifying their ID with a trusted third-party partner\"; the checker covers TikTok, CapCut, Dreamina, Hypic and Pippit and looks for Content Credentials metadata and invisible watermarks; TikTok says it has labelled about five billion AI uploads.",
+   "source": {
+    "label": "Digital Music News, TikTok Rolls Out a Manual AI Detection Tool, Officially Launches Likeness Detection for Global Creators (23 Nov 2026)",
+    "url": "https://digitalmusicnews.com/2026/11/23/tiktok-likeness-detection-release",
+    "kind": "original"
+   },
+   "first_reported": "https://newsroom.tiktok.com",
+   "beats": [
+    "TikTok will now watch for your face. First, show it your passport.",
+    "How the face check works, and who it is for.",
+    "How the AI checker works: it reads a label, not the picture.",
+    "What neither tool can see.",
+    "What this shows about proving a video is really you."
+   ],
+   "pitch": {
+    "question": "How does an app tell whether a video of you is really you?",
+    "headline": "TikTok will now watch for fakes of your face. First it needs your ID.",
+    "hook": "TikTok's Likeness Detection flags videos that may use a creator's face, once they verify their ID with a third party; its new AI checker reads hidden labels, and only from its own apps.",
+    "examples": [
+     "ID checks through a third party, Jumio in the US test.",
+     "A free checker for TikTok, CapCut, Dreamina, Hypic and Pippit.",
+     "About five billion AI uploads labelled so far."
+    ],
+    "chain": [
+     "Fake videos of real people spread fast.",
+     "TikTok needs to know what the real person looks like.",
+     "So the creator proves who they are with an ID.",
+     "The app then watches uploads for that face.",
+     "The AI checker reads labels that its own tools add.",
+     "So a fake made elsewhere, with no label, passes the checker."
+    ],
+    "take": "One tool knows your face, the other only knows its own handwriting. What would you build differently if the proof had to travel with the video?"
+   },
+   "style": {
+    "script": "head-to-head",
+    "production": "face-with-proof",
+    "experiment": {
+     "format": "fry-talking-head",
+     "why": "Krish runs both checks on a clip of himself, one made in CapCut and one made elsewhere, and reads the answers to camera."
+    }
+   },
+   "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: How does an app tell whether a video of you is really you? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 12 November to 30 November 2026 on: TikTok Likeness Detection and its AI content checker, how ID verification and face matching work, what Content Credentials and invisible watermarks can and cannot detect, and what YouTube and Meta offer creators for the same job. Work through the 5 Whys, starting from the plain question: Why 1 asks how it is built, and what broke. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+   "shape": "story",
+   "dive": "Likeness Detection matches uploads against a verified creator's face, while the checker reads labels TikTok's own tools add, so a fake made elsewhere can pass it.",
+   "aim": "utility",
+   "funny": "The fake-face detector asks for your face, your ID and a stranger to vouch for you.",
+   "lookalike": {
+    "pattern": "creator-hands-over",
+    "beats": "https://www.instagram.com/evolving.ai/p/Dc_4Sy7gGi5/",
+    "our_take": "The post was a creator giving his face to an AI on purpose; we show what a creator can do when someone else does it for them."
+   }
+  },
+  {
+   "id": "8c6c717d-00b4-4d26-b837-06b89709220a",
+   "source_kind": "engine",
+   "source_tag": "trade_press",
+   "wildcard": {
+    "kind": "strange",
+    "why_unexpected": "A rights company running about 500 AI-art music channels took down a singer's recording of a 19th-century folk song, and the copyright machinery backed it twice: a teardown of a claim system through one song nobody owns."
+   },
+   "so_what": "A recording of a song with no known writer was taken off YouTube by Media Nov Records, which runs about 500 channels, and the appeals failed twice: anyone who records traditional or public-domain music now knows how the claim system can be turned on them.",
+   "story": "Samantha Shokin's 50-second a cappella recording of \"Bre Petrunko\", a 19th-century Bulgarian folk song with no known writer, had about 125,000 views over four years. In October Media Nov Records, which runs about 500 YouTube channels mostly of repetitive electronic music with AI imagery, filed a copyright complaint; YouTube removed the video and rejected both of her counterclaims. It came back about 24 hours after 404 Media contacted Media Nov, which withdrew the claim and says it may still sue over the arrangement.",
+   "why_now": "Digital Music News, 18 Nov 2026, following 404 Media.",
+   "fact": "Digital Music News, 18 Nov 2026: Media Nov Records runs about 500 YouTube channels; YouTube removed the video in October and rejected both of Shokin's counterclaims; YouTube restored it about 24 hours after 404 Media contacted Media Nov. Shokin: \"It feels like a broken system.\"",
+   "source": {
+    "label": "Digital Music News, Musician Caught In a YouTube Copyright Claim Loop Initiated by an AI Company (18 Nov 2026)",
+    "url": "https://www.digitalmusicnews.com/2026/11/18/musician-copyright-claim-loop-ai-company/"
+   },
+   "first_reported": "https://www.404media.co",
+   "beats": [
+    "A song older than the telephone got a copyright strike.",
+    "How a claim takes a video down before anyone checks.",
+    "Why the appeals bounced, twice.",
+    "What finally worked: a journalist's email.",
+    "What this shows about who the system is built to believe."
+   ],
+   "pitch": {
+    "question": "Wildcard: How can a song nobody has owned for a hundred years get taken down for copyright?",
+    "headline": "A 19th-century folk song got a copyright strike from a 500-channel music mill.",
+    "hook": "A singer's recording of \"Bre Petrunko\", a Bulgarian folk song with no known writer, was pulled from YouTube on a claim from Media Nov Records, which runs about 500 channels, and her two appeals failed.",
+    "examples": [
+     "About 125,000 views over four years, gone in October.",
+     "Two counterclaims rejected.",
+     "Back about 24 hours after a journalist emailed the claimant."
+    ],
+    "chain": [
+     "A company says it owns a recording.",
+     "The platform takes the video down first.",
+     "The singer appeals, and the appeal goes back to the claimant.",
+     "The claimant does not answer, so the appeal fails.",
+     "A journalist asks, and the claim is withdrawn in minutes.",
+     "So the system acts on the claim and waits on the answer."
+    ],
+    "take": "The machine believed the claim and waited for the reply; what this shows is that the cheapest move in the system is the takedown. What would you build differently so a song nobody owns stays up?"
+   },
+   "style": {
+    "script": "everyday-debate",
+    "production": "voice-led-pictures",
+    "experiment": {
+     "format": "kinetic-movement",
+     "why": "Play the song itself under the whole teardown, and stop it dead at the takedown."
+    }
+   },
+   "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: How can a song nobody has owned for a hundred years get taken down for copyright? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 1 October to 30 November 2026 on: the Media Nov Records claim on Samantha Shokin's \"Bre Petrunko\", how YouTube copyright claims and counterclaims are processed, how many channels Media Nov runs, and other public-domain recordings claimed by music distribution companies. Work through the 5 Whys, starting from the plain question: Why 1 asks how it is built, and what broke. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+   "shape": "story",
+   "dive": "A claim removes the video first and sends the appeal back to the claimant, so silence from the claimant fails the appeal.",
+   "aim": "humour",
+   "funny": "A song written before anyone alive was born was finally claimed by Media Nov, with 500 channels of AI wallpaper.",
+   "lookalike": {
+    "pattern": "ai-backfires",
+    "beats": "https://www.instagram.com/evolving.ai/p/DfwzCiPgM8u/",
+    "our_take": "The post was an AI telling on a student; we show a claim machine telling on itself."
+   }
+  }
+ ],
+ "fri": [
+  {
+   "id": "16b1fd4f-3785-4842-9a2b-19ccfe889fa8",
+   "source_kind": "engine",
+   "source_tag": "trade_press",
+   "so_what": "At one of the biggest game publishers, AI is officially optional and in practice needs a reason to skip: anyone running a studio or a team can see how \"encouraged\" becomes the rule.",
+   "story": "Vertical Slice reported, and VGC followed on 25 November 2026, that Ubisoft developers pitching new games are asked how generative AI will be used, and that a team that does not want to use it has to justify why. Ubisoft says projects are not required to use it. Days earlier it opened Motherbrain, a generative AI subsidiary built from the team behind its Teammates demo, alongside another round of layoffs.",
+   "why_now": "VGC, 25 Nov 2026, following Vertical Slice.",
+   "fact": "VGC, 25 Nov 2026: Ubisoft is reportedly asking developers pitching new games to outline how generative AI will be used; one source said \"If you planned on not using it, you would have to have a reason\"; Ubisoft says it encourages developers to use generative AI rather than mandate it; Motherbrain is \"a dedicated subsidiary developing proprietary technologies for gameplay to empower creators\" (Yves Guillemot).",
+   "source": {
+    "label": "VGC, Ubisoft is reportedly requiring developers to justify not using generative AI (25 Nov 2026)",
+    "url": "https://www.videogameschronicle.com/news/ubisoft-is-reportedly-requiring-developers-to-justify-not-using-generative-ai/"
+   },
+   "first_reported": "https://www.verticalslice.news",
+   "beats": [
+    "Officially optional. Unofficially, explain yourself.",
+    "Where the claim and the pitch meeting part.",
+    "Why a publisher makes AI the default and calls it a choice.",
+    "Motherbrain, and the layoffs the same week.",
+    "What this shows about how a tool becomes the rule."
+   ],
+   "pitch": {
+    "question": "When a boss says a new tool is optional, how do you tell if it really is?",
+    "headline": "At Ubisoft, AI is optional. Skipping it needs a reason.",
+    "hook": "Ubisoft says its developers do not have to use generative AI; developers say a pitch without it now has to explain why.",
+    "examples": [
+     "A pitch must outline how generative AI will be used.",
+     "Ubisoft's answer: encouraged, not mandated.",
+     "Motherbrain opened days earlier, beside another round of layoffs."
+    ],
+    "chain": [
+     "A company believes a tool will save time.",
+     "It says the tool is encouraged.",
+     "It adds a question about the tool to every pitch.",
+     "Saying no now takes a written reason.",
+     "Most people take the easier answer.",
+     "So the default does the work a rule would have done."
+    ],
+    "take": "The gap is between the policy and the form you fill in; what this shows is that a default can do the work of a mandate. Which question on your own forms is quietly deciding for you?"
+   },
+   "style": {
+    "script": "fry-explainer",
+    "production": "face-with-proof",
+    "experiment": {
+     "format": "everyday-debate",
+     "why": "Krish argues both sides of the pitch meeting, the producer and the developer, to camera."
+    }
+   },
+   "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When a boss says a new tool is optional, how do you tell if it really is? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 12 November to 30 November 2026 on: Ubisoft's pitching process and generative AI, Vertical Slice's report, Ubisoft's denial, Motherbrain and Teammates, the layoffs, and how other game publishers word their AI policies. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+   "shape": "story",
+   "dive": "A pitch form that asks how AI will be used turns \"encouraged\" into the default, because skipping it takes a written reason.",
+   "aim": "interest",
+   "funny": "You are free to make the game without AI; please attach a short essay explaining your feelings.",
+   "lookalike": {
+    "pattern": "new-rule-for-ai-art",
+    "beats": "https://www.instagram.com/evolving.ai/p/Dcno5uwADrV/",
+    "our_take": "The post covered a rule written down; we cover a rule nobody wrote down, made by a form."
+   },
+   "recommended": true
+  },
+  {
+   "id": "5d55e729-43fd-433b-b4e5-056f5329cb05",
+   "source_kind": "engine",
+   "source_tag": "trade_press",
+   "so_what": "Nine in ten designers now use AI every week, up from about half a year ago, while the designers themselves describe careful, methodical work: anyone hiring or briefing a designer knows the gap between \"AI does design\" and what the job now is.",
+   "story": "A 2026 survey by Designer Fund and Foundation Capital of more than 900 designers found 91% use AI at least weekly, up from 54% a year earlier (reported 25 Nov 2026). The designers quoted describe using it for first drafts, storyboards and file preparation, then editing by hand: \"To get good results, I have to be methodical, very clear about the task, and thorough with my changes.\"",
+   "why_now": "Reported 25 Nov 2026 (Wix Studio via Stacker, on KESQ), citing the 2026 Designer Fund and Foundation Capital survey.",
+   "fact": "KESQ (Stacker, Wix Studio), 25 Nov 2026: 91% of designers use AI at least weekly, up from 54% a year earlier, from a survey of more than 900 designers by Designer Fund and Foundation Capital.",
+   "source": {
+    "label": "Designer Fund, AI in design 2026",
+    "url": "https://designerfund.com/blog/ai-in-design-2026",
+    "kind": "original"
+   },
+   "first_reported": "https://designerfund.com/blog/ai-in-design-2026",
+   "sources": [
+    {
+     "label": "KESQ (Stacker), Web designers share how they've adapted to AI in 2026 (25 Nov 2026)",
+     "url": "https://kesq.com/stacker-ai/2026/11/25/web-designers-share-how-theyve-adapted-to-ai-in-2026/"
+    }
+   ],
+   "beats": [
+    "91% of designers use AI every week. So who is doing the design?",
+    "The claim: AI designs. The reality: designers brief, check and redo.",
+    "Why the numbers jumped in a year.",
+    "What the job is now, in the designers' own words.",
+    "What this shows about what \"using AI\" means in creative work."
+   ],
+   "pitch": {
+    "question": "If almost every designer now uses AI each week, what is the designer actually doing?",
+    "headline": "91% of designers use AI every week. It made them pickier.",
+    "hook": "In a survey of more than 900 designers, 91% use AI at least weekly, up from 54% a year ago, and the ones who explain it describe more checking, not less.",
+    "examples": [
+     "91% weekly, up from 54% in a year.",
+     "\"AI is always my first tool, before I touch code or build a screen.\"",
+     "\"To get good results, I have to be methodical.\""
+    ],
+    "chain": [
+     "AI tools got good enough to draft a layout.",
+     "Designers started every job with a draft.",
+     "A draft still has to be judged.",
+     "Judging means a clear brief and careful edits.",
+     "So the skill moves from drawing to directing.",
+     "And the headline number hides the new work."
+    ],
+    "take": "The claim is that AI designs; the designers say it drafts and they decide. What would change in how you brief a designer if you paid for the deciding?"
+   },
+   "style": {
+    "script": "fry-explainer",
+    "production": "data-story",
+    "experiment": {
+     "format": "head-to-head",
+     "why": "Brief an AI and a designer with the same job, and show the draft beside the finished piece."
+    }
+   },
+   "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If almost every designer now uses AI each week, what is the designer actually doing? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 12 November to 30 November 2026 on: the 2026 Designer Fund and Foundation Capital survey, what designers use AI for, what share of output is edited by hand, and how studios price design work that starts with AI. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+   "shape": "story",
+   "dive": "AI moved the designer's job from drawing the first version to briefing and judging it, which the headline usage number does not show.",
+   "aim": "interest",
+   "funny": "Nine in ten designers now have an assistant who never sleeps and never once gets the kerning right.",
+   "lookalike": {
+    "pattern": "made-in-hours",
+    "beats": "https://www.instagram.com/evolving.ai/p/DcyTLjagPxg/",
+    "our_take": "The post showed what people made fast; we show what the people who make for a living actually do with it."
+   }
+  },
+  {
+   "id": "a4b34048-ab39-49da-a251-eaa58ebe2eaf",
+   "source_kind": "engine",
+   "source_tag": "trade_press",
+   "so_what": "The film billed as the first AI-animated feature in cinemas opens on 4 December, and its own director lists the human co-writer, editors, colourists, Foley artist and voice cast behind it: anyone pricing film work can see how much of an \"AI film\" is still people.",
+   "story": "Gods Don't Give Gifts, directed by Zack London (Gossip Goblin), opens in cinemas on 4 December 2026 as the first AI-animated feature in theatres. Film Threat describes a hybrid pipeline: London's own micron pen drawings, diffusion video models, then a co-writer, traditional editors and colourists, a Foley artist, a sound team that spent four days in a Stockholm studio on the theatrical mix, and a cast of professional voice actors. London calls the budget \"absurdly small\" against the $150 million a conventional version would have needed.",
+   "why_now": "Film Threat, 5 Nov 2026; the film opens in cinemas on 4 December 2026, the day this piece publishes.",
+   "fact": "Film Threat, 5 Nov 2026: a \"hybrid pipeline\" with a co-writer, traditional post-production editors and colourists, a Foley artist, a sound team and a \"dedicated ensemble of professional voice actors\"; the sound team spent four days in a Stockholm studio on the theatrical mix; London: \"This film just wouldn't exist. It wouldn't get greenlit.\"",
+   "source": {
+    "label": "Film Threat, The First AI-Animated Feature Film In Theaters: Gods Don't Give Gifts director Zack London talks about the future of cinema (5 Nov 2026)",
+    "url": "https://filmthreat.com/features/the-first-ai-animated-feature-film-in-theaters-gods-dont-give-gifts-director-zack-london-talks-about-the-future-of-cinema/",
+    "kind": "original"
+   },
+   "first_reported": "https://filmthreat.com/features/the-first-ai-animated-feature-film-in-theaters-gods-dont-give-gifts-director-zack-london-talks-about-the-future-of-cinema/",
+   "beats": [
+    "The first AI film in cinemas has a sound team, a Foley artist and a voice cast.",
+    "The claim: made by AI. The credits: made by people with AI.",
+    "Why it could only be made this way, on this budget.",
+    "What the $150 million version would have paid for.",
+    "What this shows about what \"AI film\" means on a poster."
+   ],
+   "pitch": {
+    "question": "If a film is sold as made by AI, how many people still made it?",
+    "headline": "The first AI film in cinemas has a Foley artist.",
+    "hook": "Gods Don't Give Gifts opens on 4 December as the first AI-animated feature in cinemas, and its director lists the co-writer, editors, colourists, Foley artist and voice actors who made it with him.",
+    "examples": [
+     "Micron pen drawings at the start of the pipeline.",
+     "Four days in a Stockholm studio for the theatrical mix.",
+     "\"Absurdly small\" budget against a $150 million conventional version."
+    ],
+    "chain": [
+     "A director has a film nobody will fund.",
+     "AI video tools make the pictures cheap.",
+     "The pictures still need a story, a voice and sound.",
+     "So people write, act, edit and mix it.",
+     "The poster says AI, because that is the news.",
+     "So the label hides most of the crew."
+    ],
+    "take": "The gap is between the poster and the credits; what this shows is that AI changed what the film cost, and people still made what it is. Whose name should go first on a film like this?"
+   },
+   "style": {
+    "script": "fry-explainer",
+    "production": "voice-led-pictures",
+    "experiment": {
+     "format": "head-to-head",
+     "why": "Show the poster beside the credit roll, job by job, AI or human."
+    }
+   },
+   "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If a film is sold as made by AI, how many people still made it? Find, from primary sources first (the studio's and distributor's own pages, the MPA rating record, interviews with the director and producer, the outlet that first reported it), the newest dated facts from 1 October to 4 December 2026 on: Gods Don't Give Gifts, its crew, tools, budget, rating and release, which jobs were done by people and which by AI tools, and other AI-made films with a theatrical release. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+   "shape": "story",
+   "dive": "The film's pictures come from diffusion video on the director's own drawings, while writing, voices, editing, colour and sound are people, so \"AI film\" names the cheap part.",
+   "aim": "interest",
+   "funny": "The first film made by AI needed four days in a Stockholm studio to get the footsteps right.",
+   "lookalike": {
+    "pattern": "made-in-hours",
+    "beats": "https://www.instagram.com/evolving.ai/p/DfuWseGgGfl/",
+    "our_take": "The post marvelled at what AI made; we count the people the poster leaves out."
+   }
+  },
+  {
+   "id": "ac13c2b0-5426-4018-aaeb-eed82b9d0a6c",
+   "source_kind": "engine",
+   "source_tag": "trade_press",
+   "wildcard": {
+    "kind": "unexpected",
+    "why_unexpected": "The first awards show for AI music gave AI artist of the year to an avatar whose human creator says she wrote every lyric, with AI artists as the voters: the label and the work part in plain sight."
+   },
+   "so_what": "The first AI music awards crowned an \"AI artist\" whose creator wrote all the words, with AI artists casting the votes: anyone labelling or judging AI work can see how far the label sits from who did the work.",
+   "story": "At the first AI Music Awards, at The Mayan in Los Angeles on 13 November 2026, AI artist, song and album of the year went to Xania Monet, an AI-generated avatar. Her creator, Telisha \"Nikki\" Jones, says she wrote all of the lyrics and set them to music with AI. The winners were chosen by AI artists in the Sonic Intelligence Academy, and many nominees said they had stories to tell but lacked the skills to put them to music.",
+   "why_now": "Reuters, 14 Nov 2026 (via The Star and US News).",
+   "fact": "Reuters, 14 Nov 2026: the night's top awards of AI artist, song and album of the year went to Xania Monet, an AI-generated avatar; Jones said she wrote all of the lyrics and then set them to music with the help of AI; winners were picked by AI artists who are members of the Sonic Intelligence Academy.",
+   "source": {
+    "label": "Reuters via The Star, New awards show celebrates AI music and its creators (14 Nov 2026)",
+    "url": "https://www.thestar.com.my/tech/tech-news/2026/11/14/new-awards-show-celebrates-ai-music-and-its-creators"
+   },
+   "first_reported": "https://www.reuters.com",
+   "sources": [
+    {
+     "label": "Variety, Inside the First AI Music Awards (Nov 2026)",
+     "url": "https://variety.com/2026/music/features/inside-first-ai-music-awards-sonic-intelligence-academy-1236947847/"
+    }
+   ],
+   "beats": [
+    "The AI artist of the year has a human who wrote every word.",
+    "Who voted: AI artists.",
+    "Where the label and the work part.",
+    "The Grammys' rule, and why it is the opposite.",
+    "What this shows about what \"AI artist\" means."
+   ],
+   "pitch": {
+    "question": "Wildcard: If a person writes every word and a computer sings them, whose song is it?",
+    "headline": "AI artist of the year. The lyrics were all hers.",
+    "hook": "Xania Monet, an AI avatar, swept the first AI Music Awards; her creator says she wrote every lyric herself.",
+    "examples": [
+     "AI artist, song and album of the year, all to one avatar.",
+     "Voters: AI artists in the Sonic Intelligence Academy.",
+     "The Grammys only reward the part a human made."
+    ],
+    "chain": [
+     "A writer has words but no band.",
+     "An AI tool turns the words into a song.",
+     "The song gets a face, an avatar.",
+     "The avatar is billed as the artist.",
+     "An awards show for AI crowns the avatar.",
+     "So the prize for AI goes to a human's lyrics."
+    ],
+    "take": "The label says AI, the credits say a person; what this shows is that \"AI artist\" can mean a writer with a new instrument. Which part of your own work would you put your name to?"
+   },
+   "style": {
+    "script": "everyday-debate",
+    "production": "fry-talking-head",
+    "experiment": {
+     "format": "voice-led-pictures",
+     "why": "Read one of the lyrics aloud over the avatar, then reveal the woman who wrote it."
+    }
+   },
+   "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If a person writes every word and a computer sings them, whose song is it? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 12 November to 30 November 2026 on: the first AI Music Awards, Xania Monet and Telisha Jones, the Sonic Intelligence Academy's registry and voting, the Recording Academy's rule on AI, and charts that count AI tracks. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+   "shape": "story",
+   "dive": "An AI tool turned a human writer's lyrics into songs sung by an avatar, and the awards credited the avatar.",
+   "aim": "humour",
+   "funny": "The AI artist of the year thanked her writer, who is also her.",
+   "lookalike": {
+    "pattern": "new-rule-for-ai-art",
+    "beats": "https://www.instagram.com/evolving.ai/p/Dcno5uwADrV/",
+    "our_take": "The post covered a chart keeping AI out; we cover an awards show letting a human in under an AI name."
+   }
+  }
+ ]
+}

@@ -1,0 +1,116 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why does Suno Bridge send a producer's Ableton project to Suno?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why does Suno Bridge upload a producer's Ableton project and its audio to Suno?",
+      "answer": "Suno says the upload is how Bridge learns the musical context of the track, so the parts it writes into the marked loop match the session's tempo, key, style, harmonic content and groove.",
+      "evidence": [
+        {
+          "url": "https://suno.com/blog/introducing-bridge",
+          "domain": "suno.com",
+          "date": "2026-11-13",
+          "quote": "Bridge synchronizes with your Ableton session, and this process involves uploading your session files to Suno so that Bridge understands the musical context of your track."
+        },
+        {
+          "url": "https://www.musicbusinessworldwide.com/suno-launches-bridge-an-app-that-drops-ai-stems-into-ableton-live/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-16",
+          "quote": "When a user opens a session in Bridge, the app uploads their Ableton Live project, along with its audio files, to their Suno account, according to an FAQ on Suno’s website."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "none found; searched the three given pages, the Suno blog post MBW cites and the Suno terms. Suno limits the upload: \"Bridge only uploads the project you choose.\""
+      },
+      "mechanism_type": "the model: generation conditioned on the uploaded session",
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why does the uploaded audio pass through copyright filters?",
+      "answer": "Suno says every file uploaded through Bridge is checked for copyrighted material, and flagged files are not taken into Suno. Where a project mixes the user's own material with a rights holder's, only the rights holder's material is blocked.",
+      "evidence": [
+        {
+          "url": "https://suno.com/bridge",
+          "domain": "suno.com",
+          "date": "2026-11-26",
+          "quote": "Audio files uploaded to Suno via Bridge go through our filters to detect copyrighted materials. Files flagged by the system will not be ingested into Suno."
+        },
+        {
+          "url": "https://www.musicbusinessworldwide.com/suno-launches-bridge-an-app-that-drops-ai-stems-into-ableton-live/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-16",
+          "quote": "“If your project contains original material and rightsholder material, only the rightsholder material will be blocked.”"
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "No source describes how the filter detects rights holder material or how often it errs; searched the five saved pages. Both accounts trace back to Suno's own FAQ."
+      },
+      "mechanism_type": "the rule: a copyright filter at ingestion",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why does it matter what gets ingested into Suno?",
+      "answer": "Suno's terms count uploaded music and audio as Submissions and give Suno a perpetual, irrevocable, non-exclusive licence to them, including for improving its AI models. Uploaders also promise Suno owes nobody payment to train on them. Bridge's FAQ points users to these terms.",
+      "evidence": [
+        {
+          "url": "https://suno.com/terms",
+          "domain": "suno.com",
+          "date": "2026-08-10",
+          "quote": "grant to Suno and our affiliates, successors, assigns, and designees a worldwide, non-exclusive, fully paid-up, sublicensable (directly and indirectly through multiple tiers), assignable, royalty-free, perpetual, irrevocable right and license to use, reproduce, store, modify, distribute, create derivative works based on, perform, display, communicate, transmit and otherwise make available any and all Content"
+        },
+        {
+          "url": "https://www.musicbusinessworldwide.com/suno-launches-bridge-an-app-that-drops-ai-stems-into-ableton-live/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-16",
+          "quote": "By uploading Submissions, users also warrant that Suno will not need licenses from, or have to pay, anyone else to use them, including “to train, develop, fine-tune or otherwise improve the Service” and any related AI models."
+        },
+        {
+          "url": "https://help.suno.com/en/articles/14695169",
+          "domain": "help.suno.com",
+          "date": "2026-11-26",
+          "quote": "For more information on how your data is stored and processed, see our Terms of Service and Privacy Notice."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Users keep ownership: MBW reports \"users retain ownership of their Submissions\". No saved page says Bridge uploads are in fact used for training; the Bridge pages only refer users to the terms."
+      },
+      "mechanism_type": "the contract: the terms of service licence on Submissions",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why does Suno keep rights holders' recordings out while taking a licence to users' own audio?",
+      "answer": "Suno's pages give no reason. MBW reports that Universal and Sony, which have not licensed Suno, sued it a second time on 18 September, alleging it copied 60,202 of their recordings without a licence. That points to legal exposure, but only one source says it and none ties it to the filter.",
+      "evidence": [
+        {
+          "url": "https://www.musicbusinessworldwide.com/suno-launches-bridge-an-app-that-drops-ai-stems-into-ableton-live/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-16",
+          "quote": "Universal Music Group and Sony Music Entertainment, neither of which has licensed Suno, sued the company for a second time on September 18."
+        },
+        {
+          "url": "https://www.musicbusinessworldwide.com/suno-launches-bridge-an-app-that-drops-ai-stems-into-ableton-live/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-16",
+          "quote": "The labels’ complaint accuses Suno of copying 60,202 of their sound recordings without a license, and describes v6 as “the fruit of the same poisoned tree.”"
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "MBW also reports v6 was \"developed with Warner Music Group, BMG, and Believe\", so some rights holders work with Suno; no saved page links the Bridge filter to the lawsuit or to those deals."
+      },
+      "mechanism_type": null,
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "Bridge fits its parts to a session by uploading that session to the user's Suno account. Suno filters out rights holders' recordings at that point, and its terms give it a perpetual, irrevocable licence to uploaded audio, including for model improvement. Why the filter exists is not stated; the only lead is a label lawsuit reported by one source.",
+    "open_question": "If a producer's own stems are let through the filter while a label's are blocked, whose music ends up carrying the licence that lets Suno improve its models?"
+  }
+}

@@ -1,0 +1,94 @@
+You are an ordinary 12-year-old reading social media posts once each. For each post below you see only its headline and what you would see. For each, say in one plain line what the post is. If you cannot tell what it is, say "cannot tell". Then look at the list of earlier posts at the end and, for each post, say whether it is one of those earlier posts told again in new words: answer "new" or "same as: <the earlier post>".
+
+Reply with only JSON: {"<ref>": {"says": "<one line>", "repeat": "new" or "same as: ..."}}
+
+POSTS
+
+off-tue-photonstems
+  Headline: Take any song apart on your own laptop. $259 until 7 December.
+  You see: A finished track splitting into vocals, drums, bass and the rest, card by card.
+
+off-tue-splicecreate
+  Headline: A free music studio with 3 million sounds. The catch is the export button.
+  You see: A beat being built from the sample library by voice, then the export button with a padlock.
+
+off-tue-djvoices
+  Headline: Spotify's AI DJ can finally stop talking.
+  You see: A radio presenter's microphone with a mute switch, then nine name badges.
+
+off-tue-freeanimation
+  Headline: An animation studio for $0: four free tools that do the expensive jobs.
+  You see: A studio desk where each expensive box is swapped for a free one.
+
+off-tue-grimesdeepseek
+  Headline: Grimes made an album about AI with no AI in it. Except one song.
+  You see: A record sleeve with a credits list, one line glowing.
+
+off-tue-tplconfused
+  Headline: Will Ferrell: "I guess I'm feeling a little confused"
+  You see: Will Ferrell looks around, lost, and says he is feeling a little confused. Caption: When the AI mastering tool rates your demo higher than the single
+
+off-tue-tplnogod
+  Headline: Steve Carell: "No, God, please, no"
+  You see: Steve Carell, as Michael Scott, shouts "No, God, please, no" at the sky. Caption: The 400 AI lo-fi albums the day the streaming app started deleting
+
+off-tue-tplpushthrough
+  Headline: Jamie Lee Curtis: "I don't know what day it is, I'm just trying to push through"
+  You see: Jamie Lee Curtis, frazzled, says she does not know what day or time it is and is just trying to push through. Caption: Day three of fixing the hands in the AI music video
+
+off-tue-tplwoke
+  Headline: POV: the AI that needs to think without being disturbed
+  You see: A character waves off anyone who comes near because they need to think, undisturbed. Caption: POV: your AI co-writer in 2028 asking for a quiet room before the chorus
+
+off-thu-elevensoundcloud
+  Headline: Make a song in one app, post it in another, in one tap. Three months free.
+  You see: A song flying from one phone app straight onto a SoundCloud page.
+
+off-thu-videoplugin
+  Headline: Your chatbot just invited a video studio to the table.
+  You see: A board table of apps as people, one passing a note by pigeon to the video studio.
+
+off-thu-hackertube
+  Headline: He got tired of YouTube's picks, so he built a video site in two hours.
+  You see: A wall of video thumbnails, each pinned up by a hand rather than a machine.
+
+off-thu-klingthirty
+  Headline: Thirty seconds of film from 15 of your own pictures.
+  You see: Fifteen photos on a corkboard becoming one moving shot.
+
+off-thu-threecuts
+  Headline: Upload three versions. YouTube tells you which opening worked.
+  You see: Three thumbnails racing, one pulling ahead.
+
+off-thu-tplchihuahua
+  Headline: The singing Chihuahua
+  You see: A Chihuahua throws its head back and sings, fully committed and slightly off key. Caption: The AI artist of the year performing live
+
+off-thu-tplarnold
+  Headline: Arnold Schwarzenegger is watching
+  You see: Arnold Schwarzenegger stares, unblinking, nodding slowly to a dance track. Caption: The session drummer watching the AI play his fill back to him
+
+off-thu-tpldumbest
+  Headline: Stephen A. Smith: "you might be one of the dumbest folks on the planet"
+  You see: Stephen A. Smith turns slowly to camera and, affectionately, calls someone one of the dumbest folks on earth. Caption: The club's AI matchday poster put our stadium in the wrong city
+
+off-sat-goodnews
+  Headline: This month AI helped makers reach millions, and gave fans Motty back.
+  You see: A gentleman with an umbrella helping New Yorkers, a painted Bible epic, a game world in brush strokes and a commentary box with John Motson's coat on the chair.
+
+off-sat-arenanight
+  Headline: The Warriors' big screen now talks back. Three more to find.
+  You see: A packed arena, the giant videoboard answering a fan's question.
+
+EARLIER POSTS (60)
+- So what: Your staff and customers will soon be building small tools without knowing it, because ChatGPT and Claude now answer ordinary questions with a working calculator or chart instead of a paragra
+- Jack Clark told the IMF the singularity has begun. The benchmark data he used is the part nobody is writing about.
+- Canva, Adobe or Claude: who owns design in 2028? At Adobe MAX on 10 Nov, Adobe made Firefly an AI creative studio, put agents in Illustrator, Premiere and InDesign, and opened its desktop apps to othe
+- Oracle files to sell $20B in new stock, bonds to finance AI buildout
+- Where does AI get built when towns say no?
+- Will your AI auditor find your missing money, or the skeletons in your closet?
+- Which of your habits will cost you your job once AI is at work?
+- The labs writing everyone's code still run Salesforce
+- Meta staff were ranked by AI use. They gamed it.
+- AI is already inside the songs people have on repeat, hidden in the credits. Movin' To The Sun started as a Suno demo, was rebuilt by HUGEL with a new Ultra Naté vocal and reached No. 2 in the UK. Bad
+- When an AI app millions of people loved goes bust, who walks away with the money? Google paid billions for the people; Disney is bidding millions for what is left; the users get nothing.

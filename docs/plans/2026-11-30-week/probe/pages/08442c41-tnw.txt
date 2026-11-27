@@ -1,0 +1,209 @@
+TikTok takes its deepfake detection tool global and adds an AI checker
+
+ Skip to content
+
+ Toggle Navigation
+
+ News
+
+ Events
+
+ TNW Conference
+
+ All Events
+
+ Newsletters
+
+ Advertise with us
+
+Jobs
+
+Contact
+
+ News
+
+ News
+ News
+ News
+
+ Latest
+
+ Deep tech
+
+ Sustainability
+
+ Ecosystems
+
+ Data and security
+
+ Fintech and ecommerce
+
+ Future of work
+
+ More
+
+ Startups and technology
+
+ Investors and funding
+
+ Government and policy
+
+ Corporates and innovation
+
+ TikTok
+
+TikTok takes its deepfake detection tool global and adds an AI checker
+
+Creators worldwide can now flag AI copies of themselves, and anyone can check a video for TikTok's AI.
+
+November 23, 2026 - 11:04 am GMT
+
+ Add as a preferred source
+ Read more TNW news
+
+ Credit: TikTok
+
+TikTok is rolling out its Likeness Detection tool to creators worldwide, giving them a way to find AI-generated videos that use their face without consent. Moreover, the company has also opened a public checker that tells anyone whether a clip was made or edited with TikTok’s AI tools.
+
+The checker sits in TikTok’s Transparency Centre and works without a TikTok account. Upload an image or video, and it looks for the markers TikTok attaches to AI content made with its own tools.
+
+Those markers come in two layers; TikTok stamps its AI content with C2PA Content Credentials, an industry standard it adopted in 2024, but those can be stripped when a clip is downloaded or edited.
+
+So the checker also hunts for VeraDura, TikTok’s own invisible watermark, which it says is far harder to remove.
+
+Likeness Detection has been in testing with US creators since July, a trial first reported by The Verge. The tool is opt-in and is now opening up to eligible creators everywhere, public figures and political accounts included.
+
+Creators verify their identity with a third-party partner, after which TikTok flags videos and accounts that may be using their face. They can then report matches to its safety teams, and the company says it deletes ID documents after the check.
+
+Content that breaks TikTok’s rules on misleading or nonconsensual depictions of people gets removed. The company says more than 99% of rule-breaking content comes down before anyone reports it, and that its systems have labelled over 5 billion AI-generated videos so far.
+
+Viewers get a dial of their own too. A reworked Manage Topics setting lets people choose how much AI-generated content turns up in their For You feed. It joins keyword filters, which TikTok says 79 million people in the EU used in the first half of 2026.
+
+The crackdown has been a long time coming, as AI fakes have plagued the platform for years, from celebrity scam ads to nonconsensual deepfake videos of public figures.
+
+TikTok is also following a path YouTube cut first, as the video giant launched its own likeness detection tool in October 2025 and has been widening access to it since.
+
+ Story by
+
+ Darius Popa
+
+ Technology enthusiast and intern at The Next Web, contributing to research-backed content and investigating new technologies and global even (show all)
+
+ Technology enthusiast and intern at The Next Web, contributing to research-backed content and investigating new technologies and global events. Interested in business and how the narrative and perception of technology is shaped.
+
+Get the TNW newsletter
+
+Get the most important tech news in your inbox each week.
+
+ Email address
+
+ Subscribe
+
+ Website
+
+Thanks! Check your inbox to confirm your subscription.
+
+By subscribing you agree to our Privacy Statement.
+
+Published 
+November 23, 2026 - 11:04 am UTC
+ Back to top
+
+Get more TNW on Google
+
+ Add as a preferred source
+ Read more TNW news
+
+ Follow on Google
+ @thenextweb
+
+ Story by a
+ Darius Popa
+
+Popular articles
+
+ 1
+
+TikTok takes its deepfake detection tool global and adds an AI checker
+
+ 2
+
+Germany and Austria call for TikTok’s EU business to go to European owners
+
+ 3
+
+Meta and TikTok join Google to fight Indonesia’s AI copyright bill
+
+ 4
+
+TikTok faces EU fine over “For You” feed ‘rabbit hole’ effect
+
+ 5
+
+Meta, TikTok and X reportedly lose UK court fight over Ofcom data demands
+
+ Get the TNW newsletter
+
+ ✕ Close
+
+Get the TNW newsletter
+
+Get the most important tech news in your inbox each week.
+
+ Email address
+
+ Subscribe
+
+ Website
+
+Thanks! Check your inbox to confirm your subscription.
+
+By subscribing you agree to our Privacy Statement.
+
+Related Articles
+
+ tiktok
+
+ TikTok takes its deepfake detection tool global and adds an AI checker
+
+ china
+
+ Germany and Austria call for TikTok’s EU business to go to European owners
+
+ legal
+
+ Meta and TikTok join Google to fight Indonesia’s AI copyright bill
+
+ eu
+
+ TikTok faces EU fine over “For You” feed ‘rabbit hole’ effect
+
+ legal
+
+ Meta, TikTok and X reportedly lose UK court fight over Ofcom data demands
+
+The heart of tech
+
+More TNW
+
+Media
+
+Events
+
+Newsletters
+
+About TNW
+
+Advertise with us
+
+Terms & Conditions
+
+Cookie Statement
+
+Privacy Statement
+
+Consent Preferences
+
+A Tekpon Company
+
+Copyright © 2006—2026, Cogneve, INC. Made with <3 in Amsterdam.

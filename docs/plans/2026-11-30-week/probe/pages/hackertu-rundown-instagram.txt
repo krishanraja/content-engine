@@ -1,0 +1,30 @@
+URL: https://www.instagram.com/therundownai/p/DfQCWHZEreu/
+Fetched: 2026-11-26 (logged-out HTML; text is the page's og:title and description meta tags)
+
+1,190 likes, 44 comments - therundownai on November 2, 2026: "OpenAI founding member Andrej Karpathy was frustrated with YouTube’s video suggestions, so he used Claude to build his own alternative in just two hours. 
+
+Called HackerTube, the website features 6,454 videos picked from 43 million Hacker News comments spanning 20 years.
+
+Karpathy used Claude Opus 5.5 to handle almost everything, from writing code to securing and launching the site. 
+
+He only stepped in to set up an API key, arrange a server, and buy a domain. 
+
+The site doesn’t require a login and lets users discover videos recommended by real people instead of YouTube’s algorithm.
+
+Follow us (@therundownAI) to keep up with the latest news in tech and AI.
+
+Source: Andrej Karpathy / X". 
+
+The Rundown AI on Instagram: "OpenAI founding member Andrej Karpathy was frustrated with YouTube’s video suggestions, so he used Claude to build his own alternative in just two hours. 
+
+Called HackerTube, the website features 6,454 videos picked from 43 million Hacker News comments spanning 20 years.
+
+Karpathy used Claude Opus 5.5 to handle almost everything, from writing code to securing and launching the site. 
+
+He only stepped in to set up an API key, arrange a server, and buy a domain. 
+
+The site doesn’t require a login and lets users discover videos recommended by real people instead of YouTube’s algorithm.
+
+Follow us (@therundownAI) to keep up with the latest news in tech and AI.
+
+Source: Andrej Karpathy / X"

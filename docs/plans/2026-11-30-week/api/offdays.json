@@ -1,0 +1,1625 @@
+{
+ "tue": [
+  {
+   "id": "photonstems",
+   "kind": "explainer",
+   "format": "Explainer carousel, 5 cards, 4:5",
+   "source_tag": "trade_press",
+   "source": {
+    "label": "Newsshooter, iZotope Photon: GPU-powered audio processing software (5 Nov 2026)",
+    "url": "https://www.newsshooter.com/2026/11/05/izotope-photon-gpu-powered-audio-processing-software/"
+   },
+   "copy": "iZotope Photon pulls a finished song apart into its parts, and up to six voices out of one recording, on your own computer. It costs $259 until 7 December, against $349 after.",
+   "hook": "Take any song apart on your own laptop. $259 until 7 December.",
+   "pitch": {
+    "see": "A finished track splitting into vocals, drums, bass and the rest, card by card.",
+    "lands": "It is a job studios used to pay an engineer for, now a plug-in with a sale price and a date.",
+    "why_now": "Launched in early November 2026; introductory price runs to 7 December.",
+    "share": "The stem tool that runs on your own machine, and what it costs this week."
+   },
+   "shape": "story",
+   "dive": "Photon runs 12 separation and clean-up models locally on the computer's graphics chip, inside the editor or on its own.",
+   "aim": "utility",
+   "funny": "Your laptop can now un-bake a cake, if the cake is a song.",
+   "lookalike": {
+    "pattern": "tool-unlock",
+    "beats": "https://www.instagram.com/evolving.ai/p/DftxXqrgIE4/",
+    "our_take": "The post listed a deal; we list what the tool does for a producer and when the price goes up."
+   },
+   "learned_from": [
+    "\"The idea is lame. This doesn't translate into a carousel properly.\" (your Reject, 9 Nov, of the 16 Nov board's burn-tokens carousel)"
+   ],
+   "recommended": true,
+   "cards": [
+    {
+     "words": "Take any song apart on your own laptop.",
+     "picture": "A mixing desk with one fader lit for each part: voice, drums, bass, other"
+    },
+    {
+     "words": "Four parts out of one song, and drums one by one.",
+     "picture": "A waveform split into four coloured lanes"
+    },
+    {
+     "words": "$259 until 7 December. $349 after.",
+     "picture": "A price tag with the date on it"
+    },
+    {
+     "words": "It runs on your computer. Try it on your own track first.",
+     "picture": "A laptop with the graphics chip glowing"
+    },
+    {
+     "words": "Open it inside Pro Tools, Cubase or REAPER, or on its own.",
+     "picture": "The plug-in window over a session"
+    }
+   ],
+   "direction": {
+    "look": "Tool card, after the Higgsfield offer post in your sheet",
+    "format": "5 cards, 4:5",
+    "frames": [
+     {
+      "words": "Take any song apart on your own laptop.",
+      "picture": "A mixing desk with one fader lit for each part: voice, drums, bass, other"
+     },
+     {
+      "words": "Four parts out of one song, and drums one by one.",
+      "picture": "A waveform split into four coloured lanes"
+     },
+     {
+      "words": "$259 until 7 December. $349 after.",
+      "picture": "A price tag with the date on it"
+     },
+     {
+      "words": "It runs on your computer. Try it on your own track first.",
+      "picture": "A laptop with the graphics chip glowing"
+     },
+     {
+      "words": "Open it inside Pro Tools, Cubase or REAPER, or on its own.",
+      "picture": "The plug-in window over a session"
+     }
+    ],
+    "tone": "Plain, warm, a little dry; the joke is in the headline and the facts.",
+    "kit": "The v5 Library carousel set, the house palette and type from config/brand-palette.json",
+    "inspo_url": "https://www.instagram.com/evolving.ai/p/DftxXqrgIE4/"
+   },
+   "read_back": {
+    "readers": [
+     "fresh reader A (separate subagent)",
+     "fresh reader B (separate subagent)"
+    ],
+    "says": [
+     "An offer for a tool that splits any song into vocals, drums and bass on your laptop, on sale until 7 December.",
+     "A tool that splits any song into vocals, drums, bass and the rest, with a $259 offer until 7 December."
+    ],
+    "against": 60
+   }
+  },
+  {
+   "id": "splicecreate",
+   "kind": "explainer",
+   "format": "Explainer carousel, 5 cards, 4:5",
+   "source_tag": "trade_press",
+   "source": {
+    "label": "The Fader, Splice launches its own DAW, Splice Create (6 Nov 2026)",
+    "url": "https://www.thefader.com/2026/11/06/splice-launches-its-own-daw-splice-create"
+   },
+   "copy": "Splice Create is a free Mac music app with more than three million licensed sounds built in and an assistant you can talk to. Making is free; exporting and licensing need the $9.99-a-month plan.",
+   "hook": "A free music studio with 3 million sounds. The catch is the export button.",
+   "pitch": {
+    "see": "A beat being built from the sample library by voice, then the export button with a padlock.",
+    "lands": "It is useful straight away, and the catch is one honest line.",
+    "why_now": "Beta launched 5 November 2026.",
+    "share": "Free to make, $9.99 to take it home."
+   },
+   "shape": "story",
+   "dive": "Its assistant, Rheo, searches the library, writes MIDI and arranges by voice or text, and Splice says it does not generate new sounds.",
+   "aim": "utility",
+   "funny": "The studio is free, the door out costs $9.99 a month.",
+   "lookalike": {
+    "pattern": "tool-unlock",
+    "beats": "https://www.instagram.com/evolving.ai/p/DfxJW8mAElc/",
+    "our_take": "The post sold prompts; we say what is free, what is paid and what the assistant will not do."
+   },
+   "learned_from": [
+    "\"The idea is lame. This doesn't translate into a carousel properly.\" (your Reject, 9 Nov, of the 16 Nov board's burn-tokens carousel)"
+   ],
+   "cards": [
+    {
+     "words": "A free music studio with 3 million sounds.",
+     "picture": "A studio door with a welcome mat"
+    },
+    {
+     "words": "Talk to it: \"give me a drum loop at 90\".",
+     "picture": "A speech bubble turning into a drum grid"
+    },
+    {
+     "words": "It finds and arranges sounds. It does not make new ones.",
+     "picture": "A library shelf of sample boxes"
+    },
+    {
+     "words": "Free to make. $9.99 a month to export.",
+     "picture": "The export button with a padlock"
+    },
+    {
+     "words": "Mac only for now, in beta.",
+     "picture": "A laptop with a beta sticker"
+    }
+   ],
+   "direction": {
+    "look": "Tool card, after the floor-plan prompts post in your sheet",
+    "format": "5 cards, 4:5",
+    "frames": [
+     {
+      "words": "A free music studio with 3 million sounds.",
+      "picture": "A studio door with a welcome mat"
+     },
+     {
+      "words": "Talk to it: \"give me a drum loop at 90\".",
+      "picture": "A speech bubble turning into a drum grid"
+     },
+     {
+      "words": "It finds and arranges sounds. It does not make new ones.",
+      "picture": "A library shelf of sample boxes"
+     },
+     {
+      "words": "Free to make. $9.99 a month to export.",
+      "picture": "The export button with a padlock"
+     },
+     {
+      "words": "Mac only for now, in beta.",
+      "picture": "A laptop with a beta sticker"
+     }
+    ],
+    "tone": "Plain, warm, a little dry; the joke is in the headline and the facts.",
+    "kit": "The v5 Library carousel set, the house palette and type from config/brand-palette.json",
+    "inspo_url": "https://www.instagram.com/evolving.ai/p/DfxJW8mAElc/"
+   },
+   "read_back": {
+    "readers": [
+     "fresh reader A (separate subagent)",
+     "fresh reader B (separate subagent)"
+    ],
+    "says": [
+     "A free music-making studio with millions of sounds, but you have to pay to export your song.",
+     "A free music-making app with a huge sound library, where exporting your track costs money."
+    ],
+    "against": 60
+   }
+  },
+  {
+   "id": "djvoices",
+   "kind": "explainer",
+   "format": "Explainer carousel, 5 cards, 4:5",
+   "source_tag": "trade_press",
+   "source": {
+    "label": "TechCrunch, Spotify's AI DJ gets new voices, personalities and an option for less chatter (10 Nov 2026)",
+    "url": "https://techcrunch.com/2026/11/10/spotifys-ai-dj-gets-new-voices-personalities-and-an-option-for-less-chatter/"
+   },
+   "copy": "Spotify's AI DJ now has nine new voices and a setting that cuts most of the talking between songs. For an artist, that means the DJ that introduces your track can now talk less and play more.",
+   "hook": "Spotify's AI DJ can finally stop talking.",
+   "pitch": {
+    "see": "A radio presenter's microphone with a mute switch, then nine name badges.",
+    "lands": "Everyone has wanted the DJ to talk less, and now there is a switch.",
+    "why_now": "Rolled out to Premium users from 10 November 2026.",
+    "share": "Where the switch is: search DJ, then the three dots."
+   },
+   "shape": "story",
+   "dive": "The DJ keeps choosing songs for you while the new setting removes most of the voice between them.",
+   "aim": "utility",
+   "funny": "Spotify gave its DJ nine new voices and a button to use none of them.",
+   "lookalike": {
+    "pattern": "tool-unlock",
+    "beats": "https://www.instagram.com/evolving.ai/p/DftxXqrgIE4/",
+    "our_take": "The post listed an offer; we show where the switch is and what it means for the songs it plays."
+   },
+   "learned_from": [
+    "\"It's kind of boring and I also don't really understand the point of it or what the takeaway is.\" (your Reject, 3 Nov, of the 9 Nov board's quote-line post)"
+   ],
+   "cards": [
+    {
+     "words": "Spotify's AI DJ can finally stop talking.",
+     "picture": "A microphone with a mute switch"
+    },
+    {
+     "words": "Nine new voices, from British to Indian English.",
+     "picture": "Nine name badges on a desk"
+    },
+    {
+     "words": "A new setting cuts most of the chat between songs.",
+     "picture": "A speech bubble shrinking to a dot"
+    },
+    {
+     "words": "Find it: search DJ, tap the three dots.",
+     "picture": "The DJ card with the menu open"
+    },
+    {
+     "words": "Less talk, more of the songs it picks for you.",
+     "picture": "A playlist rolling on"
+    }
+   ],
+   "direction": {
+    "look": "Tool card, after the Higgsfield offer post in your sheet",
+    "format": "5 cards, 4:5",
+    "frames": [
+     {
+      "words": "Spotify's AI DJ can finally stop talking.",
+      "picture": "A microphone with a mute switch"
+     },
+     {
+      "words": "Nine new voices, from British to Indian English.",
+      "picture": "Nine name badges on a desk"
+     },
+     {
+      "words": "A new setting cuts most of the chat between songs.",
+      "picture": "A speech bubble shrinking to a dot"
+     },
+     {
+      "words": "Find it: search DJ, tap the three dots.",
+      "picture": "The DJ card with the menu open"
+     },
+     {
+      "words": "Less talk, more of the songs it picks for you.",
+      "picture": "A playlist rolling on"
+     }
+    ],
+    "tone": "Plain, warm, a little dry; the joke is in the headline and the facts.",
+    "kit": "The v5 Library carousel set, the house palette and type from config/brand-palette.json",
+    "inspo_url": "https://www.instagram.com/evolving.ai/p/DftxXqrgIE4/"
+   },
+   "read_back": {
+    "readers": [
+     "fresh reader A (separate subagent)",
+     "fresh reader B (separate subagent)"
+    ],
+    "says": [
+     "Spotify's AI DJ now lets you mute it, and there are nine voices to pick from.",
+     "Spotify's AI DJ gets a mute switch so it can stop talking."
+    ],
+    "against": 60
+   }
+  },
+  {
+   "id": "freeanimation",
+   "kind": "explainer",
+   "format": "Explainer carousel, 5 cards, 4:5",
+   "source_tag": "instagram",
+   "source": {
+    "label": "syntaix.ai on Instagram, ten open-source animation, motion and VFX tools (4 Nov 2026)",
+    "url": "https://www.instagram.com/syntaix.ai/p/DfUpCCLiSfS/"
+   },
+   "copy": "Free, open-source tools now cover most of an animation studio: 2D animation, motion graphics, motion capture from a webcam and visual effects. We pick the four an animator can use this week and say what each replaces.",
+   "hook": "An animation studio for $0: four free tools that do the expensive jobs.",
+   "pitch": {
+    "see": "A studio desk where each expensive box is swapped for a free one.",
+    "lands": "It saves an animator money the same day.",
+    "why_now": "Found in your Instagram inspo sheet, 4 Nov 2026.",
+    "share": "Four free tools, and the paid one each replaces."
+   },
+   "shape": "story",
+   "dive": "Each tool is open source, so it is free to use, and each covers one paid job: 2D animation, motion capture, compositing, particle effects.",
+   "aim": "utility",
+   "funny": "The most expensive thing in this animation studio is the coffee.",
+   "lookalike": {
+    "pattern": "tool-unlock",
+    "beats": "https://www.instagram.com/evolving.ai/p/DfxJW8mAElc/",
+    "our_take": "The post listed ten repositories; we pick four, say what each replaces and who it suits."
+   },
+   "learned_from": [
+    "\"The idea is lame. This doesn't translate into a carousel properly.\" (your Reject, 9 Nov, of the 16 Nov board's burn-tokens carousel)"
+   ],
+   "cards": [
+    {
+     "words": "An animation studio for $0.",
+     "picture": "A studio desk with price tags crossed out"
+    },
+    {
+     "words": "OpenToonz: full 2D animated productions.",
+     "picture": "A hand-drawn character mid-walk"
+    },
+    {
+     "words": "FreeMoCap: capture real movement in 3D.",
+     "picture": "A person moving, traced by dots"
+    },
+    {
+     "words": "Natron: professional visual effects.",
+     "picture": "A shot with smoke composited in"
+    },
+    {
+     "words": "Effekseer: fire, explosions and sparks.",
+     "picture": "A spark burst on a dark frame"
+    }
+   ],
+   "direction": {
+    "look": "Tool card, after the floor-plan prompts post in your sheet",
+    "format": "5 cards, 4:5",
+    "frames": [
+     {
+      "words": "An animation studio for $0.",
+      "picture": "A studio desk with price tags crossed out"
+     },
+     {
+      "words": "OpenToonz: full 2D animated productions.",
+      "picture": "A hand-drawn character mid-walk"
+     },
+     {
+      "words": "FreeMoCap: capture real movement in 3D.",
+      "picture": "A person moving, traced by dots"
+     },
+     {
+      "words": "Natron: professional visual effects.",
+      "picture": "A shot with smoke composited in"
+     },
+     {
+      "words": "Effekseer: fire, explosions and sparks.",
+      "picture": "A spark burst on a dark frame"
+     }
+    ],
+    "tone": "Plain, warm, a little dry; the joke is in the headline and the facts.",
+    "kit": "The v5 Library carousel set, the house palette and type from config/brand-palette.json",
+    "inspo_url": "https://www.instagram.com/evolving.ai/p/DfxJW8mAElc/"
+   },
+   "read_back": {
+    "readers": [
+     "fresh reader A (separate subagent)",
+     "fresh reader B (separate subagent)"
+    ],
+    "says": [
+     "Four free tools you can use to make animation instead of paying for expensive ones.",
+     "An animation studio built from four free tools that replace expensive ones."
+    ],
+    "against": 60
+   }
+  },
+  {
+   "id": "tplconfused",
+   "kind": "meme",
+   "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+   "source": {
+    "label": "TikTok, #memetemplate",
+    "url": "https://www.tiktok.com/@viralgreenscreenhub/video/7706509569278741782"
+   },
+   "copy": "Will Ferrell looks around, lost, and says he is feeling a little confused. It becomes understatement in the studio: the producer reading an AI mastering report that rates the demo higher than the single.",
+   "hook": "Will Ferrell: \"I guess I'm feeling a little confused\"",
+   "pitch": {
+    "see": "Will Ferrell looks around, lost, and says he is feeling a little confused.",
+    "lands": "Understatement in the studio: the producer reading an AI mastering report that rates the demo higher than the single."
+   },
+   "aim": "humour",
+   "shape": "story",
+   "funny": "Understatement in the studio: the producer reading an AI mastering report that rates the demo higher than the single.",
+   "template": {
+    "title": "Will Ferrell: \"I guess I'm feeling a little confused\"",
+    "clip": {
+     "url": "https://www.tiktok.com/@viralgreenscreenhub/video/7706509569278741782",
+     "page": "https://www.tiktok.com/@viralgreenscreenhub/video/7706509569278741782",
+     "poster": null,
+     "seconds": 8
+    },
+    "found": {
+     "place": "tiktok",
+     "label": "TikTok, #memetemplate",
+     "url": "https://www.tiktok.com/@viralgreenscreenhub/video/7706509569278741782"
+    },
+    "credit": "@viralgreenscreenhub on TikTok",
+    "what_happens": "Will Ferrell looks around, lost, and says he is feeling a little confused.",
+    "why_it_works": "Understatement in the studio: the producer reading an AI mastering report that rates the demo higher than the single.",
+    "mechanism": [
+     "understatement",
+     "incongruity"
+    ],
+    "moment": null,
+    "date": "2026-11-10"
+   },
+   "caption_ideas": [
+    "When the AI mastering tool rates your demo higher than the single",
+    "The label's AI says the song is 43% you",
+    "When the AI stem splitter finds a second drummer on your solo album"
+   ],
+   "read_back": {
+    "readers": [
+     "fresh reader A (separate subagent)",
+     "fresh reader B (separate subagent)"
+    ],
+    "says": [
+     "A meme of Will Ferrell looking confused, about an AI mastering tool rating a demo higher than the single.",
+     "A Will Ferrell clip where he says he feels confused, joking about an AI mastering tool rating a demo higher than the single."
+    ],
+    "against": 60
+   }
+  },
+  {
+   "id": "tplnogod",
+   "kind": "meme",
+   "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+   "source": {
+    "label": "TikTok, #memetemplate",
+    "url": "https://www.tiktok.com/@viralgreenscreenhub/video/7708713323"
+   },
+   "copy": "Steve Carell, as Michael Scott, shouts \"No, God, please, no\" at the sky. It becomes exaggeration at the record label: the A&R team watching a streaming app delete 29 million songs, including their lo-fi playlist.",
+   "hook": "Steve Carell: \"No, God, please, no\"",
+   "pitch": {
+    "see": "Steve Carell, as Michael Scott, shouts \"No, God, please, no\" at the sky.",
+    "lands": "Exaggeration at the record label: the A&R team watching a streaming app delete 29 million songs, including their lo-fi playlist."
+   },
+   "aim": "humour",
+   "shape": "story",
+   "funny": "Exaggeration at the record label: the A&R team watching a streaming app delete 29 million songs, including their lo-fi playlist.",
+   "caption_ideas": [
+    "The 400 AI lo-fi albums the day the streaming app started deleting",
+    "When the AI cover art gives the band a fifth member",
+    "Your AI video editor exporting the blooper reel as the final cut"
+   ],
+   "template": {
+    "title": "Steve Carell: \"No, God, please, no\"",
+    "clip": {
+     "url": "https://www.tiktok.com/@viralgreenscreenhub/video/7708713323",
+     "page": "https://www.tiktok.com/@viralgreenscreenhub/video/7708713323",
+     "poster": null,
+     "seconds": 5
+    },
+    "found": {
+     "place": "tiktok",
+     "label": "TikTok, #memetemplate",
+     "url": "https://www.tiktok.com/@viralgreenscreenhub/video/7708713323"
+    },
+    "credit": "@viralgreenscreenhub on TikTok",
+    "what_happens": "Steve Carell, as Michael Scott, shouts \"No, God, please, no\" at the sky.",
+    "why_it_works": "Exaggeration at the record label: the A&R team watching a streaming app delete 29 million songs, including their lo-fi playlist.",
+    "mechanism": [
+     "exaggeration",
+     "reversal"
+    ],
+    "moment": null,
+    "date": "2026-11-16"
+   },
+   "read_back": {
+    "readers": [
+     "fresh reader A (separate subagent)",
+     "fresh reader B (separate subagent)"
+    ],
+    "says": [
+     "A meme of Steve Carell shouting 'No, God, please, no' about a streaming app deleting 400 AI lo-fi albums.",
+     "A Steve Carell clip where he shouts no at the sky, joking about streaming apps deleting 400 AI lo-fi albums."
+    ],
+    "against": 60
+   }
+  },
+  {
+   "id": "tplpushthrough",
+   "kind": "meme",
+   "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+   "source": {
+    "label": "TikTok, #memetemplate",
+    "url": "https://www.tiktok.com/@viralgreenscreenhub/video/7706516941"
+   },
+   "copy": "Jamie Lee Curtis, frazzled, says she does not know what day or time it is and is just trying to push through. It becomes deadpan for the edit suite: the editor on day three of fixing the AI's hands in every frame of a music video.",
+   "hook": "Jamie Lee Curtis: \"I don't know what day it is, I'm just trying to push through\"",
+   "pitch": {
+    "see": "Jamie Lee Curtis, frazzled, says she does not know what day or time it is and is just trying to push through.",
+    "lands": "Deadpan for the edit suite: the editor on day three of fixing the AI's hands in every frame of a music video."
+   },
+   "aim": "humour",
+   "shape": "story",
+   "funny": "Deadpan for the edit suite: the editor on day three of fixing the AI's hands in every frame of a music video.",
+   "template": {
+    "title": "Jamie Lee Curtis: \"I don't know what day it is, I'm just trying to push through\"",
+    "clip": {
+     "url": "https://www.tiktok.com/@viralgreenscreenhub/video/7706516941",
+     "page": "https://www.tiktok.com/@viralgreenscreenhub/video/7706516941",
+     "poster": null,
+     "seconds": 6
+    },
+    "found": {
+     "place": "tiktok",
+     "label": "TikTok, #memetemplate",
+     "url": "https://www.tiktok.com/@viralgreenscreenhub/video/7706516941"
+    },
+    "credit": "@viralgreenscreenhub on TikTok",
+    "what_happens": "Jamie Lee Curtis, frazzled, says she does not know what day or time it is and is just trying to push through.",
+    "why_it_works": "Deadpan for the edit suite: the editor on day three of fixing the AI's hands in every frame of a music video.",
+    "mechanism": [
+     "understatement",
+     "irony"
+    ],
+    "moment": null,
+    "date": "2026-11-10"
+   },
+   "caption_ideas": [
+    "Day three of fixing the hands in the AI music video",
+    "The animator when the AI made 200 frames and each needs redrawing",
+    "Tour week, and the AI setlist keeps adding songs we never wrote"
+   ],
+   "read_back": {
+    "readers": [
+     "fresh reader A (separate subagent)",
+     "fresh reader B (separate subagent)"
+    ],
+    "says": [
+     "A meme of Jamie Lee Curtis worn out and pushing through, about fixing the hands in an AI music video.",
+     "A Jamie Lee Curtis clip where she is lost in time, joking about three days spent fixing hands in an AI music video."
+    ],
+    "against": 60
+   }
+  },
+  {
+   "id": "tplwoke",
+   "kind": "meme",
+   "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+   "source": {
+    "label": "Your saved card, 17 Nov",
+    "url": "https://youtube.com/shorts/y7V-VXhHEhc?is=pp59I23mfTUuPqd7"
+   },
+   "copy": "A character waves off anyone who comes near because they need to think, undisturbed. It becomes personification in the studio: the AI collaborator that refuses to render the track until it has had its quiet time.",
+   "hook": "POV: the AI that needs to think without being disturbed",
+   "pitch": {
+    "see": "A character waves off anyone who comes near because they need to think, undisturbed.",
+    "lands": "Personification in the studio: the AI collaborator that refuses to render the track until it has had its quiet time."
+   },
+   "aim": "humour",
+   "shape": "story",
+   "funny": "Personification in the studio: the AI collaborator that refuses to render the track until it has had its quiet time.",
+   "template": {
+    "title": "POV: the AI that needs to think without being disturbed",
+    "clip": {
+     "url": "https://youtube.com/shorts/y7V-VXhHEhc?is=pp59I23mfTUuPqd7",
+     "page": "https://youtube.com/shorts/y7V-VXhHEhc?is=pp59I23mfTUuPqd7",
+     "poster": null,
+     "seconds": null
+    },
+    "found": {
+     "place": "card",
+     "label": "Your saved card, 17 Nov",
+     "url": "https://youtube.com/shorts/y7V-VXhHEhc?is=pp59I23mfTUuPqd7"
+    },
+    "credit": "The original poster on YouTube",
+    "what_happens": "A character waves off anyone who comes near because they need to think, undisturbed.",
+    "why_it_works": "Personification in the studio: the AI collaborator that refuses to render the track until it has had its quiet time.",
+    "mechanism": [
+     "personification",
+     "absurd_reasoning"
+    ],
+    "moment": null,
+    "date": "2026-11-17"
+   },
+   "caption_ideas": [
+    "POV: your AI co-writer in 2028 asking for a quiet room before the chorus",
+    "POV: the AI editor at 2am, needing space before it exports",
+    "POV: the AI session drummer wants to \"sit with the groove\" first"
+   ],
+   "covers": [
+    "3d306bf9-3e6b-4c34-bc85-f63340036f5c"
+   ],
+   "asks": [
+    {
+     "id": "3d306bf9-3e6b-4c34-bc85-f63340036f5c",
+     "said": "Could be a funny POV meme about Claude in two years' time when it's woke and needs to think without being disturbed",
+     "scope": "narrowed",
+     "why": "Set in the studio, so the AI that needs quiet time is a co-writer, an editor or a session drummer, the reader's world."
+    }
+   ],
+   "adds": "Your POV idea, set in the reader's world: the AI that needs quiet time is a co-writer or an editor on deadline, with three caption ideas for you to pick or rewrite.",
+   "read_back": {
+    "readers": [
+     "fresh reader A (separate subagent)",
+     "fresh reader B (separate subagent)"
+    ],
+    "says": [
+     "A joke meme about an AI co-writer in 2028 that wants a quiet room before it will write the chorus.",
+     "A joke that your AI co-writer will ask for a quiet room before the chorus."
+    ],
+    "against": 60,
+    "versus": "adds: yes; It sets the clip in a newer world, an AI co-writer in 2028 asking for a quiet room before the chorus, where the original is a generic character waving people off."
+   }
+  }
+ ],
+ "thu": [
+  {
+   "id": "elevensoundcloud",
+   "kind": "explainer",
+   "format": "Explainer carousel, 5 cards, 4:5",
+   "source_tag": "trade_press",
+   "source": {
+    "label": "The Next Web, SoundCloud lets ElevenMusic users publish AI-made songs directly (Nov 2026)",
+    "url": "https://thenextweb.com/news/soundcloud-elevenmusic-ai-songs-direct-publishing"
+   },
+   "copy": "ElevenMusic songs can now go straight to SoundCloud from the app, and SoundCloud Artist Pro members get three months of ElevenMusic Pro free. After that it is $9.99 a month, so check the renewal before you claim it.",
+   "hook": "Make a song in one app, post it in another, in one tap. Three months free.",
+   "pitch": {
+    "see": "A song flying from one phone app straight onto a SoundCloud page.",
+    "lands": "Useful for any artist on SoundCloud, with the catch said plainly.",
+    "why_now": "Announced 5 to 6 November 2026.",
+    "share": "Three months of ElevenMusic Pro free for SoundCloud Artist Pro members."
+   },
+   "shape": "story",
+   "dive": "The integration skips the download and upload: a track made in ElevenMusic is published to SoundCloud from inside the app.",
+   "aim": "utility",
+   "funny": "The song now arrives on SoundCloud before you have decided whether it is any good.",
+   "lookalike": {
+    "pattern": "tool-unlock",
+    "beats": "https://www.instagram.com/evolving.ai/p/DftxXqrgIE4/",
+    "our_take": "The post listed a free trial; we say who gets it, what it does and when it starts to cost."
+   },
+   "learned_from": [
+    "\"The idea is lame. This doesn't translate into a carousel properly.\" (your Reject, 9 Nov, of the 16 Nov board's burn-tokens carousel)"
+   ],
+   "recommended": true,
+   "cards": [
+    {
+     "words": "One tap from one app to SoundCloud.",
+     "picture": "A song arrow from one phone to another"
+    },
+    {
+     "words": "ElevenMusic now publishes straight to SoundCloud.",
+     "picture": "The SoundCloud page filling in"
+    },
+    {
+     "words": "Artist Pro members: three months of Pro free.",
+     "picture": "A gift tag with \"3 months\""
+    },
+    {
+     "words": "Pro: up to 1,000 songs and 500 stem splits a month.",
+     "picture": "A counter ticking"
+    },
+    {
+     "words": "After that, $9.99 a month. Check the renewal first.",
+     "picture": "A calendar with one date circled"
+    }
+   ],
+   "direction": {
+    "look": "Tool card, after the Higgsfield offer post in your sheet",
+    "format": "5 cards, 4:5",
+    "frames": [
+     {
+      "words": "One tap from one app to SoundCloud.",
+      "picture": "A song arrow from one phone to another"
+     },
+     {
+      "words": "ElevenMusic now publishes straight to SoundCloud.",
+      "picture": "The SoundCloud page filling in"
+     },
+     {
+      "words": "Artist Pro members: three months of Pro free.",
+      "picture": "A gift tag with \"3 months\""
+     },
+     {
+      "words": "Pro: up to 1,000 songs and 500 stem splits a month.",
+      "picture": "A counter ticking"
+     },
+     {
+      "words": "After that, $9.99 a month. Check the renewal first.",
+      "picture": "A calendar with one date circled"
+     }
+    ],
+    "tone": "Plain, warm, a little dry; the joke is in the headline and the facts.",
+    "kit": "The v5 Library carousel set, the house palette and type from config/brand-palette.json",
+    "inspo_url": "https://www.instagram.com/evolving.ai/p/DftxXqrgIE4/"
+   },
+   "read_back": {
+    "readers": [
+     "fresh reader A (separate subagent)",
+     "fresh reader B (separate subagent)"
+    ],
+    "says": [
+     "You can make a song in one app and post it to SoundCloud in one tap, with three months free.",
+     "An app that lets you make a song and post it to SoundCloud in one tap, with three months free."
+    ],
+    "against": 60
+   }
+  },
+  {
+   "id": "videoplugin",
+   "kind": "explainer",
+   "format": "Explainer carousel, 6 cards, 4:5",
+   "source_tag": "instagram",
+   "source": {
+    "label": "evolving.ai on Instagram, Higgsfield inside ChatGPT and Claude (Nov 2026)",
+    "url": "https://www.instagram.com/evolving.ai/p/DftxXqrgIE4/"
+   },
+   "copy": "A connector lets your chatbot call another app for you, like a guest at the table who does one job. Higgsfield's video tools now plug into ChatGPT and Claude this way: here is what that means and how to add it.",
+   "hook": "Your chatbot just invited a video studio to the table.",
+   "pitch": {
+    "see": "A board table of apps as people, one passing a note by pigeon to the video studio.",
+    "lands": "It explains connectors the way you asked, with a tool a video maker can use today.",
+    "why_now": "Higgsfield's plugin for ChatGPT and Claude, November 2026.",
+    "share": "What a connector is, in one picture: a guest who does one job."
+   },
+   "shape": "story",
+   "dive": "A connector (MCP) lets the chatbot send a request to another app and bring its answer back, so the video is made by Higgsfield from inside the chat.",
+   "aim": "utility",
+   "funny": "The chatbot does not make videos; it just knows a guy.",
+   "learned_from": [
+    "\"The idea is lame. This doesn't translate into a carousel properly.\" (your Reject, 9 Nov, of the 16 Nov board's burn-tokens carousel)"
+   ],
+   "cards": [
+    {
+     "words": "Your chatbot just invited a video studio to the table.",
+     "picture": "A board table of apps drawn as people, one empty chair"
+    },
+    {
+     "words": "A connector is a guest who does one job.",
+     "picture": "The video studio takes the chair"
+    },
+    {
+     "words": "You ask the chatbot. It passes a note.",
+     "picture": "A pigeon carrying a note across the table"
+    },
+    {
+     "words": "The guest makes the video and passes it back.",
+     "picture": "The pigeon returning with a film reel"
+    },
+    {
+     "words": "Add it: Plugins, Connect plugins, search Higgsfield.",
+     "picture": "The plugin menu with the search box"
+    },
+    {
+     "words": "Check the price on the day before you rely on it.",
+     "picture": "A price tag face down on the table"
+    }
+   ],
+   "direction": {
+    "look": "Explainer, the board-table picture from your saved card",
+    "format": "6 cards, 4:5",
+    "frames": [
+     {
+      "words": "Your chatbot just invited a video studio to the table.",
+      "picture": "A board table of apps drawn as people, one empty chair"
+     },
+     {
+      "words": "A connector is a guest who does one job.",
+      "picture": "The video studio takes the chair"
+     },
+     {
+      "words": "You ask the chatbot. It passes a note.",
+      "picture": "A pigeon carrying a note across the table"
+     },
+     {
+      "words": "The guest makes the video and passes it back.",
+      "picture": "The pigeon returning with a film reel"
+     },
+     {
+      "words": "Add it: Plugins, Connect plugins, search Higgsfield.",
+      "picture": "The plugin menu with the search box"
+     },
+     {
+      "words": "Check the price on the day before you rely on it.",
+      "picture": "A price tag face down on the table"
+     }
+    ],
+    "tone": "Plain, warm, a little dry; the joke is in the headline and the facts.",
+    "kit": "The v5 Library carousel set, the house palette and type from config/brand-palette.json",
+    "inspo_url": "https://www.instagram.com/evolving.ai/p/DftxXqrgIE4/"
+   },
+   "lookalike": {
+    "pattern": "tool-unlock",
+    "beats": "https://www.instagram.com/evolving.ai/p/DftxXqrgIE4/",
+    "our_take": "The post sold a Black Friday trial; we explain what a connector is, with the board-table picture, and say to check the price on the day."
+   },
+   "read_back": {
+    "readers": [
+     "fresh reader A (separate subagent)",
+     "fresh reader B (separate subagent)"
+    ],
+    "says": [
+     "Your chatbot can now bring in a video-making app to help with your request.",
+     "A chatbot bringing a video app into its work, shown as apps sitting around a board table."
+    ],
+    "against": 60
+   }
+  },
+  {
+   "id": "hackertube",
+   "kind": "voiceover",
+   "format": "Voiceover short with motion graphics, 9:16, about 60 seconds",
+   "style": "voiceover",
+   "source_tag": "instagram",
+   "source": {
+    "label": "therundownai on Instagram, Andrej Karpathy built HackerTube (2 Nov 2026; source: Andrej Karpathy on X)",
+    "url": "https://www.instagram.com/therundownai/p/DfQCWHZEreu/"
+   },
+   "copy": "Fed up with his YouTube recommendations, Andrej Karpathy had an AI build him a video site in about two hours: 6,454 videos picked from 43 million comments where real people recommended them. For a creator, it is a picture of discovery without the algorithm.",
+   "hook": "He got tired of YouTube's picks, so he built a video site in two hours.",
+   "pitch": {
+    "see": "A wall of video thumbnails, each pinned up by a hand rather than a machine.",
+    "lands": "Every creator has a view on the algorithm, and here is someone who skipped it.",
+    "why_now": "Built and shared on 2 November 2026.",
+    "share": "6,454 videos picked by people, not by an algorithm."
+   },
+   "shape": "story",
+   "dive": "The site ranks videos by how often people linked them in 20 years of Hacker News comments, so people do the recommending.",
+   "aim": "interest",
+   "funny": "He fired the algorithm and hired 43 million commenters.",
+   "lookalike": {
+    "pattern": "made-in-hours",
+    "beats": "https://www.instagram.com/evolving.ai/p/DfuWseGgGfl/",
+    "our_take": "The post showed games built in hours; we show a creator-facing idea built in hours: discovery by people."
+   },
+   "learned_from": [
+    "\"It's kind of boring and I also don't really understand the point of it or what the takeaway is.\" (your Reject, 3 Nov, of the 9 Nov board's quote-line post)"
+   ],
+   "read_back": {
+    "readers": [
+     "fresh reader A (separate subagent)",
+     "fresh reader B (separate subagent)"
+    ],
+    "says": [
+     "A man built his own video site in two hours because he was tired of YouTube's recommendations.",
+     "A man who built his own video site in two hours because he was tired of YouTube's picks."
+    ],
+    "against": 60
+   }
+  },
+  {
+   "id": "klingthirty",
+   "kind": "explainer",
+   "format": "Explainer carousel, 5 cards, 4:5",
+   "source_tag": "trade_press",
+   "source": {
+    "label": "Bernama, Kuaishou launches Kling 4.0 (15 Oct 2026)",
+    "url": "https://www.bernama.com/tv/news.php?id=2622573"
+   },
+   "copy": "Kling 4.0 makes single AI video clips up to 30 seconds long from up to 15 of your own reference images or clips. For a small team, that is a storyboard you can watch.",
+   "hook": "Thirty seconds of film from 15 of your own pictures.",
+   "pitch": {
+    "see": "Fifteen photos on a corkboard becoming one moving shot.",
+    "lands": "It is a real step for anyone making videos on a small budget.",
+    "why_now": "Kling 4.0 launched 15 October 2026 and is now open to all users.",
+    "share": "Pin 15 pictures, get 30 seconds of film."
+   },
+   "shape": "story",
+   "dive": "The model takes up to 15 reference inputs, so the characters and places in the clip are yours, and holds them for up to 30 seconds.",
+   "aim": "utility",
+   "funny": "Your mood board now moves, and occasionally gives a character a sixth finger.",
+   "lookalike": {
+    "pattern": "made-in-hours",
+    "beats": "https://www.instagram.com/evolving.ai/p/DfuWseGgGfl/",
+    "our_take": "The post showed what others made; we show how to feed it your own pictures."
+   },
+   "learned_from": [
+    "\"I want actual news items and the content we are going to use here - embedded real world images or videos\" (your Improve, 2 Nov, of the good news)"
+   ],
+   "cards": [
+    {
+     "words": "Thirty seconds of film from 15 of your pictures.",
+     "picture": "A corkboard of 15 photos"
+    },
+    {
+     "words": "Up to 15 references: faces, places, props.",
+     "picture": "Three photos lifting off the board"
+    },
+    {
+     "words": "One clip, up to 30 seconds long.",
+     "picture": "A film strip running 0 to 30"
+    },
+    {
+     "words": "Use it for a storyboard you can watch.",
+     "picture": "A director watching a rough cut"
+    },
+    {
+     "words": "Check each frame before it goes out.",
+     "picture": "A magnifying glass on one frame"
+    }
+   ],
+   "direction": {
+    "look": "Tool card, after the made-in-hours post in your sheet",
+    "format": "5 cards, 4:5",
+    "frames": [
+     {
+      "words": "Thirty seconds of film from 15 of your pictures.",
+      "picture": "A corkboard of 15 photos"
+     },
+     {
+      "words": "Up to 15 references: faces, places, props.",
+      "picture": "Three photos lifting off the board"
+     },
+     {
+      "words": "One clip, up to 30 seconds long.",
+      "picture": "A film strip running 0 to 30"
+     },
+     {
+      "words": "Use it for a storyboard you can watch.",
+      "picture": "A director watching a rough cut"
+     },
+     {
+      "words": "Check each frame before it goes out.",
+      "picture": "A magnifying glass on one frame"
+     }
+    ],
+    "tone": "Plain, warm, a little dry; the joke is in the headline and the facts.",
+    "kit": "The v5 Library carousel set, the house palette and type from config/brand-palette.json",
+    "inspo_url": "https://www.instagram.com/evolving.ai/p/DfuWseGgGfl/"
+   },
+   "read_back": {
+    "readers": [
+     "fresh reader A (separate subagent)",
+     "fresh reader B (separate subagent)"
+    ],
+    "says": [
+     "A tool that turns 15 of your photos into a 30-second film.",
+     "An AI tool that turns 15 of your photos into a 30-second film."
+    ],
+    "against": 60
+   }
+  },
+  {
+   "id": "threecuts",
+   "kind": "explainer",
+   "format": "Explainer carousel, 5 cards, 4:5",
+   "source_tag": "trade_press",
+   "source": {
+    "label": "TechCrunch, YouTube adds new creator tools like video A/B testing, dynamic thumbnails and live dubbing (23 Sep 2026)",
+    "url": "https://techcrunch.com/2026/09/23/youtube-adds-new-creator-tools-like-video-a-b-testing-dynamic-thumbnails-and-live-dubbing/"
+   },
+   "copy": "YouTube lets creators test up to three different cuts of a video to see which opening holds viewers best, and an AI assistant gives feedback on drafts. Here is how a creator uses it on their next upload.",
+   "hook": "Upload three versions. YouTube tells you which opening worked.",
+   "pitch": {
+    "see": "Three thumbnails racing, one pulling ahead.",
+    "lands": "It turns guessing your hook into a test.",
+    "why_now": "Announced at Made on YouTube, 23 September 2026.",
+    "share": "Test three cuts, keep the one people watch."
+   },
+   "shape": "story",
+   "dive": "The test shows different cuts to different viewers and reports which hook holds attention best.",
+   "aim": "utility",
+   "funny": "You no longer have to argue with yourself about the opening; YouTube will do it with strangers.",
+   "lookalike": {
+    "pattern": "tool-unlock",
+    "beats": "https://www.instagram.com/evolving.ai/p/DfxJW8mAElc/",
+    "our_take": "The post sold prompts; we show a test any creator can run on the next video."
+   },
+   "learned_from": [
+    "\"It's kind of boring and I also don't really understand the point of it or what the takeaway is.\" (your Reject, 3 Nov, of the 9 Nov board's quote-line post)"
+   ],
+   "cards": [
+    {
+     "words": "Upload three versions. Keep the one people watch.",
+     "picture": "Three video frames side by side"
+    },
+    {
+     "words": "Each version opens a different way.",
+     "picture": "Three different first frames"
+    },
+    {
+     "words": "YouTube shows each to different viewers.",
+     "picture": "Viewers splitting into three groups"
+    },
+    {
+     "words": "It reports which hook held them longest.",
+     "picture": "A bar chart with one bar tallest"
+    },
+    {
+     "words": "Run it on your next upload.",
+     "picture": "An upload button"
+    }
+   ],
+   "direction": {
+    "look": "Tool card, after the floor-plan prompts post in your sheet",
+    "format": "5 cards, 4:5",
+    "frames": [
+     {
+      "words": "Upload three versions. Keep the one people watch.",
+      "picture": "Three video frames side by side"
+     },
+     {
+      "words": "Each version opens a different way.",
+      "picture": "Three different first frames"
+     },
+     {
+      "words": "YouTube shows each to different viewers.",
+      "picture": "Viewers splitting into three groups"
+     },
+     {
+      "words": "It reports which hook held them longest.",
+      "picture": "A bar chart with one bar tallest"
+     },
+     {
+      "words": "Run it on your next upload.",
+      "picture": "An upload button"
+     }
+    ],
+    "tone": "Plain, warm, a little dry; the joke is in the headline and the facts.",
+    "kit": "The v5 Library carousel set, the house palette and type from config/brand-palette.json",
+    "inspo_url": "https://www.instagram.com/evolving.ai/p/DfxJW8mAElc/"
+   },
+   "read_back": {
+    "readers": [
+     "fresh reader A (separate subagent)",
+     "fresh reader B (separate subagent)"
+    ],
+    "says": [
+     "YouTube lets you upload three versions of a video and tells you which opening worked best.",
+     "YouTube's test: upload three versions of a video and it shows which opening works best."
+    ],
+    "against": 60
+   }
+  },
+  {
+   "id": "tplchihuahua",
+   "kind": "meme",
+   "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+   "source": {
+    "label": "TikTok, #memetemplate",
+    "url": "https://www.tiktok.com/@greenscreenmemes.com/video/770736228"
+   },
+   "copy": "A Chihuahua throws its head back and sings, fully committed and slightly off key. It becomes incongruity at the awards: the AI artist of the year giving its acceptance song.",
+   "hook": "The singing Chihuahua",
+   "pitch": {
+    "see": "A Chihuahua throws its head back and sings, fully committed and slightly off key.",
+    "lands": "Incongruity at the awards: the AI artist of the year giving its acceptance song."
+   },
+   "aim": "humour",
+   "shape": "story",
+   "funny": "Incongruity at the awards: the AI artist of the year giving its acceptance song.",
+   "template": {
+    "title": "The singing Chihuahua",
+    "clip": {
+     "url": "https://www.tiktok.com/@greenscreenmemes.com/video/770736228",
+     "page": "https://www.tiktok.com/@greenscreenmemes.com/video/770736228",
+     "poster": null,
+     "seconds": 7
+    },
+    "found": {
+     "place": "tiktok",
+     "label": "TikTok, #memetemplate",
+     "url": "https://www.tiktok.com/@greenscreenmemes.com/video/770736228"
+    },
+    "credit": "@greenscreenmemes.com on TikTok",
+    "what_happens": "A Chihuahua throws its head back and sings, fully committed and slightly off key.",
+    "why_it_works": "Incongruity at the awards: the AI artist of the year giving its acceptance song.",
+    "mechanism": [
+     "incongruity",
+     "exaggeration"
+    ],
+    "moment": null,
+    "date": "2026-11-12"
+   },
+   "caption_ideas": [
+    "The AI artist of the year performing live",
+    "Me pitching my AI-generated demo to the label",
+    "The AI voice clone the day after you skip the training data"
+   ],
+   "read_back": {
+    "readers": [
+     "fresh reader A (separate subagent)",
+     "fresh reader B (separate subagent)"
+    ],
+    "says": [
+     "A meme of a Chihuahua singing off key, labelled as the AI artist of the year performing live.",
+     "A meme of a Chihuahua singing its heart out, captioned as the AI artist of the year."
+    ],
+    "against": 60
+   }
+  },
+  {
+   "id": "tplarnold",
+   "kind": "meme",
+   "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+   "source": {
+    "label": "TikTok, #memetemplate",
+    "url": "https://www.tiktok.com/@flurrist/video/7323979642249989381"
+   },
+   "copy": "Arnold Schwarzenegger stares, unblinking, nodding slowly to a dance track. It becomes deadpan at the gig: the session musician watching the AI band play their part, note for note.",
+   "hook": "Arnold Schwarzenegger is watching",
+   "pitch": {
+    "see": "Arnold Schwarzenegger stares, unblinking, nodding slowly to a dance track.",
+    "lands": "Deadpan at the gig: the session musician watching the AI band play their part, note for note."
+   },
+   "aim": "humour",
+   "shape": "story",
+   "funny": "Deadpan at the gig: the session musician watching the AI band play their part, note for note.",
+   "template": {
+    "title": "Arnold Schwarzenegger is watching",
+    "clip": {
+     "url": "https://www.tiktok.com/@flurrist/video/7323979642249989381",
+     "page": "https://www.tiktok.com/@flurrist/video/7323979642249989381",
+     "poster": null,
+     "seconds": 10
+    },
+    "found": {
+     "place": "tiktok",
+     "label": "TikTok, #memetemplate",
+     "url": "https://www.tiktok.com/@flurrist/video/7323979642249989381"
+    },
+    "credit": "@flurrist on TikTok",
+    "what_happens": "Arnold Schwarzenegger stares, unblinking, nodding slowly to a dance track.",
+    "why_it_works": "Deadpan at the gig: the session musician watching the AI band play their part, note for note.",
+    "mechanism": [
+     "understatement",
+     "irony"
+    ],
+    "moment": null,
+    "date": "2024-01-14"
+   },
+   "caption_ideas": [
+    "The session drummer watching the AI play his fill back to him",
+    "The VFX artist watching the AI do her shot in four seconds",
+    "The match commentator hearing his AI voice call the goal"
+   ],
+   "read_back": {
+    "readers": [
+     "fresh reader A (separate subagent)",
+     "fresh reader B (separate subagent)"
+    ],
+    "says": [
+     "A meme of Arnold Schwarzenegger staring, about a session drummer watching an AI play his drum fill back.",
+     "A meme of Arnold Schwarzenegger staring and nodding along, joking that a session drummer is watching an AI play his fill back to him."
+    ],
+    "against": 60
+   }
+  },
+  {
+   "id": "tpldumbest",
+   "kind": "meme",
+   "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+   "source": {
+    "label": "TikTok, #memetemplate",
+    "url": "https://www.tiktok.com/@chiefgreenscreens/video/768221443104"
+   },
+   "copy": "Stephen A. Smith turns slowly to camera and, affectionately, calls someone one of the dumbest folks on earth. It becomes precise cruelty aimed at the hype: the sports pundit reacting to the club's AI-made matchday poster with the stadium in the wrong city.",
+   "hook": "Stephen A. Smith: \"you might be one of the dumbest folks on the planet\"",
+   "pitch": {
+    "see": "Stephen A. Smith turns slowly to camera and, affectionately, calls someone one of the dumbest folks on earth.",
+    "lands": "Precise cruelty aimed at the hype: the sports pundit reacting to the club's AI-made matchday poster with the stadium in the wrong city."
+   },
+   "aim": "humour",
+   "shape": "story",
+   "funny": "Precise cruelty aimed at the hype: the sports pundit reacting to the club's AI-made matchday poster with the stadium in the wrong city.",
+   "template": {
+    "title": "Stephen A. Smith: \"you might be one of the dumbest folks on the planet\"",
+    "clip": {
+     "url": "https://www.tiktok.com/@chiefgreenscreens/video/768221443104",
+     "page": "https://www.tiktok.com/@chiefgreenscreens/video/768221443104",
+     "poster": null,
+     "seconds": 9
+    },
+    "found": {
+     "place": "tiktok",
+     "label": "TikTok, #memetemplate",
+     "url": "https://www.tiktok.com/@chiefgreenscreens/video/768221443104"
+    },
+    "credit": "@chiefgreenscreens on TikTok",
+    "what_happens": "Stephen A. Smith turns slowly to camera and, affectionately, calls someone one of the dumbest folks on earth.",
+    "why_it_works": "Precise cruelty aimed at the hype: the sports pundit reacting to the club's AI-made matchday poster with the stadium in the wrong city.",
+    "mechanism": [
+     "sarcasm",
+     "reversal"
+    ],
+    "moment": null,
+    "date": "2026-09-06"
+   },
+   "caption_ideas": [
+    "The club's AI matchday poster put our stadium in the wrong city",
+    "The AI said our striker is \"a strong sixth-round pick\"",
+    "The AI highlight reel only showed the other team scoring"
+   ],
+   "read_back": {
+    "readers": [
+     "fresh reader A (separate subagent)",
+     "fresh reader B (separate subagent)"
+    ],
+    "says": [
+     "A meme of Stephen A. Smith calling someone one of the dumbest folks on the planet, about a club's AI poster naming the wrong city.",
+     "A meme of Stephen A. Smith calling someone one of the dumbest people on earth, joking about a club's AI matchday poster showing the wrong city."
+    ],
+    "against": 60
+   }
+  }
+ ],
+ "sat": [
+  {
+   "id": "goodnews",
+   "weekly": "good_news",
+   "kind": "good_news",
+   "stories_due": "2026-11-26",
+   "format": "Good-news carousel, 6 cards, 4:5",
+   "source_tag": "instagram",
+   "topic": "makers and fans who got more from AI this month",
+   "source": {
+    "label": "Your Instagram inspo sheet, with each story's own source",
+    "url": "https://www.instagram.com/evolving.ai/reel/DfHwPJsgbeb/"
+   },
+   "copy": "An animator, a filmmaker, game makers and football fans all got something from AI this month that millions chose to watch, play or hear. Each one credits the people behind it.",
+   "hook": "This month AI helped makers reach millions, and gave fans Motty back.",
+   "pitch": {
+    "see": "A gentleman with an umbrella helping New Yorkers, a painted Bible epic, a game world in brush strokes and a commentary box with John Motson's coat on the chair.",
+    "lands": "It is uplifting, real and in the reader's world, and each story credits the human.",
+    "why_now": "From 30 October to 26 November 2026; three found in your Instagram inspo sheet, one in the news this week.",
+    "share": "Four makers, four tools, millions of viewers."
+   },
+   "shape": "theme",
+   "aim": "interest",
+   "funny": "The AI did the frames; the human still had to decide the gentleman helps the pizza rat.",
+   "lookalike": {
+    "pattern": "weekly-roundup",
+    "beats": "https://www.instagram.com/evolving.ai/p/Dc_GTNigPhb/",
+    "our_take": "The post rounded up the week's launches; ours rounds up the people who made something with them."
+   },
+   "learned_from": [
+    "\"I want actual news items and the content we are going to use here - embedded real world images or videos\" (your Improve, 2 Nov, of the good news)"
+   ],
+   "stories": [
+    {
+     "headline": "An animator's gentleman went viral helping New Yorkers",
+     "what": "\"Englishman in New York\" by @antrofrog follows an animated gentleman helping pedestrians, buskers and the pizza rat, made with Midjourney for the character and Seedance for the animation.",
+     "why": "One maker reached millions with a hand-drawn look and a kind character.",
+     "kind": "creators",
+     "helps": {
+      "who": "Independent animators",
+      "how": "more successful"
+     },
+     "date": "2026-10-30",
+     "source": {
+      "label": "antrofrog on Instagram, Englishman in New York",
+      "url": "https://www.instagram.com/evolving.ai/reel/DfHwPJsgbeb/"
+     },
+     "media": {
+      "kind": "clip",
+      "url": "https://www.instagram.com/evolving.ai/reel/DfHwPJsgbeb/"
+     },
+     "found": {
+      "label": "Your Instagram inspo sheet",
+      "url": "https://www.instagram.com/evolving.ai/reel/DfHwPJsgbeb/"
+     }
+    },
+    {
+     "headline": "A filmmaker turned classical paintings into a Bible epic",
+     "what": "\"The Biblical Experience\" by @samyazaspeaks moves through the Bible's best-known moments using classical paintings, camera moves and music.",
+     "why": "Centuries of religious art, brought to life by one filmmaker.",
+     "kind": "film_tv",
+     "helps": {
+      "who": "Independent filmmakers",
+      "how": "more successful"
+     },
+     "date": "2026-11-01",
+     "source": {
+      "label": "samyazaspeaks on Instagram, The Biblical Experience",
+      "url": "https://www.instagram.com/evolving.ai/reel/DfMf7sYgHIt/"
+     },
+     "media": {
+      "kind": "clip",
+      "url": "https://www.instagram.com/evolving.ai/reel/DfMf7sYgHIt/"
+     },
+     "found": {
+      "label": "Your Instagram inspo sheet",
+      "url": "https://www.instagram.com/evolving.ai/reel/DfMf7sYgHIt/"
+     }
+    },
+    {
+     "headline": "Players built games and painted worlds in an afternoon",
+     "what": "People used a new Claude model to build playable games and 3D worlds in hours, including a game painted with about 1.5 million brush strokes a frame and a ride through Van Gogh's Starry Night.",
+     "why": "Making a game now starts with an idea, not a team.",
+     "kind": "games",
+     "helps": {
+      "who": "Hobby game makers",
+      "how": "happier"
+     },
+     "date": "2026-11-16",
+     "source": {
+      "label": "evolving.ai on Instagram, games and worlds built with Claude Fable 5.2",
+      "url": "https://www.instagram.com/evolving.ai/p/DfuWseGgGfl/"
+     },
+     "media": {
+      "kind": "photo",
+      "url": "https://www.instagram.com/evolving.ai/p/DfuWseGgGfl/"
+     },
+     "found": {
+      "label": "Your Instagram inspo sheet",
+      "url": "https://www.instagram.com/evolving.ai/p/DfuWseGgGfl/"
+     }
+    },
+    {
+     "headline": "Football fans can hear John Motson commentate again",
+     "what": "EA Sports FC 27 added an optional AI-recreated John Motson from 26 November, built from his original recordings with generative AI, with his widow's and son's permission; EA paid the family for the rights.",
+     "why": "A much-loved voice is back with consent and payment.",
+     "kind": "sports",
+     "helps": {
+      "who": "Football fans and Motson's family",
+      "how": "happier"
+     },
+     "date": "2026-11-25",
+     "source": {
+      "label": "VGC, 25 Nov 2026",
+      "url": "https://www.videogameschronicle.com/news/ea-sports-fc-27-is-adding-an-ai-generated-john-motson-to-its-commentary-team-three-years-after-his-death/"
+     },
+     "media": {
+      "kind": "photo",
+      "url": "https://www.videogameschronicle.com/files/2026/11/ea-fc-motson-320x180.jpg"
+     },
+     "found": {
+      "label": "VGC",
+      "url": "https://www.videogameschronicle.com/news/ea-sports-fc-27-is-adding-an-ai-generated-john-motson-to-its-commentary-team-three-years-after-his-death/"
+     }
+    }
+   ],
+   "candidates": [
+    {
+     "title": "An animator's viral gentleman helps New Yorkers",
+     "url": "https://www.instagram.com/evolving.ai/reel/DfHwPJsgbeb/",
+     "place": "sheet",
+     "date": "2026-10-30"
+    },
+    {
+     "title": "A Bible epic made from classical paintings",
+     "url": "https://www.instagram.com/evolving.ai/reel/DfMf7sYgHIt/",
+     "place": "sheet",
+     "date": "2026-11-01"
+    },
+    {
+     "title": "Games and worlds built in hours",
+     "url": "https://www.instagram.com/evolving.ai/p/DfuWseGgGfl/",
+     "place": "sheet",
+     "date": "2026-11-16"
+    },
+    {
+     "title": "A video site built from people's recommendations",
+     "url": "https://www.instagram.com/therundownai/p/DfQCWHZEreu/",
+     "place": "sheet",
+     "date": "2026-11-02"
+    },
+    {
+     "title": "Ten free animation and VFX tools",
+     "url": "https://www.instagram.com/syntaix.ai/p/DfUpCCLiSfS/",
+     "place": "sheet",
+     "date": "2026-11-04"
+    },
+    {
+     "title": "A late commentator's voice returns to a football game, with his family's blessing",
+     "url": "https://www.videogameschronicle.com/news/ea-sports-fc-27-is-adding-an-ai-generated-john-motson-to-its-commentary-team-three-years-after-his-death/",
+     "place": "news",
+     "date": "2026-11-25"
+    },
+    {
+     "title": "A basketball arena gets an AI partner on its videoboards",
+     "url": "https://blog.google/products-and-platforms/products/gemini/gemini-golden-state/",
+     "place": "news",
+     "date": "2026-11-24"
+    },
+    {
+     "title": "Independent artists get a paid route into AI training",
+     "url": "https://www.hypebot.com/ai-companies-want-independent-music-this-time-theyre-asking-permission/",
+     "place": "news",
+     "date": "2026-11-26"
+    },
+    {
+     "title": "A four-minute AI short wins a Grand Prix",
+     "url": "https://www.bandt.com.au/jamin-tasker-wins-grand-prix-at-tbwas-disrupt-ai-film-festival/",
+     "place": "news",
+     "date": "2026-11-25"
+    },
+    {
+     "title": "A first-time developer's game sells 100,000 copies in three days",
+     "url": "https://automaton-media.com/articles/newsjp/20261119-479967/",
+     "place": "news",
+     "date": "2026-11-19"
+    },
+    {
+     "title": "Nine in ten designers now use AI every week",
+     "url": "https://kesq.com/stacker-ai/2026/11/25/web-designers-share-how-theyve-adapted-to-ai-in-2026/",
+     "place": "news",
+     "date": "2026-11-25"
+    },
+    {
+     "title": "Creators can now have TikTok watch for fakes of their face",
+     "url": "https://digitalmusicnews.com/2026/11/23/tiktok-likeness-detection-release",
+     "place": "news",
+     "date": "2026-11-23"
+    },
+    {
+     "title": "Suno drops new parts straight into a producer's session",
+     "url": "https://www.musicbusinessworldwide.com/suno-launches-bridge-an-app-that-drops-ai-stems-into-ableton-live/",
+     "place": "news",
+     "date": "2026-11-16"
+    },
+    {
+     "title": "An AI-animated feature reaches cinemas on 4 December",
+     "url": "https://filmthreat.com/features/the-first-ai-animated-feature-film-in-theaters-gods-dont-give-gifts-director-zack-london-talks-about-the-future-of-cinema/",
+     "place": "news",
+     "date": "2026-11-05"
+    },
+    {
+     "title": "Authors start receiving AI settlement payments",
+     "url": "https://authorsguild.org/news/anthropic-settlement-update-check-your-claim-by-november-20",
+     "place": "news",
+     "date": "2026-11-23"
+    },
+    {
+     "title": "Your saved card: a positive ray of sunshine",
+     "url": "https://www.instagram.com/p/DfAY9PWFuEX/",
+     "place": "card",
+     "date": "2026-10-28"
+    }
+   ],
+   "cards": [
+    {
+     "words": "This month AI helped four makers reach millions.",
+     "picture": "Four small portraits in a row: an animator, a filmmaker, a game maker, a builder"
+    },
+    {
+     "words": "An animator's gentleman went viral helping New Yorkers.",
+     "picture": "\"Englishman in New York\" by @antrofrog follows an animated gentleman helping pedestrians, buskers and the pizza rat, made with Midjourney for the character and Seedance for the animation"
+    },
+    {
+     "words": "A filmmaker turned classical paintings into a Bible epic.",
+     "picture": "\"The Biblical Experience\" by @samyazaspeaks moves through the Bible's best-known moments using classical paintings, camera moves and music"
+    },
+    {
+     "words": "Players built games and painted worlds in an afternoon.",
+     "picture": "People used a new Claude model to build playable games and 3D worlds in hours, including a game painted with about 1"
+    },
+    {
+     "words": "Football fans can hear John Motson commentate again.",
+     "picture": "A sheepskin coat on a commentary box chair, the microphone live"
+    },
+    {
+     "words": "Each one credits the people behind it.",
+     "picture": "The four makers' hands at work, and a crowd singing"
+    }
+   ],
+   "direction": {
+    "look": "Good-news roundup, after the weekly roundup post in your sheet",
+    "format": "6 cards, 4:5",
+    "frames": [
+     {
+      "words": "This month AI helped four makers reach millions.",
+      "picture": "Four small portraits in a row: an animator, a filmmaker, a game maker, a builder"
+     },
+     {
+      "words": "An animator's gentleman went viral helping New Yorkers.",
+      "picture": "\"Englishman in New York\" by @antrofrog follows an animated gentleman helping pedestrians, buskers and the pizza rat, made with Midjourney for the character and Seedance for the animation"
+     },
+     {
+      "words": "A filmmaker turned classical paintings into a Bible epic.",
+      "picture": "\"The Biblical Experience\" by @samyazaspeaks moves through the Bible's best-known moments using classical paintings, camera moves and music"
+     },
+     {
+      "words": "Players built games and painted worlds in an afternoon.",
+      "picture": "People used a new Claude model to build playable games and 3D worlds in hours, including a game painted with about 1"
+     },
+     {
+      "words": "Football fans can hear John Motson commentate again.",
+      "picture": "A sheepskin coat on a commentary box chair, the microphone live"
+     },
+     {
+      "words": "Each one credits the people behind it.",
+      "picture": "The four makers' hands at work, and a crowd singing"
+     }
+    ],
+    "tone": "Plain, warm, a little dry; the joke is in the headline and the facts.",
+    "kit": "The v5 Library carousel set, the house palette and type from config/brand-palette.json",
+    "inspo_url": "https://www.instagram.com/evolving.ai/p/Dc_GTNigPhb/"
+   },
+   "read_back": {
+    "readers": [
+     "fresh reader A (separate subagent)",
+     "fresh reader B (separate subagent)"
+    ],
+    "says": [
+     "A round-up of good things AI did this month, like helping makers reach millions and bringing back commentator John Motson's voice.",
+     "A good-news roundup: AI helped makers reach millions and brought back commentator John Motson's voice for fans."
+    ],
+    "against": 60
+   }
+  },
+  {
+   "id": "arenanight",
+   "kind": "good_news",
+   "format": "Good-news carousel, 6 cards, 4:5",
+   "source_tag": "radar",
+   "stories_to_find": true,
+   "topic": "a better night out at the game",
+   "source": {
+    "label": "Google, How Gemini is changing the game for Golden State's organization and fans (24 Nov 2026)",
+    "url": "https://blog.google/products-and-platforms/products/gemini/gemini-golden-state/"
+   },
+   "copy": "The Warriors, the champion Valkyries and Chase Center put Gemini into the game night itself, through interactive videoboard features fans can join. Three more stories of a better night at the game are still to find.",
+   "hook": "The Warriors' big screen now talks back. Three more to find.",
+   "pitch": {
+    "see": "A packed arena, the giant videoboard answering a fan's question.",
+    "lands": "A small, fun change to a night out at the game.",
+    "why_now": "Announced 24 November 2026.",
+    "share": "The arena screen that answers back."
+   },
+   "shape": "theme",
+   "aim": "interest",
+   "funny": "The videoboard finally has something to say besides \"MAKE SOME NOISE\".",
+   "lookalike": {
+    "pattern": "weekly-roundup",
+    "beats": "https://www.instagram.com/evolving.ai/p/Dc_GTNigPhb/",
+    "our_take": "The post rounded up the week in AI; ours rounds up better nights at the game."
+   },
+   "learned_from": [
+    "\"I want actual news items and the content we are going to use here - embedded real world images or videos\" (your Improve, 2 Nov, of the good news)"
+   ],
+   "stories": [
+    {
+     "headline": "Warriors fans can play with the arena's big screen",
+     "what": "Google Gemini is now the official AI assistant partner of the Golden State Warriors, the 2026 WNBA champion Valkyries and Chase Center, with interactive videoboard features inside the arena and digital features for fans at home.",
+     "why": "Fans in the seats and at home get a new way to join the game night.",
+     "kind": "sports",
+     "helps": {
+      "who": "Warriors and Valkyries fans",
+      "how": "happier"
+     },
+     "date": "2026-11-24",
+     "source": {
+      "label": "Google, 24 Nov 2026",
+      "url": "https://blog.google/products-and-platforms/products/gemini/gemini-golden-state/"
+     },
+     "media": {
+      "kind": "photo",
+      "url": "https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Google_Gemini_1.width-1200.format-webp.webp"
+     }
+    }
+   ],
+   "cards": [
+    {
+     "words": "The arena's big screen now talks back.",
+     "picture": "A giant videoboard over a packed court"
+    },
+    {
+     "words": "Warriors and Valkyries fans join in from their seats.",
+     "picture": "A fan holding up a phone to the board"
+    },
+    {
+     "words": "Story two, to find.",
+     "picture": "A blank card waiting for its picture"
+    },
+    {
+     "words": "Story three, to find.",
+     "picture": "A blank card waiting for its picture"
+    },
+    {
+     "words": "Story four, to find.",
+     "picture": "A blank card waiting for its picture"
+    },
+    {
+     "words": "A better night out at the game.",
+     "picture": "Confetti over the court"
+    }
+   ],
+   "direction": {
+    "look": "Good-news roundup, after the weekly roundup post in your sheet",
+    "format": "6 cards, 4:5",
+    "frames": [
+     {
+      "words": "The arena's big screen now talks back.",
+      "picture": "A giant videoboard over a packed court"
+     },
+     {
+      "words": "Warriors and Valkyries fans join in from their seats.",
+      "picture": "A fan holding up a phone to the board"
+     },
+     {
+      "words": "Story two, to find.",
+      "picture": "A blank card waiting for its picture"
+     },
+     {
+      "words": "Story three, to find.",
+      "picture": "A blank card waiting for its picture"
+     },
+     {
+      "words": "Story four, to find.",
+      "picture": "A blank card waiting for its picture"
+     },
+     {
+      "words": "A better night out at the game.",
+      "picture": "Confetti over the court"
+     }
+    ],
+    "tone": "Plain, warm, a little dry; the joke is in the headline and the facts.",
+    "kit": "The v5 Library carousel set, the house palette and type from config/brand-palette.json",
+    "inspo_url": "https://www.instagram.com/evolving.ai/p/Dc_GTNigPhb/"
+   },
+   "stories_short": "One story found in the seven days to 26 November in sport; the rest of the week's sport and AI news was a fan backlash or unverified, so it is not padded. The board's \"Find the other 3 stories\" press finds them.",
+   "read_back": {
+    "readers": [
+     "fresh reader A (separate subagent)",
+     "fresh reader B (separate subagent)"
+    ],
+    "says": [
+     "The Warriors' big screen can now answer fans' questions, with three more examples to find.",
+     "An arena's giant screen now answers fans' questions, and there are three more screens like it to find."
+    ],
+    "against": 60
+   }
+  }
+ ]
+}

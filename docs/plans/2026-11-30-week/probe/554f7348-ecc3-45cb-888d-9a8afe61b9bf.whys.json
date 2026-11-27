@@ -1,0 +1,65 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why are authors getting $2,203.56 per work from the Bartz v. Anthropic settlement now, and why is that money often split with a publisher?",
+  "rungs": [
+    {"n": 1,
+     "question": "Why is the first payment only about 70% of each work's share?",
+     "answer": "Anthropic has not yet put the whole $1.5 billion into the settlement fund. The administrator is paying out what is there now, and the rest of each work's share follows once Anthropic makes its final payment into the fund.",
+     "evidence": [
+       {"url": "https://authorsguild.org/news/anthropic-settlement-update-check-your-claim-by-november-20", "domain": "authorsguild.org", "date": "2026-11-23", "quote": "These first payments will be only about 70 percent of the total amount payable to you because Anthropic has not fully funded the settlement fund, and the remainder will be paid in future payments."},
+       {"url": "http://www.anthropiccopyrightsettlement.com/", "domain": "anthropiccopyrightsettlement.com", "date": "2026-11-24", "quote": "The first installment will be about 70% of the total award for each Work. The remainder will be paid after Anthropic makes its final payment into the Settlement Fund."}
+     ],
+     "strength": "documented",
+     "counter": {"text": "none found; searched the two Authors Guild pages and the settlement administrator's home page and FAQ."},
+     "mechanism_type": "the money: staged funding of a settlement fund",
+     "stop": null},
+    {"n": 2,
+     "question": "Why has Anthropic not fully funded the settlement yet?",
+     "answer": "The settlement lets Anthropic pay in four instalments: $300 million, $300 million, $450 million, then a last $450 million. The first three add up to $1.05 billion, which is 70% of $1.5 billion. The last one is due by September 2027, or sooner if funding milestones are met.",
+     "evidence": [
+       {"url": "https://www.anthropiccopyrightsettlement.com/faq", "domain": "anthropiccopyrightsettlement.com", "date": "2026-11-24", "quote": "Anthropic will fund the Settlement Fund in four installments, including (1) three-hundred-million dollars ($300,000,000) paid on October 2, 2025, (2) three-hundred-million dollars ($300,000,000) paid no later than five (5) business days of entry of Final Approval, (3) four-hundred-fifty-million dollars ($450,000,000) paid by September 25, 2026, and (4) four-hundred-fifty-million dollars ($450,000,000) paid by September 27, 2027."},
+       {"url": "https://authorsguild.org/advocacy/artificial-intelligence/what-authors-need-to-know-about-the-anthropic-settlement/", "domain": "authorsguild.org", "date": "2026-11-24", "quote": "$450 million by September 25, 2027 (within 24 months of preliminary approval, or sooner if specified funding milestones are met)"}
+     ],
+     "strength": "documented",
+     "counter": {"text": "The two sites differ on the trigger. The administrator's FAQ gives a fixed date (27 September 2027) and names no early trigger; the Authors Guild says an IPO or a large investment brings the payment forward to about 30 days, and that Anthropic's IPO 'happened last week'. Only the Authors Guild says the IPO happened; nothing else read confirms it. The 70% figure matching $1.05bn of $1.5bn is my arithmetic, not stated by either source."},
+     "mechanism_type": "the contract: instalment schedule in the settlement agreement",
+     "stop": null},
+    {"n": 3,
+     "question": "Why is an author's share so often half of the per-work award?",
+     "answer": "The claim form sets a default split of 50% to the author side and 50% to the publisher side for trade and university press books. It is meant to mirror usual publishing contracts and lets claims be paid without anyone producing a contract. Either side can claim a different split; education books have no default.",
+     "evidence": [
+       {"url": "https://authorsguild.org/advocacy/artificial-intelligence/what-authors-need-to-know-about-the-anthropic-settlement/", "domain": "authorsguild.org", "date": "2026-11-24", "quote": "This default is meant to reflect the contractual norms in the industry but allows those with different terms in their contracts to negotiate other splits with their publisher, based on contractual terms."},
+       {"url": "https://www.anthropiccopyrightsettlement.com/faq", "domain": "anthropiccopyrightsettlement.com", "date": "2026-11-24", "quote": "The Settlement provides that for many types of works such as trade books and university press books, the payment, by default, will be split 50-50 between authors and publishers. This 50-50 split is called the Default Option."}
+     ],
+     "strength": "documented",
+     "counter": {"text": "The default is not universal: sole owners (self-published authors, reverted rights) get 100%, and Education Works have no default at all, per both the Authors Guild guide and the administrator's FAQ."},
+     "mechanism_type": "the rule: default allocation in the claim form",
+     "stop": null},
+    {"n": 4,
+     "question": "Why do publishers have a claim to the money at all?",
+     "answer": "The class covers legal as well as beneficial owners of the right to copy each book. A publisher holding an exclusive licence counts as the legal owner, so it is a class member alongside the author. Where a publisher is the registered owner, as Wizards of the Coast was, it filed the claim in its own name.",
+     "evidence": [
+       {"url": "https://authorsguild.org/advocacy/artificial-intelligence/what-authors-need-to-know-about-the-anthropic-settlement/", "domain": "authorsguild.org", "date": "2026-11-24", "quote": "Note that under copyright law, when the author grants the publisher an exclusive license to publish the book in exchange for percentage royalties, the publisher is deemed the legal owner of the publication rights granted to it, and the author is deemed the “beneficial” owner of that right."},
+       {"url": "https://www.linkedin.com/feed/update/urn:li:activity:7529611634730778625/", "domain": "linkedin.com", "date": "2026-11-20", "quote": "Because Wizards is the registered owner of the Works, Wizards filed the claims in its name."},
+       {"url": "https://everythingedinburgh.com/games/news/wizards-of-the-coast-ai-settlement-payout-dnd-writers/", "domain": "everythingedinburgh.com", "date": "2026-11-22", "quote": "Because publishers often hold the registered copyright on work-for-hire tie-in fiction, they filed the claims in their own names"}
+     ],
+     "strength": "documented",
+     "counter": {"text": "A publisher can choose not to take its half: Wizards of the Coast is passing its share to its D&D writers (LinkedIn post, PC Gamer, EverythingEdinburgh). EverythingEdinburgh calls this an outlier and says very few publishers have agreed to different splits, but gives no count."},
+     "mechanism_type": "the rule: class definition and copyright ownership",
+     "stop": null},
+    {"n": 5,
+     "question": "Why were tens of thousands of claims corrected, and why are some still disputed?",
+     "answer": "The form had separate choices, and many authors and publishers ticked 'sole owner' when they meant 'sole author', claiming 100%. Other disputes are real: publishers say rights on old books have not reverted under the contract, and the administrator does not check whether a book is in print.",
+     "evidence": [
+       {"url": "https://authorsguild.org/news/anthropic-settlement-update-check-your-claim-by-november-20", "domain": "authorsguild.org", "date": "2026-11-23", "quote": "They describe the 50/50 split as what the settlement contemplates and suggest that authors who claimed 100 percent may have meant to select “sole author” rather than “sole owner.” Many authors and publishers did make that mistake, and tens of thousands of claims have been corrected."}
+     ],
+     "strength": "inferred",
+     "counter": {"text": "Only one site (the Authors Guild) reports the tick-box mistake and the correction count; the administrator's pages read describe disputes and the Special Master but not the mistake. The Guild also says not every 100% claim was a mistake and that publishers' records on reversions are often unreliable."},
+     "mechanism_type": "the rule: claim-form ownership categories and dispute process",
+     "stop": "motive_not_mechanism"}
+  ],
+  "landing": {
+    "shows": "The $2,203.56 is 70% of an equal per-work award because Anthropic is paying the fund in instalments and the last $450 million is still to come. Who gets that money follows copyright ownership: a publisher with an exclusive licence is a legal owner, so the claim form's default gives it half of trade and university press awards unless the two sides agree otherwise or the rights have reverted. Wizards of the Coast chose to hand its half to writers; the sources say why it could, not why most publishers keep theirs.",
+    "open_question": "If a publisher's half comes from owning the right to copy a book that a pirate library copied, what, beyond the contract, decides whether that half goes to the company or to the person who wrote it?"
+  }
+}

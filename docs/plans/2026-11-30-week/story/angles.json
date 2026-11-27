@@ -1,0 +1,812 @@
+{
+ "options": {
+  "mon/554f7348-ecc3-45cb-888d-9a8afe61b9bf": [
+   {
+    "lens": "series",
+    "text": "An author owed money from the Anthropic settlement gets about seven tenths of it now and waits for the rest.",
+    "rests_on": "Only approximately 70 percent ($2,203.56) will be paid out now"
+   },
+   {
+    "lens": "series",
+    "text": "The last $450 million owed to writers is tied to the AI company's own fundraising: the authors get paid in full when the company does.",
+    "rests_on": "the final payment of about $450 million is due within about 30 days of Anthropic's IPO or a significant investment"
+   },
+   {
+    "lens": "series",
+    "text": "Before any money moved, the claims themselves needed fixing, at a scale of tens of thousands.",
+    "rests_on": "tens of thousands of claims have been corrected"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Authors whose books trained an AI are being paid in instalments, and the last one waits on the AI company's own stock market debut. The writers now have a quiet stake in the IPO of the firm they sued.",
+    "rests_on": "the final payment of about $450 million is due within about 30 days of Anthropic's IPO or a significant investment, and no later than September 2027"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "A settlement about copying work without checking it came with its own correction notice: tens of thousands of claims had to be fixed first.",
+    "rests_on": "\"tens of thousands of claims have been corrected\""
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Authors whose books trained an AI are paid only part of what they are owed now, and the rest waits on the AI company's own IPO or big investment. The writers' final cheque is tied to the company's next funding round.",
+    "rests_on": "the final payment of about $450 million is due within about 30 days of Anthropic's IPO or a significant investment, and no later than September 2027"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The payout to authors is down to the cent, $2,203.56, and it is still only approximately 70 percent of what they get.",
+    "rests_on": "\"Only approximately 70 percent ($2,203.56) will be paid out now\""
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "A settlement over writing has needed tens of thousands of corrections to its own paperwork.",
+    "rests_on": "\"tens of thousands of claims have been corrected\""
+   },
+   {
+    "lens": "funny",
+    "text": "The first AI royalty cheque for most novelists comes with a co-signer: their publisher.",
+    "rests_on": "Authors Guild, 23 Nov 2026: \"Only approximately 70 percent ($2,203.56) will be paid out now\"; the final payment of about $450 million is due within about 30 days of Anthropic's IPO or a significant investment, and no later than September 2027; \"tens of thousands of claims have been corrected\"."
+   }
+  ],
+  "mon/f5721a93-5b59-4d86-b53e-24bc70510d84": [
+   {
+    "lens": "series",
+    "text": "Warner's boss now counts deals with AI music companies, Suno and Udio among them, as a source of streaming growth.",
+    "rests_on": "licensing deals to contribute materially to our subscription streaming revenue growth starting in fiscal '27"
+   },
+   {
+    "lens": "series",
+    "text": "The year Kyncl named is not some distant one: Warner's fiscal 2027 is already under way.",
+    "rests_on": "fiscal 2027 began on 1 October 2026"
+   },
+   {
+    "lens": "series",
+    "text": "Under these deals, fully AI-made tracks are taken out of the royalty pot that human artists share.",
+    "rests_on": "requiring fully gen-AI content to be identified and removed from pro rata royalty shares"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The companies a label once fought over AI music are now in its revenue plan, listed by name as growth.",
+    "rests_on": "naming Suno, Stability AI, KLAY and Udio"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Warner will take money from AI music firms while making sure fully AI songs are kept out of the royalty pot. The machines can pay in, they just cannot be paid out.",
+    "rests_on": "Warner has expanded deals requiring fully gen-AI content to be identified and removed from pro rata royalty shares"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Warner wants AI music to boost its streaming revenue, and has also signed deals that take fully AI-made tracks out of the royalty pot. AI is welcome to make the label money, just not to be paid like an artist.",
+    "rests_on": "Warner has expanded deals requiring fully gen-AI content to be identified and removed from pro rata royalty shares"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Warner's \"fiscal '27\" sounds a year off, but in label time it began on 1 October 2026.",
+    "rests_on": "fiscal 2027 began on 1 October 2026"
+   },
+   {
+    "lens": "funny",
+    "text": "The label that sued the AI app now hopes it does very well.",
+    "rests_on": "Music Business Worldwide, 6 Aug 2026: Warner CEO Robert Kyncl expects AI \"licensing deals to contribute materially to our subscription streaming revenue growth starting in fiscal '27\", naming Suno, Stability AI, KLAY and Udio; fiscal 2027 began on 1 October 2026; Warner has expanded deals requiring fully gen-AI content to be identified and removed from pro rata royalty shares."
+   }
+  ],
+  "mon/013ae567-6e91-4c57-9128-9ce85eef667c": [
+   {
+    "lens": "series",
+    "text": "ITV gives away its AI ad maker, and in its first year it brought 16 businesses to TV that had never advertised there.",
+    "rests_on": "drew 16 new-to-TV small and medium-sized businesses in its first year"
+   },
+   {
+    "lens": "series",
+    "text": "The free AI tool worked as a front door: five of those first-timers went on to pay ITV's human creative team, with bigger budgets.",
+    "rests_on": "five of the 16 later moved to ITV's in-house creative team with bigger TV budgets"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "ITV's free AI ad maker worked so well as a gateway that almost a third of its users went off and hired ITV's human creative team instead.",
+    "rests_on": "five of the 16 later moved to ITV's in-house creative team with bigger TV budgets"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "ITV's free AI ad maker worked as a recruiting tool for its human creative team: five of its first 16 users went on to hire the people.",
+    "rests_on": "five of the 16 later moved to ITV's in-house creative team with bigger TV budgets"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "A year of free AI TV ads brought in 16 small businesses, a number you could fit around one meeting table.",
+    "rests_on": "GenAI Ads Manager drew 16 new-to-TV small and medium-sized businesses in its first year"
+   },
+   {
+    "lens": "funny",
+    "text": "A broadcaster gives away the advert to sell you the advert.",
+    "rests_on": "The Media Leader UK, 9 Oct 2026: GenAI Ads Manager drew 16 new-to-TV small and medium-sized businesses in its first year; it is free for advertisers; five of the 16 later moved to ITV's in-house creative team with bigger TV budgets."
+   }
+  ],
+  "mon/80baed3f-3833-4bce-9afd-040a4868e562": [
+   {
+    "lens": "series",
+    "text": "An AI music company's website hands customers a ready-made way to stop paying songwriters' collecting society.",
+    "rests_on": "YourNeuroTune's website offers customers a template to cancel existing BumaStemra licences"
+   },
+   {
+    "lens": "series",
+    "text": "The collecting society's whole case fits in one line about money.",
+    "rests_on": "If you make money from music, you pay the creators."
+   },
+   {
+    "lens": "series",
+    "text": "The licences at stake belong to businesses in four countries, not one.",
+    "rests_on": "the company serves more than 450 customers across four countries"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "An AI music company did not just skip paying for music licences; its website hands customers a ready-made letter to cancel theirs.",
+    "rests_on": "YourNeuroTune's website offers customers a template to cancel existing BumaStemra licences"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The rights body's whole legal argument fits on a fridge magnet.",
+    "rests_on": "\"If you make money from music, you pay the creators.\""
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "An AI music company did not just skip paying songwriters' royalties; its website hands customers a ready-made template to cancel their licences.",
+    "rests_on": "YourNeuroTune's website offers customers a template to cancel existing BumaStemra licences"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The rights society gave the company a deadline down to the hour, noon on 25 November, before saying it would see it in court.",
+    "rests_on": "BumaStemra gave it until noon on 25 November and then said it would go to court"
+   },
+   {
+    "lens": "funny",
+    "text": "The background music is so background it comes with a letter to cancel the people who wrote it.",
+    "rests_on": "IBTimes UK, 25 Nov 2026: YourNeuroTune's website offers customers a template to cancel existing BumaStemra licences; BumaStemra gave it until noon on 25 November and then said it would go to court; co-founder Sam Jansen said in October the company serves more than 450 customers across four countries. Michiel Laan of BumaStemra: \"If you make money from music, you pay the creators.\""
+   }
+  ],
+  "wed/cf6e7746-6ce2-4c68-904a-d1ae1988bef9": [
+   {
+    "lens": "series",
+    "text": "Suno's Bridge drops AI stems straight into an Ableton session, priced in credits: $30 a month buys 10,000 of them.",
+    "rests_on": "Premier costs $30 a month with 10,000 credits"
+   },
+   {
+    "lens": "series",
+    "text": "Opening a session in Bridge means your Ableton project and its audio files travel to your Suno account.",
+    "rests_on": "Bridge uploads the Ableton project and its audio files to the user's Suno account"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Suno's new Ableton helper is generous with its uploads: open a session and your whole project, audio and all, goes to your Suno account.",
+    "rests_on": "when a session is opened, Bridge uploads the Ableton project and its audio files to the user's Suno account"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "At 10 credits a generation, the $30 plan buys about a thousand tries at the stem you wanted.",
+    "rests_on": "each generation costs 10 Suno credits; Premier costs $30 a month with 10,000 credits"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Open a session in Suno's new Ableton app and it uploads your whole project and its audio files to Suno. The tool that adds AI stems also takes a copy of your song.",
+    "rests_on": "when a session is opened, Bridge uploads the Ableton project and its audio files to the user's Suno account"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Each AI stem is priced in Suno's own currency: 10 credits a go, out of 10,000 for $30 a month.",
+    "rests_on": "each generation costs 10 Suno credits; Premier costs $30 a month with 10,000 credits"
+   },
+   {
+    "lens": "funny",
+    "text": "The bass player who never misses a session also takes a copy of every session home.",
+    "rests_on": "Music Business Worldwide, 16 Nov 2026: Bridge \"went live in beta on November 13\"; each generation costs 10 Suno credits; Premier costs $30 a month with 10,000 credits; when a session is opened, Bridge uploads the Ableton project and its audio files to the user's Suno account."
+   }
+  ],
+  "wed/972b7721-4e4e-477f-b5cf-20164fd8260c": [
+   {
+    "lens": "series",
+    "text": "Suno's new video tool is built on another company's video model, so a music app now makes pictures with borrowed machinery.",
+    "rests_on": "it runs on H3 Move, based on MiniMax's H3 video model"
+   },
+   {
+    "lens": "series",
+    "text": "The guard sits at the request: prompts naming specific artists, public figures or copyrighted works are blocked before anything is made.",
+    "rests_on": "Suno added filters to block prompts that depict specific artists, public figures or copyrighted works"
+   },
+   {
+    "lens": "series",
+    "text": "What it makes is the kit around a song: lyric videos, album art and short clips.",
+    "rests_on": "it makes lyric videos, album art and clips of up to 15 seconds"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "An AI music company built a video tool and then had to add filters so people could not use it to make videos of the artists and works it is often accused of borrowing from.",
+    "rests_on": "Suno added filters to block prompts that depict specific artists, public figures or copyrighted works"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Suno, a company built on making music from other people's music, has added filters so its new video tool will not copy specific artists or copyrighted works.",
+    "rests_on": "Suno added filters to block prompts that depict specific artists, public figures or copyrighted works"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The music video tool tops out at 15 seconds, shorter than most choruses.",
+    "rests_on": "it makes lyric videos, album art and clips of up to 15 seconds"
+   },
+   {
+    "lens": "funny",
+    "text": "The music app learned to make videos, and brought a friend who does the actual drawing.",
+    "rests_on": "Music Business Worldwide, 23 Nov 2026: Suno launched Visuals on 17 November; it runs on H3 Move, based on MiniMax's H3 video model; it makes lyric videos, album art and clips of up to 15 seconds; Suno added filters to block prompts that depict specific artists, public figures or copyrighted works."
+   }
+  ],
+  "wed/08442c41-534a-4523-9818-0884e2fc985a": [
+   {
+    "lens": "series",
+    "text": "To be protected from fakes of your face, you first prove who you are with an ID check.",
+    "rests_on": "sign up by verifying their ID with a trusted third-party partner"
+   },
+   {
+    "lens": "series",
+    "text": "The checker finds AI content that carries a label or a hidden watermark, which is to say the content that has announced itself.",
+    "rests_on": "looks for Content Credentials metadata and invisible watermarks"
+   },
+   {
+    "lens": "series",
+    "text": "The scale of the labelling job, by TikTok's own count, runs to about five billion uploads.",
+    "rests_on": "TikTok says it has labelled about five billion AI uploads"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "To prove a face online is really yours, you first prove to a third party that your face is really yours.",
+    "rests_on": "\"sign up by verifying their ID with a trusted third-party partner\""
+   },
+   {
+    "lens": "funniest_true",
+    "text": "TikTok has labelled about five billion AI uploads, which is more than half the people on Earth, one each.",
+    "rests_on": "TikTok says it has labelled about five billion AI uploads"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "To stop strangers using your face, you first prove it is your face, by handing your ID to a third party.",
+    "rests_on": "\"sign up by verifying their ID with a trusted third-party partner\""
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The checker for AI fakes covers CapCut and Dreamina, apps people use to make AI images and video.",
+    "rests_on": "the checker covers TikTok, CapCut, Dreamina, Hypic and Pippit"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "TikTok says it has put an AI label on about five billion uploads.",
+    "rests_on": "TikTok says it has labelled about five billion AI uploads"
+   },
+   {
+    "lens": "funny",
+    "text": "The fake-face detector asks for your face, your ID and a stranger to vouch for you.",
+    "rests_on": "Digital Music News, 23 Nov 2026: Likeness Detection is globally available to eligible creators and public officials, who \"sign up by verifying their ID with a trusted third-party partner\"; the checker covers TikTok, CapCut, Dreamina, Hypic and Pippit and looks for Content Credentials metadata and invisible watermarks; TikTok says it has labelled about five billion AI uploads."
+   }
+  ],
+  "wed/8c6c717d-00b4-4d26-b837-06b89709220a": [
+   {
+    "lens": "series",
+    "text": "Two appeals through YouTube's system failed; one call from a journalist got the video back in about a day.",
+    "rests_on": "YouTube restored it about 24 hours after 404 Media contacted Media Nov"
+   },
+   {
+    "lens": "series",
+    "text": "The claimant on the other side is no single rival but an operation of about 500 channels.",
+    "rests_on": "Media Nov Records runs about 500 YouTube channels"
+   },
+   {
+    "lens": "series",
+    "text": "The musician's verdict on the process is five words long.",
+    "rests_on": "It feels like a broken system."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "A musician appealed twice through YouTube's own system and lost both times; one email from a journalist fixed it in about a day.",
+    "rests_on": "YouTube restored it about 24 hours after 404 Media contacted Media Nov"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "A musician lost two appeals to YouTube over his own song, then got it back about a day after a reporter sent one email.",
+    "rests_on": "YouTube removed the video in October and rejected both of Shokin's counterclaims; YouTube restored it about 24 hours after 404 Media contacted Media Nov"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The company that claimed his music runs about 500 YouTube channels.",
+    "rests_on": "Media Nov Records runs about 500 YouTube channels"
+   },
+   {
+    "lens": "funny",
+    "text": "A song written before anyone alive was born was finally claimed by Media Nov, with 500 channels of AI wallpaper.",
+    "rests_on": "Digital Music News, 18 Nov 2026: Media Nov Records runs about 500 YouTube channels; YouTube removed the video in October and rejected both of Shokin's counterclaims; YouTube restored it about 24 hours after 404 Media contacted Media Nov. Shokin: \"It feels like a broken system.\""
+   }
+  ],
+  "fri/16b1fd4f-3785-4842-9a2b-19ccfe889fa8": [
+   {
+    "lens": "series",
+    "text": "Ubisoft's official word is encouragement, not a mandate.",
+    "rests_on": "Ubisoft says it encourages developers to use generative AI rather than mandate it"
+   },
+   {
+    "lens": "series",
+    "text": "Against that, a source describes a pitch process where skipping AI needs a written excuse.",
+    "rests_on": "If you planned on not using it, you would have to have a reason"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "At Ubisoft, reportedly, the thing you have to justify in a game pitch is doing it without the AI.",
+    "rests_on": "\"If you planned on not using it, you would have to have a reason\""
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The official line is encouragement, not a mandate, which is a fine distinction once a pitch needs a reason for saying no.",
+    "rests_on": "Ubisoft says it encourages developers to use generative AI rather than mandate it"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "At Ubisoft, a game pitch that leaves out AI reportedly needs a reason, as if making things by hand were the risky choice.",
+    "rests_on": "one source said \"If you planned on not using it, you would have to have a reason\""
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Ubisoft's AI unit is called Motherbrain.",
+    "rests_on": "Motherbrain is \"a dedicated subsidiary developing proprietary technologies for gameplay to empower creators\" (Yves Guillemot)"
+   },
+   {
+    "lens": "funny",
+    "text": "You are free to make the game without AI; please attach a short essay explaining your feelings.",
+    "rests_on": "VGC, 25 Nov 2026: Ubisoft is reportedly asking developers pitching new games to outline how generative AI will be used; one source said \"If you planned on not using it, you would have to have a reason\"; Ubisoft says it encourages developers to use generative AI rather than mandate it; Motherbrain is \"a dedicated subsidiary developing proprietary technologies for gameplay to empower creators\" (Yves Guillemot)."
+   }
+  ],
+  "fri/5d55e729-43fd-433b-b4e5-056f5329cb05": [
+   {
+    "lens": "series",
+    "text": "The headline number: nine in ten designers use AI every week, up from about half a year before.",
+    "rests_on": "91% of designers use AI at least weekly, up from 54% a year earlier"
+   },
+   {
+    "lens": "series",
+    "text": "The evidence behind it is a survey of 900-plus designers run by Designer Fund and Foundation Capital, so it is worth knowing who asked.",
+    "rests_on": "a survey of more than 900 designers by Designer Fund and Foundation Capital"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "In one year designers went from about half using AI weekly to nine in ten; the holdouts could now fit round a small dinner table in most studios.",
+    "rests_on": "91% of designers use AI at least weekly, up from 54% a year earlier"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "In one year, designers who use AI weekly went from just over half to nine in ten.",
+    "rests_on": "91% of designers use AI at least weekly, up from 54% a year earlier"
+   },
+   {
+    "lens": "funny",
+    "text": "Nine in ten designers now have an assistant who never sleeps and never once gets the kerning right.",
+    "rests_on": "KESQ (Stacker, Wix Studio), 25 Nov 2026: 91% of designers use AI at least weekly, up from 54% a year earlier, from a survey of more than 900 designers by Designer Fund and Foundation Capital."
+   }
+  ],
+  "fri/a4b34048-ab39-49da-a251-eaa58ebe2eaf": [
+   {
+    "lens": "series",
+    "text": "The \"AI animated feature\" still had a cast: a dedicated ensemble of professional voice actors.",
+    "rests_on": "dedicated ensemble of professional voice actors"
+   },
+   {
+    "lens": "series",
+    "text": "Its theatrical mix took a sound team four days in a Stockholm studio, which is how films have always been finished.",
+    "rests_on": "the sound team spent four days in a Stockholm studio on the theatrical mix"
+   },
+   {
+    "lens": "series",
+    "text": "The director's claim is about permission more than pictures: without AI, nobody would have funded it.",
+    "rests_on": "This film just wouldn't exist. It wouldn't get greenlit."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The first AI animated feature in cinemas needed a co-writer, editors, colourists, a Foley artist, a sound team and a cast of voice actors. The credits roll looks very human.",
+    "rests_on": "a \"hybrid pipeline\" with a co-writer, traditional post-production editors and colourists, a Foley artist, a sound team and a \"dedicated ensemble of professional voice actors\""
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The AI film still sent its sound team to a Stockholm studio for four days, because some things you still mix in a room.",
+    "rests_on": "the sound team spent four days in a Stockholm studio on the theatrical mix"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The AI animated feature needed a co-writer, editors, colourists, a Foley artist, a sound team and a cast of professional voice actors. Plenty of people still had a job on the AI film.",
+    "rests_on": "a \"hybrid pipeline\" with a co-writer, traditional post-production editors and colourists, a Foley artist, a sound team and a \"dedicated ensemble of professional voice actors\""
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The AI film's sound team still spent four days in a real studio in Stockholm on the mix.",
+    "rests_on": "the sound team spent four days in a Stockholm studio on the theatrical mix"
+   },
+   {
+    "lens": "funny",
+    "text": "The first film made by AI needed four days in a Stockholm studio to get the footsteps right.",
+    "rests_on": "Film Threat, 5 Nov 2026: a \"hybrid pipeline\" with a co-writer, traditional post-production editors and colourists, a Foley artist, a sound team and a \"dedicated ensemble of professional voice actors\"; the sound team spent four days in a Stockholm studio on the theatrical mix; London: \"This film just wouldn't exist. It wouldn't get greenlit.\""
+   }
+  ],
+  "fri/ac13c2b0-5426-4018-aaeb-eed82b9d0a6c": [
+   {
+    "lens": "series",
+    "text": "The judges at the AI music awards were AI artists, which makes it a very small room.",
+    "rests_on": "winners were picked by AI artists who are members of the Sonic Intelligence Academy"
+   },
+   {
+    "lens": "series",
+    "text": "The avatar took the trophies, but the human behind it says she wrote every lyric herself.",
+    "rests_on": "Jones said she wrote all of the lyrics and then set them to music with the help of AI"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The AI music awards were judged by AI artists, which makes it the rare awards show where the voters and the nominees share a category.",
+    "rests_on": "winners were picked by AI artists who are members of the Sonic Intelligence Academy"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "AI artist of the year was an avatar whose lyrics were all written by a person.",
+    "rests_on": "Jones said she wrote all of the lyrics and then set them to music with the help of AI"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "At the first AI music awards, the voters were AI artists, and they gave the top three prizes to an AI avatar.",
+    "rests_on": "winners were picked by AI artists who are members of the Sonic Intelligence Academy"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The AI artist of the year has a human who wrote all of its lyrics.",
+    "rests_on": "Jones said she wrote all of the lyrics and then set them to music with the help of AI"
+   },
+   {
+    "lens": "funny",
+    "text": "The AI artist of the year thanked her writer, who is also her.",
+    "rests_on": "Reuters, 14 Nov 2026: the night's top awards of AI artist, song and album of the year went to Xania Monet, an AI-generated avatar; Jones said she wrote all of the lyrics and then set them to music with the help of AI; winners were picked by AI artists who are members of the Sonic Intelligence Academy."
+   }
+  ],
+  "tue/photonstems": [
+   {
+    "lens": "series",
+    "text": "Splitting a finished song into its parts used to mean a studio; Photon does it on your own computer.",
+    "rests_on": "on your own computer"
+   },
+   {
+    "lens": "series",
+    "text": "The price gap is $90, set by the calendar.",
+    "rests_on": "It costs $259 until 7 December, against $349 after."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Software that pulls up to six voices out of one recording is the first tool that can finally tell you who was singing flat in the group take.",
+    "rests_on": "up to six voices out of one recording"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Software can now pull up to six separate voices out of one recording, on an ordinary computer.",
+    "rests_on": "up to six voices out of one recording, on your own computer"
+   },
+   {
+    "lens": "funny",
+    "text": "Your laptop can now un-bake a cake, if the cake is a song.",
+    "rests_on": "iZotope Photon pulls a finished song apart into its parts, and up to six voices out of one recording, on your own computer. It costs $259 until 7 December, against $349 after."
+   }
+  ],
+  "tue/splicecreate": [
+   {
+    "lens": "series",
+    "text": "Splice gives away the making and charges for the leaving: exporting and licensing sit behind the monthly plan.",
+    "rests_on": "Making is free; exporting and licensing need the $9.99-a-month plan."
+   },
+   {
+    "lens": "series",
+    "text": "The sample library is the instrument: more than three million licensed sounds come built in.",
+    "rests_on": "more than three million licensed sounds built in"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Splice's new app is free to make music in. Letting anyone else hear it is the part with the monthly fee.",
+    "rests_on": "Making is free; exporting and licensing need the $9.99-a-month plan."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Splice's new music app is free to make in, and charges at the moment you want anyone to hear it.",
+    "rests_on": "Making is free; exporting and licensing need the $9.99-a-month plan"
+   },
+   {
+    "lens": "funny",
+    "text": "The studio is free, the door out costs $9.99 a month.",
+    "rests_on": "Splice Create is a free Mac music app with more than three million licensed sounds built in and an assistant you can talk to. Making is free; exporting and licensing need the $9.99-a-month plan."
+   }
+  ],
+  "tue/djvoices": [
+   {
+    "lens": "series",
+    "text": "Spotify's AI DJ now has a setting that cuts most of the talking between songs, so your track gets more of the airtime.",
+    "rests_on": "a setting that cuts most of the talking between songs"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Spotify gave its AI DJ nine new voices and, in the same update, a setting to make it stop talking.",
+    "rests_on": "Spotify's AI DJ now has nine new voices and a setting that cuts most of the talking between songs."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Spotify gave its AI DJ nine new voices and, in the same update, a setting to make it stop talking.",
+    "rests_on": "Spotify's AI DJ now has nine new voices and a setting that cuts most of the talking between songs"
+   },
+   {
+    "lens": "funny",
+    "text": "Spotify gave its DJ nine new voices and a button to use none of them.",
+    "rests_on": "Spotify's AI DJ now has nine new voices and a setting that cuts most of the talking between songs. For an artist, that means the DJ that introduces your track can now talk less and play more."
+   }
+  ],
+  "tue/freeanimation": [
+   {
+    "lens": "series",
+    "text": "The cost of a working animation toolkit has dropped to nothing for most of the job.",
+    "rests_on": "Free, open-source tools now cover most of an animation studio"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Motion capture used to mean a suit covered in ping-pong balls; now a webcam does a fair bit of it for nothing.",
+    "rests_on": "motion capture from a webcam"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Motion capture, the stuff of studio stages, now runs from a webcam, free.",
+    "rests_on": "motion capture from a webcam"
+   },
+   {
+    "lens": "funny",
+    "text": "The most expensive thing in this animation studio is the coffee.",
+    "rests_on": "Free, open-source tools now cover most of an animation studio: 2D animation, motion graphics, motion capture from a webcam and visual effects. We pick the four an animator can use this week and say what each replaces."
+   }
+  ],
+  "tue/grimesdeepseek": [
+   {
+    "lens": "series",
+    "text": "Grimes's claim is no generative AI, with one exception, and the exception is named after the AI.",
+    "rests_on": "says she used no generative AI on it, apart from one song, \"DeepSeek\", whose lyrics were partly written by DeepSeek"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "An album about AI made without AI, except for the one song named after an AI, which an AI helped write.",
+    "rests_on": "she used no generative AI on it, apart from one song, \"DeepSeek\", whose lyrics were partly written by DeepSeek"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The one song on Grimes's album made with AI is called \"DeepSeek\", and DeepSeek helped write it.",
+    "rests_on": "apart from one song, \"DeepSeek\", whose lyrics were partly written by DeepSeek"
+   }
+  ],
+  "thu/elevensoundcloud": [
+   {
+    "lens": "series",
+    "text": "The free part is three months long; after that the AI music plan is a monthly bill.",
+    "rests_on": "After that it is $9.99 a month"
+   },
+   {
+    "lens": "series",
+    "text": "The route is short: an AI-made song goes from the app to SoundCloud with no stop in between.",
+    "rests_on": "ElevenMusic songs can now go straight to SoundCloud from the app"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Three free months of AI songwriting, then a renewal date that arrives with the confidence of a gym membership.",
+    "rests_on": "SoundCloud Artist Pro members get three months of ElevenMusic Pro free. After that it is $9.99 a month"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "A home for human artists is giving its paying artists three free months of an AI song maker.",
+    "rests_on": "SoundCloud Artist Pro members get three months of ElevenMusic Pro free"
+   },
+   {
+    "lens": "funny",
+    "text": "The song now arrives on SoundCloud before you have decided whether it is any good.",
+    "rests_on": "ElevenMusic songs can now go straight to SoundCloud from the app, and SoundCloud Artist Pro members get three months of ElevenMusic Pro free. After that it is $9.99 a month, so check the renewal before you claim it."
+   }
+  ],
+  "thu/videoplugin": [
+   {
+    "lens": "series",
+    "text": "Higgsfield's video tools now sit inside the chatbots people already use, called up like a guest who does one job.",
+    "rests_on": "Higgsfield's video tools now plug into ChatGPT and Claude this way"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Your chatbot can now bring a plus-one: a video tool that sits at the table and does exactly one job.",
+    "rests_on": "A connector lets your chatbot call another app for you, like a guest at the table who does one job."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Your chatbot can now hire another app to make your video, like a guest at the table who does one job.",
+    "rests_on": "Higgsfield's video tools now plug into ChatGPT and Claude this way"
+   },
+   {
+    "lens": "funny",
+    "text": "The chatbot does not make videos; it just knows a guy.",
+    "rests_on": "A connector lets your chatbot call another app for you, like a guest at the table who does one job. Higgsfield's video tools now plug into ChatGPT and Claude this way: here is what that means and how to add it."
+   }
+  ],
+  "thu/hackertube": [
+   {
+    "lens": "series",
+    "text": "The selection came from people, not a feed: 6,454 videos drawn from 43 million comments where someone recommended them.",
+    "rests_on": "6,454 videos picked from 43 million comments where real people recommended them"
+   },
+   {
+    "lens": "series",
+    "text": "A whole video site, recommendations included, took an afternoon.",
+    "rests_on": "had an AI build him a video site in about two hours"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "One of the best-known people in AI got so fed up with an algorithm that he had an AI build him a site run on what humans recommend instead.",
+    "rests_on": "Fed up with his YouTube recommendations, Andrej Karpathy had an AI build him a video site in about two hours: 6,454 videos picked from 43 million comments where real people recommended them."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "It took 43 million comments to find 6,454 videos worth watching, which says something about the comments.",
+    "rests_on": "6,454 videos picked from 43 million comments"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Andrej Karpathy got so tired of YouTube's recommendations that he had an AI build him his own video site, in about two hours.",
+    "rests_on": "Fed up with his YouTube recommendations, Andrej Karpathy had an AI build him a video site in about two hours"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "It took 43 million comments to find 6,454 videos people actually recommend.",
+    "rests_on": "6,454 videos picked from 43 million comments where real people recommended them"
+   },
+   {
+    "lens": "funny",
+    "text": "He fired the algorithm and hired 43 million commenters.",
+    "rests_on": "Fed up with his YouTube recommendations, Andrej Karpathy had an AI build him a video site in about two hours: 6,454 videos picked from 43 million comments where real people recommended them. For a creator, it is a picture of discovery without the algorithm."
+   }
+  ],
+  "thu/klingthirty": [
+   {
+    "lens": "series",
+    "text": "Kling 4.0 builds a clip of up to 30 seconds from up to 15 of your own images or clips, so the look comes from you.",
+    "rests_on": "up to 30 seconds long from up to 15 of your own reference images or clips"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "You can feed it up to 15 reference images to get one 30-second clip, roughly one picture for every two seconds of film.",
+    "rests_on": "Kling 4.0 makes single AI video clips up to 30 seconds long from up to 15 of your own reference images or clips."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "You can now give an AI 15 of your own pictures and clips to make one 30-second shot: one reference for every two seconds of footage.",
+    "rests_on": "Kling 4.0 makes single AI video clips up to 30 seconds long from up to 15 of your own reference images or clips"
+   },
+   {
+    "lens": "funny",
+    "text": "Your mood board now moves, and occasionally gives a character a sixth finger.",
+    "rests_on": "Kling 4.0 makes single AI video clips up to 30 seconds long from up to 15 of your own reference images or clips. For a small team, that is a storyboard you can watch."
+   }
+  ],
+  "thu/threecuts": [
+   {
+    "lens": "series",
+    "text": "YouTube now lets a creator run three openings against each other and keep the one viewers stay for.",
+    "rests_on": "test up to three different cuts of a video to see which opening holds viewers best"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Creators who used to argue with themselves about which opening was better can now let three versions argue it out in public.",
+    "rests_on": "YouTube lets creators test up to three different cuts of a video to see which opening holds viewers best"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "YouTube creators can now cut a video three ways and let the audience vote with its attention on which opening survives.",
+    "rests_on": "YouTube lets creators test up to three different cuts of a video to see which opening holds viewers best"
+   },
+   {
+    "lens": "funny",
+    "text": "You no longer have to argue with yourself about the opening; YouTube will do it with strangers.",
+    "rests_on": "YouTube lets creators test up to three different cuts of a video to see which opening holds viewers best, and an AI assistant gives feedback on drafts. Here is how a creator uses it on their next upload."
+   }
+  ],
+  "sat/goodnews": [
+   {
+    "lens": "series",
+    "text": "John Motson's voice returns to the game with his family's say and his family's fee.",
+    "rests_on": "EA paid the family for the rights."
+   },
+   {
+    "lens": "series",
+    "text": "One of the games built with the new Claude model paints about 1.5 million brush strokes every frame.",
+    "rests_on": "a game painted with about 1.5 million brush strokes a frame"
+   },
+   {
+    "lens": "series",
+    "text": "The animated gentleman's short is a two-tool job: one for the character, one for the movement.",
+    "rests_on": "made with Midjourney for the character and Seedance for the animation"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The best-mannered man in New York this week is animated, and one of the people he helps is the pizza rat.",
+    "rests_on": "follows an animated gentleman helping pedestrians, buskers and the pizza rat"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Someone built a game painted with about 1.5 million brush strokes in every single frame, a workload no studio of human painters would sign up for.",
+    "rests_on": "a game painted with about 1.5 million brush strokes a frame"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The pizza rat now has a supporting role in an animated short, helped along by a gentleman made with Midjourney.",
+    "rests_on": "\"Englishman in New York\" by @antrofrog follows an animated gentleman helping pedestrians, buskers and the pizza rat"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Someone built a game painted with about 1.5 million brush strokes in every frame, in hours.",
+    "rests_on": "including a game painted with about 1.5 million brush strokes a frame"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "John Motson is commentating football again, rebuilt from his old recordings with his family's permission, and the family was paid.",
+    "rests_on": "EA Sports FC 27 added an optional AI-recreated John Motson from 26 November, built from his original recordings with generative AI, with his widow's and son's permission; EA paid the family for the rights"
+   },
+   {
+    "lens": "funny",
+    "text": "The AI did the frames; the human still had to decide the gentleman helps the pizza rat.",
+    "rests_on": "An animator, a filmmaker, game makers and football fans all got something from AI this month that millions chose to watch, play or hear. Each one credits the people behind it."
+   }
+  ],
+  "sat/arenanight": [
+   {
+    "lens": "series",
+    "text": "Gemini's latest deal is a sports sponsorship: official AI partner of the Warriors, the Valkyries and their arena.",
+    "rests_on": "Google Gemini is now the official AI assistant partner of the Golden State Warriors, the 2026 WNBA champion Valkyries and Chase Center"
+   },
+   {
+    "lens": "series",
+    "text": "Inside the arena, the AI shows up on the big screen as interactive videoboard features.",
+    "rests_on": "interactive videoboard features inside the arena"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "A basketball arena now has an official AI assistant partner, a job title that did not exist when most of its fans first bought a season ticket.",
+    "rests_on": "Google Gemini is now the official AI assistant partner of the Golden State Warriors"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "A basketball arena now has an official AI assistant partner, and so does its team.",
+    "rests_on": "Google Gemini is now the official AI assistant partner of the Golden State Warriors, the 2026 WNBA champion Valkyries and Chase Center"
+   },
+   {
+    "lens": "funny",
+    "text": "The videoboard finally has something to say besides \"MAKE SOME NOISE\".",
+    "rests_on": "The Warriors, the champion Valkyries and Chase Center put Gemini into the game night itself, through interactive videoboard features fans can join. Three more stories of a better night at the game are still to find."
+   }
+  ]
+ },
+ "obvious": [
+  "An AI firm is paying $2,203 a book. The publisher may keep half.",
+  "Warner Music now counts an AI song app as income.",
+  "ITV makes your first TV advert for free. A third came back to pay.",
+  "A Dutch firm sold gyms AI music so they could stop paying songwriters.",
+  "Suno now writes your next eight bars inside Ableton.",
+  "Suno makes your music video now. Another company's model draws it.",
+  "TikTok will now watch for fakes of your face. First it needs your ID.",
+  "A 19th-century folk song got a copyright strike from a 500-channel music mill.",
+  "At Ubisoft, AI is optional. Skipping it needs a reason.",
+  "91% of designers use AI every week. It made them pickier.",
+  "The first AI film in cinemas has a Foley artist.",
+  "AI artist of the year. The lyrics were all hers.",
+  "Take any song apart on your own laptop. $259 until 7 December.",
+  "A free music studio with 3 million sounds. The catch is the export button.",
+  "Spotify's AI DJ can finally stop talking.",
+  "An animation studio for $0: four free tools that do the expensive jobs.",
+  "Make a song in one app, post it in another, in one tap. Three months free.",
+  "Your chatbot just invited a video studio to the table.",
+  "He got tired of YouTube's picks, so he built a video site in two hours.",
+  "Thirty seconds of film from 15 of your own pictures.",
+  "Upload three versions. YouTube tells you which opening worked.",
+  "This month AI helped makers reach millions, and gave fans Motty back.",
+  "The Warriors' big screen now talks back. Three more to find."
+ ]
+}

@@ -1,0 +1,45 @@
+gate: REFUSED:
+  aim: off-sat-arenanight is a theme with 1 sourced stories; a theme carries at least 3 different ones (stories or sources, each with its url)
+  aim: tue offers 4 options; an off day offers at least 5, from different sources (the sheet, the web, his cards), so he has a real choice
+  aim: sat offers 2 options; an off day offers at least 5, from different sources (the sheet, the web, his cards), so he has a real choice
+  aim: tue's 4 options are all utility; a day spans at least 2 of utility, interest and humour
+  saturday: off-sat-arenanight is modelled on a post the sheet does not hold as a carousel (lookalike.beats); pick one of his sheet's carousels
+  goodnews: sat has 2 good-news carousels; Saturday offers at least 3, each a different five
+  story: mon-1 (554f7348) has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: mon-2 (f5721a93) has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: mon-2 (f5721a93) holds 2 whys documented in their cached pages before the pick, under 3; probe it (whys-probe-check) or replace it
+  story: mon-3 (013ae567) has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: mon-4 (80baed3f) has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: wed-1 (cf6e7746) has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: wed-2 (972b7721) has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: wed-2 (972b7721) holds 2 whys documented in their cached pages before the pick, under 3; probe it (whys-probe-check) or replace it
+  story: wed-3 (08442c41) has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: wed-3 (08442c41) holds 2 whys documented in their cached pages before the pick, under 3; probe it (whys-probe-check) or replace it
+  story: wed-4 (8c6c717d) has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: fri-1 (16b1fd4f) has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: fri-1 (16b1fd4f) holds 2 whys documented in their cached pages before the pick, under 3; probe it (whys-probe-check) or replace it
+  story: fri-2 (5d55e729) has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: fri-3 (a4b34048) has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: fri-4 (ac13c2b0) has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: off-tue-photonstems has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: off-tue-splicecreate has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: off-tue-djvoices has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: off-tue-freeanimation has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: off-tue-tplconfused has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: off-tue-tplnogod has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: off-tue-tplpushthrough has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: off-tue-tplwoke has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: off-thu-elevensoundcloud has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: off-thu-videoplugin has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: off-thu-hackertube has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: off-thu-klingthirty has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: off-thu-threecuts has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: off-thu-tplchihuahua has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: off-thu-tplarnold has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: off-thu-tpldumbest has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  story: off-sat-arenanight has no story score; run story_score.py score and order (.agents/skills/plan-week/references/story-score.md) before the board
+  touch s2-divergent-angles: stage 2 divergence-engine (read) has no line in touches.jsonl; run python3 scripts/post-pack/touch.py run 2 --week 2026-11-30
+  touch s2-divergent-wildcard: stage 2 divergence-engine (read) has no line in touches.jsonl; run python3 scripts/post-pack/touch.py run 2 --week 2026-11-30
+  touch s2-humour-reads: stage 2 humour-engine (read) has no line in touches.jsonl; run python3 scripts/post-pack/touch.py run 2 --week 2026-11-30
+  touch s2-story-score: stage 2 content-engine (read) has no line in touches.jsonl; run python3 scripts/post-pack/touch.py run 2 --week 2026-11-30
+  touch s2-killlist-lines: stage 2 makeyourmindup (read) has no line in touches.jsonl; run python3 scripts/post-pack/touch.py run 2 --week 2026-11-30

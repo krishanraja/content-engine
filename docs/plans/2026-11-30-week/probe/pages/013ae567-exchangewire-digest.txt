@@ -1,0 +1,150 @@
+Digest: Apple Wins Early Access to OpenAI Evidence; Tencent Raises $5.7bn in Bond Sale  - ExchangeWire.com
+×
+Home
+Features
+Events
+London
+Singapore
+Dubai
+Tokyo
+Cannes
+Madrid
+Event videos
+Event photos
+Awards
+Podcast
+MadTech Podcast
+Video
+TraderTalk TV
+A Coffee With…
+Webcasts
+Video Interviews
+VoxPops
+Event Videos
+Sketches
+Columnists
+Charlotte McEleny
+Shirley Marschall
+Peggy Anne Salz
+Chloe Singleton
+Jessica Treasure
+Alex Lamaro-McCrindle
+Paul Evans
+Reports
+ExchangeWire Research
+Deep Dive
+Ebooks
+Industry Review
+Insights & Attitudes
+Indexes
+PressBox
+News
+German
+French
+Spanish
+Italian
+Profiles
+Hot Topics
+Cannes
+MENA
+Predictions
+AI
+Retail Media
+CTV
+Privacy
+Attention
+Curation
+About us
+Contact Us
+Our websites
+ExchangeWire.com
+✓
+ExchangeWire.jp
+Home
+Features
+Events
+London
+Singapore
+Dubai
+Tokyo
+Cannes
+Madrid
+Event videos
+Event photos
+Awards
+Podcast
+MadTech Podcast
+Video
+TraderTalk TV
+A Coffee With…
+Webcasts
+Video Interviews
+VoxPops
+Event Videos
+Sketches
+Columnists
+Charlotte McEleny
+Shirley Marschall
+Peggy Anne Salz
+Chloe Singleton
+Jessica Treasure
+Alex Lamaro-McCrindle
+Paul Evans
+Reports
+ExchangeWire Research
+Deep Dive
+Ebooks
+Industry Review
+Insights & Attitudes
+Indexes
+PressBox
+News
+German
+French
+Spanish
+Italian
+Profiles
+Hot Topics
+Cannes
+MENA
+Predictions
+AI
+Retail Media
+CTV
+Privacy
+Attention
+Curation
+Digest: Apple Wins Early Access to OpenAI Evidence; Tencent Raises $5.7bn in Bond Sale
+by Sheila Obeng-King on 14th Oct 2026 in News
+In today’s Digest, we discuss Apple winning fast-track access to OpenAI evidence in its trade secrets fight, Tencent raising $5.7bn through bond sales despite concerns over AI spending, and ITV’s generative AI ad tool attracting 16 first-time TV advertisers in its first year.
+Apple wins early access to OpenAI evidence
+A federal judge in California has ordered OpenAI to produce key evidence ahead of the normal discovery schedule in Apple’s trade secrets case against it. Judge Edward Davila of the Northern District of California found a genuine risk that data on the devices of former Apple engineers now at OpenAI could be erased, citing a messaging exchange between two of them, Chang Liu and Alyssa Peng, about wiping their Apple-issued devices. OpenAI must hand over forensic copies of the devices, summaries of interviews with Apple staff, the pair’s LINE chat records, and documents describing the ex-Apple employees’ roles. Liu, Peng and former Apple hardware chief Tang Yew Tan must also give early depositions.
+The ruling was a partial win for Apple, with Davila rejecting fast-tracked discovery on OpenAI’s work on metal finishes, power management, and battery performance. He also put off a decision on requests built around the phrase “Apple Originated Information”, which he found too loosely defined.
+Tencent raises $5.7bn in bond sale
+Tencent has raised around USD$5.7bn (£4.3bn) from dollar and offshore yuan bond sales, drawing more than USD$23bn (£17.4bn) in combined orders. The deal comprised USD$1.3bn (£980.2m) of 10-year and USD$500m (£377m) of 20-year dollar notes, plus 20bn yuan (£2.17bn) of 10-year and 6bn yuan (£652m) of 30-year “dim sum” bonds. Demand was more than four times the final deal size, with dollar orders alone topping USD$7.4bn (£5.58bn).
+Tencent says the proceeds will go towards general corporate purposes as it steps up AI investment.
+ITV’s AI ad tool brings 16 first-time advertisers to TV
+ITV’s generative AI advertising service has brought 16 small and medium-sized businesses into television advertising for the first time since launching last October. Built with Streamr.AI and free for advertisers, the GenAI Ads Manager turns uploaded brand assets into TV spots within seconds. Users include dentists, gardening firms and local councils, with most campaigns running on ITVX. The most popular format has been the pause ad, which uses static AI-generated images, rather than the standard 30-second spot.
+ITV runs the tool as a hands-on service rather than a self-serve platform, with every ad reviewed for quality before it airs. Business development director Jason Spencer said ITV has no fixed sign-up target, and that five of the 16 advertisers have since moved to its in-house creative team with larger budgets. ITV is also working with Streamr.AI on new tools, including one that would adapt brands’ existing social videos into ads for its YouTube channel.
+AdvertiserAIAppleDisplayOpenAITV
+Related articles
+Digest: Apple & EU Hold Siri AI Talks; DeepSeek Introduces Peak-Hour API Pricing
+Digest: Apple Sues OpenAI Over Trade Secrets; Microsoft Partners With Nine For Copilot
+Get the latest ExchangeWire news delivered straight to your inbox.
+Follow ExchangeWire
+Popular Posts
+The Wires 2026: All the Winners
+Adform’s MCP Server Transforms Workflows for Omnicom Media & Publicis
+Buying Sales or Renting Them: How Much of 11.11 is Incremental?
+Digest: Anthropic Signs First Publisher Licensing Deal; Tubi & TikTok Team Up to Bring Creator Content to TV
+Ad Tech Tides: Building the Same Castle, Just Higher Up the Beach
+Home
+News
+Events
+Podcast
+TT TV
+Research
+PressBox
+Cookie Policy
+Privacy Statement
+© 2026 ExchangeWire.com

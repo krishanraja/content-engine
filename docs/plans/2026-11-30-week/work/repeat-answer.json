@@ -1,0 +1,190 @@
+{
+ "checked": [
+  {
+   "ref": "mon-1",
+   "verdict": "new",
+   "of": "",
+   "why": "Bartz v. Anthropic payouts to authors; no earlier post on the settlement."
+  },
+  {
+   "ref": "mon-2",
+   "verdict": "new",
+   "of": "",
+   "why": "Warner counting Suno licensing as streaming revenue; the earlier Suno piece was about hidden AI credits in hit songs, a different story."
+  },
+  {
+   "ref": "mon-3",
+   "verdict": "new",
+   "of": "",
+   "why": "ITV free AI-made TV ads for first-time advertisers; nothing earlier on this."
+  },
+  {
+   "ref": "mon-4",
+   "verdict": "new",
+   "of": "",
+   "why": "BumaStemra suing YourNeuroTune over AI background music; no earlier post."
+  },
+  {
+   "ref": "wed-1",
+   "verdict": "new",
+   "of": "",
+   "why": "Suno Bridge for Ableton uploading the session; no earlier post."
+  },
+  {
+   "ref": "wed-2",
+   "verdict": "new",
+   "of": "",
+   "why": "Suno Visuals on a MiniMax model; no earlier post."
+  },
+  {
+   "ref": "wed-3",
+   "verdict": "new",
+   "of": "",
+   "why": "TikTok Likeness Detection and AI checker; no earlier post."
+  },
+  {
+   "ref": "wed-4",
+   "verdict": "new",
+   "of": "",
+   "why": "Folk song recording pulled on a false copyright claim; no earlier post."
+  },
+  {
+   "ref": "fri-1",
+   "verdict": "new",
+   "of": "",
+   "why": "Ubisoft pressing teams to justify skipping AI; the Meta piece was about ranking staff by AI use and gaming it, a different story and lesson."
+  },
+  {
+   "ref": "fri-2",
+   "verdict": "new",
+   "of": "",
+   "why": "Designer survey on weekly AI use; no earlier post."
+  },
+  {
+   "ref": "fri-3",
+   "verdict": "new",
+   "of": "",
+   "why": "First AI-animated feature in cinemas and its human crew; no earlier post."
+  },
+  {
+   "ref": "fri-4",
+   "verdict": "new",
+   "of": "",
+   "why": "AI Music Awards and Xania Monet; the earlier Movin' To The Sun piece was a different song and credit story."
+  },
+  {
+   "ref": "off-tue-photonstems",
+   "verdict": "new",
+   "of": "",
+   "why": "iZotope Photon stem splitting deal; no earlier post."
+  },
+  {
+   "ref": "off-tue-splicecreate",
+   "verdict": "new",
+   "of": "",
+   "why": "Splice Create free app with paid export; no earlier post."
+  },
+  {
+   "ref": "off-tue-djvoices",
+   "verdict": "new",
+   "of": "",
+   "why": "Spotify AI DJ voices and talk setting; no earlier post."
+  },
+  {
+   "ref": "off-tue-freeanimation",
+   "verdict": "new",
+   "of": "",
+   "why": "Free open-source animation tools; no earlier post."
+  },
+  {
+   "ref": "off-tue-grimesdeepseek",
+   "verdict": "new",
+   "of": "",
+   "why": "Grimes album with one AI-written song; no earlier post."
+  },
+  {
+   "ref": "off-tue-tplconfused",
+   "verdict": "new",
+   "of": "",
+   "why": "Meme about AI mastering report; no earlier meme with this joke."
+  },
+  {
+   "ref": "off-tue-tplnogod",
+   "verdict": "new",
+   "of": "",
+   "why": "Meme about a streaming app deleting songs; no earlier post."
+  },
+  {
+   "ref": "off-tue-tplpushthrough",
+   "verdict": "new",
+   "of": "",
+   "why": "Meme about fixing AI hands in a music video; no earlier post."
+  },
+  {
+   "ref": "off-tue-tplwoke",
+   "verdict": "new",
+   "of": "",
+   "why": "Meme about an AI collaborator needing quiet time; no earlier post."
+  },
+  {
+   "ref": "off-thu-elevensoundcloud",
+   "verdict": "new",
+   "of": "",
+   "why": "ElevenMusic to SoundCloud offer; no earlier post."
+  },
+  {
+   "ref": "off-thu-videoplugin",
+   "verdict": "new",
+   "of": "",
+   "why": "Higgsfield connector in ChatGPT and Claude; earlier MCP post was about token loading, a different story."
+  },
+  {
+   "ref": "off-thu-hackertube",
+   "verdict": "new",
+   "of": "",
+   "why": "Karpathy's AI-built video site; no earlier post."
+  },
+  {
+   "ref": "off-thu-klingthirty",
+   "verdict": "new",
+   "of": "",
+   "why": "Kling 4.0 30-second clips; no earlier post."
+  },
+  {
+   "ref": "off-thu-threecuts",
+   "verdict": "new",
+   "of": "",
+   "why": "YouTube A/B testing of video cuts; no earlier post."
+  },
+  {
+   "ref": "off-thu-tplchihuahua",
+   "verdict": "new",
+   "of": "",
+   "why": "Meme on an AI artist's acceptance song; no earlier post."
+  },
+  {
+   "ref": "off-thu-tplarnold",
+   "verdict": "new",
+   "of": "",
+   "why": "Meme on a session musician watching an AI band; no earlier post."
+  },
+  {
+   "ref": "off-thu-tpldumbest",
+   "verdict": "new",
+   "of": "",
+   "why": "Meme on an AI-made matchday poster; no earlier post."
+  },
+  {
+   "ref": "off-sat-goodnews",
+   "verdict": "new",
+   "of": "",
+   "why": "This month's good-news stories (animator, filmmaker, games, Motson) differ from the 21 Nov stories (ALS voice, sign language, blind walker)."
+  },
+  {
+   "ref": "off-sat-arenanight",
+   "verdict": "new",
+   "of": "",
+   "why": "Warriors and Gemini on the videoboard; no earlier post."
+  }
+ ]
+}
