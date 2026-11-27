@@ -120,7 +120,10 @@ for i in d['items']:
     for op in i.get('scene',[]):
         x,y,w,h=op['rect']
         if op['kind'] in ('text','mark'):
-            left,top,width,height=i['safe_zones']['content_box']
+            # STANDARD.md, safe zones: words and logos sit inside the content box, but a data device (the
+            # play meter "labelled '0:30 = counted'", the timeline) may run below it with its own labels.
+            zone='data_device_box' if op.get('element')=='picture' and op['kind']=='text' else 'content_box'
+            left,top,width,height=i['safe_zones'].get(zone,i['safe_zones']['content_box'])
             if x<left-.1 or y<top-.1 or x+w>left+width+.2 or y+h>top+height+.2:
                 errors.append(i['id']+' unsafe '+op['value'])
             for a,b,c,e in foreground:
@@ -132,7 +135,8 @@ for i in d['items']:
         for under in i['scene'][:i['scene'].index(op)]:
             a,b,c,e=under['rect']
             if a<=px<=a+c and b<=py<=b+e:
-                if under['kind']=='field':bg=under['color']
+                # A solid panel (the advice cover's cream prompt card) is a flat support like a field.
+                if under['kind']=='field' or under['kind']=='panel' and under.get('opacity',1)==1:bg=under['color']
                 if under['kind'] in ('photo','burn'):bg=None
         if bg is None:
             photo_checks.add(i['id']);continue
@@ -217,13 +221,26 @@ for ident,raw in result['arts'].items():
             if abs(bounds['headline_1'][1]-bottom)>1 or coverage<.92:
                 errors.append(ident+' question fails the lower line or full measure')
     if item['family']=='carousel' and item['layout'].endswith('cover'):
+        # The v5 cover hierarchy (COVERS-PLAYBOOK.md, approved 26 Nov 2026): a full-bleed ground, a cream Anton
+        # headline of two or three lines, a mint payoff, and V4 on the type's left edge ("V4 directly under the
+        # headline, sharing its left edge"; on carousels "subtly in a bottom corner"). A picture cover (good news)
+        # keeps its payoff as the headline's mint last line over a Style 1 scene, with a Fraunces dek. A type-only
+        # cover (piece, advice, how-to) has no picture slot and sets its payoff as a mint Anton line under the
+        # headline. The rule this replaces (ROUND-10) required a picture and a right-aligned V4 on every cover.
         lines=tree.findall(".//text[@data-slot='headline_1']")
         mark=tree.find(".//use[@href='#v4']")
-        if ([l.get('fill') for l in lines]!=['#F4EFE4']*(len(lines)-1)+['#7EF0C0']
-                or not 2<=len(lines)<=3 or mark is None or mark.get('data-align-side')!='right'
-                or item['scene'][0]['rect']!=[0,0,item['width'],item['height']]
-                or item['slots']['photo_1']['imagery_style']!=(4 if ident=='carousel-howto-cover' else 1)
-                or tree.find(".//text[@font-family='Fraunces']") is None):
+        fills=[l.get('fill') for l in lines]
+        picture=item['slots'].get('photo_1')
+        if picture:
+            payoff=(fills==['#F4EFE4']*(len(lines)-1)+['#7EF0C0'] and picture.get('imagery_style')==1
+                    and tree.find(".//text[@font-family='Fraunces']") is not None)
+        else:
+            body=tree.findall(".//text[@data-slot='body_1']")
+            payoff=(fills==['#F4EFE4']*len(lines) and bool(body)
+                    and all(b.get('fill')=='#7EF0C0' and b.get('font-family')=='Anton' for b in body))
+        if (not payoff or not 2<=len(lines)<=3 or mark is None or mark.get('data-align-side')!='left'
+                or abs(float(mark.get('data-align-edge'))-float(lines[0].get('data-align-edge')))>2
+                or item['scene'][0]['rect']!=[0,0,item['width'],item['height']]):
             errors.append(ident+' carousel cover hierarchy')
     spacing_report[ident]=compare(item,bounds)
     for row in spacing_report[ident]['pairs']:
