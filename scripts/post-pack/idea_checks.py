@@ -2141,93 +2141,6 @@ def offday_beat_findings(ideas, week):
                     say(ref, f'story {i} ("{str(st.get("headline") or st.get("title") or "")[:60]}") {said.get("story")}')
     return out
 
-# Businesses first, and under the hood (Ruling, Krish, 2026-11-27: "My ideas board has become a little bit too focused
-# on individual creators and not enough on what it was before, which is businesses and, under the hood, how AI is
-# changing things."). From the lens's `from` board every open Monday, Wednesday and Friday option says which way it faces
-# (lens.subject business or creator), who it is about (lens.who, named in its story) and what AI changes in how that
-# business works (lens.under_the_hood, one plain line); a business subject leads on a business word or a named company
-# (in its question, headline, hook or first sentence), and no open hero day has more creator-led options than the row allows. Every word reads
-# config/beat.json lens.
-
-LENS = BEAT.get('lens') or {}
-LENS_BUSINESS = keyword_pattern(LENS.get('business_keywords'))
-LENS_ENTITIES = [str(e) for row in BEAT['focus_sectors'] for e in row.get('entities') or []]
-
-
-def lens_text(o):
-    """What a hero says it is about, in its own words: its topic, its story, its fact and its so-what."""
-    return ' '.join(str(p) for p in (option_topic(o, True), o.get('story'), o.get('fact'), o.get('so_what')) if p)
-
-
-def business_backed(text):
-    """Whether some words name a business: a business word from the lens row or one of the focus sectors' named
-    companies, bodies, platforms, leagues and venues."""
-    text = str(text or '')
-    return bool(LENS_BUSINESS.search(text)) or any(mentions(e, text) for e in LENS_ENTITIES)
-
-
-def lens_findings(ideas, week, status=None, before=None, cfg=None):
-    """From the lens's `from` board, the lens gate lines (code 'lens'), each {code, ref, line}: an open hero with no
-    lens or an unknown subject, a who its story never names, an under_the_hood missing, too short, longer than a line or
-    the so-what again, a business subject that does not lead on a business, and an open hero day with more creator-led
-    options than max_creator_led_per_day. A day with an answered option is his and is never checked."""
-    cfg = cfg or LENS
-    if not cfg or str(week) < str(cfg.get('from') or '9999'):
-        return []
-    had = keys_on(before) if before is not None else None
-    days = (ideas or {}).get('days') if isinstance((ideas or {}).get('days'), dict) else {}
-    cap = int(cfg.get('max_creator_led_per_day', 1))
-    min_words = int(cfg.get('under_the_hood_min_words', 8))
-    max_chars = int(cfg.get('under_the_hood_max_chars', 240))
-    rule = '(Ruling, Krish, 2026-11-27: businesses first, and how AI is changing them under the hood; config/beat.json lens)'
-    out = []
-
-    def say(ref, line):
-        out.append({'code': 'lens', 'ref': ref, 'line': f'lens: {ref} {line}'})
-
-    for day in ('mon', 'wed', 'fri'):
-        opts = [(n, o) for n, o in enumerate(days.get(day) or [], 1) if isinstance(o, dict)]
-        if not opts or any(not option_open(status_key(day, True, o), status, had) for _n, o in opts):
-            continue
-        creators = []
-        for n, o in opts:
-            ref = f'{day}-{n}'
-            if o.get('from_inspiration'):
-                # His tick outranks the gate (Ruling, Krish, 2026-11-12), as in story_findings: the idea from his ticked
-                # card is placed as he chose it and never counted against the day.
-                continue
-            lens = o.get('lens')
-            if not isinstance(lens, dict) or lens.get('subject') not in ('business', 'creator'):
-                say(ref, 'has no lens: write lens {subject: business or creator, who, under_the_hood} '
-                         f'{rule}')
-                continue
-            text = lens_text(o)
-            who = str(lens.get('who') or '').strip()
-            if not who:
-                say(ref, 'has no lens.who: the business or the person the story is about, by name')
-            elif not mentions(who, text):
-                say(ref, f'names "{who}" as its lens.who, but its story never does')
-            hood = str(lens.get('under_the_hood') or '').strip()
-            if len(hood.split()) < min_words:
-                say(ref, f'has no lens.under_the_hood of {min_words} words or more: one plain line of what AI changes in how '
-                         'the business works (how the work is made, sold, priced, licensed or paid for)')
-            elif '\n' in hood or len(hood) > max_chars:
-                say(ref, f'has a lens.under_the_hood longer than one line ({max_chars} characters at most)')
-            elif norm(hood) == norm(o.get('so_what') or ''):
-                say(ref, 'repeats its so_what as lens.under_the_hood: say what changes in how the business works')
-            if lens['subject'] == 'creator':
-                creators.append(ref)
-            elif not business_backed(option_topic(o, True)):
-                # The topic only (title, hook, question, headline, the story's first sentence): what the option leads on.
-                # A so-what or a source's name always carries some business word, so reading them proves nothing.
-                say(ref, 'says it is about a business, but what it leads on (its question, headline, hook and first sentence) '
-                         f'names no company, label, studio, platform, club, league or market, so it is creator-led {rule}')
-        if len(creators) > cap:
-            say(day, f'has {len(creators)} options led by one creator or one creator tool ({", ".join(creators)}); at most '
-                     f'{cap} a day. Replace the rest with a business and how AI is changing it under the hood {rule}')
-    return out
-
-
 def status_key(day, main, o):
     """An option's key in board_feed option_status: idea:<id> on a publishing day, off:<day>:<id> on an off day."""
     oid = str((o or {}).get('id') or '').lower()
@@ -2475,10 +2388,9 @@ def wildcard_findings(ideas, week, status=None, before=None, cfg=None):
 # no story score, an open day out of the score's order, a hero under three sourced whys (story) and an option that
 # fails its floor (story_floor) fail it too (story_findings; Ruling, Krish, 2026-11-26: his rejections are a floor only),
 # and so does an open hero day with no wildcard, or one whose wildcard is unexplained or unchecked (wildcard_findings;
-# ruling wildcard, Krish, 2026-11-26). From the lens's board a hero with no lens, a lens that does not hold, or an open
-# hero day led by more than one creator fails it too (lens_findings; Ruling, Krish, 2026-11-27).
+# ruling wildcard, Krish, 2026-11-26).
 GATE_CODES = ('refused', 'warned_first', 'warning_line', 'return', 'repeat', 'aim', 'saturday', 'template', 'goodnews', 'off_beat',
-              'story', 'story_floor', 'wildcard', 'carousel_format', 'lens')
+              'story', 'story_floor', 'wildcard', 'carousel_format')
 # What the checks say without failing anything: a warned option (it carries his words) and an idea from his tick on a
 # subject he refused (it carries the refusal; Ruling, Krish, 2026-11-12).
 NOTE_CODES = ('warned', 'his_tick', 'his_repeat')

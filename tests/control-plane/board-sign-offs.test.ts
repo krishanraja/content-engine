@@ -300,7 +300,8 @@ describe('the routes', () => {
     const p = signOffPresses(manifest().cards[1], manifest().cards[1].items[0])
     // Each press says what it changed (Krish, 2026-11-27: "what am I actually approving, and what happens if I press
     // that button?").
-    expect(p.approve.done).toBe('Approved. New cuts are now compared with this frame before they reach you. The card says when the engine has it.')
+    expect(p.approve.done).toBe('Approved. Once five frames are approved, new cuts are judged against them before they reach you. The card says when the engine has it.')
+    expect(signOffPresses(manifest().cards[2], null).not_this.done).toBe('Saved as your no: these frames are never used.')
     expect(p.not_this.done).toBe('Saved as your no: this frame is never used.')
     expect(signOffPresses(manifest().cards[0], manifest().cards[0].items[0]).approve.done).toMatch(/^Approved\. This sound joins the short list/)
   })

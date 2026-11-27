@@ -200,11 +200,11 @@ export function signOffPresses(card: SignOffManifestCard, item: SignOffSample | 
   // What his press changes, said the moment he presses (Krish, 2026-11-27: "what am I actually approving, and what
   // happens if I press that button? It's all so cryptic.").
   const yes = card.id === 'sfx' ? 'Approved. This sound joins the short list a cut may use on its big moment.'
-    : card.id === 'golden' ? 'Approved. New cuts are now compared with this frame before they reach you.'
+    : card.id === 'golden' ? 'Approved. Once five frames are approved, new cuts are judged against them before they reach you.'
     : 'Approved. These frames become the layout every wide cut is checked against.'
   const done = (verdict: SignOffSaid) => (verdict === 'approve'
     ? `${yes} The card says when the engine has it.`
-    : `Saved as your no: ${what} is never used.`)
+    : `Saved as your no: ${what} ${whole ? 'are' : 'is'} never used.`)
   return {
     approve: action('Approve', body('approve'), done('approve'), whole ? 'Anything to add? (optional)' : null),
     not_this: action('Not this', body('not_this'), done('not_this'), `What is not right about ${what}? (optional)`),

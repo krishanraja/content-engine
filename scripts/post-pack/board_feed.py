@@ -30,6 +30,7 @@ ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE))
 import making  # noqa: E402
 import idea_checks  # noqa: E402
+import lens  # noqa: E402
 import ideas_scorecard  # noqa: E402
 
 
@@ -821,8 +822,8 @@ def wave1(ideas, sources, plans=None, p6=None, status=None, before=None):
     # divergence engine (ruling wildcard, Krish, 2026-11-26).
     found += idea_checks.wildcard_findings(ideas, week, status, before=before)
     # Businesses first, and under the hood: every open hero says which way it faces and what AI changes in how the
-    # business works, and no hero day is led by more than one creator (Ruling, Krish, 2026-11-27; config/beat.json lens).
-    found += idea_checks.lens_findings(ideas, week, status, before=before)
+    # business works, and no hero day is led by more than one creator (Ruling, Krish, 2026-11-27; config/lens.json).
+    found += lens.lens_findings(ideas, week, status, before=before)
     # The cycle's stage 2 touches (config/cycle.json; Krish, 2026-11-26: every system involved at the right moment): a
     # required touch with no line on the week's touches.jsonl fails it too, from the story score's `from` board.
     if week:
@@ -942,8 +943,10 @@ def lookalike_of(week, plans=None):
 
 # What fails the Sunday run: idea_checks.GATE_CODES, and from the story score's `from` board a required stage 2 touch
 # missing from the week's touches.jsonl (touch; config/cycle.json, scripts/post-pack/touch.py). Kept here, beside the one
-# reader that adds it, so the blind proof's frozen idea_checks.py is unchanged.
-GATE_CODES = idea_checks.GATE_CODES + ('touch',)
+# reader that adds it, so the blind proof's frozen idea_checks.py is unchanged. From the lens's board a hero with no lens,
+# a lens that does not hold, or an open hero day led by more than one creator fails it too (lens; scripts/post-pack/lens.py,
+# config/lens.json; Ruling, Krish, 2026-11-27), kept out of idea_checks.py for the same reason.
+GATE_CODES = idea_checks.GATE_CODES + ('touch', lens.CODE)
 
 
 def gate(week, ideas_path=None, plans=None):

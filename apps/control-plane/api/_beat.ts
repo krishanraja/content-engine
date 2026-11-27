@@ -18,7 +18,8 @@
 //   "OpenAI launches GPT-5.5 with a 2M token context window"  -> OFF beat
 //
 // Deliberately dependency-free so it can be checked without booting Supabase
-// (see scripts/check-teardown-beat.ts). Its one import is config/beat.json.
+// (see scripts/check-teardown-beat.ts). Its imports are config/beat.json and
+// config/lens.json, both plain data.
 //
 // Ruling (Krish, 2026-11-24): the engine brings stories in his focus sectors
 // (media, entertainment, content, arts, music, creator tech, with the economics
@@ -32,6 +33,7 @@
 // angle.
 
 import beat from '../../../config/beat.json' with { type: 'json' }
+import lens from '../../../config/lens.json' with { type: 'json' }
 
 /**
  * Event-shaped stories that are not, by themselves, the beat.
@@ -170,8 +172,8 @@ export function beatPromptBlock(): string {
   return [
     'THE BEAT',
     `Bring stories from Krish's focus sectors: ${sectors}. ${beat.tone}`,
-    // Businesses first, and under the hood (Ruling, Krish, 2026-11-27; config/beat.json lens).
-    beat.lens.line,
+    // Businesses first, and under the hood (Ruling, Krish, 2026-11-27; config/lens.json).
+    lens.line,
     `Not the beat: ${avoid}. Return no_angle for a signal that is only one of these.`,
     `The model piece: "${beat.model_piece.title}". ${beat.model_piece.why}`,
     words ? `His words (${words.at.slice(0, 10)}): "${words.said}"` : '',

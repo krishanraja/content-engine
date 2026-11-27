@@ -25,7 +25,7 @@ story outside the focus sectors (`off_beat`, `idea_checks.offday_beat_findings`)
 **Businesses first, and under the hood** (Krish, 2026-11-27: "My ideas board has become a little bit too focused on
 individual creators and not enough on what it was before, which is businesses and, under the hood, how AI is changing
 things."). The focus sectors and the reader stay as they are; this sets which way a Monday, Wednesday or Friday story
-faces inside them. The line, the two subjects and the words are `config/beat.json` `lens`; read it, never copy it.
+faces inside them. The line, the two subjects and the words are `config/lens.json`; read it, never copy it.
 
 - Research businesses first: the labels, studios, publishers, broadcasters, streamers, platforms, agencies, clubs and
   leagues of these industries, and the AI firms, prices and markets they run on. Ask of each story what AI is changing
@@ -37,7 +37,8 @@ faces inside them. The line, the two subjects and the words are `config/beat.jso
   leads on is the company's deal, price, revenue or market.
 - Every hero carries `"lens": {"subject": "business" | "creator", "who": "<the business or person, by name>",
   "under_the_hood": "<one plain line: what AI changes in how it works>"}`. Label it honestly: `board_feed.py gate`
-  (`lens`, `idea_checks.lens_findings`, from the 7 Dec board) refuses a hero with no lens, a `who` its story never names,
+  (`lens`, `scripts/post-pack/lens.py`, from the 7 Dec board) refuses a hero with no lens, a `who` its story never names,
   an `under_the_hood` under eight words, longer than a line or the so-what again, a `business` subject whose question,
-  headline, hook and first sentence name no company, label, studio, platform, club, league or market, and an open hero
-  day with more than one creator-led option.
+  headline, hook and first sentence name no company, label, studio, platform, club, league or market (or that lead on a
+  creator when its `who` is not a business), and an open hero day with more than one creator-led option. An idea from
+  his own words or his Inspiration tick is his: write its lens, but the gate never checks or counts it.
