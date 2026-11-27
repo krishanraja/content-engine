@@ -7,5 +7,17 @@
   },
   "https://izotope.com/community/blog/introducing-izotope-nectar-5": {
     "file": "izotope-blog-introducing-nectar5.txt"
+  },
+  "https://www.izotope.com/pages/release-notes/nectar": {
+    "file": "izotope-nectar-release-notes.txt"
+  },
+  "https://www.izotope.com/nectar5-help": {
+    "file": "izotope-nectar5-manual-home.txt"
+  },
+  "https://docs.izotope.com/nectar5/docs/moments/": {
+    "file": "izotope-nectar5-manual-moments.txt"
+  },
+  "https://docs.izotope.com/nectar5/docs/vocal-assistant/": {
+    "file": "izotope-nectar5-manual-vocal-assistant.txt"
   }
 }

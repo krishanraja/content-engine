@@ -11,11 +11,22 @@
        {"url": "https://mediacopilot.ai/new-york-times-news-agent", "domain": "mediacopilot.ai", "date": "2026-11-25", "quote": "Juliana Castro Varón, senior design editor of AI initiatives, said journalists must complete legal standards training before receiving access."}
      ],
      "strength": "inferred",
-     "counter": {"text": "The Times team's own paper describes the training it gave reporters as about verification, not law: \"Every user was trained to treat Engine output as fallible and verify it against original documents.\" The legal training remark was made at a September forum about the AI Initiatives team's tools, before News Machines tied it to News Agent."},
+     "counter": {"text": "The Times team's own paper describes the training it gave reporters as about verification, not law: \"Every user was trained to treat Engine output as fallible and verify it against original documents.\" The legal training remark was made at a September forum about the AI Initiatives team's tools, before News Machines tied it to News Agent. No page read links the condition to the risk in the leads."},
      "mechanism_type": "the rule",
      "stop": null},
     {"n": 2,
-     "question": "Why do the agents produce leads that may not hold, rather than checked answers?",
+     "question": "Why do the documents throw up so many unproven allegations about named people?",
+     "answer": "The Epstein release, the collection the agent was first built for, included everything the public had sent the FBI. The Justice Department warned it may hold fake or falsely submitted material, and said notable people were not redacted. Only the Justice Department's own release says this; the Times sources do not connect it to the failed leads.",
+     "evidence": [
+       {"url": "https://www.justice.gov/opa/pr/department-justice-publishes-35-million-responsive-pages-compliance-epstein-files", "domain": "justice.gov", "date": "2026-01-30", "quote": "This production may include fake or falsely submitted images, documents or videos, as everything that was sent to the FBI by the public was included in the production that is responsive to the Act."},
+       {"url": "https://www.justice.gov/opa/pr/department-justice-publishes-35-million-responsive-pages-compliance-epstein-files", "domain": "justice.gov", "date": "2026-01-30", "quote": "Notable individuals and politicians were not redacted in the release of any files."}
+     ],
+     "strength": "inferred",
+     "counter": {"text": "This covers the Epstein files only. The Cornell records and the UFO documents the Times later searched were not read, and nothing read says whether they carry the same kind of unvetted material. The Times team's paper describes the release's size and mix but not its reliability."},
+     "mechanism_type": "the rule",
+     "stop": null},
+    {"n": 3,
+     "question": "Why do the agents pass reporters leads that may not hold, rather than checked answers?",
      "answer": "A language model turns a reporter's question into database queries across the documents, the Times archive and other outlets' headlines, then writes a report whose source of truth is the records it cites. Reporters were told not to trust its statistics, to treat its reports as fallible and to check every finding against the originals.",
      "evidence": [
        {"url": "https://arxiv.org/html/2609.30611v1", "domain": "arxiv.org", "date": "2026-09-24", "quote": "At the Engine’s heart, an LLM translates a reporter question into queries executed over the corpora and synthesizes a report whose source of truth remains the records it cites."},
@@ -26,30 +37,32 @@
      "counter": {"text": "This design is documented for the Epstein Files Engine only. The paper does not mention News Agent, and News Machines says \"The Times doesn't disclose which AI models run News Agent.\" Whether the stylebook check and records-request drafts work the same way is not described. Media Copilot's account is drawn from News Machines and the paper, so it is not an independent witness."},
      "mechanism_type": "the model",
      "stop": null},
-    {"n": 3,
+    {"n": 4,
      "question": "Why did the Times build its agents to find candidate leads instead of writing stories?",
      "answer": "The Times team argues a newsroom agent is most useful as a way into source material and institutional knowledge, not as an autonomous writer. In its account, a page only becomes a lead once it has been compared with existing reports and checked in the original document, so the agent reports what has already been published.",
      "evidence": [
        {"url": "https://arxiv.org/html/2609.30611v1", "domain": "arxiv.org", "date": "2026-09-24", "quote": "a relevant page or transcript snippet becomes a lead only once journalists have compared it against existing reports and reviewed the document where it originated."},
-       {"url": "https://newsmachines.beehiiv.com/p/new-york-times-news-agent", "domain": "newsmachines.beehiiv.com", "date": "2026-11-24", "quote": "The paper's conclusion: A newsroom agent is most useful as an interface \"to source material and institutional knowledge,\" not as an autonomous writer."}
+       {"url": "https://newsmachines.beehiiv.com/p/new-york-times-news-agent", "domain": "newsmachines.beehiiv.com", "date": "2026-11-24", "quote": "The paper's conclusion: A newsroom agent is most useful as an interface \"to source material and institutional knowledge,\" not as an autonomous writer."},
+       {"url": "https://www.hackshackers.com/investigative-journalism-forum-2026-program/", "domain": "hackshackers.com", "date": "2026-08-20", "quote": "In this session, they will share how A.I. is and isn't useful to the journalistic process, emphasizing the importance of human input and expertise."}
      ],
      "strength": "documented",
-     "counter": {"text": "Both sources trace back to the Times team's own paper, and the paper says it did not test this: \"We did not perform a controlled study that withheld The Times’s archive or external, Epstein-related headlines.\" Media Copilot adds: \"The usage figures, however, come from the Times’ own team.\""},
+     "counter": {"text": "The paper and News Machines both trace back to the Times team's own account, and the forum page is a session description for the same team. The paper says it did not test the design: \"We did not perform a controlled study that withheld The Times’s archive or external, Epstein-related headlines.\" Media Copilot adds: \"The usage figures, however, come from the Times’ own team.\""},
      "mechanism_type": "the model",
      "stop": null},
-    {"n": 4,
+    {"n": 5,
      "question": "Why is the condition legal standards training in particular, and what does it cover?",
-     "answer": "Nothing I read says. The one primary record, the Times team's paper, describes training reporters to treat output as fallible and verify it, and never mentions legal training. The legal requirement rests on a single remark at a September forum, quoted by News Machines and repeated by Media Copilot.",
+     "answer": "Nothing I read says. The Times team's paper describes training reporters to treat output as fallible and verify it, and never mentions legal training. The forum programme says the team teaches journalists to use AI responsibly, without naming law. The legal requirement rests on one remark at that forum, quoted by News Machines and repeated by Media Copilot.",
      "evidence": [
-       {"url": "https://newsmachines.beehiiv.com/p/new-york-times-news-agent", "domain": "newsmachines.beehiiv.com", "date": "2026-11-24", "quote": "\"We require legal standards training for everybody who wants to use [these tools],\" Juliana Castro Varón, senior design editor of AI initiatives at the Times, said at the"}
+       {"url": "https://newsmachines.beehiiv.com/p/new-york-times-news-agent", "domain": "newsmachines.beehiiv.com", "date": "2026-11-24", "quote": "\"We require legal standards training for everybody who wants to use [these tools],\" Juliana Castro Varón, senior design editor of AI initiatives at the Times, said at the"},
+       {"url": "https://www.hackshackers.com/investigative-journalism-forum-2026-program/", "domain": "hackshackers.com", "date": "2026-08-20", "quote": "they will share stories, tools and best practices they've uncovered as they've taught journalists to use A.I. responsibly."}
      ],
      "strength": "open",
-     "counter": {"text": "none found; searched the two source articles, the arXiv paper (abstract and full text) and the Times' public AI explainer, which returned a bot check page and could not be read"},
+     "counter": {"text": "none found; searched the two source articles, the Times team's arXiv paper (abstract and full text), the Hacks/Hackers forum programme, the Justice Department release and the Times' public AI explainer, which returned a bot check page and could not be read"},
      "mechanism_type": "the rule",
      "stop": "evidence_exhausted"}
   ],
   "landing": {
-    "shows": "The Times built its agents to pull candidate leads out of millions of pages and set each one against what the paper and other outlets had already published, leaving verification to reporters. Those leads often named living people over unproven allegations, and most failed. The sources record a legal training gate but not what it teaches or why it was chosen.",
+    "shows": "The Times built its agents to pull candidate leads out of millions of pages and set each one against what the paper and other outlets had already published, leaving verification to reporters. The Epstein release they were built for included unvetted public submissions and left notable people unredacted, and many leads named living people over unproven allegations. The sources record a legal training gate but not what it teaches or why it was chosen.",
     "open_question": "What does a reporter learn in the Times' legal standards training that the verification rules in its own paper do not already cover?"
   }
 }
