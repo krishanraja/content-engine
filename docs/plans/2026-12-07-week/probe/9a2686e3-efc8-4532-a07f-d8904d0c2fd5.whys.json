@@ -1,0 +1,165 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why did iQIYI release 21 AI-generated short dramas in a quarter when its revenue fell 10%?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why did iQIYI release 21 AI-generated short dramas in a quarter when its revenue was falling?",
+      "answer": "iQIYI's management presents AI as one of two engines of its strategy, used to widen the supply of content and lower what it costs to make. The chief executive said AI-generated content is now the main source of supply for micro dramas and micro animations.",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1722608/000119312526462100/d123902dex991.htm",
+          "domain": "www.sec.gov",
+          "date": "2026-11-16",
+          "quote": "Our shift towards becoming a long-form video social media, with long-form video at the core and decentralization and AI as twin engines, is yielding encouraging initial results."
+        },
+        {
+          "url": "https://www.marketbeat.com/instant-alerts/transcript-iqiyi-q3-earnings-call-highlights-2026-11-16/",
+          "domain": "www.marketbeat.com",
+          "date": "2026-11-16",
+          "quote": "Founder and CEO Yu Gong said the company is pursuing a shift toward a creator-driven long-form video platform while using artificial intelligence to expand content supply and reduce production costs."
+        },
+        {
+          "url": "https://www.vp-land.com/stories/chinese-streaming-platform-iqiyi-releases-21-ai-short-dramas-and-takes-top-domestic-short",
+          "domain": "www.vp-land.com",
+          "date": "2026-11-16",
+          "quote": "Gong said on the Q3 earnings call that AI-generated content is the main source of supply for micro dramas and micro animations, and that iQIYI is extending it into internet feature films and longer dramas."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "The SEC filing does not mention the 21 AI short dramas at all; it puts the membership revenue fall down to a lighter content slate. The 'nearly 90%' AI share Gong gave is for micro dramas, a category VP Land and MarketBeat report separately from short-form dramas with 15 to 30 minute episodes."
+      },
+      "mechanism_type": null,
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why does iQIYI want cheaper content supply in this quarter?",
+      "answer": "Revenue fell 10% year on year, with membership down 6% on a lighter content slate. Content costs, RMB3.52 billion of RMB4.90 billion cost of revenues, fell 13%, and the finance chief named that fall alongside a return to non-GAAP operating profit of RMB25 million. On GAAP terms the quarter was still an operating loss.",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1722608/000119312526462100/d123902dex991.htm",
+          "domain": "www.sec.gov",
+          "date": "2026-11-16",
+          "quote": "Content costs as a component of cost of revenues were RMB3.52 billion (US$525.3 million), decreasing 13% year over year, reflecting continued content strategy optimization."
+        },
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1722608/000119312526462100/d123902dex991.htm",
+          "domain": "www.sec.gov",
+          "date": "2026-11-16",
+          "quote": "our financial performance improved and we returned to non-GAAP operating profit. Content costs declined, while advertising revenue grew, both year over year and quarter over quarter."
+        },
+        {
+          "url": "https://www.vp-land.com/stories/chinese-streaming-platform-iqiyi-releases-21-ai-short-dramas-and-takes-top-domestic-short",
+          "domain": "www.vp-land.com",
+          "date": "2026-11-16",
+          "quote": "Revenue fell to RMB6.01 billion ($896 million), while content costs dropped 13% year over year and adjusted operating profit returned at RMB25 million ($3.7 million)."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "The filing attributes the content cost fall to 'continued content strategy optimization' and gives no figure for how much of it came from AI. The GAAP operating loss was RMB41.9 million, and non-GAAP income excludes share-based compensation of RMB65.4 million."
+      },
+      "mechanism_type": "the money",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why does AI make iQIYI's content cheaper to produce?",
+      "answer": "In iQIYI's account of The Ferry Man, AI generated concept art, sets and props that were turned straight into video, cutting physical shoots and months of green-screen work. The lead actors licensed their likenesses, and characters, scenes and props were built as reusable assets for later chapters. Script and post-production stayed largely traditional.",
+      "evidence": [
+        {
+          "url": "https://en.prnasia.com/releases/apac/iqiyi-aigc-series-the-ferry-man-exceeds-rmb-8-million-in-revenue-sharing-as-third-instalment-debuts-on-october-1-550445.shtml",
+          "domain": "en.prnasia.com",
+          "date": "2026-10-02",
+          "quote": "During production, AIGC was used to generate visual assets for concept design, sets, props, and other art elements, which could then be directly turned into video based on the director's creative requirements."
+        },
+        {
+          "url": "https://en.prnasia.com/releases/apac/iqiyi-aigc-series-the-ferry-man-exceeds-rmb-8-million-in-revenue-sharing-as-third-instalment-debuts-on-october-1-550445.shtml",
+          "domain": "en.prnasia.com",
+          "date": "2026-10-02",
+          "quote": "The three lead actors licensed their likenesses and provided their own voiceovers, with digital character assets, scenes, and props developed as standardized, reusable assets."
+        },
+        {
+          "url": "https://www.vp-land.com/stories/chinese-streaming-platform-iqiyi-releases-21-ai-short-dramas-and-takes-top-domestic-short",
+          "domain": "www.vp-land.com",
+          "date": "2026-11-16",
+          "quote": "A reusable digital cast. The three lead actors licensed their likenesses and recorded their own voiceovers."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "This detail describes The Ferry Man, an internet feature film series, not the 21 short dramas, and VP Land restates iQIYI's own release rather than checking it. The 50% to 80% cost cut appears only on VP Land, via Variety, and only for certain AIGC animation and children's titles. No production cost figure is disclosed."
+      },
+      "mechanism_type": "the production pipeline",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why does iQIYI put AI titles on revenue-sharing terms?",
+      "answer": "Revenue-sharing pays production partners by how titles perform, which the chief executive said moves some spending from upfront investment to performance-linked payments. iQIYI says The Ferry Man recovered its production costs within its first week under this model, and the finance chief tied a growing revenue-sharing portfolio to more efficient content investment.",
+      "evidence": [
+        {
+          "url": "https://www.marketbeat.com/instant-alerts/transcript-iqiyi-q3-earnings-call-highlights-2026-11-16/",
+          "domain": "www.marketbeat.com",
+          "date": "2026-11-16",
+          "quote": "He said revenue-sharing arrangements shift some spending from upfront investment to payments tied to performance."
+        },
+        {
+          "url": "https://en.prnasia.com/releases/apac/iqiyi-aigc-series-the-ferry-man-exceeds-rmb-8-million-in-revenue-sharing-as-third-instalment-debuts-on-october-1-550445.shtml",
+          "domain": "en.prnasia.com",
+          "date": "2026-10-02",
+          "quote": "Through iQIYI's revenue-sharing model, the series recovered its full production costs within the first week and surpassed RMB8 million in cumulative box office within the first month, with figures continuing to grow."
+        },
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1722608/000119312526462100/d123902dex991.htm",
+          "domain": "www.sec.gov",
+          "date": "2026-11-16",
+          "quote": "We will continue to improve the efficiency of our content investment with a growing portfolio of revenue-sharing content."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "The recoup claims come only from iQIYI and cannot be checked, since no production cost is given. Revenue-sharing is not specific to AI: MarketBeat reports revenue-sharing launches across dramas, films and animations up more than 200% on the quarter, and the sources do not say how many of those were AI-made."
+      },
+      "mechanism_type": "the contract",
+      "stop": null
+    },
+    {
+      "n": 5,
+      "question": "Why did iQIYI's short-form dramas reach No. 1 domestic market share in the same quarter?",
+      "answer": "Nothing read answers this. iQIYI cites Enlightent data and gives the ranking for its short-form dramas as a whole, and it launched 58 revenue-sharing short-form dramas that quarter. No source splits share, views or revenue between the 21 AI titles and the rest, or says whether the 21 are counted among the 58.",
+      "evidence": [
+        {
+          "url": "https://www.sec.gov/Archives/edgar/data/1722608/000119312526462100/d123902dex991.htm",
+          "domain": "www.sec.gov",
+          "date": "2026-11-16",
+          "quote": "while our short-form dramas claimed the No. 1 domestic market share for the first time on a quarterly basis"
+        },
+        {
+          "url": "https://www.marketbeat.com/instant-alerts/transcript-iqiyi-q3-earnings-call-highlights-2026-11-16/",
+          "domain": "www.marketbeat.com",
+          "date": "2026-11-16",
+          "quote": "According to Enlightent data cited by Gong, iQIYI ranked first in quarterly market share for short-form drama for the first time."
+        },
+        {
+          "url": "https://www.marketbeat.com/instant-alerts/transcript-iqiyi-q3-earnings-call-highlights-2026-11-16/",
+          "domain": "www.marketbeat.com",
+          "date": "2026-11-16",
+          "quote": "The company launched 58 revenue-sharing short-form dramas during the quarter"
+        }
+      ],
+      "strength": "open",
+      "counter": {
+        "text": "none found, searching the SEC filing, the VP Land story, iQIYI's Ferry Man release and MarketBeat's call summary; Enlightent's data itself was not read, as VP Land links only its home page."
+      },
+      "mechanism_type": null,
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "The ladder shows iQIYI using AI to widen supply and cut content costs while revenue falls: content costs fell 13%, non-GAAP operating profit returned, and revenue-sharing moves spending onto performance. It does not show that the 21 AI short dramas produced the No. 1 short-drama share; the sources report the two facts side by side.",
+    "open_question": "If iQIYI's short-form dramas took first place in the same quarter it released 21 AI-made ones, how much of that first place did the AI titles earn?"
+  }
+}

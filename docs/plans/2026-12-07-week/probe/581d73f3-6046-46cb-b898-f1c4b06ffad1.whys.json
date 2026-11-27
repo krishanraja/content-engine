@@ -4,7 +4,7 @@
   "rungs": [
     {"n": 1,
      "question": "Why do the two figures disagree?",
-     "answer": "They come from different people and different methods. The 74% is what surveyed streaming users said they believe. The 57% is Deezer's own detection run on the playlists of over 53,000 people who moved to Deezer from other services in October. That group is not the survey sample, so the gap compares two groups, not one person's belief with their own playlist.",
+     "answer": "They come from different people and different methods. The 74% is what surveyed streaming users said they believe. The 57% is Deezer's detection run on the playlists of over 53,000 people who joined from other services in October. That group is not the survey sample, so the gap compares two groups, not one person's belief with their own playlist.",
      "evidence": [
        {"url": "https://newsroom-deezer.com/2026/11/ai-music-labeling-deezer-ipsos-survey/", "domain": "newsroom-deezer.com", "date": "2026-11-17", "quote": "Nearly three fourths of music streaming users (74%) thought that their playlists were free from 100% AI-generated music, but according to Deezer’s internal data a majority of new subscribers joining from other streaming platforms, had 100 % AI-generated music in their library."},
        {"url": "https://www.digitalmusicnews.com/2026/11/19/ai-music-kill-switch-survey/", "domain": "digitalmusicnews.com", "date": "2026-11-19", "quote": "This number is based on Deezer’s internal data on new subscribers joining from other streaming platforms, not specifically from those surveyed."}
