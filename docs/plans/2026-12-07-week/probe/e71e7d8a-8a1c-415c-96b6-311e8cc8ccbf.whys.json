@@ -1,0 +1,60 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why is the most popular entry in Epic's AI-agent game jam a game whose creator says no generative AI was used?",
+  "rungs": [
+    {"n": 1,
+     "question": "Why could a game made without generative AI be entered in a jam built around AI agents?",
+     "answer": "Epic's rules make AI optional. The jam's own questions page answers 'Do I have to use AI?' with 'No.', and Rock Paper Shotgun reports Epic had to make that clearer soon after announcing the jam. The game's page declares no generative AI was used; that is the creator's own statement, which no source checks.",
+     "evidence": [
+       {"url": "https://itch.io/jam/2026-epic-ai-megajam", "domain": "itch.io", "date": "2026-11-27", "quote": "Do I have to use AI?\nNo."},
+       {"url": "https://www.rockpapershotgun.com/fish-with-a-sniper-rifle-takes-aim-at-tim-sweeneys-hopes-and-dreams-as-genai-free-meme-game-tops-epic-games-vibe-coding-megajam", "domain": "rockpapershotgun.com", "date": "2026-11-20", "quote": "Epic ended up having to make clearer not long after the jam was announced that submissions didn't have to make use of genAI as a hard rule, leaving it up to the developer how much or little was worked in."},
+       {"url": "https://polycube2.itch.io/fih", "domain": "itch.io", "date": "2026-11-16", "quote": "no AI was used to make this game"}
+     ],
+     "strength": "documented",
+     "counter": {"text": "The jam's pitch leans the other way: its page says 'As many AI agents as you want.' and 'Use any AI tools you like', and a player on the game's page asked 'It says no AI was used but then it was submitted to the AI MegaJam. So AI was used?'. The rule permits a hand-made game; it does not invite one. Epic's own announcement page refused the fetch (403)."},
+     "mechanism_type": "rule",
+     "stop": null},
+    {"n": 2,
+     "question": "Why does LSD:FIH sit at the top of the jam's entries?",
+     "answer": "The sources show attention, not a formula. Rock Paper Shotgun found it first when sorting by Popular, the jam's served list and data put it first, and its own page shows 442 ratings averaging 4.9 stars. No page read says what itch's Popular order counts.",
+     "evidence": [
+       {"url": "https://www.rockpapershotgun.com/fish-with-a-sniper-rifle-takes-aim-at-tim-sweeneys-hopes-and-dreams-as-genai-free-meme-game-tops-epic-games-vibe-coding-megajam", "domain": "rockpapershotgun.com", "date": "2026-11-20", "quote": "sorting the submissions by 'Popular' turns up a game about a fish with a sniper rifle whose creator says they deliberately made it without using any generative AI."},
+       {"url": "https://itch.io/jam/421245/entries.json", "domain": "itch.io", "date": "2026-11-27", "quote": "\"jam_games\":[{\"game\":{\"title\":\"LSD:FIH\""},
+       {"url": "https://polycube2.itch.io/fih", "domain": "itch.io", "date": "2026-11-16", "quote": "Rated 4.9 out of 5 stars"},
+       {"url": "https://polycube2.itch.io/fih", "domain": "itch.io", "date": "2026-11-16", "quote": "(442 total ratings)"}
+     ],
+     "strength": "inferred",
+     "counter": {"text": "Popular is not the prize and not the jam vote. The entries page's code sets its default sort to random ('\"default_sort\":\"random\"'), the served data gives every one of its 2,775 entries a rating count of 0, and the jam page says winners are chosen by 'A panel of judges' scoring seven criteria. Searched: the jam overview, entries page and data, the game page, two other entries' pages."},
+     "mechanism_type": "ranking",
+     "stop": null},
+    {"n": 3,
+     "question": "Why does a hand-made game draw that attention in this jam?",
+     "answer": "In part because players read it as a rebuke to AI-made games. Comments on its page cast it as the answer to 'AI slop', and Rock Paper Shotgun frames it as swimming against 'the slop tide'. Neither source shows how much of the attention comes from that reading rather than from the game itself.",
+     "evidence": [
+       {"url": "https://polycube2.itch.io/fih", "domain": "itch.io", "date": "2026-11-16", "quote": "So this is how we crush the AI slop fest. Wouldn't have it any other way."},
+       {"url": "https://polycube2.itch.io/fih", "domain": "itch.io", "date": "2026-11-16", "quote": "Proof that AI slop is creating a renaissance in human content. Keep on coding."},
+       {"url": "https://www.rockpapershotgun.com/fish-with-a-sniper-rifle-takes-aim-at-tim-sweeneys-hopes-and-dreams-as-genai-free-meme-game-tops-epic-games-vibe-coding-megajam", "domain": "rockpapershotgun.com", "date": "2026-11-20", "quote": "a game deliberately swimming against the slop tide shows up at the top if you hit up the Popular filter."}
+     ],
+     "strength": "inferred",
+     "counter": {"text": "Many comments praise only the play: 'awesome game, great gunplay and visuals.' and 'Movement is amazing as always', the second pointing to a creator players already followed. The creator's post about the game shows 193.6K views on X, so attention may come from an existing audience as much as from the jam."},
+     "mechanism_type": null,
+     "stop": null},
+    {"n": 4,
+     "question": "Why is there an AI push in this jam for the game to stand against?",
+     "answer": "Epic is moving the company towards AI. Its chief executive announced in October a 'huge pivot' to 'retool for maximum AI acceleration', and Rock Paper Shotgun says Epic is 'going big on genAI'. The jam carries that push: AI agents in the pitch, AI firms as sponsors handing out credits, and grants of up to $50,000.",
+     "evidence": [
+       {"url": "https://x.com/TimSweeneyEpic/status/2109705826688549304", "domain": "x.com", "date": "2026-10-12", "quote": "We have a huge pivot underway here at Epic, moving developers around to retool for maximum AI acceleration."},
+       {"url": "https://www.rockpapershotgun.com/fish-with-a-sniper-rifle-takes-aim-at-tim-sweeneys-hopes-and-dreams-as-genai-free-meme-game-tops-epic-games-vibe-coding-megajam", "domain": "rockpapershotgun.com", "date": "2026-11-20", "quote": "Epic Games are, as you're probably aware, going big on genAI at the moment."},
+       {"url": "https://itch.io/jam/2026-epic-ai-megajam", "domain": "itch.io", "date": "2026-11-27", "quote": "Supported by Claude, Google, OpenAI, SpaceXSI, AMD, Diversion, fal, Hyper3D, Intel, Meshy,"},
+       {"url": "https://itch.io/jam/2026-epic-ai-megajam", "domain": "itch.io", "date": "2026-11-27", "quote": "Development Continuation Grants of up to $50,000 per team"}
+     ],
+     "strength": "documented",
+     "counter": {"text": "Sweeney's post does not mention the jam, so tying the jam to the pivot is the reader's step. His own framing is that 'The aim isn't to do the same stuff with fewer people'; replies under it were hostile ('Your inability to read the room is really really astounding, Tim'), but no page read links those replies to the fish game's players."},
+     "mechanism_type": "money",
+     "stop": "motive_not_mechanism"}
+  ],
+  "landing": {
+    "shows": "A game said to be hand-made can lead the jam's public list because Epic's rules make AI optional. Its lead rests on player attention whose measure no page states, much of it voiced as a rebuke to AI-made games inside a jam built to showcase Epic's AI pivot. The no-AI claim is the creator's own, and Epic's pages give three entry counts: 2,782, 2,778 and 2,775.",
+    "open_question": "If a jam built to show what AI agents can do is led, on its public list, by a game made to show it did not need them, what is that list measuring?"
+  }
+}

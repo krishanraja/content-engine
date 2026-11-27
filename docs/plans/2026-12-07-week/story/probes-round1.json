@@ -1,0 +1,925 @@
+{
+  "076c5675-4aee-4ad0-b400-6b10188fdb59": {
+    "schema": "whys-probe/1",
+    "documented": 3,
+    "inferred": 0,
+    "sites": 2,
+    "mechanism_rungs": 3,
+    "counter_rungs": 3,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "izotope.com",
+          "musicradar.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "izotope.com",
+          "musicradar.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "izotope.com",
+          "musicradar.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "open",
+        "counted": "open",
+        "verified_sites": [],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
+  },
+  "0977ab4d-8c3f-47c1-af95-768e2f3f968c": {
+    "schema": "whys-probe/1",
+    "documented": 2,
+    "inferred": 1,
+    "sites": 3,
+    "mechanism_rungs": 2,
+    "counter_rungs": 2,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "arxiv.org",
+          "beehiiv.com",
+          "mediacopilot.ai"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "arxiv.org",
+          "beehiiv.com",
+          "mediacopilot.ai"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "arxiv.org",
+          "beehiiv.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "open",
+        "counted": "open",
+        "verified_sites": [],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
+  },
+  "21e94357-9b59-4abe-96c6-daf1f98cd6d2": {
+    "schema": "whys-probe/1",
+    "documented": 3,
+    "inferred": 2,
+    "sites": 2,
+    "mechanism_rungs": 1,
+    "counter_rungs": 3,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "musicbusinessworldwide.com",
+          "routenote.com"
+        ],
+        "mechanism": false,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "musicbusinessworldwide.com",
+          "routenote.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "musicbusinessworldwide.com",
+          "routenote.com"
+        ],
+        "mechanism": false,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "musicbusinessworldwide.com",
+          "routenote.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 5,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "musicbusinessworldwide.com",
+          "routenote.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
+  },
+  "2c443323-dc8c-4941-9608-04d6b3ec85ed": {
+    "schema": "whys-probe/1",
+    "documented": 2,
+    "inferred": 2,
+    "sites": 4,
+    "mechanism_rungs": 2,
+    "counter_rungs": 2,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "aimusicpreneur.com",
+          "musicbusinessworldwide.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "musicbusinessworldwide.com",
+          "sonilo.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "aimusicpreneur.com",
+          "musicbusinessworldwide.com"
+        ],
+        "mechanism": false,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "musicbusinessworldwide.com",
+          "sourceaudio.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 5,
+        "claimed": "open",
+        "counted": "open",
+        "verified_sites": [],
+        "mechanism": false,
+        "counter": true
+      }
+    ]
+  },
+  "41874364-fcd8-4fd1-b7e7-91aca6235019": {
+    "schema": "whys-probe/1",
+    "documented": 2,
+    "inferred": 2,
+    "sites": 2,
+    "mechanism_rungs": 1,
+    "counter_rungs": 2,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "creativebloq.com",
+          "maxon.net"
+        ],
+        "mechanism": false,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "creativebloq.com",
+          "maxon.net"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "creativebloq.com",
+          "maxon.net"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "creativebloq.com",
+          "maxon.net"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 5,
+        "claimed": "open",
+        "counted": "open",
+        "verified_sites": [],
+        "mechanism": false,
+        "counter": true
+      }
+    ]
+  },
+  "456c4fc3-530b-4fc8-9e92-5b5ea662ad87": {
+    "schema": "whys-probe/1",
+    "documented": 3,
+    "inferred": 0,
+    "sites": 4,
+    "mechanism_rungs": 3,
+    "counter_rungs": 3,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "eurogamer.net",
+          "kotaku.com",
+          "pcgamer.com",
+          "x.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "kotaku.com",
+          "pcgamer.com",
+          "x.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "eurogamer.net",
+          "kotaku.com",
+          "pcgamer.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "open",
+        "counted": "open",
+        "verified_sites": [],
+        "mechanism": false,
+        "counter": true
+      }
+    ]
+  },
+  "46dd71d0-6787-4bda-bd6c-b0e2bc4abca2": {
+    "schema": "whys-probe/1",
+    "documented": 2,
+    "inferred": 2,
+    "sites": 4,
+    "mechanism_rungs": 2,
+    "counter_rungs": 2,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "heygen.com",
+          "imagekit.io"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "heygen.com",
+          "imagekit.io"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "heygen.ai",
+          "heygen.com",
+          "imagekit.io"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "csuite.so",
+          "imagekit.io"
+        ],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
+  },
+  "581d73f3-6046-46cb-b898-f1c4b06ffad1": {
+    "schema": "whys-probe/1",
+    "documented": 1,
+    "inferred": 3,
+    "sites": 2,
+    "mechanism_rungs": 1,
+    "counter_rungs": 1,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [
+      "Why 3 needs a second source",
+      "Why 4 needs a second source on a different domain"
+    ],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "digitalmusicnews.com",
+          "newsroom-deezer.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "digitalmusicnews.com",
+          "newsroom-deezer.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "newsroom-deezer.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "newsroom-deezer.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 5,
+        "claimed": "open",
+        "counted": "open",
+        "verified_sites": [],
+        "mechanism": false,
+        "counter": true
+      }
+    ]
+  },
+  "83f20f43-6b46-40a2-9a9b-1007cb10f9bb": {
+    "schema": "whys-probe/1",
+    "documented": 0,
+    "inferred": 3,
+    "sites": 2,
+    "mechanism_rungs": 0,
+    "counter_rungs": 0,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [
+      "Why 2 needs a second source on a different domain",
+      "Why 3 needs a second source on a different domain"
+    ],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "drweb.de",
+          "prnewswire.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "prnewswire.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "prnewswire.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "open",
+        "counted": "open",
+        "verified_sites": [],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
+  },
+  "9a2686e3-efc8-4532-a07f-d8904d0c2fd5": {
+    "schema": "whys-probe/1",
+    "documented": 4,
+    "inferred": 0,
+    "sites": 4,
+    "mechanism_rungs": 3,
+    "counter_rungs": 4,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "marketbeat.com",
+          "sec.gov",
+          "vp-land.com"
+        ],
+        "mechanism": false,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "sec.gov",
+          "vp-land.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "prnasia.com",
+          "vp-land.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "marketbeat.com",
+          "prnasia.com",
+          "sec.gov"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 5,
+        "claimed": "open",
+        "counted": "open",
+        "verified_sites": [],
+        "mechanism": false,
+        "counter": true
+      }
+    ]
+  },
+  "b38a7a98-50b4-4608-bf8e-b99d8181ac7b": {
+    "schema": "whys-probe/1",
+    "documented": 3,
+    "inferred": 1,
+    "sites": 2,
+    "mechanism_rungs": 3,
+    "counter_rungs": 3,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "ilona-andrews.com",
+          "publishersweekly.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "ilona-andrews.com",
+          "publishersweekly.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "ilona-andrews.com",
+          "publishersweekly.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "ilona-andrews.com",
+          "publishersweekly.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 5,
+        "claimed": "open",
+        "counted": "open",
+        "verified_sites": [],
+        "mechanism": false,
+        "counter": true
+      }
+    ]
+  },
+  "c1bd8406-c267-426e-b586-d76e1ef68e5c": {
+    "schema": "whys-probe/1",
+    "documented": 3,
+    "inferred": 2,
+    "sites": 2,
+    "mechanism_rungs": 3,
+    "counter_rungs": 3,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [
+      "Why 1 needs a second source on a different domain"
+    ],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "cartoonbrew.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "cartoonbrew.com",
+          "manchesteranimationfestival.co.uk"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "cartoonbrew.com",
+          "manchesteranimationfestival.co.uk"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "cartoonbrew.com",
+          "manchesteranimationfestival.co.uk"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 5,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "cartoonbrew.com",
+          "manchesteranimationfestival.co.uk"
+        ],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
+  },
+  "d5f108ea-7b48-4e1f-8c5c-62e346129f48": {
+    "schema": "whys-probe/1",
+    "documented": 3,
+    "inferred": 0,
+    "sites": 2,
+    "mechanism_rungs": 1,
+    "counter_rungs": 3,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "advanced-television.com",
+          "indiantelevision.com"
+        ],
+        "mechanism": false,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "advanced-television.com",
+          "indiantelevision.com"
+        ],
+        "mechanism": false,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "advanced-television.com",
+          "indiantelevision.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "open",
+        "counted": "open",
+        "verified_sites": [],
+        "mechanism": false,
+        "counter": true
+      }
+    ]
+  },
+  "de83ed89-f29e-4e5f-ad82-c698ec72a010": {
+    "schema": "whys-probe/1",
+    "documented": 3,
+    "inferred": 1,
+    "sites": 3,
+    "mechanism_rungs": 3,
+    "counter_rungs": 3,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "gaming.net",
+          "vp-land.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "gaming.net",
+          "vp-land.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "gaming.net",
+          "vp-land.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "epoch.ai",
+          "gaming.net"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 5,
+        "claimed": "open",
+        "counted": "open",
+        "verified_sites": [],
+        "mechanism": false,
+        "counter": true
+      }
+    ]
+  },
+  "e71e7d8a-8a1c-415c-96b6-311e8cc8ccbf": {
+    "schema": "whys-probe/1",
+    "documented": 2,
+    "inferred": 2,
+    "sites": 3,
+    "mechanism_rungs": 2,
+    "counter_rungs": 2,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "itch.io",
+          "rockpapershotgun.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "itch.io",
+          "rockpapershotgun.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "itch.io",
+          "rockpapershotgun.com"
+        ],
+        "mechanism": false,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "itch.io",
+          "rockpapershotgun.com",
+          "x.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
+  }
+}
