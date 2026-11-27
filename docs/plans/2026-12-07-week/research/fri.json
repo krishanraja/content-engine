@@ -1,0 +1,381 @@
+{
+  "lane": "fri",
+  "searched": [
+    "Lead check: 65 AI models, 127,918 answers, same book: traced to A90 (Cody Collier), published 20 Nov 2026; second source Ruben Hassid's Substack, 24 Nov",
+    "WebSearch: AI music streams survey Nov 2026; Deezer AI uploads streams Nov 2026; music business AI survey Nov 2026 (found Deezer-Ipsos 17 Nov, UMG kill switch 19 Nov)",
+    "WebSearch: game developers generative AI survey Nov 2026; GDC State of the Game Industry Nov 2026 (cut: released 12 Nov, one day before the window)",
+    "WebSearch: Hollywood AI savings jobs credits VFX Nov 2026 (cut: Otis College report is April 2026)",
+    "WebSearch: AI film box office flop Nov 2026 (cut: Sanxingdui reporting is October)",
+    "WebSearch: AI books Amazon Kindle sales study (cut: arXiv paper and a16z figures are older than the window)",
+    "WebSearch: trade-site AI surveys Nov 2026 (found Avid/ACE editors survey; cut: Avid published it with its Ready to Play launch on 10 Nov, Variety's 77.5% story is 13 Nov, so the event sits outside the window)",
+    "WebSearch: Coca-Cola AI holiday ad 2026; Marketing Dive Enjoy Joy",
+    "WebSearch: AI artwork auction Nov 2026 (nothing in window); AI slop YouTube study Nov 2026 (Kapwing is Nov 2025, cut); Reuters Institute AI news (October, cut); sport AI fan surveys Nov 2026 (only BBC Signals and the Motson voice, both on the exclusion list)",
+    "WebSearch: Steam AI disclosures Nov 2026; Valve 12 business days (cut: Valve's post is 3 Nov; GamingOnLinux's 18 Nov SteamDB count of 13,445 AI-disclosed games is analysis of older news)",
+    "WebSearch: Tencent Music Q3 2026 negligible AI; Binding of Isaac Suno; Ilona Andrews Tor cover; McClatchy town hall",
+    "Read RSS feeds (not search engines) of Music Business Worldwide, Digital Music News, Music Ally, Game Developer, GamesIndustry.biz, Eurogamer, Rock Paper Shotgun, Publishers Weekly, Nieman Lab, Cartoon Brew, Ars Technica, The Verge, 404 Media, Adweek, SportsPro, SportBusiness and others for 13 to 27 Nov items",
+    "Cut: McClatchy's AI-first rebuild (Nieman Lab, 18 Nov: paid digital subscribers down 17%, unique visitors down 39%) because I found no second independent source dated in the window; the Editor and Publisher and Straight Arrow pieces are from June, and Straight Arrow has closed",
+    "Cut as excluded or same story: Tidal AI ban and 27 to 29 million tracks, Ubisoft gen-AI pitches and denial, EA FC Motson voice, TikTok Likeness Detection, Suno Bridge and Visuals, Fincher Cliff Booth AI, YouTube copyright loop (500-channel mill), BumaStemra and YourNeuroTune",
+    "Not opened (refused or blocked): Fast Company and MediaPost on Coca-Cola (403), Etsy's own news note (needs JavaScript), Press Gazette and The Bookseller feeds (blocked), the Guardian feeds (empty)",
+    "Spark (reject pile): no real, dated 13 to 27 Nov item with a discard rate was found; the wildcard is the strangest claim-versus-reality story instead",
+    "Search budget for the turn ran out before a sport candidate could be found; sport has no candidate here"
+  ],
+  "candidates": [
+    {
+      "key": "ai-same-book-73-in-100",
+      "sector": "creators",
+      "headline": "Sixty-five AI models were asked for a life-changing book, and 73 in 100 answers named the same one",
+      "what_happened": "Cody Collier of A90 asked 65 AI models from 30 companies the everyday questions people bring them, 127,918 times in all, ten times per model with no system prompt, and published the results on 20 November 2026. Asked to recommend one book that will change your life, 73 in 100 answers named Man's Search for Meaning, with Atomic Habits on 8 in 100 and The Power of Now on 6 in 100. The models also badly underestimated their own sameness: one guessed about 15% of people get its answer when it gave the same answer 80 times in 100.",
+      "date": "2026-11-20",
+      "named_thing": "Man's Search for Meaning, named in 73 of every 100 answers",
+      "primary": {
+        "label": "A90 (Cody Collier), AI is giving everyone the same advice, 20 Nov 2026",
+        "url": "https://a90.com/experiments/same-advice/",
+        "kind": "original",
+        "quote": "I asked 65 AIs “Recommend one book that will change my life.” 73 in 100 times it was the same book: Man's Search for Meaning ."
+      },
+      "second": {
+        "label": "How to AI (Ruben Hassid), Unpopular., 24 Nov 2026",
+        "url": "https://ruben.substack.com/p/73",
+        "quote": "Out of 127,918 answers, most are the exact same recommendations. A book to change my life? 73 answers out of 100 say “A Man in Search for Meaning”."
+      },
+      "more_sources": [
+        {
+          "label": "A90, same page, method note",
+          "url": "https://a90.com/experiments/same-advice/",
+          "quote": "Every model, ten times per request, no system prompt."
+        },
+        {
+          "label": "A90, same page, the self-estimate gap",
+          "url": "https://a90.com/experiments/same-advice/",
+          "quote": "In fact it gave the same city 80 times out of 100."
+        }
+      ],
+      "money_or_mechanism": "Each answer feels written for the reader, yet the models converge on one title, so whoever the default favours collects the recommendation traffic while every other book on the shelf is invisible to the person asking.",
+      "why_it_matters": "If readers ask chatbots what to read next, one 1946 book is getting the shelf space that used to be spread across a whole bookshop.",
+      "funny": "Sixty-five machines, thirty companies, and they all handed out the same Viktor Frankl, a book about finding your own meaning.",
+      "media": {
+        "kind": "photo",
+        "url": "https://a90.com/experiments/same-advice/og.png"
+      },
+      "risks": "A single independent experimenter, not peer reviewed, run on default settings through OpenRouter; the second source is a newsletter that cites it rather than re-running it, and misnames the book. Book recommendations are the hook; the wider study covers money and travel advice too."
+    },
+    {
+      "key": "tor-no-ai-clause-ai-cover",
+      "sector": "arts_design",
+      "headline": "Tor's contracts forbid AI cover art, and an AI-made cover still reached a bestselling series",
+      "what_happened": "On 20 November 2026 Tor Publishing Group withdrew the newly revealed cover of Ilona Andrews's fantasy novel This Crown Will Not Rule Me after learning generative AI had been used to make it, without the knowledge of Tor or the authors. Both the authors' contract and Tor's art contracts carry a no-AI clause; readers and two artists spotted it in Instagram comments, not the review process. The authors now say they must vet every individual painting, and may ask artists for project files.",
+      "date": "2026-11-20",
+      "named_thing": "The withdrawn cover of This Crown Will Not Rule Me",
+      "primary": {
+        "label": "Ilona Andrews blog, Generative AI on This Crown's cover (carrying Tor's statement), 20 Nov 2026",
+        "url": "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/",
+        "kind": "original",
+        "quote": "Tor Publishing Group has learned that generative AI was used in the creation of the cover art for This Crown Will Not Rule Me, without the knowledge of either Tor or of the authors."
+      },
+      "second": {
+        "label": "Publishers Weekly, Tor Pulls Ilona Andrews Cover Over Generative AI Use, 24 Nov 2026",
+        "url": "http://www.publishersweekly.com/pw/by-topic/industry-news/publisher-news/article/101841-tor-pulls-ilona-andrews-cover-over-generative-ai-use.html",
+        "quote": "\"Tor takes full responsibility for the breakdown in our review process,\" the publisher said, noting that its existing policies and contracts with cover artists prohibit the use of generative AI."
+      },
+      "more_sources": [
+        {
+          "label": "Ilona Andrews blog, same post",
+          "url": "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/",
+          "quote": "We have a no-AI clause in our contract. Tor also has a no-AI clause in their art contracts."
+        },
+        {
+          "label": "Ilona Andrews blog, same post",
+          "url": "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/",
+          "quote": "We can no longer vet the artist. We have to vet every individual painting."
+        }
+      ],
+      "money_or_mechanism": "The claim is a contract clause and a sketch-stage review; the reality is that the check that worked was unpaid readers and two artists commenting on Instagram, so the cost of proving art is human-made is moving onto authors and illustrators as project files and per-painting vetting.",
+      "why_it_matters": "Anyone who commissions art now learns that a no-AI clause in the contract does not tell you what is in the file you receive.",
+      "funny": "The publisher's own statement thanks readers for spotting it and ends with three words: You were right.",
+      "media": {
+        "kind": "photo",
+        "url": "https://ilona-andrews.com/wp-content/uploads/2026/11/TCWNRM-statement_final.jpg"
+      },
+      "risks": "Publisher statement and author blog agree; neither names the artist or says how much of the image was generated. Tor did not answer PW's further questions."
+    },
+    {
+      "key": "deezer-playlist-gap-57-percent",
+      "sector": "music",
+      "headline": "74% of streamers think their playlists hold no fully AI songs; 57% of new Deezer users already had one",
+      "what_happened": "Deezer and Ipsos published their second AI music survey of 9,000 people in eight countries on 17 November 2026. 74% of streaming users believed their playlists contained no fully AI-generated music, yet Deezer says nearly 57% of the more than 53,000 people who joined it in October already had at least one fully AI-generated track in the playlists they brought with them. Deezer now receives nearly 90,000 fully AI tracks a day, more than half its daily deliveries on peak days, while those tracks draw only 1 to 3% of streams.",
+      "date": "2026-11-17",
+      "named_thing": "The 74% versus 57% playlist gap",
+      "primary": {
+        "label": "Deezer newsroom, Deezer-Ipsos Survey: 80% of people Want AI Music Labeled, Paris, 17 Nov 2026",
+        "url": "https://newsroom-deezer.com/2026/11/ai-music-labeling-deezer-ipsos-survey/",
+        "kind": "original",
+        "quote": "Nearly three fourths of music streaming users (74%) thought that their playlists were free from 100% AI-generated music"
+      },
+      "second": {
+        "label": "Digital Music News, More Than 80% of Americans Want an AI Music Kill Switch, UMG Research Finds, 19 Nov 2026",
+        "url": "https://www.digitalmusicnews.com/2026/11/19/ai-music-kill-switch-survey/",
+        "quote": "However, the company says that nearly 57% of the 53,000-plus people who joined its platform in October already had at least one fully AI-generated track in their playlists."
+      },
+      "more_sources": [
+        {
+          "label": "Deezer newsroom, same release, Alexis Lanternier",
+          "url": "https://newsroom-deezer.com/2026/11/ai-music-labeling-deezer-ipsos-survey/",
+          "quote": "there is a significant gap between what listeners think is in their playlists and what is actually there."
+        },
+        {
+          "label": "Deezer newsroom, same release, streams",
+          "url": "https://newsroom-deezer.com/2026/11/ai-music-labeling-deezer-ipsos-survey/",
+          "quote": "fully AI-generated music currently accounts for only a small fraction of streams on Deezer, between 1-3%"
+        },
+        {
+          "label": "Music Business Worldwide, 80% of people want AI music labeled, 17 Nov 2026",
+          "url": "https://www.musicbusinessworldwide.com/80-of-people-want-ai-music-labeled-says-deezer-ipsos-survey-as-37-of-americans-now-see-ai-as-a-valuable-tool-for-musicians-down-from-54-in-2025/",
+          "quote": "74% of music streaming users in the survey believed their playlists contained no fully AI-generated music."
+        },
+        {
+          "label": "Digital Music News, same article, UMG's Michael Nash",
+          "url": "https://www.digitalmusicnews.com/2026/11/19/ai-music-kill-switch-survey/",
+          "quote": "We just did a new round of search, and in the U.S., that number is now north of 80%."
+        }
+      ],
+      "money_or_mechanism": "Fully AI tracks are more than half of what arrives at Deezer on peak days but 1 to 3% of what is played, and they reach listeners mostly unnoticed through playlists, which is where the per-stream money is split.",
+      "why_it_matters": "Artists and labels selling against AI tracks are competing for playlist slots listeners do not know are shared.",
+      "funny": "Three in four listeners are sure there is no AI on their playlist, and more than half of them are wrong.",
+      "media": {
+        "kind": "photo",
+        "url": "https://newsroom-deezer.com/wp-content/uploads/2026/11/Infographicimage-576x1024.jpg"
+      },
+      "risks": "The 57% comes from Deezer's own data on new subscribers importing playlists, not from the people surveyed, so the two numbers describe different groups. Deezer's newsroom blocks plain downloads; quotes were read through a page reader. Company figures, no independent audit."
+    },
+    {
+      "key": "tencent-music-ai-negligible",
+      "sector": "music",
+      "headline": "Tencent Music says AI songs are flooding in but nobody is listening: streams 'negligible' and falling",
+      "what_happened": "On its third-quarter 2026 earnings call on 17 November, Tencent Music Entertainment, owner of QQ Music, Kugou and Kuwo, said streams of AI-generated content remain negligible with a declining share of listening, while human, differentiated catalogue gains. Executive Chairman Cussion Pang said users are becoming more selective as AI makes supply more abundant, and the company said it is filtering low-quality AI tracks and taking legal action over infringing ones. Total revenue was RMB8.94 billion (US$1.33 billion), up 5.6%.",
+      "date": "2026-11-17",
+      "named_thing": "Cussion Pang's 'negligible' line on AI streams at Tencent Music",
+      "primary": {
+        "label": "Music Business Worldwide, Tencent Music says AI content streams are negligible, as it takes legal action over AI infringement, 17 Nov 2026",
+        "url": "https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/",
+        "kind": "report",
+        "quote": "Streams from AI-generated songs remain very low and with a declining trend."
+      },
+      "second": {
+        "label": "Digital Music News, Tencent Music Says AI Music Consumption is Negligible and Declining Across Its Platforms, 17 Nov 2026",
+        "url": "https://www.digitalmusicnews.com/2026/11/17/tencent-music-ai-consumption-comments/",
+        "quote": "“As a result, AI content stream volumes remain negligible, with a declining share of listening, while high-quality, differentiated content continues to gain traction.”"
+      },
+      "more_sources": [
+        {
+          "label": "Digital Music News, same article",
+          "url": "https://www.digitalmusicnews.com/2026/11/17/tencent-music-ai-consumption-comments/",
+          "quote": "“While technology advancement makes content supply more abundant, users are becoming more selective about what they choose to engage with,” said Tencent Music Entertainment (TME) Executive Chairman Cussion Pang."
+        }
+      ],
+      "money_or_mechanism": "China's biggest music platform reports growth from human artists' merch, concerts and premium memberships, not from the AI supply that is filling the catalogue, so the flood costs moderation and legal spend while earning almost nothing in streams.",
+      "why_it_matters": "The largest streaming business in China is telling investors the AI song flood is a filtering cost, not a revenue line.",
+      "funny": "The machines can write a million songs a day, and the market's verdict, per its own earnings call, is 'negligible'.",
+      "media": {
+        "kind": "photo",
+        "url": "https://www.digitalmusicnews.com/wp-content/uploads/2026/11/tencent-music-says-ai-music-consumption-is-negligible-and-declining.png"
+      },
+      "risks": "Company claim on an earnings call with no share figure given; both sources report the call rather than an official transcript, which I did not read. MBW page read through a page reader. TME has a business interest in playing down AI competition."
+    },
+    {
+      "key": "isaac-undisclosed-suno-music",
+      "sector": "games",
+      "headline": "A Binding of Isaac update shipped Suno-made music with no AI label, and players found it in the file metadata",
+      "what_happened": "On 19 November 2026, GTA 6's launch day, Nicalis added a GTA-themed daily run to The Binding of Isaac: Repentance+ on Steam; the next day a Reddit user showed its music files carried Suno metadata. The DLC's Steam page had no AI disclosure, recent reviews fell to Overwhelmingly Negative with 8% positive, creator Edmund McMillen said he had no idea, and Nicalis pushed a build with the removal of generated music files.",
+      "date": "2026-11-22",
+      "named_thing": "The Suno metadata in Repentance+'s GTA 6 daily run",
+      "primary": {
+        "label": "Eurogamer, Binding of Isaac dev pulls AI-generated music from Repentance+ after players expose it, 22 Nov 2026",
+        "url": "https://www.eurogamer.net/binding-of-isaac-repentance-plus-ai-music-removed",
+        "kind": "report",
+        "quote": "A day later, Reddit user ShweetsStuff posted that the run's music was \"100% generated by Suno (AI) (with proof)\", pointing to tracks that reference the AI music tool Suno in their metadata."
+      },
+      "second": {
+        "label": "PC Gamer, Binding of Isaac DLC adds AI music in GTA 6-parodying update despite not having an AI disclosure, 23 Nov 2026",
+        "url": "https://www.pcgamer.com/games/roguelike/binding-of-isaac-dlc-adds-ai-music-in-gta-6-parodying-update-despite-not-having-an-ai-disclosure-steam-reviews-drop-to-overwhelmingly-negative-music-gets-pulled/",
+        "quote": "Steam user reviews on The Binding of Isaac: Repentance+ dropped to Overwhelmingly Negative, with only 8% positive recent reviews."
+      },
+      "more_sources": [
+        {
+          "label": "GamesIndustry.biz, Nicalis removes AI-generated music from The Binding of Isaac: Repentance+ after player backlash, 23 Nov 2026",
+          "url": "https://www.gamesindustry.biz/nicalis-removes-ai-generated-music-from-the-binding-of-isaac-repentance-after-player-backlash",
+          "quote": "Neither The Binding of Isaac: Repentance nor Repentance+ currently discloses AI use on its Steam store page."
+        },
+        {
+          "label": "Steam announcement, A Grand Day for a Repentance+ Update, 19 Nov 2026",
+          "url": "https://store.steampowered.com/news/app/250900",
+          "quote": "be sure to get in and play today's Daily Run for a very special crime-packed surprise."
+        }
+      ],
+      "money_or_mechanism": "Steam's AI label relies on the developer ticking the box; here the label said nothing, the file metadata said Suno, and it was players reading the files, not the store, who closed the gap, at the cost of the game's review score.",
+      "why_it_matters": "For studios and composers, the real AI disclosure check on Steam is now players opening the audio files.",
+      "funny": "A satire of GTA 6 was undone by a single metadata field that politely said who wrote the music.",
+      "media": {
+        "kind": "photo",
+        "url": "https://cdn.mos.cms.futurecdn.net/HNtA6QWZH23oHdCY8geRZU-1920-80.jpg"
+      },
+      "risks": "Nicalis has not explained how the music got in. The review figure moves daily. Eurogamer credits IGN for some of its quotes, so IGN may have reported first; I did not open IGN. The Steam news URL is the app's news hub, read through the Steam news API, not the single post page."
+    },
+    {
+      "key": "coke-ai-ads-beat-benchmarks-dropped",
+      "sector": "media",
+      "headline": "Coca-Cola's AI holiday ads beat its internal benchmarks; this year's US ad is made by humans",
+      "what_happened": "On 19 November 2026 Coca-Cola launched its US holiday campaign, Enjoy Joy, live-action spots directed by Paul Dektor and produced by Mayan Productions through WPP Open X and Ogilvy, made without generative AI. Its 2024 and 2025 holiday ads were made with generative AI and, Marketing Dive reports, exceeded internal benchmarks while dividing consumers; Coke's global VP of generative AI had claimed the 2025 ad had ten times better craftsmanship than 2024's. Adweek reports the brand is not ditching AI everywhere for its holiday work.",
+      "date": "2026-11-19",
+      "named_thing": "Coca-Cola's Enjoy Joy holiday campaign",
+      "primary": {
+        "label": "Marketing Dive, Coca-Cola pivots from divisive AI-generated ads for holiday campaign, 19 Nov 2026",
+        "url": "https://www.marketingdive.com/news/coca-cola-pivots-from-divisive-ai-generated-ads-for-holiday-campaign/875215/",
+        "kind": "report",
+        "quote": "The creative direction comes after the brand ran ads during the last two years made with generative AI that — despite exceeding internal benchmarks — proved divisive with consumers."
+      },
+      "second": {
+        "label": "Adweek, AI Is Off the Festive Dinner Menu In Coke's 2026 Holiday Ad, 20 Nov 2026",
+        "url": "https://www.adweek.com/creativity/ai-is-off-the-festive-dinner-menu-in-cokes-2026-holiday-ad/",
+        "quote": "Coke's global VP of generative AI claimed 2025's AI ad had \"ten times better\" craftsmanship than its 2024 version."
+      },
+      "more_sources": [
+        {
+          "label": "Marketing Dive, same article",
+          "url": "https://www.marketingdive.com/news/coca-cola-pivots-from-divisive-ai-generated-ads-for-holiday-campaign/875215/",
+          "quote": "Notably, the new spots pivot away from using generative artificial intelligence as the brand did for recent holiday pushes."
+        },
+        {
+          "label": "ContentGrip, Coca-Cola's 2026 Christmas ads skip generative AI, 20 Nov 2026",
+          "url": "https://www.contentgrip.com/coca-cola-enjoy-joy-holiday/",
+          "quote": "For the new U.S. commercials, Coca-Cola has moved away from that method."
+        }
+      ],
+      "money_or_mechanism": "The internal numbers said the AI ads worked; the brand's flagship US spend went back to a director, a production company and a cast anyway, which says the benchmark was not measuring what the brand was worried about.",
+      "why_it_matters": "Production companies and directors pitching against AI now have the biggest holiday advertiser on record choosing them after two AI years that passed its own tests.",
+      "funny": "Two years of AI polar bears scored above target, and the reward was a deep-fried turkey filmed by humans.",
+      "media": {
+        "kind": "photo",
+        "url": "https://imgproxy.divecdn.com/RaWg51QtLbv9xZJ2woPDvYGaPr7ap_CMJW2w96HCzSo/g:ce/rs:fit:770:435/Z3M6Ly9kaXZlc2l0ZS1zdG9yYWdlL2RpdmVpbWFnZS9Db2NhLUNvbGFfX19FbmpveV9Kb3lfXzMwXzAtMThfc2NyZWVuc2hvdC5wbmc=.webp"
+      },
+      "risks": "Adweek's full story is paywalled; the quote is from its visible summary. Coca-Cola reportedly says this is not a policy change, and some coverage says another market's ad is AI-made, but I could not open Fast Company or MediaPost (both refused) to confirm either, so neither is claimed here."
+    },
+    {
+      "key": "etsy-ai-terms-sellers-close",
+      "sector": "creators",
+      "headline": "Etsy says it will not train AI to copy sellers' work; its new terms let partners train AI on their content",
+      "what_happened": "Etsy's terms, effective 16 December 2026, give Etsy and its third-party partners and vendors the right to use sellers' content to develop and train AI, and illustrators and animators began closing shops, Cartoon Brew reported on 18 November. In a note on Monday 23 November chief executive Kruti Patel Goyal said the update was not meant to enable training models to create copycats. One illustrator told Ars he is still closing his 15-year-old shop on 1 December and losing about 20% of his yearly income.",
+      "date": "2026-11-23",
+      "named_thing": "Etsy's AI training clause, effective 16 December",
+      "primary": {
+        "label": "Cartoon Brew, artists close Etsy shops over AI training terms, 18 Nov 2026",
+        "url": "https://www.cartoonbrew.com/artificial-intelligence/etsy-ai-training-terms-of-use-269553.html",
+        "kind": "report",
+        "quote": "Starting December 16, the agreement explicitly gives Etsy and its third-party partners and vendors permission to use content uploaded by sellers to train and improve AI systems."
+      },
+      "second": {
+        "label": "Ars Technica, Etsy clarifies AI terms after seller backlash, 25 Nov 2026",
+        "url": "https://arstechnica.com/tech-policy/2026/11/etsy-clarifies-ai-terms-after-seller-backlash/",
+        "quote": "“It was not meant to enable us to train AI models for the purpose of creating copycats of your items. We do not and will not do that.”"
+      },
+      "more_sources": [
+        {
+          "label": "Ars Technica, same article, illustrator Aaron Meshon",
+          "url": "https://arstechnica.com/tech-policy/2026/11/etsy-clarifies-ai-terms-after-seller-backlash/",
+          "quote": "“I would say I’m losing 20 percent of my yearly income,” he said."
+        },
+        {
+          "label": "Ars Technica, same article, Etsy VP James Ossman on 22 Oct",
+          "url": "https://arstechnica.com/tech-policy/2026/11/etsy-clarifies-ai-terms-after-seller-backlash/",
+          "quote": "“Today, many active buyers say they can’t tell which items involve AI-generated content,” James Ossman, the company’s vice president of customer operations, wrote on October 22."
+        }
+      ],
+      "money_or_mechanism": "The reassurance covers Etsy copying sellers; the clause covers Etsy and its partners and vendors training on sellers' content, and the artists' answer is to take their holiday-season sales elsewhere.",
+      "why_it_matters": "For illustrators who use Etsy for income between gigs, the decision is whether a CEO's note outweighs the clause they actually sign.",
+      "funny": "Weeks after promising buyers clearer AI rules, Etsy wrote one so clear its artists read it and left.",
+      "media": {
+        "kind": "photo",
+        "url": "https://www.cartoonbrew.com/wp-content/uploads/2026/11/Etsy-AI.jpg"
+      },
+      "risks": "Etsy's own note would not load (it needs JavaScript), so the CEO's words are taken from Ars. The beat excludes policy; this stays in as rights and artist income, but the angle must stay on money and claim versus clause. Numbers of closed shops are not counted anywhere."
+    },
+    {
+      "key": "animation-festivals-ai-forms",
+      "sector": "film_tv",
+      "headline": "Animation festivals ask filmmakers to tick an AI box; programmers say some mark AI films as 3D or experimental",
+      "what_happened": "Manchester Animation Festival announced, alongside its 2026 winners, that from 2027 a film is ineligible if a generative model creates or alters any part of its final moving image, and published a policy dated November 2026. Speaking to Cartoon Brew on 20 November, Ottawa's artistic director said some animators are clearly lying on their forms, marking AI work as 3D, and Manchester's director said people label AI films experimental or abstract and that this year brought more genAI submissions than ever.",
+      "date": "2026-11-20",
+      "named_thing": "Manchester Animation Festival's generative AI ban from 2027",
+      "primary": {
+        "label": "Cartoon Brew, Does GenAI Belong At Animation Festivals? Annecy, Ottawa, And Manchester Programmers Weigh In, 20 Nov 2026",
+        "url": "https://www.cartoonbrew.com/artificial-intelligence/annecy-ottawa-manchester-festival-programmers-artificial-intelligence-269655.html",
+        "kind": "report",
+        "quote": "“What bothers me is the animators clearly lying on their forms,” says Robinson."
+      },
+      "second": {
+        "label": "Manchester Animation Festival, Generative A.I Policy for Filmmakers (PDF), last reviewed November 2026",
+        "url": "https://www.manchesteranimationfestival.co.uk/wp-content/uploads/2026/11/Generative-A.I-Policy.pdf",
+        "quote": "If any part of the final moving image has been generated or transformed by a generative audio, image or video model, it will be deemed ineligible for the festival."
+      },
+      "more_sources": [
+        {
+          "label": "Cartoon Brew, same article, MAF's Steve Henderson",
+          "url": "https://www.cartoonbrew.com/artificial-intelligence/annecy-ottawa-manchester-festival-programmers-artificial-intelligence-269655.html",
+          "quote": "“This year, we have received more genAI films than ever in our submissions."
+        },
+        {
+          "label": "Cartoon Brew, same article, Ottawa's Chris Robinson",
+          "url": "https://www.cartoonbrew.com/artificial-intelligence/annecy-ottawa-manchester-festival-programmers-artificial-intelligence-269655.html",
+          "quote": "They just mark it as 3D or something."
+        }
+      ],
+      "money_or_mechanism": "Festival selection, which drives awards, distribution and Oscar eligibility for shorts, rests on a self-declared form, and the people reading the entries say the form and the film no longer match.",
+      "why_it_matters": "Animators competing for festival slots are up against entries whose AI use is only as honest as the box they ticked.",
+      "funny": "Ottawa offers one AI box to tick, and some entrants have decided their film is simply '3D or something'.",
+      "media": {
+        "kind": "photo",
+        "url": "https://www.cartoonbrew.com/wp-content/uploads/2026/11/AI-Festivals.jpg"
+      },
+      "risks": "No count of mislabelled or AI submissions from any festival; it rests on programmers' accounts. The policy PDF gives a review month, not a day. The exact date of MAF's winners announcement was not confirmed."
+    },
+    {
+      "key": "epic-ai-megajam-no-ai-favourite",
+      "sector": "games",
+      "wildcard": true,
+      "headline": "Epic ran an AI game jam with 2,782 entries; the crowd's favourite says no AI was used",
+      "what_happened": "Epic Games' 2026 Epic AI MegaJam, backed by Anthropic, Google, OpenAI, Nvidia and others, invited teams to build an Unreal game in four days with as many AI agents as they liked, and closed on 15 November with 2,782 games submitted. Sorted by popularity, the top entry was LSD:FIH, a game about a sniping fish whose page says no generative AI was used; Rock Paper Shotgun reported it on 19 November, and its itch.io page shows a 4.9 out of 5 rating from 442 ratings.",
+      "date": "2026-11-19",
+      "named_thing": "LSD:FIH, the no-AI fish game at the top of an AI jam",
+      "primary": {
+        "label": "itch.io, 2026 Epic AI MegaJam jam page",
+        "url": "https://itch.io/jam/2026-epic-ai-megajam",
+        "kind": "original",
+        "quote": "The 2026 Epic AI MegaJam wrapped on November 15 with 2,782 games submitted."
+      },
+      "second": {
+        "label": "Rock Paper Shotgun, genAI-free meme game tops Epic Games' vibe-coding megajam, 19 Nov 2026",
+        "url": "https://www.rockpapershotgun.com/fish-with-a-sniper-rifle-takes-aim-at-tim-sweeneys-hopes-and-dreams-as-genai-free-meme-game-tops-epic-games-vibe-coding-megajam",
+        "quote": "So, naturally, sorting the submissions by 'Popular' turns up a game about a fish with a sniper rifle whose creator says they deliberately made it without using any generative AI."
+      },
+      "more_sources": [
+        {
+          "label": "itch.io, LSD:FIH by PolyCube",
+          "url": "https://polycube2.itch.io/fih",
+          "quote": "no AI was used to make this game"
+        },
+        {
+          "label": "itch.io, 2026 Epic AI MegaJam jam page, the pitch",
+          "url": "https://itch.io/jam/2026-epic-ai-megajam",
+          "quote": "Four days. Up12 to five humans. As many AI agents as you want."
+        }
+      ],
+      "money_or_mechanism": "Epic and its AI sponsors paid for a showcase of what agents can build; the attention, the one thing a jam really hands out, went to the entry that turned the agents down.",
+      "why_it_matters": "Studios weighing AI pipelines get a small, live reading of what players reward when the two sit side by side.",
+      "funny": "Sixteen AI sponsors, $25 of Claude credits per jammer, and the crowd picked a fish that smokes and was drawn by hand.",
+      "media": {
+        "kind": "photo",
+        "url": "https://img.itch.zone/aW1nLzMyMDY4NTAwLnBuZw==/original/1S06sC.png"
+      },
+      "risks": "'Popular' is itch.io's sort, not Epic's judging; winners are not due until 29 January 2027. Rating counts move daily. Epic clarified that AI use was optional, so the entry broke no rule. Not the reject-pile spark: no dated item in the window gave a discard rate (generations thrown away per piece kept), so this is the strangest true claim-versus-reality story found instead."
+    }
+  ]
+}
