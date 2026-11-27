@@ -231,7 +231,7 @@
         "label": "Marketing Dive, Coca-Cola pivots from divisive AI-generated ads for holiday campaign, 19 Nov 2026",
         "url": "https://www.marketingdive.com/news/coca-cola-pivots-from-divisive-ai-generated-ads-for-holiday-campaign/875215/",
         "kind": "report",
-        "quote": "The creative direction comes after the brand ran ads during the last two years made with generative AI that — despite exceeding internal benchmarks — proved divisive with consumers."
+        "quote": "Notably, the new spots pivot away from using generative artificial intelligence as the brand did for recent holiday pushes."
       },
       "second": {
         "label": "Adweek, AI Is Off the Festive Dinner Menu In Coke's 2026 Holiday Ad, 20 Nov 2026",
@@ -240,9 +240,9 @@
       },
       "more_sources": [
         {
-          "label": "Marketing Dive, same article",
+          "label": "Marketing Dive, same article (two fragments of one sentence, split to leave out its dashes)",
           "url": "https://www.marketingdive.com/news/coca-cola-pivots-from-divisive-ai-generated-ads-for-holiday-campaign/875215/",
-          "quote": "Notably, the new spots pivot away from using generative artificial intelligence as the brand did for recent holiday pushes."
+          "quote": "despite exceeding internal benchmarks ... proved divisive with consumers."
         },
         {
           "label": "ContentGrip, Coca-Cola's 2026 Christmas ads skip generative AI, 20 Nov 2026",
