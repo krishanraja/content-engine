@@ -109,7 +109,26 @@ def build():
         },
     }
     data['thin_week'] = {d: {'regathered': True} for d in ('mon', 'wed', 'fri')}  # each re-gathered once: a second probe pass, and new Friday and Wednesday candidates
-    for k in ('repeat_review',):
+    rep = json.loads((HERE / 'repeat-answer.json').read_text())
+    data['repeat_review'] = {'reader': 'a fresh subagent with none of the session\'s reasoning (same-story repeat review, 27 Nov 2026)', 'checked': rep['checked']}
+    extra = HERE / 'repeat-answer-sat.json'
+    if extra.exists():
+        data['repeat_review']['checked'] += json.loads(extra.read_text())['checked']
+    src = json.loads((WEEK / 'sources.json').read_text())
+    against = len(src.get('recent') or []) + len(src.get('recent_offdays') or [])
+    rb = {}
+    for name in ('readback-A.json', 'readback-B.json', 'readback-sat-A.json', 'readback-sat-B.json'):
+        p = HERE / name
+        if p.exists():
+            r = json.loads(p.read_text())
+            for x in r['answers']:
+                rb.setdefault(x['ref'], []).append((r['reader'], x['says']))
+    for day, opts in offdays.items():
+        for o in opts:
+            got = rb.get(f'off-{day}-{o["id"]}') or []
+            if len(got) >= 2:
+                o['read_back'] = {'readers': [g[0] for g in got[:2]], 'says': [g[1] for g in got[:2]], 'against': against}
+    for k in ():
         if old.get(k):
             data[k] = old[k]
     OUT.write_text(json.dumps(data, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')

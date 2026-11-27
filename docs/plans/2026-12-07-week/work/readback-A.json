@@ -1,0 +1,100 @@
+{
+ "reader": "reader A",
+ "answers": [
+  {
+   "ref": "off-tue-nytphotoshop",
+   "says": "The New York Times told its photographers not to install the new Photoshop update.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-tue-fcpcaptions",
+   "says": "Final Cut Pro can now make subtitles for your videos in 23 more languages.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-tue-logicdrums",
+   "says": "The Logic music app on iPad can now pull the drums out of a song, each drum on its own track.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-tue-spotifyaudio",
+   "says": "Spotify will turn a book you published yourself into an audiobook for free.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-tue-mychannel",
+   "says": "Google tried to patent an AI TV channel where every show stars you, and the patent office said no.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-tue-tplcommscam",
+   "says": "A meme: the AI music start-up's pitch is all excitement, while the songwriter who read the small print in its contract sits there unimpressed.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-tue-tplfistpump",
+   "says": "A meme: a film director celebrating after pulling off a shot the AI storyboard said could not be done.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-tue-tplninedarter",
+   "says": "A meme: the AI composer needs 400 tries to get it right, the human session player nails it in one take.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-tue-tplbuzzer",
+   "says": "A meme: the real, human-made mix arrives just in time, a second before the label gives up and uses the AI one.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-thu-figmasix",
+   "says": "Figma now makes six AI pictures from one request so you can pick one.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-thu-robloxvideo",
+   "says": "Roblox's AI helper can now watch a recording of your game being played, spot what is broken and fix it.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-thu-alphamatte",
+   "says": "Runway can now cut a person out of a video and put them on a new background without a green screen.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-thu-synthfirmware",
+   "says": "People used chatbots to give a cheap $70 synth new features, and the companies that make music gear started letting them.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-thu-kernowmarket",
+   "says": "An AI-made poster promised a big Christmas market, but people turned up to five stalls and buckets in an empty hall.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-thu-tplturin",
+   "says": "A meme: a video editor celebrating like a champion because the client approved the edit and did not ask for an AI version.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-thu-tplthanksgiving",
+   "says": "A meme: a hand-drawn cartoon film gets uploaded to a film festival with seconds to spare before the deadline.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-thu-tplassemble",
+   "says": "A meme: loads of AI video tools all rushing in to compete for the same short advert.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-thu-tpllegends",
+   "says": "A meme: walking into the studio backed by all the real musicians whose work the AI music model copied.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-thu-tplskyrim",
+   "says": "A meme: after seeing one AI demo, game studios want to remake their fantasy game set in every decade.",
+   "repeat": "new"
+  }
+ ]
+}

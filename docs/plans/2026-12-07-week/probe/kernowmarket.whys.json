@@ -1,0 +1,104 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why did the organisers of Kernow Christmas Market cancel and refund all 2026 bookings?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why did the organisers cancel and refund all 2026 bookings?",
+      "answer": "The organising company, Rowlands Attractions, said it was cancelling as a result of the criticism it faced on social media and in the news. Only one source was read, the BBC, so this rests on one site.",
+      "evidence": [
+        {
+          "url": "https://www.bbc.com/news/articles/cm0qjglj3ejlo",
+          "domain": "bbc.com",
+          "date": "2026-11-25",
+          "quote": "The criticism we have faced and the words that have been seen on social media and across the news make us look at the world slightly differently."
+        },
+        {
+          "url": "https://www.bbc.com/news/articles/cm0qjglj3ejlo",
+          "domain": "bbc.com",
+          "date": "2026-11-25",
+          "quote": "As a result of this, we are going to cancel and refund all current and future bookings and Kernow Christmas Market will take no further bookings for 2026."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "The withdrawal is partial: traders who wish to continue can book direct with Pool Market, and Cornwall Winter Wonderland stays open. Quote: \"if any traders wish to continue to trade they must book direct with Pool Market.\" Scope searched: the BBC article only."
+      },
+      "mechanism_type": null,
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why was there a backlash?",
+      "answer": "AI-generated promotional images showed rows of decorated stalls under fairy lights, but visitors photographed a mostly empty hall with a handful of traders, little decoration and buckets catching water from a leaking roof. A trader who paid 180 pounds for a pitch said she felt let down.",
+      "evidence": [
+        {
+          "url": "https://www.bbc.com/news/articles/cm0qjglj3ejlo",
+          "domain": "bbc.com",
+          "date": "2026-11-25",
+          "quote": "But photographs taken by visitors showed a mostly empty hall with only a handful of traders, little Christmas decoration and buckets on the floor collecting water from a leaking roof."
+        },
+        {
+          "url": "https://www.bbc.com/news/articles/cm0qjglj3ejlo",
+          "domain": "bbc.com",
+          "date": "2026-11-25",
+          "quote": "Prior to the cancellation announcement, one stallholder, Ceilidh Hurrell, said she felt \"let down\" after paying £180 to trade at the event."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "The image maker said the pictures were only meant as a rough guide. Quote: \"You are never going to make it look exactly like the picture,\" he said. The market also sat inside a wider Winter Wonderland with more stalls, a grotto, an ice rink and a fun fair. Scope searched: the BBC article only."
+      },
+      "mechanism_type": null,
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why did the event not match its promotion?",
+      "answer": "The promoter made the AI images because they were easy and gave a rough idea. By the organiser's account, its job was to advertise and book stalls, while signage, decorating and greeting traders fell to the venue, Pool Market. Only the organiser's side of that split is on record.",
+      "evidence": [
+        {
+          "url": "https://www.bbc.com/news/articles/cm0qjglj3ejlo",
+          "domain": "bbc.com",
+          "date": "2026-11-25",
+          "quote": "He said the AI images were \"so easy to do\" and gave a \"rough idea\" of what people could expect."
+        },
+        {
+          "url": "https://www.bbc.com/news/articles/cm0qjglj3ejlo",
+          "domain": "bbc.com",
+          "date": "2026-11-25",
+          "quote": "The agreement was always with Pool Market to do their bit and we do ours. We advertise it, book the stalls and they do the rest- such as signage, decorating and greeting the traders and helping them with queries."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "A trader said the size of the promise came from the organisers themselves, beyond the pictures. Quote: \"They've told us we're going to be part of this massive Winter Wonderland, 50-plus stalls, visitors of 2,500 people plus a day, then we get shoved in a dark corner of a warehouse.\" Scope searched: the BBC article only."
+      },
+      "mechanism_type": "contract: a split of duties between the promoter (advertising, stall bookings) and the venue (signage, decorating, greeting traders), as described by the promoter only",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why were the decorating, the signage and most of the promised stalls missing on the day?",
+      "answer": "Nothing read answers this. Pool Market, which the organiser says held those duties, had not given its account, and no source says why so few traders booked.",
+      "evidence": [
+        {
+          "url": "https://www.bbc.com/news/articles/cm0qjglj3ejlo",
+          "domain": "bbc.com",
+          "date": "2026-11-25",
+          "quote": "Pool Market has been approached for comment."
+        }
+      ],
+      "strength": "open",
+      "counter": {
+        "text": "none found; scope searched: the BBC article only, which links to no primary record such as the organiser's Facebook statement or a Pool Market reply."
+      },
+      "mechanism_type": null,
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "The ladder runs from a cancellation the organiser blames on public criticism, to AI images that promised a full, festive hall, to a split of duties between promoter and venue that only the promoter has described. All of it rests on one BBC article, and the venue's side is missing.",
+    "open_question": "What did Pool Market agree to provide for the market, and why was the hall left undecorated and nearly empty?"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "https://www.theverge.com/ai-artificial-intelligence/1040081/vibe-coding-open-source-music-firmware": {"file": "synthfirmware-verge.txt"},
+  "https://polyend.com/whats-up/tracker-the-biggest-update-yet/": {"file": "synthfirmware-polyend-tracker.txt"},
+  "https://www.ericasynths.lv/news/post/lxropen/": {"file": "synthfirmware-erica-lxr02.txt"},
+  "https://github.com/polyend/tracker-ce": {"unreadable": "github.com refused in this session (403)"},
+  "https://github.com/polyend/tracker-ce/blob/main/CHANGELOG.md": {"unreadable": "github.com refused in this session (403)"},
+  "https://raw.githubusercontent.com/polyend/tracker-ce/main/README.md": {"file": "synthfirmware-tracker-ce-readme.txt"},
+  "https://raw.githubusercontent.com/polyend/tracker-ce/main/CHANGELOG.md": {"file": "synthfirmware-tracker-ce-changelog.txt"},
+  "https://raw.githubusercontent.com/polyend/tracker-ce/main/LICENSE": {"file": "synthfirmware-tracker-ce-license.txt"}
+}

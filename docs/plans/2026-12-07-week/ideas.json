@@ -651,7 +651,18 @@
      "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
      "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
     },
-    "recommended": true
+    "recommended": true,
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "The New York Times told its photographers not to install the new Photoshop update.",
+      "The New York Times has told its photographers not to install the new Photoshop update."
+     ],
+     "against": 61
+    }
    },
    {
     "id": "fcpcaptions",
@@ -752,6 +763,17 @@
      "tone": "Plain, useful and a little dry: the joke is in the facts.",
      "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
      "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
+    },
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "Final Cut Pro can now make subtitles for your videos in 23 more languages.",
+      "Final Cut Pro can now make subtitles for your videos in 23 more languages."
+     ],
+     "against": 61
     }
    },
    {
@@ -853,6 +875,17 @@
      "tone": "Plain, useful and a little dry: the joke is in the facts.",
      "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
      "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
+    },
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "The Logic music app on iPad can now pull the drums out of a song, each drum on its own track.",
+      "Logic on the iPad can now pull the drums out of a song and put each drum on its own track."
+     ],
+     "against": 61
     }
    },
    {
@@ -954,6 +987,17 @@
      "tone": "Plain, useful and a little dry: the joke is in the facts.",
      "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
      "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
+    },
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "Spotify will turn a book you published yourself into an audiobook for free.",
+      "If you wrote and published your own book, Spotify will make it into an audiobook for free."
+     ],
+     "against": 61
     }
    },
    {
@@ -1021,6 +1065,17 @@
      "tone": "Deadpan: the facts carry the joke.",
      "kit": "v5 Library short: house type, brand palette, the designed captions",
      "inspo_url": "https://www.instagram.com/evolving.ai/p/DfXfbEMACR-/"
+    },
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "Google tried to patent an AI TV channel where every show stars you, and the patent office said no.",
+      "Google tried to patent an AI TV channel where every show stars you, and the patent office turned it down."
+     ],
+     "against": 61
     }
    },
    {
@@ -1036,11 +1091,11 @@
     "hook": "Carragher cheers, Neville sinks: the 4-0 comms cam",
     "pitch": {
      "see": "On the Anfield gantry one pundit laughs and leans out of his seat at each goal while the one beside him sits still, face unmoved, as it reaches 4-0.",
-     "lands": "Two faces watching the same thing is the perfect split for the label and the session player hearing the same AI demo; the reversal is in the faces."
+     "lands": "Two faces watching the same thing is the split between an AI music start-up's pitch and the songwriter who read the contract; the reversal is in the faces."
     },
     "aim": "humour",
     "shape": "story",
-    "funny": "Two pundits, one game: exactly how a label and a session player react to the same AI demo.",
+    "funny": "Two pundits, one game: an AI music start-up's pitch and the songwriter who read the contract.",
     "template": {
      "title": "Carragher cheers, Neville sinks: the 4-0 comms cam",
      "clip": {
@@ -1056,7 +1111,7 @@
      },
      "credit": "Sky Sports Premier League",
      "what_happens": "On the Anfield gantry one pundit laughs and leans out of his seat at each goal while the one beside him sits still, face unmoved, as it reaches 4-0.",
-     "why_it_works": "Two faces watching the same thing is the perfect split for the label and the session player hearing the same AI demo; the reversal is in the faces.",
+     "why_it_works": "Two faces watching the same thing is the split between an AI music start-up's pitch and the songwriter who read the contract; the reversal is in the faces.",
      "mechanism": [
       "reversal",
       "incongruity"
@@ -1065,10 +1120,21 @@
      "date": "2026-11-22"
     },
     "caption_ideas": [
-     "The label hearing the AI demo vs the session musician hearing the AI demo",
      "Left: the AI music start-up's pitch deck. Right: the songwriter who read clause 14",
+     "The film studio reading the AI trailer's test scores vs the editor who cut the real one",
      "Me when the AI mastering tool says 'release ready' vs my ears"
-    ]
+    ],
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "A meme: the AI music start-up's pitch is all excitement, while the songwriter who read the small print in its contract sits there unimpressed.",
+      "A meme: the AI music company is laughing and excited about its big plan, while the songwriter who read the small print in the contract is not smiling at all."
+     ],
+     "against": 61
+    }
    },
    {
     "id": "tplfistpump",
@@ -1115,7 +1181,18 @@
      "The director walking past the AI storyboard that said the shot was impossible",
      "Session drummer leaving the studio after the AI drummer lost the groove twice",
      "Me after the film's credits roll and there is not one AI line in them"
-    ]
+    ],
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "A meme: a film director celebrating after pulling off a shot the AI storyboard said could not be done.",
+      "A meme: a film director celebrating because he pulled off the shot an AI storyboard said could not be done."
+     ],
+     "against": 61
+    }
    },
    {
     "id": "tplninedarter",
@@ -1162,7 +1239,18 @@
      "The AI composer after 400 generations. The session player, one take:",
      "AI drummer: perfect time after 2 hours of prompts. Real drummer, first take: same",
      "When the AI cover finally sounds right and the band plays it live better on the first go"
-    ]
+    ],
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "A meme: the AI composer needs 400 tries to get it right, the human session player nails it in one take.",
+      "A meme: the AI needs 400 tries to make a perfect piece of music, and the human musician does it just as well in one go."
+     ],
+     "against": 61
+    }
    },
    {
     "id": "tplbuzzer",
@@ -1209,7 +1297,18 @@
      "The real mix arriving one second before the label says 'fine, use the AI one'",
      "My human-made album cover landing as the AI draft is being sent to print",
      "The voice actor's take landing just before the studio clicks 'generate'"
-    ]
+    ],
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "A meme: the real, human-made mix arrives just in time, a second before the label gives up and uses the AI one.",
+      "A meme: the real, human-made mix turns up at the very last second, just before the label gives up and uses the AI one."
+     ],
+     "against": 61
+    }
    }
   ],
   "thu": [
@@ -1313,7 +1412,18 @@
      "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
      "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
     },
-    "recommended": true
+    "recommended": true,
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "Figma now makes six AI pictures from one request so you can pick one.",
+      "Figma can now make six AI pictures from one request so you can pick one."
+     ],
+     "against": 61
+    }
    },
    {
     "id": "robloxvideo",
@@ -1414,6 +1524,17 @@
      "tone": "Plain, useful and a little dry: the joke is in the facts.",
      "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
      "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
+    },
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "Roblox's AI helper can now watch a recording of your game being played, spot what is broken and fix it.",
+      "Roblox's AI helper can watch a recording of your game being played, spot what is broken and fix it."
+     ],
+     "against": 61
     }
    },
    {
@@ -1515,6 +1636,17 @@
      "tone": "Plain, useful and a little dry: the joke is in the facts.",
      "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
      "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
+    },
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "Runway can now cut a person out of a video and put them on a new background without a green screen.",
+      "Runway can now cut a person out of a video and put them on a new background without a green screen."
+     ],
+     "against": 61
     }
    },
    {
@@ -1582,68 +1714,118 @@
      "tone": "Deadpan: the facts carry the joke.",
      "kit": "v5 Library short: house type, brand palette, the designed captions",
      "inspo_url": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/"
+    },
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "People used chatbots to give a cheap $70 synth new features, and the companies that make music gear started letting them.",
+      "People used chatbots to give a cheap $70 synth new features, and the company that makes it let them."
+     ],
+     "against": 61
     }
    },
    {
-    "id": "kernowmarket",
-    "kind": "voiceover",
-    "format": "Voiceover short, 9:16, about 60 seconds, motion graphics over the source pictures",
+    "id": "pixelfill",
+    "kind": "explainer",
+    "format": "Explainer carousel, 5 cards, 4:5",
     "source": {
-     "label": "BBC News, Kernow Christmas Market (25 Nov 2026)",
-     "url": "https://www.bbc.com/news/articles/cm0qjglj3ejlo"
+     "label": "Apple, Pixelmator Pro 5.0 release notes (18 Nov 2026)",
+     "url": "https://support.apple.com/en-gb/126257"
     },
-    "sources": [],
     "source_tag": "trade_press",
-    "copy": "The organisers of a Cornish Christmas market cancelled and refunded every booking after AI-generated promotional artwork showed a busy market and visitors found about five stalls. A 60-second voiceover on what an AI poster is worth when the photos come back.",
-    "hook": "An AI poster promised a Christmas market. Visitors found five stalls and buckets.",
-    "story": "The organisers of Kernow Christmas Market in Cornwall cancelled and refunded all 2026 bookings after a backlash over AI-generated promotional artwork that showed rows of decorated stalls, the BBC reported on 25 November 2026.",
-    "fact": "BBC News, 25 Nov 2026: \"But photographs taken by visitors showed a mostly empty hall with only a handful of traders, little Christmas decoration and buckets on the floor collecting water from a leaking roof.\"",
+    "copy": "Pixelmator Pro 5.0 adds Generate Fill: select part of an image, type the change, and it blends in on its own masked layer. Here is how artists use it and what it needs.",
+    "hook": "Pixelmator Pro now repaints part of a photo from words.",
+    "story": "Apple released Pixelmator Pro 5.0, the image editor used by photographers, designers and artists, on 18 November 2026 with Generate Fill, which edits a chosen area of an image from a typed description.",
+    "fact": "Apple, 18 Nov 2026: \"Transform any detail in your image with Generate Fill, adding edits that blend naturally to match the lighting, perspective and texture of surrounding areas, using natural language.\"",
     "pitch": {
-     "see": "A glowing AI poster of a busy Christmas market beside a photo of an empty hall with buckets.",
-     "lands": "It is funny and true, and it lands for anyone who makes event art: the AI picture sold a market that did not exist, and the organisers had to refund everyone.",
-     "why_now": "BBC News, 25 Nov 2026.",
-     "share": "The AI promised fairy lights; the visitors' photos showed buckets."
+     "see": "A photo where only the sky changes colour as a sentence is typed.",
+     "lands": "Any photographer, designer or illustrator on a Mac can change one part of an image by typing what they want, on its own layer so the original stays safe, this week.",
+     "why_now": "Pixelmator Pro 5.0, released 18 Nov 2026.",
+     "share": "I typed 'make the sky purple' and it did."
     },
     "shape": "story",
-    "dive": "AI artwork made the promotion cheap and the promise unlimited, so the visitors' own photos set the record straight.",
-    "aim": "humour",
-    "funny": "The AI artwork promised fairy lights; the visitors' photos showed buckets.",
+    "dive": "A typed description edits one selected part of an image and blends it into the light and texture around it, on a separate layer.",
+    "aim": "utility",
+    "funny": "Apple's own example of what to ask the AI for is a purple sky.",
     "lookalike": {
-     "pattern": "ai-backfires",
-     "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
-     "our_take": "The post showed an AI giving itself away; ours shows an AI poster meeting the real photos."
+     "pattern": "tool-unlock",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
+     "our_take": "The post listed what a coding tool unlocks; ours is the same card flow for one creative tool, with the real price and the catch."
     },
+    "cards": [
+     {
+      "words": "Pixelmator Pro now repaints part of a photo from words.",
+      "picture": "A photo with one area glowing as it changes"
+     },
+     {
+      "words": "Choose the Generate Fill tool and select the area to change.",
+      "picture": "The Generate Fill tool in the sidebar"
+     },
+     {
+      "words": "Type the change, and it arrives on its own masked layer.",
+      "picture": "A new layer with a mask in the Layers list"
+     },
+     {
+      "words": "The catch: the $49.99 app alone does not include it.",
+      "picture": "Two price tags, one crossed out"
+     },
+     {
+      "words": "Cost: Apple Creator Studio, $12.99 a month after a 30-day trial.",
+      "picture": "A price tag on a paintbrush"
+     }
+    ],
+    "steps": [
+     {
+      "text": "Select an image layer, then choose the Generate Fill tool.",
+      "checked": "https://support.apple.com/guide/pixelmator-pro/modify-an-image-using-generative-ai-zvg3g88runqn/5.0/mac/27"
+     },
+     {
+      "text": "To change one spot, drag over it or circle it with a selection tool.",
+      "checked": "https://support.apple.com/en-gb/126257"
+     },
+     {
+      "text": "Type the change in the text field and run it.",
+      "checked": "https://support.apple.com/guide/pixelmator-pro/modify-an-image-using-generative-ai-zvg3g88runqn/5.0/mac/27"
+     },
+     {
+      "text": "Check you have Apple Creator Studio and an Apple silicon Mac; the one-time app does not include it.",
+      "checked": "https://support.apple.com/guide/pixelmator-pro/modify-an-image-using-generative-ai-zvg3g88runqn/5.0/mac/27"
+     }
+    ],
     "learned_from": [
-     "\"play on the hilarity of this topic\" (your Improve, 9 Nov, of the Home Depot homework option)"
+     "\"a more infographicy amusing explainer\" (your Improve, 9 Nov, of the phone-book tool-calls carousel)"
     ],
     "direction": {
-     "look": "Voice-led motion graphics over the story's own pictures, art-directed captions",
-     "format": "9:16 short, about 60 seconds",
+     "look": "The v5 explainer look, modelled on the tool-unlock carousels in your Instagram inspo sheet",
+     "format": "5 cards, 4:5",
      "frames": [
       {
-       "words": "The poster: a magical Christmas market.",
-       "picture": "The AI artwork of a busy market"
+       "words": "Pixelmator Pro now repaints part of a photo from words.",
+       "picture": "A photo with one area glowing as it changes"
       },
       {
-       "words": "The reality: about five stalls.",
-       "picture": "A visitor's photo of an empty hall"
+       "words": "Choose the Generate Fill tool and select the area to change.",
+       "picture": "The Generate Fill tool in the sidebar"
       },
       {
-       "words": "And buckets catching rain from the roof.",
-       "picture": "Buckets on a wet floor"
+       "words": "Type the change, and it arrives on its own masked layer.",
+       "picture": "A new layer with a mask in the Layers list"
       },
       {
-       "words": "Every booking cancelled and refunded.",
-       "picture": "A refund notice"
+       "words": "The catch: the $49.99 app alone does not include it.",
+       "picture": "Two price tags, one crossed out"
       },
       {
-       "words": "The artwork was easy. The photos were easier.",
-       "picture": "A phone camera clicking"
+       "words": "Cost: Apple Creator Studio, $12.99 a month after a 30-day trial.",
+       "picture": "A price tag on a paintbrush"
       }
      ],
-     "tone": "Deadpan: the facts carry the joke.",
-     "kit": "v5 Library short: house type, brand palette, the designed captions",
-     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/"
+     "tone": "Plain, useful and a little dry: the joke is in the facts.",
+     "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
+     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
     }
    },
    {
@@ -1691,7 +1873,18 @@
      "The editor when the client approves the cut and does not ask 'can we try an AI version'",
      "Producers when the AI stem splitter finally gets the vocal out without the hi-hats",
      "Illustrator when the art director says 'no AI, we want you'"
-    ]
+    ],
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "A meme: a video editor celebrating like a champion because the client approved the edit and did not ask for an AI version.",
+      "A meme: a video editor going wild with joy because the client liked the cut and did not ask for an AI version."
+     ],
+     "against": 61
+    }
    },
    {
     "id": "tplthanksgiving",
@@ -1738,7 +1931,18 @@
      "The hand-animated short hitting the festival upload button with three seconds left",
      "Writers' room finishing the script before the producer opens the AI draft",
      "The real band's song beating 2,000 AI songs to the playlist slot"
-    ]
+    ],
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "A meme: a hand-drawn cartoon film gets uploaded to a film festival with seconds to spare before the deadline.",
+      "A meme: a hand-drawn cartoon getting uploaded to a film festival just seconds before the deadline, like a last-second winning score."
+     ],
+     "against": 61
+    }
    },
    {
     "id": "tplassemble",
@@ -1785,7 +1989,18 @@
      "Every AI video tool turning up to pitch for the same 30-second advert",
      "The film crew arriving after the producer says 'the AI did the storyboard, so it is basically done'",
      "Every AI music app the week a label announces it is licensing"
-    ]
+    ],
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "A meme: loads of AI video tools all rushing in to compete for the same short advert.",
+      "A meme: loads of AI video tools all piling in to try and win the same short advert job."
+     ],
+     "against": 61
+    }
    },
    {
     "id": "tpllegends",
@@ -1832,7 +2047,18 @@
      "Me walking into the studio with every session player the AI music model was trained on",
      "The real band arriving at the AI song's chart party",
      "Country music when the AI country hit thanks 'the dataset'"
-    ]
+    ],
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "A meme: walking into the studio backed by all the real musicians whose work the AI music model copied.",
+      "A meme: walking into the studio with all the real musicians whose playing the AI music tool learned from."
+     ],
+     "against": 61
+    }
    },
    {
     "id": "tplskyrim",
@@ -1879,10 +2105,1171 @@
      "Game studios after one AI demo: what if our fantasy game, but in every decade",
      "The AI remake pitch, as the publisher hears it, versus as the game makers hear it",
      "When the AI gets the famous game scene right but the century wrong"
-    ]
+    ],
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "A meme: after seeing one AI demo, game studios want to remake their fantasy game set in every decade.",
+      "A meme: after seeing one AI demo, game companies want to remake their fantasy game set in every decade."
+     ],
+     "against": 61
+    }
    }
   ],
-  "sat": []
+  "sat": [
+   {
+    "id": "goodnews",
+    "kind": "good_news",
+    "format": "Good-news carousel, 6 cards, 4:5",
+    "source_tag": "trade_press",
+    "topic": "music",
+    "source": {
+     "label": "Each story's own source",
+     "url": "https://www.koreatimes.co.kr/entertainment/music/20261126/ai-music-tops-local-chart-what-you-need-to-know"
+    },
+    "copy": "AI put songwriters and bands in front of millions. Four real things AI helped people in music do this month, each with who it helped and how.",
+    "hook": "AI put songwriters and bands in front of millions.",
+    "pitch": {
+     "see": "A Korean chart with an AI-assisted ballad at number one, a new boy group's debut, and a guitarist in a studio.",
+     "lands": "It is uplifting, real and in the reader's world, and each story names who it helped.",
+     "why_now": "Stories dated 20 to 27 November 2026, or found in your Instagram inspo sheet within 30 days.",
+     "share": "Four music wins from AI this month, each with who it helped."
+    },
+    "shape": "theme",
+    "aim": "interest",
+    "funny": "The number one ballad was written by two humans and sung by software, which is the most K-pop sentence of the year.",
+    "lookalike": {
+     "pattern": "small-win",
+     "beats": "https://www.instagram.com/power.ai/p/Dfjbe68ldg-/",
+     "our_take": "The post told one person's small win; ours puts four wins in the reader's own industry side by side, each with who it helped."
+    },
+    "learned_from": [
+     "\"I want actual news items and the content we are going to use here - embedded real world images or videos\" (your Improve, 2 Nov, of the good news)",
+     "\"Real-world stories only, but with a hilarious generated cover page\" (your Improve, 9 Nov, of the good news)"
+    ],
+    "stories": [
+     {
+      "headline": "Two songwriters used AI to reach number one in Korea.",
+      "what": "MEOMURU's rock ballad The Adult I Dreamed Of, by the songwriting duo Glorywave (Lee Yong-seok and Choi Sung-hyuk), is the first AI-assisted song to top Melon's Top 100, Korea's most watched chart. The pair wrote the lyrics and used Suno for the melody, arrangement and vocals, then refined them; on Wednesday 25 November it was still at number one, more than a week after it reached the top on 13 November, with no fandom or TV promotion behind it.",
+      "why": "Two working songwriters with no fandom behind them reached the top of the country's biggest chart by writing the words themselves and letting AI play the band.",
+      "kind": "music",
+      "helps": {
+       "who": "songwriters and independent producers",
+       "how": "more successful"
+      },
+      "date": "2026-11-25",
+      "source": {
+       "label": "The Korea Times, 'AI music tops local chart: What you need to know', 26 Nov 2026 (KST)",
+       "url": "https://www.koreatimes.co.kr/entertainment/music/20261126/ai-music-tops-local-chart-what-you-need-to-know"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://newsimg.koreatimes.co.kr/2026/11/25/6c062a31-2cec-44c3-b220-6a52f0597c5f.jpg"
+      }
+     },
+     {
+      "headline": "An AI-made K-pop group released its debut single.",
+      "what": "H3ARUS, a five-member boy group made by the AI entertainment company KAIVERSE, released its debut single CRUSH and a music video on Monday 23 November 2026. The Korea Times counted four nonhuman acts, including a HYBE-backed VTuber project, putting out debut or predebut music in the last full week of November.",
+      "why": "A production company now sits in the same release week as the big K-pop agencies with a group nobody had to train for years.",
+      "kind": "music",
+      "helps": {
+       "who": "K-pop producers and small entertainment companies",
+       "how": "more successful"
+      },
+      "date": "2026-11-23",
+      "source": {
+       "label": "The Korea Times, 'Virtual, AI acts crowd K-pop debut week', 25 Nov 2026",
+       "url": "https://www.koreatimes.co.kr/entertainment/k-pop/20261125/virtual-ai-acts-crowd-k-pop-debut-week"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://newsimg.koreatimes.co.kr/2026/11/24/479dc3ee-ede6-44a2-be0f-47fb86ebd5bd.png"
+      }
+     },
+     {
+      "headline": "Music teams can now find a track by asking for it.",
+      "what": "Music-tagging company Cyanite, which has used AI to analyse and tag music catalogues for years, launched Cyanite Concierge on 26 November 2026, a conversational search for those catalogues aimed at labels, publishers and sync teams.",
+      "why": "A music supervisor with a brief can find a usable track in a big catalogue faster.",
+      "kind": "creative_tools",
+      "helps": {
+       "who": "music supervisors, labels and publishers",
+       "how": "smarter"
+      },
+      "date": "2026-11-26",
+      "source": {
+       "label": "Music Ally, 'Cyanite launches its conversational Concierge for music search', 26 Nov 2026",
+       "url": "https://musically.com/2026/11/26/cyanite-launches-its-conversational-concierge-for-music-search/"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://i0.wp.com/musically.com/wp-content/uploads/2026/11/news-stories-images-4x3-72.png?fit=2000%2C1500&ssl=1"
+      }
+     },
+     {
+      "headline": "A label still hired George Lynch to play on an AI track.",
+      "what": "Ex-Dokken guitarist George Lynch, 72, told the Frontera Rock podcast that he recently did a paid session on a complex progressive track, then learned from the engineer that the whole backing had been made by AI. MusicRadar reported the story on 27 November 2026.",
+      "why": "Even when the AI track is finished, a producer still wanted a real guitarist's name and hands on it.",
+      "kind": "music",
+      "helps": {
+       "who": "session musicians",
+       "how": "more successful"
+      },
+      "date": "2026-11-27",
+      "source": {
+       "label": "MusicRadar, 'Guitarist George Lynch on his very strange session for an AI track', 27 Nov 2026",
+       "url": "https://www.musicradar.com/artists/guitarists/guitarist-george-lynch-on-his-very-strange-session-for-an-ai-track-i-was-like-why-do-they-want-me-i-mean-im-just-a-human-being-machines-do-it-way-better"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://cdn.mos.cms.futurecdn.net/Hpx3fqfTtN8vzF5LbLymZH-2000-80.jpg"
+      }
+     }
+    ],
+    "stories_due": "2026-11-27",
+    "cards": [
+     {
+      "words": "AI put songwriters and bands in front of millions.",
+      "picture": "A chart screen with a ballad at number one"
+     },
+     {
+      "words": "Two songwriters used AI to reach number one in Korea.",
+      "picture": "The Korea Times: the thing itself (photo)"
+     },
+     {
+      "words": "An AI-made K-pop group released its debut single.",
+      "picture": "The Korea Times: the thing itself (photo)"
+     },
+     {
+      "words": "Music teams can now find a track by asking for it.",
+      "picture": "Music Ally: the thing itself (photo)"
+     },
+     {
+      "words": "A label still hired George Lynch to play on an AI track.",
+      "picture": "MusicRadar: the thing itself (photo)"
+     },
+     {
+      "words": "Each one still needed a person who knew what good sounds like.",
+      "picture": "A guitarist's hands on the strings"
+     }
+    ],
+    "direction": {
+     "look": "The v5 good-news set, modelled on the small-win carousels in your Instagram inspo sheet",
+     "format": "6 cards, 4:5",
+     "frames": [
+      {
+       "words": "AI put songwriters and bands in front of millions.",
+       "picture": "A chart screen with a ballad at number one"
+      },
+      {
+       "words": "Two songwriters used AI to reach number one in Korea.",
+       "picture": "The Korea Times: the thing itself (photo)"
+      },
+      {
+       "words": "An AI-made K-pop group released its debut single.",
+       "picture": "The Korea Times: the thing itself (photo)"
+      },
+      {
+       "words": "Music teams can now find a track by asking for it.",
+       "picture": "Music Ally: the thing itself (photo)"
+      },
+      {
+       "words": "A label still hired George Lynch to play on an AI track.",
+       "picture": "MusicRadar: the thing itself (photo)"
+      },
+      {
+       "words": "Each one still needed a person who knew what good sounds like.",
+       "picture": "A guitarist's hands on the strings"
+      }
+     ],
+     "tone": "Warm and real, with one dry line on the cover.",
+     "kit": "v5 Library good-news set: each story's own photo or clip, house type and palette",
+     "inspo_url": "https://www.instagram.com/power.ai/p/Dfjbe68ldg-/"
+    },
+    "weekly": "good_news",
+    "candidates": [
+     {
+      "title": "A fully AI-made K-pop boy group released its first single in a week crowded with nonhuman debuts",
+      "url": "https://www.koreatimes.co.kr/entertainment/k-pop/20261125/virtual-ai-acts-crowd-k-pop-debut-week",
+      "place": "news",
+      "date": "2026-11-23"
+     },
+     {
+      "title": "Two Korean songwriters used Suno to make a ballad that is still number one on Melon",
+      "url": "https://www.koreatimes.co.kr/entertainment/music/20261126/ai-music-tops-local-chart-what-you-need-to-know",
+      "place": "news",
+      "date": "2026-11-25"
+     },
+     {
+      "title": "Music gear makers are opening up their instruments after musicians started rewriting them with AI",
+      "url": "https://www.theverge.com/ai-artificial-intelligence/1040081/vibe-coding-open-source-music-firmware",
+      "place": "news",
+      "date": "2026-11-25"
+     },
+     {
+      "title": "A label hired guitarist George Lynch to play on a song AI had already played perfectly",
+      "url": "https://www.musicradar.com/artists/guitarists/guitarist-george-lynch-on-his-very-strange-session-for-an-ai-track-i-was-like-why-do-they-want-me-i-mean-im-just-a-human-being-machines-do-it-way-better",
+      "place": "news",
+      "date": "2026-11-27"
+     },
+     {
+      "title": "Cyanite launched a chat search so music teams can find the right track in a catalogue by asking for it",
+      "url": "https://musically.com/2026/11/26/cyanite-launches-its-conversational-concierge-for-music-search/",
+      "place": "news",
+      "date": "2026-11-26"
+     },
+     {
+      "title": "Lionsgate Play is making an eight-episode mythology epic with an AI lead actor, built with Google",
+      "url": "https://deadline.com/2026/11/lionsgate-play-eklavya-ai-series-tiger-tv-1237232555/",
+      "place": "news",
+      "date": "2026-11-25"
+     },
+     {
+      "title": "Oscar winner Michel Hazanavicius will show how he used AI on his new film at Les Arcs",
+      "url": "https://deadline.com/2026/11/michel-hazanavicius-exclusive-footage-third-hand-ai-1237234059/",
+      "place": "news",
+      "date": "2026-11-26"
+     },
+     {
+      "title": "Gary Vaynerchuk's AI avatar will answer one fan question a day, in the fan's own language, for a year",
+      "url": "https://www.prnewswire.com/news-releases/gary-vaynerchuk-partners-with-heygen-to-launch-ai-avatar-powered-social-channel-302948881.html",
+      "place": "news",
+      "date": "2026-11-24"
+     },
+     {
+      "title": "A Bengaluru AI creator's Desi Batman reels hit 25 million views in two weeks and landed a brand deal",
+      "url": "https://www.afaqs.com/news/social-media/e-motorad-teams-up-with-desi-batman-creator-as-ai-reels-go-viral-12843698",
+      "place": "news",
+      "date": "2026-11-27"
+     },
+     {
+      "title": "Nearly 500,000 people signed up to Canva through AI assistants in about a month",
+      "url": "https://thenextweb.com/news/canva-mcp-ai-agents-developers",
+      "place": "news",
+      "date": "2026-11-24"
+     },
+     {
+      "title": "Epic used AI to port 20,000 Fortnite Blueprints in a job it expected to take years",
+      "url": "https://www.pocketgamer.biz/epic-games-to-drop-blueprints-from-unreal-engine-6-as-ai-reshapes-migration-plans/",
+      "place": "news",
+      "date": "2026-11-24"
+     },
+     {
+      "title": "A solo game developer can now describe a world and paint a map with it minutes later",
+      "url": "https://www.pocketgamer.biz/ludoai-launches-ai-powered-tileset-generator-for-2d-game-development/",
+      "place": "news",
+      "date": "2026-11-26"
+     },
+     {
+      "title": "Prime Video's AI shows Skins Game viewers each golfer's live chance of winning the money",
+      "url": "https://www.sportsvideo.org/2026/11/23/aws-ai-to-power-real-time-win-probabilities-during-the-skins-game-on-prime-video/",
+      "place": "news",
+      "date": "2026-11-23"
+     },
+     {
+      "title": "Prime Video's AI now picks out the passes that move a Champions League team up the pitch",
+      "url": "https://www.svgeurope.org/blog/top-stories/prime-video-launches-new-feature-for-champions-league-coverage/",
+      "place": "news",
+      "date": "2026-11-23"
+     },
+     {
+      "title": "Norway's biggest paper uses AI on about 200 stories a day, and its sister paper has never published a critical AI mistake",
+      "url": "https://fortune.com/2026/11/27/checking-ai-work-human-in-the-loop-newsrooms",
+      "place": "news",
+      "date": "2026-11-27"
+     },
+     {
+      "title": "Discover BOT VFX's hybrid AI VFX pipeline for Young Washington (300 shots in 17 weeks)",
+      "url": "https://www.cgchannel.com/2026/11/discover-bot-vfxs-hybrid-ai-vfx-pipeline-for-young-washington/",
+      "place": "news",
+      "date": "2026-11-24"
+     },
+     {
+      "title": "Musixmatch adds more tools to its Pro for Artists platform",
+      "url": "https://musically.com/2026/11/26/musixmatch-adds-more-tools-to-its-pro-for-artists-platform/",
+      "place": "news",
+      "date": "2026-11-26"
+     },
+     {
+      "title": "ElevenLabs' next funding round could see a UMG-sized valuation",
+      "url": "https://musically.com/2026/11/26/elevenlabs-next-funding-round-could-see-a-umg-sized-valuation/",
+      "place": "news",
+      "date": "2026-11-26"
+     },
+     {
+      "title": "Maxon Plus brings AI 3D model generation to Cinema 4D and ZBrush",
+      "url": "https://www.unite.ai/maxon-plus-ai-3d-creation-cinema-4d-zbrush",
+      "place": "news",
+      "date": "2026-11-23"
+     },
+     {
+      "title": "From $50 million in content revenue to international AI film presales, Reverse Clock expands",
+      "url": "https://www.globenewswire.com/news-release/2026/11/27/3411094/0/en/from-50-million-in-content-revenue-to-international-ai-film-presales-reverse-clock-expands-its-global-entertainment-business.html",
+      "place": "news",
+      "date": "2026-11-27"
+     },
+     {
+      "title": "The Bay Golf Club and Game Your Game partnership bringing AI performance technology to fans",
+      "url": "https://www.globenewswire.com/news-release/2026/11/23/3408435/0/en/the-bay-golf-club-and-game-your-game-announce-partnership-bringing-ai-powered-performance-technology-to-fans.html",
+      "place": "news",
+      "date": "2026-11-23"
+     },
+     {
+      "title": "Polish voice actor for Geralt returns for The Witcher 3 with AI",
+      "url": "https://www.gamedeveloper.com/production/polish-voice-actor-for-geralt-returns-for-the-witcher-3-with-ai",
+      "place": "news",
+      "date": "2026-11-13"
+     },
+     {
+      "title": "How the BBC is using AI to transform live sport, and why it is licensing the tech to rivals",
+      "url": "https://www.sportspro.com/broadcast-ott/bbc-sport-ai-signals-wimbledon-broadcast/",
+      "place": "news",
+      "date": "2026-11-13"
+     },
+     {
+      "title": "Instagram Content Protection launched, with AI spoken-word matching test",
+      "url": "https://www.cined.com/instagram-content-protection-launched-automatic-repost-detection-credit-links-and-ai-spoken-word-matching-test/",
+      "place": "news",
+      "date": "2026-11-19"
+     },
+     {
+      "title": "LAFC and AccelerAI partner to co-develop AI tools for professional sports",
+      "url": "https://www.prnewswire.com/news-releases/lafc-and-accelerai-partner-to-pioneer-co-development-ai-tools-to-drive-enterprise-business-value-in-professional-sports-302942903.html",
+      "place": "news",
+      "date": "2026-11-17"
+     },
+     {
+      "title": "Magnific passes $300M ARR and may raise outside money next year",
+      "url": "https://thenextweb.com/news/magnific-300m-arr-cuenca-outside-funding-chinese-models",
+      "place": "news",
+      "date": "2026-11-19"
+     },
+     {
+      "title": "AI is helping this Hollywood veteran make videos that would never have existed before (Ari Kuschnir)",
+      "url": "https://www.businessinsider.com/ai-ari-kuschnir-make-200-000-videos-for-1-000-2026-11",
+      "place": "news",
+      "date": "2026-11-19"
+     },
+     {
+      "title": "UK actors gain rights and pay for AI digital replicas in new deal",
+      "url": "https://www.theguardian.com/technology/2026/nov/17/actors-uk-rights-digital-replicas-ai-protections",
+      "place": "news",
+      "date": "2026-11-17"
+     },
+     {
+      "title": "Sonilo inks licensing deal with Symphonic to train on opted-in indie recordings",
+      "url": "https://www.musicbusinessworldwide.com/11m-backed-ai-startup-sonilo-founded-by-tiktok-veterans-inks-licensing-deal-with-symphonic-to-train-its-model-on-opted-in-indie-recordings/",
+      "place": "news",
+      "date": "2026-11-18"
+     },
+     {
+      "title": "Autodesk releases Maya 2027.3 with new agentic AI features",
+      "url": "https://www.cgchannel.com/2026/11/autodesk-releases-maya-2027-3-with-new-agentic-ai-features/",
+      "place": "news",
+      "date": "2026-11-19"
+     },
+     {
+      "title": "Gallium Studios taps Artificial Agency for Will Wright's MyMems",
+      "url": "https://www.unite.ai/gallium-studios-taps-artificial-agency-for-will-wrights-mymems",
+      "place": "news",
+      "date": "2026-11-18"
+     },
+     {
+      "title": "Snapchat now lets developers build AR Lenses with AI coding assistants",
+      "url": "https://techcrunch.com/2026/11/18/snapchat-now-lets-developers-build-ar-lenses-with-ai-coding-assistants-like-claude-code-and-cursor",
+      "place": "news",
+      "date": "2026-11-18"
+     },
+     {
+      "title": "How OpenAI intends to lead Chip Ganassi Racing into IndyCar's future",
+      "url": "https://www.forbes.com/sites/brucemartin/2026/11/18/how-openai-intends-to-lead-chip-ganassi-racing-into-indycars-future",
+      "place": "news",
+      "date": "2026-11-18"
+     },
+     {
+      "title": "Epic Games held a gen AI game jam, but its most popular game used no AI",
+      "url": "https://www.gamesradar.com/games/epic-games-held-a-gen-ai-game-jam-but-its-most-popular-game-used-no-ai-at-all/",
+      "place": "news",
+      "date": "2026-11-17"
+     },
+     {
+      "title": "Mnet, Bandai Namco to launch survival show for virtual K-pop boy band",
+      "url": "https://www.koreajoongangdaily.com/entertainment/mnet-bandai-namco-to-launch-survival-show-for-virtual-kpop-boy-band/12994185",
+      "place": "news",
+      "date": "2026-11-27"
+     },
+     {
+      "title": "Macy Gray is premiering her new album inside a micro-drama",
+      "url": "https://musically.com/2026/11/24/macy-gray-is-premiering-her-new-album-inside-a-micro-drama/",
+      "place": "news",
+      "date": "2026-11-24"
+     },
+     {
+      "title": "Audible turns to AI to help users discover audiobooks",
+      "url": "https://techcrunch.com/2026/11/16/audible-turns-to-ai-to-help-users-discover-audiobooks/",
+      "place": "news",
+      "date": "2026-11-16"
+     },
+     {
+      "title": "For creators, higher incomes mean more pressure to use AI",
+      "url": "https://www.businessinsider.com/higher-earning-creators-face-more-ai-pressure-2026-11",
+      "place": "news",
+      "date": "2026-11-13"
+     },
+     {
+      "title": "Envato State of AI in Creative Work report (LinkedIn post)",
+      "url": "https://www.linkedin.com/posts/envato_some-compelling-insights-in-contras-creative-activity-7514148943975514113-EJ49",
+      "place": "linkedin",
+      "date": "2026-11-24"
+     },
+     {
+      "title": "A solo developer's first game made $1.3 million on Steam in a week despite gen AI use (Slotbound)",
+      "url": "https://www.gamesradar.com/games/roguelike/a-solo-developers-first-game-made-usd1-3-million-on-steam-in-a-week-despite-gen-ai-use/",
+      "place": "news",
+      "date": "2026-11-19"
+     },
+     {
+      "title": "Musixmatch gave 1.5 million artists a wallet for their lyric earnings, with paid AI licensing of their lyrics to come",
+      "url": "https://www.musicbusinessworldwide.com/musixmatch-launches-enhanced-pro-for-artists-platform-adding-fan-engagement-analytics-and-lyric-merch-sales-with-optional-ai-licensing-coming-soon/",
+      "place": "news",
+      "date": "2026-11-25"
+     },
+     {
+      "title": "The 49ers signed Meta as a sponsor, and every suite and club season ticket holder gets free AI glasses",
+      "url": "https://www.49ers.com/news/49ers-and-meta-announce-multi-year-partnership-centered-around-meta-ai-glasses",
+      "place": "news",
+      "date": "2026-11-24"
+     },
+     {
+      "title": "Der Spiegel built a model that spots which subscribers are about to cancel, and it finds a third of them",
+      "url": "https://wan-ifra.org/2026/11/addressing-subscriber-churn-at-der-spiegel-part-one-building-the-score/",
+      "place": "news",
+      "date": "2026-11-23"
+     },
+     {
+      "title": "Nine is letting paying companies plug the AFR and the Sydney Morning Herald straight into their AI tools",
+      "url": "https://www.nineforbrands.com.au/media-releases/nine-leads-with-first-of-its-kind-authenticated-mcp-publishing-ai-pilot-in-australia/",
+      "place": "news",
+      "date": "2026-11-25"
+     },
+     {
+      "title": "Seven Korean directors, Lee Myung-se among them, made AI short films for the Seoul Independent Film Festival",
+      "url": "https://www.koreajoongangdaily.com/entertainment/seven-directors-to-unveil-ai-short-films-at-seoul-independent-film-festival/12955399",
+      "place": "news",
+      "date": "2026-11-25"
+     },
+     {
+      "title": "An AI filmmaker made a fantasy comedy with a giant war beast for $28,775",
+      "url": "https://www.instagram.com/evolving.ai/reel/DfKgAKVgDhn/",
+      "place": "sheet",
+      "date": "2026-10-31"
+     },
+     {
+      "title": "An AI animator brought back his viral English gentleman for a Sting-scored short set in New York",
+      "url": "https://www.instagram.com/evolving.ai/reel/DfHwPJsgbeb/",
+      "place": "sheet",
+      "date": "2026-10-30"
+     },
+     {
+      "title": "Independent AI filmmaker Samyaza Speaks put out two epic films in three days",
+      "url": "https://www.instagram.com/evolving.ai/reel/DfR7b8JA4q1/",
+      "place": "sheet",
+      "date": "2026-11-03"
+     },
+     {
+      "title": "An AI creator's alternate-history trailer 'Nuremberg' looks like a $200 million blockbuster",
+      "url": "https://www.instagram.com/evolving.ai/reel/DftiVdpgoBj/",
+      "place": "sheet",
+      "date": "2026-11-14"
+     },
+     {
+      "title": "An AI filmmaker made a charity film with the monsters under a child's bed for the NO MORE campaign",
+      "url": "https://www.instagram.com/evolving.ai/reel/DfHHP0VA-PD/",
+      "place": "sheet",
+      "date": "2026-10-30"
+     },
+     {
+      "title": "Odeon's AI assistant now answers about 40% of up to 10,000 cinema-goer questions a week, and no agents lost their jobs",
+      "url": "https://diginomica.com/projecting-success-ex-and-cx-odeon-cinemas-how-movie-theater-chain-tapping-ai-without-losing",
+      "place": "news",
+      "date": "2026-11-27"
+     }
+    ]
+   },
+   {
+    "id": "screen",
+    "kind": "good_news",
+    "format": "Good-news carousel, 6 cards, 4:5",
+    "source_tag": "trade_press",
+    "topic": "film and TV",
+    "source": {
+     "label": "Each story's own source",
+     "url": "https://deadline.com/2026/11/lionsgate-play-eklavya-ai-series-tiger-tv-1237232555/"
+    },
+    "copy": "AI helped film and TV makers try something new. Four real things AI helped people in film and TV do this month, each with who it helped and how.",
+    "hook": "AI helped film and TV makers try something new.",
+    "pitch": {
+     "see": "A mythology epic with an AI lead actor, seven Korean directors' AI shorts, and an Oscar winner's case study.",
+     "lands": "It is uplifting, real and in the reader's world, and each story names who it helped.",
+     "why_now": "Stories dated 20 to 27 November 2026, or found in your Instagram inspo sheet within 30 days.",
+     "share": "Four film and TV wins from AI this month."
+    },
+    "shape": "theme",
+    "aim": "interest",
+    "funny": "The lead actor's surname has the letters AI in it, in case anyone missed the point.",
+    "lookalike": {
+     "pattern": "small-win",
+     "beats": "https://www.instagram.com/power.ai/p/DfcCbPXlWQ-/",
+     "our_take": "The post told one person's small win; ours puts four wins in the reader's own industry side by side, each with who it helped."
+    },
+    "learned_from": [
+     "\"I want actual news items and the content we are going to use here - embedded real world images or videos\" (your Improve, 2 Nov, of the good news)",
+     "\"Real-world stories only, but with a hilarious generated cover page\" (your Improve, 9 Nov, of the good news)"
+    ],
+    "stories": [
+     {
+      "headline": "Lionsgate Play started an AI-led mythology series.",
+      "what": "Lionsgate Play has put its first AI-led original series, Eklavya, into production, Deadline reported on 25 November 2026. The eight-episode Indian mythology series stars the AI actor Yug R.Ai, uses Google's AI under a long-term production pact, and will stream on Tiger TV in several languages.",
+      "why": "A streamer is greenlighting a show it says it could not otherwise have afforded to make at this scale.",
+      "kind": "film_tv",
+      "helps": {
+       "who": "streamers and producers in India",
+       "how": "more successful"
+      },
+      "date": "2026-11-25",
+      "source": {
+       "label": "Deadline, 'Lionsgate Play Sets Eklavya As First AI-Led Series', 25 Nov 2026",
+       "url": "https://deadline.com/2026/11/lionsgate-play-eklavya-ai-series-tiger-tv-1237232555/"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://deadline.com/wp-content/uploads/2026/11/Eklavya-Creative.png?w=1024"
+      }
+     },
+     {
+      "headline": "Seven Korean directors made AI short films for a festival.",
+      "what": "Seven directors, including Lee Myung-se, Shin Youn-shick and Jang Cheol-soo, each made a short film with an AI team for the Seoul Independent Film Festival's AI Cinema Special, which runs from 25 November to 4 December 2026. Kling AI, BytePlus, TapNow, MiniMax and ElevenLabs supplied the tools.",
+      "why": "Name directors with decades of features behind them are now premiering AI work at a major festival, which gives AI filmmaking a place in the programme rather than outside it.",
+      "kind": "film_tv",
+      "helps": {
+       "who": "film directors and independent festivals",
+       "how": "better"
+      },
+      "date": "2026-11-25",
+      "source": {
+       "label": "Korea JoongAng Daily, 'Seven directors to unveil AI short films at Seoul Independent Film Festival', Na Won-jeong, 4 Nov 2026",
+       "url": "https://www.koreajoongangdaily.com/entertainment/seven-directors-to-unveil-ai-short-films-at-seoul-independent-film-festival/12955399"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://image.koreajoongangdaily.com/12955618.webp?imageId=12955618&width=960&height=548&format=jpg"
+      }
+     },
+     {
+      "headline": "An Oscar winner is showing how he used AI on his film.",
+      "what": "Michel Hazanavicius, whose The Artist won Best Picture, will unveil exclusive footage of his upcoming film The Third Hand in an AI case study at the Les Arcs Film Festival in December, Deadline reported on 26 November 2026. He and post house Digital District will explain the methods and tools they used.",
+      "why": "An Oscar-winning director is putting his name to AI in his own work and showing peers exactly how.",
+      "kind": "film_tv",
+      "helps": {
+       "who": "European filmmakers and post houses",
+       "how": "smarter"
+      },
+      "date": "2026-11-26",
+      "source": {
+       "label": "Deadline, 'Michel Hazanavicius To Present Exclusive Footage Of The Third Hand In AI Case Study At Les Arcs', 26 Nov 2026",
+       "url": "https://deadline.com/2026/11/michel-hazanavicius-exclusive-footage-third-hand-ai-1237234059/"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://deadline.com/wp-content/uploads/2026/11/GettyImages-2252572174.jpg?w=1024"
+      }
+     },
+     {
+      "headline": "Odeon's cinema assistant answers 40% of questions, no jobs lost.",
+      "what": "Odeon Cinemas told diginomica on 27 November 2026 that its AI assistant Odi, built on Zendesk, resolves about 40% of guest queries, from showtimes to ticket problems, while human agents take the harder ones. The chain says it gets up to 10,000 queries a week, satisfaction has risen over 18 months, and it has kept its service teams.",
+      "why": "Cinemas run on thin margins, and Odeon is using AI to absorb the busy weeks without cutting the people who handle the hard cases.",
+      "kind": "film_tv",
+      "helps": {
+       "who": "cinema operators and their guest service staff",
+       "how": "better"
+      },
+      "date": "2026-11-27",
+      "source": {
+       "label": "diginomica, 'Projecting success on EX and CX at Odeon Cinemas', Stuart Lauchlan, 27 Nov 2026",
+       "url": "https://diginomica.com/projecting-success-ex-and-cx-odeon-cinemas-how-movie-theater-chain-tapping-ai-without-losing"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://diginomica.com/sites/default/files/styles/scaled_370/public/images/2026-11/molnarszabolcserdely-popcorn-4885565_1920.jpg.webp"
+      }
+     }
+    ],
+    "stories_due": "2026-11-27",
+    "cards": [
+     {
+      "words": "AI helped film and TV makers try something new.",
+      "picture": "A cinema screen lighting up a dark room"
+     },
+     {
+      "words": "Lionsgate Play started an AI-led mythology series.",
+      "picture": "Deadline: the thing itself (photo)"
+     },
+     {
+      "words": "Seven Korean directors made AI short films for a festival.",
+      "picture": "Korea JoongAng Daily: the thing itself (photo)"
+     },
+     {
+      "words": "An Oscar winner is showing how he used AI on his film.",
+      "picture": "Deadline: the thing itself (photo)"
+     },
+     {
+      "words": "Odeon's cinema assistant answers 40% of questions, no jobs lost.",
+      "picture": "diginomica: the thing itself (photo)"
+     },
+     {
+      "words": "Every one of them kept a director in the chair.",
+      "picture": "An empty director's chair on a set"
+     }
+    ],
+    "direction": {
+     "look": "The v5 good-news set, modelled on the small-win carousels in your Instagram inspo sheet",
+     "format": "6 cards, 4:5",
+     "frames": [
+      {
+       "words": "AI helped film and TV makers try something new.",
+       "picture": "A cinema screen lighting up a dark room"
+      },
+      {
+       "words": "Lionsgate Play started an AI-led mythology series.",
+       "picture": "Deadline: the thing itself (photo)"
+      },
+      {
+       "words": "Seven Korean directors made AI short films for a festival.",
+       "picture": "Korea JoongAng Daily: the thing itself (photo)"
+      },
+      {
+       "words": "An Oscar winner is showing how he used AI on his film.",
+       "picture": "Deadline: the thing itself (photo)"
+      },
+      {
+       "words": "Odeon's cinema assistant answers 40% of questions, no jobs lost.",
+       "picture": "diginomica: the thing itself (photo)"
+      },
+      {
+       "words": "Every one of them kept a director in the chair.",
+       "picture": "An empty director's chair on a set"
+      }
+     ],
+     "tone": "Warm and real, with one dry line on the cover.",
+     "kit": "v5 Library good-news set: each story's own photo or clip, house type and palette",
+     "inspo_url": "https://www.instagram.com/power.ai/p/DfcCbPXlWQ-/"
+    }
+   },
+   {
+    "id": "makers",
+    "kind": "good_news",
+    "format": "Good-news carousel, 6 cards, 4:5",
+    "source_tag": "trade_press",
+    "topic": "creators",
+    "source": {
+     "label": "Each story's own source",
+     "url": "https://www.afaqs.com/news/social-media/e-motorad-teams-up-with-desi-batman-creator-as-ai-reels-go-viral-12843698"
+    },
+    "copy": "This month AI turned solo creators into studios. Four real things AI helped people in creators do this month, each with who it helped and how.",
+    "hook": "This month AI turned solo creators into studios.",
+    "pitch": {
+     "see": "A desi Batman riding a buffalo, a fantasy film made for $28,775, and an alternate-history trailer that looks like a blockbuster.",
+     "lands": "It is uplifting, real and in the reader's world, and each story names who it helped.",
+     "why_now": "Stories dated 20 to 27 November 2026, or found in your Instagram inspo sheet within 30 days.",
+     "share": "Four creators who made something huge with AI this month."
+    },
+    "shape": "theme",
+    "aim": "humour",
+    "funny": "Batman's newest villain is the queue at a village tea stall.",
+    "lookalike": {
+     "pattern": "small-win",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfeWM7jADvK/",
+     "our_take": "The post told one person's small win; ours puts four wins in the reader's own industry side by side, each with who it helped."
+    },
+    "learned_from": [
+     "\"I want actual news items and the content we are going to use here - embedded real world images or videos\" (your Improve, 2 Nov, of the good news)",
+     "\"Real-world stories only, but with a hilarious generated cover page\" (your Improve, 9 Nov, of the good news)"
+    ],
+    "stories": [
+     {
+      "headline": "An AI creator's Desi Batman reached 25 million views.",
+      "what": "Sujal Jaiswar's AI-made Desi Batman series, in which Batman brushes his teeth by railway tracks and rides a buffalo to a 1999 Bollywood song, drew more than 25 million views in two weeks and took his Instagram account to about 749,000 followers. Electric bike maker E-Motorad has signed him for a collaboration, afaqs reported on 27 November 2026.",
+      "why": "A single creator turned AI video into an audience of three quarters of a million and a paid brand deal in a fortnight.",
+      "kind": "creators",
+      "helps": {
+       "who": "independent video creators",
+       "how": "more successful"
+      },
+      "date": "2026-11-27",
+      "source": {
+       "label": "afaqs, 'E-Motorad teams up with Desi Batman creator as AI reels go viral', 27 Nov 2026",
+       "url": "https://www.afaqs.com/news/social-media/e-motorad-teams-up-with-desi-batman-creator-as-ai-reels-go-viral-12843698"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://media.assettype.com/navbharatlive%2F2026-11-17%2Fd1y9381d%2FDesi-Batman-Viral-Video.jpg"
+      }
+     },
+     {
+      "headline": "A fantasy comedy film was made for $28,775.",
+      "what": "AI filmmaker PJ Ace (@pjacefilms) released a fantasy comedy about an Imperial army that recruits a wild warrior with a gigantic war beast who keeps destroying his own side. Evolving AI shared it on 31 October 2026 and said the whole film cost $28,775.",
+      "why": "A creature comedy that would need a studio budget was made by a small team for the price of a used car.",
+      "kind": "creators",
+      "helps": {
+       "who": "independent filmmakers",
+       "how": "more successful"
+      },
+      "date": "2026-10-31",
+      "source": {
+       "label": "Instagram, @evolving.ai post crediting @pjacefilms, 31 Oct 2026",
+       "url": "https://www.instagram.com/evolving.ai/reel/DfKgAKVgDhn/"
+      },
+      "media": {
+       "kind": "clip",
+       "url": "https://www.instagram.com/evolving.ai/reel/DfKgAKVgDhn/"
+      },
+      "found": {
+       "label": "Your Instagram inspo sheet",
+       "url": "https://www.instagram.com/evolving.ai/reel/DfKgAKVgDhn/"
+      }
+     },
+     {
+      "headline": "A creator's AI trailer looks like a blockbuster.",
+      "what": "Creator @tupacabra_og released 'Nuremberg', an AI-made trailer for an alternate-history epic mixing the Second World War, time travel, medieval Europe and future warfare, set to a 1903 recording of Kipling's poem 'Boots'. Evolving AI shared it on 14 November 2026, saying the visuals look like they belong in a $200 million Hollywood production.",
+      "why": "A creator can now show a studio what the film would look like before anyone pays for it.",
+      "kind": "creators",
+      "helps": {
+       "who": "independent filmmakers pitching projects",
+       "how": "more successful"
+      },
+      "date": "2026-11-14",
+      "source": {
+       "label": "Instagram, @evolving.ai post crediting @tupacabra_og, 14 Nov 2026",
+       "url": "https://www.instagram.com/evolving.ai/reel/DftiVdpgoBj/"
+      },
+      "media": {
+       "kind": "clip",
+       "url": "https://www.instagram.com/evolving.ai/reel/DftiVdpgoBj/"
+      },
+      "found": {
+       "label": "Your Instagram inspo sheet",
+       "url": "https://www.instagram.com/evolving.ai/reel/DftiVdpgoBj/"
+      }
+     },
+     {
+      "headline": "Gary Vee's AI avatar answers a fan a day.",
+      "what": "HeyGen and Gary Vaynerchuk launched @hey_garyvee on 24 November 2026, a channel on Instagram and TikTok where his AI avatar answers one real question from his comments each day for 12 months, in the language it was asked. He says he gets thousands of questions a week and cannot answer them all.",
+      "why": "A creator with millions of followers can now answer individual fans in their own language without recording every reply.",
+      "kind": "creators",
+      "helps": {
+       "who": "creators with big audiences",
+       "how": "more successful"
+      },
+      "date": "2026-11-24",
+      "source": {
+       "label": "HeyGen press release via PR Newswire, 'Gary Vaynerchuk Partners with HeyGen to Launch AI Avatar-Powered Social Channel', 24 Nov 2026",
+       "url": "https://www.prnewswire.com/news-releases/gary-vaynerchuk-partners-with-heygen-to-launch-ai-avatar-powered-social-channel-302948881.html"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://www.instagram.com/hey_garyvee"
+      }
+     }
+    ],
+    "stories_due": "2026-11-27",
+    "cards": [
+     {
+      "words": "This month AI turned solo creators into studios.",
+      "picture": "A phone screen full of view counts"
+     },
+     {
+      "words": "An AI creator's Desi Batman reached 25 million views.",
+      "picture": "afaqs: the thing itself (photo)"
+     },
+     {
+      "words": "A fantasy comedy film was made for $28,775.",
+      "picture": "Instagram: the thing itself (clip)"
+     },
+     {
+      "words": "A creator's AI trailer looks like a blockbuster.",
+      "picture": "Instagram: the thing itself (clip)"
+     },
+     {
+      "words": "Gary Vee's AI avatar answers a fan a day.",
+      "picture": "HeyGen press release via PR Newswire: the thing itself (photo)"
+     },
+     {
+      "words": "One person, one idea, a studio's worth of pictures.",
+      "picture": "A creator at a desk at night"
+     }
+    ],
+    "direction": {
+     "look": "The v5 good-news set, modelled on the small-win carousels in your Instagram inspo sheet",
+     "format": "6 cards, 4:5",
+     "frames": [
+      {
+       "words": "This month AI turned solo creators into studios.",
+       "picture": "A phone screen full of view counts"
+      },
+      {
+       "words": "An AI creator's Desi Batman reached 25 million views.",
+       "picture": "afaqs: the thing itself (photo)"
+      },
+      {
+       "words": "A fantasy comedy film was made for $28,775.",
+       "picture": "Instagram: the thing itself (clip)"
+      },
+      {
+       "words": "A creator's AI trailer looks like a blockbuster.",
+       "picture": "Instagram: the thing itself (clip)"
+      },
+      {
+       "words": "Gary Vee's AI avatar answers a fan a day.",
+       "picture": "HeyGen press release via PR Newswire: the thing itself (photo)"
+      },
+      {
+       "words": "One person, one idea, a studio's worth of pictures.",
+       "picture": "A creator at a desk at night"
+      }
+     ],
+     "tone": "Warm and real, with one dry line on the cover.",
+     "kit": "v5 Library good-news set: each story's own photo or clip, house type and palette",
+     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfeWM7jADvK/"
+    }
+   },
+   {
+    "id": "newsrooms",
+    "kind": "good_news",
+    "format": "Good-news carousel, 6 cards, 4:5",
+    "source_tag": "trade_press",
+    "topic": "media",
+    "source": {
+     "label": "Each story's own source",
+     "url": "https://fortune.com/2026/11/27/checking-ai-work-human-in-the-loop-newsrooms"
+    },
+    "copy": "This month AI helped newsrooms keep readers and save time. Four real things AI helped people in media do this month, each with who it helped and how.",
+    "hook": "This month AI helped newsrooms keep readers and save time.",
+    "pitch": {
+     "see": "Norway's biggest paper checking AI headlines, Der Spiegel spotting who will cancel, and Australian papers plugged into AI tools.",
+     "lands": "It is uplifting, real and in the reader's world, and each story names who it helped.",
+     "why_now": "Stories dated 20 to 27 November 2026, or found in your Instagram inspo sheet within 30 days.",
+     "share": "Four newsroom wins from AI this month."
+    },
+    "shape": "theme",
+    "aim": "interest",
+    "funny": "The newspaper's newest subscriber is a corporate chatbot, and it still has to log in.",
+    "lookalike": {
+     "pattern": "small-win",
+     "beats": "https://www.instagram.com/power.ai/p/Dfa2apfFSE5/",
+     "our_take": "The post told one person's small win; ours puts four wins in the reader's own industry side by side, each with who it helped."
+    },
+    "learned_from": [
+     "\"I want actual news items and the content we are going to use here - embedded real world images or videos\" (your Improve, 2 Nov, of the good news)",
+     "\"Real-world stories only, but with a hilarious generated cover page\" (your Improve, 9 Nov, of the good news)"
+    ],
+    "stories": [
+     {
+      "headline": "Norway's biggest paper uses AI on 200 stories a day.",
+      "what": "In a piece published on 27 November 2026, Christoph Trattner of the University of Bergen reported that VG asks an AI model for a headline, search terms and other details for each of its roughly 200 new articles a day, with a second model checking the first. At Bergens Tidende, AI writes short versions of reporters' stories; the development editor says about one in ten needs a fix, almost never for hallucinations, and the paper has never published a critical mistake this way.",
+      "why": "A newsroom shows AI saving reporters time without letting errors into print, because the person checking already knows the story.",
+      "kind": "media",
+      "helps": {
+       "who": "journalists and editors",
+       "how": "smarter"
+      },
+      "date": "2026-11-27",
+      "source": {
+       "label": "Fortune, 'I have a front-row seat to Norway's cutting-edge AI newsroom experiment', by Christoph Trattner, 27 Nov 2026",
+       "url": "https://fortune.com/2026/11/27/checking-ai-work-human-in-the-loop-newsrooms"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://fortune.com/img-assets/wp-content/uploads/2026/11/christoph-trattner.jpg?resize=1200,600"
+      }
+     },
+     {
+      "headline": "Der Spiegel's model finds a third of readers about to leave.",
+      "what": "Der Spiegel's lead data scientist, Alexander Held, published how the German news magazine built a machine-learning score for subscriber churn, in a WAN-IFRA piece on 23 November 2026. The riskiest group it flags, close to 10,000 subscriptions, cancels at 28% against a base rate of about 4%, and that group holds about 36% of everyone who leaves.",
+      "why": "A news publisher can now see a cancellation coming and act before the reader goes, which is subscription money kept.",
+      "kind": "media",
+      "helps": {
+       "who": "news publishers living on subscriptions",
+       "how": "more successful"
+      },
+      "date": "2026-11-23",
+      "source": {
+       "label": "WAN-IFRA, 'Addressing subscriber churn at Der Spiegel, part one: building the score', Alexander Held, 23 Nov 2026",
+       "url": "https://wan-ifra.org/2026/11/addressing-subscriber-churn-at-der-spiegel-part-one-building-the-score/"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://cdn.wan-ifra.org/wp-content/uploads/2026/11/20141041/Screenshot-2026-11-20-at-15.09.54-235x300.png"
+      }
+     },
+     {
+      "headline": "Nine plugged its newspapers into business AI tools.",
+      "what": "Australian publisher Nine announced on 25 November 2026 a pilot that lets licensed business subscribers connect its journalism from The Australian Financial Review, The Sydney Morning Herald, The Age, Brisbane Times and WAtoday to their own AI tools through the Model Context Protocol. It is testing with a group of business clients before a wider commercial rollout through 2027.",
+      "why": "A newspaper group found a way to sell its journalism to AI users without giving it away to the AI companies.",
+      "kind": "media",
+      "helps": {
+       "who": "news publishers with business subscribers",
+       "how": "more successful"
+      },
+      "date": "2026-11-25",
+      "source": {
+       "label": "Nine for Brands, 'Nine Leads With First-of-Its-Kind Authenticated MCP Publishing AI Pilot in Australia', 25 Nov 2026",
+       "url": "https://www.nineforbrands.com.au/media-releases/nine-leads-with-first-of-its-kind-authenticated-mcp-publishing-ai-pilot-in-australia/"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://www.nineforbrands.com.au/wp-content/uploads/2026/11/NINE_HERO-IMG.jpg"
+      }
+     },
+     {
+      "headline": "Nearly 500,000 people joined Canva through AI assistants.",
+      "what": "Canva made its MCP server generally available on 24 November 2026, letting AI assistants such as ChatGPT, Claude and Gemini make and edit Canva designs, images and video. Canva says nearly 500,000 people signed up through MCP since October, usage grew 93% in a month, and the yearly revenue it expects from MCP has more than tripled since September.",
+      "why": "A design company found hundreds of thousands of new users by letting other companies' chatbots do the clicking.",
+      "kind": "creative_tools",
+      "helps": {
+       "who": "Canva and designers who work through AI assistants",
+       "how": "more successful"
+      },
+      "date": "2026-11-24",
+      "source": {
+       "label": "The Next Web, 'Canva opens its design tools to AI agents and outside developers', 24 Nov 2026",
+       "url": "https://thenextweb.com/news/canva-mcp-ai-agents-developers"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://media.thenextweb.com/2026/11/canva-mcp-any-assistant-graphic.jpg"
+      }
+     }
+    ],
+    "stories_due": "2026-11-27",
+    "cards": [
+     {
+      "words": "This month AI helped newsrooms keep readers and save time.",
+      "picture": "A newspaper front page beside a laptop"
+     },
+     {
+      "words": "Norway's biggest paper uses AI on 200 stories a day.",
+      "picture": "Fortune: the thing itself (photo)"
+     },
+     {
+      "words": "Der Spiegel's model finds a third of readers about to leave.",
+      "picture": "WAN-IFRA: the thing itself (photo)"
+     },
+     {
+      "words": "Nine plugged its newspapers into business AI tools.",
+      "picture": "Nine for Brands: the thing itself (photo)"
+     },
+     {
+      "words": "Nearly 500,000 people joined Canva through AI assistants.",
+      "picture": "The Next Web: the thing itself (photo)"
+     },
+     {
+      "words": "Each one kept an editor checking the machine.",
+      "picture": "An editor's red pen on a printout"
+     }
+    ],
+    "direction": {
+     "look": "The v5 good-news set, modelled on the small-win carousels in your Instagram inspo sheet",
+     "format": "6 cards, 4:5",
+     "frames": [
+      {
+       "words": "This month AI helped newsrooms keep readers and save time.",
+       "picture": "A newspaper front page beside a laptop"
+      },
+      {
+       "words": "Norway's biggest paper uses AI on 200 stories a day.",
+       "picture": "Fortune: the thing itself (photo)"
+      },
+      {
+       "words": "Der Spiegel's model finds a third of readers about to leave.",
+       "picture": "WAN-IFRA: the thing itself (photo)"
+      },
+      {
+       "words": "Nine plugged its newspapers into business AI tools.",
+       "picture": "Nine for Brands: the thing itself (photo)"
+      },
+      {
+       "words": "Nearly 500,000 people joined Canva through AI assistants.",
+       "picture": "The Next Web: the thing itself (photo)"
+      },
+      {
+       "words": "Each one kept an editor checking the machine.",
+       "picture": "An editor's red pen on a printout"
+      }
+     ],
+     "tone": "Warm and real, with one dry line on the cover.",
+     "kit": "v5 Library good-news set: each story's own photo or clip, house type and palette",
+     "inspo_url": "https://www.instagram.com/power.ai/p/Dfa2apfFSE5/"
+    }
+   },
+   {
+    "id": "players",
+    "kind": "good_news",
+    "format": "Good-news carousel, 6 cards, 4:5",
+    "source_tag": "trade_press",
+    "topic": "fans and solo makers",
+    "source": {
+     "label": "Each story's own source",
+     "url": "https://www.49ers.com/news/49ers-and-meta-announce-multi-year-partnership-centered-around-meta-ai-glasses"
+    },
+    "copy": "This month AI helped fans and solo makers get more. Four real things AI helped people in fans and solo makers do this month, each with who it helped and how.",
+    "hook": "This month AI helped fans and solo makers get more.",
+    "pitch": {
+     "see": "Season ticket holders opening AI glasses at home, a game developer painting a map in minutes, and a filmmaker's two epics.",
+     "lands": "It is uplifting, real and in the reader's world, and each story names who it helped.",
+     "why_now": "Stories dated 20 to 27 November 2026, or found in your Instagram inspo sheet within 30 days.",
+     "share": "Three wins for fans and solo makers, and one more to find."
+    },
+    "shape": "theme",
+    "aim": "interest",
+    "funny": "The 49ers' official title for Meta is official moment maker, the first sponsorship category named after a camera.",
+    "lookalike": {
+     "pattern": "small-win",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/",
+     "our_take": "The post told one person's small win; ours puts four wins in the reader's own industry side by side, each with who it helped."
+    },
+    "learned_from": [
+     "\"I want actual news items and the content we are going to use here - embedded real world images or videos\" (your Improve, 2 Nov, of the good news)",
+     "\"Real-world stories only, but with a hilarious generated cover page\" (your Improve, 9 Nov, of the good news)"
+    ],
+    "stories": [
+     {
+      "headline": "4,700 49ers members got AI glasses at home.",
+      "what": "The San Francisco 49ers announced a multi-year partnership with Meta on 24 November 2026, built around Meta's AI glasses. More than 4,700 suite partners and club season ticket members will get a free pair of Oakley Meta HSTN glasses at home, fullback Kyle Juszczyk becomes a Meta ambassador, and Meta joins the club's marketing in the UK, UAE and Mexico.",
+      "why": "A club turned its season ticket list into a launch audience for an AI device and got a global sponsor for it.",
+      "kind": "sports",
+      "helps": {
+       "who": "sports clubs selling sponsorship, and their season ticket holders",
+       "how": "more successful"
+      },
+      "date": "2026-11-24",
+      "source": {
+       "label": "San Francisco 49ers, '49ers and Meta Announce Multi-Year Partnership Centered Around Meta AI Glasses', 24 Nov 2026",
+       "url": "https://www.49ers.com/news/49ers-and-meta-announce-multi-year-partnership-centered-around-meta-ai-glasses"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://www.sportcal.com/wp-content/uploads/sites/32/2026/11/main6b0598eec042d-430x241.jpg"
+      }
+     },
+     {
+      "headline": "A solo game maker can paint a map in minutes.",
+      "what": "Ludo.ai launched Tileset Generator on 26 November 2026, which makes sets of 2D map tiles, such as grass, sand, roads and rivers, from a text description or a reference image. A full 16-tile set costs one credit, and it exports straight to engines like Godot 4.",
+      "why": "Small game teams can skip days of drawing edge and corner tiles.",
+      "kind": "games",
+      "helps": {
+       "who": "indie and solo game developers",
+       "how": "smarter"
+      },
+      "date": "2026-11-26",
+      "source": {
+       "label": "PocketGamer.biz, 'Ludo.ai launches AI-powered Tileset Generator for 2D game development', 26 Nov 2026",
+       "url": "https://www.pocketgamer.biz/ludoai-launches-ai-powered-tileset-generator-for-2d-game-development/"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://media.pocketgamer.biz/images/142383/90365/ludoai_l1200.jpg"
+      }
+     },
+     {
+      "headline": "An independent filmmaker released two AI epics in three days.",
+      "what": "Samyaza Speaks released 'The Biblical Experience', an AI-made journey through the Bible from the fall of Lucifer to the last battle, and 'OBLITERATION', a five-minute dystopian short about an order that destroys the world in the name of peace. Evolving AI shared them on 1 and 3 November 2026 as examples of what independent filmmakers can now make.",
+      "why": "A single maker now has the output of a small studio, and a distinct style is what lifts the work above the flood.",
+      "kind": "film_tv",
+      "helps": {
+       "who": "independent filmmakers",
+       "how": "more successful"
+      },
+      "date": "2026-11-03",
+      "source": {
+       "label": "Instagram, @evolving.ai post crediting @Samyazaspeaks, 3 Nov 2026",
+       "url": "https://www.instagram.com/evolving.ai/reel/DfR7b8JA4q1/"
+      },
+      "media": {
+       "kind": "clip",
+       "url": "https://www.instagram.com/evolving.ai/reel/DfR7b8JA4q1/"
+      },
+      "found": {
+       "label": "Your Instagram inspo sheet",
+       "url": "https://www.instagram.com/evolving.ai/reel/DfR7b8JA4q1/"
+      }
+     }
+    ],
+    "stories_due": "2026-11-27",
+    "cards": [
+     {
+      "words": "This month AI helped fans and solo makers get more.",
+      "picture": "A stadium crowd with phones up"
+     },
+     {
+      "words": "4,700 49ers members got AI glasses at home.",
+      "picture": "San Francisco 49ers: the thing itself (photo)"
+     },
+     {
+      "words": "A solo game maker can paint a map in minutes.",
+      "picture": "PocketGamer.biz: the thing itself (photo)"
+     },
+     {
+      "words": "An independent filmmaker released two AI epics in three days.",
+      "picture": "Instagram: the thing itself (clip)"
+     },
+     {
+      "words": "One more story to find this week.",
+      "picture": "An empty frame, to be filled with the fourth story"
+     },
+     {
+      "words": "Small tools, big nights.",
+      "picture": "A football in floodlights"
+     }
+    ],
+    "direction": {
+     "look": "The v5 good-news set, modelled on the small-win carousels in your Instagram inspo sheet",
+     "format": "6 cards, 4:5",
+     "frames": [
+      {
+       "words": "This month AI helped fans and solo makers get more.",
+       "picture": "A stadium crowd with phones up"
+      },
+      {
+       "words": "4,700 49ers members got AI glasses at home.",
+       "picture": "San Francisco 49ers: the thing itself (photo)"
+      },
+      {
+       "words": "A solo game maker can paint a map in minutes.",
+       "picture": "PocketGamer.biz: the thing itself (photo)"
+      },
+      {
+       "words": "An independent filmmaker released two AI epics in three days.",
+       "picture": "Instagram: the thing itself (clip)"
+      },
+      {
+       "words": "One more story to find this week.",
+       "picture": "An empty frame, to be filled with the fourth story"
+      },
+      {
+       "words": "Small tools, big nights.",
+       "picture": "A football in floodlights"
+      }
+     ],
+     "tone": "Warm and real, with one dry line on the cover.",
+     "kit": "v5 Library good-news set: each story's own photo or clip, house type and palette",
+     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/"
+    },
+    "stories_to_find": true,
+    "stories_short": "Only three stories in games and sport passed their source check in the week; the fourth is still to find."
+   }
+  ]
  },
  "considered": {
   "mon": 8,
@@ -2272,5 +3659,172 @@
   "fri": {
    "regathered": true
   }
+ },
+ "repeat_review": {
+  "reader": "a fresh subagent with none of the session's reasoning (same-story repeat review, 27 Nov 2026)",
+  "checked": [
+   {
+    "ref": "mon-1",
+    "verdict": "new",
+    "of": "piece:8c6c717d-00b4-4d26-b837-06b89709220a",
+    "why": "A paid opt-in training licence for independent musicians; the folk song post was about a false copyright claim on YouTube, a different event and a different lesson."
+   },
+   {
+    "ref": "mon-2",
+    "verdict": "new",
+    "of": "piece:08442c41-534a-4523-9818-0884e2fc985a",
+    "why": "An acquisition price for Japanese speech; the TikTok post was about likeness detection for brands, not what a voice company pays for a language."
+   },
+   {
+    "ref": "mon-3",
+    "verdict": "new",
+    "of": "piece:8287846b-6618-4a19-9fb8-23ad4eca2718",
+    "why": "Both are about how AI firms are funded, but Kling's redemption-backed raise is a different company and a different warning from Oracle asking customers to prepay its build."
+   },
+   {
+    "ref": "wed-1",
+    "verdict": "new",
+    "of": "piece:bf0fddae-2fcf-4687-9079-190729234ed3",
+    "why": "Maxon putting third-party credit-billed 3D generation in Cinema 4D is separate news from Adobe MAX and the question of which design tool your agents can drive."
+   },
+   {
+    "ref": "wed-2",
+    "verdict": "new",
+    "of": "off-thu-701a2c55-7400-4dc8-99cb-d6001147ae16",
+    "why": "Epic retiring Blueprints after an AI conversion is a specific engine change for game makers; the habits post was general advice on keeping a job."
+   },
+   {
+    "ref": "fri-1",
+    "verdict": "new",
+    "of": "piece:a4b34048-ab39-49da-a251-eaa58ebe2eaf",
+    "why": "Undisclosed Suno music caught by file metadata is a disclosure failure in a game; the Gods Don't Give Gifts post counted the humans behind a credited AI film."
+   },
+   {
+    "ref": "fri-2",
+    "verdict": "new",
+    "of": "piece:a4b34048-ab39-49da-a251-eaa58ebe2eaf",
+    "why": "Festival bans and false entry forms are new news about AI animation's eligibility, while the earlier post was one AI-animated feature's cinema release and its crew."
+   },
+   {
+    "ref": "fri-3",
+    "verdict": "new",
+    "of": "piece:8c6c717d-00b4-4d26-b837-06b89709220a",
+    "why": "Tencent Music's results on AI streams falling is listening data from earnings; no recent post covered who listens to AI music."
+   },
+   {
+    "ref": "off-tue-nytphotoshop",
+    "verdict": "new",
+    "of": "piece:bf0fddae-2fcf-4687-9079-190729234ed3",
+    "why": "A newsroom banning Photoshop 2027 over AI labelling is advice to photographers, not the Adobe MAX question of which design suite to renew."
+   },
+   {
+    "ref": "off-tue-fcpcaptions",
+    "verdict": "new",
+    "of": "off-thu-videoplugin",
+    "why": "A how-to for Final Cut's new caption languages; the connectors post explained chatbots linking to a video studio."
+   },
+   {
+    "ref": "off-tue-logicdrums",
+    "verdict": "new",
+    "of": "off-thu-videoplugin",
+    "why": "A how-to for Logic's drum stem splitting; no recent post gave musicians a tool tip of this kind."
+   },
+   {
+    "ref": "off-tue-spotifyaudio",
+    "verdict": "new",
+    "of": "piece:08442c41-534a-4523-9818-0884e2fc985a",
+    "why": "Free audiobook tools for self-published authors are a how-to for writers; nothing recent covered audiobooks or digital narration for authors."
+   },
+   {
+    "ref": "off-tue-mychannel",
+    "verdict": "new",
+    "of": "piece:08442c41-534a-4523-9818-0884e2fc985a",
+    "why": "Both touch a person's face and voice used by AI, but a rejected Google patent for personal TV is about where TV money goes, not likeness detection for brands."
+   },
+   {
+    "ref": "off-tue-tplcommscam",
+    "verdict": "new",
+    "of": "off-thu-tpl-cat",
+    "why": "A new template clip with no caption story yet; the commentary box echoes only the Motson good-news item, which told a different story."
+   },
+   {
+    "ref": "off-tue-tplfistpump",
+    "verdict": "new",
+    "of": "off-thu-tpl-cat",
+    "why": "A new template clip with no AI story attached yet, unlike any posted meme."
+   },
+   {
+    "ref": "off-tue-tplninedarter",
+    "verdict": "new",
+    "of": "off-thu-tpl-cat",
+    "why": "A new template clip with no AI story attached yet, unlike any posted meme."
+   },
+   {
+    "ref": "off-tue-tplbuzzer",
+    "verdict": "new",
+    "of": "off-thu-tpl-cat",
+    "why": "A new template clip with no AI story attached yet, unlike any posted meme."
+   },
+   {
+    "ref": "off-thu-figmasix",
+    "verdict": "new",
+    "of": "piece:bf0fddae-2fcf-4687-9079-190729234ed3",
+    "why": "A how-to for Figma's multi-image prompts, separate from the Adobe and Canva ownership piece."
+   },
+   {
+    "ref": "off-thu-robloxvideo",
+    "verdict": "new",
+    "of": "off-thu-videoplugin",
+    "why": "Both involve an AI assistant connected to a tool, but Roblox recording playtests to fix games is a new feature for game makers, not the video studio connector explainer."
+   },
+   {
+    "ref": "off-thu-alphamatte",
+    "verdict": "new",
+    "of": "off-thu-videoplugin",
+    "why": "A how-to for Runway's green-screen-free cutouts for editors; no recent post covered it."
+   },
+   {
+    "ref": "off-thu-synthfirmware",
+    "verdict": "new",
+    "of": "piece:db9f9f6a-1092-49be-8024-f335e060305a",
+    "why": "Hobbyists rewriting synth firmware with AI is close in spirit to build or buy, but it is a different reader, musicians, and a different event, makers opening their gear."
+   },
+   {
+    "ref": "off-thu-kernowmarket",
+    "verdict": "new",
+    "of": "off-tue-alphacard",
+    "why": "An AI poster overselling a Cornish market is new news; the nearest is the AI school receipt, a different promise and a different reader."
+   },
+   {
+    "ref": "off-thu-tplturin",
+    "verdict": "new",
+    "of": "off-thu-tpl-cat",
+    "why": "A new template clip with no AI story attached yet, unlike any posted meme."
+   },
+   {
+    "ref": "off-thu-tplthanksgiving",
+    "verdict": "new",
+    "of": "off-thu-tpl-cat",
+    "why": "A new template clip with no AI story attached yet, unlike any posted meme."
+   },
+   {
+    "ref": "off-thu-tplassemble",
+    "verdict": "new",
+    "of": "off-thu-tpl-cat",
+    "why": "A new template clip with no AI story attached yet, unlike any posted meme."
+   },
+   {
+    "ref": "off-thu-tpllegends",
+    "verdict": "new",
+    "of": "off-fri-tpl-pigeon",
+    "why": "A different clip and no story yet, though its backstage corridor walk is the same setting as the pigeon doctor meme of 20 Nov, so check the picture is not too alike."
+   },
+   {
+    "ref": "off-thu-tplskyrim",
+    "verdict": "new",
+    "of": "off-sat-goodnews",
+    "why": "An AI remake of a game in another decade has no story yet; the nearest is the 5 Dec good-news item on a game world in brush strokes, a different project."
+   }
+  ]
  }
 }
