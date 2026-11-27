@@ -3167,6 +3167,175 @@
      ],
      "against": 61
     }
+   },
+   {
+    "id": "talent",
+    "kind": "good_news",
+    "format": "Good-news carousel, 6 cards, 4:5",
+    "source_tag": "trade_press",
+    "topic": "scouts, race teams and actors",
+    "source": {
+     "label": "Each story's own source",
+     "url": "https://bluewin.ch/en/sport/football/bringing-overlooked-talents-to-light-li.3686124"
+    },
+    "copy": "AI got footballers, a race car and an actor noticed. Four real things AI helped people in scouts, race teams and actors do this month, each with who it helped and how.",
+    "hook": "AI got footballers, a race car and an actor noticed.",
+    "pitch": {
+     "see": "A teenager's video reaching a European club, a NASCAR car answering guests, and an actor paid for his face.",
+     "lands": "It is uplifting, real and in the reader's world, and each story names who it helped.",
+     "why_now": "Stories dated 20 to 27 November 2026, or found in your Instagram inspo sheet within 30 days.",
+     "share": "Four people AI helped get noticed and paid this month."
+    },
+    "shape": "theme",
+    "aim": "interest",
+    "funny": "The driver cannot talk while racing, so the car now does the talking for him.",
+    "lookalike": {
+     "pattern": "small-win",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/",
+     "our_take": "The post told one person's small win; ours puts four wins in the reader's own industry side by side, each with who it helped."
+    },
+    "learned_from": [
+     "\"I want actual news items and the content we are going to use here - embedded real world images or videos\" (your Improve, 2 Nov, of the good news)",
+     "\"Real-world stories only, but with a hilarious generated cover page\" (your Improve, 9 Nov, of the good news)"
+    ],
+    "stories": [
+     {
+      "headline": "An AI scouting app got 26 overlooked footballers signed.",
+      "what": "Footbao, a Swiss app built in Brazil, lets young players upload videos of themselves, which its AI scores on 24 performance indicators before analysts pass the best to scouts. It now has 170,000 registered players and more than 80 partner clubs in six countries, including Santos and Corinthians, and on 25 November 2026 said players in Switzerland, Germany and Austria can register from January 2027. Its own site counts 750 players referred to clubs and 26 signed.",
+      "why": "Clubs are finding signings through an app that watches thousands of teenagers they would never have paid a scout to see.",
+      "kind": "sports",
+      "helps": {
+       "who": "young footballers outside the big academies, and the clubs scouting them",
+       "how": "more successful"
+      },
+      "date": "2026-11-25",
+      "source": {
+       "label": "Keystone-SDA via blue News (bluewin.ch), 'Bringing overlooked talents to light', 25 Nov 2026",
+       "url": "https://bluewin.ch/en/sport/football/bringing-overlooked-talents-to-light-li.3686124"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://images.futebolinterior.com.br/2026/11/FOOTBAO-LAUNCH-25.webp"
+      }
+     },
+     {
+      "headline": "A NASCAR team gave its race car an AI voice for guests.",
+      "what": "Trackhouse Racing built 88Bot, an AI agent that speaks as Connor Zilisch's No. 88 Chevrolet: guests download an app, ask the car questions about the race and get live updates from its racing data. The team can host up to 60 VIP guests on a race day in a pit box that fits about eight, and the system draws on roughly 25,000 telemetry messages a second. Sports Business Journal first reported it on 23 November 2026, and some fans pushed back online.",
+      "why": "A race team is using AI to make its most valuable seats, the ones it sells to sponsors, more worth paying for.",
+      "kind": "sports",
+      "helps": {
+       "who": "a NASCAR team and its sponsors and VIP guests",
+       "how": "more successful"
+      },
+      "date": "2026-11-23",
+      "source": {
+       "label": "EssentiallySports, 'Future Hendrick Star Gets an AI Alter Ego in Trackhouse's Unconventional Fan Push', 25 Nov 2026",
+       "url": "https://www.essentiallysports.com/nascar-news-future-hendrick-star-gets-an-ai-alter-ego-in-trackhouses-unconventional-fan-push/"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://image-cdn.essentiallysports.com/wp-content/uploads/imago1051550550-e1755003251340.jpg"
+      }
+     },
+     {
+      "headline": "An actor licensed his face and was paid a normal role's rate.",
+      "what": "Aki Avni, an Israeli film and television actor who appeared on Fox's 24, licensed his face to Shortical, a microdrama start-up, which made a wholly AI series called Inevitable starring his likeness; it premiered in Los Angeles in mid November. TechCrunch reported on 21 November 2026 that Shortical says his pay was in line with industry standards for a comparable non-AI acting role, and that Avni came in as a partner on the project.",
+      "why": "An actor has been paid a normal fee for a starring role he never had to turn up to film.",
+      "kind": "performance",
+      "helps": {
+       "who": "actors",
+       "how": "more successful"
+      },
+      "date": "2026-11-21",
+      "source": {
+       "label": "TechCrunch, 'Is selling an AI version of your face to this microdrama startup the future of Hollywood?', Lucas Ropek, 21 Nov 2026",
+       "url": "https://techcrunch.com/2026/11/21/is-selling-an-ai-version-of-your-face-to-this-microdrama-startup-the-future-of-hollywood/"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://techcrunch.com/wp-content/uploads/2026/11/Inevitable-Key-Art_3x4-full-size.jpg?w=1024"
+      }
+     },
+     {
+      "headline": "A solo game maker can paint a map in minutes.",
+      "what": "Ludo.ai launched Tileset Generator on 26 November 2026, which makes sets of 2D map tiles, such as grass, sand, roads and rivers, from a text description or a reference image. A full 16-tile set costs one credit, and it exports straight to engines like Godot 4.",
+      "why": "Small game teams can skip days of drawing edge and corner tiles.",
+      "kind": "games",
+      "helps": {
+       "who": "indie and solo game developers",
+       "how": "smarter"
+      },
+      "date": "2026-11-26",
+      "source": {
+       "label": "PocketGamer.biz, 'Ludo.ai launches AI-powered Tileset Generator for 2D game development', 26 Nov 2026",
+       "url": "https://www.pocketgamer.biz/ludoai-launches-ai-powered-tileset-generator-for-2d-game-development/"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://media.pocketgamer.biz/images/142383/90365/ludoai_l1200.jpg"
+      }
+     }
+    ],
+    "stories_due": "2026-11-27",
+    "cards": [
+     {
+      "words": "AI got footballers, a race car and an actor noticed.",
+      "picture": "A young footballer filming on a local pitch"
+     },
+     {
+      "words": "An AI scouting app got 26 overlooked footballers signed.",
+      "picture": "Keystone-SDA via blue News (bluewin.ch): the thing itself (photo)"
+     },
+     {
+      "words": "A NASCAR team gave its race car an AI voice for guests.",
+      "picture": "EssentiallySports: the thing itself (photo)"
+     },
+     {
+      "words": "An actor licensed his face and was paid a normal role's rate.",
+      "picture": "TechCrunch: the thing itself (photo)"
+     },
+     {
+      "words": "A solo game maker can paint a map in minutes.",
+      "picture": "PocketGamer.biz: the thing itself (photo)"
+     },
+     {
+      "words": "Each one got seen by someone who could pay them.",
+      "picture": "A scout's notebook beside a phone"
+     }
+    ],
+    "direction": {
+     "look": "The v5 good-news set, modelled on the small-win carousels in your Instagram inspo sheet",
+     "format": "6 cards, 4:5",
+     "frames": [
+      {
+       "words": "AI got footballers, a race car and an actor noticed.",
+       "picture": "A young footballer filming on a local pitch"
+      },
+      {
+       "words": "An AI scouting app got 26 overlooked footballers signed.",
+       "picture": "Keystone-SDA via blue News (bluewin.ch): the thing itself (photo)"
+      },
+      {
+       "words": "A NASCAR team gave its race car an AI voice for guests.",
+       "picture": "EssentiallySports: the thing itself (photo)"
+      },
+      {
+       "words": "An actor licensed his face and was paid a normal role's rate.",
+       "picture": "TechCrunch: the thing itself (photo)"
+      },
+      {
+       "words": "A solo game maker can paint a map in minutes.",
+       "picture": "PocketGamer.biz: the thing itself (photo)"
+      },
+      {
+       "words": "Each one got seen by someone who could pay them.",
+       "picture": "A scout's notebook beside a phone"
+      }
+     ],
+     "tone": "Warm and real, with one dry line on the cover.",
+     "kit": "v5 Library good-news set: each story's own photo or clip, house type and palette",
+     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/"
+    }
    }
   ]
  },

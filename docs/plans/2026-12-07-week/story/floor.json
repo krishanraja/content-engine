@@ -155,6 +155,11 @@
    "ref": "off-sat-newsrooms",
    "floored": false,
    "reasons": []
+  },
+  {
+   "ref": "off-sat-talent",
+   "floored": false,
+   "reasons": []
   }
  ],
  "unread": []

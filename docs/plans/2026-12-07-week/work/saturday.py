@@ -8,7 +8,7 @@ from pathlib import Path
 R = Path(__file__).resolve().parent.parent / 'research'
 _C = {}
 _FIX = {}
-for f in ('goodnews.json', 'goodnews2.json'):
+for f in ('goodnews.json', 'goodnews2.json', 'goodnews3.json'):
     d = json.loads((R / f).read_text())
     for c in d['candidates']:
         _C[c['key']] = c
@@ -114,5 +114,15 @@ SAT = [
             ('canva-mcp-500k', 'Nearly 500,000 people joined Canva through AI assistants.')],
            'https://www.instagram.com/power.ai/p/Dfa2apfFSE5/', 'A newspaper front page beside a laptop',
            'Each one kept an editor checking the machine.', 'An editor\'s red pen on a printout'),
+    option('talent', 'scouts, race teams and actors', "AI got footballers, a race car and an actor noticed.",
+           "A teenager's video reaching a European club, a NASCAR car answering guests, and an actor paid for his face.",
+           "Four people AI helped get noticed and paid this month.",
+           "The driver cannot talk while racing, so the car now does the talking for him.",
+           [('footbao-26-signed-europe', 'An AI scouting app got 26 overlooked footballers signed.'),
+            ('trackhouse-88bot-talking-car', 'A NASCAR team gave its race car an AI voice for guests.'),
+            ('aki-avni-licensed-face', 'An actor licensed his face and was paid a normal role\'s rate.'),
+            ('ludo-tileset-generator', 'A solo game maker can paint a map in minutes.')],
+           'https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/', 'A young footballer filming on a local pitch',
+           'Each one got seen by someone who could pay them.', 'A scout\'s notebook beside a phone'),
 ]
 SAT[0]['candidates'] = candidates()
