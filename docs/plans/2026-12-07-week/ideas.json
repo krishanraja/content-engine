@@ -5,6 +5,92 @@
  "days": {
   "mon": [
    {
+    "id": "21e94357-9b59-4abe-96c6-daf1f98cd6d2",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "The biggest AI voice company just paid about $100 million to buy Japanese speech instead of building it, so voice actors, dubbers and audiobook narrators can see what one language is worth to the firms cloning voices.",
+    "story": "On 16 November 2026 ElevenLabs, the AI voice company whose voices are used by creators, dubbers and audiobook publishers, agreed to buy Kotoba Technologies, whose model handles Japanese speech. Its chief executive Mati Staniszewski put the price at around $100 million, Business Insider Japan reported; ElevenLabs was valued at $22 billion in September.",
+    "why_now": "Music Business Worldwide, 16 Nov 2026, reporting Business Insider Japan.",
+    "fact": "Music Business Worldwide, 16 Nov 2026: \"Business Insider Japan reports that ElevenLabs CEO Mati Staniszewski put the price at around $100 million\"; RouteNote: \"reportedly worth approximately $100 million\".",
+    "source": {
+     "label": "Music Business Worldwide, ElevenLabs to buy Kotoba (16 Nov 2026)",
+     "url": "https://www.musicbusinessworldwide.com/elevenlabs-agrees-to-acquire-japan-focused-voice-ai-company-kotoba-in-reported-100m-deal/",
+     "kind": "report"
+    },
+    "sources": [
+     {
+      "label": "RouteNote, ElevenLabs and Kotoba (Nov 2026)",
+      "url": "https://routenote.com/radar/?p=6292"
+     }
+    ],
+    "first_reported": "https://www.musicbusinessworldwide.com/elevenlabs-agrees-to-acquire-japan-focused-voice-ai-company-kotoba-in-reported-100m-deal/",
+    "beats": [
+     "The company that makes AI talk in every language buys one.",
+     "About $100 million for Japanese speech.",
+     "Why buying a language beats building it.",
+     "Who is paid when a voice is cloned into Japanese: the voice, the firm, the dubber.",
+     "What this shows about what a language is worth to voice cloning."
+    ],
+    "pitch": {
+     "question": "How much is one language worth to the companies that copy voices?",
+     "headline": "ElevenLabs paid about $100 million to learn Japanese.",
+     "hook": "ElevenLabs, the AI voice company used by creators and dubbing studios, agreed to buy Japanese voice firm Kotoba for a reported $100 million, three months after a sale valued it at $22 billion.",
+     "examples": [
+      "About $100 million, the price its chief executive gave.",
+      "$22 billion, its valuation in September.",
+      "Japanese, one of the biggest dubbing and anime markets."
+     ],
+     "chain": [
+      "AI voice firms sell voices that can speak many languages.",
+      "Japanese is hard to get right and a huge market for dubbing and anime.",
+      "Building it takes years of data and specialists.",
+      "So the biggest voice firm buys a team that already has it.",
+      "The price tells you what one language is worth to them.",
+      "Voice actors and dubbers now know the value of the thing they compete with."
+     ],
+     "take": "What this shows is that a language has a price tag in voice cloning, and it was set by a takeover. What is your own voice worth in a market where a whole language costs $100 million?"
+    },
+    "style": {
+     "script": "random-headline",
+     "production": "face-with-proof",
+     "experiment": {
+      "format": "fry-explainer",
+      "why": "Explain why Japanese is hard for a voice model with three spoken examples, one sound at a time."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: How much is one language worth to the companies that copy voices? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: ElevenLabs' purchase of Kotoba Technologies, the price, what Kotoba's model does, ElevenLabs' valuation and Japanese dubbing and voice markets. Work through the 5 Whys, starting from the plain question: Why 1 asks who pays, and why the price moved. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "A voice company valued at $22 billion buys an existing Japanese speech team for about $100 million rather than building it.",
+    "aim": "interest",
+    "funny": "The company that makes AI speak every language had to go shopping for one.",
+    "lookalike": {
+     "pattern": "money-twist",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfeWM7jADvK/",
+     "our_take": "The post priced one man's trip; we price one language, and what that says about a voice actor's job."
+    },
+    "recommended": true,
+    "story_score": {
+     "total": 65.5,
+     "axes": {
+      "whys": 8,
+      "scale": 7.0,
+      "unique_angle": 0.0,
+      "absurdity_humour": null,
+      "fun_consume": 7.0,
+      "fun_produce": 7.0,
+      "fit": 10,
+      "named_thing": 10
+     },
+     "type": "hero_mon",
+     "floors_failed": [
+      "a hero has at least one sound angle"
+     ],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
+    }
+   },
+   {
     "id": "2c443323-dc8c-4941-9608-04d6b3ec85ed",
     "source_kind": "engine",
     "source_tag": "trade_press",
@@ -68,71 +154,25 @@
      "beats": "https://www.instagram.com/evolving.ai/p/DfeWM7jADvK/",
      "our_take": "The post showed one man paying people to sign up; we show a start-up paying songwriters, and the box that decides it."
     },
-    "recommended": true
-   },
-   {
-    "id": "21e94357-9b59-4abe-96c6-daf1f98cd6d2",
-    "source_kind": "engine",
-    "source_tag": "trade_press",
-    "so_what": "The biggest AI voice company just paid about $100 million to buy Japanese speech instead of building it, so voice actors, dubbers and audiobook narrators can see what one language is worth to the firms cloning voices.",
-    "story": "On 16 November 2026 ElevenLabs, the AI voice company whose voices are used by creators, dubbers and audiobook publishers, agreed to buy Kotoba Technologies, whose model handles Japanese speech. Its chief executive Mati Staniszewski put the price at around $100 million, Business Insider Japan reported; ElevenLabs was valued at $22 billion in September.",
-    "why_now": "Music Business Worldwide, 16 Nov 2026, reporting Business Insider Japan.",
-    "fact": "Music Business Worldwide, 16 Nov 2026: \"Business Insider Japan reports that ElevenLabs CEO Mati Staniszewski put the price at around $100 million\"; RouteNote: \"reportedly worth approximately $100 million\".",
-    "source": {
-     "label": "Music Business Worldwide, ElevenLabs to buy Kotoba (16 Nov 2026)",
-     "url": "https://www.musicbusinessworldwide.com/elevenlabs-agrees-to-acquire-japan-focused-voice-ai-company-kotoba-in-reported-100m-deal/",
-     "kind": "report"
-    },
-    "sources": [
-     {
-      "label": "RouteNote, ElevenLabs and Kotoba (Nov 2026)",
-      "url": "https://routenote.com/radar/?p=6292"
-     }
-    ],
-    "first_reported": "https://www.musicbusinessworldwide.com/elevenlabs-agrees-to-acquire-japan-focused-voice-ai-company-kotoba-in-reported-100m-deal/",
-    "beats": [
-     "The company that makes AI talk in every language buys one.",
-     "About $100 million for Japanese speech.",
-     "Why buying a language beats building it.",
-     "Who is paid when a voice is cloned into Japanese: the voice, the firm, the dubber.",
-     "What this shows about what a language is worth to voice cloning."
-    ],
-    "pitch": {
-     "question": "How much is one language worth to the companies that copy voices?",
-     "headline": "ElevenLabs paid about $100 million to learn Japanese.",
-     "hook": "ElevenLabs, the AI voice company used by creators and dubbing studios, agreed to buy Japanese voice firm Kotoba for a reported $100 million, three months after a sale valued it at $22 billion.",
-     "examples": [
-      "About $100 million, the price its chief executive gave.",
-      "$22 billion, its valuation in September.",
-      "Japanese, one of the biggest dubbing and anime markets."
+    "story_score": {
+     "total": 58.9,
+     "axes": {
+      "whys": 8,
+      "scale": 5.0,
+      "unique_angle": 0.0,
+      "absurdity_humour": null,
+      "fun_consume": 6.0,
+      "fun_produce": 6.0,
+      "fit": 10,
+      "named_thing": 10
+     },
+     "type": "hero_mon",
+     "floors_failed": [
+      "a hero has at least one sound angle"
      ],
-     "chain": [
-      "AI voice firms sell voices that can speak many languages.",
-      "Japanese is hard to get right and a huge market for dubbing and anime.",
-      "Building it takes years of data and specialists.",
-      "So the biggest voice firm buys a team that already has it.",
-      "The price tells you what one language is worth to them.",
-      "Voice actors and dubbers now know the value of the thing they compete with."
-     ],
-     "take": "What this shows is that a language has a price tag in voice cloning, and it was set by a takeover. What is your own voice worth in a market where a whole language costs $100 million?"
-    },
-    "style": {
-     "script": "random-headline",
-     "production": "face-with-proof",
-     "experiment": {
-      "format": "fry-explainer",
-      "why": "Explain why Japanese is hard for a voice model with three spoken examples, one sound at a time."
-     }
-    },
-    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: How much is one language worth to the companies that copy voices? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: ElevenLabs' purchase of Kotoba Technologies, the price, what Kotoba's model does, ElevenLabs' valuation and Japanese dubbing and voice markets. Work through the 5 Whys, starting from the plain question: Why 1 asks who pays, and why the price moved. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
-    "shape": "story",
-    "dive": "A voice company valued at $22 billion buys an existing Japanese speech team for about $100 million rather than building it.",
-    "aim": "interest",
-    "funny": "The company that makes AI speak every language had to go shopping for one.",
-    "lookalike": {
-     "pattern": "money-twist",
-     "beats": "https://www.instagram.com/evolving.ai/p/DfeWM7jADvK/",
-     "our_take": "The post priced one man's trip; we price one language, and what that says about a voice actor's job."
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
     }
    },
    {
@@ -208,76 +248,30 @@
       "text_hash": "a3c5c6e6d0272b0a",
       "at": "2026-11-27T16:36:43Z"
      }
+    },
+    "story_score": {
+     "total": 50.0,
+     "axes": {
+      "unique_angle": 0.0,
+      "absurdity_humour": null,
+      "whys": 8,
+      "scale": 6.0,
+      "fun_consume": 5.0,
+      "fit": 10,
+      "named_thing": 10,
+      "fun_produce": 5.0
+     },
+     "type": "wildcard",
+     "floors_failed": [
+      "truth: a wildcard's angle rests on its sourced fact; strange never adds a detail the source does not give"
+     ],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
     }
    }
   ],
   "wed": [
-   {
-    "id": "41874364-fcd8-4fd1-b7e7-91aca6235019",
-    "source_kind": "engine",
-    "source_tag": "trade_press",
-    "so_what": "3D artists using Cinema 4D and ZBrush now get AI model generation inside their apps, but the models come from other firms and the credits expire monthly, so any studio budgeting for it knows what it is actually paying for.",
-    "story": "Maxon, maker of Cinema 4D and ZBrush for 3D artists and designers, launched Maxon Plus in November 2026, a cloud subscription whose Model Generator turns a prompt, photo or sketch into an editable 3D model. The work runs on third-party AI providers such as Tripo and Rodin, and is sold in credits.",
-    "why_now": "Creative Bloq, 23 Nov 2026.",
-    "fact": "Maxon: \"We work with third-party AI providers, such as Tripo and Rodin.\"; Creative Bloq, 23 Nov 2026: \"AI generation comes to Cinema 4D and ZBrush, but artists have an 'off' switch.\"",
-    "source": {
-     "label": "Maxon, Maxon Plus (Nov 2026)",
-     "url": "https://www.maxon.net/en/maxon-plus",
-     "kind": "original"
-    },
-    "sources": [
-     {
-      "label": "Creative Bloq, Maxon Plus (23 Nov 2026)",
-      "url": "https://www.creativebloq.com/news/every-3d-artist-should-have-an-ai-assistant-maxon-says-as-it-launches-new-tools-and-agentic-licences"
-     }
-    ],
-    "first_reported": "https://www.maxon.net/en/maxon-plus",
-    "beats": [
-     "An AI model maker inside the 3D artist's favourite apps.",
-     "Whose AI it really is: Tripo and Rodin.",
-     "Why the credits run out every month.",
-     "The off switch, and why it is a selling point.",
-     "What this shows about who makes money from AI in 3D."
-    ],
-    "pitch": {
-     "question": "When your design software adds AI, whose AI is it, and who are you paying?",
-     "headline": "Cinema 4D's new AI is someone else's AI, sold in credits that expire.",
-     "hook": "Maxon Plus puts AI model generation inside Cinema 4D and ZBrush for 3D artists, run on other firms' models such as Tripo and Rodin, billed in credits.",
-     "examples": [
-      "A prompt, photo or sketch becomes an editable model.",
-      "Third-party AI providers such as Tripo and Rodin.",
-      "An off switch for artists who want none of it."
-     ],
-     "chain": [
-      "A 3D artist needs a base model to start from.",
-      "Other companies have built AI that makes rough models.",
-      "Maxon plugs those models into its own apps.",
-      "Each generation costs credits.",
-      "The credits are part of a subscription.",
-      "Maxon earns on the wrapper, the other firm on the model."
-     ],
-     "take": "What this shows is that the AI inside a creative app is often rented, and the margin is in the wrapper. Do you know whose model made your last asset?"
-    },
-    "style": {
-     "script": "head-to-head",
-     "production": "face-with-proof",
-     "experiment": {
-      "format": "kinetic-movement",
-      "why": "Peel the Maxon logo off the feature like a sticker to show Tripo and Rodin underneath."
-     }
-    },
-    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When your design software adds AI, whose AI is it, and who are you paying? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Maxon Plus, its Model Generator, the third-party AI providers it runs on, how credits are priced and expire, and what 3D artists have said. Work through the 5 Whys, starting from the plain question: Why 1 asks how it is built, and what broke. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
-    "shape": "story",
-    "dive": "Maxon resells other firms' 3D generators inside its own apps and bills artists in credits, so the margin sits in the wrapper and the subscription.",
-    "aim": "utility",
-    "funny": "The headline feature for 3D artists is an AI assistant, and the selling point in the subtitle is that you can switch it off.",
-    "lookalike": {
-     "pattern": "tool-unlock",
-     "beats": "https://www.instagram.com/power.ai/p/DfbtORYFfti/",
-     "our_take": "The post sold a new tool; we show whose tool is really underneath a famous 3D app."
-    },
-    "recommended": true
-   },
    {
     "id": "de83ed89-f29e-4e5f-ad82-c698ec72a010",
     "source_kind": "engine",
@@ -355,10 +349,287 @@
       "text_hash": "3021aa0bb0a199c1",
       "at": "2026-11-27T16:36:43Z"
      }
+    },
+    "recommended": true,
+    "story_score": {
+     "total": 59.6,
+     "axes": {
+      "unique_angle": 0.0,
+      "absurdity_humour": null,
+      "whys": 9,
+      "scale": 8.0,
+      "fun_consume": 8.0,
+      "fit": 10,
+      "named_thing": 10,
+      "fun_produce": 7.0
+     },
+     "type": "wildcard",
+     "floors_failed": [
+      "truth: a wildcard's angle rests on its sourced fact; strange never adds a detail the source does not give"
+     ],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
+    }
+   },
+   {
+    "id": "41874364-fcd8-4fd1-b7e7-91aca6235019",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "3D artists using Cinema 4D and ZBrush now get AI model generation inside their apps, but the models come from other firms and the credits expire monthly, so any studio budgeting for it knows what it is actually paying for.",
+    "story": "Maxon, maker of Cinema 4D and ZBrush for 3D artists and designers, launched Maxon Plus in November 2026, a cloud subscription whose Model Generator turns a prompt, photo or sketch into an editable 3D model. The work runs on third-party AI providers such as Tripo and Rodin, and is sold in credits.",
+    "why_now": "Creative Bloq, 23 Nov 2026.",
+    "fact": "Maxon: \"We work with third-party AI providers, such as Tripo and Rodin.\"; Creative Bloq, 23 Nov 2026: \"AI generation comes to Cinema 4D and ZBrush, but artists have an 'off' switch.\"",
+    "source": {
+     "label": "Maxon, Maxon Plus (Nov 2026)",
+     "url": "https://www.maxon.net/en/maxon-plus",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "Creative Bloq, Maxon Plus (23 Nov 2026)",
+      "url": "https://www.creativebloq.com/news/every-3d-artist-should-have-an-ai-assistant-maxon-says-as-it-launches-new-tools-and-agentic-licences"
+     }
+    ],
+    "first_reported": "https://www.maxon.net/en/maxon-plus",
+    "beats": [
+     "An AI model maker inside the 3D artist's favourite apps.",
+     "Whose AI it really is: Tripo and Rodin.",
+     "Why the credits run out every month.",
+     "The off switch, and why it is a selling point.",
+     "What this shows about who makes money from AI in 3D."
+    ],
+    "pitch": {
+     "question": "When your design software adds AI, whose AI is it, and who are you paying?",
+     "headline": "Cinema 4D's new AI is someone else's AI, sold in credits that expire.",
+     "hook": "Maxon Plus puts AI model generation inside Cinema 4D and ZBrush for 3D artists, run on other firms' models such as Tripo and Rodin, billed in credits.",
+     "examples": [
+      "A prompt, photo or sketch becomes an editable model.",
+      "Third-party AI providers such as Tripo and Rodin.",
+      "An off switch for artists who want none of it."
+     ],
+     "chain": [
+      "A 3D artist needs a base model to start from.",
+      "Other companies have built AI that makes rough models.",
+      "Maxon plugs those models into its own apps.",
+      "Each generation costs credits.",
+      "The credits are part of a subscription.",
+      "Maxon earns on the wrapper, the other firm on the model."
+     ],
+     "take": "What this shows is that the AI inside a creative app is often rented, and the margin is in the wrapper. Do you know whose model made your last asset?"
+    },
+    "style": {
+     "script": "head-to-head",
+     "production": "face-with-proof",
+     "experiment": {
+      "format": "kinetic-movement",
+      "why": "Peel the Maxon logo off the feature like a sticker to show Tripo and Rodin underneath."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When your design software adds AI, whose AI is it, and who are you paying? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Maxon Plus, its Model Generator, the third-party AI providers it runs on, how credits are priced and expire, and what 3D artists have said. Work through the 5 Whys, starting from the plain question: Why 1 asks how it is built, and what broke. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "Maxon resells other firms' 3D generators inside its own apps and bills artists in credits, so the margin sits in the wrapper and the subscription.",
+    "aim": "utility",
+    "funny": "The headline feature for 3D artists is an AI assistant, and the selling point in the subtitle is that you can switch it off.",
+    "lookalike": {
+     "pattern": "tool-unlock",
+     "beats": "https://www.instagram.com/power.ai/p/DfbtORYFfti/",
+     "our_take": "The post sold a new tool; we show whose tool is really underneath a famous 3D app."
+    },
+    "story_score": {
+     "total": 57.7,
+     "axes": {
+      "whys": 8,
+      "scale": 5.0,
+      "unique_angle": 0.0,
+      "absurdity_humour": null,
+      "fun_consume": 5.0,
+      "fun_produce": 6.0,
+      "fit": 10,
+      "named_thing": 10
+     },
+     "type": "hero_wed",
+     "floors_failed": [
+      "a hero has at least one sound angle"
+     ],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
     }
    }
   ],
   "fri": [
+   {
+    "id": "acb58370-aaca-4040-9c13-83f227a628ec",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "China's biggest music company says AI songs are flooding in and almost nobody is listening, so every artist and label worried about AI music can see where the money is still going: to human, distinctive music.",
+    "story": "On its third-quarter 2026 earnings call on 17 November, Tencent Music Entertainment, owner of the QQ Music, Kugou and Kuwo music apps, said streams of AI-generated songs remain negligible and falling while human, distinctive music gains. Its executive chairman Cussion Pang said listeners are becoming more selective as AI makes music more abundant; revenue was RMB8.94 billion, up 5.6%.",
+    "why_now": "Tencent Music third-quarter 2026 earnings call, 17 Nov 2026.",
+    "fact": "Music Business Worldwide, 17 Nov 2026: \"Streams from AI-generated songs remain very low and with a declining trend.\"; Digital Music News: \"AI content stream volumes remain negligible, with a declining share of listening, while high-quality, differentiated content continues to gain traction.\"",
+    "source": {
+     "label": "Music Business Worldwide, Tencent Music on AI streams (17 Nov 2026)",
+     "url": "https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/",
+     "kind": "report"
+    },
+    "sources": [
+     {
+      "label": "Digital Music News, Tencent Music on AI music (17 Nov 2026)",
+      "url": "https://www.digitalmusicnews.com/2026/11/17/tencent-music-ai-consumption-comments/"
+     }
+    ],
+    "first_reported": "https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/",
+    "beats": [
+     "AI can make a million songs a day. Almost nobody plays them.",
+     "What the biggest music company in China told its investors.",
+     "Why more supply made listeners pickier.",
+     "Where the money still goes: concerts, merch and human artists.",
+     "What this shows about what AI music is worth."
+    ],
+    "pitch": {
+     "question": "If machines can make endless songs, why are listeners still choosing the ones people make?",
+     "headline": "AI is flooding China's biggest music apps. Streams of it are 'negligible'.",
+     "hook": "Tencent Music, owner of China's biggest music apps, told investors that streams of AI-generated songs remain negligible and falling, while human, distinctive music gains.",
+     "examples": [
+      "Owner of QQ Music, Kugou and Kuwo.",
+      "AI streams 'negligible, with a declining share of listening'.",
+      "Revenue up 5.6%, to RMB8.94 billion."
+     ],
+     "chain": [
+      "AI tools make songs cheap and fast.",
+      "So the apps fill up with them.",
+      "Listeners face more choice than ever.",
+      "More choice makes them pickier.",
+      "They keep playing music by people they know.",
+      "So the AI flood costs the apps filtering and lawyers, and earns little."
+     ],
+     "take": "What this shows is that making music is no longer scarce, and being chosen is. What makes a listener pick one song out of a million?"
+    },
+    "style": {
+     "script": "random-headline",
+     "production": "data-story",
+     "experiment": {
+      "format": "everyday-debate",
+      "why": "A label boss and a bedroom producer argue over the chart, each holding the same earnings quote."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If machines can make endless songs, why are listeners still choosing the ones people make? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Tencent Music's comments on AI-generated streams, its filtering and legal action, its revenue and what other music platforms report about AI listening. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "AI makes music supply abundant, listeners grow more selective, and AI tracks earn a negligible share of streams while costing moderation and legal spend.",
+    "aim": "interest",
+    "funny": "The machines can write a million songs a day, and the market's verdict, per its own earnings call, is negligible.",
+    "lookalike": {
+     "pattern": "ai-backfires",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
+     "our_take": "The post showed AI doing something unexpected; we show listeners simply not playing it."
+    },
+    "recommended": true,
+    "story_score": {
+     "total": 64.8,
+     "axes": {
+      "whys": 9,
+      "scale": 7.0,
+      "unique_angle": 0.0,
+      "absurdity_humour": null,
+      "fun_consume": 6.0,
+      "fun_produce": 5.0,
+      "fit": 10,
+      "named_thing": 10
+     },
+     "type": "hero_fri",
+     "floors_failed": [
+      "a hero has at least one sound angle"
+     ],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
+    }
+   },
+   {
+    "id": "c1bd8406-c267-426e-b586-d76e1ef68e5c",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "Festival selection, which decides awards and distribution for animated films, rests on a form filmmakers fill in themselves, and programmers say the form and the film no longer match, so every animator entering festivals knows the box is being gamed.",
+    "story": "Manchester Animation Festival announced that from 2027 a film is ineligible if a generative model creates or alters any part of its final moving image. Speaking to Cartoon Brew on 20 November 2026, Ottawa's artistic director said some animators are lying on their forms, marking AI films as 3D.",
+    "why_now": "Cartoon Brew, 20 Nov 2026.",
+    "fact": "Cartoon Brew, 20 Nov 2026: \"What bothers me is the animators clearly lying on their forms,” says Robinson.\"; Manchester Animation Festival: \"If any part of the final moving image has been generated or transformed by a generative audio, image or video model, it will be deemed ineligible\".",
+    "source": {
+     "label": "Cartoon Brew, festival programmers on AI (20 Nov 2026)",
+     "url": "https://www.cartoonbrew.com/artificial-intelligence/annecy-ottawa-manchester-festival-programmers-artificial-intelligence-269655.html",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "Manchester Animation Festival, generative AI rules (Nov 2026)",
+      "url": "https://www.manchesteranimationfestival.co.uk/wp-content/uploads/2026/11/Generative-A.I-Policy.pdf"
+     }
+    ],
+    "first_reported": "https://www.cartoonbrew.com/artificial-intelligence/annecy-ottawa-manchester-festival-programmers-artificial-intelligence-269655.html",
+    "beats": [
+     "A box on a festival form: did you use AI?",
+     "What programmers see: AI films ticked as 3D.",
+     "Why the form matters: awards and distribution.",
+     "Why a rule cannot see inside a frame.",
+     "What this shows about honesty when the stakes are a prize."
+    ],
+    "pitch": {
+     "question": "If a festival asks filmmakers to declare AI themselves, what stops them ticking the wrong box?",
+     "headline": "Animation festivals ask if you used AI. Some entries say they are '3D'.",
+     "hook": "Ottawa's animation festival director says some entrants are lying on their forms, marking AI films as 3D, as Manchester bans generative AI films from 2027.",
+     "examples": [
+      "Manchester: any generated part of the final image makes a film ineligible.",
+      "Ottawa: one AI box to tick.",
+      "Programmers: some AI films are marked 3D or experimental."
+     ],
+     "chain": [
+      "Festivals pick films for awards and screenings.",
+      "They ask filmmakers how each film was made.",
+      "A prize can change a filmmaker's career.",
+      "AI films can look like 3D animation.",
+      "So some entrants tick the box that keeps them in.",
+      "Programmers are left judging the form, not the frame."
+     ],
+     "take": "What this shows is that a self-declared box works only while nobody has a reason to lie. How would you prove your own film was made by hand?"
+    },
+    "style": {
+     "script": "everyday-debate",
+     "production": "voice-led-pictures",
+     "experiment": {
+      "format": "fry-talking-head",
+      "why": "A lit talking head reads the festival form aloud, box by box, and stops at the one that matters."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If a festival asks filmmakers to declare AI themselves, what stops them ticking the wrong box? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: animation festivals' generative AI rules, Manchester Animation Festival's 2027 rule, Ottawa's AI declaration, programmers' accounts of mislabelled entries and how festivals check. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "Festival selection rests on a self-declared form, and programmers say AI films are being marked as 3D or experimental.",
+    "aim": "interest",
+    "funny": "Faced with one AI box to tick, some entrants have decided their film is simply 3D or something.",
+    "lookalike": {
+     "pattern": "new-rule-for-ai-art",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
+     "our_take": "The post explained a rule; we show the box people tick to get round it."
+    },
+    "story_score": {
+     "total": 57.3,
+     "axes": {
+      "whys": 8,
+      "scale": 5.0,
+      "unique_angle": 0.0,
+      "absurdity_humour": null,
+      "fun_consume": 7.0,
+      "fun_produce": 6.0,
+      "fit": 7,
+      "named_thing": 10
+     },
+     "type": "hero_fri",
+     "floors_failed": [
+      "a hero has at least one sound angle"
+     ],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
+    }
+   },
    {
     "id": "456c4fc3-530b-4fc8-9e92-5b5ea662ad87",
     "source_kind": "engine",
@@ -437,136 +708,25 @@
       "at": "2026-11-27T16:36:43Z"
      }
     },
-    "recommended": true
-   },
-   {
-    "id": "c1bd8406-c267-426e-b586-d76e1ef68e5c",
-    "source_kind": "engine",
-    "source_tag": "trade_press",
-    "so_what": "Festival selection, which decides awards and distribution for animated films, rests on a form filmmakers fill in themselves, and programmers say the form and the film no longer match, so every animator entering festivals knows the box is being gamed.",
-    "story": "Manchester Animation Festival announced that from 2027 a film is ineligible if a generative model creates or alters any part of its final moving image. Speaking to Cartoon Brew on 20 November 2026, Ottawa's artistic director said some animators are lying on their forms, marking AI films as 3D.",
-    "why_now": "Cartoon Brew, 20 Nov 2026.",
-    "fact": "Cartoon Brew, 20 Nov 2026: \"What bothers me is the animators clearly lying on their forms,” says Robinson.\"; Manchester Animation Festival: \"If any part of the final moving image has been generated or transformed by a generative audio, image or video model, it will be deemed ineligible\".",
-    "source": {
-     "label": "Cartoon Brew, festival programmers on AI (20 Nov 2026)",
-     "url": "https://www.cartoonbrew.com/artificial-intelligence/annecy-ottawa-manchester-festival-programmers-artificial-intelligence-269655.html",
-     "kind": "original"
-    },
-    "sources": [
-     {
-      "label": "Manchester Animation Festival, generative AI rules (Nov 2026)",
-      "url": "https://www.manchesteranimationfestival.co.uk/wp-content/uploads/2026/11/Generative-A.I-Policy.pdf"
-     }
-    ],
-    "first_reported": "https://www.cartoonbrew.com/artificial-intelligence/annecy-ottawa-manchester-festival-programmers-artificial-intelligence-269655.html",
-    "beats": [
-     "A box on a festival form: did you use AI?",
-     "What programmers see: AI films ticked as 3D.",
-     "Why the form matters: awards and distribution.",
-     "Why a rule cannot see inside a frame.",
-     "What this shows about honesty when the stakes are a prize."
-    ],
-    "pitch": {
-     "question": "If a festival asks filmmakers to declare AI themselves, what stops them ticking the wrong box?",
-     "headline": "Animation festivals ask if you used AI. Some entries say they are '3D'.",
-     "hook": "Ottawa's animation festival director says some entrants are lying on their forms, marking AI films as 3D, as Manchester bans generative AI films from 2027.",
-     "examples": [
-      "Manchester: any generated part of the final image makes a film ineligible.",
-      "Ottawa: one AI box to tick.",
-      "Programmers: some AI films are marked 3D or experimental."
+    "story_score": {
+     "total": 50.5,
+     "axes": {
+      "unique_angle": 0.0,
+      "absurdity_humour": null,
+      "whys": 8,
+      "scale": 4.0,
+      "fun_consume": 8.0,
+      "fit": 7,
+      "named_thing": 10,
+      "fun_produce": 8.0
+     },
+     "type": "wildcard",
+     "floors_failed": [
+      "truth: a wildcard's angle rests on its sourced fact; strange never adds a detail the source does not give"
      ],
-     "chain": [
-      "Festivals pick films for awards and screenings.",
-      "They ask filmmakers how each film was made.",
-      "A prize can change a filmmaker's career.",
-      "AI films can look like 3D animation.",
-      "So some entrants tick the box that keeps them in.",
-      "Programmers are left judging the form, not the frame."
-     ],
-     "take": "What this shows is that a self-declared box works only while nobody has a reason to lie. How would you prove your own film was made by hand?"
-    },
-    "style": {
-     "script": "everyday-debate",
-     "production": "voice-led-pictures",
-     "experiment": {
-      "format": "fry-talking-head",
-      "why": "A lit talking head reads the festival form aloud, box by box, and stops at the one that matters."
-     }
-    },
-    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If a festival asks filmmakers to declare AI themselves, what stops them ticking the wrong box? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: animation festivals' generative AI rules, Manchester Animation Festival's 2027 rule, Ottawa's AI declaration, programmers' accounts of mislabelled entries and how festivals check. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
-    "shape": "story",
-    "dive": "Festival selection rests on a self-declared form, and programmers say AI films are being marked as 3D or experimental.",
-    "aim": "interest",
-    "funny": "Faced with one AI box to tick, some entrants have decided their film is simply 3D or something.",
-    "lookalike": {
-     "pattern": "new-rule-for-ai-art",
-     "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
-     "our_take": "The post explained a rule; we show the box people tick to get round it."
-    }
-   },
-   {
-    "id": "acb58370-aaca-4040-9c13-83f227a628ec",
-    "source_kind": "engine",
-    "source_tag": "trade_press",
-    "so_what": "China's biggest music company says AI songs are flooding in and almost nobody is listening, so every artist and label worried about AI music can see where the money is still going: to human, distinctive music.",
-    "story": "On its third-quarter 2026 earnings call on 17 November, Tencent Music Entertainment, owner of the QQ Music, Kugou and Kuwo music apps, said streams of AI-generated songs remain negligible and falling while human, distinctive music gains. Its executive chairman Cussion Pang said listeners are becoming more selective as AI makes music more abundant; revenue was RMB8.94 billion, up 5.6%.",
-    "why_now": "Tencent Music third-quarter 2026 earnings call, 17 Nov 2026.",
-    "fact": "Music Business Worldwide, 17 Nov 2026: \"Streams from AI-generated songs remain very low and with a declining trend.\"; Digital Music News: \"AI content stream volumes remain negligible, with a declining share of listening, while high-quality, differentiated content continues to gain traction.\"",
-    "source": {
-     "label": "Music Business Worldwide, Tencent Music on AI streams (17 Nov 2026)",
-     "url": "https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/",
-     "kind": "report"
-    },
-    "sources": [
-     {
-      "label": "Digital Music News, Tencent Music on AI music (17 Nov 2026)",
-      "url": "https://www.digitalmusicnews.com/2026/11/17/tencent-music-ai-consumption-comments/"
-     }
-    ],
-    "first_reported": "https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/",
-    "beats": [
-     "AI can make a million songs a day. Almost nobody plays them.",
-     "What the biggest music company in China told its investors.",
-     "Why more supply made listeners pickier.",
-     "Where the money still goes: concerts, merch and human artists.",
-     "What this shows about what AI music is worth."
-    ],
-    "pitch": {
-     "question": "If machines can make endless songs, why are listeners still choosing the ones people make?",
-     "headline": "AI is flooding China's biggest music apps. Streams of it are 'negligible'.",
-     "hook": "Tencent Music, owner of China's biggest music apps, told investors that streams of AI-generated songs remain negligible and falling, while human, distinctive music gains.",
-     "examples": [
-      "Owner of QQ Music, Kugou and Kuwo.",
-      "AI streams 'negligible, with a declining share of listening'.",
-      "Revenue up 5.6%, to RMB8.94 billion."
-     ],
-     "chain": [
-      "AI tools make songs cheap and fast.",
-      "So the apps fill up with them.",
-      "Listeners face more choice than ever.",
-      "More choice makes them pickier.",
-      "They keep playing music by people they know.",
-      "So the AI flood costs the apps filtering and lawyers, and earns little."
-     ],
-     "take": "What this shows is that making music is no longer scarce, and being chosen is. What makes a listener pick one song out of a million?"
-    },
-    "style": {
-     "script": "random-headline",
-     "production": "data-story",
-     "experiment": {
-      "format": "everyday-debate",
-      "why": "A label boss and a bedroom producer argue over the chart, each holding the same earnings quote."
-     }
-    },
-    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If machines can make endless songs, why are listeners still choosing the ones people make? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Tencent Music's comments on AI-generated streams, its filtering and legal action, its revenue and what other music platforms report about AI listening. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
-    "shape": "story",
-    "dive": "AI makes music supply abundant, listeners grow more selective, and AI tracks earn a negligible share of streams while costing moderation and legal spend.",
-    "aim": "interest",
-    "funny": "The machines can write a million songs a day, and the market's verdict, per its own earnings call, is negligible.",
-    "lookalike": {
-     "pattern": "ai-backfires",
-     "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
-     "our_take": "The post showed AI doing something unexpected; we show listeners simply not playing it."
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
     }
    }
   ]
@@ -680,118 +840,22 @@
       "The New York Times has told its photographers not to install the new Photoshop update."
      ],
      "against": 61
-    }
-   },
-   {
-    "id": "fcpcaptions",
-    "kind": "explainer",
-    "format": "Explainer carousel, 5 cards, 4:5",
-    "source": {
-     "label": "Apple, Final Cut Pro release notes (18 Nov 2026)",
-     "url": "https://support.apple.com/en-us/102825"
     },
-    "source_tag": "trade_press",
-    "copy": "Final Cut Pro 13.0 generates captions and searches transcripts in 23 more languages, and closed captions now come out as SRT. Here is how to do it and what it costs.",
-    "hook": "Final Cut Pro now writes captions in 23 more languages.",
-    "story": "Final Cut Pro 13.0, Apple's film and video editor, released on 18 November 2026, can generate captions and search transcripts in 23 more languages, and closed captions now default to SRT.",
-    "fact": "Apple, 18 Nov 2026: \"Generate captions and search transcripts in 23 new supported languages.\"",
-    "pitch": {
-     "see": "A video timeline with subtitles appearing in five languages at once.",
-     "lands": "Any filmmaker or video creator who posts to an audience abroad can caption a video in its own language in a few clicks this week.",
-     "why_now": "Final Cut Pro 13.0, released 18 Nov 2026.",
-     "share": "My editor just learned 23 languages over the weekend."
-    },
-    "shape": "story",
-    "dive": "Speech recognition built into the editor now covers 23 more languages, so captioning for an audience abroad is a menu item.",
-    "aim": "utility",
-    "funny": "For five months the caption tool in a $299.99 film editor spoke one language, American.",
-    "lookalike": {
-     "pattern": "tool-unlock",
-     "beats": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
-     "our_take": "The post listed what a coding tool unlocks; ours is the same card flow for one creative tool, with the real price and the catch."
-    },
-    "cards": [
-     {
-      "words": "Final Cut Pro now writes captions in 23 more languages.",
-      "picture": "A Final Cut Pro timeline with subtitle lanes in several languages"
+    "story_score": {
+     "total": 63.5,
+     "axes": {
+      "utility": 7.0,
+      "mechanism": null,
+      "named_thing": 7,
+      "fun_consume": 8.0,
+      "fun_produce": 7.0,
+      "fit": 7,
+      "absurdity_humour": 0.0
      },
-     {
-      "words": "Select the clips with speech, then Edit > Generate Captions > Subtitles.",
-      "picture": "The Edit menu with Generate Captions highlighted"
-     },
-     {
-      "words": "Pick the language spoken, click Generate; closed captions come out as SRT.",
-      "picture": "The language picker and an SRT file icon"
-     },
-     {
-      "words": "The catch: some new languages need macOS 27 or later.",
-      "picture": "A macOS version badge beside the language list"
-     },
-     {
-      "words": "Cost: $299.99 once, or $12.99 a month after a 30-day trial.",
-      "picture": "A price tag on a film reel"
-     }
-    ],
-    "steps": [
-     {
-      "text": "Update to Final Cut Pro 13.0; some new languages need macOS 27 or later.",
-      "checked": "https://support.apple.com/guide/final-cut-pro/generate-subtitles-automatically-verd6d52c4e8/mac"
-     },
-     {
-      "text": "Select the clips that contain speech in the timeline.",
-      "checked": "https://support.apple.com/guide/final-cut-pro/generate-subtitles-automatically-verd6d52c4e8/mac"
-     },
-     {
-      "text": "Choose Edit, Generate Captions, Subtitles, pick the language spoken and click Generate.",
-      "checked": "https://support.apple.com/guide/final-cut-pro/generate-subtitles-automatically-verd6d52c4e8/mac"
-     },
-     {
-      "text": "Check the price: $299.99 once, or Apple Creator Studio at $12.99 a month after a 30-day trial.",
-      "checked": "https://www.apple.com/final-cut-pro/"
-     }
-    ],
-    "learned_from": [
-     "\"a more infographicy amusing explainer\" (your Improve, 9 Nov, of the phone-book tool-calls carousel)"
-    ],
-    "direction": {
-     "look": "The v5 explainer look, modelled on the tool-unlock carousels in your Instagram inspo sheet",
-     "format": "5 cards, 4:5",
-     "frames": [
-      {
-       "words": "Final Cut Pro now writes captions in 23 more languages.",
-       "picture": "A Final Cut Pro timeline with subtitle lanes in several languages"
-      },
-      {
-       "words": "Select the clips with speech, then Edit > Generate Captions > Subtitles.",
-       "picture": "The Edit menu with Generate Captions highlighted"
-      },
-      {
-       "words": "Pick the language spoken, click Generate; closed captions come out as SRT.",
-       "picture": "The language picker and an SRT file icon"
-      },
-      {
-       "words": "The catch: some new languages need macOS 27 or later.",
-       "picture": "A macOS version badge beside the language list"
-      },
-      {
-       "words": "Cost: $299.99 once, or $12.99 a month after a 30-day trial.",
-       "picture": "A price tag on a film reel"
-      }
-     ],
-     "tone": "Plain, useful and a little dry: the joke is in the facts.",
-     "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
-     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
-    },
-    "read_back": {
-     "readers": [
-      "reader A",
-      "reader B"
-     ],
-     "says": [
-      "Final Cut Pro can now make subtitles for your videos in 23 more languages.",
-      "Final Cut Pro can now make subtitles for your videos in 23 more languages."
-     ],
-     "against": 61
+     "type": "explainer",
+     "floors_failed": [],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00"
     }
    },
    {
@@ -904,6 +968,23 @@
       "Logic on the iPad can now pull the drums out of a song and put each drum on its own track."
      ],
      "against": 61
+    },
+    "story_score": {
+     "total": 70.0,
+     "axes": {
+      "utility": 9.0,
+      "mechanism": null,
+      "named_thing": 7,
+      "fun_consume": 5.0,
+      "fun_produce": 5.0,
+      "fit": 7,
+      "absurdity_humour": null
+     },
+     "type": "explainer",
+     "floors_failed": [],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
     }
    },
    {
@@ -1016,6 +1097,152 @@
       "If you wrote and published your own book, Spotify will make it into an audiobook for free."
      ],
      "against": 61
+    },
+    "story_score": {
+     "total": 68.7,
+     "axes": {
+      "utility": 8.0,
+      "mechanism": null,
+      "named_thing": 7,
+      "fun_consume": 6.0,
+      "fun_produce": 5.0,
+      "fit": 7,
+      "absurdity_humour": null
+     },
+     "type": "explainer",
+     "floors_failed": [],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
+    }
+   },
+   {
+    "id": "fcpcaptions",
+    "kind": "explainer",
+    "format": "Explainer carousel, 5 cards, 4:5",
+    "source": {
+     "label": "Apple, Final Cut Pro release notes (18 Nov 2026)",
+     "url": "https://support.apple.com/en-us/102825"
+    },
+    "source_tag": "trade_press",
+    "copy": "Final Cut Pro 13.0 generates captions and searches transcripts in 23 more languages, and closed captions now come out as SRT. Here is how to do it and what it costs.",
+    "hook": "Final Cut Pro now writes captions in 23 more languages.",
+    "story": "Final Cut Pro 13.0, Apple's film and video editor, released on 18 November 2026, can generate captions and search transcripts in 23 more languages, and closed captions now default to SRT.",
+    "fact": "Apple, 18 Nov 2026: \"Generate captions and search transcripts in 23 new supported languages.\"",
+    "pitch": {
+     "see": "A video timeline with subtitles appearing in five languages at once.",
+     "lands": "Any filmmaker or video creator who posts to an audience abroad can caption a video in its own language in a few clicks this week.",
+     "why_now": "Final Cut Pro 13.0, released 18 Nov 2026.",
+     "share": "My editor just learned 23 languages over the weekend."
+    },
+    "shape": "story",
+    "dive": "Speech recognition built into the editor now covers 23 more languages, so captioning for an audience abroad is a menu item.",
+    "aim": "utility",
+    "funny": "For five months the caption tool in a $299.99 film editor spoke one language, American.",
+    "lookalike": {
+     "pattern": "tool-unlock",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
+     "our_take": "The post listed what a coding tool unlocks; ours is the same card flow for one creative tool, with the real price and the catch."
+    },
+    "cards": [
+     {
+      "words": "Final Cut Pro now writes captions in 23 more languages.",
+      "picture": "A Final Cut Pro timeline with subtitle lanes in several languages"
+     },
+     {
+      "words": "Select the clips with speech, then Edit > Generate Captions > Subtitles.",
+      "picture": "The Edit menu with Generate Captions highlighted"
+     },
+     {
+      "words": "Pick the language spoken, click Generate; closed captions come out as SRT.",
+      "picture": "The language picker and an SRT file icon"
+     },
+     {
+      "words": "The catch: some new languages need macOS 27 or later.",
+      "picture": "A macOS version badge beside the language list"
+     },
+     {
+      "words": "Cost: $299.99 once, or $12.99 a month after a 30-day trial.",
+      "picture": "A price tag on a film reel"
+     }
+    ],
+    "steps": [
+     {
+      "text": "Update to Final Cut Pro 13.0; some new languages need macOS 27 or later.",
+      "checked": "https://support.apple.com/guide/final-cut-pro/generate-subtitles-automatically-verd6d52c4e8/mac"
+     },
+     {
+      "text": "Select the clips that contain speech in the timeline.",
+      "checked": "https://support.apple.com/guide/final-cut-pro/generate-subtitles-automatically-verd6d52c4e8/mac"
+     },
+     {
+      "text": "Choose Edit, Generate Captions, Subtitles, pick the language spoken and click Generate.",
+      "checked": "https://support.apple.com/guide/final-cut-pro/generate-subtitles-automatically-verd6d52c4e8/mac"
+     },
+     {
+      "text": "Check the price: $299.99 once, or Apple Creator Studio at $12.99 a month after a 30-day trial.",
+      "checked": "https://www.apple.com/final-cut-pro/"
+     }
+    ],
+    "learned_from": [
+     "\"a more infographicy amusing explainer\" (your Improve, 9 Nov, of the phone-book tool-calls carousel)"
+    ],
+    "direction": {
+     "look": "The v5 explainer look, modelled on the tool-unlock carousels in your Instagram inspo sheet",
+     "format": "5 cards, 4:5",
+     "frames": [
+      {
+       "words": "Final Cut Pro now writes captions in 23 more languages.",
+       "picture": "A Final Cut Pro timeline with subtitle lanes in several languages"
+      },
+      {
+       "words": "Select the clips with speech, then Edit > Generate Captions > Subtitles.",
+       "picture": "The Edit menu with Generate Captions highlighted"
+      },
+      {
+       "words": "Pick the language spoken, click Generate; closed captions come out as SRT.",
+       "picture": "The language picker and an SRT file icon"
+      },
+      {
+       "words": "The catch: some new languages need macOS 27 or later.",
+       "picture": "A macOS version badge beside the language list"
+      },
+      {
+       "words": "Cost: $299.99 once, or $12.99 a month after a 30-day trial.",
+       "picture": "A price tag on a film reel"
+      }
+     ],
+     "tone": "Plain, useful and a little dry: the joke is in the facts.",
+     "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
+     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
+    },
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "Final Cut Pro can now make subtitles for your videos in 23 more languages.",
+      "Final Cut Pro can now make subtitles for your videos in 23 more languages."
+     ],
+     "against": 61
+    },
+    "story_score": {
+     "total": 66.7,
+     "axes": {
+      "utility": 8.0,
+      "mechanism": null,
+      "named_thing": 10,
+      "fun_consume": 4.0,
+      "fun_produce": 5.0,
+      "fit": 4,
+      "absurdity_humour": null
+     },
+     "type": "explainer",
+     "floors_failed": [],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
     }
    },
    {
@@ -1094,6 +1321,27 @@
       "Google tried to patent an AI TV channel where every show stars you, and the patent office turned it down."
      ],
      "against": 61
+    },
+    "story_score": {
+     "total": 61.3,
+     "axes": {
+      "absurdity_humour": null,
+      "fun_consume": 8.0,
+      "named_thing": 7,
+      "fun_produce": 7.0,
+      "unique_angle": 0.0,
+      "fit": 7,
+      "scale": 4.0,
+      "whys": 7
+     },
+     "type": "offday_short",
+     "floors_failed": [
+      "a short leads on humour the engine can read (not read)",
+      "a short's joke never needs explaining (not read)"
+     ],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
     }
    },
    {
@@ -1152,64 +1400,25 @@
       "A meme: the AI music company is laughing and excited about its big plan, while the songwriter who read the small print in the contract is not smiling at all."
      ],
      "against": 61
-    }
-   },
-   {
-    "id": "tplfistpump",
-    "kind": "meme",
-    "format": "Meme template, your caption on the clip, 9:16 and 4:5",
-    "source": {
-     "label": "This week in football: This Is Anfield on YouTube",
-     "url": "https://www.youtube.com/watch?v=TX8IhY3r6cY"
     },
-    "source_tag": "trade_press",
-    "copy": "After the full-time handshakes the head coach walks towards the stand and pumps his fist at the crowd, again and again. It becomes the AI moment the caption names, in the reader's world.",
-    "hook": "The manager's fist pumps to the Kop",
-    "pitch": {
-     "see": "After the full-time handshakes the head coach walks towards the stand and pumps his fist at the crowd, again and again.",
-     "lands": "Pure triumph over a small win is the director walking past the AI storyboard that got the shot wrong; the exaggeration lands because the win is tiny."
-    },
-    "aim": "humour",
-    "shape": "story",
-    "funny": "A fist pump this big is how a film crew celebrates beating the AI storyboard on a shoot.",
-    "template": {
-     "title": "The manager's fist pumps to the Kop",
-     "clip": {
-      "url": "https://www.youtube.com/watch?v=TX8IhY3r6cY",
-      "page": "https://www.youtube.com/watch?v=TX8IhY3r6cY",
-      "poster": null,
-      "seconds": 138
+    "story_score": {
+     "total": 47.7,
+     "axes": {
+      "absurdity_humour": null,
+      "fun_consume": 6.0,
+      "unique_angle": 0.0,
+      "named_thing": 10,
+      "fun_produce": 5.0,
+      "fit": 4
      },
-     "found": {
-      "place": "pop_culture",
-      "label": "This week in football: This Is Anfield on YouTube",
-      "url": "https://www.youtube.com/watch?v=TX8IhY3r6cY"
-     },
-     "credit": "This Is Anfield (filmed at Anfield); Liverpool FC",
-     "what_happens": "After the full-time handshakes the head coach walks towards the stand and pumps his fist at the crowd, again and again.",
-     "why_it_works": "Pure triumph over a small win is the director walking past the AI storyboard that got the shot wrong; the exaggeration lands because the win is tiny.",
-     "mechanism": [
-      "exaggeration",
-      "irony"
+     "type": "offday_meme",
+     "floors_failed": [
+      "a meme's humour reads as supported (not read)",
+      "a meme never needs explaining (not read)"
      ],
-     "moment": "Full time at Liverpool 4-0 Manchester United, Anfield, 2026-11-22",
-     "date": "2026-11-22"
-    },
-    "caption_ideas": [
-     "The director walking past the AI storyboard that said the shot was impossible",
-     "Session drummer leaving the studio after the AI drummer lost the groove twice",
-     "Me after the film's credits roll and there is not one AI line in them"
-    ],
-    "read_back": {
-     "readers": [
-      "reader A",
-      "reader B"
-     ],
-     "says": [
-      "A meme: a film director celebrating after pulling off a shot the AI storyboard said could not be done.",
-      "A meme: a film director celebrating because he pulled off the shot an AI storyboard said could not be done."
-     ],
-     "against": 61
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
     }
    },
    {
@@ -1268,6 +1477,102 @@
       "A meme: the AI needs 400 tries to make a perfect piece of music, and the human musician does it just as well in one go."
      ],
      "against": 61
+    },
+    "story_score": {
+     "total": 43.1,
+     "axes": {
+      "absurdity_humour": null,
+      "fun_consume": 6.0,
+      "unique_angle": 0.0,
+      "named_thing": 7,
+      "fun_produce": 5.0,
+      "fit": 4
+     },
+     "type": "offday_meme",
+     "floors_failed": [
+      "a meme's humour reads as supported (not read)",
+      "a meme never needs explaining (not read)"
+     ],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
+    }
+   },
+   {
+    "id": "tplfistpump",
+    "kind": "meme",
+    "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+    "source": {
+     "label": "This week in football: This Is Anfield on YouTube",
+     "url": "https://www.youtube.com/watch?v=TX8IhY3r6cY"
+    },
+    "source_tag": "trade_press",
+    "copy": "After the full-time handshakes the head coach walks towards the stand and pumps his fist at the crowd, again and again. It becomes the AI moment the caption names, in the reader's world.",
+    "hook": "The manager's fist pumps to the Kop",
+    "pitch": {
+     "see": "After the full-time handshakes the head coach walks towards the stand and pumps his fist at the crowd, again and again.",
+     "lands": "Pure triumph over a small win is the director walking past the AI storyboard that got the shot wrong; the exaggeration lands because the win is tiny."
+    },
+    "aim": "humour",
+    "shape": "story",
+    "funny": "A fist pump this big is how a film crew celebrates beating the AI storyboard on a shoot.",
+    "template": {
+     "title": "The manager's fist pumps to the Kop",
+     "clip": {
+      "url": "https://www.youtube.com/watch?v=TX8IhY3r6cY",
+      "page": "https://www.youtube.com/watch?v=TX8IhY3r6cY",
+      "poster": null,
+      "seconds": 138
+     },
+     "found": {
+      "place": "pop_culture",
+      "label": "This week in football: This Is Anfield on YouTube",
+      "url": "https://www.youtube.com/watch?v=TX8IhY3r6cY"
+     },
+     "credit": "This Is Anfield (filmed at Anfield); Liverpool FC",
+     "what_happens": "After the full-time handshakes the head coach walks towards the stand and pumps his fist at the crowd, again and again.",
+     "why_it_works": "Pure triumph over a small win is the director walking past the AI storyboard that got the shot wrong; the exaggeration lands because the win is tiny.",
+     "mechanism": [
+      "exaggeration",
+      "irony"
+     ],
+     "moment": "Full time at Liverpool 4-0 Manchester United, Anfield, 2026-11-22",
+     "date": "2026-11-22"
+    },
+    "caption_ideas": [
+     "The director walking past the AI storyboard that said the shot was impossible",
+     "Session drummer leaving the studio after the AI drummer lost the groove twice",
+     "Me after the film's credits roll and there is not one AI line in them"
+    ],
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "A meme: a film director celebrating after pulling off a shot the AI storyboard said could not be done.",
+      "A meme: a film director celebrating because he pulled off the shot an AI storyboard said could not be done."
+     ],
+     "against": 61
+    },
+    "story_score": {
+     "total": 36.9,
+     "axes": {
+      "absurdity_humour": null,
+      "fun_consume": 4.0,
+      "unique_angle": 0.0,
+      "named_thing": 7,
+      "fun_produce": 5.0,
+      "fit": 4
+     },
+     "type": "offday_meme",
+     "floors_failed": [
+      "a meme's humour reads as supported (not read)",
+      "a meme never needs explaining (not read)"
+     ],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
     }
    },
    {
@@ -1326,6 +1631,25 @@
       "A meme: the real, human-made mix turns up at the very last second, just before the label gives up and uses the AI one."
      ],
      "against": 61
+    },
+    "story_score": {
+     "total": 36.9,
+     "axes": {
+      "absurdity_humour": null,
+      "fun_consume": 4.0,
+      "unique_angle": 0.0,
+      "named_thing": 7,
+      "fun_produce": 5.0,
+      "fit": 4
+     },
+     "type": "offday_meme",
+     "floors_failed": [
+      "a meme's humour reads as supported (not read)",
+      "a meme never needs explaining (not read)"
+     ],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
     }
    }
   ],
@@ -1441,6 +1765,24 @@
       "Figma can now make six AI pictures from one request so you can pick one."
      ],
      "against": 61
+    },
+    "story_score": {
+     "total": 70.0,
+     "axes": {
+      "utility": 9.0,
+      "mechanism": null,
+      "named_thing": 7,
+      "fun_consume": 5.0,
+      "fun_produce": 5.0,
+      "fit": 7,
+      "absurdity_humour": null
+     },
+     "type": "explainer",
+     "floors_failed": [],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true,
+     "close_call": "close call, your pick"
     }
    },
    {
@@ -1553,196 +1895,24 @@
       "Roblox's AI helper can watch a recording of your game being played, spot what is broken and fix it."
      ],
      "against": 61
-    }
-   },
-   {
-    "id": "alphamatte",
-    "kind": "explainer",
-    "format": "Explainer carousel, 5 cards, 4:5",
-    "source": {
-     "label": "Runway changelog (13 Nov 2026)",
-     "url": "https://runway.com/changelog"
     },
-    "source_tag": "trade_press",
-    "copy": "Runway added LTX Alphagen, a model that turns any clip into a matte and a cutout with transparency, no green screen, mask or prompt, and can output ProRes. Here is how film editors use it and what it costs.",
-    "hook": "Runway now cuts people out of clips, no green screen.",
-    "story": "On 13 November 2026 Runway, the AI video tool used by filmmakers and editors, added LTX Alphagen, a model from Lightricks that turns any clip into a matte with a separate alpha cutout, with no green screen.",
-    "fact": "Runway, 13 Nov 2026: \"LTX Alphagen is the first third-party model to return two outputs and support ProRes as an output type.\"",
-    "pitch": {
-     "see": "A dancer lifted out of a street scene onto a new background.",
-     "lands": "Any filmmaker or video editor can turn an ordinary clip into a clean cutout with a matte, no green screen or mask, on a paid Runway plan this week.",
-     "why_now": "Runway changelog, 13 Nov 2026.",
-     "share": "I just cut out the background without a green screen."
-    },
-    "shape": "story",
-    "dive": "A model separates the subject from the background in any clip and returns a matte and a transparent cutout, replacing a green screen.",
-    "aim": "utility",
-    "funny": "The headline feature of the model is that it gives you two files instead of one.",
-    "lookalike": {
-     "pattern": "tool-unlock",
-     "beats": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
-     "our_take": "The post listed what a coding tool unlocks; ours is the same card flow for one creative tool, with the real price and the catch."
-    },
-    "cards": [
-     {
-      "words": "Runway now cuts people out of clips, no green screen.",
-      "picture": "A figure lifted out of a scene onto a new one"
+    "story_score": {
+     "total": 66.7,
+     "axes": {
+      "utility": 8.0,
+      "mechanism": null,
+      "named_thing": 7,
+      "fun_consume": 5.0,
+      "fun_produce": 5.0,
+      "fit": 7,
+      "absurdity_humour": null
      },
-     {
-      "words": "Pick LTX Alphagen and give it a clip you already have.",
-      "picture": "The model picker in Runway"
-     },
-     {
-      "words": "You get two files: a matte and a cutout with transparency.",
-      "picture": "A grey matte beside the cutout"
-     },
-     {
-      "words": "The catch: the output has no audio, so keep your original sound.",
-      "picture": "A muted speaker icon on the cutout"
-     },
-     {
-      "words": "Cost: paid plans from $15 a month, or $12 billed yearly.",
-      "picture": "A price tag on a film clapperboard"
-     }
-    ],
-    "steps": [
-     {
-      "text": "On a Runway paid plan, pick LTX Alphagen and give it a clip.",
-      "checked": "https://runway.com/changelog"
-     },
-     {
-      "text": "No prompt, mask or green screen is needed.",
-      "checked": "https://ltx.io/model/capabilities/alpha-channel-video-generation"
-     },
-     {
-      "text": "You get a matte and a cutout frame for frame, and can ask for ProRes.",
-      "checked": "https://ltx.io/model/capabilities/alpha-channel-video-generation"
-     },
-     {
-      "text": "Check the price: Standard is $15 a month, or $12 billed yearly.",
-      "checked": "https://runway.com/pricing"
-     }
-    ],
-    "learned_from": [
-     "\"a more infographicy amusing explainer\" (your Improve, 9 Nov, of the phone-book tool-calls carousel)"
-    ],
-    "direction": {
-     "look": "The v5 explainer look, modelled on the tool-unlock carousels in your Instagram inspo sheet",
-     "format": "5 cards, 4:5",
-     "frames": [
-      {
-       "words": "Runway now cuts people out of clips, no green screen.",
-       "picture": "A figure lifted out of a scene onto a new one"
-      },
-      {
-       "words": "Pick LTX Alphagen and give it a clip you already have.",
-       "picture": "The model picker in Runway"
-      },
-      {
-       "words": "You get two files: a matte and a cutout with transparency.",
-       "picture": "A grey matte beside the cutout"
-      },
-      {
-       "words": "The catch: the output has no audio, so keep your original sound.",
-       "picture": "A muted speaker icon on the cutout"
-      },
-      {
-       "words": "Cost: paid plans from $15 a month, or $12 billed yearly.",
-       "picture": "A price tag on a film clapperboard"
-      }
-     ],
-     "tone": "Plain, useful and a little dry: the joke is in the facts.",
-     "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
-     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
-    },
-    "read_back": {
-     "readers": [
-      "reader A",
-      "reader B"
-     ],
-     "says": [
-      "Runway can now cut a person out of a video and put them on a new background without a green screen.",
-      "Runway can now cut a person out of a video and put them on a new background without a green screen."
-     ],
-     "against": 61
-    }
-   },
-   {
-    "id": "synthfirmware",
-    "kind": "voiceover",
-    "format": "Voiceover short, 9:16, about 60 seconds, motion graphics over the source pictures",
-    "source": {
-     "label": "The Verge, vibe coding and open-source music firmware (25 Nov 2026)",
-     "url": "https://www.theverge.com/ai-artificial-intelligence/1040081/vibe-coding-open-source-music-firmware"
-    },
-    "sources": [
-     {
-      "label": "Polyend, Tracker firmware source code (Nov 2026)",
-      "url": "https://polyend.com/whats-up/tracker-the-biggest-update-yet/"
-     }
-    ],
-    "source_tag": "trade_press",
-    "copy": "AI coding tools let hobbyists write custom firmware for music gear, a $70 synth now has more than a dozen custom versions, and some makers have opened up their devices. A 60-second voiceover on who wins when musicians can rewrite their instruments.",
-    "hook": "People taught a $70 synth new tricks with chatbots, and the music gear makers opened up.",
-    "story": "The Verge reported on 25 November 2026 that AI coding tools have let hobbyists write custom firmware for music gear, and that some makers are opening up their devices; Polyend published its Tracker firmware code.",
-    "fact": "The Verge, 25 Nov 2026: \"companies have begun making more and more of their devices open source.\"; Polyend: \"Today we're publishing the firmware source code for the original Tracker, Tracker+ and Tracker Mini on GitHub.\"",
-    "pitch": {
-     "see": "A tiny $70 synth with a chat window open beside it.",
-     "lands": "It is a surprising, true twist: AI coding tools let hobbyists rewrite music gear, and some makers answered by publishing their code.",
-     "why_now": "The Verge, 25 Nov 2026.",
-     "share": "AI turned bedroom musicians into synth makers."
-    },
-    "shape": "story",
-    "dive": "AI coding tools let musicians rewrite the software inside their instruments, so some makers publish their code rather than fight it.",
-    "aim": "interest",
-    "funny": "A $70 synth became the instrument of the summer because people kept teaching it new tricks with chatbots.",
-    "lookalike": {
-     "pattern": "made-in-hours",
-     "beats": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/",
-     "our_take": "The post showed a game made with AI in a day; ours shows musicians rewriting their own instruments with it."
-    },
-    "learned_from": [
-     "\"Real-world stories only\" (your Improve, 9 Nov, of the good news): this one is a real story told as a short"
-    ],
-    "direction": {
-     "look": "Voice-led motion graphics over the story's own pictures, art-directed captions",
-     "format": "9:16 short, about 60 seconds",
-     "frames": [
-      {
-       "words": "A $70 synth with a dozen new brains.",
-       "picture": "The small synth on a desk"
-      },
-      {
-       "words": "Musicians wrote them with AI chatbots.",
-       "picture": "A chat window writing code"
-      },
-      {
-       "words": "Some makers fought back with forum bans.",
-       "picture": "A locked forum page"
-      },
-      {
-       "words": "Others published their code.",
-       "picture": "A code page opening"
-      },
-      {
-       "words": "Now the instrument changes after you buy it.",
-       "picture": "The synth glowing with a new screen"
-      }
-     ],
-     "tone": "Deadpan: the facts carry the joke.",
-     "kit": "v5 Library short: house type, brand palette, the designed captions",
-     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/"
-    },
-    "read_back": {
-     "readers": [
-      "reader A",
-      "reader B"
-     ],
-     "says": [
-      "People used chatbots to give a cheap $70 synth new features, and the companies that make music gear started letting them.",
-      "People used chatbots to give a cheap $70 synth new features, and the company that makes it let them."
-     ],
-     "against": 61
+     "type": "explainer",
+     "floors_failed": [],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true,
+     "close_call": "close call, your pick"
     }
    },
    {
@@ -1855,6 +2025,249 @@
       "Pixelmator Pro lets you type what you want and it repaints just that part of a photo, like the sky."
      ],
      "against": 61
+    },
+    "story_score": {
+     "total": 65.3,
+     "axes": {
+      "utility": 9.0,
+      "mechanism": null,
+      "named_thing": 7,
+      "fun_consume": 4.0,
+      "fun_produce": 6.0,
+      "fit": 4,
+      "absurdity_humour": null
+     },
+     "type": "explainer",
+     "floors_failed": [],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
+    }
+   },
+   {
+    "id": "alphamatte",
+    "kind": "explainer",
+    "format": "Explainer carousel, 5 cards, 4:5",
+    "source": {
+     "label": "Runway changelog (13 Nov 2026)",
+     "url": "https://runway.com/changelog"
+    },
+    "source_tag": "trade_press",
+    "copy": "Runway added LTX Alphagen, a model that turns any clip into a matte and a cutout with transparency, no green screen, mask or prompt, and can output ProRes. Here is how film editors use it and what it costs.",
+    "hook": "Runway now cuts people out of clips, no green screen.",
+    "story": "On 13 November 2026 Runway, the AI video tool used by filmmakers and editors, added LTX Alphagen, a model from Lightricks that turns any clip into a matte with a separate alpha cutout, with no green screen.",
+    "fact": "Runway, 13 Nov 2026: \"LTX Alphagen is the first third-party model to return two outputs and support ProRes as an output type.\"",
+    "pitch": {
+     "see": "A dancer lifted out of a street scene onto a new background.",
+     "lands": "Any filmmaker or video editor can turn an ordinary clip into a clean cutout with a matte, no green screen or mask, on a paid Runway plan this week.",
+     "why_now": "Runway changelog, 13 Nov 2026.",
+     "share": "I just cut out the background without a green screen."
+    },
+    "shape": "story",
+    "dive": "A model separates the subject from the background in any clip and returns a matte and a transparent cutout, replacing a green screen.",
+    "aim": "utility",
+    "funny": "The headline feature of the model is that it gives you two files instead of one.",
+    "lookalike": {
+     "pattern": "tool-unlock",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
+     "our_take": "The post listed what a coding tool unlocks; ours is the same card flow for one creative tool, with the real price and the catch."
+    },
+    "cards": [
+     {
+      "words": "Runway now cuts people out of clips, no green screen.",
+      "picture": "A figure lifted out of a scene onto a new one"
+     },
+     {
+      "words": "Pick LTX Alphagen and give it a clip you already have.",
+      "picture": "The model picker in Runway"
+     },
+     {
+      "words": "You get two files: a matte and a cutout with transparency.",
+      "picture": "A grey matte beside the cutout"
+     },
+     {
+      "words": "The catch: the output has no audio, so keep your original sound.",
+      "picture": "A muted speaker icon on the cutout"
+     },
+     {
+      "words": "Cost: paid plans from $15 a month, or $12 billed yearly.",
+      "picture": "A price tag on a film clapperboard"
+     }
+    ],
+    "steps": [
+     {
+      "text": "On a Runway paid plan, pick LTX Alphagen and give it a clip.",
+      "checked": "https://runway.com/changelog"
+     },
+     {
+      "text": "No prompt, mask or green screen is needed.",
+      "checked": "https://ltx.io/model/capabilities/alpha-channel-video-generation"
+     },
+     {
+      "text": "You get a matte and a cutout frame for frame, and can ask for ProRes.",
+      "checked": "https://ltx.io/model/capabilities/alpha-channel-video-generation"
+     },
+     {
+      "text": "Check the price: Standard is $15 a month, or $12 billed yearly.",
+      "checked": "https://runway.com/pricing"
+     }
+    ],
+    "learned_from": [
+     "\"a more infographicy amusing explainer\" (your Improve, 9 Nov, of the phone-book tool-calls carousel)"
+    ],
+    "direction": {
+     "look": "The v5 explainer look, modelled on the tool-unlock carousels in your Instagram inspo sheet",
+     "format": "5 cards, 4:5",
+     "frames": [
+      {
+       "words": "Runway now cuts people out of clips, no green screen.",
+       "picture": "A figure lifted out of a scene onto a new one"
+      },
+      {
+       "words": "Pick LTX Alphagen and give it a clip you already have.",
+       "picture": "The model picker in Runway"
+      },
+      {
+       "words": "You get two files: a matte and a cutout with transparency.",
+       "picture": "A grey matte beside the cutout"
+      },
+      {
+       "words": "The catch: the output has no audio, so keep your original sound.",
+       "picture": "A muted speaker icon on the cutout"
+      },
+      {
+       "words": "Cost: paid plans from $15 a month, or $12 billed yearly.",
+       "picture": "A price tag on a film clapperboard"
+      }
+     ],
+     "tone": "Plain, useful and a little dry: the joke is in the facts.",
+     "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
+     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
+    },
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "Runway can now cut a person out of a video and put them on a new background without a green screen.",
+      "Runway can now cut a person out of a video and put them on a new background without a green screen."
+     ],
+     "against": 61
+    },
+    "story_score": {
+     "total": 62.7,
+     "axes": {
+      "utility": 7.0,
+      "mechanism": null,
+      "named_thing": 7,
+      "fun_consume": 4.0,
+      "fun_produce": 6.0,
+      "fit": 7,
+      "absurdity_humour": null
+     },
+     "type": "explainer",
+     "floors_failed": [],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
+    }
+   },
+   {
+    "id": "synthfirmware",
+    "kind": "voiceover",
+    "format": "Voiceover short, 9:16, about 60 seconds, motion graphics over the source pictures",
+    "source": {
+     "label": "The Verge, vibe coding and open-source music firmware (25 Nov 2026)",
+     "url": "https://www.theverge.com/ai-artificial-intelligence/1040081/vibe-coding-open-source-music-firmware"
+    },
+    "sources": [
+     {
+      "label": "Polyend, Tracker firmware source code (Nov 2026)",
+      "url": "https://polyend.com/whats-up/tracker-the-biggest-update-yet/"
+     }
+    ],
+    "source_tag": "trade_press",
+    "copy": "AI coding tools let hobbyists write custom firmware for music gear, a $70 synth now has more than a dozen custom versions, and some makers have opened up their devices. A 60-second voiceover on who wins when musicians can rewrite their instruments.",
+    "hook": "People taught a $70 synth new tricks with chatbots, and the music gear makers opened up.",
+    "story": "The Verge reported on 25 November 2026 that AI coding tools have let hobbyists write custom firmware for music gear, and that some makers are opening up their devices; Polyend published its Tracker firmware code.",
+    "fact": "The Verge, 25 Nov 2026: \"companies have begun making more and more of their devices open source.\"; Polyend: \"Today we're publishing the firmware source code for the original Tracker, Tracker+ and Tracker Mini on GitHub.\"",
+    "pitch": {
+     "see": "A tiny $70 synth with a chat window open beside it.",
+     "lands": "It is a surprising, true twist: AI coding tools let hobbyists rewrite music gear, and some makers answered by publishing their code.",
+     "why_now": "The Verge, 25 Nov 2026.",
+     "share": "AI turned bedroom musicians into synth makers."
+    },
+    "shape": "story",
+    "dive": "AI coding tools let musicians rewrite the software inside their instruments, so some makers publish their code rather than fight it.",
+    "aim": "interest",
+    "funny": "A $70 synth became the instrument of the summer because people kept teaching it new tricks with chatbots.",
+    "lookalike": {
+     "pattern": "made-in-hours",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/",
+     "our_take": "The post showed a game made with AI in a day; ours shows musicians rewriting their own instruments with it."
+    },
+    "learned_from": [
+     "\"Real-world stories only\" (your Improve, 9 Nov, of the good news): this one is a real story told as a short"
+    ],
+    "direction": {
+     "look": "Voice-led motion graphics over the story's own pictures, art-directed captions",
+     "format": "9:16 short, about 60 seconds",
+     "frames": [
+      {
+       "words": "A $70 synth with a dozen new brains.",
+       "picture": "The small synth on a desk"
+      },
+      {
+       "words": "Musicians wrote them with AI chatbots.",
+       "picture": "A chat window writing code"
+      },
+      {
+       "words": "Some makers fought back with forum bans.",
+       "picture": "A locked forum page"
+      },
+      {
+       "words": "Others published their code.",
+       "picture": "A code page opening"
+      },
+      {
+       "words": "Now the instrument changes after you buy it.",
+       "picture": "The synth glowing with a new screen"
+      }
+     ],
+     "tone": "Deadpan: the facts carry the joke.",
+     "kit": "v5 Library short: house type, brand palette, the designed captions",
+     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/"
+    },
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "People used chatbots to give a cheap $70 synth new features, and the companies that make music gear started letting them.",
+      "People used chatbots to give a cheap $70 synth new features, and the company that makes it let them."
+     ],
+     "against": 61
+    },
+    "story_score": {
+     "total": 46.0,
+     "axes": {
+      "absurdity_humour": 0.0,
+      "fun_consume": 7.0,
+      "named_thing": 7,
+      "fun_produce": 6.0,
+      "unique_angle": 0.0,
+      "fit": 10,
+      "scale": 5.0,
+      "whys": 7
+     },
+     "type": "offday_short",
+     "floors_failed": [
+      "a short leads on humour the engine can read"
+     ],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00"
     }
    },
    {
@@ -1913,6 +2326,25 @@
       "A meme: a video editor going wild with joy because the client liked the cut and did not ask for an AI version."
      ],
      "against": 61
+    },
+    "story_score": {
+     "total": 43.1,
+     "axes": {
+      "absurdity_humour": null,
+      "fun_consume": 6.0,
+      "unique_angle": 0.0,
+      "named_thing": 7,
+      "fun_produce": 5.0,
+      "fit": 4
+     },
+     "type": "offday_meme",
+     "floors_failed": [
+      "a meme's humour reads as supported (not read)",
+      "a meme never needs explaining (not read)"
+     ],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
     }
    },
    {
@@ -1971,6 +2403,25 @@
       "A meme: a hand-drawn cartoon getting uploaded to a film festival just seconds before the deadline, like a last-second winning score."
      ],
      "against": 61
+    },
+    "story_score": {
+     "total": 40.0,
+     "axes": {
+      "absurdity_humour": null,
+      "fun_consume": 5.0,
+      "unique_angle": 0.0,
+      "named_thing": 7,
+      "fun_produce": 5.0,
+      "fit": 4
+     },
+     "type": "offday_meme",
+     "floors_failed": [
+      "a meme's humour reads as supported (not read)",
+      "a meme never needs explaining (not read)"
+     ],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
     }
    },
    {
@@ -2029,6 +2480,25 @@
       "A meme: loads of AI video tools all piling in to try and win the same short advert job."
      ],
      "against": 61
+    },
+    "story_score": {
+     "total": 40.0,
+     "axes": {
+      "absurdity_humour": null,
+      "fun_consume": 5.0,
+      "unique_angle": 0.0,
+      "named_thing": 7,
+      "fun_produce": 5.0,
+      "fit": 4
+     },
+     "type": "offday_meme",
+     "floors_failed": [
+      "a meme's humour reads as supported (not read)",
+      "a meme never needs explaining (not read)"
+     ],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
     }
    },
    {
@@ -2087,6 +2557,25 @@
       "A meme: walking into the studio with all the real musicians whose playing the AI music tool learned from."
      ],
      "against": 61
+    },
+    "story_score": {
+     "total": 40.0,
+     "axes": {
+      "absurdity_humour": null,
+      "fun_consume": 5.0,
+      "unique_angle": 0.0,
+      "named_thing": 7,
+      "fun_produce": 5.0,
+      "fit": 4
+     },
+     "type": "offday_meme",
+     "floors_failed": [
+      "a meme's humour reads as supported (not read)",
+      "a meme never needs explaining (not read)"
+     ],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
     }
    },
    {
@@ -2145,6 +2634,25 @@
       "A meme: after seeing one AI demo, game companies want to remake their fantasy game set in every decade."
      ],
      "against": 61
+    },
+    "story_score": {
+     "total": 38.5,
+     "axes": {
+      "absurdity_humour": null,
+      "fun_consume": 6.0,
+      "unique_angle": 0.0,
+      "named_thing": 1,
+      "fun_produce": 5.0,
+      "fit": 7
+     },
+     "type": "offday_meme",
+     "floors_failed": [
+      "a meme's humour reads as supported (not read)",
+      "a meme never needs explaining (not read)"
+     ],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
     }
    }
   ],
@@ -2639,29 +3147,29 @@
     }
    },
    {
-    "id": "screen",
+    "id": "talent",
     "kind": "good_news",
     "format": "Good-news carousel, 6 cards, 4:5",
     "source_tag": "trade_press",
-    "topic": "film and TV",
+    "topic": "scouts, race teams and cinemas",
     "source": {
      "label": "Each story's own source",
-     "url": "https://deadline.com/2026/11/lionsgate-play-eklavya-ai-series-tiger-tv-1237232555/"
+     "url": "https://bluewin.ch/en/sport/football/bringing-overlooked-talents-to-light-li.3686124"
     },
-    "copy": "AI helped film and TV makers try something new. Three real things AI did for film and TV this month, each with who it helped and how, and 1 more to find.",
-    "hook": "AI helped film and TV makers try something new.",
+    "copy": "AI helped footballers, a race team and cinemas get noticed. Three real things AI did for scouts, race teams and cinemas this month, each with who it helped and how, and 1 more to find.",
+    "hook": "AI helped footballers, a race team and cinemas get noticed.",
     "pitch": {
-     "see": "A mythology epic with an AI lead actor, seven Korean directors' AI shorts, and an Oscar winner's case study.",
+     "see": "A teenager's video reaching a European club, a NASCAR car answering guests, and a cinema assistant answering the easy questions.",
      "lands": "It is uplifting, real and in the reader's world, and each story names who it helped.",
      "why_now": "Stories dated 20 to 27 November 2026, or found in your Instagram inspo sheet within 30 days.",
-     "share": "Four film and TV wins from AI this month."
+     "share": "Footballers, a race car and a cinema chain AI helped this month."
     },
     "shape": "theme",
     "aim": "interest",
-    "funny": "The lead actor's surname has the letters AI in it, in case anyone missed the point.",
+    "funny": "The driver cannot talk while racing, so the car now does the talking for him.",
     "lookalike": {
      "pattern": "small-win",
-     "beats": "https://www.instagram.com/power.ai/p/DfcCbPXlWQ-/",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/",
      "our_take": "The post told one person's small win; ours puts four wins in the reader's own industry side by side, each with who it helped."
     },
     "learned_from": [
@@ -2670,88 +3178,88 @@
     ],
     "stories": [
      {
-      "headline": "Lionsgate Play started an AI-led mythology series.",
-      "what": "Lionsgate Play has put its first AI-led original series, Eklavya, into production, Deadline reported on 25 November 2026. The eight-episode Indian mythology series stars the AI actor Yug R.Ai, uses Google's AI under a long-term production pact, and will stream on Tiger TV in several languages.",
-      "why": "A streamer is greenlighting a show it says it could not otherwise have afforded to make at this scale.",
-      "kind": "film_tv",
+      "headline": "An AI scouting app got 26 overlooked footballers signed.",
+      "what": "Footbao, a Swiss app built in Brazil, lets young players upload videos of themselves, which its AI scores on 24 performance indicators before analysts pass the best to scouts. It now has 170,000 registered players and more than 80 partner clubs in six countries, including Santos and Corinthians, and on 25 November 2026 said players in Switzerland, Germany and Austria can register from January 2027. Its own site counts 750 players referred to clubs and 26 signed.",
+      "why": "Clubs are finding signings through an app that watches thousands of teenagers they would never have paid a scout to see.",
+      "kind": "sports",
       "helps": {
-       "who": "streamers and producers in India",
+       "who": "young footballers outside the big academies, and the clubs scouting them",
        "how": "more successful"
       },
       "date": "2026-11-25",
       "source": {
-       "label": "Deadline, 'Lionsgate Play Sets Eklavya As First AI-Led Series', 25 Nov 2026",
-       "url": "https://deadline.com/2026/11/lionsgate-play-eklavya-ai-series-tiger-tv-1237232555/"
+       "label": "Keystone-SDA via blue News (bluewin.ch), 'Bringing overlooked talents to light', 25 Nov 2026",
+       "url": "https://bluewin.ch/en/sport/football/bringing-overlooked-talents-to-light-li.3686124"
       },
       "media": {
        "kind": "photo",
-       "url": "https://deadline.com/wp-content/uploads/2026/11/Eklavya-Creative.png?w=1024"
+       "url": "https://images.futebolinterior.com.br/2026/11/FOOTBAO-LAUNCH-25.webp"
       }
      },
      {
-      "headline": "Seven Korean directors made AI short films for a festival.",
-      "what": "Seven directors, including Lee Myung-se, Shin Youn-shick and Jang Cheol-soo, each made a short film with an AI team for the Seoul Independent Film Festival's AI Cinema Special, which runs from 25 November to 4 December 2026. Kling AI, BytePlus, TapNow, MiniMax and ElevenLabs supplied the tools.",
-      "why": "Name directors with decades of features behind them are now premiering AI work at a major festival, which gives AI filmmaking a place in the programme rather than outside it.",
+      "headline": "A NASCAR team gave its race car an AI voice for guests.",
+      "what": "Trackhouse Racing built 88Bot, an AI agent that speaks as Connor Zilisch's No. 88 Chevrolet: guests download an app, ask the car questions about the race and get live updates from its racing data. The team can host up to 60 VIP guests on a race day in a pit box that fits about eight, and the system draws on roughly 25,000 telemetry messages a second. Sports Business Journal first reported it on 23 November 2026, and some fans pushed back online.",
+      "why": "A race team is using AI to make its most valuable seats, the ones it sells to sponsors, more worth paying for.",
+      "kind": "sports",
+      "helps": {
+       "who": "a NASCAR team and its sponsors and VIP guests",
+       "how": "more successful"
+      },
+      "date": "2026-11-23",
+      "source": {
+       "label": "EssentiallySports, 'Future Hendrick Star Gets an AI Alter Ego in Trackhouse's Unconventional Fan Push', 25 Nov 2026",
+       "url": "https://www.essentiallysports.com/nascar-news-future-hendrick-star-gets-an-ai-alter-ego-in-trackhouses-unconventional-fan-push/"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://image-cdn.essentiallysports.com/wp-content/uploads/imago1051550550-e1755003251340.jpg"
+      }
+     },
+     {
+      "headline": "Odeon's cinema assistant answers 40% of questions, no jobs lost.",
+      "what": "Odeon Cinemas told diginomica on 27 November 2026 that its AI assistant Odi, built on Zendesk, resolves about 40% of guest queries, from showtimes to ticket problems, while human agents take the harder ones. The chain says it gets up to 10,000 queries a week, satisfaction has risen over 18 months, and it has kept its service teams.",
+      "why": "Cinemas run on thin margins, and Odeon is using AI to absorb the busy weeks without cutting the people who handle the hard cases.",
       "kind": "film_tv",
       "helps": {
-       "who": "film directors and independent festivals",
+       "who": "cinema operators and their guest service staff",
        "how": "better"
       },
-      "date": "2026-11-25",
+      "date": "2026-11-27",
       "source": {
-       "label": "Korea JoongAng Daily, 'Seven directors to unveil AI short films at Seoul Independent Film Festival', Na Won-jeong, 4 Nov 2026",
-       "url": "https://www.koreajoongangdaily.com/entertainment/seven-directors-to-unveil-ai-short-films-at-seoul-independent-film-festival/12955399"
+       "label": "diginomica, 'Projecting success on EX and CX at Odeon Cinemas', Stuart Lauchlan, 27 Nov 2026",
+       "url": "https://diginomica.com/projecting-success-ex-and-cx-odeon-cinemas-how-movie-theater-chain-tapping-ai-without-losing"
       },
       "media": {
        "kind": "photo",
-       "url": "https://image.koreajoongangdaily.com/12955618.webp?imageId=12955618&width=960&height=548&format=jpg"
-      }
-     },
-     {
-      "headline": "An Oscar winner is showing how he used AI on his film.",
-      "what": "Michel Hazanavicius, whose The Artist won Best Picture, will unveil exclusive footage of his upcoming film The Third Hand in an AI case study at the Les Arcs Film Festival in December, Deadline reported on 26 November 2026. He and post house Digital District will explain the methods and tools they used.",
-      "why": "An Oscar-winning director is putting his name to AI in his own work and showing peers exactly how.",
-      "kind": "film_tv",
-      "helps": {
-       "who": "European filmmakers and post houses",
-       "how": "smarter"
-      },
-      "date": "2026-11-26",
-      "source": {
-       "label": "Deadline, 'Michel Hazanavicius To Present Exclusive Footage Of The Third Hand In AI Case Study At Les Arcs', 26 Nov 2026",
-       "url": "https://deadline.com/2026/11/michel-hazanavicius-exclusive-footage-third-hand-ai-1237234059/"
-      },
-      "media": {
-       "kind": "photo",
-       "url": "https://deadline.com/wp-content/uploads/2026/11/GettyImages-2252572174.jpg?w=1024"
+       "url": "https://diginomica.com/sites/default/files/styles/scaled_370/public/images/2026-11/molnarszabolcserdely-popcorn-4885565_1920.jpg.webp"
       }
      }
     ],
     "stories_due": "2026-11-27",
     "cards": [
      {
-      "words": "AI helped film and TV makers try something new.",
-      "picture": "A cinema screen lighting up a dark room"
+      "words": "AI helped footballers, a race team and cinemas get noticed.",
+      "picture": "A young footballer filming on a local pitch"
      },
      {
-      "words": "Lionsgate Play started an AI-led mythology series.",
-      "picture": "Deadline: the thing itself (photo)"
+      "words": "An AI scouting app got 26 overlooked footballers signed.",
+      "picture": "Keystone-SDA via blue News (bluewin.ch): the thing itself (photo)"
      },
      {
-      "words": "Seven Korean directors made AI short films for a festival.",
-      "picture": "Korea JoongAng Daily: the thing itself (photo)"
+      "words": "A NASCAR team gave its race car an AI voice for guests.",
+      "picture": "EssentiallySports: the thing itself (photo)"
      },
      {
-      "words": "An Oscar winner is showing how he used AI on his film.",
-      "picture": "Deadline: the thing itself (photo)"
+      "words": "Odeon's cinema assistant answers 40% of questions, no jobs lost.",
+      "picture": "diginomica: the thing itself (photo)"
      },
      {
       "words": "One more story to find this week.",
       "picture": "An empty frame, to be filled with the fourth story"
      },
      {
-      "words": "Every one of them kept a director in the chair.",
-      "picture": "An empty director's chair on a set"
+      "words": "Each one got seen by someone who could pay them.",
+      "picture": "A scout's notebook beside a phone"
      }
     ],
     "direction": {
@@ -2759,33 +3267,33 @@
      "format": "6 cards, 4:5",
      "frames": [
       {
-       "words": "AI helped film and TV makers try something new.",
-       "picture": "A cinema screen lighting up a dark room"
+       "words": "AI helped footballers, a race team and cinemas get noticed.",
+       "picture": "A young footballer filming on a local pitch"
       },
       {
-       "words": "Lionsgate Play started an AI-led mythology series.",
-       "picture": "Deadline: the thing itself (photo)"
+       "words": "An AI scouting app got 26 overlooked footballers signed.",
+       "picture": "Keystone-SDA via blue News (bluewin.ch): the thing itself (photo)"
       },
       {
-       "words": "Seven Korean directors made AI short films for a festival.",
-       "picture": "Korea JoongAng Daily: the thing itself (photo)"
+       "words": "A NASCAR team gave its race car an AI voice for guests.",
+       "picture": "EssentiallySports: the thing itself (photo)"
       },
       {
-       "words": "An Oscar winner is showing how he used AI on his film.",
-       "picture": "Deadline: the thing itself (photo)"
+       "words": "Odeon's cinema assistant answers 40% of questions, no jobs lost.",
+       "picture": "diginomica: the thing itself (photo)"
       },
       {
        "words": "One more story to find this week.",
        "picture": "An empty frame, to be filled with the fourth story"
       },
       {
-       "words": "Every one of them kept a director in the chair.",
-       "picture": "An empty director's chair on a set"
+       "words": "Each one got seen by someone who could pay them.",
+       "picture": "A scout's notebook beside a phone"
       }
      ],
      "tone": "Warm and real, with one dry line on the cover.",
      "kit": "v5 Library good-news set: each story's own photo or clip, house type and palette",
-     "inspo_url": "https://www.instagram.com/power.ai/p/DfcCbPXlWQ-/"
+     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/"
     },
     "stories_to_find": true,
     "stories_short": "Only 3 stories on this topic passed their source and repeat checks this week; the other 1 are still to find (the board's Find the other stories press).",
@@ -2795,10 +3303,227 @@
       "reader B"
      ],
      "says": [
-      "A round-up of good news: film and TV makers used AI to try new things, like an epic with an AI lead actor and AI short films by Korean directors.",
-      "A round-up of film and TV makers using AI to try new things, like an epic with an AI lead actor and AI short films."
+      "A round-up of good news: AI helped people and places get noticed, like a teenage footballer whose video reached a European club, a NASCAR car that talks to guests and a cinema helper that answers easy questions.",
+      "A round-up of AI helping people get noticed: a teenage footballer's video reaching a big European club, a NASCAR car that answers visitors' questions, and a cinema helper that answers the easy questions."
      ],
      "against": 61
+    },
+    "recommended": true,
+    "story_score": {
+     "total": 67.6,
+     "axes": {
+      "uplift": 7.0,
+      "named_thing": 7,
+      "scale": 5.0,
+      "wonder": null,
+      "fun_produce": 5.0,
+      "fit": 7,
+      "evidence": 10
+     },
+     "type": "goodnews",
+     "floors_failed": [],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true,
+     "close_call": "close call, your pick"
+    }
+   },
+   {
+    "id": "newsrooms",
+    "kind": "good_news",
+    "format": "Good-news carousel, 6 cards, 4:5",
+    "source_tag": "trade_press",
+    "topic": "media",
+    "source": {
+     "label": "Each story's own source",
+     "url": "https://fortune.com/2026/11/27/checking-ai-work-human-in-the-loop-newsrooms"
+    },
+    "copy": "This month AI helped newsrooms keep readers and save time. Four real things AI did for media this month, each with who it helped and how.",
+    "hook": "This month AI helped newsrooms keep readers and save time.",
+    "pitch": {
+     "see": "Norway's biggest paper checking AI headlines, Der Spiegel spotting who will cancel, and Australian papers plugged into AI tools.",
+     "lands": "It is uplifting, real and in the reader's world, and each story names who it helped.",
+     "why_now": "Stories dated 20 to 27 November 2026, or found in your Instagram inspo sheet within 30 days.",
+     "share": "Four newsroom wins from AI this month."
+    },
+    "shape": "theme",
+    "aim": "interest",
+    "funny": "The newspaper's newest subscriber is a corporate chatbot, and it still has to log in.",
+    "lookalike": {
+     "pattern": "small-win",
+     "beats": "https://www.instagram.com/power.ai/p/Dfa2apfFSE5/",
+     "our_take": "The post told one person's small win; ours puts four wins in the reader's own industry side by side, each with who it helped."
+    },
+    "learned_from": [
+     "\"I want actual news items and the content we are going to use here - embedded real world images or videos\" (your Improve, 2 Nov, of the good news)",
+     "\"Real-world stories only, but with a hilarious generated cover page\" (your Improve, 9 Nov, of the good news)"
+    ],
+    "stories": [
+     {
+      "headline": "Norway's biggest paper uses AI on 200 stories a day.",
+      "what": "In a piece published on 27 November 2026, Christoph Trattner of the University of Bergen reported that VG asks an AI model for a headline, search terms and other details for each of its roughly 200 new articles a day, with a second model checking the first. At Bergens Tidende, AI writes short versions of reporters' stories; the development editor says about one in ten needs a fix, almost never for hallucinations, and the paper has never published a critical mistake this way.",
+      "why": "A newsroom shows AI saving reporters time without letting errors into print, because the person checking already knows the story.",
+      "kind": "media",
+      "helps": {
+       "who": "journalists and editors",
+       "how": "smarter"
+      },
+      "date": "2026-11-27",
+      "source": {
+       "label": "Fortune, 'I have a front-row seat to Norway's cutting-edge AI newsroom experiment', by Christoph Trattner, 27 Nov 2026",
+       "url": "https://fortune.com/2026/11/27/checking-ai-work-human-in-the-loop-newsrooms"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://fortune.com/img-assets/wp-content/uploads/2026/11/christoph-trattner.jpg?resize=1200,600"
+      }
+     },
+     {
+      "headline": "Der Spiegel's model finds a third of readers about to leave.",
+      "what": "Der Spiegel's lead data scientist, Alexander Held, published how the German news magazine built a machine-learning score for subscriber churn, in a WAN-IFRA piece on 23 November 2026. The riskiest group it flags, close to 10,000 subscriptions, cancels at 28% against a base rate of about 4%, and that group holds about 36% of everyone who leaves.",
+      "why": "A news publisher can now see a cancellation coming and act before the reader goes, which is subscription money kept.",
+      "kind": "media",
+      "helps": {
+       "who": "news publishers living on subscriptions",
+       "how": "more successful"
+      },
+      "date": "2026-11-23",
+      "source": {
+       "label": "WAN-IFRA, 'Addressing subscriber churn at Der Spiegel, part one: building the score', Alexander Held, 23 Nov 2026",
+       "url": "https://wan-ifra.org/2026/11/addressing-subscriber-churn-at-der-spiegel-part-one-building-the-score/"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://cdn.wan-ifra.org/wp-content/uploads/2026/11/20141041/Screenshot-2026-11-20-at-15.09.54-235x300.png"
+      }
+     },
+     {
+      "headline": "Nine plugged its newspapers into business AI tools.",
+      "what": "Australian publisher Nine announced on 25 November 2026 a pilot that lets licensed business subscribers connect its journalism from The Australian Financial Review, The Sydney Morning Herald, The Age, Brisbane Times and WAtoday to their own AI tools through the Model Context Protocol. It is testing with a group of business clients before a wider commercial rollout through 2027.",
+      "why": "A newspaper group found a way to sell its journalism to AI users without giving it away to the AI companies.",
+      "kind": "media",
+      "helps": {
+       "who": "news publishers with business subscribers",
+       "how": "more successful"
+      },
+      "date": "2026-11-25",
+      "source": {
+       "label": "Nine for Brands, 'Nine Leads With First-of-Its-Kind Authenticated MCP Publishing AI Pilot in Australia', 25 Nov 2026",
+       "url": "https://www.nineforbrands.com.au/media-releases/nine-leads-with-first-of-its-kind-authenticated-mcp-publishing-ai-pilot-in-australia/"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://www.nineforbrands.com.au/wp-content/uploads/2026/11/NINE_HERO-IMG.jpg"
+      }
+     },
+     {
+      "headline": "Nearly 500,000 people joined Canva through AI assistants.",
+      "what": "Canva made its MCP server generally available on 24 November 2026, letting AI assistants such as ChatGPT, Claude and Gemini make and edit Canva designs, images and video. Canva says nearly 500,000 people signed up through MCP since October, usage grew 93% in a month, and the yearly revenue it expects from MCP has more than tripled since September.",
+      "why": "A design company found hundreds of thousands of new users by letting other companies' chatbots do the clicking.",
+      "kind": "creative_tools",
+      "helps": {
+       "who": "Canva and designers who work through AI assistants",
+       "how": "more successful"
+      },
+      "date": "2026-11-24",
+      "source": {
+       "label": "The Next Web, 'Canva opens its design tools to AI agents and outside developers', 24 Nov 2026",
+       "url": "https://thenextweb.com/news/canva-mcp-ai-agents-developers"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://media.thenextweb.com/2026/11/canva-mcp-any-assistant-graphic.jpg"
+      }
+     }
+    ],
+    "stories_due": "2026-11-27",
+    "cards": [
+     {
+      "words": "This month AI helped newsrooms keep readers and save time.",
+      "picture": "A newspaper front page beside a laptop"
+     },
+     {
+      "words": "Norway's biggest paper uses AI on 200 stories a day.",
+      "picture": "Fortune: the thing itself (photo)"
+     },
+     {
+      "words": "Der Spiegel's model finds a third of readers about to leave.",
+      "picture": "WAN-IFRA: the thing itself (photo)"
+     },
+     {
+      "words": "Nine plugged its newspapers into business AI tools.",
+      "picture": "Nine for Brands: the thing itself (photo)"
+     },
+     {
+      "words": "Nearly 500,000 people joined Canva through AI assistants.",
+      "picture": "The Next Web: the thing itself (photo)"
+     },
+     {
+      "words": "Each one kept an editor checking the machine.",
+      "picture": "An editor's red pen on a printout"
+     }
+    ],
+    "direction": {
+     "look": "The v5 good-news set, modelled on the small-win carousels in your Instagram inspo sheet",
+     "format": "6 cards, 4:5",
+     "frames": [
+      {
+       "words": "This month AI helped newsrooms keep readers and save time.",
+       "picture": "A newspaper front page beside a laptop"
+      },
+      {
+       "words": "Norway's biggest paper uses AI on 200 stories a day.",
+       "picture": "Fortune: the thing itself (photo)"
+      },
+      {
+       "words": "Der Spiegel's model finds a third of readers about to leave.",
+       "picture": "WAN-IFRA: the thing itself (photo)"
+      },
+      {
+       "words": "Nine plugged its newspapers into business AI tools.",
+       "picture": "Nine for Brands: the thing itself (photo)"
+      },
+      {
+       "words": "Nearly 500,000 people joined Canva through AI assistants.",
+       "picture": "The Next Web: the thing itself (photo)"
+      },
+      {
+       "words": "Each one kept an editor checking the machine.",
+       "picture": "An editor's red pen on a printout"
+      }
+     ],
+     "tone": "Warm and real, with one dry line on the cover.",
+     "kit": "v5 Library good-news set: each story's own photo or clip, house type and palette",
+     "inspo_url": "https://www.instagram.com/power.ai/p/Dfa2apfFSE5/"
+    },
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "A round-up of good news: newspapers used AI to keep their readers and save time, like checking headlines and spotting who is about to cancel.",
+      "A round-up of newspapers using AI to check headlines, keep readers from cancelling and save time."
+     ],
+     "against": 61
+    },
+    "story_score": {
+     "total": 66.5,
+     "axes": {
+      "uplift": 6.0,
+      "named_thing": 7,
+      "scale": 6.0,
+      "wonder": null,
+      "fun_produce": 5.0,
+      "fit": 7,
+      "evidence": 10
+     },
+     "type": "goodnews",
+     "floors_failed": [],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true,
+     "close_call": "close call, your pick"
     }
    },
    {
@@ -2987,32 +3712,49 @@
       "A round-up of people working on their own who used AI to make things that look like big studio films."
      ],
      "against": 61
+    },
+    "story_score": {
+     "total": 65.9,
+     "axes": {
+      "uplift": 6.0,
+      "named_thing": 7,
+      "scale": 5.0,
+      "wonder": null,
+      "fun_produce": 6.0,
+      "fit": 7,
+      "evidence": 10
+     },
+     "type": "goodnews",
+     "floors_failed": [],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
     }
    },
    {
-    "id": "newsrooms",
+    "id": "screen",
     "kind": "good_news",
     "format": "Good-news carousel, 6 cards, 4:5",
     "source_tag": "trade_press",
-    "topic": "media",
+    "topic": "film and TV",
     "source": {
      "label": "Each story's own source",
-     "url": "https://fortune.com/2026/11/27/checking-ai-work-human-in-the-loop-newsrooms"
+     "url": "https://deadline.com/2026/11/lionsgate-play-eklavya-ai-series-tiger-tv-1237232555/"
     },
-    "copy": "This month AI helped newsrooms keep readers and save time. Four real things AI did for media this month, each with who it helped and how.",
-    "hook": "This month AI helped newsrooms keep readers and save time.",
+    "copy": "AI helped film and TV makers try something new. Three real things AI did for film and TV this month, each with who it helped and how, and 1 more to find.",
+    "hook": "AI helped film and TV makers try something new.",
     "pitch": {
-     "see": "Norway's biggest paper checking AI headlines, Der Spiegel spotting who will cancel, and Australian papers plugged into AI tools.",
+     "see": "A mythology epic with an AI lead actor, seven Korean directors' AI shorts, and an Oscar winner's case study.",
      "lands": "It is uplifting, real and in the reader's world, and each story names who it helped.",
      "why_now": "Stories dated 20 to 27 November 2026, or found in your Instagram inspo sheet within 30 days.",
-     "share": "Four newsroom wins from AI this month."
+     "share": "Four film and TV wins from AI this month."
     },
     "shape": "theme",
     "aim": "interest",
-    "funny": "The newspaper's newest subscriber is a corporate chatbot, and it still has to log in.",
+    "funny": "The lead actor's surname has the letters AI in it, in case anyone missed the point.",
     "lookalike": {
      "pattern": "small-win",
-     "beats": "https://www.instagram.com/power.ai/p/Dfa2apfFSE5/",
+     "beats": "https://www.instagram.com/power.ai/p/DfcCbPXlWQ-/",
      "our_take": "The post told one person's small win; ours puts four wins in the reader's own industry side by side, each with who it helped."
     },
     "learned_from": [
@@ -3021,268 +3763,88 @@
     ],
     "stories": [
      {
-      "headline": "Norway's biggest paper uses AI on 200 stories a day.",
-      "what": "In a piece published on 27 November 2026, Christoph Trattner of the University of Bergen reported that VG asks an AI model for a headline, search terms and other details for each of its roughly 200 new articles a day, with a second model checking the first. At Bergens Tidende, AI writes short versions of reporters' stories; the development editor says about one in ten needs a fix, almost never for hallucinations, and the paper has never published a critical mistake this way.",
-      "why": "A newsroom shows AI saving reporters time without letting errors into print, because the person checking already knows the story.",
-      "kind": "media",
-      "helps": {
-       "who": "journalists and editors",
-       "how": "smarter"
-      },
-      "date": "2026-11-27",
-      "source": {
-       "label": "Fortune, 'I have a front-row seat to Norway's cutting-edge AI newsroom experiment', by Christoph Trattner, 27 Nov 2026",
-       "url": "https://fortune.com/2026/11/27/checking-ai-work-human-in-the-loop-newsrooms"
-      },
-      "media": {
-       "kind": "photo",
-       "url": "https://fortune.com/img-assets/wp-content/uploads/2026/11/christoph-trattner.jpg?resize=1200,600"
-      }
-     },
-     {
-      "headline": "Der Spiegel's model finds a third of readers about to leave.",
-      "what": "Der Spiegel's lead data scientist, Alexander Held, published how the German news magazine built a machine-learning score for subscriber churn, in a WAN-IFRA piece on 23 November 2026. The riskiest group it flags, close to 10,000 subscriptions, cancels at 28% against a base rate of about 4%, and that group holds about 36% of everyone who leaves.",
-      "why": "A news publisher can now see a cancellation coming and act before the reader goes, which is subscription money kept.",
-      "kind": "media",
-      "helps": {
-       "who": "news publishers living on subscriptions",
-       "how": "more successful"
-      },
-      "date": "2026-11-23",
-      "source": {
-       "label": "WAN-IFRA, 'Addressing subscriber churn at Der Spiegel, part one: building the score', Alexander Held, 23 Nov 2026",
-       "url": "https://wan-ifra.org/2026/11/addressing-subscriber-churn-at-der-spiegel-part-one-building-the-score/"
-      },
-      "media": {
-       "kind": "photo",
-       "url": "https://cdn.wan-ifra.org/wp-content/uploads/2026/11/20141041/Screenshot-2026-11-20-at-15.09.54-235x300.png"
-      }
-     },
-     {
-      "headline": "Nine plugged its newspapers into business AI tools.",
-      "what": "Australian publisher Nine announced on 25 November 2026 a pilot that lets licensed business subscribers connect its journalism from The Australian Financial Review, The Sydney Morning Herald, The Age, Brisbane Times and WAtoday to their own AI tools through the Model Context Protocol. It is testing with a group of business clients before a wider commercial rollout through 2027.",
-      "why": "A newspaper group found a way to sell its journalism to AI users without giving it away to the AI companies.",
-      "kind": "media",
-      "helps": {
-       "who": "news publishers with business subscribers",
-       "how": "more successful"
-      },
-      "date": "2026-11-25",
-      "source": {
-       "label": "Nine for Brands, 'Nine Leads With First-of-Its-Kind Authenticated MCP Publishing AI Pilot in Australia', 25 Nov 2026",
-       "url": "https://www.nineforbrands.com.au/media-releases/nine-leads-with-first-of-its-kind-authenticated-mcp-publishing-ai-pilot-in-australia/"
-      },
-      "media": {
-       "kind": "photo",
-       "url": "https://www.nineforbrands.com.au/wp-content/uploads/2026/11/NINE_HERO-IMG.jpg"
-      }
-     },
-     {
-      "headline": "Nearly 500,000 people joined Canva through AI assistants.",
-      "what": "Canva made its MCP server generally available on 24 November 2026, letting AI assistants such as ChatGPT, Claude and Gemini make and edit Canva designs, images and video. Canva says nearly 500,000 people signed up through MCP since October, usage grew 93% in a month, and the yearly revenue it expects from MCP has more than tripled since September.",
-      "why": "A design company found hundreds of thousands of new users by letting other companies' chatbots do the clicking.",
-      "kind": "creative_tools",
-      "helps": {
-       "who": "Canva and designers who work through AI assistants",
-       "how": "more successful"
-      },
-      "date": "2026-11-24",
-      "source": {
-       "label": "The Next Web, 'Canva opens its design tools to AI agents and outside developers', 24 Nov 2026",
-       "url": "https://thenextweb.com/news/canva-mcp-ai-agents-developers"
-      },
-      "media": {
-       "kind": "photo",
-       "url": "https://media.thenextweb.com/2026/11/canva-mcp-any-assistant-graphic.jpg"
-      }
-     }
-    ],
-    "stories_due": "2026-11-27",
-    "cards": [
-     {
-      "words": "This month AI helped newsrooms keep readers and save time.",
-      "picture": "A newspaper front page beside a laptop"
-     },
-     {
-      "words": "Norway's biggest paper uses AI on 200 stories a day.",
-      "picture": "Fortune: the thing itself (photo)"
-     },
-     {
-      "words": "Der Spiegel's model finds a third of readers about to leave.",
-      "picture": "WAN-IFRA: the thing itself (photo)"
-     },
-     {
-      "words": "Nine plugged its newspapers into business AI tools.",
-      "picture": "Nine for Brands: the thing itself (photo)"
-     },
-     {
-      "words": "Nearly 500,000 people joined Canva through AI assistants.",
-      "picture": "The Next Web: the thing itself (photo)"
-     },
-     {
-      "words": "Each one kept an editor checking the machine.",
-      "picture": "An editor's red pen on a printout"
-     }
-    ],
-    "direction": {
-     "look": "The v5 good-news set, modelled on the small-win carousels in your Instagram inspo sheet",
-     "format": "6 cards, 4:5",
-     "frames": [
-      {
-       "words": "This month AI helped newsrooms keep readers and save time.",
-       "picture": "A newspaper front page beside a laptop"
-      },
-      {
-       "words": "Norway's biggest paper uses AI on 200 stories a day.",
-       "picture": "Fortune: the thing itself (photo)"
-      },
-      {
-       "words": "Der Spiegel's model finds a third of readers about to leave.",
-       "picture": "WAN-IFRA: the thing itself (photo)"
-      },
-      {
-       "words": "Nine plugged its newspapers into business AI tools.",
-       "picture": "Nine for Brands: the thing itself (photo)"
-      },
-      {
-       "words": "Nearly 500,000 people joined Canva through AI assistants.",
-       "picture": "The Next Web: the thing itself (photo)"
-      },
-      {
-       "words": "Each one kept an editor checking the machine.",
-       "picture": "An editor's red pen on a printout"
-      }
-     ],
-     "tone": "Warm and real, with one dry line on the cover.",
-     "kit": "v5 Library good-news set: each story's own photo or clip, house type and palette",
-     "inspo_url": "https://www.instagram.com/power.ai/p/Dfa2apfFSE5/"
-    },
-    "read_back": {
-     "readers": [
-      "reader A",
-      "reader B"
-     ],
-     "says": [
-      "A round-up of good news: newspapers used AI to keep their readers and save time, like checking headlines and spotting who is about to cancel.",
-      "A round-up of newspapers using AI to check headlines, keep readers from cancelling and save time."
-     ],
-     "against": 61
-    }
-   },
-   {
-    "id": "talent",
-    "kind": "good_news",
-    "format": "Good-news carousel, 6 cards, 4:5",
-    "source_tag": "trade_press",
-    "topic": "scouts, race teams and cinemas",
-    "source": {
-     "label": "Each story's own source",
-     "url": "https://bluewin.ch/en/sport/football/bringing-overlooked-talents-to-light-li.3686124"
-    },
-    "copy": "AI helped footballers, a race team and cinemas get noticed. Three real things AI did for scouts, race teams and cinemas this month, each with who it helped and how, and 1 more to find.",
-    "hook": "AI helped footballers, a race team and cinemas get noticed.",
-    "pitch": {
-     "see": "A teenager's video reaching a European club, a NASCAR car answering guests, and a cinema assistant answering the easy questions.",
-     "lands": "It is uplifting, real and in the reader's world, and each story names who it helped.",
-     "why_now": "Stories dated 20 to 27 November 2026, or found in your Instagram inspo sheet within 30 days.",
-     "share": "Footballers, a race car and a cinema chain AI helped this month."
-    },
-    "shape": "theme",
-    "aim": "interest",
-    "funny": "The driver cannot talk while racing, so the car now does the talking for him.",
-    "lookalike": {
-     "pattern": "small-win",
-     "beats": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/",
-     "our_take": "The post told one person's small win; ours puts four wins in the reader's own industry side by side, each with who it helped."
-    },
-    "learned_from": [
-     "\"I want actual news items and the content we are going to use here - embedded real world images or videos\" (your Improve, 2 Nov, of the good news)",
-     "\"Real-world stories only, but with a hilarious generated cover page\" (your Improve, 9 Nov, of the good news)"
-    ],
-    "stories": [
-     {
-      "headline": "An AI scouting app got 26 overlooked footballers signed.",
-      "what": "Footbao, a Swiss app built in Brazil, lets young players upload videos of themselves, which its AI scores on 24 performance indicators before analysts pass the best to scouts. It now has 170,000 registered players and more than 80 partner clubs in six countries, including Santos and Corinthians, and on 25 November 2026 said players in Switzerland, Germany and Austria can register from January 2027. Its own site counts 750 players referred to clubs and 26 signed.",
-      "why": "Clubs are finding signings through an app that watches thousands of teenagers they would never have paid a scout to see.",
-      "kind": "sports",
-      "helps": {
-       "who": "young footballers outside the big academies, and the clubs scouting them",
-       "how": "more successful"
-      },
-      "date": "2026-11-25",
-      "source": {
-       "label": "Keystone-SDA via blue News (bluewin.ch), 'Bringing overlooked talents to light', 25 Nov 2026",
-       "url": "https://bluewin.ch/en/sport/football/bringing-overlooked-talents-to-light-li.3686124"
-      },
-      "media": {
-       "kind": "photo",
-       "url": "https://images.futebolinterior.com.br/2026/11/FOOTBAO-LAUNCH-25.webp"
-      }
-     },
-     {
-      "headline": "A NASCAR team gave its race car an AI voice for guests.",
-      "what": "Trackhouse Racing built 88Bot, an AI agent that speaks as Connor Zilisch's No. 88 Chevrolet: guests download an app, ask the car questions about the race and get live updates from its racing data. The team can host up to 60 VIP guests on a race day in a pit box that fits about eight, and the system draws on roughly 25,000 telemetry messages a second. Sports Business Journal first reported it on 23 November 2026, and some fans pushed back online.",
-      "why": "A race team is using AI to make its most valuable seats, the ones it sells to sponsors, more worth paying for.",
-      "kind": "sports",
-      "helps": {
-       "who": "a NASCAR team and its sponsors and VIP guests",
-       "how": "more successful"
-      },
-      "date": "2026-11-23",
-      "source": {
-       "label": "EssentiallySports, 'Future Hendrick Star Gets an AI Alter Ego in Trackhouse's Unconventional Fan Push', 25 Nov 2026",
-       "url": "https://www.essentiallysports.com/nascar-news-future-hendrick-star-gets-an-ai-alter-ego-in-trackhouses-unconventional-fan-push/"
-      },
-      "media": {
-       "kind": "photo",
-       "url": "https://image-cdn.essentiallysports.com/wp-content/uploads/imago1051550550-e1755003251340.jpg"
-      }
-     },
-     {
-      "headline": "Odeon's cinema assistant answers 40% of questions, no jobs lost.",
-      "what": "Odeon Cinemas told diginomica on 27 November 2026 that its AI assistant Odi, built on Zendesk, resolves about 40% of guest queries, from showtimes to ticket problems, while human agents take the harder ones. The chain says it gets up to 10,000 queries a week, satisfaction has risen over 18 months, and it has kept its service teams.",
-      "why": "Cinemas run on thin margins, and Odeon is using AI to absorb the busy weeks without cutting the people who handle the hard cases.",
+      "headline": "Lionsgate Play started an AI-led mythology series.",
+      "what": "Lionsgate Play has put its first AI-led original series, Eklavya, into production, Deadline reported on 25 November 2026. The eight-episode Indian mythology series stars the AI actor Yug R.Ai, uses Google's AI under a long-term production pact, and will stream on Tiger TV in several languages.",
+      "why": "A streamer is greenlighting a show it says it could not otherwise have afforded to make at this scale.",
       "kind": "film_tv",
       "helps": {
-       "who": "cinema operators and their guest service staff",
-       "how": "better"
+       "who": "streamers and producers in India",
+       "how": "more successful"
       },
-      "date": "2026-11-27",
+      "date": "2026-11-25",
       "source": {
-       "label": "diginomica, 'Projecting success on EX and CX at Odeon Cinemas', Stuart Lauchlan, 27 Nov 2026",
-       "url": "https://diginomica.com/projecting-success-ex-and-cx-odeon-cinemas-how-movie-theater-chain-tapping-ai-without-losing"
+       "label": "Deadline, 'Lionsgate Play Sets Eklavya As First AI-Led Series', 25 Nov 2026",
+       "url": "https://deadline.com/2026/11/lionsgate-play-eklavya-ai-series-tiger-tv-1237232555/"
       },
       "media": {
        "kind": "photo",
-       "url": "https://diginomica.com/sites/default/files/styles/scaled_370/public/images/2026-11/molnarszabolcserdely-popcorn-4885565_1920.jpg.webp"
+       "url": "https://deadline.com/wp-content/uploads/2026/11/Eklavya-Creative.png?w=1024"
+      }
+     },
+     {
+      "headline": "Seven Korean directors made AI short films for a festival.",
+      "what": "Seven directors, including Lee Myung-se, Shin Youn-shick and Jang Cheol-soo, each made a short film with an AI team for the Seoul Independent Film Festival's AI Cinema Special, which runs from 25 November to 4 December 2026. Kling AI, BytePlus, TapNow, MiniMax and ElevenLabs supplied the tools.",
+      "why": "Name directors with decades of features behind them are now premiering AI work at a major festival, which gives AI filmmaking a place in the programme rather than outside it.",
+      "kind": "film_tv",
+      "helps": {
+       "who": "film directors and independent festivals",
+       "how": "better"
+      },
+      "date": "2026-11-25",
+      "source": {
+       "label": "Korea JoongAng Daily, 'Seven directors to unveil AI short films at Seoul Independent Film Festival', Na Won-jeong, 4 Nov 2026",
+       "url": "https://www.koreajoongangdaily.com/entertainment/seven-directors-to-unveil-ai-short-films-at-seoul-independent-film-festival/12955399"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://image.koreajoongangdaily.com/12955618.webp?imageId=12955618&width=960&height=548&format=jpg"
+      }
+     },
+     {
+      "headline": "An Oscar winner is showing how he used AI on his film.",
+      "what": "Michel Hazanavicius, whose The Artist won Best Picture, will unveil exclusive footage of his upcoming film The Third Hand in an AI case study at the Les Arcs Film Festival in December, Deadline reported on 26 November 2026. He and post house Digital District will explain the methods and tools they used.",
+      "why": "An Oscar-winning director is putting his name to AI in his own work and showing peers exactly how.",
+      "kind": "film_tv",
+      "helps": {
+       "who": "European filmmakers and post houses",
+       "how": "smarter"
+      },
+      "date": "2026-11-26",
+      "source": {
+       "label": "Deadline, 'Michel Hazanavicius To Present Exclusive Footage Of The Third Hand In AI Case Study At Les Arcs', 26 Nov 2026",
+       "url": "https://deadline.com/2026/11/michel-hazanavicius-exclusive-footage-third-hand-ai-1237234059/"
+      },
+      "media": {
+       "kind": "photo",
+       "url": "https://deadline.com/wp-content/uploads/2026/11/GettyImages-2252572174.jpg?w=1024"
       }
      }
     ],
     "stories_due": "2026-11-27",
     "cards": [
      {
-      "words": "AI helped footballers, a race team and cinemas get noticed.",
-      "picture": "A young footballer filming on a local pitch"
+      "words": "AI helped film and TV makers try something new.",
+      "picture": "A cinema screen lighting up a dark room"
      },
      {
-      "words": "An AI scouting app got 26 overlooked footballers signed.",
-      "picture": "Keystone-SDA via blue News (bluewin.ch): the thing itself (photo)"
+      "words": "Lionsgate Play started an AI-led mythology series.",
+      "picture": "Deadline: the thing itself (photo)"
      },
      {
-      "words": "A NASCAR team gave its race car an AI voice for guests.",
-      "picture": "EssentiallySports: the thing itself (photo)"
+      "words": "Seven Korean directors made AI short films for a festival.",
+      "picture": "Korea JoongAng Daily: the thing itself (photo)"
      },
      {
-      "words": "Odeon's cinema assistant answers 40% of questions, no jobs lost.",
-      "picture": "diginomica: the thing itself (photo)"
+      "words": "An Oscar winner is showing how he used AI on his film.",
+      "picture": "Deadline: the thing itself (photo)"
      },
      {
       "words": "One more story to find this week.",
       "picture": "An empty frame, to be filled with the fourth story"
      },
      {
-      "words": "Each one got seen by someone who could pay them.",
-      "picture": "A scout's notebook beside a phone"
+      "words": "Every one of them kept a director in the chair.",
+      "picture": "An empty director's chair on a set"
      }
     ],
     "direction": {
@@ -3290,33 +3852,33 @@
      "format": "6 cards, 4:5",
      "frames": [
       {
-       "words": "AI helped footballers, a race team and cinemas get noticed.",
-       "picture": "A young footballer filming on a local pitch"
+       "words": "AI helped film and TV makers try something new.",
+       "picture": "A cinema screen lighting up a dark room"
       },
       {
-       "words": "An AI scouting app got 26 overlooked footballers signed.",
-       "picture": "Keystone-SDA via blue News (bluewin.ch): the thing itself (photo)"
+       "words": "Lionsgate Play started an AI-led mythology series.",
+       "picture": "Deadline: the thing itself (photo)"
       },
       {
-       "words": "A NASCAR team gave its race car an AI voice for guests.",
-       "picture": "EssentiallySports: the thing itself (photo)"
+       "words": "Seven Korean directors made AI short films for a festival.",
+       "picture": "Korea JoongAng Daily: the thing itself (photo)"
       },
       {
-       "words": "Odeon's cinema assistant answers 40% of questions, no jobs lost.",
-       "picture": "diginomica: the thing itself (photo)"
+       "words": "An Oscar winner is showing how he used AI on his film.",
+       "picture": "Deadline: the thing itself (photo)"
       },
       {
        "words": "One more story to find this week.",
        "picture": "An empty frame, to be filled with the fourth story"
       },
       {
-       "words": "Each one got seen by someone who could pay them.",
-       "picture": "A scout's notebook beside a phone"
+       "words": "Every one of them kept a director in the chair.",
+       "picture": "An empty director's chair on a set"
       }
      ],
      "tone": "Warm and real, with one dry line on the cover.",
      "kit": "v5 Library good-news set: each story's own photo or clip, house type and palette",
-     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/"
+     "inspo_url": "https://www.instagram.com/power.ai/p/DfcCbPXlWQ-/"
     },
     "stories_to_find": true,
     "stories_short": "Only 3 stories on this topic passed their source and repeat checks this week; the other 1 are still to find (the board's Find the other stories press).",
@@ -3326,10 +3888,27 @@
       "reader B"
      ],
      "says": [
-      "A round-up of good news: AI helped people and places get noticed, like a teenage footballer whose video reached a European club, a NASCAR car that talks to guests and a cinema helper that answers easy questions.",
-      "A round-up of AI helping people get noticed: a teenage footballer's video reaching a big European club, a NASCAR car that answers visitors' questions, and a cinema helper that answers the easy questions."
+      "A round-up of good news: film and TV makers used AI to try new things, like an epic with an AI lead actor and AI short films by Korean directors.",
+      "A round-up of film and TV makers using AI to try new things, like an epic with an AI lead actor and AI short films."
      ],
      "against": 61
+    },
+    "story_score": {
+     "total": 58.8,
+     "axes": {
+      "uplift": 5.0,
+      "named_thing": 7,
+      "scale": 4.0,
+      "wonder": null,
+      "fun_produce": 4.0,
+      "fit": 7,
+      "evidence": 10
+     },
+     "type": "goodnews",
+     "floors_failed": [],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-27T17:01:42+00:00",
+     "humour_unread": true
     }
    }
   ]

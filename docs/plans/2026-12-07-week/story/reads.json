@@ -10,7 +10,15 @@
    "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#a9aebe82b6c9": null,
    "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#69b945d7864c": null,
    "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#6c4e758fd962": null,
-   "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#3d2879414868": null,
+   "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#3d2879414868": {
+    "comic_reading": "not_supported",
+    "attempted": false,
+    "needs_explaining": true,
+    "mechanism": [],
+    "target": [
+     "situation"
+    ]
+   },
    "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#32e95f89f1e1": null,
    "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#25714aed70dd": null
   }
@@ -20,7 +28,13 @@
   "line": null,
   "angles": {
    "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#14c02bb8ce8e": null,
-   "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#ebff7b08cdb3": null,
+   "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#ebff7b08cdb3": {
+    "comic_reading": "not_supported",
+    "attempted": false,
+    "needs_explaining": true,
+    "mechanism": [],
+    "target": []
+   },
    "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#a597254a6047": null,
    "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#a4df9bcaf5d6": null,
    "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#c97b1ef92ccd": null,
@@ -97,7 +111,18 @@
    "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#520fe80b966f": null,
    "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#4879ea1e7b40": null,
    "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#88f185b396d1": null,
-   "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#40f78027689a": null
+   "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#40f78027689a": {
+    "comic_reading": "supported",
+    "attempted": true,
+    "needs_explaining": true,
+    "mechanism": [
+     "incongruity",
+     "personification"
+    ],
+    "target": [
+     "situation"
+    ]
+   }
   }
  },
  "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c": {
@@ -113,7 +138,15 @@
    "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#281d294dc37f": null,
    "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#c806fdeee1e7": null,
    "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#9ad0c683d5bd": null,
-   "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#5f498f3a2ea1": null,
+   "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#5f498f3a2ea1": {
+    "comic_reading": "not_supported",
+    "attempted": false,
+    "needs_explaining": true,
+    "mechanism": [],
+    "target": [
+     "none"
+    ]
+   },
    "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#6ad04e508a00": null
   }
  },
@@ -121,8 +154,20 @@
   "fact": null,
   "line": null,
   "angles": {
-   "fri/acb58370-aaca-4040-9c13-83f227a628ec#d817b98898ee": null,
-   "fri/acb58370-aaca-4040-9c13-83f227a628ec#1d4c8da22119": null,
+   "fri/acb58370-aaca-4040-9c13-83f227a628ec#d817b98898ee": {
+    "comic_reading": "not_supported",
+    "attempted": false,
+    "needs_explaining": true,
+    "mechanism": [],
+    "target": []
+   },
+   "fri/acb58370-aaca-4040-9c13-83f227a628ec#1d4c8da22119": {
+    "comic_reading": "not_supported",
+    "attempted": false,
+    "needs_explaining": true,
+    "mechanism": [],
+    "target": []
+   },
    "fri/acb58370-aaca-4040-9c13-83f227a628ec#5ef84555ee38": null,
    "fri/acb58370-aaca-4040-9c13-83f227a628ec#f072644c309f": null,
    "fri/acb58370-aaca-4040-9c13-83f227a628ec#45c188701551": null,
@@ -131,7 +176,13 @@
   }
  },
  "tue/nytphotoshop": {
-  "fact": null,
+  "fact": {
+   "comic_reading": "not_supported",
+   "attempted": false,
+   "needs_explaining": true,
+   "mechanism": [],
+   "target": []
+  },
   "line": null,
   "angles": {
    "tue/nytphotoshop#156b207b0d6c": null,
@@ -159,9 +210,21 @@
   "line": null,
   "angles": {
    "tue/logicdrums#a13361d75819": null,
-   "tue/logicdrums#b491abb3bcfb": null,
+   "tue/logicdrums#b491abb3bcfb": {
+    "comic_reading": "not_supported",
+    "attempted": false,
+    "needs_explaining": true,
+    "mechanism": [],
+    "target": []
+   },
    "tue/logicdrums#7a3eba76f681": null,
-   "tue/logicdrums#486d4fe7d9c0": null,
+   "tue/logicdrums#486d4fe7d9c0": {
+    "comic_reading": "not_supported",
+    "attempted": false,
+    "needs_explaining": true,
+    "mechanism": [],
+    "target": []
+   },
    "tue/logicdrums#c01593e65326": null,
    "tue/logicdrums#a8f6612ed9ba": null
   }
@@ -227,7 +290,13 @@
   "line": null,
   "angles": {
    "tue/tplbuzzer#a3dabdb36c7e": null,
-   "tue/tplbuzzer#7d083927f049": null,
+   "tue/tplbuzzer#7d083927f049": {
+    "comic_reading": "not_supported",
+    "attempted": false,
+    "needs_explaining": true,
+    "mechanism": [],
+    "target": []
+   },
    "tue/tplbuzzer#b98e6bbeb7cb": null,
    "tue/tplbuzzer#094f7c6603f8": null
   }
@@ -252,7 +321,18 @@
    "thu/robloxvideo#118d354d97df": null,
    "thu/robloxvideo#7ab66a85c3d0": null,
    "thu/robloxvideo#a76cc68517f0": null,
-   "thu/robloxvideo#6c961853aa9c": null
+   "thu/robloxvideo#6c961853aa9c": {
+    "comic_reading": "supported",
+    "attempted": true,
+    "needs_explaining": true,
+    "mechanism": [
+     "incongruity",
+     "understatement"
+    ],
+    "target": [
+     "situation"
+    ]
+   }
   }
  },
  "thu/alphamatte": {
@@ -267,14 +347,26 @@
   }
  },
  "thu/synthfirmware": {
-  "fact": null,
+  "fact": {
+   "comic_reading": "not_supported",
+   "attempted": false,
+   "needs_explaining": false,
+   "mechanism": [],
+   "target": []
+  },
   "line": null,
   "angles": {
    "thu/synthfirmware#70437c7e10eb": null,
    "thu/synthfirmware#2a23db2d669c": null,
    "thu/synthfirmware#00bb0b0c5b33": null,
    "thu/synthfirmware#6bfe1de70f25": null,
-   "thu/synthfirmware#29fdc406f3c9": null,
+   "thu/synthfirmware#29fdc406f3c9": {
+    "comic_reading": "not_supported",
+    "attempted": false,
+    "needs_explaining": true,
+    "mechanism": [],
+    "target": []
+   },
    "thu/synthfirmware#a9a556e3d9b2": null
   }
  },
@@ -285,7 +377,13 @@
    "thu/pixelfill#529199f97032": null,
    "thu/pixelfill#26d979bc2200": null,
    "thu/pixelfill#177c81f9cad8": null,
-   "thu/pixelfill#dab8fc0a95f3": null,
+   "thu/pixelfill#dab8fc0a95f3": {
+    "comic_reading": "ambiguous",
+    "attempted": true,
+    "needs_explaining": true,
+    "mechanism": [],
+    "target": []
+   },
    "thu/pixelfill#9ce8bfd94bc6": null,
    "thu/pixelfill#f5ae6ba2f2e1": null
   }
