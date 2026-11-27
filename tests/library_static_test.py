@@ -15,6 +15,7 @@ docs/ve/cards/library/pixel_alignment.py, docs/ve/cards/library/render_lock.py, 
 docs/ve/cards/library/verify-static-known.json.
 """
 from collections import Counter
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -33,7 +34,10 @@ class LibraryStaticCheck(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             out = Path(tmp) / "errors.json"
             env = dict(os.environ, PYTHONUTF8="1", PYTHONIOENCODING="utf-8")
-            run = subprocess.run([sys.executable, "-B", "verify_static.py", "--errors-json", str(out)], cwd=LIBRARY,
+            # The lock check renders the locked templates in a browser. The quick CI job installs no Playwright,
+            # so there the rest of the check runs and the lock check is left to a machine that has it.
+            locks = [] if importlib.util.find_spec("playwright") else ["--no-lock-check"]
+            run = subprocess.run([sys.executable, "-B", "verify_static.py", "--errors-json", str(out), *locks], cwd=LIBRARY,
                                  env=env, capture_output=True, text=True, encoding="utf-8")
             self.assertTrue(out.is_file(), "verify_static.py stopped before its report:\n"
                             + run.stdout[-4000:] + run.stderr[-4000:])

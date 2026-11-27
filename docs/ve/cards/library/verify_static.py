@@ -13,13 +13,18 @@ import numpy as np
 parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--spacing-report', type=Path, help='Save the modelled per-item gaps as JSON')
 parser.add_argument('--errors-json', type=Path, help='Also save the error list as JSON (tests/library_static_test.py reads it)')
+parser.add_argument('--no-lock-check', action='store_true',
+                    help='Skip render.py --check-locks, which renders the locked templates in a browser (Playwright)')
 args=parser.parse_args()
 def report(found):
     for err in found:print(err)
     if args.errors_json:args.errors_json.write_text(json.dumps(found,ensure_ascii=False,indent=1)+'\n',encoding='utf-8')
     raise SystemExit(bool(found))
 HERE=Path(__file__).resolve().parent
-subprocess.run([sys.executable, '-B', str(HERE/'render.py'), '--check-locks'], check=True)
+if args.no_lock_check:
+    print('Skipped the lock check (--no-lock-check): run python render.py --check-locks where Playwright is installed.')
+else:
+    subprocess.run([sys.executable, '-B', str(HERE/'render.py'), '--check-locks'], check=True)
 subprocess.run([sys.executable, '-B', str(HERE/'make_samples.py'), '--check'], check=True)
 root=HERE.parents[3]
 fonts=root/'assets/fonts/makeyourmindup'
