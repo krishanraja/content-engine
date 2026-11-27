@@ -1,0 +1,2725 @@
+Hong Kong Exchanges and Clearing Limited and The Stock Exchange of Hong Kong Limited take no responsibility for the
+contents of this announcement, make no representation as to its accuracy or completeness and expressly disclaim any liability
+whatsoever for any loss howsoever arising from or in reliance upon the whole or any part of the contents of this announcement.
+
+Kuaishou Technology
+(A company controlled through weighted voting rights and incorporated in the Cayman Islands with limited liability)
+
+(HKD Counter Stock Code: 01024 / RMB Counter Stock Code: 81024)
+
+(1) DISCLOSEABLE TRANSACTIONS AND CONNECTED
+TRANSACTIONS IN RELATION TO THE SUBSCRIPTION,
+THE GRANT OF THE REDEMPTION RIGHTS THEREOF AND
+THE ADOPTION OF THE SUBSIDIARY SHARE PARTICIPATION
+SCHEMES
+(2) CONNECTED TRANSACTION IN RELATION TO THE GRANT OF
+EQUITY AWARDS UNDER THE BEIJING KLING SHARE INCENTIVE
+SCHEME
+(3) DISCLOSEABLE TRANSACTION IN RELATION TO
+THE RESTRUCTURING
+Reference is made to the announcement of the Company dated May 12, 2026 in relation to the proposed
+related assets and businesses, which involves
+restructuring of the Kuaishou Group’s Kling AI (AI)
+the introduction of external financing.
+THE CAPITAL INCREASE AGREEMENT
+The Board announces that on July 2, 2026 (after trading hours), (i) Beijing Kling (an indirect
+wholly-owned subsidiary of the Company which is expected to hold the Kuaishou Group’s Kling AI
+related assets and businesses upon completion of the Restructuring), (ii) 21 Independent
+(AI)
+Investors, Party A and Party B (together, the “Initial Investors”), (iii) the Beijing Kling Group
+Companies; (iv) Lucky Labs (which directly and, through Beijing Kuailingrui, indirectly wholly-owns
+Beijing Kling); and (v) Beijing Kuailingrui, entered into the Capital Increase Agreement, pursuant
+to which the Initial Investors agreed to inject an aggregate amount of cash capital of RMB13,823.60
+million (or USD2,028.20 million) into Beijing Kling, subject to the satisfaction or waiver of the
+Conditions.
+Under the Capital Increase Agreement, with Beijing Kling’s consent, an additional investor may
+join within 60 days from the Signing Date (or a longer period approved by Investors holding more
+than 50% of the Subscription Amount) (the “Subscription Period”) by signing a joinder agreement
+(the “Joinder Agreement(s)”) to become a party to the Capital Increase Agreement as an investor
+(the “Additional Investor(s)”), provided that the total Subscription Price under the Capital Increase
+Agreement (including all Joinder Agreements thereunder) must not exceed RMB20,447.10 million
+(or USD3,000.00 million) (representing approximately 16.67% of Beijing Kling’s enlarged registered
+capital) (the “Subscription Limit”). The Joinder Agreement(s) shall form part of the Capital Increase
+Agreement.
+–1–
+
+Accordingly, on the same date of the Capital Increase Agreement, each of 15 Additional Investors
+(comprising 13 Independent Investors, Party C and Party D) entered into a Joinder Agreement with
+Beijing Kling pursuant to which they became parties to the Capital Increase Agreement and agreed
+to inject an aggregate amount of cash capital of RMB5,223.50 million (or USD766.39 million) into
+Beijing Kling, subject to the satisfaction or waiver of the Conditions. Beijing Kling may enter into
+further Joinder Agreement(s) with new Additional Investor(s) within the Subscription Limit during the
+Subscription Period.
+THE ADOPTION OF THE SUBSIDIARY SHARE PARTICIPATION SCHEMES
+The Board further announces that on July 2, 2026 (after trading hours), the Board and the shareholders
+and board of directors of Beijing Kling approved the adoption of each of the Beijing Kling Share
+Incentive Scheme, Beijing Kling Share Ownership Scheme and Beijing Kling Share Option Scheme
+(together, the “Subsidiary Share Participation Schemes”). The Subsidiary Share Participation
+Schemes are to recognize the contributions made or to be made by the Participants and to provide them
+with ownership of equity interests in Beijing Kling in order to retain them for the continual operation
+and development of Beijing Kling, and to attract suitable personnel for further development of Beijing
+Kling.
+Beijing Kling is not a principal subsidiary of the Company and therefore, the Subsidiary Share
+Participation Schemes do not constitute share schemes under Chapter 17 of the Listing Rules.
+The aggregate scheme mandate limits of the Subsidiary Share Participation Schemes are 15% of Beijing
+Kling’s registered capital as enlarged by the Subscription and the implementation of the Subsidiary
+Share Participation Schemes (assuming the Subscription Limit and the scheme mandate limits of the
+Subsidiary Share Participation Schemes are both fully utilized).
+LISTING RULES IMPLICATIONS
+The Subscriptions under the Capital Increase Agreement constitute a deemed disposal of equity
+interests in Beijing Kling by the Company under Rule 14.29 of the Listing Rules.
+As the Subsidiary Share Participation Schemes involve the grant of equity awards and options, the
+adoption of the Subsidiary Share Participation Schemes constitutes possible disposal and/or deemed
+disposal of interests in Beijing Kling by the Company pursuant to Rule 14.32A of the Listing Rules,
+and therefore should be aggregated with the transaction under the Subscription.
+Assuming the Subscription Limit and the scheme mandate limits of the Subsidiary Share Participation
+Schemes are both fully utilized, the Company’s equity interests in Beijing Kling will be diluted
+from 100.00% to approximately 68.33%, representing deemed disposal and/or possible disposal of
+approximately 31.67% interest in Beijing Kling by the Company. As one or more of the applicable
+percentage ratios (as defined under the Listing Rules) in respect of the aggregated transactions exceed
+5% but all are less than 25%, the transactions contemplated under the Subscriptions and the Subsidiary
+Share Participation Schemes constitute discloseable transactions of the Company and are subject to the
+reporting and announcement requirements under Chapter 14 of the Listing Rules.
+
+–2–
+
+In addition, Party A is a company wholly owned by a limited partnership of which Ms. Lu Rong, an
+independent non-executive Director, acts as the general partner; Party B comprises two companies
+controlled by Tencent, a substantial shareholder of the Company; Party C is a company wholly owned
+by Mr. Zhang Fei, an independent non-executive Director; and Party D is a company controlled by
+family members of Mr. Yang Yuanxi, a director of Beijing Kuaishou Ads (which is a subsidiary of the
+Company).
+Therefore, Parties A, B and C are connected persons of the Company, while Party D is a connected
+person of the Company at the subsidiary level. As such, the Subscription by each of Parties A, B, C and
+D constitutes a connected transaction of the Company pursuant to Chapter 14A of the Listing Rules.
+As one or more of the applicable percentage ratios (as defined under the Listing Rules) in respect of
+the Subscription by each of Parties A, B and C exceed 0.1% but all are less than 5%, each of the above
+transactions is subject to the reporting, announcement and annual review requirements but is exempt
+from the circular and independent shareholders’ approval requirements under Chapter 14A of the
+Listing Rules. As all of the applicable percentage ratios (as defined under the Listing Rules) in respect
+of the Subscription by Party D are less than 1%, the Subscription by Party D is fully exempt from the
+reporting, announcement, annual review, circular and independent shareholders’ approval requirements
+under Chapter 14A of the Listing Rules.
+THE GRANT OF THE REDEMPTION RIGHTS
+Under the Shareholders’ Agreement entered into in connection with the Subscriptions, each of the
+Investors was granted the Redemption Right pursuant to which, among other things, Beijing Kling
+will be required to repurchase all or part of the Investors’ equity interests in Beijing Kling after the
+occurrence of certain triggering events as contemplated thereunder.
+Since the exercises of the Redemption Rights are not at the discretion of Beijing Kling, according to
+Rule 14.74(1) of the Listing Rules, the transaction in relation to the grant of the Redemption Rights will
+be classified as if the Redemption Rights had been exercised at the time of the grant. As the highest
+applicable percentage ratio in respect of the grant of the Redemption Rights exceeds 5% but is less than
+25%, the grant of the Redemption Rights constitutes a discloseable transaction of the Company and
+is therefore subject to the reporting and announcement requirements under Chapter 14 of the Listing
+Rules.
+As Parties A, B and C are connected persons of the Company while Party D is a connected person
+of the Company at the subsidiary level, the grant of the Redemption Rights to each of Parties A, B,
+C and D constitutes a connected transaction of the Company pursuant to Chapter 14A of the Listing
+Rules. Since the exercises of the Redemption Rights under the Shareholders’ Agreement are not at the
+discretion of Beijing Kling, according to Rule 14A.61 of the Listing Rules, the transaction in relation to
+the grant of the Redemption Rights will be classified as if the Redemption Rights had been exercised at
+the time of grant. As the highest applicable percentage ratio in respect of the grant of the Redemption
+Rights to each of Parties A, B and C exceed 0.1% but all are less than 5%, the grant of the Redemption
+Rights to Parties A, B and C is subject to the reporting, announcement and annual review requirements
+but is exempt from the circular and independent shareholders’ approval requirements under Chapter
+14A of the Listing Rules. As all of the applicable percentage ratios (as defined under the Listing Rules)
+in respect of the grant of the Redemption Rights to Party D are less than 1%, such transaction is fully
+exempt from the reporting, announcement, annual review, circular and independent shareholders’
+approval requirements under Chapter 14A of the Listing Rules.
+
+–3–
+
+THE GRANT OF EQUITY AWARDS UNDER THE BEIJING KLING SHARE INCENTIVE
+SCHEME
+The Board announces that on July 2, 2026 (after trading hours), the shareholders and the board of
+directors of Beijing Kling approved the grant of an aggregate of 7,165,104 equity awards and options
+(corresponding to RMB7,165,104 registered capital of Beijing Kling) to the key employees of
+Beijing Kling under the Subsidiary Share Participation Schemes (the “Initial Grants”), representing
+approximately 7.45% of Beijing Kling’s registered capital as enlarged by the Subscriptions and the
+implementation of the Subsidiary Share Participation Schemes (assuming the Subscription Limit and
+the scheme mandate limits of the Subsidiary Share Participation Schemes are both fully utilized).
+Of the Initial Grants, a total of 961,759 equity awards (corresponding to RMB961,759 registered
+capital of Beijing Kling), representing approximately 1.00% of Beijing Kling’s registered capital as
+enlarged by the Subscriptions and the implementation of the Subsidiary Share Participation Schemes
+(assuming the Subscription Limit and the scheme mandate limits of the Subsidiary Share Participation
+Schemes are both fully utilized), were granted to Mr. Cheng Yixiao, an executive Director and the
+chairman of the board of directors of Beijing Kling under the Beijing Kling Share Incentive Scheme
+for nil consideration (the “Connected Grant”). The equity awards granted to Mr. Cheng Yixiao may
+not be disposed of for a period of at least three years following the grant and prior to the listing of
+Beijing Kling, and are subject to clawback in accordance with their terms if Mr. Cheng Yixiao ceases
+employment with Beijing Kling within six years after the grant, among other restrictions.
+As Mr. Cheng Yixiao is an executive Director, he is a connected person of the Company. Accordingly,
+the Connected Grant constitutes a connected transaction of the Company pursuant to Chapter 14A
+of the Listing Rules. As one or more of the applicable percentage ratios (as defined under the Listing
+Rules) in respect of the Connected Grant exceed 0.1% but all are less than 5%, the Connected Grant is
+subject to the reporting, announcement and annual review requirements but is exempt from the circular
+and independent shareholders’ approval requirements under Chapter 14A of the Listing Rules.
+Save as disclosed above, no other grantees under the Initial Grants are connected persons of the
+Company as defined under Chapter 14A of the Listing Rules.
+THE RESTRUCTURING
+The Board announces that on July 2, 2026 (after trading hours), in connection with the introduction of
+external financing to Beijing Kling, Beijing Kling, Beijing Dajia, Huayi Huilong, Beijing Kuaishou
+Technology, Lucky Labs and Fortune Ever entered into the Restructuring Framework Agreement so as
+related assets and businesses.
+to allow Beijing Kling to hold the Kuaishou Group’s Kling AI (AI)
+Completion of the Restructuring is expected to take place no later than nine months after the Latest
+Payment Date under the Capital Increase Agreement (unless otherwise extended by the Investors
+holding more than 50% of the Subscription Amount).
+
+–4–
+
+As the Restructuring would only involve a net disposal of approximately 31.67% equity interests in the
+related assets and businesses by the Company, the Company
+Kuaishou Group’s Kling AI (AI)
+has obtained confirmation from the Stock Exchange that the Company may disregard the calculation
+of percentage ratios as set out in Rule 14.07 of the Listing Rules in respect of the Restructuring and
+instead use an alternative size test based on a net disposal of approximately 31.67% interest in the
+related assets and businesses for the purpose of calculating the
+Kuaishou Group’s Kling AI (AI)
+percentage ratios for the Restructuring pursuant to Rule 14.20 of the Listing Rules. As one or more of
+the applicable percentage ratios in respect of the Restructuring exceed 5% but are all less than 25%, the
+Restructuring constitutes a discloseable transaction of the Company under Chapter 14 of the Listing
+Rules and is subject to the reporting and announcement requirements under Chapter 14 of the Listing
+Rules.
+THE CAPITAL INCREASE AGREEMENT AND THE GRANT OF THE REDEMPTION
+RIGHTS
+The principal terms of the Capital Increase Agreement (including the Joinder Agreements which form part
+of the Capital Increase Agreement) are summarized below:
+Date
+July 2, 2026
+Parties
+(a)
+
+Beijing Kling;
+
+(b)
+
+the Beijing Kling Group Companies;
+
+(c)
+
+34 Independent Investors;
+
+(d)
+
+Party A;
+
+(e)
+
+Party B;
+
+(f)
+
+Party C;
+
+(g)
+
+Party D;
+
+(h)
+
+Lucky Labs; and
+
+(i)
+
+Beijing Kuailingrui.
+
+Party A is a company wholly owned by a limited partnership of which Ms. Lu Rong, an independent
+non-executive Director, acts as the general partner; Party B comprises two companies controlled by
+Tencent, a substantial shareholder of the Company; Party C is a company wholly owned by Mr. Zhang
+Fei, an independent non-executive Director; and Party D is a company controlled by family members of
+Mr. Yang Yuanxi, a director of Beijing Kuaishou Ads (which is a subsidiary of the Company). Therefore,
+Parties A, B, C and D are connected persons of the Company.
+
+–5–
+
+Save as disclosed above, to the best knowledge of the Board having made all reasonable enquiries, each
+of the other Investors and their respective ultimate beneficial owners are third parties independent of the
+Company and its connected persons.
+The Subscriptions
+Pursuant to the Capital Increase Agreement, the Initial Investors agreed to inject an aggregate amount of
+cash capital of RMB13,823.60 million (or USD2,028.20 million) into Beijing Kling, subject to the
+satisfaction or waiver of the Conditions.
+Under the Capital Increase Agreement, with Beijing Kling’s consent, an additional investor may join
+within 60 days (or a longer period approved by Investors holding more than 50% of the Subscription
+Amount) from the Signing Date by signing a joinder agreement to become an “Additional Investor”,
+provided that the total Subscription Price under the Capital Increase Agreement (including all Joinder
+Agreements thereunder) must not exceed RMB20,447.10 million (or USD3,000.00 million) (representing
+approximately 16.67% of Beijing Kling’s enlarged registered capital). The Joinder Agreement(s) shall
+form part of the Capital Increase Agreement. Beijing Kling may enter into further Joinder Agreement(s)
+with new Additional Investor(s) within the Subscription Limit during the Subscription Period.
+Accordingly, on the same date of the Capital Increase Agreement, each of 15 Additional Investors
+(comprising 13 Independent Investors, Party C and Party D) entered into a Joinder Agreement with
+Beijing Kling pursuant to which they became parties to the Capital Increase Agreement and agreed to
+inject an aggregate amount of cash capital of RMB5,223.50 million (or USD766.39 million) into Beijing
+Kling, subject to the satisfaction or waiver of the Conditions.
+For details of the capital contribution by each Investor, please refer to the section headed “Change In
+Shareholding Structure of Beijing Kling” in this announcement.
+Consideration and Payment
+Upon fulfillment (or waiver by the relevant parties) of the Conditions and within 10 Business Days after
+Beijing Kling has delivered the notice of payment to the Investors in accordance with the Capital Increase
+Agreement, the Investors shall pay the full Subscription Price for their respective Subscriptions by way of
+bank transfer to the bank account as stated on the notice of payment.
+The Subscription Price was determined after arm’s length negotiations between the Parties after taking
+into account the financial position, business performance and the business prospect of Beijing Kling, with
+reference to:
+(i)
+
+assuming the Restructuring had been completed, the unaudited financial information of Beijing
+Kling for the financial year ended December 31, 2025. In particular, the revenue of Beijing Kling
+would have been approximately RMB1.1 billion for the year ended December 31, 2025, and in
+would have been approximately
+March 2026, the annualized revenue run rate of Kling AI (AI)
+USD500 million;
+
+(ii)
+
+the development prospects of AI video generation industry globally, fueled by deepening
+penetration across professional verticals, including advertising, e-commerce, film and television,
+short plays, animation and gaming;
+
+–6–
+
+(iii) Kling AI’s leadership position globally, highlighted by its cutting-edge model capabilities, robust
+product performance, and solid commercial monetization;
+(iv) the independent and comprehensive due diligence, commercial analysis and assessment conducted
+by the Company’s management. As part of such assessment, the management undertook a market
+comparable analysis and identified several peer companies for benchmarking purposes. The
+selection of the comparable companies was based on a number of objective criteria, including that:
+(a) the principal business activities of the selected companies are focused on the research,
+development and commercialization of AI-related technologies and products; (b) the selected
+companies are traded on major international capital markets, including those in the United States
+and Hong Kong, which are generally characterized by adequate market liquidity, transparency and
+established regulatory disclosure standards; (c) sufficient and reliable financial and operating
+information of the selected companies that is publicly available to facilitate meaningful comparison;
+and (d) the selected companies exhibit high-growth characteristics in terms of revenue growth and
+business expansion that are broadly comparable to the growth profile and development stage of
+Beijing Kling. The management also considered a range of metrics derived from the selected
+comparable companies, together with Beijing Kling’s operational performance. Based on the
+foregoing analysis and assessment, the management considered that the pre-transaction valuation of
+Beijing Kling of USD15.00 billion is supportable from a commercial perspective and is within the
+valuation range implied by the selected comparable companies and transactions;
+(v)
+
+the validation through arm’s length negotiations with the Investors, which include a number of
+internationally recognized, reputable and sophisticated institutional investors with extensive
+investment experience in the technology and artificial intelligence sectors. The willingness of such
+Investors to invest at the agreed valuation provides independent market-based support for the
+valuation adopted for the transaction; and
+
+, which is a fast-growing business of the Kuaishou
+(vi) the unique circumstances of Kling AI (AI)
+Group since 2024 and, as such, has been subject to ongoing public disclosure. Relevant key
+has already been
+operational, financial and business information relating to Kling AI (AI)
+disclosed to the market, thereby enhancing transparency and reducing information asymmetry that
+would otherwise typically exist in the valuation of a private company.
+The Directors (including the independent non-executive Directors who are not required to abstain from
+voting) consider that the Capital Increase Agreement to be fair and reasonable and on normal commercial
+terms, and in the interests of the Company and the Shareholders as a whole.
+Conditions Precedent
+The obligation of Beijing Kling to complete the Subscription with any one Investor is conditional on the
+satisfaction (or waiver by Beijing Kling) of all of the following Conditions:
+(a)
+
+the representations and warranties made by such Investor remaining true, accurate, complete and
+not misleading in material aspects as of the Signing Date and the Completion Date; and
+
+(b)
+
+such Investor having complied with and fulfilled all undertakings and obligations required to be
+complied with and fulfilled by it on or before the Completion Date in all material aspects pursuant
+to the Capital Increase Agreement.
+
+–7–
+
+The obligation of an Investor to complete the Subscriptions is conditional on the satisfaction (or waiver
+by the Investors holding more than 50% of the Subscription Amount) of all of the following Conditions:
+(a)
+
+the representations and warranties made by Beijing Kling remaining true, accurate, complete and
+not misleading in material aspects as of the Signing Date and the Completion Date;
+
+(b)
+
+Beijing Kling having complied with and fulfilled all undertakings and obligations required to be
+complied with and fulfilled by it on or before the Completion Date in all material aspects pursuant
+to the Capital Increase Agreement;
+
+(c)
+
+there being no material adverse effect after the Signing Date and before the Completion Date;
+
+(d)
+
+Beijing Kling having provided to the Investor the shareholders’ and board resolutions approving the
+following: (i) the Subscriptions, the signing and performance of the Transaction Documents and the
+transactions contemplated thereunder; (ii) the New Articles of Association; (iii) the formation of the
+new board of directors of Beijing Kling; and (iv) the waiver by the existing shareholders of Beijing
+Kling of their pre-emptive rights and other similar rights in relation to the Subscription;
+
+(e)
+
+Beijing Kling having entered into employment agreements, non-disclosure agreements, intellectual
+property ownership agreements and non-competition agreements (provided that the intellectual
+property ownership obligations shall remain effective during the term of the employment, and the
+non-competition obligations shall apply during the term of the employment and for a period of two
+(2) years following its termination) with all key personnel;
+
+(f)
+
+Beijing Kling having registered the Investor as its shareholder on its register of members, which
+shall include the requisite particulars and be signed by Beijing Kling’s legal representative and
+stamped with Beijing Kling’s company seal; and
+
+(g)
+
+Beijing Kling having delivered to the Investor a signed confirmation that the Conditions under
+paragraphs (a) to (f) above have been satisfied.
+
+The Company and the Investors shall each use their reasonable commercial efforts to satisfy the
+Conditions within 180 days from the Signing Date (or such other dates as may be mutually agreed in
+writing by the Company and the Investors).
+Termination
+The Capital Increase Agreement as between Beijing Kling and any one Investor may be terminated in the
+following manners before the Completion Date with respect to such Investor:
+(a)
+
+by written agreement between the parties to terminate the Capital Increase Agreement and confirm
+the effective date of such termination;
+
+(b)
+
+if Beijing Kling commits a serious breach of the representations, warranties, undertakings and
+related agreements, such Investor may terminate the Capital Increase Agreement by written notice
+to Beijing Kling, provided that such breach results in the failure of any of the Conditions pertaining
+to Beijing Kling to be satisfied, and such breach either cannot be cured before the Latest Completion
+Date, or, if capable of being cured, is not cured within thirty (30) days after the delivery of a notice
+specifying the grounds for termination and the Investor’s intention to terminate the Capital Increase
+Agreement;
+
+–8–
+
+(c)
+
+if the Investor commits a serious breach of the representations, warranties, undertakings and related
+agreements, Beijing Kling may terminate the Capital Increase Agreement by written notice to such
+Investor, provided that such breach results in the failure of any of the Conditions pertaining to such
+Investor to be satisfied, and such breach either cannot be cured before the Latest Completion Date,
+or, if capable of being cured, is not cured within thirty (30) days after the delivery of a notice
+specifying the grounds for termination and Beijing Kling’s intention to terminate the Capital
+Increase Agreement; or
+
+(d)
+
+if the Conditions have not been fulfilled as at the Latest Completion Date, Beijing Kling and such
+Investor are each entitled to terminate the Capital Increase Agreement by written notice to the other,
+but if such failure is a direct result of a breach of its representations, warranties, undertakings and
+related agreements under the Capital Increase Agreement by one party, that party shall not have
+such right to terminate the Capital Increase Agreement.
+
+The Grant of the Redemption Rights
+Under the Shareholders’ Agreement entered into in connection with the Subscriptions, each of the
+Investors was granted the Redemption Right pursuant to which, among other things, Beijing Kling will be
+required to repurchase all or part of the Investors’ equity interests in Beijing Kling after the occurrence of
+certain triggering events as contemplated thereunder. The Redemption Rights set out in the Shareholders’
+Agreement include the following principal terms, among others:
+(a)
+
+(b)
+
+each of the Investors shall have the right, within 12 months after the occurrence of the below events,
+to require Beijing Kling to repurchase all or part of its equity interests in Beijing Kling:
+(i)
+
+Beijing Kling being unable to complete its initial public offering before the Latest Listing
+Date or October 30, 2031 (whichever is earlier); or
+
+(ii)
+
+Beijing Kling being unable to complete the following matters within nine months from the
+Latest Payment Date (or within such other period as agreed by the Investors holding more
+than 50% of the voting rights among all the Investors): the relevant Beijing Kling Group
+Companies (1) completing the acquisition of 100% of the equity interests in an overseas
+operating company (or its substantial assets and businesses), (2) obtaining the value-added
+telecommunications business operating licence required for the conduct of the Beijing Kling
+Group Companies’ principal business, and (3) completing the filing of the AI large model(s)
+and/or algorithm(s) required for the conduct of the Beijing Kling Group Companies’ principal
+business (unless such license or filing is not required by the relevant laws for the Beijing
+Kling Group Companies’ then actual business operations).
+
+Notwithstanding the above, if at the Latest Listing Date, Beijing Kling has formally submitted its
+listing application in respect of its initial public offering, the Investors shall not be entitled to
+exercise its respective Redemption Rights, unless and until any one of the following occurs
+(whichever is earlier):
+(i)
+
+the initial public offering not being completed within twelve (12) months after the listing
+application has been submitted;
+
+(ii)
+
+the submitted listing application having lapsed and not re-submitted in time or rejected by the
+competent government department or stock exchange; or
+
+–9–
+
+(iii) Beijing Kling having withdrawn its submitted listing application.
+The repurchase amount shall be equal to the original investment price attributable to the equity interests
+subject to the repurchase request, plus an annual return of 8% calculated on a simple interest basis from
+the applicable Completion Date of such Investor until the date on which the repurchase price is paid (with
+any period of less than one year calculated on a pro rata basis), plus any dividends declared but unpaid by
+Beijing Kling, minus the aggregate amount of dividends and distributions previously received by such
+Investor from Beijing Kling prior to the issuance of the repurchase notice.
+The Beijing Kling Group Companies have agreed to assume joint and several liability for Beijing Kling’s
+obligation to pay the repurchase amount.
+The Investors’ Consent Rights
+Separately, under the Shareholders’ Agreement, the Investors holding more than 50% of the Subscription
+Amount have customary consent rights over certain material matters of Beijing Kling and entities
+controlled by it.
+THE ADOPTION OF THE SUBSIDIARY SHARE PARTICIPATION SCHEMES
+The Board further announces that on July 2, 2026 (after trading hours), the Board and the shareholders
+and board of directors of Beijing Kling approved the adoption of each of the Beijing Kling Share
+Incentive Scheme, Beijing Kling Share Ownership Scheme and Beijing Kling Share Option Scheme. The
+board of directors of Beijing Kling has the discretion to adjust the allocation of the number of the equity
+awards or options among the Subsidiary Share Participation Schemes within the aggregate scheme
+mandate limits, i.e. 15% of Beijing Kling’s registered capital as enlarged by the Subscriptions and the
+implementation of the Subsidiary Share Participation Schemes (assuming the Subscription Limit and the
+scheme mandate limits of the Subsidiary Share Participation Schemes are both fully utilized).
+Beijing Kling is not a principal subsidiary of the Company and therefore, the Subsidiary Share
+Participation Schemes do not constitute share schemes under Chapter 17 of the Listing Rules.
+The major terms of the Subsidiary Share Participation Schemes are summarized below:
+1.
+
+Beijing Kling Share Incentive Scheme
+Purpose
+The purpose of the Beijing Kling Share Incentive Scheme is to attract, motivate and retain senior
+management personnel who have a significant influence on and contribution to Beijing Kling’s
+development, as well as other proposed eligible Participants determined under the scheme, to fully
+mobilize the enthusiasm, sense of responsibility and sense of mission of the Participants, to align
+the interests of the Participants with those of Beijing Kling’s shareholders, and to promote the
+success of Beijing Kling.
+Participants
+Beijing Kling’s senior management personnel (including but not limited to its directors and other
+personnel holding senior management positions) and key technical staff.
+
+– 10 –
+
+Source and number of awards and options
+The total amount of equity interests proposed to be granted to the Participants under the scheme
+corresponds to RMB5,241,586 of Beijing Kling’s registered capital, comprising the following:
+(a)
+
+The number of equity awards: 4,279,827 equity awards, corresponding to RMB4,279,827 of
+Beijing Kling’s registered capital; and
+
+(b)
+
+The number of equity options: 961,759 equity options, each of which, upon exercise,
+corresponds to RMB1 of Beijing Kling’s registered capital (or, if it has been converted into a
+joint stock company limited by shares, corresponds to 1 share of Beijing Kling with a par
+value of RMB1 per share).
+
+The sources of equity interests under the scheme are:
+(a)
+
+The equity awards: direct transfer of Beijing Kling’s equity interests from its majority
+shareholder; and
+
+(b)
+
+The equity options: newly increased registered capital and/or newly issued shares of Beijing
+Kling to be allocated/issued to the grantees upon their exercise of the equity options.
+
+Any equity interests under the scheme that are repurchased for any reason may, in the future, be
+re-included in the number of available equity interests pursuant to the scheme (unless the scheme
+has been terminated) provided that such re-inclusion complies with applicable laws and regulations.
+Purchase/Exercise price
+(a)
+
+The equity awards: the purchase price is nil.
+
+(b)
+
+The equity options: no consideration is required to be paid by the grantees upon the grant of
+equity options under the scheme. The exercise price payable by the grantees in respect of the
+granted equity options shall be subject to the grant letter to be executed between Beijing Kling
+and the respective grantees.
+
+Exercise period of options
+From the date on which the conditions for exercise of the equity options granted to the grantees
+under the scheme are satisfied, and subject to compliance with the requirements of applicable laws
+and regulations and the regulatory rules of the stock exchange on which Beijing Kling’s shares are
+listed at the time (if applicable), the grantees may exercise their equity options in full or in
+instalments prior to or following Beijing Kling’s listing, and shall complete the exercise within the
+exercise validity period of the equity options. The period from the grant date to the exercise date of
+any equity option shall not exceed 10 years, and the exercise period shall be specified in the relevant
+grant documents.
+Term of the scheme
+The scheme shall remain valid for 10 years from the date of its adoption (i.e., July 2, 2026).
+
+– 11 –
+
+Termination of the scheme
+Unless otherwise provided in the scheme document, the early termination of the scheme shall be
+subject to approval by the board of directors of Beijing Kling.
+2.
+
+Beijing Kling Share Ownership Scheme
+Participants
+Participants in the scheme must simultaneously satisfy all of the following conditions:
+(a)
+
+being a core management member, core technical staff, or external consultant of Beijing
+Kling, the Beijing Kling Group Companies or their affiliated enterprises (meaning the
+Company’s affiliated enterprises included in its consolidated financial statements, excluding
+Beijing Kling and the Beijing Kling Group Companies) (the “Affiliated Enterprises”);
+
+(b)
+
+having entered into a labor contract, employment agreement, or service agreement with
+Beijing Kling, the Beijing Kling Group Companies or the Affiliated Enterprises; and
+
+(c)
+
+there being no circumstances that would prohibit the holding of equity interests in Beijing
+Kling under applicable laws and regulations, rules and regulations, regulatory rules, or policy
+requirements.
+
+Source and amount of equity interests
+The total amount of equity interests proposed to be granted to the grantees under the scheme
+corresponds to RMB2,404,398 of Beijing Kling’s registered capital.
+The sources of equity interests under the scheme are as follows:
+(a)
+
+The Shareholding Platforms may acquire equity interests in Beijing Kling by subscribing for
+newly increased registered capital of Beijing Kling; and
+
+(b)
+
+Participants may subscribe for/purchase a certain number of partnership interests, or capital
+contributions/equity interests in the Shareholding Platforms at the conditions and prices
+stipulated under the scheme or the subscription documents, thereby indirectly holding a
+certain number of equity interests in Beijing Kling.
+
+Any equity interests under the scheme that are repurchased for any reason may, in the future, be
+re-included in the number of available equity interests pursuant to the scheme (unless the scheme
+has been terminated) provided that such re-inclusion complies with applicable laws and regulations.
+Subscription price
+The subscription price payable by the Participants in respect of the equity interests shall be subject
+to the subscription agreement to be executed between the Shareholding Platforms and the
+Participants.
+
+– 12 –
+
+Term of the scheme
+The scheme shall remain valid for 10 years from the date of its adoption (i.e., July 2, 2026).
+Termination of the scheme
+Unless otherwise provided in the scheme document, the early termination of the scheme shall be
+subject to approval by the board of directors of Beijing Kling.
+3.
+
+Beijing Kling Share Option Scheme
+Purpose
+The purpose of the Beijing Kling Share Option Scheme is to adapt to the needs of Beijing Kling’s
+strategic development; optimize its governance structure; establish a mechanism for interest sharing
+and risk sharing between its shareholders and its management and other employees; attract, motivate
+and retain personnel who have a significant influence on and contribution to its development; fully
+mobilize the enthusiasm, sense of responsibility and sense of mission of the incentivized employees;
+enhance its overall competitiveness, strengthen its cohesion, and maintain its long-term stable
+development; establish and improve a long-term incentive and restraint mechanism; give due
+consideration to the long-term interests of both employees and itself; and lay a solid foundation for
+its sustainable development.
+Participants
+Participants in the scheme must simultaneously satisfy all of the following conditions:
+(a)
+
+being a core management member, core technical staff, or external consultant of Beijing
+Kling, the Beijing Kling Group Companies or the Affiliated Enterprises;
+
+(b)
+
+having entered into a labor contract, employment agreement, or service agreement with
+Beijing Kling, the Beijing Kling Group Companies or the Affiliated Enterprises; and
+
+(c)
+
+there being no circumstances that would prohibit the holding of equity interests in Beijing
+Kling under applicable laws and regulations, rules and regulations, regulatory rules, or policy
+requirements.
+
+Source and number of options
+The total number of equity options proposed to be granted to the grantees under the scheme is
+6,780,397 options, with each equity option corresponding to 1 Beijing Kling share upon exercise, at
+a par value of RMB1 per share. The total number of shares corresponding to all equity options upon
+exercise, to be issued by Beijing Kling following its initial public offering and listing, is 6,780,397
+shares.
+The source of the underlying shares involved in the scheme shall be shares issued by Beijing Kling
+following its initial public offering and listing. Beijing Kling shall not grant any equity options
+under the scheme after its listing.
+
+– 13 –
+
+Any equity options held by the grantees that become invalid, are canceled or are repurchased for
+any reason may, in the future, be re-included in the number of available options pursuant to the
+scheme (unless the scheme has been terminated) provided that such re-inclusion complies with
+applicable laws and regulations.
+Exercise price
+No consideration is required to be paid by the grantees upon the grant of equity options under the
+scheme. The exercise price payable by the grantees in respect of the granted equity options shall be
+subject to the grant letter to be executed between Beijing Kling and the respective grantees.
+Exercise period of options
+From the date on which the conditions for exercise of the equity options granted to the grantees
+under the scheme are satisfied, and subject to compliance with the requirements of applicable laws
+and regulations and the regulatory rules of the stock exchange on which Beijing Kling’s shares are
+listed at the time (if applicable), the grantees may exercise their equity options in full or in
+instalments following Beijing Kling’s listing, and shall complete the exercise within the exercise
+validity period of the equity options. The exercise period shall be specified in the relevant grant
+documents. Notwithstanding the foregoing, the governing body of the scheme may approve the
+extension of the exercise period in writing.
+Term of the scheme
+The scheme shall remain valid for 10 years from the date of its adoption (i.e., July 2, 2026).
+Termination of the scheme
+Unless otherwise provided in the scheme document, the early termination of the scheme shall be
+subject to approval by the board of directors of Beijing Kling.
+THE GRANT OF EQUITY AWARDS UNDER THE BEIJING KLING SHARE INCENTIVE
+SCHEME
+The Board announces that on July 2, 2026 (after trading hours), the shareholders and the board of
+directors of Beijing Kling approved the grant of an aggregate of 7,165,104 equity awards and options
+(corresponding to RMB7,165,104 registered capital of Beijing Kling) to the key employees of Beijing
+Kling under the Subsidiary Share Participation Schemes, representing approximately 7.45% of Beijing
+Kling’s registered capital as enlarged by the Subscription and the implementation of the Subsidiary Share
+Participation Schemes (assuming the Subscription Limit and the scheme mandate limits of the Subsidiary
+Share Participation Schemes are both fully utilized).
+Of the Initial Grants, a total of 961,759 equity awards (corresponding to RMB961,759 registered capital
+of Beijing Kling), representing approximately 1.00% of Beijing Kling’s registered capital as enlarged by
+the Subscription and the implementation of the Subsidiary Share Participation Schemes (assuming the
+Subscription Limit and the scheme mandate limits of the Subsidiary Share Participation Schemes are both
+fully utilized), were granted to Mr. Cheng Yixiao, an executive Director and the chairman of the board of
+directors of Beijing Kling, under the Beijing Kling Share Incentive Scheme for nil consideration.
+
+– 14 –
+
+The grant to Mr. Cheng Yixiao may not be disposed of for a period of at least three years following the
+grant and prior to the listing of Beijing Kling, and is subject to clawback in accordance with its terms if
+Mr. Cheng Yixiao ceases employment with Beijing Kling within six years after the grant, among other
+restrictions.
+THE RESTRUCTURING
+The Board announces that on July 2, 2026 (after trading hours), in order to implement the Restructuring,
+Beijing Dajia, Huayi Huilong, Beijing Kuaishou Technology, Lucky Labs, Fortune Ever (the
+“Restructuring Parties”, each of which are directly or indirectly owned or controlled by the Company)
+and Beijing Kling entered into the Restructuring Framework Agreement, pursuant to which the parties
+agreed to take and procure their respective subsidiaries and controlled entities (where necessary) to take
+related assets and businesses under
+certain steps to consolidate the Kuaishou Group’s Kling AI (AI)
+Beijing Kling at the consideration to be appraised by an independent valuer.
+The major terms of the Restructuring Framework Agreement are summarized below:
+Date
+July 2, 2026
+Parties
+(a)
+
+the Restructuring Parties; and
+
+(b)
+
+Beijing Kling.
+
+Subject matter
+The parties agree that, for the purposes of the Restructuring Framework Agreement, they shall cooperate
+with and procure the relevant parties to implement and complete the Restructuring within nine (9) months
+following the Latest Payment Date under the Capital Increase Agreement, or such longer period as may
+be agreed by Beijing Kling and the Investors holding more than 50% of the Subscription Amount under
+the Capital Increase Agreement. The key steps of the Restructuring shall include:
+First, Beijing Kling will transfer any businesses that will not form part of its principal business after the
+Restructuring, together with the related assets, contracts, personnel and operational resources, to other
+designated entities within the Kuaishou Group. Beijing Kling will then acquire from Fortune Ever and
+Beijing Dajia 100% of the equity interests in Beijing Kuaixingchen Technology, Beijing Kuaixingkong
+Technology, Beijing Kling Lingdong, and Beijing Kling Technology, with the consideration for each
+acquisition determined by reference to the relevant appraised value. Following these steps, Lucky Labs,
+directly and through Beijing Kuailingrui, will acquire 100% of the equity interests in Beijing Kling from
+Huayi Huilong, with the consideration determined by reference to the appraised value of Beijing Kling.
+Upon completion, Beijing Kling will be converted into a foreign-invested enterprise.
+
+– 15 –
+
+Thereafter, Lucky Labs will subscribe for the newly increased registered capital of Beijing Kling and
+make capital contributions progressively. Concurrently with, and as a condition precedent to, such capital
+increase, Beijing Kuailingrui will transfer equity interests in Beijing Kling and the Shareholding Platforms
+will subscribe for newly increased registered capital of Beijing Kling. In addition, a subsidiary of Beijing
+Kling will, following completion of all required approvals, registrations and filings relating to outbound
+direct investment, including but without limitation filings with the competent development and reform
+authorities, approvals from the competent commerce authorities and foreign exchange registrations (the
+“ODI procedures”), acquire 100% of the equity interests in the overseas operating company(ies).
+The Kuaishou Group will also progressively transfer the Kling AI (AI)
+related assets and businesses
+to the Beijing Kling Group Companies. In connection with the Restructuring, the Beijing Kling Group
+Companies will obtain all regulatory approvals, permits, licenses and qualifications required under
+applicable laws, including those relating to value-added telecommunications services, AI large model and
+algorithm filings, and the ODI Procedures, together with any other ancillary arrangements relating to the
+equity ownership structure of the Beijing Kling Group Companies, business-related assets, personnel and
+other matters necessary to achieve the purposes of the Restructuring Framework Agreement.
+Consideration and payment terms
+To the extent the Restructuring involves any transfer of equity interests, businesses or assets, the
+consideration shall be determined by the relevant parties through consultation on a fair and reasonable
+basis with reference to the valuation results issued by a valuer possessing the requisite professional
+qualifications. The specific consideration shall be subject to the pricing arrangements set forth in the
+relevant transfer agreements.
+Termination
+The Restructuring Framework Agreement may be terminated in the following manners:
+(a)
+
+the Restructuring Framework Agreement may be terminated at any time upon the unanimous
+written consent of all parties; or
+
+(b)
+
+if the purpose of the Restructuring Framework Agreement can no longer be achieved, or if it is
+otherwise necessary to terminate it in light of the purpose hereof, Beijing Dajia may unilaterally
+terminate the Restructuring Framework Agreement by giving written notice to the other parties.
+
+NON-COMPETITION UNDERTAKING
+Pursuant to a letter of non-competition undertaking dated July 2, 2026 from the Company to Beijing
+Kling, the Company has agreed that, from the completion of the Restructuring contemplated under the
+Restructuring Framework Agreement until the later of (1) the first day on which the aggregate equity
+interest in Beijing Kling held by the Company and its affiliates on a fully diluted basis falls below the
+minimum shareholding threshold for a controlling shareholder or de facto controller under applicable
+securities regulatory rules, or (2) the expiry of the fifth (5th) anniversary of the Signing Date (whichever
+is later), the Company shall not, and shall procure that the Kuaishou Group shall not, directly or indirectly
+control any entity primarily engaged in the business of video generation model, other than the Beijing
+Kling Group Companies.
+
+– 16 –
+
+CHANGE IN SHAREHOLDING STRUCTURE OF BEIJING KLING
+Before the Subscriptions and
+After the Subscription Limit and
+the scheme mandate limits of the Subsidiary Share
+the adoption of the Subsidiary Share
+Participation Schemes are both fully utilized
+Participation Schemes
+Percentage Percentage
+Percentage Percentage
+Registered
+of equity
+of voting
+Amount of
+Registered
+of equity
+of voting
+Capital
+interests
+rights contribution
+Capital
+interests
+rights
+(%)(3) (RMB million)
+(RMB)
+(%)(3)
+(%)(3)
+(RMB)
+(%)(3)
+
+Controlling Shareholders
+Lucky Labs
+Beijing Kuailingrui
+The grantees and the Shareholding Platforms
+Mr. Cheng Yixiao
+Mr. Gai Kun(1) (equity awards granted under the
+Beijing Kling Share Incentive Scheme)
+Equity awards grantee under the Initial Grants other
+than Mr. Cheng Yixiao and Mr. Gai Kun
+The Shareholding Platforms
+Share options granted or to be granted but not yet
+exercised
+Investors
+Party A
+Party B (Shanghai Qishan Investment Co., Ltd.)
+Party B (Parallel Mars Investment Limited)
+Party C
+Party D
+Shanghai Guofang Digital Technology Enterprise
+Management Partnership (Limited Partnership)
+Hangzhou AliCloud Apsara Information Technology
+Co., Ltd.
+Beijing CAS Generation Equity Investment Fund
+Partnership (Limited Partnership)
+Guangdong Dakang Lanwu Equity Investment
+Partnership Enterprise (Limited Partnership)
+Tianjin Yuanfeng Qifeng Enterprise Management
+Partnership (Limited Partnership)
+CPE Spruce Investment Limited
+Goldstone Lingshu (Jiaxing) Enterprise Management
+Partnership (Limited Partnership)
+Shenzhen Hongtu Baichuan No.2 Investment
+Partnership (Limited Partnership)
+Suzhou Gongrong Jinzhi No.1 Venture Capital
+Partnership (Limited Partnership)
+Qingdao Huaxin Ceda Equity Investment Partnership
+(Limited Partnership)
+Beijing Hongyi Lingjing Enterprise Management
+Partnership (Limited Partnership)
+China Internet Investment Fund (Limited
+Partnership)
+
+3,796,656
+6,203,344
+
+37.97%
+62.03%
+
+37.97%
+62.03%
+
+63,796,656
+1,923,517
+
+66.33%
+2.00%
+
+52.23%
+1.57%
+
+—
+
+—
+
+—
+
+—
+
+961,759
+
+1.00%
+
+0.79%
+
+—
+
+—
+
+—
+
+—
+
+2,885,276
+
+3.00%
+
+23.62%(2)
+
+—
+—
+
+—
+—
+
+—
+—
+
+—
+—
+
+432,792
+2,404,398
+
+0.45%
+2.50%
+
+0.35%
+1.97%
+
+—
+
+—
+
+—
+
+—
+
+7,742,156
+
+8.05%
+
+6.34%
+
+—
+—
+—
+—
+—
+
+—
+—
+—
+—
+—
+
+—
+—
+—
+—
+—
+
+102.24
+681.57
+681.57
+68.16
+47.00
+
+80,147
+534,310
+534,310
+53,431
+36,845
+
+0.08%
+0.56%
+0.56%
+0.06%
+0.04%
+
+0.07%
+0.44%
+0.44%
+0.04%
+0.03%
+
+—
+
+—
+
+—
+
+1,690.00
+
+1,324,860
+
+1.38%
+
+1.08%
+
+—
+
+—
+
+—
+
+1,363.14
+
+1,068,621
+
+1.11%
+
+0.87%
+
+—
+
+—
+
+—
+
+943.00
+
+739,256
+
+0.77%
+
+0.61%
+
+—
+
+—
+
+—
+
+880.00
+
+689,868
+
+0.72%
+
+0.56%
+
+—
+—
+
+—
+—
+
+—
+—
+
+850.79
+850.79
+
+666,965
+666,965
+
+0.69%
+0.69%
+
+0.55%
+0.55%
+
+—
+
+—
+
+—
+
+800.00
+
+627,152
+
+0.65%
+
+0.51%
+
+—
+
+—
+
+—
+
+700.00
+
+548,758
+
+0.57%
+
+0.45%
+
+—
+
+—
+
+—
+
+650.00
+
+509,561
+
+0.53%
+
+0.42%
+
+—
+
+—
+
+—
+
+478.00
+
+374,724
+
+0.39%
+
+0.31%
+
+—
+
+—
+
+—
+
+400.00
+
+313,576
+
+0.33%
+
+0.26%
+
+—
+
+—
+
+—
+
+400.00
+
+313,576
+
+0.33%
+
+0.26%
+
+– 17 –
+
+Before the Subscriptions and
+After the Subscription Limit and
+the scheme mandate limits of the Subsidiary Share
+the adoption of the Subsidiary Share
+Participation Schemes are both fully utilized
+Participation Schemes
+Percentage Percentage
+Percentage Percentage
+Registered
+of equity
+of voting
+Amount of
+Registered
+of equity
+of voting
+Capital
+interests
+rights contribution
+Capital
+interests
+rights
+(%)(3) (RMB million)
+(RMB)
+(%)(3)
+(%)(3)
+(RMB)
+(%)(3)
+Beijing Haipu No.1 Technology Development
+Partnership (Limited Partnership)
+Chongqing Manufacturing Transformation and
+Upgrading Private Equity Investment Fund
+Partnership (Limited Partnership)
+Beijing Baidu Netcom Science Technology Co., Ltd.
+Nanjing Zijin Kuaiying Enterprise Management
+Partnership (Limited Partnership)
+Taizhou Jiaojiang Qiling Enterprise Management
+Consulting Partnership (Limited Partnership)
+Wealth Investment V (HK) Limited
+Beijing Information Industry Development
+Investment Fund (L.P.)
+Beijing Artificial Intelligence Industry Investment
+Fund (Limited Partnership)
+CITIC Securities Investment Company Limited
+BlueFive Investments Holding Limited
+Ningbo Meishan Bonded Port Area Zhichun Huayan
+Venture Capital Partnership (Limited Partnership)
+Tianjin Lisi Xingque Venture Capital Partnership
+(Limited Partnership)
+Shenzhen Kunhe Juyuan Venture Capital Partnership
+(Limited Partnership)
+Wenzhou Ruida Venture Capital Partnership
+(Limited Partnership)
+Gongqingcheng Junmang Yunze Venture Capital
+Partnership (Limited Partnership)
+QM323 Limited
+MONOLITH KLING FUND L.P.
+Maanshan Ruiyuan Co-Stone Enterprise
+Management Partnership (Limited Partnership)
+Yangtze River Delta Digital Intelligence Cultural
+Industry Private Equity Investment Fund
+(Shanghai) Partnership (Limited Partnership)
+Xiamen Chunhua Zhongying Fuyao Artificial
+Intelligence Investment Partnership (Limited
+Partnership)
+HUNDREDS PLUS LIMITED PARTNERSHIP
+PMF Select Polaris LP
+Reserved interests for other Additional Investors
+Total
+
+—
+
+—
+
+—
+
+377.00
+
+295,546
+
+0.31%
+
+0.24%
+
+—
+—
+
+—
+—
+
+—
+—
+
+350.00
+340.79
+
+274,379
+267,155
+
+0.29%
+0.28%
+
+0.22%
+0.22%
+
+—
+
+—
+
+—
+
+340.79
+
+267,155
+
+0.28%
+
+0.22%
+
+—
+—
+
+—
+—
+
+—
+—
+
+239.47
+204.47
+
+187,731
+160,293
+
+0.20%
+0.17%
+
+0.15%
+0.13%
+
+—
+
+—
+
+—
+
+200.00
+
+156,788
+
+0.16%
+
+0.13%
+
+—
+—
+—
+
+—
+—
+—
+
+—
+—
+—
+
+200.00
+100.00
+545.26
+
+156,788
+78,394
+427,448
+
+0.16%
+0.08%
+0.44%
+
+0.13%
+0.06%
+0.35%
+
+—
+
+—
+
+—
+
+681.57
+
+534,310
+
+0.56%
+
+0.44%
+
+—
+
+—
+
+—
+
+700.00
+
+548,758
+
+0.57%
+
+0.45%
+
+—
+
+—
+
+—
+
+350.00
+
+274,379
+
+0.29%
+
+0.22%
+
+—
+
+—
+
+—
+
+340.00
+
+266,540
+
+0.28%
+
+0.22%
+
+—
+—
+—
+
+—
+—
+—
+
+—
+—
+—
+
+240.00
+204.47
+136.31
+
+188,146
+160,293
+106,862
+
+0.20%
+0.17%
+0.11%
+
+0.15%
+0.13%
+0.09%
+
+—
+
+—
+
+—
+
+500.00
+
+391,970
+
+0.41%
+
+0.32%
+
+—
+
+—
+
+—
+
+350.00
+
+274,379
+
+0.29%
+
+0.22%
+
+—
+—
+
+—
+—
+
+—
+—
+
+—
+
+—
+
+—
+
+285.00
+340.79
+434.95
+1,400.00
+
+223,423
+267,155
+340,975
+1,097,518
+
+0.23%
+0.28%
+0.35%
+1.14%
+
+0.18%
+0.22%
+0.28%
+0.90%
+
+10,000,000
+
+100.00%
+
+100.00%
+
+20,447.10
+
+96,175,864
+
+100.00%
+
+100.00%
+
+– 18 –
+
+Notes:
+(1)
+
+On July 2, 2026, a total of 2,885,276 equity awards (corresponding to RMB2,885,276 registered capital of Beijing
+Kling), representing approximately 3.00% of Beijing Kling’s registered capital as enlarged by the Subscriptions and the
+implementation of the Subsidiary Share Participation Schemes (assuming the Subscription Limit and the scheme
+mandate limits of the Subsidiary Share Participation Schemes are both fully utilized), were granted to Mr. Gai Kun
+(“Mr. Gai”), a director and chief executive officer of Beijing Kling for nil consideration. Beijing Kling is regarded as an
+insignificant subsidiary of the Company as defined under Chapter 14A of the Listing Rules, and thus Mr. Gai is not a
+connected person of the Company. The grant to Mr. Gai may not be disposed of for a period of at least three years
+following the grant and prior to the listing of Beijing Kling, and is subject to clawback in accordance with its terms if
+Mr. Gai ceases employment with Beijing Kling within four years after the grant, among other restrictions.
+
+(2)
+
+According to the Shareholders’ Agreement, Beijing Kling will adopt a weighted voting rights structure, which entitles
+Mr. Gai to ten times the voting power of his shareholdings up to 4% of Beijing Kling’s registered capital as enlarged by
+the Subscriptions and the implementation of the Subsidiary Share Participation Schemes (assuming the Subscription
+Limit and the scheme mandate limits of the Subsidiary Share Participation Schemes are both fully utilized), on any
+resolution tabled at Beijing Kling’s general meetings. In particular, (i) 3.00% of Beijing Kling’s enlarged registered
+capital held by Mr. Gai (upon the equity awards granted to him) shall carry the weighted voting rights, and (ii) the share
+options granted to Mr. Gai (the “Options”) under the Subsidiary Share Participation Schemes representing 1.00% of
+Beijing Kling’s enlarged registered capital shall, upon duly exercised by Mr. Gai (which is exercisable upon completion
+of the Subscriptions), be designated as shares carrying weighted voting rights should Mr. Gai so determines. As at the
+date of this announcement, Mr. Gai has not exercised the Options, and the voting rights percentage number disclosed
+hereinabove represents his shareholdings of 3% of Beijing Kling’s enlarged registered capital carrying weighted voting
+rights. For the avoidance of doubt, when Mr. Gai ceases to serve as the chief executive officer of Beijing Kling, all
+weighted voting rights attached to his shareholdings shall automatically terminate and cease to be effective; further, if
+Mr. Gai transfers any of his shareholdings in Beijing Kling, the weighted voting rights corresponding to such transferred
+registered capital shall automatically terminate and cease to be effective as of the completion of such transfer. In either
+of the foregoing circumstances, the relevant registered capital shall revert to one (1) vote per RMB1 of Beijing Kling’s
+registered capital.
+
+(3)
+
+The numbers may not add up to 100.00% due to rounding.
+
+FINANCIAL IMPACT OF THE TRANSACTIONS AS DESCRIBED IN THIS
+ANNOUNCEMENT AND USE OF PROCEEDS
+Upon completion of the transactions described in this announcement, the Company will continue to
+indirectly hold approximately 68.33% of the equity interests in Beijing Kling, and the financial results of
+Beijing Kling will continue to be consolidated into the financial statements of the Company.
+As the Restructuring will not result in the loss of the Company’s control over Beijing Kling, the
+Restructuring (excluding the Subsidiary Share Participation Schemes) will not result in the recognition of
+any gain or loss in profit or loss by the Company.
+Beijing Kling expects to receive proceeds of approximately RMB20,447.10 million (equivalent to
+USD3,000.00 million) if the Subscription Limit is fully utilized, and such proceeds are expected to be
+used for business expansion, daily operation, working capital, team development and other purposes duly
+approved by the board of directors of Beijing Kling.
+
+– 19 –
+
+REASONS FOR AND BENEFITS OF THE CAPITAL INCREASE AGREEMENT, THE GRANT
+OF THE REDEMPTION RIGHTS, THE ADOPTION OF THE SUBSIDIARY SHARE
+PARTICIPATION SCHEMES, THE CONNECTED GRANT AND THE RESTRUCTURING
+The Company considers that (i) the introduction of external financings to Beijing Kling through entering
+into the Capital Increase Agreement and (ii) the Restructuring are commercially beneficial to the
+Company and Beijing Kling and in the interest of the Shareholders as a whole for the following reasons:
+(a)
+
+the introduction of external financing and the Restructuring could better reflect the value of Beijing
+related assets and businesses on their own
+Kling and the Kuaishou Group’s Kling AI (AI)
+merits, and investors would be able to appraise and assess the performance and potential of Beijing
+Kling separately and distinctly from those of the Kuaishou Group (excluding Beijing Kling);
+
+(b)
+
+Beijing Kling’s business would be appealing to an investor base that specialized in the business of
+the development and application of AI video generation, which is different from the content
+community and social platform business model of the Kuaishou Group’s operations (excluding
+Beijing Kling); and
+
+(c)
+
+the introduction of external financing and the Restructuring will be beneficial to the Company and
+Beijing Kling, given that it will (i) enhance Beijing Kling’s profile among its customers, suppliers,
+and potential strategic partners and its position to negotiate and solicit more business, so that the
+Company will be able to benefit from the growth of Beijing Kling through its equity interests in
+Beijing Kling; (ii) allow a more efficient deployment of financial resources of the Kuaishou Group
+(excluding Beijing Kling); and (iii) lead to a more direct alignment of the responsibilities and
+accountability of the management of both the Company and Beijing Kling with their respective
+operating and financial performance, which would result in enhanced management focus and
+corporate governance.
+
+The grant of the Redemption Rights is considered a commercially appropriate arrangement that facilitates
+Beijing Kling’s fund-raising activities and enhances its attractiveness to the Investors. It provides the
+Investors with a defined exit mechanism under specified circumstances, thereby reducing investment risk
+and improving funding certainty for Beijing Kling. From the Kuaishou Group’s perspective, this structure
+enables Beijing Kling to secure capital on more favourable terms and supports its business development
+and operations while allowing the Company to retain overall strategic control.
+The purpose of adopting the Subsidiary Share Participation Schemes is to recognize the contributions
+made or to be made by the Participants and to provide them with ownership of equity interests in Beijing
+Kling in order to retain them for the continual operation and development of Beijing Kling, and to attract
+suitable personnel for further development of Beijing Kling.
+The Connected Grant is intended to encourage Mr. Cheng Yixiao to work towards enhancing the value of
+Beijing Kling for the benefits of the Company and the Shareholders as a whole by continuously
+contributing his strong work performance, expertise, industry knowledge and strategic guidance to the
+Kuaishou Group in building the long-term success of the Kuaishou Group.
+
+– 20 –
+
+The Directors (including the independent non-executive Directors who are not required to abstain from
+voting) consider that although the Capital Increase Agreement, the grant of the Redemption Rights, the
+adoption of the Subsidiary Share Participation Schemes, the Connected Grant, and the Restructuring are
+not conducted in the ordinary and usual course of business of the Kuaishou Group, the terms of each of
+the Capital Increase Agreement, the grant of the Redemption Rights, the adoption of the Subsidiary Share
+Participation Schemes, the Connected Grant, and the Restructuring Framework Agreement are fair and
+reasonable, on normal commercial terms and in the interests of the Company and its Shareholders as a
+whole.
+LISTING RULES IMPLICATIONS
+The Subscriptions and the adoption of the Subsidiary Share Participation Schemes
+The Subscriptions constitute a deemed disposal of equity interests in Beijing Kling by the Company under
+Rule 14.29 of the Listing Rules.
+As the Subsidiary Share Participation Schemes involve the grant of equity awards and options, the
+adoption of the Subsidiary Share Participation Schemes constitute possible disposal and/or deemed
+disposal of interest in Beijing Kling by the Company pursuant to Rule 14.32A of the Listing Rules, and
+therefore should be aggregated with the transaction under the Subscriptions.
+Assuming the Subscription Limit and the scheme mandate limits of the Subsidiary Share Participation
+Schemes are both fully utilized, the Company’s equity interests in Beijing Kling will be diluted from
+100.00% to approximately 68.33%, representing deemed disposal and/or possible disposal of
+approximately 31.67% interest in Beijing Kling by the Company. As one or more of the applicable
+percentage ratios (as defined under the Listing Rules) in respect of the aggregated transactions exceed 5%
+but all are less than 25%, the transactions contemplated under the Subscriptions and the Subsidiary Share
+Participation Schemes constitute discloseable transactions of the Company and are subject to the reporting
+and announcement requirements under Chapter 14 of the Listing Rules.
+In addition, Party A is a company wholly owned by a limited partnership of which Ms. Lu Rong, an
+independent non-executive Director, acts as the general partner; Party B comprises two companies
+controlled by Tencent, a substantial shareholder of the Company; Party C is a company wholly owned by
+Mr. Zhang Fei, an independent non-executive Director; and Party D is a company controlled by family
+members of Mr. Yang Yuanxi, a director of Beijing Kuaishou Ads which is a subsidiary of the Company.
+Therefore, Parties A, B and C are connected persons of the Company, while Party D is a connected person
+of the Company at the subsidiary level. As such, the Subscription by each of Parties A, B, C and D
+constitutes a connected transaction of the Company pursuant to Chapter 14A of the Listing Rules. As one
+or more of the applicable percentage ratios (as defined under the Listing Rules) in respect of the
+Subscription by each of Parties A, B and C exceed 0.1% but all are less than 5%, each of the above
+transactions is subject to the reporting, announcement and annual review requirements but is exempt from
+the circular and independent shareholders’ approval requirements under Chapter 14A of the Listing Rules.
+As all of the applicable percentage ratios (as defined under the Listing Rules) in respect of the
+Subscription by Party D are less than 1%, the Subscription by Party D is fully exempt from the reporting,
+announcement, annual review, circular and independent shareholders’ approval requirements under
+Chapter 14A of the Listing Rules.
+Beijing Kling is not a principal subsidiary of the Company under Chapter 17 of the Listing Rules.
+Therefore, the Subsidiary Share Participation Schemes do not constitute share schemes under Chapter 17
+of the Listing Rules.
+– 21 –
+
+The Grant of the Redemption Rights
+Since the exercises of the Redemption Rights under the Shareholders’ Agreement are not at the discretion
+of Beijing Kling, according to Rule 14.74(1) of the Listing Rules, the transaction in relation to the grant
+of the Redemption Rights will be classified as if the Redemption Rights had been exercised at the time of
+the grant. As the highest applicable percentage ratio in respect of the grant of the Redemption Rights,
+after aggregation, exceeds 5% but is less than 25%, the grant of the Redemption Rights constitutes a
+discloseable transaction of the Company and is therefore subject to the reporting and announcement
+requirements under Chapter 14 of the Listing Rules.
+As Parties A, B and C are connected persons of the Company while Party D is a connected person of the
+Company at the subsidiary level, the grant of the Redemption Rights to each of Parties A, B, C and D
+constitutes a connected transaction of the Company pursuant to Chapter 14A of the Listing Rules. Since
+the exercises of the Redemption Rights under the Shareholders’ Agreement are not at the discretion of
+Beijing Kling, according to Rule 14A.61 of the Listing Rules, the transaction in relation to the grant of the
+Redemption Rights will be classified as if the Redemption Rights had been exercised at the time of the
+grant. As the highest applicable percentage ratio in respect of the grant of the Redemption Rights to each
+of Parties A, B and C exceed 0.1% but all are less than 5%, the grant of the Redemption Rights to Parties
+A, B and C is subject to the reporting, announcement and annual review requirements but is exempt from
+the circular and independent shareholders’ approval requirements under Chapter 14A of the Listing Rules.
+As all of the applicable percentage ratios (as defined under the Listing Rules) in respect of the grant of the
+Redemption Rights to Party D are less than 1%, such transaction is fully exempt from the reporting,
+announcement, annual review, circular and independent shareholders’ approval requirements under
+Chapter 14A of the Listing Rules.
+The Grant of the Equity Awards under the Beijing Kling Share Incentive Scheme
+As Mr. Cheng Yixiao is an executive Director and a director of Beijing Kling, he is a connected person of
+the Company. Accordingly, the Connected Grant constitutes a connected transaction of the Company
+pursuant to Chapter 14A of the Listing Rules. As one or more of the applicable percentage ratios (as
+defined under the Listing Rules) in respect of the Connected Grant exceed 0.1% but all are less than 5%,
+the Connected Grant is subject to the reporting, announcement and annual review requirements but is
+exempt from the circular and independent shareholders’ approval requirements under Chapter 14A of the
+Listing Rules.
+The Restructuring
+As the Restructuring would only result in a net disposal of approximately 31.67% equity interests in the
+related assets and businesses by the Company, the Company has
+Kuaishou Group’s Kling AI (AI)
+obtained confirmation from the Stock Exchange that the Company may disregard the calculation of
+percentage ratios as set out in Rule 14.07 of the Listing Rules in respect of the Restructuring and instead
+use an alternative size test based on a net disposal of approximately 31.67% interest in the Kuaishou
+related assets and businesses for the purpose of calculating the percentage
+Group’s Kling AI (AI)
+ratios for the Restructuring pursuant to Rule 14.20 of the Listing Rules. As one or more of the applicable
+percentage ratios in respect of the Restructuring exceed 5% but are all less than 25%, the Restructuring
+constitutes a discloseable transaction of the Company under Chapter 14 of the Listing Rules and is subject
+to the reporting and announcement requirements under Chapter 14 of the Listing Rules.
+
+– 22 –
+
+Mr. Zhang Fei, Ms. Lu Rong and Mr. Li Zhaohui (who holds positions in Tencent) have abstained from
+voting on the relevant Board resolutions approving the Subscriptions, the grant of the Redemption Rights
+and the Restructuring, and Mr. Cheng Yixiao has abstained from voting on the relevant Board resolutions
+approving the Connected Grant.
+Save as disclosed above, none of the Directors has any material interest in the matters contemplated
+therein nor is required to abstain from voting on the relevant Board resolutions approving the transactions
+contemplated thereunder.
+INFORMATION ON THE KUAISHOU GROUP’S KLING AI (AI)
+BUSINESSES
+
+RELATED ASSETS AND
+
+Beijing Kling is mainly engaged in the development and operation of Kling AI (AI)
+, a world leading
+leverages the
+large video generation model. Developed in-house by the Company, Kling AI (AI)
+Company’s deep expertise in video data processing and advanced algorithms. As the world’s first
+is dedicated to serving as a
+user-accessible large video generation model, Kling AI (AI)
+comprehensive AI creative engine, empowering everyone to craft captivating stories with AI technology.
+Since the release of Kling AI 1.0 in June 2024, Kling AI (AI)
+has undergone more than 30 major
+version updates, continuously enriching the user experience through ongoing technical and product
+AI) offers paid subscription
+innovations. Backed by a clear commercial strategy, Kling AI (
+memberships for prosumers and API services for enterprise clients.
+Assuming the Restructuring had been completed, based on the unaudited financial information of Beijing
+Kling, as at December 31, 2025, the total assets, total liabilities and net assets of Beijing Kling would
+have been approximately RMB244 million, RMB253 million and negative RMB9 million, respectively.
+The unaudited net loss (both before and after taxation) attributable to Beijing Kling for the years ended
+December 31, 2024 and 2025 would have been RMB0.5 billion and RMB1.9 billion respectively.
+INFORMATION ON THE PARTIES
+The Company is a company incorporated in the Cayman Islands with limited liability on February 11,
+2014, the class B ordinary shares of which are listed on the Stock Exchange. The Kuaishou Group is a
+leading content community and social platform. It provides online marketing services, e-commerce
+services, live streaming services, and other services to its customers.
+Party A, Atypical Holdings Limited, is a company incorporated in Hong Kong and its principal business
+activity is investment holding. It is wholly owned by Atypical Ventures II, L.P., an exempted limited
+partnership formed in Cayman Islands. Its general partner is Ms. Lu Rong, an independent non-executive
+Director. Atypical Ventures II, LP.’s investor base comprises both institutional and entrepreneurial
+investors. No ultimate beneficial owner of any limited partner holds 30% or more interests in Atypical
+Ventures II, L.P..
+Party B comprises Shanghai Qishan Investment Co., Ltd., a company incorporated in the PRC with
+limited liability and Parallel Mars Investment Limited, a company incorporated in the Cayman Islands
+with limited liability. Shanghai Qishan Investment Co., Ltd. is principally engaged in investment holding
+and Parallel Mars Investment Limited is principally engaged in investment holding. They are ultimately
+controlled by Tencent, a substantial shareholder of the Company. Tencent (together with its group
+members) is principally engaged in the provision of communication, social, digital content, games,
+marketing services, fintech and business services primarily in the PRC. Its shares are listed on the Stock
+Exchange (HKD Counter Stock Code: 00700/RMB Counter Stock Code: 80700).
+– 23 –
+
+Party C, Neumann Intelligence I Holdings Limited, is a company incorporated in the BVI and an
+investment holding company wholly owned by Mr. Zhang Fei, an independent non-executive Director.
+Party D, Beijing Zhuoyue Lingbo Enterprise Management Co., Ltd. (),
+is a company incorporated in the PRC with limited liability and its principal business activity is
+investment holding. It is wholly owned by Beijing Zhuoyue Chuangzhan Technology Co., Ltd (
+), a company incorporated in the PRC, which is in turn jointly owned by two natural
+persons who are family members of Mr. Yang Yuanxi, a director of Beijing Kuaishou Ads, a subsidiary
+of the Company.
+As at the date of this announcement, the information on the Independent Investors is as follows:
+1.
+
+Shanghai Guofang Digital Technology Enterprise Management Partnership (Limited Partnership) (
+(
+)) (“Shanghai Guofang”) is a limited partnership
+established in the PRC. It is principally engaged in enterprise management, enterprise management
+consulting and financial consulting. 0.90% of the partnership interest in Shanghai Guofang is held
+by its general partner, Shanghai Growth Investment Co., Ltd. ()
+(“Guofang Investment”), while 65.76% and 33.33% of the partnership interests in Shanghai
+Guofang are held by its two limited partners, i.e. Shanghai Guofang Taike Enterprise Management
+Limited Partnership Enterprise (Limited Partnership) ((
+)) (“Guofang Taike”), and Shanghai Chuangzhi Shulian I Chuangye Investment Partnership
+(Limited Partnership) (()). Guofang Investment is
+owned as to 35% by Shanghai International Group Asset Management Co., Ltd. (
+), which is indirectly wholly-owned by the Shanghai State-owned Assets
+Supervision and Administration Commission (). 99.47% of the
+partnership interest in Guofang Taike is held by its limited partner, Changsanjiao Xietong Yinling
+(Shanghai) Private Fund Partnership Enterprise (Limited Partnership) (()
+(
+)) (“Changsanjiao Partnership”), 39.42% of whose partnership interest
+is held by Shanghai International Group Asset Management Co., Ltd. (
+), which is indirectly wholly-owned by Shanghai State-owned Assets Supervision and
+Administration Commission (). Save as disclosed above, no
+ultimate beneficial owner of any general partner and limited partner holds 30% or more interests in
+Shanghai Guofang.
+
+2.
+
+Hangzhou AliCloud Apsara Information Technology Co., Ltd. (
+) (“Hangzhou AliCloud”) is a company incorporated in the PRC with limited liability. It is
+principally engaged in the operation of cloud computing business. Hangzhou AliCloud is an indirect
+wholly owned subsidiary of Alibaba Group Holding Limited (“Alibaba Group”). Alibaba Group is
+a company incorporated in the Cayman Islands, with its American depositary shares, each
+representing eight ordinary shares, listed on the New York Stock Exchange (symbol: BABA), and
+its ordinary shares listed on the Stock Exchange (stock code: 9988 (HKD Counter) and 89988
+(RMB Counter)). Alibaba Group is a global technology company focused on AI + Cloud and
+consumption.
+
+3.
+
+Beijing CAS Generation Equity Investment Fund Partnership (Limited Partnership) (
+()) (“CAS GENERATION”) is a limited partnership established
+in the PRC. It is principally engaged in equity investment. 0.02% of the partnership interest in CAS
+GENERATION is held by its general partner China Technology Industrial Investment Management
+Co., Ltd. () (“CASIM”), while two of its limited partners, i.e.
+Beijing Guoke Ruihua IV Equity Investment Fund Partnership Enterprise (Limited Partnership) (
+(
+)) and Shenzhen Baoshi Xinqiao Guoke
+– 24 –
+
+Ruihua Private Equity Investment Fund Partnership Enterprise (Limited Partnership) (
+(
+)) each owns more than 30% partnership
+interests. CASIM is held as to (i) 30.01% by Chinese Academy of Sciences Holdings Co., Ltd. (
+), which is wholly owned by Chinese Academy of Sciences (),
+and (ii) 32.52% by Beijing CAS Talent Consulting Co., Ltd. (), which
+is held by 12 individuals and no shareholder holds 30% or more of the equity interest. None of the
+other shareholders of CASIM holds more than 30% equity interest therein. Save as disclosed above,
+no ultimate beneficial owner of any general partner and limited partner holds 30% or more interests
+in CAS GENERATION.
+4.
+
+Guangdong Dakang Lanwu Equity Investment Partnership Enterprise (Limited Partnership) (
+(
+)) (“Dakang Lanwu”) is a limited partnership established
+in the PRC, with its primary business being investment services. 93.33% of Dakang Lanwu’s
+partnership interests are held by the sole limited partner, Mr. Wen Quan, and the remaining 3.33%
+of partnership interests are held by its two general partners, i.e. Thinkfund Investment Management
+Co., Ltd. () and Ningbo D.K. Capital Co., Ltd. (
+), both of which are directly or indirectly controlled by Mr. Wen Quan. Save as
+disclosed above, no ultimate beneficial owner of any general partner and limited partner holds 30%
+or more interests in Dakang Lanwu.
+
+5.
+
+Tianjin Yuanfeng Qifeng Enterprise Management Partnership (Limited Partnership)(
+(
+)) (“Tianjin Yuanfeng”) is a limited partnership established in the
+PRC. It is principally engaged in business management and information consulting services
+(excluding licensed information consulting services). 0.0033% of the partnership interest in Tianjin
+Yuanfeng is held by its general partner, Tianjin Rongyu Enterprise Management Co., Ltd. (
+) (“Tianjin Rongyu”), and 99.9967% of the partnership interest is held by its
+sole limited partner, Xiamen Yuanfeng Equity Investment Fund Partnership Enterprise (Limited
+Partnership) (()). Tianjin Rongyu is owned as to 90.9%
+by Xiamen Yuanfeng Investment Co., Ltd. (), which is in turn 90.9%
+controlled by Beijing Panmao Investment Management Co., Ltd. ().
+Beijing Panmao Investment Management Co., Ltd. () is owned as to
+35% by Mr. Tian Yu and 35% by Mr. Nie Lei. Save as disclosed above and to the extent of Tianjin
+Yuanfeng’s knowledge, no ultimate beneficial owner of any general partner and limited partner
+holds 30% or more interests in Tianjin Yuanfeng.
+
+6.
+
+CPE Spruce Investment Limited (“CPE Spruce”) is a company incorporated in the BVI with
+limited liability and its primary business activity is investment holding. It is wholly owned by CPE
+China Fund IV, L.P., an exempted limited partnership established in the Cayman Islands, whose
+general partner is CPE Funds IV Limited, a company incorporated in the Cayman Islands with
+limited liability. CPE Funds IV Limited is directly and wholly owned by CPE Management
+International Limited, which is in turn wholly owned by CPE Management International II Limited,
+both of which are companies incorporated in the Cayman Islands with limited liability. CPE
+Management International II Limited is owned by a number of shareholders that are natural persons,
+none of whom hold 30% or more interest in CPE Management International II Limited.
+
+7.
+
+Goldstone Lingshu (Jiaxing) Enterprise Management Partnership (Limited Partnership) (
+()()) (“Goldstone Lingshu”) is a limited partnership established
+in the PRC. It is principally engaged in equity investment. 0.25% of the partnership interest in
+Goldstone Lingshu is held by its general partner, CITIC Goldstone Investment Co., Ltd. (
+) (“CITIC Goldstone”), and 58.6% of the partnership interest is held by its single
+largest limited partner Goldstone Growth Equity Investment (Hangzhou) Limited Partnership (
+– 25 –
+
+(
+)
+(
+)), (“Goldstone Growth”). The general partner of
+Goldstone Growth is CITIC Goldstone. CITIC Goldstone is wholly owned by CITIC Securities
+Company Limited (), a joint stock company incorporated in the PRC with
+limited liability, the H shares and A shares of which are listed on the Stock Exchange (stock code:
+06030) and the Shanghai Stock Exchange (stock code: 600030). CITIC Securities Company Limited
+covers a wide range of businesses including securities, funds, futures, foreign exchange and
+commodities. There is no other limited partner holding 30% or more interest in Goldstone Lingshu,
+and no ultimate beneficial owner of any general partner and limited partner holding 30% or more
+interests in Goldstone Growth.
+8.
+
+Shenzhen Hongtu Baichuan No.2 Investment Partnership (Limited Partnership) (
+(
+)) (“Shenzhen Hongtu”) is a limited partnership established in the
+PRC. It is principally engaged in equity investment. The general partner of Shenzhen Hongtu is
+Shenzhen Luohu Hongtu Chuangye Investment Management Co., Ltd. (
+) (“Luohu Hongtu”), while the sole limited partner of Shenzhen Hongtu is Shenzhen
+Hongtu Chuangye Investment Co., Ltd. () (“Hongtu Chuangye”).
+Both Luohu Hongtu and Hongtu Chuangye are wholly owned (directly or indirectly) by Shenzhen
+Capital Group Co., Ltd. (), which is 28.2% owned by State-owned
+Assets Supervision and Administration Commission of Shenzhen (
+). Save as disclosed above, no ultimate beneficial owner of any general partner and
+limited partner holds 30% or more interests in Shenzhen Hongtu.
+
+9.
+
+Suzhou Gongrong Jinzhi No.1 Venture Capital Partnership (Limited Partnership) (
+(
+)) (“Suzhou Gongrong”) is a limited partnership established in the
+PRC. It is principally engaged in venture capital investment. The general partner of Suzhou
+Gongrong is ICBC Capital Management Co., Ltd. () (“ICBC Capital”),
+while the limited partner holding 30% or more partnership interests in Suzhou Gongrong is Suzhou
+Industrial Park Yuanhewuqi Equity Investment Partnership Enterprise (Limited Partnership) (
+(
+)) (“
+Suzhou Yuanhewuqi”). The ultimate
+beneficial owners holding more than 30% partnership interests in Suzhou Yuanhewuqi is National
+Council for Social Security Fund () and Suzhou Xinchuang Future
+Equity Investment Partnership Enterprise (Limited Partnership) (
+()), where no limited partners holding 30% or more partnership interests therein. ICBC
+Capital is indirectly wholly owned by Industrial and Commercial Bank of China Ltd., a company
+incorporated in the PRC with limited liability and whose H shares and A shares are listed on the
+Stock Exchange (stock code: 01398) and the Shanghai Stock Exchange (stock code: 601398). It is
+principally engaged in the management of private equity funds and equity investment business.
+Save as disclosed above, no ultimate beneficial owner of any general partner and limited partner
+holds 30% or more interests in Suzhou Gongrong.
+
+10.
+
+Qingdao Huaxin Ceda Equity Investment Partnership (Limited Partnership) (
+()) (“Qingdao Huaxin”) is a limited partnership established in the PRC. It is
+principally engaged in equity investment. The general partner of Qingdao Huaxin is Hangzhou
+Hengshi Asset Management Co., Ltd. (), which is controlled by Mr.
+Wu Jianhai. The single largest limited partner holding 78.58% partnership interests in Qingdao
+Huaxin is Zhejiang Huace Media Group Co., Ltd. (), a company
+incorporated in the PRC with limited liability and whose shares are listed on the Shenzhen Stock
+Exchange (stock code: 300133). It is principally engaged in investment, production, distribution and
+derivative business of TV dramas, films and online series. Save as disclosed above, no ultimate
+beneficial owner of any general partner and limited partner holds 30% or more interests in Qingdao
+Huaxin.
+– 26 –
+
+11.
+
+Beijing Hongyi Lingjing Enterprise Management Partnership (Limited Partnership)(
+(
+)) (“Beijing Hongyi”) is a limited partnership established in the PRC.
+It is principally engaged in investment holding. The general partner of Beijing Hongyi is Shenzhen
+Hongtu Enterprise Management Center (Limited Partnership) ((
+))
+(“Shenzhen Hongtu”), while its limited partner which holds more than 30% partnership interest is
+Suzhou Hongyi Dayunhe Venture Capital Management Partnership (Limited Partnership) (
+(
+)) (“Hongyi Dayunhe”). Hongyi Dayunhe is a
+registered investment fund which has a wide investor base with no single limited partner holding
+more than 30% partnership interest therein. The general partner of Hongyi Dayunhe is Shenzhen
+Hongtu, and the fund manager of Hongyi Dayunhe is Hony Private Equity Fund Management
+(Tianjin) Partnership (Limited Partnership) (()()). 10%
+of the partnership interest of Shenzhen Hongtu is held by its general partner Beijing Hongyi
+Hezhong Enterprise Management Co., Ltd. (
+) (“Hongyi
+Hezhong”) which is equally owned by Mr. Cao Yonggang, Mr. Xu Minsheng and Mr. Zhao Wen,
+and 90% of the partnership interest is held by its sole limited partner, Xizang Hongyi Hezhong
+Enterprise Management Center (Limited Partnership) ((
+))
+(“Xizang Hongyi”). Xizang Hongyi’s general partner is Hongyi Hezhong and its sole limited
+partner holding 99.27% partnership interest is Lasa Yuyi Enterprise Management Partnership
+(Limited Partnership), in which no single limited partner holding more than 30% partnership interest
+therein. Save as disclosed above, no ultimate beneficial owner of any general partner or limited
+partner holds 30% or more interest in Beijing Hongyi.
+
+12.
+
+China Internet Investment Fund (Limited Partnership) (()) (“CIIF”)
+is a limited partnership established in the PRC on March 23, 2017 which is engaged in investment
+management and consulting services. The general partner of CIIF is China Internet Investment Fund
+Management Co., Ltd. (
+), a company owned as to 40% by
+Zhongwang Xintong (Beijing) Holdings Co., Ltd. (()). CIIF has nine
+limited partners, including ICBC Credit Suisse Management Co., Ltd. (
+), which holds 33.22% partnership interests therein, and eight other limited partners, none of
+which holds 30% or more partnership interests therein.
+
+13.
+
+Beijing Haipu No.1 Technology Development Partnership (Limited Partnership) (
+()) (“Haipu No. 1”) is a limited partnership established in the PRC. It is
+principally engaged in investment. Its general partner is Beijing Haizhikechuang Technology
+Services Co., Ltd (
+), which is indirectly wholly-owned by
+State-owned Assets Supervision and Administration Commission of the People’s Government of
+Haidian District, Beijing () (“Haidian
+SASAC”). Beijing Zhongguancun Science City IV Technology Growth Equity Investment
+Partnership (Limited Partnership) ((
+)), a limited partner of Haipu No.1, holds 30% or more partnership interest therein, which is
+owned as to (i) 1% by Beijing Zhongguancun Science City Technology Investment Management
+Co., Ltd. () as its general partner, which is ultimately
+controlled by Haidian SASAC, and (ii) 99% by Beijing Haidian District State-owned Assets
+Investment Group Co., Ltd. () as its sole limited
+partner, which is wholly owned by State-owned Capital Operation Company of Haidian District,
+Beijing () and in turn ultimately controlled by Haidian
+SASAC. Aviation Industry Integration Development (Qingdao) Equity Investment Fund Partnership
+(Limited Partnership) ((
+)
+(
+)) and Qingdao
+Honghua Qianyuan X Investment Partnership (Limited Partnership) (
+(
+)) are two limited partners of Haipu No. 1, which together hold 30% or more
+partnership interests therein, and both are ultimately controlled by AVIC Asset Management Co.,
+– 27 –
+
+Ltd. (), Qingdao Mingquan Haichuang Information Technology Co., Ltd.
+() and Qingdao Longtai Lize Investment Consulting Co., Ltd. (
+). Save as disclosed above, no ultimate beneficial owner of any
+general partner and limited partner holds 30% or more interests in Haipu No. 1.
+14.
+
+Chongqing Manufacturing Transformation and Upgrading Private Equity Investment Fund
+Partnership (Limited Partnership) (())
+(“Chongqing Manufacturing Fund”) is a limited partnership established under the laws of the
+PRC. It is principally engaged in equity investments in artificial intelligence, advanced
+manufacturing, new materials, healthcare, new-generation information technology and other
+strategic emerging industries in the PRC. Its general partner is Chongqing Jianyu Lingxing
+Enterprise Management Consulting Partnership (Limited Partnership) (
+(
+)) (“Chongqing Jianyu”), whose general partner is CCB Private Equity
+Investment Management Co., Ltd. (), which is ultimately
+controlled by China Construction Bank Corporation (), a joint stock
+company incorporated in the PRC with limited liability, the H shares of which are listed on the
+Stock Exchange (stock code: 939) and the A shares of which are listed on the Shanghai Stock
+Exchange (stock code: 601939). None of the limited partners holds 30% or more partnership
+interests in Chongqing Manufacturing Fund. Save as disclosed above, no ultimate beneficial owner
+of any general partner or limited partner holds 30% or more interests in Chongqing Manufacturing
+Fund.
+
+15.
+
+Beijing Baidu Netcom Science Technology Co., Ltd. () is a company
+incorporated in the PRC with limited liability. It is principally engaged in internet and technology
+services. It is a variable interest entity controlled by Baidu, Inc. (a company listed on the Nasdaq
+(stock code: BIDU) and the Hong Kong Stock Exchange (stock code: 9888)) based on contractual
+arrangements. Baidu, Inc. is a leading AI company with a strong internet foundation.
+
+16.
+
+Nanjing Zijin Kuaiying Enterprise Management Partnership (Limited Partnership) (
+(
+)) (“Nanjing Zijin”) is a limited partnership established in the
+PRC. It is principally engaged in equity investment. 98.59% of its partnership interest is held by its
+sole limited partner, Nanjing Huatai Zijin Xinxing Industrial Fund Partnership (Limited Partnership)
+(()), which has a wide investor base with no single
+limited partner who holds 30% or more partnership interest in it. The remaining partnership interest
+of 1.41% of Nanjing Zijin is held by its general partner, Huatai Zijin Investment Co., Ltd. (
+) (“Huatai Zijin”), which is directly wholly-owned by Huatai Securities Co.,
+Ltd. (), a company incorporated in the PRC with limited liability and
+whose shares are listed on the Stock Exchange (stock code: 06886), the Shanghai Stock Exchange
+(stock code: 601688) and London Stock Exchange (stock code: HTSC). It is principally engaged in
+wealth management, institutional services, investment management, and international operations.
+Save as disclosed above, no ultimate beneficial owner of any general partner and limited partner
+holds 30% or more interests in Nanjing Zijin.
+
+17.
+
+Taizhou Jiaojiang Qiling Enterprise Management Consulting Partnership (Limited Partnership) (
+(
+)) (“Jiaojiang Qiling”) is a limited partnership
+established in the PRC. It is principally engaged in investment holding. The general partner of
+Jiaojiang Qiling is Shanghai Qixun Management Consulting Partnership (Limited Partnership) (
+(
+)) (“Shanghai Qixun”). The general partner of Shanghai
+Qixun is Shanghai Qihui Management Consulting Co., Ltd. (), which
+is jointly controlled by Mr. Kuang Duane Ziping () and Ms. Yu Jia (). Save and except
+Shanghai Qiming Ronghui Private Equity Fund Partnership (Limited Partnership) (
+– 28 –
+
+(
+)), the general partner of which is Shanghai Qixun and no limited
+partner holding one third or more partnership interests therein, none of the limited partners of
+Jiaojiang Qiling holds one third or more of its partnership interests.
+18.
+
+Wealth Investment V (HK) Limited (“Wealth Investment V”) is a company incorporated in Hong
+Kong with limited liability. It is principally engaged in investment holding. It is indirectly wholly
+owned by CLSA SMA Fortune Fund V, L.P. (“CLSA Fund V”), an exempted limited partnership
+established in the Cayman Islands. The CLSA Fund V’s general partner is CLSA SMA Fortune
+Fund GP Limited, a company incorporated in the Cayman Islands with limited liability which is
+wholly and indirectly owned by CITIC Securities Company Limited, a joint stock company with
+limited liability established in the PRC, the H shares and A shares of which are listed on the Stock
+Exchange (stock code: 06030) and the Shanghai Stock Exchange (stock code: 600030). CITIC
+Securities Company Limited covers a wide range of businesses including securities, funds, futures,
+foreign exchange and commodities. No ultimate beneficial owner of any limited partner of CLSA
+Fund V holds more than 30% partnership interests therein. Save as disclosed above, no ultimate
+beneficial owner of any general partner and limited partner hold 30% or more interests in Wealth
+Investment V.
+
+19.
+
+Beijing Information Industry Development Investment Fund (L.P.) (
+()) is a limited partnership established in the PRC, primarily engaged in private equity
+investments, investment management, and asset management activities. Legend Capital
+Management Co. Ltd. () and Beijing Jingguoguan Property
+Management Co., Ltd. () served as the general partners, each
+holding a 0.50% partnership interest. The sole limited partner of Beijing Information Industry
+Development Investment Fund (L.P.) was Beijing Municipal Government Investment Guidance
+Fund Management (Limited Partnership) (()), holding 99% of
+the partnership interest. Save as disclosed above, no ultimate beneficial owner of any general
+partner and limited partner holds 30% or more interests in Beijing Information Industry
+Development Investment Fund (L.P.).
+
+20.
+
+Beijing Artificial Intelligence Industry Investment Fund (Limited Partnership) (
+(
+)) is a limited partnership established in the PRC, primarily engaged in
+private equity funds investment activities such as equity investment, investment management, and
+asset management. Its general partners are Beijing Jingguoguan Real Estate Management Co., Ltd.
+(
+) and Beijing Qiou Management Consulting Partnership (Limited
+Partnership) ((
+)), each holding approximately 0.50% and
+0.50% partnership interests therein respectively. It has one limited partner, Beijing Municipal
+Government Investment Guidance Fund (Limited Partnership) ((
+)), a state-owned fund primarily engaged in investment and asset management, which holds
+approximately 99.00% of the partnership interests therein. Save as disclosed above, no ultimate
+beneficial owner of any general partner and limited partner holds 30% or more interests in Beijing
+Artificial Intelligence Industry Investment Fund (Limited Partnership).
+
+21.
+
+CITIC Securities Investment Company Limited () is a wholly owned
+subsidiary of CITIC Securities Company Limited (). CITIC Securities
+Company Limited is a joint stock company with limited liability established in the PRC, the H
+shares and A shares of which are listed on the Stock Exchange (stock code: 06030) and the
+Shanghai Stock Exchange (stock code: 600030). CITIC Securities Company Limited covers a wide
+range of businesses including securities, funds, futures, foreign exchange and commodities.
+
+– 29 –
+
+22.
+
+BlueFive Investments Holding Limited (“BFIH”) is a company incorporated in the Abu Dhabi
+Global Market (ADGM), UAE, with limited liability, principally engaged in investment holding
+activities. BFIH is owned by BlueFive Holdings Limited as the majority shareholder, with the
+remaining interests held by minority shareholders, none of whom individually holds 5% or more of
+the issued share capital. Mr. Hazem Ben-Gacem is the ultimate beneficial owner and controller of
+BFIH.
+
+23.
+
+Ningbo Meishan Bonded Port Area Zhichun Huayan Venture Capital Partnership (Limited
+Partnership) ((
+)) (“Ningbo Zhichun
+Huayan”) is a limited partnership established in the PRC. It is principally engaged in venture
+capital investment business. 1% of the partnership interest in Ningbo Zhichun Huayan is held by its
+general partner, Ningbo Meishan Bonded Port Area Atlas Investment Management Co., Ltd. (
+) (“Ningbo Atlas”), and 99% of the partnership interest
+is held by its sole limited partner, Ms. Wu Chunmei. Ningbo Atlas is a private equity fund manager
+licensed in China. Save as disclosed above, no ultimate beneficial owner of any general partner and
+limited partner holds 30% or more interests in Ningbo Zhichun Huayan.
+
+24.
+
+Tianjin Lisi Xingque Venture Capital Partnership (Limited Partnership) (
+()) (“Tianjin Lisi Xingque”) is a limited partnership established in the PRC. It
+is principally engaged in investment activities. 0.1379% of the partnership interest in Tianjin Lisi
+Xingque is held by its general partner, Tianjin Lisi Mingtang Enterprise Management Consulting
+Partnership Enterprise (Limited Partnership) (
+(
+))
+(“Tianjin Lisi”) which is owned as to 97.2222% by Mr. Cao Xi, and 99.8621% of the partnership
+interest is held by its limited partners each holding less than 30% of the partnership interest. Save as
+disclosed above, no ultimate beneficial owner of any general partner and limited partner holds 30%
+or more interests in Tianjin Lisi Xingque.
+
+25.
+
+Shenzhen Kunhe Juyuan Venture Capital Partnership (Limited Partnership) (
+(
+)) (“Shenzhen Kunhe Juyuan”) is a limited partnership established in the
+PRC. It is principally engaged in investment. Its general partner is Shenzhen Changsheng Private
+Equity Fund Management Co., Ltd. () (“Shenzhen
+Changsheng”) and Beijing Kunni Management Consulting Co., Ltd. (
+) (“Beijing Kunni”), and its limited partners are Mr. Yao Qicong and Mr. Wang Chen, each
+holding 49.9% partnership interests in Shenzhen Kunhe Juyuan. Shenzhen Changsheng is owned as
+to 95% by Ms. Jin Yinfeng and Beijing Kunni is owned as to 99% by Qingdao Jiukun Taolue
+Equity Investment Partnership Enterprise (Limited Partnership) (
+(), of which Mr. Wang Chen serves as the general partner and Mr. Yao Qicong serves as
+the limited partner. Save as disclosed above, no ultimate beneficial owner of any general partner
+and limited partner holds 30% or more interests in Shenzhen Kunhe Juyuan.
+
+26.
+
+Wenzhou Ruida Venture Capital Partnership (Limited Partnership) (
+()) (“Wenzhou Ruida”) is a limited partnership established in the PRC. It is principally
+engaged in investment, investment management, asset management and other activities through
+private investment funds; engaging in investment activities with proprietary funds; venture capital
+investment. 0.0125% of the partnership interest in Wenzhou Ruida is held by its general partner,
+Ningbo Meishan Bonded Port Area Ruiyuan Investment Management Co., Ltd. (
+) (which is indirectly controlled by Mr. Zheng Xuanle), and 93.74% of
+the partnership interest is held by its largest limited partner, Hainan Guangzhiyuan Management
+Consulting Co., Ltd. (
+), which is indirectly controlled by Lighthouse
+Development (HK) Limited (which is indirectly controlled by Mr. Zheng Xuanle). Save as disclosed
+
+– 30 –
+
+above, no ultimate beneficial owner of any general partner and limited partner holds 30% or more
+interests in Wenzhou Ruida.
+27.
+
+Gongqingcheng Junmang Yunze Venture Capital Partnership (Limited Partnership) (
+()) (“Junmang Yunze”) is a limited partnership established in the
+PRC. It is principally engaged in investment. The general partner of Junmang Yunze is Zhuhai
+Houweizhuoyuan Investment Center (Limited Partnership) (
+())
+(“Zhuhai Houweizhuoyuan”), and no limited partners holding 30% or more partnership interests
+therein. Zhuhai Houweizhuoyuan is owned as to 98% by Houwei Ruida (Dalian) Capital
+Management Co., Ltd. (
+()
+), which is in turn 55% controlled by
+Ms. Huang Xiaofang. Save as disclosed above, no ultimate beneficial owner of any general partner
+and limited partner holds 30% or more interests in Junmang Yunze.
+
+28.
+
+QM323 Limited is a company incorporated under the laws of Hong Kong principally engaging in
+investment holding, and is wholly owned by Qiming Venture Partners IX-A, L.P. Qiming Venture
+Partners IX-A, L.P. is an exempted limited partnership established in the Cayman Islands. Qiming
+GP IX-A, LLC is the general partner of Qiming Venture Partners IX-A, L.P. Save and except Duane
+Ziping Kuang (who is an independent third party), no other shareholders of Qiming GP IX-A, LLC
+holds one-third or more of its shareholding interests. None of the limited partners of Qiming
+Venture Partners IX-A, L.P. holds one-third or more of its partnership interests.
+
+29.
+
+MONOLITH KLING FUND L.P. (“Monolith Kling”) is an exempted limited partnership
+established in the Cayman Islands. It is principally engaged in investment activities. The general
+partner of Monolith Kling is Monolith Opportunity GP II LLC (a Cayman Islands LLC), which is
+ultimately wholly-owned by Mr. Cao Xi () and does not hold any partnership interests in
+Monolith Kling. GIGA INDUSTRIES LIMITED (a BVI business company) is the limited partner
+of Monolith Kling holding more than 30% partnership interests therein, and is ultimately
+wholly-owned by Greater Bay Area Homeland Investments Limited (
+) (a Hong Kong company), which is held by a diversified base of corporate shareholders with no
+single individual holding more than 25% ownership. Save as disclosed above, no ultimate beneficial
+owner of any general partner or limited partner holds 30% or more interests in Monolith Kling.
+
+30.
+
+Maanshan Ruiyuan Co-Stone Enterprise Management Partnership (Limited Partnership) (
+(
+)) (“Maanshan Co-Stone”) is a limited partnership
+established in the PRC. It is principally engaged in asset management services with self-owned
+capital investment. 1.96% of the partnership interest in Maanshan Co-Stone is held by its general
+partner, Tibet Tianji Co-Stone Venture Capital Co., Ltd. (
+)
+(“Tibet Tianji Co-Stone”), and 98.04% of the partnership interest is held by its sole limited partner,
+Urumqi Kunlun Co-Stone Venture Capital Co., Ltd. (). Both
+of Tibet Tianji Co-Stone and Urumqi Kunlun Co-Stone Venture Capital Co., Ltd. are wholly owned
+by Co-Stone Asset Management Co., Ltd. (), which is in turn more
+than 30% controlled by Maanshan Shenzhou Jishi Equity Investment Partnership (Limited
+Partnership) ((
+)), which is ultimately controlled by
+Mr. Zhang Wei. Save as disclosed above, no ultimate beneficial owner of any general partner and
+limited partner holds 30% or more interests in Maanshan Co-Stone.
+
+31.
+
+Yangtze River Delta Digital Intelligence Cultural Industry Private Equity Investment Fund
+(Shanghai) Partnership (Limited Partnership) ((
+)
+()) (“YRD Digital Intelligence”) is a limited partnership established in the PRC. It is
+principally engaged in private equity investment focusing on artificial intelligence, integrated
+media, cultural and digital content industries. Its general partner is Haitong Leading Capital
+– 31 –
+
+Management Co., Ltd. () (“Haitong Creative”), which is owned
+as to 53.25% by Haitong Kaiyuan Investment Co., Ltd. (), which is in turn
+wholly-owned by Guotai Haitong Securities Co., Ltd. (), a company
+incorporated in the PRC with limited liability and whose shares are listed on the Stock Exchange
+(stock code: 02611) and the Shanghai Stock Exchange (stock code: 601211). It is principally
+engaged in comprehensive securities businesses including brokerage, investment banking and asset
+management. Save as disclosed above, no ultimate beneficial owner of any general partner and
+limited partner holds 30% or more interests in YRD Digital Intelligence.
+32.
+
+Xiamen Chunhua Zhongying Fuyao Artificial Intelligence Investment Partnership (Limited
+Partnership) (()) (“Chunhua Zhongying”) is
+a limited partnership established in the PRC. It is principally engaged in equity investment. 90% of
+the partnership interest in Chunhua Zhongying is held by its general partner, Chunhua Qiushi
+(Tianjin) Equity Investment Management Co., Ltd. ((
+)
+)
+(“Chunhua Qiushi”), and 10% of the partnership interest is held by its sole limited partner, Mr.
+Wang Jie. Chunhua Qiushi is affiliated to Primavera Capital Group and is duly registered with the
+Asset Management Association of China as a private fund manager.
+
+33.
+
+HUNDREDS PLUS LIMITED PARTNERSHIP is a limited partnership established in the Cayman
+Islands. It is principally engaged in investment. Its general partner is Hundreds Capital which is
+ultimately owned by a trust for the benefit of Hundreds Capital’s investors, the trustee of which is
+Vistra Trust (Singapore) Pte. Limited. No ultimate beneficial owner of any general partner and
+limited partner holds 30% or more interests in HUNDREDS PLUS LIMITED PARTNERSHIP.
+
+34.
+
+PMF Select Polaris LP is a limited partnership established in the BVI, principally engaged in
+investment activities. Its general partner is PMF Select Investment Limited, the ultimate beneficial
+owner of which is Mr. Zhou Taolue. No limited partner holds more than 30% of the partnership
+interests. Save as disclosed above, no ultimate beneficial owner of any general partner and limited
+partner holds 30% or more interests in PMF Select Polaris LP.
+
+To the knowledge and belief of the Directors having made all reasonable enquiries, each of the
+Independent Investors and their ultimate beneficial owner(s) is a third party/are third parties independent
+of the Company and its connected persons.
+Beijing Kling is a company incorporated in the PRC with limited liability. It is principally engaged in the
+. As at the date of this announcement, Beijing Kling is
+development and operation of Kling AI (AI)
+indirectly wholly owned by the Company. Upon the Subscription Limit and the scheme mandate limits of
+the Subsidiary Share Participation Schemes being both fully utilized, Beijing Kling will be indirectly
+owned as to approximately 68.33% by the Company.
+Beijing Kuaixingkong Technology is a company incorporated in the PRC with limited liability. It
+currently does not carry out any substantive business. However, it plans to apply for necessary licenses (if
+required) to commence the operation of Kling AI ’s related business upon completion of the Restructuring.
+As at the date of this announcement, it is directly wholly owned by Beijing Kling.
+Beijing Kuaixingchen Technology is a company incorporated in the PRC with limited liability. It
+currently does not carry out any substantive business. However, it plans to apply for necessary licenses (if
+required) to commence the operation of Kling AI ’s related business upon completion of the Restructuring.
+As at the date of this announcement, it is directly wholly owned by Beijing Kling.
+
+– 32 –
+
+Beijing Kling Technology is a company incorporated in the PRC with limited liability. It currently does
+not carry out any substantive business. However, it plans to apply for necessary licenses (if required) to
+commence the operation of Kling AI ’s related business upon completion of the Restructuring. As at the
+date of this announcement, it is directly wholly owned by Beijing Kling.
+Beijing Kling Lingdong is a company incorporated in the PRC with limited liability. It currently does not
+carry out any substantive business. However, it plans to apply for necessary licenses (if required) to
+commence the operation of Kling AI ’s related business upon completion of the Restructuring. As at the
+date of this announcement, it is directly wholly owned by Beijing Kling.
+Beijing Lingshi Technology is a company incorporated in the PRC with limited liability. It currently does
+not carry out any substantive business. However, it plans to apply for necessary licenses (if required) to
+commence the operation of Kling AI ’s related business upon completion of the Restructuring. As at the
+date of this announcement, it is directly wholly owned by Beijing Kling.
+Beijing Kling Duomotai is a company incorporated in the PRC with limited liability. It currently does not
+carry out any substantive business. However, it plans to apply for necessary licenses (if required) to
+commence the operation of Kling AI ’s related business upon completion of the Restructuring. As at the
+date of this announcement, it is directly wholly owned by Beijing Kling.
+Beijing Kuaishou Technology is a company incorporated in the PRC with limited liability. It is principally
+engaged in the provision of live-streaming and online marketing services. As at the date of this
+announcement, it is directly wholly owned by Huayi Huilong.
+Huayi Huilong is a company incorporated in the PRC with limited liability. It is principally engaged in
+the development of software, hardware and network technology. As at the date of this announcement, it is
+controlled by Beijing Dajia through contractual arrangements.
+Beijing Dajia is a company incorporated in the PRC with limited liability. It is principally engaged in the
+development of software, hardware and network technology. As at the date of this announcement, it is
+directly wholly owned by Fortune Ever.
+Fortune Ever is a company incorporated in Hong Kong with limited liability. It is principally engaged in
+investment holding and investment. As at the date of this announcement, it is directly wholly owned by
+the Company.
+Beijing Kuailingrui is a company incorporated in the PRC with limited liability. It is principally engaged
+in investment holding. As at the date of this announcement, it is directly wholly owned by Lucky Labs.
+Lucky Labs is a company incorporated in Hong Kong with limited liability. It is principally engaged in
+investment holding. As at the date of this announcement, it is indirectly wholly owned by the Company.
+DEFINITIONS
+In this announcement, the following expressions shall have the following meanings unless the context
+requires otherwise:
+“Beijing Dajia”
+
+Beijing Dajia Internet Information Technology Co., Ltd. (
+), a company incorporated in the PRC with
+limited liability and an indirect wholly-owned subsidiary of the
+Company
+– 33 –
+
+“Beijing Kling”
+
+Beijing Kling Intelligent Technology Co., Ltd. (
+), a company incorporated in the PRC with limited
+liability which will adopt a weighted voting rights structure in
+accordance with the Shareholders’ Agreement. As at the date of this
+announcement, Beijing Kling is indirectly wholly owned by the
+Company. Assuming the Subscription Limit and the scheme
+mandate limits of the Subsidiary Share Participation Schemes are
+both fully utilized, Beijing Kling will be indirectly owned as to
+approximately 68.33% by the Company
+
+“Beijing Kling Duomotai”
+
+Beijing Kling Duomotai Technology Limited (
+), a company incorporated in the PRC with limited
+liability and a direct wholly owned subsidiary of Beijing Kling
+
+“Beijing Kling Group
+Companies”
+
+Beijing Kuaixingkong Technology, Beijing Kling Technology,
+Beijing Kuaixingchen Technology, Beijing Kling Lingdong,
+Beijing Lingshi Technology, Beijing Kling Duomotai and other
+entity(ies) that may become direct or indirect wholly owned
+subsidiaries of Beijing Kling after the Signing Date and become
+party(ies) to the Capital Increase Agreement and the Shareholders’
+Agreement by signing a joinder agreement thereto respectively
+
+“Beijing Kling Lingdong”
+
+Beijing Kling Lingdong Technology Limited (
+), a company incorporated in the PRC with limited
+liability and a direct wholly owned subsidiary of Beijing Kling
+
+“Beijing Kling Share Incentive
+Scheme”
+
+the share incentive scheme adopted by Beijing Kling on July 2,
+2026
+
+“Beijing Kling Share Option
+Scheme”
+
+the share option scheme adopted by Beijing Kling on July 2, 2026
+
+“Beijing Kling Share Ownership
+Scheme”
+
+the share ownership scheme adopted by Beijing Kling on July 2,
+2026
+
+“Beijing Kling Technology”
+
+Beijing Kling Technology Limited (), a
+company incorporated in the PRC with limited liability and a direct
+wholly owned subsidiary of Beijing Kling
+
+“Beijing Kuailingrui”
+
+Beijing Kuailingrui Technology Co., Ltd. (
+), a company incorporated in the PRC with limited liability. As
+at the date of this announcement, Beijing Kuailingrui is directly
+wholly owned by Lucky Labs and directly holds 62.03% interest in
+Beijing Kling. Assuming the Subscription Limit and the scheme
+mandate limits of the Subsidiary Share Participation Schemes are
+both fully utilized, Beijing Kuailingrui will directly hold
+approximately 2.00% interest in Beijing Kling
+
+– 34 –
+
+“Beijing Kuaishou Ads”
+
+Beijing Kuaishou Ads Co., Ltd. (), a
+company incorporated in the PRC with limited liability and a
+wholly-owned subsidiary of the Company, which does not
+constitute an “insignificant subsidiary” as defined under Chapter
+14A of the Listing Rules
+
+“Beijing Kuaishou Technology”
+
+Beijing Kuaishou Technology Co., Ltd. (),
+a company incorporated in the PRC with limited liability and
+controlled by the Company through contractual arrangements
+
+“Beijing Kuaixingchen Technology” Beijing Kuaixingchen Technology Limited (
+), a company incorporated in the PRC with limited liability
+and a direct wholly owned subsidiary of Beijing Kling
+“Beijing Kuaixingkong Technology” Beijing Kuaixingkong Technology Limited (
+), a company incorporated in the PRC with limited liability
+and a direct wholly owned subsidiary of Beijing Kling
+“Beijing Lingshi Technology”
+
+Beijing Lingshi Technology Limited (), a
+company incorporated in the PRC with limited liability and a direct
+wholly owned subsidiary of Beijing Kling
+
+“Board”
+
+the board of Directors of the Company
+
+“Business Day(s)”
+
+any day(s) other than a Saturday, Sunday or a day on which banks
+in the PRC or Hong Kong are generally closed for business
+
+“BVI”
+
+the British Virgin Islands
+
+“Capital Increase Agreement”
+
+the capital increase agreement (including the Joinder Agreements)
+dated July 2, 2026 entered into between Beijing Kling, the Beijing
+Kling Group Companies, the Investors (including the Additional
+Investors), Lucky Labs and Beijing Kuailingrui
+
+“Company”
+
+Kuaishou Technology (), a company incorporated in the
+Cayman Islands with limited liability on February 11, 2014, the
+class B ordinary shares of which are listed on the Stock Exchange
+
+“Completion Date”
+
+in relation to an Investor, the date on which such Investor pays the
+Subscription Price in full with respect to its Subscription in
+accordance with the Capital Increase Agreement
+
+“Conditions”
+
+the conditions precedent under the Capital Increase Agreement
+
+“connected person(s)”
+
+has the same meaning ascribed to it under the Listing Rules
+
+“Director(s)”
+
+the director(s) of the Company
+
+– 35 –
+
+“Fortune Ever”
+
+Fortune Ever Global Limited, a company incorporated in Hong
+Kong with limited liability and a direct wholly owned subsidiary of
+the Company
+
+“Hong Kong”
+
+the Hong Kong Special Administrative Region of the PRC
+
+“Huayi Huilong”
+
+Beijing Huayi Huilong Internet Technology Limited (
+), a company incorporated in the PRC with
+limited liability and controlled by Beijing Dajia through contractual
+arrangements
+
+“Independent Investors”
+
+34 investors independent of the Company and its connected persons
+
+“insignificant subsidiary”
+
+has the same meaning ascribed to it under the Listing Rules
+
+“Investors”
+
+Initial Investors and the Additional Investors
+
+“Kuaishou Group”
+
+the Company and its subsidiaries and consolidated affiliated entities
+
+“Latest Completion Date”
+
+the date falling 180 days after the Signing Date, or such other date
+as Beijing Kling and the Investors may otherwise agree in writing
+
+“Latest Listing Date”
+
+the date falling on the fifth anniversary of the Latest Payment Date
+
+“Latest Payment Date”
+
+the date falling one hundred and twenty (120) days after the Signing
+Date (or such other period as approved by the Investors holding
+more than 50% of the Subscription Amount)
+
+“Listing Rules”
+
+the Rules Governing the Listing of Securities on the Stock
+Exchange
+
+“Lucky Labs”
+
+Lucky Labs Limited, a company incorporated in Hong Kong with
+limited liability. As at the date of this announcement, Lucky Labs is
+indirectly wholly owned by the Company and directly holds
+37.97% interest in Beijing Kling. Assuming the Subscription Limit
+and the scheme mandate limits of the Subsidiary Share Participation
+Schemes are both fully utilized, Lucky Labs will directly hold
+approximately 66.33% interest in Beijing Kling
+
+“New Articles of Association”
+
+the new articles of association of Beijing Kling approved by its
+board of directors and shareholders to reflect the capital increase
+contemplated under the Capital Increase Agreement
+
+“Participants”
+
+the respective participants of the Beijing Kling Share Incentive
+Scheme, the Beijing Kling Share Ownership Scheme and the
+Beijing Kling Share Option Scheme, as the context requires
+
+– 36 –
+
+“Party A”
+
+Atypical Holdings Limited, a company incorporated in Hong Kong
+with limited liability
+
+“Party B”
+
+(i) Shanghai Qishan Investment Co., Ltd., and (ii) Parallel Mars
+Investment Limited
+
+“Party C”
+
+Neumann Intelligence I Holdings Limited, a company incorporated
+in the BVI with limited liability
+
+“Party D”
+
+Beijing Zhuoyue Lingbo Enterprise Management Co., Ltd. (
+), a company incorporated in the PRC
+with limited liability
+
+“PRC” or “China”
+
+the People’s Republic of China, which for the purposes of this
+announcement only, excludes Hong Kong, Macao Special
+Administrative Region and Taiwan
+
+“principal subsidiary”
+
+has the same meaning ascribed to it under the Listing Rules
+
+“Redemption Right(s)”
+
+the rights granted to each of the Investors under the Shareholders’
+Agreement, pursuant to which each of the Investors shall have the
+right to require Beijing Kling to repurchase all or part of its equity
+interests in Beijing Kling in the event of any of the circumstances,
+the details of which are under the section “The Grant of the
+Redemption Rights” in this announcement
+
+“Restructuring”
+
+the restructuring of the Kuaishou Group’s Kling AI (AI)
+related assets and businesses contemplated under the Restructuring
+Framework Agreement
+
+“Restructuring Framework
+Agreement”
+
+the agreement dated July 2, 2026 entered into between the
+Restructuring Parties and Beijing Kling
+
+“RMB”
+
+Renminbi, the lawful currency of the PRC
+
+“Signing Date”
+
+the date the Capital Increase Agreement was signed by the parties
+thereto
+
+“Shareholder(s)”
+
+the shareholder(s) of the Company
+
+“Shareholders’ Agreement”
+
+the shareholders’ agreement dated July 2, 2026 entered into
+between the parties to the Capital Increase Agreement (including
+the Joinder Agreements thereunder)
+
+“Shareholding Platforms”
+
+the limited partnerships and/or limited liability companies
+established to acquire, hold and administer the equity interests of
+Beijing Kling for the purpose of satisfying the grants under the
+Subsidiary Share Participation Schemes
+
+“Stock Exchange”
+
+The Stock Exchange of Hong Kong Limited
+– 37 –
+
+“Subscription(s)”
+
+the subscription of registered capital in Beijing Kling by each of the
+Investors (including the Additional Investors) under the Capital
+Increase Agreement within the Subscription Limit
+
+“Subscription Amount”
+
+the amount of increased registered capital in Beijing Kling
+subscribed by all Investors (including the Additional Investors)
+under the Capital Increase Agreement (including the Joinder
+Agreements thereunder)
+
+“Subscription Price”
+
+the price to be paid to Beijing Kling by each of the Investors
+(including the Additional Investors) for the Subscription pursuant
+to the Capital Increase Agreement (including the Joinder
+Agreements thereunder)
+
+“substantial shareholder”
+
+has the same meaning ascribed to it under the Listing Rules
+
+“Tencent”
+
+Tencent Holdings Limited, a company incorporated in the Cayman
+Islands with limited liability, the shares of which are listed on the
+Stock Exchange (stock code: 700)
+
+“Transaction Documents”
+
+the Capital Increase Agreement, the Shareholders’ Agreement, the
+New Articles of Association and other legal documents stipulated
+by the Capital Increase Agreement in relation to the capital increase
+contemplated thereunder
+
+“United States”
+
+the United States of America, its territories, its possessions and all
+areas subject to its jurisdiction
+
+“USD”
+
+United States Dollars, the lawful currency of the United States
+
+“%”
+
+percent
+By order of the Board
+Kuaishou Technology
+Mr. Cheng Yixiao
+Chairman
+
+Hong Kong, July 2, 2026
+As at the date of this announcement, the Board comprises Mr. Cheng Yixiao and Mr. Su Hua as executive Directors; Mr. Li
+Zhaohui and Mr. Wang Huiwen as non-executive Directors; Mr. Zhang Fei, Mr. Ma Yin, Ms. Lu Rong and Mr. Huang Jia as
+independent non-executive Directors.
+
+– 38 –
+
+

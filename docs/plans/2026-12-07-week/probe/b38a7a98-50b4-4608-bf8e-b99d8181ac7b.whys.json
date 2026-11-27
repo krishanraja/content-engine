@@ -2,52 +2,137 @@
   "schema": "why-ladder/1",
   "question": "Why did Tor pull the cover of This Crown Will Not Rule Me?",
   "rungs": [
-    {"n": 1, "question": "Why did Tor pull the cover of This Crown Will Not Rule Me?",
-     "answer": "Tor learned that generative AI had been used to make the cover art, without its knowledge or the authors'. Its own policies and its contracts with cover artists forbid that, so it took the cover down and said the imagery will not appear on any finished book.",
-     "evidence": [
-       {"url": "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/", "domain": "ilona-andrews.com", "date": "2026-11-20", "quote": "Tor Publishing Group has learned that generative AI was used in the creation of the cover art for This Crown Will Not Rule Me, without the knowledge of either Tor or of the authors."},
-       {"url": "http://www.publishersweekly.com/pw/by-topic/industry-news/publisher-news/article/101841-tor-pulls-ilona-andrews-cover-over-generative-ai-use.html", "domain": "publishersweekly.com", "date": "2026-11-24", "quote": "noting that its existing policies and contracts with cover artists prohibit the use of generative AI"}
-     ],
-     "strength": "documented",
-     "counter": {"text": "None found in the two sources. Neither names the artist or says how much of the artwork was made with generative AI, and Publishers Weekly's account rests on the same Tor statement the authors posted."},
-     "mechanism_type": "the contract", "stop": null},
-    {"n": 2, "question": "Why did Tor only learn of it after the cover had been revealed?",
-     "answer": "Readers raised concerns once the cover was public. The authors credit Instagram comments from two artists, Markova and Zakuga Art. The authors told Tor and asked for proof the art was made by a human; Tor then confirmed generative AI had been used.",
-     "evidence": [
-       {"url": "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/", "domain": "ilona-andrews.com", "date": "2026-11-20", "quote": "We notified our publisher, asked for the proof of human-created art, and settled down to wait."},
-       {"url": "http://www.publishersweekly.com/pw/by-topic/industry-news/publisher-news/article/101841-tor-pulls-ilona-andrews-cover-over-generative-ai-use.html", "domain": "publishersweekly.com", "date": "2026-11-24", "quote": "After readers raised concerns about the cover when it was revealed, the authors notified Tor and requested proof that the artwork was created by a human."}
-     ],
-     "strength": "documented",
-     "counter": {"text": "None found in the two sources. Neither says what proof Tor asked the artist for, or what it received, before confirming the AI use."},
-     "mechanism_type": "detection by outside readers", "stop": null},
-    {"n": 3, "question": "Why did the no-AI clauses and the review before release not catch it?",
-     "answer": "The check before release was a sketch, and it looked like an ordinary cover sketch. The authors say they lack the expertise to spot AI-made art. Tor calls it a breakdown in its review process and says it will strengthen that review.",
-     "evidence": [
-       {"url": "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/", "domain": "ilona-andrews.com", "date": "2026-11-20", "quote": "In this case, the cover was commissioned by our publisher, and a sketch was provided to the art department. It looked like a typical cover sketch."},
-       {"url": "http://www.publishersweekly.com/pw/by-topic/industry-news/publisher-news/article/101841-tor-pulls-ilona-andrews-cover-over-generative-ai-use.html", "domain": "publishersweekly.com", "date": "2026-11-24", "quote": "The publisher had provided a sketch that appeared to be a conventional cover illustration, and the authors, who said they lack expertise in detecting AI-generated artwork, did not see cause for concern."},
-       {"url": "http://www.publishersweekly.com/pw/by-topic/industry-news/publisher-news/article/101841-tor-pulls-ilona-andrews-cover-over-generative-ai-use.html", "domain": "publishersweekly.com", "date": "2026-11-24", "quote": "\"Tor takes full responsibility for the breakdown in our review process,\" the publisher said"}
-     ],
-     "strength": "documented",
-     "counter": {"text": "The two accounts differ on who saw the sketch: the authors' post says it was provided to Tor's art department, while Publishers Weekly says the publisher provided it to the authors. Publishers Weekly also reports Tor faced earlier criticism over AI-made cover art in 2022 and 2024."},
-     "mechanism_type": "the review process", "stop": null},
-    {"n": 4, "question": "Why was a sketch not enough to tell?",
-     "answer": "The authors say generative AI has become very sophisticated, so a normal-looking sketch or an artist's reputation no longer shows how a piece was made. They say they may ask for project files and will vet each painting rather than the artist.",
-     "evidence": [
-       {"url": "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/", "domain": "ilona-andrews.com", "date": "2026-11-20", "quote": "The generative AI has gotten very sophisticated."},
-       {"url": "http://www.publishersweekly.com/pw/by-topic/industry-news/publisher-news/article/101841-tor-pulls-ilona-andrews-cover-over-generative-ai-use.html", "domain": "publishersweekly.com", "date": "2026-11-24", "quote": "Andrews said they may begin requesting artists' project files and intend to review individual artworks rather than relying on an artist's reputation or assurances."}
-     ],
-     "strength": "inferred",
-     "counter": {"text": "Both sources carry only the authors' view; Publishers Weekly reports it from their post. Tor's statement does not say what its review checked or why it failed, and Publishers Weekly says Tor did not respond to requests for further comment."},
-     "mechanism_type": "verification of how art was made", "stop": null},
-    {"n": 5, "question": "Why did the artist use generative AI under a contract that forbade it?",
-     "answer": "Nothing read answers this. The authors say they do not know what led to it and ask readers not to target the artist, who is not named in either source.",
-     "evidence": [
-       {"url": "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/", "domain": "ilona-andrews.com", "date": "2026-11-20", "quote": "We don’t know what was going on that person’s life or what led to this unfortunate incident."},
-       {"url": "http://www.publishersweekly.com/pw/by-topic/industry-news/publisher-news/article/101841-tor-pulls-ilona-andrews-cover-over-generative-ai-use.html", "domain": "publishersweekly.com", "date": "2026-11-24", "quote": "Andrews also asked readers not to target the artist on social media, saying the authors did not know the circumstances surrounding the incident."}
-     ],
-     "strength": "open",
-     "counter": {"text": "None found; the two sources and the Tor statement reproduced in the authors' post were searched."},
-     "mechanism_type": null, "stop": "motive_not_mechanism"}
+    {
+      "n": 1,
+      "question": "Why did Tor pull the cover of This Crown Will Not Rule Me?",
+      "answer": "Tor learned that generative AI had been used to make the cover art, without its knowledge or the authors'. Its own policies and its contracts with cover artists forbid that, so it took the cover down and said the imagery will not appear on any finished book.",
+      "evidence": [
+        {
+          "url": "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/",
+          "domain": "ilona-andrews.com",
+          "date": "2026-11-20",
+          "quote": "Tor Publishing Group has learned that generative AI was used in the creation of the cover art for This Crown Will Not Rule Me, without the knowledge of either Tor or of the authors."
+        },
+        {
+          "url": "http://www.publishersweekly.com/pw/by-topic/industry-news/publisher-news/article/101841-tor-pulls-ilona-andrews-cover-over-generative-ai-use.html",
+          "domain": "publishersweekly.com",
+          "date": "2026-11-24",
+          "quote": "noting that its existing policies and contracts with cover artists prohibit the use of generative AI"
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "None found in the two sources. Neither names the artist or says how much of the artwork was made with generative AI, and Publishers Weekly's account rests on the same Tor statement the authors posted."
+      },
+      "mechanism_type": "the contract",
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why did Tor only learn of it after the cover had been revealed?",
+      "answer": "Readers raised concerns once the cover was public. The authors credit Instagram comments from two artists, Markova and Zakuga Art. The authors told Tor and asked for proof the art was made by a human; Tor then confirmed generative AI had been used.",
+      "evidence": [
+        {
+          "url": "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/",
+          "domain": "ilona-andrews.com",
+          "date": "2026-11-20",
+          "quote": "We notified our publisher, asked for the proof of human-created art, and settled down to wait."
+        },
+        {
+          "url": "http://www.publishersweekly.com/pw/by-topic/industry-news/publisher-news/article/101841-tor-pulls-ilona-andrews-cover-over-generative-ai-use.html",
+          "domain": "publishersweekly.com",
+          "date": "2026-11-24",
+          "quote": "After readers raised concerns about the cover when it was revealed, the authors notified Tor and requested proof that the artwork was created by a human."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "None found in the two sources. Neither says what proof Tor asked the artist for, or what it received, before confirming the AI use. The authors link the two artists' Instagram profiles, not the comments themselves, and both profiles were unreadable without a login."
+      },
+      "mechanism_type": "detection by outside readers",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why did the no-AI clauses and the review before release not catch it?",
+      "answer": "The check before release was a sketch, and it looked like an ordinary cover sketch. The authors say they lack the expertise to spot AI-made art. Tor calls it a breakdown in its review process and says it will strengthen that review.",
+      "evidence": [
+        {
+          "url": "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/",
+          "domain": "ilona-andrews.com",
+          "date": "2026-11-20",
+          "quote": "In this case, the cover was commissioned by our publisher, and a sketch was provided to the art department. It looked like a typical cover sketch."
+        },
+        {
+          "url": "http://www.publishersweekly.com/pw/by-topic/industry-news/publisher-news/article/101841-tor-pulls-ilona-andrews-cover-over-generative-ai-use.html",
+          "domain": "publishersweekly.com",
+          "date": "2026-11-24",
+          "quote": "The publisher had provided a sketch that appeared to be a conventional cover illustration, and the authors, who said they lack expertise in detecting AI-generated artwork, did not see cause for concern."
+        },
+        {
+          "url": "http://www.publishersweekly.com/pw/by-topic/industry-news/publisher-news/article/101841-tor-pulls-ilona-andrews-cover-over-generative-ai-use.html",
+          "domain": "publishersweekly.com",
+          "date": "2026-11-24",
+          "quote": "\"Tor takes full responsibility for the breakdown in our review process,\" the publisher said"
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "The two accounts differ on who saw the sketch: the authors' post says it was provided to Tor's art department, while Publishers Weekly says the publisher provided it to the authors. Publishers Weekly also reports Tor faced earlier criticism over AI-made cover art in 2022 and 2024."
+      },
+      "mechanism_type": "the review process",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why was a sketch not enough to tell?",
+      "answer": "The authors say generative AI has become very sophisticated, so a normal-looking sketch or an artist's reputation no longer shows how a piece was made. They say they may ask for project files and will vet each painting rather than the artist.",
+      "evidence": [
+        {
+          "url": "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/",
+          "domain": "ilona-andrews.com",
+          "date": "2026-11-20",
+          "quote": "The generative AI has gotten very sophisticated."
+        },
+        {
+          "url": "http://www.publishersweekly.com/pw/by-topic/industry-news/publisher-news/article/101841-tor-pulls-ilona-andrews-cover-over-generative-ai-use.html",
+          "domain": "publishersweekly.com",
+          "date": "2026-11-24",
+          "quote": "Andrews said they may begin requesting artists' project files and intend to review individual artworks rather than relying on an artist's reputation or assurances."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "Both sources carry only the authors' view; Publishers Weekly reports it from their post. Neither says outright that a sketch cannot show AI use, which is why this rung stays inferred. Tor's statement does not say what its review checked or why it failed, Publishers Weekly says Tor did not respond to requests for further comment, and neither source links Tor's statement anywhere but the authors' post."
+      },
+      "mechanism_type": "verification of how art was made",
+      "stop": null
+    },
+    {
+      "n": 5,
+      "question": "Why did the artist use generative AI under a contract that forbade it?",
+      "answer": "Nothing read answers this. The authors say they do not know what led to it and ask readers not to target the artist, who is not named in either source.",
+      "evidence": [
+        {
+          "url": "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/",
+          "domain": "ilona-andrews.com",
+          "date": "2026-11-20",
+          "quote": "We don’t know what was going on that person’s life or what led to this unfortunate incident."
+        },
+        {
+          "url": "http://www.publishersweekly.com/pw/by-topic/industry-news/publisher-news/article/101841-tor-pulls-ilona-andrews-cover-over-generative-ai-use.html",
+          "domain": "publishersweekly.com",
+          "date": "2026-11-24",
+          "quote": "Andrews also asked readers not to target the artist on social media, saying the authors did not know the circumstances surrounding the incident."
+        }
+      ],
+      "strength": "open",
+      "counter": {
+        "text": "None found. Searched the two sources, the Tor statement reproduced in the authors' post, and the two Instagram profiles the authors link (unreadable). Neither source links any other primary record."
+      },
+      "mechanism_type": null,
+      "stop": "motive_not_mechanism"
+    }
   ],
   "landing": {
     "shows": "No-AI clauses sat in both the authors' contract and Tor's artist contracts, but the clause forbade the use without checking for it. The only look before release was a sketch that seemed ordinary, and the AI use was found by outside artists after the reveal. The authors now say they will vet each piece of work, not the artist.",
