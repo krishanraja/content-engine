@@ -101,8 +101,18 @@ class SignOffs(unittest.TestCase):
         self.assertEqual(signoffs.validate(doc), [])
         counts = [len(c['items']) for c in doc['cards']]
         self.assertTrue(8 <= counts[0] <= 15, counts)
-        self.assertGreaterEqual(counts[1], 10)
-        self.assertEqual([i['beat'] for i in signoffs.card(doc, 'gate2')['items']], BEATS)
+        # Checked on 27 Nov 2026 against that day's video standards (Krish, 2026-11-27: "I have no idea if the things
+        # that are waiting on me ... are actually up to date or not"): a frame showing the corner logo, the series label
+        # or a prediction was retired, with its reason, so it never waits on him; Gate 2's four stills all were.
+        self.assertGreaterEqual(counts[1] + len(signoffs.card(doc, 'golden').get('retired') or []), 10)
+        # Gate 2 is its four beats, live or, when they come back in today's look, made again under the same ids.
+        gate2 = signoffs.card(doc, 'gate2')
+        self.assertEqual([i['beat'] for i in gate2['items'] or gate2.get('retired') or []], BEATS)
+        for entry in doc['cards']:
+            for r in entry.get('retired') or []:
+                self.assertTrue(r['retired']['on'] and len(r['retired']['why']) > 40, r['id'])
+                # A retired sample is never live again by its bytes; a new sample may reuse its id.
+                self.assertNotIn(r['sha256'], [i['sha256'] for i in entry['items']])
         # Only Drive ids and hashes are committed: no sample path points into the repository.
         self.assertFalse(any('file' in i for c in doc['cards'] for i in c['items']))
 
