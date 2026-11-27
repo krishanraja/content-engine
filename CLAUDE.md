@@ -25,6 +25,7 @@ reading it whole. It is about 335 KB (some 80k tokens).
 | Ideas, judging, drafting, rewriting, channel copy, the ledger | `docs/CONTENT_ENGINE.md` |
 | Video | `docs/ve/ENGINE.md`, then `docs/ve/RUNBOOK.md` (`docs/ve/STATUS.md` says what ve can do today; `docs/ve/INGREDIENTS.md` for caption styles, motion styles, transitions, camera, energy and `ve pace`; `docs/ve/TREATMENTS.md` for the effects applied by rule, video and stills) |
 | The week's publish board | `docs/PUBLISH_BOARDS.md` |
+| The daily Edition hub | `docs/HUB-PIPELINE.md` |
 | Any intro, outro, icon, wordmark, sting or end card, on any day or format | `docs/production/BRAND_PALETTE.md` (the rules are `config/brand-palette.json` only) |
 | The carousel standard (content-engine makes every asset from the v5 Library; Growth posts) | `docs/CAROUSEL-STANDARD.md` |
 | The Studio runner or the renderer | `docs/STUDIO.md`, then `docs/ENGINE_SESSION.md` |

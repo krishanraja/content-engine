@@ -30,7 +30,7 @@ class MusicUseTest(unittest.TestCase):
         track, _, _ = music.pick_for_piece('thu-5', data=self.ledger(), use='off-day')
         self.assertEqual(track['id'], 'goodie-bags')
 
-    def test_the_live_ledger_rotates_each_series_day_and_keeps_the_off_day_track(self):
+    def test_the_live_ledger_rotates_each_series_day_and_puts_the_rest_behind_carousels(self):
         # Ruling (Krish, 2026-11-17): series music rotates week by week. Ruling (Krish, 2026-11-26): the rotation is two
         # tracks, Four on the Funky Flour and NO CURVES, on every series day; the rest go behind carousels. No carousel or
         # off-day track is ever in a series day's rotation.
@@ -46,7 +46,7 @@ class MusicUseTest(unittest.TestCase):
                 self.assertNotIn(t.get('for'), ('off-day', 'carousel'), t['id'])
         self.assertEqual({t['id'] for t in music.day_pool(data, '2026-11-23')}, set(pools['mon']))
         goodie = next(t for t in data['tracks'] if t['id'] == 'goodie-bags')
-        self.assertEqual(goodie['for'], 'off-day')
+        self.assertEqual(goodie['for'], 'carousel')  # Krish, 2026-11-26: the rest go behind carousels
 
 
 

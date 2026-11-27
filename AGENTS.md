@@ -98,9 +98,9 @@ Where anything goes in Krish's Drive is [`docs/DRIVE.md`](docs/DRIVE.md), the Dr
 ## No branch is ever left unmerged (Ruling, Krish, 2026-11-26)
 
 Krish, 26 Nov 2026: "ensure stray branches may NEVER ever be left unmerged". Every session reads the open pull
-requests before it starts (), so it never works blind to unmerged work, and ends with its
+requests before it starts (`gh pr list --state open`), so it never works blind to unmerged work, and ends with its
 branch either merged (a ready pull request, never a draft left behind) or deleted. The stray guard
-(, every hour) enforces it: it deletes merged branches and branches whose pull
+(`.github/workflows/stray-guard.yml`, every hour) enforces it: it deletes merged branches and branches whose pull
 request was closed, opens a pull request for any branch idle six hours without one, marks drafts idle a day ready,
 merges every ready pull request whose CI is green, and lists whatever it cannot land in one issue, "Stray branches and
 pull requests". A red pull request on that list is fixed or closed the same day.
@@ -145,7 +145,7 @@ Read linked detail before domain work; every moved paragraph remains verbatim.
 
 **His feedback on ideas is kept as cues, permanently** ([detail](docs/AGENTS-REFERENCE.md#rule-19))
 
-**Every opening, close, icon, wordmark and sting comes from `config/brand-palette.json` and nowhere else; `scripts/brand_palette.py` refuses a cut that differs (Ruling, Krish, 2026-11-12).** ([detail](docs/production/BRAND_PALETTE.md))
+**Every opening, close, icon and wordmark (the sting is retired) comes from `config/brand-palette.json` and nowhere else; `scripts/brand_palette.py` refuses a cut that differs (Ruling, Krish, 2026-11-12).** ([detail](docs/production/BRAND_PALETTE.md))
 
 **Never ship beneath the rejection floor: read `python3 scripts/floor.py --format <maker>` before the brief and check the finished file against it.** ([detail](docs/AGENTS-REFERENCE.md#rule-20))
 

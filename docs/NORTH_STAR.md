@@ -2,7 +2,7 @@
 
 Status: Current
 Owner: Krish Raja
-Last verified: 2026-09-25
+Last verified: 2026-11-27
 
 Read this before changing anything in this repository. Every other document
 here describes a part of the system; this one says what the whole system is
@@ -63,7 +63,7 @@ And on what the machine should do before a piece reaches him, recorded in
 > could not find a way to improve the story to get it to a 10/10 itself first
 > by going deeper, finding contrarian evidence, asking why."
 
-## Where the engine sits in Mindmake
+## Mindmake's canon, for reference only
 
 Mindmake is Krish's AI advisory, education and products business. Its mission
 and the reader everything is aimed at are held as code in
@@ -87,9 +87,9 @@ cut from it, run at the standard Krish would set himself.
 
 ## What that means, plainly
 
-This repository is the engine behind Krish Raja's media business: makeyourmindup,
-the Mindmake publication (on Substack, cover page at makeyourmindup.ai), and the
-video and carousel work made from it. It should behave
+This repository is the engine behind makeyourmindup, the publication (Substack,
+with its site at makeyourmindup.ai), a makeyourmindup product, not a Mindmake one
+(Ruling, Krish, 2026-10-28), and the video and carousel work made from it. It should behave
 like a world-class production team working for one person. It finds what is
 worth saying, argues for the best version of it, writes it in his voice to
 the mandate of the right subchannel, turns it into the right formats, and
@@ -175,6 +175,14 @@ make the work in those industries. The line is held as data in
 (`apps/control-plane/api/_judges/roster.ts`, `panel-v3`) and the humour check
 (`scripts/post-pack/humour_check.py`) all read, so no prompt keeps its own copy.
 
+### Why it exists, why these industries, what makes it different
+
+(approved by Krish, 27 Nov 2026)
+
+- **Why it exists:** "makeyourmindup exists so the people who make the work, and the businesses around them, use AI rather than get used by it: what it lets them make, earn and express, and who gets paid."
+- **Why the creative industries:** "These industries run on creativity, and AI is changing how creative work makes money: who gets paid, what it costs, who wins the market. Our AI Music breakdown showed how much these readers want that explained."
+- **What makes it different:** "We don't hand you a verdict. Every piece climbs five whys from one story to how the money moves, so you make your own mind up. Positive about what AI lets makers do, honest about who gets paid."
+
 Three subchannels, each with a standing question and a mandate that decides
 the structure and the close of every piece. The mandates are authoritative
 only in `venture_formats`; the lines below are orientation.
@@ -189,6 +197,9 @@ The days swapped on 2026-10-05. Krish: "Let's just make follow the money
 permanently a monday thing, and swap it out." Until then under.the.hood ran on
 Mondays (since 2026-09-26) and follow.the.money on Wednesdays. Each subchannel
 kept its colour, sticker, promise and question.
+
+From 25 Nov 2026 (v5) the day colours, pills and series names are retired on
+every public surface; the subchannels stay as internal routing.
 
 Krish's own one-line version (2026-09-24, recorded in Control Center's
 `NOW.md`): "follow.the.money is how to make money with AI, under.the.hood is how to

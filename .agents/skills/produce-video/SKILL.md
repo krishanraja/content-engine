@@ -518,8 +518,8 @@ python scripts/quick-edit/kit.py docs/plans/PLAN/post.json --cut short --recordi
 ```
 
 It draws the house end cards for both shapes, the wide frame in the
-subchannel's look, the tall cut's dress (the brand's wordmark and the series
-tag in the top corners, from the first frame), a panel per picture, and
+subchannel's look, the tall cut with no dress (no wordmark, no series tag;
+Ruling, Krish, 2026-11-11; S3h on the outro is the cut's one wordmark), a panel per picture, and
 writes a starter `long.json` or `short.json` for make.py (music on auto,
 the same piece id on both, so both cuts get the same track). It never draws
 a name strap: no content refers to Krish (Krish, 2026-10-28: "Remember, no
@@ -765,8 +765,7 @@ report these numbers back in plain words:
 - Every other line in `warnings`, said as it is.
 
 Then look, with your own eyes, at every `preview-SHAPE-NN.jpg` (the first
-one the hook in the brand's dress, the wordmark and the series tag in the
-tall cut's top corners; each graphic on its line, its words
+one the hook in the brand's dress; each graphic on its line, its words
 readable on a phone, captions readable, his eyes in frame in the tall
 shape), `NAME.cut.txt` (misheard names, US spellings, and every number
 whole: "$150,000", "70%") and the grid mock, `WORK/thumbs/grid-mock.png`. A
