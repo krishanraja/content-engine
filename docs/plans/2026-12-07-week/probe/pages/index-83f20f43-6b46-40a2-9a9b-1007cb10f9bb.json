@@ -4,5 +4,17 @@
   },
   "https://www.drweb.de/?p=608232": {
     "file": "drweb-kuaishou-q3-2026.txt"
+  },
+  "https://www.drweb.de/kling-finanzierung-abschluss-abu-dhabi/": {
+    "file": "drweb-kling-financing.txt"
+  },
+  "https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0702/2026070204065.pdf": {
+    "file": "hkex-2026-07-02-kling-subscription.txt"
+  },
+  "https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083102335.pdf": {
+    "file": "hkex-2026-08-31-kling-update.txt"
+  },
+  "https://www1.hkexnews.hk/listedco/listconews/sehk/2026/1030/2026103002123.pdf": {
+    "file": "hkex-2026-10-30-kling-completion.txt"
   }
 }

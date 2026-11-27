@@ -1,0 +1,91 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why did Coca-Cola make its 2026 US holiday advertising as live-action film without generative AI, after its AI-made holiday ads of 2024 and 2025 exceeded internal benchmarks?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why did Coca-Cola make its 2026 US holiday films without generative AI?",
+      "answer": "The sources place the switch straight after two holiday seasons of AI-made ads that drew backlash and divided consumers. None of the pages read quotes Coca-Cola naming that as its reason, and the one company statement quoted does not mention AI at all.",
+      "evidence": [
+        {
+          "url": "https://www.marketingdive.com/news/coca-cola-pivots-from-divisive-ai-generated-ads-for-holiday-campaign/875215/",
+          "domain": "marketingdive.com",
+          "date": "2026-11-19",
+          "quote": "proved divisive with consumers"
+        },
+        {
+          "url": "https://www.adweek.com/creativity/ai-is-off-the-festive-dinner-menu-in-cokes-2026-holiday-ad/",
+          "domain": "adweek.com",
+          "date": "2026-11-20",
+          "quote": "Coca-Cola's 2026 holiday spot ditches AI after backlash last year."
+        },
+        {
+          "url": "https://www.contentgrip.com/coca-cola-enjoy-joy-holiday/",
+          "domain": "contentgrip.com",
+          "date": "2026-11-20",
+          "quote": "The new films choose a live-action language after earlier AI-based efforts proved divisive."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "The backlash and the switch are both reported on three sites, but each links them only by sequence (\"comes after\", \"after\"). The quoted statement from Stacy Jackson, vice president for the Coca-Cola Trademark, gives the aim as staying true to the brand and says nothing about AI. ContentGrip adds that the decision should not be read as Coca-Cola stopping AI everywhere. Scope: the three source pages; Adweek's body past its paywall was not readable."
+      },
+      "mechanism_type": null,
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why did the 2024 and 2025 AI-made ads draw criticism?",
+      "answer": "ContentGrip says the criticism was over visual quality and emotional authenticity. Marketing Dive says only that the ads proved divisive with consumers, and Adweek's readable text says only that there was backlash. So the grounds are stated on one site alone.",
+      "evidence": [
+        {
+          "url": "https://www.contentgrip.com/coca-cola-enjoy-joy-holiday/",
+          "domain": "contentgrip.com",
+          "date": "2026-11-20",
+          "quote": "The company's holiday films in 2024 and 2025 used generative AI and became the subject of criticism over visual quality and emotional authenticity."
+        },
+        {
+          "url": "https://www.marketingdive.com/news/coca-cola-pivots-from-divisive-ai-generated-ads-for-holiday-campaign/875215/",
+          "domain": "marketingdive.com",
+          "date": "2026-11-19",
+          "quote": "proved divisive with consumers"
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "Adweek reports Coca-Cola's own view of the craft running the other way: its global vice president of generative AI claimed the 2025 ad had far better craftsmanship than the 2024 one. Quote: Coke's global VP of generative AI claimed 2025's AI ad had \"ten times better\" craftsmanship than its 2024 version. Scope: the three source pages."
+      },
+      "mechanism_type": null,
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why would ads that exceeded Coca-Cola's internal benchmarks be followed by a return to live-action film?",
+      "answer": "Nothing read answers this. Marketing Dive reports the AI ads beat internal benchmarks, but no source says what those benchmarks measured, who set them, or how Coca-Cola weighed them against public reaction. The company's only quoted words speak of staying true to what people love about the brand.",
+      "evidence": [
+        {
+          "url": "https://www.marketingdive.com/news/coca-cola-pivots-from-divisive-ai-generated-ads-for-holiday-campaign/875215/",
+          "domain": "marketingdive.com",
+          "date": "2026-11-19",
+          "quote": "despite exceeding internal benchmarks"
+        },
+        {
+          "url": "https://www.marketingdive.com/news/coca-cola-pivots-from-divisive-ai-generated-ads-for-holiday-campaign/875215/",
+          "domain": "marketingdive.com",
+          "date": "2026-11-19",
+          "quote": "It's about finding new ways to make Coca‑Cola part of the season while staying true to what people have always loved about the brand."
+        }
+      ],
+      "strength": "open",
+      "counter": {
+        "text": "none found. ContentGrip notes the company has not shown that filmed creative will outperform the earlier campaigns, which leaves the comparison unanswered rather than countered. Scope: the three source pages and Coca-Cola's third-quarter 2026 results release, the one primary record a source links, which does not mention generative AI or the holiday ads."
+      },
+      "mechanism_type": "the measure: internal advertising benchmarks, contents not disclosed",
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "Marketing Dive and ContentGrip report that Coca-Cola's 2026 US holiday films, directed by Paul Dektor, were made without generative AI, and Adweek reports the same switch away from AI, after two years of AI-made holiday ads that divided consumers. Marketing Dive alone reports those AI ads beat internal benchmarks. The sources link the switch to the backlash only by sequence; none quotes Coca-Cola giving a reason, and none says what the benchmarks measured.",
+    "open_question": "If Coca-Cola's AI-made holiday ads beat its own internal benchmarks, what were those benchmarks measuring that public reaction was not?"
+  }
+}

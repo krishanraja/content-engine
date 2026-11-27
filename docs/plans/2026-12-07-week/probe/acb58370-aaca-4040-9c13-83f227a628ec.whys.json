@@ -1,0 +1,159 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why did Tencent Music tell investors that streams of AI-generated songs are negligible and falling?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why did Tencent Music tell investors that streams of AI-generated songs are negligible and falling?",
+      "answer": "Its executive chairman, Cussion Pang, opened the third-quarter 2026 earnings call with it as a trend: as technology makes music more abundant, listeners grow choosier, so AI streams stay negligible while distinctive content gains. He used it to back TME's case for music with lasting emotional pull and its wider IP business.",
+      "evidence": [
+        {
+          "url": "https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-17",
+          "quote": "In his prepared remarks on the Q3 call, Executive Chairman Cussion Pang said: “While technology advancement makes content supply more abundant, users are becoming more selective about what they choose to engage with."
+        },
+        {
+          "url": "https://www.digitalmusicnews.com/2026/11/17/tencent-music-ai-consumption-comments/",
+          "domain": "digitalmusicnews.com",
+          "date": "2026-11-17",
+          "quote": "“This trend further endorses our belief in the value of music that builds emotional connections and stands the test of time,” Pang continued. “When content continues to resonate with users, it can grow into premium IP and create new opportunities for engagement and consumption.”"
+        },
+        {
+          "url": "https://www.fool.com/earnings/call-transcripts/2026/11/17/tencent-music-tme-q3-2026-earnings-call-transcript/",
+          "domain": "fool.com",
+          "date": "2026-11-17",
+          "quote": "As a result, AI content stream volume remains negligible with a declining share of listening, while high-quality differentiated content continues to gain traction."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "On the same call Pang said low-quality and unauthorised AI-generated content still weighs on subscription money, and in May TME's leaders called it a headwind for subscription growth, so the company does not treat AI content as negligible for its business. TME gave no figure for what negligible means."
+      },
+      "mechanism_type": null,
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why are AI-generated songs such a small share of listening on TME's apps?",
+      "answer": "TME gives two reasons. The English prepared remarks credit listeners choosing for themselves. In his original Chinese remarks Pang credited TME's own control measures, and the company points to filtering out low-quality AI songs and legal action against infringing ones.",
+      "evidence": [
+        {
+          "url": "https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-17",
+          "quote": "In his original Chinese remarks, Pang said TME’s own proactive control measures had kept the share of plays of AI-generated songs on its platforms at a relatively low level."
+        },
+        {
+          "url": "https://www.digitalmusicnews.com/2026/11/17/tencent-music-ai-consumption-comments/",
+          "domain": "digitalmusicnews.com",
+          "date": "2026-11-17",
+          "quote": "TME attributed this low share to proactive content management, filtering out low-quality AI slop, alongside legal action against unauthorized, copyright-infringing AI-generated music."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "The English prepared remarks frame the low share as listener choice, not filtering: \"users are becoming more selective about what they choose to engage with\" (fool.com transcript). The sources do not separate how much of the low share comes from listeners and how much from TME removing or limiting AI songs."
+      },
+      "mechanism_type": "platform content control",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "How does TME keep AI-generated songs down on its platforms?",
+      "answer": "By its own account it filters and manages content and takes legal action over infringement, aligned with major rights holders. Its 2025 ESG report says it works with labels on detection technology, tags AI songs using audio models, took down over 250,000 policy-violating songs and reviewed over 600,000 high-risk copyright cases.",
+      "evidence": [
+        {
+          "url": "https://www.fool.com/earnings/call-transcripts/2026/11/17/tencent-music-tme-q3-2026-earnings-call-transcript/",
+          "domain": "fool.com",
+          "date": "2026-11-17",
+          "quote": "Align with the leading global rights holders, we are actively attack on infringement through legal action and proactive content management, with encouraging early results."
+        },
+        {
+          "url": "https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-17",
+          "quote": "The report said TME took down more than 250,000 policy-violating songs and reviewed over 600,000 cases involving “high-risk copyright content” across its platforms in 2025."
+        },
+        {
+          "url": "https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-17",
+          "quote": "TME also said it identifies and tags AI-generated content on its platforms using audio models."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "TME did not name the rights holders or identify any legal case (musicbusinessworldwide.com). The takedown and review counts are for policy-violating songs and high-risk copyright cases in general, not AI songs alone, and the detection and tagging detail appears only on one site, citing TME's ESG report, which was not read."
+      },
+      "mechanism_type": "content detection, tagging and takedown",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why does TME work to hold AI-generated songs down?",
+      "answer": "Because, in its own words, the spread of low-quality and unauthorised AI-generated content weighs on how much money it makes from subscriptions. It also casts it as copyright protection, its first priority heading into 2027. TME is not against AI music as such: it runs its own AI music production platform.",
+      "evidence": [
+        {
+          "url": "https://www.fool.com/earnings/call-transcripts/2026/11/17/tencent-music-tme-q3-2026-earnings-call-transcript/",
+          "domain": "fool.com",
+          "date": "2026-11-17",
+          "quote": "The proliferation of low-quality and unauthorized AI-generated content still weigh on subscription monetization."
+        },
+        {
+          "url": "https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-17",
+          "quote": "He said the proliferation of “low-quality and unauthorized AI-generated content” still weighs on subscription monetization."
+        },
+        {
+          "url": "https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-17",
+          "quote": "In March, Liang said TME’s AI music production platform had more than 10 million users and over 150,000 professional creators, as MBW reported."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Membership services revenue still rose about 9% year on year in the quarter, with Ximalaya, an audio platform TME bought in May, contributing to that growth (musicbusinessworldwide.com, digitalmusicnews.com). TME stopped disclosing subscriber numbers after March, so the size of any AI effect on subscriptions cannot be checked from these sources."
+      },
+      "mechanism_type": "subscription revenue",
+      "stop": null
+    },
+    {
+      "n": 5,
+      "question": "How does unauthorised AI-generated content weigh on TME's subscription money?",
+      "answer": "The sources point to competition but do not spell it out. TME's chief executive accused rivals of using AI to fill their music libraries quickly to attract users, and TME competes with ByteDance's Soda Music and NetEase Cloud Music under subscription pressure. No source says how AI songs move paying subscribers.",
+      "evidence": [
+        {
+          "url": "https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-17",
+          "quote": "CEO Ross Liang accused competitors on the same call of using AI “to quickly fill their music libraries” in a bid to attract users."
+        },
+        {
+          "url": "https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-17",
+          "quote": "TME faces competition in China from ByteDance‘s Soda Music and NetEase Cloud Music."
+        },
+        {
+          "url": "https://www.fool.com/earnings/call-transcripts/2026/11/17/tencent-music-tme-q3-2026-earnings-call-transcript/",
+          "domain": "fool.com",
+          "date": "2026-11-17",
+          "quote": "Despite some short-term pressure on membership and advertising, our IP-related business continues to gain momentum with market share gains."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "In March Liang said that on AI-generated music, \"in terms of royalty and revenue sharing, we do not see material changes\" (musicbusinessworldwide.com), which cuts against AI songs taking money from the pool. Scope: the two source articles and the call transcript; neither rival's own account was read."
+      },
+      "mechanism_type": "competition for subscribers",
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "The claim rests on TME's own word on an earnings call, with no figure behind negligible. TME explains the low share two ways at once, listeners choosing and its own filters and lawsuits, and it calls AI streams negligible while saying AI content weighs on subscription money. The link from rivals' AI-filled libraries to that pressure is pointed to, never shown.",
+    "open_question": "If TME's own filters and takedowns keep AI songs off its apps, how much of the falling share is listeners choosing human music?"
+  }
+}

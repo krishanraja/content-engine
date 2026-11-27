@@ -1,0 +1,103 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why are illustrators closing their Etsy shops even after its chief executive said Etsy will not make copycats?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why are illustrators closing their Etsy shops?",
+      "answer": "Etsy's updated terms, starting 16 December, give Etsy and its third-party partners and vendors the right to use content sellers upload to develop, train, test and improve AI and machine learning systems. Artists are leaving rather than have their work used that way.",
+      "evidence": [
+        {
+          "url": "https://www.cartoonbrew.com/artificial-intelligence/etsy-ai-training-terms-of-use-269553.html",
+          "domain": "cartoonbrew.com",
+          "date": "2026-11-18",
+          "quote": "Starting December 16, the agreement explicitly gives Etsy and its third-party partners and vendors permission to use content uploaded by sellers to train and improve AI systems."
+        },
+        {
+          "url": "https://arstechnica.com/tech-policy/2026/11/etsy-clarifies-ai-terms-after-seller-backlash/",
+          "domain": "arstechnica.com",
+          "date": "2026-11-25",
+          "quote": "This also includes the right for us and our third party partners and vendors to use Your Content to develop, train, test and improve artificial intelligence and machine learning technologies, including to improve the Services and/or help keep them safe, subject to any applicable opt-out rights described in our Privacy Policy."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "The clause itself is \"subject to any applicable opt-out rights described in our Privacy Policy\" (Ars Technica), so some opt-out may exist; the Privacy Policy and Etsy's own terms page could not be read (bot check), so its scope is unknown."
+      },
+      "mechanism_type": "contract",
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why does the chief executive's promise not stop the closures?",
+      "answer": "Her note rules out Etsy itself training models to make copycats. The terms also name partners and vendors, and Cartoon Brew says the vague wording leaves open how they might use the same content. One seller who is closing calls the revisions sugar coating.",
+      "evidence": [
+        {
+          "url": "https://arstechnica.com/tech-policy/2026/11/etsy-clarifies-ai-terms-after-seller-backlash/",
+          "domain": "arstechnica.com",
+          "date": "2026-11-25",
+          "quote": "It was not meant to enable us to train AI models for the purpose of creating copycats of your items. We do not and will not do that."
+        },
+        {
+          "url": "https://www.cartoonbrew.com/artificial-intelligence/etsy-ai-training-terms-of-use-269553.html",
+          "domain": "cartoonbrew.com",
+          "date": "2026-11-18",
+          "quote": "That said, the vague terms leave open just how its partners and vendors might use that same content."
+        },
+        {
+          "url": "https://arstechnica.com/tech-policy/2026/11/etsy-clarifies-ai-terms-after-seller-backlash/",
+          "domain": "arstechnica.com",
+          "date": "2026-11-25",
+          "quote": "Aaron Meshon, a longtime professional illustrator and Etsy seller, told Ars that even though the company had dialed back its AI language somewhat, the changes were mere “sugar coating.”"
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "Ars Technica reports Etsy \"had dialed back its AI language somewhat\"; the revised wording and the chief executive's full note were not readable (bot check on etsy.com), so whether the revision reaches partners and vendors is not known from what was read."
+      },
+      "mechanism_type": "contract",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why does Etsy want the right to train AI on seller content at all?",
+      "answer": "Etsy's stated reason is its own tools: the chief executive says the update reflects technologies used to build better tools for sellers, and Etsy says it uses seller content to spot fraud and help shoppers find products. The clause itself names improving the services and keeping them safe.",
+      "evidence": [
+        {
+          "url": "https://arstechnica.com/tech-policy/2026/11/etsy-clarifies-ai-terms-after-seller-backlash/",
+          "domain": "arstechnica.com",
+          "date": "2026-11-25",
+          "quote": "Our recent terms update was meant to reflect the evolving technologies we’re using to build better tools and experiences for sellers and the Etsy community"
+        },
+        {
+          "url": "https://www.cartoonbrew.com/artificial-intelligence/etsy-ai-training-terms-of-use-269553.html",
+          "domain": "cartoonbrew.com",
+          "date": "2026-11-18",
+          "quote": "Etsy says it uses sellers’ content to spot fraud and help shoppers find products, and that it doesn’t train models designed to copy artists’ work."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Both sources report this as Etsy's own account; neither shows the tools, and Cartoon Brew says the terms leave open how partners and vendors might use the content."
+      },
+      "mechanism_type": null,
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why do third-party partners and vendors need seller content, and who are they?",
+      "answer": "Nothing read answers this. Neither source names any partner or vendor or says what they would train, and Etsy's own pages could not be read.",
+      "evidence": [],
+      "strength": "open",
+      "counter": {
+        "text": "none found; scope: the Cartoon Brew and Ars Technica articles, with Etsy's chief executive note, seller handbook article and terms of use unreadable behind a bot check"
+      },
+      "mechanism_type": null,
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "From 16 December Etsy's terms let Etsy and unnamed third-party partners and vendors train AI on seller content. The chief executive's promise speaks for Etsy and rules out copycats, but what was read does not show it binding the partners and vendors, and illustrators such as Aaron Meshon are closing shops weeks before the holidays anyway.",
+    "open_question": "Who are the third-party partners and vendors the terms name, and does the chief executive's promise bind what they do with sellers' work?"
+  }
+}

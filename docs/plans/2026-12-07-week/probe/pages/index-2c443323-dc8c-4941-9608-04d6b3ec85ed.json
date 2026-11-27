@@ -20,7 +20,22 @@
   "https://sonilo.com/blog": {
     "file": "sonilo-blog-index.txt"
   },
+  "https://sonilo.com/blog/industry/sonilo-musical-ai-partnership-creators-rights-holders": {
+    "file": "sonilo-musical-ai-blog.txt"
+  },
+  "https://sonilo.com/blog/industry/sonilo-raises-11-million-b-capital-variety": {
+    "file": "sonilo-funding-variety-repro.txt"
+  },
+  "https://sonilo.com/news": {
+    "file": "sonilo-news-index.txt"
+  },
+  "https://sonilo.com/blog/industry": {
+    "file": "sonilo-blog-industry-index.txt"
+  },
+  "https://sonilo.com/news/feed.xml": {
+    "file": "sonilo-news-feed.txt"
+  },
   "https://symphonic.com/ai/": {
-    "unreadable": "Cloudflare bot check, HTTP 403"
+    "unreadable": "Cloudflare bot check, HTTP 403, tried twice"
   }
 }

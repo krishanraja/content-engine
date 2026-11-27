@@ -1005,6 +1005,209 @@
      "kind": "strange",
      "why_unexpected": "The obvious takes count what AI made; this one is about the crowd ignoring the AI and crowning the hand-made fish."
     }
+   },
+   {
+    "id": "acb58370-aaca-4040-9c13-83f227a628ec",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "China's biggest music company says AI songs are flooding in and almost nobody is listening, so every artist and label worried about AI music can see where the money is still going: to human, distinctive music.",
+    "story": "On its third-quarter 2026 earnings call on 17 November, Tencent Music Entertainment, owner of the QQ Music, Kugou and Kuwo music apps, said streams of AI-generated songs remain negligible and falling while human, distinctive music gains. Its executive chairman Cussion Pang said listeners are becoming more selective as AI makes music more abundant; revenue was RMB8.94 billion, up 5.6%.",
+    "why_now": "Tencent Music third-quarter 2026 earnings call, 17 Nov 2026.",
+    "fact": "Music Business Worldwide, 17 Nov 2026: \"Streams from AI-generated songs remain very low and with a declining trend.\"; Digital Music News: \"AI content stream volumes remain negligible, with a declining share of listening, while high-quality, differentiated content continues to gain traction.\"",
+    "source": {
+     "label": "Music Business Worldwide, Tencent Music on AI streams (17 Nov 2026)",
+     "url": "https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/",
+     "kind": "report"
+    },
+    "sources": [
+     {
+      "label": "Digital Music News, Tencent Music on AI music (17 Nov 2026)",
+      "url": "https://www.digitalmusicnews.com/2026/11/17/tencent-music-ai-consumption-comments/"
+     }
+    ],
+    "first_reported": "https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/",
+    "beats": [
+     "AI can make a million songs a day. Almost nobody plays them.",
+     "What the biggest music company in China told its investors.",
+     "Why more supply made listeners pickier.",
+     "Where the money still goes: concerts, merch and human artists.",
+     "What this shows about what AI music is worth."
+    ],
+    "pitch": {
+     "question": "If machines can make endless songs, why are listeners still choosing the ones people make?",
+     "headline": "AI is flooding China's biggest music apps. Streams of it are 'negligible'.",
+     "hook": "Tencent Music, owner of China's biggest music apps, told investors that streams of AI-generated songs remain negligible and falling, while human, distinctive music gains.",
+     "examples": [
+      "Owner of QQ Music, Kugou and Kuwo.",
+      "AI streams 'negligible, with a declining share of listening'.",
+      "Revenue up 5.6%, to RMB8.94 billion."
+     ],
+     "chain": [
+      "AI tools make songs cheap and fast.",
+      "So the apps fill up with them.",
+      "Listeners face more choice than ever.",
+      "More choice makes them pickier.",
+      "They keep playing music by people they know.",
+      "So the AI flood costs the apps filtering and lawyers, and earns little."
+     ],
+     "take": "What this shows is that making music is no longer scarce, and being chosen is. What makes a listener pick one song out of a million?"
+    },
+    "style": {
+     "script": "random-headline",
+     "production": "data-story",
+     "experiment": {
+      "format": "everyday-debate",
+      "why": "A label boss and a bedroom producer argue over the chart, each holding the same earnings quote."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If machines can make endless songs, why are listeners still choosing the ones people make? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Tencent Music's comments on AI-generated streams, its filtering and legal action, its revenue and what other music platforms report about AI listening. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "AI makes music supply abundant, listeners grow more selective, and AI tracks earn a negligible share of streams while costing moderation and legal spend.",
+    "aim": "interest",
+    "funny": "The machines can write a million songs a day, and the market's verdict, per its own earnings call, is negligible.",
+    "lookalike": {
+     "pattern": "ai-backfires",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
+     "our_take": "The post showed AI doing something unexpected; we show listeners simply not playing it."
+    }
+   },
+   {
+    "id": "b0e8bb0f-186e-4622-8d31-65a3cadcd29c",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "Etsy's chief executive says it will not train AI to copy sellers, but its new terms let partners train AI on their work, so every illustrator, animator and maker selling online knows to read what the terms allow, not what the note promises.",
+    "story": "Etsy's terms, effective 16 December 2026, give Etsy and its third-party partners and vendors permission to use sellers' content to train AI, and illustrators and animators began closing shops, Cartoon Brew reported on 18 November. Etsy's chief executive said on 23 November the update was not meant to train AI to copy sellers' items; one illustrator told Ars Technica he is losing 20 percent of his yearly income by leaving.",
+    "why_now": "Cartoon Brew, 18 Nov 2026; Ars Technica, 25 Nov 2026.",
+    "fact": "Cartoon Brew, 18 Nov 2026: \"Starting December 16, the agreement explicitly gives Etsy and its third-party partners and vendors permission to use content uploaded by sellers to train and improve AI systems.\"; Ars Technica: \"It was not meant to enable us to train AI models for the purpose of creating copycats of your items.\"",
+    "source": {
+     "label": "Cartoon Brew, artists close Etsy shops over AI training terms (18 Nov 2026)",
+     "url": "https://www.cartoonbrew.com/artificial-intelligence/etsy-ai-training-terms-of-use-269553.html",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "Ars Technica, Etsy clarifies AI terms after seller backlash (25 Nov 2026)",
+      "url": "https://arstechnica.com/tech-policy/2026/11/etsy-clarifies-ai-terms-after-seller-backlash/"
+     }
+    ],
+    "first_reported": "https://www.cartoonbrew.com/artificial-intelligence/etsy-ai-training-terms-of-use-269553.html",
+    "beats": [
+     "A shop full of artists' work, and a new line in the terms.",
+     "What the line allows: partners training AI on it.",
+     "What the note promises: no copycats.",
+     "Why artists believed the line over the note.",
+     "What this shows about who owns an artist's work online."
+    ],
+    "pitch": {
+     "question": "When a marketplace promises not to copy your art but its terms allow it, which do you believe?",
+     "headline": "Etsy says it won't copy its artists. Its terms let partners train AI on their work.",
+     "hook": "Etsy's new terms let its partners and vendors train AI on sellers' content from 16 December, and illustrators are closing shops even after its chief executive said it will not make copycats.",
+     "examples": [
+      "Terms effective 16 December.",
+      "Partners and vendors allowed to train AI on sellers' content.",
+      "One illustrator losing 20 percent of his yearly income by leaving."
+     ],
+     "chain": [
+      "Artists sell prints and designs on a marketplace.",
+      "The marketplace updates its terms.",
+      "The terms let its partners train AI on what artists upload.",
+      "The chief executive writes that it will not copy their items.",
+      "The terms still say what they say.",
+      "Artists take their work, and their sales, elsewhere."
+     ],
+     "take": "What this shows is that artists read the contract, not the reassurance. If your work is in someone's shop, what do their terms let them do with it?"
+    },
+    "style": {
+     "script": "everyday-debate",
+     "production": "face-with-proof",
+     "experiment": {
+      "format": "kinetic-movement",
+      "why": "Highlight the one clause in the terms and the one line in the note, side by side, as the words move."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When a marketplace promises not to copy your art but its terms allow it, which do you believe? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Etsy's terms of use effective 16 December 2026, the AI training clause, the chief executive's note, sellers closing shops and their lost income. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "The reassurance covers Etsy copying sellers; the clause covers Etsy and its partners training AI on sellers' content, and artists act on the clause.",
+    "aim": "interest",
+    "funny": "Etsy wrote an AI rule so clear its artists read it and left.",
+    "lookalike": {
+     "pattern": "new-rule-for-ai-art",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
+     "our_take": "The post explained a rule; we set a marketplace's rule against its own reassurance."
+    }
+   },
+   {
+    "id": "72b1be18-6980-478b-aca4-9e546f07bb03",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "Coca-Cola's AI Christmas ads beat its own targets and the brand still went back to a film director and a cast, so everyone making advertising and film for brands knows the benchmark was not measuring what the brand cared about.",
+    "story": "On 19 November 2026 Coca-Cola launched its US holiday advertising, live-action film spots directed by Paul Dektor, made without generative AI. Its 2024 and 2025 holiday ads were made with generative AI and, Marketing Dive reports, exceeded internal benchmarks while dividing consumers.",
+    "why_now": "Marketing Dive, 19 Nov 2026; Adweek, 20 Nov 2026.",
+    "fact": "Marketing Dive, 19 Nov 2026: \"Notably, the new spots pivot away from using generative artificial intelligence as the brand did for recent holiday pushes.\"; the earlier AI ads were \"exceeding internal benchmarks\" yet \"proved divisive with consumers\".",
+    "source": {
+     "label": "Marketing Dive, Coca-Cola pivots from AI-generated holiday ads (19 Nov 2026)",
+     "url": "https://www.marketingdive.com/news/coca-cola-pivots-from-divisive-ai-generated-ads-for-holiday-campaign/875215/",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "Adweek, AI is off the festive dinner menu in Coke's 2026 holiday ad (20 Nov 2026)",
+      "url": "https://www.adweek.com/creativity/ai-is-off-the-festive-dinner-menu-in-cokes-2026-holiday-ad/"
+     },
+     {
+      "label": "ContentGrip, Coca-Cola's 2026 Christmas ads skip generative AI (20 Nov 2026)",
+      "url": "https://www.contentgrip.com/coca-cola-enjoy-joy-holiday/"
+     }
+    ],
+    "first_reported": "https://www.marketingdive.com/news/coca-cola-pivots-from-divisive-ai-generated-ads-for-holiday-campaign/875215/",
+    "beats": [
+     "Two AI Christmas ads that beat their targets.",
+     "The third one made with a director and a cast.",
+     "What the benchmark measured, and what it missed.",
+     "Why a brand drops a tool that hits its numbers.",
+     "What this shows about measuring creative work."
+    ],
+    "pitch": {
+     "question": "Wildcard: If an AI advert beats every target, why would a brand stop making them?",
+     "headline": "Coke's AI Christmas ads beat their targets. This year it hired a film crew.",
+     "hook": "Coca-Cola's 2024 and 2025 AI-made holiday ads exceeded its internal benchmarks, and its 2026 US holiday advertising is live-action film, directed by Paul Dektor, made without generative AI.",
+     "examples": [
+      "Two AI holiday ads that exceeded internal benchmarks.",
+      "A 2026 US campaign made with no generative AI.",
+      "A director, a production company and a cast."
+     ],
+     "chain": [
+      "A brand made its Christmas ads with AI.",
+      "The ads beat its internal targets.",
+      "Viewers were divided about them.",
+      "The brand cares about how people feel at Christmas.",
+      "So it went back to a director and a cast.",
+      "The targets measured the ad, not the feeling."
+     ],
+     "take": "What this shows is that a creative benchmark can be passed while missing the point. What does your own team measure that the audience does not care about?"
+    },
+    "style": {
+     "script": "everyday-debate",
+     "production": "face-with-proof",
+     "experiment": {
+      "format": "fry-explainer",
+      "why": "Show the benchmark chart going up, then cut to the comments, one at a time."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If an AI advert beats every target, why would a brand stop making them? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Coca-Cola's 2026 US holiday campaign, how it was made, its 2024 and 2025 AI holiday ads, their internal benchmark results and consumer reaction. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "The internal numbers said the AI ads worked; the brand's flagship spend went back to a director and a cast anyway.",
+    "aim": "humour",
+    "funny": "Two years of AI Christmas ads scored above target, and the reward was a film crew.",
+    "lookalike": {
+     "pattern": "ai-backfires",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
+     "our_take": "The post showed an AI surprising its user; we show an AI hitting its targets and being dropped anyway."
+    },
+    "wildcard": {
+     "kind": "unexpected",
+     "why_unexpected": "The obvious take is AI replacing ad crews; here the AI ads hit every target and the brand rehired the crew anyway."
+    }
    }
   ]
  },

@@ -23,11 +23,41 @@
  "https://newsroom-deezer.com/wp-content/uploads/2026/11/Market-Research-Scorecards-Second-Annual-Barometer-AI-x-Music-Study-2.pdf": {
   "file": "deezer-ipsos-scorecards-2026.txt"
  },
+ "https://business.deezer.com/ai-detection/": {
+  "file": "deezer-business-ai-detection.txt"
+ },
+ "https://www.ipsos.com": {
+  "file": "ipsos-home-en-uk.txt"
+ },
  "https://www.maxon.net/en/maxon-plus": {
   "file": "maxon-plus.txt"
  },
  "https://www.creativebloq.com/news/every-3d-artist-should-have-an-ai-assistant-maxon-says-as-it-launches-new-tools-and-agentic-licences": {
   "file": "creativebloq-maxon-plus.txt"
+ },
+ "https://www.maxon.net/en/responsible-ai": {
+  "file": "maxon-responsible-ai.txt"
+ },
+ "https://www.maxon.net/en/legal/service-description": {
+  "file": "maxon-plus-service-description.txt"
+ },
+ "https://www.maxon.net/en/": {
+  "file": "maxon-home.txt"
+ },
+ "https://www.maxon.net/en/buy/maxon-plus": {
+  "unreadable": "plans and prices load by script; fetched page holds only navigation"
+ },
+ "https://www.marketingdive.com/news/coca-cola-pivots-from-divisive-ai-generated-ads-for-holiday-campaign/875215/": {
+  "file": "72b1-marketingdive-coke-pivot.txt"
+ },
+ "https://www.adweek.com/creativity/ai-is-off-the-festive-dinner-menu-in-cokes-2026-holiday-ad/": {
+  "file": "72b1-adweek-coke-2026-holiday.txt"
+ },
+ "https://www.contentgrip.com/coca-cola-enjoy-joy-holiday/": {
+  "file": "72b1-contentgrip-coke-enjoy-joy.txt"
+ },
+ "https://investors.coca-colacompany.com/news-events/press-releases/detail/1176/coca-cola-reports-third-quarter-2026-results-and-raises-full-year-guidance": {
+  "file": "72b1-coca-cola-q3-2026-release.txt"
  },
  "https://www.izotope.com/en/products/nectar.html": {
   "file": "izotope-nectar-product.txt"
@@ -37,6 +67,18 @@
  },
  "https://izotope.com/community/blog/introducing-izotope-nectar-5": {
   "file": "izotope-blog-introducing-nectar5.txt"
+ },
+ "https://www.izotope.com/pages/release-notes/nectar": {
+  "file": "izotope-nectar-release-notes.txt"
+ },
+ "https://www.izotope.com/nectar5-help": {
+  "file": "izotope-nectar5-manual-home.txt"
+ },
+ "https://docs.izotope.com/nectar5/docs/moments/": {
+  "file": "izotope-nectar5-manual-moments.txt"
+ },
+ "https://docs.izotope.com/nectar5/docs/vocal-assistant/": {
+  "file": "izotope-nectar5-manual-vocal-assistant.txt"
  },
  "https://www.eurogamer.net/binding-of-isaac-repentance-plus-ai-music-removed": {
   "file": "eurogamer-isaac-ai-music.txt"
@@ -59,6 +101,15 @@
  "https://store.steampowered.com/app/250900/The_Binding_of_Isaac_Rebirth/": {
   "file": "steam-isaac-rebirth-store.txt"
  },
+ "https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=250900&count=10&maxlength=0": {
+  "file": "steam-news-api-250900.txt"
+ },
+ "https://store.steampowered.com/app/3353470/": {
+  "file": "steam-repentance-plus-store.txt"
+ },
+ "https://x.com/edmundmcmillen/status/2124242373761003571": {
+  "file": "x-mcmillen-2124242373761003571.txt"
+ },
  "https://www.reddit.com/r/bindingofisaac/comments/1y1qqut/reps_gtavi_runs_music_is_100_generated_by_suno_ai/": {
   "unreadable": "Reddit returned 403 Blocked"
  },
@@ -80,6 +131,15 @@
  "https://dynamic.heygen.ai/www/Paper%20Links/avatarv_tech_report.pdf": {
   "file": "46dd-heygen-avatar-v-report.txt"
  },
+ "https://developers.heygen.com/docs/models/avatar-6": {
+  "file": "46dd-heygen-dev-docs-avatar-6.txt"
+ },
+ "https://openrouter.ai/heygen/heygen-avatar-6": {
+  "file": "46dd-openrouter-heygen-avatar-6.txt"
+ },
+ "https://www.heygen.com/research/heygen-voice-scene-aware-voice-cloning": {
+  "file": "46dd-heygen-voice-research.txt"
+ },
  "https://www.vp-land.com/stories/unreal-engine-6-drops-blueprints-as-epic-uses-ai-to-port-20-000-fortnite-blueprints-to-ver": {
   "file": "vpland-ue6-blueprints.txt"
  },
@@ -98,6 +158,18 @@
  "https://epoch.ai/publications/the-plunging-price-of-thought": {
   "file": "epoch-plunging-price-of-thought.txt"
  },
+ "https://www.unrealengine.com/events/unreal-fest-tokyo-2026": {
+  "unreadable": "HTTP 403, bot block page with no event text"
+ },
+ "https://dev.epicgames.com/documentation/unreal-engine/unreal-engine-5-9-release-notes": {
+  "file": "epic-ue59-release-notes.txt"
+ },
+ "https://dev.epicgames.com/documentation/fortnite/scene-graph-in-unreal-editor-for-fortnite": {
+  "file": "epic-scene-graph-uefn-docs.txt"
+ },
+ "https://dev.epicgames.com/documentation/fortnite/verse": {
+  "file": "epic-verse-docs.txt"
+ },
  "https://newsmachines.beehiiv.com/p/new-york-times-news-agent": {
   "file": "newsmachines-nyt-news-agent.txt"
  },
@@ -113,11 +185,26 @@
  "https://www.nytimes.com/2024/10/07/reader-center/how-new-york-times-uses-ai-journalism.html?unlocked_article_code=1.S1E.w1xq.gqBL7AK7rKTN&smid=url-share": {
   "unreadable": "403, bot check page, no article text"
  },
+ "https://www.hackshackers.com/investigative-journalism-forum-2026-program/": {
+  "file": "hackshackers-ij-forum-2026-program.txt"
+ },
+ "https://www.justice.gov/opa/pr/department-justice-publishes-35-million-responsive-pages-compliance-epstein-files": {
+  "file": "doj-epstein-files-release-2026-01-30.txt"
+ },
  "https://www.cartoonbrew.com/artificial-intelligence/annecy-ottawa-manchester-festival-programmers-artificial-intelligence-269655.html": {
   "file": "cartoonbrew-festival-genai-programmers.txt"
  },
  "https://www.manchesteranimationfestival.co.uk/wp-content/uploads/2026/11/Generative-A.I-Policy.pdf": {
   "file": "maf-generative-ai-policy.txt"
+ },
+ "https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/": {
+  "file": "acb5-mbw-tme-ai-negligible.txt"
+ },
+ "https://www.digitalmusicnews.com/2026/11/17/tencent-music-ai-consumption-comments/": {
+  "file": "acb5-dmn-tme-ai-consumption.txt"
+ },
+ "https://www.fool.com/earnings/call-transcripts/2026/11/17/tencent-music-tme-q3-2026-earnings-call-transcript/": {
+  "file": "acb5-fool-tme-q3-2026-transcript.txt"
  },
  "https://www.musicbusinessworldwide.com/elevenlabs-agrees-to-acquire-japan-focused-voice-ai-company-kotoba-in-reported-100m-deal/": {
   "file": "mbw-elevenlabs-kotoba.txt"
@@ -131,11 +218,44 @@
  "https://www.drweb.de/?p=608232": {
   "file": "drweb-kuaishou-q3-2026.txt"
  },
+ "https://www.drweb.de/kling-finanzierung-abschluss-abu-dhabi/": {
+  "file": "drweb-kling-financing.txt"
+ },
+ "https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0702/2026070204065.pdf": {
+  "file": "hkex-2026-07-02-kling-subscription.txt"
+ },
+ "https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0831/2026083102335.pdf": {
+  "file": "hkex-2026-08-31-kling-update.txt"
+ },
+ "https://www1.hkexnews.hk/listedco/listconews/sehk/2026/1030/2026103002123.pdf": {
+  "file": "hkex-2026-10-30-kling-completion.txt"
+ },
  "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/": {
   "file": "ilona-andrews-crown-cover-ai.txt"
  },
  "http://www.publishersweekly.com/pw/by-topic/industry-news/publisher-news/article/101841-tor-pulls-ilona-andrews-cover-over-generative-ai-use.html": {
   "file": "pw-tor-pulls-andrews-cover.txt"
+ },
+ "https://www.instagram.com/markovart_/": {
+  "unreadable": "empty without login, script-rendered profile"
+ },
+ "https://www.instagram.com/zakuga_mignon/?hl=en": {
+  "unreadable": "empty without login, script-rendered profile"
+ },
+ "https://www.cartoonbrew.com/artificial-intelligence/etsy-ai-training-terms-of-use-269553.html": {
+  "file": "cartoonbrew-etsy-ai-terms.txt"
+ },
+ "https://arstechnica.com/tech-policy/2026/11/etsy-clarifies-ai-terms-after-seller-backlash/": {
+  "file": "ars-etsy-clarifies-ai-terms.txt"
+ },
+ "https://www.etsy.com/news/etsyas-terms-of-use?ref=news": {
+  "unreadable": "403, bot check page (captcha)"
+ },
+ "https://www.etsy.com/seller-handbook/article/1522733284810?ref=handbook": {
+  "unreadable": "403, bot check page (captcha)"
+ },
+ "https://www.etsy.com/legal/terms-of-use": {
+  "unreadable": "403, bot check page (captcha)"
  },
  "https://www.musicbusinessworldwide.com/11m-backed-ai-startup-sonilo-founded-by-tiktok-veterans-inks-licensing-deal-with-symphonic-to-train-its-model-on-opted-in-indie-recordings/": {
   "file": "sonilo-symphonic-mbw.txt"
@@ -158,8 +278,23 @@
  "https://sonilo.com/blog": {
   "file": "sonilo-blog-index.txt"
  },
+ "https://sonilo.com/blog/industry/sonilo-musical-ai-partnership-creators-rights-holders": {
+  "file": "sonilo-musical-ai-blog.txt"
+ },
+ "https://sonilo.com/blog/industry/sonilo-raises-11-million-b-capital-variety": {
+  "file": "sonilo-funding-variety-repro.txt"
+ },
+ "https://sonilo.com/news": {
+  "file": "sonilo-news-index.txt"
+ },
+ "https://sonilo.com/blog/industry": {
+  "file": "sonilo-blog-industry-index.txt"
+ },
+ "https://sonilo.com/news/feed.xml": {
+  "file": "sonilo-news-feed.txt"
+ },
  "https://symphonic.com/ai/": {
-  "unreadable": "Cloudflare bot check, HTTP 403"
+  "unreadable": "Cloudflare bot check, HTTP 403, tried twice"
  },
  "https://itch.io/jam/2026-epic-ai-megajam": {
   "file": "megajam-itch-overview.txt"
@@ -190,6 +325,9 @@
  },
  "https://www.unrealengine.com/news/2026-epic-ai-megajam": {
   "unreadable": "403 refused, only a block page returned"
+ },
+ "https://www.youtube.com/watch?v=Ya8rzhoFOVM": {
+  "unreadable": "429 too many requests, no page returned"
  },
  "https://www.advanced-television.com/2026/11/23/prime-video-unveils-progressive-actions-for-champions-league/": {
   "file": "advtv-prime-progressive-actions.txt"
