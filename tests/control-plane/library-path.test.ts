@@ -199,19 +199,22 @@ describe('the migration matches the code', () => {
   })
 
   it('keeps the database\'s own path check in step with the top folders', () => {
-    // The first migration's check, as it was applied; 20261226090000 replaced it (below).
+    // The first migration's check, as it was applied; 20261226090000 and 20261227090000 replaced it (below).
     expect(migration).toContain("path ~ '^(1 Brand kit \\(permanent\\)|2 Channel art \\(permanent\\)|3 Posts/[^/]+)/[^/]'")
   })
 })
 
-// Channel art moved into "1 Brand kit (permanent)/Channel art" on 26 Nov 2026 and the API refuses the old top folder;
-// on 27 Nov (Krish's yes) the database stopped taking a ready row there too, and the working-files loop's old
-// versions stopped being ready. Nothing was deleted.
+// Channel art moved into "1 Brand kit (permanent)/Channel art" on 26 Nov 2026 and the API refuses the old top folder.
+// On 27 Nov (Krish's yes) the working-files loop's old versions and the three channel-art rows stopped being ready,
+// reversibly, and later that day (his yes to the permanent deletion) they and the stored files only they used were
+// deleted, and the database stopped taking any row under the old folder.
 describe('the retired channel-art folder and the working-files loop (27 Nov 2026)', () => {
   const retire = readFileSync('supabase/migrations/20261226090000_content_library_retire_loop_rows.sql', 'utf8')
-  const readyRule = /\(library = 'makeyourmindup' and path ~ '([^']+)'\)/.exec(retire)?.[1]
+  const purge = readFileSync('supabase/migrations/20261227090000_content_library_delete_retired_rows.sql', 'utf8')
+  const purgeStatements = purge.replace(/^--.*$/gm, '')
+  const readyRule = /\(library = 'makeyourmindup' and path ~ '([^']+)'\)/.exec(purgeStatements)?.[1]
 
-  it('the newest path check takes a ready row only under the code\'s top folders', () => {
+  it('the newest path check takes a row of any state only under the code\'s top folders', () => {
     expect(readyRule).toBe('^(1 Brand kit \\(permanent\\)|3 Posts/[^/]+)/[^/]')
     expect([...LIBRARY_TOP_FOLDERS]).toEqual(['1 Brand kit (permanent)', '3 Posts'])
     const rule = new RegExp(readyRule!)
@@ -219,12 +222,16 @@ describe('the retired channel-art folder and the working-files loop (27 Nov 2026
     expect(rule.test('3 Posts/2026-10-05 Mon follow.the.money - Who gets paid/READ ME.txt')).toBe(true)
     expect(rule.test('2 Channel art (permanent)/youtube-banner-2560x1440.png')).toBe(false)
     expect(checkLibraryPath('2 Channel art (permanent)/youtube-banner-2560x1440.png')).toEqual({ ok: false, refusal: 'path_wrong_top_folder' })
-    // A row already taken out of ready keeps its old path as a record, and only while it is not ready.
+    // The not-ready exception the retire migration made is gone: the old folder is refused for every row.
+    expect(purgeStatements).not.toContain('2 Channel art \\(permanent\\)')
+    expect(purgeStatements).not.toContain("state <> 'ready'")
+    expect(purge).toContain("raise exception 'a row is still under 2 Channel art (permanent)/'")
+    expect(purgeStatements).toMatch(/where path like '2 Channel art \(permanent\)\/%'\s*\)/)
+    // As the retire migration applied it, before the deletion.
     expect(retire).toContain("(library = 'makeyourmindup' and state <> 'ready' and path ~ '^2 Channel art \\(permanent\\)/[^/]')")
-    expect(retire).toContain('raise exception \'a ready row is still under 2 Channel art (permanent)/\'')
   })
 
-  it('takes rows out of ready reversibly: the one other state, the old ready_at kept, nothing deleted', () => {
+  it('first took rows out of ready reversibly, keeping the old ready_at', () => {
     expect(retire).toContain("set state = 'reserved', ready_at = null")
     expect(retire).toContain('create table if not exists public.content_library_files_unready')
     expect(retire).toContain('revoke all on public.content_library_files_unready from anon, authenticated;')
@@ -232,8 +239,20 @@ describe('the retired channel-art folder and the working-files loop (27 Nov 2026
     // The newest version of each path stays ready, read the way content_library_pending reads it.
     expect(retire).toContain('row_number() over (partition by f.path order by f.ready_at desc, f.id) as n')
     expect(retire).toContain('where ranked.id = f.id and ranked.n > 1')
-    const statements = retire.replace(/^--.*$/gm, '')
-    expect(statements).not.toMatch(/\bdelete\b|\bdrop table\b|\btruncate\b|storage\./i)
+    expect(retire.replace(/^--.*$/gm, '')).not.toMatch(/\bdelete\b|\bdrop table\b|\btruncate\b|storage\./i)
+  })
+
+  it('then deleted only those listed rows still not ready, and dropped the list', () => {
+    const deletes = purgeStatements.match(/\bdelete from\b[^;$]*/gi) ?? []
+    expect(deletes).toHaveLength(1)
+    expect(purgeStatements).toContain('delete from public.content_library_files as f')
+    expect(purgeStatements).toContain('using public.content_library_files_unready as u')
+    expect(purgeStatements).toContain("where u.id = f.id and f.state = 'reserved'")
+    expect(purgeStatements).toContain("if to_regclass('public.content_library_files_unready') is not null then")
+    expect(purgeStatements).toContain('drop table if exists public.content_library_files_unready;')
+    expect(purgeStatements.match(/\bdrop table\b/gi)).toHaveLength(1)
+    // The stored files went through the Storage API before the migration; it never touches storage itself.
+    expect(purgeStatements).not.toMatch(/\btruncate\b|storage\./i)
   })
 })
 
@@ -296,7 +315,7 @@ describe('the Heartside library', () => {
   it('keeps the database in step: a library column, a per-library path check and per-library functions', () => {
     expect(heartsideMigration).toContain("add column if not exists library text not null default 'makeyourmindup'")
     expect(heartsideMigration).toContain("check (library in ('makeyourmindup', 'heartside'))")
-    // As applied on 21 Nov; 20261226090000 took "2 Channel art (permanent)" out for a ready row (tested above).
+    // As applied on 21 Nov; 20261226090000 took "2 Channel art (permanent)" out for a ready row and 20261227090000 for every row (tested above).
     expect(heartsideMigration).toContain("path ~ '^(1 Brand kit \\(permanent\\)|2 Channel art \\(permanent\\)|3 Posts/[^/]+)/[^/]'")
     expect(heartsideMigration).toContain(`path ~ '^Posts/${heartside.post_id_pattern.replace('(?:', '(')}/[^/]+$'`)
     expect(heartsideMigration).toContain(`char_length(path) between 1 and ${LIBRARY_PATH_MAX}`)
