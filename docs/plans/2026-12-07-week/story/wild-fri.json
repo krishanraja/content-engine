@@ -1,0 +1,38 @@
+{
+  "kind": "wildcard",
+  "day": "fri",
+  "namespace": "content-engine:ideas",
+  "sparks": [
+    {
+      "rank": 1,
+      "title": "Recipient pays the postage",
+      "mechanism": "Before Rowland Hill's 1840 prepaid stamp, the person receiving a letter paid for it, so senders could flood people with mail at no cost to themselves. This week's threads follow the pre-1840 rule. The 500-channel mill files a strike for free and the singer pays in time to prove a 19th-century song is public domain. TikTok's likeness watch makes you hand over ID before it protects you. The column tallies, thread by thread, who pays to send the AI output and who pays to receive, refuse or dispute it.",
+      "whyNonObvious": "Most coverage argues about whether the AI output is good, while the postal frame looks only at which side of the transaction carries the cost.",
+      "firstStep": "Build a two-column table for every thread this week, sender cost versus receiver cost in hours or dollars, and publish whichever thread shows the widest ratio.",
+      "lens": "multi",
+      "score": 0.713
+    },
+    {
+      "rank": 2,
+      "title": "The reject pile is the product",
+      "mechanism": "Assume value comes from human judgment rather than from output sold. Then the real product of generative tools is the discard rate. The 91% of designers who got pickier, YouTube's three-version opening test and Suno's next eight bars all turn the human into a selector. The gap: claims count what got generated, while the work, and the skill that gets paid, is in what got thrown away.",
+      "whyNonObvious": "Industry economics treat discarded drafts as waste, so nobody reports the ratio that shows where the labor actually moved.",
+      "firstStep": "Ask five working users of Suno, Firefly or Canva for one recent project's ratio of generated versions to kept versions, and publish the numbers.",
+      "lens": "multi",
+      "score": 0.675
+    },
+    {
+      "rank": 3,
+      "title": "What the credits say in 2126",
+      "mechanism": "Add a constraint: the story must pay off for a historian a hundred years from now, who will only have the credits and metadata. Under that test, the AI part of Gods Don't Give Gifts leaves no named trace, and the Foley artist and the pen-drawing animators do. The same goes for the AI artist of the year, whose lyrics were all hers. The pattern still holds without the century: human contributions are the only ones that build up a record, so the AI claim fades from the record while the human work stays in it.",
+      "whyNonObvious": "Present-day coverage asks whether AI did the work, and only the century frame asks which contribution will still be attributable later.",
+      "firstStep": "Pull the full credit list for the first AI feature in cinemas, count the human roles by department, and compare the count with a conventional animated feature of similar length.",
+      "lens": "multi",
+      "score": 0.646
+    }
+  ],
+  "chain": "this week's chain spend could not be read, and unknown stops nothing",
+  "run_id": "1277631359",
+  "label": "engine-made: source_kind engine, divergent {\"run_id\", \"spark\"}; never his",
+  "status": "ok"
+}
