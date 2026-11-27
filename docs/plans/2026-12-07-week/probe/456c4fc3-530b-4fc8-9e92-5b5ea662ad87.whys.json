@@ -1,0 +1,134 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why did a Binding of Isaac update ship Suno-made music with no AI label on Steam?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why do players say the Crime Mode music was made with Suno?",
+      "answer": "A Reddit user opened the update's music files and found a comment tag reading 'made with suno', with a creation date of 30 October 2026, in at least one track. The tag was missing from other files, which the user said were edited and exported later. Nicalis then removed what it called the generated music files.",
+      "evidence": [
+        {
+          "url": "https://kotaku.com/binding-of-isaac-update-review-bombed-over-ai-generated-music-in-gta-6-mode-woke-up-to-a-sht-show-obviously-i-had-no-idea-2000759213",
+          "domain": "kotaku.com",
+          "date": "2026-11-21",
+          "quote": "comment : made with suno; created=2026-10-30T17:53:41Z; id=cd5a5b55-bead-4cb9-949d-09ed1f917dce"
+        },
+        {
+          "url": "https://www.pcgamer.com/games/roguelike/binding-of-isaac-dlc-adds-ai-music-in-gta-6-parodying-update-despite-not-having-an-ai-disclosure-steam-reviews-drop-to-overwhelmingly-negative-music-gets-pulled/",
+          "domain": "pcgamer.com",
+          "date": "2026-11-23",
+          "quote": "user ShweetStuff noted before looking at the music files and finding that, yep, there was Suno metadata in the file comments."
+        },
+        {
+          "url": "https://www.eurogamer.net/binding-of-isaac-repentance-plus-ai-music-removed",
+          "domain": "eurogamer.net",
+          "date": "2026-11-22",
+          "quote": "pointing to tracks that reference the AI music tool Suno in their metadata."
+        },
+        {
+          "url": "https://x.com/nicalis/status/2124241453266169887",
+          "domain": "x.com",
+          "date": "2026-11-21",
+          "quote": "• Removal of generated music files"
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "The tag survives only in some files: the Reddit post as Kotaku quotes it says 'Other files have this comment scrubbed'. The Reddit post itself returned 403 and could not be read, so the breakdown is known only as the three articles quote it. Nicalis calls the files 'generated' but does not name Suno."
+      },
+      "mechanism_type": "file metadata",
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why did the update reach Steam with no AI label?",
+      "answer": "The Steam page for Repentance+ carried no AI disclosure when the update shipped. The game's creator, Edmund McMillen, says he did not know the daily run used generated music. The publisher, Nicalis, has not said who made the tracks or why no disclosure was filed.",
+      "evidence": [
+        {
+          "url": "https://www.pcgamer.com/games/roguelike/binding-of-isaac-dlc-adds-ai-music-in-gta-6-parodying-update-despite-not-having-an-ai-disclosure-steam-reviews-drop-to-overwhelmingly-negative-music-gets-pulled/",
+          "domain": "pcgamer.com",
+          "date": "2026-11-23",
+          "quote": "Yet there was no AI disclosure on the DLC's Steam page."
+        },
+        {
+          "url": "https://kotaku.com/binding-of-isaac-update-review-bombed-over-ai-generated-music-in-gta-6-mode-woke-up-to-a-sht-show-obviously-i-had-no-idea-2000759213",
+          "domain": "kotaku.com",
+          "date": "2026-11-21",
+          "quote": "Steam requires store page disclosures for any content that uses assets generated with the help of AI, which The Binding of Isaac: Repentance+ did not have"
+        },
+        {
+          "url": "https://x.com/edmundmcmillen/status/2124169167880470745",
+          "domain": "x.com",
+          "date": "2026-11-21",
+          "quote": "obviously I had no idea it featured generated music in the daily run, looking into how that happened and getting it removed, stay tuned."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Steam's disclosure rule is stated only by Kotaku among the pages read; Steam's own policy text was not cited by any source and was not read. The Steam store page fetched now (the base game's page) shows no disclosure section either way, so it cannot show what the Repentance+ page said on 19 November."
+      },
+      "mechanism_type": "platform rule",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why could the game's creator not know what music his own game shipped?",
+      "answer": "Nicalis licenses The Binding of Isaac from McMillen and is publisher and co-developer of Repentance+. McMillen says launching on GTA 6's release day was Nicalis's idea. So the build that carried the music came through the licensee, and the creator learned of it from players.",
+      "evidence": [
+        {
+          "url": "https://www.pcgamer.com/games/roguelike/binding-of-isaac-dlc-adds-ai-music-in-gta-6-parodying-update-despite-not-having-an-ai-disclosure-steam-reviews-drop-to-overwhelmingly-negative-music-gets-pulled/",
+          "domain": "pcgamer.com",
+          "date": "2026-11-23",
+          "quote": "Players put the blame on Nicalis, who licence Binding of Isaac from its original creator Edmund McMillen."
+        },
+        {
+          "url": "https://kotaku.com/binding-of-isaac-update-review-bombed-over-ai-generated-music-in-gta-6-mode-woke-up-to-a-sht-show-obviously-i-had-no-idea-2000759213",
+          "domain": "kotaku.com",
+          "date": "2026-11-21",
+          "quote": "Many have blamed Nicalis, the publisher and co-developer of the Repentance+ expansion, in particular."
+        },
+        {
+          "url": "https://www.eurogamer.net/grand-theft-auto-6-meet-the-developers-tackling-it-head-on",
+          "domain": "eurogamer.net",
+          "date": "2026-11-17",
+          "quote": "\"That was [Nicalis'] idea,\" McMillen laughs when we speak. \"'Wouldn't it be funny if...?' I was like, whatever, that's funny ... We're done, so we've got to release this month ... It's a fun experiment.\""
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "In the 17 November interview the 'Nicalis' idea' line is about the release date, not the daily run or its music. In the same interview McMillen hints at a 'funny stupid' thing for daily-run players during GTA 6's launch, so he knew a daily-run surprise was coming; nothing read shows he knew how its music was made."
+      },
+      "mechanism_type": "licence",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why was the Crime Mode music made with Suno at all?",
+      "answer": "Nothing read answers this. Every source says Nicalis has not explained how the music got into the game. The only dated facts are a Suno creation date of 30 October and a release on 19 November, and no source links the two to a reason.",
+      "evidence": [
+        {
+          "url": "https://www.eurogamer.net/binding-of-isaac-repentance-plus-ai-music-removed",
+          "domain": "eurogamer.net",
+          "date": "2026-11-22",
+          "quote": "Nicalis has yet to explain how the music ended up in the game."
+        },
+        {
+          "url": "https://kotaku.com/binding-of-isaac-update-review-bombed-over-ai-generated-music-in-gta-6-mode-woke-up-to-a-sht-show-obviously-i-had-no-idea-2000759213",
+          "domain": "kotaku.com",
+          "date": "2026-11-21",
+          "quote": "Nicalis has yet to take responsibility for the use of AI or explained how it made it into the game."
+        }
+      ],
+      "strength": "open",
+      "counter": {
+        "text": "none found, within the three articles, the 17 November Eurogamer interview, the Nicalis and McMillen posts on X and the Steam store page"
+      },
+      "mechanism_type": null,
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "A tag left in the music files exposed the Suno origin, not any label. The game's name belongs to McMillen, who says he did not know; the update came through Nicalis, which holds the licence and co-developed it. The ladder reaches the party that controlled the build and stops there, because Nicalis has not said how the music was made.",
+    "open_question": "Who at Nicalis decided the Crime Mode music would come from Suno, and did that person know Steam asks for a disclosure?"
+  }
+}
