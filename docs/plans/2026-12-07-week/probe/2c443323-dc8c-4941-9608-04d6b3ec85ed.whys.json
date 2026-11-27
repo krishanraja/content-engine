@@ -1,0 +1,159 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why will Sonilo pay licence fees and a share of revenue to Symphonic's opted-in independent artists to train its model, at a rate it keeps private?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why does Sonilo pay Symphonic's artists at all to train its model?",
+      "answer": "Sonilo says it trains its models only on licensed catalogues, and that rights holders receive licence fees and a share of revenue. Its co-founder says licensing was part of how the company was built, not something added later. The Symphonic deal extends that arrangement to independent artists and labels who opt in.",
+      "evidence": [
+        {
+          "url": "https://www.musicbusinessworldwide.com/11m-backed-ai-startup-sonilo-founded-by-tiktok-veterans-inks-licensing-deal-with-symphonic-to-train-its-model-on-opted-in-indie-recordings/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-18",
+          "quote": "Sonilo says it trains its models only on licensed catalogs, and that rights holders and artists receive licensing fees and a share of revenue."
+        },
+        {
+          "url": "https://www.aimusicpreneur.com/ai-tools-news/sonilo-symphonic-opt-in-ai-training-licensing-deal-2026/",
+          "domain": "aimusicpreneur.com",
+          "date": "2026-11-19",
+          "quote": "Sonilo also says rights holders receive licensing fees and a share of revenue."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Both reports rest on what Sonilo says, and neither discloses the amounts: MBW writes \"Financial terms were not disclosed\". Sonilo's own home page (sonilo.com, undated, fetched 2026-11-27) words the payment differently: \"Artists paid upfront.\""
+      },
+      "mechanism_type": "contract: training licence paid by licence fee plus revenue share",
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why does Sonilo train only on licensed music?",
+      "answer": "In its own account, Sonilo was built as the alternative to AI music firms that trained without permission, and it points to a rise in infringement cases against such firms. Its licensing partner Shutterstock links licensed training to demand for commercially safe AI workflows. Sonilo sells commercial-use rights on its paid plans and API.",
+      "evidence": [
+        {
+          "url": "https://sonilo.com/blog/sonilo-partners-with-shutterstock-to-build-the-gold-standard-in-licensed-ai-music",
+          "domain": "sonilo.com",
+          "date": "2026-05-11",
+          "quote": "In 2025, infringement cases filed against AI music companies had surged by more than 130% year over year."
+        },
+        {
+          "url": "https://sonilo.com/blog/sonilo-partners-with-shutterstock-to-build-the-gold-standard-in-licensed-ai-music",
+          "domain": "sonilo.com",
+          "date": "2026-05-11",
+          "quote": "Sonilo was built to be the alternative to that model."
+        },
+        {
+          "url": "https://www.musicbusinessworldwide.com/11m-backed-ai-startup-sonilo-founded-by-tiktok-veterans-inks-licensing-deal-with-symphonic-to-train-its-model-on-opted-in-indie-recordings/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-18",
+          "quote": "Licensing isn’t a feature we’re adding later. It’s how we built Sonilo."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "The reason (litigation risk, the alternative to unlicensed rivals) appears only on Sonilo's own site; MBW carries the claim that licensing is how Sonilo was built but not why. Sonilo's licensing page (sonilo.com/licensing, undated, fetched 2026-11-27) also separates training from what customers buy: \"A training partnership does not expand the output license.\" The 130% figure is given without a source on the page."
+      },
+      "mechanism_type": "business model: licensed training as the product's positioning; output rights sold separately by plan",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why go to Symphonic's independent artists for that licensed music?",
+      "answer": "The sources do not give Sonilo's reason. They show Symphonic already runs an opt-in AI dataset licensing programme used by several AI firms, and that Sonilo's only other named music source is Shutterstock. Deals with major rights organisations that Sonilo said were close have not been announced.",
+      "evidence": [
+        {
+          "url": "https://www.musicbusinessworldwide.com/11m-backed-ai-startup-sonilo-founded-by-tiktok-veterans-inks-licensing-deal-with-symphonic-to-train-its-model-on-opted-in-indie-recordings/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-18",
+          "quote": "No such agreement has yet been announced."
+        },
+        {
+          "url": "https://www.aimusicpreneur.com/ai-tools-news/sonilo-symphonic-opt-in-ai-training-licensing-deal-2026/",
+          "domain": "aimusicpreneur.com",
+          "date": "2026-11-19",
+          "quote": "So far, the named music sources are Shutterstock and now Symphonic’s opted-in roster."
+        },
+        {
+          "url": "https://www.musicbusinessworldwide.com/11m-backed-ai-startup-sonilo-founded-by-tiktok-veterans-inks-licensing-deal-with-symphonic-to-train-its-model-on-opted-in-indie-recordings/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-18",
+          "quote": "The Sonilo agreement adds to the distributor’s existing AI licensing partnerships."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "Nothing read ties the choice of Symphonic to the missing major deals; the link is drawn only by placing the facts side by side. Searched: both news sources, Sonilo's Shutterstock post, home page and licensing page. Symphonic's own AI page would not load."
+      },
+      "mechanism_type": null,
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why does Symphonic put its artists' recordings up for AI training?",
+      "answer": "Symphonic's CEO frames it as a paid, consent-based alternative to unpaid training and a new revenue stream for artists. The programme is a voluntary add-on, separate from the distribution agreement, and nothing is included without explicit opt-in. Revenue is passed to participating rights holders on agreed terms.",
+      "evidence": [
+        {
+          "url": "https://www.musicbusinessworldwide.com/11m-backed-ai-startup-sonilo-founded-by-tiktok-veterans-inks-licensing-deal-with-symphonic-to-train-its-model-on-opted-in-indie-recordings/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-18",
+          "quote": "we are pushing back against unpaid training and opening new revenue opportunities for those who wish to participate."
+        },
+        {
+          "url": "https://www.sourceaudio.com/blog/2026/02/18/sourceaudio-inks-deal-with-symphonic-expanding-ethical-ai-licensing-opportunities-for-artists/",
+          "domain": "sourceaudio.com",
+          "date": "2026-02-18",
+          "quote": "We’re always looking for new ways to bring in more revenue for our artists, and SourceAudio’s AI music dataset licensing marketplace checks all the boxes,"
+        },
+        {
+          "url": "https://www.sourceaudio.com/blog/2026/02/18/sourceaudio-inks-deal-with-symphonic-expanding-ethical-ai-licensing-opportunities-for-artists/",
+          "domain": "sourceaudio.com",
+          "date": "2026-02-18",
+          "quote": "This program is entirely separate from Symphonic’s core Digital Distribution Agreement and will not impact an artist’s existing distribution unless they actively choose to participate."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Symphonic also offers the opposite route: \"Its MusicShield tool alters your audio so AI models learn less from it.\" (aimusicpreneur.com, 2026-11-19). The motive is Brea's own statement on both sites; neither source shows Symphonic's own earnings from the programme."
+      },
+      "mechanism_type": "contract: opt-in dataset licensing add-on administered by the distributor, separate from distribution",
+      "stop": null
+    },
+    {
+      "n": 5,
+      "question": "Why are the fee, the revenue split and the number of artists who opted in kept private?",
+      "answer": "Nothing read answers this. Both news sources report that the terms and the opt-in count were not disclosed, and Symphonic's earlier SourceAudio deal also refers only to agreed-upon terms without giving them.",
+      "evidence": [
+        {
+          "url": "https://www.musicbusinessworldwide.com/11m-backed-ai-startup-sonilo-founded-by-tiktok-veterans-inks-licensing-deal-with-symphonic-to-train-its-model-on-opted-in-indie-recordings/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-18",
+          "quote": "Financial terms were not disclosed, and the companies did not say how many Symphonic artists or labels have opted in."
+        },
+        {
+          "url": "https://www.aimusicpreneur.com/ai-tools-news/sonilo-symphonic-opt-in-ai-training-licensing-deal-2026/",
+          "domain": "aimusicpreneur.com",
+          "date": "2026-11-19",
+          "quote": "Neither side shared the fee, the revenue split or how many Symphonic artists have opted in so far."
+        },
+        {
+          "url": "https://www.sourceaudio.com/blog/2026/02/18/sourceaudio-inks-deal-with-symphonic-expanding-ethical-ai-licensing-opportunities-for-artists/",
+          "domain": "sourceaudio.com",
+          "date": "2026-02-18",
+          "quote": "Revenue from SourceAudio’s agreement with Symphonic is distributed to participating rightsholders in accordance with agreed-upon terms, with reporting designed to provide transparency into licensed usage."
+        }
+      ],
+      "strength": "open",
+      "counter": {
+        "text": "none found; searched both news sources, Sonilo's Shutterstock post, home page and licensing page, and SourceAudio's February 2026 announcement. Symphonic's AI page returned a bot check and was not read."
+      },
+      "mechanism_type": null,
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "The payment rests on two stated positions: Sonilo's claim that it trains only on licensed music, and Symphonic's existing opt-in pipe for selling its artists' recordings to AI firms. Each firm's reasons come in its own words. The price, the split and how many artists opted in are not public in anything read.",
+    "open_question": "If the fee, the split and the opt-in count stay private, how would an independent artist weigh licensing a song to Sonilo against shielding it with the tool Symphonic also offers?"
+  }
+}
