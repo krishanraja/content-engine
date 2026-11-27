@@ -28,7 +28,7 @@ One layer leads each frame. Everything else steps back to support it, or leaves.
 | Big moment | Colour block with one Anton number | Nothing | A gradient (the old plum and ember look is retired) |
 | Landing | Mint block with the insight | A still above it | A wordmark |
 | Close | The wordmark (S3h) on ink | "Follow for more", the site in DM Mono | The headline, a second mark |
-| Wide thumbnail and tall cover | A still or an approved headshot, with real logos | Anton headline, V4 under it | More than five words, a logo bigger than the headline |
+| Wide thumbnail and tall cover | Not a Library template: `scripts/covers/make_covers.py` draws every cover and thumbnail (the two approved cover systems, Krish, 26 Nov 2026) | See `COVERS-PLAYBOOK.md` | A retired cover template |
 | Carousel cover | A still, full bleed | Anton headline, V4 | A document, a robot |
 | Carousel inner cards | The colour block or the evidence | Fraunces human line | Source lines (they go in the caption), numbers in the top-left corner |
 | Good-news carousel | A real photo of the thing itself | Anton headline, one Fraunces line | A generated still standing in for a real event |

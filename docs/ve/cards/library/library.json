@@ -13520,7 +13520,7 @@
         ]
       ],
       "archetype": 1,
-      "superseded_by": "cover-scene-tall"
+      "superseded_by": "scripts/covers/make_covers.py"
     },
     {
       "id": "social-tiktok-cover",
@@ -13722,7 +13722,7 @@
         ]
       ],
       "archetype": 1,
-      "superseded_by": "cover-face-tall"
+      "superseded_by": "scripts/covers/make_covers.py"
     },
     {
       "id": "social-youtube-thumb",
@@ -13918,7 +13918,7 @@
         ]
       ],
       "archetype": 7,
-      "superseded_by": "cover-receipt-youtube"
+      "superseded_by": "scripts/covers/make_covers.py"
     },
     {
       "id": "social-youtube-shorts-thumb",
@@ -14118,7 +14118,7 @@
         ]
       ],
       "archetype": 1,
-      "superseded_by": "cover-receipt-tall"
+      "superseded_by": "scripts/covers/make_covers.py"
     },
     {
       "id": "social-quote",
@@ -15434,7 +15434,7 @@
         ]
       ],
       "archetype": 1,
-      "superseded_by": "cover-scene-tall",
+      "superseded_by": "scripts/covers/make_covers.py",
       "posted_by": "growth-makeyourmindup"
     },
     {
@@ -20633,11 +20633,6 @@
             "file": "docs/ve/cards/why-ladder-evo/piece.json#rungs/1/plate",
             "basis": "Musicae Scientiae (2018). The filed series measures average intro length in US top-ten hits, 1986 and 2015."
           }
-        ],
-        "latest": [
-          "cover-receipt-youtube",
-          "cover-scene-youtube",
-          "cover-face-youtube"
         ]
       },
       "wordmarks_note": "The page carries one S3h; each latest cover keeps its own small V4 because it is shown as the real artefact."
@@ -20745,11 +20740,6 @@
             "file": "docs/ve/cards/why-ladder-evo/piece.json#rungs/1/plate",
             "basis": "Musicae Scientiae (2018). The filed series measures average intro length in US top-ten hits, 1986 and 2015."
           }
-        ],
-        "latest": [
-          "cover-receipt-youtube",
-          "cover-scene-youtube",
-          "cover-face-youtube"
         ]
       },
       "wordmarks_note": "The page carries one S3h; each latest cover keeps its own small V4 because it is shown as the real artefact."
@@ -26512,7 +26502,7 @@
         ]
       ],
       "archetype": 7,
-      "superseded_by": "cover-face-youtube"
+      "superseded_by": "scripts/covers/make_covers.py"
     },
     {
       "id": "social-tall-cover-face",
@@ -26743,7 +26733,7 @@
         ]
       ],
       "archetype": 7,
-      "superseded_by": "cover-face-tall"
+      "superseded_by": "scripts/covers/make_covers.py"
     },
     {
       "id": "social-meme-tall",
@@ -39541,7 +39531,8 @@
       "preview_ui": "actions",
       "spacing_pairs": [],
       "archetype": 1,
-      "retired_reason": "Krish, 26 Nov 2026: \"the other screen grab looks terrible.\" The notification idea from the Divergence engine did not land."
+      "retired_reason": "Krish, 26 Nov 2026: \"the other screen grab looks terrible.\" The notification idea from the Divergence engine did not land.",
+      "superseded_by": "scripts/covers/make_covers.py"
     }
   ],
   "grid": {
@@ -42169,7 +42160,7 @@
   },
   "grid_proof": [
     {
-      "item": "cover-scene-tall",
+      "item": "video-vertical-chart",
       "photo": ""
     },
     {
@@ -42177,7 +42168,7 @@
       "photo": "evo-topdown"
     },
     {
-      "item": "cover-face-tall",
+      "item": "video-vertical-number",
       "photo": ""
     },
     {
@@ -42193,7 +42184,7 @@
       "photo": "still-jukebox"
     },
     {
-      "item": "cover-receipt-tall",
+      "item": "video-vertical-rail",
       "photo": ""
     },
     {

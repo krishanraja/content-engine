@@ -9,7 +9,8 @@ Generated from `library.json` by `make_guide.py`. Read this before making any ar
 - `PRODUCTION-PLAYBOOK.md`: how to assemble every piece (hero vertical, long cut, carousel, covers, off-day, good news, weekly edition, Notes) from these templates, how to choose the cover family, every edge case per asset with the action, and what each refusal stamp means.
 - `STANDARD.md` (the poster and the evidence), `TITLES.md` (his title shapes), `COVERS-PLAYBOOK.md`, `CAROUSEL-FORMAT.md` (the 3-second swipe), `IMAGERY.md` (what may be pictured).
 - `SCRIPT-TO-MOTION.md` (beats that land on the spoken word, the four caption styles) and `MOTION-FLOOR.md` (the minimum standard for every cut).
-- `scripts/library/make_piece.py` (from the repository root) fills covers, thumbnails and carousel sets from a piece's cover facts and hands the files to post-pack.
+- `scripts/library/make_piece.py` (from the repository root) fills carousel sets from a piece's cover facts and hands the files to post-pack.
+- `scripts/covers/make_covers.py` (from the repository root) draws every cover and thumbnail in the two approved cover systems (Krish, 26 Nov 2026: "I approve the new cover thumbnail systems, go"). No Library template makes a cover or thumbnail; the old cover templates are retired (the list at the end).
 - `LOCKING.md` (what a locked template means). `EDGE-CASES.md` and the `ROUND-*`, `FIX*`, `CRITIQUE-*` and `BRIEF*` files are build history: never production instructions.
 
 ## The rule in one line
@@ -24,7 +25,7 @@ Generated from `library.json` by `make_guide.py`. Read this before making any ar
 - **The approved closes and outros**, the colour-bar motif, and everything in `lock.json` once Krish approves it (a locked template only changes when a brief names it).
 
 ## Free: where a session uses its judgement
-- **Which family for the piece.** Covers come in four families (STANDARD.md, the poster and the evidence): Data (the key number striped in the house colours, at most 2 words, one real source card), Receipt (his headline, named logos with one verdict chip each, the colour bars), Face (his approved headshot cut out on the series colour, at most 4 words) and the carousel cover (headline, mint payoff, data). Pick by channel (the Channels column below) and by what makes this story land fastest.
+- **Which family for the piece.** Covers and thumbnails come from `make_covers.py`, in the families `COVERS-PLAYBOOK.md` sets out. In this Library, pick the carousel cover (headline, mint payoff, data) by channel (the Channels column below) and by what makes this story land fastest.
 - **The words**, always written in his shapes (`TITLES.md`) and offered to him as a few options; the template's sample words are never shipped.
 - **The data and the evidence.** Choose which number, timeline or meter carries this story, and cut the one real sentence that proves it. A picture slot takes the specific real thing in the story (a real place, product, screen or document). Never generic or generated people, never old music artefacts, never a mood shot (`IMAGERY.md`).
 - **People in pictures:** never crop through a head. The whole face sits inside the bright part of the picture with headroom above it; if the slot cannot hold the whole head, compose or generate the image for that slot's shape instead of cropping.
@@ -288,15 +289,15 @@ Generated from `library.json` by `make_guide.py`. Read this before making any ar
 
 - `video-vertical-documented`
 - `video-vertical-lower-third`
-- `social-ig-reels-cover`: use `cover-scene-tall`
-- `social-tiktok-cover`: use `cover-face-tall`
-- `social-youtube-thumb`: use `cover-receipt-youtube`
-- `social-youtube-shorts-thumb`: use `cover-receipt-tall`
-- `social-clip-cover`: use `cover-scene-tall`
+- `social-ig-reels-cover`: use `scripts/covers/make_covers.py`
+- `social-tiktok-cover`: use `scripts/covers/make_covers.py`
+- `social-youtube-thumb`: use `scripts/covers/make_covers.py`
+- `social-youtube-shorts-thumb`: use `scripts/covers/make_covers.py`
+- `social-clip-cover`: use `scripts/covers/make_covers.py`
 - `newsletter-substack-cover`: use `scripts/covers/make_covers.py`
 - `web-og-card`: use `scripts/covers/make_covers.py`
-- `social-youtube-thumb-face`: use `cover-face-youtube`
-- `social-tall-cover-face`: use `cover-face-tall`
+- `social-youtube-thumb-face`: use `scripts/covers/make_covers.py`
+- `social-tall-cover-face`: use `scripts/covers/make_covers.py`
 - `social-share-card`: use `scripts/covers/make_covers.py`
 - `social-x-card`: use `scripts/covers/make_covers.py`
 - `newsletter-substack-cover-wide`: use `scripts/covers/make_covers.py`
@@ -306,4 +307,4 @@ Generated from `library.json` by `make_guide.py`. Read this before making any ar
 - `cover-receipt-tall`: use `scripts/covers/make_covers.py`
 - `cover-scene-tall`: use `scripts/covers/make_covers.py`
 - `cover-face-tall`: use `scripts/covers/make_covers.py`
-- `cover-notification-tall`
+- `cover-notification-tall`: use `scripts/covers/make_covers.py`

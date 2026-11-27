@@ -10,6 +10,14 @@ from xml.etree import ElementTree as ET
 from PIL import Image, ImageFont
 import numpy as np
 
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--spacing-report', type=Path, help='Save the modelled per-item gaps as JSON')
+parser.add_argument('--errors-json', type=Path, help='Also save the error list as JSON (tests/library_static_test.py reads it)')
+args=parser.parse_args()
+def report(found):
+    for err in found:print(err)
+    if args.errors_json:args.errors_json.write_text(json.dumps(found,ensure_ascii=False,indent=1)+'\n',encoding='utf-8')
+    raise SystemExit(bool(found))
 HERE=Path(__file__).resolve().parent
 subprocess.run([sys.executable, '-B', str(HERE/'render.py'), '--check-locks'], check=True)
 subprocess.run([sys.executable, '-B', str(HERE/'make_samples.py'), '--check'], check=True)
@@ -19,6 +27,24 @@ from font_metrics import font_metrics
 metrics=font_metrics(root)
 d=json.loads((HERE/'library.json').read_text(encoding='utf8'))
 html=(HERE/'library.html').read_text(encoding='utf8')
+# Nothing live may name a retired template. The page and the renderer never draw one, so a reference
+# crashes a review view or silently draws nothing; a retired template's successor must be live too.
+retired_ids={i['id'] for i in d['items'] if i.get('status')=='retired'}
+def retired_refs(value,path):
+    if isinstance(value,dict):
+        for key,child in value.items():yield from retired_refs(child,path+'.'+key)
+    elif isinstance(value,list):
+        for n,child in enumerate(value):yield from retired_refs(child,f'{path}[{n}]')
+    elif isinstance(value,str) and value in retired_ids:
+        yield path+' names retired template '+value
+registry_errors=[]
+for key,value in d.items():
+    if key!='items':registry_errors+=retired_refs(value,key)
+for i in d['items']:
+    if i.get('status')!='retired':registry_errors+=retired_refs(i,i['id'])
+    elif i.get('superseded_by') in retired_ids:
+        registry_errors.append(i['id']+' is superseded by retired template '+i['superseded_by'])
+if registry_errors:report(registry_errors)
 script=re.search(r'<script>\s*([\s\S]*?)</script>',html)[1]
 subprocess.run(['node','--check'],input=script,encoding='utf8',check=True)
 for name in ('imagery.js','edition.js','alignment.js','motion.js','review.js','check_static.cjs'):
@@ -84,6 +110,7 @@ def contrast(fg,bg):
     return (h+.05)/(l+.05)
 pairs=[];photo_checks=set()
 for i in d['items']:
+    if i.get('status')=='retired':continue  # never drawn: the page and the renderer skip retired templates
     foreground=[]
     for op in i.get('scene',[]):
         x,y,w,h=op['rect']
@@ -208,12 +235,9 @@ for ident,raw in result['arts'].items():
         top=float(art.get('y'))+shift_y(art)
         cap=metrics['Anton']['H'][1]*float(lines[0].get('font-size'))
         if top-slot_ink(headline['slot'])[1]+.1<cap/2:errors.append(ident+' V4 cap clearance')
-    if ident in ('video-wide-place','video-wide-creative-work','social-youtube-thumb-face'):
+    if ident in ('video-wide-place','video-wide-creative-work'):
         panel=next(op['rect'] for op in scene if op['kind']=='field')
-        key='media slot' if ident.endswith('face') else 'headline_1'
-        edge=columns[members[key]]
-        boundary=panel[0]+panel[2] if ident.endswith('face') else panel[0]
-        if edge-boundary<20:errors.append(ident+' ink against the panel seam')
+        if columns[members['headline_1']]-panel[0]<20:errors.append(ident+' ink against the panel seam')
     if any(op.get('value')=='headshot' for op in scene):
         x,y,w,h=item['safe_zones']['footage']
         sheet=ET.fromstring('<svg>'+result['cameraSheets'][ident]+'</svg>')
@@ -307,16 +331,26 @@ for word in ('IBM Plex Mono','Archivo','Newsreader','Instrument Serif','AI, unpi
              'brutal shadow','halftone','felt robot','highlighter swipe','typing animation'):
     if word.casefold() in html.casefold():errors.append('retired '+word)
 bank=json.loads((HERE/d['imagery']['house_stills']).read_text(encoding='utf8'))
-prompts=json.loads((root/'.scratch/bank/bank-prompts.json').read_text(encoding='utf8'))
-if [r['id'] for r in bank]!=[f'bank-{n:02}' for n in range(48)] or len(prompts)!=len(bank):
+if [r['id'] for r in bank]!=[f'bank-{n:02}' for n in range(48)]:
     errors.append('Incomplete house-still bank')
-for row,original in zip(bank,prompts):
-    params=original['params']
+for row in bank:
     focus=row['focus']
-    if (row['id']!=f"bank-{original['index']:02}" or row['prompt']!=params['prompt']
-            or row['imagery_style']!=original['style'] or row['aspect']!=params['aspect_ratio']
-            or not (0<=focus['x']<focus['x']+focus['w']<=1 and 0<=focus['y']<focus['y']+focus['h']<=.600001)):
-        errors.append(row['id']+' source metadata or upper focal box')
+    if not (0<=focus['x']<focus['x']+focus['w']<=1 and 0<=focus['y']<focus['y']+focus['h']<=.600001):
+        errors.append(row['id']+' upper focal box')
+# The generation prompts live only on the machine that made the bank. Where they exist, every
+# row must match its source; a clean checkout has none, so that one comparison is skipped.
+prompts_file=root/'.scratch/bank/bank-prompts.json'
+if prompts_file.is_file():
+    prompts=json.loads(prompts_file.read_text(encoding='utf8'))
+    if len(prompts)!=len(bank):errors.append('Incomplete house-still bank')
+    for row,original in zip(bank,prompts):
+        params=original['params']
+        if (row['id']!=f"bank-{original['index']:02}" or row['prompt']!=params['prompt']
+                or row['imagery_style']!=original['style'] or row['aspect']!=params['aspect_ratio']):
+            errors.append(row['id']+' source metadata')
+else:
+    print('Skipped the house-still source comparison: .scratch/bank/bank-prompts.json is absent '
+          '(a local file, never committed). Bank ids and focal boxes were checked.')
 for name,photo in d['photos'].items():
     if name=='headshot':continue
     path=root/photo['path'] if 'path' in photo else root/'.scratch/why-ladder/assets'/(name+'.png')
@@ -328,9 +362,6 @@ for name,photo in d['photos'].items():
         if im.size!=(photo['width'],photo['height']):errors.append(name+' image dimensions')
 print('Minimum flat-field contrast',round(min(pairs),2),'to one. Photographic type samples:',sorted(photo_checks))
 print('Active items generated',len(result['arts']),'of',sum(i.get('status')!='retired' for i in d['items']))
-parser=argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--spacing-report', type=Path, help='Save the modelled per-item gaps as JSON')
-args=parser.parse_args()
 if args.spacing_report:
     args.spacing_report.write_text(json.dumps({'model':'local fonts and SVG transforms', 'items':spacing_report},indent=2)+'\n',encoding='utf-8')
 print('Static spacing:',sum(r['passed'] for r in spacing_report.values()),'items pass,',
@@ -339,10 +370,9 @@ print('Stress previews',result['stressCases'])
 print('Sequence samples',result['sequencesTested'])
 print('Timed caption word onsets',result['captionStates'])
 print('Structural open-area exceptions',json.dumps(exceptions))
-for ident,small in [('podcast-episode-art',56),('cover-receipt-youtube',168),('cover-face-youtube',168)]:
+for ident,small in [('podcast-episode-art',56)]:
     row=next(i for i in d['items'] if i['id']==ident)
     tree=ET.fromstring('<svg>'+result['arts'][ident]+'</svg>')
     proof=[(el.text,round(float(el.get('font-size'))*small/row['width'],1)) for el in tree.iter('text') if el.get('font-family')=='Anton']
     print(f'{ident} at {small}px, fitted Anton em size:', proof)
-for err in errors:print(err)
-raise SystemExit(bool(errors))
+report(errors)
