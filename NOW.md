@@ -36,6 +36,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-23","week_target":20,"current":0,"current_as_of":"2026-11-27","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (0 published, and 0 derived carousels and Shorts content-engine made and Growth posted that passed the 10/10 judges and went live, in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (0% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 0, against 20 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
+- The working-files lane no longer sends its own list or the copy the library sync keeps beside it, so the loop that rewrote five working-files lists in the Two passports post folder every ten minutes since 30 Oct has stopped; find and the by-hash lookup never return a row at a path the library now refuses. (2026-11-27)
 - The standards check-in of 2026-11-27 grouped the new floor standards; config/floor-groups.json holds 96 groups, each new one seeded as a proposal for Krish on the pinned check-in page. (2026-11-27)
 - The Sunday ideas run now treats step 6d (judges, score, order, stage 2 touches) as part of the run, and its log names how the Claude step ended and which commands it was refused. (2026-11-26)
 - The story engine v5 is on main (pull request #1005, merged 26 Nov): the reader Krish approved on 26 Nov, sports on the beat (config/beat.json, Ruling, Krish, 2026-11-25; pull request #997, merged), the story floor, the blind story score with the pre-pick whys probe, close calls and a checked wildcard every Monday, Wednesday and Friday, gated from the 30 Nov board: the Sunday 29 Nov run is the first gated, with every hard floor citing his ruling or a recorded failure and the buyer judge kept as the paying-reader judge. With it came the production cycle's one registry (config/cycle.json, touch.py), impact zoom (config/ve/impact-zoom.json, in ve and quick-edit, each with its camera.impact check) and the 26 Nov split. (2026-11-26)
@@ -46,13 +47,14 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-27 Migration 20261226090000 takes the loop's older versions and the three retired channel-art rows out of ready (state reserved, old ready_at kept in content_library_files_unready) and stops the database taking a ready row under "2 Channel art (permanent)/". Nothing was deleted.
 - 2026-11-26 What it is, from 26 Nov (Ruling, Krish, 2026-11-26): content-engine makes every asset from the v5 Library (config/asset-routes.json: the hero pieces, carousels, memes, Notes, per-channel words, covers, thumbnails and the weekly edition's package) and Growth-MakeYourMindUp posts, schedules and measures them and reports performance back; docs/GROWTH-HANDOFF.md is the contract and supersedes the 26 and 28 October split, so NOW.md's sentence that Growth owns the derived carousels, Notes and memes is history. Who it is for: the publication's reader is the people who make the calls or make the work in the creative, arts, music, entertainment, media and sports industries (config/beat.json reader, docs/NORTH_STAR.md); the face in _mission.ts (leaders of PE and VC backed media, adtech and data businesses) is Mindmake's reader only. Every copied board prompt names the Library as the only renderer, and ve card refuses the carousel, cover, meme and Notes image kinds.
 Older lines: `docs/history/2026-11-26-NOW-moved-9.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-27): Krish answers the new items on the standards check-in page.
+- Next (2026-11-27): Krish decides on the deletion plan for the retired rows and their storage objects, and on the 20 "working-files (n).json" copies in Drive.
 - House close (2026-11-26): every whole cut dated from 26 Nov closes on the Library's outro (`docs/production/BRAND_PALETTE.md`, "The series close"); `docs/production/CLOSING.md` describes the 10 Nov statement card that cuts dated before 26 Nov keep. He hears the first cut with the outro at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
 - North Star check (2026-11-27): holds.

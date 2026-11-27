@@ -3955,6 +3955,7 @@ What the compiler looks for, as pure functions.
 - `const LIBRARY_FILE_COLUMNS`
 - `interface LibraryFileRow`
 - `function libraryFileRow(value: unknown): LibraryFileRow | null`
+- `function servableLibraryFileRow(value: unknown): LibraryFileRow | null`
 - `function libraryFileView(row: LibraryFileRow)`
 - `function isLibraryObjectKey(value: unknown): value is string`
 
