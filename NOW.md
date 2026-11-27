@@ -36,6 +36,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-23","week_target":20,"current":0,"current_as_of":"2026-11-27","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (0 published, and 0 derived carousels and Shorts content-engine made and Growth posted that passed the 10/10 judges and went live, in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (0% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 0, against 20 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
+- The working-files loop's leftovers are gone for good, with Krish's yes of 27 Nov: the 29,437 retired rows of content_library_files (1,868 ready rows kept), the 14,710 stored files only they used (39,266,945 bytes; the bucket went from 17,154 to 2,444 objects), and content_library_files_unready; the database now refuses "2 Channel art (permanent)/" for every row. (2026-11-27)
 - Every close a new render can reach is now the locked v5 look: quick-edit's kit films the Library outro (S3h, Follow for more, makeyourmindup.ai, the climb bars) for pieces dated from 26 Nov, the why-ladder close card ends on S3h instead of V10, and the title lockup drops its retired V10 from 26 Nov. (2026-11-27)
 - The Library's static check runs on a clean checkout again: no live part of library.json, library.html, the review page or the guide names a retired cover template, verify_static.py skips the local bank-prompts comparison when that file is absent, and test_locking.py passes; 65 older gate failures in live v5 templates remain, listed in docs/ve/cards/library/verify-static-known.json. (2026-11-27)
 - The working-files lane no longer sends its own list or the copy the library sync keeps beside it, so the loop that rewrote five working-files lists in the Two passports post folder every ten minutes since 30 Oct has stopped; find and the by-hash lookup never return a row at a path the library now refuses. (2026-11-27)
@@ -49,15 +50,13 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
-- 2026-11-27 scripts/quick-edit/kit.py and kit-v5/v5-outro.html, apps/renderer/src/engine/v5/Cards.tsx, FormatMaster.tsx, props.ts, scripts/velib/compile.py, their tests, the produce-video skill and its mirror, BRAND_PALETTE.md and CLOSING.md.
-- 2026-11-27 tests/library_static_test.py runs verify_static.py on every pull request that touches the Library and fails on any error outside that list, or on a listed one that is fixed.
-- 2026-11-27 Migration 20261226090000 takes the loop's older versions and the three retired channel-art rows out of ready (state reserved, old ready_at kept in content_library_files_unready) and stops the database taking a ready row under "2 Channel art (permanent)/". Nothing was deleted.
-Older lines: `docs/history/2026-11-27-NOW-moved-1.md` (it names every earlier move) and `LOG.md`.
+- 2026-11-27 supabase/migrations/20261227090000_content_library_delete_retired_rows.sql (applied) and tests/control-plane/library-path.test.ts; the 20 "working-files (2) to (5).json" copies moved in Drive to makeyourmindup/_Archive/2026-11-27 working-files loop copies (retired, do not use).
+Older lines: `docs/history/2026-11-27-NOW-moved-2.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-27): Krish confirms the title lockup without a wordmark, or asks for S3h there instead.
+- Next (2026-11-27): Read the next library-sync pass in library-sync.log and confirm it writes nothing and logs no error.
 - House close (2026-11-26): every whole cut dated from 26 Nov closes on the Library's outro (`docs/production/BRAND_PALETTE.md`, "The series close"); `docs/production/CLOSING.md` describes the 10 Nov statement card that cuts dated before 26 Nov keep. He hears the first cut with the outro at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
 - North Star check (2026-11-27): holds.

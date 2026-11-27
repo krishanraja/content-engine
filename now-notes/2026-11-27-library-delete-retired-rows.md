@@ -1,4 +1,0 @@
-Status: The working-files loop's leftovers are gone for good, with Krish's yes of 27 Nov: the 29,437 retired rows of content_library_files (1,868 ready rows kept), the 14,710 stored files only they used (39,266,945 bytes; the bucket went from 17,154 to 2,444 objects), and content_library_files_unready; the database now refuses "2 Channel art (permanent)/" for every row.
-Changed: supabase/migrations/20261227090000_content_library_delete_retired_rows.sql (applied) and tests/control-plane/library-path.test.ts; the 20 "working-files (2) to (5).json" copies moved in Drive to makeyourmindup/_Archive/2026-11-27 working-files loop copies (retired, do not use).
-Next: Read the next library-sync pass in library-sync.log and confirm it writes nothing and logs no error.
-North Star check (2026-11-27): holds.
