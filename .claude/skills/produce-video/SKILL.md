@@ -636,18 +636,8 @@ but no cut is rendered as finished, filed, sent to the library or recorded
 (`making.py video`) without it. Never build or improvise the design here, and
 never ship a cut without it on anyone's word but Krish's own, quoted.
 
-Approved on 12 October: the stand-off (`config/story-intro-outro.json`,
-`approved`). Render the piece's own outro, then point each cut's config at
-it:
-
-```
-python scripts/quick-edit/story_io.py props --plan docs/plans/PLAN --out WORK/story-io/props.json
-python scripts/quick-edit/story_io.py render --piece-props WORK/story-io/props.json --out WORK/story-io --only outro-16x9,outro-9x16
-```
-
-In `long.json` set `"endcard": {"16x9": "WORK/story-io/outro-16x9.mp4"}`
-(in `short.json` the `9x16` one). The outro runs 4 s; make.py sizes the
-music for it. `scripts/produce_day.py` does exactly this.
+The 12 October stand-off outro (`config/story-intro-outro.json`, `story_io.py`) is retired: every cut from 26 Nov ends
+on the v5 outro, which make.py and ve draw themselves. `scripts/produce_day.py` no longer renders it.
 
 ```
 python scripts/quick-edit/make.py WORK/kit/long.json --out WORK/long --only 16x9 --plan
