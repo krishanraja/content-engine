@@ -318,11 +318,20 @@ for shape in ('vertical','wide'):
         if landed.get('transform')!='translate(0 0)' or [r.attrib for r in landed]!=[r.attrib for r in list(base)[:2]]:
             errors.append('Wide settled backdrop differs')
 deck=json.loads((root/'docs/plans/2026-11-16-week/goodnews-carousel/deck.json').read_text(encoding='utf8'))
+# The samples carry the short headlines Krish approved on 27 Nov 2026 (library-headlines.json, mapped by card order
+# to the deck's cards) and the deck's own lines and sources. Each mint phrase must be what the card draws in mint.
+short=json.loads((root/'docs/plans/2026-11-16-week/goodnews-carousel/library-headlines.json').read_text(encoding='utf8'))
 news=d['sequences']['goodnews']['shots']
 for n,card in enumerate(deck['cards'][:6]):
     item=active[news[n]['slide']]
     text=[o['value'] for o in item['scene'] if o['kind']=='text']
-    if card['headline'] not in text:errors.append(item['id']+' changed approved headline')
+    words=short['cards'][n]
+    head=next(o for o in item['scene'] if o['kind']=='text' and o['slot']=='headline_1')
+    if head['value']!=words['headline'] or head.get('mint','')!=words['mint']:
+        errors.append(item['id']+' changed approved headline')
+    lit=' '.join(t.text or '' for t in ET.fromstring('<svg>'+result['arts'][item['id']]+'</svg>').iter('tspan')
+                 if t.get('fill')=='#7EF0C0' and t.get('data-slot') is None)
+    if lit!=(words['mint'] or '').upper():errors.append(item['id']+' mint off the approved words')
     if n and (card['line'] not in text or item['source']!=card['story_source']):
         errors.append(item['id']+' changed approved story')
 # Check the coloured stock the grid actually draws. Each featured stock

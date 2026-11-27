@@ -1,19 +1,10 @@
 {
- "why": "Gate failures in live v5 templates that verify_static.py still reports on 27 Nov 2026. They predate this file: the Library arrived with its gates unfinished (9a4976f1, 26 Nov 2026). On 27 Nov 52 of the 65 were fixed (the safe boxes, the cover hierarchy rule, the podcast V4 and the advice cover's contrast). Thirteen remain because each needs Krish's decision. The ten good-news failures: the samples carry shortened headlines that are not in the approved 21 Nov deck (docs/plans/2026-11-16-week/goodnews-carousel/deck.json), and every deck headline is 10 to 20 words, over STANDARD's 7-word limit, so neither can stand without his words. The three meme failures: the sample exemplar's subject (ex-paid-split, a focus box 60% by 80% of the image) cannot sit inside the 680 by 640 clip window while the picture also fills its aperture (at least 55% of the frame height, CRITIQUE-3); sizing it to the window shrank the picture to 40% of the frame, which looked worse.",
+ "why": "Gate failures in live v5 templates that verify_static.py still reports. They predate this file: the Library arrived with its gates unfinished (9a4976f1, 26 Nov 2026). On 27 Nov 52 of the 65 were fixed (the safe boxes, the cover hierarchy rule, the podcast V4 and the advice cover's contrast), then nine of the ten good-news failures: the five story samples carry the short headlines Krish approved on 27 Nov (docs/plans/2026-11-16-week/goodnews-carousel/library-headlines.json) with their mint phrases, and the approved 21 Nov deck's own lines and sources. Four remain. The good-news cover: its approved short headline has no mint (\"mint: none\"), but the v5 cover hierarchy (COVERS-PLAYBOOK.md) needs a mint payoff line on a picture cover, so the sample keeps its old line until Krish chooses between them. The three meme failures: the sample exemplar's subject (ex-paid-split, a focus box 60% by 80% of the image) cannot sit inside the 680 by 640 clip window while the picture also fills its aperture (at least 55% of the frame height, CRITIQUE-3); sizing it to the window shrank the picture to 40% of the frame, which looked worse.",
  "rule": "tests/library_static_test.py fails on any error not listed here and on any listed error that no longer occurs, so this list only shrinks. Never add to it to make a change pass.",
  "errors": [
   "social-meme-tall subject outside clip",
   "social-meme-video subject outside clip",
   "social-meme-video subject outside clip",
-  "carousel-good-news-cover changed approved headline",
-  "carousel-good-news-item changed approved headline",
-  "carousel-good-news-item changed approved story",
-  "carousel-good-news-item-2 changed approved headline",
-  "carousel-good-news-item-2 changed approved story",
-  "carousel-good-news-item-3 changed approved headline",
-  "carousel-good-news-item-4 changed approved headline",
-  "carousel-good-news-item-4 changed approved story",
-  "carousel-good-news-item-5 changed approved headline",
-  "carousel-good-news-item-5 changed approved story"
+  "carousel-good-news-cover changed approved headline"
  ]
 }
