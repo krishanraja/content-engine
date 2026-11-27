@@ -29,6 +29,12 @@
    "verdict": "new",
    "of": "piece:bf0fddae-2fcf-4687-9079-190729234ed3",
    "why": "Newsroom stories are new; only the Canva item touches a recent post, and that post was about design seats, not sign-ups through AI assistants."
+  },
+  {
+   "ref": "off-sat-talent",
+   "verdict": "new",
+   "of": "off-sat-goodnews",
+   "why": "The scouting app, the NASCAR voice and Odeon's assistant appear in no posted edition; Odeon is also in the off-sat-screen option, so they should not both run."
   }
  ]
 }

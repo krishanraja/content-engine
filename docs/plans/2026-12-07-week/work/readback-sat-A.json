@@ -25,6 +25,11 @@
    "ref": "off-sat-newsrooms",
    "says": "A round-up of good news: newspapers used AI to keep their readers and save time, like checking headlines and spotting who is about to cancel.",
    "repeat": "new"
+  },
+  {
+   "ref": "off-sat-talent",
+   "says": "A round-up of good news: AI helped people and places get noticed, like a teenage footballer whose video reached a European club, a NASCAR car that talks to guests and a cinema helper that answers easy questions.",
+   "repeat": "new"
   }
  ]
 }

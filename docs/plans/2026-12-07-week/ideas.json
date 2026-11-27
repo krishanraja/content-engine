@@ -2141,7 +2141,7 @@
      "label": "Each story's own source",
      "url": "https://www.koreatimes.co.kr/entertainment/music/20261126/ai-music-tops-local-chart-what-you-need-to-know"
     },
-    "copy": "AI put songwriters and bands in front of millions. Four real things AI helped people in music do this month, each with who it helped and how.",
+    "copy": "AI put songwriters and bands in front of millions. Four real things AI did for music this month, each with who it helped and how.",
     "hook": "AI put songwriters and bands in front of millions.",
     "pitch": {
      "see": "A Korean chart with an AI-assisted ballad at number one, a new boy group's debut, and a guitarist in a studio.",
@@ -2630,7 +2630,7 @@
      "label": "Each story's own source",
      "url": "https://deadline.com/2026/11/lionsgate-play-eklavya-ai-series-tiger-tv-1237232555/"
     },
-    "copy": "AI helped film and TV makers try something new. Four real things AI helped people in film and TV do this month, each with who it helped and how.",
+    "copy": "AI helped film and TV makers try something new. Three real things AI did for film and TV this month, each with who it helped and how, and 1 more to find.",
     "hook": "AI helped film and TV makers try something new.",
     "pitch": {
      "see": "A mythology epic with an AI lead actor, seven Korean directors' AI shorts, and an Oscar winner's case study.",
@@ -2707,25 +2707,6 @@
        "kind": "photo",
        "url": "https://deadline.com/wp-content/uploads/2026/11/GettyImages-2252572174.jpg?w=1024"
       }
-     },
-     {
-      "headline": "Odeon's cinema assistant answers 40% of questions, no jobs lost.",
-      "what": "Odeon Cinemas told diginomica on 27 November 2026 that its AI assistant Odi, built on Zendesk, resolves about 40% of guest queries, from showtimes to ticket problems, while human agents take the harder ones. The chain says it gets up to 10,000 queries a week, satisfaction has risen over 18 months, and it has kept its service teams.",
-      "why": "Cinemas run on thin margins, and Odeon is using AI to absorb the busy weeks without cutting the people who handle the hard cases.",
-      "kind": "film_tv",
-      "helps": {
-       "who": "cinema operators and their guest service staff",
-       "how": "better"
-      },
-      "date": "2026-11-27",
-      "source": {
-       "label": "diginomica, 'Projecting success on EX and CX at Odeon Cinemas', Stuart Lauchlan, 27 Nov 2026",
-       "url": "https://diginomica.com/projecting-success-ex-and-cx-odeon-cinemas-how-movie-theater-chain-tapping-ai-without-losing"
-      },
-      "media": {
-       "kind": "photo",
-       "url": "https://diginomica.com/sites/default/files/styles/scaled_370/public/images/2026-11/molnarszabolcserdely-popcorn-4885565_1920.jpg.webp"
-      }
      }
     ],
     "stories_due": "2026-11-27",
@@ -2747,8 +2728,8 @@
       "picture": "Deadline: the thing itself (photo)"
      },
      {
-      "words": "Odeon's cinema assistant answers 40% of questions, no jobs lost.",
-      "picture": "diginomica: the thing itself (photo)"
+      "words": "One more story to find this week.",
+      "picture": "An empty frame, to be filled with the fourth story"
      },
      {
       "words": "Every one of them kept a director in the chair.",
@@ -2776,8 +2757,8 @@
        "picture": "Deadline: the thing itself (photo)"
       },
       {
-       "words": "Odeon's cinema assistant answers 40% of questions, no jobs lost.",
-       "picture": "diginomica: the thing itself (photo)"
+       "words": "One more story to find this week.",
+       "picture": "An empty frame, to be filled with the fourth story"
       },
       {
        "words": "Every one of them kept a director in the chair.",
@@ -2788,6 +2769,8 @@
      "kit": "v5 Library good-news set: each story's own photo or clip, house type and palette",
      "inspo_url": "https://www.instagram.com/power.ai/p/DfcCbPXlWQ-/"
     },
+    "stories_to_find": true,
+    "stories_short": "Only 3 stories on this topic passed their source and repeat checks this week; the other 1 are still to find (the board's Find the other stories press).",
     "read_back": {
      "readers": [
       "reader A",
@@ -2810,7 +2793,7 @@
      "label": "Each story's own source",
      "url": "https://www.afaqs.com/news/social-media/e-motorad-teams-up-with-desi-batman-creator-as-ai-reels-go-viral-12843698"
     },
-    "copy": "This month AI turned solo creators into studios. Four real things AI helped people in creators do this month, each with who it helped and how.",
+    "copy": "This month AI turned solo creators into studios. Four real things AI did for creators this month, each with who it helped and how.",
     "hook": "This month AI turned solo creators into studios.",
     "pitch": {
      "see": "A desi Batman riding a buffalo, a fantasy film made for $28,775, and an alternate-history trailer that looks like a blockbuster.",
@@ -2998,7 +2981,7 @@
      "label": "Each story's own source",
      "url": "https://fortune.com/2026/11/27/checking-ai-work-human-in-the-loop-newsrooms"
     },
-    "copy": "This month AI helped newsrooms keep readers and save time. Four real things AI helped people in media do this month, each with who it helped and how.",
+    "copy": "This month AI helped newsrooms keep readers and save time. Four real things AI did for media this month, each with who it helped and how.",
     "hook": "This month AI helped newsrooms keep readers and save time.",
     "pitch": {
      "see": "Norway's biggest paper checking AI headlines, Der Spiegel spotting who will cancel, and Australian papers plugged into AI tools.",
@@ -3173,18 +3156,18 @@
     "kind": "good_news",
     "format": "Good-news carousel, 6 cards, 4:5",
     "source_tag": "trade_press",
-    "topic": "scouts, race teams and actors",
+    "topic": "scouts, race teams and cinemas",
     "source": {
      "label": "Each story's own source",
      "url": "https://bluewin.ch/en/sport/football/bringing-overlooked-talents-to-light-li.3686124"
     },
-    "copy": "AI got footballers, a race car and an actor noticed. Four real things AI helped people in scouts, race teams and actors do this month, each with who it helped and how.",
-    "hook": "AI got footballers, a race car and an actor noticed.",
+    "copy": "AI helped footballers, a race team and cinemas get noticed. Three real things AI did for scouts, race teams and cinemas this month, each with who it helped and how, and 1 more to find.",
+    "hook": "AI helped footballers, a race team and cinemas get noticed.",
     "pitch": {
-     "see": "A teenager's video reaching a European club, a NASCAR car answering guests, and an actor paid for his face.",
+     "see": "A teenager's video reaching a European club, a NASCAR car answering guests, and a cinema assistant answering the easy questions.",
      "lands": "It is uplifting, real and in the reader's world, and each story names who it helped.",
      "why_now": "Stories dated 20 to 27 November 2026, or found in your Instagram inspo sheet within 30 days.",
-     "share": "Four people AI helped get noticed and paid this month."
+     "share": "Footballers, a race car and a cinema chain AI helped this month."
     },
     "shape": "theme",
     "aim": "interest",
@@ -3238,48 +3221,29 @@
       }
      },
      {
-      "headline": "An actor licensed his face and was paid a normal role's rate.",
-      "what": "Aki Avni, an Israeli film and television actor who appeared on Fox's 24, licensed his face to Shortical, a microdrama start-up, which made a wholly AI series called Inevitable starring his likeness; it premiered in Los Angeles in mid November. TechCrunch reported on 21 November 2026 that Shortical says his pay was in line with industry standards for a comparable non-AI acting role, and that Avni came in as a partner on the project.",
-      "why": "An actor has been paid a normal fee for a starring role he never had to turn up to film.",
-      "kind": "performance",
+      "headline": "Odeon's cinema assistant answers 40% of questions, no jobs lost.",
+      "what": "Odeon Cinemas told diginomica on 27 November 2026 that its AI assistant Odi, built on Zendesk, resolves about 40% of guest queries, from showtimes to ticket problems, while human agents take the harder ones. The chain says it gets up to 10,000 queries a week, satisfaction has risen over 18 months, and it has kept its service teams.",
+      "why": "Cinemas run on thin margins, and Odeon is using AI to absorb the busy weeks without cutting the people who handle the hard cases.",
+      "kind": "film_tv",
       "helps": {
-       "who": "actors",
-       "how": "more successful"
+       "who": "cinema operators and their guest service staff",
+       "how": "better"
       },
-      "date": "2026-11-21",
+      "date": "2026-11-27",
       "source": {
-       "label": "TechCrunch, 'Is selling an AI version of your face to this microdrama startup the future of Hollywood?', Lucas Ropek, 21 Nov 2026",
-       "url": "https://techcrunch.com/2026/11/21/is-selling-an-ai-version-of-your-face-to-this-microdrama-startup-the-future-of-hollywood/"
+       "label": "diginomica, 'Projecting success on EX and CX at Odeon Cinemas', Stuart Lauchlan, 27 Nov 2026",
+       "url": "https://diginomica.com/projecting-success-ex-and-cx-odeon-cinemas-how-movie-theater-chain-tapping-ai-without-losing"
       },
       "media": {
        "kind": "photo",
-       "url": "https://techcrunch.com/wp-content/uploads/2026/11/Inevitable-Key-Art_3x4-full-size.jpg?w=1024"
-      }
-     },
-     {
-      "headline": "A solo game maker can paint a map in minutes.",
-      "what": "Ludo.ai launched Tileset Generator on 26 November 2026, which makes sets of 2D map tiles, such as grass, sand, roads and rivers, from a text description or a reference image. A full 16-tile set costs one credit, and it exports straight to engines like Godot 4.",
-      "why": "Small game teams can skip days of drawing edge and corner tiles.",
-      "kind": "games",
-      "helps": {
-       "who": "indie and solo game developers",
-       "how": "smarter"
-      },
-      "date": "2026-11-26",
-      "source": {
-       "label": "PocketGamer.biz, 'Ludo.ai launches AI-powered Tileset Generator for 2D game development', 26 Nov 2026",
-       "url": "https://www.pocketgamer.biz/ludoai-launches-ai-powered-tileset-generator-for-2d-game-development/"
-      },
-      "media": {
-       "kind": "photo",
-       "url": "https://media.pocketgamer.biz/images/142383/90365/ludoai_l1200.jpg"
+       "url": "https://diginomica.com/sites/default/files/styles/scaled_370/public/images/2026-11/molnarszabolcserdely-popcorn-4885565_1920.jpg.webp"
       }
      }
     ],
     "stories_due": "2026-11-27",
     "cards": [
      {
-      "words": "AI got footballers, a race car and an actor noticed.",
+      "words": "AI helped footballers, a race team and cinemas get noticed.",
       "picture": "A young footballer filming on a local pitch"
      },
      {
@@ -3291,12 +3255,12 @@
       "picture": "EssentiallySports: the thing itself (photo)"
      },
      {
-      "words": "An actor licensed his face and was paid a normal role's rate.",
-      "picture": "TechCrunch: the thing itself (photo)"
+      "words": "Odeon's cinema assistant answers 40% of questions, no jobs lost.",
+      "picture": "diginomica: the thing itself (photo)"
      },
      {
-      "words": "A solo game maker can paint a map in minutes.",
-      "picture": "PocketGamer.biz: the thing itself (photo)"
+      "words": "One more story to find this week.",
+      "picture": "An empty frame, to be filled with the fourth story"
      },
      {
       "words": "Each one got seen by someone who could pay them.",
@@ -3308,7 +3272,7 @@
      "format": "6 cards, 4:5",
      "frames": [
       {
-       "words": "AI got footballers, a race car and an actor noticed.",
+       "words": "AI helped footballers, a race team and cinemas get noticed.",
        "picture": "A young footballer filming on a local pitch"
       },
       {
@@ -3320,12 +3284,12 @@
        "picture": "EssentiallySports: the thing itself (photo)"
       },
       {
-       "words": "An actor licensed his face and was paid a normal role's rate.",
-       "picture": "TechCrunch: the thing itself (photo)"
+       "words": "Odeon's cinema assistant answers 40% of questions, no jobs lost.",
+       "picture": "diginomica: the thing itself (photo)"
       },
       {
-       "words": "A solo game maker can paint a map in minutes.",
-       "picture": "PocketGamer.biz: the thing itself (photo)"
+       "words": "One more story to find this week.",
+       "picture": "An empty frame, to be filled with the fourth story"
       },
       {
        "words": "Each one got seen by someone who could pay them.",
@@ -3335,6 +3299,19 @@
      "tone": "Warm and real, with one dry line on the cover.",
      "kit": "v5 Library good-news set: each story's own photo or clip, house type and palette",
      "inspo_url": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/"
+    },
+    "stories_to_find": true,
+    "stories_short": "Only 3 stories on this topic passed their source and repeat checks this week; the other 1 are still to find (the board's Find the other stories press).",
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "A round-up of good news: AI helped people and places get noticed, like a teenage footballer whose video reached a European club, a NASCAR car that talks to guests and a cinema helper that answers easy questions.",
+      "A round-up of AI helping people get noticed: a teenage footballer's video reaching a big European club, a NASCAR car that answers visitors' questions, and a cinema helper that answers the easy questions."
+     ],
+     "against": 61
     }
    }
   ]
@@ -3922,6 +3899,12 @@
     "verdict": "new",
     "of": "piece:bf0fddae-2fcf-4687-9079-190729234ed3",
     "why": "Newsroom stories are new; only the Canva item touches a recent post, and that post was about design seats, not sign-ups through AI assistants."
+   },
+   {
+    "ref": "off-sat-talent",
+    "verdict": "new",
+    "of": "off-sat-goodnews",
+    "why": "The scouting app, the NASCAR voice and Odeon's assistant appear in no posted edition; Odeon is also in the off-sat-screen option, so they should not both run."
    }
   ]
  }

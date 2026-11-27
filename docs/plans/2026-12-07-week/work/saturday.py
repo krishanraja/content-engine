@@ -44,7 +44,7 @@ def option(id, topic, hook, see, share, funny, keys, beats, cover_pic, close_wor
     cards.append({'words': close_words, 'picture': close_pic})
     o = {'id': id, 'kind': 'good_news', 'format': 'Good-news carousel, 6 cards, 4:5', 'source_tag': 'trade_press',
          'topic': topic, 'source': {'label': 'Each story\'s own source', 'url': stories[0]['source']['url']},
-         'copy': f"{hook} Four real things AI helped people in {topic} do this month, each with who it helped and how.",
+         'copy': f"{hook} {['', 'One', 'Two', 'Three', 'Four'][len(stories)]} real things AI did for {topic} this month, each with who it helped and how" + (f", and {4 - len(stories)} more to find." if len(stories) < 4 else "."),
          'hook': hook, 'pitch': {'see': see, 'lands': 'It is uplifting, real and in the reader\'s world, and each story names who it helped.',
                                  'why_now': 'Stories dated 20 to 27 November 2026, or found in your Instagram inspo sheet within 30 days.', 'share': share},
          'shape': 'theme', 'aim': aim, 'funny': funny,
@@ -55,7 +55,7 @@ def option(id, topic, hook, see, share, funny, keys, beats, cover_pic, close_wor
                        'kit': 'v5 Library good-news set: each story\'s own photo or clip, house type and palette', 'inspo_url': beats}}
     if short_by:
         o['stories_to_find'] = True
-        o['stories_short'] = 'Only three stories in games and sport passed their source check in the week; the fourth is still to find.'
+        o['stories_short'] = f'Only {4 - short_by} stories on this topic passed their source and repeat checks this week; the other {short_by} are still to find (the board\'s Find the other stories press).'
     if weekly:
         o['weekly'] = 'good_news'
     return o
@@ -90,10 +90,9 @@ SAT = [
            "The lead actor's surname has the letters AI in it, in case anyone missed the point.",
            [('eklavya-ai-led-series', 'Lionsgate Play started an AI-led mythology series.'),
             ('seoul-indie-fest-ai-cinema', 'Seven Korean directors made AI short films for a festival.'),
-            ('hazanavicius-third-hand', 'An Oscar winner is showing how he used AI on his film.'),
-            ('odeon-odi-40-percent', 'Odeon\'s cinema assistant answers 40% of questions, no jobs lost.')],
+            ('hazanavicius-third-hand', 'An Oscar winner is showing how he used AI on his film.')],
            'https://www.instagram.com/power.ai/p/DfcCbPXlWQ-/', 'A cinema screen lighting up a dark room',
-           'Every one of them kept a director in the chair.', 'An empty director\'s chair on a set'),
+           'Every one of them kept a director in the chair.', 'An empty director\'s chair on a set', short_by=1),
     option('makers', 'creators', "This month AI turned solo creators into studios.",
            "A desi Batman riding a buffalo, a fantasy film made for $28,775, and an alternate-history trailer that looks like a blockbuster.",
            "Four creators who made something huge with AI this month.",
@@ -114,15 +113,14 @@ SAT = [
             ('canva-mcp-500k', 'Nearly 500,000 people joined Canva through AI assistants.')],
            'https://www.instagram.com/power.ai/p/Dfa2apfFSE5/', 'A newspaper front page beside a laptop',
            'Each one kept an editor checking the machine.', 'An editor\'s red pen on a printout'),
-    option('talent', 'scouts, race teams and actors', "AI got footballers, a race car and an actor noticed.",
-           "A teenager's video reaching a European club, a NASCAR car answering guests, and an actor paid for his face.",
-           "Four people AI helped get noticed and paid this month.",
+    option('talent', 'scouts, race teams and cinemas', "AI helped footballers, a race team and cinemas get noticed.",
+           "A teenager's video reaching a European club, a NASCAR car answering guests, and a cinema assistant answering the easy questions.",
+           "Footballers, a race car and a cinema chain AI helped this month.",
            "The driver cannot talk while racing, so the car now does the talking for him.",
            [('footbao-26-signed-europe', 'An AI scouting app got 26 overlooked footballers signed.'),
             ('trackhouse-88bot-talking-car', 'A NASCAR team gave its race car an AI voice for guests.'),
-            ('aki-avni-licensed-face', 'An actor licensed his face and was paid a normal role\'s rate.'),
-            ('ludo-tileset-generator', 'A solo game maker can paint a map in minutes.')],
+            ('odeon-odi-40-percent', 'Odeon\'s cinema assistant answers 40% of questions, no jobs lost.')],
            'https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/', 'A young footballer filming on a local pitch',
-           'Each one got seen by someone who could pay them.', 'A scout\'s notebook beside a phone'),
+           'Each one got seen by someone who could pay them.', 'A scout\'s notebook beside a phone', short_by=1),
 ]
 SAT[0]['candidates'] = candidates()

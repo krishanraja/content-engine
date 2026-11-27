@@ -25,6 +25,11 @@
    "ref": "off-sat-newsrooms",
    "says": "A round-up of newspapers using AI to check headlines, keep readers from cancelling and save time.",
    "repeat": "new"
+  },
+  {
+   "ref": "off-sat-talent",
+   "says": "A round-up of AI helping people get noticed: a teenage footballer's video reaching a big European club, a NASCAR car that answers visitors' questions, and a cinema helper that answers the easy questions.",
+   "repeat": "new"
   }
  ]
 }
