@@ -199,7 +199,41 @@ describe('the migration matches the code', () => {
   })
 
   it('keeps the database\'s own path check in step with the top folders', () => {
+    // The first migration's check, as it was applied; 20261226090000 replaced it (below).
     expect(migration).toContain("path ~ '^(1 Brand kit \\(permanent\\)|2 Channel art \\(permanent\\)|3 Posts/[^/]+)/[^/]'")
+  })
+})
+
+// Channel art moved into "1 Brand kit (permanent)/Channel art" on 26 Nov 2026 and the API refuses the old top folder;
+// on 27 Nov (Krish's yes) the database stopped taking a ready row there too, and the working-files loop's old
+// versions stopped being ready. Nothing was deleted.
+describe('the retired channel-art folder and the working-files loop (27 Nov 2026)', () => {
+  const retire = readFileSync('supabase/migrations/20261226090000_content_library_retire_loop_rows.sql', 'utf8')
+  const readyRule = /\(library = 'makeyourmindup' and path ~ '([^']+)'\)/.exec(retire)?.[1]
+
+  it('the newest path check takes a ready row only under the code\'s top folders', () => {
+    expect(readyRule).toBe('^(1 Brand kit \\(permanent\\)|3 Posts/[^/]+)/[^/]')
+    expect([...LIBRARY_TOP_FOLDERS]).toEqual(['1 Brand kit (permanent)', '3 Posts'])
+    const rule = new RegExp(readyRule!)
+    expect(rule.test('1 Brand kit (permanent)/Channel art/youtube-banner-2560x1440.png')).toBe(true)
+    expect(rule.test('3 Posts/2026-10-05 Mon follow.the.money - Who gets paid/READ ME.txt')).toBe(true)
+    expect(rule.test('2 Channel art (permanent)/youtube-banner-2560x1440.png')).toBe(false)
+    expect(checkLibraryPath('2 Channel art (permanent)/youtube-banner-2560x1440.png')).toEqual({ ok: false, refusal: 'path_wrong_top_folder' })
+    // A row already taken out of ready keeps its old path as a record, and only while it is not ready.
+    expect(retire).toContain("(library = 'makeyourmindup' and state <> 'ready' and path ~ '^2 Channel art \\(permanent\\)/[^/]')")
+    expect(retire).toContain('raise exception \'a ready row is still under 2 Channel art (permanent)/\'')
+  })
+
+  it('takes rows out of ready reversibly: the one other state, the old ready_at kept, nothing deleted', () => {
+    expect(retire).toContain("set state = 'reserved', ready_at = null")
+    expect(retire).toContain('create table if not exists public.content_library_files_unready')
+    expect(retire).toContain('revoke all on public.content_library_files_unready from anon, authenticated;')
+    expect(retire.match(/insert into public\.content_library_files_unready \(id, ready_at, reason\)/g)?.length).toBe(2)
+    // The newest version of each path stays ready, read the way content_library_pending reads it.
+    expect(retire).toContain('row_number() over (partition by f.path order by f.ready_at desc, f.id) as n')
+    expect(retire).toContain('where ranked.id = f.id and ranked.n > 1')
+    const statements = retire.replace(/^--.*$/gm, '')
+    expect(statements).not.toMatch(/\bdelete\b|\bdrop table\b|\btruncate\b|storage\./i)
   })
 })
 
@@ -262,6 +296,7 @@ describe('the Heartside library', () => {
   it('keeps the database in step: a library column, a per-library path check and per-library functions', () => {
     expect(heartsideMigration).toContain("add column if not exists library text not null default 'makeyourmindup'")
     expect(heartsideMigration).toContain("check (library in ('makeyourmindup', 'heartside'))")
+    // As applied on 21 Nov; 20261226090000 took "2 Channel art (permanent)" out for a ready row (tested above).
     expect(heartsideMigration).toContain("path ~ '^(1 Brand kit \\(permanent\\)|2 Channel art \\(permanent\\)|3 Posts/[^/]+)/[^/]'")
     expect(heartsideMigration).toContain(`path ~ '^Posts/${heartside.post_id_pattern.replace('(?:', '(')}/[^/]+$'`)
     expect(heartsideMigration).toContain(`char_length(path) between 1 and ${LIBRARY_PATH_MAX}`)

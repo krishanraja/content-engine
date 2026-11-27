@@ -3,7 +3,7 @@ import { guardEngine } from '../_auth.js'
 import { supabase } from '../_supabase.js'
 import { hashVideoStudioIdentity } from '../_videoStudioAuth.js'
 import { enforceVideoStudioRateLimit } from '../video-studio/_data.js'
-import { libraryFileRow, parseLibraryName, type LibraryName } from './_library.js'
+import { parseLibraryName, servableLibraryFileRow, type LibraryName } from './_library.js'
 
 // GET /api/library/find, on the engine key or Krish's access cookie (I-07, 14 Nov 2026).
 //   ?library=<makeyourmindup|heartside>&sha256=<64 hex>            the copies of those exact bytes
@@ -69,7 +69,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const files = []
   for (const raw of data) {
-    const row = libraryFileRow(raw)
+    const row = servableLibraryFileRow(raw)
     if (!row || row.state !== 'ready' || row.library !== query.library) continue
     if ('sha256' in query ? row.sha256 !== query.sha256 : !row.path.startsWith(query.prefix)) continue
     const type = fileType(row.content_type)

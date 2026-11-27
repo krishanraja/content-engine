@@ -630,8 +630,8 @@ describe('the Heartside library on the same routes', () => {
     const other = 'b'.repeat(64)
     db.files.push(readyRow({ ready_at: '2026-10-06T08:01:00.000Z' }))
     db.files.push(readyRow({ library: 'heartside', path: 'Posts/F01/heartside_F01_same.html', ready_at: '2026-11-03T08:01:00.000Z' }))
-    db.files.push(readyRow({ sha256: other, path: '3 Posts/2026-10-06 Article/cut.mp4', content_type: 'video/mp4', object_key: `files/${other}.mp4`, ready_at: '2026-10-07T08:01:00.000Z' }))
-    db.files.push(readyRow({ sha256: 'c'.repeat(64), path: '3 Posts/2026-10-06 Article/held.mp4', content_type: 'video/mp4', state: 'reserved', ready_at: null }))
+    db.files.push(readyRow({ sha256: other, path: `${POST}/3 Video/cut.mp4`, content_type: 'video/mp4', object_key: `files/${other}.mp4`, ready_at: '2026-10-07T08:01:00.000Z' }))
+    db.files.push(readyRow({ sha256: 'c'.repeat(64), path: `${POST}/3 Video/held.mp4`, content_type: 'video/mp4', state: 'reserved', ready_at: null }))
     const get = (query: Record<string, unknown>, headers: Record<string, string> = { authorization: `Bearer ${ENGINE}` }) => call(findRoute, { method: 'GET', headers, query })
 
     const bySha = await get({ library: 'makeyourmindup', sha256: SHA })
@@ -639,8 +639,8 @@ describe('the Heartside library on the same routes', () => {
     expect(bySha.body).toEqual({ ok: true, files: [{ library: 'makeyourmindup', path: PATH, object_key: KEY, sha256: SHA, bytes: 1234, type: 'text',
       content_type: 'text/html', ready_at: '2026-10-06T08:01:00.000Z', role: 'master', approved: false }] })
 
-    const videos = await get({ library: 'makeyourmindup', prefix: '3 Posts/2026-10-06 Article/', type: 'video' })
-    expect(videos.body.files.map((f: { path: string }) => f.path)).toEqual(['3 Posts/2026-10-06 Article/cut.mp4'])
+    const videos = await get({ library: 'makeyourmindup', prefix: `${POST}/3 Video/`, type: 'video' })
+    expect(videos.body.files.map((f: { path: string }) => f.path)).toEqual([`${POST}/3 Video/cut.mp4`])
     expect(JSON.stringify(videos.body)).not.toMatch(/https?:/)
 
     for (const bad of [{ sha256: SHA }, { library: 'makeyourmindup' }, { library: 'makeyourmindup', sha256: 'NOT' }, { library: 'elsewhere', sha256: SHA },
@@ -648,6 +648,30 @@ describe('the Heartside library on the same routes', () => {
       expect((await get(bad)).body).toEqual({ ok: false, error: 'invalid_find_query' })
     }
     expect((await get({ library: 'makeyourmindup', sha256: SHA }, {})).statusCode).toBe(401)
+  })
+
+  // 27 Nov 2026: three ready rows still sat under "2 Channel art (permanent)/", retired on 26 Nov and refused by the
+  // path rule. A reader is never handed a row at a path the library itself now refuses, even while one is ready.
+  it('never finds a row at a path the library now refuses, by hash or under a folder', async () => {
+    const retired = '2 Channel art (permanent)/youtube-banner-2560x1440.png'
+    const png = 'd'.repeat(64)
+    db.files.push(readyRow({ sha256: png, path: retired, content_type: 'image/png', object_key: `files/${png}.png`, ready_at: '2026-11-20T08:01:00.000Z' }))
+    db.files.push(readyRow({ sha256: png, path: '1 Brand kit (permanent)/Channel art/youtube-banner-2560x1440.png', content_type: 'image/png', object_key: `files/${png}.png`, ready_at: '2026-10-06T08:01:00.000Z' }))
+    const find = (query: Record<string, unknown>) => call(findRoute, { method: 'GET', headers: { authorization: `Bearer ${ENGINE}` }, query })
+    const file = (query: Record<string, unknown>) => call(fileRoute, { method: 'GET', headers: { authorization: `Bearer ${ENGINE}` }, query })
+
+    const bySha = await find({ library: 'makeyourmindup', sha256: png })
+    expect(bySha.body.files.map((f: { path: string }) => f.path)).toEqual(['1 Brand kit (permanent)/Channel art/youtube-banner-2560x1440.png'])
+    expect((await find({ library: 'makeyourmindup', prefix: '2 Channel art (permanent)/' })).body).toEqual({ ok: true, files: [] })
+
+    const newest = await file({ sha256: png })
+    expect(newest.statusCode).toBe(200)
+    expect(newest.body.file.path).toBe('1 Brand kit (permanent)/Channel art/youtube-banner-2560x1440.png')
+    expect(newest.body.also_at).toEqual([])
+
+    db.files = db.files.filter((row) => row.path === retired)
+    expect((await file({ sha256: png })).statusCode).toBe(404)
+    expect((await find({ library: 'makeyourmindup', sha256: png })).body).toEqual({ ok: true, files: [] })
   })
 
   it('asks the database for one library at a time', async () => {
