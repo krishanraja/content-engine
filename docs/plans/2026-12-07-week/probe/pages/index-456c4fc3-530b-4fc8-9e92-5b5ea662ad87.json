@@ -20,6 +20,15 @@
   "https://store.steampowered.com/app/250900/The_Binding_of_Isaac_Rebirth/": {
     "file": "steam-isaac-rebirth-store.txt"
   },
+  "https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=250900&count=10&maxlength=0": {
+    "file": "steam-news-api-250900.txt"
+  },
+  "https://store.steampowered.com/app/3353470/": {
+    "file": "steam-repentance-plus-store.txt"
+  },
+  "https://x.com/edmundmcmillen/status/2124242373761003571": {
+    "file": "x-mcmillen-2124242373761003571.txt"
+  },
   "https://www.reddit.com/r/bindingofisaac/comments/1y1qqut/reps_gtavi_runs_music_is_100_generated_by_suno_ai/": {
     "unreadable": "Reddit returned 403 Blocked"
   },
