@@ -36,6 +36,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-23","week_target":20,"current":0,"current_as_of":"2026-11-27","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (0 published, and 0 derived carousels and Shorts content-engine made and Growth posted that passed the 10/10 judges and went live, in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (0% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 0, against 20 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
+- The five good-news story samples in the Library carry the short headlines approved on 27 Nov, with their mint phrases, and the 21 Nov deck's own lines and sources. verify_static.py reports 4 known failures (3 memes, the good-news cover). (2026-11-27)
 - The v5 Library's known gate failures fell from 65 to 13 on a draft pull request awaiting Krish's approval of the before-and-after sheet: the safe boxes now follow STANDARD and the carousel and cover margins, the carousel cover hierarchy rule follows the v5 covers, the podcast V4 meets STANDARD 6 and the advice cover's contrast check reads its cream card. (2026-11-27)
 - From 27 Nov a video carries one wordmark, S3h on its outro: the wide quick-edit frame and the why-ladder title card draw no V4, no beat carries a series pill, and ve lint and ve render refuse a cut that would; cuts dated before render as signed. (2026-11-27)
 - The working-files loop's leftovers are gone for good, with Krish's yes of 27 Nov: the 29,437 retired rows of content_library_files (1,868 ready rows kept), the 14,710 stored files only they used (39,266,945 bytes; the bucket went from 17,154 to 2,444 objects), and content_library_files_unready; the database now refuses "2 Channel art (permanent)/" for every row. (2026-11-27)
@@ -50,13 +51,14 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 ## What changed recently
 
+- 2026-11-27 library.json and its embedded copy in library.html, a mint phrase per text op in the renderer, library-headlines.json beside the deck, verify_static.py, verify-static-known.json, LIBRARY-GUIDE.md.
 - 2026-11-27 docs/ve/cards/library/library.json, library.html (embedded registry), LIBRARY-GUIDE.md, verify_static.py and verify-static-known.json.
 Older lines: `docs/history/2026-11-27-NOW-moved-3.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-27): Krish approves or rejects the sheet; he also chooses the words for the 10 good-news samples and a fix for the 3 meme crops.
+- Next (2026-11-27): Decide the good-news cover. Its approved headline has no mint, but the v5 cover hierarchy needs a mint payoff line, so its sample keeps the old line. Also decide whether mint on the butter story field (about 1 to 1 luminance contrast) stands, and where cards 7 to 10 live, since the Library has no sample for them.
 - House close (2026-11-26): every whole cut dated from 26 Nov closes on the Library's outro (`docs/production/BRAND_PALETTE.md`, "The series close"); `docs/production/CLOSING.md` describes the 10 Nov statement card that cuts dated before 26 Nov keep. He hears the first cut with the outro at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
 - North Star check (2026-11-27): holds.

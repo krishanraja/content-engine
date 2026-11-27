@@ -1,4 +1,0 @@
-Status: The five good-news story samples in the Library carry the short headlines approved on 27 Nov, with their mint phrases, and the 21 Nov deck's own lines and sources. verify_static.py reports 4 known failures (3 memes, the good-news cover).
-Changed: library.json and its embedded copy in library.html, a mint phrase per text op in the renderer, library-headlines.json beside the deck, verify_static.py, verify-static-known.json, LIBRARY-GUIDE.md.
-Next: Decide the good-news cover. Its approved headline has no mint, but the v5 cover hierarchy needs a mint payoff line, so its sample keeps the old line. Also decide whether mint on the butter story field (about 1 to 1 luminance contrast) stands, and where cards 7 to 10 live, since the Library has no sample for them.
-North Star check (2026-11-27): holds.
