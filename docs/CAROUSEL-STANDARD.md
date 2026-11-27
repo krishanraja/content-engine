@@ -16,7 +16,7 @@ real screenshot, a prompt of 5 words or fewer; nothing below 34 px. A carousel i
 `python3 scripts/carousel_make.py <piece> --set <set> --deck DECK.json --out <folder>`, which checks the deck
 (`carousel-deck/3`, `scripts/carousel_check.py`), calls `make_piece.py --set <set>` and `make_covers.py` by path,
 checks the drawn slides and writes the receipt the manifest needs before he can approve it. Where a section below says
-otherwise (ten cards, 8 to 20 word sentences, "Follow for more", an Anton body, a Codex card), it is history: the old
+otherwise (ten cards, 8 to 20 word sentences, "Follow for more", an Anton body, a Codex card, series pills, series names and the butter, lilac and coral day colours (retired with v5 on 25 Nov 2026; those colours code a climb only)), it is history: the old
 deck schemas are refused and the Codex carousel card is retired.
 
 **The brand palette wins on every brand element** (Krish, 12 Nov 2026: "I approve the brand palette sheet, but only if

@@ -30,6 +30,8 @@ format is refused before it renders. Only Krish changes the palette, and only in
 
 ## The days
 
+Record only for cuts signed before 26 Nov. In v5 the day colours and pills are retired; coral, butter and lilac code a climb only.
+
 | Day | Kind | Colour |
 |---|---|---|
 | Monday | follow.the.money | butter `#FFD84D` |
