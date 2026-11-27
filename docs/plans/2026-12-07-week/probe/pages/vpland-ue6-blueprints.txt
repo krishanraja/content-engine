@@ -1,0 +1,74 @@
+Unreal Engine 6 Drops Blueprints as Epic Uses AI to Port 20, — VP Land
+Skip to content
+StoriesPodcastShowsToolsEventsJobsVideos ↗
+PRODUCTION & POST
+Unreal Engine 6 Drops Blueprints as Epic Uses AI to Port 20,000+ Fortnite Blueprints to Verse
+VP Land
+Nov 21, 2026
+· 3 min read
+Unreal Engine 6, Early Access included, will ship without Blueprints or the Actor gameplay framework, according to Epic's update on Blueprints, so gameplay moves to Verse on the new Scene Graph framework. Any UE5 project built on Blueprint logic will need converting to make the jump, and Epic says AI is what will make that practical.
+One engine replaces two. UE6 merges UE5 and Unreal Editor for Fortnite, with Scene Graph built from scratch on Verse.
+Fortnite was the test case. Epic used AI to convert more than 20,000 Fortnite Battle Royale Blueprints into a working Verse prototype.
+The prototype still has to prove itself. Epic is still validating its performance, memory use and architecture.
+UE5 projects get UE6's AI tooling first. Agent tooling built for UE6 is arriving in the UE 5.9 Preview for existing projects.
+UE6 reverses Epic's earlier plan to keep Blueprints and Actors alongside Scene Graph
+Epic's earlier UE6 roadmap said Actors and Blueprints would coexist in UE6 Early Access and 6.0 while Scene Graph matured, as Gaming.net reported. That plan targeted Early Access for the end of 2027, with a full release 12 to 18 months later.
+✦FREE NEWSLETTER
+THE STORIES SHAPING AI IN HOLLYWOOD — IN YOUR INBOX
+Join studio execs, filmmakers, and creators who read VP Land to stay ahead of creative tech.
+SUBSCRIBE
+By subscribing, you agree to receive VP Land emails and to the
+Terms. Unsubscribe anytime.
+Privacy Policy
+Free forever · read in minutes · unsubscribe anytime
+Epic lists its design goals for UE6 as a new data model, an architecture built first around Verse, Epic's programming language, modularity and AI operability.
+For studios, moving from Unreal Engine 5 to UE6 becomes a conversion job instead of a carry-over. You can keep projects on UE5, and Epic says targeted UE5 features, fixes and support will continue while UE6 work proceeds.
+Virtual production and broadcast teams that built stage controls or graphics logic in Blueprints face the same choice. If a broadcast project built around Epic's free sports graphics package relies on Blueprint logic, that logic either stays on UE5 or gets rewritten in Verse.
+Epic's AI-assisted Fortnite port produced roughly 3 million lines of Verse
+The conversion, which Epic Games had expected to take years, set out to move every Battle Royale Blueprint to Verse. The AI-assisted run produced a working prototype with roughly 3 million lines of Verse.
+Epic says the large-scale effort is meant to make conversions easier for other developers. The team is still iterating to check how the generated codebase holds up on performance, memory and architecture.
+The company expects AI to make converting UE5 projects practical and cost-efficient, with potentially modest costs by the time UE 6.0 ships. Its reasoning is that AI task costs keep falling while the complexity of converting a game stays roughly constant.
+Epic also says the approach should keep UE6 on its existing schedule or bring it in sooner. That cost outlook is Epic's projection, so studios with large Blueprint codebases should plan around that uncertainty.
+UE 5.9 brings UE6's agent tooling to existing UE5 projects
+Epic has begun moving AI tooling built for UE6 back to UE5, starting with the UE 5.9 MegaJam Preview. The preview adds settings and toolsets for the Model Context Protocol, which connect models and external agents to Unreal projects.
+Expanded Python access. More of the editor is reachable through Python scripting.
+Unreal Canvas. An experimental shared workspace, covered by IEEE Spectrum, where people and agents generate text, images, video and meshes from prompts. It draws on the current editor context, references and feedback you control.
+Web delivery. An experimental WebAssembly target with WebGPU rendering. Preview 2 also lets Blueprint-only projects package for the web with the standard game executable, though the web toolkit is still required.
+Epic says AI agents built much of UE 5.9 itself, including most of its web-platform work.
+The backport is meant to ease the eventual conversion burden, which gives teams a way to start testing agent workflows on their existing projects before the UE6 move.
+TOOLS IN THIS STORY
+Unreal Engine3D & Spatial
+Agent WorkflowsDeveloper Tools & APIs
+gear-softwareEpic GamesUnreal EngineVerseFortniteUnreal CanvasMCPVAD / Unreal Enginevirtual productionAI toolssoftware
+KEEP READING
+PRODUCTION & POST
+Netflix Explores Gaussian Splats as a Streaming Format While Blender and Unreal Engine Add Native Support
+Netflix is investigating Gaussian splats as a future streaming format for TVs, streaming sticks, phones and laptops, according to Lowpass's reporting on a Netflix job listing. On the production side, native splat supp…
+Nov 20, 2026
+· 3 min read
+PRODUCTION & POST
+DNEG Is Converting a Film Catalog to Stereo 3D for Meta VR Glasses, Including 'The Hunger Games: Sunrise on the Reaping'
+DNEG has partnered with Meta to convert a catalog of films into stereo 3D for Meta VR Glasses, and its Stereo team is already in production on several titles, including The Hunger Games: Sunrise on the Reaping, accord…
+Nov 18, 2026
+· 3 min read
+PRODUCTION & POST
+Disney Animation's 'Lilo & Scratch' Short Runs on a New Pipeline That Mixes Hand-Drawn and CG Art in One Frame
+Walt Disney Animation Studios built a new production pipeline for its Lilo & Scratch short that lets hand-drawn animators, CG animators and background painters each work in their own medium, often inside the same fram…
+Nov 14, 2026
+· 3 min read
+News, trends, and insights on the latest creative technology
+XLinkedInYouTubeInstagramTikTokFacebook
+EXPLORE
+StoriesPodcast — DenoisedShow — Inside the AI StudioShow — Studio CircuitToolsEventsJobsVideos
+VP LAND
+SubscribeSign InPremiumServicesContact
+GET THE NEWSLETTER
+AI, virtual production, and the creative technologies disrupting entertainment. Free.
+SUBSCRIBE
+By subscribing, you agree to receive VP Land emails and to the
+Terms. Unsubscribe anytime.
+Privacy Policy
+©
+2026
+VP Land · A New Territory Media publication
+PrivacyTerms

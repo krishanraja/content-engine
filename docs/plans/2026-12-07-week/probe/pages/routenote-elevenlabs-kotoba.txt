@@ -1,0 +1,125 @@
+ElevenLabs to Acquire Japanese Voice AI Company Kotoba in Reported $100 Million Deal - RouteNote - Radar
+ RouteNote - Radar
+ RouteNote
+Distribution
+Publishing
+RouteNote Advance
+Push.fm
+RouteNote Licensing
+RouteNote Create
+ RouteNote - Radar
+ Music News
+Video
+Music Tech
+Gaming Music
+Music Industry News
+Festival
+ Music News 
+ ElevenLabs to Acquire Japanese Voice AI Company Kotoba in Reported $100 Million Deal 
+ By Radar TeamNovember 17, 202616 mins read 
+AI voice technology company ElevenLabs has agreed to acquire Japanese voice AI specialist Kotoba Technologies in a deal reportedly worth approximately $100 million.
+The acquisition, announced on November 16, 2026, represents a significant expansion of ElevenLabs’ international operations and its ambitions to develop more natural, multilingual AI voice technology.
+Although ElevenLabs has not officially disclosed the financial terms, reports from Nikkei Asia and Business Insider Japan place the transaction at around $100 million.
+The deal is expected to close later in the fourth quarter of 2026, subject to regulatory approval and customary closing conditions.
+For a company that has rapidly expanded beyond AI voice generation into music creation and entertainment, the acquisition could have wider implications for the future of AI-generated audio.
+What is Kotoba Technologies?
+Kotoba Technologies is an AI research company specialising in speech recognition, voice generation and real-time translation.
+Founded in 2023 by AI researchers Noriyuki Kojima and Jungo Kasai, the company is headquartered in San Francisco, with its research and development operations based in Tokyo.
+Kotoba focuses on developing AI speech models capable of understanding and reproducing the complexities of the Japanese language.
+Its flagship voice model, Koto, supports several applications:
+Text-to-speech technology that converts written Japanese into natural-sounding speech
+Speech-to-text systems that transcribe spoken conversations
+Speech-to-speech technology for simultaneous interpretation and translation
+Conversational AI systems designed to handle Japanese-language interactions
+The company’s technology is already being used by major enterprise customers.
+Salesforce, for example, uses Kotoba’s Koto model to support Japanese-language conversations through its Agentforce Voice platform.
+This existing commercial adoption makes Kotoba an attractive acquisition for ElevenLabs as it expands its AI-powered voice products.
+Why is ElevenLabs acquiring Kotoba?
+The acquisition forms part of ElevenLabs’ strategy to make conversational AI accessible across different languages and cultures.
+Japan represents an important market for voice AI, but developing accurate Japanese-language models presents challenges beyond simply translating English speech.
+Japanese communication frequently relies on context, levels of politeness and subtle differences in speech patterns.
+An effective AI voice assistant therefore needs to understand not only the words being spoken but also the cultural expectations behind them.
+Kotoba has developed technology specifically designed to address these challenges.
+By combining Kotoba’s Japanese-language expertise with ElevenLabs’ existing AI models and infrastructure, the companies aim to improve how businesses and consumers interact with AI.
+ElevenLabs CEO and co-founder Mati Staniszewski said the company’s ambition is to develop technology that reflects the language and social norms of different cultures.
+The acquisition is also expected to strengthen ElevenLabs’ presence in Japan, where it established a local subsidiary in April 2025.
+ElevenLabs continues its rapid expansion
+The reported $100 million acquisition comes during a period of substantial growth for ElevenLabs.
+Founded in 2022, the company initially gained attention for its realistic AI-generated voices and text-to-speech technology.
+Since then, it has expanded into conversational AI agents, automated dubbing, audio production and AI music generation.
+In September 2026, ElevenLabs announced that its valuation had reached $22 billion following a $300 million employee share tender offer.
+That represented a doubling of the $11 billion valuation announced during its $500 million Series D funding round earlier in the year.
+The company’s expansion has increasingly focused on enterprise customers using AI voices for customer service, digital assistants and automated conversations.
+The Kotoba acquisition provides access to specialised research expertise and an established Japanese-language AI model.
+It also demonstrates how major AI companies are increasingly acquiring smaller developers with expertise in particular languages, technologies or regional markets.
+What does the acquisition mean for ElevenMusic?
+Although Kotoba primarily focuses on conversational AI rather than music generation, the acquisition is particularly interesting given ElevenLabs’ growing involvement in the music industry.
+ElevenLabs entered the AI music generation market in August 2025, introducing its music technology alongside licensing arrangements with Merlin and Kobalt.
+Its ElevenMusic platform has since developed into an AI-powered music creation service that allows users to generate, edit, remix and discover music.
+The company has also been developing tools that offer greater control over vocals, instrumentation and musical arrangements.
+In September 2026, ElevenLabs announced a multi-year agreement with Universal Music Group.
+The partnership includes plans to develop a separate AI-powered platform allowing fans to create remixes, mashups and alternative interpretations of music from participating artists.
+The agreement reflects the growing interest among major music companies in licensed AI music experiences.
+Could Kotoba improve AI-generated singing and vocals?
+Kotoba’s expertise in Japanese-language speech technology could eventually contribute to improvements across ElevenLabs’ audio products.
+For example, multilingual voice models may help AI systems better understand pronunciation, timing and the nuances of different languages.
+These capabilities could potentially benefit music creation tools, particularly those involving synthetic vocals and multilingual content.
+However, ElevenLabs has not announced any specific plans to integrate Kotoba’s technology into ElevenMusic.
+For now, the acquisition is primarily focused on improving Japanese-language conversational AI.
+Any potential application to AI-generated music remains speculative.
+Why Japan is an important market for AI audio
+Japan has a substantial entertainment industry spanning recorded music, anime, gaming, film and digital media.
+These industries create opportunities for AI-powered audio technology, particularly in localisation and multilingual content production.
+For example, voice AI could help media companies develop Japanese-language versions of content originally produced in other languages.
+Real-time translation and synthetic speech technology could also support international gaming platforms, customer-facing applications and digital entertainment services.
+The potential applications extend beyond entertainment.
+Companies operating in Japan could use more natural voice AI systems for customer support, sales, accessibility and automated services.
+ElevenLabs has indicated that it plans to expand its local sales operations and continue investing in Japanese infrastructure following the acquisition.
+Kotoba’s 15 employees are also expected to join ElevenLabs as part of the transaction.
+AI voice technology and the future of the music industry
+AI-generated audio is becoming an increasingly important part of the wider music technology industry.
+While AI music generators have attracted significant attention, voice technology also presents opportunities for artists, labels and music businesses.
+Potential applications include:
+1. Multilingual artist promotion
+Voice AI could make it easier for musicians to create spoken promotional content in multiple languages.
+For artists attempting to reach international audiences, this could provide additional ways to communicate with fans.
+2. Music and video localisation
+AI dubbing and translation tools could help creators adapt interviews, promotional videos and educational content for different markets.
+3. Interactive fan experiences
+Conversational AI could support new forms of interactive entertainment, allowing fans to engage with authorised digital experiences connected to artists and music.
+4. AI-assisted music production
+More advanced speech technology may eventually contribute to improvements in synthetic vocals, pronunciation and multilingual music creation.
+However, the development of AI voice technology also raises questions around consent, licensing and the commercial use of human voices.
+Artists and rights holders will need confidence that their recordings, identities and performances are protected as these technologies develop.
+When will ElevenLabs complete the Kotoba acquisition?
+ElevenLabs expects the acquisition to close before the end of 2026.
+The transaction remains subject to regulatory approval and other closing conditions.
+Once completed, Kotoba will join ElevenLabs’ operations, with its researchers continuing to contribute to the development of Japanese-language voice technology.
+The combined teams aim to improve AI-powered conversations and support the adoption of voice interfaces across Japan and other markets.
+What happens next for ElevenLabs?
+The acquisition of Kotoba highlights the increasing importance of specialist AI research as major technology companies compete to develop more capable voice systems.
+For ElevenLabs, the transaction offers an opportunity to strengthen its position in Japan while improving the multilingual capabilities of its existing products.
+For the music industry, the deal is another reminder that the companies developing generative audio are expanding well beyond basic text-to-speech applications.
+With ElevenMusic, its Universal Music Group partnership and continued investment in advanced voice technology, ElevenLabs is positioning itself across several areas of the rapidly evolving AI audio market.
+Whether Kotoba’s technology eventually becomes part of ElevenMusic remains to be seen.
+However, the reported $100 million transaction demonstrates the commercial value being placed on specialised speech AI technology.
+As artificial intelligence becomes more closely integrated into music creation, distribution and promotion, developments like this are likely to remain important for artists and music businesses.
+Independent artists can continue to distribute their releases worldwide through RouteNote, with free and premium music distribution options available.
+ elevenlabsjapankotobavoice ai
+ 0 comments 
+ Share: 
+ Prev Post
+ What Song Is in the 2026 John Lewis Christmas Advert? Sam Fender Explained
+ Next Post
+ 15 Songs Like Jamie Miller’s “Babydoll” for Soul-Pop Fans
+SearchSearch
+Recent Posts
+Five-Artist Music Distribution Cost Calculator
+TuneCore Breakout Artist Discontinued: What Should Existing Artists Do?
+Finding Hope – So Love – When Playing It Cool Gives Way to Falling Hard
+Who Sings “Light the Night” in The Snowman and the Snowdog?
+dioboi – SOPHIE Review – Nine Tracks of Late-Night City Trap
+Remembering Valdi Sabev
+ © 2026 RouteNote - Radar. All rights reserved. 
+ RouteNote - Radar
+ Hit enter to search or ESC to close.
