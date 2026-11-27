@@ -23,6 +23,7 @@ describe('the engine gates', () => {
     ['the article keeps its pictures: pack figures fed in, zero or stray pictures refused (Krish, 2026-10-31)', ['tests/publish_figures_test.py']],
     ['an article figure carries no mark, names its picture form and says nothing the article does not (Krish, 2026-11-19)', ['tests/article_figure_test.py']],
     ['the making record, drive-link and thumbnails', ['scripts/post-pack/making.py', '--self-test']],
+    ['the working-files lane never sends its own list, or the copy the library sync keeps beside it, again (the loop of 30 Oct to 27 Nov 2026)', ['scripts/post-pack/working.py', '--self-test']],
     ['one spine per piece', ['scripts/post-pack/spine_check.py', '--self-test']],
     ['the style references: cuts, zooms and the ledger', ['scripts/quick-edit/references.py', '--self-test']],
     ['the cover drawer and thumbnails', ['scripts/pages/build.py', '--self-test']],

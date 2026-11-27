@@ -23,6 +23,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -37,6 +38,7 @@ for p in (HERE, REPO / 'scripts'):
         sys.path.insert(0, str(p))
 
 LIST_NAME = 'working-files.json'  # not '.working.json': the library refuses a hidden name (path_hidden_part), so until 18 Oct no working folder ever reached it
+LIST_COPY = re.compile(r'working-files \((?:[2-9]|[1-9][0-9])\)\.json')
 PURPOSE = "a session's working files for this post (screenshots, cards, panels, charts, clips), saved by Krish"
 
 
@@ -84,10 +86,18 @@ def working_folders(root):
     return out
 
 
+def is_list_copy(rel):
+    """This lane's own list, or a copy the library sync kept of it: working-files.json, or "working-files (2).json"
+    to "working-files (99).json" beside it (Get-BesideName in scripts/library-sync.ps1). Neither is Krish's work.
+    Read back as a working file, a kept copy went into the next list, changed it, and was sent again on every pass
+    (27 Nov 2026: about 29,000 library rows, five files rewritten in Drive every ten minutes since 30 Oct)."""
+    return rel == LIST_NAME or LIST_COPY.fullmatch(rel) is not None
+
+
 def files_of(folder):
     return sorted((p.relative_to(folder).as_posix(), p) for p in folder.rglob('*')
                   if p.is_file() and not any(s.startswith('.') for s in p.relative_to(folder).parts)
-                  and p.relative_to(folder).as_posix() != LIST_NAME)
+                  and not is_list_copy(p.relative_to(folder).as_posix()))
 
 
 def plan_folder(prefix, folder):
@@ -210,6 +220,32 @@ def _recent_dates(days=21):
     return seen
 
 
+def _list_loop_closed(tmp):
+    """The loop, replayed: three passes of publish and the library sync over one working folder.
+
+    The folder already holds a working-files.json the sync did not write last (so it is kept), and the sync puts each
+    new list beside it as "working-files (2).json", replacing its own earlier copy in place, as Write-IntoLibrary in
+    scripts/library-sync.ps1 does. Until 27 Nov that beside copy was read back as a working file: it went into the
+    next list, which changed the list, which was sent again and written over the copy, every pass since 30 Oct
+    (about 29,000 library rows and the same five files rewritten in Drive every ten minutes). Closed when the second
+    and third passes plan the same list and send nothing new."""
+    folder = tmp / 'loop' / '3 Posts' / '2026-11-06 Fri mind.the.gap - X' / '3 Video' / 'working 26 Oct'
+    folder.mkdir(parents=True)
+    (folder / 'a.png').write_bytes(b'png')
+    (folder / LIST_NAME).write_text('{"an": "older list, kept"}', encoding='utf-8')
+    prefix = '3 Posts/2026-11-06 Fri mind.the.gap - X/3 Video/working 26 Oct'
+    beside = folder / 'working-files (2).json'
+    digests, sent = [], []
+    for _ in range(3):
+        planned, listing = plan_folder(prefix, folder)
+        digests.append(hashlib.sha256(json.dumps(listing, sort_keys=True).encode()).hexdigest())
+        if len(digests) > 1 and digests[-1] == digests[-2]:
+            continue  # publish skips a folder whose list is unchanged
+        sent.append([t for t, _, _ in planned])
+        beside.write_text(json.dumps({'prefix': prefix, 'files': listing}, indent=1), encoding='utf-8')
+    return len(sent) == 1 and digests[0] == digests[1] == digests[2] and sent[0] == [f'{prefix}/a.png']
+
+
 def self_test():
     checks = []
     with tempfile.TemporaryDirectory() as tmp:
@@ -224,6 +260,7 @@ def self_test():
         planned, listing = plan_folder(*found[0])
         checks.append(('plans each file under its library path', [t for t, _, _ in planned] == ['3 Posts/2026-10-16 Fri mind.the.gap - X/3 Video/working 17 Oct/panels/a.png']))
         checks.append(('hidden files stay home', len(listing) == 1 and listing[0]['path'] == 'panels/a.png'))
+        checks.append(('the loop of 27 Nov 2026 is closed: a list kept beside another is never sent again', _list_loop_closed(Path(tmp))))
     checks.append(('dates read as the folders are named', '17 Oct' in _recent_dates(400)))
     bad = [n for n, ok in checks if not ok]
     print(f'working self-test {"passed" if not bad else "FAILED"}: {len(checks)} checks' + (f' ({", ".join(bad)})' if bad else ''))

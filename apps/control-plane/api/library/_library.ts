@@ -495,6 +495,14 @@ export function libraryFileRow(value: unknown): LibraryFileRow | null {
   }
 }
 
+/** A row a reader may be handed: well formed, and at a path its library's rule takes today. A row filed under a
+ *  folder since retired ("2 Channel art (permanent)/", 26 Nov 2026) stays in the index but is never served, so a
+ *  link is never minted onto a path the library itself now refuses. */
+export function servableLibraryFileRow(value: unknown): LibraryFileRow | null {
+  const row = libraryFileRow(value)
+  return row && checkLibraryPath(row.path, row.library).ok ? row : null
+}
+
 /** What a sender is shown about a file: never the object key or the bucket. */
 export function libraryFileView(row: LibraryFileRow) {
   return {

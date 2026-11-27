@@ -5,7 +5,7 @@ import { hashVideoStudioIdentity } from '../_videoStudioAuth.js'
 import { VIDEO_STUDIO_CONTROL_SCHEMA_VERSION, sendVideoStudioError } from '../video-studio/_contracts.js'
 import { enforceVideoStudioRateLimit } from '../video-studio/_data.js'
 import { isSignedPreviewUrlAllowed } from '../video-studio/_previewStorage.js'
-import { LIBRARY_BUCKET, checkLibraryPath, configuredLibraryStore, libraryFileRow, libraryFileView, parseLibraryName } from './_library.js'
+import { LIBRARY_BUCKET, checkLibraryPath, configuredLibraryStore, libraryFileRow, libraryFileView, parseLibraryName, servableLibraryFileRow } from './_library.js'
 
 // GET /api/library/file?path=<library path>[&library=heartside], on the engine key (or Krish's cookie).
 //
@@ -41,7 +41,7 @@ async function findBySha(res: VercelResponse, sha: string) {
     .order('ready_at', { ascending: false })
     .limit(20)
   if (error || !Array.isArray(data)) return sendVideoStudioError(res, 503, 'library_index_unavailable')
-  const rows = data.map(libraryFileRow).filter((row): row is NonNullable<typeof row> => row !== null && row.sha256 === sha)
+  const rows = data.map(servableLibraryFileRow).filter((row): row is NonNullable<typeof row> => row !== null && row.sha256 === sha)
   const newest = rows[0]
   if (!newest) return sendVideoStudioError(res, 404, 'library_file_not_found')
   return res.status(200).json({
