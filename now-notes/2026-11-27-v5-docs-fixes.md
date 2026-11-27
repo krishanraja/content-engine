@@ -1,4 +1,0 @@
-Status: The v5 docs teach a cold session the rebrand: the North Star says the engine serves makeyourmindup, not Mindmake, with Krish's approved positioning lines (27 Nov 2026); the marks, the music rotation, the Saturday footnote exception, the tall cut with no dress and the retired day colours read as v5 everywhere they are named.
-Changed: The publication's promise is "AI news for the creative industries, every morning.": the daily Edition hub (`docs/HUB-PIPELINE.md`, published 06:00 UTC), pieces as 5 Whys ladders (`docs/FIVE-WHYS.md`), and one Saturday email to all subscribers (`.agents/skills/weekly-edition/SKILL.md`). Series names are internal and never shown.
-Next: On a home computer, measure Goodie Bags, Illusions and Be Alone with `scripts/quick-edit/music.py add` so the three carousel tracks can be approved in the ledger.
-North Star check (2026-11-27): holds.
