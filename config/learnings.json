@@ -92,7 +92,7 @@
       "krish": "1 agreed",
       "asked": "Every series video still closes on the old intro-sting clips (day colours, the old gift-box wordmark). My recommendation: retire them and end on the plain v5 outro card.",
       "why": "After the v5 lock (25 Nov) every series cut still closed on the six v4 sting clips, rendered in the old look (day colours, the gift-box wordmark, one file per series), so the last seconds of every series video undid the locked look.",
-      "means": "Amended 2026-11-26 (the v5 close is the Library's outro): the card is the Library's video-wide-outro (16:9) and video-vertical-outro (9:16), approved in docs/ve/cards/library/lock.json, drawn by ve's V5Outro.tsx: S3h, the one wordmark, \"Follow for more\", the address and the climb bars, with no tagline, no stacked V10 mark, no days row and no series name (ONE-MARK.md, 25 Nov: \"there should only be one of these wordmarks on any given artifact or page\"; Krish, 26 Nov: \"the sub brands do not need to feature\"). A cut dated before 26 Nov keeps the close it was signed with. As first recorded: Every video, series or off day, wide or tall, ends on the plain v5 outro card: statement_card (16:9) or statement_beat (9:16), the ending band's plain card drawn in the locked v5 look, with the series days row on a series day. No cut dated from Thu 26 Nov carries an intro sting clip anywhere; ve compile lays none, ve lint refuses a spec naming one and ve render refuses props carrying one or drawn in another theme. A series cut dated 23 to 25 Nov keeps the sting close it was signed with (F33). The clips stay in Drive, unused by any new cut.",
+      "means": "Amended 2026-11-27: quick-edit's kit films the same outro card for every piece dated from 26 Nov, the why-ladder close card ends on S3h in place of V10, and from 26 Nov the title lockup carries no wordmark, so a cut shows S3h once, on its outro. Amended 2026-11-26 (the v5 close is the Library's outro): the card is the Library's video-wide-outro (16:9) and video-vertical-outro (9:16), approved in docs/ve/cards/library/lock.json, drawn by ve's V5Outro.tsx: S3h, the one wordmark, \"Follow for more\", the address and the climb bars, with no tagline, no stacked V10 mark, no days row and no series name (ONE-MARK.md, 25 Nov: \"there should only be one of these wordmarks on any given artifact or page\"; Krish, 26 Nov: \"the sub brands do not need to feature\"). A cut dated before 26 Nov keeps the close it was signed with. As first recorded: Every video, series or off day, wide or tall, ends on the plain v5 outro card: statement_card (16:9) or statement_beat (9:16), the ending band's plain card drawn in the locked v5 look, with the series days row on a series day. No cut dated from Thu 26 Nov carries an intro sting clip anywhere; ve compile lays none, ve lint refuses a spec naming one and ve render refuses props carrying one or drawn in another theme. A series cut dated 23 to 25 Nov keeps the sting close it was signed with (F33). The clips stay in Drive, unused by any new cut.",
       "status": "encoded",
       "encoded": [
         {
@@ -134,6 +134,21 @@
           "file": "scripts/velib/compile.py",
           "contains": "not the v5 outro card, the Library",
           "how": "ve render refuses a cut dated from 26 Nov that closes on the old statement card or shows a days row"
+        },
+        {
+          "file": "scripts/quick-edit/kit.py",
+          "contains": "def page_outro(",
+          "how": "quick-edit's kit films the same outro for every piece dated from 26 Nov (kit-v5/v5-outro.html), its numbers held to V5Outro.tsx by tests/quick-edit-kit.test.ts"
+        },
+        {
+          "file": "apps/renderer/src/engine/v5/Cards.tsx",
+          "contains": "const markS3h",
+          "how": "the why-ladder close card ends on S3h, its one wordmark, in place of the retired V10 (ladder.test.ts)"
+        },
+        {
+          "file": "scripts/velib/compile.py",
+          "contains": "def title_without_wordmark(",
+          "how": "from 26 Nov the title lockup carries no wordmark, so S3h on the outro is the cut's one and the retired V10 is drawn nowhere"
         }
       ]
     },

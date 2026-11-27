@@ -139,6 +139,12 @@ export function anchorSlots(uses: readonly string[], isProp: (id: string) => boo
   return uses.map(id => isProp(id) ? staging.props![Math.min(p++, staging.props!.length - 1)]! : shared[r++]!)
 }
 
+/** The title lockup's wordmark: the stacked mark on a cut dated before 26 Nov, as it was signed (F33), and none from 26 Nov
+ *  (props.titleMoment.wordmark false), when S3h on the v5 outro is the cut's one wordmark and the stacked V10 is retired. */
+export function titleWordmark(props: EngineRenderProps) {
+  return props.titleMoment?.wordmark === false ? undefined : props.brand.stacked
+}
+
 export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean }) {
   const v5 = props.renderTheme === 'makeyourmindup-v5' || props.format === 'why-ladder-v5'
   setHouseDataFace(v5)
@@ -231,7 +237,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
       <DepthLayer items={depthItems} frame={frame} tokens={props.tokens} width={width} height={height} back />
       {titleBehind ? <TitleMoment words={props.titleMoment!.words} fromFrame={props.titleMoment!.fromFrame} toFrame={props.titleMoment!.toFrame}
         frame={frame} aspect={props.aspect} width={width} height={height} tokens={props.tokens as unknown as Record<string, string>}
-        wordmark={props.brand.stacked} Image={Img} behind={props.titleMoment!.behind} /> : null}
+        wordmark={titleWordmark(props)} Image={Img} behind={props.titleMoment!.behind} /> : null}
     </AbsoluteFill> : null
   const subject = behindNow && props.matte && !cutout ? <AbsoluteFill key="depth-subject" data-depth-subject>
       {takeLayer(props.matte.src, true, 'subject')}</AbsoluteFill> : null
@@ -421,7 +427,8 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
         </AbsoluteFill>
       )))
   // The episode title moment (props.titleMoment): the line he says becomes ONE full-frame lockup with the stacked wordmark
-  // inside it, over his face panel on a wide cut and over the band on a short (Ruling, Krish, 2026-11-19; title/TitleMoment.tsx).
+  // inside it (none from 26 Nov: titleWordmark), over his face panel on a wide cut and over the band on a short (Ruling,
+  // Krish, 2026-11-19; title/TitleMoment.tsx).
   // The wordmark is the lockup's own, from config/brand-palette.json through props.brand: it never comes or goes on its own.
   // A panel that is the whole frame (stage's) builds the title in the devices' region, never over his take.
   const titlePanel = staging ? (staging.panel.height > 0 && staging.panel.height < height ? staging.panel : staging.region) : undefined
@@ -429,7 +436,7 @@ export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { st
     <AbsoluteFill key="title-moment" data-title-moment>
       <TitleMoment words={props.titleMoment.words} fromFrame={props.titleMoment.fromFrame} toFrame={props.titleMoment.toFrame}
         frame={frame} aspect={props.aspect} width={width} height={height} tokens={props.tokens as unknown as Record<string, string>}
-        wordmark={props.brand.stacked} Image={Img} fullFrom={props.titleMoment.fullFrom}
+        wordmark={titleWordmark(props)} Image={Img} fullFrom={props.titleMoment.fullFrom}
         panel={props.titleMoment.fullFrom !== undefined ? titlePanel : undefined} />
     </AbsoluteFill>) : null
   // The staging's ground: stage's cream band, the ink panel and band's series-colour hairline, all under his take.

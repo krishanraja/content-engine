@@ -85,7 +85,17 @@ describe('Why ladder v5', () => {
     expect(at('v5_callout',6)).toContain('opacity:0')
     expect(at('v5_callout',10)).toContain('opacity:1')
     expect(at('v5_close',16)).toContain('Follow for more')
-    expect(at('v5_close',16)).toContain('v10.svg')
+  })
+  it('ends the close on S3h, its one wordmark, never the stacked V10 or V6 it replaced (ONE-MARK, Krish, 2026-11-25)', () => {
+    const params = fixture.objects.find((o) => o.device === 'v5_close')!.params
+    for (const format of ['9:16', '16:9'] as const) {
+      const html = renderToStaticMarkup(React.createElement(Card, { id: 'v5_close', params, frame: 16, format }))
+      expect(html.match(/<img[^>]*>/g)).toHaveLength(1)
+      expect(html).toMatch(/<img[^>]*data-close-mark="s3h"[^>]*s3h\.svg/)
+      for (const retired of ['v10.svg', 'v6.svg', 'v4.svg', 'v9.svg']) expect(html).not.toContain(retired)
+      // No series name and no days row on the close (Krish, 2026-11-26: "the sub brands do not need to feature").
+      for (const text of ['Mondays', 'Wednesdays', 'Fridays', 'follow.the.money', 'under.the.hood', 'mind.the.gap']) expect(html).not.toContain(text)
+    }
   })
   it('keeps each phrase between two and five words', () => {
     for (let n = 2; n < 25; n++) {

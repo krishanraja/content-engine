@@ -23,8 +23,9 @@ export type TitleMomentProps = {
   words: TitleWord[]; fromFrame: number; toFrame: number; frame: number
   aspect: '9:16' | '16:9'; width: number; height: number
   tokens: Record<string, string>
-  /** The stacked wordmark from config/brand-palette.json through the props' brand (props.brand.stacked), never typed text. */
-  wordmark?: TitleImage
+  /** The stacked wordmark from config/brand-palette.json through the props' brand (props.brand.stacked), never typed text;
+   *  none on a cut dated from 26 Nov (FormatMaster titleWordmark), whose one wordmark is S3h on its v5 outro. */
+  wordmark?: TitleImage | undefined
   /** How the wordmark is drawn: Remotion's Img in a render, a plain img in a test. */
   Image?: React.ElementType
   /** Accepted for older props; the lockup always fades where it stands, over the whole frame. */
