@@ -1,0 +1,103 @@
+{
+  "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed": [
+    {"lens": "series", "text": "An $11m-backed AI start-up has promised indie rights holders licensing fees and a share of revenue for training on their recordings, and the one number an artist would want to see, the split, is the one nobody has published.", "rests_on": "the fee and split were not disclosed"},
+    {"lens": "series", "text": "How the deal works: artists do not sell to Sonilo directly, Symphonic signs for them, and the payment comes in two parts, a licensing fee and a share of revenue.", "rests_on": "signed with Symphonic so that \"rights holders and artists receive licensing fees and a share of revenue\""}
+  ],
+  "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2": [
+    {"lens": "series", "text": "The price of ElevenLabs's deal, around $100 million, reached the public through a news report of what its CEO said, rather than through a filing.", "rests_on": "Business Insider Japan reports that ElevenLabs CEO Mati Staniszewski put the price at around $100 million"},
+    {"lens": "series", "text": "Every outlet carrying the figure hedges it: the $100 million is reported, not announced, which is worth knowing before anyone quotes it as fact.", "rests_on": "reportedly worth approximately $100 million"}
+  ],
+  "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb": [
+    {"lens": "series", "text": "Kling raised 19.8 billion yuan in October, and Kuaishou's accounts show the money came with an annual return and a conditional promise to buy the shares back.", "rests_on": "reflecting the annual return attached to Beijing Kling's conditional obligation to repurchase equity"},
+    {"lens": "series", "text": "How the money works: investors are owed an annual return that builds up on paper each quarter, so the business is carrying a cost even before any cash leaves.", "rests_on": "represent the non-cash interest expense accrued"},
+    {"lens": "series", "text": "The size of the bet in one line: 19.8 billion yuan, raised by Kling in one month.", "rests_on": "Kling raised 19.8 billion yuan in October"}
+  ],
+  "wed/41874364-fcd8-4fd1-b7e7-91aca6235019": [
+    {"lens": "series", "text": "The AI inside Cinema 4D and ZBrush is not Maxon's own: the generation is handed to outside companies, Tripo and Rodin.", "rests_on": "We work with third-party AI providers, such as Tripo and Rodin."},
+    {"lens": "series", "text": "Maxon's pitch to 3D artists is that the AI tools arrive with an off switch, so whether a sculpt touches generation at all is the artist's setting.", "rests_on": "AI generation comes to Cinema 4D and ZBrush, but artists have an 'off' switch."}
+  ],
+  "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010": [
+    {"lens": "series", "text": "Epic used AI to move more than 20,000 Fortnite Blueprints into its Verse language, which is how a studio clears its own backlog before dropping a tool.", "rests_on": "Epic converted more than 20,000 Fortnite Blueprints"},
+    {"lens": "series", "text": "The AI-assisted run produced a working prototype, and roughly 3 million lines of code, which is a lot of reading for whoever checks it.", "rests_on": "The AI-assisted run produced a working prototype with roughly 3 million lines of Verse."},
+    {"lens": "series", "text": "Unreal Engine 6 ships without Blueprints, and the company that made that call first ran its own Blueprints through AI to get off them.", "rests_on": "Unreal Engine 6 ships without Blueprints"}
+  ],
+  "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87": [
+    {"lens": "series", "text": "The claim was that the music was 100% AI; the evidence was sitting in the tracks themselves, which named Suno in their own metadata.", "rests_on": "pointing to tracks that reference the AI music tool Suno in their metadata"},
+    {"lens": "series", "text": "What the AI music row cost the game with its players, measured in one number.", "rests_on": "only 8% positive recent reviews"}
+  ],
+  "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c": [
+    {"lens": "series", "text": "Festival AI bans rest on a form the filmmaker fills in, and Robinson says some animators are clearly lying on theirs.", "rests_on": "What bothers me is the animators clearly lying on their forms"},
+    {"lens": "series", "text": "How strict the line is at Manchester: one AI-transformed frame or sound, not just a generated one, puts the whole film out.", "rests_on": "If any part of the final moving image has been generated or transformed by a generative audio, image or video model, it will be deemed ineligible"}
+  ],
+  "fri/acb58370-aaca-4040-9c13-83f227a628ec": [
+    {"lens": "series", "text": "For all the noise about AI songs flooding streaming, the platform says listeners are barely playing them and playing them less.", "rests_on": "Streams from AI-generated songs remain very low and with a declining trend."},
+    {"lens": "series", "text": "The same platform says what is growing is high-quality, differentiated music, which is its own reading of where the plays go.", "rests_on": "high-quality, differentiated content continues to gain traction"}
+  ],
+  "tue/nytphotoshop": [
+    {"lens": "series", "text": "The New York Times has told its photographers not to update Photoshop: version 28.0.0 and anything after it is off limits for work on assignment.", "rests_on": "we are requiring that all contributing photographers avoid using Adobe Photoshop 2027 (release 28.0.0 and subsequent updates)"},
+    {"lens": "series", "text": "The rule only bites when the job is for the Times, so the same photographer can be allowed one Photoshop for their own work and not for their paid work.", "rests_on": "when working on assignment for The Times"}
+  ],
+  "tue/fcpcaptions": [
+    {"lens": "series", "text": "Apple's software can now caption footage and search its transcripts in 23 more languages, so an editor can find a line by what was said rather than scrubbing for it.", "rests_on": "Generate captions and search transcripts in 23 new supported languages."}
+  ],
+  "tue/logicdrums": [
+    {"lens": "series", "text": "Apple's Stem Splitter can now pull a recorded drum kit apart into kick, snare, hi-hat, toms and cymbals, from a single mixed region.", "rests_on": "extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion"}
+  ],
+  "tue/spotifyaudio": [
+    {"lens": "series", "text": "Spotify will make up to five audiobooks per author at no charge, which takes the cost off a self-published writer's first five.", "rests_on": "with up to five audiobooks free per author"},
+    {"lens": "series", "text": "The tools now reach self-published authors in 21 more markets, the UK among them.", "rests_on": "available to self-published authors in 21 more markets"}
+  ],
+  "tue/mychannel": [
+    {"lens": "series", "text": "The headline idea is a TV channel starring you, but it comes with a hedge: Google might be planning it.", "rests_on": "Google might be planning to build a completely AI-generated TV channel in which your likeness is the main character"},
+    {"lens": "series", "text": "Where the money would be: the system makes the adverts as well as the shows, both generated for one viewer.", "rests_on": "designed to create feeds filled with personalized, AI-generated videos and advertisements"}
+  ],
+  "tue/tplcommscam": [],
+  "tue/tplfistpump": [],
+  "tue/tplninedarter": [],
+  "tue/tplbuzzer": [],
+  "thu/figmasix": [
+    {"lens": "series", "text": "In Figma one prompt can now return two, four or six images from the same model, so a designer compares options side by side instead of asking again.", "rests_on": "Have a single image model generate two, four, or six images from one prompt"},
+    {"lens": "series", "text": "Figma's stated reason is time: fewer rounds of rewording the same request.", "rests_on": "so you spend less time re-prompting"}
+  ],
+  "thu/robloxvideo": [
+    {"lens": "series", "text": "Roblox's agent can now record video while a game is being playtested, so it can watch how things move rather than judge from still screenshots.", "rests_on": "screen_capture can now record video during a playtest, so the agent can see motion for itself."}
+  ],
+  "thu/alphamatte": [
+    {"lens": "series", "text": "LTX Alphagen is the first outside model on Runway to hand back two outputs from one job and to export ProRes.", "rests_on": "LTX Alphagen is the first third-party model to return two outputs and support ProRes as an output type."}
+  ],
+  "thu/synthfirmware": [
+    {"lens": "series", "text": "Polyend has put the code that runs its Tracker grooveboxes on GitHub, so anyone can read the code their device runs on.", "rests_on": "Today we're publishing the firmware source code for the original Tracker, Tracker+ and Tracker Mini on GitHub."},
+    {"lens": "series", "text": "Polyend is one case of a wider pattern The Verge describes, companies opening up more and more of their devices.", "rests_on": "companies have begun making more and more of their devices open source."}
+  ],
+  "thu/pixelfill": [
+    {"lens": "series", "text": "Apple's Generate Fill is pitched on matching what is already in the photo: the lighting, the perspective and the texture around the edit.", "rests_on": "adding edits that blend naturally to match the lighting, perspective and texture of surrounding areas"},
+    {"lens": "series", "text": "The edit is asked for in ordinary words rather than with a brush.", "rests_on": "using natural language"}
+  ],
+  "thu/tplturin": [],
+  "thu/tplthanksgiving": [],
+  "thu/tplassemble": [],
+  "thu/tpllegends": [],
+  "thu/tplskyrim": [
+    {"lens": "series", "text": "A well-known fantasy game's most famous scenes, cart ride and dungeon included, rebuilt by AI as if shot in the 1960s.", "rests_on": "A famous fantasy video game's best-known scenes are rebuilt with AI in a 1960s setting, cart ride and dungeon included."}
+  ],
+  "sat/goodnews": [
+    {"lens": "series", "text": "A song reached the top of Korea's most watched chart and stayed there for more than a week with no fan army and no TV push behind it.", "rests_on": "with no fandom or TV promotion behind it"},
+    {"lens": "series", "text": "How the number one was made: two songwriters wrote the words, Suno made the melody, arrangement and vocals, and the pair refined what it gave them.", "rests_on": "The pair wrote the lyrics and used Suno for the melody, arrangement and vocals, then refined them"},
+    {"lens": "series", "text": "A veteran guitarist was paid to play over a complex track and only found out afterwards that everything else on it had been made by AI.", "rests_on": "he recently did a paid session on a complex progressive track, then learned from the engineer that the whole backing had been made by AI"}
+  ],
+  "sat/screen": [
+    {"lens": "series", "text": "Lionsgate Play's first AI-led series runs on Google's AI under a long-term production pact, a studio deal rather than a one-off experiment.", "rests_on": "uses Google's AI under a long-term production pact"},
+    {"lens": "series", "text": "An Oscar-winning director and his post house will show, at a festival, exactly which methods and tools went into his new film.", "rests_on": "He and post house Digital District will explain the methods and tools they used."},
+    {"lens": "series", "text": "Odeon says its AI assistant handles about 40% of guest questions, and that it has kept its service teams for the rest.", "rests_on": "it has kept its service teams"}
+  ],
+  "sat/makers": [
+    {"lens": "series", "text": "An AI Batman who brushes his teeth by the railway tracks and rides a buffalo has turned into a paid brand deal with an electric bike maker.", "rests_on": "Electric bike maker E-Motorad has signed him for a collaboration"},
+    {"lens": "series", "text": "A whole AI fantasy comedy, war beast included, for a stated cost of $28,775, a figure that comes from the account that shared it.", "rests_on": "said the whole film cost $28,775"},
+    {"lens": "series", "text": "How one person answers thousands of questions a week: an AI avatar of him takes one a day, in whatever language it was asked.", "rests_on": "his AI avatar answers one real question from his comments each day for 12 months, in the language it was asked"}
+  ],
+  "sat/newsrooms": [
+    {"lens": "series", "text": "Nine is selling business subscribers a way to plug its journalism straight into their own AI tools, a new way for a publisher to charge for its reporting.", "rests_on": "lets licensed business subscribers connect its journalism from The Australian Financial Review"},
+    {"lens": "series", "text": "How Der Spiegel finds the readers about to leave: its score picks out a group that cancels at seven times the usual rate.", "rests_on": "cancels at 28% against a base rate of about 4%"},
+    {"lens": "series", "text": "The fear is that AI makes things up; at Bergens Tidende about one in ten AI summaries needs a fix, and almost never for that.", "rests_on": "about one in ten needs a fix, almost never for hallucinations"}
+  ]
+}

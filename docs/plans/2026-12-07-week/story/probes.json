@@ -1178,5 +1178,128 @@
         "counter": true
       }
     ]
+  },
+  "mychannel": {
+    "schema": "whys-probe/1",
+    "documented": 3,
+    "inferred": 1,
+    "sites": 2,
+    "mechanism_rungs": 3,
+    "counter_rungs": 3,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "theverge.com",
+          "uspto.gov"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "theverge.com",
+          "uspto.gov"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "theverge.com",
+          "uspto.gov"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "theverge.com",
+          "uspto.gov"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 5,
+        "claimed": "open",
+        "counted": "open",
+        "verified_sites": [],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
+  },
+  "synthfirmware": {
+    "schema": "whys-probe/1",
+    "documented": 3,
+    "inferred": 1,
+    "sites": 4,
+    "mechanism_rungs": 2,
+    "counter_rungs": 3,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "polyend.com",
+          "theverge.com"
+        ],
+        "mechanism": false,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "ericasynths.lv",
+          "theverge.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "ericasynths.lv",
+          "polyend.com",
+          "theverge.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "githubusercontent.com",
+          "polyend.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
   }
 }

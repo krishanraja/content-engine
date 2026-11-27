@@ -1,0 +1,3422 @@
+{
+ "options": {
+  "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed": [
+   {
+    "lens": "series",
+    "text": "An $11m-backed AI start-up has promised indie rights holders licensing fees and a share of revenue for training on their recordings, and the one number an artist would want to see, the split, is the one nobody has published.",
+    "rests_on": "the fee and split were not disclosed"
+   },
+   {
+    "lens": "series",
+    "text": "How the deal works: artists do not sell to Sonilo directly, Symphonic signs for them, and the payment comes in two parts, a licensing fee and a share of revenue.",
+    "rests_on": "signed with Symphonic so that \"rights holders and artists receive licensing fees and a share of revenue\""
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The deal exists so that rights holders and artists receive licensing fees and a share of revenue, and the two numbers an artist would most want from that sentence, the fee and the split, are the two nobody disclosed.",
+    "rests_on": "the fee and split were not disclosed"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The whole point of the deal is that artists get licensing fees and a share of revenue, and the two numbers left out of the announcement are the fee and the share.",
+    "rests_on": "the fee and split were not disclosed"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "An $11m-backed startup can say exactly how much money it raised, but not how much the artists training its model will get.",
+    "rests_on": "$11m-backed"
+   },
+   {
+    "lens": "funny",
+    "text": "An indie track can now be in more AI training deals than playlists.",
+    "rests_on": "Music Business Worldwide, 18 Nov 2026: Sonilo, \"$11m-backed\", signed with Symphonic so that \"rights"
+   }
+  ],
+  "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2": [
+   {
+    "lens": "series",
+    "text": "The price of ElevenLabs's deal, around $100 million, reached the public through a news report of what its CEO said, rather than through a filing.",
+    "rests_on": "Business Insider Japan reports that ElevenLabs CEO Mati Staniszewski put the price at around $100 million"
+   },
+   {
+    "lens": "series",
+    "text": "Every outlet carrying the figure hedges it: the $100 million is reported, not announced, which is worth knowing before anyone quotes it as fact.",
+    "rests_on": "reportedly worth approximately $100 million"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The price of a voice AI company reached the world as a report of a report: Business Insider Japan reported what the chief executive said, and Music Business Worldwide reported Business Insider Japan.",
+    "rests_on": "Business Insider Japan reports that ElevenLabs CEO Mati Staniszewski put the price at around $100 million"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "RouteNote's figure arrives behind two hedges before it gets to the number: 'reportedly worth approximately $100 million'.",
+    "rests_on": "reportedly worth approximately $100 million"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The price of a voice AI deal travelled like a rumour: the CEO said it, a Japanese outlet reported it, and the music trade press reported the report.",
+    "rests_on": "Business Insider Japan reports that ElevenLabs CEO Mati Staniszewski put the price at around $100 million"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "For a company that sells voices which sound sure of themselves, its own price comes hedged twice in four words: reportedly, approximately.",
+    "rests_on": "reportedly worth approximately $100 million"
+   },
+   {
+    "lens": "funny",
+    "text": "The company that makes AI speak every language had to go shopping for one.",
+    "rests_on": "Music Business Worldwide, 16 Nov 2026: \"Business Insider Japan reports that ElevenLabs CEO Mati"
+   }
+  ],
+  "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb": [
+   {
+    "lens": "series",
+    "text": "Kling raised 19.8 billion yuan in October, and Kuaishou's accounts show the money came with an annual return and a conditional promise to buy the shares back.",
+    "rests_on": "reflecting the annual return attached to Beijing Kling's conditional obligation to repurchase equity"
+   },
+   {
+    "lens": "series",
+    "text": "How the money works: investors are owed an annual return that builds up on paper each quarter, so the business is carrying a cost even before any cash leaves.",
+    "rests_on": "represent the non-cash interest expense accrued"
+   },
+   {
+    "lens": "series",
+    "text": "The size of the bet in one line: 19.8 billion yuan, raised by Kling in one month.",
+    "rests_on": "Kling raised 19.8 billion yuan in October"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Kuaishou explains one cost of its Kling business in a single sentence that needs 'redemption', 'liabilities', 'non-cash', 'accrued' and 'conditional obligation' to reach the end, and the cost it describes involved no cash.",
+    "rests_on": "Finance costs on redemption financial liabilities represent the non-cash interest expense accrued, reflecting the annual return attached to Beijing Kling's conditional obligation to repurchase equity"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Kling turns a line of text into a film; its parent company needed a whole sentence of accountancy to say it may have to buy back shares in it.",
+    "rests_on": "Finance costs on redemption financial liabilities represent the non-cash interest expense accrued, reflecting the annual return attached to Beijing Kling's conditional obligation to repurchase equity"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "A video generator raised 19.8 billion yuan in a single month, and the accounts file the cost of it under non-cash interest.",
+    "rests_on": "Kling raised 19.8 billion yuan in October"
+   },
+   {
+    "lens": "funny",
+    "text": "Even the people betting on AI video asked for a receipt.",
+    "rests_on": "Kuaishou, 19 Nov 2026: \"Finance costs on redemption financial liabilities represent the non-cash interest"
+   }
+  ],
+  "wed/41874364-fcd8-4fd1-b7e7-91aca6235019": [
+   {
+    "lens": "series",
+    "text": "The AI inside Cinema 4D and ZBrush is not Maxon's own: the generation is handed to outside companies, Tripo and Rodin.",
+    "rests_on": "We work with third-party AI providers, such as Tripo and Rodin."
+   },
+   {
+    "lens": "series",
+    "text": "Maxon's pitch to 3D artists is that the AI tools arrive with an off switch, so whether a sculpt touches generation at all is the artist's setting.",
+    "rests_on": "AI generation comes to Cinema 4D and ZBrush, but artists have an 'off' switch."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "AI generation arrives in Cinema 4D and ZBrush, and the feature that makes the headline is the off switch.",
+    "rests_on": "AI generation comes to Cinema 4D and ZBrush, but artists have an 'off' switch."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The AI inside Maxon's tools is made by somebody else, and Maxon says so plainly: Tripo and Rodin.",
+    "rests_on": "We work with third-party AI providers, such as Tripo and Rodin."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The feature in Cinema 4D and ZBrush's AI launch that made the headline is the switch that turns the AI off.",
+    "rests_on": "AI generation comes to Cinema 4D and ZBrush, but artists have an 'off' switch."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "ZBrush is a sculpting tool, and one of the AI providers now behind it shares a name with the sculptor of The Thinker.",
+    "rests_on": "We work with third-party AI providers, such as Tripo and Rodin."
+   },
+   {
+    "lens": "funny",
+    "text": "The headline feature for 3D artists is an AI assistant, and the selling point in the subtitle is that you can switch it off.",
+    "rests_on": "Maxon: \"We work with third-party AI providers, such as Tripo and Rodin.\"; Creative Bloq,"
+   }
+  ],
+  "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010": [
+   {
+    "lens": "series",
+    "text": "Epic used AI to move more than 20,000 Fortnite Blueprints into its Verse language, which is how a studio clears its own backlog before dropping a tool.",
+    "rests_on": "Epic converted more than 20,000 Fortnite Blueprints"
+   },
+   {
+    "lens": "series",
+    "text": "The AI-assisted run produced a working prototype, and roughly 3 million lines of code, which is a lot of reading for whoever checks it.",
+    "rests_on": "The AI-assisted run produced a working prototype with roughly 3 million lines of Verse."
+   },
+   {
+    "lens": "series",
+    "text": "Unreal Engine 6 ships without Blueprints, and the company that made that call first ran its own Blueprints through AI to get off them.",
+    "rests_on": "Unreal Engine 6 ships without Blueprints"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The prototype, the rough first try, came to roughly 3 million lines of Verse.",
+    "rests_on": "The AI-assisted run produced a working prototype with roughly 3 million lines of Verse."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Epic used AI to translate more than 20,000 Fortnite Blueprints, and the next engine ships without Blueprints, so the translation doubled as a farewell.",
+    "rests_on": "Epic converted more than 20,000 Fortnite Blueprints, and Unreal Engine 6 ships without Blueprints"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Epic used AI to carry more than 20,000 Fortnite Blueprints across into Verse, then said the next engine will not have Blueprints at all.",
+    "rests_on": "Epic converted more than 20,000 Fortnite Blueprints, and Unreal Engine 6 ships without Blueprints."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The tool that let people build without writing code was replaced, in the AI's working prototype, by roughly 3 million lines of code.",
+    "rests_on": "The AI-assisted run produced a working prototype with roughly 3 million lines of Verse."
+   },
+   {
+    "lens": "funny",
+    "text": "The visual scripting system made so people would not have to write code is being retired because an AI wrote 3 million lines of it.",
+    "rests_on": "VP Land, 20 Nov 2026: \"The AI-assisted run produced a working prototype with roughly"
+   }
+  ],
+  "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87": [
+   {
+    "lens": "series",
+    "text": "The claim was that the music was 100% AI; the evidence was sitting in the tracks themselves, which named Suno in their own metadata.",
+    "rests_on": "pointing to tracks that reference the AI music tool Suno in their metadata"
+   },
+   {
+    "lens": "series",
+    "text": "What the AI music row cost the game with its players, measured in one number.",
+    "rests_on": "only 8% positive recent reviews"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The AI music was given away by its own paperwork: the tracks named Suno in their metadata.",
+    "rests_on": "pointing to tracks that reference the AI music tool Suno in their metadata"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The evidence that the music was AI-made was sitting inside the files: the tracks named Suno in their own metadata.",
+    "rests_on": "pointing to tracks that reference the AI music tool Suno in their metadata"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The accusation arrived with its receipt already in brackets: \"100% generated by Suno (AI) (with proof)\".",
+    "rests_on": "100% generated by Suno (AI) (with proof)"
+   },
+   {
+    "lens": "funny",
+    "text": "A parody of one of the biggest games of the year was undone by a single metadata field that politely said who wrote the music.",
+    "rests_on": "Eurogamer, Nov 2026: Reddit user ShweetsStuff posted that the run's music was \"100% generated"
+   }
+  ],
+  "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c": [
+   {
+    "lens": "series",
+    "text": "Festival AI bans rest on a form the filmmaker fills in, and Robinson says some animators are clearly lying on theirs.",
+    "rests_on": "What bothers me is the animators clearly lying on their forms"
+   },
+   {
+    "lens": "series",
+    "text": "How strict the line is at Manchester: one AI-transformed frame or sound, not just a generated one, puts the whole film out.",
+    "rests_on": "If any part of the final moving image has been generated or transformed by a generative audio, image or video model, it will be deemed ineligible"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "For one festival programmer the sore point is the paperwork: animators lying on their entry forms.",
+    "rests_on": "What bothers me is the animators clearly lying on their forms"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Manchester's rule covers any part of the final moving image, so by its wording a single AI-touched frame is enough to send a whole film home.",
+    "rests_on": "If any part of the final moving image has been generated or transformed by a generative audio, image or video model, it will be deemed ineligible"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Animation festivals now police AI with a form, and one programmer says the form is exactly where the lying happens.",
+    "rests_on": "What bothers me is the animators clearly lying on their forms"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Manchester's rule covers any part of the final image, so a single generated frame in an otherwise hand-made film is enough to rule it out.",
+    "rests_on": "If any part of the final moving image has been generated or transformed by a generative audio, image or video model, it will be deemed ineligible"
+   },
+   {
+    "lens": "funny",
+    "text": "Faced with one AI box to tick, some entrants have decided their film is simply 3D or something.",
+    "rests_on": "Cartoon Brew, 20 Nov 2026: \"What bothers me is the animators clearly lying on"
+   }
+  ],
+  "fri/acb58370-aaca-4040-9c13-83f227a628ec": [
+   {
+    "lens": "series",
+    "text": "For all the noise about AI songs flooding streaming, the platform says listeners are barely playing them and playing them less.",
+    "rests_on": "Streams from AI-generated songs remain very low and with a declining trend."
+   },
+   {
+    "lens": "series",
+    "text": "The same platform says what is growing is high-quality, differentiated music, which is its own reading of where the plays go.",
+    "rests_on": "high-quality, differentiated content continues to gain traction"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "A company that makes its money from streams describes AI songs' streams in the language of a kind rejection letter: very low, and declining.",
+    "rests_on": "Streams from AI-generated songs remain very low and with a declining trend."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The report sorts listening into two piles, 'negligible' and 'high-quality, differentiated', and leaves little doubt which pile it puts AI in.",
+    "rests_on": "AI content stream volumes remain negligible, with a declining share of listening, while high-quality, differentiated content continues to gain traction."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "All the argument about AI songs flooding streaming is over a share of listening the platform itself calls negligible, and shrinking.",
+    "rests_on": "AI content stream volumes remain negligible, with a declining share of listening"
+   },
+   {
+    "lens": "funny",
+    "text": "The machines can write a million songs a day, and the market's verdict, per its own earnings call, is negligible.",
+    "rests_on": "Music Business Worldwide, 17 Nov 2026: \"Streams from AI-generated songs remain very low and"
+   }
+  ],
+  "tue/nytphotoshop": [
+   {
+    "lens": "series",
+    "text": "The New York Times has told its photographers not to update Photoshop: version 28.0.0 and anything after it is off limits for work on assignment.",
+    "rests_on": "we are requiring that all contributing photographers avoid using Adobe Photoshop 2027 (release 28.0.0 and subsequent updates)"
+   },
+   {
+    "lens": "series",
+    "text": "The rule only bites when the job is for the Times, so the same photographer can be allowed one Photoshop for their own work and not for their paid work.",
+    "rests_on": "when working on assignment for The Times"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "In November 2026 The Times told its photographers to stay away from Photoshop 2027, and from every update after it.",
+    "rests_on": "avoid using Adobe Photoshop 2027 (release 28.0.0 and subsequent updates)"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The New York Times has told its photographers the exact version number of Photoshop they must not install: 28.0.0, and every update after it.",
+    "rests_on": "release 28.0.0 and subsequent updates"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "A newspaper's instructions to its photographers now include the advice office IT usually gives about printers: do not update.",
+    "rests_on": "we are requiring that all contributing photographers avoid using Adobe Photoshop 2027"
+   },
+   {
+    "lens": "funny",
+    "text": "The world's best-known newspaper is asking photographers to keep their software out of date on purpose.",
+    "rests_on": "The Verge, 24 Nov 2026: \"At this time, we are requiring that all contributing"
+   }
+  ],
+  "tue/fcpcaptions": [
+   {
+    "lens": "series",
+    "text": "Apple's software can now caption footage and search its transcripts in 23 more languages, so an editor can find a line by what was said rather than scrubbing for it.",
+    "rests_on": "Generate captions and search transcripts in 23 new supported languages."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "In 23 more languages, the transcript can now find the line the interviewee swears they never said.",
+    "rests_on": "Generate captions and search transcripts in 23 new supported languages."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "One update added 23 languages at once to captions and transcript search, so an editor can now search a transcript in languages they cannot read.",
+    "rests_on": "Generate captions and search transcripts in 23 new supported languages."
+   },
+   {
+    "lens": "funny",
+    "text": "For five months the caption tool in a $299.99 film editor spoke one language, American.",
+    "rests_on": "Apple, 18 Nov 2026: \"Generate captions and search transcripts in 23 new supported languages.\""
+   }
+  ],
+  "tue/logicdrums": [
+   {
+    "lens": "series",
+    "text": "Apple's Stem Splitter can now pull a recorded drum kit apart into kick, snare, hi-hat, toms and cymbals, from a single mixed region.",
+    "rests_on": "extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Stem Splitter now pulls the kit apart piece by piece, kick, snare, hi-hat, toms, cymbals, and then 'other drums and percussion', where the tambourine still shares a track with everything else.",
+    "rests_on": "extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "A drummer's kit can now be taken apart into its pieces without anyone touching a drum key.",
+    "rests_on": "Choose the Drums (Individual Kit Pieces) preset in Stem Splitter"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Stem Splitter can now take a drum kit apart piece by piece, kick to cymbals, and files everything it cannot name under \"other drums and percussion\".",
+    "rests_on": "kick, snare, hi-hat, toms, cymbals, and other drums and percussion"
+   },
+   {
+    "lens": "funny",
+    "text": "The list of kit pieces ends with Other, which every drummer knows is the cowbell.",
+    "rests_on": "Apple, 18 Nov 2026: \"Choose the Drums (Individual Kit Pieces) preset in Stem Splitter"
+   }
+  ],
+  "tue/spotifyaudio": [
+   {
+    "lens": "series",
+    "text": "Spotify will make up to five audiobooks per author at no charge, which takes the cost off a self-published writer's first five.",
+    "rests_on": "with up to five audiobooks free per author"
+   },
+   {
+    "lens": "series",
+    "text": "The tools now reach self-published authors in 21 more markets, the UK among them.",
+    "rests_on": "available to self-published authors in 21 more markets"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The free allowance is up to five audiobooks per author, so a self-published author with one book has four free ones still to write.",
+    "rests_on": "with up to five audiobooks free per author"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The free allowance stops at five audiobooks per author, a limit that only bites for a self-published writer with a sixth book.",
+    "rests_on": "with up to five audiobooks free per author"
+   },
+   {
+    "lens": "funny",
+    "text": "Spotify reckons most books in the world have no audiobook, and it is offering to fix five of them per author.",
+    "rests_on": "Spotify, 18 Nov 2026: \"Starting today, they're available to self-published authors in 21 more"
+   }
+  ],
+  "tue/mychannel": [
+   {
+    "lens": "series",
+    "text": "The headline idea is a TV channel starring you, but it comes with a hedge: Google might be planning it.",
+    "rests_on": "Google might be planning to build a completely AI-generated TV channel in which your likeness is the main character"
+   },
+   {
+    "lens": "series",
+    "text": "Where the money would be: the system makes the adverts as well as the shows, both generated for one viewer.",
+    "rests_on": "designed to create feeds filled with personalized, AI-generated videos and advertisements"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The system would fill your feed with personalised AI videos and advertisements, so you could star in the show and sit through its ad breaks.",
+    "rests_on": "designed to create feeds filled with personalized, AI-generated videos and advertisements"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The sentence that makes you the main character of your own TV channel begins with 'Google might be planning'.",
+    "rests_on": "Google might be planning to build a completely AI-generated TV channel in which your likeness is the main character"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Gizmodo says Google might be planning a TV channel where the main character is the viewer, so the cast and the audience are the same person.",
+    "rests_on": "Google might be planning to build a completely AI-generated TV channel in which your likeness is the main character"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Even the adverts in these feeds are made by AI for you, so the ad break is personalised too.",
+    "rests_on": "designed to create feeds filled with personalized, AI-generated videos and advertisements"
+   },
+   {
+    "lens": "funny",
+    "text": "In Google's plan for television the star of the show is you, and the ad break is still there.",
+    "rests_on": "Gizmodo, 23 Nov 2026: \"Google might be planning to build a completely AI-generated TV"
+   }
+  ],
+  "thu/figmasix": [
+   {
+    "lens": "series",
+    "text": "In Figma one prompt can now return two, four or six images from the same model, so a designer compares options side by side instead of asking again.",
+    "rests_on": "Have a single image model generate two, four, or six images from one prompt"
+   },
+   {
+    "lens": "series",
+    "text": "Figma's stated reason is time: fewer rounds of rewording the same request.",
+    "rests_on": "so you spend less time re-prompting"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Figma's cure for asking twice is getting six answers at once.",
+    "rests_on": "Have a single image model generate two, four, or six images from one prompt, so you spend less time re-prompting."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The cure for asking an AI for an image over and over is asking once and getting six.",
+    "rests_on": "generate two, four, or six images from one prompt, so you spend less time re-prompting"
+   },
+   {
+    "lens": "funny",
+    "text": "The release note's selling point is that you will spend less time re-prompting, the most honest description of AI image work yet.",
+    "rests_on": "Figma, 18 Nov 2026: \"Have a single image model generate two, four, or six"
+   }
+  ],
+  "thu/robloxvideo": [
+   {
+    "lens": "series",
+    "text": "Roblox's agent can now record video while a game is being playtested, so it can watch how things move rather than judge from still screenshots.",
+    "rests_on": "screen_capture can now record video during a playtest, so the agent can see motion for itself."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The AI agent testing the game can now film its own playtest and watch it back, so it can finally see the thing move.",
+    "rests_on": "screen_capture can now record video during a playtest, so the agent can see motion for itself."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The playtester in Roblox Studio is now an AI that films the game so it can watch the motion for itself.",
+    "rests_on": "screen_capture can now record video during a playtest, so the agent can see motion for itself."
+   },
+   {
+    "lens": "funny",
+    "text": "Roblox's demo is an AI noticing that a door stutters, which is roughly where every game maker's career begins.",
+    "rests_on": "Roblox, 20 Nov 2026: \"screen_capture can now record video during a playtest, so the"
+   }
+  ],
+  "thu/alphamatte": [
+   {
+    "lens": "series",
+    "text": "LTX Alphagen is the first outside model on Runway to hand back two outputs from one job and to export ProRes.",
+    "rests_on": "LTX Alphagen is the first third-party model to return two outputs and support ProRes as an output type."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "A changelog milestone measured in the number two: the first third-party model to return two outputs.",
+    "rests_on": "LTX Alphagen is the first third-party model to return two outputs and support ProRes as an output type."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The milestone in this changelog is a model that hands back two files and can save them as ProRes, a first for an outside model on the platform.",
+    "rests_on": "the first third-party model to return two outputs and support ProRes as an output type"
+   },
+   {
+    "lens": "funny",
+    "text": "The headline feature of the model is that it gives you two files instead of one.",
+    "rests_on": "Runway, 13 Nov 2026: \"LTX Alphagen is the first third-party model to return two"
+   }
+  ],
+  "thu/synthfirmware": [
+   {
+    "lens": "series",
+    "text": "Polyend has put the code that runs its Tracker grooveboxes on GitHub, so anyone can read the code their device runs on.",
+    "rests_on": "Today we're publishing the firmware source code for the original Tracker, Tracker+ and Tracker Mini on GitHub."
+   },
+   {
+    "lens": "series",
+    "text": "Polyend is one case of a wider pattern The Verge describes, companies opening up more and more of their devices.",
+    "rests_on": "companies have begun making more and more of their devices open source."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Polyend has put the code inside its Trackers on GitHub, so owners can open up the instrument without a screwdriver.",
+    "rests_on": "Today we're publishing the firmware source code for the original Tracker, Tracker+ and Tracker Mini on GitHub."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Polyend has put the code that runs its Tracker instruments on GitHub, so the inside of the box is now as public as the music made on it.",
+    "rests_on": "Today we're publishing the firmware source code for the original Tracker, Tracker+ and Tracker Mini on GitHub."
+   },
+   {
+    "lens": "funny",
+    "text": "A $70 synth became the instrument of the summer because people kept teaching it new tricks with chatbots.",
+    "rests_on": "The Verge, 25 Nov 2026: \"companies have begun making more and more of their"
+   }
+  ],
+  "thu/pixelfill": [
+   {
+    "lens": "series",
+    "text": "Apple's Generate Fill is pitched on matching what is already in the photo: the lighting, the perspective and the texture around the edit.",
+    "rests_on": "adding edits that blend naturally to match the lighting, perspective and texture of surrounding areas"
+   },
+   {
+    "lens": "series",
+    "text": "The edit is asked for in ordinary words rather than with a brush.",
+    "rests_on": "using natural language"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The promise is edits that blend naturally with the light, perspective and texture around them, so the best result is the one nobody notices.",
+    "rests_on": "adding edits that blend naturally to match the lighting, perspective and texture of surrounding areas"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Describe a change to a photo in a sentence and the app works out the light, the perspective and the texture to match it.",
+    "rests_on": "adding edits that blend naturally to match the lighting, perspective and texture of surrounding areas, using natural language"
+   },
+   {
+    "lens": "funny",
+    "text": "Apple's own example of what to ask the AI for is a purple sky.",
+    "rests_on": "Apple, 18 Nov 2026: \"Transform any detail in your image with Generate Fill, adding"
+   }
+  ],
+  "thu/tplskyrim": [
+   {
+    "lens": "series",
+    "text": "A well-known fantasy game's most famous scenes, cart ride and dungeon included, rebuilt by AI as if shot in the 1960s.",
+    "rests_on": "A famous fantasy video game's best-known scenes are rebuilt with AI in a 1960s setting, cart ride and dungeon included."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "AI sent a famous fantasy game back to the 1960s, and the cart ride and the dungeon both survived the trip.",
+    "rests_on": "A famous fantasy video game's best-known scenes are rebuilt with AI in a 1960s setting, cart ride and dungeon included."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "AI moved a fantasy game's best-known scenes to the 1960s and kept the cart ride and the dungeon, as if they were period details.",
+    "rests_on": "cart ride and dungeon included"
+   },
+   {
+    "lens": "funny",
+    "text": "An AI remade a famous fantasy game in the wrong century, which is roughly how studios pitch AI remakes.",
+    "rests_on": "A famous fantasy video game's best-known scenes are rebuilt with AI in a 1960s"
+   }
+  ],
+  "sat/goodnews": [
+   {
+    "lens": "series",
+    "text": "A song reached the top of Korea's most watched chart and stayed there for more than a week with no fan army and no TV push behind it.",
+    "rests_on": "with no fandom or TV promotion behind it"
+   },
+   {
+    "lens": "series",
+    "text": "How the number one was made: two songwriters wrote the words, Suno made the melody, arrangement and vocals, and the pair refined what it gave them.",
+    "rests_on": "The pair wrote the lyrics and used Suno for the melody, arrangement and vocals, then refined them"
+   },
+   {
+    "lens": "series",
+    "text": "A veteran guitarist was paid to play over a complex track and only found out afterwards that everything else on it had been made by AI.",
+    "rests_on": "he recently did a paid session on a complex progressive track, then learned from the engineer that the whole backing had been made by AI"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "A guitarist booked for a paid session on a complex progressive track found out afterwards from the engineer that the whole backing band he had played over was AI.",
+    "rests_on": "then learned from the engineer that the whole backing had been made by AI"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The first AI-assisted song to top Melon's chart held number one for more than a week with no fandom or TV promotion behind it, which on a Korean chart may be the stranger half of the story.",
+    "rests_on": "with no fandom or TV promotion behind it"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "In the last full week of November, four of the acts putting out debut or predebut music in Korea were not human at all.",
+    "rests_on": "The Korea Times counted four nonhuman acts, including a HYBE-backed VTuber project, putting out debut or predebut music in the last full week of November."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "A veteran guitarist was paid to play a session on a complex prog track, then found out from the engineer that everything behind his guitar had been made by AI.",
+    "rests_on": "he recently did a paid session on a complex progressive track, then learned from the engineer that the whole backing had been made by AI"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "On Korea's most watched chart, the song at number one for more than a week had Suno on vocals and no fandom or TV promotion behind it.",
+    "rests_on": "with no fandom or TV promotion behind it"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "K-pop's debut week now needs a separate count for acts that are not human, and in the last full week of November it came to four.",
+    "rests_on": "The Korea Times counted four nonhuman acts"
+   },
+   {
+    "lens": "funny",
+    "text": "The number one ballad was written by two humans and sung by software, which is the most K-pop sentence of the year.",
+    "rests_on": "MEOMURU's rock ballad The Adult I Dreamed Of, by the songwriting duo Glorywave (Lee"
+   }
+  ],
+  "sat/screen": [
+   {
+    "lens": "series",
+    "text": "Lionsgate Play's first AI-led series runs on Google's AI under a long-term production pact, a studio deal rather than a one-off experiment.",
+    "rests_on": "uses Google's AI under a long-term production pact"
+   },
+   {
+    "lens": "series",
+    "text": "An Oscar-winning director and his post house will show, at a festival, exactly which methods and tools went into his new film.",
+    "rests_on": "He and post house Digital District will explain the methods and tools they used."
+   },
+   {
+    "lens": "series",
+    "text": "Odeon says its AI assistant handles about 40% of guest questions, and that it has kept its service teams for the rest.",
+    "rests_on": "it has kept its service teams"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Lionsgate's AI actor comes with the disclosure built into his name: Yug R.Ai.",
+    "rests_on": "stars the AI actor Yug R.Ai"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "A film being shown as an AI case study is called The Third Hand.",
+    "rests_on": "will unveil exclusive footage of his upcoming film The Third Hand in an AI case study at the Les Arcs Film Festival in December"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Odeon named its AI assistant Odi, and Odi now sorts out about 40% of guest queries, from showtimes to ticket problems.",
+    "rests_on": "its AI assistant Odi, built on Zendesk, resolves about 40% of guest queries, from showtimes to ticket problems"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The lead in Lionsgate Play's first AI-led series is an AI actor whose name, Yug R.Ai, carries the giveaway in its last two letters.",
+    "rests_on": "stars the AI actor Yug R.Ai"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The Best Picture winner is showing his next film in an AI case study, and the film is called The Third Hand.",
+    "rests_on": "his upcoming film The Third Hand in an AI case study"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Odeon's chatbot is called Odi, answers about 40% of guest queries, and the chain says it kept its service teams for the rest.",
+    "rests_on": "resolves about 40% of guest queries"
+   },
+   {
+    "lens": "funny",
+    "text": "The lead actor's surname has the letters AI in it, in case anyone missed the point.",
+    "rests_on": "Lionsgate Play has put its first AI-led original series, Eklavya, into production, Deadline reported"
+   }
+  ],
+  "sat/makers": [
+   {
+    "lens": "series",
+    "text": "An AI Batman who brushes his teeth by the railway tracks and rides a buffalo has turned into a paid brand deal with an electric bike maker.",
+    "rests_on": "Electric bike maker E-Motorad has signed him for a collaboration"
+   },
+   {
+    "lens": "series",
+    "text": "A whole AI fantasy comedy, war beast included, for a stated cost of $28,775, a figure that comes from the account that shared it.",
+    "rests_on": "said the whole film cost $28,775"
+   },
+   {
+    "lens": "series",
+    "text": "How one person answers thousands of questions a week: an AI avatar of him takes one a day, in whatever language it was asked.",
+    "rests_on": "his AI avatar answers one real question from his comments each day for 12 months, in the language it was asked"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The Batman who rides a buffalo to a 1999 Bollywood song has been signed by a company that makes electric bikes.",
+    "rests_on": "Electric bike maker E-Motorad has signed him for a collaboration"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "An epic about a war beast that keeps destroying its own side came in at $28,775, costed to the dollar.",
+    "rests_on": "said the whole film cost $28,775"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "An AI avatar that never needs to sleep has been set a pace of one question a day, for a year.",
+    "rests_on": "his AI avatar answers one real question from his comments each day for 12 months, in the language it was asked"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The Batman that found 25 million viewers in two weeks brushes his teeth by railway tracks and rides a buffalo to a 1999 Bollywood song.",
+    "rests_on": "Batman brushes his teeth by railway tracks and rides a buffalo to a 1999 Bollywood song"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The plot of a $28,775 AI film: an army recruits a warrior whose giant war beast keeps destroying his own side.",
+    "rests_on": "a wild warrior with a gigantic war beast who keeps destroying his own side"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Thousands of questions a week arrive, and the AI avatar built to answer them will take one a day, for a year.",
+    "rests_on": "his AI avatar answers one real question from his comments each day for 12 months"
+   },
+   {
+    "lens": "funny",
+    "text": "Batman's newest villain is the queue at a village tea stall.",
+    "rests_on": "Sujal Jaiswar's AI-made Desi Batman series, in which Batman brushes his teeth by railway"
+   }
+  ],
+  "sat/newsrooms": [
+   {
+    "lens": "series",
+    "text": "Nine is selling business subscribers a way to plug its journalism straight into their own AI tools, a new way for a publisher to charge for its reporting.",
+    "rests_on": "lets licensed business subscribers connect its journalism from The Australian Financial Review"
+   },
+   {
+    "lens": "series",
+    "text": "How Der Spiegel finds the readers about to leave: its score picks out a group that cancels at seven times the usual rate.",
+    "rests_on": "cancels at 28% against a base rate of about 4%"
+   },
+   {
+    "lens": "series",
+    "text": "The fear is that AI makes things up; at Bergens Tidende about one in ten AI summaries needs a fix, and almost never for that.",
+    "rests_on": "about one in ten needs a fix, almost never for hallucinations"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "At VG one AI model writes the headline and a second AI model checks the first, a newsroom where the sub-editor is software too.",
+    "rests_on": "VG asks an AI model for a headline, search terms and other details for each of its roughly 200 new articles a day, with a second model checking the first"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "At Bergens Tidende about one AI summary in ten needs a fix, almost never for hallucinations, so the machine's mistakes turn out to be the ordinary kind.",
+    "rests_on": "about one in ten needs a fix, almost never for hallucinations"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The Canva number that more than tripled since September is the revenue it expects.",
+    "rests_on": "the yearly revenue it expects from MCP has more than tripled since September"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "At VG one AI model writes the headline and a second AI model checks the first one's work.",
+    "rests_on": "with a second model checking the first"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "When Bergens Tidende's AI summaries need fixing, about one time in ten, the problem is almost never the machine making things up.",
+    "rests_on": "about one in ten needs a fix, almost never for hallucinations"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Nearly half a million people signed up to Canva through a connection built for AI assistants, so the chatbot has become a front door.",
+    "rests_on": "nearly 500,000 people signed up through MCP since October"
+   },
+   {
+    "lens": "funny",
+    "text": "The newspaper's newest subscriber is a corporate chatbot, and it still has to log in.",
+    "rests_on": "In a piece published on 27 November 2026, Christoph Trattner of the University of"
+   }
+  ],
+  "tue/tplcommscam": [
+   {
+    "lens": "funniest_true",
+    "text": "Two pundits, one gantry, 4-0: one leans out of his seat laughing at every goal, the other sits so still he could be watching a different match.",
+    "rests_on": "one pundit laughs and leans out of his seat at each goal while the one beside him sits still, face unmoved, as it reaches 4-0"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Two pundits, one gantry, one scoreline: by 4-0 one is half out of his seat laughing and the other has not moved a muscle.",
+    "rests_on": "the one beside him sits still, face unmoved, as it reaches 4-0"
+   },
+   {
+    "lens": "funny",
+    "text": "Two pundits, one game: an AI music start-up's pitch and the songwriter who read the contract.",
+    "rests_on": "On the Anfield gantry one pundit laughs and leans out of his seat at"
+   }
+  ],
+  "tue/tplfistpump": [
+   {
+    "lens": "funniest_true",
+    "text": "The handshakes are done and the match is over; the fist pumping is not, and goes on again and again.",
+    "rests_on": "pumps his fist at the crowd, again and again"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The match is over and the handshakes are done, and the coach is still pumping his fist at the stand, again and again.",
+    "rests_on": "pumps his fist at the crowd, again and again"
+   },
+   {
+    "lens": "funny",
+    "text": "A fist pump this big is how a film crew celebrates beating the AI storyboard on a shoot.",
+    "rests_on": "After the full-time handshakes the head coach walks towards the stand and pumps his"
+   }
+  ],
+  "tue/tplninedarter": [
+   {
+    "lens": "funniest_true",
+    "text": "He watches a perfect leg thrown against him, grins, and answers it the only way perfect can be answered: by doing it straight back.",
+    "rests_on": "his opponent grins at the replay, then throws a perfect nine-darter of his own straight back"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "His opponent watched a perfect leg on the replay, grinned, and then threw exactly the same perfect leg straight back.",
+    "rests_on": "his opponent grins at the replay, then throws a perfect nine-darter of his own straight back"
+   },
+   {
+    "lens": "funny",
+    "text": "The AI music tool needed 400 tries to be perfect; the session musician needed one and a grin.",
+    "rests_on": "One player throws a perfect nine-dart leg and his opponent grins at the replay,"
+   }
+  ],
+  "tue/tplbuzzer": [
+   {
+    "lens": "funniest_true",
+    "text": "Ninety-six points were not enough for the other side; the margin was one, and the clock had nothing left.",
+    "rests_on": "A player hits the winning shot as the clock runs out, the arena erupts and his team-mates swarm him on the floor, 97-96."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Nearly 200 points between them, and the whole game came down to the one shot that went in as the clock hit zero.",
+    "rests_on": "97-96"
+   },
+   {
+    "lens": "funny",
+    "text": "Every human mix in music now lands like a buzzer-beater, one second before the AI version.",
+    "rests_on": "A player hits the winning shot as the clock runs out, the arena erupts"
+   }
+  ],
+  "thu/tplturin": [
+   {
+    "lens": "funniest_true",
+    "text": "He wins the match, lies down on the court, and is promptly buried by his own players' box.",
+    "rests_on": "the winner drops flat on his back on the court, then disappears under his team in the players' box"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "He wins match point, and the first thing he does is lie down; the second is vanish under his own team.",
+    "rests_on": "the winner drops flat on his back on the court, then disappears under his team in the players' box"
+   },
+   {
+    "lens": "funny",
+    "text": "A film editor's championship point is a client who does not ask for an AI version.",
+    "rests_on": "Match point goes in, the winner drops flat on his back on the court,"
+   }
+  ],
+  "thu/tplthanksgiving": [
+   {
+    "lens": "funniest_true",
+    "text": "One end zone, two benches: one becomes a pile, the other a row of stares.",
+    "rests_on": "the whole team piles on while the other bench stares"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "One end of the field is a pile of bodies; the other is a bench standing perfectly still, staring.",
+    "rests_on": "the whole team piles on while the other bench stares"
+   },
+   {
+    "lens": "funny",
+    "text": "The hand-made short film gets to the festival the way football teams win on Thanksgiving: three seconds left.",
+    "rests_on": "Trailing with the clock almost gone, the quarterback finds his receiver in the end"
+   }
+  ],
+  "thu/tplassemble": [
+   {
+    "lens": "funniest_true",
+    "text": "One call from the leader and heroes arrive from every side of the battlefield: a team meeting with perfect attendance.",
+    "rests_on": "A leader calls his team and heroes charge in from every side of the battlefield to stand together."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "It takes one call for heroes to arrive from every side of the battlefield at once and stand together.",
+    "rests_on": "A leader calls his team and heroes charge in from every side of the battlefield to stand together."
+   },
+   {
+    "lens": "funny",
+    "text": "Every AI video tool now turns up to a film pitch like the whole superhero roster.",
+    "rests_on": "A leader calls his team and heroes charge in from every side of the"
+   }
+  ],
+  "thu/tpllegends": [
+   {
+    "lens": "funniest_true",
+    "text": "Before a note is played, the corridor to the stage is already lined with country music legends, and he dances past them on his way to work.",
+    "rests_on": "A singer dances down a backstage corridor surrounded by country music legends before walking out to perform, guitar in hand."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The walk to the stage is a dance down a backstage corridor with country music legends on either side.",
+    "rests_on": "A singer dances down a backstage corridor surrounded by country music legends before walking out to perform, guitar in hand."
+   },
+   {
+    "lens": "funny",
+    "text": "An AI music model should walk out with every musician it learned from, the way a headliner brings the legends.",
+    "rests_on": "A singer dances down a backstage corridor surrounded by country music legends before walking"
+   }
+  ]
+ },
+ "obvious": [
+  "Sonilo, an $11 million AI music start-up, will pay licence fees and a share of revenue to Symphonic's independent artists who opt in to train its model, and the rate is private.",
+  "ElevenLabs, the AI voice company used by creators and dubbing studios, agreed to buy Japanese voice firm Kotoba for a reported $100 million, three months after a sale valued it at $22 billion.",
+  "Kling, the AI video tool sold to filmmakers and creators, raised 19.8 billion yuan in October, and its owner's accounts book a yearly return on a promise to buy those investors out.",
+  "Maxon Plus puts AI model generation inside Cinema 4D and ZBrush for 3D artists, run on other firms' models such as Tripo and Rodin, billed in credits.",
+  "Epic Games used AI to convert more than 20,000 of Fortnite's Blueprints into about 3 million lines of Verse, and on that basis Unreal Engine 6 will ship without Blueprints.",
+  "A Binding of Isaac update shipped Suno-made music with no AI label on Steam, and players found Suno's tag inside the music files' metadata.",
+  "Ottawa's animation festival director says some entrants are lying on their forms, marking AI films as 3D, as Manchester bans generative AI films from 2027.",
+  "Tencent Music, owner of China's biggest music apps, told investors that streams of AI-generated songs remain negligible and falling, while human, distinctive music gains.",
+  "The New York Times told photographers: do not update Photoshop.",
+  "Final Cut Pro now writes captions in 23 more languages.",
+  "Logic on iPad now splits a song's drums apart.",
+  "Spotify will turn your self-published book into an audiobook, free.",
+  "Google patented a TV channel starring you, made by AI. The examiner said no.",
+  "Carragher cheers, Neville sinks: the 4-0 comms cam",
+  "The manager's fist pumps to the Kop",
+  "Two perfect legs in one match",
+  "The buzzer-beater at the Garden",
+  "Figma now gives you six AI pictures from one prompt.",
+  "Roblox's AI helper can now watch your game being played, and fix it.",
+  "Runway now cuts people out of clips, no green screen.",
+  "People taught a $70 synth new tricks with chatbots, and the music gear makers opened up.",
+  "Pixelmator Pro now repaints part of a photo from words.",
+  "The champion on his back in Turin",
+  "The touchdown with three seconds left",
+  "The heroes run in together",
+  "The headliner brings the legends backstage",
+  "A fantasy game remade in another decade by AI",
+  "AI put songwriters and bands in front of millions.",
+  "AI helped film and TV makers try something new.",
+  "This month AI turned solo creators into studios.",
+  "This month AI helped newsrooms keep readers and save time."
+ ],
+ "pooled": {
+  "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed": [
+   {
+    "lens": "own",
+    "text": "Sonilo, an $11 million AI music start-up, will pay licence fees and a share of revenue to Symphonic's independent artists who opt in to train its model, and the rate is private.",
+    "rests_on": "Music Business Worldwide, 18 Nov 2026: Sonilo, \"$11m-backed\", signed with Symphonic so that \"rights holders and artists receive licensing fees and a share of revenue\"; the fee and split were not disclosed.",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#8af89381e45b",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "An $11m-backed AI start-up has promised indie rights holders licensing fees and a share of revenue for training on their recordings, and the one number an artist would want to see, the split, is the one nobody has published.",
+    "rests_on": "the fee and split were not disclosed",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#25143c083971",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 4.0,
+     "specificity": 4.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "How the deal works: artists do not sell to Sonilo directly, Symphonic signs for them, and the payment comes in two parts, a licensing fee and a share of revenue.",
+    "rests_on": "signed with Symphonic so that \"rights holders and artists receive licensing fees and a share of revenue\"",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#10cd9f45432a",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The deal exists so that rights holders and artists receive licensing fees and a share of revenue, and the two numbers an artist would most want from that sentence, the fee and the split, are the two nobody disclosed.",
+    "rests_on": "the fee and split were not disclosed",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#7b4474d70657",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The whole point of the deal is that artists get licensing fees and a share of revenue, and the two numbers left out of the announcement are the fee and the share.",
+    "rests_on": "the fee and split were not disclosed",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#a9aebe82b6c9",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "An $11m-backed startup can say exactly how much money it raised, but not how much the artists training its model will get.",
+    "rests_on": "$11m-backed",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#69b945d7864c",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "An indie track can now be in more AI training deals than playlists.",
+    "rests_on": "Music Business Worldwide, 18 Nov 2026: Sonilo, \"$11m-backed\", signed with Symphonic so that \"rights",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#6c4e758fd962",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "Map the money onto a jukebox A jukebox has three structural properties. Money comes in per use. The machine owner and the venue split the takings. The operator decides which records are loaded. The angle assigns each role from the story: Sonilo owns the machine, Symphonic is the route records come in by, artists who opt in are the loaded records, and the fee and revenue share are the coins. Executives see who stands between the coin and the artist without reading a contract.",
+    "rests_on": null,
+    "run_id": "557759421",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#3d2879414868",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 4.0,
+     "status": "rejected_archive"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "Your league or agency could run the opt-in Look at the one transaction and the contract shape is clear. A buyer signs with an intermediary, and individuals who opt in get a fee and a share. Leaders of talent agencies, sports leagues, photographer cooperatives and voice-actor rosters can copy that structure: offer members a pooled opt-in and bargain once as a group instead of one by one. The angle hands them the template the story shows, which is an opt-in, a fee and a revenue share, with no number attached.",
+    "rests_on": null,
+    "run_id": "557759421",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#32e95f89f1e1",
+    "judge": {
+     "status": "rejected_archive"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "$11 million is not the pot Shrink the story to one transaction and the headline number moves out of it. \"$11m-backed\" describes the money investors gave Sonilo. It is not the licensing budget, and the report gives no deal size. The angle shows busy readers how to separate a company's funding from what it pays per deal, so they stop mentally dividing $11m by a number of artists. One clear graphic shows two boxes, \"money raised\" and \"money paid to rights holders\", with the second one blank.",
+    "rests_on": null,
+    "run_id": "557759421",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#25714aed70dd",
+    "judge": {
+     "status": "rejected_archive"
+    }
+   }
+  ],
+  "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2": [
+   {
+    "lens": "own",
+    "text": "ElevenLabs, the AI voice company used by creators and dubbing studios, agreed to buy Japanese voice firm Kotoba for a reported $100 million, three months after a sale valued it at $22 billion.",
+    "rests_on": "Music Business Worldwide, 16 Nov 2026: \"Business Insider Japan reports that ElevenLabs CEO Mati Staniszewski put the price at around $100 million\"; RouteNote: \"reportedly worth approximately $100 million\".",
+    "id": "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#14c02bb8ce8e",
+    "judge": {
+     "originality": 1.0,
+     "usefulness": 2.0,
+     "specificity": 3.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "The price of ElevenLabs's deal, around $100 million, reached the public through a news report of what its CEO said, rather than through a filing.",
+    "rests_on": "Business Insider Japan reports that ElevenLabs CEO Mati Staniszewski put the price at around $100 million",
+    "id": "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#ebff7b08cdb3",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Every outlet carrying the figure hedges it: the $100 million is reported, not announced, which is worth knowing before anyone quotes it as fact.",
+    "rests_on": "reportedly worth approximately $100 million",
+    "id": "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#a597254a6047",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The price of a voice AI company reached the world as a report of a report: Business Insider Japan reported what the chief executive said, and Music Business Worldwide reported Business Insider Japan.",
+    "rests_on": "Business Insider Japan reports that ElevenLabs CEO Mati Staniszewski put the price at around $100 million",
+    "id": "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#a4df9bcaf5d6",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "RouteNote's figure arrives behind two hedges before it gets to the number: 'reportedly worth approximately $100 million'.",
+    "rests_on": "reportedly worth approximately $100 million",
+    "id": "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#c97b1ef92ccd",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The price of a voice AI deal travelled like a rumour: the CEO said it, a Japanese outlet reported it, and the music trade press reported the report.",
+    "rests_on": "Business Insider Japan reports that ElevenLabs CEO Mati Staniszewski put the price at around $100 million",
+    "id": "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#55f1d4291de1",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "For a company that sells voices which sound sure of themselves, its own price comes hedged twice in four words: reportedly, approximately.",
+    "rests_on": "reportedly worth approximately $100 million",
+    "id": "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#40fb2d7261e8",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 3.0,
+     "specificity": 4.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "The company that makes AI speak every language had to go shopping for one.",
+    "rests_on": "Music Business Worldwide, 16 Nov 2026: \"Business Insider Japan reports that ElevenLabs CEO Mati",
+    "id": "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#7012aa07372a",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 2.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "Scratch-card reveal A lottery scratch card reveals one panel at a time, makes the player commit attention before the payoff, and shows the result to everyone at once. Build a three-panel post or carousel where panel one reveals the buyer, panel two the target, and panel three the reported price, with the reader guessing before each swipe. The format inherits staged commitment and a single shared reveal.",
+    "rests_on": null,
+    "run_id": "1389403249",
+    "id": "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#fde0ca5af408",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 2.0,
+     "specificity": 4.0,
+     "status": "rejected_archive"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "Count the hedges The thing that usually kills deal stories is soft sourcing that makes readers distrust the number. Here the hedges become the content: 'around' from the CEO, 'reports' from Business Insider Japan via MBW, 'reportedly' and 'approximately' from RouteNote. Lining up all four qualifiers shows readers exactly how firm the $100 million is, which teaches them to read every deal figure that way.",
+    "rests_on": null,
+    "run_id": "1389403249",
+    "id": "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#194462d46dfe",
+    "judge": {
+     "status": "rejected_archive"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "The three-month clock Borrow the structural property of a lottery that draws happen on a schedule, so attention goes to the interval rather than the prize. The story gives two dated points: a sale valued ElevenLabs at $22 billion, and three months later it agreed to buy Kotoba. Plot those as a two-point timeline and ask readers to watch the gap, not the size of either number.",
+    "rests_on": null,
+    "run_id": "1389403249",
+    "id": "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#6d933e121807",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_archive"
+    }
+   }
+  ],
+  "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb": [
+   {
+    "lens": "own",
+    "text": "Kling, the AI video tool sold to filmmakers and creators, raised 19.8 billion yuan in October, and its owner's accounts book a yearly return on a promise to buy those investors out.",
+    "rests_on": "Kuaishou, 19 Nov 2026: \"Finance costs on redemption financial liabilities represent the non-cash interest expense accrued, reflecting the annual return attached to Beijing Kling's conditional obligation to repurchase equity\"; Dr. Web: Kling raised 19.8 billion yuan in October.",
+    "id": "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#8b2d5d89c00e",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Kling raised 19.8 billion yuan in October, and Kuaishou's accounts show the money came with an annual return and a conditional promise to buy the shares back.",
+    "rests_on": "reflecting the annual return attached to Beijing Kling's conditional obligation to repurchase equity",
+    "id": "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#20a265853aba",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "How the money works: investors are owed an annual return that builds up on paper each quarter, so the business is carrying a cost even before any cash leaves.",
+    "rests_on": "represent the non-cash interest expense accrued",
+    "id": "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#306382695553",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 4.0,
+     "specificity": 3.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "The size of the bet in one line: 19.8 billion yuan, raised by Kling in one month.",
+    "rests_on": "Kling raised 19.8 billion yuan in October",
+    "id": "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#fc4eca71db2a",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Kuaishou explains one cost of its Kling business in a single sentence that needs 'redemption', 'liabilities', 'non-cash', 'accrued' and 'conditional obligation' to reach the end, and the cost it describes involved no cash.",
+    "rests_on": "Finance costs on redemption financial liabilities represent the non-cash interest expense accrued, reflecting the annual return attached to Beijing Kling's conditional obligation to repurchase equity",
+    "id": "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#dcf6f92ddf28",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 4.0,
+     "specificity": 4.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Kling turns a line of text into a film; its parent company needed a whole sentence of accountancy to say it may have to buy back shares in it.",
+    "rests_on": "Finance costs on redemption financial liabilities represent the non-cash interest expense accrued, reflecting the annual return attached to Beijing Kling's conditional obligation to repurchase equity",
+    "id": "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#9f805e098e9b",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "A video generator raised 19.8 billion yuan in a single month, and the accounts file the cost of it under non-cash interest.",
+    "rests_on": "Kling raised 19.8 billion yuan in October",
+    "id": "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#9752a5727644",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 4.0,
+     "specificity": 4.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "Even the people betting on AI video asked for a receipt.",
+    "rests_on": "Kuaishou, 19 Nov 2026: \"Finance costs on redemption financial liabilities represent the non-cash interest",
+    "id": "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#c66946642e9a",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 2.0,
+     "specificity": 2.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "The meter runs while you render A sundial's shadow moves at a fixed pace whatever happens in the garden. The filing describes a return that accrues annually, which is a clock, not a reaction to product news. The piece pairs Kling's product moments with one fixed line beside each: 'the annual return kept accruing.' Creators see that the money clock and the product clock are separate machines.",
+    "rests_on": null,
+    "run_id": "293221951",
+    "id": "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#9992948f9716",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 3.0,
+     "specificity": 4.0,
+     "status": "rejected_archive"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "Demurrage on 19.8 billion yuan In container shipping, demurrage is a fee that grows for every day a box sits in port before it is collected. The angle uses that mechanism: money raised in October now carries an annual return for as long as the repurchase obligation stays open, so waiting itself has a price. For makers, the question shifts from 'how big was the raise' to 'what does it cost the owner each year this money sits.'",
+    "rests_on": null,
+    "run_id": "293221951",
+    "id": "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#343c7b0efbb1",
+    "judge": {
+     "status": "rejected_archive"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "The condition nobody printed The filing calls the obligation conditional but the quoted story does not say what the condition is. The angle drops all explanation of liabilities and centres on that one missing fact, naming exactly what is known and what is not. Readers who sign deals know the trigger clause is the whole deal, so an honest gap holds their attention better than a definition.",
+    "rests_on": null,
+    "run_id": "293221951",
+    "id": "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#d6dcd6d19ba7",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 4.0,
+     "specificity": 3.0,
+     "status": "rejected_archive"
+    }
+   }
+  ],
+  "wed/41874364-fcd8-4fd1-b7e7-91aca6235019": [
+   {
+    "lens": "own",
+    "text": "Maxon Plus puts AI model generation inside Cinema 4D and ZBrush for 3D artists, run on other firms' models such as Tripo and Rodin, billed in credits.",
+    "rests_on": "Maxon: \"We work with third-party AI providers, such as Tripo and Rodin.\"; Creative Bloq, 23 Nov 2026: \"AI generation comes to Cinema 4D and ZBrush, but artists have an 'off' switch.\"",
+    "id": "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#455fce60eadc",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "The AI inside Cinema 4D and ZBrush is not Maxon's own: the generation is handed to outside companies, Tripo and Rodin.",
+    "rests_on": "We work with third-party AI providers, such as Tripo and Rodin.",
+    "id": "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#23461798be9d",
+    "judge": {
+     "originality": 1.0,
+     "usefulness": 3.0,
+     "specificity": 4.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Maxon's pitch to 3D artists is that the AI tools arrive with an off switch, so whether a sculpt touches generation at all is the artist's setting.",
+    "rests_on": "AI generation comes to Cinema 4D and ZBrush, but artists have an 'off' switch.",
+    "id": "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#9e7648b72d14",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 4.0,
+     "specificity": 3.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "AI generation arrives in Cinema 4D and ZBrush, and the feature that makes the headline is the off switch.",
+    "rests_on": "AI generation comes to Cinema 4D and ZBrush, but artists have an 'off' switch.",
+    "id": "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#df72314e145a",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The AI inside Maxon's tools is made by somebody else, and Maxon says so plainly: Tripo and Rodin.",
+    "rests_on": "We work with third-party AI providers, such as Tripo and Rodin.",
+    "id": "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#337cc5665b7d",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 3.0,
+     "specificity": 4.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The feature in Cinema 4D and ZBrush's AI launch that made the headline is the switch that turns the AI off.",
+    "rests_on": "AI generation comes to Cinema 4D and ZBrush, but artists have an 'off' switch.",
+    "id": "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#6bbf6ed23b25",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 4.0,
+     "specificity": 3.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "ZBrush is a sculpting tool, and one of the AI providers now behind it shares a name with the sculptor of The Thinker.",
+    "rests_on": "We work with third-party AI providers, such as Tripo and Rodin.",
+    "id": "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#ee76ed4ce1a8",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "The headline feature for 3D artists is an AI assistant, and the selling point in the subtitle is that you can switch it off.",
+    "rests_on": "Maxon: \"We work with third-party AI providers, such as Tripo and Rodin.\"; Creative Bloq,",
+    "id": "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#7326f1b4a34f",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "Who holds the switch on this job Shrink the off switch to one toggle on one project and ask who decides where it sits. The angle proposes that studios set the switch position per project, written into the job sheet next to deadline and format, decided by whoever owns the client relationship. That ends the case where each artist flips it on their own and the client gets mixed work.",
+    "rests_on": null,
+    "run_id": "640886065",
+    "id": "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#5436325c33cd",
+    "judge": {
+     "status": "rejected_archive"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "Tripo and Rodin as two materials Flip the premise: suppose the value is not knowing the cost but knowing the look. Treat each provider like a different clay or brush that artists pick for its character. The angle becomes a recurring side-by-side where the outlet gives the same starting request to each provider inside the app and shows the raw results next to each other with no ranking.",
+    "rests_on": null,
+    "run_id": "640886065",
+    "id": "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#ef80bd1dbe96",
+    "judge": {
+     "status": "rejected_archive"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "The reel caption convention Start with one freelancer posting one portfolio piece. Since generation inside Cinema 4D and ZBrush can now be on or off, the artist adds a short caption stating which it was, and which provider if on. Once a few artists do it, it becomes a norm that buyers look for, in the way film credits list departments.",
+    "rests_on": null,
+    "run_id": "640886065",
+    "id": "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#b57ae65989b7",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_archive"
+    }
+   }
+  ],
+  "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010": [
+   {
+    "lens": "own",
+    "text": "Epic Games used AI to convert more than 20,000 of Fortnite's Blueprints into about 3 million lines of Verse, and on that basis Unreal Engine 6 will ship without Blueprints.",
+    "rests_on": "VP Land, 20 Nov 2026: \"The AI-assisted run produced a working prototype with roughly 3 million lines of Verse.\"; Epic converted more than 20,000 Fortnite Blueprints, and Unreal Engine 6 ships without Blueprints.",
+    "id": "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#f2b8d02d3a3e",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Epic used AI to move more than 20,000 Fortnite Blueprints into its Verse language, which is how a studio clears its own backlog before dropping a tool.",
+    "rests_on": "Epic converted more than 20,000 Fortnite Blueprints",
+    "id": "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#794ed5b75033",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "The AI-assisted run produced a working prototype, and roughly 3 million lines of code, which is a lot of reading for whoever checks it.",
+    "rests_on": "The AI-assisted run produced a working prototype with roughly 3 million lines of Verse.",
+    "id": "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#0e8d8d5075f2",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Unreal Engine 6 ships without Blueprints, and the company that made that call first ran its own Blueprints through AI to get off them.",
+    "rests_on": "Unreal Engine 6 ships without Blueprints",
+    "id": "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#259f1969e2a2",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The prototype, the rough first try, came to roughly 3 million lines of Verse.",
+    "rests_on": "The AI-assisted run produced a working prototype with roughly 3 million lines of Verse.",
+    "id": "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#39a48ed64ed6",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Epic used AI to translate more than 20,000 Fortnite Blueprints, and the next engine ships without Blueprints, so the translation doubled as a farewell.",
+    "rests_on": "Epic converted more than 20,000 Fortnite Blueprints, and Unreal Engine 6 ships without Blueprints",
+    "id": "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#217954a6a85a",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Epic used AI to carry more than 20,000 Fortnite Blueprints across into Verse, then said the next engine will not have Blueprints at all.",
+    "rests_on": "Epic converted more than 20,000 Fortnite Blueprints, and Unreal Engine 6 ships without Blueprints.",
+    "id": "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#57a1ade277d2",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The tool that let people build without writing code was replaced, in the AI's working prototype, by roughly 3 million lines of code.",
+    "rests_on": "The AI-assisted run produced a working prototype with roughly 3 million lines of Verse.",
+    "id": "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#009053524de5",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "The visual scripting system made so people would not have to write code is being retired because an AI wrote 3 million lines of it.",
+    "rests_on": "VP Land, 20 Nov 2026: \"The AI-assisted run produced a working prototype with roughly",
+    "id": "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#eb63d1bad27d",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "The playbook translation drill Under a no-internet constraint the angle becomes a room exercise. A team takes one of its own visual artifacts, such as a coach's play diagram, a lighting cue chart or a stage blocking sketch, and writes it out as plain step-by-step instructions on paper. Everyone feels how much a picture hides and how long the text gets. That makes the jump from 20,000 Blueprints to 3 million lines tangible without a single screen. The idea also works online as an interactive piece.",
+    "rests_on": null,
+    "run_id": "494943174",
+    "id": "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#fd7ed71e131e",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 3.0,
+     "specificity": 4.0,
+     "status": "rejected_archive"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "The vendor exit clause Future-back: by 2050, retiring a creative tool is a non-event because every contract requires a working, tested translation path out of it. The version you could ship today is a checklist for buyers. Before signing with any software vendor, ask whether it has ever converted its own flagship work out of its own format, the way Epic did with Fortnite's Blueprints. Anyone who commissions tools for a studio, a newsroom or a sports club gets a clause they can paste into a contract.",
+    "rests_on": null,
+    "run_id": "494943174",
+    "id": "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#5cdd405fc6c3",
+    "judge": {
+     "status": "rejected_archive"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "Whose name is on 3 million lines Over decades, credit is the currency of creative industries. Fortnite's Blueprints were built by people, and the Verse version came out of an AI-assisted run. The angle asks what crediting looks like when a body of work changes form through translation, and it compares that to how translated novels, dubbed films and remastered albums already handle credit. It raises the question without claiming anything the story does not say about who is credited.",
+    "rests_on": null,
+    "run_id": "494943174",
+    "id": "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#8054e4979e23",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_archive"
+    }
+   }
+  ],
+  "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87": [
+   {
+    "lens": "own",
+    "text": "A Binding of Isaac update shipped Suno-made music with no AI label on Steam, and players found Suno's tag inside the music files' metadata.",
+    "rests_on": "Eurogamer, Nov 2026: Reddit user ShweetsStuff posted that the run's music was \"100% generated by Suno (AI) (with proof)\", pointing to tracks that reference the AI music tool Suno in their metadata; PC Gamer: \"only 8% positive recent reviews\".",
+    "id": "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#29da7936b9f8",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "The claim was that the music was 100% AI; the evidence was sitting in the tracks themselves, which named Suno in their own metadata.",
+    "rests_on": "pointing to tracks that reference the AI music tool Suno in their metadata",
+    "id": "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#c31147aabad5",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "What the AI music row cost the game with its players, measured in one number.",
+    "rests_on": "only 8% positive recent reviews",
+    "id": "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#0bc9b94efd4c",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The AI music was given away by its own paperwork: the tracks named Suno in their metadata.",
+    "rests_on": "pointing to tracks that reference the AI music tool Suno in their metadata",
+    "id": "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#d874999c0a67",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The evidence that the music was AI-made was sitting inside the files: the tracks named Suno in their own metadata.",
+    "rests_on": "pointing to tracks that reference the AI music tool Suno in their metadata",
+    "id": "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#211800152ffc",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The accusation arrived with its receipt already in brackets: \"100% generated by Suno (AI) (with proof)\".",
+    "rests_on": "100% generated by Suno (AI) (with proof)",
+    "id": "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#3f6260b1c121",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 4.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "A parody of one of the biggest games of the year was undone by a single metadata field that politely said who wrote the music.",
+    "rests_on": "Eurogamer, Nov 2026: Reddit user ShweetsStuff posted that the run's music was \"100% generated",
+    "id": "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#520fe80b966f",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "Soredia-style asset bundles Lichens spread through soredia, small packets that hold fungus and alga together, so the partnership can never travel half-separated. Do the same for audio: every music asset ships as a bundle that pairs the audio file with its contribution record, and the build pipeline refuses any track whose record is missing. The disclosure then moves with the file through every handoff, instead of depending on one person ticking a store box at the end.",
+    "rests_on": null,
+    "run_id": "861436935",
+    "id": "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#4879ea1e7b40",
+    "judge": {
+     "status": "rejected_archive"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "Name the algae in the credits By naming convention, a lichen is named after its fungal partner, while the alga that feeds the whole organism goes unnamed. Steam's label works the same way: the developer ticks the box, and the tool that did the feeding goes unnamed unless they choose to name it. Studios and labels can add a fixed 'tool partner' line to every credit template, next to the human roles, so leaving it out becomes a visible blank rather than a quiet default.",
+    "rests_on": null,
+    "run_id": "861436935",
+    "id": "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#88f185b396d1",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 3.0,
+     "specificity": 4.0,
+     "status": "rejected_archive"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "The metadata tasting segment For podcasters, streamers and entertainment hosts: a recurring bit where the host reads a release's file tags aloud in the voice of a wine critic, noting the bouquet of the encoder and the lingering finish of the tool name. This story is the pilot episode, built on the real detail that the tracks referenced Suno in their metadata. The joke teaches the audience, without a lecture, that files carry fields they never see.",
+    "rests_on": null,
+    "run_id": "861436935",
+    "id": "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#40f78027689a",
+    "judge": {
+     "status": "rejected_archive"
+    }
+   }
+  ],
+  "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c": [
+   {
+    "lens": "own",
+    "text": "Ottawa's animation festival director says some entrants are lying on their forms, marking AI films as 3D, as Manchester bans generative AI films from 2027.",
+    "rests_on": "Cartoon Brew, 20 Nov 2026: \"What bothers me is the animators clearly lying on their forms,” says Robinson.\"; Manchester Animation Festival: \"If any part of the final moving image has been generated or transformed by a generative audio, image or video model, it will be deemed ineligible\".",
+    "id": "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#21ce67289cc5",
+    "judge": {
+     "originality": 1.0,
+     "usefulness": 2.0,
+     "specificity": 3.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Festival AI bans rest on a form the filmmaker fills in, and Robinson says some animators are clearly lying on theirs.",
+    "rests_on": "What bothers me is the animators clearly lying on their forms",
+    "id": "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#fbc74e980c3f",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 4.0,
+     "specificity": 4.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "How strict the line is at Manchester: one AI-transformed frame or sound, not just a generated one, puts the whole film out.",
+    "rests_on": "If any part of the final moving image has been generated or transformed by a generative audio, image or video model, it will be deemed ineligible",
+    "id": "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#6029ef12ed3c",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "For one festival programmer the sore point is the paperwork: animators lying on their entry forms.",
+    "rests_on": "What bothers me is the animators clearly lying on their forms",
+    "id": "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#935d05bd03a1",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Manchester's rule covers any part of the final moving image, so by its wording a single AI-touched frame is enough to send a whole film home.",
+    "rests_on": "If any part of the final moving image has been generated or transformed by a generative audio, image or video model, it will be deemed ineligible",
+    "id": "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#1db1531656ee",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 4.0,
+     "specificity": 4.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Animation festivals now police AI with a form, and one programmer says the form is exactly where the lying happens.",
+    "rests_on": "What bothers me is the animators clearly lying on their forms",
+    "id": "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#592a6afe2001",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Manchester's rule covers any part of the final image, so a single generated frame in an otherwise hand-made film is enough to rule it out.",
+    "rests_on": "If any part of the final moving image has been generated or transformed by a generative audio, image or video model, it will be deemed ineligible",
+    "id": "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#281d294dc37f",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "Faced with one AI box to tick, some entrants have decided their film is simply 3D or something.",
+    "rests_on": "Cartoon Brew, 20 Nov 2026: \"What bothers me is the animators clearly lying on",
+    "id": "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#c806fdeee1e7",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "Let the buyer pay for the check Today the festival absorbs the work of checking, while distributors gain the benefit of a trusted selection. Move the payment so that buyers who want a confirmed hand-made film pay for confirmation at the point of acquisition, and festivals go back to judging films. The cost then sits with the party whose money depends on the answer being true.",
+    "rests_on": null,
+    "run_id": "7610841",
+    "id": "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#9ad0c683d5bd",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 4.0,
+     "specificity": 3.0,
+     "status": "rejected_archive"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "The programmer already caught them without the form Robinson says the animators are 'clearly' lying. That word means he spotted the mismatch by watching the films, not by reading the paperwork. The angle drops the form from the story: the check that worked was a programmer's eye on the film, and the box only recorded the lie after the eye had already caught it.",
+    "rests_on": null,
+    "run_id": "7610841",
+    "id": "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#5f498f3a2ea1",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 4.0,
+     "specificity": 4.0,
+     "status": "rejected_archive"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "The 2027 rule is already judging films made today Manchester's ban starts in 2027, and the story is dated November 2026. Animated films take long enough that work being produced now will be entered under the new rule. The cost of the rule falls at the moment of making, not at submission, so the angle is aimed at producers deciding about tools this month, not at entrants next year.",
+    "rests_on": null,
+    "run_id": "7610841",
+    "id": "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#6ad04e508a00",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   }
+  ],
+  "fri/acb58370-aaca-4040-9c13-83f227a628ec": [
+   {
+    "lens": "own",
+    "text": "Tencent Music, owner of China's biggest music apps, told investors that streams of AI-generated songs remain negligible and falling, while human, distinctive music gains.",
+    "rests_on": "Music Business Worldwide, 17 Nov 2026: \"Streams from AI-generated songs remain very low and with a declining trend.\"; Digital Music News: \"AI content stream volumes remain negligible, with a declining share of listening, while high-quality, differentiated content continues to gain traction.\"",
+    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#d817b98898ee",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "For all the noise about AI songs flooding streaming, the platform says listeners are barely playing them and playing them less.",
+    "rests_on": "Streams from AI-generated songs remain very low and with a declining trend.",
+    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#1d4c8da22119",
+    "judge": {
+     "originality": 1.0,
+     "usefulness": 3.0,
+     "specificity": 2.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "The same platform says what is growing is high-quality, differentiated music, which is its own reading of where the plays go.",
+    "rests_on": "high-quality, differentiated content continues to gain traction",
+    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#5ef84555ee38",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "A company that makes its money from streams describes AI songs' streams in the language of a kind rejection letter: very low, and declining.",
+    "rests_on": "Streams from AI-generated songs remain very low and with a declining trend.",
+    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#f072644c309f",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The report sorts listening into two piles, 'negligible' and 'high-quality, differentiated', and leaves little doubt which pile it puts AI in.",
+    "rests_on": "AI content stream volumes remain negligible, with a declining share of listening, while high-quality, differentiated content continues to gain traction.",
+    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#45c188701551",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "All the argument about AI songs flooding streaming is over a share of listening the platform itself calls negligible, and shrinking.",
+    "rests_on": "AI content stream volumes remain negligible, with a declining share of listening",
+    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#a8f813de5bce",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "The machines can write a million songs a day, and the market's verdict, per its own earnings call, is negligible.",
+    "rests_on": "Music Business Worldwide, 17 Nov 2026: \"Streams from AI-generated songs remain very low and",
+    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#f7d09054e6ba",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "accepted"
+    }
+   }
+  ],
+  "tue/nytphotoshop": [
+   {
+    "lens": "own",
+    "text": "The world's best-known newspaper is asking photographers to keep their software out of date on purpose.",
+    "rests_on": "The Verge, 24 Nov 2026: \"At this time, we are requiring that all contributing photographers avoid using Adobe Photoshop 2027 (release 28.0.0 and subsequent updates) when working on assignment for The Times,\" the email reads.",
+    "id": "tue/nytphotoshop#156b207b0d6c",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "The New York Times has told its photographers not to update Photoshop: version 28.0.0 and anything after it is off limits for work on assignment.",
+    "rests_on": "we are requiring that all contributing photographers avoid using Adobe Photoshop 2027 (release 28.0.0 and subsequent updates)",
+    "id": "tue/nytphotoshop#1b29bca60b54",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "The rule only bites when the job is for the Times, so the same photographer can be allowed one Photoshop for their own work and not for their paid work.",
+    "rests_on": "when working on assignment for The Times",
+    "id": "tue/nytphotoshop#14aa8140e223",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "In November 2026 The Times told its photographers to stay away from Photoshop 2027, and from every update after it.",
+    "rests_on": "avoid using Adobe Photoshop 2027 (release 28.0.0 and subsequent updates)",
+    "id": "tue/nytphotoshop#4263c180becc",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 3.0,
+     "specificity": 4.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The New York Times has told its photographers the exact version number of Photoshop they must not install: 28.0.0, and every update after it.",
+    "rests_on": "release 28.0.0 and subsequent updates",
+    "id": "tue/nytphotoshop#b7757769be28",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 4.0,
+     "specificity": 5.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "A newspaper's instructions to its photographers now include the advice office IT usually gives about printers: do not update.",
+    "rests_on": "we are requiring that all contributing photographers avoid using Adobe Photoshop 2027",
+    "id": "tue/nytphotoshop#a35a297d5b7c",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "The world's best-known newspaper is asking photographers to keep their software out of date on purpose.",
+    "rests_on": "The Verge, 24 Nov 2026: \"At this time, we are requiring that all contributing",
+    "id": "tue/nytphotoshop#64ac5f59415e",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_gravity"
+    }
+   }
+  ],
+  "tue/fcpcaptions": [
+   {
+    "lens": "own",
+    "text": "For five months the caption tool in a $299.99 film editor spoke one language, American.",
+    "rests_on": "Apple, 18 Nov 2026: \"Generate captions and search transcripts in 23 new supported languages.\"",
+    "id": "tue/fcpcaptions#462d9b5462c0",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Apple's software can now caption footage and search its transcripts in 23 more languages, so an editor can find a line by what was said rather than scrubbing for it.",
+    "rests_on": "Generate captions and search transcripts in 23 new supported languages.",
+    "id": "tue/fcpcaptions#345aa3c003fc",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 4.0,
+     "specificity": 4.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "In 23 more languages, the transcript can now find the line the interviewee swears they never said.",
+    "rests_on": "Generate captions and search transcripts in 23 new supported languages.",
+    "id": "tue/fcpcaptions#1fcf8cbf0dc8",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "One update added 23 languages at once to captions and transcript search, so an editor can now search a transcript in languages they cannot read.",
+    "rests_on": "Generate captions and search transcripts in 23 new supported languages.",
+    "id": "tue/fcpcaptions#a496135931d5",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 4.0,
+     "specificity": 4.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "For five months the caption tool in a $299.99 film editor spoke one language, American.",
+    "rests_on": "Apple, 18 Nov 2026: \"Generate captions and search transcripts in 23 new supported languages.\"",
+    "id": "tue/fcpcaptions#9f249285331a",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 3.0,
+     "specificity": 4.0,
+     "status": "rejected_gravity"
+    }
+   }
+  ],
+  "tue/logicdrums": [
+   {
+    "lens": "own",
+    "text": "The list of kit pieces ends with Other, which every drummer knows is the cowbell.",
+    "rests_on": "Apple, 18 Nov 2026: \"Choose the Drums (Individual Kit Pieces) preset in Stem Splitter to extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion.\"",
+    "id": "tue/logicdrums#a13361d75819",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Apple's Stem Splitter can now pull a recorded drum kit apart into kick, snare, hi-hat, toms and cymbals, from a single mixed region.",
+    "rests_on": "extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion",
+    "id": "tue/logicdrums#b491abb3bcfb",
+    "judge": {
+     "originality": 1.0,
+     "usefulness": 3.0,
+     "specificity": 4.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Stem Splitter now pulls the kit apart piece by piece, kick, snare, hi-hat, toms, cymbals, and then 'other drums and percussion', where the tambourine still shares a track with everything else.",
+    "rests_on": "extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion.",
+    "id": "tue/logicdrums#7a3eba76f681",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 4.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "A drummer's kit can now be taken apart into its pieces without anyone touching a drum key.",
+    "rests_on": "Choose the Drums (Individual Kit Pieces) preset in Stem Splitter",
+    "id": "tue/logicdrums#486d4fe7d9c0",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 2.0,
+     "specificity": 2.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Stem Splitter can now take a drum kit apart piece by piece, kick to cymbals, and files everything it cannot name under \"other drums and percussion\".",
+    "rests_on": "kick, snare, hi-hat, toms, cymbals, and other drums and percussion",
+    "id": "tue/logicdrums#c01593e65326",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "The list of kit pieces ends with Other, which every drummer knows is the cowbell.",
+    "rests_on": "Apple, 18 Nov 2026: \"Choose the Drums (Individual Kit Pieces) preset in Stem Splitter",
+    "id": "tue/logicdrums#a8f6612ed9ba",
+    "judge": {
+     "status": "accepted"
+    }
+   }
+  ],
+  "tue/spotifyaudio": [
+   {
+    "lens": "own",
+    "text": "Spotify reckons most books in the world have no audiobook, and it is offering to fix five of them per author.",
+    "rests_on": "Spotify, 18 Nov 2026: \"Starting today, they're available to self-published authors in 21 more markets\", the UK among them, with up to five audiobooks free per author.",
+    "id": "tue/spotifyaudio#8b2a6f5df2a9",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Spotify will make up to five audiobooks per author at no charge, which takes the cost off a self-published writer's first five.",
+    "rests_on": "with up to five audiobooks free per author",
+    "id": "tue/spotifyaudio#8622fa3dd2ef",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "The tools now reach self-published authors in 21 more markets, the UK among them.",
+    "rests_on": "available to self-published authors in 21 more markets",
+    "id": "tue/spotifyaudio#f9b3ec97c55b",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The free allowance is up to five audiobooks per author, so a self-published author with one book has four free ones still to write.",
+    "rests_on": "with up to five audiobooks free per author",
+    "id": "tue/spotifyaudio#550b68b2b0c8",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The free allowance stops at five audiobooks per author, a limit that only bites for a self-published writer with a sixth book.",
+    "rests_on": "with up to five audiobooks free per author",
+    "id": "tue/spotifyaudio#a27c0210b913",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "Spotify reckons most books in the world have no audiobook, and it is offering to fix five of them per author.",
+    "rests_on": "Spotify, 18 Nov 2026: \"Starting today, they're available to self-published authors in 21 more",
+    "id": "tue/spotifyaudio#60bca05819ed",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   }
+  ],
+  "tue/mychannel": [
+   {
+    "lens": "own",
+    "text": "In Google's plan for television the star of the show is you, and the ad break is still there.",
+    "rests_on": "Gizmodo, 23 Nov 2026: \"Google might be planning to build a completely AI-generated TV channel in which your likeness is the main character\"; The Verge: a system \"designed to create feeds filled with personalized, AI-generated videos and advertisements\".",
+    "id": "tue/mychannel#7124db204df2",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "The headline idea is a TV channel starring you, but it comes with a hedge: Google might be planning it.",
+    "rests_on": "Google might be planning to build a completely AI-generated TV channel in which your likeness is the main character",
+    "id": "tue/mychannel#089fe3f42050",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Where the money would be: the system makes the adverts as well as the shows, both generated for one viewer.",
+    "rests_on": "designed to create feeds filled with personalized, AI-generated videos and advertisements",
+    "id": "tue/mychannel#12519f613eae",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The system would fill your feed with personalised AI videos and advertisements, so you could star in the show and sit through its ad breaks.",
+    "rests_on": "designed to create feeds filled with personalized, AI-generated videos and advertisements",
+    "id": "tue/mychannel#34ba20c397bc",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The sentence that makes you the main character of your own TV channel begins with 'Google might be planning'.",
+    "rests_on": "Google might be planning to build a completely AI-generated TV channel in which your likeness is the main character",
+    "id": "tue/mychannel#6e03936dfdf3",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Gizmodo says Google might be planning a TV channel where the main character is the viewer, so the cast and the audience are the same person.",
+    "rests_on": "Google might be planning to build a completely AI-generated TV channel in which your likeness is the main character",
+    "id": "tue/mychannel#8f98fae0720d",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Even the adverts in these feeds are made by AI for you, so the ad break is personalised too.",
+    "rests_on": "designed to create feeds filled with personalized, AI-generated videos and advertisements",
+    "id": "tue/mychannel#4ccc947c4e04",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "In Google's plan for television the star of the show is you, and the ad break is still there.",
+    "rests_on": "Gizmodo, 23 Nov 2026: \"Google might be planning to build a completely AI-generated TV",
+    "id": "tue/mychannel#ee0ea09a552b",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   }
+  ],
+  "tue/tplcommscam": [
+   {
+    "lens": "own",
+    "text": "Two pundits, one game: an AI music start-up's pitch and the songwriter who read the contract.",
+    "rests_on": null,
+    "id": "tue/tplcommscam#a74788a9000d",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Two pundits, one gantry, 4-0: one leans out of his seat laughing at every goal, the other sits so still he could be watching a different match.",
+    "rests_on": "one pundit laughs and leans out of his seat at each goal while the one beside him sits still, face unmoved, as it reaches 4-0",
+    "id": "tue/tplcommscam#652b64b43a24",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 4.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Two pundits, one gantry, one scoreline: by 4-0 one is half out of his seat laughing and the other has not moved a muscle.",
+    "rests_on": "the one beside him sits still, face unmoved, as it reaches 4-0",
+    "id": "tue/tplcommscam#9836f52a03ca",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 2.0,
+     "specificity": 3.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "Two pundits, one game: an AI music start-up's pitch and the songwriter who read the contract.",
+    "rests_on": "On the Anfield gantry one pundit laughs and leans out of his seat at",
+    "id": "tue/tplcommscam#f466c680cfd5",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 2.0,
+     "status": "rejected_gravity"
+    }
+   }
+  ],
+  "tue/tplfistpump": [
+   {
+    "lens": "own",
+    "text": "A fist pump this big is how a film crew celebrates beating the AI storyboard on a shoot.",
+    "rests_on": null,
+    "id": "tue/tplfistpump#bac5beaca2e4",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The handshakes are done and the match is over; the fist pumping is not, and goes on again and again.",
+    "rests_on": "pumps his fist at the crowd, again and again",
+    "id": "tue/tplfistpump#4c372c207227",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 2.0,
+     "specificity": 2.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The match is over and the handshakes are done, and the coach is still pumping his fist at the stand, again and again.",
+    "rests_on": "pumps his fist at the crowd, again and again",
+    "id": "tue/tplfistpump#8656b93f2bb4",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "A fist pump this big is how a film crew celebrates beating the AI storyboard on a shoot.",
+    "rests_on": "After the full-time handshakes the head coach walks towards the stand and pumps his",
+    "id": "tue/tplfistpump#0705f9d5f417",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   }
+  ],
+  "tue/tplninedarter": [
+   {
+    "lens": "own",
+    "text": "The AI music tool needed 400 tries to be perfect; the session musician needed one and a grin.",
+    "rests_on": null,
+    "id": "tue/tplninedarter#67eec3e4977d",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "He watches a perfect leg thrown against him, grins, and answers it the only way perfect can be answered: by doing it straight back.",
+    "rests_on": "his opponent grins at the replay, then throws a perfect nine-darter of his own straight back",
+    "id": "tue/tplninedarter#d880d52c285d",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "His opponent watched a perfect leg on the replay, grinned, and then threw exactly the same perfect leg straight back.",
+    "rests_on": "his opponent grins at the replay, then throws a perfect nine-darter of his own straight back",
+    "id": "tue/tplninedarter#1a0101ac9e96",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 4.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "The AI music tool needed 400 tries to be perfect; the session musician needed one and a grin.",
+    "rests_on": "One player throws a perfect nine-dart leg and his opponent grins at the replay,",
+    "id": "tue/tplninedarter#55716c20cfe2",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   }
+  ],
+  "tue/tplbuzzer": [
+   {
+    "lens": "own",
+    "text": "Every human mix in music now lands like a buzzer-beater, one second before the AI version.",
+    "rests_on": null,
+    "id": "tue/tplbuzzer#a3dabdb36c7e",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 1.0,
+     "specificity": 1.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Ninety-six points were not enough for the other side; the margin was one, and the clock had nothing left.",
+    "rests_on": "A player hits the winning shot as the clock runs out, the arena erupts and his team-mates swarm him on the floor, 97-96.",
+    "id": "tue/tplbuzzer#7d083927f049",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 2.0,
+     "specificity": 3.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Nearly 200 points between them, and the whole game came down to the one shot that went in as the clock hit zero.",
+    "rests_on": "97-96",
+    "id": "tue/tplbuzzer#b98e6bbeb7cb",
+    "judge": {
+     "originality": 1.0,
+     "usefulness": 2.0,
+     "specificity": 2.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "Every human mix in music now lands like a buzzer-beater, one second before the AI version.",
+    "rests_on": "A player hits the winning shot as the clock runs out, the arena erupts",
+    "id": "tue/tplbuzzer#094f7c6603f8",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   }
+  ],
+  "thu/figmasix": [
+   {
+    "lens": "own",
+    "text": "The release note's selling point is that you will spend less time re-prompting, the most honest description of AI image work yet.",
+    "rests_on": "Figma, 18 Nov 2026: \"Have a single image model generate two, four, or six images from one prompt, so you spend less time re-prompting.\"",
+    "id": "thu/figmasix#0aceb61b6ca3",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "In Figma one prompt can now return two, four or six images from the same model, so a designer compares options side by side instead of asking again.",
+    "rests_on": "Have a single image model generate two, four, or six images from one prompt",
+    "id": "thu/figmasix#7f24d3ed87b4",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Figma's stated reason is time: fewer rounds of rewording the same request.",
+    "rests_on": "so you spend less time re-prompting",
+    "id": "thu/figmasix#84e9b1b4ca10",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Figma's cure for asking twice is getting six answers at once.",
+    "rests_on": "Have a single image model generate two, four, or six images from one prompt, so you spend less time re-prompting.",
+    "id": "thu/figmasix#25699385d1bc",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The cure for asking an AI for an image over and over is asking once and getting six.",
+    "rests_on": "generate two, four, or six images from one prompt, so you spend less time re-prompting",
+    "id": "thu/figmasix#81363ed282bb",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "The release note's selling point is that you will spend less time re-prompting, the most honest description of AI image work yet.",
+    "rests_on": "Figma, 18 Nov 2026: \"Have a single image model generate two, four, or six",
+    "id": "thu/figmasix#896d543dcaad",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_duplicate"
+    }
+   }
+  ],
+  "thu/robloxvideo": [
+   {
+    "lens": "own",
+    "text": "Roblox's demo is an AI noticing that a door stutters, which is roughly where every game maker's career begins.",
+    "rests_on": "Roblox, 20 Nov 2026: \"screen_capture can now record video during a playtest, so the agent can see motion for itself.\"",
+    "id": "thu/robloxvideo#61a7a311346c",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 2.0,
+     "specificity": 3.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Roblox's agent can now record video while a game is being playtested, so it can watch how things move rather than judge from still screenshots.",
+    "rests_on": "screen_capture can now record video during a playtest, so the agent can see motion for itself.",
+    "id": "thu/robloxvideo#118d354d97df",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The AI agent testing the game can now film its own playtest and watch it back, so it can finally see the thing move.",
+    "rests_on": "screen_capture can now record video during a playtest, so the agent can see motion for itself.",
+    "id": "thu/robloxvideo#7ab66a85c3d0",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The playtester in Roblox Studio is now an AI that films the game so it can watch the motion for itself.",
+    "rests_on": "screen_capture can now record video during a playtest, so the agent can see motion for itself.",
+    "id": "thu/robloxvideo#a76cc68517f0",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "Roblox's demo is an AI noticing that a door stutters, which is roughly where every game maker's career begins.",
+    "rests_on": "Roblox, 20 Nov 2026: \"screen_capture can now record video during a playtest, so the",
+    "id": "thu/robloxvideo#6c961853aa9c",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   }
+  ],
+  "thu/alphamatte": [
+   {
+    "lens": "own",
+    "text": "The headline feature of the model is that it gives you two files instead of one.",
+    "rests_on": "Runway, 13 Nov 2026: \"LTX Alphagen is the first third-party model to return two outputs and support ProRes as an output type.\"",
+    "id": "thu/alphamatte#d847219be2cf",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 2.0,
+     "specificity": 2.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "LTX Alphagen is the first outside model on Runway to hand back two outputs from one job and to export ProRes.",
+    "rests_on": "LTX Alphagen is the first third-party model to return two outputs and support ProRes as an output type.",
+    "id": "thu/alphamatte#e48ab4e13779",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "A changelog milestone measured in the number two: the first third-party model to return two outputs.",
+    "rests_on": "LTX Alphagen is the first third-party model to return two outputs and support ProRes as an output type.",
+    "id": "thu/alphamatte#9de34c8632cc",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The milestone in this changelog is a model that hands back two files and can save them as ProRes, a first for an outside model on the platform.",
+    "rests_on": "the first third-party model to return two outputs and support ProRes as an output type",
+    "id": "thu/alphamatte#1b118265183e",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 4.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "The headline feature of the model is that it gives you two files instead of one.",
+    "rests_on": "Runway, 13 Nov 2026: \"LTX Alphagen is the first third-party model to return two",
+    "id": "thu/alphamatte#8401ef732257",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 2.0,
+     "specificity": 2.0,
+     "status": "rejected_duplicate"
+    }
+   }
+  ],
+  "thu/synthfirmware": [
+   {
+    "lens": "own",
+    "text": "A $70 synth became the instrument of the summer because people kept teaching it new tricks with chatbots.",
+    "rests_on": "The Verge, 25 Nov 2026: \"companies have begun making more and more of their devices open source.\"; Polyend: \"Today we're publishing the firmware source code for the original Tracker, Tracker+ and Tracker Mini on GitHub.\"",
+    "id": "thu/synthfirmware#70437c7e10eb",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Polyend has put the code that runs its Tracker grooveboxes on GitHub, so anyone can read the code their device runs on.",
+    "rests_on": "Today we're publishing the firmware source code for the original Tracker, Tracker+ and Tracker Mini on GitHub.",
+    "id": "thu/synthfirmware#2a23db2d669c",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Polyend is one case of a wider pattern The Verge describes, companies opening up more and more of their devices.",
+    "rests_on": "companies have begun making more and more of their devices open source.",
+    "id": "thu/synthfirmware#00bb0b0c5b33",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Polyend has put the code inside its Trackers on GitHub, so owners can open up the instrument without a screwdriver.",
+    "rests_on": "Today we're publishing the firmware source code for the original Tracker, Tracker+ and Tracker Mini on GitHub.",
+    "id": "thu/synthfirmware#6bfe1de70f25",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Polyend has put the code that runs its Tracker instruments on GitHub, so the inside of the box is now as public as the music made on it.",
+    "rests_on": "Today we're publishing the firmware source code for the original Tracker, Tracker+ and Tracker Mini on GitHub.",
+    "id": "thu/synthfirmware#29fdc406f3c9",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "A $70 synth became the instrument of the summer because people kept teaching it new tricks with chatbots.",
+    "rests_on": "The Verge, 25 Nov 2026: \"companies have begun making more and more of their",
+    "id": "thu/synthfirmware#a9a556e3d9b2",
+    "judge": {
+     "originality": 1.0,
+     "usefulness": 2.0,
+     "specificity": 2.0,
+     "status": "rejected_gravity"
+    }
+   }
+  ],
+  "thu/pixelfill": [
+   {
+    "lens": "own",
+    "text": "Apple's own example of what to ask the AI for is a purple sky.",
+    "rests_on": "Apple, 18 Nov 2026: \"Transform any detail in your image with Generate Fill, adding edits that blend naturally to match the lighting, perspective and texture of surrounding areas, using natural language.\"",
+    "id": "thu/pixelfill#529199f97032",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Apple's Generate Fill is pitched on matching what is already in the photo: the lighting, the perspective and the texture around the edit.",
+    "rests_on": "adding edits that blend naturally to match the lighting, perspective and texture of surrounding areas",
+    "id": "thu/pixelfill#26d979bc2200",
+    "judge": {
+     "originality": 1.0,
+     "usefulness": 2.0,
+     "specificity": 3.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "The edit is asked for in ordinary words rather than with a brush.",
+    "rests_on": "using natural language",
+    "id": "thu/pixelfill#177c81f9cad8",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The promise is edits that blend naturally with the light, perspective and texture around them, so the best result is the one nobody notices.",
+    "rests_on": "adding edits that blend naturally to match the lighting, perspective and texture of surrounding areas",
+    "id": "thu/pixelfill#dab8fc0a95f3",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Describe a change to a photo in a sentence and the app works out the light, the perspective and the texture to match it.",
+    "rests_on": "adding edits that blend naturally to match the lighting, perspective and texture of surrounding areas, using natural language",
+    "id": "thu/pixelfill#9ce8bfd94bc6",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "Apple's own example of what to ask the AI for is a purple sky.",
+    "rests_on": "Apple, 18 Nov 2026: \"Transform any detail in your image with Generate Fill, adding",
+    "id": "thu/pixelfill#f5ae6ba2f2e1",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   }
+  ],
+  "thu/tplturin": [
+   {
+    "lens": "own",
+    "text": "A film editor's championship point is a client who does not ask for an AI version.",
+    "rests_on": null,
+    "id": "thu/tplturin#f2d0ec9e8ee1",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "He wins the match, lies down on the court, and is promptly buried by his own players' box.",
+    "rests_on": "the winner drops flat on his back on the court, then disappears under his team in the players' box",
+    "id": "thu/tplturin#fb997e6ee85f",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "He wins match point, and the first thing he does is lie down; the second is vanish under his own team.",
+    "rests_on": "the winner drops flat on his back on the court, then disappears under his team in the players' box",
+    "id": "thu/tplturin#641c604e8a81",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 2.0,
+     "specificity": 2.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "A film editor's championship point is a client who does not ask for an AI version.",
+    "rests_on": "Match point goes in, the winner drops flat on his back on the court,",
+    "id": "thu/tplturin#2c82a47e03b4",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   }
+  ],
+  "thu/tplthanksgiving": [
+   {
+    "lens": "own",
+    "text": "The hand-made short film gets to the festival the way football teams win on Thanksgiving: three seconds left.",
+    "rests_on": null,
+    "id": "thu/tplthanksgiving#9ac3e6fc6044",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 1.0,
+     "specificity": 1.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "One end zone, two benches: one becomes a pile, the other a row of stares.",
+    "rests_on": "the whole team piles on while the other bench stares",
+    "id": "thu/tplthanksgiving#3df8dcda3fe4",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "One end of the field is a pile of bodies; the other is a bench standing perfectly still, staring.",
+    "rests_on": "the whole team piles on while the other bench stares",
+    "id": "thu/tplthanksgiving#82823b62bcee",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 2.0,
+     "specificity": 3.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "The hand-made short film gets to the festival the way football teams win on Thanksgiving: three seconds left.",
+    "rests_on": "Trailing with the clock almost gone, the quarterback finds his receiver in the end",
+    "id": "thu/tplthanksgiving#5c757cf4ee80",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 1.0,
+     "specificity": 1.0,
+     "status": "rejected_duplicate"
+    }
+   }
+  ],
+  "thu/tplassemble": [
+   {
+    "lens": "own",
+    "text": "Every AI video tool now turns up to a film pitch like the whole superhero roster.",
+    "rests_on": null,
+    "id": "thu/tplassemble#03fcf5a152fe",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "One call from the leader and heroes arrive from every side of the battlefield: a team meeting with perfect attendance.",
+    "rests_on": "A leader calls his team and heroes charge in from every side of the battlefield to stand together.",
+    "id": "thu/tplassemble#881aced60aae",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 1.0,
+     "specificity": 1.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "It takes one call for heroes to arrive from every side of the battlefield at once and stand together.",
+    "rests_on": "A leader calls his team and heroes charge in from every side of the battlefield to stand together.",
+    "id": "thu/tplassemble#6ad84a5171b5",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 2.0,
+     "specificity": 2.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "Every AI video tool now turns up to a film pitch like the whole superhero roster.",
+    "rests_on": "A leader calls his team and heroes charge in from every side of the",
+    "id": "thu/tplassemble#eb1d80d3e3f0",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 1.0,
+     "specificity": 1.0,
+     "status": "rejected_duplicate"
+    }
+   }
+  ],
+  "thu/tpllegends": [
+   {
+    "lens": "own",
+    "text": "An AI music model should walk out with every musician it learned from, the way a headliner brings the legends.",
+    "rests_on": null,
+    "id": "thu/tpllegends#da6b28fbca94",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Before a note is played, the corridor to the stage is already lined with country music legends, and he dances past them on his way to work.",
+    "rests_on": "A singer dances down a backstage corridor surrounded by country music legends before walking out to perform, guitar in hand.",
+    "id": "thu/tpllegends#582ce1e16090",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The walk to the stage is a dance down a backstage corridor with country music legends on either side.",
+    "rests_on": "A singer dances down a backstage corridor surrounded by country music legends before walking out to perform, guitar in hand.",
+    "id": "thu/tpllegends#e7e4dd96944d",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "An AI music model should walk out with every musician it learned from, the way a headliner brings the legends.",
+    "rests_on": "A singer dances down a backstage corridor surrounded by country music legends before walking",
+    "id": "thu/tpllegends#305abaa52afe",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 2.0,
+     "status": "rejected_duplicate"
+    }
+   }
+  ],
+  "thu/tplskyrim": [
+   {
+    "lens": "own",
+    "text": "An AI remade a famous fantasy game in the wrong century, which is roughly how studios pitch AI remakes.",
+    "rests_on": null,
+    "id": "thu/tplskyrim#af3fb217c46b",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "A well-known fantasy game's most famous scenes, cart ride and dungeon included, rebuilt by AI as if shot in the 1960s.",
+    "rests_on": "A famous fantasy video game's best-known scenes are rebuilt with AI in a 1960s setting, cart ride and dungeon included.",
+    "id": "thu/tplskyrim#f46f005cf064",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "AI sent a famous fantasy game back to the 1960s, and the cart ride and the dungeon both survived the trip.",
+    "rests_on": "A famous fantasy video game's best-known scenes are rebuilt with AI in a 1960s setting, cart ride and dungeon included.",
+    "id": "thu/tplskyrim#067cc590732f",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "AI moved a fantasy game's best-known scenes to the 1960s and kept the cart ride and the dungeon, as if they were period details.",
+    "rests_on": "cart ride and dungeon included",
+    "id": "thu/tplskyrim#4b84488b5d4f",
+    "judge": {
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "An AI remade a famous fantasy game in the wrong century, which is roughly how studios pitch AI remakes.",
+    "rests_on": "A famous fantasy video game's best-known scenes are rebuilt with AI in a 1960s",
+    "id": "thu/tplskyrim#e9898babcae9",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 2.0,
+     "specificity": 2.0,
+     "status": "rejected_gravity"
+    }
+   }
+  ],
+  "sat/goodnews": [
+   {
+    "lens": "own",
+    "text": "The number one ballad was written by two humans and sung by software, which is the most K-pop sentence of the year.",
+    "rests_on": null,
+    "id": "sat/goodnews#fac0f52e143e",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 4.0,
+     "specificity": 3.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "A song reached the top of Korea's most watched chart and stayed there for more than a week with no fan army and no TV push behind it.",
+    "rests_on": "with no fandom or TV promotion behind it",
+    "id": "sat/goodnews#6b948f59fe53",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "How the number one was made: two songwriters wrote the words, Suno made the melody, arrangement and vocals, and the pair refined what it gave them.",
+    "rests_on": "The pair wrote the lyrics and used Suno for the melody, arrangement and vocals, then refined them",
+    "id": "sat/goodnews#b67f29f19598",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 4.0,
+     "specificity": 5.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "A veteran guitarist was paid to play over a complex track and only found out afterwards that everything else on it had been made by AI.",
+    "rests_on": "he recently did a paid session on a complex progressive track, then learned from the engineer that the whole backing had been made by AI",
+    "id": "sat/goodnews#f1e4d1b49fef",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "A guitarist booked for a paid session on a complex progressive track found out afterwards from the engineer that the whole backing band he had played over was AI.",
+    "rests_on": "then learned from the engineer that the whole backing had been made by AI",
+    "id": "sat/goodnews#43ac1c5245a1",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The first AI-assisted song to top Melon's chart held number one for more than a week with no fandom or TV promotion behind it, which on a Korean chart may be the stranger half of the story.",
+    "rests_on": "with no fandom or TV promotion behind it",
+    "id": "sat/goodnews#d10bc3e432a0",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "In the last full week of November, four of the acts putting out debut or predebut music in Korea were not human at all.",
+    "rests_on": "The Korea Times counted four nonhuman acts, including a HYBE-backed VTuber project, putting out debut or predebut music in the last full week of November.",
+    "id": "sat/goodnews#6bdf796b6348",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 4.0,
+     "specificity": 4.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "A veteran guitarist was paid to play a session on a complex prog track, then found out from the engineer that everything behind his guitar had been made by AI.",
+    "rests_on": "he recently did a paid session on a complex progressive track, then learned from the engineer that the whole backing had been made by AI",
+    "id": "sat/goodnews#22a0b66d2768",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 4.0,
+     "specificity": 4.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "On Korea's most watched chart, the song at number one for more than a week had Suno on vocals and no fandom or TV promotion behind it.",
+    "rests_on": "with no fandom or TV promotion behind it",
+    "id": "sat/goodnews#7de3df760669",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 5.0,
+     "specificity": 4.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "K-pop's debut week now needs a separate count for acts that are not human, and in the last full week of November it came to four.",
+    "rests_on": "The Korea Times counted four nonhuman acts",
+    "id": "sat/goodnews#918973e3418d",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 4.0,
+     "specificity": 4.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "The number one ballad was written by two humans and sung by software, which is the most K-pop sentence of the year.",
+    "rests_on": "MEOMURU's rock ballad The Adult I Dreamed Of, by the songwriting duo Glorywave (Lee",
+    "id": "sat/goodnews#ad1e79ec26b3",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   }
+  ],
+  "sat/screen": [
+   {
+    "lens": "own",
+    "text": "The lead actor's surname has the letters AI in it, in case anyone missed the point.",
+    "rests_on": null,
+    "id": "sat/screen#ff3ebaa86b09",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 1.0,
+     "specificity": 2.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Lionsgate Play's first AI-led series runs on Google's AI under a long-term production pact, a studio deal rather than a one-off experiment.",
+    "rests_on": "uses Google's AI under a long-term production pact",
+    "id": "sat/screen#3d270d7cefee",
+    "judge": {
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "An Oscar-winning director and his post house will show, at a festival, exactly which methods and tools went into his new film.",
+    "rests_on": "He and post house Digital District will explain the methods and tools they used.",
+    "id": "sat/screen#8a3664734e7f",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Odeon says its AI assistant handles about 40% of guest questions, and that it has kept its service teams for the rest.",
+    "rests_on": "it has kept its service teams",
+    "id": "sat/screen#7961d726f8fa",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 4.0,
+     "specificity": 4.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Lionsgate's AI actor comes with the disclosure built into his name: Yug R.Ai.",
+    "rests_on": "stars the AI actor Yug R.Ai",
+    "id": "sat/screen#f9f392dcd635",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "A film being shown as an AI case study is called The Third Hand.",
+    "rests_on": "will unveil exclusive footage of his upcoming film The Third Hand in an AI case study at the Les Arcs Film Festival in December",
+    "id": "sat/screen#3b6c4c906dda",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 2.0,
+     "specificity": 2.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Odeon named its AI assistant Odi, and Odi now sorts out about 40% of guest queries, from showtimes to ticket problems.",
+    "rests_on": "its AI assistant Odi, built on Zendesk, resolves about 40% of guest queries, from showtimes to ticket problems",
+    "id": "sat/screen#d99056d245ca",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 4.0,
+     "specificity": 4.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The lead in Lionsgate Play's first AI-led series is an AI actor whose name, Yug R.Ai, carries the giveaway in its last two letters.",
+    "rests_on": "stars the AI actor Yug R.Ai",
+    "id": "sat/screen#dc37a3be79da",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 4.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The Best Picture winner is showing his next film in an AI case study, and the film is called The Third Hand.",
+    "rests_on": "his upcoming film The Third Hand in an AI case study",
+    "id": "sat/screen#02437d014de2",
+    "judge": {
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Odeon's chatbot is called Odi, answers about 40% of guest queries, and the chain says it kept its service teams for the rest.",
+    "rests_on": "resolves about 40% of guest queries",
+    "id": "sat/screen#9d1ac0dd2981",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 4.0,
+     "specificity": 5.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "The lead actor's surname has the letters AI in it, in case anyone missed the point.",
+    "rests_on": "Lionsgate Play has put its first AI-led original series, Eklavya, into production, Deadline reported",
+    "id": "sat/screen#239d89e5bcdb",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 1.0,
+     "specificity": 2.0,
+     "status": "accepted"
+    }
+   }
+  ],
+  "sat/makers": [
+   {
+    "lens": "own",
+    "text": "Batman's newest villain is the queue at a village tea stall.",
+    "rests_on": null,
+    "id": "sat/makers#f7ff3ca44d39",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 1.0,
+     "specificity": 2.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "An AI Batman who brushes his teeth by the railway tracks and rides a buffalo has turned into a paid brand deal with an electric bike maker.",
+    "rests_on": "Electric bike maker E-Motorad has signed him for a collaboration",
+    "id": "sat/makers#10a692bcc16c",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 4.0,
+     "specificity": 4.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "A whole AI fantasy comedy, war beast included, for a stated cost of $28,775, a figure that comes from the account that shared it.",
+    "rests_on": "said the whole film cost $28,775",
+    "id": "sat/makers#79ff26a7eb07",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "How one person answers thousands of questions a week: an AI avatar of him takes one a day, in whatever language it was asked.",
+    "rests_on": "his AI avatar answers one real question from his comments each day for 12 months, in the language it was asked",
+    "id": "sat/makers#3c4acedca426",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The Batman who rides a buffalo to a 1999 Bollywood song has been signed by a company that makes electric bikes.",
+    "rests_on": "Electric bike maker E-Motorad has signed him for a collaboration",
+    "id": "sat/makers#8a51d66880b1",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 4.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "An epic about a war beast that keeps destroying its own side came in at $28,775, costed to the dollar.",
+    "rests_on": "said the whole film cost $28,775",
+    "id": "sat/makers#d5c787fdcfdf",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 4.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "An AI avatar that never needs to sleep has been set a pace of one question a day, for a year.",
+    "rests_on": "his AI avatar answers one real question from his comments each day for 12 months, in the language it was asked",
+    "id": "sat/makers#c64a3be01a03",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 2.0,
+     "specificity": 2.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The Batman that found 25 million viewers in two weeks brushes his teeth by railway tracks and rides a buffalo to a 1999 Bollywood song.",
+    "rests_on": "Batman brushes his teeth by railway tracks and rides a buffalo to a 1999 Bollywood song",
+    "id": "sat/makers#58923881a543",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 4.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The plot of a $28,775 AI film: an army recruits a warrior whose giant war beast keeps destroying his own side.",
+    "rests_on": "a wild warrior with a gigantic war beast who keeps destroying his own side",
+    "id": "sat/makers#dac06fb20241",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 4.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Thousands of questions a week arrive, and the AI avatar built to answer them will take one a day, for a year.",
+    "rests_on": "his AI avatar answers one real question from his comments each day for 12 months",
+    "id": "sat/makers#60dc8d6db728",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "Batman's newest villain is the queue at a village tea stall.",
+    "rests_on": "Sujal Jaiswar's AI-made Desi Batman series, in which Batman brushes his teeth by railway",
+    "id": "sat/makers#619c8c84b49b",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 2.0,
+     "specificity": 1.0,
+     "status": "rejected_duplicate"
+    }
+   }
+  ],
+  "sat/newsrooms": [
+   {
+    "lens": "own",
+    "text": "The newspaper's newest subscriber is a corporate chatbot, and it still has to log in.",
+    "rests_on": null,
+    "id": "sat/newsrooms#738bfc0cf06e",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 4.0,
+     "specificity": 3.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Nine is selling business subscribers a way to plug its journalism straight into their own AI tools, a new way for a publisher to charge for its reporting.",
+    "rests_on": "lets licensed business subscribers connect its journalism from The Australian Financial Review",
+    "id": "sat/newsrooms#cd4df92999cb",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 4.0,
+     "specificity": 4.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "How Der Spiegel finds the readers about to leave: its score picks out a group that cancels at seven times the usual rate.",
+    "rests_on": "cancels at 28% against a base rate of about 4%",
+    "id": "sat/newsrooms#249354be240c",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 4.0,
+     "specificity": 4.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "The fear is that AI makes things up; at Bergens Tidende about one in ten AI summaries needs a fix, and almost never for that.",
+    "rests_on": "about one in ten needs a fix, almost never for hallucinations",
+    "id": "sat/newsrooms#cf877d393aae",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 4.0,
+     "specificity": 4.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "At VG one AI model writes the headline and a second AI model checks the first, a newsroom where the sub-editor is software too.",
+    "rests_on": "VG asks an AI model for a headline, search terms and other details for each of its roughly 200 new articles a day, with a second model checking the first",
+    "id": "sat/newsrooms#06858d06a377",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 4.0,
+     "specificity": 4.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "At Bergens Tidende about one AI summary in ten needs a fix, almost never for hallucinations, so the machine's mistakes turn out to be the ordinary kind.",
+    "rests_on": "about one in ten needs a fix, almost never for hallucinations",
+    "id": "sat/newsrooms#41c0b5928a52",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 4.0,
+     "specificity": 4.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The Canva number that more than tripled since September is the revenue it expects.",
+    "rests_on": "the yearly revenue it expects from MCP has more than tripled since September",
+    "id": "sat/newsrooms#ad3652044906",
+    "judge": {
+     "originality": 3.0,
+     "usefulness": 3.0,
+     "specificity": 3.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "At VG one AI model writes the headline and a second AI model checks the first one's work.",
+    "rests_on": "with a second model checking the first",
+    "id": "sat/newsrooms#fdb99b8966b7",
+    "judge": {
+     "originality": 2.0,
+     "usefulness": 4.0,
+     "specificity": 4.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "When Bergens Tidende's AI summaries need fixing, about one time in ten, the problem is almost never the machine making things up.",
+    "rests_on": "about one in ten needs a fix, almost never for hallucinations",
+    "id": "sat/newsrooms#095403eea010",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 5.0,
+     "specificity": 4.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Nearly half a million people signed up to Canva through a connection built for AI assistants, so the chatbot has become a front door.",
+    "rests_on": "nearly 500,000 people signed up through MCP since October",
+    "id": "sat/newsrooms#58ae29f43a93",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 5.0,
+     "specificity": 4.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "The newspaper's newest subscriber is a corporate chatbot, and it still has to log in.",
+    "rests_on": "In a piece published on 27 November 2026, Christoph Trattner of the University of",
+    "id": "sat/newsrooms#137df1c05c91",
+    "judge": {
+     "originality": 4.0,
+     "usefulness": 4.0,
+     "specificity": 3.0,
+     "status": "rejected_duplicate"
+    }
+   }
+  ]
+ },
+ "unread": [],
+ "at": "2026-11-27T16:21:53+00:00"
+}

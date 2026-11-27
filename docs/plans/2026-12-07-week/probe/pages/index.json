@@ -170,6 +170,9 @@
  "https://dev.epicgames.com/documentation/fortnite/verse": {
   "file": "epic-verse-docs.txt"
  },
+ "https://www.bbc.com/news/articles/cm0qjglj3ejlo": {
+  "file": "bbc-kernow-market-ai-backlash.txt"
+ },
  "https://newsmachines.beehiiv.com/p/new-york-times-news-agent": {
   "file": "newsmachines-nyt-news-agent.txt"
  },
@@ -190,6 +193,30 @@
  },
  "https://www.justice.gov/opa/pr/department-justice-publishes-35-million-responsive-pages-compliance-epstein-files": {
   "file": "doj-epstein-files-release-2026-01-30.txt"
+ },
+ "https://www.theverge.com/ai-artificial-intelligence/1040081/vibe-coding-open-source-music-firmware": {
+  "file": "synthfirmware-verge.txt"
+ },
+ "https://polyend.com/whats-up/tracker-the-biggest-update-yet/": {
+  "file": "synthfirmware-polyend-tracker.txt"
+ },
+ "https://www.ericasynths.lv/news/post/lxropen/": {
+  "file": "synthfirmware-erica-lxr02.txt"
+ },
+ "https://github.com/polyend/tracker-ce": {
+  "unreadable": "github.com refused in this session (403)"
+ },
+ "https://github.com/polyend/tracker-ce/blob/main/CHANGELOG.md": {
+  "unreadable": "github.com refused in this session (403)"
+ },
+ "https://raw.githubusercontent.com/polyend/tracker-ce/main/README.md": {
+  "file": "synthfirmware-tracker-ce-readme.txt"
+ },
+ "https://raw.githubusercontent.com/polyend/tracker-ce/main/CHANGELOG.md": {
+  "file": "synthfirmware-tracker-ce-changelog.txt"
+ },
+ "https://raw.githubusercontent.com/polyend/tracker-ce/main/LICENSE": {
+  "file": "synthfirmware-tracker-ce-license.txt"
  },
  "https://www.cartoonbrew.com/artificial-intelligence/annecy-ottawa-manchester-festival-programmers-artificial-intelligence-269655.html": {
   "file": "cartoonbrew-festival-genai-programmers.txt"
@@ -328,6 +355,15 @@
  },
  "https://www.youtube.com/watch?v=Ya8rzhoFOVM": {
   "unreadable": "429 too many requests, no page returned"
+ },
+ "https://gizmodo.com/google-wants-to-make-ai-tv-shows-starring-you-2000844299": {
+  "unreadable": "403 bot challenge page, no article text"
+ },
+ "https://www.theverge.com/entertainment/1042221/google-my-channel-ai-video-patent": {
+  "file": "mychannel-verge.txt"
+ },
+ "https://image-ppubs.uspto.gov/dirsearch-public/print/downloadPdf/20260370899": {
+  "file": "mychannel-uspto-20260370899.txt"
  },
  "https://www.advanced-television.com/2026/11/23/prime-video-unveils-progressive-actions-for-champions-league/": {
   "file": "advtv-prime-progressive-actions.txt"
