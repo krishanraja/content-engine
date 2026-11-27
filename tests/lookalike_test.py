@@ -42,8 +42,8 @@ def workbook(rows, themes=True, titled=False):
     return out.getvalue()
 
 
-def row(n, published=None, retrieved=datetime(2026, 11, 16, 6, 0)):
-    return [f'p{n}', published, retrieved, 'carousel', 5, 'ok', f'Headline {n}', f'What post {n} says.', '', 'Acme', 'now', 'a paper',
+def row(n, published=None, retrieved=datetime(2026, 11, 16, 6, 0), kind='carousel', pages=5):
+    return [f'p{n}', published, retrieved, kind, pages, 'ok', f'Headline {n}', f'What post {n} says.', '', 'Acme', 'now', 'a paper',
             'caption', 'slide one | slide two', f'https://www.instagram.com/p/post{n}/', '@someone']
 
 
@@ -54,7 +54,7 @@ XLSX = lookalike.XLSX_TYPE
 class PrepareTest(unittest.TestCase):
     def test_the_newest_posts_by_published_else_retrieved_with_how_fresh_the_sheet_is(self):
         rows = [row(1, published=datetime(2026, 11, 14, 9)), row(2, published=datetime(2026, 10, 1)), row(3)]  # row 3: backfill, no Published
-        rows += [row(n, published=datetime(2026, 9, 1)) for n in range(4, 110)]
+        rows += [row(n, published=datetime(2026, 9, 1), kind='Post', pages=None) for n in range(4, 110)]
         with tempfile.TemporaryDirectory() as tmp:
             path, lines = lookalike.prepare('2026-11-23', call_bytes=lambda p: (200, workbook(rows), XLSX), plans=tmp, today=TODAY)
             data = json.loads(path.read_text())
@@ -66,6 +66,20 @@ class PrepareTest(unittest.TestCase):
         self.assertEqual(data['themes'], [{'Theme': 'Robots at work', 'Why it travels': 'People like seeing the robot fail first'}])
         self.assertEqual(data['warnings'], [])
         self.assertIn('sheet, 100 of 109 posts, 1 themes', lines[0])
+
+    def test_the_sheets_newest_carousels_come_with_the_newest_posts_when_the_backfill_crowds_them_out(self):
+        # 16 Nov: the profile-grid backfill filled the newest rows with Posts and Reels, so the newest 100 held no carousel
+        # and no Saturday option (each modelled on a sheet carousel) could pass the 30 Nov or 7 Dec gate.
+        rows = [row(n, kind='Post', pages=None) for n in range(1, 106)]
+        rows += [row(n, published=datetime(2026, 10, 1), kind='Carousel', pages=6) for n in range(200, 240)]
+        with tempfile.TemporaryDirectory() as tmp:
+            path, _ = lookalike.prepare('2026-12-07', call_bytes=lambda p: (200, workbook(rows), XLSX), plans=tmp, today=TODAY)
+            data = json.loads(path.read_text())
+        posts = data['posts']
+        self.assertEqual(len(posts), lookalike.NEWEST + lookalike.NEWEST_CAROUSELS)
+        self.assertFalse(any(lookalike.is_carousel(p) for p in posts[:lookalike.NEWEST]), 'the newest 100 are the backfill')
+        self.assertTrue(all(lookalike.is_carousel(p) for p in posts[lookalike.NEWEST:]))
+        self.assertEqual(len({p['url'] for p in posts}), len(posts), 'no post twice')
 
     def test_a_stale_sheet_is_a_warning_never_a_quiet_skip(self):
         old = [row(1, published=datetime(2026, 11, 1), retrieved=datetime(2026, 11, 2))]
