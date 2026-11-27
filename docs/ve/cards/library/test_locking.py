@@ -40,11 +40,12 @@ class ApprovalWorkflow(unittest.TestCase):
             'assets/fonts/makeyourmindup/Fraunces-'+s+'-Variable.ttf' for s in ('Italic','Upright')]:
             (self.root/path).parent.mkdir(parents=True,exist_ok=True)
             shutil.copyfile(ROOT/path,self.root/path)
-        # Small local photographs keep this fixture independent of private review files.
-        bank = self.root/'.scratch/bank'
-        bank.mkdir(parents=True)
-        for name in ('bank-12','bank-30'):
-            Image.new('RGB',(120,150),'#105446').save(bank/(name+'.png'))
+        # A local stand-in for the cover's real source keeps this fixture independent of private review files.
+        # The v5 how-to cover (poster and evidence, 26 Nov 2026) has no photo slot: its one picture is the
+        # m-spotify evidence card, so that file is the media it must react to.
+        self.evidence = self.root/'.scratch/why-ladder/assets/m-spotify.png'
+        self.evidence.parent.mkdir(parents=True)
+        Image.new('RGB',(1080,2750),'#F4EFE4').save(self.evidence)
         self.original_html = (HERE/'library.html').read_text(encoding='utf8')
         self.data = json.loads((HERE/'library.json').read_text(encoding='utf8'))
         self.data['items'] = [i for i in self.data['items'] if i['id'] in IDS]
@@ -184,7 +185,7 @@ export(here,here.parents[3]/'.scratch/library/out','resvg',ledger(here),
         self.changed(COVER)
         pg = self.out/'items'/f'{COVER}.png'
         before=pg.read_bytes()
-        Image.new('RGB',(120,150),'#ffcc33').save(self.root/'.scratch/bank/bank-30.png')
+        Image.new('RGB',(1080,2750),'#ffcc33').save(self.evidence)
         self.changed(COVER)
         self.assertNotEqual(hashlib.sha256(before).digest(),hashlib.sha256(pg.read_bytes()).digest())
         pg.write_bytes(b'broken')
