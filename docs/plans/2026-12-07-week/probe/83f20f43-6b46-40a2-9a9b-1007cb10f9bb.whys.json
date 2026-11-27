@@ -1,0 +1,115 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why do Kuaishou's accounts book a yearly return on the money investors put into Kling?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why did Kling take money from outside investors?",
+      "answer": "Kuaishou says it raised its spending on AI this year, above all on Kling, while the group swung from an operating profit to an operating loss in the third quarter. Dr. Web reports Kling took 19.8 billion yuan from investors in October. Neither source says the spending is the reason for the raise.",
+      "evidence": [
+        {
+          "url": "https://www.prnewswire.com/apac/news-releases/kuaishou-technology-announces-third-quarter-2026-unaudited-financial-results-302945189.html",
+          "domain": "prnewswire.com",
+          "date": "2026-11-19",
+          "quote": "Dynamic consumer environment and intensifying external competition exerted short-term pressure on our business during the period. Despite increased investment in our AI strategy this year, particularly in"
+        },
+        {
+          "url": "https://www.prnewswire.com/apac/news-releases/kuaishou-technology-announces-third-quarter-2026-unaudited-financial-results-302945189.html",
+          "domain": "prnewswire.com",
+          "date": "2026-11-19",
+          "quote": "Operating\nloss\nwas RMB635 million, compared to operating profit of RMB5.3 billion for the same period of 2025."
+        },
+        {
+          "url": "https://www.drweb.de/?p=608232",
+          "domain": "drweb.de",
+          "date": "2026-11-19",
+          "quote": "Kling holte im Oktober 19,8 Mrd. Yuan von Investoren"
+        },
+        {
+          "url": "https://www.drweb.de/?p=608232",
+          "domain": "drweb.de",
+          "date": "2026-11-19",
+          "quote": "Kuaishou hat seine Investitionen in KI in diesem Jahr erhöht, besonders in Kling."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "Both sources say the group held RMB127.2 billion of total available funds at 30 September 2026 and kept buying back its own shares (HK$1.41 billion in the quarter), so the group was not shown to be short of cash. The 19.8 billion yuan figure appears only on Dr. Web; Kuaishou's release names a capital increase but gives no amount. Searched: both saved pages in full."
+      },
+      "mechanism_type": "money",
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why does that money carry a yearly return in Kuaishou's accounts?",
+      "answer": "Beijing Kling gave the investors in its capital increase redemption rights: a conditional obligation to buy their equity back. Kuaishou accrues a non-cash interest expense reflecting the annual return attached to that obligation, RMB48 million in the third quarter, and adds it back when it reports adjusted net profit.",
+      "evidence": [
+        {
+          "url": "https://www.prnewswire.com/apac/news-releases/kuaishou-technology-announces-third-quarter-2026-unaudited-financial-results-302945189.html",
+          "domain": "prnewswire.com",
+          "date": "2026-11-19",
+          "quote": "(2) Finance costs on redemption financial liabilities represent the non-cash interest expense accrued, reflecting the\nannual return attached to Beijing Kling's conditional obligation to repurchase equity interests under the\nredemption rights granted to its investors in connection with its capital increase."
+        },
+        {
+          "url": "https://www.prnewswire.com/apac/news-releases/kuaishou-technology-announces-third-quarter-2026-unaudited-financial-results-302945189.html",
+          "domain": "prnewswire.com",
+          "date": "2026-11-19",
+          "quote": "Finance costs on redemption\nfinancial liabilities\n(2)\n48\n-\n-\n48\n-"
+        },
+        {
+          "url": "https://www.prnewswire.com/apac/news-releases/kuaishou-technology-announces-third-quarter-2026-unaudited-financial-results-302945189.html",
+          "domain": "prnewswire.com",
+          "date": "2026-11-19",
+          "quote": "(1) We define \"adjusted net profit\" as (loss)/profit for the period adjusted by share-based compensation expenses, net fair value changes on investments and finance costs on redemption financial liabilities."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "Marked inferred, not documented, because only one site says it: Kuaishou's own release states it outright, and Dr. Web, writing from the same release, does not mention redemption rights or the finance cost at all. Searched: both saved pages in full."
+      },
+      "mechanism_type": "contract",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why does the raise sit in the accounts as a debt rather than as owners' equity?",
+      "answer": "Because Beijing Kling may have to pay the investors back, the release carries their money as redemption financial liabilities of RMB15,359 million among non-current liabilities at 30 September 2026, against nothing at the end of 2025, while non-controlling interests stand at RMB36 million. The release does not name the accounting rule behind this.",
+      "evidence": [
+        {
+          "url": "https://www.prnewswire.com/apac/news-releases/kuaishou-technology-announces-third-quarter-2026-unaudited-financial-results-302945189.html",
+          "domain": "prnewswire.com",
+          "date": "2026-11-19",
+          "quote": "Redemption financial liabilities\n15,359\n-"
+        },
+        {
+          "url": "https://www.prnewswire.com/apac/news-releases/kuaishou-technology-announces-third-quarter-2026-unaudited-financial-results-302945189.html",
+          "domain": "prnewswire.com",
+          "date": "2026-11-19",
+          "quote": "Non-controlling interests\n36\n26\nTotal equity\n80,905\n79,584"
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "The liability already stands on the 30 September 2026 balance sheet, while Dr. Web dates the raise to October, and RMB15,359 million is below the 19.8 billion yuan Dr. Web reports. Neither source reconciles the date or the gap. A Dr. Web headline on the same page also says a backer from Abu Dhabi dropped out (\"ein Geldgeber aus Abu Dhabi fällt aus\"); that article was not followed, as it is not a primary record. Searched: both saved pages in full."
+      },
+      "mechanism_type": "accounting rule",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why did the investors get a promise to be bought out, and what would set it off?",
+      "answer": "Nothing read answers this. The release calls the obligation conditional but gives no conditions, no rate, no term and no reason the investors asked for it. Dr. Web does not mention the promise.",
+      "evidence": [],
+      "strength": "open",
+      "counter": {
+        "text": "none found; searched both saved pages in full. Neither cites a filing or announcement with the terms of Beijing Kling's capital increase."
+      },
+      "mechanism_type": "contract",
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "Kling's capital increase came with a conditional promise from Beijing Kling to buy the investors' stakes back. Kuaishou carries that money as a RMB15.4 billion redemption liability, accrues an annual return on it (RMB48 million in the third quarter, the first such charge) and strips that charge out of adjusted profit. The conditions, the rate and the reason are not in what was read.",
+    "open_question": "What would have to happen for Beijing Kling to owe its investors their money back?"
+  }
+}

@@ -1,0 +1,246 @@
+iZotope's Nectar 5 introduces a clever new way to add effects to vocals, one word at a time | MusicRadar
+Skip to main content
+Become a MusicRadar VIP - it's free
+- Join our community
+JOIN NOW
+SampleRadar
+Access over 90,000 royalty-free samples
+The MusicRadar app
+Full access and custom feeds
+MusicRadar Newsletters
+The latest music and gear news inboxed
+Earn Member Badges
+Climb the MusicRadar charts
+Coming soon: VIP-only Giveaways
+Win pro-grade music gear and more
+Join the conversation
+Connect with other musicians and fans
+BECOME A MUSICRADAR VIP
+For the quickest way to join, enter your email below. We’ll send a confirmation email and sign you up to MusicRadar newsletters with the latest music news, gear reviews, tutorials and exclusive offers.
+Contact me with news and offers from
+musicradar
+and other Future brands.
+By submitting your information you agree to the
+Terms & Conditions
+and
+Privacy Policy
+and are aged 16 or over.
+FIND OUT ABOUT OUR MAGAZINE
+Want to subscribe to the magazine? Click the button below to
+find out more information.
+Find out more
+Get VIP Access Quick
+Become a MusicRadar VIP for quick access. Enter your email below and we'll send confirmation, and sign you up to our newsletter.
+Contact me with news and offers from
+musicradar
+and other Future brands.
+Sign Up
+By submitting your information you agree to the
+Terms & Conditions
+and
+Privacy Policy
+and are aged 16 or over.
+Welcome
+to
+Become a MusicRadar VIP
+!
+Hi
+,
+Your membership journey starts here.
+Keep exploring and earning more as a member.
+MY ACCOUNT
+Earn your first badge
+Start reading to unlock your first badge
+Keep earning badges
+Explore ways to get more involved as a member.
+Hot music news
+The latest news from the hottest artists.
+Explore
+Make better music
+Explore tutorials, tips and guides for creating music.
+Explore
+Your membership perks
+Start exploring exclusive deals, expert advice and more
+Explore now
+Get the MusicRadar Newsletter
+Get the latest music news, gear reviews, deals and tutorials delivered straight to your inbox.
+Sign up here
+Sign Out
+Main navigation menu
+Open menu
+Close main menu
+MusicRadar
+The No.1 website for musicians
+UK Edition
+UK
+US
+Australia
+Singapore
+Sign in
+View Profile
+Sign out
+Search
+Search MusicRadar
+Black Friday
+Artists
+Guitars
+Software & Apps
+Controllers
+Buying Guides
+Drums
+Guitar Amps
+Music Gear Reviews
+Synths
+Keyboards & Pianos
+More 
+Recording
+DJ Gear
+Acoustic Guitars
+Bass Guitars
+Tech
+Tutorials
+Reviews
+About us
+Want all the hottest music and gear news, reviews, deals, features and more, direct to your inbox? Sign up here. 
+Contact me with news and offers from other Future brands
+Receive email from us on behalf of our trusted partners or sponsors
+By submitting your information you agree to the Terms & Conditions and Privacy Policy and are aged 16 or over.
+Get the MusicRadar Newsletter
+Want all the hottest music and gear news, reviews, deals, features and more, direct to your inbox? Sign up here. 
+Become a Member in Seconds
+ Unlock instant access to exclusive member features.
+Contact me with news and offers from other Future brands
+Receive email from us on behalf of our trusted partners or sponsors
+By submitting your information you agree to the Terms & Conditions and Privacy Policy and are aged 16 or over.
+You are now subscribed
+Your newsletter sign-up was successful
+Join the club
+Get full access to premium articles, exclusive features and a growing list of member rewards.
+Explore
+ An account already exists for this email address, please log in.
+More
+Black Friday plugin deals LIVE
+Music news
+Vibe modding
+95k+ free music samples
+Tech
+iZotope's Nectar 5 introduces a clever new way to add effects to vocals, one word at a time
+News
+By
+Matt Mullen 
+Published
+24 November 2026
+Moments is an "industry-first" lyrics-transcribing plugin that lets you apply creative vocal effects via a text editor, with no automation needed
+When you purchase through links on our site, we may earn an affiliate commission. Here’s how it works.
+ (Image credit: iZotope)
+Copy link
+Facebook
+X
+Whatsapp
+Pinterest
+Flipboard
+Email
+Instagram
+Share this article
+ 0
+Join the conversation
+Follow us
+Add us as a preferred source on Google
+Newsletter
+Subscribe to our newsletter
+Fresh from the release of Photon earlier this month, iZotope has announced the launch of Nectar 5, the next generation of its flagship suite of intelligent vocal plugins. 
+Promising to “transform raw takes into stunning performances”, Nectar 5 brings two fresh modules, an enhanced Vocal Assistant, and a new AI-powered lyric-transcribing ARA plugin to the company’s all-in-one vocal toolbox.
+Nectar brings together an assortment of vocal processing tools together in a single host plugin, though each module can be used as a standalone plugin as well. The latest version is equipped with 14 modules, two of which are brand new: Vocal Stabilizer and Serial Compressor. The Dimension, Delay and Reverb modules have all received an update , and there’s now a new Overview page that gives you a top-down look at every module with all the key controls in one place.
+Latest Videos FromMusicRadar
+Watch full video here: 
+Vocal Stabilizer is an adaptive EQ inherited from Ozone, iZotope’s mastering suite, that intelligently shapes a vocal’s EQ settings. There’s a choice of two modes – Shape applies both boosts and cuts to the EQ, while Cut does what you’d expect, taming problematic resonances and harshness à la Soothe – and multiband processing is on offer with adjustable crossovers and per-band stabilization.
+Nectar 5's Serial Compressor (Image credit: iZotope)
+The second new module is Serial Compressor, a dynamics tool designed to produce vocals that are up-front and in-your-face without becoming overly squashed or lifeless. Serial Compressor allows you to chain up to three compressors together from a selection of four models plus a clipper and a limiter, adjusting thresholds directly on the waveform to visualise the gain reduction.
+ You may like
+ "Choose your model and let the magic happen": iZotope launches Photon, the company's first plugin developed with new owner Boris FX
+ "Ever wanted to play a piano that’s 14 feet tall? Now you can": 5 new plugins you need to know about
+ “If you buy one piece of music software this month, make it this one”: 5 plugins you need to know about
+READ MORE
+(Image credit: Future)
+New to the mixing process? Start here
+The headline addition in Nectar’s latest update is Moments, a creative vocal multi-effects plugin that lets you apply targeted processing to specific lyrics in a vocal phrase – it’s a fast and intuitive way to spice up a vocal with effects without getting into the weeds with automation across multiple plugins. (Moments is an ARA plugin, meaning that it can edit audio on the timeline directly, rather than working on a stream of real-time audio that’s coming in through the DAW’s playback.)
+Open up Moments on a vocal recording and the plugin will transcribe the lyrics automatically in the edit window. Here you can select a word or a phrase before adding up to seven effects to the selection: you’ve got a choice of delay, reverb, distortion, and double-tracking, along with pitch- and formant-shifting, harmony generation and Preverb, a neat reverse-reverb effect that swells into the word before it sounds.
+Get the MusicRadar Newsletter
+Want all the hottest music and gear news, reviews, deals, features and more, direct to your inbox? Sign up here. 
+Contact me with news and offers from other Future brands
+Receive email from us on behalf of our trusted partners or sponsors
+By submitting your information you agree to the Terms & Conditions and Privacy Policy and are aged 16 or over.
+Nectar 5's Vocal Assistant (Image credit: iZotope)
+Finally, Nectar 5 updates one of the plugin’s standout features, the Vocal Assistant. This AI-powered mixing tool listens to a portion of your vocal and designs a customized processing chain to match it.
+Not only has Nectar 5’s Vocal Assistant been calibrated to deliver superior results, but it’s also been outfitted with a new Custom mode that can be used to fine-tune its processing. Here you can choose to disable certain modules, upload an a capella reference recording and adjust two macro controls that tweak the overall intensity and spaciousness of the results.
+iZotope Nectar 5 is available now at an introductory price of $179 as part of its Cyber Season sale through December 7, after which it’ll cost $249. Upgrade and crossgrade pricing is available.
+Find out more on iZotope’s website.
+CATEGORIES
+Plugins
+Software & Apps
+Matt Mullen
+Social Links Navigation
+Tech Editor
+I'm MusicRadar's Tech Editor, working across everything from product news and gear-focused features to artist interviews and tech tutorials. I love electronic music, and I love writing about the tools and techniques we use to make it. 
+View More
+You must confirm your public display name before commenting
+Please logout and then login again, you will then be prompted to enter your display name.
+Logout
+Read more
+ Tech
+ "Ever wanted to play a piano that’s 14 feet tall? Now you can": 5 new plugins you need to know about
+ Tech
+ "Since 1997, the complaint about pitch correction has been the same: it takes the singer out of the singing. That's the problem DVA was built to solve": Antares launches AutoTune Advanced with new DVA vibrato engine
+ Tech
+ “If you buy one piece of music software this month, make it this one”: 5 plugins you need to know about
+ Software & Apps
+ Acon Digital’s Acoustica 8 audio editor is the company’s “most ambitious release to date”
+ Tech
+ Zplane's Timbre is a formant-shifting plugin with a few tricks up its sleeve
+ Tech
+ Universal Audio's Topline Vocal Tune is now available for Apollo and UAD hardware
+Latest in Tech
+ Keyboards & Pianos
+ I’m calling it, $1,400 off Kawai, and over $1,100 off Casio, makes this Black Friday easily the best I’ve seen for piano players
+ Plugins
+ 1 Universal Audio plugin for just $1? This is the Black Friday deal every producer has been waiting for
+ Synths
+ Sound designer Eric Persing didn’t know he’d created a classic '90s rave synth preset until he was asked to make it again
+ Samples
+ Revisit the glory days of '90s rave with this free euphoric trance sample pack
+ Guitars
+ Got GAS? The 7 key stages of Gear Acquisition Syndrome
+ Tech
+ The AI revolution is coming for your electronic instruments
+Latest in News
+ Bands
+ Mick Jagger just reminded everyone that he came up with one of the Rolling Stones’ most famous guitar riffs
+ Gigs & Festivals
+ U2 honour Dolly Parton with the first performance of Torn at the NFL’s Thanksgiving Eve game’s halftime show
+ Keyboards & Pianos
+ I’m calling it, $1,400 off Kawai, and over $1,100 off Casio, makes this Black Friday easily the best I’ve seen for piano players
+ Plugins
+ 1 Universal Audio plugin for just $1? This is the Black Friday deal every producer has been waiting for
+ Guitarists
+ "His playing drove the songs that took us around the world”: Duran Duran guitarist Andy Taylor has died, aged 65
+ Artists
+ “I can go, ‘Make it sound more Metallica’”: Pearl Jam’s Mike McCready on his switch to Fractal
+MusicRadar is part of Future plc, an international media group and leading digital publisher. Visit our corporate site.
+Add as a preferred source on Google
+About Us
+Contact Future's experts
+Terms and conditions
+Privacy policy
+Cookies policy
+Advertise with us
+Accessibility Statement
+Careers
+©
+Future Publishing Limited Quay House, The Ambury,
+Bath
+BA1 1UA. All rights reserved. England and Wales company registration number 2008885. 
+Close
+Please login or signup to comment
+Please wait...
+Login
+Sign Up

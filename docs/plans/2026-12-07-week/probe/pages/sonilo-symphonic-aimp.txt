@@ -1,0 +1,293 @@
+Sonilo and Symphonic Sign Opt-In AI Training Deal
+ Skip to content 
+
+ New: Read this week's AI Music Briefing → 20k+ readers trust this site monthly 
+
+AI Music News
+ AI Tools 
+
+Directory 
+Browse All Tools
+AI Music Generators
+AI Mixing
+AI Mastering
+AI Music Video Generators
+AI Stem Splitters
+AI Voice Cloning
+AI VST Plugins 
+
+Editorial 
+All Articles
+Roundups
+Tutorials
+Comparisons
+Explainers
+News & Updates AI Music Industry 
+
+Editorial 
+All Articles
+The AI Music Briefing 
+
+Resources 
+Artist Index
+Music Conferences 
+AI Music Promotion
+ Knowledge Base 
+
+Knowledge Base 
+Knowledge Base Home
+AI Music Lawsuits
+FAQ
+Glossary About 
+
+About 
+About Me
+Work With Me 
+ Newsletter 
+
+AI Music News
+
+AI Tools
+
+Directory 
+Browse All Tools
+AI Music Generators
+AI Mixing
+AI Mastering
+AI Music Video Generators
+AI Stem Splitters
+AI Voice Cloning
+AI VST Plugins 
+Editorial 
+All Articles
+Roundups
+Tutorials
+Comparisons
+Explainers
+News & Updates 
+AI Music Industry
+
+Editorial 
+All Articles
+The AI Music Briefing 
+Resources 
+Artist Index
+Music Conferences 
+AI Music Promotion
+
+Knowledge Base
+
+Knowledge Base Home
+AI Music Lawsuits
+FAQ
+Glossary 
+About
+
+About Me
+Work With Me 
+
+ Home / 
+ AI Tools News 
+Published November 19, 2026 
+
+Sonilo signs Symphonic to train its video-to-music AI on indie songs, but only from artists who opt in 
+
+By Christopher Wieduwilt Black Friday deal · ends Nov 30 My #1 AI music video tool is up to 50% off until Nov 30 See which one and lock in your deal before it’s gone → 
+
+Music videos made with Neural Frames 
+ Neural Frames syncs the visuals to your song's stems, shows you the
+ full storyboard before you spend credits, and can put you in your own video.
+
+ 50% off when you go yearly 
+ 25% off monthly plans and credit top-ups 
+No code needed. The deal is waiting for you on Neural Frames. 
+Make your AI music video →
+
+Back to full price after Nov 30. Affiliate link: I earn a commission at no cost to you.
+ Logos: Sonilo and Symphonic 
+
+Key highlights 
+ • Sonilo and Symphonic announced a licensing deal on November 18, 2026 that lets Sonilo train its video-to-music AI on recordings Symphonic distributes. 
+ • Only songs whose artists or labels opt in go into training, through Symphonic's optional AI Dataset Licensing program. 
+ • Sonilo says it will give rights holders attribution reporting, licensing fees and a share of revenue. 
+ • Neither company disclosed the fee, the revenue split or how many Symphonic artists and labels have opted in. 
+
+Sonilo, the AI startup that writes soundtracks to match your video, can now train its model on music from Symphonic’s independent artists and labels. There’s one condition: a song only goes in if its owner opts in.
+
+The two companies announced the licensing deal on November 18, 2026, Music Business Worldwide reported. Neither side shared the fee, the revenue split or how many Symphonic artists have opted in so far.
+
+Former TikTok staff founded Sonilo, and it raised $11 million in October in a round led by B Capital. Symphonic is the Tampa distributor Jorge Brea started in 2006, and it’s one of the picks in my AI music distribution roundup.
+
+So what does opting in actually mean for a song you release through Symphonic?
+
+How Symphonic’s opt-in AI training works in the Sonilo deal
+
+Training is how an AI music model learns. It listens to a lot of recordings and picks up how music behaves, so it can write something new later. Opt-in means Sonilo only gets your recording for that if you said yes first, so nobody’s catalogue goes in by default.
+
+On Symphonic’s side, that yes runs through its optional AI Dataset Licensing program, where Symphonic says enrollment is “entirely opt-in.”
+
+Sonilo says it will send back “attribution reporting to support transparency and compensation for the rights holders behind the music.” That’s a usage report: which licensed songs shaped the music Sonilo generated. Sonilo signed Musical AI in October to measure exactly that on its soundtracks.
+ Design: The AI Musicpreneur, from Music Business Worldwide's November 18, 2026 report and Symphonic's AI page 
+
+Sonilo also says rights holders receive licensing fees and a share of revenue. That’s the payment step, and it’s the one step with no numbers attached yet.
+
+ “ AI is only a real opportunity for artists when it's built on consent, transparency and fair payment. 
+— Jorge Brea, CEO of Symphonic, November 18, 2026 
+
+What Sonilo’s video-to-music AI makes with the songs it trains on
+
+Sonilo’s models write music and sound effects from video footage, a text prompt, or both. You hand it a clip, and it scores the clip.
+
+Sonilo pitches it at short-form and short-drama creators, developer platforms and production teams, and developers can already reach it through fal, TapNow and ComfyUI. Its consumer app is due in the fourth quarter of 2026.
+
+So an opted-in Symphonic song becomes training material: music Sonilo learns from before it scores somebody else’s clip.
+
+Keli Li, Sonilo’s co-founder and COO, said licensing “isn’t a feature we’re adding later. It’s how we built Sonilo.” Its first named licensing partner was Shutterstock, whose music catalog trained Sonilo v1.0 in May 2026.
+
+I track AI music tools & industry shifts so you don't have to.
+
+2x FREE newsletters a week for those who can't afford to miss what's coming. Read by 2,000+ music pros.
+
+Trusted by industry leaders 
+
+What the Sonilo and Symphonic deal leaves out
+
+3 things a Symphonic artist would want to know before opting in aren’t public yet:
+
+How much Sonilo pays, per recording or per catalogue.
+
+How the revenue share splits between Sonilo, Symphonic and the artist.
+
+How many Symphonic artists and labels have opted in.
+
+There’s also an open promise. When Sonilo announced its funding, it said master recording and publishing deals with “major rights organizations” would close “in the coming weeks.” It repeated that in October, and no such deal has been announced as of November 19. So far, the named music sources are Shutterstock and now Symphonic’s opted-in roster.
+
+For Symphonic, Sonilo joins a list of opt-in AI partners: Musical AI in August 2024, SourceAudio in February 2026 and Warner-owned Sureel AI in July. Brea has also argued that AI’s bigger risk sits with distributors that launch without fraud controls.
+
+Symphonic has the opposite option too. Its MusicShield tool alters your audio so AI models learn less from it.
+
+So a Symphonic artist can now license a song for AI training or shield it from training. Until Sonilo or Symphonic publishes a rate, the first option comes without a price tag. 
+Frequently asked questions 
+
+Which AI training partners did Symphonic sign before Sonilo? 
+Musical AI in August 2024, SourceAudio in February 2026 and Sureel AI in July 2026. All 3 are opt-in, so a Symphonic artist's music is only licensed for AI training if they enroll. The Sonilo deal from November 18, 2026 joins them. 
+
+Who announced the Sonilo and Symphonic licensing deal? 
+Keli Li, Sonilo's co-founder and COO, and Jorge Brea, who founded Symphonic in 2006 and runs it as CEO. Both gave statements when the deal was announced on November 18, 2026. 
+
+Does the Sonilo and Symphonic deal include major-label music? 
+No. It covers recordings from Symphonic's independent artists and labels who opt in. Sonilo has said since October 2026 that it is finalizing deals with major rights organizations, but none had been announced as of November 19, 2026. 
+
+I track AI music tools & industry shifts so you don't have to.
+
+2x FREE newsletters a week for those who can't afford to miss what's coming. Read by 2,000+ music pros.
+
+Trusted by industry leaders 
+About the author 
+
+ Christopher Wieduwilt 
+AI Music Educator & Journalist 
+Covering AI music tools, industry shifts, and news for music creators and professionals. Twice-weekly newsletter at aimusicpreneur.com. 
+ Linkedin 
+ Tiktok 
+ Instagram 
+ Youtube 
+Share this article 
+ X 
+ LinkedIn 
+ Facebook 
+ Email 
+Keep reading
+AI Tools News
+Sonilo partners with Musical AI to measure which licensed songs shape its AI music
+Oct 30, 2026
+AI Tools News
+Beatoven.ai has discontinued its B2C service after 6 years, with the core team moving to Rusk Media
+Sep 15, 2026 
+
+Latest video
+AI Music News: Suno FINALLY Did It & Suno Scandal in a GTA6 Mode
+Watch now
+
+Freshly Updated in Nov. 2026
+Best AI music video generator in 2026: I ranked 8 tools for musicians (free and paid)
+Read now
+ Newsletter
+
+I track AI music tools & industry shifts so you don't have to.
+
+2x FREE newsletters a week for those who can't afford to miss what's coming. Read by 2,000+ music pros.
+
+Trusted by industry leaders 
+Work with me
+
+Put your AI music tool in front of 50,000+ music creators
+
+I've helped some of the biggest names in music tech roll out their tools, including:
+
+ElevenLabs
+Google
+LANDR
++ more
+See offers and prices
+
+ Follow 
+
+Follow along
+
+ Linkedin 
+ Tiktok 
+ Instagram 
+ Youtube 
+ FREE AI music newsletter 
+
+The AI music tools & news worth your time —
+2× a week, read by 2,000+ pros. 
+
+Trusted by industry leaders FREE AI music newsletter 
+
+ AI music news, tools, reviews and tutorials for music creators and professionals. 
+
+Content 
+AI Music News
+AI Music Promotion
+The AI Music Briefing 
+
+Tools 
+All AI Tools
+Tool Reviews
+Tutorials
+Explainers
+Comparisons
+Knowledge Base 
+
+Connect 
+About Christopher
+Newsletter
+Work With Me
+Book as Speaker
+Contact 
+
+© 2026 The AI Musicpreneur · Christopher Wieduwilt · Made with care in the EU
+
+ Impressum · Privacy Policy · Cookie Policy · Cookie Settings 
+
+Browse 
+AI Music News
+AI Tools directory
+Tutorials
+Knowledge Base 
+Latest articles 
+Ja Rule says an AI app turned one of his tracks into a '70s record, and he's considering doing it to a whole album
+Recorded Music NZ says Australia's AI training proposal would put New Zealand songs at risk too
+Suno's first attempt to get Jason Isbell's identity lawsuit thrown out has been denied
+Musixmatch will let artists choose to license their lyrics to AI platforms, through a new Pro for Artists Wallet
+The Chicks and the estates of Willie Colón and Sam Moore join Jason Isbell's identity lawsuit against Suno
+Australia's AI committee backs copyright 'certainty' for AI training, and ARIA calls it a concession to foreign AI companies 
+ ↑↓ navigate ↵ open esc close 
+
+We use analytics cookies to see how visitors use the site and improve our
+ content. They run only if you accept — the site works fully either way.
+ See our Privacy Policy.
+
+ Decline Accept
