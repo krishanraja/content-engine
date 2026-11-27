@@ -36,6 +36,7 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 
 <!-- north-star-state {"week_of":"2026-11-23","week_target":20,"current":0,"current_as_of":"2026-11-27","current_source":"Control Center content_ideas in the publication's series and content-engine's asset_judgements (0 published, and 0 derived carousels and Shorts content-engine made and Growth posted that passed the 10/10 judges and went live, in the last 7 days)","urgency":5,"urgency_reason":"under 40% of the week's target two weeks running (0% now)"} --> **North Star number: U5, stalled.** Finished assets published through the engine per week (essays, Shorts, carousels), each passing the 10/10 judges: 0, against 20 this week, on the way to 30 by 30 November 2026. Everything else pauses unless it moves the number.
 
+- The standards check-in of 2026-11-27 grouped the new floor standards; config/floor-groups.json holds 96 groups, each new one seeded as a proposal for Krish on the pinned check-in page. (2026-11-27)
 - The Sunday ideas run now treats step 6d (judges, score, order, stage 2 touches) as part of the run, and its log names how the Claude step ended and which commands it was refused. (2026-11-26)
 - The story engine v5 is on main (pull request #1005, merged 26 Nov): the reader Krish approved on 26 Nov, sports on the beat (config/beat.json, Ruling, Krish, 2026-11-25; pull request #997, merged), the story floor, the blind story score with the pre-pick whys probe, close calls and a checked wildcard every Monday, Wednesday and Friday, gated from the 30 Nov board: the Sunday 29 Nov run is the first gated, with every hard floor citing his ruling or a recorded failure and the buyer judge kept as the paying-reader judge. With it came the production cycle's one registry (config/cycle.json, touch.py), impact zoom (config/ve/impact-zoom.json, in ve and quick-edit, each with its camera.impact check) and the 26 Nov split. (2026-11-26)
 - Every whole cut dated from 26 Nov now ends on the Library's outro (video-wide-outro, video-vertical-outro, approved in docs/ve/cards/library/lock.json on Krish's delegation and his "1 agreed"), drawn by ve's V5Outro.tsx: S3h, "Follow for more", makeyourmindup.ai and the climb bars, with no tagline, no V10 mark, no days row and no series name; cuts dated before 26 Nov render as they were. No intro sting clip goes anywhere in such a cut (`ve lint` and `ve render` refuse one); series cuts dated 23 to 25 Nov keep the sting close they were signed with (`docs/production/BRAND_PALETTE.md`). This replaces the v5 statement card of pull request #1001, which still drew the V10 mark and the tagline. The learning house-robot-or-no-robot now states the v5 no-robot rule and points at its line in docs/CAROUSEL-STANDARD.md, so the failure register guard is green again. (2026-11-26)
@@ -51,10 +52,10 @@ Older lines: `docs/history/2026-11-26-NOW-moved-9.md` (it names every earlier mo
 
 ## What is next and what is waiting on Krish
 
-- Next (2026-11-26): Read the 28 Nov 12:17 UTC run's "How the Claude step ended" lines and its gate for the week of 7 Dec.
+- Next (2026-11-27): Krish answers the new items on the standards check-in page.
 - House close (2026-11-26): every whole cut dated from 26 Nov closes on the Library's outro (`docs/production/BRAND_PALETTE.md`, "The series close"); `docs/production/CLOSING.md` describes the 10 Nov statement card that cuts dated before 26 Nov keep. He hears the first cut with the outro at full size.
 - Krish declined required status checks on `main` (2026-10-25: "No merge checks."): `auto-merge.yml` merges every PR on green CI; no hand merges (2026-11-03).
-- North Star check (2026-11-26): holds.
+- North Star check (2026-11-27): holds.
 
 ## Read next
 
