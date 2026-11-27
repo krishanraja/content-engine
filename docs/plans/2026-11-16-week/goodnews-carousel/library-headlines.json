@@ -1,0 +1,17 @@
+{
+  "schema": "carousel-headlines/1",
+  "deck": "docs/plans/2026-11-16-week/goodnews-carousel/deck.json",
+  "approved": "Krish approved these ten short headlines for the Library's good-news sample cards on 27 Nov 2026: \"yes approved\". They map by card order to the deck's ten cards and replace the deck's headlines on the Library samples only. The deck stays as the historical approved 21 Nov deck. Sub-lines and sources stay as the deck has them. mint is the phrase set in mint; null means no mint.",
+  "cards": [
+    {"headline": "AI helped people speak, sign, get around.", "mint": null},
+    {"headline": "AI gave her own voice back.", "mint": "her own voice back"},
+    {"headline": "Hearing parents and deaf children can talk.", "mint": "talk"},
+    {"headline": "Blind people's AI guide reaches first customers.", "mint": "first customers"},
+    {"headline": "Google's AI glasses read small print aloud.", "mint": "read small print aloud"},
+    {"headline": "A 17-year-old's AI reads bank statements aloud.", "mint": "17-year-old's"},
+    {"headline": "Small teams can buy AI that sees.", "mint": "buy AI"},
+    {"headline": "WHO: 2.5 billion people need this help.", "mint": "2.5 billion people"},
+    {"headline": "Your phone plays what blind customers hear.", "mint": "what blind customers hear"},
+    {"headline": "Inspired? Follow for more of this.", "mint": null}
+  ]
+}

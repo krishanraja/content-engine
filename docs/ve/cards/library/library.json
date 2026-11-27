@@ -11732,7 +11732,7 @@
         },
         "headline_1": {
           "role": "headline",
-          "max_chars": 44,
+          "max_chars": 48,
           "max_lines": 3,
           "max_size_px": 367.353,
           "min_size_px": 96,
@@ -11742,8 +11742,8 @@
         },
         "body_1": {
           "role": "body",
-          "max_chars": 72,
-          "max_lines": 2,
+          "max_chars": 100,
+          "max_lines": 3,
           "max_size_px": 44.0,
           "min_size_px": 36.0,
           "step_px": 1,
@@ -11793,14 +11793,15 @@
             950,
             349.86
           ],
-          "value": "AI gave a woman with ALS her voice back.",
+          "value": "AI gave her own voice back.",
           "slot": "headline_1",
           "face": "Anton",
           "color": "#0C1512",
           "element": "type",
           "italic": false,
           "stack": true,
-          "stack_order": 0
+          "stack_order": 0,
+          "mint": "her own voice back"
         },
         {
           "kind": "text",
@@ -11810,7 +11811,7 @@
             950,
             238.14
           ],
-          "value": "Vocality rebuilt it from old recordings of her talking.",
+          "value": "ALS is a disease that takes away speech; Vocality built her voice from recordings of her talking.",
           "slot": "body_1",
           "face": "Fraunces",
           "color": "#0C1512",
@@ -36883,7 +36884,7 @@
         },
         "headline_1": {
           "role": "headline",
-          "max_chars": 44,
+          "max_chars": 48,
           "max_lines": 3,
           "max_size_px": 367.353,
           "min_size_px": 96,
@@ -36893,8 +36894,8 @@
         },
         "body_1": {
           "role": "body",
-          "max_chars": 72,
-          "max_lines": 2,
+          "max_chars": 100,
+          "max_lines": 3,
           "max_size_px": 44.0,
           "min_size_px": 36.0,
           "step_px": 1,
@@ -36944,14 +36945,15 @@
             950,
             349.86
           ],
-          "value": "An app turns speech into sign language.",
+          "value": "Hearing parents and deaf children can talk.",
           "slot": "headline_1",
           "face": "Anton",
           "color": "#0C1512",
           "element": "type",
           "italic": false,
           "stack": true,
-          "stack_order": 0
+          "stack_order": 0,
+          "mint": "talk"
         },
         {
           "kind": "text",
@@ -36961,7 +36963,7 @@
             950,
             238.14
           ],
-          "value": "Thatsign, still in testing, is for hearing parents of deaf children.",
+          "value": "Thatsign, still in testing, is for the hearing parents of more than 9 in 10 deaf children.",
           "slot": "body_1",
           "face": "Fraunces",
           "color": "#0C1512",
@@ -37079,7 +37081,7 @@
         },
         "headline_1": {
           "role": "headline",
-          "max_chars": 44,
+          "max_chars": 48,
           "max_lines": 3,
           "max_size_px": 367.353,
           "min_size_px": 96,
@@ -37089,8 +37091,8 @@
         },
         "body_1": {
           "role": "body",
-          "max_chars": 72,
-          "max_lines": 2,
+          "max_chars": 100,
+          "max_lines": 3,
           "max_size_px": 44.0,
           "min_size_px": 36.0,
           "step_px": 1,
@@ -37140,14 +37142,15 @@
             950,
             349.86
           ],
-          "value": "An AI guide that steers blind people.",
+          "value": "Blind people's AI guide reaches first customers.",
           "slot": "headline_1",
           "face": "Anton",
           "color": "#0C1512",
           "element": "type",
           "italic": false,
           "stack": true,
-          "stack_order": 0
+          "stack_order": 0,
+          "mint": "first customers"
         },
         {
           "kind": "text",
@@ -37275,7 +37278,7 @@
         },
         "headline_1": {
           "role": "headline",
-          "max_chars": 44,
+          "max_chars": 48,
           "max_lines": 3,
           "max_size_px": 367.353,
           "min_size_px": 96,
@@ -37285,8 +37288,8 @@
         },
         "body_1": {
           "role": "body",
-          "max_chars": 72,
-          "max_lines": 2,
+          "max_chars": 100,
+          "max_lines": 3,
           "max_size_px": 44.0,
           "min_size_px": 36.0,
           "step_px": 1,
@@ -37343,7 +37346,8 @@
           "element": "type",
           "italic": false,
           "stack": true,
-          "stack_order": 0
+          "stack_order": 0,
+          "mint": "read small print aloud"
         },
         {
           "kind": "text",
@@ -37353,7 +37357,7 @@
             950,
             238.14
           ],
-          "value": "The feature is called Guided Vision. The glasses go on sale 10 December.",
+          "value": "The feature is called Guided Vision, and the glasses go on sale on 10 December.",
           "slot": "body_1",
           "face": "Fraunces",
           "color": "#0C1512",
@@ -37471,7 +37475,7 @@
         },
         "headline_1": {
           "role": "headline",
-          "max_chars": 44,
+          "max_chars": 48,
           "max_lines": 3,
           "max_size_px": 367.353,
           "min_size_px": 96,
@@ -37481,8 +37485,8 @@
         },
         "body_1": {
           "role": "body",
-          "max_chars": 72,
-          "max_lines": 2,
+          "max_chars": 100,
+          "max_lines": 3,
           "max_size_px": 44.0,
           "min_size_px": 36.0,
           "step_px": 1,
@@ -37532,14 +37536,15 @@
             950,
             349.86
           ],
-          "value": "A 17-year-old built a bank PDF reader.",
+          "value": "A 17-year-old's AI reads bank statements aloud.",
           "slot": "headline_1",
           "face": "Anton",
           "color": "#0C1512",
           "element": "type",
           "italic": false,
           "stack": true,
-          "stack_order": 0
+          "stack_order": 0,
+          "mint": "17-year-old's"
         },
         {
           "kind": "text",
@@ -37549,7 +37554,7 @@
             950,
             238.14
           ],
-          "value": "Visionably reads bank statements aloud for blind people.",
+          "value": "Yash Bhatnagar's Visionably, built in India, works on about 95% of the PDFs it is tested on.",
           "slot": "body_1",
           "face": "Fraunces",
           "color": "#0C1512",
