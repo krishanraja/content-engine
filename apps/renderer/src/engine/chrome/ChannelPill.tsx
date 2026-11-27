@@ -9,6 +9,9 @@ import { houseTokens } from './tokens'
 
 export function ChannelPill({ props, beat }: { props: EngineRenderProps; beat: EngineBeat }) {
   if (!beat.sectionBeat) return null
+  // From 27 Nov no beat carries the series name: S3h on the outro is the one wordmark (Ruling, Krish, 2026-11-27:
+  // "agree"; props.seriesPill false; config/brand-palette.json marks_rule).
+  if (props.seriesPill === false) return null
   // An off day wears no tag at all (Ruling, Krish, 2026-11-18: "off.day is NEVER to be used ever as a tag").
   if (isOffDayLabel(props.series.label)) return null
   const box = boxFor('pill', props.aspect)

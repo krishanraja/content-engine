@@ -408,8 +408,11 @@ def palette_lints(spec: dict) -> list[str]:
         closes_on_sting = kind == 'series' and ve_compile._intro().close_wanted(shape, series, when)
         days_row = kind == 'series' and str(when)[:10] < ve_compile.V5_CLOSE['from'] and not (closes_on_sting and shape == '9x16')
         ids = ('sting_card', 'sting_beat') if closes_on_sting else ('statement_card', 'statement_beat')
+        # The body compile will draw: the series pill on a wide series cut's section beats only for a cut dated before 27
+        # Nov, never from it (Ruling, Krish, 2026-11-27: "agree"; marks_rule, ve compile bare_body).
+        pill = 'section_beats' if kind == 'series' and shape == '16x9' and not ve_compile.bare_body(spec) else False
         record = {'date': when, 'format': 'long_cut' if shape == '16x9' else 'short_cut', 'shape': shape, 'kind': kind,
-                  'opening': 'hook', 'sting': sting,
+                  'opening': 'hook', 'sting': sting, 'body': {'series_pill': pill},
                   'close': {'id': ids[0] if shape == '16x9' else ids[1], 'sting': bool(closes_on_sting),
                             'seconds': getattr(ve_compile, 'ENDING_FRAMES_BY_ASPECT', {}).get(cut.get('aspect'), ve_compile.ENDING_FRAMES)
                             / ve_compile.FPS, 'days_row': days_row}}

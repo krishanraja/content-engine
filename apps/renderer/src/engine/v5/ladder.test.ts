@@ -97,6 +97,19 @@ describe('Why ladder v5', () => {
       for (const text of ['Mondays', 'Wednesdays', 'Fridays', 'follow.the.money', 'under.the.hood', 'mind.the.gap']) expect(html).not.toContain(text)
     }
   })
+  it('draws no V4 on the title card of a cut dated from 27 Nov, and keeps it for one dated before (Ruling, Krish, 2026-11-27: "agree")', () => {
+    const params = fixture.objects.find((o) => o.device === 'v5_title')!.params
+    for (const format of ['9:16', '16:9'] as const) {
+      const card = (titleMark?: boolean) =>
+        renderToStaticMarkup(React.createElement(Card, { id: 'v5_title', params, frame: 40, format, ...(titleMark === undefined ? {} : { titleMark }) }))
+      // S3h on the v5 outro is the cut's one wordmark: the title card carries no wordmark at all.
+      expect(card(false)).not.toContain('v4.svg')
+      for (const mark of ['v10.svg', 'v6.svg', 'v9.svg', 's3h.svg']) expect(card(false)).not.toContain(mark)
+      // A cut dated before 27 Nov renders exactly as it was signed (F33): its title card keeps V4.
+      expect(card()).toContain('v4.svg')
+      expect(card(true)).toBe(card())
+    }
+  })
   it('keeps each phrase between two and five words', () => {
     for (let n = 2; n < 25; n++) {
       const words = Array.from({ length: n }, (_, i) => ({ text: 'word', atFrame: i * 3 }))

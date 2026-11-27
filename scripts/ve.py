@@ -2032,6 +2032,14 @@ def cmd_render(args) -> int:
         print('ve render: refused, the cut must close on its palette close:')
         print('\n'.join(f'  - {reason}' for reason in closing))
         return 1
+    from velib.compile import marks_problems
+    marked = marks_problems(props, spec)
+    if marked:
+        # One wordmark per video, S3h on its v5 outro: from 27 Nov no V4 in the body or on the title card, no series pill
+        # and no wordmark on the title (Ruling, Krish, 2026-11-27: "agree"; config/brand-palette.json marks_rule).
+        print('ve render: refused, the cut carries a wordmark or a series name its palette does not:')
+        print('\n'.join(f'  - {reason}' for reason in marked))
+        return 1
     render(args.props, args.out, args.scale)
     from velib import guards, plainframes
     from velib.common import sha256_file

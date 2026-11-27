@@ -3172,6 +3172,62 @@
           "how": "a sector word appended after the fact never lifts fit to a hero's floor"
         }
       ]
+    },
+    {
+      "id": "one-wordmark-per-video",
+      "on": "2026-11-27",
+      "krish": "agree",
+      "asked": [
+        "1. The opening title of a video carries no wordmark. S3h on the v5 outro is the only wordmark per video.",
+        "2. Remove the V4 wordmark from the wide quick-edit frame (it shows V4 behind the speaker for the whole wide cut) and from the why-ladder title card. The outro carries the brand.",
+        "3. Remove the series-name pills (\"follow.the.money\" and the like) from the body sections of wide videos: ve's ChannelPill and the quick-edit wide panel pill.",
+        "4. The 9:16 outro stays at 2 s, settled by 1.33 s. Do not lengthen it to the template's 3.6 s."
+      ],
+      "why": "After PR #1013 (26 Nov) a cut showed S3h on its outro, but the wide quick-edit frame still drew V4 behind the speaker for the whole wide cut, the why-ladder title card drew V4 under the title, and ve's ChannelPill, StageHeader and the quick-edit wide panel still carried the series name on body beats, so one video showed two wordmarks and a sub brand. His earlier words: \"the sub brands do not need to feature\" (2026-11-26).",
+      "means": "Ruling (Krish, 2026-11-27): \"agree\" to each of the four. S3h on the v5 outro is the one wordmark per video. From 27 Nov the title lockup carries no wordmark (from 26 Nov, PR #1013), the wide quick-edit frame carries no V4, the why-ladder title card carries no V4, and no beat carries a series-name pill (ve ChannelPill and StageHeader, the quick-edit wide panel). The 9:16 outro stays a 2 s beat, settled by 1.33 s. A cut dated before 27 Nov renders exactly as it was signed (F33). ve lint refuses a spec from 27 Nov naming V4 or asking for a body logo, a series pill or a title wordmark; ve render refuses props from 27 Nov that would draw one.",
+      "status": "encoded",
+      "encoded": [
+        {
+          "file": "config/brand-palette.json",
+          "contains": "\"marks_rule\": {",
+          "how": "the four rulings in his words, the date, and the series pill kept only for series long cuts dated before (before)"
+        },
+        {
+          "file": "scripts/brand_palette.py",
+          "contains": "marks['before'][fmt]",
+          "how": "the palette asks for no series pill on any beat from 27 Nov"
+        },
+        {
+          "file": "scripts/velib/compile.py",
+          "contains": "def marks_problems(",
+          "how": "ve render refuses props from 27 Nov with a body logo, a series pill, V4 on the title card, a title wordmark or V4 named anywhere outside props.brand"
+        },
+        {
+          "file": "scripts/velib/guards.py",
+          "contains": "def marks_problems(",
+          "how": "ve lint refuses a spec from 27 Nov naming V4 or asking for a body logo, a series pill or a title wordmark"
+        },
+        {
+          "file": "apps/renderer/src/engine/chrome/ChannelPill.tsx",
+          "contains": "props.seriesPill === false",
+          "how": "no series pill on a body beat from 27 Nov (engine.test.ts)"
+        },
+        {
+          "file": "apps/renderer/src/engine/v5/Cards.tsx",
+          "contains": "titleMark ? (",
+          "how": "the why-ladder title card draws no V4 from 27 Nov (ladder.test.ts)"
+        },
+        {
+          "file": "scripts/quick-edit/kit.py",
+          "contains": "def bare_body(",
+          "how": "the wide quick-edit frame draws no V4 and the wide panel no series pill from 27 Nov (kit.py --self-test)"
+        },
+        {
+          "file": "tests/ve_compile_test.py",
+          "contains": "def test_a_cut_from_27_nov_that_would_draw_a_mark_or_a_series_name_is_refused",
+          "how": "the render refusal proved on the v5 fixture"
+        }
+      ]
     }
   ]
 }

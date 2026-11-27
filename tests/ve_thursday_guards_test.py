@@ -175,6 +175,44 @@ class TheClose(unittest.TestCase):
         self.assertEqual(guards.close_problems(spec), [])
 
 
+class OneWordmark(unittest.TestCase):
+    """Ruling (Krish, 2026-11-27): "agree", to one wordmark per video, S3h on its v5 outro: no V4 in the body or on the
+    title card, no series pill and no wordmark on the title. A spec dated from 27 Nov that asks for one is refused."""
+
+    def spec(self, day='2026-11-27'):
+        return whole(copy.deepcopy(V5_FIXTURE), day=day)
+
+    def test_a_v5_spec_from_27_nov_passes(self):
+        self.assertEqual(guards.marks_problems(self.spec()), [])
+
+    def test_v4_anywhere_in_the_spec_is_refused(self):
+        sha = json.loads((ROOT / 'config' / 'brand-palette.json').read_text(encoding='utf-8'))['marks']['wordmark']['sha256']
+        for name, value in (('its path', 'assets/brand/makeyourmindup/v5/v4.svg'), ('its ink drawing', r'brand\makeyourmindup\v5\v4-ink.svg'),
+                            ('its sha256', sha)):
+            with self.subTest(name):
+                spec = self.spec()
+                spec['assets'].append({'id': 'title-mark', 'kind': 'image', 'path': value})
+                found = guards.marks_problems(spec)
+                self.assertEqual(codes(found), ['marks.one_wordmark'])
+                self.assertIn('agree', found[0])
+                self.assertIn('marks.one_wordmark', codes(guards.spec_lints(spec)))
+
+    def test_a_body_logo_a_series_pill_or_a_title_wordmark_is_refused(self):
+        for where in ('body_logo', 'series_pill', 'title_wordmark'):
+            with self.subTest(where):
+                spec = self.spec()
+                spec['brand'][where] = True
+                self.assertEqual(codes(guards.marks_problems(spec)), ['marks.one_wordmark'])
+        spec = self.spec()
+        spec.setdefault('title_moment', {})['wordmark'] = True
+        self.assertEqual(codes(guards.marks_problems(spec)), ['marks.one_wordmark'])
+
+    def test_a_piece_dated_before_27_nov_is_not_held(self):
+        spec = self.spec(day='2026-11-26')
+        spec['assets'].append({'id': 'title-mark', 'kind': 'image', 'path': 'assets/brand/makeyourmindup/v5/v4.svg'})
+        self.assertEqual(guards.marks_problems(spec), [])
+
+
 class OffDays(unittest.TestCase):
     """Krish, 2026-11-04: "Yes, give off days their own music and look - Rotate." """
 

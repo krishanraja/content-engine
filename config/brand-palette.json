@@ -71,6 +71,51 @@
       }
     }
   },
+  "marks_rule": {
+    "ruled": "Ruling (Krish, 2026-11-27): one wordmark per video, S3h on its v5 outro. The opening title carries no wordmark; from 27 Nov the body carries no V4 (the wide quick-edit frame drew it behind the speaker for the whole wide cut, and the why-ladder title card drew it under the title) and no series-name pill on any beat (ve's ChannelPill and StageHeader pill, the quick-edit wide panel pill); the 9:16 outro stays at 2 s, settled by 1.33 s.",
+    "words": "agree",
+    "rulings": [
+      {
+        "n": 1,
+        "asked": "The opening title of a video carries no wordmark. S3h on the v5 outro is the only wordmark per video.",
+        "words": "agree",
+        "from": "2026-11-26",
+        "made_by": "already in PR #1013: ve compile marks titleMoment.wordmark false from 26 Nov and FormatMaster.tsx (titleWordmark) draws the lockup without one"
+      },
+      {
+        "n": 2,
+        "asked": "Remove the V4 wordmark from the wide quick-edit frame (it shows V4 behind the speaker for the whole wide cut) and from the why-ladder title card. The outro carries the brand.",
+        "words": "agree",
+        "from": "2026-11-27",
+        "made_by": "scripts/quick-edit/kit.py page_frame16 (style_for bare); apps/renderer/src/engine/v5/Cards.tsx v5_title (props titleCardMark false, set by ve compile)"
+      },
+      {
+        "n": 3,
+        "asked": "Remove the series-name pills (\"follow.the.money\" and the like) from the body sections of wide videos: ve's ChannelPill and the quick-edit wide panel pill.",
+        "words": "agree",
+        "from": "2026-11-27",
+        "earlier": "Krish, 2026-11-26: \"the sub brands do not need to feature\"",
+        "made_by": "apps/renderer/src/engine/chrome/ChannelPill.tsx and StageHeader.tsx (props seriesPill false, set by ve compile); scripts/quick-edit/kit.py page_panel"
+      },
+      {
+        "n": 4,
+        "asked": "The 9:16 outro stays at 2 s, settled by 1.33 s. Do not lengthen it to the template's 3.6 s.",
+        "words": "agree",
+        "from": "2026-11-26",
+        "made_by": "scripts/velib/compile.py ENDING_FRAMES_BY_ASPECT 9:16 60 frames; scripts/quick-edit/kit.py ENDCARD_SECONDS_BY_SHAPE 9x16 2; closes.statement_beat seconds_max"
+      }
+    ],
+    "from": "2026-11-27",
+    "tall_outro_seconds": 2,
+    "tall_outro_settled_s": 1.33,
+    "before": {
+      "why": "A series long cut dated before Fri 27 Nov carried the series pill on its section beats, and the wide quick-edit frame and the why-ladder title card carried V4; each keeps the body it was signed with (F33).",
+      "long_cut": {
+        "series_pill": "section_beats"
+      }
+    },
+    "never": "from 27 Nov: V4 in a body or on a title card, a series pill on any beat, or a wordmark on the title lockup. ve lint (scripts/velib/guards.py marks_problems) refuses a spec asking for one, and ve render (scripts/velib/compile.py marks_problems) refuses props that would draw one (bodyLogo true, seriesPill or titleCardMark not false, titleMoment.wordmark not false, or V4 named outside props.brand)"
+  },
   "days": {
     "monday": {
       "kind": "series",
@@ -299,7 +344,7 @@
         "body": {
           "icon": false,
           "wordmark": false,
-          "series_pill": "section_beats"
+          "series_pill": false
         },
         "close": "statement_card",
         "days_row": false,

@@ -6563,7 +6563,7 @@ JSON-value transport: escape values only; keys retain their original spelling.
 
 - `const enter = (frame: number, duration: number) =>`
 - `type CardProps`
-- `function Card({ id, params, format, frame, lineStarts, captionSpace }: CardProps)`
+- `function Card({ id, params, format, frame, lineStarts, captionSpace, titleMark = true }: CardProps)`
 - `const cardDevice: DeviceComponent`
 
 ### `apps/renderer/src/engine/v5/HouseCaptions.tsx`
