@@ -1,0 +1,33 @@
+{
+  "status": "pass",
+  "days": {
+    "mon": [
+      {
+        "ref": "mon-3",
+        "status": "accepted",
+        "divergent": true,
+        "text_hash": "a3c5c6e6d0272b0a",
+        "at": "2026-11-27T16:36:43Z"
+      }
+    ],
+    "wed": [
+      {
+        "ref": "wed-2",
+        "status": "accepted",
+        "divergent": true,
+        "text_hash": "3021aa0bb0a199c1",
+        "at": "2026-11-27T16:36:43Z"
+      }
+    ],
+    "fri": [
+      {
+        "ref": "fri-1",
+        "status": "accepted",
+        "divergent": true,
+        "text_hash": "fa7f24d5c2c5f640",
+        "at": "2026-11-27T16:36:43Z"
+      }
+    ]
+  },
+  "findings": []
+}

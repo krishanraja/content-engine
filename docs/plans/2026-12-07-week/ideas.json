@@ -201,7 +201,13 @@
     },
     "wildcard": {
      "kind": "obscure",
-     "why_unexpected": "Everyone covers what AI video tools can make; nobody reads the footnote that says their backers were promised their money back with interest."
+     "why_unexpected": "Everyone covers what AI video tools can make; nobody reads the footnote that says their backers were promised their money back with interest.",
+     "distance": {
+      "status": "accepted",
+      "divergent": true,
+      "text_hash": "a3c5c6e6d0272b0a",
+      "at": "2026-11-27T16:36:43Z"
+     }
     }
    }
   ],
@@ -342,7 +348,13 @@
     },
     "wildcard": {
      "kind": "unexpected",
-     "why_unexpected": "AI coverage asks whether AI makes games; this is AI making a whole way of making games obsolete, by translating the biggest one out of it."
+     "why_unexpected": "AI coverage asks whether AI makes games; this is AI making a whole way of making games obsolete, by translating the biggest one out of it.",
+     "distance": {
+      "status": "accepted",
+      "divergent": true,
+      "text_hash": "3021aa0bb0a199c1",
+      "at": "2026-11-27T16:36:43Z"
+     }
     }
    }
   ],
@@ -417,7 +429,13 @@
     },
     "wildcard": {
      "kind": "strange",
-     "why_unexpected": "Everyone argues about whether AI music is good; here a single line of file metadata confessed what a whole store's AI label left out."
+     "why_unexpected": "Everyone argues about whether AI music is good; here a single line of file metadata confessed what a whole store's AI label left out.",
+     "distance": {
+      "status": "accepted",
+      "divergent": true,
+      "text_hash": "fa7f24d5c2c5f640",
+      "at": "2026-11-27T16:36:43Z"
+     }
     },
     "recommended": true
    },
