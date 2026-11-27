@@ -1,0 +1,379 @@
+HeyGen Voice: Scene-Aware Voice Cloning for Talking Videos | HeyGen Research
+Skip to main content
+
+|
+
+Platform
+
+Use cases
+
+Developers
+
+Resources
+Enterprise
+MCP
+Research
+Pricing
+More
+
+Change language, EN
+Contact sales
+Sign in
+
+HeyGen is now in ChatGPT. Install HeyGen Plugin for ChatGPTInstall HeyGen Plugin for ChatGPT
+
+Home/
+Research/
+HeyGen Voice: Scene-Aware Voice Cloning for Talking VideosTechnical reports
+
+HeyGen Voice: Scene-Aware Voice Cloning for Talking Videos
+An open beach. A moving car. A busy factory floor. HeyGen Voice brings your voice into the picture, shaping the delivery and sound to fit the scene.
+By HeyGen ResearchOct 14, 20269 min read
+Read the report
+
+A convincing talking video needs a voice that belongs in the picture. The warmth of a close microphone, the openness of a street, the echo of a large room: these details help a person feel present.
+HeyGen Voice turns a recording of your voice, a script, and a target image into speech for the person and place on screen. An everyday recording becomes the starting point for a studio narration, an outdoor conversation, or a presentation in a large room—with delivery and acoustics shaped for each scene.
+One everyday voice recording, adapted for different scenes. HeyGen Voice generates the speech; a separate avatar model renders the video.
+
+Watch the showcase · 80 seconds
+Your voice, with the performance and sound the scene needs.
+Start with Pavel’s original recording. Hear what expressiveness boost changes, then follow his voice from the studio to the beach, a factory floor, and a moving car.
+Watch the HeyGen Voice showcaseOne voice. Expression and acoustics shaped for the scene.Pavel Andreev’s voice and digital twin · HeyGen Voice + HeyGen’s avatar video model · Music is off during the listening comparisons.
+
+Hear the picture
+A voice that belongs in the scene.
+Listen to the space around the speaker as well as the voice. Compare HeyGen Voice with ElevenLabs v4 across five selected scenes, all rendered by HeyGen’s avatar video model.
+
+Beach
+Car driving
+Mountain top
+Factory floor
+Park garden
+
+Beach, scene 1 of 5
+
+Beach
+A voice by the water.
+Listen to how the voice fits an open shoreline, with the sea stretching out behind the speaker.
+
+HeyGen VoiceWatch HeyGen Voice · BeachElevenLabs v4Watch ElevenLabs v4 · Beach
+Same script and reference voice within each scene; both videos use HeyGen’s avatar video model. HeyGen Voice also receives the scene image.Compare with Cartesia and Seedance
+Cartesia Sonic 3.6Watch Cartesia Sonic 3.6 · BeachSeedance 2.5Watch Seedance 2.5 · Beach
+
+Car driving
+A conversation on the move.
+A car cabin brings a different sense of space and distance to an everyday conversation.
+
+HeyGen VoiceWatch HeyGen Voice · Car drivingElevenLabs v4Watch ElevenLabs v4 · Car driving
+Same script and reference voice within each scene; both videos use HeyGen’s avatar video model. HeyGen Voice also receives the scene image.Compare with Cartesia and Seedance
+Cartesia Sonic 3.6Watch Cartesia Sonic 3.6 · Car drivingSeedance 2.5Watch Seedance 2.5 · Car driving
+
+Mountain top
+A voice in the open air.
+Listen to the voice and the surrounding sound in an exposed mountain setting.
+
+HeyGen VoiceWatch HeyGen Voice · Mountain topElevenLabs v4Watch ElevenLabs v4 · Mountain top
+Same script and reference voice within each scene; both videos use HeyGen’s avatar video model. HeyGen Voice also receives the scene image.Compare with Cartesia and Seedance
+Cartesia Sonic 3.6Watch Cartesia Sonic 3.6 · Mountain topSeedance 2.5Watch Seedance 2.5 · Mountain top
+
+Factory floor
+Speech in a busy workspace.
+A large industrial space calls for speech that belongs alongside the activity around it.
+
+HeyGen VoiceWatch HeyGen Voice · Factory floorElevenLabs v4Watch ElevenLabs v4 · Factory floor
+Same script and reference voice within each scene; both videos use HeyGen’s avatar video model. HeyGen Voice also receives the scene image.Compare with Cartesia and Seedance
+Cartesia Sonic 3.6Watch Cartesia Sonic 3.6 · Factory floorSeedance 2.5Watch Seedance 2.5 · Factory floor
+
+Park garden
+A conversation in the park.
+A sunny garden provides the setting for a relaxed, conversational performance.
+
+HeyGen VoiceWatch HeyGen Voice · Park gardenElevenLabs v4Watch ElevenLabs v4 · Park garden
+Same script and reference voice within each scene; both videos use HeyGen’s avatar video model. HeyGen Voice also receives the scene image.Compare with Cartesia and Seedance
+Cartesia Sonic 3.6Watch Cartesia Sonic 3.6 · Park gardenSeedance 2.5Watch Seedance 2.5 · Park garden
+
+Model design
+Separate the voice from the recording.
+
+A voice recording captures more than a person’s voice. It also captures a microphone, a room, background sound, and one particular delivery. HeyGen Voice treats these as distinct sources of information: the reference establishes who is speaking, while the image and descriptions of the scene guide how the speech should sound.
+
+From an image to a performance
+A language model turns the target image and requested delivery style into two descriptions. A speaker caption describes tone, pace, emphasis, and expressiveness. A background caption describes the space and its sound: for example, a close microphone in a quiet studio or a voice surrounded by traffic. These captions give the speech model explicit guidance alongside the visual input.
+
+A multimodal autoregressive transformer combines the script, voice reference, image, and scene descriptions to generate speech. A flow-matching decoder and waveform decoder turn its output into 44.1 kHz audio.
+
+Voice referenceSpeaker identity
+Image + captionsScene and delivery
+ScriptWords to speak
+Audio contextVoice and room continuity
+
+Conditioning tokens + script ↓
+
+Autoregressive transformerPredict acoustic codes
+→
+Flow + waveform decodersRender the audio
+→
+44.1 kHz speechReady for video rendering
+Simplified model overview. HeyGen Voice generates the speech; a separate avatar model creates the video.
+
+One voice and one room, throughout
+For longer scripts, HeyGen Voice reuses an audio anchor to carry the same voice, delivery, and acoustics across segments. Each segment also receives the end of the preceding speech as context, helping the narration flow naturally.
+
+Training
+Learning what to keep—and what to change.
+Training progresses from reading in a chosen voice to adapting that voice across scenes, then refining clarity and expression.
+
+Learn speech and voice identity.
+Supervised pretraining on recordings and scripts establishes multilingual speech generation and voice cloning.
+
+Vary the recording conditions.
+Simulated changes to noise, reverberation, microphones, and timing teach the model to preserve the speaker even when the reference sounds different from the target.
+
+Learn from real changes of scene.
+Pairs of the same speaker in different videos teach changes in delivery and setting that audio augmentation alone cannot capture.
+
+Reward clear, recognizable speech.
+Reinforcement learning uses speech-recognition and speaker-similarity scores to reward clear speech and a recognizable voice.
+
+Refine expressive delivery.
+Preference training refines phrasing, emphasis, and rhythm through an optional expressiveness adapter, using automated feedback followed by human preferences.
+
+Your voice, your choice
+Choose how your voice comes through.
+Sometimes you want a polished performance for a new scene. Sometimes you want the familiar sound of your own recording. HeyGen Voice gives you both.
+Watch The original recordingThe original recordingStart with an everyday voice sample.Watch Voice-cloneVoice-cloneAdapt the delivery and room sound to the picture.Watch Full-cloneFull-cloneStay closer to the recording’s delivery and acoustic character.
+Choose voice-clone to bring your voice into a new scene, with delivery and acoustics shaped by the picture. Choose full-clone to stay closer to the sound and pace of your original recording. Both modes use the same underlying model.Compare with other voice models
+Watch ElevenLabs v4ElevenLabs v4Watch Cartesia Sonic 3.6Cartesia Sonic 3.6Watch Seedance 2.5Seedance 2.5
+The same speaker and generated script, rendered with the same avatar video model.
+
+What listeners think
+A voice people choose.
+The strongest test is personal: would you choose this voice to represent you? Across public listening votes and studies with people hearing their own voice, HeyGen Voice stands out.
+
+#1
+In the public speech arena
+HeyGen Voice ranked first on the Artificial Analysis controlled-voice leaderboard, where listeners compare speech from the same reference voices.
+Voice-clone · October 9, 2026 snapshot
+41.7%
+Most chosen voice clone
+In a blind three-way comparison, HeyGen Voice received the largest share of votes, ahead of Cartesia (35.3%) and ElevenLabs v4 (23.0%).
+Full-clone · 6,153 votes
+76.1/100
+For their own digital twin
+Voice-clone received the highest average rating when 43 volunteers judged videos of themselves. Full-clone scored 72.6; both settings outscored the three competitors.
+Blind ratings · Five systems compared
+
+People rating their own digital twin
+43 volunteers provided a reference video and voice recording, then rated videos of themselves without knowing which system produced the speech. Every system read the same script through the same avatar video model, so the videos differed only in the audio. Participants rated how comfortable they would be using each voice to represent themselves.
+Average digital-twin voice rating · 1–100
+SystemMean score
+
+HeyGen Voice · voice-clone
+76.1 ±5.3
+
+HeyGen Voice · full-clone
+72.6 ±5.8
+
+Cartesia Sonic 3.6
+63.1 ±7.2
+
+ElevenLabs v4
+59.2 ±7.6
+
+Seedance 2.5
+45.7 ±6.9
+
+43 participants. Values show means with 95% participant-bootstrap intervals; the report includes paired comparisons.
+
+People hearing their own digital twin rated both HeyGen Voice settings above all three alternatives. The full study, including participant feedback, is in the technical report.
+
+A voice listeners would choose to narrate
+Separate audio listening tests covered 245 cases in English, Spanish, German, French, and Chinese. Systems shared the same voice references and scripts; HeyGen Voice in voice-clone mode was guided by a podcast-studio image. Listeners chose the voice they would prefer for an educational lesson.
+Narrator preference for HeyGen Voice (voice-clone)
+Compared withShare of decided votes
+
+ElevenLabs v4
+61.5%
+
+Cartesia Sonic 3.6
+77.9%
+
+Inworld TTS-2
+68.1%
+
+Across all five languages; ties excluded. Each comparison includes 1,225 narrator-choice ratings.
+
+Listeners preferred HeyGen Voice for narration over all three alternatives. Explore the full listening results in the technical report.
+
+Public listening preference
+HeyGen Voice ranked #1 on the Artificial Analysis controlled-voice leaderboard in the October 9, 2026 snapshot, with an Elo score of 1201. The independent arena compares listener preferences across systems using the same eight reference voices.
+
+HeyGen Voice in voice-clone mode leads this snapshot. Points show Elo scores; whiskers show 95% intervals. Source: Artificial Analysis.View chart dataOctober 9, 2026 · Score ± 95% interval
+SystemElo
+
+1. HeyGen Voice
+1201 ±17
+
+2. Qwen-Audio-3.1-TTS-Plus
+1182 ±15
+
+3. Eleven v4 Turbo
+1166 ±14
+
+4. Eleven v4
+1162 ±15
+
+5. Sonic 3.6
+1142 ±14
+
+6. Realtime TTS-2
+1142 ±14
+
+7. Qwen-Audio-3.0-TTS-Plus
+1124 ±15
+
+8. Sonic 3.5
+1118 ±13
+
+9. StepAudio 2.5 TTS
+1076 ±13
+
+10. Eleven v3
+1072 ±13
+
+Users choose HeyGen Voice as the clone of their own voice
+In the HeyGen voice-cloning flow, users hear anonymous versions of their own voice, generated from the same recording and script, and choose one to use. Candidates appear in randomized order, and a vote counts only after every candidate has been played.
+
+HeyGen Voice uses full-clone. Each row is a separate comparison; shares sum to 100%. An even three-way split would be 33.3% each. Source: HeyGen platform voice-cloning votes, October 2, 2026.View vote counts and intervalsThree-way · 6,153 votes
+SystemShare / 95% interval
+
+HeyGen Voice (full-clone)
+2,564 picks
+41.7%
+40.4–42.9%
+
+Cartesia Sonic 3.6
+2,173 picks
+35.3%
+34.1–36.5%
+
+ElevenLabs v4
+1,416 picks
+23.0%
+22.0–24.1%Pairwise vs. ElevenLabs v4 · 8,332 votes
+SystemShare / 95% interval
+
+HeyGen Voice (full-clone)
+5,179 picks
+62.2%
+61.1–63.2%
+
+ElevenLabs v4
+3,153 picks
+37.8%
+36.8–38.9%Pairwise vs. Cartesia Sonic 3.6 · 7,286 votes
+SystemShare / 95% interval
+
+HeyGen Voice (full-clone)
+3,939 picks
+54.1%
+52.9–55.2%
+
+Cartesia Sonic 3.6
+3,347 picks
+45.9%
+44.8–47.1%
+Wilson 95% intervals over votes. Votes are counted only after every candidate has been played.
+HeyGen Voice was the most chosen voice in the three-way comparison, receiving 41.7% of 6,153 votes. It also won both pairwise comparisons: 62.2% against ElevenLabs v4 and 54.1% against Cartesia Sonic 3.6.
+
+Ethics and Safety
+HeyGen Voice is designed for authorized voice creation, with consent and control at its foundation. HeyGen’s platform requires verified consent from the person whose voice is cloned and allows them to request removal of their voice. Uploaded and generated content is subject to automated moderation and human review. The serving system uses AI audio watermarking to support detection of generated speech. Learn more in HeyGen’s moderation policy.
+These demos use synthetic speech.
+
+Bring your next story to life.
+Bring your voice into your next lesson, presentation, or story—with the delivery and sound the scene needs.
+Explore how HeyGen Voice works, how it was trained, and the complete evaluation results in the technical report.
+Try HeyGen Voice ↗Read the technical report ↗
+
+Home
+Research
+HeyGen Voice: Scene-Aware Voice Cloning for Talking Videos
+
+Change language, English
+
+Pricing
+Pricing Plans
+API Pricing
+
+Products
+Video Avatar
+Talking Photo AI
+API
+Video Translator
+Localization
+LiveAvatar
+AI Video Generator
+AI Avatar Generator
+AI Voice Cloning
+AI Podcast Generator
+Text to Video
+Image to Video
+Audio to Video
+Lip Sync AI
+AI Tools
+AI Dubbing
+
+Models
+HeyGen Avatar 6
+HeyGen Video 1
+HeyGen Voice 1
+
+Industry
+Agencies
+E-Learning
+Marketing
+Learning & Development
+Localization
+Sales Outreach
+
+Resources
+Blog
+Customers Stories
+Affiliate Program
+Webinars
+Help Center
+Community
+How To Guides
+API Docs
+FAQ
+AI Glossary
+
+Enterprise
+For Enterprise
+Localization
+Contact Sales
+
+Company
+About Us
+Careers
+Alternatives
+AI Research
+Security Portal
+Trust & Safety
+Privacy Policy
+Terms of Service
+Moderation Policy
+GDPR Compliance
+
+Copyright © 2026 HeyGen
+
+•Terms of Service
+
+Follow us on Discord
+Follow us on YouTube
+Follow us on X (Twitter)
+Follow us on LinkedIn
+Follow us on Instagram
+Follow us on TikTok
+
+Contact sales

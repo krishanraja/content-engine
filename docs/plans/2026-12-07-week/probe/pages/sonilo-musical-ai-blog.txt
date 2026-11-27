@@ -1,0 +1,164 @@
+Sonilo and Musical AI Partner to Ensure AI Music Empowers Creators and Rewards Rights Holders30% offExtra 30% off annual plansExtra 30% offClaim offer
+HomeSolutionsPricing
+Library
+Royalty-free sound effectsMusic libraryTutorialsAPIMCP & CLI
+DashboardSign inSign up
+HomeSolutionsPricing
+Library
+Royalty-free sound effectsMusic libraryTutorialsAPIMCP & CLI
+DashboardSign inSign up
+← Blog
+Industry
+Sonilo and Musical AI Partner to Ensure AI Music Empowers Creators and Rewards Rights Holders
+Written byJavier Gil
+PublishedOct 27, 2026
+By Javier Gil. Originally published by Geek Metaverse on October 27, 2026. Reproduced with permission.
+A songwriter wakes up to a notification: an AI platform has generated 10,000 soundtracks overnight. Some sound vaguely familiar. One carries the rhythmic DNA of a track she wrote years ago. Did her music influence it? Should she be paid? And who can even prove it?
+That question sits at the center of the AI music debate. Licensing says, “You may use this work.” Attribution asks a harder question: “Which works shaped this output, and how should value flow back to the people who made them?”
+On October 27, 2026, Sonilo, a generative audio company building video-native music and sound models, announced a partnership with Musical AI, a rights-management and attribution technology company. The collaboration aims to connect AI-generated music back to the licensed recordings, compositions, artists, songwriters, and rights holders that contributed to it.
+This article explains what the partnership does, why attribution matters, how the technology works, and what it could mean for creators, AI companies, and the future of licensed generative music.
+“The future of AI music can’t be built at the expense of the people who created the music that makes it possible,” said Keli Li, COO and Co-Founder of Sonilo. “The industry needs a better way to connect AI-generated music back to the artists and rights holders whose work contributed to it. We’re building Sonilo around licensed music from the start, and our partnership with Musical AI is an important step toward building an AI music ecosystem that empowers creators while ensuring rights holders share in the value.”
+“AI music has enormous potential, but that potential depends on building a system that respects the creators behind it,” said Sean Power, CEO of Musical AI. “Sonilo recognizes that licensing is only part of the equation. Rights holders also need visibility into how their work contributes to generated music. Together, we’re helping demonstrate how attribution can support a more transparent and sustainable model for the industry.”
+What Is the Sonilo and Musical AI Partnership?
+The Sonilo–Musical AI partnership is designed to make licensing, attribution, and compensation part of AI music generation from the beginning. Sonilo will use Musical AI’s technology to analyze generated outputs and measure how licensed recordings and compositions contributed to each result.
+Sonilo creates music and sound effects directly from video footage, text, or both. Its models are built around licensed source material, and the company is finalizing master recording and publishing agreements with major rights organizations as it prepares a new music-model update.
+Musical AI provides the missing measurement layer. Its platform analyzes AI-generated outputs and assesses influence across two separate rights categories:
+Sound recordings: The recorded performances and master recordings.
+Musical compositions: The underlying songs, melodies, lyrics, and publishing rights.
+That distinction matters because a single generated track may draw influence from both a recording and a composition, often involving different owners and payment structures.Expert insight: Licensing without attribution is like paying for electricity without a meter. You know permission was granted, but you cannot see how much was used, by whom, or how value should be divided.
+Why AI Music Attribution Matters
+AI music attribution matters because generative models can create new works influenced by many existing songs, making it difficult to identify contributions after the fact. A licensing agreement can authorize use of a catalog, but it does not automatically explain which specific recording or composition influenced a particular output.
+The music industry has long relied on clear ownership chains: a songwriter owns a composition, a label or artist may control a master recording, and collecting societies help administer certain rights. Generative AI complicates that structure because one output can emerge from patterns learned across thousands of licensed works.
+Musical AI’s approach addresses this by computing proportional attribution across contributing sources. The company says attribution totals always sum to 100%, with sound recordings and underlying compositions assessed and reported independently.
+That creates a more auditable model:
+StageTraditional Music LicensingAI Music With Attribution
+PermissionRights holder grants access to a catalog or work.Rights holder grants consent and defines permitted AI uses.
+UsageUsage is often tracked through plays, syncs, or distributions.Each generated output is analyzed for source influence.
+ReportingReports may show broad usage categories.Reports connect outputs to contributing works and rights categories. +1
+CompensationPayments follow established royalty structures.Attribution data can support usage-based compensation.
+TrustDepends on contracts and reporting systems.Adds evidence-linked, repeatable attribution records.
+How Sonilo Creates AI Music for Video
+Sonilo generates original music and sound effects from video, text, or both, rather than pulling tracks from a fixed stock-music library. Its system treats video as the primary input and creates soundtracks aligned with a video’s runtime, pacing, mood, motion, scene changes, and emotional arc.
+That makes Sonilo different from a conventional music library. A creator does not search for “upbeat corporate track” and manually trim it to fit an edit. Instead, the platform analyzes the footage and generates music intended to match the story.
+Sonilo’s enterprise API, for example, accepts a video file, analyzes each scene, and returns a track designed to match the visuals in mood, energy, and pacing. The company describes this as video-native generative audio: sound created for the specific video, not merely attached to it.
+For creators, this can reduce several production bottlenecks:
+No manual music trimming.
+Fewer mismatches between scene changes and soundtrack energy.
+Faster iteration across multiple video versions.
+More tailored audio for ads, social clips, trailers, games, and branded content.
+But the more capable generative music becomes, the more important it is to know what source material influenced the result. That is where Musical AI enters the workflow.
+How Musical AI Measures Influence
+Musical AI measures influence by analyzing generated outputs and calculating proportional attribution across the licensed sources that contributed to them. The company describes its system as evidence-linked, repeatable, and traceable to specific output segments.
+In practical terms, the process works like this:
+Sonilo generates an output from video, text, or both.
+Musical AI receives the output or an output representation after generation.
+The system analyzes the result against licensed source material.
+It calculates proportional influence across contributing sources.
+It reports attribution separately for sound recordings and compositions.
+Sonilo’s licensing partners receive reporting that can support usage accounting and compensation.
+Musical AI says its attribution records are retained for audit and inquiry, which is important for rights holders who need documentation rather than vague assurances.
+Why Licensing Alone Is Not Enough
+Licensing establishes permission, but attribution establishes accountability. Sonilo and Musical AI argue that both are necessary for a sustainable generative music ecosystem.
+A license can answer whether an AI company may use a catalog. It cannot always answer:
+Which specific songs influenced a generated output?
+How much did each source contribute?
+Should payment be weighted by influence?
+How should compensation split between recording and publishing rights?
+What evidence exists if a rights holder disputes usage?
+Musical AI’s technology is designed to make those questions answerable. Its platform helps rights holders manage permissions and identify how licensed works influence AI-generated outputs, supporting transparent reporting, licensing, and compensation.
+This approach also aligns with broader industry principles. SOCAN, which represents songwriters, composers, and music publishers, has collaborated with Musical AI on attribution and consent infrastructure. SOCAN’s stated principles include that creators should decide how their work participates in AI, that AI use should be opt-in, and that creators should receive credit and compensation when their work influences an AI-generated output.
+What This Means for Artists and Songwriters
+For artists and songwriters, the partnership could create a path from “my music may have been used” to “here is evidence of how it contributed.” That shift could make AI music less extractive and more participatory.
+Potential benefits include:
+Visibility: Rights holders can see when their works influence generated outputs.
+Consent control: Creators can define whether and how their work participates in AI systems.
+Usage data: Attribution reports can support more precise accounting than broad catalog licenses alone.
+Compensation pathways: Usage evidence can help support payments to songwriters, artists, and rights holders.
+Auditability: Repeatable, evidence-linked records give rights holders a basis for review or dispute resolution.
+The key word is could. Attribution technology does not automatically guarantee fair payment. Contracts, royalty splits, collective bargaining, publishing structures, and platform terms still determine how money moves. But without attribution data, those conversations lack a shared factual foundation.
+What This Means for AI Music Companies
+For AI music companies, attribution offers a way to build products without treating creators as invisible inputs. Sonilo is positioning licensed training data and post-generation attribution as core infrastructure, not an afterthought.
+Sonilo has already said its commercial music infrastructure is built around licensed source material, with Shutterstock as an early licensing partner. The company states that licensing fees and revenue share flow to rights holders and artists.
+That matters commercially as well as ethically. Brands, media platforms, game studios, and enterprise buyers increasingly need to demonstrate provenance and compliance. A platform that can show licensed inputs, auditable attribution, and rights-holder reporting may be easier to approve in procurement and legal reviews.
+StakeholderWhat They Gain
+CreatorsGreater visibility, consent controls, and potential compensation pathways.
+Rights holdersAttribution reports across recordings and compositions, supporting licensing and audits.
+AI platformsA clearer compliance and provenance framework for generative music.
+Brands and studiosMore defensible music sourcing for commercial video and media projects.
+Fans and listenersMore original soundtracks without erasing the human creators behind the source material.
+A Practical Case Study: AI Music for a Brand Video
+Imagine a travel brand producing a 60-second promotional video for a mountain retreat. The creative team wants a soundtrack that rises with the sunrise, softens during a quiet breakfast scene, and builds again as hikers reach a summit.
+Here is how a licensed, attributable AI music workflow could function.
+Step 1: Upload the Video
+The editor uploads the final cut—or a rough cut—to Sonilo. The system analyzes scene length, pacing, motion, transitions, and emotional tone.
+Step 2: Define the Creative Brief
+The team enters a prompt such as:
+“Warm acoustic music with subtle electronic textures. Start calm, build gradually, and peak during the summit scene.”
+Step 3: Generate the Soundtrack
+Sonilo generates a full-length track designed around the video’s structure rather than requiring the editor to cut a stock track to fit.
+Step 4: Run Attribution
+Musical AI analyzes the generated output and calculates proportional influence from licensed recordings and compositions. It reports those contributions separately.
+Step 5: Report and Compensate
+Sonilo’s licensing partners receive reporting showing how source material contributed to the output. That data can support usage accounting and compensation for the relevant songwriters, artists, and rights holders.
+Step 6: Publish With Confidence
+The brand receives a custom soundtrack, while the underlying rights framework includes licensing, attribution, and documentation. The result is not merely “AI-generated music.” It is AI-generated music with a traceable creative and commercial chain.
+The Bigger Shift: From Black-Box AI to Accountable AI
+The Sonilo–Musical AI partnership reflects a broader shift from black-box generative AI toward accountable, rights-aware creative systems. The question is no longer only whether AI can make music. It is whether the system can explain what shaped the music and compensate the people behind it.
+Musical AI describes attribution as influence, not detection. That wording matters. The goal is not to claim that an AI output “copied” a song in the legal sense. Instead, the system measures proportional influence from contributing sources and creates records that can support licensing and payment decisions.
+That framing is more precise—and more useful. It avoids overstating what attribution can prove while still giving rights holders meaningful visibility.
+The partnership also arrives at a strategic moment. Sonilo recently raised $11 million to build an AI-native audio stack for video, and its commercial infrastructure is being developed around licensed music datasets. Musical AI, meanwhile, has been building attribution and rights-compliance infrastructure for generative music since 2024.
+Together, they are testing a simple but ambitious premise: AI music can scale only if creators share in the value it creates.
+What to Watch Next
+The next signal to watch is whether attribution becomes a standard requirement in commercial AI music deals. Sonilo is finalizing master recording and publishing agreements with major rights organizations and preparing a new music-model update, which could make the partnership a live test case rather than a concept.
+Key developments to monitor include:
+Adoption by rights organizations: Whether publishers, labels, and collecting societies treat attribution reporting as a licensing requirement.
+Payment models: Whether influence data translates into transparent royalty formulas.
+Creator consent tools: Whether artists can easily opt in, set conditions, or withdraw permission.
+Enterprise procurement: Whether brands and media platforms begin requiring provenance and attribution reports.
+Cross-border standards: Whether attribution frameworks can work across different copyright systems and collecting societies.
+About Sonilo
+Sonilo builds video-native generative audio models for creators, developers, and media platforms. Its technology generates music and sound effects directly from footage or text, creating soundtracks built for each video’s story rather than pulled from a library. Sonilo is building a future where every video can have its own soundtrack, because when music truly fits a story, people don’t just watch. They feel. Sonilo is headquartered in San Francisco and backed by B Capital. Learn more at sonilo.com.
+About Musical AI
+Musical AI is a Canadian rights technology company providing consent management and attribution infrastructure for generative music. Its platform helps rights holders manage permissions and identify how licensed works influence AI-generated outputs across composition and sound recording rights, supporting transparent reporting, licensing, and compensation
+Conclusion & Next Steps
+Sonilo and Musical AI are addressing one of AI music’s hardest problems: connecting a generated track back to the human-created works that helped shape it. Sonilo brings video-native generative audio; Musical AI brings attribution, consent, and rights-reporting infrastructure.
+The partnership’s central idea is easy to state: licensing gives permission, attribution creates accountability, and compensation makes participation sustainable.
+For creators, the next step is to ask platforms how their music is licensed, attributed, and compensated. For AI music companies, the next step is to build attribution into the product—not bolt it on after criticism. For brands and studios, the next step is to demand provenance before publishing AI-assisted soundtracks.
+AI music does not have to choose between innovation and fairness. The Sonilo–Musical AI partnership argues that the strongest version of the future includes both.
+FAQs
+What is the Sonilo and Musical AI partnership?
+Sonilo and Musical AI partnered to add attribution and rights reporting to Sonilo’s AI-generated music. Musical AI analyzes outputs to measure how licensed recordings and compositions contributed, helping support compensation for creators and rights holders.
+How does AI music attribution work?
+AI music attribution analyzes a generated output and calculates proportional influence from licensed source material. Musical AI reports contributions separately for sound recordings and musical compositions, creating evidence-linked records for licensing and compensation.
+Why is attribution important for AI-generated music?
+Attribution helps identify which licensed works influenced an AI output. This gives songwriters, artists, and rights holders visibility into usage and creates a basis for transparent reporting, licensing, and compensation.
+What does Sonilo do?
+Sonilo builds video-native generative audio models that create music and sound effects from video footage, text, or both. Its system generates soundtracks based on a video’s pacing, mood, motion, scene changes, and emotional arc.
+Does attribution mean an AI song copied a copyrighted track?
+No. Musical AI describes attribution as measuring influence, not detecting copying. It calculates proportional contributions from licensed sources and provides reporting that can support licensing, audits, and compensation decisions.
+Recommended reads
+IndustryOct 8, 2026
+AI Audio Startup Sonilo, Founded by TikTok Veterans, Raises $11 Million in B Capital-Led Round
+IndustryAug 10, 2026
+Music API Sublicensing — What Every Developer Must Know Before Building on a Licensed Music Platform
+IndustryAug 3, 2026
+AI Music for E-Commerce Product Videos
+Company
+About
+Reviews
+News
+Blog
+Docs
+Alternatives
+AI Music
+API access
+Contact
+Pricing
+Support
+Sales
+Legal
+Commercial Use
+Privacy Policy
+Terms of Service
+TikTokInstagramYouTubeXRedditDiscord
+© 2026 Sonilo. All rights reserved.

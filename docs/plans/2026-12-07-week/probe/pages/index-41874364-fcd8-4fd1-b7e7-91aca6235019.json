@@ -1,4 +1,8 @@
 {
   "https://www.maxon.net/en/maxon-plus": {"file": "maxon-plus.txt"},
-  "https://www.creativebloq.com/news/every-3d-artist-should-have-an-ai-assistant-maxon-says-as-it-launches-new-tools-and-agentic-licences": {"file": "creativebloq-maxon-plus.txt"}
+  "https://www.creativebloq.com/news/every-3d-artist-should-have-an-ai-assistant-maxon-says-as-it-launches-new-tools-and-agentic-licences": {"file": "creativebloq-maxon-plus.txt"},
+  "https://www.maxon.net/en/responsible-ai": {"file": "maxon-responsible-ai.txt"},
+  "https://www.maxon.net/en/legal/service-description": {"file": "maxon-plus-service-description.txt"},
+  "https://www.maxon.net/en/": {"file": "maxon-home.txt"},
+  "https://www.maxon.net/en/buy/maxon-plus": {"unreadable": "plans and prices load by script; fetched page holds only navigation"}
 }

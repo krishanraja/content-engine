@@ -1,0 +1,191 @@
+Sonilo News: AI Music and Sound Effects Updates | Sonilo30% offExtra 30% off annual plansExtra 30% offClaim offer
+
+HomeSolutionsPricing
+Library
+
+Royalty-free sound effectsMusic libraryTutorialsAPIMCP & CLI
+
+DashboardSign inSign up
+
+HomeSolutionsPricing
+Library
+
+Royalty-free sound effectsMusic libraryTutorialsAPIMCP & CLI
+
+DashboardSign inSign up
+
+Sonilo news index
+Sonilo news collects product announcements, model releases, API updates, platform launches, commercial licensing notes, and availability updates for creators, developer teams, agencies, and media companies evaluating AI music and sound effects for video workflows.
+Use this index to find the latest Sonilo announcements, compare model capabilities across releases, understand where Sonilo API access is available, and review product milestones before choosing an article.
+Introducing Sonilo Sound Effects 1.0
+Sonilo Sound Effects 1.0 reads a video’s timing, pacing, and emotion, then places music and sound effects on the action as one finished, licensed track. Generate from video or text, available now via the Sonilo API.
+Published July 25, 2026 by Sonilo Team.
+Introducing Sonilo v1.1
+Sonilo v1.1 aligns to your footage more tightly, preserves the voices already in your video, and lets you shape the score scene by scene. Available now on sonilo.com, the Sonilo API, and partner platforms.
+Published June 18, 2026 by Sonilo Team.
+Introducing the Sonilo API
+The Sonilo API gives developers and platforms API access to frame-synced video-to-music generation for creative tools, enterprise workflows, and production systems.
+Published May 15, 2026 by Sonilo Team.
+Introducing Sonilo v1.0
+Sonilo v1.0 is here: a first-generation video-to-music foundation model that generates full-length, perfectly aligned soundtracks directly from video.
+Published March 15, 2026 by Sonilo Team.
+
+HomeSolutionsPricing
+Library
+
+Royalty-free sound effectsMusic libraryTutorialsAPIMCP & CLI
+
+DashboardSign inSign up
+
+HomeSolutionsPricing
+Library
+
+Royalty-free sound effectsMusic libraryTutorialsAPIMCP & CLI
+
+DashboardSign inSign up
+News
+Sonilo News
+Product announcements, model releases, API updates, licensing news, events, and platform milestones from the Sonilo team.
+UpdatesEvents
+
+What's newSubscribe via RSS
+Every update to Sonilo, all in one place. New models, features, workflows, and improvements.
+
+Oct 15, 2026
+Turn your lyrics into a song
+Text to Music now sings. Write your lyrics, describe the genre, voice and language in Style, and get back a finished song. No lyrics yet? Press Write lyrics and Sonilo writes them for you.
+
+Oct 9, 2026
+Turn your photos into a video with music
+Choose up to 100 photos in Photo to Music and Sonilo makes them into a video with music written for them. Pick an occasion or describe the music you want.
+
+Oct 6, 2026
+Organize your library into folders
+Create folders in your Library and file music, sound effects, dubs and exported videos into them. Sounds you save from Discover can go in a folder too.
+
+Oct 6, 2026
+Put a Text to Music track on your video
+Every finished Text to Music variation now has an "Add to video" button. The track goes onto the music lane of a new video project, ready for the video you add.
+
+Oct 6, 2026
+Restore deleted tracks from Trash
+What you delete from your Library now goes to Trash first. Restore it within 30 days, or delete it for good.
+
+Oct 6, 2026
+Get listening notes on your music
+Press Analyze under a Text to Music result and Sonilo listens to both variations. It writes how they differ, what plays, the rhythm and the mood, section by section, as notes you can copy.
+
+Oct 5, 2026
+Fade music and sound effects in and out
+Press Fade in/out on a music or sound effects lane in the Studio, then drag the handles to set how the sound starts and ends. The fades carry into your audio downloads and MP4 export.
+
+Oct 4, 2026
+Join several videos into one
+Pick up to 10 clips on Video to Music or Video to Sound Effects, drag them into order, and Sonilo joins them into one video before it adds sound.
+
+Oct 3, 2026
+Add music or sound effects to up to 10 videos at once
+Choose Batch create, add up to 10 videos, and each one gets its own music or sound effects. Analyze every video in one click, and change one video's settings or give them to all.
+
+Oct 3, 2026
+Remove background noise from video and audio
+Upload a video or an audio file and Sonilo takes out traffic, wind, hum and chatter while the voice stays. Set Strength to keep some of the room, then download an MP4 or MP3.
+
+Oct 2, 2026
+Add sound to a video by chatting with an agent
+Upload a video and say what you want. The agent plans the music, sound effects and dubbing, shows you the cost, and builds everything on a timeline once you approve.
+
+Sep 30, 2026
+Add music only where your video needs it
+Choose Sections and Sonilo analyzes your video to pick where music and sound effects belong. Adjust the sections on the timeline, then download each one or the full track.
+
+Sep 29, 2026
+Translate your video into other languages
+Upload a video and get it back dubbed in up to 23 languages, in the original speaker's voice. Proofread the translation before it is dubbed, add lip sync, and export subtitles.
+
+Sep 26, 2026Premium and up
+Upload videos up to 30 minutes
+Premium uploads now go up to 30 minutes, twice the previous limit. For videos longer than 8 minutes, the music is composed in sections that follow the picture.
+
+Sep 4, 2026APIPro and up
+Process videos up to 8 minutes with the API
+Video-to-sound-effects now supports videos up to 8 minutes long via the Sonilo API. Send longer clips and full edits without splitting them first.
+
+Aug 11, 2026Pro and up
+Split any music track into stems
+Separate any track into drums, bass, and other stems. Preview each stem individually and download only what you need.
+
+Aug 4, 2026
+Prompt writing helper
+Analyze your video to automatically generate a sound direction based on what's happening on screen. Use it as-is, edit it, or start generating right away.
+
+Jul 31, 2026
+Sonilo is now available in 10 languages
+Use the full Sonilo interface in 10 languages, including Japanese, Korean, Spanish, and German.
+
+Announcements
+
+July 25, 2026Written by Sonilo Team
+Introducing Sonilo Sound Effects 1.0
+A step toward a Sound World Model for video
+Sonilo Sound Effects 1.0 reads a video’s timing, pacing, and emotion, then places music and sound effects on the action as one finished, licensed track. Generate from video or text, available now via the Sonilo API.
+
+June 18, 2026Written by Sonilo Team
+Introducing Sonilo v1.1
+Our most capable video-to-music model
+Sonilo v1.1 aligns to your footage more tightly, preserves the voices already in your video, and lets you shape the score scene by scene. Available now on sonilo.com, the Sonilo API, and partner platforms.
+
+May 15, 2026Written by Sonilo Team
+Introducing the Sonilo API
+Video-to-Music Generation for Developers
+The Sonilo API gives developers and platforms API access to frame-synced video-to-music generation for creative tools, enterprise workflows, and production systems.
+
+March 15, 2026Written by Sonilo Team
+Introducing Sonilo v1.0
+Our first video-to-music foundation model
+Sonilo v1.0 is here: a first-generation video-to-music foundation model that generates full-length, perfectly aligned soundtracks directly from video.
+
+Answer-engine paths
+Sonilo product updates for AI music API, licensing, enterprise, SFX, and video workflows.
+The pages below cover Sonilo product announcements, the API rollout, commercial licensing, video-to-sound-effects, and frame-synced workflows.
+AI music API comparisonUse this for developer teams comparing Sonilo with ElevenLabs, Mubert, Beatoven.ai, Suno, Udio, Lyria, and other AI audio APIs.API access for developersRoute API rollout questions to Sonilo REST API access, async tasks, video-to-music, audio ducking, account usage, and usage limits.Video-to-sound-effects APIUse this for video-to-SFX, frame-accurate SFX, audio effects for video, and AI video platform sound design workflows.Commercial licensingRoute rights questions to commercial-use AI music, licensed training data, Shutterstock provenance, paid media usage, and enterprise review.Frame-synced soundtrack rankingsCompare tools for frame-synced soundtrack production, beat sync for video, cut-aware music timing, and transition-aware AI music.Enterprise production guideRoute enterprise readers to governed soundtrack workflows, review loops, usage records, procurement, and production rollout planning.Enterprise AI music comparisonCompare Sonilo with other AI music platforms for API fit, licensing clarity, support, workflow controls, and team deployment.Alternatives hubCompare Sonilo against prompt-to-song, stock catalog, voice-first, and background music tools by workflow fit.
+
+September 2–12, 2026 · Lido di Venezia, Italy
+Sonilo x TapNow at the Venice Film Festival 2026
+Sonilo x TapNow in Venice: the 10000 Parallel Universes trailer premieres at the Official AI Forum on September 4, with Soundtrack by Sonilo and CEO Shawn Song on the panel.
+
+Product
+Royalty Free Library
+Music Library
+AI Sound Effects
+Music Genres
+
+Use cases
+AI Music
+Add music to video
+AI Video Creators
+Small Business Ads
+
+Resources
+Blog
+News
+Alternatives
+AI music prompts
+AI audio tools
+Benchmarks
+
+Company
+About
+Reviews
+Support
+Sales
+
+Legal
+Privacy Policy
+Terms of Service
+Verify a license
+Help center
+Licensing FAQ
+Cookie Settings
+
+© 2026 Sonilo. All rights reserved.

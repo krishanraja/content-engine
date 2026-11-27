@@ -53,7 +53,7 @@
       ],
       "strength": "inferred",
       "counter": {
-        "text": "The report discloses the \"can't tell\" answers rather than hiding them, and a \"can't tell\" answer is itself a rater failing to spot the avatar, so leaving them out does not plainly flatter Avatar 6. The research page shows 270 answers but does not mention the 34 left out. Searched: both Avatar 6 pages and the csuite roundup."
+        "text": "The report discloses the \"can't tell\" answers rather than hiding them, and a \"can't tell\" answer is itself a rater failing to spot the avatar, so leaving them out does not plainly flatter Avatar 6. The research page shows 270 answers but does not mention the 34 left out. Searched: both Avatar 6 pages, the csuite roundup and the pages it cites for Avatar 6 (HeyGen's developer docs and the OpenRouter listing); only the report states the exclusion."
       },
       "mechanism_type": "the metric",
       "stop": null
@@ -119,15 +119,27 @@
           "quote": "side-by-side test 76, with 20 external raters and about four raters per clip or pair. To our knowledge, this is"
         },
         {
+          "url": "https://www.heygen.com/research/avatar-6-model",
+          "domain": "heygen.com",
+          "date": "2026-11-17",
+          "quote": "All people shown in this report are HeyGen employees or contracted actors who consented to the use of their likeness in this report."
+        },
+        {
           "url": "https://csuite.so/blog/ai-models-roundup-november-2026",
           "domain": "csuite.so",
           "date": "2026-11-26",
           "quote": "HeyGen’s Avatar 6 and Avatar 6 Turbo do one job: they take a photo or a reference clip of at least two seconds, plus an audio track, and return a video of that person speaking, as long as the audio."
+        },
+        {
+          "url": "https://openrouter.ai/heygen/heygen-avatar-6",
+          "domain": "openrouter.ai",
+          "date": "2026-11-17",
+          "quote": "Avatar 6 was released on November 17, 2026."
         }
       ],
       "strength": "inferred",
       "counter": {
-        "text": "The report does not say who recruited the 20 raters or how they were chosen, only that they are external. In the single-clip test real recordings of the same people were judged real 78.9% of the time, so raters also doubted genuine footage. No independent test was found; scope: the two HeyGen pages, both HeyGen reports and the csuite roundup, with no open-web search."
+        "text": "The report does not say who recruited the 20 raters or how they were chosen, only that they are external. In the single-clip test real recordings of the same people were judged real 78.9% of the time, so raters also doubted genuine footage. No independent test was found; scope: the two HeyGen Avatar 6 pages, both HeyGen reports, the HeyGen Voice page the report cites, the csuite roundup and the two pages it cites for Avatar 6 (HeyGen's developer docs, which cover access and consent, and the OpenRouter listing, which gives price, release date and latency but no rater results), with no open-web search."
       },
       "mechanism_type": "the study design",
       "stop": "evidence_exhausted"

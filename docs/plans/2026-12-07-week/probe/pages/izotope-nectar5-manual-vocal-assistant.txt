@@ -1,0 +1,194 @@
+Vocal Assistant – Nectar 5 User ManualSkip to content
+User Manual
+Search...
+CTRL K
+iZotope Support
+User Manual
+Features
+Global Controls
+Auto-Level
+Pitch
+Moments
+Breath Control
+Vocal Assistant
+Overview
+Running Vocal Assistant
+One-Click
+Custom Flow
+Listening and analysis
+What Vocal Assistant builds
+Rerunning Vocal Assistant
+Vocal Unmask
+Nectar 5 Elements
+Processing Modules
+Backer
+Compressor
+De-esser
+Delay
+Dimension
+Equalizer
+Gate
+Reverb
+Saturation
+Serial Compressor
+Vocal Stabilizer
+Voices
+Reference
+Presets
+Options
+License Information
+iZotope Support
+Printable manual
+Features
+Global Controls
+Auto-Level
+Pitch
+Moments
+Breath Control
+Vocal Assistant
+Vocal Unmask
+Nectar 5 Elements
+Processing Modules
+Backer
+Compressor
+De-esser
+Delay
+Dimension
+Equalizer
+Gate
+Reverb
+Saturation
+Serial Compressor
+Vocal Stabilizer
+Voices
+Reference
+Presets
+Options
+License Information
+Printable manual
+LightDark
+System
+Light
+Dark
+System
+On this page
+Overview
+Running Vocal Assistant
+One-Click
+Custom Flow
+Vocal Style
+Voice Register
+Reference
+Key
+Module switches
+Intensity
+Space
+Listen Time
+Save as default settings
+Listening and analysis
+What Vocal Assistant builds
+Rerunning Vocal Assistant
+Scroll to top
+Nectar 5
+Vocal Assistant
+Vocal Assistant
+Overview
+Vocal Assistant listens to your vocal and sets up your whole chain for it, from EQ and compression to pitch correction and space.
+Trained on pro vocal standards, it gives you a tailored starting point in seconds, so you can spend your time dialing in your own sound.
+Run it in one click, or call the shots with Custom Flow: tell it the style, register, and key, choose the modules it uses, set how hard it works and how much space it adds, and give it an acapella to aim for.
+Vocal Assistant sets up your chain, and you take it from there. Every control it sets stays open for you to adjust, on the Overview page or in each full module.
+Reach for Vocal Assistant when you start on a new vocal, when you want a second opinion on a chain, or when you’re working fast and want a strong first pass before you fine-tune.
+Running Vocal Assistant
+Play your vocal in your DAW. Vocal Assistant listens to what plays through Nectar 5, so choose a section where the vocal is present and at its loudest.
+Click Assistant in the header.
+Choose how to run it:
+One-Click: skip the setup and let Vocal Assistant make every choice. See One-Click.
+Custom: set the options first, then start. See Custom Flow.
+Loop a short section
+Vocal Assistant needs to hear the vocal for the whole listen time. If your vocal section is short, loop it in your DAW before you start.
+To close Vocal Assistant at any point without changing your processing, click the X in the top-right corner, or click Assistant again.
+One-Click
+One-Click runs Vocal Assistant with its own choices for everything: it detects the vocal style, register, and key, uses every module it can, and listens for 8 seconds.
+Click Assistant, then One-Click.
+Play the loudest section of your vocal. Listening starts when Vocal Assistant detects audio.
+Keep playing until Vocal Assistant finishes. See Listening and analysis.
+Custom Flow
+Custom Flow lets you steer Vocal Assistant before it listens.
+Click Assistant, then Custom. Set the options below, then click Start Assistant.
+Vocal Style
+Voice Register
+Reference
+Key
+Module switches
+Enable All and Disable All
+Intensity
+Space
+Listen Time
+Save as default settings
+Back: returns to the choice between One-Click and Custom.
+Start Assistant: starts listening with these settings.
+Vocal Style
+The kind of vocal you’re working on: Auto, Singing, Rap, or Speaking.
+On Auto, Vocal Assistant detects the style.
+Choose a style yourself when you already know it, or when the detected style isn’t the sound you want.
+The style shapes every module Vocal Assistant sets. For example, a spoken vocal gets no Dimension, Delay, or Reverb.
+Voice Register
+How high or low the voice sits: Auto, Low, or High.
+On Auto, Vocal Assistant detects the register.
+Reference
+An acapella that has the vocal tone you’re after.
+Vocal Assistant matches your vocal’s Equalizer curve toward the reference’s tonal balance.
+Click + to load a reference. Vocal Assistant accepts WAV, AIFF, FLAC, MP3, M4A, and AAC files, analyzes the file, and adds it to the menu.
+Choose a reference from the menu, or choose None to use Vocal Assistant’s built-in targets for the vocal style and register.
+For the best match, use an isolated vocal (an acapella or a vocal stem), not a full mix.
+Key
+The key and scale for pitch correction.
+Leave it on Auto Detect to let Vocal Assistant find the key, or choose your song’s key from the menu.
+The keyboard below the menu shows the notes of the chosen scale.
+Auto Detect: Vocal Assistant sets Pitch to the key it detects, but only when it’s confident of the key. When it isn’t, or when the vocal is spoken, it leaves Pitch as it was.
+A key you choose: Vocal Assistant always sets Pitch to that key, whatever the vocal style.
+Module switches
+Choose which modules Vocal Assistant sets up: Pitch, EQ, De-Esser, Serial Compressor, Vocal Stabilizer, Dimension, Delay, and Reverb.
+A module you switch off is left out of the chain Vocal Assistant builds. If you switch off Pitch, Vocal Assistant turns pitch correction off.
+Enable All and Disable All set every switch at once.
+Start Assistant is unavailable while every module is off, and Key, Intensity, and Space have no effect while every module they adjust is off.
+Nectar 5 Elements
+In Nectar 5 Elements, the switches match the modules on its Overview page. See Nectar 5 Elements.
+Intensity
+How much corrective processing Vocal Assistant applies: Subtle, Transparent, Balanced, Bold, or Dramatic. The default is Balanced.
+Higher settings give larger Equalizer moves, a stronger Vocal Stabilizer, and more compression; lower settings are gentler.
+Space
+How much Dimension, Delay, and Reverb Vocal Assistant adds: Dry, Subtle, Balanced, Lush, or Wet. The default is Balanced.
+Listen Time
+How long Vocal Assistant listens to your vocal: from 4 to 30 seconds. The default is 8 seconds, the same as One-Click.
+Click the note icon to set the listen time in bars instead, from 1 bar to 32 bars, at your session’s tempo.
+A longer listen gives Vocal Assistant more of the performance to learn from; use it when the vocal changes a lot from section to section.
+Save as default settings
+Check Save as default settings to make Custom Flow open with these settings next time, including in new instances of Nectar 5.
+Listening and analysis
+Once Vocal Assistant starts, it walks through these steps. Keep your vocal playing until it finishes.
+Play the loudest section of your vocals: Vocal Assistant waits for audio. Listening starts when it detects your vocal.
+Analyzing your vocals: Vocal Assistant listens for the listen time, learning the vocal’s tone and dynamics.
+Designing your vocal chain: Vocal Assistant builds your chain. This step briefly uses more CPU.
+Setting levels: Vocal Assistant measures the processed vocal and sets its levels.
+When it finishes, your chain is ready to play and adjust.
+What Vocal Assistant builds
+Vocal Assistant builds a complete chain in this order:
+Equalizer: a high-pass filter set for the voice’s register, and gentle bell bands that move your vocal’s tone toward its target: the built-in target for its style and register, or your reference.
+De-esser: set to tame your vocal’s sibilance.
+Serial Compressor: the classic FET-into-Opto vocal chain, followed by a Limiter. The FET stage catches the peaks, the Opto stage evens out the body of the vocal, and the Limiter holds the loudest moments. Vocal Assistant sets each stage’s threshold for your vocal.
+Vocal Stabilizer: keeps the vocal’s tone balanced against a target for its style and register.
+Dimension, Delay, and Reverb: space and depth sized to the vocal style, with ducking on the Delay and Reverb so they stay out of the way of the words. Vocal Assistant leaves these off for a spoken vocal.
+It also sets Pitch as described under Key.
+Modules you switched off in Custom Flow are left out of the chain.
+Everything stays open
+Vocal Assistant’s chain is a starting point. Adjust any control on the Overview page or in the full modules, and keep the rest.
+Rerunning Vocal Assistant
+After Vocal Assistant finishes, click Assistant again to rerun it.
+Vocal Assistant listens to your vocal again and rebuilds the starting chain. Rerunning opens the choice between One-Click and Custom, so you can switch between them or change your Custom Flow settings.
+To keep your current chain instead, click the X before you start the new run.
+Breath ControlVocal Unmask
+Third-party notices
+Copyright (c) 2026 Artel Software, Inc./DBA Boris FX and iZotope, Inc. All rights reserved.
+ESC
+No results found.

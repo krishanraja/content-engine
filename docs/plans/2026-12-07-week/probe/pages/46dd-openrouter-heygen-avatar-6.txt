@@ -1,0 +1,300 @@
+Avatar 6 - Video Generation API Pricing | OpenRouter
+
+Skip to content
+
+Alpha
+
+Search⌘K
+
+Models 
+Rankings 
+Ori DocsChatChatPricingDashboard
+
+Talk to salesSign inSign up
+
+Sign Up
+
+HeyGen: Avatar 6
+
+heygen/heygen-avatar-6
+BenchmarksCompareAPI
+
+HeyGen: Avatar 6 is HeyGen's avatar video model for turning a single photo, a short reference video, or both into an expressive, lip-synced talking video driven by a supplied audio track. It reads the tone, rhythm, and emotion of the speech to drive head motion, facial expression, and gestures, and renders at 1080p or 2K; the audio sets the video length.
+
+Supply exactly one audio reference plus one reference image, one reference video, or a same-person photo alongside the video. The prompt becomes a motion prompt describing how the subject should move, and the motion_expressiveness passthrough parameter can tone the motion down.Show more 
+
+Modalities
+
+Price
+from $0.10/second
+
+Released
+Nov 17, 2026
+
+HeyGen: Avatar 6
+BenchmarksCompareAPI
+
+PlaygroundProvidersPerformanceUptimeAppsActivityFAQExplore
+
+Playground
+
+Example outputs summary for HeyGen: Avatar 6
+Text to Video: Speaks warmly and directly to the camera, with small nods and natural hand gestures. — generated with HeyGen: Avatar 6
+
+Playground
+
+Providers
+This model is hosted by one provider. OpenRouter forwards every request without routing.
+
+End-to-end latency
+P50P75P90P95P99
+
+ProviderOutput /secEnd-to-end latencySpeedUptime
+
+HeyGen
+
+$0.145
+48.58s
+11.3 s/min
+
+100.00%
+
+Filters
+
+Provider
+
+HeyGen
+
+Output /sec$0.145
+End-to-end latency48.58s
+Speed11.3 s/min
+Uptime100.00%
+
+Performance
+Generation time is how long a video takes from submission to completion (lower is better). Speed is seconds of video generated per minute of generation time (higher is better).
+
+End-to-end latency
+48.58s
+P50, best provider
+
+Speed
+11.3s/min
+P50, best across providers
+
+1W
+All locationsAll locations
+1 week
+
+Uptime
+Uptime is the percentage of the past 3 days that at least one provider was responding to requests. Availability is the percentage of time that inference was successfully served. OpenRouter continuously monitors and uses the next-best provider when one returns an error.
+
+Uptime (3d)The model was reachable. Request routed to a provider.
+100.00%
+
+Availability (3d)The model returned inference from any provider. Errors and empty responses count against it.
+95.77%
+
+Availability over the last 3 daysLast 72 hoursAvailability 95.77%
+
+3 Days Ago2 Days AgoYesterdayNow
+
+Availability over the last 24 hours
+
+OpenRouter Availability
+
+94.63%
+
+When an error occurs in an upstream provider, we can recover by routing to another healthy provider, if your request filters allow it. You can access per-provider uptime data programmatically through the Endpoints API. Learn more about our load balancing and provider routing options.
+
+Apps
+Public apps that send the most traffic to this model. Good signal for what real production workloads look like — and a hint at which use cases this model is best suited for.
+
+1.
+
+UIM statics 1124 
+new
+
+0tokens
+
+2.
+
+BisaUGC 
+new
+
+0tokens
+
+3.
+
+mofeed 
+new
+
+0tokens
+
+4.
+
+Switchyard 
+new
+
+0tokens
+
+5.
+
+lol.gl 
+new
+
+0tokens
+
+No chart data available
+
+Activity
+Token volume and request traffic to this model over time.
+
+API
+Drop-in code to call this model. OpenRouter's API is OpenAI-compatible — most SDKs work by just swapping the base URL. The only thing that changes between models is the model slug below.
+
+Not currently available through EU in-region routing. In-region routing docs
+
+Frequently asked questions
+
+What is Avatar 6?
+
+HeyGen: Avatar 6 is HeyGen's avatar video model for turning a single photo, a short reference video, or both into an expressive, lip-synced talking video driven by a supplied audio track. It reads the tone, rhythm, and emotion of the speech to drive head motion, facial expression, and gestures, and renders at 1080p or 2K; the audio sets the video length.
+
+How much does Avatar 6 cost?
+
+Avatar 6 costs from $0.10/second at 1080p to $0.145/second at 2K.
+
+What resolutions does Avatar 6 support?
+
+Avatar 6 generates video at 1080p and 2K.
+
+What inputs and outputs does Avatar 6 support?
+
+Avatar 6 accepts text, images, video, and audio as input and returns video.
+
+Which providers serve Avatar 6?
+
+Avatar 6 is served by 1 provider on OpenRouter: HeyGen.
+
+What other video models does HeyGen have?
+
+Avatar 6 Turbo, HeyGen Video, and Avatar IV are other video models from HeyGen.
+
+When was Avatar 6 released?
+
+Avatar 6 was released on November 17, 2026.
+
+Explore more models
+
+AI Models with Vision: Multimodal LLMs for Image UnderstandingCollectionVideo Generation ModelsCollectionVideo Model RankingsRanking
+
+Footer
+
+© 2026 OpenRouter, Inc
+
+Product
+Chat
+Ori
+Labs
+Pricing
+Business
+Enterprise
+
+Explore
+Rankings
+Models
+Apps
+Providers
+Benchmarks
+Tools
+Discover
+Collections
+Compare
+Works With OR
+
+Company
+About
+Blog
+Customers
+Careers
+Hiring
+Privacy
+
+Terms of Service
+Trust Center
+Support
+Data
+Brand
+
+Developer
+Documentation
+API Reference
+Developer Platform
+Status
+AI Site Map
+
+Connect
+Discord
+GitHub
+LinkedIn
+X
+YouTube
+
+Sign up
+Sign Up
+
+More models from heygen
+
+Avatar 6 Turbo
+
+HeyGen: Avatar 6 Turbo is the faster, lower-cost variant of HeyGen's Avatar 6 avatar video model. It turns a single photo, a short reference video, or both into a lip-synced talking video driven by a supplied audio track, reading the speech's tone and rhythm to drive head motion, facial expression, and gestures, and renders at 1080p or 2K; the audio sets the video length.
+
+Supply exactly one audio reference plus one reference image, one reference video, or a same-person photo alongside the video. The prompt becomes a motion prompt describing how the subject should move, and the motion_expressiveness passthrough parameter can tone the motion down.
+Videofrom $0.05/second
+
+HeyGen Decision 1 Turbo
+
+HeyGen Decision 1 Turbo is a fast, lower-cost multimodal decision model for high-volume moderation, classification, and routing across text, images, audio, and video. Screen each upload against your content policy, tag ads by product and call to action, or organize training clips by topic.
+
+A single moderation request can flag a potential violation, identify the relevant policy category, and score its severity. Turbo returns probabilities for each answer, so you can set your own thresholds for automatic action and human review.
+
+Try Turbo in the HeyGen playground or read the model guide.
+Decisions$0.042 / $0
+
+HeyGen Decision 1
+
+HeyGen Decision 1 is a multimodal decision model for complex judgments across text, images, audio, and video. Use it for creative review, training QA, and context-sensitive moderation. Does a localized ad make the same offer as the approved brief? Does a training clip show a prohibited action as a warning, or does the narrator encourage viewers to repeat it?
+
+Ask multiple yes/no, multiple-choice, and scoring questions in one request. Each answer includes probabilities you can use to apply a rubric, flag discrepancies, or send uncertain cases for review.
+
+Try Decision 1 in the HeyGen playground or read the model guide.
+Decisions$0.07 / $0
+
+HeyGen Voice Turbo
+
+HeyGen Voice Turbo is a lower-latency version of HeyGen Voice, HeyGen's text-to-speech model. It has the same 10 default voices, or bring your own HeyGen key to use voice clones from your own account. It streams 44.1 kHz mono PCM audio, with support for 39 languages and up to 5,000 characters per request.
+Speech$4/M characters
+
+HeyGen Voice Turbo (free)
+
+HeyGen Voice Turbo is a lower-latency version of HeyGen Voice, HeyGen's text-to-speech model. It has the same 10 default voices, or bring your own HeyGen key to use voice clones from your own account. It streams 44.1 kHz mono PCM audio, with support for 39 languages and up to 5,000 characters per request.
+SpeechFree
+
+HeyGen Voice
+
+HeyGen Voice is a text-to-speech model from HeyGen. It comes with 10 default voices, or bring your own HeyGen key to use voice clones from your own account. It streams 44.1 kHz mono PCM audio, with support for 39 languages and up to 5,000 characters per request.
+Speech$15/M characters
+
+HeyGen Video
+
+HeyGen Video is a general-purpose video generation model from HeyGen. It renders short clips with synthesized audio (dialogue, ambience, and sound effects) in a single call, working from a text prompt, from a first-frame image, or from a set of image, video, and audio references that the prompt can address directly. It is aimed at short-form business video with a lot of motion in frame: brand moments, product and equipment demos, and training or onboarding content.
+
+It is not an avatar product. Unlike HeyGen's Avatar IV and Video Agent, there is no talking-head, script, or lip-sync step; the prompt and references drive the whole scene.
+Videofrom $0.01/second
+
+Avatar IV
+
+HeyGen: Avatar IV is an image-to-video model that animates a single photo into an expressive, lip-synced talking-head video. Rather than only matching mouth shapes to words, it interprets the vocal tone, rhythm, and emotion of the audio to drive head motion, facial expression, and gestures, producing output at up to 1080p.
+
+The spoken audio comes from one of two inputs: a text script, which the model voices with HeyGen text-to-speech, or a supplied audio track, which the image is lip-synced to directly. Passthrough parameters let you choose a voice, tune voice settings, set expressiveness, prompt specific motion, replace or remove the background, add captions, and title the video.
+Video$0.05/secondPrevious slideNext slide

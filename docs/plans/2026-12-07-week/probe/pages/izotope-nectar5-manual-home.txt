@@ -1,0 +1,89 @@
+Nectar 5 – Nectar 5 User ManualSkip to content
+User Manual
+Search...
+CTRL K
+iZotope Support
+User Manual
+Welcome to Nectar 5
+New in this version
+Features
+Global Controls
+Auto-Level
+Pitch
+Moments
+Breath Control
+Vocal Assistant
+Vocal Unmask
+Nectar 5 Elements
+Processing Modules
+Backer
+Compressor
+De-esser
+Delay
+Dimension
+Equalizer
+Gate
+Reverb
+Saturation
+Serial Compressor
+Vocal Stabilizer
+Voices
+Reference
+Presets
+Options
+License Information
+iZotope Support
+Printable manual
+Features
+Global Controls
+Auto-Level
+Pitch
+Moments
+Breath Control
+Vocal Assistant
+Vocal Unmask
+Nectar 5 Elements
+Processing Modules
+Backer
+Compressor
+De-esser
+Delay
+Dimension
+Equalizer
+Gate
+Reverb
+Saturation
+Serial Compressor
+Vocal Stabilizer
+Voices
+Reference
+Presets
+Options
+License Information
+Printable manual
+LightDark
+System
+Light
+Dark
+System
+On this page
+Welcome to Nectar 5
+New in this version
+Scroll to top
+Nectar 5
+Nectar 5
+Welcome to Nectar 5
+New in this version
+Moments: select lyrics and apply throws, reverse reverb swells, doubling, harmonies, pitch and formant shifts, and distortion to just those words. An industry first, in DAWs that support ARA.
+Serial Compressor: stack up to 3 compressors, limiters, or clippers, set thresholds on the oscilloscope, and let Learn set the makeup gain.
+Vocal Stabilizer: an adaptive EQ built for vocals, with style and register targets, Shape and Cut modes, and an Amount control for each band.
+Overview page: the key controls of Nectar’s core modules in one place, with a one-click jump to each full module.
+Custom Flow: guide Vocal Assistant with your style, register, key, modules, Intensity, Space, and an acapella reference.
+Micro Pitch Shift: a new Dimension mode that spreads and subtly detunes the vocal for width and weight.
+Wet Level mode, ducking, and Output EQ: send-style control and a 3-band Output EQ in Reverb, Delay, and Dimension, with ducking in Reverb and Delay.
+Nectar 5 Elements: your whole vocal chain on one page, set up by Vocal Assistant.
+A new look: a redesigned interface with a collapsible Pitch and Auto-Level side panel.
+Third-party notices
+Copyright (c) 2026 Artel Software, Inc./DBA Boris FX and iZotope, Inc. All rights reserved.
+ESC
+No results found.
