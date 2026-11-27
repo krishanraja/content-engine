@@ -168,6 +168,10 @@ CTA = _CLOSE_COPY['cta']
 # series name (Krish, 2026-11-26: "the sub brands do not need to feature"). A piece dated before keeps the statement
 # card it was signed with (v5-close.html), as ve compile does (F33).
 OUTRO_FROM = _PALETTE['series_close']['from']
+# One wordmark per video, S3h on its outro (Ruling, Krish, 2026-11-27: "agree"; config/brand-palette.json marks_rule):
+# from 27 Nov the wide frame carries no V4 behind the speaker and the wide panel no series pill. A piece dated before
+# keeps the frame and panel it was signed with (F33).
+MARKS_FROM = _PALETTE['marks_rule']['from']
 S3H = REPO / 'assets' / 'brand' / 'makeyourmindup' / 'v5' / 's3h.svg'
 # The upright Fraunces the outro's invitation is set in, as ve sets it (apps/renderer/src/house/fonts.css).
 OUTRO_SERIF = ('Fraunces', 'normal', '100 900', '@fontsource-variable/fraunces/files/fraunces-latin-full-normal.woff2')
@@ -860,7 +864,18 @@ def style_for(subchannel, date=None):
     accent = tok['mint'] if off else ch['accent']
     return {'house': H, 'channel': ch, 'ink': tok['ink'], 'cream': tok['cream'], 'mint': tok['mint'], 'off': off,
             'accent': accent, 'shadow': mix(accent, tok['ink'], 0.28),
-            'site': H['copy'].get('site', 'makeyourmindup.ai'), 'outro': closes_on_outro(date)}
+            'site': H['copy'].get('site', 'makeyourmindup.ai'), 'outro': closes_on_outro(date), 'bare': bare_body(date)}
+
+
+def bare_body(published):
+    """True when a piece published on `published` carries no V4 on its wide frame and no series pill on its wide panels:
+    every piece from 27 Nov, and one with no readable date (a new render never gets a retired mark). S3h on the outro is
+    its one wordmark (Ruling, Krish, 2026-11-27: "agree"). A piece dated before keeps its frame and panels (F33)."""
+    try:
+        day = date.fromisoformat(str(published)[:10]).isoformat()
+    except ValueError:
+        return True
+    return day >= MARKS_FROM
 
 
 def closes_on_outro(published):
@@ -1099,7 +1114,9 @@ def page_frame16(st, subject, wordmark, fonts):
         fonts=fonts, ink=st['ink'], cream=st['cream'], accent=st['accent'], shadow=st['shadow'],
         channel=html.escape(st['channel']['name']), subject=html.escape(subject),
         sticker=f'<span class="sticker">{html.escape(sticker)}</span>' if sticker else '',
-        wordmark=wordmark, days=html.escape(st['channel']['days']), site=html.escape(st['site']))
+        # From 27 Nov no V4 behind the speaker: an empty box of its height keeps the title where it stood (marks_rule).
+        mark='<i class="mark"></i>' if st.get('bare') else f'<img src="{wordmark}" alt="makeyourmindup">',
+        days=html.escape(st['channel']['days']), site=html.escape(st['site']))
 
 
 def page_panel(st, shape, picture, facts, fonts):
@@ -1110,7 +1127,8 @@ def page_panel(st, shape, picture, facts, fonts):
         fonts=fonts, W=g['W'], H=g['H'], ink=st['ink'], cream=st['cream'], accent=st['accent'], shadow=st['shadow'],
         pad=L['pad'], top=g['pill_top'], pill=L['pill'], x=g['picture_left'], y=g['picture_top'], w=w, h=h,
         picture_bg=facts['background'], picture=png_uri(picture), channel=html.escape(st['channel']['name']),
-        pill_show='hidden' if shape == '9x16' else 'visible')
+        # No series pill on a tall panel (Ruling, Krish, 2026-11-11), nor on a wide one from 27 Nov (marks_rule).
+        pill_show='hidden' if shape == '9x16' or st.get('bare') else 'visible')
 
 
 # ---------------------------------------------------------------- drawing
@@ -1707,6 +1725,18 @@ def self_test():
     check('there is no tall dress template', (TEMPLATES / 'dress.html').exists(), False)
     check('the tall panel hides its series pill, the wide one keeps it',
           ('visibility: hidden' in docs[3], 'visibility: visible' in docs[4]), (True, True))
+    # One wordmark per video, S3h on its outro (Ruling, Krish, 2026-11-27: "agree"): from 27 Nov the wide frame carries no
+    # V4 behind the speaker and no panel a series pill; a piece dated before keeps both, as signed (F33).
+    check('a piece dated from 27 Nov, or undated, is bare; one dated before keeps its marks',
+          [bare_body(d) for d in ('2026-11-26', '2026-11-27', '2026-12-04', None)], [False, True, True, True])
+    bare = {**st, 'bare': True}
+    bare_docs = [page_frame16(bare, 'Who gets paid & why', dot, ''),
+                 page_panel(bare, '16x9', small, {'size': [100, 60], 'background': '#0C1512'}, '')]
+    check('from 27 Nov the wide frame draws no V4 and keeps its title and address, the wide panel hides its series pill',
+          (dot in bare_docs[0], '<img' in bare_docs[0], 'class="mark"' in bare_docs[0], 'Who gets paid &amp; why' in bare_docs[0],
+           'makeyourmindup.ai' in bare_docs[0], 'visibility: hidden' in bare_docs[1], [m for d in bare_docs for m in re.findall(r'\$\{?[A-Za-z_]\w*', d)]),
+          (False, False, True, True, True, True, []))
+    check('before 27 Nov the wide frame keeps V4, exactly as signed', (dot in docs[2], docs[2].count('<img')), (True, 1))
     # From 26 Nov every cut ends on the v5 outro card, the Library's (Ruling, Krish, 2026-11-26: "1 agreed"): S3h once,
     # "Follow for more", the address and the climb bars; no tagline, no stacked mark, no days row and no series name.
     check('a piece dated from 26 Nov closes on the outro, one dated before on its statement card, an undated one on the outro',

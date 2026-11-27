@@ -59,9 +59,29 @@ only be one of these wordmarks on any given artifact or page"). ve compile marks
 false and `FormatMaster.tsx` (`titleWordmark`) draws the lockup without it; a cut dated before keeps the lockup it was
 signed with.
 
+## One wordmark per video, and no sub brands, from 27 Nov
+
+Ruling (Krish, 2026-11-27): "agree", to each of four recommendations (`config/brand-palette.json` `marks_rule`):
+
+1. "The opening title of a video carries no wordmark. S3h on the v5 outro is the only wordmark per video." Done from
+   26 Nov (above).
+2. "Remove the V4 wordmark from the wide quick-edit frame ... and from the why-ladder title card. The outro carries the
+   brand." From 27 Nov quick-edit's `frame-16x9.png` (`kit-v5/v5-frame.html`, `page_frame16`) draws no V4 behind the
+   speaker, and ve's why-ladder title card (`engine/v5/Cards.tsx` `v5_title`, props `titleCardMark` false) draws none
+   under the title.
+3. "Remove the series-name pills ("follow.the.money" and the like) from the body sections of wide videos." His earlier
+   words: "the sub brands do not need to feature" (26 Nov). From 27 Nov no beat carries one: ve's `ChannelPill` and the
+   `StageHeader` pill (props `seriesPill` false) and quick-edit's wide panel pill (`page_panel`).
+4. "The 9:16 outro stays at 2 s, settled by 1.33 s. Do not lengthen it to the template's 3.6 s."
+
+A cut dated before 27 Nov renders exactly as it was signed (F33): ve compile adds neither flag, and quick-edit keeps the
+frame and panels it had. `ve lint` (`guards.marks_problems`) refuses a spec from 27 Nov naming V4 or asking for a body
+logo, a series pill or a title wordmark; `ve render` (`compile.marks_problems`) refuses props from 27 Nov that would draw
+one.
+
 ## The formats, in one line each
 
-- **Long cut (16:9).** Opens on the hook, with nothing before it (the sting is retired). The body carries no logo, only the series pill on section beats (from 16 Nov; no icon tile). Closes on `statement_card`, from 26 Nov the Library's `video-wide-outro`, with no days row (series pieces dated 23 to 25 Nov keep the retired `sting_card`).
+- **Long cut (16:9).** Opens on the hook, with nothing before it (the sting is retired). The body carries no logo (from 16 Nov; no icon tile) and, from 27 Nov, no series pill; a series cut dated before keeps the pill on its section beats. Closes on `statement_card`, from 26 Nov the Library's `video-wide-outro`, with no days row (series pieces dated 23 to 25 Nov keep the retired `sting_card`).
 - **Short cut (9:16).** Opens on the hook, with no intro card and no sting. The body carries captions only: no icon, no wordmark, no pill. Closes on `statement_beat`, from 26 Nov the Library's `video-vertical-outro`, with no days row (series pieces dated 23 to 25 Nov keep the retired `sting_beat`); the title frame and the close are the only places a logo appears.
 - **Carousel (4:5).** Card 1 is the cover scene, with no logo at the top. Every card carries the wordmark small in the bottom right. The last card is `house_close_slide`.
 - **Meme and Notes image.** No logo at the top, and the wordmark small in the bottom right. No close.

@@ -75,6 +75,11 @@ def expect(date, fmt, kind=None, palette=None):
     rule = palette.get('logo_rule') or {}
     if rule.get('from') and str(date)[:10] < rule['from'] and fmt in (rule.get('before') or {}):
         rules['body'] = {**(rules.get('body') or {}), **rule['before'][fmt]}
+    # One wordmark per video, S3h on its outro (Ruling, Krish, 2026-11-27: "agree"; marks_rule): from 27 Nov no series pill
+    # on any beat. A series long cut dated before keeps the pill on its section beats it was signed with (marks_rule.before).
+    marks = palette.get('marks_rule') or {}
+    if k == 'series' and marks.get('from') and str(date)[:10] < marks['from'] and fmt in (marks.get('before') or {}):
+        rules['body'] = {**(rules.get('body') or {}), **marks['before'][fmt]}
     # Every video ends on the v5 outro card, the Library's outro, with no days row (Ruling, Krish, 2026-11-26: "1 agreed";
     # series_close). A series piece dated 23 to 25 Nov was signed with the retired sting close and keeps it (F33): its
     # close is not checked here. One dated before 23 Nov keeps the statement card with the series days row (before).
@@ -208,6 +213,14 @@ def self_test():
     ok.append(('a long cut from 23 Nov carries no logo in its body', body_logo('2026-11-23', 'long_cut', None, p), False))
     ok.append(('an off-day long cut from 23 Nov carries none either', body_logo('2026-11-24', 'long_cut', 'off', p), False))
     ok.append(('a short cut never carries one', body_logo('2026-11-18', 'short_cut', None, p), False))
+    # From 27 Nov no series pill on any beat (Ruling, Krish, 2026-11-27: "agree"); a series long cut dated before keeps it.
+    ok.append(('a series long cut dated 26 Nov keeps its section-beat pill', expect('2026-11-26', 'long_cut', None, p)['body']['series_pill'], 'section_beats'))
+    ok.append(('a series long cut from 27 Nov carries no series pill', expect('2026-11-30', 'long_cut', None, p)['body']['series_pill'], False))
+    ok.append(('an off-day long cut before 27 Nov carries none either', expect('2026-11-26', 'long_cut', 'off', p)['body']['series_pill'], False))
+    ok.append(('a series pill on a long cut from 27 Nov is refused', bool(check({'date': '2026-11-30', 'format': 'long_cut',
+               'body': {'series_pill': 'section_beats'}}, p)), True))
+    ok.append(('the tall outro stays a 2 s beat (marks_rule, ruling 4)', (p['closes']['statement_beat']['seconds_max'],
+               p['marks_rule']['tall_outro_seconds']), (2.0, 2)))
     ok.append(('a mark tile on a long cut from 23 Nov is refused',
                bool(check(dict(long_cut, date='2026-11-23', sting='none', body={'icon': 'tile'}), p)), True))
     ok.append(('the logo rule names the title frame and the close only', p['logo_rule']['logo_on'], ['title_frame', 'close']))

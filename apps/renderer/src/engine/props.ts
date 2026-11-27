@@ -133,6 +133,13 @@ export const EngineRenderPropsSchema = z.object({
    *  the animated title frame and the close card, "NO ICONS"; config/brand-palette.json logo_rule). It was the other way
    *  round, so every spec that forgot the flag drew the icon. */
   bodyLogo: z.boolean().optional(),
+  /** false on a cut dated from 27 Nov: no beat carries the series-name pill (ChannelPill, StageHeader's pill). S3h on the
+   *  v5 outro is the cut's one wordmark and the sub brands do not feature (Ruling, Krish, 2026-11-27: "agree"; earlier,
+   *  2026-11-26: "the sub brands do not need to feature"; config/brand-palette.json marks_rule). Absent: as signed (F33). */
+  seriesPill: z.literal(false).optional(),
+  /** false on a cut dated from 27 Nov: the why-ladder title card (v5_title) carries no V4 under its lines (Ruling, Krish,
+   *  2026-11-27: "agree"; marks_rule). Absent: the card keeps V4, as signed (F33). */
+  titleCardMark: z.literal(false).optional(),
   segments: z.array(EngineSegmentSchema).default([]),
   audio: EngineAudioSchema,
   captions: z.array(EngineCaptionPageSchema).min(1),

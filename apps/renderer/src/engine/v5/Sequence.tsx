@@ -51,6 +51,7 @@ export function LadderSequence({
               format={props.aspect}
               frame={((at - start) * 25) / props.fps}
               lineStarts={starts}
+              titleMark={props.titleCardMark !== false}
               captionSpace={
                 object.device !== 'v5_title' &&
                 object.device !== 'v5_close' &&

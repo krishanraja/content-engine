@@ -94,8 +94,11 @@ export type CardProps = {
   frame: number
   captionSpace?: boolean
   lineStarts?: number[]
+  /** false: the title card draws no V4 under its lines, on a cut dated from 27 Nov (props.titleCardMark; Ruling, Krish,
+   *  2026-11-27: "agree", S3h on the outro is the one wordmark). Absent: V4, as a cut dated before was signed (F33). */
+  titleMark?: boolean
 }
-export function Card({ id, params, format, frame, lineStarts, captionSpace }: CardProps) {
+export function Card({ id, params, format, frame, lineStarts, captionSpace, titleMark = true }: CardProps) {
   const tall = format === '9:16'
   const [w, h, x, safeTop, b, safeHeight] = tall
     ? ([1080, 1920, 90, 269, 756, 1210] as const)
@@ -148,14 +151,16 @@ export function Card({ id, params, format, frame, lineStarts, captionSpace }: Ca
           <div style={{ ...fill, background: 'linear-gradient(transparent 15%, ' + ink + ' 87%)' }} />
           <div style={{ ...area(0), top: undefined, bottom: h - y - c }}>
             {lines(p.lines, true)}
-            <Img
-              src={mark4}
-              style={{
-                width: b * 0.32,
-                marginTop: 18,
-                opacity: enter(frame - (lineStarts?.at(-1) ?? 4 * (p.lines.length - 1)), 8),
-              }}
-            />
+            {titleMark ? (
+              <Img
+                src={mark4}
+                style={{
+                  width: b * 0.32,
+                  marginTop: 18,
+                  opacity: enter(frame - (lineStarts?.at(-1) ?? 4 * (p.lines.length - 1)), 8),
+                }}
+              />
+            ) : null}
           </div>
         </>,
       )

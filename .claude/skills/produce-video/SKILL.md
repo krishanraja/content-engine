@@ -602,21 +602,20 @@ sting is retired (`config/intro-sting.json`). Each report records its opening
 `.agents/skills/produce-video/references/opening.md`.
 
 **The close: the v5 outro card.** Ruling (Krish, 2026-11-26): "1 agreed",
-to retiring the sting close. Every cut dated from 26 Nov, wide and tall,
-series or off day, ends on it (`config/brand-palette.json` `series_close`).
-It is the Library's outro, `video-wide-outro` and `video-vertical-outro`
-(`docs/ve/cards/library`, approved in `lock.json`), drawn by ve's
-`V5Outro.tsx` and filmed by quick-edit's kit from the same numbers
-(`scripts/quick-edit/kit-v5/v5-outro.html`): S3h, "Follow for more",
-makeyourmindup.ai and the climb bars.
-No tagline, no stacked mark, no days row and no series name (ONE-MARK: one
-wordmark per artefact; Krish, 26 Nov: "the sub brands do not need to
-feature"). No intro sting clip goes anywhere in a cut, and ve lint and ve
-render refuse one; ve render also refuses a cut from 26 Nov that closes on the
-old statement card. A cut dated before 26 Nov keeps the close it was signed
-with, the sting close for a series cut dated 23 to 25 Nov. From 26 Nov the
-title lockup carries no wordmark either: S3h on the outro is the cut's one
-wordmark, and the stacked V10 is retired.
+to retiring the sting close. Every cut dated from 26 Nov ends on the
+Library's `video-wide-outro` or `video-vertical-outro` (`config/brand-palette.json`
+`series_close`; ve `V5Outro.tsx`, quick-edit `kit-v5/v5-outro.html`): S3h,
+"Follow for more", makeyourmindup.ai and the climb bars. No tagline, stacked
+mark, days row, series name or sting clip; ve lint and ve render refuse them.
+A cut dated before keeps the close it was signed with.
+
+**One wordmark per video.** Ruling (Krish, 2026-11-27): "agree". S3h on the
+outro is the only wordmark: no wordmark on the title lockup (from 26 Nov), and
+from 27 Nov no V4 on the wide quick-edit frame or the why-ladder title card
+and no series pill on any beat ("the sub brands do not need to feature"). The
+9:16 outro stays 2 s, settled by 1.33 s. ve lint and render refuse a cut from
+27 Nov that breaks it; one dated before renders as signed. Read
+`.agents/skills/produce-video/references/marks.md`.
 
 **Then the outro card and the audio treatment: required before the final
 render** (house rule `STORY_INTRO_OUTRO`). Krish, 2026-10-12: "when the

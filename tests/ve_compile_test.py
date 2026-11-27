@@ -757,6 +757,52 @@ class StingCloseTest(unittest.TestCase):
             self.assertRegex(report['close'], 'sting missing')
             self.assertTrue(ve_compile.ending_problems(props, spec))
 
+    # One wordmark per video, S3h on its v5 outro (Ruling, Krish, 2026-11-27: "agree"; config/brand-palette.json
+    # marks_rule): from 27 Nov no series pill, no V4 on the title card and no wordmark on the title.
+    def test_a_cut_from_27_nov_draws_no_series_pill_no_title_card_v4_and_no_title_wordmark(self):
+        for cut in ('proof-wide', 'proof-tall'):
+            with self.subTest(cut), self.env():
+                spec = self.spec('2026-11-27', cut)
+                props = compile_cut(spec, cut, timed_words(), FIXTURE)
+                self.assertIs(props['seriesPill'], False)
+                self.assertIs(props['titleCardMark'], False)
+                self.assertIs(props['bodyLogo'], False)
+                self.assertEqual(ve_compile.marks_problems(props, spec), [])
+
+    def test_a_cut_from_27_nov_that_would_draw_a_mark_or_a_series_name_is_refused(self):
+        with self.env():
+            spec = self.spec('2026-11-27', 'proof-wide')
+            props = compile_cut(spec, 'proof-wide', timed_words(), FIXTURE)
+            for name, change, why in (
+                    ('the series pill', lambda p: p.pop('seriesPill'), 'seriesPill false'),
+                    ('V4 on the title card', lambda p: p.pop('titleCardMark'), 'titleCardMark false'),
+                    ('a body logo', lambda p: p.update(bodyLogo=True), 'bodyLogo is true'),
+                    ('a title wordmark', lambda p: p.update(titleMoment={'fromFrame': 0, 'toFrame': 10, 'words': []}),
+                     'title lockup carries a wordmark'),
+                    ('V4 in a device', lambda p: p['objects'][0].setdefault('params', {}).update(
+                        src='assets/brand/makeyourmindup/v5/v4.svg'), r'props\.objects\.0\.params\.src')):
+                with self.subTest(name):
+                    marked = copy.deepcopy(props)
+                    change(marked)
+                    found = ' '.join(ve_compile.marks_problems(marked, spec))
+                    self.assertRegex(found, why)
+                    self.assertIn('agree', found)
+
+    def test_a_cut_dated_before_27_nov_keeps_the_body_it_was_signed_with(self):
+        with self.env():
+            spec = self.spec('2026-11-26', 'proof-wide')
+            props = compile_cut(spec, 'proof-wide', timed_words(), FIXTURE)
+            self.assertNotIn('seriesPill', props)
+            self.assertNotIn('titleCardMark', props)
+            self.assertEqual(ve_compile.marks_problems(props, spec), [])
+            late = dict(props, seriesPill=False)
+            self.assertRegex(' '.join(ve_compile.marks_problems(late, spec)), 'keeps the body it was signed with')
+
+    def test_the_tall_outro_stays_a_2_s_beat(self):
+        # Ruling, Krish, 2026-11-27: "agree", to keeping the 9:16 outro at 2 s, settled by 1.33 s, not the template's 3.6 s.
+        self.assertEqual(ve_compile.ENDING_FRAMES_BY_ASPECT['9:16'], 2 * ve_compile.FPS)
+        self.assertEqual(ve_compile.MARKS_RULE['tall_outro_seconds'], 2)
+
 
 class StingAfterHookTest(StingTest):
     """The sting straight after the hook: a new design, built in ve and laid by compile only once Krish approves one

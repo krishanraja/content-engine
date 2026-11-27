@@ -272,6 +272,21 @@ describe('the logo only on the title frame and the close (Ruling, Krish, 2026-11
     }
   })
 
+  it('a wide cut dated from 27 Nov (seriesPill false) draws no series pill on any beat, the stage header included (Ruling, Krish, 2026-11-27: "agree")', () => {
+    const props = { ...EngineRenderPropsSchema.parse({ ...fixture, bodyLogo: false, seriesPill: false, titleCardMark: false }), aspect: '16:9' as const }
+    for (const layout of ['STAGE', 'P1', 'P3', 'P6', 'F3'] as const) {
+      const beat = { ...props.beats[0]!, layout, sectionBeat: true }
+      expect(ChannelPill({ props, beat })).toBeNull()
+      const drawn = elements(StageHeader({ props }))
+      expect(drawn.some((node) => node.props.children === props.series.label)).toBe(false)
+      expect(drawn.some((node) => (node.props as { image?: unknown }).image === props.brand.logo)).toBe(false)
+    }
+    // A cut dated before keeps the pill it was signed with (F33): the flag is absent from its props.
+    const before = { ...EngineRenderPropsSchema.parse({ ...fixture, bodyLogo: false }), aspect: '16:9' as const }
+    expect(ChannelPill({ props: before, beat: { ...before.beats[0]!, sectionBeat: true } })).not.toBeNull()
+    expect(() => EngineRenderPropsSchema.parse({ ...fixture, seriesPill: true })).toThrow()
+  })
+
   it('without bodyLogo the wide cut draws no icon either: the default is no logo, so a spec that forgets the flag cannot draw one', () => {
     // Krish, 2026-11-18: "we have a strict NO ICONS, ONLY THE WORDMARK DURING THE TITLE FRAME AND THE CLOSING FRAME [...] how
     // does this keep creeping through randomly". The tile was drawn on every wide cut unless bodyLogo was false.

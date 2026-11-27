@@ -15,6 +15,8 @@ gate they bind a whole cut of a piece published from creative_direction.MOTION_F
     hook, ever. Remove the sting exception for good.").
   - `close_problems(spec)`: every video dated from 26 Nov ends on the plain v5 outro card, so a spec naming an intro
     sting clip anywhere, or made in another theme, is refused (Ruling, Krish, 26 Nov: "1 agreed").
+  - `marks_problems(spec)`: one wordmark per video, S3h on its v5 outro, so from 27 Nov a spec naming V4 anywhere, or
+    asking for a body logo, a series pill or a wordmark on the title, is refused (Ruling, Krish, 27 Nov: "agree").
   - `freeze(directory)` / `engine_route(...)` / `engine_problems(...)`: the engine and the rules freeze at Sign storyboard
     (ve expect). Proof and render run on the commit pinned there by themselves; a fix on main reaches the piece only under
     Krish's standing engine-follows-main yes or when the house golden test passes on it, and nothing asks him to approve
@@ -297,6 +299,31 @@ def close_problems(spec: dict) -> list[str]:
     return out
 
 
+def marks_problems(spec: dict) -> list[str]:
+    """The marks of a piece dated from 27 Nov, refused before anything is drawn (Ruling, Krish, 2026-11-27: "agree";
+    config/brand-palette.json marks_rule): S3h on the v5 outro is the one wordmark per video, so the spec names V4
+    nowhere (its file or sha256, either drawing), and asks for no body logo (brand.body_logo), no series pill
+    (brand.series_pill) and no wordmark on the title (brand.title_wordmark, title_moment.wordmark). A cut dated before
+    keeps the body it was signed with (F33)."""
+    from . import compile as ve_compile  # noqa: PLC0415
+    rule = ve_compile.MARKS_RULE
+    if str(spec.get('publish_day') or '')[:10] < rule['from']:
+        return []
+    out = []
+    hits = ve_compile.carried_v4(spec, 'spec')
+    if hits:
+        out.append(f'marks.one_wordmark {hits[0]}: names V4 ({len(hits)} place{"s" if len(hits) > 1 else ""}), and no body beat '
+                   f'or title card carries it: S3h on the v5 outro is the one wordmark ({ve_compile.MARKS_RULING}); remove it')
+    brand = spec.get('brand') or {}
+    asks = [(f'brand.{key}', what) for key, what in (('body_logo', 'a logo in the body'), ('series_pill', 'a series pill'),
+                                                       ('title_wordmark', 'a wordmark on the title')) if brand.get(key)]
+    if (spec.get('title_moment') or {}).get('wordmark'):
+        asks.append(('title_moment.wordmark', 'a wordmark on the title'))
+    out += [f'marks.one_wordmark {where}: asks for {what}, and from {rule["from"]} the cut carries none: S3h on the v5 outro is '
+            f'the one wordmark and the sub brands do not feature ({ve_compile.MARKS_RULING}); remove it' for where, what in asks]
+    return out
+
+
 def off_day_beds(rules: dict | None = None) -> list[str]:
     """The tracks the music ledger marks for off days, in ledger order (the rotation)."""
     want = (rules or config()['off_day']).get('off_day_for', 'off-day')
@@ -346,7 +373,7 @@ def spec_lints(spec: dict) -> list[str]:
     from .sfx import style_problems  # noqa: PLC0415
     from . import qc_frames  # noqa: PLC0415
     return (qc_frames.lints(spec) + idea_problems(spec) + one_object_problems(spec) + retype_problems(spec) + offday_problems(spec) + opening_problems(spec)
-            + close_problems(spec) + annotation_lints(spec) + style_problems(spec))
+            + close_problems(spec) + marks_problems(spec) + annotation_lints(spec) + style_problems(spec))
 
 
 # ---------------------------------------------------------------- 3. freeze the engine during a piece

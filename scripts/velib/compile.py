@@ -34,6 +34,13 @@ V5_OUTRO_LOOK = V5_CLOSE['outro']['look']
 V5_CLOSE_RULING = f'Ruling, Krish, {V5_CLOSE["from"]}: "{V5_CLOSE["words"]}"'
 ENDING_TAGLINE = _CLOSE_COPY['tagline']
 ENDING_CTA = _CLOSE_COPY['cta']
+# One wordmark per video, S3h on its v5 outro (Ruling, Krish, 2026-11-27: "agree"; config/brand-palette.json marks_rule):
+# from 27 Nov no V4 in the body or on the why-ladder title card, no series pill on any beat, no wordmark on the title.
+MARKS_RULE = _PALETTE['marks_rule']
+MARKS_RULING = f'Ruling, Krish, {MARKS_RULE["from"]}: "{MARKS_RULE["words"]}"'
+# What names V4: its file, in either drawing (v4.svg, v4-ink.svg), by path or sha256 (config/brand-palette.json marks).
+V4_MARKS = {'makeyourmindup/v5/v4.svg', 'makeyourmindup/v5/v4-ink.svg', _PALETTE['marks']['wordmark']['sha256'],
+            *_PALETTE['marks']['wordmark'].get('same_drawing', [])}
 # The opening, under test (Krish, 29 Oct 2026: "I'd pick number one here but I think that we need to test and learn.
 # We need to figure out what the right tone is over time based on real engagement. Let's go with number one for
 # now."): the hook is the intro. The first beat owns frame 0 with the logo and the series tag in its corners, and no
@@ -206,6 +213,61 @@ def ending_problems(props: dict, spec: dict | None = None) -> list[str]:
         elif ending and ending.get('days'):
             out.append('the v5 outro card carries no series days row and no series name (Krish, 2026-11-26: "the sub brands '
                        'do not need to feature"); run ve compile again')
+    return out
+
+
+def bare_body(spec: dict) -> bool:
+    """True for a cut dated from 27 Nov (marks_rule from): its body carries no series pill on any beat and its why-ladder
+    title card no V4, so S3h on the v5 outro is the cut's one wordmark (Ruling, Krish, 2026-11-27: "agree"; earlier,
+    2026-11-26: "the sub brands do not need to feature"). A cut dated before keeps the body it was signed with (F33)."""
+    return str(spec.get('publish_day') or '')[:10] >= MARKS_RULE['from']
+
+
+def carried_v4(value, where: str = 'props') -> list[str]:
+    """Every place in value (props or a spec) that names V4 by path or sha256, outside props.brand (the house marks
+    compile always hands the renderer, drawn in the body only when bodyLogo is true)."""
+    if isinstance(value, dict):
+        return [hit for key, item in value.items() if f'{where}.{key}' != 'props.brand'
+                for hit in carried_v4(item, f'{where}.{key}')]
+    if isinstance(value, list):
+        return [hit for i, item in enumerate(value) for hit in carried_v4(item, f'{where}.{i}')]
+    if isinstance(value, str):
+        low = value.lower().replace('\\', '/')
+        if low in V4_MARKS or any(low.endswith(mark) for mark in V4_MARKS if '/' in mark):
+            return [where]
+    return []
+
+
+def marks_problems(props: dict, spec: dict | None = None) -> list[str]:
+    """Why this cut's props would draw a wordmark or a series name where the palette has none (Ruling, Krish, 2026-11-27:
+    "agree"; config/brand-palette.json marks_rule). From 27 Nov the one wordmark is S3h on the v5 outro, so the props say
+    bodyLogo false, seriesPill false (no ChannelPill or StageHeader pill), titleCardMark false (no V4 on the why-ladder
+    title card) and titleMoment.wordmark false, and name V4 nowhere outside props.brand. A cut dated before keeps the
+    body it was signed with (F33), so its props carry neither new field."""
+    if spec is None:
+        return []
+    day = str(spec.get('publish_day') or '')[:10]
+    if day < MARKS_RULE['from']:
+        late = [key for key in ('seriesPill', 'titleCardMark') if key in props]
+        return [f'the props say {", ".join(late)}, and a cut dated {day or "without a date"} keeps the body it was signed '
+                f'with (the marks rule binds cuts dated from {MARKS_RULE["from"]}; F33); run ve compile again'] if late else []
+    out = []
+    if props.get('bodyLogo') is True:
+        out.append(f'bodyLogo is true: from {MARKS_RULE["from"]} the body carries no V4 or icon, and S3h on the v5 outro is '
+                   f'the cut\'s one wordmark ({MARKS_RULING}); run ve compile again')
+    if props.get('seriesPill') is not False:
+        out.append(f'the props do not say seriesPill false: from {MARKS_RULE["from"]} no beat carries a series-name pill '
+                   f'({MARKS_RULING}; Krish, 2026-11-26: "the sub brands do not need to feature"); run ve compile again')
+    if props.get('titleCardMark') is not False:
+        out.append(f'the props do not say titleCardMark false: from {MARKS_RULE["from"]} the why-ladder title card carries '
+                   f'no V4 ({MARKS_RULING}); run ve compile again')
+    if props.get('titleMoment') and (props['titleMoment'] or {}).get('wordmark') is not False:
+        out.append(f'the title lockup carries a wordmark: the opening title carries none, and S3h on the v5 outro is the '
+                   f'cut\'s one wordmark ({MARKS_RULING}); run ve compile again')
+    hits = carried_v4(props)
+    if hits:
+        out.append(f'the props name V4 at {", ".join(hits)}: from {MARKS_RULE["from"]} no body beat or title card carries '
+                   f'it ({MARKS_RULING}); remove it')
     return out
 
 
@@ -858,6 +920,9 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         # Always said, never left to a default: false from the palette's logo rule (Mon 16 Nov), true only for a piece dated before
         # it. The renderer also draws no body logo unless bodyLogo is true, so a spec that bypasses compile cannot draw one.
         'bodyLogo': _body_logo(spec, cut['aspect'], off),
+        # From 27 Nov no series pill on any beat and no V4 on the why-ladder title card: S3h on the outro is the cut's one
+        # wordmark (Ruling, Krish, 2026-11-27: "agree"; marks_rule). Absent for older cuts, so their props hold (F33).
+        **({'seriesPill': False, 'titleCardMark': False} if bare_body(spec) else {}),
         'segments': [] if spec['audio']['master'] == 'vo' else [
             {'src': take, 'trimBeforeFrames': 0, 'fromFrame': 0, 'durationFrames': duration}],
         'audio': {'stem': {'src': resolve_source(f'audio.{cut_id}.wav'), 'trimBeforeFrames': 0}, 'sfx': []},
