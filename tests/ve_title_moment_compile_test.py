@@ -9,7 +9,7 @@ from pathlib import Path
 
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
-from velib.compile import title_moment_props  # noqa: E402
+from velib.compile import title_moment_props, title_without_wordmark  # noqa: E402
 
 ROWS = [{'w': i, 'text': t, 'atFrame': 10 * i} for i, t in enumerate(
     ['and', 'where', 'does', 'AI', 'get', 'built?', "Let's", 'find', 'out.', 'Meta'])]
@@ -39,6 +39,18 @@ class TitleMomentTest(unittest.TestCase):
     def test_a_span_the_cut_does_not_hold_is_refused(self):
         with self.assertRaises(ValueError):
             title_moment_props(spec({'from_w': 8, 'to_w': 12}, []), 'short', ROWS, 200)
+
+
+class TitleWordmarkTest(unittest.TestCase):
+    """From 26 Nov the lockup carries no wordmark: the stacked V10 is retired (S3h replaced it) and S3h on the v5 outro is
+    the cut's one wordmark (Krish, 2026-11-25, ONE-MARK.md). A cut dated before keeps the lockup it was signed with."""
+
+    def test_from_26_nov_the_lockup_has_no_wordmark(self):
+        self.assertEqual([title_without_wordmark({'publish_day': d}) for d in ('2026-11-25', '2026-11-26', '2026-12-01')],
+                         [False, True, True])
+
+    def test_a_cut_with_no_publish_day_keeps_the_lockup_as_compile_keeps_its_close(self):
+        self.assertFalse(title_without_wordmark({}))
 
 
 if __name__ == '__main__':

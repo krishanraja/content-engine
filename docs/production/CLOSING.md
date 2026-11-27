@@ -1,6 +1,6 @@
 # How every video ends
 
-From Thu 26 Nov 2026 every whole cut closes on the Library's outro instead (`video-wide-outro` and `video-vertical-outro`: S3h, "Follow for more", makeyourmindup.ai and the climb bars, no tagline; Ruling, Krish, 2026-11-26: "1 agreed"). `docs/production/BRAND_PALETTE.md`, "The series close", is the rule. This page describes the statement card that cuts dated before 26 Nov keep.
+From Thu 26 Nov 2026 every whole cut closes on the Library's outro instead (`video-wide-outro` and `video-vertical-outro`: S3h, "Follow for more", makeyourmindup.ai and the climb bars, no tagline; Ruling, Krish, 2026-11-26: "1 agreed"). `docs/production/BRAND_PALETTE.md`, "The series close", is the rule. ve draws it in `apps/renderer/src/engine/chrome/V5Outro.tsx`; quick-edit's kit films the same card from `scripts/quick-edit/kit-v5/v5-outro.html` (`page_outro` in `scripts/quick-edit/kit.py`, its numbers held to `V5Outro.tsx` by `tests/quick-edit-kit.test.ts`) for every piece dated from 26 Nov. This page describes the statement card that cuts dated before 26 Nov keep (kit's `kit-v5/v5-close.html`).
 
 Krish, 10 Nov 2026, on the Fri 13 Nov piece's cards: "This house card looks awful. The copy should read: "Built to help you decide." And the component spacing and where all the components are are ridiculously poorly designed. Can you spin off a sub-session to upgrade these cards permanently and come up with a much more powerful closing strategy?"
 

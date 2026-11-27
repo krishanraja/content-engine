@@ -606,13 +606,17 @@ to retiring the sting close. Every cut dated from 26 Nov, wide and tall,
 series or off day, ends on it (`config/brand-palette.json` `series_close`).
 It is the Library's outro, `video-wide-outro` and `video-vertical-outro`
 (`docs/ve/cards/library`, approved in `lock.json`), drawn by ve's
-`V5Outro.tsx`: S3h, "Follow for more", makeyourmindup.ai and the climb bars.
+`V5Outro.tsx` and filmed by quick-edit's kit from the same numbers
+(`scripts/quick-edit/kit-v5/v5-outro.html`): S3h, "Follow for more",
+makeyourmindup.ai and the climb bars.
 No tagline, no stacked mark, no days row and no series name (ONE-MARK: one
 wordmark per artefact; Krish, 26 Nov: "the sub brands do not need to
 feature"). No intro sting clip goes anywhere in a cut, and ve lint and ve
 render refuse one; ve render also refuses a cut from 26 Nov that closes on the
 old statement card. A cut dated before 26 Nov keeps the close it was signed
-with, the sting close for a series cut dated 23 to 25 Nov.
+with, the sting close for a series cut dated 23 to 25 Nov. From 26 Nov the
+title lockup carries no wordmark either: S3h on the outro is the cut's one
+wordmark, and the stacked V10 is retired.
 
 **Then the outro card and the audio treatment: required before the final
 render** (house rule `STORY_INTRO_OUTRO`). Krish, 2026-10-12: "when the
@@ -632,18 +636,8 @@ but no cut is rendered as finished, filed, sent to the library or recorded
 (`making.py video`) without it. Never build or improvise the design here, and
 never ship a cut without it on anyone's word but Krish's own, quoted.
 
-Approved on 12 October: the stand-off (`config/story-intro-outro.json`,
-`approved`). Render the piece's own outro, then point each cut's config at
-it:
-
-```
-python scripts/quick-edit/story_io.py props --plan docs/plans/PLAN --out WORK/story-io/props.json
-python scripts/quick-edit/story_io.py render --piece-props WORK/story-io/props.json --out WORK/story-io --only outro-16x9,outro-9x16
-```
-
-In `long.json` set `"endcard": {"16x9": "WORK/story-io/outro-16x9.mp4"}`
-(in `short.json` the `9x16` one). The outro runs 4 s; make.py sizes the
-music for it. `scripts/produce_day.py` does exactly this.
+The 12 October stand-off outro (`config/story-intro-outro.json`, `story_io.py`) is retired: every cut from 26 Nov ends
+on the v5 outro, which make.py and ve draw themselves. `scripts/produce_day.py` no longer renders it.
 
 ```
 python scripts/quick-edit/make.py WORK/kit/long.json --out WORK/long --only 16x9 --plan

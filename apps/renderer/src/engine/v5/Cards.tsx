@@ -10,7 +10,10 @@ const { ink, cream, mint, climb } = brand.colours
 const ease = Easing.bezier(0.22, 1, 0.36, 1)
 export const enter = (frame: number, duration: number) => ease(Math.min(1, Math.max(0, frame / duration)))
 const mark4 = new URL('../../../../../assets/brand/makeyourmindup/v5/v4.svg', import.meta.url).href
-const mark10 = new URL('../../../../../assets/brand/makeyourmindup/v5/v10.svg', import.meta.url).href
+/** The close's one wordmark is S3h, the square three-line name with the D as the O: it replaced the stacked V10 and V6
+ *  (Krish, 2026-11-25, docs/ve/cards/library/ONE-MARK.md: "there should only be one of these wordmarks on any given
+ *  artifact or page"; the closing cards end with S3h small, under "Follow for more", in place of V10). */
+const markS3h = new URL('../../../../../assets/brand/makeyourmindup/v5/s3h.svg', import.meta.url).href
 const fill: CSSProperties = { position: 'absolute', inset: 0 }
 const mono: CSSProperties = { fontFamily: V5_DATA_FONT, fontSize: 32 }
 const grain =
@@ -365,7 +368,7 @@ export function Card({ id, params, format, frame, lineStarts, captionSpace }: Ca
           >
             Follow for more
             <br />
-            <Img src={mark10} style={{ width: Math.min(b * 0.39, 310), marginTop: 30 }} />
+            <Img data-close-mark="s3h" src={markS3h} style={{ display: 'block', width: Math.min(b * 0.39, 310), marginTop: 30 }} />
           </div>
         </>,
       )

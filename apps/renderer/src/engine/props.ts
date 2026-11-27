@@ -158,6 +158,10 @@ export const EngineRenderPropsSchema = z.object({
     /** The title is one full-frame lockup with the wordmark inside it (Ruling, Krish, 2026-11-19): compile always says so,
      *  so ve qc can refuse a cut rendered before the lockup. */
     lockup: z.literal(true).optional(),
+    /** false on a cut dated from 26 Nov: the lockup carries no wordmark. The stacked V10 it carried is retired (S3h
+     *  replaced V10 and V6), and the cut's one wordmark is S3h on its v5 outro (Krish, 2026-11-25, ONE-MARK.md: "there
+     *  should only be one of these wordmarks on any given artifact"; Ruling, Krish, 2026-11-26: "1 agreed"). */
+    wordmark: z.literal(false).optional(),
     /** Under the shot grammar (Ruling, Krish, 2026-11-20): the lockup builds inside the staging's panel as he says the
      *  line and goes full frame only from this frame, his last title word, for at most 2 s (compile caps toFrame). */
     fullFrom: z.number().int().nonnegative().optional(),

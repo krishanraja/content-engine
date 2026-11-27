@@ -3,7 +3,7 @@ import { createElement, isValidElement, type ReactElement, type ReactNode } from
 import { Audio, Composition, OffthreadVideo, Sequence } from 'remotion'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import fixture from '../../../../fixtures/ve/engine-core/props.json'
-import { FormatMaster } from './FormatMaster'
+import { FormatMaster, titleWordmark } from './FormatMaster'
 import { VeCut } from './VeCut'
 import { RemotionRoot } from '../Root'
 import { BrandFrame } from './BrandFrame'
@@ -311,6 +311,20 @@ describe('vertical video carries no wordmark (Ruling, Krish, 2026-11-11)', () =>
     const band = nodes.find((node) => node.type === EndingBand)
     expect(band).toBeTruthy()
     expect(JSON.stringify(elements(EndingBand({ props, frame: 100 }) as ReactElement).map((n) => (n.props as { image?: { src?: string } }).image?.src ?? null))).toContain(props.brand.stacked.src)
+  })
+})
+
+describe("the title lockup's wordmark", () => {
+  // S3h replaced the stacked V10 and V6, and a cut carries one wordmark, S3h on its v5 outro (Krish, 2026-11-25,
+  // ONE-MARK.md: "there should only be one of these wordmarks on any given artifact"): compile marks a cut dated from
+  // 26 Nov titleMoment.wordmark false, and its lockup draws none. A cut dated before keeps the stacked mark it was signed with.
+  const words = [{ text: 'Where', atFrame: 0 }, { text: 'next?', atFrame: 10 }]
+  it('is the stacked mark on a cut dated before 26 Nov, and none from 26 Nov', () => {
+    const before = EngineRenderPropsSchema.parse({ ...fixture, titleMoment: { fromFrame: 0, toFrame: 40, lockup: true, words } })
+    const from = EngineRenderPropsSchema.parse({ ...fixture, titleMoment: { fromFrame: 0, toFrame: 40, lockup: true, wordmark: false, words } })
+    expect(titleWordmark(before)).toEqual(before.brand.stacked)
+    expect(titleWordmark(from)).toBeUndefined()
+    expect(() => EngineRenderPropsSchema.parse({ ...fixture, titleMoment: { fromFrame: 0, toFrame: 40, wordmark: true, words } })).toThrow()
   })
 })
 

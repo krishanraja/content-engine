@@ -528,6 +528,13 @@ def generated_plate_problem(asset: dict, device: str) -> str:
     return ''
 
 
+def title_without_wordmark(spec: dict) -> bool:
+    """True for a cut dated from 26 Nov (series_close from): its title lockup carries no wordmark, since the stacked V10
+    it carried is retired and S3h on the v5 outro is the cut's one wordmark (Krish, 2026-11-25, ONE-MARK.md: "there
+    should only be one of these wordmarks on any given artifact"). A cut dated before keeps the lockup it was signed with."""
+    return str(spec.get('publish_day') or '')[:10] >= V5_CLOSE['from']
+
+
 def title_moment_props(spec: dict, cut_id: str, rows: list[dict], duration: int) -> dict | None:
     """The episode title moment on this cut's clock (title_moment.spans; Krish, 2026-11-15 and 2026-11-17: the line he
     says becomes the title, "seamlessly flowing out of the captions and back in to them again"; 2026-11-18, Tue 17:
@@ -860,7 +867,10 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
         **({'title': spec['brand']['title']} if spec['brand'].get('title') else {}),
         # The title is one full-frame lockup with the wordmark inside it (Ruling, Krish, 2026-11-19); 'lockup' tells ve qc
         # the cut was rendered after the lockup replaced the panel card and the separate wordmark.
+        # From 26 Nov the lockup carries no wordmark: the stacked V10 is retired (S3h replaced it) and S3h on the v5 outro
+        # is the cut's one wordmark (Krish, 2026-11-25, ONE-MARK.md); a cut dated before keeps its lockup as signed (F33).
         **({'titleMoment': {**{k: moment[k] for k in ('fromFrame', 'toFrame', 'release', 'words')}, 'card': True, 'lockup': True,
+                            **({'wordmark': False} if title_without_wordmark(spec) else {}),
                             **grammar_title(cut, moment, cut_layout_mode(spec, cut_id, take_frame))}}
            if moment else {}),
         'beats': beats, 'objects': objects, 'events': events,

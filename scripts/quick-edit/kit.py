@@ -52,7 +52,11 @@ cut.
 It writes into DIR, and nowhere else:
 
   endcard-9x16.png/.mp4, endcard-16x9.png/.mp4
-                       the house end card, 4 seconds, 30 fps, a silent 48 kHz stereo track
+                       the close, 2 s tall and 6 s wide, 30 fps, a silent 48 kHz stereo track:
+                       from 26 Nov the v5 outro card (kit-v5/v5-outro.html, the Library's
+                       video-vertical-outro and video-wide-outro, as ve's V5Outro.tsx draws them:
+                       S3h, "Follow for more", the address and the climb bars); a piece dated
+                       before keeps the statement card it was signed with (kit-v5/v5-close.html)
   frame-16x9.png       the wide shape's background in the subchannel's look
   panels/<id>-9x16.png, panels/<id>-16x9.png
                        every picture in the post (kind "image"), fitted to the
@@ -154,9 +158,19 @@ ENDCARD_SECONDS = 6
 # the attached", docs/production/SOCIAL-BEST-PRACTICES-2026.md section 5: a compact end beat, never a long card).
 ENDCARD_SECONDS_BY_SHAPE = {'16x9': ENDCARD_SECONDS, '9x16': 2}
 # The one copy of the close's words (config/brand-palette.json close_copy), the same ve compile reads.
-_CLOSE_COPY = json.loads((REPO / 'config' / 'brand-palette.json').read_text(encoding='utf-8'))['close_copy']
+_PALETTE = json.loads((REPO / 'config' / 'brand-palette.json').read_text(encoding='utf-8'))
+_CLOSE_COPY = _PALETTE['close_copy']
 TAGLINE = _CLOSE_COPY['tagline']
 CTA = _CLOSE_COPY['cta']
+# From 26 Nov every cut ends on the v5 outro card, the Library's video-vertical-outro and video-wide-outro (Ruling,
+# Krish, 2026-11-26: "1 agreed"; config/brand-palette.json series_close), the card ve draws in V5Outro.tsx: S3h, the
+# one wordmark, "Follow for more", the address and the climb bars. No tagline, no stacked mark, no days row and no
+# series name (Krish, 2026-11-26: "the sub brands do not need to feature"). A piece dated before keeps the statement
+# card it was signed with (v5-close.html), as ve compile does (F33).
+OUTRO_FROM = _PALETTE['series_close']['from']
+S3H = REPO / 'assets' / 'brand' / 'makeyourmindup' / 'v5' / 's3h.svg'
+# The upright Fraunces the outro's invitation is set in, as ve sets it (apps/renderer/src/house/fonts.css).
+OUTRO_SERIF = ('Fraunces', 'normal', '100 900', '@fontsource-variable/fraunces/files/fraunces-latin-full-normal.woff2')
 
 # How big a picture's words come out, from house rule SUBSTACK_FIT: a
 # 1360-wide article picture draws every word a reader needs at 54 pixels or
@@ -846,7 +860,17 @@ def style_for(subchannel, date=None):
     accent = tok['mint'] if off else ch['accent']
     return {'house': H, 'channel': ch, 'ink': tok['ink'], 'cream': tok['cream'], 'mint': tok['mint'], 'off': off,
             'accent': accent, 'shadow': mix(accent, tok['ink'], 0.28),
-            'site': H['copy'].get('site', 'makeyourmindup.ai')}
+            'site': H['copy'].get('site', 'makeyourmindup.ai'), 'outro': closes_on_outro(date)}
+
+
+def closes_on_outro(published):
+    """True when a piece published on `published` ends on the v5 outro card: every piece from 26 Nov, and one with no
+    readable date (a new render never gets a retired close). A piece dated before keeps its statement card (F33)."""
+    try:
+        day = date.fromisoformat(str(published)[:10]).isoformat()
+    except ValueError:
+        return True
+    return day >= OUTRO_FROM
 
 
 def template(name):
@@ -875,7 +899,182 @@ def statement_lines(shape, tagline=TAGLINE):
 
 
 def page_endcard(st, shape, masthead, fonts):
-    """The house end card (endcard.html, direction C, picked by Krish on 10 Nov 2026): the tagline as the picture,
+    """The close for this piece's date: the v5 outro card from 26 Nov (page_outro), else the statement card it was
+    signed with (page_statement)."""
+    if st['outro']:
+        return page_outro(st, shape, fonts)
+    return page_statement(st, shape, masthead, fonts)
+
+
+# The v5 outro card, the Library's video-vertical-outro (9x16) and video-wide-outro (16x9), as ve draws it
+# (apps/renderer/src/engine/chrome/V5Outro.tsx V5_OUTRO, V5_OUTRO_TRACKS and v5OutroModel): every number is the
+# template's settled frame as the Library draws it, and tests/quick-edit-kit.test.ts holds these to V5Outro.tsx's.
+# frames and hold_from are Library frames (25 fps); the close plays them in its own seconds (ENDCARD_SECONDS_BY_SHAPE).
+OUTRO = {
+    '9x16': dict(item='video-vertical-outro', frames=90, hold_from=60,
+                 mark=dict(x=113.15500304040272, y=168.11158753497338, size=857.3644222160799),
+                 invitation=dict(x=141, baseline=1114.7865258776312, size=88),
+                 site=dict(x=144, baseline=1215.7865258776312, size=45, tracking=1.8),
+                 bars=dict(top=1440, height=480, edges=(0, 0.25, 0.5, 0.75, 1)),
+                 enter=dict(start=55, duration=5, invitation=20, site=12)),
+    '16x9': dict(item='video-wide-outro', frames=150, hold_from=60,
+                 mark=dict(x=251.08679936956827, y=28.0725904613912, size=536.1240817401816),
+                 invitation=dict(x=268, baseline=663.9880301057593, size=71.11111111111111),
+                 site=dict(x=270, baseline=774.0991412168704, size=48, tracking=1.92),
+                 bars=dict(top=842, height=238, edges=(0, 0.25, 0.5, 0.8125, 1)),
+                 enter=dict(start=53, duration=7, invitation=12, site=7.2)),
+}
+OUTRO_WORDS = {'invitation': 'Follow for more', 'site': 'makeyourmindup.ai'}
+OUTRO_TRACKS = {
+    'drop': ((15, 12), (17, 12), (19, 12), (21, 12)), 'pulse': (55, 56, 57, 58), 'pulse_frames': 2,
+    'make': (25, 8), 'your': (31, 8), 'disc': (31, 9), 'lock': (40, 5), 'mind': (40, 8), 'up': (45, 8),
+}
+# S3h in its own units (s3h.svg <use href="#three-h">), the parts the Library lands one by one, and the D's halves.
+_THREE_H = dict(x=26, y=35, scale=645 / 400)
+_ROWS = {'make': (-3, 143), 'your': (143, 296.5), 'mind': (296.5, 397)}
+_PARTS = (('make', 'make', -5, 407, -18), ('your', 'your', -5, 78.7, 16), ('your', 'your', 237.8, 407, 16),
+          ('mind', 'mind', -5, 287, -14), ('up', 'mind', 287, 407, 18))
+_DISC = {'cream': (78.7, 157.3), 'mint': (157.3, 237.8)}
+
+
+def library_ease(value):
+    """motion.js progress(), as V5Outro.tsx libraryEase: cubic-bezier(0.22, 1, 0.36, 1) solved by bisection, eased out."""
+    if value <= 0:
+        return 0.0
+    if value >= 1:
+        return 1.0
+    lo, hi = 0.0, 1.0
+    for _ in range(22):
+        u = (lo + hi) / 2
+        v = 1 - u
+        if 3 * v * v * u * 0.22 + 3 * v * u * u * 0.36 + u * u * u < value:
+            lo = u
+        else:
+            hi = u
+    return 1 - (1 - (lo + hi) / 2) ** 3
+
+
+def outro_model(shape, at):
+    """V5Outro.tsx v5OutroModel at Library frame `at`: each track's progress, the pulses, the snap and the words."""
+    o, t = OUTRO[shape], OUTRO_TRACKS
+    building = at < o['hold_from']
+    track = lambda start, duration: library_ease((at - start) / duration) if building else 1.0  # noqa: E731
+    whole = math.floor(at)
+    words = None if building and at < o['enter']['start'] else track(o['enter']['start'], o['enter']['duration'])
+    return {'building': building, 'drops': [track(*d) for d in t['drop']],
+            'pulses': [building and start <= whole < start + t['pulse_frames'] for start in t['pulse']], 'snap': whole == 0,
+            **{name: track(*t[name]) for name in ('make', 'your', 'disc', 'lock', 'mind', 'up')}, 'words': words}
+
+
+def outro_bars(shape, model):
+    """V5Outro.tsx v5OutroBars: the four bars fill the frame, then drop into the staircase along the foot."""
+    o = OUTRO[shape]
+    w, h = FRAME[shape]
+    spread = model['drops'][3]
+    edge = lambda n: w * (n / 4 + (o['bars']['edges'][n] - n / 4) * spread)  # noqa: E731
+    out = []
+    for i in range(4):
+        height = h + (o['bars']['height'] * (i + 1) / 4 - h) * model['drops'][i]
+        out.append({'left': edge(i), 'top': h - height, 'width': edge(i + 1) - edge(i), 'height': height,
+                    'pulse': model['pulses'][i]})
+    return out
+
+
+def outro_parts(shape, model):
+    """The S3h copies on screen at this moment, each {name: (clip-path inset, translateX px)}: the parts landing one
+    by one and the D's two halves locking while the card builds, then one plain copy of the file (V5Outro.tsx Mark)."""
+    size = OUTRO[shape]['mark']['size']
+    unit = size / 700
+    k = unit * _THREE_H['scale']
+
+    def region(frm, to, row):
+        left = unit * _THREE_H['x'] + k * frm
+        right = size - (unit * _THREE_H['x'] + k * to)
+        top = unit * _THREE_H['y'] + k * row[0]
+        bottom = size - (unit * _THREE_H['y'] + k * row[1])
+        return f'inset({top:.3f}px {right:.3f}px {bottom:.3f}px {left:.3f}px)'
+
+    if not model['building'] or (model['up'] >= 1 and model['lock'] >= 1):
+        return {'whole': ('none', 0.0)}
+    out = {}
+    for i, (name, row, frm, to, start_x) in enumerate(_PARTS):
+        if model[name] > 0:
+            out[f'{name}-{i}'] = (region(frm, to, _ROWS[row]), start_x * (1 - model[name]) * k)
+    if model['disc'] > 0:
+        offset = (1 - model['disc']) * 9 - model['disc'] * (1 - model['lock']) * 2.6
+        shift = 16 * (1 - model['your'])
+        out['disc-cream'] = (region(*_DISC['cream'], _ROWS['your']), (shift - offset) * k)
+        out['disc-mint'] = (region(*_DISC['mint'], _ROWS['your']), (shift + offset) * k)
+    return out
+
+
+def outro_motion(shape):
+    """The card's motion as CSS keyframes, one stop per Library frame from the first to the hold and the settled card
+    after it, so Drawer.film (and the HyperFrames drawer) step the template's own motion and Drawer.shoot draws the
+    settled card. Every animation runs the close's whole length; a stop at Library frame f sits at f / frames."""
+    o = OUTRO[shape]
+    seconds = ENDCARD_SECONDS_BY_SHAPE[shape]
+    frames = list(range(o['hold_from'] + 1)) + [o['frames']]
+    models = [(f, outro_model(shape, f)) for f in frames]
+    pct = lambda f: f'{100 * f / o["frames"]:.4f}%'  # noqa: E731
+    css, names = [], {}
+
+    def animate(selector, name, stops, step=False):
+        css.append(f'@keyframes {name} {{' + ''.join(f'{pct(f)}{{{body}}}' for f, body in stops) + '}')
+        names.setdefault(selector, []).append(f'{name} {seconds}s {"step-end" if step else "linear"} both')
+
+    for i in range(4):
+        geo = [(f, outro_bars(shape, m)[i]) for f, m in models]
+        animate(f'.bar[data-step="{i + 1}"]', f'bar{i + 1}', [(f, f'left:{b["left"]:.3f}px;top:{b["top"]:.3f}px;'
+                                                                 f'width:{b["width"]:.3f}px;height:{b["height"]:.3f}px') for f, b in geo])
+        animate(f'.bar[data-step="{i + 1}"] .pulse', f'pulse{i + 1}', [(f, f'opacity:{0.24 if b["pulse"] else 0}') for f, b in geo], step=True)
+    animate('.snap', 'snap', [(f, f'opacity:{0.2 if m["snap"] else 0}') for f, m in models], step=True)
+    parts = [(f, outro_parts(shape, m)) for f, m in models]
+    for key in dict.fromkeys(k for _, p in parts for k in p):
+        clip = next(p[key][0] for _, p in parts if key in p)
+        css.append(f'.mark img[data-part="{key}"] {{clip-path:{clip}}}')
+        animate(f'.mark img[data-part="{key}"]', f'show-{key}', [(f, f'opacity:{1 if key in p else 0}') for f, p in parts], step=True)
+        if key != 'whole':
+            animate(f'.mark img[data-part="{key}"]', f'move-{key}',
+                    [(f, f'transform:translateX({p[key][1] if key in p else 0:.3f}px)') for f, p in parts])
+    for word in ('invitation', 'site'):
+        rise = o['enter'][word]
+        animate(f'text.{word}', f'rise-{word}', [(f, f'transform:translateY({0 if m["words"] is None else rise * (1 - m["words"]):.3f}px)')
+                                                for f, m in models])
+        animate(f'text.{word}', f'show-{word}', [(f, f'opacity:{0 if m["words"] is None else 1}') for f, m in models], step=True)
+    css += [f'{selector} {{animation:{", ".join(anims)}}}' for selector, anims in names.items()]
+    return '\n'.join(css), [key for key in dict.fromkeys(k for _, p in parts for k in p)]
+
+
+def page_outro(st, shape, fonts):
+    """The v5 outro card (OUTRO above; v5-outro.html): S3h once, "Follow for more", makeyourmindup.ai and the climb
+    bars, coral, butter, lilac and mint, on grained ink, with the Library's motion. Nothing else: no tagline, no
+    stacked mark, no days row and no series name, on a series piece or an off day alike."""
+    W, H = FRAME[shape]
+    o = OUTRO[shape]
+    tokens = json.loads((REPO / 'config' / 've' / 'brand-tokens.json').read_text(encoding='utf-8'))['colours']
+    motion, parts = outro_motion(shape)
+    settled = outro_bars(shape, outro_model(shape, o['frames']))
+    bars = ''.join(f'<div class="bar" data-step="{i + 1}" style="left:{b["left"]:.3f}px;top:{b["top"]:.3f}px;width:{b["width"]:.3f}px;'
+                   f'height:{b["height"]:.3f}px;background:{colour}"><div class="pulse"></div></div>'
+                   for i, (b, colour) in enumerate(zip(settled, [*tokens['climb'], tokens['mint']])))
+    s3h = 'data:image/svg+xml;base64,' + base64.b64encode(S3H.read_bytes()).decode('ascii')
+    mark = ''.join(f'<img data-part="{key}" src="{s3h}" alt="{"makeyourmindup" if key == "whole" else ""}">' for key in parts)
+    axes = f'"opsz" 14, "SOFT" {tokens["fraunces_axes"]["SOFT"]}, "WONK" {tokens["fraunces_axes"]["WONK"]}'
+    if fonts:  # the upright Fraunces beside the kit's faces
+        fonts += '\n' + brand.font_css(extra=[OUTRO_SERIF]).split('\n')[-1]
+    return template('v5-outro.html').substitute(
+        fonts=fonts, W=W, H=H, ink=tokens['ink'], cream=tokens['cream'], grain=tokens['grain_on_ink'], axes=axes,
+        motion=motion, item=o['item'], bars=bars, snap_top=H * 0.35, snap_height=H * 0.008, mark=mark,
+        mark_x=o['mark']['x'], mark_y=o['mark']['y'], mark_size=o['mark']['size'],
+        inv_x=o['invitation']['x'], inv_y=o['invitation']['baseline'], inv_size=o['invitation']['size'],
+        site_x=o['site']['x'], site_y=o['site']['baseline'], site_size=o['site']['size'], site_tracking=o['site']['tracking'],
+        invitation=html.escape(OUTRO_WORDS['invitation']), site=html.escape(OUTRO_WORDS['site']))
+
+
+def page_statement(st, shape, masthead, fonts):
+    """The statement card every piece dated before 26 Nov closes on, kept as it was signed (F33): the end card of
+    direction C (Krish, 10 Nov 2026), the tagline as the picture,
     the masthead on ink, the three days in their series colours, "Subscribe free" and the address, the last word
     and the underline in this piece's series colour. An off-day piece (st["off"]) closes in house mint with no
     series days on it (config/brand-palette.json; F36)."""
@@ -1485,7 +1684,8 @@ def self_test():
     # Every template fills, with nothing left over.
     st = {'house': {'channels': [{'day': 'Monday', 'name': 'follow.the.money', 'accent': '#FFD84D'}]},
           'channel': {'name': 'follow.the.money', 'days': 'Mondays', 'sticker': 'Bring a calculator'},
-          'ink': '#0C1512', 'cream': '#F4EFE4', 'mint': '#7EF0C0', 'accent': '#FFD84D', 'shadow': '#BBA13C', 'site': 'makeyourmindup.ai'}
+          'ink': '#0C1512', 'cream': '#F4EFE4', 'mint': '#7EF0C0', 'accent': '#FFD84D', 'shadow': '#BBA13C', 'site': 'makeyourmindup.ai',
+          'outro': False}
     dot = png_uri(Image.new('RGB', (8, 8), (12, 21, 18)))
     small = Image.new('RGB', (100, 60), (12, 21, 18))
     docs = [page_endcard(st, '9x16', dot, ''), page_endcard(st, '16x9', dot, ''), page_frame16(st, 'Who gets paid & why', dot, ''),
@@ -1507,6 +1707,34 @@ def self_test():
     check('there is no tall dress template', (TEMPLATES / 'dress.html').exists(), False)
     check('the tall panel hides its series pill, the wide one keeps it',
           ('visibility: hidden' in docs[3], 'visibility: visible' in docs[4]), (True, True))
+    # From 26 Nov every cut ends on the v5 outro card, the Library's (Ruling, Krish, 2026-11-26: "1 agreed"): S3h once,
+    # "Follow for more", the address and the climb bars; no tagline, no stacked mark, no days row and no series name.
+    check('a piece dated from 26 Nov closes on the outro, one dated before on its statement card, an undated one on the outro',
+          [closes_on_outro(d) for d in ('2026-11-25', '2026-11-26', '2026-12-04', None, 'soon')], [False, True, True, True, True])
+    new = {**st, 'outro': True}
+    outros = {sh: page_endcard(new, sh, dot, '') for sh in ('9x16', '16x9')}
+    check('every outro template is filled', [m for doc in outros.values() for m in re.findall(r'\$\{?[A-Za-z_]\w*', doc)], [])
+    for sh, doc in outros.items():
+        settled = outro_parts(sh, outro_model(sh, OUTRO[sh]['frames']))
+        check(f'the {sh} outro is the Library template, its words and the address, S3h settled as one plain copy',
+              (f'data-template="{OUTRO[sh]["item"]}"' in doc, '>Follow for more</text>' in doc, '>makeyourmindup.ai</text>' in doc,
+               list(settled), doc.count('alt="makeyourmindup"'), base64.b64encode(S3H.read_bytes()).decode('ascii') in doc, dot in doc),
+              (True, True, True, ['whole'], 1, True, False))
+        check(f'the {sh} outro carries no tagline, Subscribe free, days row or series name',
+              [t for t in ('Built to', 'decide.', 'Subscribe free', 'Mondays', 'follow.the.money', 'Bring a calculator') if t in doc], [])
+        bars = outro_bars(sh, outro_model(sh, OUTRO[sh]['frames']))
+        W, H = FRAME[sh]
+        check(f'the {sh} outro settles on the staircase: each bar on its edge, rising a quarter of the foot each',
+              [(round(b['left'], 3), round(b['top'], 3)) for b in bars],
+              [(round(OUTRO[sh]['bars']['edges'][i] * W, 3), round(H - OUTRO[sh]['bars']['height'] * (i + 1) / 4, 3)) for i in range(4)])
+        first = outro_model(sh, 0)
+        check(f'the {sh} outro opens on four full-height bars, nothing landed and no words',
+              ([(b['top'], b['height']) for b in outro_bars(sh, first)], list(outro_parts(sh, first)), first['words'], first['snap']),
+              ([(0, H)] * 4, [], None, True))
+        hold = outro_model(sh, OUTRO[sh]['hold_from'])
+        check(f'the {sh} outro has settled by Library frame {OUTRO[sh]["hold_from"]}',
+              (hold['building'], [hold[k] for k in ('make', 'your', 'disc', 'lock', 'mind', 'up', 'words')]), (False, [1.0] * 7))
+    check("the ease is the Library's", (library_ease(0), library_ease(1), library_ease(0.5) > 0.9), (0.0, 1.0, True))
 
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
@@ -1572,6 +1800,9 @@ def self_test():
                 mast = png_uri(Image.new('RGB', (322, 99), (126, 240, 192)))  # the masthead's shape, 2415 x 740
                 ends = [drawer.shoot(page_endcard(st, sh, mast, fonts), FRAME[sh], tmp / f'end-{sh}.png') for sh in ('9x16', '16x9')]
                 check('in a browser, the end card draws settled in both shapes with nothing past an edge', ends, [[], []])
+                outro = [drawer.shoot(page_endcard({**st, 'outro': True}, sh, mast, fonts), FRAME[sh], tmp / f'outro-{sh}.png')
+                         for sh in ('9x16', '16x9')]
+                check('in a browser, the v5 outro draws settled in both shapes with nothing past an edge', outro, [[], []])
             finally:
                 drawer.close()
 

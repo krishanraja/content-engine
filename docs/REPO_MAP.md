@@ -5051,6 +5051,7 @@ Run a Vercel serverless handler locally against the real environment.
 - `function anchorScrim(staging: { region: Box } | undefined, beat: EngineBeat, mode: string | undefined, tokens: EngineRe…`
 - `function realImage(object: EngineObject | undefined): boolean`
 - `function anchorSlots(uses: readonly string[], isProp: (id: string) => boolean, staging: { region: Box; props?: Box[] | …`
+- `function titleWordmark(props: EngineRenderProps)`
 - `function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean })`
 - `const FACE_LIFT`
 - `function faceLift(aspect: string, windowed: number): number`

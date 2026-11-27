@@ -51,7 +51,7 @@
       "tall_box": "the Library's content box for video-vertical-outro, x 145 to 935, y 87 to 1353, in place of the old card's tall core box",
       "timing": "the template's own motion: 150 Library frames (25 fps) in the wide close's 6 s, settled by 2.4 s; the tall template's 90 frames played inside the 2 s beat, settled by 1.33 s"
     },
-    "drawn_by": "apps/renderer/src/engine/chrome/V5Outro.tsx (props.ending.look v5_outro, set by ve compile on every whole cut dated from 26 Nov); EndingBand.tsx draws the statement card only for cuts dated before",
+    "drawn_by": "apps/renderer/src/engine/chrome/V5Outro.tsx (props.ending.look v5_outro, set by ve compile on every whole cut dated from 26 Nov), and quick-edit's kit for every piece dated from 26 Nov (scripts/quick-edit/kit-v5/v5-outro.html, page_outro in kit.py, its numbers held to V5Outro.tsx by tests/quick-edit-kit.test.ts); EndingBand.tsx and kit-v5/v5-close.html draw the statement card only for cuts dated before",
     "never": "a sting clip anywhere in a cut dated from 26 Nov: ve compile lays none, ve lint (scripts/velib/guards.py close_problems) refuses a spec naming one, and ve render (scripts/velib/compile.py ending_problems) refuses props carrying one or drawn in another theme",
     "unchecked": {
       "from": "2026-11-23",
