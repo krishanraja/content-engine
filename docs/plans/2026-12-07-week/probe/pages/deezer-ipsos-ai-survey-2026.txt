@@ -1,0 +1,352 @@
+Deezer-Ipsos Survey: 80% of people Want AI Music Labeled
+
+ Search for:
+
+ News
+
+Music
+
+Tech
+
+Research
+
+Community
+
+Investors
+
+Press Kit
+
+MyDeezerYear
+
+Try DeezerGet notified 
+
+ enfrbr 
+
+ An error occured
+ Please, provide your email address
+ This address is invalid
+ Your email is already subscribed. Do you wish to unsuscribe ?
+ newsletter nolist
+ newsletter refreshed
+ You've been unsuscribed
+ Your email has been registered
+
+ Subscribe
+
+ Your email adress
+
+ Subscribe 
+
+ By signing up, you agree to receive emails every time the Deezer Newsroom is updated. You can unsubscribe at any time by clicking the link at the bottom of each email.
+
+ Deezer/Ipsos: 80 % of people agree that all AI music should be labeled, both fully AI-generated tracks and AI-assisted creations
+
+Jesper Wendel Nov 17, 2026
+ 14 min read
+
+Skepticism towards AI in music is still strong, with an increased fear that AI could diminish creativity in music  production (67% of people), and continued belief that 100% AI-generated music threatens the livelihood of current and future artists (69% of people)
+
+72% of music streaming users want to know when their platform recommends fully AI-generated music, and 60% believe that 100% AI-generated tracks should not be included in major charts alongside human-made tracks
+
+74% of music streaming users don’t think they have 100 % AI-generated music in their playlists, but 57% of people actually do,1 according to Deezer’s internal data on new subscribers joining from other platforms
+
+Paris, November 17, 2026 – Deezer, the global music experience platform, today announced the second edition of its yearly international barometer focused on perceptions and attitudes towards AI-generated Music. The survey was carried out by Ipsos with a total of 9000 people in 8 countries, United States, Canada, Brazil, UK, France, Netherlands, Germany and Japan. 
+
+Alexis Lanternier, CEO, Deezer, said: “It is clear from this year’s survey that an overwhelming majority still want transparency when it comes to AI music, and that there is a significant gap between what listeners think is in their playlists and what is actually there, which highlights the need for continued efforts to achieve greater awareness for music streaming users. Concerns about AI having a negative impact on creativity and artistry are clearly growing, especially in the United States, where there is a striking difference in attitudes compared to last year. A majority of people in all surveyed countries also consider fully AI-generated music a threat to the livelihood of artists.
+
+In 2025, Deezer became the first streaming service to implement measures to increase transparency for fans and minimize AI-based fraud and revenue dilution. By gathering intelligence through this annual survey, and  continuously listening to feedback from our users and the music ecosystem, we are better positioned to improve the fan experience, and protect artists and songwriters. The stakes are high, but we will continue to do our part in building a thriving music ecosystem, and minimize any negative effects of generative AI.” 
+
+Nearly three fourths of music streaming users (74%) thought that their playlists were free from 100% AI-generated music, but according to Deezer’s internal data a majority of new subscribers joining from other streaming platforms, had 100 % AI-generated music in their library. Nearly 57% of over 53,000 people joining Deezer in October, had at least one fully AI-generated track in their playlists already. 80% of people agree that both 100% AI-generated and AI-assisted music should be clearly labeled to listeners.
+
+There are some clear local differences, and the United States stands out as the country showing a substantially growing concern when it comes to AI in music. On all questions related to general attitudes to AI in Music, US respondents are significantly more negative in 2026 compared to what they were in 2025. For example, 69% believe that AI will lead to a loss in creativity in music creation (up 4pts from 2025), 51% believe that AI will play a significant role in music creation (down 11pts from 2025), and 37% believe that AI is valuable tool to help musicians/artists/composers to create music (down 17pts from 2025).
+
+France is the country with the most desire for transparency, with 88% of the respondents wanting clear labels on 100% AI-generated music, a number that rises to 90% when it comes to AI-assisted music.2 The French are also the most worried about AI leading to loss of creativity, with 76% agreeing with this statement (+6 pts vs 2025). 
+
+As last year, Brazilians are significantly more positive towards AI music than respondents in other countries. As an example, 61% agree that AI could be a valuable tool for music creation, compared to 35% globally. Brazil is also the country with the most people having believed they have listened to 100% AI-generated music at least once (63% vs 46% in 2025).
+
+Japan is the country with the least reported exposure, with 46% (-6 pts vs 2025) saying they have never listened to fully AI-generated music (compared to 32% across all respondents, which is a decrease of 7 pts vs 2025).
+
+Deezer has been leading the way in creating solutions for transparency and minimizing the negative impact of AI-generated content flooding music streaming, and was the first platform to detect, tag and exclude AI-generated content from algorithmic recommendations in 2025. 
+
+What are the key findings from the Deezer and Ipsos AI music survey?
+
+KEY RESULTS FROM THE SURVEY
+
+If “music streaming users” (n=6672) is not specifically mentioned, the below data refers to all respondents (General Population n=9000). If no year-over-year change is highlighted, the results are either stable or the difference compared with 2025 is not statistically significant.
+
+How are people using AI and what do they think about it?
+
+General perceptions and use of AI
+
+99% have at least heard of AI and 84% (+12 pts vs 2025) have used AI at least a few times.
+
+25 % of respondents use AI on a daily basis (+7 pts vs 2025) and nearly half use it at least weekly (49%, +13 pts vs 2025)
+
+Curiosity remains the dominant sentiment towards AI (cited by 55% of respondents), while only 17% (-2 pts vs 2025) say they trust it. 
+
+How is AI changing the future of music creation?
+
+Music creation with AI
+
+50% think that AI will play a significant part in music creation in the next 10 years 
+
+54% (+3 pts vs 2025) think that AI will lead to the creation of more low-quality, generic sounding music on streaming platforms
+
+67% (+3 pts vs 2025) believe that AI could lead to the loss of creativity in music production
+
+54% consider it unacceptable for their favorite artist to create a full track with little human involvement.3
+
+45% consider it acceptable for their favorite artist to use AI to produce, mix, or master tracks.4
+
+How do listeners recognize and consume AI-generated music?
+
+Recognition and consumption of AI-generated music
+
+61% (-5 pts vs 2025) of music streaming users say they would listen to 100% AI-generated music at least once, out of curiosity
+
+41% of music streaming users would like to filter out 100% AI-generated music from their music streaming platform
+
+43% (+3 pts vs 2025) of music streaming users say that they would skip without listening to 100% AI-generated music if they came across it
+
+43% (-3 pts vs 2025) think that AI can help them discover more music they like
+
+43% (-3 pts vs 2025) think that AI can help them personalize/remix music
+
+Why do listeners want clearer AI music labeling?
+
+Need for transparency
+
+80% agree that both 100% AI-generated and AI-assisted music should be clearly labeled to listeners 
+
+72% of music streaming users would like to know if a music streaming service is recommending 100% AI-generated music
+
+60% (+8pts vs 2025) of respondents feel that 100% AI-generated songs should not be included in charts alongside human-made songs in the main charts
+
+Only 7% believe that 100% AI generated music should be treated equally on charts (-4 pts vs 2025)
+
+54% (-4pts vs 2025) of music streaming users believe that their music streaming platform has never recommended 100% AI-generated music to them while 28% (+3pts vs 2025) are uncertain
+
+How does AI music affect fairness for artists?
+
+Fairness towards artists
+
+66% agree that it shouldn’t be allowed to use copyrighted material to train AI-models that are used to create music
+
+69% believe 100% AI-generated music threatens the livelihood of current and future musicians/artists/composers
+
+73% think It’s unethical for AI companies to use copyrighted material to generate new music without clear approval from the original artist
+
+67% (-2pts vs 2025) believe payouts for 100% AI-generated music should be lower than for human-made music
+
+The full scorecards from Deezer’s second annual AI x Music Barometer are available to download below:
+
+[Market Research] Scorecards – Second Annual Barometer AI x Music StudyDownload
+
+*** ENDS ***
+
+Notes to editors: 
+
+AI tracks are removed from recommendations on Deezer – Songs detected as AI-generated are automatically removed from algorithmic recommendations and are not included in editorial playlists. This makes sure that these tracks don’t dilute the royalty pool in any significant way. 
+
+Upcoming toggle to remove AI music completely from streaming experience – This on/off toggle will be available before the end of 2026 on Deezer, and will allow users to exclude AI-generated content as they search for music, creating full focus on discovering human creators
+
+Deezer’s AI music detection tool has set an industry standard, with the ability to detect AI-generated music from the most prolific generative models, such as Suno and Udio, with the possibility to add detection capabilities for practically any other similar tool as long as there’s access to relevant data examples. The tool has been awarded multiple times, including TIME’s Best Invention of Year 2026, Billboard France Innovation of the Year 2026, and has led to Deezer inclusion in Fast Company’s Most Innovative Companies of The Year 2025, and Newsweek’s Most Trustworthy Companies of the Year 2025. 
+
+Two new patents – In December 2024, Deezer applied for two patents for its AI Detection technology, focused on two different methods of detecting unique signatures that are used to distinguish synthetic content from authentic content. The patents have been published by the EU and US patent offices in June, 2026.
+
+Deezer, is receiving nearly 90,000 fully AI-generated tracks every day, accounting for more than 50% of the total daily delivery on peak days. Deezer’s AI detection tool has been in place since the beginning of 2025, enabling the company to track a steady increase of fully synthetic content on the platform. In June, Deezer became the first (and so far only) music streaming platform to explicitly tag AI-generated music. Over 13.4M AI-tracks were detected and tagged on Deezer in 2025. 
+
+Deezer is now licensing its AI-detection tech, offering the wider music industry an option to support transparency and reduce the incentive for AI-music fraud. Visit https://business.deezer.com/ai-detection/ for more info.
+
+AI and fraud – Although fully AI-generated music currently accounts for only a small fraction of streams on Deezer, between 1-3%, it’s evident that the primary purpose of uploading these tracks to streaming platforms is fraudulent. Deezer has found that up to 85% of the streams generated by fully AI-generated tracks were in fact fraudulent in 2025. When detecting stream manipulation of any kind, Deezer excludes the streams from the royalty payments.
+
+AI is a critical challenge for the music industry – According to a study conducted by CISAC and PMP Strategy, with participation from key industry players (including Deezer), nearly 25% of creators’ revenues are at risk by 2028, which could amount to as much as €4 billion by that time. This represents a colossal, even critical, challenge for the music creation sector as a whole. https://www.cisac.org/services/reports-and-research/cisacpmp-strategy-ai-study 
+
+FAQ: What do listeners need to know about AI-generated music?
+
+Figures updated to reflect Deezer data as of July 2026.
+
+What does the Deezer and Ipsos survey show about AI music labeling?
+
+The survey shows that 80% of respondents agree that both fully AI-generated music and AI-assisted music should be clearly labeled for listeners.
+
+How many music streaming users want to know when a platform recommends fully AI-generated music?
+
+72% of music streaming users want to know when their streaming platform recommends fully AI-generated music.
+
+Do listeners know whether AI-generated music is already in their playlists?
+
+No. Although 74% of music streaming users do not think they have fully AI-generated music in their playlists, Deezer’s internal data shows that nearly 57% of more than 53,000 new subscribers joining Deezer in October already had at least one fully AI-generated track in their playlists.
+
+Should fully AI-generated music appear in major charts alongside human-made music?
+
+Most respondents do not think so. 60% believe that fully AI-generated songs should not be included in major charts alongside human-made songs, while only 7% believe fully AI-generated music should be treated equally on charts.
+
+How much fully AI-generated music is Deezer receiving?
+
+Deezer is receiving nearly 90,000 fully AI-generated tracks every day. This represents more than 50% of total daily music delivery on peak days. Deezer detected and tagged more than 13.4 million AI-generated tracks in 2025.
+
+What happens to AI-generated tracks detected by Deezer?
+
+Songs detected as AI-generated are automatically removed from algorithmic recommendations and are not included in editorial playlists. Deezer also excludes fraudulent streams from royalty payments. An on/off toggle to exclude AI-generated content from the streaming experience will be available before the end of 2026.
+
+How much of Deezer’s listening activity comes from fully AI-generated music?
+
+Fully AI-generated music accounts for between 1% and 3% of total streams on Deezer. Up to 85% of streams generated by fully AI-generated tracks were identified as fraudulent in 2025.
+
+Press Contact Deezer
+
+Jesper Wendel
+jwendel@deezer.com
+
+ABOUT DEEZER
+
+Deezer is a leading independent music experiences platform, creating ways for people to Live the music. Founded in Paris in 2007, Deezer is available in 180 countries, and brings together a team of 530 people across France, Germany, the UK, Brazil and the US, sharing a passion for music, technology and innovation.
+
+Deezer offers a full-range music catalog, lossless HiFi audio and innovative features designed to enhance discovery, engagement and personalization. With a mission to make music thrive, Deezer is committed to help build a more sustainable music ecosystem, and has pioneered both AI-music tagging and a new monetization model that better rewards artists and songwriters.
+
+Beyond its direct-to-consumer service, Deezer partners with leading brands through Deezer for Business, extending its reach and driving brand value and user engagement across multiple industries, including telecommunications, media, audio hardware and retail.
+
+Deezer is listed on Euronext Paris (Ticker: DEEZR. ISIN: FR001400AYG6).
+
+For the latest news, please visit https://newsroom-deezer.com/  
+
+For Investor Relations, please visit https://www.deezer-investors.com/  
+
+Please follow DeezerNews on X and Deezer on LinkedIn for real time information.
+
+Deezer – Live the music
+
+ABOUT IPSOS
+
+Ipsos is one of the largest market research companies in the world, present in 90 markets and employing nearly 20,000 people. Our passionately curious research professionals, analysts and scientists have built unique multi-specialist capabilities that provide true understanding and powerful insights into the actions, opinions and motivations of citizens, consumers, patients, customers or employees. Our 75 solutions are based on primary data from our surveys, social media monitoring, and qualitative or observational techniques. “Game Changers” – our tagline – summarises our ambition to help our 5,000 clients navigate with confidence our world of rapid change. Founded in France in 1975, Ipsos has been listed on the Euronext Paris since 1 July 1999. The company is part of the SBF 120, Mid-60 indices and is eligible for the Deferred Settlement Service (SRD). ISIN code FR0000073298, Reuters ISOS.PA, Bloomberg IPS:FP
+
+www.ipsos.com
+
+Deezer has tuned its AI-detection tool to achieve maximum accuracy, but false positives may occur. ↩︎
+New question ↩︎
+New question ↩︎
+New question ↩︎
+
+ Facebook
+WhatsApp
+Twitter
+
+ Written by
+ Jesper Wendel
+ Head of Global Communications at Deezer
+
+15+ years of experience in corporate, B2B and B2C communications, public relations, crisis communications, and internal communications.
+
+Connect on LinkedIn
+
+ Up Next
+
+Darius Afchar
+
+ Improved Robustness in AI-Generated Music Detection
+
+ Nov 9, 2026
+ 1 min read
+
+Jesper Wendel
+
+ Deezer delivers second consecutive quarter of revenue growth and upgrades its FY26 outlook
+
+ Oct 27, 2026
+ 9 min read
+
+Jesper Wendel
+
+ Deezer’s AI music detection tool named to TIME’s list of Best Inventions of 2026
+
+ Oct 15, 2026
+ 8 min read
+
+Deezer
+
+Plans
+
+Discount
+
+Reviews
+
+Devices
+
+Download the desktop app
+
+Gift card
+
+Help
+
+Community & feedback
+
+The Backstage
+
+Features
+
+Flow
+
+Identify songs
+
+Transfer your library
+
+Lyrics
+
+Offline listening
+
+High Fidelity (HiFi)
+
+Explore
+
+Charts
+
+Most popular release
+
+New releases
+
+Radio
+
+Podcasts
+
+Music for all moments
+
+Zen by deezer
+
+Who are we?
+
+Investors
+
+Brand Partnerships
+
+Musicians and podcasters
+
+Press Kit
+
+Careers
+
+Legal
+
+Terms and Conditions of use
+
+Privacy policy
+
+Cookies
+
+Open Source Software Report (EN)
+
+Vulnerabilities Disclosure Privacy (EN)
+
+Digital Services Act
+
+LinkedIn
+
+YouTube
+
+Twitter
+
+TikTok
+
+Instagram
+
+ © 2026 Deezer
