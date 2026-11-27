@@ -1,0 +1,429 @@
+{
+  "lane": "wed",
+  "searched": [
+    "AI video model launch November 2026",
+    "AI music model release November 2026",
+    "Kindle Translate November 2026",
+    "Kindle Translate authors edits translation update",
+    "DLSS 5 swap DLL games November 2026",
+    "DLSS new version DLL preset modders comparison ghosting",
+    "\"November 2026\" AI dubbing launch streaming",
+    "Kling video model Kuaishou new release late November 2026",
+    "league AI system launch referee broadcast November 2026",
+    "game released with generative AI features November 2026 NPC",
+    "Genie 4 Google world model generally available games developers",
+    "studio AI pipeline visual effects film behind the scenes generative AI November 2026",
+    "newsroom launches AI tool November 2026 journalists",
+    "sports AI launch fans highlights automated November 2026 NBA NFL Premier League",
+    "Suno MIDI input feature launch",
+    "sportsvideo.org AI November 2026",
+    "musicbusinessworldwide AI launch November 2026 label tool",
+    "AI captions subtitles broadcaster launch November 2026 BBC Sky Channel 4",
+    "gamesindustry.biz AI tool shipped game November 2026",
+    "Binding of Isaac Repentance Plus AI music removed",
+    "Nicalis AI music Repentance+ McMillen apology Steam disclosure",
+    "Unity Spark Synty 70,000 assets closed beta",
+    "Netflix OR Prime Video OR Disney generative AI used in series production November 2026",
+    "Amazon MGM Project Nara GenAI Creators Fund series",
+    "Midjourney new model video release November 2026",
+    "Spotify OR Deezer OR SoundCloud AI feature launched November 2026",
+    "Audible AI narration audiobooks November 2026 publishers",
+    "Formula 1 OR NBA OR NFL OR FIFA AI system unveiled fans November 2026",
+    "techcrunch 2026/11 AI music video creators launches",
+    "\"November 20, 2026\" AI generated music video film game",
+    "sportspromedia AI launch league broadcaster November 2026",
+    "NBA app AI feature launched November 2026",
+    "Premier League OR Bundesliga OR LaLiga AI new feature fans November 2026",
+    "Prime Video \"Progressive Actions\" Champions League",
+    "Prime Vision progressive actions Arsenal Dortmund Prime Insight AI",
+    "Udio OR Stable Audio OR Lyria new model November 2026 musicians",
+    "musicradar AI plugin release November 2026",
+    "\"Logic Pro 13\" now available release Assistant",
+    "Pages read directly (no search): csuite.so and kombitz.com November model roundups, dailyartifact.ai gaming and game-development tags, vp-land.com front page, SEC EDGAR iQIYI 6-K list",
+    "NOTE: the shared web-search budget ran out partway through; the rest of the lane was done by opening pages directly, so music, publishing and dubbing were searched less than the other sectors",
+    "CUT, spark (a) Kindle Translate: no dated news item in 13 to 27 Nov 2026 found; latest change is Amazon's 30 June 2026 language expansion; KDP help says direct editing is not available and a changed source prompts a re-translate, which is the spark's question but has no news peg in the window",
+    "CUT, spark (b) DLSS DLL swapping: DLSS 5 Swapper coverage found (tbreak, 6 Sep 2026, updated 15 Sep), outside the window; TweakTown returned 403 and PC Gamer's body did not load, so no dated item in the window could be checked",
+    "CUT, Kling (engine lead): no Kling video model release in the window; Kling 4.0 launched 15 Oct 2026 and is already on the excluded list as an off-day post; Kling Image 4.0 (17 Nov per a roundup) has no dated source page",
+    "CUT, Unity Spark and Synty (16 Nov): Spark is not shipped (closed beta later), and Unity's own blog says 60,000 assets while other reports say 70,000",
+    "CUT, Amazon MGM GenAI Creators' Fund and Project Nara: announced May 2026, outside the window",
+    "CUT, Logic Pro 13 AI Assistant: released 5 Nov 2026, outside the window",
+    "CUT, Native Instruments Massive XL Generate: 12 Nov 2026, one day outside the window, not opened",
+    "CUT, ACME AI Grey Box (David Ayer, Doug Liman's Bitcoin, 18 Nov): The Hollywood Reporter routes bots to a paid gate and ACME's own page says nothing about Grey Box, so only one source could be opened",
+    "CUT, Lionsgate Play Eklavya AI-led series (26 Nov): in production, not shipped, and its Google tools are not named",
+    "CUT, GTA VI (19 Nov): Take-Two says it was built with no generative AI (Fortune, 25 Nov), so it is not a shipped AI thing; used only as context for the Binding of Isaac candidate",
+    "CUT, Ubisoft Motherbrain generative AI studio (19 Nov): no shipped product, and Ubisoft generative AI is on the skip list",
+    "CUT, Netflix Gaussian splats, DNEG stereo conversion for Meta, Disney Animation's Lilo and Scratch pipeline: none of the pages says the build uses AI"
+  ],
+  "candidates": [
+    {
+      "key": "isaac-suno-metadata",
+      "sector": "games",
+      "headline": "Players found 'made with suno' inside the music files of a Binding of Isaac update, and the songs were pulled",
+      "what_happened": "A Repentance+ update for The Binding of Isaac added a GTA-themed daily run with 14 new music files. A Reddit user ran the files through ffprobe and found Suno's own tag, with a creation time of 30 October 2026, in the metadata of some tracks, and none of this was disclosed on Steam. Nicalis pushed an emergency update removing the music on about 21 November, after recent Steam reviews fell to about 9% positive.",
+      "date": "2026-11-21",
+      "named_thing": "The metadata line in drivingsong1.ogg: \"made with suno; created=2026-10-30T17:53:41Z\"",
+      "primary": {
+        "label": "Kotaku, Ethan Gach, 'Binding Of Isaac Update Review-Bombed Over AI-Generated Music In GTA 6 Mode', 21 Nov 2026",
+        "url": "https://kotaku.com/binding-of-isaac-update-review-bombed-over-ai-generated-music-in-gta-6-mode-woke-up-to-a-sht-show-obviously-i-had-no-idea-2000759213",
+        "kind": "report",
+        "quote": "comment : made with suno; created=2026-10-30T17:53:41Z; id=cd5a5b55-bead-4cb9-949d-09ed1f917dce"
+      },
+      "second": {
+        "label": "Nintendo Life, Jim Norman, 'Binding Of Isaac Dev Shocked To Find GenAI Music In Repentance+', Nov 2026 (page shows Mon, likely 23 Nov)",
+        "url": "https://www.nintendolife.com/news/2026/11/woke-up-to-a-st-show-binding-of-isaac-dev-shocked-to-find-genai-music-in-repentanceplus",
+        "quote": "mentions of the AI music 'tool' Suno in select tracks' metadata"
+      },
+      "more_sources": [
+        {
+          "label": "Kotaku, same article, on the file count",
+          "url": "https://kotaku.com/binding-of-isaac-update-review-bombed-over-ai-generated-music-in-gta-6-mode-woke-up-to-a-sht-show-obviously-i-had-no-idea-2000759213",
+          "quote": "The new update includes 14 music files for the run; seven full songs, plus some derivatives (intros/outros),"
+        },
+        {
+          "label": "Kotaku, same article, on the fix",
+          "url": "https://kotaku.com/binding-of-isaac-update-review-bombed-over-ai-generated-music-in-gta-6-mode-woke-up-to-a-sht-show-obviously-i-had-no-idea-2000759213",
+          "quote": "An emergency update has since gone out to remove the AI-generated music"
+        },
+        {
+          "label": "Fortune, Catherina Gioino, on GTA VI itself, 25 Nov 2026 (context only)",
+          "url": "https://fortune.com/2026/11/25/gta-vi-take-two-ceo-ben-feder-ai-videogames-filmmaker",
+          "quote": "generative AI has zero part in what Rockstar Games is building."
+        }
+      ],
+      "money_or_mechanism": "The teardown is literal: a free command-line tool read the tags Suno writes into every file it exports, so the build was visible to any player, and some files had the tag scrubbed because they were edited and exported again.",
+      "why_it_matters": "A game studio that buys or makes AI music without saying so can be caught by its own file metadata, and the cost lands on the game's reviews.",
+      "funny": "The game's tribute to Grand Theft Auto used AI music; the real Grand Theft Auto VI, out the same week, was made with none.",
+      "media": {"kind": "photo", "url": "https://kotaku.com/app/uploads/2026/11/binding-of-isaac.jpg"},
+      "risks": "Event date is from Kotaku's 21 Nov story; the update itself went out a day or so earlier. Who put the music in is disputed: McMillen says it was Nicalis's idea and Nicalis has not explained. The Verge's story (22 Nov) could not be fetched. Nintendo Life shows no full date."
+    },
+    {
+      "key": "nyt-news-agent",
+      "sector": "media",
+      "headline": "The New York Times folded its newsroom AI agents into one tool, News Agent, and reporters must pass legal training to use it",
+      "what_happened": "On 24 November 2026 Ulrike Langer's News Machines described News Agent, the New York Times' internal tool that combines archive search across 175 years of the paper, stylebook checks, Freedom of Information Act drafting and document analysis. Journalists get access only after legal standards training, and the Times will not say which AI models run it. Its forerunner, the Epstein Files Engine, turned reporters' questions into BigQuery SQL and was asked about 4,500 questions by more than 100 journalists, contributing to at least 20 stories.",
+      "date": "2026-11-24",
+      "named_thing": "News Agent, and the Epstein Files Engine it grew from",
+      "primary": {
+        "label": "News Machines (Ulrike Langer), on the New York Times' News Agent, 24 Nov 2026",
+        "url": "https://newsmachines.beehiiv.com/p/new-york-times-news-agent",
+        "kind": "original",
+        "quote": "The Times doesn't disclose which AI models run News Agent."
+      },
+      "second": {
+        "label": "The Media Copilot, 'New York Times folds newsroom AI agents into one tool called News Agent', 25 Nov 2026",
+        "url": "https://mediacopilot.ai/new-york-times-news-agent",
+        "quote": "journalists must complete legal standards training before receiving access."
+      },
+      "more_sources": [
+        {
+          "label": "News Machines, same piece, on archive search",
+          "url": "https://newsmachines.beehiiv.com/p/new-york-times-news-agent",
+          "quote": "searching all 175 years of the Times, updated within seconds of publication"
+        },
+        {
+          "label": "arXiv 2609.30611, Nguyen, Mondría Terol, Freedman and Seward (Times staff), 'Epstein Files Engine: Agentic Search for Investigative Journalism', 24 Sep 2026",
+          "url": "https://arxiv.org/abs/2609.30611",
+          "quote": "The Engine translated reporter questions into Google BigQuery SQL queries across three corpora:"
+        },
+        {
+          "label": "arXiv 2609.30611, same paper, on use",
+          "url": "https://arxiv.org/abs/2609.30611",
+          "quote": "More than 100 journalists used the Engine, and it contributed to at least 20 published stories."
+        }
+      ],
+      "money_or_mechanism": "The build is a set of agents over the paper's own archive and stylebook, with a language model writing database queries and returning citations a reporter can check, and a legal training gate in front of it.",
+      "why_it_matters": "Editors weighing a newsroom AI tool can see how the biggest paper built one: on its own archive, with citations, behind training, and with the model kept secret.",
+      "funny": "The paper built an AI that reads 175 years of its own journalism, and the one thing it will not tell its own reporters is which AI it is.",
+      "media": {"kind": "photo", "url": "https://media.beehiiv.com/cdn-cgi/image/fit=scale-down,quality=80,format=auto,onerror=redirect/uploads/asset/file/a2f18cff-d098-4506-8911-c46631b8cd7e/UFO_database.png?t=1795567541"},
+      "risks": "The merge into News Agent happened in late July; what is new in the window is the first public description (24 Nov), so check that this counts as the dated event. Media Copilot is drafted by AI and edited by people. The image is a Times UFO records tool shown in the same piece, not News Agent itself; no screenshot of News Agent was found."
+    },
+    {
+      "key": "prime-video-progressive-actions",
+      "sector": "sports",
+      "headline": "Prime Video built an AI model that flags every pass and carry that moves the ball forward in Champions League games",
+      "what_happened": "On 23 November 2026 Prime Video announced Progressive Actions, a Prime Insight on its Prime Vision feed for UEFA Champions League games, debuting at Arsenal against Borussia Dortmund on 24 November in the UK and Ireland, and also in Germany and Italy. Its own AI models measure how far the ball travels in each phase of the pitch, with a shorter threshold near the opposition goal, then show the start, end, player and distance live. It was built by Prime Video's producers, engineers, AI specialists and on-air analysts.",
+      "date": "2026-11-23",
+      "named_thing": "Progressive Actions on Prime Vision, first shown at Arsenal v Borussia Dortmund",
+      "primary": {
+        "label": "Advanced Television, 'Prime Video unveils Progressive Actions for Champions League', 23 Nov 2026",
+        "url": "https://www.advanced-television.com/2026/11/23/prime-video-unveils-progressive-actions-for-champions-league/",
+        "kind": "report",
+        "quote": "proprietary AI-powered models that identify a Progressive Action"
+      },
+      "second": {
+        "label": "Indian Television Dot Com, 'Prime Video introduces AI-powered Progressive Actions for Champions League', 23 Nov 2026",
+        "url": "https://indiantelevision.com/iworld/prime-video-introduces-ai-powered-progressive-actions-for-champions-league/",
+        "quote": "The feature uses proprietary AI-powered models to identify progressive actions by measuring how far the ball travels"
+      },
+      "more_sources": [
+        {
+          "label": "Indian Television Dot Com, same article, on who built it",
+          "url": "https://indiantelevision.com/iworld/prime-video-introduces-ai-powered-progressive-actions-for-champions-league/",
+          "quote": "Developed by Prime Video’s producers, engineers, artificial intelligence specialists and on-air analysts"
+        },
+        {
+          "label": "TECHBOOK (German), 24 Nov 2026",
+          "url": "https://www.techbook.de/streaming/anbieter/amazon-prime-video-fussball-ki-progressive-actions",
+          "quote": "Premiere feierte die Funktion beim Champions-League-Spiel zwischen Arsenal London und Borussia Dortmund am 24. November 2026."
+        },
+        {
+          "label": "TECHBOOK, same article, on the sliding threshold",
+          "url": "https://www.techbook.de/streaming/anbieter/amazon-prime-video-fussball-ki-progressive-actions",
+          "quote": "desto niedriger liegt deshalb die Distanz, ab der eine Aktion als progressiv gewertet wird."
+        }
+      ],
+      "money_or_mechanism": "It is a rule a coach would recognise (forward distance, scaled to where on the pitch it happens) run by a model on live tracking, so the build can be taken apart into the rule, the data and the graphic.",
+      "why_it_matters": "Broadcasters with sports rights can see what it takes to turn a club analyst's metric into a live on-screen feature that keeps fans on their own feed.",
+      "funny": "Football's newest AI feature mostly confirms what every pub already shouts: pass it forward.",
+      "media": {"kind": "photo", "url": "https://www.advanced-television.com/wp-content/uploads/2026/11/PrimeVideoprogressive-ucl-1024x572.png"},
+      "risks": "No Amazon press release was found to open; all sources are trade reports of the same announcement. The data source and the exact distance thresholds are not published. Sources were written before the match; no report on how it performed was found."
+    },
+    {
+      "key": "izotope-nectar-5",
+      "sector": "music",
+      "headline": "iZotope's Nectar 5 transcribes a vocal so producers can put effects on single words, and an AI builds the vocal chain",
+      "what_happened": "iZotope released Nectar 5, its vocal plugin suite, on about 24 November 2026 at an introductory $179 until 7 December, then $249. Its Moments module transcribes the sung lyrics in the edit window so a producer can select a word or phrase and add up to seven effects to it. Its Vocal Assistant listens to part of the vocal and designs a processing chain, and can aim at an a cappella reference.",
+      "date": "2026-11-24",
+      "named_thing": "Nectar 5's Moments module and Vocal Assistant",
+      "primary": {
+        "label": "iZotope, Nectar product page (no date shown)",
+        "url": "https://www.izotope.com/en/products/nectar.html",
+        "kind": "original",
+        "quote": "the industry-first Moments transcribes your vocal into lyrics for word-by-word effects"
+      },
+      "second": {
+        "label": "MusicRadar, Matt Mullen, 'iZotope's Nectar 5 introduces a clever new way to add effects to vocals, one word at a time', 24 Nov 2026",
+        "url": "https://www.musicradar.com/music-tech/izotopes-nectar-5-introduces-a-clever-new-way-to-add-effects-to-vocals-one-word-at-a-time",
+        "quote": "This AI-powered mixing tool listens to a portion of your vocal and designs a customized processing chain to match it."
+      },
+      "more_sources": [
+        {
+          "label": "MusicRadar, same article, on Moments",
+          "url": "https://www.musicradar.com/music-tech/izotopes-nectar-5-introduces-a-clever-new-way-to-add-effects-to-vocals-one-word-at-a-time",
+          "quote": "Open up Moments on a vocal recording and the plugin will transcribe the lyrics automatically in the edit window."
+        },
+        {
+          "label": "MusicRadar, same article, on price",
+          "url": "https://www.musicradar.com/music-tech/izotopes-nectar-5-introduces-a-clever-new-way-to-add-effects-to-vocals-one-word-at-a-time",
+          "quote": "available now at an introductory price of $179"
+        },
+        {
+          "label": "iZotope, same page, on the Vocal Assistant",
+          "url": "https://www.izotope.com/en/products/nectar.html",
+          "quote": "trained on pro vocal standards and retuned for even better results"
+        }
+      ],
+      "money_or_mechanism": "The build is speech-to-text pointed at singing, used as an editing index (an ARA plugin reads the clip on the timeline), plus a model that picks settings for an ordinary chain of effects a mix engineer could still adjust by hand.",
+      "why_it_matters": "Producers and engineers can see which part of vocal mixing a $179 plugin now does and which part stays a human ear.",
+      "funny": "The plugin has to work out what the singer is saying before it can add reverb, which puts it ahead of most of the audience.",
+      "media": {"kind": "photo", "url": "https://cdn.mos.cms.futurecdn.net/pNN68baVuL3U3A5EYkirbV.png"},
+      "risks": "Release date rests on MusicRadar (24 Nov); the iZotope page shows no date. iZotope does not say what the Vocal Assistant was trained on beyond 'pro vocal standards'. iZotope Photon, from the same company, is on the excluded list; this is a different product."
+    },
+    {
+      "key": "heygen-avatar-6-real-test",
+      "sector": "creators",
+      "headline": "HeyGen says its new avatar is 84.4% indistinguishable from real video; its own test shows viewers picked it as real 42.2% of the time",
+      "what_happened": "HeyGen released Avatar 6 on 17 November 2026, a model that turns a photo or a short clip plus an audio track into a talking video at 1080p or 2K, with gestures cued from the script. Its research page explains the headline number: shown real footage and Avatar 6 side by side, raters picked Avatar 6 as the real one 42.2% of the time across 270 answers, which HeyGen scores as 84.4% of the way to a coin toss. Shown one clip at a time, 65.1% of Avatar 6 clips were judged real against 78.9% for real recordings.",
+      "date": "2026-11-17",
+      "named_thing": "HeyGen Avatar 6 and its 84.4% figure",
+      "primary": {
+        "label": "HeyGen Research, 'Avatar 6' model report, 17 Nov 2026",
+        "url": "https://www.heygen.com/research/avatar-6-model",
+        "kind": "original",
+        "quote": "Side by side with the real recording, raters pick Avatar 6 as the real one 42.2% of the time."
+      },
+      "second": {
+        "label": "CSuite, 'AI models roundup, November 2026', ledger entry dated 17 Nov (page updated 26 Nov 2026)",
+        "url": "https://csuite.so/blog/ai-models-roundup-november-2026",
+        "quote": "A photo or short clip plus an audio track becomes a talking video at 1080p or 2K."
+      },
+      "more_sources": [
+        {
+          "label": "HeyGen Research, same page, on the 84.4% figure",
+          "url": "https://www.heygen.com/research/avatar-6-model",
+          "quote": "50% would mean they cannot tell at all, so Avatar 6 is 84.4% of the way there."
+        },
+        {
+          "label": "HeyGen developer docs, Avatar 6",
+          "url": "https://developers.heygen.com/docs/models/avatar-6",
+          "quote": "The Avatar 6 model animates your reference media with the speech audio you supply."
+        },
+        {
+          "label": "HeyGen developer docs, same page, on limits",
+          "url": "https://developers.heygen.com/docs/models/avatar-6",
+          "quote": "Avatar 6 is not supported for raw-image requests, studio scenes, batch creation, or scene editing."
+        }
+      ],
+      "money_or_mechanism": "Where claim and reality part: the marketing number is a rescaled score from 270 side-by-side answers, and the same page shows a 14-point gap between how often Avatar 6 and real footage are judged real when seen alone.",
+      "why_it_matters": "Creators and agencies paying for avatar video can read what 'indistinguishable' actually measured before they put a synthetic presenter in front of an audience.",
+      "funny": "The avatar is 84.4% indistinguishable from a real person, according to a test in which viewers mostly picked the real person.",
+      "media": {"kind": "photo", "url": "https://dynamic.heygen.ai/tr:so-0,w-1280,q-60/www/video/models/heygen-avatar-6/avatar-6-launch-film.mp4/ik-thumbnail.jpg"},
+      "risks": "Every result is HeyGen's own test. The second source is a roundup blog with no named author. HeyGen's model page and research page do not describe the architecture or training data. The product page says 15 seconds of recording in one place and 30 in another. Generic AI tool news; the creator angle must carry the sentence."
+    },
+    {
+      "key": "maxon-plus-model-generator",
+      "sector": "arts_design",
+      "headline": "Maxon put AI model generation into Cinema 4D and ZBrush, run on Tripo and Rodin and sold in credits that expire each month",
+      "what_happened": "Maxon launched Maxon Plus in November 2026 (reported 23 November), a cloud subscription sold separately from Maxon One. Its Model Generator turns a prompt, photo or sketch into an editable model that arrives as a native Cinema 4D object, Texture Generator retextures existing models and Clay Builder makes a base mesh for sculpting. The work runs on third-party AI providers such as Tripo and Rodin that Maxon manages, paid for in Starter, Creator or Pro credit packs that do not roll over.",
+      "date": "2026-11-23",
+      "named_thing": "Maxon Plus Model Generator in Cinema 4D 2027.1",
+      "primary": {
+        "label": "Maxon, Maxon Plus product page",
+        "url": "https://www.maxon.net/en/maxon-plus",
+        "kind": "original",
+        "quote": "We work with third-party AI providers, such as Tripo and Rodin."
+      },
+      "second": {
+        "label": "Creative Bloq, Joe Foley, 'Every 3D artist should have an AI assistant, Maxon says as it launches new tools and agentic licences', 23 Nov 2026",
+        "url": "https://www.creativebloq.com/news/every-3d-artist-should-have-an-ai-assistant-maxon-says-as-it-launches-new-tools-and-agentic-licences",
+        "quote": "AI generation comes to Cinema 4D and ZBrush, but artists have an 'off' switch."
+      },
+      "more_sources": [
+        {
+          "label": "Maxon, same page, on output",
+          "url": "https://www.maxon.net/en/maxon-plus",
+          "quote": "The model arrives as a native Cinema 4D object, editable like any other."
+        },
+        {
+          "label": "Maxon, same page, on credits",
+          "url": "https://www.maxon.net/en/maxon-plus",
+          "quote": "Maxon Plus credits renew each monthly billing cycle, and do not carry over to the next billing cycle."
+        },
+        {
+          "label": "VP Land, 'Maxon Launches Maxon Plus for AI 3D Model Generation and Browser-Based Client Review', 23 Nov 2026",
+          "url": "https://www.vp-land.com/stories/maxon-launches-maxon-plus-for-ai-3d-model-generation-and-browser-based-client-review",
+          "quote": "All three run on third-party AI providers that Maxon manages."
+        }
+      ],
+      "money_or_mechanism": "Maxon does not make the models: it resells other firms' 3D generators inside its own apps and bills artists in credits that lapse monthly, so the margin sits in the wrapper and the subscription.",
+      "why_it_matters": "Studios paying for Cinema 4D and ZBrush can see that the new AI button is a second subscription to someone else's model, priced in credits.",
+      "funny": "The headline feature for 3D artists is an AI assistant, and the subtitle's selling point is that you can switch it off.",
+      "media": {"kind": "photo", "url": "https://cdn.mos.cms.futurecdn.net/SZhxTWsvwYEKwrFyDuR9dX.png"},
+      "risks": "Maxon's page says 'launches in November 2026' with no exact date; 23 Nov is the reporting date. No prices are published on the page read. Creative Bloq's body did not load past the headline and subtitle, so its quote is the subtitle. The companion Agentic License (headless Cinema 4D over MCP) is a separate product with no price shown."
+    },
+    {
+      "key": "iqiyi-21-ai-short-dramas",
+      "sector": "film_tv",
+      "headline": "iQIYI released 21 AI-generated short dramas in a quarter and took the top domestic short-form share for the first time",
+      "what_happened": "In its third-quarter 2026 results on 16 November, Chinese streamer iQIYI said its short-form dramas took the No. 1 domestic market share for the first time on a quarterly basis, while total revenue fell 10% to RMB6.01 billion. VP Land reports that 21 of the quarter's short dramas were AI-generated, with AIGC making concept art, sets and props, lead actors licensing their likenesses as reusable digital characters, and about 30% of roughly 190 revenue-sharing short dramas this year expected to be AI-generated.",
+      "date": "2026-11-16",
+      "named_thing": "21 AI-generated short dramas in one quarter",
+      "primary": {
+        "label": "iQIYI, 'iQIYI Announces Third Quarter 2026 Financial Results', Form 6-K Exhibit 99.1 filed with the SEC, 16 Nov 2026",
+        "url": "https://www.sec.gov/Archives/edgar/data/1722608/000119312526462100/d123902dex991.htm",
+        "kind": "original",
+        "quote": "our short-form dramas claimed the No. 1 domestic market share for the first time on a quarterly basis"
+      },
+      "second": {
+        "label": "VP Land, 'Chinese Streaming Platform iQIYI Releases 21 AI Short Dramas and Takes Top Domestic Short-Form Share as Sales Slide 10%', 16 Nov 2026",
+        "url": "https://www.vp-land.com/stories/chinese-streaming-platform-iqiyi-releases-21-ai-short-dramas-and-takes-top-domestic-short",
+        "quote": "It released 21 AI-generated short-form dramas"
+      },
+      "more_sources": [
+        {
+          "label": "iQIYI, same release, on revenue",
+          "url": "https://www.sec.gov/Archives/edgar/data/1722608/000119312526462100/d123902dex991.htm",
+          "quote": "Total revenues reached RMB6.01 billion (US$896.0 million), decreasing 10% year over year."
+        },
+        {
+          "label": "VP Land, same article, on the pipeline",
+          "url": "https://www.vp-land.com/stories/chinese-streaming-platform-iqiyi-releases-21-ai-short-dramas-and-takes-top-domestic-short",
+          "quote": "AIGC created visual assets for concept design, sets, props and other art elements"
+        },
+        {
+          "label": "iQIYI, same release, CEO Yu Gong",
+          "url": "https://www.sec.gov/Archives/edgar/data/1722608/000119312526462100/d123902dex991.htm",
+          "quote": "We look forward to further leveraging AI to empower our content ecosystem and enhance our financial performance."
+        }
+      ],
+      "money_or_mechanism": "The pipeline swaps the art department and part of the green-screen work for generated assets and licensed digital doubles that can be reused across titles, while the streamer's overall sales shrink.",
+      "why_it_matters": "Producers and streamers can see a large platform's AI short-drama pipeline in its parts, set against the quarter's falling revenue.",
+      "funny": "iQIYI's short dramas hit number one in the same quarter its sales fell 10%.",
+      "media": {"kind": "photo", "url": "https://piqvbzhttirzocvnnlhc.supabase.co/storage/v1/object/public/story-images/thumbnails/dae1fd1a-caf4-41de-8cf0-07188430ad8d/4fc5fa0c-bd49-47a1-9c9b-07ca703e90a1-1.jpg"},
+      "risks": "The 21 AI dramas, the pipeline detail and the 190 and 30% figures are not in the press release I opened; they appear only in VP Land, probably from the earnings call, which I did not find. iQIYI's own IR site returned 403. The funny line puts two true facts side by side and does not claim one caused the other. No tool names are given."
+    },
+    {
+      "key": "genie-4-playable-worlds",
+      "sector": "games",
+      "headline": "Google opened Genie 4, a model that streams playable worlds at 24 frames a second, to developers at about 10 cents a second",
+      "what_happened": "On 19 November 2026 Google made Genie 4 available to developers through the Gemini API and AI Studio. It generates a continuous 720p world at 24 frames a second with sound, seeded by text or an image and steered live with the keyboard and text prompts, with each frame generated as the session runs. Its documentation prices it at roughly $0.10 per second of streamed output, and sessions run for up to 120 seconds.",
+      "date": "2026-11-19",
+      "named_thing": "Genie 4 (genie-4) in the Gemini API",
+      "primary": {
+        "label": "Google, The Keyword, 'Genie 4 in the Gemini API', 19 Nov 2026",
+        "url": "https://blog.google/innovation-and-ai/technology/developers-tools/genie-4-in-gemini-api/",
+        "kind": "original",
+        "quote": "generating continuous 720p worlds at 24fps with synchronized native audio"
+      },
+      "second": {
+        "label": "PPC Land, 'Google charges developers about 10 cents a second for Genie 4 worlds', 19 Nov 2026",
+        "url": "https://ppc.land/google-charges-developers-about-10-cents-a-second-for-genie-4-worlds/",
+        "quote": "Each session can run for up to 120 seconds."
+      },
+      "more_sources": [
+        {
+          "label": "Google, same post, on availability",
+          "url": "https://blog.google/innovation-and-ai/technology/developers-tools/genie-4-in-gemini-api/",
+          "quote": "Genie 4 is now available for developers through the Gemini API."
+        },
+        {
+          "label": "PPC Land, same article, on price",
+          "url": "https://ppc.land/google-charges-developers-about-10-cents-a-second-for-genie-4-worlds/",
+          "quote": "at a rate its documentation puts at roughly $0.10 for every second of streamed output."
+        },
+        {
+          "label": "PPC Land, same article, on how frames are made",
+          "url": "https://ppc.land/google-charges-developers-about-10-cents-a-second-for-genie-4-worlds/",
+          "quote": "Each frame is generated by the model as the session runs."
+        }
+      ],
+      "money_or_mechanism": "There is no game engine underneath: every frame is a model's guess at the next one, billed by the second, which is why a session stops at two minutes and Google lists long-term scene permanence as an open problem.",
+      "why_it_matters": "Game makers pricing a prototype can see what a generated world costs per minute of play and how long it holds together.",
+      "funny": "An hour of your generated game costs about $360 to stream, and it can only remember the last two minutes.",
+      "media": {"kind": "photo", "url": "https://storage.googleapis.com/gweb-uniblog-publish-prod/images/resized_ProjectGenie_.2e16d0ba.fill-300x300.format-webp.webp"},
+      "risks": "Weakest on the beat: a general AI lab launch, and Google's post names prototyping, spatial visualisation and robotics, not game studios; no game studio using it in the window was found. The $360 an hour is my arithmetic from $0.10 a second, and 120 seconds is the session cap, not a memory measure; check the joke against those exact facts. The image is a small Project Genie thumbnail."
+    },
+    {
+      "key": "epic-ai-ports-fortnite-to-verse",
+      "sector": "games",
+      "wildcard": true,
+      "headline": "Epic used AI to rewrite more than 20,000 Fortnite Blueprints as about 3 million lines of Verse, then dropped Blueprints from Unreal Engine 6",
+      "what_happened": "In an update reported on 20 and 21 November 2026, Epic said an AI-assisted run had converted more than 20,000 of Fortnite Battle Royale's visual Blueprints into a working prototype written in its Verse language, about 3 million lines, a job it had expected to take years. On that basis Unreal Engine 6, Early Access included, will ship without Blueprints or the Actor gameplay framework, reversing its June 2026 roadmap. Epic says the team is still checking the generated code's performance, memory and architecture.",
+      "date": "2026-11-20",
+      "named_thing": "About 3 million lines of AI-converted Verse for Fortnite Battle Royale",
+      "primary": {
+        "label": "Epic Games, 'An update on Blueprints and the path to UE6' (page returned 403 and could not be read)",
+        "url": "https://www.unrealengine.com/news/an-update-on-blueprints-and-the-path-to-ue6",
+        "kind": "original",
+        "quote": "Not read: the page returned HTTP 403. The quotes below are from the two reports."
+      },
+      "second": {
+        "label": "VP Land, 'Unreal Engine 6 Drops Blueprints as Epic Uses AI to Port 20,000+ Fortnite Blueprints to Verse', 21 Nov 2026",
+        "url": "https://www.vp-land.com/stories/unreal-engine-6-drops-blueprints-as-epic-uses-ai-to-port-20-000-fortnite-blueprints-to-ver",
+        "quote": "The AI-assisted run produced a working prototype with roughly 3 million lines of Verse."
+      },
+      "more_sources": [
+        {
+          "label": "VP Land, same article, on scope",
+          "url": "https://www.vp-land.com/stories/unreal-engine-6-drops-blueprints-as-epic-uses-ai-to-port-20-000-fortnite-blueprints-to-ver",
+          "quote": "Epic used AI to convert more than 20,000 Fortnite Battle Royale Blueprints into a working Verse prototype."
+        },
+        {
+          "label": "Gaming.net, 'Epic Uses AI to Port Over 20,000 Fortnite Blueprints to Verse', 20 Nov 2026",
+          "url": "https://www.gaming.net/epic-uses-ai-to-port-over-20-000-fortnite-blueprints-to-verse/",
+          "quote": "UE6, including Early Access, will not include Blueprints or the Actor Gameplay Framework."
+        },
+        {
+          "label": "Gaming.net, same article, on what is unproven",
+          "url": "https://www.gaming.net/epic-uses-ai-to-port-over-20-000-fortnite-blueprints-to-verse/",
+          "quote": "The team is still iterating to validate the prototype’s performance, memory usage and architecture."
+        }
+      ],
+      "money_or_mechanism": "Epic is betting the next engine on a machine translation of its own biggest game: if AI can port Blueprints cheaply, it can drop the tool millions of creators learned on, and the open question is whether 3 million generated lines hold up.",
+      "why_it_matters": "Studios and Fortnite creators who build in Blueprints learn that the next Unreal Engine is planned around AI porting their work into code.",
+      "funny": "The visual scripting system made so people would not have to write code is being retired because an AI wrote 3 million lines of it.",
+      "media": {"kind": "photo", "url": "https://www.gaming.net/wp-content/uploads/2026/11/epic-uses-ai-to-port-over-20000-fortnite-blueprints-to-verse.jpg"},
+      "risks": "Wildcard: neither spark had a dated news item in the window (see searched), so this is the strangest build story found. Epic's own page returned 403, so nothing is quoted from it. Gaming.net's byline is an AI research agent reviewed by editors. Not shipped: the port is a prototype and UE6 is not out. The AI tool used, the error rate and the human review are not reported."
+    }
+  ]
+}
