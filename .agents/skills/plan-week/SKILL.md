@@ -123,6 +123,13 @@ opinion of their own." Every idea passes six tests before it reaches him:
 them, never governance or breaches. Rows: `config/beat.json` (read, never
 copy); his words and the `off_beat` gate: `references/beat.md`.
 
+**Businesses first, and under the hood** (Krish, 2026-11-27: "My ideas board has become a little bit too focused on
+individual creators and not enough on what it was before, which is businesses and, under the hood, how AI is changing
+things."). Inside those sectors, research and pick businesses and the AI firms and markets they run on, and say how AI is
+changing the way each works; one individual creator or one creator tool's feature leads at most one option a day. Every
+hero carries `lens` and `board_feed.py gate` refuses the day otherwise (`lens`, from the 7 Dec board):
+`references/beat.md`, "Businesses first".
+
 **His asks.** Every card he typed words on in the 45 days before the week
 (`why_here`, a typed `why_like`, `would_do`), dismissed, style-only or
 already a piece included, is in `sources.json` `asks` (newest first, his
@@ -362,6 +369,7 @@ he ticks: `references/inspiration-piece.md`.
    argument, `{"members": [its ids], "series", "thesis", "joins": [3 to 5 beats]}`;
    drop a group that does not, and say why in your reply.
    Write at least four a day to `docs/plans/<Monday>-week/ideas.json`, each
+   with `lens` (`{"subject": "business" | "creator", "who", "under_the_hood"}`, `references/beat.md`), each
    with `so_what` first (what a business person finds out, in one plain
    sentence, the consequence before any mechanism; Krish, 2026-10-19: "In
    plain English what would be so interesting to a business person?"; the

@@ -820,6 +820,9 @@ def wave1(ideas, sources, plans=None, p6=None, status=None, before=None):
     # The day's wildcard: every open Monday, Wednesday and Friday carries one, explained and its distance read by the
     # divergence engine (ruling wildcard, Krish, 2026-11-26).
     found += idea_checks.wildcard_findings(ideas, week, status, before=before)
+    # Businesses first, and under the hood: every open hero says which way it faces and what AI changes in how the
+    # business works, and no hero day is led by more than one creator (Ruling, Krish, 2026-11-27; config/beat.json lens).
+    found += idea_checks.lens_findings(ideas, week, status, before=before)
     # The cycle's stage 2 touches (config/cycle.json; Krish, 2026-11-26: every system involved at the right moment): a
     # required touch with no line on the week's touches.jsonl fails it too, from the story score's `from` board.
     if week:

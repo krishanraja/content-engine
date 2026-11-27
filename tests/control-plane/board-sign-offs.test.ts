@@ -51,17 +51,26 @@ describe('the sign-off cards on the view', () => {
     expect(real?.cards.map(c => c.id)).toEqual(['sfx', 'golden', 'gate2'])
     const n = real!.cards.map(c => c.items.length)
     expect(n[0]).toBeGreaterThanOrEqual(8); expect(n[0]).toBeLessThanOrEqual(15)
-    expect(n[1]).toBeGreaterThanOrEqual(10)
-    expect(real!.cards[2].items.map(i => i.id)).toEqual(['hook', 'face', 'proof', 'close'])
-    expect(JSON.parse(readFileSync('config/ve/sign-offs.json', 'utf8')).cards.length).toBe(real!.cards.length)
+    // Checked on 27 Nov 2026 against that day's video standards: what fell below them is retired with its reason and
+    // never waits on him (Krish, 2026-11-27: "I have no idea if the things that are waiting on me ... are actually up to
+    // date or not"). Gate 2's four stills all were, so its card is not drawn.
+    const raw = JSON.parse(readFileSync('config/ve/sign-offs.json', 'utf8'))
+    expect(n[1] + raw.cards[1].retired.length).toBeGreaterThanOrEqual(10)
+    expect(real!.cards[2].items).toEqual([])
+    expect(raw.cards[2].retired.map((i: { id: string }) => i.id)).toEqual(['hook', 'face', 'proof', 'close'])
+    expect(raw.cards.length).toBe(real!.cards.length)
+    const view = signOffsView(real, [], NONE)!
+    expect(view.cards.map(c => c.id)).toEqual(['sfx', 'golden'])
+    for (const c of view.cards) expect([c.ask, c.why, c.note].every(t => typeof t === 'string' && t.length > 40)).toBe(true)
   })
 
   it('gives every sound and frame its own Approve and Not this, and Gate 2 one press for the card', () => {
     const v = signOffsView(manifest(), [], NONE)!
     expect(v.waiting).toBe(3)
     const sfx = v.cards[0]
-    expect(sfx.items[0]).toMatchObject({ id: 'thud', kind: 'audio', src: '/api/board/sign-offs?file=1SyntheticDriveIdA', verdict: null, written: false,
-      lines: ['A card slams in', 'For: slam · 2.1 s · Epidemic Sound'] })
+    // A sound is called by what it is for; the provider's own tag list is said once, as theirs.
+    expect(sfx.items[0]).toMatchObject({ id: 'thud', title: 'A card slams in', kind: 'audio', src: '/api/board/sign-offs?file=1SyntheticDriveIdA', verdict: null, written: false,
+      lines: ['2.1 seconds long, from Epidemic Sound', 'Epidemic Sound files it as: A thud'] })
     expect(sfx.items[0].presses!.approve).toMatchObject({ kind: 'press', label: 'Approve', op: 'sign-off', body: { card: 'sfx', item: 'thud', verdict: 'approve', sha256: h('thud') } })
     expect(sfx.items[0].presses!.approve.words).toBeUndefined()
     expect(sfx.items[0].presses!.not_this.words).toEqual({ path: 'words', ask: 'What is not right about this sound? (optional)', required: false })
@@ -289,7 +298,17 @@ describe('the routes', () => {
 
   it('builds presses the board posts as they are', () => {
     const p = signOffPresses(manifest().cards[1], manifest().cards[1].items[0])
-    expect(p.approve.done).toBe('Approved. The engine takes it in, and this card says so when it has.')
-    expect(p.not_this.done).toBe('Saved as your no. The engine records it, and nothing here is used.')
+    // Each press says what it changed (Krish, 2026-11-27: "what am I actually approving, and what happens if I press
+    // that button?").
+    expect(p.approve.done).toBe('Approved. New cuts are now compared with this frame before they reach you. The card says when the engine has it.')
+    expect(p.not_this.done).toBe('Saved as your no: this frame is never used.')
+    expect(signOffPresses(manifest().cards[0], manifest().cards[0].items[0]).approve.done).toMatch(/^Approved\. This sound joins the short list/)
+  })
+
+  it('draws no card whose samples were all retired, and never counts it as waiting', () => {
+    const emptied = parseManifest(JSON.stringify({ ...MANIFEST, cards: [MANIFEST.cards[0], MANIFEST.cards[1], { ...MANIFEST.cards[2], items: [] }] }))
+    const v = signOffsView(emptied, [], NONE)!
+    expect(v.cards.map(c => c.id)).toEqual(['sfx', 'golden'])
+    expect(v.waiting).toBe(2)
   })
 })

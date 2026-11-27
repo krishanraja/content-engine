@@ -1040,6 +1040,62 @@ class SaturdayGateTest(unittest.TestCase):
             week_plan.read_offdays({'tue': [dict(o, kind='podcast') for o in own]}, week='2026-11-30')
 
 
+class LensTest(unittest.TestCase):
+    """Ruling (Krish, 2026-11-27): businesses first, and how AI is changing them under the hood; one creator or one
+    creator tool leads at most one hero a day. config/beat.json lens holds the words; from its from board every open
+    hero carries lens and the gate refuses what does not hold. Every option here is invented."""
+
+    WEEK = ic.LENS['from']
+    HOOD = 'The label now earns a licence fee each time the model is trained on its catalogue'
+
+    def hero(self, n, subject, who, question, hood=None, **kw):
+        lens = {'subject': subject, 'who': who, 'under_the_hood': self.HOOD if hood is None else hood}
+        kw.setdefault('story', f'{question} {who} is the story.')
+        return main_option(id=f'{n:08d}-2222-4333-8444-555555555555', pitch={'question': question}, lens=lens, **kw)
+
+    def board(self, *mains):
+        return {'week_start': self.WEEK, 'days': {'wed': list(mains)}, 'offdays': {}}
+
+    def lines(self, ideas, week=None, status=None):
+        return [f['line'] for f in ic.lens_findings(ideas, week or self.WEEK, status)]
+
+    def test_the_config_is_read_and_the_code_fails_the_run(self):
+        self.assertIn('lens', ic.GATE_CODES)
+        self.assertEqual(ic.LENS['max_creator_led_per_day'], 1)
+        self.assertIn('individual creators', ic.LENS['his_words'][0]['said'])
+
+    def test_a_business_led_day_with_one_creator_passes(self):
+        board = self.board(self.hero(1, 'business', 'Acme Records', 'Why is a record label paid twice for one song?'),
+                           self.hero(2, 'business', 'Northwind', 'How does a streaming platform price an AI voice?'),
+                           self.hero(3, 'creator', 'Jo Bloggs', 'How did one singer make an album in a week?'))
+        self.assertEqual(self.lines(board), [])
+
+    def test_two_creator_led_options_on_a_day_fail_it(self):
+        board = self.board(self.hero(1, 'creator', 'Jo Bloggs', 'How did one singer make an album in a week?'),
+                           self.hero(2, 'creator', 'Sam Roe', 'What does a painter do with a new brush app?'))
+        found = self.lines(board)
+        self.assertEqual(len(found), 1)
+        self.assertTrue(found[0].startswith('lens: wed has 2 options led by one creator'), found[0])
+
+    def test_calling_a_creator_story_a_business_is_caught(self):
+        found = self.lines(self.board(self.hero(1, 'business', 'Sam Roe', 'What does a painter do with a new brush app?')))
+        self.assertEqual(len(found), 1)
+        self.assertIn('names no company', found[0])
+
+    def test_a_hero_without_a_lens_or_with_a_weak_one_is_refused(self):
+        bare = main_option(id='00000001-2222-4333-8444-555555555555', pitch={'question': 'Why is a studio paying less?'})
+        self.assertIn('has no lens', self.lines(self.board(bare))[0])
+        short = self.hero(2, 'business', 'Acme Records', 'Why is a record label paid twice?', hood='It changes things.')
+        self.assertIn('under_the_hood of 8 words', self.lines(self.board(short))[0])
+        ghost = self.hero(3, 'business', 'Acme Records', 'Why is a record label paid twice?', story='A label is paid twice.')
+        self.assertIn('never does', self.lines(self.board(ghost))[0])
+
+    def test_before_its_board_or_on_a_day_he_answered_nothing_is_checked(self):
+        board = self.board(main_option(id='00000001-2222-4333-8444-555555555555'))
+        self.assertEqual(self.lines(board, week='2026-11-30'), [])
+        self.assertEqual(self.lines(board, status={'idea:00000001-2222-4333-8444-555555555555': 'picked'}), [])
+
+
 class OffBeatTest(unittest.TestCase):
     """Ruling (Krish, 2026-11-24): the engine brings stories in his focus sectors (media, entertainment, content, arts,
     music, creator tech, with the economics of AI inside them) and not governance, regulation, security or data

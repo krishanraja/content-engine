@@ -170,6 +170,8 @@ export function beatPromptBlock(): string {
   return [
     'THE BEAT',
     `Bring stories from Krish's focus sectors: ${sectors}. ${beat.tone}`,
+    // Businesses first, and under the hood (Ruling, Krish, 2026-11-27; config/beat.json lens).
+    beat.lens.line,
     `Not the beat: ${avoid}. Return no_angle for a signal that is only one of these.`,
     `The model piece: "${beat.model_piece.title}". ${beat.model_piece.why}`,
     words ? `His words (${words.at.slice(0, 10)}): "${words.said}"` : '',

@@ -3,7 +3,8 @@
   "about": [
     "Krish's three video sign-offs, one review card each on his Publish Board (Ruling, Krish, 2026-11-12: \"One review card each: each goes on your Publish Board as a card with samples to look at and listen to, plus Approve or Not this. About 10 minutes in total.\").",
     "Each sample is a file in his Drive, named by its id and link, with the sha256 of its bytes, which his press binds. Media is never committed. scripts/velib/signoffs.py makes and records them (ve signoff stills, gate2, add); the live board draws them (apps/control-plane/api/board/_signOffs.ts, view contract 1.11.0, sign_offs) and takes his Approve or Not this; .github/workflows/signoff-apply.yml writes his presses into config/sfx-approved.json, config/ve/golden-frames.json and config/ve/design-lock.json. Nothing is approved on his behalf.",
-    "The samples were filed on 13 Nov 2026 in his Drive's Inbox from My AI (docs/DRIVE.md: where a session files what the map gives no other home), each named \"Video sign-off - ...\"."
+    "The samples were filed on 13 Nov 2026 in his Drive's Inbox from My AI (docs/DRIVE.md: where a session files what the map gives no other home), each named \"Video sign-off - ...\".",
+    "Checked on 27 Nov 2026 against the video standards of that day (Krish, 2026-11-27: \"I also have no idea if the things that are waiting on me in the content board to approve are actually up to date or not, relevant or not. Even if they were, what am I actually approving, and what happens if I press that button? It's all so cryptic.\"). A sample that falls below today's standard is moved to its card's retired list with the reason and the date, so it never waits on him; a card with no samples left is not shown. Each card's ask says what he is looking at, its why says what Approve and Not this change and what happens if he never presses, and its note says when it was last checked."
   ],
   "drive": {
     "folder": "Inbox from My AI",
@@ -16,8 +17,8 @@
       "title": "Sound effects",
       "presses": "each",
       "writes": "config/sfx-approved.json",
-      "ask": "Twelve short sounds for the one big moment in a cut. Approve each one you would want to hear in a video, and press Not this on any you would not.",
-      "why": "config/sfx-approved.json approves none, so no cut can use a sound yet (THE_BAR ruling 11: one sound, on the big moment only).",
+      "ask": "Twelve sound effects, each a second or two long, for the one big moment in a video: a word slamming in, a stamp landing, a ding as a number counts up. Play each one and say whether you would want to hear it in one of your cuts.",
+      "why": "Approve puts that sound on the short list a cut may use, and a cut uses at most one sound, on its big moment. Not this keeps it out for good. Neither press publishes anything. Until you approve one, every cut goes out with no sound effect.",
       "from": "Epidemic Sound, on your plan, which covers sound effects in published video (29 Oct 2026)",
       "items": [
         {
@@ -68,7 +69,7 @@
           "name": "stamp-rubber.wav",
           "seconds": 0.21,
           "slot": "stamp",
-          "use": "A real rubber stamp for the stamp device",
+          "use": "A real rubber stamp, for a word stamped onto the screen",
           "provider": "Epidemic Sound",
           "provider_id": "d530c5b9-3047-42fe-a06a-7c479d637b60",
           "gain_db": -10,
@@ -260,7 +261,8 @@
           "sha256": "e1bf2690af3eea5c739910d1d60e1de85c6a764f20be15112c8dd080d6dfaeb6",
           "bytes": 395306
         }
-      ]
+      ],
+      "note": "Still current: checked on 27 Nov 2026. Nothing about sound effects has changed since these were chosen on 13 Nov, and none is approved yet."
     },
     {
       "id": "golden",
@@ -271,8 +273,8 @@
         "min": 5,
         "max": 10
       },
-      "ask": "Twelve frames from your own published cuts. Approve the ones that show the standard every new cut is judged against. At least five are wanted, and at most ten are kept.",
-      "why": "All ten golden frame slots are empty, so the Critic judges new cuts against Monday 26 alone.",
+      "ask": "Frames from your own published cuts. Approve each one that looks the way every new cut should look.",
+      "why": "An approved frame becomes a reference picture: the engine's reviewer judges every new cut against these frames before the cut reaches you. Not this keeps a frame out. Until five are approved, the reviewer compares new cuts with your Mon 26 Oct cut only.",
       "items": [
         {
           "id": "mon26-tall-00047",
@@ -341,28 +343,6 @@
           "bytes": 222041
         },
         {
-          "id": "mon26-tall-00610",
-          "title": "Your prediction, with the companies it names",
-          "kind": "image",
-          "mime": "image/jpeg",
-          "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
-          "piece": "Why is Disney eating the scraps of bankrupt Character.AI?",
-          "date": "2026-10-26",
-          "cut": "short",
-          "shape": "tall 9:16",
-          "at": "1:01.0",
-          "at_s": 61.0,
-          "cut_sha256": "39f1039c810681d1a6776b5a0c9f5f32696931cc47ea21ea4ec3f19b90888ecd",
-          "cut_path": "3 Posts/2026-10-26 Mon follow.the.money - Disney, Google and Character.AI/3 Video/Disney, Google and Character.AI - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4",
-          "drive": {
-            "file_id": "1iS3kNwkxYoEkkIyNNOZ3fr44U8LDlJXs",
-            "url": "https://drive.google.com/file/d/1iS3kNwkxYoEkkIyNNOZ3fr44U8LDlJXs/view"
-          },
-          "order": 4,
-          "sha256": "415d13a85b98eb7c2804e662aeefa5c36b01697192caba59ee32e727027dc163",
-          "bytes": 245080
-        },
-        {
           "id": "mon26-wide-01651",
           "title": "Comparison receipts beside you: proof that sums up",
           "kind": "image",
@@ -383,6 +363,34 @@
           "order": 5,
           "sha256": "0d258d81c25f307f76c90f3678dbeace9034a458303807205c8fb2741b40716e",
           "bytes": 236525
+        }
+      ],
+      "retired": [
+        {
+          "id": "mon26-tall-00610",
+          "title": "Your prediction, with the companies it names",
+          "kind": "image",
+          "mime": "image/jpeg",
+          "piece_id": "b358e788-209f-427b-a84d-1f79a8ebb430",
+          "piece": "Why is Disney eating the scraps of bankrupt Character.AI?",
+          "date": "2026-10-26",
+          "cut": "short",
+          "shape": "tall 9:16",
+          "at": "1:01.0",
+          "at_s": 61.0,
+          "cut_sha256": "39f1039c810681d1a6776b5a0c9f5f32696931cc47ea21ea4ec3f19b90888ecd",
+          "cut_path": "3 Posts/2026-10-26 Mon follow.the.money - Disney, Google and Character.AI/3 Video/Disney, Google and Character.AI - tall 9x16 - Shorts, Reels, TikTok, LinkedIn.mp4",
+          "drive": {
+            "file_id": "1iS3kNwkxYoEkkIyNNOZ3fr44U8LDlJXs",
+            "url": "https://drive.google.com/file/d/1iS3kNwkxYoEkkIyNNOZ3fr44U8LDlJXs/view"
+          },
+          "order": 4,
+          "sha256": "415d13a85b98eb7c2804e662aeefa5c36b01697192caba59ee32e727027dc163",
+          "bytes": 245080,
+          "retired": {
+            "on": "2026-11-27",
+            "why": "It shows \"Our prediction\", and pieces stopped making predictions on 24 Nov (Krish, 2026-11-24: \"get rid of everything that suggests predictions, calls, dated, odds or scores\"), so it no longer shows the standard a new cut is held to."
+          }
         },
         {
           "id": "mon2-tall-00178",
@@ -404,7 +412,11 @@
           },
           "order": 6,
           "sha256": "dfb5544aabb3c06986be05a199210f6172cbb4ecdbbd81c7aa8342527af90724",
-          "bytes": 180444
+          "bytes": 180444,
+          "retired": {
+            "on": "2026-11-27",
+            "why": "It shows the corner logo, which cuts stopped carrying on 16 Nov, and the series label, which they stopped carrying on 27 Nov (docs/production/BRAND_PALETTE.md), so it no longer shows the standard a new cut is held to."
+          }
         },
         {
           "id": "mon2-tall-00287",
@@ -426,7 +438,11 @@
           },
           "order": 7,
           "sha256": "87f105d8e9eefddcf433c13669b46cad9d69c7388281dba6c15a5fc76bfce709",
-          "bytes": 86100
+          "bytes": 86100,
+          "retired": {
+            "on": "2026-11-27",
+            "why": "It shows the corner logo, which cuts stopped carrying on 16 Nov, and the series label, which they stopped carrying on 27 Nov (docs/production/BRAND_PALETTE.md), so it no longer shows the standard a new cut is held to."
+          }
         },
         {
           "id": "mon2-wide-02650",
@@ -448,7 +464,11 @@
           },
           "order": 8,
           "sha256": "dd8c2c7321ecb5b8bc12e356bc8dce0e47be06f7b67d74557de32e312cbcc903",
-          "bytes": 152611
+          "bytes": 152611,
+          "retired": {
+            "on": "2026-11-27",
+            "why": "It shows the corner logo, which cuts stopped carrying on 16 Nov, and the series label, which they stopped carrying on 27 Nov (docs/production/BRAND_PALETTE.md), so it no longer shows the standard a new cut is held to."
+          }
         },
         {
           "id": "fri6-wide-01188",
@@ -470,7 +490,11 @@
           },
           "order": 9,
           "sha256": "6e07cecd385301d5c64d3feed5f09ff27c6e724c4e2bbeaf1f58b293ce25261b",
-          "bytes": 142914
+          "bytes": 142914,
+          "retired": {
+            "on": "2026-11-27",
+            "why": "It shows the corner logo, which cuts stopped carrying on 16 Nov, and the series label, which they stopped carrying on 27 Nov (docs/production/BRAND_PALETTE.md), so it no longer shows the standard a new cut is held to."
+          }
         },
         {
           "id": "fri6-wide-01683",
@@ -492,7 +516,11 @@
           },
           "order": 10,
           "sha256": "8c725ff4d0dd02589427bfe4f7011f75c94fa92d0989177e12ade7f4a5a2cc1c",
-          "bytes": 251577
+          "bytes": 251577,
+          "retired": {
+            "on": "2026-11-27",
+            "why": "It shows the corner logo, which cuts stopped carrying on 16 Nov, and the series label, which they stopped carrying on 27 Nov (docs/production/BRAND_PALETTE.md), so it no longer shows the standard a new cut is held to."
+          }
         },
         {
           "id": "wed4-wide-00215",
@@ -514,7 +542,11 @@
           },
           "order": 11,
           "sha256": "84d988e0dc9293c91c59335e0e781c50e4da5052788a816a683f91900595cdd1",
-          "bytes": 299081
+          "bytes": 299081,
+          "retired": {
+            "on": "2026-11-27",
+            "why": "It shows the corner logo, which cuts stopped carrying on 16 Nov, and the series label, which they stopped carrying on 27 Nov (docs/production/BRAND_PALETTE.md), so it no longer shows the standard a new cut is held to."
+          }
         },
         {
           "id": "wed4-wide-01757",
@@ -536,9 +568,14 @@
           },
           "order": 12,
           "sha256": "1dbd454bb9820bb648a585304333a698c7edac6b70cd4344f5c400b66c41f286",
-          "bytes": 200214
+          "bytes": 200214,
+          "retired": {
+            "on": "2026-11-27",
+            "why": "It shows the corner logo, which cuts stopped carrying on 16 Nov, and the series label, which they stopped carrying on 27 Nov (docs/production/BRAND_PALETTE.md), so it no longer shows the standard a new cut is held to."
+          }
         }
-      ]
+      ],
+      "note": "Checked on 27 Nov 2026 against today's video standards: 4 of the 12 frames chosen on 13 Nov still meet them. 8 were taken off because they show the corner logo, the series label or a prediction, none of which a cut carries now. Five are wanted, so more frames are added from your next approved cuts."
     },
     {
       "id": "gate2",
@@ -548,7 +585,7 @@
       "writes": "config/ve/design-lock.json",
       "ask": "Four frames, one for each beat of the wide layout (hook, face, proof, close), from your published Mon 2 Nov wide cut. Approve them and they become the 16:9 lock every wide cut is checked against.",
       "why": "The 9:16 lock is frozen; the 16:9 one is still a draft, so no wide cut has key frames to match.",
-      "note": "These frames are from the published cut, made before ve drew wide cuts. ve does not yet draw this layout on your portrait takes, so approving makes it the target the wide renderer is built to, as the 9:16 lock was on 3 Nov.",
+      "note": "Taken off your board on 27 Nov 2026: its four frames show a look the cuts no longer use. It comes back with frames in today's look once ve draws wide cuts.",
       "from": {
         "piece_id": "9a0c97af-f0d6-4d12-a7ce-773c622d4b67",
         "piece": "Who trains your 2030 seniors",
@@ -556,7 +593,8 @@
         "cut": "long",
         "cut_sha256": "a7eb0a498d6f5ec0dc9d2c6342c72f01151bb10710760731d2325b6a0c4ec48b"
       },
-      "items": [
+      "items": [],
+      "retired": [
         {
           "id": "hook",
           "beat": "hook",
@@ -573,7 +611,11 @@
           },
           "order": 1,
           "sha256": "9aeeaedbd4ba1581306a5a4e6047cf3b0c27959a144f04cb8b2029afa7c0bf78",
-          "bytes": 160127
+          "bytes": 160127,
+          "retired": {
+            "on": "2026-11-27",
+            "why": "All four frames come from the 2 Nov wide cut and show the corner logo (retired 16 Nov), the series label (retired 27 Nov) or the old close card (replaced by the v5 outro on 26 Nov). Approving them would have locked the wide layout to a look already retired."
+          }
         },
         {
           "id": "face",
@@ -591,7 +633,11 @@
           },
           "order": 2,
           "sha256": "32b8cee7dc486f3e43be18801224dee9b8f93c670762f2fc573177f6cf20086a",
-          "bytes": 194307
+          "bytes": 194307,
+          "retired": {
+            "on": "2026-11-27",
+            "why": "All four frames come from the 2 Nov wide cut and show the corner logo (retired 16 Nov), the series label (retired 27 Nov) or the old close card (replaced by the v5 outro on 26 Nov). Approving them would have locked the wide layout to a look already retired."
+          }
         },
         {
           "id": "proof",
@@ -609,7 +655,11 @@
           },
           "order": 3,
           "sha256": "6e233176a03c9acf82f403cd23e6af7e742a7a5463cb64af6fcff86770f6776e",
-          "bytes": 172756
+          "bytes": 172756,
+          "retired": {
+            "on": "2026-11-27",
+            "why": "All four frames come from the 2 Nov wide cut and show the corner logo (retired 16 Nov), the series label (retired 27 Nov) or the old close card (replaced by the v5 outro on 26 Nov). Approving them would have locked the wide layout to a look already retired."
+          }
         },
         {
           "id": "close",
@@ -627,9 +677,14 @@
           },
           "order": 4,
           "sha256": "8d3699d6f6228e63f9256944ed17c990eaee83d696a4612aa9f662de03dab693",
-          "bytes": 95772
+          "bytes": 95772,
+          "retired": {
+            "on": "2026-11-27",
+            "why": "All four frames come from the 2 Nov wide cut and show the corner logo (retired 16 Nov), the series label (retired 27 Nov) or the old close card (replaced by the v5 outro on 26 Nov). Approving them would have locked the wide layout to a look already retired."
+          }
         }
       ]
     }
-  ]
+  ],
+  "checked_on": "2026-11-27"
 }

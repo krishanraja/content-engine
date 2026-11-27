@@ -167,8 +167,10 @@ const DATE = (iso: string) => {
 function linesOf(card: SignOffCardId, i: SignOffSample): string[] {
   const s = (k: string) => (typeof i[k] === 'string' && String(i[k]).trim() ? String(i[k]).trim() : null)
   if (card === 'sfx') {
-    const secs = typeof i.seconds === 'number' ? `${(i.seconds as number).toFixed(1)} s` : null
-    return [s('use'), [s('slot') ? `For: ${s('slot')}` : null, secs, s('provider')].filter(Boolean).join(' · ')].filter((x): x is string => Boolean(x))
+    // The title is what the sound is for (titleOf); the provider's own tag list is said once, as theirs.
+    const secs = typeof i.seconds === 'number' ? `${(i.seconds as number).toFixed(1)} seconds long` : null
+    return [[secs, s('provider') ? `from ${s('provider')}` : null].filter(Boolean).join(', '),
+      s('use') && s('provider') ? `${s('provider')} files it as: ${i.title}` : null].filter((x): x is string => Boolean(x))
   }
   if (card === 'golden') {
     const day = s('date') ? DATE(`${s('date')}T12:00:00Z`) : null
@@ -176,6 +178,12 @@ function linesOf(card: SignOffCardId, i: SignOffSample): string[] {
       .filter(x => x)
   }
   return [s('at') ? `Beat: ${s('beat') || i.id}, at ${s('at')} of the cut` : `Beat: ${s('beat') || i.id}`]
+}
+
+/** What a sample is called on the card: a sound by what it is for, in plain words, never the provider's tag list. */
+function titleOf(card: SignOffCardId, i: SignOffSample): string {
+  const use = typeof i.use === 'string' && i.use.trim() ? i.use.trim() : null
+  return card === 'sfx' && use ? use : i.title
 }
 
 function action(label: string, body: Body, done: string, ask: string | null): SignOffAction {
@@ -188,10 +196,15 @@ export function signOffPresses(card: SignOffManifestCard, item: SignOffSample | 
   const whole = card.presses === 'card'
   const sha = whole ? cardSha256(card) : item!.sha256
   const body = (verdict: SignOffSaid) => ({ card: card.id, item: whole ? CARD_ITEM : item!.id, verdict, sha256: sha })
-  const what = whole ? 'these four frames' : card.id === 'sfx' ? 'this sound' : 'this frame'
+  const what = whole ? 'these frames' : card.id === 'sfx' ? 'this sound' : 'this frame'
+  // What his press changes, said the moment he presses (Krish, 2026-11-27: "what am I actually approving, and what
+  // happens if I press that button? It's all so cryptic.").
+  const yes = card.id === 'sfx' ? 'Approved. This sound joins the short list a cut may use on its big moment.'
+    : card.id === 'golden' ? 'Approved. New cuts are now compared with this frame before they reach you.'
+    : 'Approved. These frames become the layout every wide cut is checked against.'
   const done = (verdict: SignOffSaid) => (verdict === 'approve'
-    ? 'Approved. The engine takes it in, and this card says so when it has.'
-    : 'Saved as your no. The engine records it, and nothing here is used.')
+    ? `${yes} The card says when the engine has it.`
+    : `Saved as your no: ${what} is never used.`)
   return {
     approve: action('Approve', body('approve'), done('approve'), whole ? 'Anything to add? (optional)' : null),
     not_this: action('Not this', body('not_this'), done('not_this'), `What is not right about ${what}? (optional)`),
@@ -202,13 +215,15 @@ export function signOffPresses(card: SignOffManifestCard, item: SignOffSample | 
  *  manifest cannot be read. */
 export function signOffsView(manifest: SignOffManifest | null, presses: SignOffPress[], configs: SignOffConfigs): SignOffsView | null {
   if (!manifest) return null
-  const cards: SignOffCardView[] = manifest.cards.map(card => {
+  // A card with no sample left (every one retired as below today's standard, config/ve/sign-offs.json retired) asks
+  // him nothing, so it is not shown and never counts as waiting on him.
+  const cards: SignOffCardView[] = manifest.cards.filter(card => card.items.length > 0).map(card => {
     const whole = card.presses === 'card'
     const sha = whole && card.items.length ? cardSha256(card) : null
     const cardVerdict = whole && sha ? latest(presses, card.id, CARD_ITEM, sha) : null
     const items: SignOffItemView[] = card.items.map(i => {
       const verdict = whole ? null : latest(presses, card.id, i.id, i.sha256)
-      return { id: i.id, title: i.title, kind: i.kind, mime: typeof i.mime === 'string' ? i.mime : null,
+      return { id: i.id, title: titleOf(card.id, i), kind: i.kind, mime: typeof i.mime === 'string' ? i.mime : null,
         src: `/api/board/sign-offs?file=${encodeURIComponent(i.drive.file_id)}`, drive: { file_id: i.drive.file_id, url: i.drive.url },
         sha256: i.sha256, lines: linesOf(card.id, i), verdict,
         written: whole ? Boolean(cardVerdict && sha && gate2Written(sha, cardVerdict.said, configs.lock)) : Boolean(verdict && writtenOf(card.id, i, verdict.said, configs)),
