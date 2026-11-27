@@ -1,0 +1,361 @@
+{
+ "lane": "mon",
+ "searched": [
+  "Tidal 80,000 songs a day AI 43% submissions 9 December",
+  "Tidal delete AI songs every day December policy (lead checked: holds, Tidal rejects wholly AI tracks from 9 Dec 2026 and expects 80,000 to 85,000 rejections a day, but it is the same news as the 23 Nov off-thu offer 'Tidal is deleting 29 million AI songs' in exclude.txt, so left out)",
+  "New York Times photographers told not to update Photoshop AI (lead checked: holds, kept as nyt-photoshop-2027)",
+  "AI music licensing deal November 2026",
+  "generative AI video startup raises funding November 2026 valuation (Sand.ai $200m round is 5 Nov, outside the window; fal $1.3bn is 3 Nov and infrastructure)",
+  "publisher AI licensing deal authors payment November 2026 (nothing in window with numbers)",
+  "video game studio AI layoffs cost savings November 2026",
+  "Hollywood studio AI deal terms November 2026 actors payment likeness (nothing in window)",
+  "Ubisoft Motherbrain AI subsidiary 166 layoffs November 19",
+  "ElevenLabs OR Suno OR Udio OR Midjourney price change November 2026 (only Black Friday promotions, no list-price change found)",
+  "acquires AI music startup November 2026",
+  "ElevenLabs acquisition $100 million Music Business Worldwide",
+  "Spotify AI November 2026 royalties payout change (none found; Spotify and Believe AI remix deal is 20 Oct, outside window)",
+  "AI sports broadcasting rights deal November 2026",
+  "Disney Adobe official AI innovation partner (9 Nov, outside window)",
+  "news publisher AI licensing deal November 2026",
+  "audiobook AI narration narrators pay November 2026 (no dated event in window)",
+  "Trove deals tracker and DMLA November round-up (nothing in window on the beat)",
+  "AI film studio raises Series A November 2026 (Utopai is October)",
+  "YouTube creators AI likeness payout November 2026 (nothing dated in window)",
+  "Getty Images OR Shutterstock AI licensing revenue November 2026 (nothing in window)",
+  "record label AI deal week of 16 or 23 November 2026",
+  "Variety: AI could make filmmaking costlier, Korean pioneers warn at TCCF (page blocked behind a paid gate, could not read it, left out)",
+  "Merry the Christmas Witch $1.5m AI film (18 Oct, outside window)",
+  "Kuaishou Q3 2026 results Kling AI",
+  "Canva 1,271 roles restructure (3 to 4 Nov, outside window)",
+  "LVMH media division OpenAI partnership",
+  "McClatchy Project Catalyst AI-native newsroom",
+  "Google and KBO search partnership 25 Nov (checked, no money or terms disclosed, left out)",
+  "SportsPro: BBC Signals licensed to rivals",
+  "ValkaAI pre-seed extension to 13m euros (an extension of about 1m euros, too thin, left out)",
+  "Wildcard spark: creative AI company data-centre or compute deal 13 to 27 Nov 2026 (Runway, Luma, Suno, Midjourney, Black Forest Labs, Kling, AI music, AI video, animation studios). Every compute deal found in the window (Applied Digital, TensorWave and OpenAI, Nscale and Anthropic, L&T Chennai, Meridian and Datagrid in Southland) has no creative company in it, so the spark is not supported; the strangest true money story found instead is marked wildcard",
+  "Note: the shared web search budget for this turn ran out before more sport, art and publishing searches could run; a follow-up could fill a second sport story and an art or publishing story"
+ ],
+ "candidates": [
+  {
+   "key": "kuaishou-kling-loss",
+   "sector": "creative_tools",
+   "headline": "Kling's owner went from a big profit to a loss while it pays for its AI video tool",
+   "what_happened": "On 19 November 2026 Kuaishou, the Chinese short-video app that owns the Kling AI video generator, reported a third-quarter loss of RMB959 million against a profit of RMB4.5 billion a year earlier. Revenue fell from RMB35.6 billion to RMB31.6 billion while research and development spending rose from RMB3.65 billion to RMB5.18 billion. The company says its investment in Kling will keep carrying cost implications, and it no longer gives Kling's own revenue.",
+   "date": "2026-11-19",
+   "named_thing": "Kling AI (Kuaishou Q3 2026 results: RMB959 million loss)",
+   "primary": {
+    "label": "Kuaishou Technology, Third Quarter 2026 Unaudited Financial Results (PR Newswire), 19 Nov 2026",
+    "url": "https://www.prnewswire.com/apac/news-releases/kuaishou-technology-announces-third-quarter-2026-unaudited-financial-results-302945189.html",
+    "kind": "original",
+    "quote": "Loss for the period was RMB959 million, compared to a profit of RMB4.5 billion for the same period of 2025."
+   },
+   "second": {
+    "label": "Dr. Web Magazin, Kuaishou Q3 2026 report, 19 Nov 2026",
+    "url": "https://www.drweb.de/?p=608232",
+    "quote": "Kuaishou hat seine Investitionen in KI in diesem Jahr erhöht, besonders in Kling."
+   },
+   "more_sources": [
+    {
+     "label": "Kuaishou release, Outlook",
+     "url": "https://www.prnewswire.com/apac/news-releases/kuaishou-technology-announces-third-quarter-2026-unaudited-financial-results-302945189.html",
+     "quote": "Our ongoing strategic investments in Kling AI and our broader AI strategy will continue to carry cost implications and weigh"
+    },
+    {
+     "label": "Dr. Web Magazin",
+     "url": "https://www.drweb.de/?p=608232",
+     "quote": "Wie viel das KI-Videomodell Kling zum Minus beiträgt, gibt Kuaishou nicht an."
+    },
+    {
+     "label": "Kuaishou release, other services",
+     "url": "https://www.prnewswire.com/apac/news-releases/kuaishou-technology-announces-third-quarter-2026-unaudited-financial-results-302945189.html",
+     "quote": "primarily attributable to the increase in games and Kling AI revenue"
+    }
+   ],
+   "money_or_mechanism": "Advertising and live-streaming money from a short-video app (both down, 11.1% and 19.0%) is paying for an AI video tool sold to filmmakers and creators, and the research bill rose about 42% in a year.",
+   "why_it_matters": "The cheap AI video tool a studio or creator pays for is being subsidised by its owner's ad business, which is now losing money to keep the price where it is.",
+   "funny": "The company asks investors to judge the tool by its awards ceremony in Seoul and its stand at TIFF, but not by its revenue, which it stopped printing.",
+   "media": {
+    "kind": "photo",
+    "url": ""
+   },
+   "risks": "Kling's own Q3 revenue is not disclosed (Q2 was over RMB850 million), so the share of the loss due to Kling is not stated by the company; the R&D rise is our sum from the release's table (5,178 vs 3,650 RMB million); quotes from the release were read through a tool that caps quotes at 125 characters, so the Outlook line is cut mid-sentence; no image verified."
+  },
+  {
+   "key": "lvmh-openai-17-titles",
+   "sector": "media",
+   "headline": "LVMH's 17 news and culture titles sign with OpenAI, and part of the deal is paid in software",
+   "what_happened": "On 16 November 2026 LVMH's media division, which owns Les Echos, Le Parisien, Paris Match, Challenges and 13 other brands, signed a partnership with OpenAI. ChatGPT will show summaries and excerpts of its journalism with links back, and OpenAI tools and ChatGPT Enterprise go to the group's staff. No amount was disclosed.",
+   "date": "2026-11-16",
+   "named_thing": "LVMH media division and OpenAI partnership (17 brands)",
+   "primary": {
+    "label": "OpenAI, LVMH media division partnership, Paris, 16 Nov 2026",
+    "url": "https://openai.com/index/lvmh-media-division-partnership/",
+    "kind": "original",
+    "quote": "Les Echos, Le Parisien, Challenges, Paris Match, L’Opinion, Investir, L’Agefi and others."
+   },
+   "second": {
+    "label": "Siècle Digital, OpenAI signe un accord avec 17 médias français, 17 Nov 2026",
+    "url": "https://siecledigital.fr/2026/11/17/openai-signe-un-accord-avec-17-medias-francais-dont-le-parisien-et-les-echos/",
+    "quote": "L’annonce a été faite le 16 novembre et aucun montant n’a été communiqué."
+   },
+   "more_sources": [
+    {
+     "label": "OpenAI announcement",
+     "url": "https://openai.com/index/lvmh-media-division-partnership/",
+     "quote": "the deployment of OpenAI tools and ChatGPT Enterprise to teams across the media division"
+    },
+    {
+     "label": "Siècle Digital",
+     "url": "https://siecledigital.fr/2026/11/17/openai-signe-un-accord-avec-17-medias-francais-dont-le-parisien-et-les-echos/",
+     "quote": "Cet accord stratégique comprend également l’utilisation de plusieurs outils, notamment ChatGPT Enterprise."
+    }
+   ],
+   "money_or_mechanism": "The publisher licenses its journalism into ChatGPT and gets OpenAI's software for its newsrooms in the same deal, so some of the payment may come back as seats rather than cash, and neither side says how much.",
+   "why_it_matters": "A publisher or label weighing an AI licence can see the template: content goes in, tools come back, and the price stays off the page.",
+   "funny": "A luxury group famous for putting the price nowhere near the product has signed a deal with the price nowhere near the announcement.",
+   "media": {
+    "kind": "photo",
+    "url": ""
+   },
+   "risks": "Terms undisclosed, so the 'paid in software' reading is our inference from the bundled tools, not a stated fact; Siècle Digital's body names six titles though its headline says 17 (OpenAI's page says 17 brands); no image verified."
+  },
+  {
+   "key": "mcclatchy-project-catalyst",
+   "sector": "media",
+   "headline": "McClatchy cut 90 newsroom jobs, then said AI would find the cash to keep it afloat",
+   "what_happened": "Nieman Lab reported on 18 November 2026 that McClatchy, owner of the Sacramento Bee and about 30 local papers, plans Project Catalyst, a companywide restructure into an 'AI-native operating model' with AI agents in daily work. Its chief operating officer Jeff Dorsey said it is meant to provide cash to keep the business afloat. It follows more than 90 newsroom job cuts in September, a 17% fall in paid digital subscribers and a 39% fall in unique visitors.",
+   "date": "2026-11-18",
+   "named_thing": "McClatchy Project Catalyst",
+   "primary": {
+    "label": "Nieman Lab, After gutting newsrooms, McClatchy plans to rebuild itself around AI, Mark Keierleber, 18 Nov 2026",
+    "url": "https://www.niemanlab.org/2026/11/after-gutting-newsrooms-mcclatchy-plans-to-rebuild-itself-around-ai/",
+    "kind": "original",
+    "quote": "Dubbed “Project Catalyst,” the companywide restructure will create an “AI-native operating model” that takes “repeated tasks"
+   },
+   "second": {
+    "label": "Tomorrow's Publisher, After cutting 90 staff, McClatchy plans an AI-native newsroom, 19 Nov 2026",
+    "url": "https://tomorrowspublisher.today/news/after-cutting-90-staff-mcclatchy-plans-an-ai-native-newsroom-cf5beb88b572/",
+    "quote": "after cutting more than 90 journalists and media workers in September 2026"
+   },
+   "more_sources": [
+    {
+     "label": "Tomorrow's Publisher",
+     "url": "https://tomorrowspublisher.today/news/after-cutting-90-staff-mcclatchy-plans-an-ai-native-newsroom-cf5beb88b572/",
+     "quote": "paid digital subscriptions had declined by 17 per cent over the previous year and unique visitors by 39 per cent"
+    }
+   ],
+   "money_or_mechanism": "With subscribers and readers falling, a newspaper chain is moving the cost of reporting from people to AI agents, and its own operations chief says the point is cash.",
+   "why_it_matters": "Anyone selling words to local readers sees the trade in plain sight: when revenue drops, the AI budget is paid for by the newsroom payroll.",
+   "funny": "The plan to save the newspapers is named after a chemistry term for something that speeds a reaction up without being used up itself.",
+   "media": {
+    "kind": "photo",
+    "url": "https://www.niemanlab.org/images/AdobeStock_693258227_Editorial_Use_Only.jpeg"
+   },
+   "risks": "Dorsey's 'provide cash, frankly, to keep the business afloat' was seen only as a fragment through a capped reader; the second source rewrites Nieman Lab rather than reporting independently; the job cuts were September, the plan report is 18 Nov; image is a stock photo, not McClatchy's own; the 'catalyst' line in funny is ours, check it before use."
+  },
+  {
+   "key": "ubisoft-motherbrain-166",
+   "sector": "games",
+   "headline": "Ubisoft cut 166 jobs in Canada the same day it opened an AI company",
+   "what_happened": "On 19 November 2026 Ubisoft said it is cutting 166 positions at its Montreal and Quebec City studios, just under 4% of its Canadian staff, as part of its cost-saving plan. In the same half-year results it announced Motherbrain, a new subsidiary focused on 'AI for gameplay innovation'. Ubisoft does not link the two.",
+   "date": "2026-11-19",
+   "named_thing": "Ubisoft Motherbrain; 166 positions",
+   "primary": {
+    "label": "Engadget, Ubisoft lays off 166 more workers, opens a generative AI studio, 19 Nov 2026",
+    "url": "https://engadget.com/2322205/ubisoft-lays-off-166-more-workers-opens-a-generative-ai-studio",
+    "kind": "report",
+    "quote": "On Thursday, Ubisoft announced that it's laying off 166 workers at its Montreal and Quebec City studios."
+   },
+   "second": {
+    "label": "Video Games Chronicle, Ubisoft is laying off 166 staff in its Montréal and Québec City offices, 19 Nov 2026",
+    "url": "https://www.videogameschronicle.com/news/ubisoft-is-laying-off-166-staff-in-its-montreal-and-quebec-city-offices/",
+    "quote": "reducing its workforce by 166 positions across its Montréal and Québec City operations."
+   },
+   "more_sources": [
+    {
+     "label": "Engadget",
+     "url": "https://engadget.com/2322205/ubisoft-lays-off-166-more-workers-opens-a-generative-ai-studio",
+     "quote": "Ubisoft added that it's opening a new subsidiary, Motherbrain, focused on \"AI for gameplay innovation.\""
+    }
+   ],
+   "money_or_mechanism": "The same set of results moves budget out of production and support roles in Quebec and into a new AI subsidiary, without saying whether one pays for the other.",
+   "why_it_matters": "Studio heads and developers can see how a big publisher now books AI: a new company on one line, fewer people on another.",
+   "funny": "The AI company is called Motherbrain, which in Metroid is the villain the player spends the whole game trying to destroy.",
+   "media": {
+    "kind": "photo",
+    "url": "https://www.engadget.com/img/gallery/ubisoft-lays-off-166-more-workers-opens-a-generative-ai-studio/intro-1795114771.jpg"
+   },
+   "risks": "Ubisoft does not tie the cuts to AI; VGC says the Montreal and Quebec split is not known (another outlet gave 128 and 38, not checked on its page); Ubisoft's own release not opened; exclude.txt holds a different Ubisoft AI story (generative-AI pitches, 25 Nov), so check it is not read as the same; the Metroid line is general knowledge, not from a source."
+  },
+  {
+   "key": "sonilo-symphonic-optin",
+   "sector": "music",
+   "headline": "An $11m AI music start-up will pay indie artists to train on their songs, if they opt in",
+   "what_happened": "On 18 November 2026 Sonilo, an AI music company founded by former TikTok staff that raised $11 million in October, signed a licence with the distributor Symphonic to train its model on recordings from Symphonic's independent artists and labels who opt in. Sonilo says rights holders get licensing fees and a share of revenue, with attribution reporting. Neither side disclosed the fee or the split.",
+   "date": "2026-11-18",
+   "named_thing": "Sonilo and Symphonic licensing deal",
+   "primary": {
+    "label": "Music Business Worldwide, $11M-backed AI startup Sonilo inks licensing deal with Symphonic, 18 Nov 2026",
+    "url": "https://www.musicbusinessworldwide.com/11m-backed-ai-startup-sonilo-founded-by-tiktok-veterans-inks-licensing-deal-with-symphonic-to-train-its-model-on-opted-in-indie-recordings/",
+    "kind": "report",
+    "quote": "rights holders and artists receive licensing fees and a share of revenue."
+   },
+   "second": {
+    "label": "AI Musicpreneur, Sonilo and Symphonic opt-in AI training deal, Nov 2026",
+    "url": "https://www.aimusicpreneur.com/ai-tools-news/sonilo-symphonic-opt-in-ai-training-licensing-deal-2026/",
+    "quote": "raised $11 million in October in a round led by B Capital."
+   },
+   "more_sources": [
+    {
+     "label": "Music Business Worldwide",
+     "url": "https://www.musicbusinessworldwide.com/11m-backed-ai-startup-sonilo-founded-by-tiktok-veterans-inks-licensing-deal-with-symphonic-to-train-its-model-on-opted-in-indie-recordings/",
+     "quote": "Financial terms were not disclosed"
+    },
+    {
+     "label": "AI Musicpreneur",
+     "url": "https://www.aimusicpreneur.com/ai-tools-news/sonilo-symphonic-opt-in-ai-training-licensing-deal-2026/",
+     "quote": "attribution reporting to support transparency and compensation for the rights holders behind the music."
+    }
+   ],
+   "money_or_mechanism": "Venture money raised by an AI start-up flows to independent artists through their distributor as a licence fee plus a revenue share, but only for songs whose owners tick the box, and the rate is private.",
+   "why_it_matters": "An independent artist or label now gets offered a paid AI training opt-in through their own distributor, without being told the rate up front.",
+   "funny": "It is Symphonic's fourth AI training partner, so an indie track can now be in more AI deals than playlists.",
+   "media": {
+    "kind": "photo",
+    "url": ""
+   },
+   "risks": "Company claims only on payment; no fee, split or opt-in count; the second source summarises MBW and the company release rather than reporting fresh; no image verified (the MBW image the reader returned was an advert)."
+  },
+  {
+   "key": "nyt-photoshop-2027",
+   "sector": "media",
+   "headline": "The New York Times told its photographers not to install the new Photoshop",
+   "what_happened": "In an email confirmed to The Verge around 24 November 2026, The New York Times told freelance photographers not to use Adobe Photoshop 2027 (version 28.0.0 and later) on its assignments. It said some features use generative AI in ways users may not notice and can write metadata that labels a photo as AI-generated. The rule applies 'at this time'.",
+   "date": "2026-11-24",
+   "named_thing": "Adobe Photoshop 2027 (version 28.0.0)",
+   "primary": {
+    "label": "DPReview, The New York Times tells photographers not to use the latest Photoshop, 25 Nov 2026",
+    "url": "https://www.dpreview.com/news/new-york-times-adobe-photoshop-2027-restriction-ai/",
+    "kind": "report",
+    "quote": "metadata identifying photographs as AI-generated."
+   },
+   "second": {
+    "label": "Glonce, New York Times tells freelance photographers to avoid Photoshop 2027 over AI metadata, 25 Nov 2026",
+    "url": "https://glonce.com/new-york-times-tells-freelance-photographers-to-avoid/",
+    "quote": "in ways that may not be apparent to users"
+   },
+   "more_sources": [
+    {
+     "label": "Slashdot, quoting The Verge, 26 Nov 2026 (Verge original: https://www.theverge.com/ai-artificial-intelligence/1041227/the-new-york-times-warns-photographers-not-to-update-photoshop-over-ai-features, could not be opened)",
+     "url": "https://news.slashdot.org/story/26/11/26/041231/nyt-warns-photographers-not-to-update-photoshop-over-ai-features",
+     "quote": "Adobe Photoshop 2027 (version 28.0.0 and subsequent updates)"
+    }
+   ],
+   "money_or_mechanism": "Freelancers keep paying for an Adobe subscription whose newest version their biggest client has told them not to use, because a hidden AI label could cost the paper its readers' trust in its pictures.",
+   "why_it_matters": "A photographer or picture desk paying for creative software now has to check whether the update they paid for breaks a client's rules.",
+   "funny": "The world's best-known newspaper's advice on the AI future of photography is: don't press update.",
+   "media": {
+    "kind": "photo",
+    "url": "https://www.dpreview.com/wp-content/uploads/2026/08/m_gi_adobe_photoshop_wordmark-jpeg.webp"
+   },
+   "risks": "The Verge, the original, would not load here; DPReview and Glonce quotes are short fragments; the money link (subscription cost) is our framing, no price is in the sources; Adobe had not responded; date of the email itself is not given, 24 Nov is the first report."
+  },
+  {
+   "key": "bbc-signals-licence",
+   "sector": "sports",
+   "headline": "The BBC built AI layers for its Wimbledon coverage and now plans to sell them to rivals",
+   "what_happened": "SportsPro reported on 13 November 2026 that the BBC used Signals, a platform that adds data graphics and layers over a live feed, on every live broadcast from Wimbledon's Centre Court, alongside a voice-activated AI assistant trained on tennis data. Three in four viewers kept it switched on. The BBC built it as white-label technology and plans to licence it to other broadcasters.",
+   "date": "2026-11-13",
+   "named_thing": "BBC Signals",
+   "primary": {
+    "label": "SportsPro, How the BBC is using AI to transform live sport and why it's licensing the tech to rivals, Steve McCaskill, 13 Nov 2026",
+    "url": "https://www.sportspro.com/broadcast-ott/bbc-sport-ai-signals-wimbledon-broadcast/",
+    "kind": "original",
+    "quote": "plans to licence the technology to other broadcasters grappling with the same challenges."
+   },
+   "second": {
+    "label": "none found",
+    "url": "",
+    "quote": ""
+   },
+   "more_sources": [
+    {
+     "label": "SportsPro",
+     "url": "https://www.sportspro.com/broadcast-ott/bbc-sport-ai-signals-wimbledon-broadcast/",
+     "quote": "75 per cent of viewers chose to keep Signals enabled even when they had the option to turn it off."
+    }
+   ],
+   "money_or_mechanism": "A licence-fee-funded broadcaster turns its own AI sports tools into something rival broadcasters pay for, so money flows from competitors back to the BBC.",
+   "why_it_matters": "Sports broadcasters and rights holders may end up buying their AI coverage tools from a competitor rather than a tech firm.",
+   "funny": "The licence fee paid for the tech, and now the BBC wants a licence fee for the tech.",
+   "media": {
+    "kind": "photo",
+    "url": "https://www.sportspro.com/wp-content/uploads/2026/11/Gabby-Logan-BBC.jpg?x57778"
+   },
+   "risks": "Single source: the search budget ran out before a second site was found; no licensees, prices or revenue named, so the money is a plan; page may sit partly behind SportsPro+; Wimbledon use was July, the licensing plan report is 13 Nov (edge of window)."
+  },
+  {
+   "key": "elevenlabs-kotoba",
+   "sector": "creative_tools",
+   "headline": "ElevenLabs buys a Japanese voice AI firm for about $100 million",
+   "what_happened": "On 16 November 2026 ElevenLabs, the AI voice company behind ElevenMusic, agreed to buy Kotoba Technologies, whose model Koto handles Japanese speech for simultaneous interpretation. Its chief executive Mati Staniszewski put the price at around $100 million, Business Insider Japan reported. ElevenLabs was valued at $22 billion in a September share sale.",
+   "date": "2026-11-16",
+   "named_thing": "ElevenLabs acquisition of Kotoba (about $100m)",
+   "primary": {
+    "label": "Music Business Worldwide, ElevenLabs agrees to acquire Kotoba in reported $100M deal, 17 Nov 2026",
+    "url": "https://www.musicbusinessworldwide.com/elevenlabs-agrees-to-acquire-japan-focused-voice-ai-company-kotoba-in-reported-100m-deal/",
+    "kind": "report",
+    "quote": "Business Insider Japan reports that ElevenLabs CEO Mati Staniszewski put the price at around $100 million"
+   },
+   "second": {
+    "label": "RouteNote Radar, Nov 2026",
+    "url": "https://routenote.com/radar/?p=6292",
+    "quote": "reportedly worth approximately $100 million."
+   },
+   "more_sources": [
+    {
+     "label": "Music Business Worldwide",
+     "url": "https://www.musicbusinessworldwide.com/elevenlabs-agrees-to-acquire-japan-focused-voice-ai-company-kotoba-in-reported-100m-deal/",
+     "quote": "the deal is worth more than USD $100 million"
+    }
+   ],
+   "money_or_mechanism": "A creative-voice company valued at $22 billion spends about $100 million to buy its way into Japanese speech rather than build it.",
+   "why_it_matters": "Voice actors, dubbing studios and audiobook makers working in Japanese now face the biggest AI voice firm with a home-grown Japanese model.",
+   "funny": "The company that makes AI speak every language had to buy one.",
+   "media": {
+    "kind": "photo",
+    "url": ""
+   },
+   "risks": "Weak beat fit: Kotoba is conversational and interpretation AI used by Salesforce, not a creative product, so the creative angle is ElevenLabs itself; price is reported, not confirmed by ElevenLabs; deal closes later in Q4; no image verified."
+  },
+  {
+   "key": "kling-investors-guaranteed-return",
+   "sector": "creative_tools",
+   "wildcard": true,
+   "headline": "Kling's investors were promised their money back with a yearly return, like a loan",
+   "what_happened": "Kuaishou's results of 19 November 2026 book a non-cash interest cost on 'redemption financial liabilities': the annual return attached to Beijing Kling's conditional obligation to buy back shares from investors who were given redemption rights. Dr. Web reports Kling raised 19.8 billion yuan from investors in October. So the AI video tool's backers hold a promise that, if conditions are not met, the company buys them out with a return.",
+   "date": "2026-11-19",
+   "named_thing": "Beijing Kling redemption rights",
+   "primary": {
+    "label": "Kuaishou Technology, Third Quarter 2026 Unaudited Financial Results, footnote 2, 19 Nov 2026",
+    "url": "https://www.prnewswire.com/apac/news-releases/kuaishou-technology-announces-third-quarter-2026-unaudited-financial-results-302945189.html",
+    "kind": "original",
+    "quote": "Finance costs on redemption financial liabilities represent the non-cash interest expense accrued, reflecting the annual return attached to Beijing Kling's conditional obligation to repurchase equity interests under the redemption rights granted to"
+   },
+   "second": {
+    "label": "Dr. Web Magazin, Kuaishou Q3 2026 report, 19 Nov 2026",
+    "url": "https://www.drweb.de/?p=608232",
+    "quote": "Kling holte im Oktober 19,8 Mrd. Yuan von Investoren"
+   },
+   "more_sources": [],
+   "money_or_mechanism": "Investor money in an AI video tool comes with a buy-back promise, so part of what looks like risk capital is treated in the accounts like debt that earns interest.",
+   "why_it_matters": "The low price a filmmaker pays for an AI video tool rests on investors who have arranged to be paid back whether or not the tool wins.",
+   "funny": "Even the people betting on AI video asked for a receipt.",
+   "media": {
+    "kind": "photo",
+    "url": ""
+   },
+   "risks": "Spark not supported (no creative-AI data-centre deal found in window), so this is the 'strangest true money story' fallback; same company and release as kuaishou-kling-loss, so it may be better as a rung inside that piece than its own; the 19.8 billion yuan raise is from Dr. Web's linked article (October), not the release; the conditions on redemption are not spelled out in what was read; footnote quote is cut at the reader's limit."
+  }
+ ]
+}
