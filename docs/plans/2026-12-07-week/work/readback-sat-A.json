@@ -1,0 +1,30 @@
+{
+ "reader": "reader A",
+ "answers": [
+  {
+   "ref": "off-thu-pixelfill",
+   "says": "Pixelmator Pro can now change just one part of a photo, like the sky, when you type what you want.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-sat-goodnews",
+   "says": "A round-up of good news: AI helped songwriters and bands get heard by millions, like an AI-assisted song hitting number one in Korea.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-sat-screen",
+   "says": "A round-up of good news: film and TV makers used AI to try new things, like an epic with an AI lead actor and AI short films by Korean directors.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-sat-makers",
+   "says": "A round-up of good news: one person with AI can now make things that used to need a whole studio, like a cheap fantasy film and a blockbuster-looking trailer.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-sat-newsrooms",
+   "says": "A round-up of good news: newspapers used AI to keep their readers and save time, like checking headlines and spotting who is about to cancel.",
+   "repeat": "new"
+  }
+ ]
+}

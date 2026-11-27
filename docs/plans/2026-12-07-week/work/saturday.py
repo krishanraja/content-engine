@@ -114,14 +114,5 @@ SAT = [
             ('canva-mcp-500k', 'Nearly 500,000 people joined Canva through AI assistants.')],
            'https://www.instagram.com/power.ai/p/Dfa2apfFSE5/', 'A newspaper front page beside a laptop',
            'Each one kept an editor checking the machine.', 'An editor\'s red pen on a printout'),
-    option('players', 'fans and solo makers', "This month AI helped fans and solo makers get more.",
-           "Season ticket holders opening AI glasses at home, a game developer painting a map in minutes, and a filmmaker's two epics.",
-           "Three wins for fans and solo makers, and one more to find.",
-           "The 49ers' official title for Meta is official moment maker, the first sponsorship category named after a camera.",
-           [('49ers-meta-ai-glasses-4700', '4,700 49ers members got AI glasses at home.'),
-            ('ludo-tileset-generator', 'A solo game maker can paint a map in minutes.'),
-            ('samyaza-two-ai-films', 'An independent filmmaker released two AI epics in three days.')],
-           'https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/', 'A stadium crowd with phones up',
-           'Small tools, big nights.', 'A football in floodlights', short_by=1),
 ]
 SAT[0]['candidates'] = candidates()

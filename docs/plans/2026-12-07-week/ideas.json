@@ -1826,6 +1826,17 @@
      "tone": "Plain, useful and a little dry: the joke is in the facts.",
      "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
      "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
+    },
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "Pixelmator Pro can now change just one part of a photo, like the sky, when you type what you want.",
+      "Pixelmator Pro lets you type what you want and it repaints just that part of a photo, like the sky."
+     ],
+     "against": 61
     }
    },
    {
@@ -2596,7 +2607,18 @@
       "place": "news",
       "date": "2026-11-27"
      }
-    ]
+    ],
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "A round-up of good news: AI helped songwriters and bands get heard by millions, like an AI-assisted song hitting number one in Korea.",
+      "A round-up of good news where AI helped songwriters and bands get heard by millions, like an AI-helped song topping a Korean chart."
+     ],
+     "against": 61
+    }
    },
    {
     "id": "screen",
@@ -2765,6 +2787,17 @@
      "tone": "Warm and real, with one dry line on the cover.",
      "kit": "v5 Library good-news set: each story's own photo or clip, house type and palette",
      "inspo_url": "https://www.instagram.com/power.ai/p/DfcCbPXlWQ-/"
+    },
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "A round-up of good news: film and TV makers used AI to try new things, like an epic with an AI lead actor and AI short films by Korean directors.",
+      "A round-up of film and TV makers using AI to try new things, like an epic with an AI lead actor and AI short films."
+     ],
+     "against": 61
     }
    },
    {
@@ -2942,6 +2975,17 @@
      "tone": "Warm and real, with one dry line on the cover.",
      "kit": "v5 Library good-news set: each story's own photo or clip, house type and palette",
      "inspo_url": "https://www.instagram.com/evolving.ai/p/DfeWM7jADvK/"
+    },
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "A round-up of good news: one person with AI can now make things that used to need a whole studio, like a cheap fantasy film and a blockbuster-looking trailer.",
+      "A round-up of people working on their own who used AI to make things that look like big studio films."
+     ],
+     "against": 61
     }
    },
    {
@@ -3111,163 +3155,18 @@
      "tone": "Warm and real, with one dry line on the cover.",
      "kit": "v5 Library good-news set: each story's own photo or clip, house type and palette",
      "inspo_url": "https://www.instagram.com/power.ai/p/Dfa2apfFSE5/"
-    }
-   },
-   {
-    "id": "players",
-    "kind": "good_news",
-    "format": "Good-news carousel, 6 cards, 4:5",
-    "source_tag": "trade_press",
-    "topic": "fans and solo makers",
-    "source": {
-     "label": "Each story's own source",
-     "url": "https://www.49ers.com/news/49ers-and-meta-announce-multi-year-partnership-centered-around-meta-ai-glasses"
     },
-    "copy": "This month AI helped fans and solo makers get more. Four real things AI helped people in fans and solo makers do this month, each with who it helped and how.",
-    "hook": "This month AI helped fans and solo makers get more.",
-    "pitch": {
-     "see": "Season ticket holders opening AI glasses at home, a game developer painting a map in minutes, and a filmmaker's two epics.",
-     "lands": "It is uplifting, real and in the reader's world, and each story names who it helped.",
-     "why_now": "Stories dated 20 to 27 November 2026, or found in your Instagram inspo sheet within 30 days.",
-     "share": "Three wins for fans and solo makers, and one more to find."
-    },
-    "shape": "theme",
-    "aim": "interest",
-    "funny": "The 49ers' official title for Meta is official moment maker, the first sponsorship category named after a camera.",
-    "lookalike": {
-     "pattern": "small-win",
-     "beats": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/",
-     "our_take": "The post told one person's small win; ours puts four wins in the reader's own industry side by side, each with who it helped."
-    },
-    "learned_from": [
-     "\"I want actual news items and the content we are going to use here - embedded real world images or videos\" (your Improve, 2 Nov, of the good news)",
-     "\"Real-world stories only, but with a hilarious generated cover page\" (your Improve, 9 Nov, of the good news)"
-    ],
-    "stories": [
-     {
-      "headline": "4,700 49ers members got AI glasses at home.",
-      "what": "The San Francisco 49ers announced a multi-year partnership with Meta on 24 November 2026, built around Meta's AI glasses. More than 4,700 suite partners and club season ticket members will get a free pair of Oakley Meta HSTN glasses at home, fullback Kyle Juszczyk becomes a Meta ambassador, and Meta joins the club's marketing in the UK, UAE and Mexico.",
-      "why": "A club turned its season ticket list into a launch audience for an AI device and got a global sponsor for it.",
-      "kind": "sports",
-      "helps": {
-       "who": "sports clubs selling sponsorship, and their season ticket holders",
-       "how": "more successful"
-      },
-      "date": "2026-11-24",
-      "source": {
-       "label": "San Francisco 49ers, '49ers and Meta Announce Multi-Year Partnership Centered Around Meta AI Glasses', 24 Nov 2026",
-       "url": "https://www.49ers.com/news/49ers-and-meta-announce-multi-year-partnership-centered-around-meta-ai-glasses"
-      },
-      "media": {
-       "kind": "photo",
-       "url": "https://www.sportcal.com/wp-content/uploads/sites/32/2026/11/main6b0598eec042d-430x241.jpg"
-      }
-     },
-     {
-      "headline": "A solo game maker can paint a map in minutes.",
-      "what": "Ludo.ai launched Tileset Generator on 26 November 2026, which makes sets of 2D map tiles, such as grass, sand, roads and rivers, from a text description or a reference image. A full 16-tile set costs one credit, and it exports straight to engines like Godot 4.",
-      "why": "Small game teams can skip days of drawing edge and corner tiles.",
-      "kind": "games",
-      "helps": {
-       "who": "indie and solo game developers",
-       "how": "smarter"
-      },
-      "date": "2026-11-26",
-      "source": {
-       "label": "PocketGamer.biz, 'Ludo.ai launches AI-powered Tileset Generator for 2D game development', 26 Nov 2026",
-       "url": "https://www.pocketgamer.biz/ludoai-launches-ai-powered-tileset-generator-for-2d-game-development/"
-      },
-      "media": {
-       "kind": "photo",
-       "url": "https://media.pocketgamer.biz/images/142383/90365/ludoai_l1200.jpg"
-      }
-     },
-     {
-      "headline": "An independent filmmaker released two AI epics in three days.",
-      "what": "Samyaza Speaks released 'The Biblical Experience', an AI-made journey through the Bible from the fall of Lucifer to the last battle, and 'OBLITERATION', a five-minute dystopian short about an order that destroys the world in the name of peace. Evolving AI shared them on 1 and 3 November 2026 as examples of what independent filmmakers can now make.",
-      "why": "A single maker now has the output of a small studio, and a distinct style is what lifts the work above the flood.",
-      "kind": "film_tv",
-      "helps": {
-       "who": "independent filmmakers",
-       "how": "more successful"
-      },
-      "date": "2026-11-03",
-      "source": {
-       "label": "Instagram, @evolving.ai post crediting @Samyazaspeaks, 3 Nov 2026",
-       "url": "https://www.instagram.com/evolving.ai/reel/DfR7b8JA4q1/"
-      },
-      "media": {
-       "kind": "clip",
-       "url": "https://www.instagram.com/evolving.ai/reel/DfR7b8JA4q1/"
-      },
-      "found": {
-       "label": "Your Instagram inspo sheet",
-       "url": "https://www.instagram.com/evolving.ai/reel/DfR7b8JA4q1/"
-      }
-     }
-    ],
-    "stories_due": "2026-11-27",
-    "cards": [
-     {
-      "words": "This month AI helped fans and solo makers get more.",
-      "picture": "A stadium crowd with phones up"
-     },
-     {
-      "words": "4,700 49ers members got AI glasses at home.",
-      "picture": "San Francisco 49ers: the thing itself (photo)"
-     },
-     {
-      "words": "A solo game maker can paint a map in minutes.",
-      "picture": "PocketGamer.biz: the thing itself (photo)"
-     },
-     {
-      "words": "An independent filmmaker released two AI epics in three days.",
-      "picture": "Instagram: the thing itself (clip)"
-     },
-     {
-      "words": "One more story to find this week.",
-      "picture": "An empty frame, to be filled with the fourth story"
-     },
-     {
-      "words": "Small tools, big nights.",
-      "picture": "A football in floodlights"
-     }
-    ],
-    "direction": {
-     "look": "The v5 good-news set, modelled on the small-win carousels in your Instagram inspo sheet",
-     "format": "6 cards, 4:5",
-     "frames": [
-      {
-       "words": "This month AI helped fans and solo makers get more.",
-       "picture": "A stadium crowd with phones up"
-      },
-      {
-       "words": "4,700 49ers members got AI glasses at home.",
-       "picture": "San Francisco 49ers: the thing itself (photo)"
-      },
-      {
-       "words": "A solo game maker can paint a map in minutes.",
-       "picture": "PocketGamer.biz: the thing itself (photo)"
-      },
-      {
-       "words": "An independent filmmaker released two AI epics in three days.",
-       "picture": "Instagram: the thing itself (clip)"
-      },
-      {
-       "words": "One more story to find this week.",
-       "picture": "An empty frame, to be filled with the fourth story"
-      },
-      {
-       "words": "Small tools, big nights.",
-       "picture": "A football in floodlights"
-      }
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
      ],
-     "tone": "Warm and real, with one dry line on the cover.",
-     "kit": "v5 Library good-news set: each story's own photo or clip, house type and palette",
-     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/"
-    },
-    "stories_to_find": true,
-    "stories_short": "Only three stories in games and sport passed their source check in the week; the fourth is still to find."
+     "says": [
+      "A round-up of good news: newspapers used AI to keep their readers and save time, like checking headlines and spotting who is about to cancel.",
+      "A round-up of newspapers using AI to check headlines, keep readers from cancelling and save time."
+     ],
+     "against": 61
+    }
    }
   ]
  },
@@ -3824,6 +3723,36 @@
     "verdict": "new",
     "of": "off-sat-goodnews",
     "why": "An AI remake of a game in another decade has no story yet; the nearest is the 5 Dec good-news item on a game world in brush strokes, a different project."
+   },
+   {
+    "ref": "off-thu-pixelfill",
+    "verdict": "new",
+    "of": "piece:bf0fddae-2fcf-4687-9079-190729234ed3",
+    "why": "A how-to for Pixelmator Pro's Generate Fill; the Adobe MAX piece asked which design suite to renew, a different event and a different reader question."
+   },
+   {
+    "ref": "off-sat-goodnews",
+    "verdict": "new",
+    "of": "off-sat-goodnews",
+    "why": "All four music stories are new against the 5 Dec good news (umbrella helper, Bible epic, painted game world, Motson), though 'in front of millions' echoes its 'reach millions' hook; note this ref shares its key with both posted Saturday editions."
+   },
+   {
+    "ref": "off-sat-screen",
+    "verdict": "new",
+    "of": "piece:a4b34048-ab39-49da-a251-eaa58ebe2eaf",
+    "why": "Lionsgate's series, the Korean shorts, the Oscar winner's case study and Odeon are not in any recent post; the AI-animated feature post was a single film's release."
+   },
+   {
+    "ref": "off-sat-makers",
+    "verdict": "new",
+    "of": "off-sat-goodnews",
+    "why": "Desi Batman, the $28,775 film, the AI trailer and Gary Vee's avatar are different stories from the 5 Dec edition, but its frame of solo makers reaching millions is close to that edition's hook, so word the cover apart."
+   },
+   {
+    "ref": "off-sat-newsrooms",
+    "verdict": "new",
+    "of": "piece:bf0fddae-2fcf-4687-9079-190729234ed3",
+    "why": "Newsroom stories are new; only the Canva item touches a recent post, and that post was about design seats, not sign-ups through AI assistants."
    }
   ]
  }

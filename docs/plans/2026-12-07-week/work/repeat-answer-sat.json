@@ -1,0 +1,34 @@
+{
+ "checked": [
+  {
+   "ref": "off-thu-pixelfill",
+   "verdict": "new",
+   "of": "piece:bf0fddae-2fcf-4687-9079-190729234ed3",
+   "why": "A how-to for Pixelmator Pro's Generate Fill; the Adobe MAX piece asked which design suite to renew, a different event and a different reader question."
+  },
+  {
+   "ref": "off-sat-goodnews",
+   "verdict": "new",
+   "of": "off-sat-goodnews",
+   "why": "All four music stories are new against the 5 Dec good news (umbrella helper, Bible epic, painted game world, Motson), though 'in front of millions' echoes its 'reach millions' hook; note this ref shares its key with both posted Saturday editions."
+  },
+  {
+   "ref": "off-sat-screen",
+   "verdict": "new",
+   "of": "piece:a4b34048-ab39-49da-a251-eaa58ebe2eaf",
+   "why": "Lionsgate's series, the Korean shorts, the Oscar winner's case study and Odeon are not in any recent post; the AI-animated feature post was a single film's release."
+  },
+  {
+   "ref": "off-sat-makers",
+   "verdict": "new",
+   "of": "off-sat-goodnews",
+   "why": "Desi Batman, the $28,775 film, the AI trailer and Gary Vee's avatar are different stories from the 5 Dec edition, but its frame of solo makers reaching millions is close to that edition's hook, so word the cover apart."
+  },
+  {
+   "ref": "off-sat-newsrooms",
+   "verdict": "new",
+   "of": "piece:bf0fddae-2fcf-4687-9079-190729234ed3",
+   "why": "Newsroom stories are new; only the Canva item touches a recent post, and that post was about design seats, not sign-ups through AI assistants."
+  }
+ ]
+}
