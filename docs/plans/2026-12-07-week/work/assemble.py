@@ -14,7 +14,7 @@ OUT = WEEK / 'ideas.json'
 ids = json.loads((HERE / 'ids.json').read_text())
 carry = json.loads((HERE / 'carry.json').read_text())
 look = json.loads((WEEK / 'lookalike.json').read_text())
-DROPPED = {'fri/samebook'}  # the engine's ingest gate dropped it as off-topic (via ingest_gate), so it is not an option
+DROPPED = {'fri/samebook', 'mon/iqiyi', 'wed/primevision', 'wed/nectar', 'wed/newsagent', 'wed/heygen6', 'fri/torcover', 'fri/deezergap', 'fri/megajam', 'fri/etsyterms', 'fri/cokeads'}  # samebook: the ingest gate dropped it; the rest are under the whys floor after two probe passes (story/probes.json)  # the engine's ingest gate dropped it as off-topic (via ingest_gate), so it is not an option
 
 old = json.loads(OUT.read_text()) if OUT.exists() else {}
 KEEP_FROM_OLD = ('story_score', 'score', 'order', 'read_back', 'distance', 'thin_week')
@@ -108,7 +108,8 @@ def build():
             'fri': "Nothing of his fits Friday: his ask on AI correcting what people believed is held until a newer checked case lands.",
         },
     }
-    for k in ('repeat_review', 'thin_week'):
+    data['thin_week'] = {d: {'regathered': True} for d in ('mon', 'wed', 'fri')}  # each re-gathered once: a second probe pass, and new Friday and Wednesday candidates
+    for k in ('repeat_review',):
         if old.get(k):
             data[k] = old[k]
     OUT.write_text(json.dumps(data, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')

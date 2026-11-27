@@ -5,72 +5,6 @@
  "days": {
   "mon": [
    {
-    "id": "9a2686e3-efc8-4532-a07f-d8904d0c2fd5",
-    "source_kind": "engine",
-    "source_tag": "trade_press",
-    "so_what": "A streamer just showed what AI short dramas are worth: first place in its home market and a smaller total bill, while its overall sales still fell, so anyone pricing film or TV work now knows where the cheap minutes are going.",
-    "story": "In its third-quarter 2026 results on 16 November, Chinese streamer iQIYI said its short-form TV dramas took the number one domestic market share for the first time, while total revenue fell 10% to RMB6.01 billion. VP Land reports 21 of the quarter's short dramas were AI-generated, with generated concept art, sets and props, and lead actors licensing their likenesses as reusable digital characters.",
-    "why_now": "iQIYI third-quarter 2026 results, 16 Nov 2026.",
-    "fact": "iQIYI, 16 Nov 2026: total revenue fell 10% to RMB6.01 billion, and \"our short-form dramas claimed the No. 1 domestic market share for the first time on a quarterly basis\"; VP Land: \"It released 21 AI-generated short-form dramas\".",
-    "source": {
-     "label": "iQIYI third-quarter 2026 results, SEC filing (16 Nov 2026)",
-     "url": "https://www.sec.gov/Archives/edgar/data/1722608/000119312526462100/d123902dex991.htm",
-     "kind": "original"
-    },
-    "sources": [
-     {
-      "label": "VP Land, 21 AI short dramas (Nov 2026)",
-      "url": "https://www.vp-land.com/stories/chinese-streaming-platform-iqiyi-releases-21-ai-short-dramas-and-takes-top-domestic-short"
-     }
-    ],
-    "first_reported": "https://www.sec.gov/Archives/edgar/data/1722608/000119312526462100/d123902dex991.htm",
-    "beats": [
-     "A streamer tops its short-drama chart in the quarter its sales shrink.",
-     "What an AI short drama replaces: the art department and the set.",
-     "The actors who rent out their faces as reusable characters.",
-     "Where the money moved: fewer crew days, more titles.",
-     "What this shows about what a minute of TV now costs."
-    ],
-    "pitch": {
-     "question": "If a computer can make the sets and the faces, what is a minute of television worth now?",
-     "headline": "iQIYI made 21 AI dramas and won its short-drama market. Its sales still fell 10%.",
-     "hook": "iQIYI released 21 AI-generated short dramas in one quarter and took first place in China's short-drama market, in the same results where its revenue fell 10% to RMB6.01 billion.",
-     "examples": [
-      "21 AI-generated short dramas in one quarter.",
-      "First place in domestic short-drama share, for the first time.",
-      "Total revenue down 10%, to RMB6.01 billion."
-     ],
-     "chain": [
-      "Short dramas are cheap, fast TV made for phones.",
-      "AI now makes the concept art, the sets and the props.",
-      "Lead actors license their faces as digital characters that can be reused.",
-      "So one title needs fewer crew days and less building.",
-      "So the streamer can make many more titles for the same money.",
-      "It wins the short-drama chart, while the rest of its business shrinks."
-     ],
-     "take": "What this shows is that AI pushes the price of a minute of drama down faster than it pushes viewing up. Who keeps the difference: the streamer, the actor who rented their face, or nobody?"
-    },
-    "style": {
-     "script": "follow-the-receipt",
-     "production": "data-story",
-     "experiment": {
-      "format": "receipt-animation",
-      "why": "Draw one AI short drama's bill as a receipt beside a normal one: the art department and set lines struck through, the likeness licence added."
-     }
-    },
-    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If a computer can make the sets and the faces, what is a minute of television worth now? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 16 November to 7 December 2026 on: iQIYI's AI-generated short dramas, their production costs, the actors' likeness licences and how the short-drama share and total revenue moved. Work through the 5 Whys, starting from the plain question: Why 1 asks who pays, and why the price moved. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
-    "shape": "story",
-    "dive": "AI swaps the art department and the set for generated assets and licensed digital doubles, so the cost of a short drama falls while total sales shrink.",
-    "aim": "interest",
-    "funny": "iQIYI's drama hit number one in the same quarter its accountant needed a tissue.",
-    "lookalike": {
-     "pattern": "money-twist",
-     "beats": "https://www.instagram.com/evolving.ai/p/DfeWM7jADvK/",
-     "our_take": "The post followed one man paying villagers; we follow one streamer's bill for a minute of TV, and who it stops paying."
-    },
-    "recommended": true
-   },
-   {
     "id": "2c443323-dc8c-4941-9608-04d6b3ec85ed",
     "source_kind": "engine",
     "source_tag": "trade_press",
@@ -133,7 +67,8 @@
      "pattern": "money-twist",
      "beats": "https://www.instagram.com/evolving.ai/p/DfeWM7jADvK/",
      "our_take": "The post showed one man paying people to sign up; we show a start-up paying songwriters, and the box that decides it."
-    }
+    },
+    "recommended": true
    },
    {
     "id": "21e94357-9b59-4abe-96c6-daf1f98cd6d2",
@@ -272,202 +207,6 @@
   ],
   "wed": [
    {
-    "id": "d5f108ea-7b48-4e1f-8c5c-62e346129f48",
-    "source_kind": "engine",
-    "source_tag": "trade_press",
-    "so_what": "A broadcaster has turned a coach's rule of thumb into a live AI graphic, so anyone in sport or broadcasting can see exactly what the machine adds to a football broadcast and what it simply repeats.",
-    "story": "On 23 November 2026 Prime Video announced Progressive Actions for its UEFA Champions League football coverage, first used at Arsenal against Borussia Dortmund on 24 November. Its own AI models measure how far the ball travels forward in each phase of the pitch, with a shorter threshold near the opposition goal, and show the start, end and player on screen.",
-    "why_now": "Advanced Television, 23 Nov 2026; debut at Arsenal v Borussia Dortmund, 24 Nov 2026.",
-    "fact": "Advanced Television, 23 Nov 2026: Prime Video's \"proprietary AI-powered models that identify a Progressive Action\" in Champions League football; Indian Television: \"The feature uses proprietary AI-powered models to identify progressive actions by measuring how far the ball travels\".",
-    "source": {
-     "label": "Advanced Television, Prime Video Progressive Actions (23 Nov 2026)",
-     "url": "https://www.advanced-television.com/2026/11/23/prime-video-unveils-progressive-actions-for-champions-league/",
-     "kind": "report"
-    },
-    "sources": [
-     {
-      "label": "Indian Television, Prime Video Progressive Actions (Nov 2026)",
-      "url": "https://indiantelevision.com/iworld/prime-video-introduces-ai-powered-progressive-actions-for-champions-league/"
-     }
-    ],
-    "first_reported": "https://www.advanced-television.com/2026/11/23/prime-video-unveils-progressive-actions-for-champions-league/",
-    "beats": [
-     "A football broadcast that highlights every pass forward.",
-     "The rule inside it: how far, and where on the pitch.",
-     "The data that feeds it: tracking every player, live.",
-     "What the model adds that a pundit could not.",
-     "What this shows about AI in a live sports broadcast."
-    ],
-    "pitch": {
-     "question": "When a football broadcast adds AI, what does the machine actually see that the pundit does not?",
-     "headline": "Prime Video built an AI that tells you to pass it forward.",
-     "hook": "Prime Video's new Progressive Actions graphic uses its own AI models to flag every pass and carry that moves the ball forward in Champions League football, first shown at Arsenal against Dortmund.",
-     "examples": [
-      "A shorter threshold near the opposition goal.",
-      "Shown live with the start, end and player.",
-      "Debuted at Arsenal against Borussia Dortmund on 24 November."
-     ],
-     "chain": [
-      "Cameras track every player and the ball.",
-      "The model measures how far each pass or carry moves the ball forward.",
-      "Near goal, a shorter move counts.",
-      "When it crosses the line, it is a progressive action.",
-      "The graphic draws it on screen in seconds.",
-      "The broadcaster sells a richer picture of the game."
-     ],
-     "take": "What this shows is that the clever part is a coach's rule, and the AI is the speed. Is a broadcast better when it tells you what you already shout at the telly?"
-    },
-    "style": {
-     "script": "fry-explainer",
-     "production": "voice-led-pictures",
-     "experiment": {
-      "format": "kinetic-movement",
-      "why": "Draw each progressive pass as a moving arrow over a match frame, the threshold shrinking as the ball nears goal."
-     }
-    },
-    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When a football broadcast adds AI, what does the machine actually see that the pundit does not? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Prime Video's Progressive Actions, how its AI models are built, the tracking data, the distance thresholds and how Champions League broadcasters use it. Work through the 5 Whys, starting from the plain question: Why 1 asks how it is built, and what broke. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
-    "shape": "story",
-    "dive": "A coach's rule (forward distance scaled to where on the pitch) is run by a model on live tracking data and drawn as a graphic.",
-    "aim": "interest",
-    "funny": "Football's newest AI feature mostly confirms what every pub already shouts: pass it forward.",
-    "lookalike": {
-     "pattern": "tool-unlock",
-     "beats": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
-     "our_take": "The post listed what a tool can do; we take one football graphic apart to the rule inside it."
-    },
-    "recommended": true
-   },
-   {
-    "id": "076c5675-4aee-4ad0-b400-6b10188fdb59",
-    "source_kind": "engine",
-    "source_tag": "trade_press",
-    "so_what": "Music producers can now put an effect on one sung word by clicking the word, because the plugin writes the lyrics out first, so anyone mixing vocals knows what changed in the edit window this month.",
-    "story": "iZotope released Nectar 5, its vocal plugin for music producers, on about 24 November 2026 at an introductory $179 until 7 December. Its Moments module transcribes the sung lyrics so a producer can select a word and add effects to it, and its Vocal Assistant listens to part of the vocal and designs a processing chain.",
-    "why_now": "MusicRadar, 24 Nov 2026.",
-    "fact": "iZotope: \"the industry-first Moments transcribes your vocal into lyrics for word-by-word effects\"; MusicRadar, 24 Nov 2026: \"This AI-powered mixing tool listens to a portion of your vocal and designs a customized processing chain to match it.\"",
-    "source": {
-     "label": "iZotope, Nectar 5 product page (Nov 2026)",
-     "url": "https://www.izotope.com/en/products/nectar.html",
-     "kind": "original"
-    },
-    "sources": [
-     {
-      "label": "MusicRadar, Nectar 5 (24 Nov 2026)",
-      "url": "https://www.musicradar.com/music-tech/izotopes-nectar-5-introduces-a-clever-new-way-to-add-effects-to-vocals-one-word-at-a-time"
-     }
-    ],
-    "first_reported": "https://www.izotope.com/en/products/nectar.html",
-    "beats": [
-     "A vocal plugin that reads the lyrics before it adds reverb.",
-     "How speech recognition ended up pointed at singing.",
-     "Why a word list makes a better edit window than a waveform.",
-     "What the Vocal Assistant actually picks, and what it leaves to you.",
-     "What this shows about where AI sits in a mix."
-    ],
-    "pitch": {
-     "question": "If a computer can read the words a singer sings, how does that change the way a song is mixed?",
-     "headline": "Nectar 5 writes out the lyrics so you can put reverb on one word.",
-     "hook": "iZotope's Nectar 5 transcribes a sung vocal into lyrics so a music producer can click one word and add effects to it, and an AI listens to the vocal and builds the chain.",
-     "examples": [
-      "Click a word to add up to seven effects to it.",
-      "An assistant that designs the vocal chain from a short listen.",
-      "$179 introductory price until 7 December."
-     ],
-     "chain": [
-      "A producer used to find a word by staring at a waveform.",
-      "Speech recognition can now write out sung lyrics.",
-      "So the plugin turns the vocal into a list of words.",
-      "Clicking a word selects that exact moment.",
-      "Effects go on that word only.",
-      "The assistant suggests a starting chain the engineer can still change."
-     ],
-     "take": "What this shows is that the AI's real job is finding things, while the taste stays with the person. Which part of a mix would you never hand to the assistant?"
-    },
-    "style": {
-     "script": "head-to-head",
-     "production": "voice-led-pictures",
-     "experiment": {
-      "format": "scoreboard-test",
-      "why": "Mix one vocal twice, by waveform and by clicking words, and put the two times on a scoreboard."
-     }
-    },
-    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If a computer can read the words a singer sings, how does that change the way a song is mixed? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: iZotope Nectar 5, how Moments transcribes vocals, what the Vocal Assistant was trained on and picks, its pricing and how producers use it. Work through the 5 Whys, starting from the plain question: Why 1 asks how it is built, and what broke. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
-    "shape": "story",
-    "dive": "Speech-to-text is pointed at singing and used as an editing index, and a model picks settings for an ordinary chain of effects.",
-    "aim": "utility",
-    "funny": "The plugin has to work out what the singer is saying before it adds reverb, which puts it ahead of most of the audience.",
-    "lookalike": {
-     "pattern": "tool-unlock",
-     "beats": "https://www.instagram.com/power.ai/p/DfbtORYFfti/",
-     "our_take": "The post said what a tool unlocks; we show the speech recogniser hiding inside a vocal plugin."
-    }
-   },
-   {
-    "id": "0977ab4d-8c3f-47c1-af95-768e2f3f968c",
-    "source_kind": "engine",
-    "source_tag": "newsletter",
-    "so_what": "The world's best-known newsroom has published how its own AI tool is built, so anyone running a newsroom or a media team can copy the design: agents over your own archive, citations you can check, and a training gate in front.",
-    "story": "On 24 November 2026 the News Machines newsletter described News Agent, the New York Times newsroom's internal AI tool combining archive search across 175 years of journalism, stylebook checks, Freedom of Information drafting and document analysis. Journalists get access only after legal standards training, and the Times will not say which AI models run it.",
-    "why_now": "News Machines, 24 Nov 2026.",
-    "fact": "News Machines, 24 Nov 2026: \"The Times doesn't disclose which AI models run News Agent.\"; Media Copilot: \"journalists must complete legal standards training before receiving access.\"",
-    "source": {
-     "label": "News Machines, New York Times News Agent (24 Nov 2026)",
-     "url": "https://newsmachines.beehiiv.com/p/new-york-times-news-agent",
-     "kind": "original"
-    },
-    "sources": [
-     {
-      "label": "Media Copilot, New York Times News Agent (Nov 2026)",
-      "url": "https://mediacopilot.ai/new-york-times-news-agent"
-     }
-    ],
-    "first_reported": "https://newsmachines.beehiiv.com/p/new-york-times-news-agent",
-    "beats": [
-     "A newsroom AI that has read 175 years of the paper.",
-     "The parts: archive search, stylebook checks, records requests.",
-     "Why every answer comes back with a citation.",
-     "The legal training a reporter needs before using it.",
-     "What this shows about how a newsroom trusts its own AI."
-    ],
-    "pitch": {
-     "question": "How do you build an AI that journalists will trust with their own reporting?",
-     "headline": "The New York Times built an AI that has read 175 years of the paper. It won't say which AI.",
-     "hook": "The New York Times' News Agent searches 175 years of the paper's journalism, checks the stylebook and drafts records requests, and reporters must pass legal training before they can use it.",
-     "examples": [
-      "175 years of the archive, searchable.",
-      "Legal standards training before access.",
-      "The models that run it are not disclosed."
-     ],
-     "chain": [
-      "A newsroom has decades of its own reporting.",
-      "A language model turns a reporter's question into a database search.",
-      "It brings back passages with citations.",
-      "The reporter checks the citation, not the AI's summary.",
-      "Legal training comes first, so mistakes are caught early.",
-      "The archive becomes a tool, not a library."
-     ],
-     "take": "What this shows is that a newsroom trusts its AI by making it show its sources, the same rule it applies to people. Why will it not say which model it uses?"
-    },
-    "style": {
-     "script": "fry-explainer",
-     "production": "face-with-proof",
-     "experiment": {
-      "format": "from-my-own-fleet",
-      "why": "Set the Times' design beside the agents this publication runs on its own archive, part by part."
-     }
-    },
-    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: How do you build an AI that journalists will trust with their own reporting? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: the New York Times' News Agent, how it is built, its archive search and citations, the legal training gate, its forerunner tools and other newsrooms' AI tools. Work through the 5 Whys, starting from the plain question: Why 1 asks how it is built, and what broke. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
-    "shape": "story",
-    "dive": "Agents over the paper's own archive and stylebook, with a language model writing database queries and returning checkable citations, behind a legal training gate.",
-    "aim": "interest",
-    "funny": "The paper built an AI that reads 175 years of its own journalism, and the one thing it will not tell its reporters is which AI it is.",
-    "lookalike": {
-     "pattern": "tool-unlock",
-     "beats": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
-     "our_take": "The post listed a tool's features; we take apart a newsroom's own AI and the gate in front of it."
-    }
-   },
-   {
     "id": "41874364-fcd8-4fd1-b7e7-91aca6235019",
     "source_kind": "engine",
     "source_tag": "trade_press",
@@ -530,72 +269,8 @@
      "pattern": "tool-unlock",
      "beats": "https://www.instagram.com/power.ai/p/DfbtORYFfti/",
      "our_take": "The post sold a new tool; we show whose tool is really underneath a famous 3D app."
-    }
-   },
-   {
-    "id": "46dd71d0-6787-4bda-bd6c-b0e2bc4abca2",
-    "source_kind": "engine",
-    "source_tag": "engine_research",
-    "so_what": "The headline number on a new AI avatar is a rescaled score from 270 answers, and the same page shows people still spot it more often than not, so any creator or brand deciding whether to put an AI face on camera can read the real test.",
-    "story": "HeyGen, whose AI avatars are used by creators and video teams, released Avatar 6 on 17 November 2026, turning a photo or short clip plus audio into a talking video. Its research page says that shown real footage and Avatar 6 side by side, raters picked Avatar 6 as the real one 42.2% of the time across 270 answers, which HeyGen scores as 84.4% of the way to a coin toss.",
-    "why_now": "HeyGen research page, 17 Nov 2026.",
-    "fact": "HeyGen, 17 Nov 2026: \"Side by side with the real recording, raters pick Avatar 6 as the real one 42.2% of the time.\"",
-    "source": {
-     "label": "HeyGen, Avatar 6 research (17 Nov 2026)",
-     "url": "https://www.heygen.com/research/avatar-6-model",
-     "kind": "original"
     },
-    "sources": [
-     {
-      "label": "C-Suite, AI models roundup (Nov 2026)",
-      "url": "https://csuite.so/blog/ai-models-roundup-november-2026"
-     }
-    ],
-    "first_reported": "https://www.heygen.com/research/avatar-6-model",
-    "beats": [
-     "An avatar billed as 84.4% indistinguishable from you.",
-     "The test behind it: 270 side-by-side answers.",
-     "How 42.2% becomes 84.4%.",
-     "What the same page shows when people see it alone.",
-     "What this shows about how AI video is measured."
-    ],
-    "pitch": {
-     "question": "When a company says its AI face is nearly real, what test is the number really from?",
-     "headline": "HeyGen's avatar is '84.4% indistinguishable' in a test most people got right.",
-     "hook": "HeyGen says Avatar 6 is 84.4% indistinguishable from real video, and its own research page shows raters picked the avatar as the real person 42.2% of the time.",
-     "examples": [
-      "42.2% of 270 side-by-side answers picked the avatar.",
-      "84.4%, the same result rescaled against a coin toss.",
-      "A photo or short clip plus audio becomes a talking video."
-     ],
-     "chain": [
-      "Raters see a real clip and an avatar side by side.",
-      "They guess which is real.",
-      "Pure guessing would pick the avatar half the time.",
-      "They picked it 42.2% of the time.",
-      "HeyGen divides 42.2 by 50 and calls it 84.4%.",
-      "So the headline is a rescaled score, and most people still spotted it."
-     ],
-     "take": "What this shows is that the build is impressive and the marketing number is maths. Would you put an AI face in front of your audience on a test most of them pass?"
-    },
-    "style": {
-     "script": "head-to-head",
-     "production": "scoreboard-test",
-     "experiment": {
-      "format": "fry-explainer",
-      "why": "Explain the 42.2 to 84.4 step with a coin and a stopwatch, one number at a time."
-     }
-    },
-    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When a company says its AI face is nearly real, what test is the number really from? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: HeyGen Avatar 6, how it turns a photo and audio into video, its research page's side-by-side and single-clip tests, the rescaling and independent tests. Work through the 5 Whys, starting from the plain question: Why 1 asks how it is built, and what broke. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
-    "shape": "story",
-    "dive": "The marketing figure is a rescaled score from 270 side-by-side answers, and the same page shows a gap when the avatar is seen alone.",
-    "aim": "interest",
-    "funny": "The avatar is 84.4% indistinguishable from a real person, according to a test in which viewers mostly picked the real person.",
-    "lookalike": {
-     "pattern": "tool-unlock",
-     "beats": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
-     "our_take": "The post repeated a launch claim; we open the test the claim came from."
-    }
+    "recommended": true
    },
    {
     "id": "de83ed89-f29e-4e5f-ad82-c698ec72a010",
@@ -673,137 +348,6 @@
   ],
   "fri": [
    {
-    "id": "b38a7a98-50b4-4608-bf8e-b99d8181ac7b",
-    "source_kind": "engine",
-    "source_tag": "trade_press",
-    "so_what": "A publisher's no-AI contracts did not stop an AI cover reaching a bestselling series; readers and two artists did, so every author and illustrator now knows the check that works is the audience, not the clause.",
-    "story": "On 20 November 2026 Tor Publishing Group withdrew the cover art of Ilona Andrews's fantasy novel This Crown Will Not Rule Me after learning generative AI was used to make it, without Tor's or the authors' knowledge. Both the authors' contract and Tor's contracts with cover artists carry a no-AI clause; readers and artists spotted it in Instagram comments.",
-    "why_now": "Ilona Andrews's blog and Publishers Weekly, 20 Nov 2026.",
-    "fact": "Tor, via Ilona Andrews, 20 Nov 2026: \"Tor Publishing Group has learned that generative AI was used in the creation of the cover art for This Crown Will Not Rule Me, without the knowledge of either Tor or of the authors.\"; Publishers Weekly: \"Tor takes full responsibility for the breakdown in our review process\".",
-    "source": {
-     "label": "Ilona Andrews, Generative AI on This Crown's cover (20 Nov 2026)",
-     "url": "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/",
-     "kind": "original"
-    },
-    "sources": [
-     {
-      "label": "Publishers Weekly, Tor pulls Ilona Andrews cover (Nov 2026)",
-      "url": "http://www.publishersweekly.com/pw/by-topic/industry-news/publisher-news/article/101841-tor-pulls-ilona-andrews-cover-over-generative-ai-use.html"
-     }
-    ],
-    "first_reported": "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/",
-    "beats": [
-     "A no-AI contract, and an AI cover anyway.",
-     "Who spotted it: readers in the comments.",
-     "Why a review process missed it.",
-     "Who now pays to prove art is human: authors and artists.",
-     "What this shows about what a contract clause can check."
-    ],
-    "pitch": {
-     "question": "If a contract bans AI art, who actually checks that the art is human?",
-     "headline": "Tor's contracts banned AI covers. Readers on Instagram caught one anyway.",
-     "hook": "Tor pulled the cover of Ilona Andrews's new fantasy novel after learning generative AI was used to make it, though both its author and artist contracts carry a no-AI clause.",
-     "examples": [
-      "A no-AI clause in the author's contract.",
-      "A no-AI clause in Tor's artist contracts.",
-      "Spotted by readers and two artists in Instagram comments."
-     ],
-     "chain": [
-      "A publisher commissions a cover from an artist.",
-      "The contract says no AI.",
-      "The publisher reviews sketches, not how each pixel was made.",
-      "An AI-made image slips through.",
-      "Readers who know art spot it online.",
-      "The publisher pulls it and thanks them."
-     ],
-     "take": "What this shows is that a clause sets the rule and the audience enforces it. Who will check your work when the contract cannot?"
-    },
-    "style": {
-     "script": "everyday-debate",
-     "production": "face-with-proof",
-     "experiment": {
-      "format": "fry-explainer",
-      "why": "Walk through how a cover goes from sketch to shelf, and point to the step where nobody looks."
-     }
-    },
-    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If a contract bans AI art, who actually checks that the art is human? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Tor's withdrawal of the This Crown Will Not Rule Me cover, its no-AI clauses, how cover art is reviewed, and other publishers' AI cover cases. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
-    "shape": "story",
-    "dive": "The claim is a contract clause and a sketch-stage review; what worked was readers and artists commenting online.",
-    "aim": "interest",
-    "funny": "The publisher's statement thanks the readers who caught it, which makes the comments section its best art director.",
-    "lookalike": {
-     "pattern": "new-rule-for-ai-art",
-     "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
-     "our_take": "The post reported a new rule; we show a rule that was already there and still missed."
-    },
-    "recommended": true
-   },
-   {
-    "id": "581d73f3-6046-46cb-b898-f1c4b06ffad1",
-    "source_kind": "engine",
-    "source_tag": "trade_press",
-    "so_what": "Most music listeners are sure there is no AI on their playlists and more than half of them are wrong, so every artist and label sharing a playlist with AI tracks now knows where the AI music is hiding and earning.",
-    "story": "Deezer and Ipsos published a survey of 9,000 music streaming users in eight countries on 17 November 2026: 74% believed their playlists held no fully AI-generated music. Deezer says nearly 57% of the more than 53,000 people who joined it in October already had at least one fully AI-generated track in the playlists they brought.",
-    "why_now": "Deezer newsroom, 17 Nov 2026.",
-    "fact": "Deezer, 17 Nov 2026: \"Nearly three fourths of music streaming users (74%) thought that their playlists were free from 100% AI-generated music\"; Digital Music News: \"nearly 57% of the 53,000-plus people who joined its platform in October already had at least one fully AI-generated track\".",
-    "source": {
-     "label": "Deezer newsroom, AI music labelling survey (17 Nov 2026)",
-     "url": "https://newsroom-deezer.com/2026/11/ai-music-labeling-deezer-ipsos-survey/",
-     "kind": "original"
-    },
-    "sources": [
-     {
-      "label": "Digital Music News, AI music survey (19 Nov 2026)",
-      "url": "https://www.digitalmusicnews.com/2026/11/19/ai-music-kill-switch-survey/"
-     }
-    ],
-    "first_reported": "https://newsroom-deezer.com/2026/11/ai-music-labeling-deezer-ipsos-survey/",
-    "beats": [
-     "Three in four listeners are sure. More than half are wrong.",
-     "Where the AI songs arrive: inside playlists people bring with them.",
-     "Why nobody notices: the label is easy to miss.",
-     "Where the money goes: the per-stream split.",
-     "What this shows about how AI music reaches ears."
-    ],
-    "pitch": {
-     "question": "How can most listeners be sure there is no AI on their playlist, when there is?",
-     "headline": "74% say their playlist has no AI songs. 57% of new joiners already had one.",
-     "hook": "Deezer found 74% of music streaming users believe their playlists hold no fully AI songs, while nearly 57% of the people who joined it in October already had at least one.",
-     "examples": [
-      "9,000 people surveyed in eight countries.",
-      "74% sure their playlists are AI-free.",
-      "57% of 53,000 new joiners already had a fully AI track."
-     ],
-     "chain": [
-      "People build playlists over years.",
-      "AI tracks get added by algorithms and shares.",
-      "They sound like ordinary songs.",
-      "Listeners do not check every track.",
-      "The playlist moves with them to a new service.",
-      "Each play takes a slice of the money paid to artists."
-     ],
-     "take": "What this shows is that AI music spreads through the playlist, not the search bar. How would you know if your favourite playlist was partly written by a machine?"
-    },
-    "style": {
-     "script": "random-headline",
-     "production": "data-story",
-     "experiment": {
-      "format": "scoreboard-test",
-      "why": "Play five tracks blind and keep score of which ones viewers guess are AI."
-     }
-    },
-    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: How can most listeners be sure there is no AI on their playlist, when there is? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: the Deezer and Ipsos AI music survey, Deezer's data on AI tracks in new users' playlists, how many fully AI tracks it receives and how streams of them are paid. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
-    "shape": "story",
-    "dive": "Fully AI tracks reach listeners unnoticed through playlists, which is where the per-stream money is split.",
-    "aim": "interest",
-    "funny": "Three in four listeners are sure there is no AI on their playlist, and more than half of them are wrong.",
-    "lookalike": {
-     "pattern": "ai-backfires",
-     "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
-     "our_take": "The post showed AI doing a surprising thing; we show listeners not noticing it at all."
-    }
-   },
-   {
     "id": "456c4fc3-530b-4fc8-9e92-5b5ea662ad87",
     "source_kind": "engine",
     "source_tag": "trade_press",
@@ -835,7 +379,7 @@
      "What this shows about who really discloses AI."
     ],
     "pitch": {
-     "question": "When a store's AI label says nothing, who tells the audience the truth?",
+     "question": "Wildcard: When a store's AI label says nothing, who tells the audience the truth?",
      "headline": "A game had no AI label. Its music files said 'made with Suno'.",
      "hook": "A Binding of Isaac update shipped Suno-made music with no AI label on Steam, and players found Suno's tag inside the music files' metadata.",
      "examples": [
@@ -870,7 +414,12 @@
      "pattern": "ai-backfires",
      "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
      "our_take": "The post showed one AI giving itself away; we show a music file confessing for a whole game."
-    }
+    },
+    "wildcard": {
+     "kind": "strange",
+     "why_unexpected": "Everyone argues about whether AI music is good; here a single line of file metadata confessed what a whole store's AI label left out."
+    },
+    "recommended": true
    },
    {
     "id": "c1bd8406-c267-426e-b586-d76e1ef68e5c",
@@ -938,75 +487,6 @@
     }
    },
    {
-    "id": "e71e7d8a-8a1c-415c-96b6-311e8cc8ccbf",
-    "source_kind": "engine",
-    "source_tag": "trade_press",
-    "so_what": "A jam built to show off AI game making crowned a hand-made game as the crowd's favourite, so every game maker and creator weighing AI can see where the audience's attention actually went.",
-    "story": "Epic Games' 2026 Epic AI MegaJam, backed by AI companies, invited teams to build an Unreal game in four days with as many AI agents as they liked, and closed on 15 November with 2,782 games submitted. Sorted by popularity, the top entry was a game about a sniping fish whose creator says no generative AI was used, Rock Paper Shotgun reported on 19 November.",
-    "why_now": "itch.io, 15 Nov 2026; Rock Paper Shotgun, 19 Nov 2026.",
-    "fact": "itch.io: \"The 2026 Epic AI MegaJam wrapped on November 15 with 2,782 games submitted.\"; Rock Paper Shotgun, 19 Nov 2026: sorting by popular turns up a fish game \"whose creator says they deliberately made it without using\" generative AI.",
-    "source": {
-     "label": "itch.io, 2026 Epic AI MegaJam (Nov 2026)",
-     "url": "https://itch.io/jam/2026-epic-ai-megajam",
-     "kind": "original"
-    },
-    "sources": [
-     {
-      "label": "Rock Paper Shotgun, fish with a sniper rifle (19 Nov 2026)",
-      "url": "https://www.rockpapershotgun.com/fish-with-a-sniper-rifle-takes-aim-at-tim-sweeneys-hopes-and-dreams-as-genai-free-meme-game-tops-epic-games-vibe-coding-megajam"
-     }
-    ],
-    "first_reported": "https://itch.io/jam/2026-epic-ai-megajam",
-    "beats": [
-     "An AI game jam's favourite game used no AI.",
-     "2,782 games in four days.",
-     "What the sponsors paid for, and what they got.",
-     "Why the crowd picked the hand-made one.",
-     "What this shows about attention in an AI flood."
-    ],
-    "pitch": {
-     "question": "Wildcard: When everyone can make a game with AI, what makes people choose one?",
-     "headline": "Epic held an AI game jam. The crowd's favourite was made without AI.",
-     "hook": "Epic's AI MegaJam drew 2,782 game entries built with AI agents in four days, and the most popular one is a game about a sniping fish whose creator says no generative AI was used.",
-     "examples": [
-      "2,782 games submitted.",
-      "Four days, as many AI agents as you liked.",
-      "The most popular entry made without generative AI."
-     ],
-     "chain": [
-      "AI companies sponsored a game jam.",
-      "Teams could use as many AI agents as they liked.",
-      "2,782 games came in.",
-      "Players sorted them by what they liked best.",
-      "The top one was drawn and coded by hand.",
-      "The attention went to the game that turned the agents down."
-     ],
-     "take": "What this shows is that in a flood of AI-made games the hand-made one stood out. Is being made by a person becoming the feature?"
-    },
-    "style": {
-     "script": "random-headline",
-     "production": "kinetic-movement",
-     "experiment": {
-      "format": "everyday-debate",
-      "why": "Two jam judges argue about the fish game, one holding a sponsor's lanyard."
-     }
-    },
-    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When everyone can make a game with AI, what makes people choose one? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Epic's 2026 AI MegaJam, its sponsors and rules, the number of entries, the most popular entries and whether they used AI, and how the jam is judged. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
-    "shape": "story",
-    "dive": "AI sponsors paid for a showcase of agent-made games; the crowd's attention went to an entry that turned the agents down.",
-    "aim": "humour",
-    "funny": "Sixteen AI sponsors, free AI credits for every jammer, and the crowd picked a fish that was drawn by hand.",
-    "lookalike": {
-     "pattern": "made-in-hours",
-     "beats": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/",
-     "our_take": "The post celebrated a game made with AI in a day; we found the jam where the hand-made game won the crowd."
-    },
-    "wildcard": {
-     "kind": "strange",
-     "why_unexpected": "The obvious takes count what AI made; this one is about the crowd ignoring the AI and crowning the hand-made fish."
-    }
-   },
-   {
     "id": "acb58370-aaca-4040-9c13-83f227a628ec",
     "source_kind": "engine",
     "source_tag": "trade_press",
@@ -1070,149 +550,479 @@
      "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
      "our_take": "The post showed AI doing something unexpected; we show listeners simply not playing it."
     }
-   },
-   {
-    "id": "b0e8bb0f-186e-4622-8d31-65a3cadcd29c",
-    "source_kind": "engine",
-    "source_tag": "trade_press",
-    "so_what": "Etsy's chief executive says it will not train AI to copy sellers, but its new terms let partners train AI on their work, so every illustrator, animator and maker selling online knows to read what the terms allow, not what the note promises.",
-    "story": "Etsy's terms, effective 16 December 2026, give Etsy and its third-party partners and vendors permission to use sellers' content to train AI, and illustrators and animators began closing shops, Cartoon Brew reported on 18 November. Etsy's chief executive said on 23 November the update was not meant to train AI to copy sellers' items; one illustrator told Ars Technica he is losing 20 percent of his yearly income by leaving.",
-    "why_now": "Cartoon Brew, 18 Nov 2026; Ars Technica, 25 Nov 2026.",
-    "fact": "Cartoon Brew, 18 Nov 2026: \"Starting December 16, the agreement explicitly gives Etsy and its third-party partners and vendors permission to use content uploaded by sellers to train and improve AI systems.\"; Ars Technica: \"It was not meant to enable us to train AI models for the purpose of creating copycats of your items.\"",
-    "source": {
-     "label": "Cartoon Brew, artists close Etsy shops over AI training terms (18 Nov 2026)",
-     "url": "https://www.cartoonbrew.com/artificial-intelligence/etsy-ai-training-terms-of-use-269553.html",
-     "kind": "original"
-    },
-    "sources": [
-     {
-      "label": "Ars Technica, Etsy clarifies AI terms after seller backlash (25 Nov 2026)",
-      "url": "https://arstechnica.com/tech-policy/2026/11/etsy-clarifies-ai-terms-after-seller-backlash/"
-     }
-    ],
-    "first_reported": "https://www.cartoonbrew.com/artificial-intelligence/etsy-ai-training-terms-of-use-269553.html",
-    "beats": [
-     "A shop full of artists' work, and a new line in the terms.",
-     "What the line allows: partners training AI on it.",
-     "What the note promises: no copycats.",
-     "Why artists believed the line over the note.",
-     "What this shows about who owns an artist's work online."
-    ],
-    "pitch": {
-     "question": "When a marketplace promises not to copy your art but its terms allow it, which do you believe?",
-     "headline": "Etsy says it won't copy its artists. Its terms let partners train AI on their work.",
-     "hook": "Etsy's new terms let its partners and vendors train AI on sellers' content from 16 December, and illustrators are closing shops even after its chief executive said it will not make copycats.",
-     "examples": [
-      "Terms effective 16 December.",
-      "Partners and vendors allowed to train AI on sellers' content.",
-      "One illustrator losing 20 percent of his yearly income by leaving."
-     ],
-     "chain": [
-      "Artists sell prints and designs on a marketplace.",
-      "The marketplace updates its terms.",
-      "The terms let its partners train AI on what artists upload.",
-      "The chief executive writes that it will not copy their items.",
-      "The terms still say what they say.",
-      "Artists take their work, and their sales, elsewhere."
-     ],
-     "take": "What this shows is that artists read the contract, not the reassurance. If your work is in someone's shop, what do their terms let them do with it?"
-    },
-    "style": {
-     "script": "everyday-debate",
-     "production": "face-with-proof",
-     "experiment": {
-      "format": "kinetic-movement",
-      "why": "Highlight the one clause in the terms and the one line in the note, side by side, as the words move."
-     }
-    },
-    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When a marketplace promises not to copy your art but its terms allow it, which do you believe? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Etsy's terms of use effective 16 December 2026, the AI training clause, the chief executive's note, sellers closing shops and their lost income. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
-    "shape": "story",
-    "dive": "The reassurance covers Etsy copying sellers; the clause covers Etsy and its partners training AI on sellers' content, and artists act on the clause.",
-    "aim": "interest",
-    "funny": "Etsy wrote an AI rule so clear its artists read it and left.",
-    "lookalike": {
-     "pattern": "new-rule-for-ai-art",
-     "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
-     "our_take": "The post explained a rule; we set a marketplace's rule against its own reassurance."
-    }
-   },
-   {
-    "id": "72b1be18-6980-478b-aca4-9e546f07bb03",
-    "source_kind": "engine",
-    "source_tag": "trade_press",
-    "so_what": "Coca-Cola's AI Christmas ads beat its own targets and the brand still went back to a film director and a cast, so everyone making advertising and film for brands knows the benchmark was not measuring what the brand cared about.",
-    "story": "On 19 November 2026 Coca-Cola launched its US holiday advertising, live-action film spots directed by Paul Dektor, made without generative AI. Its 2024 and 2025 holiday ads were made with generative AI and, Marketing Dive reports, exceeded internal benchmarks while dividing consumers.",
-    "why_now": "Marketing Dive, 19 Nov 2026; Adweek, 20 Nov 2026.",
-    "fact": "Marketing Dive, 19 Nov 2026: \"Notably, the new spots pivot away from using generative artificial intelligence as the brand did for recent holiday pushes.\"; the earlier AI ads were \"exceeding internal benchmarks\" yet \"proved divisive with consumers\".",
-    "source": {
-     "label": "Marketing Dive, Coca-Cola pivots from AI-generated holiday ads (19 Nov 2026)",
-     "url": "https://www.marketingdive.com/news/coca-cola-pivots-from-divisive-ai-generated-ads-for-holiday-campaign/875215/",
-     "kind": "original"
-    },
-    "sources": [
-     {
-      "label": "Adweek, AI is off the festive dinner menu in Coke's 2026 holiday ad (20 Nov 2026)",
-      "url": "https://www.adweek.com/creativity/ai-is-off-the-festive-dinner-menu-in-cokes-2026-holiday-ad/"
-     },
-     {
-      "label": "ContentGrip, Coca-Cola's 2026 Christmas ads skip generative AI (20 Nov 2026)",
-      "url": "https://www.contentgrip.com/coca-cola-enjoy-joy-holiday/"
-     }
-    ],
-    "first_reported": "https://www.marketingdive.com/news/coca-cola-pivots-from-divisive-ai-generated-ads-for-holiday-campaign/875215/",
-    "beats": [
-     "Two AI Christmas ads that beat their targets.",
-     "The third one made with a director and a cast.",
-     "What the benchmark measured, and what it missed.",
-     "Why a brand drops a tool that hits its numbers.",
-     "What this shows about measuring creative work."
-    ],
-    "pitch": {
-     "question": "Wildcard: If an AI advert beats every target, why would a brand stop making them?",
-     "headline": "Coke's AI Christmas ads beat their targets. This year it hired a film crew.",
-     "hook": "Coca-Cola's 2024 and 2025 AI-made holiday ads exceeded its internal benchmarks, and its 2026 US holiday advertising is live-action film, directed by Paul Dektor, made without generative AI.",
-     "examples": [
-      "Two AI holiday ads that exceeded internal benchmarks.",
-      "A 2026 US campaign made with no generative AI.",
-      "A director, a production company and a cast."
-     ],
-     "chain": [
-      "A brand made its Christmas ads with AI.",
-      "The ads beat its internal targets.",
-      "Viewers were divided about them.",
-      "The brand cares about how people feel at Christmas.",
-      "So it went back to a director and a cast.",
-      "The targets measured the ad, not the feeling."
-     ],
-     "take": "What this shows is that a creative benchmark can be passed while missing the point. What does your own team measure that the audience does not care about?"
-    },
-    "style": {
-     "script": "everyday-debate",
-     "production": "face-with-proof",
-     "experiment": {
-      "format": "fry-explainer",
-      "why": "Show the benchmark chart going up, then cut to the comments, one at a time."
-     }
-    },
-    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If an AI advert beats every target, why would a brand stop making them? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Coca-Cola's 2026 US holiday campaign, how it was made, its 2024 and 2025 AI holiday ads, their internal benchmark results and consumer reaction. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
-    "shape": "story",
-    "dive": "The internal numbers said the AI ads worked; the brand's flagship spend went back to a director and a cast anyway.",
-    "aim": "humour",
-    "funny": "Two years of AI Christmas ads scored above target, and the reward was a film crew.",
-    "lookalike": {
-     "pattern": "ai-backfires",
-     "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
-     "our_take": "The post showed an AI surprising its user; we show an AI hitting its targets and being dropped anyway."
-    },
-    "wildcard": {
-     "kind": "unexpected",
-     "why_unexpected": "The obvious take is AI replacing ad crews; here the AI ads hit every target and the brand rehired the crew anyway."
-    }
    }
   ]
  },
  "offdays": {
   "tue": [
+   {
+    "id": "nytphotoshop",
+    "kind": "explainer",
+    "format": "Explainer carousel, 5 cards, 4:5",
+    "source": {
+     "label": "The Verge, the New York Times warns photographers not to update Photoshop (24 Nov 2026)",
+     "url": "https://www.theverge.com/ai-artificial-intelligence/1041227/the-new-york-times-warns-photographers-not-to-update-photoshop-over-ai-features"
+    },
+    "source_tag": "trade_press",
+    "copy": "The New York Times has told freelance photographers not to use Photoshop 2027 on its assignments, because its AI features can label a photo as AI-generated. Here is what that means for anyone who files photos to a newsroom.",
+    "hook": "The New York Times told photographers: do not update Photoshop.",
+    "story": "In an email reported by The Verge on 24 November 2026, two New York Times photography leaders told freelance photographers to avoid Adobe Photoshop 2027 on assignment, because its AI features can add metadata that labels a photograph as AI-generated.",
+    "fact": "The Verge, 24 Nov 2026: \"At this time, we are requiring that all contributing photographers avoid using Adobe Photoshop 2027 (release 28.0.0 and subsequent updates) when working on assignment for The Times,\" the email reads.",
+    "pitch": {
+     "see": "A Photoshop update button with a big newspaper hand over it.",
+     "lands": "Every photographer and photo editor uses Photoshop, and the biggest newspaper just told its freelancers to stay on the old version, so this is a rule they can apply on their next job.",
+     "why_now": "The Verge, 24 Nov 2026.",
+     "share": "My biggest client just told me not to update my software."
+    },
+    "shape": "story",
+    "dive": "A newsroom that cannot risk an AI label on a photo tells freelancers to stay on the old software, so the version number becomes part of the job.",
+    "aim": "utility",
+    "funny": "The world's best-known newspaper is asking photographers to keep their software out of date on purpose.",
+    "lookalike": {
+     "pattern": "tool-unlock",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
+     "our_take": "The post listed what a coding tool unlocks; ours is the same card flow for one creative tool, with the real price and the catch."
+    },
+    "cards": [
+     {
+      "words": "The New York Times told photographers: do not update Photoshop.",
+      "picture": "A Photoshop update prompt with a red newspaper stamp across it"
+     },
+     {
+      "words": "Photoshop 2027 (version 28.0.0 and later) is off limits on Times assignments.",
+      "picture": "The version number in the About Photoshop window"
+     },
+     {
+      "words": "Why: some AI features can write metadata that labels a photo as AI-generated.",
+      "picture": "A photo's file info panel with an AI label highlighted"
+     },
+     {
+      "words": "The catch: the label can be added in ways you may not notice.",
+      "picture": "A photographer looking puzzled at two identical photos"
+     },
+     {
+      "words": "This week: check your version and your client's rules before you edit.",
+      "picture": "A checklist on a camera bag: version, client, metadata"
+     }
+    ],
+    "steps": [
+     {
+      "text": "Open Photoshop and check your version in About Photoshop; the Times rule covers 28.0.0 and later.",
+      "checked": "https://www.theverge.com/ai-artificial-intelligence/1041227/the-new-york-times-warns-photographers-not-to-update-photoshop-over-ai-features"
+     },
+     {
+      "text": "If you file to a newsroom, ask whether it has the same rule before you update.",
+      "checked": "https://www.theverge.com/ai-artificial-intelligence/1041227/the-new-york-times-warns-photographers-not-to-update-photoshop-over-ai-features"
+     },
+     {
+      "text": "Before you send, check the file's metadata for an AI label.",
+      "checked": "https://www.dpreview.com/news/new-york-times-adobe-photoshop-2027-restriction-ai/"
+     }
+    ],
+    "learned_from": [
+     "\"be really helpful to the layperson to understand what they can use when\" (your Improve, 16 Nov, of the assistants explainer)"
+    ],
+    "direction": {
+     "look": "The v5 explainer look, modelled on the tool-unlock carousels in your Instagram inspo sheet",
+     "format": "5 cards, 4:5",
+     "frames": [
+      {
+       "words": "The New York Times told photographers: do not update Photoshop.",
+       "picture": "A Photoshop update prompt with a red newspaper stamp across it"
+      },
+      {
+       "words": "Photoshop 2027 (version 28.0.0 and later) is off limits on Times assignments.",
+       "picture": "The version number in the About Photoshop window"
+      },
+      {
+       "words": "Why: some AI features can write metadata that labels a photo as AI-generated.",
+       "picture": "A photo's file info panel with an AI label highlighted"
+      },
+      {
+       "words": "The catch: the label can be added in ways you may not notice.",
+       "picture": "A photographer looking puzzled at two identical photos"
+      },
+      {
+       "words": "This week: check your version and your client's rules before you edit.",
+       "picture": "A checklist on a camera bag: version, client, metadata"
+      }
+     ],
+     "tone": "Plain, useful and a little dry: the joke is in the facts.",
+     "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
+     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
+    },
+    "recommended": true
+   },
+   {
+    "id": "fcpcaptions",
+    "kind": "explainer",
+    "format": "Explainer carousel, 5 cards, 4:5",
+    "source": {
+     "label": "Apple, Final Cut Pro release notes (18 Nov 2026)",
+     "url": "https://support.apple.com/en-us/102825"
+    },
+    "source_tag": "trade_press",
+    "copy": "Final Cut Pro 13.0 generates captions and searches transcripts in 23 more languages, and closed captions now come out as SRT. Here is how to do it and what it costs.",
+    "hook": "Final Cut Pro now writes captions in 23 more languages.",
+    "story": "Final Cut Pro 13.0, Apple's film and video editor, released on 18 November 2026, can generate captions and search transcripts in 23 more languages, and closed captions now default to SRT.",
+    "fact": "Apple, 18 Nov 2026: \"Generate captions and search transcripts in 23 new supported languages.\"",
+    "pitch": {
+     "see": "A video timeline with subtitles appearing in five languages at once.",
+     "lands": "Any filmmaker or video creator who posts to an audience abroad can caption a video in its own language in a few clicks this week.",
+     "why_now": "Final Cut Pro 13.0, released 18 Nov 2026.",
+     "share": "My editor just learned 23 languages over the weekend."
+    },
+    "shape": "story",
+    "dive": "Speech recognition built into the editor now covers 23 more languages, so captioning for an audience abroad is a menu item.",
+    "aim": "utility",
+    "funny": "For five months the caption tool in a $299.99 film editor spoke one language, American.",
+    "lookalike": {
+     "pattern": "tool-unlock",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
+     "our_take": "The post listed what a coding tool unlocks; ours is the same card flow for one creative tool, with the real price and the catch."
+    },
+    "cards": [
+     {
+      "words": "Final Cut Pro now writes captions in 23 more languages.",
+      "picture": "A Final Cut Pro timeline with subtitle lanes in several languages"
+     },
+     {
+      "words": "Select the clips with speech, then Edit > Generate Captions > Subtitles.",
+      "picture": "The Edit menu with Generate Captions highlighted"
+     },
+     {
+      "words": "Pick the language spoken, click Generate; closed captions come out as SRT.",
+      "picture": "The language picker and an SRT file icon"
+     },
+     {
+      "words": "The catch: some new languages need macOS 27 or later.",
+      "picture": "A macOS version badge beside the language list"
+     },
+     {
+      "words": "Cost: $299.99 once, or $12.99 a month after a 30-day trial.",
+      "picture": "A price tag on a film reel"
+     }
+    ],
+    "steps": [
+     {
+      "text": "Update to Final Cut Pro 13.0; some new languages need macOS 27 or later.",
+      "checked": "https://support.apple.com/guide/final-cut-pro/generate-subtitles-automatically-verd6d52c4e8/mac"
+     },
+     {
+      "text": "Select the clips that contain speech in the timeline.",
+      "checked": "https://support.apple.com/guide/final-cut-pro/generate-subtitles-automatically-verd6d52c4e8/mac"
+     },
+     {
+      "text": "Choose Edit, Generate Captions, Subtitles, pick the language spoken and click Generate.",
+      "checked": "https://support.apple.com/guide/final-cut-pro/generate-subtitles-automatically-verd6d52c4e8/mac"
+     },
+     {
+      "text": "Check the price: $299.99 once, or Apple Creator Studio at $12.99 a month after a 30-day trial.",
+      "checked": "https://www.apple.com/final-cut-pro/"
+     }
+    ],
+    "learned_from": [
+     "\"a more infographicy amusing explainer\" (your Improve, 9 Nov, of the phone-book tool-calls carousel)"
+    ],
+    "direction": {
+     "look": "The v5 explainer look, modelled on the tool-unlock carousels in your Instagram inspo sheet",
+     "format": "5 cards, 4:5",
+     "frames": [
+      {
+       "words": "Final Cut Pro now writes captions in 23 more languages.",
+       "picture": "A Final Cut Pro timeline with subtitle lanes in several languages"
+      },
+      {
+       "words": "Select the clips with speech, then Edit > Generate Captions > Subtitles.",
+       "picture": "The Edit menu with Generate Captions highlighted"
+      },
+      {
+       "words": "Pick the language spoken, click Generate; closed captions come out as SRT.",
+       "picture": "The language picker and an SRT file icon"
+      },
+      {
+       "words": "The catch: some new languages need macOS 27 or later.",
+       "picture": "A macOS version badge beside the language list"
+      },
+      {
+       "words": "Cost: $299.99 once, or $12.99 a month after a 30-day trial.",
+       "picture": "A price tag on a film reel"
+      }
+     ],
+     "tone": "Plain, useful and a little dry: the joke is in the facts.",
+     "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
+     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
+    }
+   },
+   {
+    "id": "logicdrums",
+    "kind": "explainer",
+    "format": "Explainer carousel, 5 cards, 4:5",
+    "source": {
+     "label": "Apple, Logic Pro for iPad 4.0 release notes (18 Nov 2026)",
+     "url": "https://support.apple.com/en-us/101628"
+    },
+    "source_tag": "trade_press",
+    "copy": "Logic Pro for iPad 4.0's Stem Splitter can now pull each drum kit piece out of any recording as its own stem. Here is how musicians use it and what it needs.",
+    "hook": "Logic on iPad now splits a song's drums apart.",
+    "story": "Logic Pro for iPad 4.0, Apple's music app for musicians and producers, published on 18 November 2026, adds a Drums (Individual Kit Pieces) option to its AI Stem Splitter.",
+    "fact": "Apple, 18 Nov 2026: \"Choose the Drums (Individual Kit Pieces) preset in Stem Splitter to extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion.\"",
+    "pitch": {
+     "see": "A drum kit exploding into separate pieces, each on its own track.",
+     "lands": "Any musician or producer with an iPad can split a song's drums into kick, snare and hats to practise, remix or sample, today.",
+     "why_now": "Logic Pro for iPad 4.0, published 18 Nov 2026.",
+     "share": "My iPad just took the drummer apart."
+    },
+    "shape": "story",
+    "dive": "An AI stem splitter now separates each piece of a drum kit, so a musician gets kick, snare and hats as separate tracks.",
+    "aim": "utility",
+    "funny": "The list of kit pieces ends with Other, which every drummer knows is the cowbell.",
+    "lookalike": {
+     "pattern": "tool-unlock",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
+     "our_take": "The post listed what a coding tool unlocks; ours is the same card flow for one creative tool, with the real price and the catch."
+    },
+    "cards": [
+     {
+      "words": "Logic on iPad now splits a song's drums apart.",
+      "picture": "A drum kit coming apart into labelled pieces"
+     },
+     {
+      "words": "Tap the audio region, tap it again, then tap Stem Splitter.",
+      "picture": "The Stem Splitter button on an iPad"
+     },
+     {
+      "words": "Choose Drums (Individual Kit Pieces): kick, snare, hi-hat, toms, cymbals.",
+      "picture": "Five drum stems in a Track Stack"
+     },
+     {
+      "words": "The catch: it needs an iPad with an M1 chip or later.",
+      "picture": "An iPad with an M1 badge"
+     },
+     {
+      "words": "Cost: free for 30 days, then $12.99 a month.",
+      "picture": "A price tag on a drumstick"
+     }
+    ],
+    "steps": [
+     {
+      "text": "Select the audio region, tap it again, then tap Stem Splitter.",
+      "checked": "https://support.apple.com/guide/logicpro-ipad/extract-vocal-instrumental-stems-stem-lpip1b60ada3/ipados"
+     },
+     {
+      "text": "Choose the Drums (Individual Kit Pieces) preset.",
+      "checked": "https://support.apple.com/guide/logicpro-ipad/extract-vocal-instrumental-stems-stem-lpip1b60ada3/ipados"
+     },
+     {
+      "text": "Tap Apply; the drum stems come back grouped in a Track Stack.",
+      "checked": "https://support.apple.com/en-us/101628"
+     },
+     {
+      "text": "Check you have an M1 iPad or later and Apple Creator Studio, $12.99 a month after a 30-day trial.",
+      "checked": "https://www.apple.com/logic-pro-for-ipad/"
+     }
+    ],
+    "learned_from": [
+     "\"be really helpful to the layperson to understand what they can use when\" (your Improve, 16 Nov, of the assistants explainer)"
+    ],
+    "direction": {
+     "look": "The v5 explainer look, modelled on the tool-unlock carousels in your Instagram inspo sheet",
+     "format": "5 cards, 4:5",
+     "frames": [
+      {
+       "words": "Logic on iPad now splits a song's drums apart.",
+       "picture": "A drum kit coming apart into labelled pieces"
+      },
+      {
+       "words": "Tap the audio region, tap it again, then tap Stem Splitter.",
+       "picture": "The Stem Splitter button on an iPad"
+      },
+      {
+       "words": "Choose Drums (Individual Kit Pieces): kick, snare, hi-hat, toms, cymbals.",
+       "picture": "Five drum stems in a Track Stack"
+      },
+      {
+       "words": "The catch: it needs an iPad with an M1 chip or later.",
+       "picture": "An iPad with an M1 badge"
+      },
+      {
+       "words": "Cost: free for 30 days, then $12.99 a month.",
+       "picture": "A price tag on a drumstick"
+      }
+     ],
+     "tone": "Plain, useful and a little dry: the joke is in the facts.",
+     "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
+     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
+    }
+   },
+   {
+    "id": "spotifyaudio",
+    "kind": "explainer",
+    "format": "Explainer carousel, 5 cards, 4:5",
+    "source": {
+     "label": "Spotify newsroom, Audiobook Creation Tools expansion (18 Nov 2026)",
+     "url": "https://newsroom.spotify.com/2026-11-18/audiobook-creation-tools-expansion/"
+    },
+    "source_tag": "trade_press",
+    "copy": "Spotify opened its audiobook tools to self-published authors in the UK and 20 more markets: upload an EPUB, pick a licensed digital voice and publish up to five audiobooks free.",
+    "hook": "Spotify will turn your self-published book into an audiobook, free.",
+    "story": "On 18 November 2026 Spotify opened its Audiobook Creation Tools to self-published authors in 21 more markets, the UK among them; an author uploads an EPUB and picks a licensed digital voice.",
+    "fact": "Spotify, 18 Nov 2026: \"Starting today, they're available to self-published authors in 21 more markets\", the UK among them, with up to five audiobooks free per author.",
+    "pitch": {
+     "see": "A book cover turning into a pair of headphones.",
+     "lands": "Any self-published author in the UK can now make up to five audiobooks with Spotify's licensed digital voices at no cost, starting today.",
+     "why_now": "Spotify newsroom, 18 Nov 2026.",
+     "share": "My book got a voice and it did not cost me a penny."
+    },
+    "shape": "story",
+    "dive": "Licensed digital voices read a self-published author's EPUB, so an audiobook costs the author nothing up to five books.",
+    "aim": "utility",
+    "funny": "Spotify reckons most books in the world have no audiobook, and it is offering to fix five of them per author.",
+    "lookalike": {
+     "pattern": "tool-unlock",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
+     "our_take": "The post listed what a coding tool unlocks; ours is the same card flow for one creative tool, with the real price and the catch."
+    },
+    "cards": [
+     {
+      "words": "Spotify will turn your self-published book into an audiobook, free.",
+      "picture": "A book cover turning into headphones"
+     },
+     {
+      "words": "Upload your book as an EPUB and pick a licensed digital voice.",
+      "picture": "The voice picker in Spotify for Authors"
+     },
+     {
+      "words": "Check how it says names and places, then preview each chapter.",
+      "picture": "A pronunciation list beside a chapter preview"
+     },
+     {
+      "words": "The catch: your payment profile must be approved first, which can take five working days.",
+      "picture": "A calendar with five days ticked"
+     },
+     {
+      "words": "Cost: free, up to five audiobooks per author.",
+      "picture": "Five small book spines with headphones on"
+     }
+    ],
+    "steps": [
+     {
+      "text": "Sign in to Spotify for Authors and complete your payment profile; approval can take up to five business days.",
+      "checked": "https://support.spotify.com/us/authors/article/getting-access-to-audiobook-creation-tools/"
+     },
+     {
+      "text": "Upload your finished manuscript as an EPUB file.",
+      "checked": "https://support.spotify.com/us/authors/article/audiobook-creation-tools/"
+     },
+     {
+      "text": "Choose a digital voice, preview it and check how it says names and places.",
+      "checked": "https://support.spotify.com/us/authors/article/audiobook-creation-tools/"
+     },
+     {
+      "text": "Listen to the chapter previews, then submit; it is published within 72 hours.",
+      "checked": "https://support.spotify.com/us/authors/article/audiobook-creation-tools/"
+     }
+    ],
+    "learned_from": [
+     "\"be really helpful to the layperson to understand what they can use when\" (your Improve, 16 Nov, of the assistants explainer)"
+    ],
+    "direction": {
+     "look": "The v5 explainer look, modelled on the tool-unlock carousels in your Instagram inspo sheet",
+     "format": "5 cards, 4:5",
+     "frames": [
+      {
+       "words": "Spotify will turn your self-published book into an audiobook, free.",
+       "picture": "A book cover turning into headphones"
+      },
+      {
+       "words": "Upload your book as an EPUB and pick a licensed digital voice.",
+       "picture": "The voice picker in Spotify for Authors"
+      },
+      {
+       "words": "Check how it says names and places, then preview each chapter.",
+       "picture": "A pronunciation list beside a chapter preview"
+      },
+      {
+       "words": "The catch: your payment profile must be approved first, which can take five working days.",
+       "picture": "A calendar with five days ticked"
+      },
+      {
+       "words": "Cost: free, up to five audiobooks per author.",
+       "picture": "Five small book spines with headphones on"
+      }
+     ],
+     "tone": "Plain, useful and a little dry: the joke is in the facts.",
+     "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
+     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
+    }
+   },
+   {
+    "id": "mychannel",
+    "kind": "voiceover",
+    "format": "Voiceover short, 9:16, about 60 seconds, motion graphics over the source pictures",
+    "source": {
+     "label": "Gizmodo, Google wants to make AI TV shows starring you (23 Nov 2026)",
+     "url": "https://gizmodo.com/google-wants-to-make-ai-tv-shows-starring-you-2000844299"
+    },
+    "sources": [
+     {
+      "label": "The Verge, Google My Channel patent (25 Nov 2026)",
+      "url": "https://www.theverge.com/entertainment/1042221/google-my-channel-ai-video-patent"
+     }
+    ],
+    "source_tag": "trade_press",
+    "copy": "A Google patent application describes My Channel, a feed of AI-made TV shows and films starring the viewer's own face and voice, with an ad stitcher; the examiner rejected it. A 60-second voiceover on what it says about where TV money is going.",
+    "hook": "Google patented a TV channel starring you, made by AI. The examiner said no.",
+    "story": "A Google patent application published in November 2026 describes My Channel, a feed of AI-generated TV shows and films built from a viewer's history, starring the viewer's own image and voice, with an advertising stitcher inserting ads. The examiner rejected it.",
+    "fact": "Gizmodo, 23 Nov 2026: \"Google might be planning to build a completely AI-generated TV channel in which your likeness is the main character\"; The Verge: a system \"designed to create feeds filled with personalized, AI-generated videos and advertisements\".",
+    "pitch": {
+     "see": "A TV schedule where every show stars the same face: the viewer's.",
+     "lands": "It is absurd and real: a giant planned AI films starring the viewer, with the ad breaks kept in, and the patent office turned it down.",
+     "why_now": "Gizmodo, 23 Nov 2026; The Verge, 25 Nov 2026.",
+     "share": "Google wanted to make you the star of your own TV channel, ads included."
+    },
+    "shape": "story",
+    "dive": "The patent pairs AI-made shows starring the viewer with an ad stitcher, so the plan's money is still in the adverts.",
+    "aim": "humour",
+    "funny": "In Google's plan for television the star of the show is you, and the ad break is still there.",
+    "lookalike": {
+     "pattern": "creator-hands-over",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfXfbEMACR-/",
+     "our_take": "The post showed AI making a creator's video; ours shows a plan where the viewer is the star and the ads still run."
+    },
+    "learned_from": [
+     "\"play on the hilarity of this topic\" (your Improve, 9 Nov, of the Home Depot homework option)"
+    ],
+    "direction": {
+     "look": "Voice-led motion graphics over the story's own pictures, art-directed captions",
+     "format": "9:16 short, about 60 seconds",
+     "frames": [
+      {
+       "words": "Google patented a TV channel starring you.",
+       "picture": "A TV guide where every show has the same face"
+      },
+      {
+       "words": "Every show made by AI from what you watched.",
+       "picture": "A viewing history turning into film posters"
+      },
+      {
+       "words": "Your face and voice as the lead.",
+       "picture": "A selfie becoming a film poster"
+      },
+      {
+       "words": "And a stitcher that inserts the ads.",
+       "picture": "An advert sliding into the middle of the show"
+      },
+      {
+       "words": "The patent examiner said no.",
+       "picture": "A rejected stamp on the patent"
+      }
+     ],
+     "tone": "Deadpan: the facts carry the joke.",
+     "kit": "v5 Library short: house type, brand palette, the designed captions",
+     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfXfbEMACR-/"
+    }
+   },
    {
     "id": "tplcommscam",
     "kind": "meme",
@@ -1403,6 +1213,439 @@
    }
   ],
   "thu": [
+   {
+    "id": "figmasix",
+    "kind": "explainer",
+    "format": "Explainer carousel, 5 cards, 4:5",
+    "source": {
+     "label": "Figma release notes (18 Nov 2026)",
+     "url": "https://www.figma.com/release-notes/"
+    },
+    "source_tag": "trade_press",
+    "copy": "Figma's image tools now return two, four or six pictures from one prompt, or run it across three models side by side, in Design, FigJam, Slides and Draw. Here is how, and what is free.",
+    "hook": "Figma now gives you six AI pictures from one prompt.",
+    "story": "On 18 November 2026 Figma, the design tool used by designers and illustrators, updated Make image and Edit image so one model can return two, four or six pictures from a single prompt.",
+    "fact": "Figma, 18 Nov 2026: \"Have a single image model generate two, four, or six images from one prompt, so you spend less time re-prompting.\"",
+    "pitch": {
+     "see": "A design canvas with six image options in a grid.",
+     "lands": "Any designer or illustrator using Figma can get two, four or six image options from one prompt, or compare three models side by side, this week, free on Starter.",
+     "why_now": "Figma release notes, 18 Nov 2026.",
+     "share": "One prompt, six options, less retyping."
+    },
+    "shape": "story",
+    "dive": "One image model returns several options per prompt, or several models answer one prompt, so a designer chooses instead of retyping.",
+    "aim": "utility",
+    "funny": "The release note's selling point is that you will spend less time re-prompting, the most honest description of AI image work yet.",
+    "lookalike": {
+     "pattern": "tool-unlock",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
+     "our_take": "The post listed what a coding tool unlocks; ours is the same card flow for one creative tool, with the real price and the catch."
+    },
+    "cards": [
+     {
+      "words": "Figma now gives you six AI pictures from one prompt.",
+      "picture": "A Figma canvas with a six-image grid"
+     },
+     {
+      "words": "Open Actions, choose Make an image, and type your prompt.",
+      "picture": "The Actions menu in Figma"
+     },
+     {
+      "words": "Pick 2, 4 or 6 images, or compare up to three models side by side.",
+      "picture": "The model picker with three models"
+     },
+     {
+      "words": "The catch: on the free plan the image tools work only in Figma Design.",
+      "picture": "A free-plan badge on the Design tab"
+     },
+     {
+      "words": "Cost: Starter is free with 150 AI credits a day; Professional is $16 a month.",
+      "picture": "A credit meter beside a price tag"
+     }
+    ],
+    "steps": [
+     {
+      "text": "Click where you want the picture, open Actions and choose Make an image.",
+      "checked": "https://help.figma.com/hc/en-us/articles/24004542669463-Generate-and-edit-images-with-Figma-AI"
+     },
+     {
+      "text": "Type your prompt, open the model picker and choose 2, 4 or 6 images.",
+      "checked": "https://help.figma.com/hc/en-us/articles/24004542669463-Generate-and-edit-images-with-Figma-AI"
+     },
+     {
+      "text": "To compare models, add up to three and keep the version you like best.",
+      "checked": "https://www.figma.com/release-notes/"
+     },
+     {
+      "text": "Check the plan: Starter is free with 150 AI credits a day, Professional $16 a month per seat.",
+      "checked": "https://www.figma.com/pricing/"
+     }
+    ],
+    "learned_from": [
+     "\"a more infographicy amusing explainer\" (your Improve, 9 Nov, of the phone-book tool-calls carousel)"
+    ],
+    "direction": {
+     "look": "The v5 explainer look, modelled on the tool-unlock carousels in your Instagram inspo sheet",
+     "format": "5 cards, 4:5",
+     "frames": [
+      {
+       "words": "Figma now gives you six AI pictures from one prompt.",
+       "picture": "A Figma canvas with a six-image grid"
+      },
+      {
+       "words": "Open Actions, choose Make an image, and type your prompt.",
+       "picture": "The Actions menu in Figma"
+      },
+      {
+       "words": "Pick 2, 4 or 6 images, or compare up to three models side by side.",
+       "picture": "The model picker with three models"
+      },
+      {
+       "words": "The catch: on the free plan the image tools work only in Figma Design.",
+       "picture": "A free-plan badge on the Design tab"
+      },
+      {
+       "words": "Cost: Starter is free with 150 AI credits a day; Professional is $16 a month.",
+       "picture": "A credit meter beside a price tag"
+      }
+     ],
+     "tone": "Plain, useful and a little dry: the joke is in the facts.",
+     "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
+     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
+    },
+    "recommended": true
+   },
+   {
+    "id": "robloxvideo",
+    "kind": "explainer",
+    "format": "Explainer carousel, 5 cards, 4:5",
+    "source": {
+     "label": "Roblox developer forum, Studio MCP server updates (20 Nov 2026)",
+     "url": "https://devforum.roblox.com/t/studio-mcp-server-updates-video-capture-saveplace-and-submitfeedback/4998177"
+    },
+    "source_tag": "trade_press",
+    "copy": "Roblox Studio's MCP server now lets a connected AI assistant record video during a playtest to spot stutters and bad timing, fix them and check again. Here is how game makers switch it on.",
+    "hook": "Roblox's AI helper can now watch your game being played, and fix it.",
+    "story": "On 20 November 2026 Roblox updated its Studio MCP server so a connected AI assistant can record video during a game playtest to spot stutters, flicker or bad timing, fix them and record again.",
+    "fact": "Roblox, 20 Nov 2026: \"screen_capture can now record video during a playtest, so the agent can see motion for itself.\"",
+    "pitch": {
+     "see": "A game scene with a door stuttering, and a recording light on.",
+     "lands": "Any game maker building on Roblox can let a connected AI assistant record a playtest, spot a stutter, fix it and record again, today, with Studio free.",
+     "why_now": "Roblox developer forum, 20 Nov 2026.",
+     "share": "My AI assistant now playtests my game and sends me the clip."
+    },
+    "shape": "story",
+    "dive": "A connected AI assistant records video during a game playtest, so it can see motion problems that screenshots miss.",
+    "aim": "utility",
+    "funny": "Roblox's demo is an AI noticing that a door stutters, which is roughly where every game maker's career begins.",
+    "lookalike": {
+     "pattern": "tool-unlock",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
+     "our_take": "The post listed what a coding tool unlocks; ours is the same card flow for one creative tool, with the real price and the catch."
+    },
+    "cards": [
+     {
+      "words": "Roblox's AI helper can now watch your game being played.",
+      "picture": "A Roblox scene with a recording dot"
+     },
+     {
+      "words": "Turn on Studio as an MCP server in Assistant.",
+      "picture": "The Manage MCP Servers menu"
+     },
+     {
+      "words": "Connect your AI assistant, then ask it to playtest and record.",
+      "picture": "An AI chat asking to record a playtest"
+     },
+     {
+      "words": "The catch: it records video only when stills cannot show the problem.",
+      "picture": "A still frame beside a video clip"
+     },
+     {
+      "words": "Cost: Studio is free; your AI assistant has its own plan.",
+      "picture": "A free badge on Roblox Studio"
+     }
+    ],
+    "steps": [
+     {
+      "text": "Update Roblox Studio, open Assistant, choose Manage MCP Servers and turn on Studio as an MCP server.",
+      "checked": "https://create.roblox.com/docs/studio/mcp"
+     },
+     {
+      "text": "Use quick connect to link your AI assistant, then restart it.",
+      "checked": "https://create.roblox.com/docs/studio/mcp"
+     },
+     {
+      "text": "Ask the agent to playtest and record the scene.",
+      "checked": "https://devforum.roblox.com/t/studio-mcp-server-updates-video-capture-saveplace-and-submitfeedback/4998177"
+     },
+     {
+      "text": "Let it play, record, fix and record again to confirm the fix.",
+      "checked": "https://devforum.roblox.com/t/studio-mcp-server-updates-video-capture-saveplace-and-submitfeedback/4998177"
+     }
+    ],
+    "learned_from": [
+     "\"be really helpful to the layperson to understand what they can use when\" (your Improve, 16 Nov, of the assistants explainer)"
+    ],
+    "direction": {
+     "look": "The v5 explainer look, modelled on the tool-unlock carousels in your Instagram inspo sheet",
+     "format": "5 cards, 4:5",
+     "frames": [
+      {
+       "words": "Roblox's AI helper can now watch your game being played.",
+       "picture": "A Roblox scene with a recording dot"
+      },
+      {
+       "words": "Turn on Studio as an MCP server in Assistant.",
+       "picture": "The Manage MCP Servers menu"
+      },
+      {
+       "words": "Connect your AI assistant, then ask it to playtest and record.",
+       "picture": "An AI chat asking to record a playtest"
+      },
+      {
+       "words": "The catch: it records video only when stills cannot show the problem.",
+       "picture": "A still frame beside a video clip"
+      },
+      {
+       "words": "Cost: Studio is free; your AI assistant has its own plan.",
+       "picture": "A free badge on Roblox Studio"
+      }
+     ],
+     "tone": "Plain, useful and a little dry: the joke is in the facts.",
+     "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
+     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
+    }
+   },
+   {
+    "id": "alphamatte",
+    "kind": "explainer",
+    "format": "Explainer carousel, 5 cards, 4:5",
+    "source": {
+     "label": "Runway changelog (13 Nov 2026)",
+     "url": "https://runway.com/changelog"
+    },
+    "source_tag": "trade_press",
+    "copy": "Runway added LTX Alphagen, a model that turns any clip into a matte and a cutout with transparency, no green screen, mask or prompt, and can output ProRes. Here is how film editors use it and what it costs.",
+    "hook": "Runway now cuts people out of clips, no green screen.",
+    "story": "On 13 November 2026 Runway, the AI video tool used by filmmakers and editors, added LTX Alphagen, a model from Lightricks that turns any clip into a matte with a separate alpha cutout, with no green screen.",
+    "fact": "Runway, 13 Nov 2026: \"LTX Alphagen is the first third-party model to return two outputs and support ProRes as an output type.\"",
+    "pitch": {
+     "see": "A dancer lifted out of a street scene onto a new background.",
+     "lands": "Any filmmaker or video editor can turn an ordinary clip into a clean cutout with a matte, no green screen or mask, on a paid Runway plan this week.",
+     "why_now": "Runway changelog, 13 Nov 2026.",
+     "share": "I just cut out the background without a green screen."
+    },
+    "shape": "story",
+    "dive": "A model separates the subject from the background in any clip and returns a matte and a transparent cutout, replacing a green screen.",
+    "aim": "utility",
+    "funny": "The headline feature of the model is that it gives you two files instead of one.",
+    "lookalike": {
+     "pattern": "tool-unlock",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
+     "our_take": "The post listed what a coding tool unlocks; ours is the same card flow for one creative tool, with the real price and the catch."
+    },
+    "cards": [
+     {
+      "words": "Runway now cuts people out of clips, no green screen.",
+      "picture": "A figure lifted out of a scene onto a new one"
+     },
+     {
+      "words": "Pick LTX Alphagen and give it a clip you already have.",
+      "picture": "The model picker in Runway"
+     },
+     {
+      "words": "You get two files: a matte and a cutout with transparency.",
+      "picture": "A grey matte beside the cutout"
+     },
+     {
+      "words": "The catch: the output has no audio, so keep your original sound.",
+      "picture": "A muted speaker icon on the cutout"
+     },
+     {
+      "words": "Cost: paid plans from $15 a month, or $12 billed yearly.",
+      "picture": "A price tag on a film clapperboard"
+     }
+    ],
+    "steps": [
+     {
+      "text": "On a Runway paid plan, pick LTX Alphagen and give it a clip.",
+      "checked": "https://runway.com/changelog"
+     },
+     {
+      "text": "No prompt, mask or green screen is needed.",
+      "checked": "https://ltx.io/model/capabilities/alpha-channel-video-generation"
+     },
+     {
+      "text": "You get a matte and a cutout frame for frame, and can ask for ProRes.",
+      "checked": "https://ltx.io/model/capabilities/alpha-channel-video-generation"
+     },
+     {
+      "text": "Check the price: Standard is $15 a month, or $12 billed yearly.",
+      "checked": "https://runway.com/pricing"
+     }
+    ],
+    "learned_from": [
+     "\"a more infographicy amusing explainer\" (your Improve, 9 Nov, of the phone-book tool-calls carousel)"
+    ],
+    "direction": {
+     "look": "The v5 explainer look, modelled on the tool-unlock carousels in your Instagram inspo sheet",
+     "format": "5 cards, 4:5",
+     "frames": [
+      {
+       "words": "Runway now cuts people out of clips, no green screen.",
+       "picture": "A figure lifted out of a scene onto a new one"
+      },
+      {
+       "words": "Pick LTX Alphagen and give it a clip you already have.",
+       "picture": "The model picker in Runway"
+      },
+      {
+       "words": "You get two files: a matte and a cutout with transparency.",
+       "picture": "A grey matte beside the cutout"
+      },
+      {
+       "words": "The catch: the output has no audio, so keep your original sound.",
+       "picture": "A muted speaker icon on the cutout"
+      },
+      {
+       "words": "Cost: paid plans from $15 a month, or $12 billed yearly.",
+       "picture": "A price tag on a film clapperboard"
+      }
+     ],
+     "tone": "Plain, useful and a little dry: the joke is in the facts.",
+     "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
+     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
+    }
+   },
+   {
+    "id": "synthfirmware",
+    "kind": "voiceover",
+    "format": "Voiceover short, 9:16, about 60 seconds, motion graphics over the source pictures",
+    "source": {
+     "label": "The Verge, vibe coding and open-source music firmware (25 Nov 2026)",
+     "url": "https://www.theverge.com/ai-artificial-intelligence/1040081/vibe-coding-open-source-music-firmware"
+    },
+    "sources": [
+     {
+      "label": "Polyend, Tracker firmware source code (Nov 2026)",
+      "url": "https://polyend.com/whats-up/tracker-the-biggest-update-yet/"
+     }
+    ],
+    "source_tag": "trade_press",
+    "copy": "AI coding tools let hobbyists write custom firmware for music gear, a $70 synth now has more than a dozen custom versions, and some makers have opened up their devices. A 60-second voiceover on who wins when musicians can rewrite their instruments.",
+    "hook": "People taught a $70 synth new tricks with chatbots, and the music gear makers opened up.",
+    "story": "The Verge reported on 25 November 2026 that AI coding tools have let hobbyists write custom firmware for music gear, and that some makers are opening up their devices; Polyend published its Tracker firmware code.",
+    "fact": "The Verge, 25 Nov 2026: \"companies have begun making more and more of their devices open source.\"; Polyend: \"Today we're publishing the firmware source code for the original Tracker, Tracker+ and Tracker Mini on GitHub.\"",
+    "pitch": {
+     "see": "A tiny $70 synth with a chat window open beside it.",
+     "lands": "It is a surprising, true twist: AI coding tools let hobbyists rewrite music gear, and some makers answered by publishing their code.",
+     "why_now": "The Verge, 25 Nov 2026.",
+     "share": "AI turned bedroom musicians into synth makers."
+    },
+    "shape": "story",
+    "dive": "AI coding tools let musicians rewrite the software inside their instruments, so some makers publish their code rather than fight it.",
+    "aim": "interest",
+    "funny": "A $70 synth became the instrument of the summer because people kept teaching it new tricks with chatbots.",
+    "lookalike": {
+     "pattern": "made-in-hours",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/",
+     "our_take": "The post showed a game made with AI in a day; ours shows musicians rewriting their own instruments with it."
+    },
+    "learned_from": [
+     "\"Real-world stories only\" (your Improve, 9 Nov, of the good news): this one is a real story told as a short"
+    ],
+    "direction": {
+     "look": "Voice-led motion graphics over the story's own pictures, art-directed captions",
+     "format": "9:16 short, about 60 seconds",
+     "frames": [
+      {
+       "words": "A $70 synth with a dozen new brains.",
+       "picture": "The small synth on a desk"
+      },
+      {
+       "words": "Musicians wrote them with AI chatbots.",
+       "picture": "A chat window writing code"
+      },
+      {
+       "words": "Some makers fought back with forum bans.",
+       "picture": "A locked forum page"
+      },
+      {
+       "words": "Others published their code.",
+       "picture": "A code page opening"
+      },
+      {
+       "words": "Now the instrument changes after you buy it.",
+       "picture": "The synth glowing with a new screen"
+      }
+     ],
+     "tone": "Deadpan: the facts carry the joke.",
+     "kit": "v5 Library short: house type, brand palette, the designed captions",
+     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/"
+    }
+   },
+   {
+    "id": "kernowmarket",
+    "kind": "voiceover",
+    "format": "Voiceover short, 9:16, about 60 seconds, motion graphics over the source pictures",
+    "source": {
+     "label": "BBC News, Kernow Christmas Market (25 Nov 2026)",
+     "url": "https://www.bbc.com/news/articles/cm0qjglj3ejlo"
+    },
+    "sources": [],
+    "source_tag": "trade_press",
+    "copy": "The organisers of a Cornish Christmas market cancelled and refunded every booking after AI-generated promotional artwork showed a busy market and visitors found about five stalls. A 60-second voiceover on what an AI poster is worth when the photos come back.",
+    "hook": "An AI poster promised a Christmas market. Visitors found five stalls and buckets.",
+    "story": "The organisers of Kernow Christmas Market in Cornwall cancelled and refunded all 2026 bookings after a backlash over AI-generated promotional artwork that showed rows of decorated stalls, the BBC reported on 25 November 2026.",
+    "fact": "BBC News, 25 Nov 2026: \"But photographs taken by visitors showed a mostly empty hall with only a handful of traders, little Christmas decoration and buckets on the floor collecting water from a leaking roof.\"",
+    "pitch": {
+     "see": "A glowing AI poster of a busy Christmas market beside a photo of an empty hall with buckets.",
+     "lands": "It is funny and true, and it lands for anyone who makes event art: the AI picture sold a market that did not exist, and the organisers had to refund everyone.",
+     "why_now": "BBC News, 25 Nov 2026.",
+     "share": "The AI promised fairy lights; the visitors' photos showed buckets."
+    },
+    "shape": "story",
+    "dive": "AI artwork made the promotion cheap and the promise unlimited, so the visitors' own photos set the record straight.",
+    "aim": "humour",
+    "funny": "The AI artwork promised fairy lights; the visitors' photos showed buckets.",
+    "lookalike": {
+     "pattern": "ai-backfires",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
+     "our_take": "The post showed an AI giving itself away; ours shows an AI poster meeting the real photos."
+    },
+    "learned_from": [
+     "\"play on the hilarity of this topic\" (your Improve, 9 Nov, of the Home Depot homework option)"
+    ],
+    "direction": {
+     "look": "Voice-led motion graphics over the story's own pictures, art-directed captions",
+     "format": "9:16 short, about 60 seconds",
+     "frames": [
+      {
+       "words": "The poster: a magical Christmas market.",
+       "picture": "The AI artwork of a busy market"
+      },
+      {
+       "words": "The reality: about five stalls.",
+       "picture": "A visitor's photo of an empty hall"
+      },
+      {
+       "words": "And buckets catching rain from the roof.",
+       "picture": "Buckets on a wet floor"
+      },
+      {
+       "words": "Every booking cancelled and refunded.",
+       "picture": "A refund notice"
+      },
+      {
+       "words": "The artwork was easy. The photos were easier.",
+       "picture": "A phone camera clicking"
+      }
+     ],
+     "tone": "Deadpan: the facts carry the joke.",
+     "kit": "v5 Library short: house type, brand palette, the designed captions",
+     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/"
+    }
+   },
    {
     "id": "tplturin",
     "kind": "meme",
@@ -2018,5 +2261,16 @@
   "mon": "Nothing of his fits Monday: no idea from Krish since 22 Nov, and his open money asks (ads in the chatbots) went out on the 23 Nov board.",
   "wed": "Nothing of his fits Wednesday: his ask on software editing itself has no dated creative-industry story this fortnight (held, with his words).",
   "fri": "Nothing of his fits Friday: his ask on AI correcting what people believed is held until a newer checked case lands."
+ },
+ "thin_week": {
+  "mon": {
+   "regathered": true
+  },
+  "wed": {
+   "regathered": true
+  },
+  "fri": {
+   "regathered": true
+  }
  }
 }

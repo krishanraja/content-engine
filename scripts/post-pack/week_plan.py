@@ -753,6 +753,21 @@ MIN_IDEAS = 4  # Krish, 2026-10-18: "at least three content ideas for each day",
 # suggested sources and the ones I threw at other sessions last week"
 
 
+def min_ideas(data, day):
+    """How many ideas a publishing day must offer: MIN_IDEAS, or, on a day ideas.json marks a thin week after its
+    re-gather (thin_week.<day>.regathered), the thin minimum in config/story-score.json hero_floors.thin_week. That rule
+    (Ruling, Krish, 2026-11-26: "never an empty board, never a relaxed floor") lets a day carry the options that pass every
+    floor when fewer than four do; this check asked for four regardless, so the rule could never be used (7 Dec board)."""
+    thin = (data or {}).get('thin_week') if isinstance((data or {}).get('thin_week'), dict) else {}
+    if not (isinstance(thin.get(day), dict) and thin[day].get('regathered') is True):
+        return MIN_IDEAS
+    try:
+        rule = json.loads((HERE.parents[1] / 'config' / 'story-score.json').read_text(encoding='utf-8'))['hero_floors']['thin_week']
+        return int(rule['thin_min'])
+    except (OSError, ValueError, KeyError, TypeError):
+        return MIN_IDEAS
+
+
 # Where an idea came from, as its chip says it (GET /api/week/options?include=sources, _weekSources.ts).
 SOURCE_KINDS = {'his': 'Your idea', 'inspo': 'From your inspo folder', 'engine': 'Engine research'}
 
@@ -808,8 +823,9 @@ def read_ideas(data, monday, where='--ideas'):
                 problems.append(f'{weekday} is locked to its piece {out.locked[key]["piece_id"]}; it takes no options, give it none')
             out[key] = []
             continue
-        if len(ideas) < MIN_IDEAS:
-            problems.append(f'{weekday}: {len(ideas)} idea(s); give at least {MIN_IDEAS} to pick from')
+        least = min_ideas(data, key)
+        if len(ideas) < least:
+            problems.append(f'{weekday}: {len(ideas)} idea(s); give at least {least} to pick from')
         rows, seen = [], set()
         for n, idea in enumerate(ideas, 1):
             idea = idea if isinstance(idea, dict) else {}
