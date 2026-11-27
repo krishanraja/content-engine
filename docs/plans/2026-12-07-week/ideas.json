@@ -1,0 +1,1819 @@
+{
+ "_about": "The ideas board for the week of 7 December 2026, steps 1 to 7 of plan-week, run in a Claude Code session on 27 November 2026 (Krish asked for it in the session; the Sunday ideas workflow had failed its gate five runs running). Researched with web search and web fetch; the turn's shared web-search budget ran out part-way, so later research read outlet and vendor pages directly. Drive and Firecrawl were not used, so the Cold Ideas & Inspo folder was not read. Reddit could not be read for the meme templates (HTTP 403 from r/MemeTemplatesOfficial and r/memes), and Apify was not run (no paid run without his approval of that run). Stale sheet: the Instagram inspo sheet's newest row is 2026-11-16, more than 3 days before 2026-11-27; the patterns lean on older posts.",
+ "week_start": "2026-12-07",
+ "checked_on": "2026-11-27",
+ "days": {
+  "mon": [
+   {
+    "id": "9a2686e3-efc8-4532-a07f-d8904d0c2fd5",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "A streamer just showed what AI short dramas are worth: first place in its home market and a smaller total bill, while its overall sales still fell, so anyone pricing film or TV work now knows where the cheap minutes are going.",
+    "story": "In its third-quarter 2026 results on 16 November, Chinese streamer iQIYI said its short-form TV dramas took the number one domestic market share for the first time, while total revenue fell 10% to RMB6.01 billion. VP Land reports 21 of the quarter's short dramas were AI-generated, with generated concept art, sets and props, and lead actors licensing their likenesses as reusable digital characters.",
+    "why_now": "iQIYI third-quarter 2026 results, 16 Nov 2026.",
+    "fact": "iQIYI, 16 Nov 2026: total revenue fell 10% to RMB6.01 billion, and \"our short-form dramas claimed the No. 1 domestic market share for the first time on a quarterly basis\"; VP Land: \"It released 21 AI-generated short-form dramas\".",
+    "source": {
+     "label": "iQIYI third-quarter 2026 results, SEC filing (16 Nov 2026)",
+     "url": "https://www.sec.gov/Archives/edgar/data/1722608/000119312526462100/d123902dex991.htm",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "VP Land, 21 AI short dramas (Nov 2026)",
+      "url": "https://www.vp-land.com/stories/chinese-streaming-platform-iqiyi-releases-21-ai-short-dramas-and-takes-top-domestic-short"
+     }
+    ],
+    "first_reported": "https://www.sec.gov/Archives/edgar/data/1722608/000119312526462100/d123902dex991.htm",
+    "beats": [
+     "A streamer tops its short-drama chart in the quarter its sales shrink.",
+     "What an AI short drama replaces: the art department and the set.",
+     "The actors who rent out their faces as reusable characters.",
+     "Where the money moved: fewer crew days, more titles.",
+     "What this shows about what a minute of TV now costs."
+    ],
+    "pitch": {
+     "question": "If a computer can make the sets and the faces, what is a minute of television worth now?",
+     "headline": "iQIYI made 21 AI dramas and won its short-drama market. Its sales still fell 10%.",
+     "hook": "iQIYI released 21 AI-generated short dramas in one quarter and took first place in China's short-drama market, in the same results where its revenue fell 10% to RMB6.01 billion.",
+     "examples": [
+      "21 AI-generated short dramas in one quarter.",
+      "First place in domestic short-drama share, for the first time.",
+      "Total revenue down 10%, to RMB6.01 billion."
+     ],
+     "chain": [
+      "Short dramas are cheap, fast TV made for phones.",
+      "AI now makes the concept art, the sets and the props.",
+      "Lead actors license their faces as digital characters that can be reused.",
+      "So one title needs fewer crew days and less building.",
+      "So the streamer can make many more titles for the same money.",
+      "It wins the short-drama chart, while the rest of its business shrinks."
+     ],
+     "take": "What this shows is that AI pushes the price of a minute of drama down faster than it pushes viewing up. Who keeps the difference: the streamer, the actor who rented their face, or nobody?"
+    },
+    "style": {
+     "script": "follow-the-receipt",
+     "production": "data-story",
+     "experiment": {
+      "format": "receipt-animation",
+      "why": "Draw one AI short drama's bill as a receipt beside a normal one: the art department and set lines struck through, the likeness licence added."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If a computer can make the sets and the faces, what is a minute of television worth now? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 16 November to 7 December 2026 on: iQIYI's AI-generated short dramas, their production costs, the actors' likeness licences and how the short-drama share and total revenue moved. Work through the 5 Whys, starting from the plain question: Why 1 asks who pays, and why the price moved. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "AI swaps the art department and the set for generated assets and licensed digital doubles, so the cost of a short drama falls while total sales shrink.",
+    "aim": "interest",
+    "funny": "iQIYI's drama hit number one in the same quarter its accountant needed a tissue.",
+    "lookalike": {
+     "pattern": "money-twist",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfeWM7jADvK/",
+     "our_take": "The post followed one man paying villagers; we follow one streamer's bill for a minute of TV, and who it stops paying."
+    },
+    "recommended": true
+   },
+   {
+    "id": "2c443323-dc8c-4941-9608-04d6b3ec85ed",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "Independent musicians can now be paid to have an AI learn from their songs, through their distributor, but only if they tick the box, and nobody has said the rate: anyone with music on a distributor knows which email to read.",
+    "story": "On 18 November 2026 Sonilo, an AI music company that raised $11 million in October, signed a licence with the music distributor Symphonic to train its model on recordings from Symphonic's independent artists and labels who opt in. Sonilo says rights holders get licensing fees and a share of revenue, with attribution reporting; neither side disclosed the fee or the split.",
+    "why_now": "Music Business Worldwide, 18 Nov 2026.",
+    "fact": "Music Business Worldwide, 18 Nov 2026: Sonilo, \"$11m-backed\", signed with Symphonic so that \"rights holders and artists receive licensing fees and a share of revenue\"; the fee and split were not disclosed.",
+    "source": {
+     "label": "Music Business Worldwide, Sonilo and Symphonic (18 Nov 2026)",
+     "url": "https://www.musicbusinessworldwide.com/11m-backed-ai-startup-sonilo-founded-by-tiktok-veterans-inks-licensing-deal-with-symphonic-to-train-its-model-on-opted-in-indie-recordings/",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "AI Musicpreneur, Sonilo and Symphonic (Nov 2026)",
+      "url": "https://www.aimusicpreneur.com/ai-tools-news/sonilo-symphonic-opt-in-ai-training-licensing-deal-2026/"
+     }
+    ],
+    "first_reported": "https://www.musicbusinessworldwide.com/11m-backed-ai-startup-sonilo-founded-by-tiktok-veterans-inks-licensing-deal-with-symphonic-to-train-its-model-on-opted-in-indie-recordings/",
+    "beats": [
+     "An AI start-up offers to pay indie musicians for their songs.",
+     "How $11 million of venture money reaches an artist: through the distributor.",
+     "The box you have to tick, and what ticking it signs.",
+     "The number nobody printed: the rate.",
+     "What this shows about who sets the price of a song an AI learns from."
+    ],
+    "pitch": {
+     "question": "When a computer pays to learn from your song, who decides what the song is worth?",
+     "headline": "An AI music start-up will pay indie artists to learn from their songs. Nobody says how much.",
+     "hook": "Sonilo, an $11 million AI music start-up, will pay licence fees and a share of revenue to Symphonic's independent artists who opt in to train its model, and the rate is private.",
+     "examples": [
+      "$11 million raised by Sonilo in October.",
+      "Symphonic's fourth AI training partner.",
+      "Fees and a revenue share, at a rate neither side published."
+     ],
+     "chain": [
+      "An AI music model needs songs to learn from.",
+      "Taking them without asking has led to lawsuits.",
+      "So the start-up pays a distributor that represents thousands of indie artists.",
+      "The distributor offers its artists a box to tick.",
+      "Artists who tick it get a fee and a share of revenue.",
+      "The rate is set between the start-up and the distributor, not the artist."
+     ],
+     "take": "The money is real and it is opt-in, and what this shows is that the price of an indie song's training rights is being set in a deal the artist never reads. Would you tick the box without seeing the number?"
+    },
+    "style": {
+     "script": "follow-the-receipt",
+     "production": "receipt-animation",
+     "experiment": {
+      "format": "everyday-debate",
+      "why": "Two indie artists argue over a kitchen table about whether to tick the box, each holding the same email."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When a computer pays to learn from your song, who decides what the song is worth? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: the Sonilo and Symphonic AI training licence, the fees and revenue share, the opt-in terms, Symphonic's other AI training partners and what independent artists have been offered. Work through the 5 Whys, starting from the plain question: Why 1 asks who pays, and why the price moved. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "Venture money reaches indie artists through their distributor as a licence fee plus a revenue share, only for songs whose owners opt in, at a private rate.",
+    "aim": "utility",
+    "funny": "An indie track can now be in more AI training deals than playlists.",
+    "lookalike": {
+     "pattern": "money-twist",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfeWM7jADvK/",
+     "our_take": "The post showed one man paying people to sign up; we show a start-up paying songwriters, and the box that decides it."
+    }
+   },
+   {
+    "id": "21e94357-9b59-4abe-96c6-daf1f98cd6d2",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "The biggest AI voice company just paid about $100 million to buy Japanese speech instead of building it, so voice actors, dubbers and audiobook narrators can see what one language is worth to the firms cloning voices.",
+    "story": "On 16 November 2026 ElevenLabs, the AI voice company whose voices are used by creators, dubbers and audiobook publishers, agreed to buy Kotoba Technologies, whose model handles Japanese speech. Its chief executive Mati Staniszewski put the price at around $100 million, Business Insider Japan reported; ElevenLabs was valued at $22 billion in September.",
+    "why_now": "Music Business Worldwide, 16 Nov 2026, reporting Business Insider Japan.",
+    "fact": "Music Business Worldwide, 16 Nov 2026: \"Business Insider Japan reports that ElevenLabs CEO Mati Staniszewski put the price at around $100 million\"; RouteNote: \"reportedly worth approximately $100 million\".",
+    "source": {
+     "label": "Music Business Worldwide, ElevenLabs to buy Kotoba (16 Nov 2026)",
+     "url": "https://www.musicbusinessworldwide.com/elevenlabs-agrees-to-acquire-japan-focused-voice-ai-company-kotoba-in-reported-100m-deal/",
+     "kind": "report"
+    },
+    "sources": [
+     {
+      "label": "RouteNote, ElevenLabs and Kotoba (Nov 2026)",
+      "url": "https://routenote.com/radar/?p=6292"
+     }
+    ],
+    "first_reported": "https://www.musicbusinessworldwide.com/elevenlabs-agrees-to-acquire-japan-focused-voice-ai-company-kotoba-in-reported-100m-deal/",
+    "beats": [
+     "The company that makes AI talk in every language buys one.",
+     "About $100 million for Japanese speech.",
+     "Why buying a language beats building it.",
+     "Who is paid when a voice is cloned into Japanese: the voice, the firm, the dubber.",
+     "What this shows about what a language is worth to voice cloning."
+    ],
+    "pitch": {
+     "question": "How much is one language worth to the companies that copy voices?",
+     "headline": "ElevenLabs paid about $100 million to learn Japanese.",
+     "hook": "ElevenLabs, the AI voice company used by creators and dubbing studios, agreed to buy Japanese voice firm Kotoba for a reported $100 million, three months after a sale valued it at $22 billion.",
+     "examples": [
+      "About $100 million, the price its chief executive gave.",
+      "$22 billion, its valuation in September.",
+      "Japanese, one of the biggest dubbing and anime markets."
+     ],
+     "chain": [
+      "AI voice firms sell voices that can speak many languages.",
+      "Japanese is hard to get right and a huge market for dubbing and anime.",
+      "Building it takes years of data and specialists.",
+      "So the biggest voice firm buys a team that already has it.",
+      "The price tells you what one language is worth to them.",
+      "Voice actors and dubbers now know the value of the thing they compete with."
+     ],
+     "take": "What this shows is that a language has a price tag in voice cloning, and it was set by a takeover. What is your own voice worth in a market where a whole language costs $100 million?"
+    },
+    "style": {
+     "script": "random-headline",
+     "production": "face-with-proof",
+     "experiment": {
+      "format": "fry-explainer",
+      "why": "Explain why Japanese is hard for a voice model with three spoken examples, one sound at a time."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: How much is one language worth to the companies that copy voices? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: ElevenLabs' purchase of Kotoba Technologies, the price, what Kotoba's model does, ElevenLabs' valuation and Japanese dubbing and voice markets. Work through the 5 Whys, starting from the plain question: Why 1 asks who pays, and why the price moved. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "A voice company valued at $22 billion buys an existing Japanese speech team for about $100 million rather than building it.",
+    "aim": "interest",
+    "funny": "The company that makes AI speak every language had to go shopping for one.",
+    "lookalike": {
+     "pattern": "money-twist",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfeWM7jADvK/",
+     "our_take": "The post priced one man's trip; we price one language, and what that says about a voice actor's job."
+    }
+   },
+   {
+    "id": "83f20f43-6b46-40a2-9a9b-1007cb10f9bb",
+    "source_kind": "engine",
+    "source_tag": "engine_research",
+    "so_what": "The money behind a famous AI video tool used by filmmakers and creators is partly a loan in disguise: its backers can ask for their money back with interest, so anyone choosing which AI video tool to build on can see how safe its funding really is.",
+    "story": "Kuaishou's results of 19 November 2026 book a non-cash interest cost on redemption financial liabilities: the yearly return attached to its Kling unit's promise to buy back shares from investors given redemption rights. Dr. Web reports Kling, the AI video generator sold to filmmakers and creators, raised 19.8 billion yuan from investors in October.",
+    "why_now": "Kuaishou third-quarter 2026 results, 19 Nov 2026.",
+    "fact": "Kuaishou, 19 Nov 2026: \"Finance costs on redemption financial liabilities represent the non-cash interest expense accrued, reflecting the annual return attached to Beijing Kling's conditional obligation to repurchase equity\"; Dr. Web: Kling raised 19.8 billion yuan in October.",
+    "source": {
+     "label": "Kuaishou third-quarter 2026 results, PR Newswire (19 Nov 2026)",
+     "url": "https://www.prnewswire.com/apac/news-releases/kuaishou-technology-announces-third-quarter-2026-unaudited-financial-results-302945189.html",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "Dr. Web, Kuaishou and Kling (Nov 2026)",
+      "url": "https://www.drweb.de/?p=608232"
+     }
+    ],
+    "first_reported": "https://www.prnewswire.com/apac/news-releases/kuaishou-technology-announces-third-quarter-2026-unaudited-financial-results-302945189.html",
+    "beats": [
+     "The AI video tool whose backers were promised their money back.",
+     "19.8 billion yuan in, with a buy-back promise attached.",
+     "Why the accounts call it interest.",
+     "Who carries the risk if the tool does not pay off.",
+     "What this shows about how AI video is really funded."
+    ],
+    "pitch": {
+     "question": "Wildcard: When investors back a creative AI tool, are they taking a bet or making a loan?",
+     "headline": "Kling's investors were promised their money back, with interest.",
+     "hook": "Kling, the AI video tool sold to filmmakers and creators, raised 19.8 billion yuan in October, and its owner's accounts book a yearly return on a promise to buy those investors out.",
+     "examples": [
+      "19.8 billion yuan raised by Kling in October.",
+      "A yearly return booked as an interest cost.",
+      "A conditional promise to buy the shares back."
+     ],
+     "chain": [
+      "AI video tools cost a fortune to build and run.",
+      "Investors put 19.8 billion yuan into Kling.",
+      "They were given the right to sell their shares back.",
+      "The promised buy-back comes with a yearly return.",
+      "So the accounts treat part of the money like a loan earning interest.",
+      "The risk sits with the owner, not only the backers."
+     ],
+     "take": "What this shows is that some of the money behind AI video is less a bet than a loan with a smile. If the backers can walk away with interest, who is really betting on the tool you use?"
+    },
+    "style": {
+     "script": "random-headline",
+     "production": "receipt-animation",
+     "experiment": {
+      "format": "data-story",
+      "why": "Draw the 19.8 billion yuan as a stack of IOUs, each with a small interest coupon attached."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When investors back a creative AI tool, are they taking a bet or making a loan? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Kuaishou's redemption financial liabilities for Kling, the investors' redemption rights, the yearly return, Kling's October fundraising and Kling's revenue. Work through the 5 Whys, starting from the plain question: Why 1 asks who pays, and why the price moved. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "Investor money in an AI video tool comes with a buy-back promise, so the accounts treat part of the risk capital like interest-bearing debt.",
+    "aim": "interest",
+    "funny": "Even the people betting on AI video asked for a receipt.",
+    "lookalike": {
+     "pattern": "money-twist",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfeWM7jADvK/",
+     "our_take": "The post found one odd payment; we found the footnote that turns an AI video tool's funding into a loan."
+    },
+    "wildcard": {
+     "kind": "obscure",
+     "why_unexpected": "Everyone covers what AI video tools can make; nobody reads the footnote that says their backers were promised their money back with interest."
+    }
+   }
+  ],
+  "wed": [
+   {
+    "id": "d5f108ea-7b48-4e1f-8c5c-62e346129f48",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "A broadcaster has turned a coach's rule of thumb into a live AI graphic, so anyone in sport or broadcasting can see exactly what the machine adds to a football broadcast and what it simply repeats.",
+    "story": "On 23 November 2026 Prime Video announced Progressive Actions for its UEFA Champions League football coverage, first used at Arsenal against Borussia Dortmund on 24 November. Its own AI models measure how far the ball travels forward in each phase of the pitch, with a shorter threshold near the opposition goal, and show the start, end and player on screen.",
+    "why_now": "Advanced Television, 23 Nov 2026; debut at Arsenal v Borussia Dortmund, 24 Nov 2026.",
+    "fact": "Advanced Television, 23 Nov 2026: Prime Video's \"proprietary AI-powered models that identify a Progressive Action\" in Champions League football; Indian Television: \"The feature uses proprietary AI-powered models to identify progressive actions by measuring how far the ball travels\".",
+    "source": {
+     "label": "Advanced Television, Prime Video Progressive Actions (23 Nov 2026)",
+     "url": "https://www.advanced-television.com/2026/11/23/prime-video-unveils-progressive-actions-for-champions-league/",
+     "kind": "report"
+    },
+    "sources": [
+     {
+      "label": "Indian Television, Prime Video Progressive Actions (Nov 2026)",
+      "url": "https://indiantelevision.com/iworld/prime-video-introduces-ai-powered-progressive-actions-for-champions-league/"
+     }
+    ],
+    "first_reported": "https://www.advanced-television.com/2026/11/23/prime-video-unveils-progressive-actions-for-champions-league/",
+    "beats": [
+     "A football broadcast that highlights every pass forward.",
+     "The rule inside it: how far, and where on the pitch.",
+     "The data that feeds it: tracking every player, live.",
+     "What the model adds that a pundit could not.",
+     "What this shows about AI in a live sports broadcast."
+    ],
+    "pitch": {
+     "question": "When a football broadcast adds AI, what does the machine actually see that the pundit does not?",
+     "headline": "Prime Video built an AI that tells you to pass it forward.",
+     "hook": "Prime Video's new Progressive Actions graphic uses its own AI models to flag every pass and carry that moves the ball forward in Champions League football, first shown at Arsenal against Dortmund.",
+     "examples": [
+      "A shorter threshold near the opposition goal.",
+      "Shown live with the start, end and player.",
+      "Debuted at Arsenal against Borussia Dortmund on 24 November."
+     ],
+     "chain": [
+      "Cameras track every player and the ball.",
+      "The model measures how far each pass or carry moves the ball forward.",
+      "Near goal, a shorter move counts.",
+      "When it crosses the line, it is a progressive action.",
+      "The graphic draws it on screen in seconds.",
+      "The broadcaster sells a richer picture of the game."
+     ],
+     "take": "What this shows is that the clever part is a coach's rule, and the AI is the speed. Is a broadcast better when it tells you what you already shout at the telly?"
+    },
+    "style": {
+     "script": "fry-explainer",
+     "production": "voice-led-pictures",
+     "experiment": {
+      "format": "kinetic-movement",
+      "why": "Draw each progressive pass as a moving arrow over a match frame, the threshold shrinking as the ball nears goal."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When a football broadcast adds AI, what does the machine actually see that the pundit does not? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Prime Video's Progressive Actions, how its AI models are built, the tracking data, the distance thresholds and how Champions League broadcasters use it. Work through the 5 Whys, starting from the plain question: Why 1 asks how it is built, and what broke. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "A coach's rule (forward distance scaled to where on the pitch) is run by a model on live tracking data and drawn as a graphic.",
+    "aim": "interest",
+    "funny": "Football's newest AI feature mostly confirms what every pub already shouts: pass it forward.",
+    "lookalike": {
+     "pattern": "tool-unlock",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
+     "our_take": "The post listed what a tool can do; we take one football graphic apart to the rule inside it."
+    },
+    "recommended": true
+   },
+   {
+    "id": "076c5675-4aee-4ad0-b400-6b10188fdb59",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "Music producers can now put an effect on one sung word by clicking the word, because the plugin writes the lyrics out first, so anyone mixing vocals knows what changed in the edit window this month.",
+    "story": "iZotope released Nectar 5, its vocal plugin for music producers, on about 24 November 2026 at an introductory $179 until 7 December. Its Moments module transcribes the sung lyrics so a producer can select a word and add effects to it, and its Vocal Assistant listens to part of the vocal and designs a processing chain.",
+    "why_now": "MusicRadar, 24 Nov 2026.",
+    "fact": "iZotope: \"the industry-first Moments transcribes your vocal into lyrics for word-by-word effects\"; MusicRadar, 24 Nov 2026: \"This AI-powered mixing tool listens to a portion of your vocal and designs a customized processing chain to match it.\"",
+    "source": {
+     "label": "iZotope, Nectar 5 product page (Nov 2026)",
+     "url": "https://www.izotope.com/en/products/nectar.html",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "MusicRadar, Nectar 5 (24 Nov 2026)",
+      "url": "https://www.musicradar.com/music-tech/izotopes-nectar-5-introduces-a-clever-new-way-to-add-effects-to-vocals-one-word-at-a-time"
+     }
+    ],
+    "first_reported": "https://www.izotope.com/en/products/nectar.html",
+    "beats": [
+     "A vocal plugin that reads the lyrics before it adds reverb.",
+     "How speech recognition ended up pointed at singing.",
+     "Why a word list makes a better edit window than a waveform.",
+     "What the Vocal Assistant actually picks, and what it leaves to you.",
+     "What this shows about where AI sits in a mix."
+    ],
+    "pitch": {
+     "question": "If a computer can read the words a singer sings, how does that change the way a song is mixed?",
+     "headline": "Nectar 5 writes out the lyrics so you can put reverb on one word.",
+     "hook": "iZotope's Nectar 5 transcribes a sung vocal into lyrics so a music producer can click one word and add effects to it, and an AI listens to the vocal and builds the chain.",
+     "examples": [
+      "Click a word to add up to seven effects to it.",
+      "An assistant that designs the vocal chain from a short listen.",
+      "$179 introductory price until 7 December."
+     ],
+     "chain": [
+      "A producer used to find a word by staring at a waveform.",
+      "Speech recognition can now write out sung lyrics.",
+      "So the plugin turns the vocal into a list of words.",
+      "Clicking a word selects that exact moment.",
+      "Effects go on that word only.",
+      "The assistant suggests a starting chain the engineer can still change."
+     ],
+     "take": "What this shows is that the AI's real job is finding things, while the taste stays with the person. Which part of a mix would you never hand to the assistant?"
+    },
+    "style": {
+     "script": "head-to-head",
+     "production": "voice-led-pictures",
+     "experiment": {
+      "format": "scoreboard-test",
+      "why": "Mix one vocal twice, by waveform and by clicking words, and put the two times on a scoreboard."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If a computer can read the words a singer sings, how does that change the way a song is mixed? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: iZotope Nectar 5, how Moments transcribes vocals, what the Vocal Assistant was trained on and picks, its pricing and how producers use it. Work through the 5 Whys, starting from the plain question: Why 1 asks how it is built, and what broke. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "Speech-to-text is pointed at singing and used as an editing index, and a model picks settings for an ordinary chain of effects.",
+    "aim": "utility",
+    "funny": "The plugin has to work out what the singer is saying before it adds reverb, which puts it ahead of most of the audience.",
+    "lookalike": {
+     "pattern": "tool-unlock",
+     "beats": "https://www.instagram.com/power.ai/p/DfbtORYFfti/",
+     "our_take": "The post said what a tool unlocks; we show the speech recogniser hiding inside a vocal plugin."
+    }
+   },
+   {
+    "id": "0977ab4d-8c3f-47c1-af95-768e2f3f968c",
+    "source_kind": "engine",
+    "source_tag": "newsletter",
+    "so_what": "The world's best-known newsroom has published how its own AI tool is built, so anyone running a newsroom or a media team can copy the design: agents over your own archive, citations you can check, and a training gate in front.",
+    "story": "On 24 November 2026 the News Machines newsletter described News Agent, the New York Times newsroom's internal AI tool combining archive search across 175 years of journalism, stylebook checks, Freedom of Information drafting and document analysis. Journalists get access only after legal standards training, and the Times will not say which AI models run it.",
+    "why_now": "News Machines, 24 Nov 2026.",
+    "fact": "News Machines, 24 Nov 2026: \"The Times doesn't disclose which AI models run News Agent.\"; Media Copilot: \"journalists must complete legal standards training before receiving access.\"",
+    "source": {
+     "label": "News Machines, New York Times News Agent (24 Nov 2026)",
+     "url": "https://newsmachines.beehiiv.com/p/new-york-times-news-agent",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "Media Copilot, New York Times News Agent (Nov 2026)",
+      "url": "https://mediacopilot.ai/new-york-times-news-agent"
+     }
+    ],
+    "first_reported": "https://newsmachines.beehiiv.com/p/new-york-times-news-agent",
+    "beats": [
+     "A newsroom AI that has read 175 years of the paper.",
+     "The parts: archive search, stylebook checks, records requests.",
+     "Why every answer comes back with a citation.",
+     "The legal training a reporter needs before using it.",
+     "What this shows about how a newsroom trusts its own AI."
+    ],
+    "pitch": {
+     "question": "How do you build an AI that journalists will trust with their own reporting?",
+     "headline": "The New York Times built an AI that has read 175 years of the paper. It won't say which AI.",
+     "hook": "The New York Times' News Agent searches 175 years of the paper's journalism, checks the stylebook and drafts records requests, and reporters must pass legal training before they can use it.",
+     "examples": [
+      "175 years of the archive, searchable.",
+      "Legal standards training before access.",
+      "The models that run it are not disclosed."
+     ],
+     "chain": [
+      "A newsroom has decades of its own reporting.",
+      "A language model turns a reporter's question into a database search.",
+      "It brings back passages with citations.",
+      "The reporter checks the citation, not the AI's summary.",
+      "Legal training comes first, so mistakes are caught early.",
+      "The archive becomes a tool, not a library."
+     ],
+     "take": "What this shows is that a newsroom trusts its AI by making it show its sources, the same rule it applies to people. Why will it not say which model it uses?"
+    },
+    "style": {
+     "script": "fry-explainer",
+     "production": "face-with-proof",
+     "experiment": {
+      "format": "from-my-own-fleet",
+      "why": "Set the Times' design beside the agents this publication runs on its own archive, part by part."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: How do you build an AI that journalists will trust with their own reporting? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: the New York Times' News Agent, how it is built, its archive search and citations, the legal training gate, its forerunner tools and other newsrooms' AI tools. Work through the 5 Whys, starting from the plain question: Why 1 asks how it is built, and what broke. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "Agents over the paper's own archive and stylebook, with a language model writing database queries and returning checkable citations, behind a legal training gate.",
+    "aim": "interest",
+    "funny": "The paper built an AI that reads 175 years of its own journalism, and the one thing it will not tell its reporters is which AI it is.",
+    "lookalike": {
+     "pattern": "tool-unlock",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
+     "our_take": "The post listed a tool's features; we take apart a newsroom's own AI and the gate in front of it."
+    }
+   },
+   {
+    "id": "41874364-fcd8-4fd1-b7e7-91aca6235019",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "3D artists using Cinema 4D and ZBrush now get AI model generation inside their apps, but the models come from other firms and the credits expire monthly, so any studio budgeting for it knows what it is actually paying for.",
+    "story": "Maxon, maker of Cinema 4D and ZBrush for 3D artists and designers, launched Maxon Plus in November 2026, a cloud subscription whose Model Generator turns a prompt, photo or sketch into an editable 3D model. The work runs on third-party AI providers such as Tripo and Rodin, and is sold in credits.",
+    "why_now": "Creative Bloq, 23 Nov 2026.",
+    "fact": "Maxon: \"We work with third-party AI providers, such as Tripo and Rodin.\"; Creative Bloq, 23 Nov 2026: \"AI generation comes to Cinema 4D and ZBrush, but artists have an 'off' switch.\"",
+    "source": {
+     "label": "Maxon, Maxon Plus (Nov 2026)",
+     "url": "https://www.maxon.net/en/maxon-plus",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "Creative Bloq, Maxon Plus (23 Nov 2026)",
+      "url": "https://www.creativebloq.com/news/every-3d-artist-should-have-an-ai-assistant-maxon-says-as-it-launches-new-tools-and-agentic-licences"
+     }
+    ],
+    "first_reported": "https://www.maxon.net/en/maxon-plus",
+    "beats": [
+     "An AI model maker inside the 3D artist's favourite apps.",
+     "Whose AI it really is: Tripo and Rodin.",
+     "Why the credits run out every month.",
+     "The off switch, and why it is a selling point.",
+     "What this shows about who makes money from AI in 3D."
+    ],
+    "pitch": {
+     "question": "When your design software adds AI, whose AI is it, and who are you paying?",
+     "headline": "Cinema 4D's new AI is someone else's AI, sold in credits that expire.",
+     "hook": "Maxon Plus puts AI model generation inside Cinema 4D and ZBrush for 3D artists, run on other firms' models such as Tripo and Rodin, billed in credits.",
+     "examples": [
+      "A prompt, photo or sketch becomes an editable model.",
+      "Third-party AI providers such as Tripo and Rodin.",
+      "An off switch for artists who want none of it."
+     ],
+     "chain": [
+      "A 3D artist needs a base model to start from.",
+      "Other companies have built AI that makes rough models.",
+      "Maxon plugs those models into its own apps.",
+      "Each generation costs credits.",
+      "The credits are part of a subscription.",
+      "Maxon earns on the wrapper, the other firm on the model."
+     ],
+     "take": "What this shows is that the AI inside a creative app is often rented, and the margin is in the wrapper. Do you know whose model made your last asset?"
+    },
+    "style": {
+     "script": "head-to-head",
+     "production": "face-with-proof",
+     "experiment": {
+      "format": "kinetic-movement",
+      "why": "Peel the Maxon logo off the feature like a sticker to show Tripo and Rodin underneath."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When your design software adds AI, whose AI is it, and who are you paying? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Maxon Plus, its Model Generator, the third-party AI providers it runs on, how credits are priced and expire, and what 3D artists have said. Work through the 5 Whys, starting from the plain question: Why 1 asks how it is built, and what broke. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "Maxon resells other firms' 3D generators inside its own apps and bills artists in credits, so the margin sits in the wrapper and the subscription.",
+    "aim": "utility",
+    "funny": "The headline feature for 3D artists is an AI assistant, and the selling point in the subtitle is that you can switch it off.",
+    "lookalike": {
+     "pattern": "tool-unlock",
+     "beats": "https://www.instagram.com/power.ai/p/DfbtORYFfti/",
+     "our_take": "The post sold a new tool; we show whose tool is really underneath a famous 3D app."
+    }
+   },
+   {
+    "id": "46dd71d0-6787-4bda-bd6c-b0e2bc4abca2",
+    "source_kind": "engine",
+    "source_tag": "engine_research",
+    "so_what": "The headline number on a new AI avatar is a rescaled score from 270 answers, and the same page shows people still spot it more often than not, so any creator or brand deciding whether to put an AI face on camera can read the real test.",
+    "story": "HeyGen, whose AI avatars are used by creators and video teams, released Avatar 6 on 17 November 2026, turning a photo or short clip plus audio into a talking video. Its research page says that shown real footage and Avatar 6 side by side, raters picked Avatar 6 as the real one 42.2% of the time across 270 answers, which HeyGen scores as 84.4% of the way to a coin toss.",
+    "why_now": "HeyGen research page, 17 Nov 2026.",
+    "fact": "HeyGen, 17 Nov 2026: \"Side by side with the real recording, raters pick Avatar 6 as the real one 42.2% of the time.\"",
+    "source": {
+     "label": "HeyGen, Avatar 6 research (17 Nov 2026)",
+     "url": "https://www.heygen.com/research/avatar-6-model",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "C-Suite, AI models roundup (Nov 2026)",
+      "url": "https://csuite.so/blog/ai-models-roundup-november-2026"
+     }
+    ],
+    "first_reported": "https://www.heygen.com/research/avatar-6-model",
+    "beats": [
+     "An avatar billed as 84.4% indistinguishable from you.",
+     "The test behind it: 270 side-by-side answers.",
+     "How 42.2% becomes 84.4%.",
+     "What the same page shows when people see it alone.",
+     "What this shows about how AI video is measured."
+    ],
+    "pitch": {
+     "question": "When a company says its AI face is nearly real, what test is the number really from?",
+     "headline": "HeyGen's avatar is '84.4% indistinguishable' in a test most people got right.",
+     "hook": "HeyGen says Avatar 6 is 84.4% indistinguishable from real video, and its own research page shows raters picked the avatar as the real person 42.2% of the time.",
+     "examples": [
+      "42.2% of 270 side-by-side answers picked the avatar.",
+      "84.4%, the same result rescaled against a coin toss.",
+      "A photo or short clip plus audio becomes a talking video."
+     ],
+     "chain": [
+      "Raters see a real clip and an avatar side by side.",
+      "They guess which is real.",
+      "Pure guessing would pick the avatar half the time.",
+      "They picked it 42.2% of the time.",
+      "HeyGen divides 42.2 by 50 and calls it 84.4%.",
+      "So the headline is a rescaled score, and most people still spotted it."
+     ],
+     "take": "What this shows is that the build is impressive and the marketing number is maths. Would you put an AI face in front of your audience on a test most of them pass?"
+    },
+    "style": {
+     "script": "head-to-head",
+     "production": "scoreboard-test",
+     "experiment": {
+      "format": "fry-explainer",
+      "why": "Explain the 42.2 to 84.4 step with a coin and a stopwatch, one number at a time."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When a company says its AI face is nearly real, what test is the number really from? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: HeyGen Avatar 6, how it turns a photo and audio into video, its research page's side-by-side and single-clip tests, the rescaling and independent tests. Work through the 5 Whys, starting from the plain question: Why 1 asks how it is built, and what broke. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "The marketing figure is a rescaled score from 270 side-by-side answers, and the same page shows a gap when the avatar is seen alone.",
+    "aim": "interest",
+    "funny": "The avatar is 84.4% indistinguishable from a real person, according to a test in which viewers mostly picked the real person.",
+    "lookalike": {
+     "pattern": "tool-unlock",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
+     "our_take": "The post repeated a launch claim; we open the test the claim came from."
+    }
+   },
+   {
+    "id": "de83ed89-f29e-4e5f-ad82-c698ec72a010",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "Epic is retiring the visual tool millions of game makers learned on because an AI could translate its biggest game out of it, so any game studio or creator on Unreal knows the skill they built is being replaced by code an AI wrote.",
+    "story": "In an update reported on 20 November 2026, Epic Games said an AI-assisted run converted more than 20,000 of Fortnite's visual Blueprints into a working prototype in its Verse language, about 3 million lines, a job it had expected to take years. On that basis Unreal Engine 6, the engine game studios build on, will ship without Blueprints.",
+    "why_now": "VP Land, 20 Nov 2026.",
+    "fact": "VP Land, 20 Nov 2026: \"The AI-assisted run produced a working prototype with roughly 3 million lines of Verse.\"; Epic converted more than 20,000 Fortnite Blueprints, and Unreal Engine 6 ships without Blueprints.",
+    "source": {
+     "label": "VP Land, Unreal Engine 6 drops Blueprints (20 Nov 2026)",
+     "url": "https://www.vp-land.com/stories/unreal-engine-6-drops-blueprints-as-epic-uses-ai-to-port-20-000-fortnite-blueprints-to-ver",
+     "kind": "report"
+    },
+    "sources": [
+     {
+      "label": "Gaming.net, Epic ports Fortnite Blueprints with AI (Nov 2026)",
+      "url": "https://www.gaming.net/epic-uses-ai-to-port-over-20000-fortnite-blueprints-to-verse/"
+     },
+     {
+      "label": "Epic Games, An update on Blueprints and the path to UE6",
+      "url": "https://www.unrealengine.com/news/an-update-on-blueprints-and-the-path-to-ue6"
+     }
+    ],
+    "first_reported": "https://www.vp-land.com/stories/unreal-engine-6-drops-blueprints-as-epic-uses-ai-to-port-20-000-fortnite-blueprints-to-ver",
+    "beats": [
+     "The tool made so people would not have to code, retired by code.",
+     "20,000 Blueprints in, 3 million lines out.",
+     "How an AI translates a visual script into text.",
+     "What broke: the skill millions learned on.",
+     "What this shows about where game making is heading."
+    ],
+    "pitch": {
+     "question": "Wildcard: What happens to a skill when an AI can translate the thing you built into something else?",
+     "headline": "An AI turned Fortnite into 3 million lines of code, so Epic is retiring the tool it was built in.",
+     "hook": "Epic Games used AI to convert more than 20,000 of Fortnite's Blueprints into about 3 million lines of Verse, and on that basis Unreal Engine 6 will ship without Blueprints.",
+     "examples": [
+      "More than 20,000 Blueprints converted.",
+      "About 3 million lines of Verse.",
+      "A job Epic expected to take years."
+     ],
+     "chain": [
+      "Blueprints let people build games by joining boxes, not typing code.",
+      "Fortnite was built with tens of thousands of them.",
+      "An AI read each one and wrote it out as Verse code.",
+      "It produced a working prototype of the game.",
+      "So Epic no longer needs Blueprints to carry old games forward.",
+      "Unreal Engine 6 drops them."
+     ],
+     "take": "What this shows is that a translation tool can end a skill as fast as it saves a project. If an AI can port your work, what were you really paid to know?"
+    },
+    "style": {
+     "script": "fry-explainer",
+     "production": "kinetic-movement",
+     "experiment": {
+      "format": "data-story",
+      "why": "Animate one Blueprint's boxes unfolding into lines of code, then multiply the screen by 20,000."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: What happens to a skill when an AI can translate the thing you built into something else? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Epic's AI-assisted conversion of Fortnite Blueprints to Verse, the number of Blueprints and lines, Unreal Engine 6's plans and what game developers have said. Work through the 5 Whys, starting from the plain question: Why 1 asks how it is built, and what broke. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "An AI-assisted run translated visual Blueprints into Verse text code, so Epic can drop the visual tool from its next engine.",
+    "aim": "interest",
+    "funny": "The visual scripting system made so people would not have to write code is being retired because an AI wrote 3 million lines of it.",
+    "lookalike": {
+     "pattern": "made-in-hours",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/",
+     "our_take": "The post showed a game made with AI in a day; we show a game engine's oldest tool retired by an AI translation."
+    },
+    "wildcard": {
+     "kind": "unexpected",
+     "why_unexpected": "AI coverage asks whether AI makes games; this is AI making a whole way of making games obsolete, by translating the biggest one out of it."
+    }
+   }
+  ],
+  "fri": [
+   {
+    "id": "b38a7a98-50b4-4608-bf8e-b99d8181ac7b",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "A publisher's no-AI contracts did not stop an AI cover reaching a bestselling series; readers and two artists did, so every author and illustrator now knows the check that works is the audience, not the clause.",
+    "story": "On 20 November 2026 Tor Publishing Group withdrew the cover art of Ilona Andrews's fantasy novel This Crown Will Not Rule Me after learning generative AI was used to make it, without Tor's or the authors' knowledge. Both the authors' contract and Tor's contracts with cover artists carry a no-AI clause; readers and artists spotted it in Instagram comments.",
+    "why_now": "Ilona Andrews's blog and Publishers Weekly, 20 Nov 2026.",
+    "fact": "Tor, via Ilona Andrews, 20 Nov 2026: \"Tor Publishing Group has learned that generative AI was used in the creation of the cover art for This Crown Will Not Rule Me, without the knowledge of either Tor or of the authors.\"; Publishers Weekly: \"Tor takes full responsibility for the breakdown in our review process\".",
+    "source": {
+     "label": "Ilona Andrews, Generative AI on This Crown's cover (20 Nov 2026)",
+     "url": "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "Publishers Weekly, Tor pulls Ilona Andrews cover (Nov 2026)",
+      "url": "http://www.publishersweekly.com/pw/by-topic/industry-news/publisher-news/article/101841-tor-pulls-ilona-andrews-cover-over-generative-ai-use.html"
+     }
+    ],
+    "first_reported": "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/",
+    "beats": [
+     "A no-AI contract, and an AI cover anyway.",
+     "Who spotted it: readers in the comments.",
+     "Why a review process missed it.",
+     "Who now pays to prove art is human: authors and artists.",
+     "What this shows about what a contract clause can check."
+    ],
+    "pitch": {
+     "question": "If a contract bans AI art, who actually checks that the art is human?",
+     "headline": "Tor's contracts banned AI covers. Readers on Instagram caught one anyway.",
+     "hook": "Tor pulled the cover of Ilona Andrews's new fantasy novel after learning generative AI was used to make it, though both its author and artist contracts carry a no-AI clause.",
+     "examples": [
+      "A no-AI clause in the author's contract.",
+      "A no-AI clause in Tor's artist contracts.",
+      "Spotted by readers and two artists in Instagram comments."
+     ],
+     "chain": [
+      "A publisher commissions a cover from an artist.",
+      "The contract says no AI.",
+      "The publisher reviews sketches, not how each pixel was made.",
+      "An AI-made image slips through.",
+      "Readers who know art spot it online.",
+      "The publisher pulls it and thanks them."
+     ],
+     "take": "What this shows is that a clause sets the rule and the audience enforces it. Who will check your work when the contract cannot?"
+    },
+    "style": {
+     "script": "everyday-debate",
+     "production": "face-with-proof",
+     "experiment": {
+      "format": "fry-explainer",
+      "why": "Walk through how a cover goes from sketch to shelf, and point to the step where nobody looks."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If a contract bans AI art, who actually checks that the art is human? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Tor's withdrawal of the This Crown Will Not Rule Me cover, its no-AI clauses, how cover art is reviewed, and other publishers' AI cover cases. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "The claim is a contract clause and a sketch-stage review; what worked was readers and artists commenting online.",
+    "aim": "interest",
+    "funny": "The publisher's statement thanks the readers who caught it, which makes the comments section its best art director.",
+    "lookalike": {
+     "pattern": "new-rule-for-ai-art",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
+     "our_take": "The post reported a new rule; we show a rule that was already there and still missed."
+    },
+    "recommended": true
+   },
+   {
+    "id": "581d73f3-6046-46cb-b898-f1c4b06ffad1",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "Most music listeners are sure there is no AI on their playlists and more than half of them are wrong, so every artist and label sharing a playlist with AI tracks now knows where the AI music is hiding and earning.",
+    "story": "Deezer and Ipsos published a survey of 9,000 music streaming users in eight countries on 17 November 2026: 74% believed their playlists held no fully AI-generated music. Deezer says nearly 57% of the more than 53,000 people who joined it in October already had at least one fully AI-generated track in the playlists they brought.",
+    "why_now": "Deezer newsroom, 17 Nov 2026.",
+    "fact": "Deezer, 17 Nov 2026: \"Nearly three fourths of music streaming users (74%) thought that their playlists were free from 100% AI-generated music\"; Digital Music News: \"nearly 57% of the 53,000-plus people who joined its platform in October already had at least one fully AI-generated track\".",
+    "source": {
+     "label": "Deezer newsroom, AI music labelling survey (17 Nov 2026)",
+     "url": "https://newsroom-deezer.com/2026/11/ai-music-labeling-deezer-ipsos-survey/",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "Digital Music News, AI music survey (19 Nov 2026)",
+      "url": "https://www.digitalmusicnews.com/2026/11/19/ai-music-kill-switch-survey/"
+     }
+    ],
+    "first_reported": "https://newsroom-deezer.com/2026/11/ai-music-labeling-deezer-ipsos-survey/",
+    "beats": [
+     "Three in four listeners are sure. More than half are wrong.",
+     "Where the AI songs arrive: inside playlists people bring with them.",
+     "Why nobody notices: the label is easy to miss.",
+     "Where the money goes: the per-stream split.",
+     "What this shows about how AI music reaches ears."
+    ],
+    "pitch": {
+     "question": "How can most listeners be sure there is no AI on their playlist, when there is?",
+     "headline": "74% say their playlist has no AI songs. 57% of new joiners already had one.",
+     "hook": "Deezer found 74% of music streaming users believe their playlists hold no fully AI songs, while nearly 57% of the people who joined it in October already had at least one.",
+     "examples": [
+      "9,000 people surveyed in eight countries.",
+      "74% sure their playlists are AI-free.",
+      "57% of 53,000 new joiners already had a fully AI track."
+     ],
+     "chain": [
+      "People build playlists over years.",
+      "AI tracks get added by algorithms and shares.",
+      "They sound like ordinary songs.",
+      "Listeners do not check every track.",
+      "The playlist moves with them to a new service.",
+      "Each play takes a slice of the money paid to artists."
+     ],
+     "take": "What this shows is that AI music spreads through the playlist, not the search bar. How would you know if your favourite playlist was partly written by a machine?"
+    },
+    "style": {
+     "script": "random-headline",
+     "production": "data-story",
+     "experiment": {
+      "format": "scoreboard-test",
+      "why": "Play five tracks blind and keep score of which ones viewers guess are AI."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: How can most listeners be sure there is no AI on their playlist, when there is? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: the Deezer and Ipsos AI music survey, Deezer's data on AI tracks in new users' playlists, how many fully AI tracks it receives and how streams of them are paid. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "Fully AI tracks reach listeners unnoticed through playlists, which is where the per-stream money is split.",
+    "aim": "interest",
+    "funny": "Three in four listeners are sure there is no AI on their playlist, and more than half of them are wrong.",
+    "lookalike": {
+     "pattern": "ai-backfires",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
+     "our_take": "The post showed AI doing a surprising thing; we show listeners not noticing it at all."
+    }
+   },
+   {
+    "id": "456c4fc3-530b-4fc8-9e92-5b5ea662ad87",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "A video game store's AI label depends on the developer ticking a box, and this time a file's own metadata told players the truth, so anyone releasing a game, an album or a video knows the file can disclose what the label did not.",
+    "story": "On 19 November 2026 Nicalis added a themed daily run to the video game The Binding of Isaac: Repentance+ on Steam; the next day a Reddit user showed its music files carried Suno metadata. The game's Steam page had no AI disclosure, recent reviews fell to 8% positive, and Nicalis removed the generated music.",
+    "why_now": "Eurogamer and PC Gamer, 20 to 22 Nov 2026.",
+    "fact": "Eurogamer, Nov 2026: Reddit user ShweetsStuff posted that the run's music was \"100% generated by Suno (AI) (with proof)\", pointing to tracks that reference the AI music tool Suno in their metadata; PC Gamer: \"only 8% positive recent reviews\".",
+    "source": {
+     "label": "Eurogamer, Binding of Isaac AI music removed (Nov 2026)",
+     "url": "https://www.eurogamer.net/binding-of-isaac-repentance-plus-ai-music-removed",
+     "kind": "report"
+    },
+    "sources": [
+     {
+      "label": "PC Gamer, Binding of Isaac AI music (Nov 2026)",
+      "url": "https://www.pcgamer.com/games/roguelike/binding-of-isaac-dlc-adds-ai-music-in-gta-6-parodying-update-despite-not-having-an-ai-disclosure-steam-reviews-drop-to-overwhelmingly-negative-music-gets-pulled/"
+     },
+     {
+      "label": "Kotaku, Binding of Isaac update (21 Nov 2026)",
+      "url": "https://kotaku.com/binding-of-isaac-update-review-bombed-over-ai-generated-music-in-gta-6-mode-woke-up-to-a-sht-show-obviously-i-had-no-idea-2000759213"
+     }
+    ],
+    "first_reported": "https://www.eurogamer.net/binding-of-isaac-repentance-plus-ai-music-removed",
+    "beats": [
+     "A game update with no AI label and AI music inside.",
+     "How players found it: one line of file metadata.",
+     "Why the store's label said nothing.",
+     "What it cost: reviews down to 8% positive.",
+     "What this shows about who really discloses AI."
+    ],
+    "pitch": {
+     "question": "When a store's AI label says nothing, who tells the audience the truth?",
+     "headline": "A game had no AI label. Its music files said 'made with Suno'.",
+     "hook": "A Binding of Isaac update shipped Suno-made music with no AI label on Steam, and players found Suno's tag inside the music files' metadata.",
+     "examples": [
+      "A line in the file: made with Suno.",
+      "No AI disclosure on the Steam page.",
+      "Recent reviews fell to 8% positive."
+     ],
+     "chain": [
+      "Steam asks developers to say if they used AI.",
+      "The developer ticks the box, or does not.",
+      "AI music tools write a tag into every file they export.",
+      "A player ran the files through a free tool.",
+      "The tag said Suno.",
+      "Reviews collapsed and the music was pulled."
+     ],
+     "take": "What this shows is that the file is more honest than the label. Would you know what your own exported files say about how they were made?"
+    },
+    "style": {
+     "script": "random-headline",
+     "production": "voice-led-pictures",
+     "experiment": {
+      "format": "fry-explainer",
+      "why": "Open a real music file's metadata on screen and read out each line, one by one."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When a store's AI label says nothing, who tells the audience the truth? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: the Binding of Isaac Repentance+ update, the Suno metadata in its music files, Steam's AI disclosure rules, the review drop and what the developers said. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "Steam's AI label relies on the developer ticking a box; the file metadata said Suno, and players reading it closed the gap.",
+    "aim": "humour",
+    "funny": "A parody of one of the biggest games of the year was undone by a single metadata field that politely said who wrote the music.",
+    "lookalike": {
+     "pattern": "ai-backfires",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
+     "our_take": "The post showed one AI giving itself away; we show a music file confessing for a whole game."
+    }
+   },
+   {
+    "id": "c1bd8406-c267-426e-b586-d76e1ef68e5c",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "Festival selection, which decides awards and distribution for animated films, rests on a form filmmakers fill in themselves, and programmers say the form and the film no longer match, so every animator entering festivals knows the box is being gamed.",
+    "story": "Manchester Animation Festival announced that from 2027 a film is ineligible if a generative model creates or alters any part of its final moving image. Speaking to Cartoon Brew on 20 November 2026, Ottawa's artistic director said some animators are lying on their forms, marking AI films as 3D.",
+    "why_now": "Cartoon Brew, 20 Nov 2026.",
+    "fact": "Cartoon Brew, 20 Nov 2026: \"What bothers me is the animators clearly lying on their forms,” says Robinson.\"; Manchester Animation Festival: \"If any part of the final moving image has been generated or transformed by a generative audio, image or video model, it will be deemed ineligible\".",
+    "source": {
+     "label": "Cartoon Brew, festival programmers on AI (20 Nov 2026)",
+     "url": "https://www.cartoonbrew.com/artificial-intelligence/annecy-ottawa-manchester-festival-programmers-artificial-intelligence-269655.html",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "Manchester Animation Festival, generative AI rules (Nov 2026)",
+      "url": "https://www.manchesteranimationfestival.co.uk/wp-content/uploads/2026/11/Generative-A.I-Policy.pdf"
+     }
+    ],
+    "first_reported": "https://www.cartoonbrew.com/artificial-intelligence/annecy-ottawa-manchester-festival-programmers-artificial-intelligence-269655.html",
+    "beats": [
+     "A box on a festival form: did you use AI?",
+     "What programmers see: AI films ticked as 3D.",
+     "Why the form matters: awards and distribution.",
+     "Why a rule cannot see inside a frame.",
+     "What this shows about honesty when the stakes are a prize."
+    ],
+    "pitch": {
+     "question": "If a festival asks filmmakers to declare AI themselves, what stops them ticking the wrong box?",
+     "headline": "Animation festivals ask if you used AI. Some entries say they are '3D'.",
+     "hook": "Ottawa's animation festival director says some entrants are lying on their forms, marking AI films as 3D, as Manchester bans generative AI films from 2027.",
+     "examples": [
+      "Manchester: any generated part of the final image makes a film ineligible.",
+      "Ottawa: one AI box to tick.",
+      "Programmers: some AI films are marked 3D or experimental."
+     ],
+     "chain": [
+      "Festivals pick films for awards and screenings.",
+      "They ask filmmakers how each film was made.",
+      "A prize can change a filmmaker's career.",
+      "AI films can look like 3D animation.",
+      "So some entrants tick the box that keeps them in.",
+      "Programmers are left judging the form, not the frame."
+     ],
+     "take": "What this shows is that a self-declared box works only while nobody has a reason to lie. How would you prove your own film was made by hand?"
+    },
+    "style": {
+     "script": "everyday-debate",
+     "production": "voice-led-pictures",
+     "experiment": {
+      "format": "fry-talking-head",
+      "why": "A lit talking head reads the festival form aloud, box by box, and stops at the one that matters."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If a festival asks filmmakers to declare AI themselves, what stops them ticking the wrong box? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: animation festivals' generative AI rules, Manchester Animation Festival's 2027 rule, Ottawa's AI declaration, programmers' accounts of mislabelled entries and how festivals check. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "Festival selection rests on a self-declared form, and programmers say AI films are being marked as 3D or experimental.",
+    "aim": "interest",
+    "funny": "Faced with one AI box to tick, some entrants have decided their film is simply 3D or something.",
+    "lookalike": {
+     "pattern": "new-rule-for-ai-art",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
+     "our_take": "The post explained a rule; we show the box people tick to get round it."
+    }
+   },
+   {
+    "id": "e71e7d8a-8a1c-415c-96b6-311e8cc8ccbf",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "A jam built to show off AI game making crowned a hand-made game as the crowd's favourite, so every game maker and creator weighing AI can see where the audience's attention actually went.",
+    "story": "Epic Games' 2026 Epic AI MegaJam, backed by AI companies, invited teams to build an Unreal game in four days with as many AI agents as they liked, and closed on 15 November with 2,782 games submitted. Sorted by popularity, the top entry was a game about a sniping fish whose creator says no generative AI was used, Rock Paper Shotgun reported on 19 November.",
+    "why_now": "itch.io, 15 Nov 2026; Rock Paper Shotgun, 19 Nov 2026.",
+    "fact": "itch.io: \"The 2026 Epic AI MegaJam wrapped on November 15 with 2,782 games submitted.\"; Rock Paper Shotgun, 19 Nov 2026: sorting by popular turns up a fish game \"whose creator says they deliberately made it without using\" generative AI.",
+    "source": {
+     "label": "itch.io, 2026 Epic AI MegaJam (Nov 2026)",
+     "url": "https://itch.io/jam/2026-epic-ai-megajam",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "Rock Paper Shotgun, fish with a sniper rifle (19 Nov 2026)",
+      "url": "https://www.rockpapershotgun.com/fish-with-a-sniper-rifle-takes-aim-at-tim-sweeneys-hopes-and-dreams-as-genai-free-meme-game-tops-epic-games-vibe-coding-megajam"
+     }
+    ],
+    "first_reported": "https://itch.io/jam/2026-epic-ai-megajam",
+    "beats": [
+     "An AI game jam's favourite game used no AI.",
+     "2,782 games in four days.",
+     "What the sponsors paid for, and what they got.",
+     "Why the crowd picked the hand-made one.",
+     "What this shows about attention in an AI flood."
+    ],
+    "pitch": {
+     "question": "Wildcard: When everyone can make a game with AI, what makes people choose one?",
+     "headline": "Epic held an AI game jam. The crowd's favourite was made without AI.",
+     "hook": "Epic's AI MegaJam drew 2,782 game entries built with AI agents in four days, and the most popular one is a game about a sniping fish whose creator says no generative AI was used.",
+     "examples": [
+      "2,782 games submitted.",
+      "Four days, as many AI agents as you liked.",
+      "The most popular entry made without generative AI."
+     ],
+     "chain": [
+      "AI companies sponsored a game jam.",
+      "Teams could use as many AI agents as they liked.",
+      "2,782 games came in.",
+      "Players sorted them by what they liked best.",
+      "The top one was drawn and coded by hand.",
+      "The attention went to the game that turned the agents down."
+     ],
+     "take": "What this shows is that in a flood of AI-made games the hand-made one stood out. Is being made by a person becoming the feature?"
+    },
+    "style": {
+     "script": "random-headline",
+     "production": "kinetic-movement",
+     "experiment": {
+      "format": "everyday-debate",
+      "why": "Two jam judges argue about the fish game, one holding a sponsor's lanyard."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When everyone can make a game with AI, what makes people choose one? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Epic's 2026 AI MegaJam, its sponsors and rules, the number of entries, the most popular entries and whether they used AI, and how the jam is judged. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "AI sponsors paid for a showcase of agent-made games; the crowd's attention went to an entry that turned the agents down.",
+    "aim": "humour",
+    "funny": "Sixteen AI sponsors, free AI credits for every jammer, and the crowd picked a fish that was drawn by hand.",
+    "lookalike": {
+     "pattern": "made-in-hours",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/",
+     "our_take": "The post celebrated a game made with AI in a day; we found the jam where the hand-made game won the crowd."
+    },
+    "wildcard": {
+     "kind": "strange",
+     "why_unexpected": "The obvious takes count what AI made; this one is about the crowd ignoring the AI and crowning the hand-made fish."
+    }
+   }
+  ]
+ },
+ "offdays": {
+  "tue": [
+   {
+    "id": "tplcommscam",
+    "kind": "meme",
+    "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+    "source": {
+     "label": "This week in football: Sky Sports Premier League on YouTube",
+     "url": "https://www.youtube.com/watch?v=A8IxwaSPeqw"
+    },
+    "source_tag": "trade_press",
+    "copy": "On the Anfield gantry one pundit laughs and leans out of his seat at each goal while the one beside him sits still, face unmoved, as it reaches 4-0. It becomes the AI moment the caption names, in the reader's world.",
+    "hook": "Carragher cheers, Neville sinks: the 4-0 comms cam",
+    "pitch": {
+     "see": "On the Anfield gantry one pundit laughs and leans out of his seat at each goal while the one beside him sits still, face unmoved, as it reaches 4-0.",
+     "lands": "Two faces watching the same thing is the perfect split for the label and the session player hearing the same AI demo; the reversal is in the faces."
+    },
+    "aim": "humour",
+    "shape": "story",
+    "funny": "Two pundits, one game: exactly how a label and a session player react to the same AI demo.",
+    "template": {
+     "title": "Carragher cheers, Neville sinks: the 4-0 comms cam",
+     "clip": {
+      "url": "https://www.youtube.com/watch?v=A8IxwaSPeqw",
+      "page": "https://www.youtube.com/watch?v=A8IxwaSPeqw",
+      "poster": null,
+      "seconds": 248
+     },
+     "found": {
+      "place": "pop_culture",
+      "label": "This week in football: Sky Sports Premier League on YouTube",
+      "url": "https://www.youtube.com/watch?v=A8IxwaSPeqw"
+     },
+     "credit": "Sky Sports Premier League",
+     "what_happens": "On the Anfield gantry one pundit laughs and leans out of his seat at each goal while the one beside him sits still, face unmoved, as it reaches 4-0.",
+     "why_it_works": "Two faces watching the same thing is the perfect split for the label and the session player hearing the same AI demo; the reversal is in the faces.",
+     "mechanism": [
+      "reversal",
+      "incongruity"
+     ],
+     "moment": "The commentary cam at Liverpool 4-0 Manchester United, Anfield, 2026-11-22",
+     "date": "2026-11-22"
+    },
+    "caption_ideas": [
+     "The label hearing the AI demo vs the session musician hearing the AI demo",
+     "Left: the AI music start-up's pitch deck. Right: the songwriter who read clause 14",
+     "Me when the AI mastering tool says 'release ready' vs my ears"
+    ]
+   },
+   {
+    "id": "tplfistpump",
+    "kind": "meme",
+    "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+    "source": {
+     "label": "This week in football: This Is Anfield on YouTube",
+     "url": "https://www.youtube.com/watch?v=TX8IhY3r6cY"
+    },
+    "source_tag": "trade_press",
+    "copy": "After the full-time handshakes the head coach walks towards the stand and pumps his fist at the crowd, again and again. It becomes the AI moment the caption names, in the reader's world.",
+    "hook": "The manager's fist pumps to the Kop",
+    "pitch": {
+     "see": "After the full-time handshakes the head coach walks towards the stand and pumps his fist at the crowd, again and again.",
+     "lands": "Pure triumph over a small win is the director walking past the AI storyboard that got the shot wrong; the exaggeration lands because the win is tiny."
+    },
+    "aim": "humour",
+    "shape": "story",
+    "funny": "A fist pump this big is how a film crew celebrates beating the AI storyboard on a shoot.",
+    "template": {
+     "title": "The manager's fist pumps to the Kop",
+     "clip": {
+      "url": "https://www.youtube.com/watch?v=TX8IhY3r6cY",
+      "page": "https://www.youtube.com/watch?v=TX8IhY3r6cY",
+      "poster": null,
+      "seconds": 138
+     },
+     "found": {
+      "place": "pop_culture",
+      "label": "This week in football: This Is Anfield on YouTube",
+      "url": "https://www.youtube.com/watch?v=TX8IhY3r6cY"
+     },
+     "credit": "This Is Anfield (filmed at Anfield); Liverpool FC",
+     "what_happens": "After the full-time handshakes the head coach walks towards the stand and pumps his fist at the crowd, again and again.",
+     "why_it_works": "Pure triumph over a small win is the director walking past the AI storyboard that got the shot wrong; the exaggeration lands because the win is tiny.",
+     "mechanism": [
+      "exaggeration",
+      "irony"
+     ],
+     "moment": "Full time at Liverpool 4-0 Manchester United, Anfield, 2026-11-22",
+     "date": "2026-11-22"
+    },
+    "caption_ideas": [
+     "The director walking past the AI storyboard that said the shot was impossible",
+     "Session drummer leaving the studio after the AI drummer lost the groove twice",
+     "Me after the film's credits roll and there is not one AI line in them"
+    ]
+   },
+   {
+    "id": "tplninedarter",
+    "kind": "meme",
+    "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+    "source": {
+     "label": "This week in darts: PDC on YouTube",
+     "url": "https://www.youtube.com/watch?v=69ex7G4stfM"
+    },
+    "source_tag": "trade_press",
+    "copy": "One player throws a perfect nine-dart leg and his opponent grins at the replay, then throws a perfect nine-darter of his own straight back. It becomes the AI moment the caption names, in the reader's world.",
+    "hook": "Two perfect legs in one match",
+    "pitch": {
+     "see": "One player throws a perfect nine-dart leg and his opponent grins at the replay, then throws a perfect nine-darter of his own straight back.",
+     "lands": "One perfect take answered by another is the human session player matching the AI track first time; the callback is the grin."
+    },
+    "aim": "humour",
+    "shape": "story",
+    "funny": "The AI music tool needed 400 tries to be perfect; the session musician needed one and a grin.",
+    "template": {
+     "title": "Two perfect legs in one match",
+     "clip": {
+      "url": "https://www.youtube.com/watch?v=69ex7G4stfM",
+      "page": "https://www.youtube.com/watch?v=69ex7G4stfM",
+      "poster": null,
+      "seconds": 153
+     },
+     "found": {
+      "place": "pop_culture",
+      "label": "This week in darts: PDC on YouTube",
+      "url": "https://www.youtube.com/watch?v=69ex7G4stfM"
+     },
+     "credit": "Professional Darts Corporation (Sky Sports pictures)",
+     "what_happens": "One player throws a perfect nine-dart leg and his opponent grins at the replay, then throws a perfect nine-darter of his own straight back.",
+     "why_it_works": "One perfect take answered by another is the human session player matching the AI track first time; the callback is the grin.",
+     "mechanism": [
+      "callback",
+      "reversal"
+     ],
+     "moment": "Van Gerwen v Sykes, Grand Slam of Darts quarter-final, Wolverhampton, 2026-11-21",
+     "date": "2026-11-21"
+    },
+    "caption_ideas": [
+     "The AI composer after 400 generations. The session player, one take:",
+     "AI drummer: perfect time after 2 hours of prompts. Real drummer, first take: same",
+     "When the AI cover finally sounds right and the band plays it live better on the first go"
+    ]
+   },
+   {
+    "id": "tplbuzzer",
+    "kind": "meme",
+    "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+    "source": {
+     "label": "This week in basketball: NBA on YouTube",
+     "url": "https://www.youtube.com/watch?v=Cdy1lQCfVV4"
+    },
+    "source_tag": "trade_press",
+    "copy": "A player hits the winning shot as the clock runs out, the arena erupts and his team-mates swarm him on the floor, 97-96. It becomes the AI moment the caption names, in the reader's world.",
+    "hook": "The buzzer-beater at the Garden",
+    "pitch": {
+     "see": "A player hits the winning shot as the clock runs out, the arena erupts and his team-mates swarm him on the floor, 97-96.",
+     "lands": "Winning with no time left is the human mix landing a second before the label settles for the AI version; exaggeration of a deadline everyone in music has lived."
+    },
+    "aim": "humour",
+    "shape": "story",
+    "funny": "Every human mix in music now lands like a buzzer-beater, one second before the AI version.",
+    "template": {
+     "title": "The buzzer-beater at the Garden",
+     "clip": {
+      "url": "https://www.youtube.com/watch?v=Cdy1lQCfVV4",
+      "page": "https://www.youtube.com/watch?v=Cdy1lQCfVV4",
+      "poster": null,
+      "seconds": 76
+     },
+     "found": {
+      "place": "pop_culture",
+      "label": "This week in basketball: NBA on YouTube",
+      "url": "https://www.youtube.com/watch?v=Cdy1lQCfVV4"
+     },
+     "credit": "NBA (MSG broadcast)",
+     "what_happens": "A player hits the winning shot as the clock runs out, the arena erupts and his team-mates swarm him on the floor, 97-96.",
+     "why_it_works": "Winning with no time left is the human mix landing a second before the label settles for the AI version; exaggeration of a deadline everyone in music has lived.",
+     "mechanism": [
+      "exaggeration",
+      "misdirection"
+     ],
+     "moment": "Mikal Bridges' buzzer-beater, Trail Blazers at Knicks, Madison Square Garden, 2026-11-21",
+     "date": "2026-11-21"
+    },
+    "caption_ideas": [
+     "The real mix arriving one second before the label says 'fine, use the AI one'",
+     "My human-made album cover landing as the AI draft is being sent to print",
+     "The voice actor's take landing just before the studio clicks 'generate'"
+    ]
+   }
+  ],
+  "thu": [
+   {
+    "id": "tplturin",
+    "kind": "meme",
+    "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+    "source": {
+     "label": "This week in tennis: Tennis TV on YouTube",
+     "url": "https://www.youtube.com/watch?v=wBR51UlMKW8"
+    },
+    "source_tag": "trade_press",
+    "copy": "Match point goes in, the winner drops flat on his back on the court, then disappears under his team in the players' box. It becomes the AI moment the caption names, in the reader's world.",
+    "hook": "The champion on his back in Turin",
+    "pitch": {
+     "see": "Match point goes in, the winner drops flat on his back on the court, then disappears under his team in the players' box.",
+     "lands": "Collapse-on-the-floor joy is how an editor feels when the client approves the cut with no request for an AI version; understatement of the trigger, exaggeration of the joy."
+    },
+    "aim": "humour",
+    "shape": "story",
+    "funny": "A film editor's championship point is a client who does not ask for an AI version.",
+    "template": {
+     "title": "The champion on his back in Turin",
+     "clip": {
+      "url": "https://www.youtube.com/watch?v=wBR51UlMKW8",
+      "page": "https://www.youtube.com/watch?v=wBR51UlMKW8",
+      "poster": null,
+      "seconds": 335
+     },
+     "found": {
+      "place": "pop_culture",
+      "label": "This week in tennis: Tennis TV on YouTube",
+      "url": "https://www.youtube.com/watch?v=wBR51UlMKW8"
+     },
+     "credit": "Tennis TV (ATP Tour)",
+     "what_happens": "Match point goes in, the winner drops flat on his back on the court, then disappears under his team in the players' box.",
+     "why_it_works": "Collapse-on-the-floor joy is how an editor feels when the client approves the cut with no request for an AI version; understatement of the trigger, exaggeration of the joy.",
+     "mechanism": [
+      "exaggeration",
+      "understatement"
+     ],
+     "moment": "Alcaraz beats Zverev in the ATP Finals final, Turin, 2026-11-22",
+     "date": "2026-11-22"
+    },
+    "caption_ideas": [
+     "The editor when the client approves the cut and does not ask 'can we try an AI version'",
+     "Producers when the AI stem splitter finally gets the vocal out without the hi-hats",
+     "Illustrator when the art director says 'no AI, we want you'"
+    ]
+   },
+   {
+    "id": "tplthanksgiving",
+    "kind": "meme",
+    "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+    "source": {
+     "label": "This week in American football: NFL on YouTube",
+     "url": "https://www.youtube.com/watch?v=Etsgla0KIoE"
+    },
+    "source_tag": "trade_press",
+    "copy": "Trailing with the clock almost gone, the quarterback finds his receiver in the end zone and the whole team piles on while the other bench stares. It becomes the AI moment the caption names, in the reader's world.",
+    "hook": "The touchdown with three seconds left",
+    "pitch": {
+     "see": "Trailing with the clock almost gone, the quarterback finds his receiver in the end zone and the whole team piles on while the other bench stares.",
+     "lands": "A last-second win is the hand-made short film beating the AI entries to the festival deadline; the reversal is who was expected to win."
+    },
+    "aim": "humour",
+    "shape": "story",
+    "funny": "The hand-made short film gets to the festival the way football teams win on Thanksgiving: three seconds left.",
+    "template": {
+     "title": "The touchdown with three seconds left",
+     "clip": {
+      "url": "https://www.youtube.com/watch?v=Etsgla0KIoE",
+      "page": "https://www.youtube.com/watch?v=Etsgla0KIoE",
+      "poster": null,
+      "seconds": 858
+     },
+     "found": {
+      "place": "pop_culture",
+      "label": "This week in American football: NFL on YouTube",
+      "url": "https://www.youtube.com/watch?v=Etsgla0KIoE"
+     },
+     "credit": "NFL (CBS Sports broadcast)",
+     "what_happens": "Trailing with the clock almost gone, the quarterback finds his receiver in the end zone and the whole team piles on while the other bench stares.",
+     "why_it_works": "A last-second win is the hand-made short film beating the AI entries to the festival deadline; the reversal is who was expected to win.",
+     "mechanism": [
+      "reversal",
+      "exaggeration"
+     ],
+     "moment": "Caleb Williams to Rome Odunze with three seconds left, Bears 39-35 Lions, Detroit, 2026-11-26",
+     "date": "2026-11-26"
+    },
+    "caption_ideas": [
+     "The hand-animated short hitting the festival upload button with three seconds left",
+     "Writers' room finishing the script before the producer opens the AI draft",
+     "The real band's song beating 2,000 AI songs to the playlist slot"
+    ]
+   },
+   {
+    "id": "tplassemble",
+    "kind": "meme",
+    "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+    "source": {
+     "label": "This week's film trailers: Marvel Entertainment on YouTube",
+     "url": "https://www.youtube.com/watch?v=Wb8Tq_HD4E8"
+    },
+    "source_tag": "trade_press",
+    "copy": "A leader calls his team and heroes charge in from every side of the battlefield to stand together. It becomes the AI moment the caption names, in the reader's world.",
+    "hook": "The heroes run in together",
+    "pitch": {
+     "see": "A leader calls his team and heroes charge in from every side of the battlefield to stand together.",
+     "lands": "Everyone turning up at once is every AI video tool arriving at the same advertising pitch; personification of the tools does the work."
+    },
+    "aim": "humour",
+    "shape": "story",
+    "funny": "Every AI video tool now turns up to a film pitch like the whole superhero roster.",
+    "template": {
+     "title": "The heroes run in together",
+     "clip": {
+      "url": "https://www.youtube.com/watch?v=Wb8Tq_HD4E8",
+      "page": "https://www.youtube.com/watch?v=Wb8Tq_HD4E8",
+      "poster": null,
+      "seconds": 196
+     },
+     "found": {
+      "place": "pop_culture",
+      "label": "This week's film trailers: Marvel Entertainment on YouTube",
+      "url": "https://www.youtube.com/watch?v=Wb8Tq_HD4E8"
+     },
+     "credit": "Marvel Entertainment (Marvel Studios)",
+     "what_happens": "A leader calls his team and heroes charge in from every side of the battlefield to stand together.",
+     "why_it_works": "Everyone turning up at once is every AI video tool arriving at the same advertising pitch; personification of the tools does the work.",
+     "mechanism": [
+      "personification",
+      "exaggeration"
+     ],
+     "moment": "The Avengers: Doomsday final trailer, released 2026-11-23",
+     "date": "2026-11-23"
+    },
+    "caption_ideas": [
+     "Every AI video tool turning up to pitch for the same 30-second advert",
+     "The film crew arriving after the producer says 'the AI did the storyboard, so it is basically done'",
+     "Every AI music app the week a label announces it is licensing"
+    ]
+   },
+   {
+    "id": "tpllegends",
+    "kind": "meme",
+    "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+    "source": {
+     "label": "This week's award shows: the CMA Awards on YouTube",
+     "url": "https://www.youtube.com/watch?v=LJC7mgjp5FQ"
+    },
+    "source_tag": "trade_press",
+    "copy": "A singer dances down a backstage corridor surrounded by country music legends before walking out to perform, guitar in hand. It becomes the AI moment the caption names, in the reader's world.",
+    "hook": "The headliner brings the legends backstage",
+    "pitch": {
+     "see": "A singer dances down a backstage corridor surrounded by country music legends before walking out to perform, guitar in hand.",
+     "lands": "A headliner surrounded by the people who made the sound is the cruel truth about AI music models; the irony is aimed at the AI, never the artist."
+    },
+    "aim": "humour",
+    "shape": "story",
+    "funny": "An AI music model should walk out with every musician it learned from, the way a headliner brings the legends.",
+    "template": {
+     "title": "The headliner brings the legends backstage",
+     "clip": {
+      "url": "https://www.youtube.com/watch?v=LJC7mgjp5FQ",
+      "page": "https://www.youtube.com/watch?v=LJC7mgjp5FQ",
+      "poster": null,
+      "seconds": 189
+     },
+     "found": {
+      "place": "pop_culture",
+      "label": "This week's award shows: the CMA Awards on YouTube",
+      "url": "https://www.youtube.com/watch?v=LJC7mgjp5FQ"
+     },
+     "credit": "Taylor Swift and the CMA Awards",
+     "what_happens": "A singer dances down a backstage corridor surrounded by country music legends before walking out to perform, guitar in hand.",
+     "why_it_works": "A headliner surrounded by the people who made the sound is the cruel truth about AI music models; the irony is aimed at the AI, never the artist.",
+     "mechanism": [
+      "irony",
+      "reversal"
+     ],
+     "moment": "Taylor Swift's return to the CMA Awards stage, Nashville, clip posted 2026-11-19",
+     "date": "2026-11-19"
+    },
+    "caption_ideas": [
+     "Me walking into the studio with every session player the AI music model was trained on",
+     "The real band arriving at the AI song's chart party",
+     "Country music when the AI country hit thanks 'the dataset'"
+    ]
+   },
+   {
+    "id": "tplskyrim",
+    "kind": "meme",
+    "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+    "source": {
+     "label": "Your Instagram inspo sheet",
+     "url": "https://www.instagram.com/evolving.ai/reel/Dc8ff9ug9-e/"
+    },
+    "source_tag": "instagram",
+    "copy": "A famous fantasy video game's best-known scenes are rebuilt with AI in a 1960s setting, cart ride and dungeon included. It becomes the AI moment the caption names, in the reader's world.",
+    "hook": "A fantasy game remade in another decade by AI",
+    "pitch": {
+     "see": "A famous fantasy video game's best-known scenes are rebuilt with AI in a 1960s setting, cart ride and dungeon included.",
+     "lands": "An AI parody that keeps every famous game moment and swaps the decade is the literal version of how studios pitch AI remakes; literalisation of the pitch."
+    },
+    "aim": "humour",
+    "shape": "story",
+    "funny": "An AI remade a famous fantasy game in the wrong century, which is roughly how studios pitch AI remakes.",
+    "template": {
+     "title": "A fantasy game remade in another decade by AI",
+     "clip": {
+      "url": "https://www.instagram.com/evolving.ai/reel/Dc8ff9ug9-e/",
+      "page": "https://www.instagram.com/evolving.ai/reel/Dc8ff9ug9-e/",
+      "poster": null,
+      "seconds": null
+     },
+     "found": {
+      "place": "sheet",
+      "label": "Your Instagram inspo sheet",
+      "url": "https://www.instagram.com/evolving.ai/reel/Dc8ff9ug9-e/"
+     },
+     "credit": "gormtheold25, shared by evolving.ai on Instagram",
+     "what_happens": "A famous fantasy video game's best-known scenes are rebuilt with AI in a 1960s setting, cart ride and dungeon included.",
+     "why_it_works": "An AI parody that keeps every famous game moment and swaps the decade is the literal version of how studios pitch AI remakes; literalisation of the pitch.",
+     "mechanism": [
+      "literalisation",
+      "incongruity"
+     ],
+     "moment": null,
+     "date": "2026-11-16"
+    },
+    "caption_ideas": [
+     "Game studios after one AI demo: what if our fantasy game, but in every decade",
+     "The AI remake pitch, as the publisher hears it, versus as the game makers hear it",
+     "When the AI gets the famous game scene right but the century wrong"
+    ]
+   }
+  ],
+  "sat": []
+ },
+ "considered": {
+  "mon": 8,
+  "wed": 8,
+  "fri": 8
+ },
+ "accounted": {
+  "4077d778-8f73-410a-a142-26cd9e308d07": "Already made: this card (what Claude Duet does) became Wednesday 4 November's piece on Duet's approval gate (b63d2507), and it has no line into the creative industries the beat now covers.",
+  "385a5da8-2cae-41ec-8fb6-2e328920664c": "Already used, and you said (24 Oct) it is \"good general advice for other topics that are more interesting than this\": the three-question test stays a rule we apply, never its own idea.",
+  "13720d74-2177-42cb-a9f8-6d8d0e06bf5a": "A style ask, used: the Hannah Fry breakdown is the hannah-fry check every script on this board will pass, and Friday's fry-explainer recommendations follow it.",
+  "626b338c-c064-4743-bf1c-22981f54d3e1": "Already made: everyone vibe coding without knowing it was Friday 27 November's piece (4f8f23b2), inside three weeks.",
+  "ccbe548e-9c51-4e7d-819b-f629c7e2ddc9": "Already made: which human qualities lead to job loss became Thursday 19 November's said-to-camera off day (701a2c55).",
+  "772d09a7-2455-4f05-a6f2-d90d0e60314a": "A style ask, used: each pitch here is written as a plain chain a 12-year-old can follow, the way her short simplifies a hard topic.",
+  "c02e49b6-5c38-4fb0-a753-6ade6d6f4248": "A brand ask with no subject: you saved it as the kind of company you want to become, in the form of a viral organic post. It shapes how the posts feel, so no single idea this week answers it; it stays open for the brand work.",
+  "8ca0bd3d-454d-48fd-a2d1-98d0e5469779": "A style ask, used: its art-directed captions are the caption style recommended for this week's voiceover shorts.",
+  "dd93bfb1-20be-4c13-93b7-3c34ded7544b": "Held, not dropped: software editing itself on the fly has no dated, sourced story inside the creative industries this fortnight; Ubisoft's Motherbrain is the nearest, and it is on Friday as a story about defaults, which does not claim your ask.",
+  "7502d46a-3ec1-4fc1-964a-e91b9e284415": "Already made: the dirty truth of how companies measure AI was Friday 13 November's piece, \"Meta staff were ranked by AI use. They gamed it.\"",
+  "cca6cea3-ee1d-4098-bc2f-d5d8444b18fc": "Already shown: what you pay for ads in the chatbots was Tuesday 24 November's two options on the 23 Nov board (adwait, adprice) and Thursday 19 November's post, so it is not offered again under a new id.",
+  "6eaaf127-ed4e-48bc-86a0-54c9e99aa428": "Already made: build versus buy became Wednesday 18 November's piece (db9f9f6a).",
+  "50368dee-0a10-4452-a79a-0607d4f2e278": "Already made: Canva, Adobe or Claude became Wednesday 25 November's piece (bf0fddae).",
+  "ca53cac9-d00d-49ed-8ea8-f17f61f602f4": "Held, not dropped: the newest creative-industry case, AI uncovering lost detail in an 1888 painting, was already on the 23 Nov board's Saturday, and nothing newer and checked landed by 26 Nov.",
+  "d16fe9ff-413c-47c4-ac53-c89e40d28489": "Held: its caption is very close to the meme you approved for Friday 13 November, \"POV: your AI agent using your computer without being set up properly by you\" (povteach), so a second one this soon would read as a repeat.",
+  "da3cacd1-b038-4827-bd22-1d4d9be07889": "Already shown: it was Thursday 19 November's lookalike option on the 16 Nov board, so it is not offered again under a new id.",
+  "93342d88-0320-4e56-a3c1-f25889d8add4": "For Heartside, not this publication: you saved it for \"heartside posts to buff out the volume\", so it stays with the heartside cues.",
+  "2162c904-b0ff-452b-81aa-b8cfd7ec1909": "Already made: the reskin is Tuesday 10 November's short (mcpskin), approved with your Improve on 3 Nov.",
+  "aae54ef9-0bd7-49a8-959e-96695e1a51a8": "A style ask, used: every pitch here is held to one plain chain, the crazy simple explanation you asked for.",
+  "e829fbfb-278d-45e2-9607-73af4c04310d": "Already shown: its look was Thursday 19 November's lookalike option on the 16 Nov board; it guides how this week's voiceover shorts are drawn.",
+  "7f43c6b5-a468-40f3-ad66-c988cdc16072": "A style ask for a clean to-camera 1-2-3 shot: this week's to-camera recommendations are Monday's gym-music wildcard and Wednesday's TikTok test (fry-talking-head), and no off day is to camera.",
+  "87a82f7f-6411-41c9-92b1-a52c4f3e4f8a": "Answered for good: your positive ray of sunshine is the weekly Saturday good news, offered again this Saturday with four makers who reached millions.",
+  "e73a0110-a108-456c-8781-350259b1b196": "Already shown: its fast subtitles were part of Thursday 19 November's lookalike option; the designed captions of this week's voiceover shorts follow it.",
+  "501c4fd1-4aa1-4cdd-b716-03e70c89c283": "A style ask, used: the infographic style is the look of Tuesday's and Thursday's tool cards.",
+  "2b582f5a-52fb-49a3-8502-0e9bd914f772": "Already made: the translator meme for when your AI talks to your customer's AI was Tuesday 3 November's off day, approved with your words for the caption.",
+  "f6327ce0-a414-4365-98df-635c1780523c": "Already a piece: Wednesday 11 November's AI-in-music piece (36886e0b) uses this clip.",
+  "90b654ca-204a-4aef-bffe-19cfa7a2db19": "Already a piece: Wednesday 11 November's AI-in-music piece (36886e0b) uses this clip.",
+  "d501ae8a-bce1-4964-89a0-63bf076bc641": "A style ask, used: her lit talking head is the production recommended for Friday's AI awards wildcard, and her simple chain is the chain every pitch here passes.",
+  "a397253e-bfe1-4a84-babc-27d93fd2779d": "You dismissed the card; its boring-topic, irresistible-headline style is how this week's headlines are written.",
+  "5b865aa9-463c-44c3-9352-73fda39fa18e": "You dismissed the card; its chart-led style is how this week's explainer carousels are drawn.",
+  "dde4b46f-fa8b-4ba4-b0e8-b82b5d5352d3": "Already shown: what an MCP connector is was Tuesday 24 November's \"What is MCP, actually?\" option on the 23 Nov board, so it is not offered again under a new id. Thursday's video plug-in card uses your board-table picture without claiming the ask.",
+  "45e0ead0-310b-4c74-9bd2-54305fb41539": "A style-only card: its frame-by-frame explainer style is the motion recommended for Wednesday's Suno Bridge teardown.",
+  "3d306bf9-3e6b-4c34-bc85-f63340036f5c": "Offered on the 30 Nov board as Tuesday's meme template tplwoke (this clip, with your caption idea in its caption box); that option is still open there and carries onto this board until you answer it, so it is not offered twice."
+ },
+ "held": [
+  {
+   "ref": "ask/c02e49b6-5c38-4fb0-a753-6ade6d6f4248",
+   "day": "any",
+   "title": "The YouTube short you saved as the kind of company you want to become",
+   "reason": "A brand ask with no subject: you saved it as the kind of company you want to become, in the form of a viral organic post. It shapes how the posts feel, so no single idea this week answers it; it stays open for the brand work.",
+   "said": "Basically an ad for a company that I'm trying to become like, in the form of a viral organic post",
+   "source": {
+    "label": "The YouTube short you saved as the kind of company you want to become",
+    "url": "https://youtube.com/shorts/5LVSk_2HF2k?si=n0MyAq3UYgny0ESE"
+   }
+  },
+  {
+   "ref": "ask/d16fe9ff-413c-47c4-ac53-c89e40d28489",
+   "day": "tue",
+   "title": "The YouTube short you saved to reskin as a \"forgot to teach your AI\" meme",
+   "reason": "Held: its caption is very close to the meme you approved for Friday 13 November, \"POV: your AI agent using your computer without being set up properly by you\" (povteach), so a second one this soon would read as a repeat.",
+   "said": "Lets make a hilarious meme. Reskin this video with the text \"POV: your AI agent when you forget to teach it anything that matters to you\"",
+   "source": {
+    "label": "The YouTube short you saved to reskin as a \"forgot to teach your AI\" meme",
+    "url": "https://youtube.com/shorts/tJwqPQvgQkk?is=MD4N2ZQuY488v1mB"
+   }
+  },
+  {
+   "ref": "ask/da3cacd1-b038-4827-bd22-1d4d9be07889",
+   "day": "thu",
+   "title": "The Instagram reel you saved to copy and reskin",
+   "reason": "Already shown: it was Thursday 19 November's lookalike option on the 16 Nov board, so it is not offered again under a new id.",
+   "said": "Let's literally copy the content and production for this and just reskin it ASAP.",
+   "source": {
+    "label": "The Instagram reel you saved to copy and reskin",
+    "url": "https://www.instagram.com/reel/DeR9G-JNf-8/?cplk=b2x4bXNtYzlidm1q"
+   }
+  },
+  {
+   "ref": "ask/ca53cac9-d00d-49ed-8ea8-f17f61f602f4",
+   "day": "fri",
+   "title": "The research dossier you saved on times AI corrected what people believed",
+   "reason": "Held, not dropped: the newest creative-industry case, AI uncovering lost detail in an 1888 painting, was already on the 23 Nov board's Saturday, and nothing newer and checked landed by 26 Nov.",
+   "said": "We should do a piece on all the times when AI has corrected people and improved overall human knowledge."
+  },
+  {
+   "ref": "ask/dd93bfb1-20be-4c13-93b7-3c34ded7544b",
+   "day": "wed",
+   "title": "The DeepSeek post you saved on software that edits itself on the fly",
+   "reason": "Held, not dropped: software editing itself on the fly has no dated, sourced story inside the creative industries this fortnight; Ubisoft's Motherbrain is the nearest, and it is on Friday as a story about defaults, which does not claim your ask.",
+   "said": "We need to do a piece on how ai is going to enable software to edit itself on the fly",
+   "source": {
+    "label": "The DeepSeek post you saved on software that edits itself on the fly",
+    "url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
+   }
+  },
+  {
+   "ref": "ask/13720d74-2177-42cb-a9f8-6d8d0e06bf5a",
+   "day": "any",
+   "title": "Your saved card youtube_VADONXzhjTc.mp4: Can you help me deconstruct the script (pace, vocabulary, narrative st...",
+   "reason": "A style ask, used: the Hannah Fry breakdown is the hannah-fry check every script on this board will pass, and Friday's fry-explainer recommendations follow it.",
+   "said": "Can you help me deconstruct the script (pace, vocabulary, narrative style, tone, explanation style, and everything else about how Hannah Fry breaks down a topic, narrates it, and gets from start to finish) and recommend how we can use this to power my script skill inside the content engine? If there is not already a script skill, create one and bring everything that applies into this skill that we already know from the engine. And then have that skill be wired into the script creation process for that video length. Or we could just create a Hannah Fry skill that my scripts get checked against…",
+   "source": {
+    "label": "Your saved card youtube_VADONXzhjTc.mp4: Can you help me deconstruct the script (pace, vocabulary, narrative st...",
+    "url": "https://youtube.com/shorts/VADONXzhjTc?is=r-OA7dMA76DPjKso"
+   }
+  },
+  {
+   "ref": "ask/626b338c-c064-4743-bf1c-22981f54d3e1",
+   "day": "any",
+   "title": "Your saved card Software to Questions or Semantic Inflation Evaluating Universal Vibe Coding Through May 2028.md: I think everyone will vibe code without even realizing they're vibe co...",
+   "reason": "Already made: everyone vibe coding without knowing it was Friday 27 November's piece (4f8f23b2), inside three weeks.",
+   "said": "I think everyone will vibe code without even realizing they're vibe coding in a year. I want to argue the case.",
+   "source": {
+    "label": "Your saved card Software to Questions or Semantic Inflation Evaluating Universal Vibe Coding Through May 2028.md: I think everyone will vibe code without even realizing they're vibe co...",
+    "url": "https://drive.google.com/file/d/15Q7BOv6aGHZcBg2o1xVNneJJgygCG_dJ/view"
+   }
+  },
+  {
+   "ref": "ask/ccbe548e-9c51-4e7d-819b-f629c7e2ddc9",
+   "day": "any",
+   "title": "Your saved card youtube_GBjWcUL77UQ.mp4: We need to do a piece on what kind of human qualities are going to res...",
+   "reason": "Already made: which human qualities lead to job loss became Thursday 19 November's said-to-camera off day (701a2c55).",
+   "said": "We need to do a piece on what kind of human qualities are going to result in job loss versus succeeding in the future era. It should be incredibly confronting.",
+   "source": {
+    "label": "Your saved card youtube_GBjWcUL77UQ.mp4: We need to do a piece on what kind of human qualities are going to res...",
+    "url": "https://youtu.be/GBjWcUL77UQ?is=FZW1qBKHdtpoArH7"
+   }
+  },
+  {
+   "ref": "ask/772d09a7-2455-4f05-a6f2-d90d0e60314a",
+   "day": "any",
+   "title": "Your saved card youtube_kaIs0mHr7Kg.mp4: Hannah's fry is explaining something a hundred times more complex than...",
+   "reason": "A style ask, used: each pitch here is written as a plain chain a 12-year-old can follow, the way her short simplifies a hard topic.",
+   "said": "Hannah's fry is explaining something a hundred times more complex than what I explain but she's simplified it for everyone. We need to do the same.",
+   "source": {
+    "label": "Your saved card youtube_kaIs0mHr7Kg.mp4: Hannah's fry is explaining something a hundred times more complex than...",
+    "url": "https://youtube.com/shorts/kaIs0mHr7Kg?si=13jRWYXny4VMO2Am"
+   }
+  },
+  {
+   "ref": "ask/8ca0bd3d-454d-48fd-a2d1-98d0e5469779",
+   "day": "any",
+   "title": "Your saved card instagram_DfkCOCLt7KZ.mp4: Really well-animated and strong speaker production as well as K12 Newm...",
+   "reason": "A style ask, used: its art-directed captions are the caption style recommended for this week's voiceover shorts.",
+   "said": "Really well-animated and strong speaker production as well as K12 Newmalden. The captions are very unique and well-designed, like an art director would do them.",
+   "source": {
+    "label": "Your saved card instagram_DfkCOCLt7KZ.mp4: Really well-animated and strong speaker production as well as K12 Newm...",
+    "url": "https://www.instagram.com/reel/DfkCOCLt7KZ/?obrf=MWM4b21sdDFhcWt5NQ=="
+   }
+  },
+  {
+   "ref": "ask/7502d46a-3ec1-4fc1-964a-e91b9e284415",
+   "day": "any",
+   "title": "Your saved card AI-metrics-gaming-research-dossier-Markdown.docx: A piece on the dirty truth behind how companies measure whether AI is...",
+   "reason": "Already made: the dirty truth of how companies measure AI was Friday 13 November's piece, \"Meta staff were ranked by AI use. They gamed it.\" (f3fcd5e1).",
+   "said": "A piece on the dirty truth behind how companies measure whether AI is working or not",
+   "source": {
+    "label": "Your saved card AI-metrics-gaming-research-dossier-Markdown.docx: A piece on the dirty truth behind how companies measure whether AI is...",
+    "url": "https://docs.google.com/document/d/1x49yiVtyNslMGcDblfGb8XndrmDuI_Yr/edit#bookmark=id.9m99d0ms3rui"
+   }
+  },
+  {
+   "ref": "ask/cca6cea3-ee1d-4098-bc2f-d5d8444b18fc",
+   "day": "any",
+   "title": "Your saved card When the Assistant Becomes the Ad.docx: Produce an easy-to-understand breakdown of what you actually pay when...",
+   "reason": "Already shown: what you pay for ads in the chatbots was Tuesday 24 November's two options on the 23 Nov board (adwait, adprice) and Thursday 19 November's post, so it is not offered again under a new id.",
+   "said": "Produce an easy-to-understand breakdown of what you actually pay when you consume ads in the LLMs and what you will pay in the future.",
+   "source": {
+    "label": "Your saved card When the Assistant Becomes the Ad.docx: Produce an easy-to-understand breakdown of what you actually pay when...",
+    "url": "https://docs.google.com/document/d/1emR7rjLsYEgS5bkJbYgvjyjbNjtSw0vI/edit?usp=drivesdk&ouid=107741908582439094738&rtpof=true&sd=true"
+   }
+  },
+  {
+   "ref": "ask/6eaaf127-ed4e-48bc-86a0-54c9e99aa428",
+   "day": "any",
+   "title": "Your saved card screenshot-20261105-061040.jpg: Let's do a piece on build versus buy and break it down with the realit...",
+   "reason": "Already made: build versus buy became Wednesday 18 November's piece (db9f9f6a).",
+   "said": "Let's do a piece on build versus buy and break it down with the realities of businesses thinking they can vibe code everything instead of getting SaaS licences from vendors. Make it a bit tongue-in-cheek and explore both angles.",
+   "source": {
+    "label": "Your saved card screenshot-20261105-061040.jpg: Let's do a piece on build versus buy and break it down with the realit...",
+    "url": "https://drive.google.com/file/d/1LAxjA2ES1mtfWbK-_y4dfqmC5Il3sy7T/view"
+   }
+  },
+  {
+   "ref": "ask/50368dee-0a10-4452-a79a-0607d4f2e278",
+   "day": "any",
+   "title": "Your saved card screenshot-20261105-060348.jpg: We should do a piece on who's going to win out among Canva, Adobe, and...",
+   "reason": "Already made: Canva, Adobe or Claude became Wednesday 25 November's piece (bf0fddae).",
+   "said": "We should do a piece on who's going to win out among Canva, Adobe, and Claude Design. We should look at the perspective of how much of design AI can really do and how much it will be able to do in 2 years. Hypothesise who will have the bigger moat. In 2 years",
+   "source": {
+    "label": "Your saved card screenshot-20261105-060348.jpg: We should do a piece on who's going to win out among Canva, Adobe, and...",
+    "url": "https://drive.google.com/file/d/1OGDLCPsMabZF5-UO_WsdErCIlZfgGpT_/view"
+   }
+  },
+  {
+   "ref": "ask/93342d88-0320-4e56-a3c1-f25889d8add4",
+   "day": "any",
+   "title": "Your saved card youtube_IuB7JLAnYMw.mp4: We should think about this sort of hilarity and meme culture for heart...",
+   "reason": "For Heartside, not this publication: you saved it for \"heartside posts to buff out the volume\", so it stays with the heartside cues.",
+   "said": "We should think about this sort of hilarity and meme culture for heartside posts to buff out the volume that we need.",
+   "source": {
+    "label": "Your saved card youtube_IuB7JLAnYMw.mp4: We should think about this sort of hilarity and meme culture for heart...",
+    "url": "https://youtube.com/shorts/IuB7JLAnYMw?is=m3cXhbvh4pPSoiCq"
+   }
+  },
+  {
+   "ref": "ask/2162c904-b0ff-452b-81aa-b8cfd7ec1909",
+   "day": "any",
+   "title": "Your saved card instagram_DeypYeWN5hL.mp4: This is good for both production and content. We should do a short tha...",
+   "reason": "Already made: the reskin is Tuesday 10 November's short (mcpskin), approved with your Improve on 3 Nov.",
+   "said": "This is good for both production and content. We should do a short that just completely reskins and reuses the content and production of this.",
+   "source": {
+    "label": "Your saved card instagram_DeypYeWN5hL.mp4: This is good for both production and content. We should do a short tha...",
+    "url": "https://www.instagram.com/reel/DeypYeWN5hL/?xtok=Z2V2bnlmNXZrMTl3"
+   }
+  },
+  {
+   "ref": "ask/aae54ef9-0bd7-49a8-959e-96695e1a51a8",
+   "day": "any",
+   "title": "Your saved card youtube_wh3D5Zx6Prg.mp4: Another crazy simple explanation of a crazy complex topic. We really n...",
+   "reason": "A style ask, used: every pitch here is held to one plain chain, the crazy simple explanation you asked for.",
+   "said": "Another crazy simple explanation of a crazy complex topic. We really need to simplify our scripts and our content.",
+   "source": {
+    "label": "Your saved card youtube_wh3D5Zx6Prg.mp4: Another crazy simple explanation of a crazy complex topic. We really n...",
+    "url": "https://youtube.com/shorts/wh3D5Zx6Prg?is=fqSykt8SqXYjEuUE"
+   }
+  },
+  {
+   "ref": "ask/e829fbfb-278d-45e2-9607-73af4c04310d",
+   "day": "any",
+   "title": "Your saved card instagram_DeZuQ7-lATg.mp4: I want my short video shorts for Instagram and TikTok to be more of th...",
+   "reason": "Already shown: its look was Thursday 19 November's lookalike option on the 16 Nov board; it guides how this week's voiceover shorts are drawn.",
+   "said": "I want my short video shorts for Instagram and TikTok to be more of this type of quality from a visual perspective and an emotion perspective. Let's try and replicate this for the coming week.",
+   "source": {
+    "label": "Your saved card instagram_DeZuQ7-lATg.mp4: I want my short video shorts for Instagram and TikTok to be more of th...",
+    "url": "https://www.instagram.com/reel/DeZuQ7-lATg/?psln=MXA3b2c3dGVydmI2bw=="
+   }
+  },
+  {
+   "ref": "ask/7f43c6b5-a468-40f3-ad66-c988cdc16072",
+   "day": "any",
+   "title": "Your saved card instagram_DePHDr_jRed.mp4: I'm going to be doing a clean shot of me explaining something about AI...",
+   "reason": "A style ask for a clean to-camera 1-2-3 shot: this week's to-camera recommendations are Monday's gym-music wildcard and Wednesday's TikTok test (fry-talking-head), and no off day is to camera.",
+   "said": "I'm going to be doing a clean shot of me explaining something about AI and how to build your brain, for example, or just a quick 1-2-3 step. This would be a nice candid way of doing it with nice lighting, a good-quality shot, and nice subtitle builds as well as a really good thumbnail like this one. https://drive.google.com/file/d/1WVmopXVzY0NOKUuQQIH0tubIa1hwLHU_/view?usp=drivesdk",
+   "source": {
+    "label": "Your saved card instagram_DePHDr_jRed.mp4: I'm going to be doing a clean shot of me explaining something about AI...",
+    "url": "https://www.instagram.com/reel/DePHDr_jRed/?mdxt=cnpwdjkxcXJ6aWRl"
+   }
+  },
+  {
+   "ref": "ask/87a82f7f-6411-41c9-92b1-a52c4f3e4f8a",
+   "day": "any",
+   "title": "Your saved card instagram_DfAY9PWFuEX_01.jpg: Just a positive ray of sunshine. I'd love to post a week out that is j...",
+   "reason": "Answered for good: your positive ray of sunshine is the weekly Saturday good news, offered again this Saturday with four makers who reached millions.",
+   "said": "Just a positive ray of sunshine. I'd love to post a week out that is just amazing, with positive things being done with AI.",
+   "source": {
+    "label": "Your saved card instagram_DfAY9PWFuEX_01.jpg: Just a positive ray of sunshine. I'd love to post a week out that is j...",
+    "url": "https://www.instagram.com/p/DfAY9PWFuEX/?img_index=4&exln=MWR2ZmtoOW5lbTk1dQ=="
+   }
+  },
+  {
+   "ref": "ask/e73a0110-a108-456c-8781-350259b1b196",
+   "day": "any",
+   "title": "The Instagram reel you saved for its fast, eye-catching subtitles",
+   "reason": "Already shown: its fast subtitles were part of Thursday 19 November's lookalike option; the designed captions of this week's voiceover shorts follow it.",
+   "said": "The speed and visual engagement of the subtitles",
+   "source": {
+    "label": "The Instagram reel you saved for its fast, eye-catching subtitles",
+    "url": "https://www.instagram.com/reel/DdcAPSuEw-o/?exln=MW1rcGduM3czNDJqbQ=="
+   }
+  },
+  {
+   "ref": "ask/501c4fd1-4aa1-4cdd-b716-03e70c89c283",
+   "day": "any",
+   "title": "The Instagram reel you saved for its infographic style",
+   "reason": "A style ask, used: the infographic style is the look of Tuesday's and Thursday's tool cards.",
+   "said": "I love the infographic style.",
+   "source": {
+    "label": "The Instagram reel you saved for its infographic style",
+    "url": "https://www.instagram.com/reel/DdCY4cJAQZk/?vrfl=MWF0cXkzNDl3ZnM4Zg=="
+   }
+  },
+  {
+   "ref": "ask/2b582f5a-52fb-49a3-8502-0e9bd914f772",
+   "day": "any",
+   "title": "Your saved card youtube_7olCmqWw9Wk.mp4: We should reskin this as a hilarious video meme for when your AI talks...",
+   "reason": "Already made: the translator meme for when your AI talks to your customer's AI was Tuesday 3 November's off day, approved with your words for the caption.",
+   "said": "We should reskin this as a hilarious video meme for when your AI talks to your customer's AI.",
+   "source": {
+    "label": "Your saved card youtube_7olCmqWw9Wk.mp4: We should reskin this as a hilarious video meme for when your AI talks...",
+    "url": "https://youtube.com/shorts/7olCmqWw9Wk?is=Z_J7lrCfpLGIX7ON"
+   }
+  },
+  {
+   "ref": "ask/f6327ce0-a414-4365-98df-635c1780523c",
+   "day": "any",
+   "title": "Your saved card youtube_wSsJbXzp3DY.mp4: Here's another video that we're going to include for the AI-generated...",
+   "reason": "Already a piece: Wednesday 11 November's AI-in-music piece (36886e0b) uses this clip.",
+   "said": "Here's another video that we're going to include for the AI-generated music piece because everyone has seen this and probably isn't aware that half of it's generated by AI.",
+   "source": {
+    "label": "Your saved card youtube_wSsJbXzp3DY.mp4: Here's another video that we're going to include for the AI-generated...",
+    "url": "https://youtube.com/shorts/wSsJbXzp3DY?is=NrD7qIf-brI3ZA4n"
+   }
+  },
+  {
+   "ref": "ask/90b654ca-204a-4aef-bffe-19cfa7a2db19",
+   "day": "any",
+   "title": "Your saved card youtube_oEODyXtV49M.mp4: I want to do a piece on AI-generated music and what that actually is....",
+   "reason": "Already a piece: Wednesday 11 November's AI-in-music piece (36886e0b) uses this clip.",
+   "said": "I want to do a piece on AI-generated music and what that actually is. Here's a video that we are going to want to keep the video and audio for because it will be something I reference in the piece.",
+   "source": {
+    "label": "Your saved card youtube_oEODyXtV49M.mp4: I want to do a piece on AI-generated music and what that actually is....",
+    "url": "https://youtube.com/shorts/oEODyXtV49M?is=q2ENp9Z-Kb3iFARU"
+   }
+  },
+  {
+   "ref": "ask/d501ae8a-bce1-4964-89a0-63bf076bc641",
+   "day": "any",
+   "title": "Your saved card stamp-duty-is-stupid-ytshorts.savetube.vip.mp4: Yeah I really like the explanation style of Hannah Fry. She is a real...",
+   "reason": "A style ask, used: her lit talking head is the production recommended for Friday's AI awards wildcard, and her simple chain is the chain every pitch here passes.",
+   "said": "Yeah I really like the explanation style of Hannah Fry. She is a real intellectual but she comes across as really relatable, honest, and sincere. The way she says things and her script writing should be analysed. The lighting and talking-head nature of her videos are really good and the subtitle effects are really nice as well."
+  },
+  {
+   "ref": "ask/a397253e-bfe1-4a84-babc-27d93fd2779d",
+   "day": "any",
+   "title": "Your saved card Screenshot_20261016_204206_Instagram.jpg: I love this because the headline makes you want to know more but the t...",
+   "reason": "You dismissed the card; its boring-topic, irresistible-headline style is how this week's headlines are written.",
+   "said": "I love this because the headline makes you want to know more but the topic is actually about AI ethics, which is, on paper, one of the most boring topics out there. I think that I'm quite a powerful capability to turn boring topics into something really entertaining. As we evolve the Make Your Mind Up Instagram, X, and YouTube channels, I was thinking that we could pump out carousels kind of like this in my branding."
+  },
+  {
+   "ref": "ask/5b865aa9-463c-44c3-9352-73fda39fa18e",
+   "day": "any",
+   "title": "Your saved card Screenshot_20261017_055750_Instagram.jpg: Could be useful for us making visuals but it also could just be useful...",
+   "reason": "You dismissed the card; its chart-led style is how this week's explainer carousels are drawn.",
+   "said": "Could be useful for us making visuals but it also could just be useful to quote in a piece in the near future."
+  },
+  {
+   "ref": "ask/dde4b46f-fa8b-4ba4-b0e8-b82b5d5352d3",
+   "day": "any",
+   "title": "Your saved card Screenshot_20261118_064631_Instagram.jpg: We could do a carousel explaining what an MCP connector is in this kin...",
+   "reason": "Already shown: what an MCP connector is was Tuesday 24 November's \"What is MCP, actually?\" option on the 23 Nov board, so it is not offered again under a new id. Thursday's video plug-in card uses your board-table picture without claiming the ask.",
+   "said": "We could do a carousel explaining what an MCP connector is in this kind of way, where all the different connectors are actually different people sitting around a board table. Then in the next shot they're sending a pigeon carrier to one another. In another one they're shaking hands and in another one they're lifting a log together. In another one Slack is the town crier and Google is the sage, holding a giant book, and so on and so forth. The company's logos replace the heads of the people. The text itself would be explaining what MCP actually is but the images would be absurdly painting the …",
+   "source": {
+    "label": "Your saved card Screenshot_20261118_064631_Instagram.jpg: We could do a carousel explaining what an MCP connector is in this kin...",
+    "url": "https://drive.google.com/file/d/1lHAJkNfVsFJO64W0MVEzFAr4uPdPwqxn/view"
+   }
+  },
+  {
+   "ref": "ask/45e0ead0-310b-4c74-9bd2-54305fb41539",
+   "day": "any",
+   "title": "Your saved card SaveClip.App_AQP6P-DCy7NO_pjNElKDguG_v7k6eDrPLbpSrLvvT_GvZqgKE7uRcpc5VXFzMOQWFweCOjXoGXxg1nPYaOc3FiiPLJDNalps77vPHVo.mp4: This video needs to be watched frame by frame because it's an explaine...",
+   "reason": "A style-only card: its frame-by-frame explainer style is the motion recommended for Wednesday's Suno Bridge teardown.",
+   "said": "This video needs to be watched frame by frame because it's an explainer on how Anthropic and GitHub are interacting and how Anthropic's building a new version of GitHub. I tend to talk about more business-related changes so the topic itself is less relevant even though it is about AI. I'm more showing you that I like the visual style. I like how the visuals support most of the absorption of information and with a powerful voiceover this could be a really nice format for certain topics where appropriate."
+  },
+  {
+   "ref": "ask/3d306bf9-3e6b-4c34-bc85-f63340036f5c",
+   "day": "tue",
+   "title": "The YouTube short you saved as a POV meme about a woke Claude that needs to decompress",
+   "reason": "Offered on the 30 Nov board as Tuesday's meme template tplwoke, with your caption idea; that option is still open there and carries onto this board until you answer it, so it is not offered twice.",
+   "said": "Could be a funny POV meme about Claude in two years' time when it's woke and needs to think without being disturbed",
+   "source": {
+    "label": "The YouTube short you saved for a woke-Claude POV meme",
+    "url": "https://youtube.com/shorts/y7V-VXhHEhc?is=pp59I23mfTUuPqd7"
+   }
+  }
+ ],
+ "vetoes": [
+  {
+   "subject": "Infosys",
+   "said": "Told you already. Infosys is boring.",
+   "at": "2026-11-09",
+   "ref": "2026-11-16/queue/off-tue-infosys",
+   "day": "tue"
+  }
+ ],
+ "split": [],
+ "his_empty": {
+  "mon": "Nothing of his fits Monday: no idea from Krish since 22 Nov, and his open money asks (ads in the chatbots) went out on the 23 Nov board.",
+  "wed": "Nothing of his fits Wednesday: his ask on software editing itself has no dated creative-industry story this fortnight (held, with his words).",
+  "fri": "Nothing of his fits Friday: his ask on AI correcting what people believed is held until a newer checked case lands."
+ }
+}
