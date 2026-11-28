@@ -84,7 +84,7 @@ one.
 No V10 from 27 Nov either (Ruling (Krish, 2026-11-25): wordmark on ink only; V10 retired). The theme
 `makeyourmindup-v5` still pins `v10.svg` as `stacked` (hash-pinned for Studio V2 jobs, and kept so older cuts render as
 signed), so ve compile puts S3h (`marks.square`) in that slot for a cut dated from 27 Nov (`stacked_slot`): a close that
-draws the slot draws S3h, and the title lockup draws nothing when the slot holds S3h (`FormatMaster.tsx`
+draws the slot draws S3h, and the title lockup of a cut from 27 Nov draws nothing, even if its wordmark flag is lost (`FormatMaster.tsx`
 `titleWordmark`). `ve lint` and `ve render` refuse a cut from 27 Nov naming V10, V6 or any `-ink` drawing by path or
 sha256, `props.brand` included (`marks.retired`; `carried_retired`). A Studio V2 render on the theme still draws V10 in
 `HouseShort.tsx`'s ending band: its manifest carries no date to gate it.

@@ -261,7 +261,7 @@ def carried_retired(value, where: str = 'props') -> list[str]:
 
 def stacked_slot(spec: dict, theme_id: str, image: dict) -> dict:
     """The mark in the renderer's stacked slot (props.brand.stacked): S3h on a v5 cut dated from 27 Nov, where it can only
-    be the closing wordmark and the title lockup draws nothing (FormatMaster titleWordmark), in place of the theme's V10
+    be the closing wordmark, and the title lockup draws nothing (FormatMaster titleWordmark, on titleCardMark false), in place of the theme's V10
     (Ruling, Krish, 2026-11-25: wordmark on ink only; V10 retired). A cut dated before keeps the mark it was signed with."""
     if theme_id != 'makeyourmindup-v5' or not bare_body(spec):
         return image

@@ -3184,7 +3184,7 @@
         "4. The 9:16 outro stays at 2 s, settled by 1.33 s. Do not lengthen it to the template's 3.6 s."
       ],
       "why": "After PR #1013 (26 Nov) a cut showed S3h on its outro, but the wide quick-edit frame still drew V4 behind the speaker for the whole wide cut, the why-ladder title card drew V4 under the title, and ve's ChannelPill, StageHeader and the quick-edit wide panel still carried the series name on body beats, so one video showed two wordmarks and a sub brand. His earlier words: \"the sub brands do not need to feature\" (2026-11-26).",
-      "means": "Ruling (Krish, 2026-11-27): \"agree\" to each of the four. S3h on the v5 outro is the one wordmark per video. From 27 Nov the title lockup carries no wordmark (from 26 Nov, PR #1013), the wide quick-edit frame carries no V4, the why-ladder title card carries no V4, and no beat carries a series-name pill (ve ChannelPill and StageHeader, the quick-edit wide panel). The 9:16 outro stays a 2 s beat, settled by 1.33 s. A cut dated before 27 Nov renders exactly as it was signed (F33). ve lint refuses a spec from 27 Nov naming V4 or asking for a body logo, a series pill or a title wordmark; ve render refuses props from 27 Nov that would draw one. Ruling (Krish, 2026-11-25): wordmark on ink only; V10 retired. From 27 Nov ve compile puts S3h in the renderer's stacked slot in place of the theme's V10, the title lockup draws nothing when the slot holds S3h, and ve lint and ve render refuse a cut naming V10, V6 or any -ink drawing.",
+      "means": "Ruling (Krish, 2026-11-27): \"agree\" to each of the four. S3h on the v5 outro is the one wordmark per video. From 27 Nov the title lockup carries no wordmark (from 26 Nov, PR #1013), the wide quick-edit frame carries no V4, the why-ladder title card carries no V4, and no beat carries a series-name pill (ve ChannelPill and StageHeader, the quick-edit wide panel). The 9:16 outro stays a 2 s beat, settled by 1.33 s. A cut dated before 27 Nov renders exactly as it was signed (F33). ve lint refuses a spec from 27 Nov naming V4 or asking for a body logo, a series pill or a title wordmark; ve render refuses props from 27 Nov that would draw one. Ruling (Krish, 2026-11-25): wordmark on ink only; V10 retired. From 27 Nov ve compile puts S3h in the renderer's stacked slot in place of the theme's V10, the title lockup of a cut from 27 Nov draws nothing even if its wordmark flag is lost, and ve lint and ve render refuse a cut naming V10, V6 or any -ink drawing.",
       "status": "encoded",
       "encoded": [
         {
@@ -3249,8 +3249,8 @@
         },
         {
           "file": "apps/renderer/src/engine/FormatMaster.tsx",
-          "contains": "isSquareMark(props.brand.stacked)",
-          "how": "the title lockup draws no wordmark when the stacked slot holds S3h (engine.test.ts)"
+          "contains": "props.titleCardMark === false ? undefined : props.brand.stacked",
+          "how": "the title lockup of a cut from 27 Nov draws no wordmark even if titleMoment.wordmark is lost (engine.test.ts)"
         },
         {
           "file": "tests/ve_compile_test.py",
