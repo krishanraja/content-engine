@@ -5,6 +5,10 @@ Newest first. Entries are written by the docs steward (see the steward link in
 describes current behaviour; `NOW.md` and `docs/STATE.md` do.
 Files moved here keep their body verbatim under a Historical banner.
 
+## 2026-11-28
+
+- reconciled at `a35e3a9`: NOW.md re-stamped from `68a84e7` (40 non-steward commits; sessions had folded their own closeout notes and none was left to fold; the NOW.md audit passed). Two "Where it is right now" bullets called merged work unmerged: the 7 Dec ideas board was said to sit on branch `claude/kind-allen-lrvme1`, which merged as #1021 (`9952368f`); the v5 Library layout fixes were said to be on a draft pull request awaiting Krish, which merged as #1015 (`b4cf3d16`) although its body asked to stay draft until he approves the before-and-after sheet. Both now say main, and the second keeps that the good-news words and meme crops wait on his decision. The digest's stale stamps were left as they are: their bodies were not rechecked in this run.
+
 ## 2026-11-27
 
 - reconciled at `68a84e7`: NOW.md re-stamped from `f03dcbc` (213 non-steward commits; sessions had folded their own closeout notes and none was left to fold). "What it is" still said Growth owns the derived carousels, Notes and memes, which the 26 Nov ruling superseded (content-engine makes every asset, Growth posts; `docs/GROWTH-HANDOFF.md`); "Who it is for" still named the `_mission.ts` face as the publication's reader, which the change bullet of 26 Nov and `config/beat.json` give as Mindmake's only. Both rewritten. "Where it is right now" carried 11 bullets against a limit of 8: the sports bullet twice, still called a draft pull request though #997 merged; the story engine v5 still called a branch though #1005 merged; and the plain v5 statement card of #1001, which #1004 replaced with the Library's outro the same day. The waiting line on the house close named "Built to help you decide.", which the v5 outro no longer carries; restated against `docs/production/BRAND_PALETTE.md`, and `docs/production/CLOSING.md` gained a note that it describes cuts dated before 26 Nov.
