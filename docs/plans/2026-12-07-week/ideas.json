@@ -392,7 +392,7 @@
     "source_kind": "engine",
     "source_tag": "trade_press",
     "so_what": "3D artists using Cinema 4D and ZBrush now get AI model generation inside their apps, but the models come from other firms and the credits expire monthly, so any studio budgeting for it knows what it is actually paying for.",
-    "story": "Maxon, the company behind Cinema 4D and ZBrush, which 3D studios and artists use, launched Maxon Plus in November 2026, a cloud subscription whose Model Generator turns a prompt, photo or sketch into an editable 3D model. The work runs on third-party AI providers such as Tripo and Rodin, and is sold in credits.",
+    "story": "Maxon, the software firm behind Cinema 4D and ZBrush, which 3D studios and artists use, launched Maxon Plus in November 2026, a cloud subscription whose Model Generator turns a prompt, photo or sketch into an editable 3D model. The work runs on third-party AI providers such as Tripo and Rodin, and is sold in credits.",
     "why_now": "Creative Bloq, 23 Nov 2026.",
     "fact": "Maxon: \"We work with third-party AI providers, such as Tripo and Rodin.\"; Creative Bloq, 23 Nov 2026: \"AI generation comes to Cinema 4D and ZBrush, but artists have an 'off' switch.\"",
     "source": {
@@ -474,6 +474,154 @@
      "subject": "business",
      "who": "Maxon",
      "under_the_hood": "Maxon resells other firms' AI models inside its own software, billed in credits that expire monthly, so it is a reseller as much as a maker."
+    }
+   },
+   {
+    "id": "1a010324-839f-48a3-b41c-11feb88ae48d",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "A film studio making a whole feature with AI found that every better model made its old shots look worse, so it rebuilt the stills three times and spent past $500,000, which tells any producer pricing an AI film that the bill keeps moving with the tools.",
+    "story": "VP Land reported on 26 November 2026 that Maharaja in Denims, the generative AI feature film from Intelliflicks Studios, made with director Balpreet Kaur, will open in April 2027. The studio moved from Midjourney to Runway, Google Veo, Kling, Seedance 2.0 and finally Higgsfield, the stills for the whole film were redone three times as the models improved, and the budget passed $500,000, excluding marketing.",
+    "why_now": "VP Land, 26 Nov 2026, after Variety's report of the April 2027 release.",
+    "fact": "VP Land, 26 Nov 2026: the stills for the whole film were redone three times and the budget passed $500,000; Intelliflicks chief executive Khushwant Singh: \"You are tempted to use the latest technology, so what was made before didn't look as appealing,\" and \"But then it also burns cash, because you are spending again for the software.\"",
+    "source": {
+     "label": "VP Land, Maharaja in Denims sets April 2027 release after rebuilding every still (26 Nov 2026)",
+     "url": "https://www.vp-land.com/stories/generative-ai-feature-maharaja-in-denims-sets-april-2027-release-after-rebuilding-every-st",
+     "kind": "report"
+    },
+    "sources": [
+     {
+      "label": "Variety, Generative AI feature Maharaja in Denims sets April 2027 release (Nov 2026)",
+      "url": "https://variety.com/2026/film/news/generative-ai-feature-maharaja-in-denims-april-2027-release-1236957865/"
+     },
+     {
+      "label": "Digital Journal (AFP), India's Maharaja in Denims stakes claim in AI film race (15 Apr 2026)",
+      "url": "https://www.digitaljournal.com/article/indias-maharaja-in-denims-stakes-claim-in-ai-film-race/"
+     }
+    ],
+    "first_reported": "https://variety.com/2026/film/news/generative-ai-feature-maharaja-in-denims-april-2027-release-1236957865/",
+    "beats": [
+     "An AI film that kept getting better, which was the problem.",
+     "Six tools in two years, from Midjourney to Higgsfield.",
+     "Why a face or a lampshade would not stay the same from shot to shot.",
+     "What broke: every still redone three times, and the bill past $500,000.",
+     "What this shows about when an AI film is ever finished."
+    ],
+    "pitch": {
+     "question": "What does it cost to make a film when the tools get better every month you are making it?",
+     "headline": "An AI film was rebuilt three times because the AI kept getting better.",
+     "hook": "Intelliflicks Studios made Maharaja in Denims across six AI tools, redid the stills for the whole film three times as each one improved, and spent more than $500,000.",
+     "examples": [
+      "Six AI tools, from Midjourney to Higgsfield.",
+      "Every still in the film redone three times.",
+      "A budget past $500,000, before marketing."
+     ],
+     "chain": [
+      "A film studio starts an AI feature on one image model in 2024.",
+      "A better model arrives, and the old shots look worse beside it.",
+      "So the team switches tools and pays for new software again.",
+      "Keeping a face or a lampshade the same across shots only works late on.",
+      "So the stills for the whole film are redone three times.",
+      "The bill passes $500,000 and the opening moves to April 2027."
+     ],
+     "take": "What this shows is that an AI film is never finished while the tools keep improving under it. When does a director stop upgrading and lock the picture?"
+    },
+    "style": {
+     "script": "head-to-head",
+     "production": "data-story",
+     "experiment": {
+      "format": "scoreboard-test",
+      "why": "Show one shot of the film as each of the six tools drew it, side by side, and score which kept the same face."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: What does it cost to make a film when the tools get better every month you are making it? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 14 November to 7 December 2026 on: Intelliflicks Studios' Maharaja in Denims, the AI tools it moved between, why its stills were rebuilt three times, its budget against the studio's earlier cost claims, and its release date. Work through the 5 Whys, starting from the plain question: Why 1 asks how it is built, and what broke. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "Each newer video model made the earlier shots look dated, and consistent faces and props across shots arrived late, so the film's stills were rebuilt three times.",
+    "aim": "interest",
+    "funny": "The AI film kept getting better, and that was the problem: every upgrade meant starting again.",
+    "lookalike": {
+     "pattern": "made-in-hours",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfuWseGgGfl/",
+     "our_take": "The post showed games made in hours with a new model; we show a feature film that took two years because the models kept changing."
+    },
+    "lens": {
+     "subject": "both",
+     "who": "Intelliflicks Studios",
+     "under_the_hood": "Each newer video model made earlier generated shots look dated, so the studio paid to regenerate the whole film's stills three times."
+    }
+   },
+   {
+    "id": "19cde54d-3a9f-492d-bcfc-02240814705b",
+    "source_kind": "engine",
+    "source_tag": "engine_research",
+    "so_what": "Every musician on Spotify can now get an email when a release arrives under their name and take their name off it, but by default a stranger's track still goes live unless the artist acts, so labels and managers now know whose job it is to watch the profile.",
+    "story": "On 17 November 2026 Spotify, the music streaming platform, made Artist Profile Protection available to every artist on it. An artist who turns it on gets an email when music is delivered to Spotify under their name and can remove themselves from it; by default the release still goes live as scheduled, and a stricter setting blocks releases until the artist approves them. TechCrunch reported that Sony Music had asked platforms to remove more than 260,000 deepfake songs.",
+    "why_now": "Spotify for Artists, 17 Nov 2026: available to all artists.",
+    "fact": "Spotify for Artists: \"As of November 17th, 2026, Artist Profile Protection is now available for all artists on Spotify.\" and \"If you take no action, the release will go live as scheduled\"; TechCrunch, 17 Nov 2026: \"Sony Music had requested the removal of more than 260,000 deepfake songs from digital platforms\".",
+    "source": {
+     "label": "Spotify for Artists, Introducing Artist Profile Protection (updated 17 Nov 2026)",
+     "url": "https://artists.spotify.com/en/blog/introducing-artist-profile-protection",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "TechCrunch, Spotify's new tool aims to stop deepfakes from being attributed to real artists (17 Nov 2026)",
+      "url": "https://techcrunch.com/2026/11/17/spotifys-new-tool-aims-to-stop-deepfakes-from-being-attributed-to-real-artists/"
+     },
+     {
+      "label": "Spotify support, Protecting your Spotify artist profile",
+      "url": "https://support.spotify.com/artists/article/artist-profile-protection/"
+     }
+    ],
+    "first_reported": "https://artists.spotify.com/en/blog/introducing-artist-profile-protection",
+    "beats": [
+     "An alarm for fake songs in your name, whose default is to let them in.",
+     "How a song finds an artist's page: the name a distributor sends.",
+     "Why AI made the wrong songs land on real artists' pages.",
+     "What broke: the check comes after delivery, and it is the artist's.",
+     "What this shows about who now guards an artist's name."
+    ],
+    "pitch": {
+     "question": "If anyone can upload a song under your name, who should have to check it before it goes live?",
+     "headline": "Spotify now emails artists when a song arrives in their name. It still goes live.",
+     "hook": "Spotify's Artist Profile Protection, open to every artist since 17 November, emails a musician when a release arrives under their name, and unless they act, it goes live anyway.",
+     "examples": [
+      "Open to every artist from 17 November 2026.",
+      "By default the release goes live unless the artist steps in.",
+      "Sony Music asked for more than 260,000 deepfake songs to be taken down."
+     ],
+     "chain": [
+      "A distributor delivers a song to Spotify with an artist's name on it.",
+      "Spotify puts the song on the profile that carries that name.",
+      "AI makes it cheap to deliver songs that sound like a real artist.",
+      "So the wrong songs land on real artists' pages.",
+      "Spotify now emails the artist and lets them take their name off.",
+      "But the song goes live unless the artist acts, or turns on the stricter block."
+     ],
+     "take": "What this shows is that the platform built the alarm and left the artist on the night shift. Should checking a name be the artist's job or the distributor's?"
+    },
+    "style": {
+     "script": "the-usable-rule",
+     "production": "voice-led-pictures",
+     "experiment": {
+      "format": "receipt-animation",
+      "why": "Draw the email an artist gets as a delivery note, then stamp it: goes live unless you act."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If anyone can upload a song under your name, who should have to check it before it goes live? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 14 November to 7 December 2026 on: Spotify's Artist Profile Protection, how releases are matched to artist profiles, its review and block settings and artist keys, the volume of misattributed and AI-made releases, and what distributors and labels say. Work through the 5 Whys, starting from the plain question: Why 1 asks how it is built, and what broke. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "Spotify attaches a delivered release to a profile by the artist name in the delivery, so the new switch alerts the artist and lets them detach, while the release goes live by default.",
+    "aim": "utility",
+    "funny": "Spotify built an alarm for fake songs in your name, and its factory setting is to let them in.",
+    "lookalike": {
+     "pattern": "new-rule-for-ai-art",
+     "beats": "https://www.instagram.com/evolving.ai/p/Dcno5uwADrV/",
+     "our_take": "The post explained a country's new rule for AI music; we take apart the switch a platform gave artists, and its default."
+    },
+    "lens": {
+     "subject": "both",
+     "who": "Spotify",
+     "under_the_hood": "Releases attach to a profile by the name a distributor sends, so Spotify alerts the artist and lets them detach after delivery."
     }
    }
   ],
@@ -671,6 +819,150 @@
      "subject": "business",
      "who": "Nicalis",
      "under_the_hood": "Steam's AI label rests on the developer's own tick, and here the music files' metadata disclosed what the store page did not."
+    }
+   },
+   {
+    "id": "f1782b9f-5302-444d-9051-18070f8787c3",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "A newspaper company says humans are in charge of its new AI tools while one of them rewrites reporters' stories at new lengths and keeps their names on top, so any writer whose byline is their living now knows what their name is being used to sell.",
+    "story": "Nieman Lab reported on 18 November 2026 that McClatchy, the newspaper company behind the Miami Herald and the Sacramento Bee, plans Project Catalyst, an 'AI-native operating model' with about a dozen internal AI tools. One, a content scaling agent, repackages articles written by its reporters and writers at different lengths with their names attached; Originality.ai estimated up to 20% of recent McClatchy articles were AI-generated, while its product chief said humans are at the command center.",
+    "why_now": "Nieman Lab, 18 Nov 2026, from McClatchy's 6 Nov town hall.",
+    "fact": "Nieman Lab, 18 Nov 2026: chief product and engineering officer Rajiv Pant, \"In every one of these, humans are at the command center, they aren't just checking the technology's work,\"; Originality.ai estimated that up to 20% of recent McClatchy newspaper articles were AI-generated.",
+    "source": {
+     "label": "Nieman Lab, After gutting newsrooms, McClatchy plans to rebuild itself around AI (18 Nov 2026)",
+     "url": "https://www.niemanlab.org/2026/11/after-gutting-newsrooms-mcclatchy-plans-to-rebuild-itself-around-ai/",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "TheWrap, Inside the backlash to McClatchy's AI news tool (21 Apr 2026)",
+      "url": "https://thewrap.com/media-platforms/journalism/mcclatchy-content-scaling-agents-roiling-newsrooms"
+     }
+    ],
+    "first_reported": "https://www.niemanlab.org/2026/11/after-gutting-newsrooms-mcclatchy-plans-to-rebuild-itself-around-ai/",
+    "beats": [
+     "One reporter writes a story; by lunchtime it is five stories.",
+     "How the agent turns one article into versions for many audiences.",
+     "Why each version keeps the reporter's name.",
+     "Where the claim and the count part: humans in command, a fifth machine-made.",
+     "What this shows about what a byline now means."
+    ],
+    "pitch": {
+     "question": "When an AI rewrites your work and keeps your name on it, who is the author?",
+     "headline": "A newspaper's AI rewrites reporters' stories and keeps their names on them.",
+     "hook": "McClatchy's content scaling agent turns a reporter's story into shorter and longer versions with the reporter's name attached, and an outside check put up to 20% of its recent articles down as AI-made.",
+     "examples": [
+      "About a dozen internal AI tools in Project Catalyst.",
+      "Up to 20% of recent articles estimated as AI-generated, by Originality.ai.",
+      "More than 90 journalists laid off in September."
+     ],
+     "chain": [
+      "A reporter writes one story.",
+      "The content scaling agent rewrites it for several audiences, long and short.",
+      "Each version carries the reporter's name.",
+      "So one reporter's work becomes many articles to sell advertising against.",
+      "The company says humans are at the command center.",
+      "But an outside detector counts up to a fifth of its articles as AI-made."
+     ],
+     "take": "What this shows is that a byline is turning from a signature into a label on a product line. How many versions of a story can carry one person's name before it stops being theirs?"
+    },
+    "style": {
+     "script": "fry-explainer",
+     "production": "face-with-proof",
+     "experiment": {
+      "format": "data-story",
+      "why": "Stack one reporter's story and its machine-made versions like a tower, each with the same name at the top."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When an AI rewrites your work and keeps your name on it, who is the author? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 14 November to 7 December 2026 on: McClatchy's Project Catalyst, its content scaling agent, how bylines and AI disclosures are set, the share of its articles estimated as AI-generated, and what its reporters and their unions say. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "One human story is fed to an agent that writes versions for several audiences and lengths, and each version keeps the reporter's byline.",
+    "aim": "interest",
+    "funny": "One reporter writes a story and, by lunchtime, has written five of them without lifting a finger.",
+    "lookalike": {
+     "pattern": "creator-hands-over",
+     "beats": "https://www.instagram.com/evolving.ai/p/Dc_4Sy7gGi5/",
+     "our_take": "The post showed a streamer handing his channel to an AI copy by choice; we show reporters whose names went on AI copies without choosing."
+    },
+    "lens": {
+     "subject": "both",
+     "who": "McClatchy",
+     "under_the_hood": "An agent rewrites one human-written story into many lengths and audiences, keeping the original reporter's byline on each version."
+    }
+   },
+   {
+    "id": "908ca29a-784a-4ada-93a6-17af4a2b5083",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "Most film and TV editors already use AI, but for the chores, typing up footage and cleaning sound, and almost none want it to make the cut, so a post house or tool maker selling AI as faster editing is aiming at the part of the job editors will not hand over.",
+    "story": "VP Land and Variety reported on 15 November 2026 that in Avid's survey of 120 members of American Cinema Editors, the society of film and TV editors, 77.5% use AI somewhere in post-production. Transcription leads at 60%, then audio cleanup at 55% and searching footage at 39.2%, while only 7.5% want AI to help assemble shots or rough cuts for the filmmakers they work with.",
+    "why_now": "VP Land and Variety, 15 Nov 2026 (Avid first published the data on 16 Oct 2026).",
+    "fact": "VP Land, 15 Nov 2026: 77.5% of the 120 American Cinema Editors members Avid surveyed use AI, led by transcription (60%) and audio cleanup (55%), and 7.5% want it to help assemble shots or rough cuts; one editor told Avid: \"I don't want to generate an image. I want the AI to transcribe footage or find lines I'm looking for.\"",
+    "source": {
+     "label": "Avid, AI in post-production: film and TV editors (16 Oct 2026)",
+     "url": "https://www.avid.com/resource-center/ai-in-post-production-film-tv-editors",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "VP Land, 77.5% of ACE editors in Avid's survey use AI (15 Nov 2026)",
+      "url": "https://www.vp-land.com/stories/77-5-of-ace-editors-in-avids-survey-use-ai-led-by-transcription-and-audio-cleanup"
+     },
+     {
+      "label": "Variety, Surveyed ACE editors using AI, Avid data finds (15 Nov 2026)",
+      "url": "https://variety.com/2026/biz/news/surveyed-ace-editors-using-ai-avid-data-finds-1236947004/"
+     }
+    ],
+    "first_reported": "https://www.avid.com/resource-center/ai-in-post-production-film-tv-editors",
+    "beats": [
+     "Nobody becomes a film editor to type up rushes.",
+     "What editors hand AI: transcription, sound cleanup, search.",
+     "What they keep: the cut, with 7.5% wanting help there.",
+     "Where the claim and the reality part: tools sold as faster editing.",
+     "What this shows about which part of creative work AI gets first."
+    ],
+    "pitch": {
+     "question": "If most editors already use AI, why do almost none want it to make the cut?",
+     "headline": "Most film editors use AI. Almost none let it cut.",
+     "hook": "In Avid's survey of 120 film and TV editors, 77.5% use AI, mostly to transcribe footage and clean up sound, and only 7.5% want it anywhere near a rough cut.",
+     "examples": [
+      "77.5% of 120 surveyed editors use AI.",
+      "Transcription 60%, audio cleanup 55%.",
+      "Only 7.5% want help with a rough cut."
+     ],
+     "chain": [
+      "An editor's day starts with hours of footage nobody has typed up.",
+      "AI now transcribes it and cleans the sound.",
+      "So the editor can search the footage by the words said.",
+      "That frees time for the part they were hired for: choosing the cut.",
+      "The tools sold as faster editing aim at that part.",
+      "Editors say no: only 7.5% want AI to assemble a cut."
+     ],
+     "take": "What this shows is that editors let AI in through the back door and keep the front door locked. Is the cut the last part of the job anyone will trust a machine with?"
+    },
+    "style": {
+     "script": "everyday-debate",
+     "production": "data-story",
+     "experiment": {
+      "format": "scoreboard-test",
+      "why": "Two editors race the same hour of rushes, one typing it up by hand and one with AI, and both stop at the cut."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If most editors already use AI, why do almost none want it to make the cut? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 14 November to 7 December 2026 on: Avid's survey of American Cinema Editors members, what editors use AI for, what they refuse, the barriers they name, and how editing tools market AI. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "Editors use AI where the job is mechanical, transcription, sound cleanup and search, and refuse it where the job is judgement, assembling the cut.",
+    "aim": "interest",
+    "funny": "Nobody becomes a film editor to type up rushes, and AI took exactly that job and then stopped.",
+    "lookalike": {
+     "pattern": "small-win",
+     "beats": "https://www.instagram.com/power.ai/p/Dfjbe68ldg-/",
+     "our_take": "The post showed AI finding one lost earbud; we show film editors handing AI the dull hours and keeping the craft."
+    },
+    "lens": {
+     "subject": "creator",
+     "who": "film and TV editors",
+     "under_the_hood": "Editors hand AI the mechanical work of transcribing, cleaning sound and searching footage, and keep assembling the cut for themselves."
     }
    }
   ]
@@ -4504,6 +4796,30 @@
     "verdict": "new",
     "of": "off-sat-goodnews",
     "why": "The scouting app, the NASCAR voice and Odeon's assistant appear in no posted edition; Odeon is also in the off-sat-screen option, so they should not both run."
+   },
+   {
+    "ref": "wed-3",
+    "verdict": "new",
+    "of": "piece:a4b34048-ab39-49da-a251-eaa58ebe2eaf",
+    "why": "Both are about AI feature films, but this is a different film (Maharaja in Denims) and a different point: the cost keeps moving because better models made old shots look worse, while Gods Don't Give Gifts was about how many people are behind an AI film."
+   },
+   {
+    "ref": "wed-4",
+    "verdict": "new",
+    "of": "piece:08442c41-534a-4523-9818-0884e2fc985a",
+    "why": "Both have the same shape (a platform spots a fake and the person has to act), but this is different news: Spotify alerting musicians when a release arrives under their name. The TikTok post was likeness detection, aimed at brand managers and creators."
+   },
+   {
+    "ref": "fri-3",
+    "verdict": "new",
+    "of": "piece:4f8f23b2-8cb2-4498-b07c-243840f8a1ba",
+    "why": "No recent post covers a newsroom using AI to rewrite reporters' stories under their bylines. The nearest one is about users unknowingly building tools in chatbots, which is a different story for a different reader."
+   },
+   {
+    "ref": "fri-4",
+    "verdict": "new",
+    "of": "piece:5d55e729-43fd-433b-b4e5-056f5329cb05",
+    "why": "Both are surveys of creative workers using AI, but this is Avid's survey of film editors and its point is that they keep AI to chores and away from the cut. The designers post was about weekly use jumping to 91%."
    }
   ]
  }

@@ -1,0 +1,43 @@
+{
+ "lane": "fri",
+ "run": "Sunday ideas re-run of wed and fri, 28 Nov 2026 (days: wed,fri). Friday kept its two open options (festival entry forms, the Binding of Isaac metadata) and needed two with a creator side (config/lens.json, a mix, Krish 2026-11-28).",
+ "searched": [
+  "Pages read: niemanlab.org front page and its 18 Nov McClatchy report; thebookseller.com news; musicbusinessworldwide.com; vp-land.com; techcrunch.com media-entertainment",
+  "WebSearch: McClatchy Project Catalyst AI",
+  "WebSearch: Pangram AI detector authors novel accused November 2026",
+  "WebSearch: Wild Horse Country Mertens AI agent dropped",
+  "Read: thewrap.com (McClatchy content scaling agent, 21 Apr 2026), avid.com resource centre (16 Oct 2026), theweek.com on Pangram (27 Oct 2026)",
+  "CUT, Pangram 'witch hunts' in publishing (The Bookseller, 26 and 27 Nov): both in-window pages are paywalled after one sentence, and the readable cases (Orelien, Ballard, Kundizeza) are from September and October; kept as a theme to watch",
+  "CUT, Jason Isbell v Suno (25 Nov) and BumaStemra v YourNeuroTune (27 Nov): legal process, off the beat",
+  "CUT, Tidal AI ban (24 Nov): on the 23 Nov board",
+  "NOTE, Avid survey: Avid published the data on 16 Oct 2026; Variety and VP Land reported it on 15 Nov 2026, which is the dated event used"
+ ],
+ "candidates": [
+  {
+   "key": "mcclatchy",
+   "id": "f1782b9f-5302-444d-9051-18070f8787c3",
+   "sector": "media",
+   "subject": "both",
+   "who": "McClatchy and its reporters",
+   "event_date": "2026-11-18",
+   "what_happened": "Nieman Lab reported on 18 Nov 2026, from a 6 Nov town hall, that McClatchy plans Project Catalyst, an 'AI-native operating model' with about a dozen internal AI tools. Its content scaling agent repackages human-written articles at different lengths with the reporters' names attached; Originality.ai estimated up to 20% of recent McClatchy articles were AI-generated, while executives said 'humans are at the command center'.",
+   "sources": [
+    {"label": "Nieman Lab, After gutting newsrooms, McClatchy plans to rebuild itself around AI (18 Nov 2026)", "url": "https://www.niemanlab.org/2026/11/after-gutting-newsrooms-mcclatchy-plans-to-rebuild-itself-around-ai/", "date": "2026-11-18", "quotes": ["In every one of these, humans are at the command center, they aren't just checking the technology's work,", "We make entertainment — not content, entertainment,"]},
+    {"label": "TheWrap, 'More Stories, More Inventory': Inside the Backlash to McClatchy's AI News Tool (21 Apr 2026)", "url": "https://thewrap.com/media-platforms/journalism/mcclatchy-content-scaling-agents-roiling-newsrooms", "date": "2026-04-21", "quotes": ["Bottom line: We need more stories and we need more inventory.", "I'm not going to give the AI credit for all the reporting that we went out and did, the original story that we wrote."]}
+   ]
+  },
+  {
+   "key": "aceeditors",
+   "id": "908ca29a-784a-4ada-93a6-17af4a2b5083",
+   "sector": "film_tv",
+   "subject": "creator",
+   "who": "film and TV editors in American Cinema Editors",
+   "event_date": "2026-11-15",
+   "what_happened": "Reported by Variety and VP Land on 15 Nov 2026: in Avid's survey of 120 members of American Cinema Editors, 77.5% use AI, led by transcription (60%) and audio cleanup (55%), with search at 39.2%; only 7.5% want AI to help assemble shots or rough cuts.",
+   "sources": [
+    {"label": "VP Land, 77.5% of ACE editors in Avid's survey use AI (15 Nov 2026)", "url": "https://www.vp-land.com/stories/77-5-of-ace-editors-in-avids-survey-use-ai-led-by-transcription-and-audio-cleanup", "date": "2026-11-15", "quotes": ["Nobody grows up saying 'I dream of sinking dailies one day,'", "I wouldn't say I'm more efficient."]},
+    {"label": "Avid, AI in post-production: film and TV editors (16 Oct 2026)", "url": "https://www.avid.com/resource-center/ai-in-post-production-film-tv-editors", "date": "2026-10-16", "quotes": ["I don't want to generate an image. I want the AI to transcribe footage or find lines I'm looking for."]}
+   ]
+  }
+ ]
+}

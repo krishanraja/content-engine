@@ -1,0 +1,33 @@
+Generative AI Feature 'Maharaja in Denims' Sets April 2027 R — VP LandSkip to contentStoriesPodcastShowsToolsEventsJobsVideos ↗GENERATIVE AIGenerative AI Feature 'Maharaja in Denims' Sets April 2027 Release After Rebuilding Every Still Three Times
+Nov 26, 2026 · 3 min read
+Intelliflicks Studios is targeting an April 2027 release for Maharaja in Denims, a feature-length generative AI adaptation of CEO Khushwant Singh's own novel, after redoing its imagery as the models improved, according to Variety. Choosing realism over mythology or sci-fi made shot-to-shot consistency the central production problem, from character references to how the team handled performances.
+Timed to Baisakhi. The team wants the film out by April 2027 for the Punjabi harvest festival, and co-producer Twenty-Twenty One Studios is weighing a theatrical run followed by non-theatrical distribution.
+Nano Banana changed the workflow. It let the team generate new camera angles and compositions from reference images with far fewer manual corrections.
+Budget topped $500,000. Singh puts the cost above that figure, excluding marketing.
+Humans made the music and voices. Every song was written, composed and performed by people, and dubbing and narration were recorded with actors in the studio.
+The toolchain moved from Midjourney and Runway to Kling, Seedance 2.0 and Higgsfield
+Production began in 2024 on Midjourney's own platform.
+Work also started on Runway's video tools, before the team shifted to Google Veo, with Nano Banana handling stills.
+The team then moved through Kling AI's platform before switching models again.
+After Kling came ByteDance's Seedance 2.0.
+THE STORIES SHAPING AI IN HOLLYWOOD — IN YOUR INBOX
+Join studio execs, filmmakers, and creators who read VP Land to stay ahead of creative tech.
+By subscribing, you agree to receive VP Land emails and to the Terms. Unsubscribe anytime. Privacy Policy
+Free forever · read in minutes · unsubscribe anytime
+The film wrapped on tools available on the Higgsfield platform.
+OpenAI's ChatGPT and Google Imagen helped build early character references.
+Keeping faces, costumes and sets in line still took heavy manual fixes with face-swapping software, Photoshop and Adobe's Firefly.
+Singh says near-perfect shot-to-shot consistency only became achievable late in production. The team rebuilt the stills for the entire film three times before locking a look.
+When Higgsfield began allowing moving shots to be generated straight from character sheets, switching over would have added time and money, so the team animated the stills it already had.
+Singh gives an example of how tight that consistency has to be:
+"For example, if a lampshade is placed at a particular spot in a two-minute scene, it must remain in exactly the same position across every generated shot, irrespective of the camera angle. Even the slightest inconsistency can disrupt the cinematic experience."
+One person drove most of the motion, and redoing the film drove the budget
+Early on, real actors guided performances through Runway Act-One. A single person created most of the motion shots so that each character would speak, move and react the same way throughout the film.
+The short generated clips gave the editor less room to shape scenes than conventional footage allows.
+Singh says new technology usually cuts costs to around a tenth, but redoing close to an hour of the film three times as the tools improved pushed the budget past $500,000. "You are tempted to use the latest technology, so what was made before didn't look as appealing," Singh told AFP in an interview. "But then it also burns cash, because you are spending again for the software."
+A realism-first period drama with human control over story and sound
+Singh co-founded Intelliflicks in 2023 with Gurdeep Pall, then corporate VP of incubations at Microsoft, who proposed making the long-stalled book with generative AI. Balpreet Kaur, a Punjab-based independent filmmaker, is directing and holds final creative control.
+Set in 2008, the film follows Hari Sandhu, who has flashbacks to three earlier lives: as 19th-century Sikh ruler Maharaja Ranjit Singh, as a victim of Partition violence in 1947 and as a victim of the 1984 anti-Sikh violence.
+The team took liberties where the tools couldn't render period costumes accurately, and keeping faces and headgear consistent was a major hurdle early on; some early imagery still bears the marks. AFP reported the models were poorly trained for Indian faces and Sikh historical figures, and Singh told the agency, "Had we known the challenges, we would have picked a different script."
+Playback singer Sukhwinder Singh sang two versions of the title track, composed by Hargun Kaur. On copyright, Intelliflicks says it avoids drawing on any style or IP that belongs to a person or company, and leaves training-data questions to the companies that own the models.
+Singh calls the film an experiment and claims it will be "the first full-length generative AI film rooted in realism." Intelliflicks is exploring an adaptation of his next novel, The Opium Toffee, has a spy script and a war film in development, and is open to partnering with outside filmmakers on hybrid productions.

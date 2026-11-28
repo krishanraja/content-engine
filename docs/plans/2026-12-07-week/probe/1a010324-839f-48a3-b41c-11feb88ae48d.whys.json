@@ -1,0 +1,128 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why did a generative AI feature that its maker says should cost a tenth of a normal film end up costing more than $500,000?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why did the budget of Maharaja in Denims pass $500,000?",
+      "answer": "Because the team redid close to an hour of the film three times as the AI tools improved, and each round meant paying again for software.",
+      "evidence": [
+        {
+          "url": "https://variety.com/2026/film/news/generative-ai-feature-maharaja-in-denims-april-2027-release-1236957865/",
+          "domain": "variety.com",
+          "date": "2026-11-25",
+          "quote": "the team redid close to an hour of the film three times as the tools improved. He puts the cost at more than $500,000, excluding marketing, which has yet to begin."
+        },
+        {
+          "url": "https://www.vp-land.com/stories/generative-ai-feature-maharaja-in-denims-sets-april-2027-release-after-rebuilding-every-st",
+          "domain": "vp-land.com",
+          "date": "2026-11-26",
+          "quote": "redoing close to an hour of the film three times as the tools improved pushed the budget past $500,000."
+        },
+        {
+          "url": "https://www.digitaljournal.com/article/indias-maharaja-in-denims-stakes-claim-in-ai-film-race/",
+          "domain": "digitaljournal.com",
+          "date": "2026-04-15",
+          "quote": "“But then it also burns cash, because you are spending again for the software.”"
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "In April, AFP quoted Singh saying AI had slashed costs to roughly a tenth of a traditional budget. No source publishes a line-item budget, so the share of the $500,000 spent on redoing work is not shown. VP Land's account cites Variety, so those two are not fully independent; the AFP piece is."
+      },
+      "mechanism_type": "money",
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why did the team redo the film three times?",
+      "answer": "Each new model made the earlier footage look worse by comparison, and near-perfect shot-to-shot consistency only became possible late in production, so the stills were rebuilt before a look was locked.",
+      "evidence": [
+        {
+          "url": "https://www.digitaljournal.com/article/indias-maharaja-in-denims-stakes-claim-in-ai-film-race/",
+          "domain": "digitaljournal.com",
+          "date": "2026-04-15",
+          "quote": "“You are tempted to use the latest technology, so what was made before didn’t look as appealing,” Singh said."
+        },
+        {
+          "url": "https://variety.com/2026/film/news/generative-ai-feature-maharaja-in-denims-april-2027-release-1236957865/",
+          "domain": "variety.com",
+          "date": "2026-11-25",
+          "quote": "Singh says near-perfect shot-to-shot consistency only became achievable four or five months ago. The team rebuilt the stills for the entire film three times before locking a look."
+        },
+        {
+          "url": "https://www.vp-land.com/stories/generative-ai-feature-maharaja-in-denims-sets-april-2027-release-after-rebuilding-every-st",
+          "domain": "vp-land.com",
+          "date": "2026-11-26",
+          "quote": "Singh says near-perfect shot-to-shot consistency only became achievable late in production. The team rebuilt the stills for the entire film three times before locking a look."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "They did not always chase the newest tool: when Higgsfield began generating moving shots straight from character sheets, the team kept the stills it had because switching would have added time and money (Variety and VP Land)."
+      },
+      "mechanism_type": "model",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why did the earlier footage fall short?",
+      "answer": "The film chose realism, which made keeping faces, costumes and sets the same from shot to shot the central problem, and the models were poorly trained on Indian faces and Sikh historical figures, so the team kept troubleshooting and fixing by hand.",
+      "evidence": [
+        {
+          "url": "https://variety.com/2026/film/news/generative-ai-feature-maharaja-in-denims-april-2027-release-1236957865/",
+          "domain": "variety.com",
+          "date": "2026-11-25",
+          "quote": "Choosing realism over mythology or sci-fi made consistency the central problem."
+        },
+        {
+          "url": "https://www.digitaljournal.com/article/indias-maharaja-in-denims-stakes-claim-in-ai-film-race/",
+          "domain": "digitaljournal.com",
+          "date": "2026-04-15",
+          "quote": "AI models were poorly trained for Indian faces and Sikh historical figures, forcing the team to repeatedly troubleshoot."
+        },
+        {
+          "url": "https://www.vp-land.com/stories/generative-ai-feature-maharaja-in-denims-sets-april-2027-release-after-rebuilding-every-st",
+          "domain": "vp-land.com",
+          "date": "2026-11-26",
+          "quote": "Keeping faces, costumes and sets in line still took heavy manual fixes with face-swapping software, Photoshop and Adobe's Firefly."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Variety reports Nano Banana as a turning point that let the team make new angles from reference images with far fewer manual corrections, so the gap narrowed during production. VP Land's line on poorly trained models is attributed to AFP, not separate reporting."
+      },
+      "mechanism_type": "model",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why were the models poorly trained for Indian faces and Sikh historical figures?",
+      "answer": "Singh says the models are trained for Western films, which would be much easier to generate. No source shows what the models were trained on, and the studio leaves training-data questions to the companies that own the models.",
+      "evidence": [
+        {
+          "url": "https://www.digitaljournal.com/article/indias-maharaja-in-denims-stakes-claim-in-ai-film-race/",
+          "domain": "digitaljournal.com",
+          "date": "2026-04-15",
+          "quote": "A Western movie would be “much easier to generate, because the models are trained for that”, he said."
+        },
+        {
+          "url": "https://variety.com/2026/film/news/generative-ai-feature-maharaja-in-denims-april-2027-release-1236957865/",
+          "domain": "variety.com",
+          "date": "2026-11-25",
+          "quote": "What data the AI models were trained on is one for the companies that own them."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "none found, within the three source pages; no model company's training-data record was cited by any source."
+      },
+      "mechanism_type": "model",
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "The money went on doing the same work again: each better model made the last version look dated, and realism with Indian faces and Sikh period dress was where the models were weakest, so close to an hour was rebuilt three times. The sources stop at Singh's own account of why the models were weak.",
+    "open_question": "If every new model makes the last cut look old, when does an AI film count as finished?"
+  }
+}

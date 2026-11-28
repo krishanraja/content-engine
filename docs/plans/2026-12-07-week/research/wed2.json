@@ -1,0 +1,52 @@
+{
+ "lane": "wed",
+ "run": "Sunday ideas re-run of wed and fri, 28 Nov 2026 (days: wed,fri). Wednesday kept its two open options (Epic Blueprints, Maxon Plus) and needed two with a creator side (config/lens.json, a mix, Krish 2026-11-28).",
+ "searched": [
+  "WebSearch: AI tool musicians producers launch November 2026",
+  "WebSearch: YouTube creators AI feature November 2026 rolled out",
+  "WebSearch: illustrators artists AI controversy November 2026",
+  "WebSearch: Suno new feature artists November 2026",
+  "WebSearch: AI narration authors audiobooks launched November 2026",
+  "WebSearch: Twitch OR Patreon OR Substack OR Kick AI tool for creators November 2026",
+  "WebSearch: game developers AI tool shipped players found 2026/11",
+  "WebSearch: Spotify Artist Profile Protection artists",
+  "WebSearch: Meta Muse AI agent Instagram creators UK launch",
+  "Pages read: vp-land.com front page, techcrunch.com media-entertainment, digitalmusicnews.com/2026/11, musicradar.com music-tech, cartoonbrew.com, musically.com, niemanlab.org",
+  "Unreadable: theverge.com, gamesindustry.biz, rockpapershotgun.com (fetch refused); variety.com (paid gate, tollbit); gamesradar and pcgamer bodies did not load",
+  "CUT, Meta Muse UK launch (Music Ally, 27 Nov): Muse launched in the US on 8 Sep; the UK arrival has one source and no mechanism detail",
+  "CUT, inclusionAI Invoker-Render (25 Nov): a research lab's open-weight model, no creator in the story, so it reads as general AI lab news",
+  "CUT, Splice Create (11 Nov) and Beeble SwitchX 3.0 (11 Nov): outside the 14 to 28 Nov window",
+  "CUT, Tidal banning AI music (24 Nov): Tidal deleting AI songs was on the 23 Nov board's Thursday",
+  "CUT, microdrama startup buying actors' faces (TechCrunch, 21 Nov): an actor renting his face to an AI drama was on the 23 Nov board's Thursday",
+  "CUT, Neverness to Everness AI assets and Google's 'nine in ten developers' claim: article bodies would not load, so nothing could be checked"
+ ],
+ "candidates": [
+  {
+   "key": "maharaja",
+   "id": "1a010324-839f-48a3-b41c-11feb88ae48d",
+   "sector": "film_tv",
+   "subject": "both",
+   "who": "Intelliflicks Studios and director Balpreet Kaur",
+   "event_date": "2026-11-26",
+   "what_happened": "VP Land reported on 26 Nov 2026 (after Variety) that Maharaja in Denims, Intelliflicks Studios' feature-length generative AI film directed by Balpreet Kaur, will open in April 2027. It was made across Midjourney, Runway, Google Veo, Kling, Seedance 2.0 and Higgsfield, the stills for the whole film were redone three times as models improved, and the budget passed $500,000.",
+   "sources": [
+    {"label": "VP Land, Maharaja in Denims sets April 2027 release (26 Nov 2026)", "url": "https://www.vp-land.com/stories/generative-ai-feature-maharaja-in-denims-sets-april-2027-release-after-rebuilding-every-st", "date": "2026-11-26", "quotes": ["You are tempted to use the latest technology, so what was made before didn't look as appealing,", "But then it also burns cash, because you are spending again for the software."]},
+    {"label": "Digital Journal (AFP), India's Maharaja in Denims stakes claim in AI film race (15 Apr 2026)", "url": "https://www.digitaljournal.com/article/indias-maharaja-in-denims-stakes-claim-in-ai-film-race/", "date": "2026-04-15", "quotes": ["You are tempted to use the latest technology, so what was made before didn't look as appealing.", "There is no actor fee, there is no fuss over them coming late or causing delays."]}
+   ]
+  },
+  {
+   "key": "spotifyprotect",
+   "id": "19cde54d-3a9f-492d-bcfc-02240814705b",
+   "sector": "music",
+   "subject": "both",
+   "who": "Spotify and its artists",
+   "event_date": "2026-11-17",
+   "what_happened": "On 17 Nov 2026 Spotify made Artist Profile Protection available to every artist. An artist who turns it on gets an email when music is delivered under their name and can remove themselves; by default the release still goes live, and an advanced setting blocks releases until the artist approves them. Billboard reported Sony Music had asked for more than 260,000 deepfake songs to be removed.",
+   "sources": [
+    {"label": "Spotify for Artists, Introducing Artist Profile Protection (15 Mar 2026, updated 17 Nov 2026)", "url": "https://artists.spotify.com/en/blog/introducing-artist-profile-protection", "date": "2026-11-17", "quotes": ["As of November 17th, 2026, Artist Profile Protection is now available for all artists on Spotify.", "If you take no action, the release will go live as scheduled"]},
+    {"label": "TechCrunch, Spotify's new tool aims to stop deepfakes from being attributed to real artists (17 Nov 2026)", "url": "https://techcrunch.com/2026/11/17/spotifys-new-tool-aims-to-stop-deepfakes-from-being-attributed-to-real-artists/", "date": "2026-11-17", "quotes": ["By default, releases go live as scheduled unless an artist intervenes.", "Sony Music had requested the removal of more than 260,000 deepfake songs from digital platforms"]},
+    {"label": "Spotify support, Protecting your Spotify artist profile", "url": "https://support.spotify.com/artists/article/artist-profile-protection/", "date": null, "quotes": []}
+   ]
+  }
+ ]
+}
