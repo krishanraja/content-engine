@@ -33,8 +33,12 @@ export async function mapLimit<T, U>(rows: T[], limit: number, fn: (row: T) => P
   }))
   return output
 }
-export async function optional<T>(stage: string, fallback: T, read: () => Promise<T>): Promise<T> {
-  try { return await read() } catch {
+// A stage that fails falls back, except for the reasons named in `keep`: those are a decision (the week's budget is spent),
+// never a hiccup, and they reach the run's own error so the cron's 503 says why no edition came (27 Nov 2026: the
+// editorial stage's budget refusal was read as "no stories" for every run, and the site showed its frozen snapshot).
+export async function optional<T>(stage: string, fallback: T, read: () => Promise<T>, keep: readonly string[] = []): Promise<T> {
+  try { return await read() } catch (err) {
+    if (err instanceof Error && keep.includes(err.message)) throw err
     console.warn('hub unavailable:', stage)
     return fallback
   }

@@ -3,7 +3,7 @@ import { parseFeed, feeds, feedHealth, onBeat } from '../../apps/control-plane/l
 import { articleText } from '../../apps/control-plane/lib/hub/articles.js'
 import { buildMarkets, equalWeight, parseYahoo, validSymbol } from '../../apps/control-plane/lib/hub/markets.js'
 import { chooseImage, commonsImage, parseViews, wikiClient } from '../../apps/control-plane/lib/hub/wiki.js'
-import { dayMs, isoDay, type Draft } from '../../apps/control-plane/lib/hub/types.js'
+import { dayMs, isoDay, optional, type Draft } from '../../apps/control-plane/lib/hub/types.js'
 
 const now = Date.parse('2026-11-26T15:00:00Z')
 const google = feeds.find(f => f.outlet === 'Google News')!
@@ -134,4 +134,13 @@ describe('Wikimedia', () => {
     expect(parseViews(entity,{items:items.slice(1)},end)).toBeNull()
     expect(parseViews(entity,{items:items.slice(0,-1)},end)).toBeNull()
   })
+})
+
+it('a stage falls back on a hiccup but a budget refusal reaches the run', async () => {
+  const warn = vi.spyOn(console,'warn').mockImplementation(() => {})
+  expect(await optional('editorial stage',[],async () => { throw Error('provider unavailable') },['editorial_budget_unavailable'])).toEqual([])
+  await expect(optional('editorial stage',[],async () => { throw Error('editorial_budget_unavailable') },['editorial_budget_unavailable']))
+    .rejects.toThrow('editorial_budget_unavailable')
+  expect(await optional('catalogue',['kept'],async () => { throw Error('editorial_budget_unavailable') })).toEqual(['kept'])
+  warn.mockRestore()
 })

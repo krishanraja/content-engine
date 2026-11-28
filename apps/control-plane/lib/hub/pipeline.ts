@@ -36,7 +36,7 @@ export async function refresh(mode: Mode, now: number) {
   } else {
     const [market, catalogue, drafts] = await Promise.all([
       readMarket(), optional('catalogue',previous?.pieces || [],pieces),
-      optional('editorial stage',[],() => discover(now).then(writeEdition)),
+      optional('editorial stage',[],() => discover(now).then(writeEdition),['editorial_budget_unavailable']),
     ])
     if (drafts.length < 8) throw Error('insufficient_verified_stories')
     const wiki = wikiClient(now + 580_000)

@@ -308,14 +308,19 @@ def hub_items(answer):
     return [{k: r.get(k) for k in HUB_FIELDS if r.get(k) is not None} for r in rows if isinstance(r, dict) and r.get('url') and r.get('headline')]
 
 
-def hub_source(wk, read):
+def hub_source(wk, read, today=None):
     """The week's stories from makeyourmindup.ai's daily news hub (content-engine #982: GET /api/hub/today, the latest
     hub_snapshots row, curated per subsector; and, once the weekly edition's route is merged, a week of the rows at
     GET /api/board/<Monday>/edition/news), read by HTTP from the board's base url the way the other gather reads are.
-    Items from the seven days before the week, the same story once (by url). {read_from, items, skipped}: when no route
-    answers, skipped says why and the gather goes on, so a thin pool is said, never silent."""
+    Items from the seven days up to the week or up to today, whichever is earlier, the same story once (by url).
+    {read_from, items, skipped}: when no route answers, skipped says why and the gather goes on, so a thin pool is said,
+    never silent. The plan runs eight or nine days before its week (the Sunday loop), so a window of the seven days before
+    the week was always in the future and always empty: the 7 Dec board's gather (27 Nov) asked for 30 Nov to 7 Dec. The
+    window now ends at today, so the board is drawn from the latest news there is."""
     start = date.fromisoformat(wk)
-    window = ((start - timedelta(days=7)).isoformat(), start.isoformat())
+    today = today or date.today()
+    end = min(start, today + timedelta(days=1))
+    window = ((end - timedelta(days=7)).isoformat(), end.isoformat())
     if read is None:
         return {'read_from': [], 'items': [], 'skipped': 'no board reader (a test or an offline run)'}
     got, read_from, why = {}, [], []
