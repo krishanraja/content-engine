@@ -22,26 +22,29 @@ by the lines in `config/beat.json` `offdays` (`references/offdays.md`, "Every of
 story score's board `board_feed.py gate` refuses one with no focus-sector word, an office one as such, and a good-news
 story outside the focus sectors (`off_beat`, `idea_checks.offday_beat_findings`).
 
-**Businesses first, and under the hood** (Krish, 2026-11-27: "My ideas board has become a little bit too focused on
-individual creators and not enough on what it was before, which is businesses and, under the hood, how AI is changing
-things."). The focus sectors and the reader stay as they are; this sets which way a Monday, Wednesday or Friday story
-faces inside them. The line, the two subjects and the words are `config/lens.json`; read it, never copy it.
+**A mix of businesses and creators, layered where it can be** (Krish, 2026-11-27: "My ideas board has become a little
+bit too focused on individual creators and not enough on what it was before, which is businesses and, under the hood,
+how AI is changing things."; then, 2026-11-28: "I want a mix, not a lean." and "a mix, or a multilayered combo is better
+than one or the other. therein lies the ability to tell better stories."). The focus sectors and the reader stay as they
+are; this sets which way a Monday, Wednesday or Friday story faces inside them, and each off day's explainers. The line,
+the three subjects and the words are `config/lens.json`; read it, never copy it.
 
-- Research businesses first: the labels, studios, publishers, broadcasters, streamers, platforms, agencies, clubs and
-  leagues of these industries, and the AI firms, prices and markets they run on. Ask of each story what AI is changing
-  in how that business works: how the work is made, sold, priced, licensed or paid for. The weeks of 16 and 23 Nov are
-  the register he means ("Anthropic made $17 billion in three months and still lost money"; "An AI fixed another AI by
-  changing 0.016% of it"), brought inside the focus sectors.
-- One person or one tool feature leads at most one option a day (`max_creator_led_per_day`), and only when the story
-  is what it shows about how the business around them works. A creator tool's launch is creator-led unless what it
-  leads on is the company's deal, price, revenue or market.
-- Every hero carries `"lens": {"subject": "business" | "creator", "who": "<the business or person, by name>",
-  "under_the_hood": "<one plain line: what AI changes in how it works>"}`. Label it honestly: `board_feed.py gate`
-  (`lens`, `scripts/post-pack/lens.py`, from the 7 Dec board) refuses a hero with no lens, a `who` its story never names,
-  an `under_the_hood` under eight words, longer than a line or the so-what again, a `business` subject whose question,
-  headline, hook and first sentence name no company, label, studio, platform, club, league or market (or that lead on a
-  creator when its `who` is not a business), and an open hero day with more than one creator-led option. An idea from
-  his own words or his Inspiration tick is his: write its lens, but the gate never checks or counts it.
+- Research both sides: the labels, studios, publishers, broadcasters, streamers, platforms, agencies, clubs and leagues of
+  these industries and the AI firms, prices and markets they run on (asking what AI is changing in how each works: how
+  the work is made, sold, priced, licensed or paid for; the weeks of 16 and 23 Nov are that register, "Anthropic made $17
+  billion in three months and still lost money"), and the creators, artists and performers and the tools they use.
+- Prefer the layered story that carries both: what a label's AI deal does to its artists, how a studio's pipeline
+  changes an animator's job. It is labelled `both` and counts on each side.
+- Each open hero day has at least two options with a business side and two with a creator side (`min_each_per_day`; a
+  `both` counts on each), and each off day's explainers at least one of each (`min_each_offday`). Neither side takes over.
+- Every hero, and every off-day explainer, carries `"lens": {"subject": "business" | "creator" | "both", "who": "<the
+  business or person, by name>", "under_the_hood": "<one plain line: what AI changes in how it works>"}` (an explainer
+  needs no `under_the_hood`). Label it honestly: `board_feed.py gate` (`lens`, `scripts/post-pack/lens.py`, from the 7 Dec
+  board) refuses a lens missing or unknown, a `who` the option's words never name, a weak `under_the_hood`, a `business`
+  or `both` subject whose question, headline, hook and first sentence name no company, label, studio, platform, club,
+  league or market, a `business` one led by a creator when its `who` is not a business, a `both` one that names no
+  creator, and a day short of either side. A day he has already answered is never checked, and an idea from his own
+  words or his Inspiration tick is his: write its lens, but the gate never checks or counts it.
 
 **What is actually happening in the world** (Ruling, Krish, 2026-11-28: "Ultimately that week's ideas, memes, and
 carousels should be aligned to what is actually happening in the world."). The news hub carries three trend lanes above
