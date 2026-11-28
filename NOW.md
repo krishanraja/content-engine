@@ -44,18 +44,12 @@ Objection it answers: "AI content is slop." Here is an engine that grades its ju
 - From 27 Nov a video carries one wordmark, S3h on its outro: the wide quick-edit frame and the why-ladder title card draw no V4, no beat carries a series pill, and ve lint and ve render refuse a cut that would; cuts dated before render as signed. (2026-11-27)
 - The working-files loop's leftovers are gone for good, with Krish's yes of 27 Nov: the 29,437 retired rows of content_library_files (1,868 ready rows kept), the 14,710 stored files only they used (39,266,945 bytes; the bucket went from 17,154 to 2,444 objects), and content_library_files_unready; the database now refuses "2 Channel art (permanent)/" for every row. (2026-11-27)
 - Every close a new render can reach is now the locked v5 look: quick-edit's kit films the Library outro (S3h, Follow for more, makeyourmindup.ai, the climb bars) for pieces dated from 26 Nov, the why-ladder close card ends on S3h instead of V10, and the title lockup drops its retired V10 from 26 Nov. (2026-11-27)
-- The Library's static check runs on a clean checkout again: no live part of library.json, library.html, the review page or the guide names a retired cover template, verify_static.py skips the local bank-prompts comparison when that file is absent, and test_locking.py passes; 65 older gate failures in live v5 templates remain, listed in docs/ve/cards/library/verify-static-known.json. (2026-11-27)
-- The working-files lane no longer sends its own list or the copy the library sync keeps beside it, so the loop that rewrote five working-files lists in the Two passports post folder every ten minutes since 30 Oct has stopped; find and the by-hash lookup never return a row at a path the library now refuses. (2026-11-27)
-- The standards check-in of 2026-11-27 grouped the new floor standards; config/floor-groups.json holds 96 groups, each new one seeded as a proposal for Krish on the pinned check-in page. (2026-11-27)
-- The Sunday ideas run now treats step 6d (judges, score, order, stage 2 touches) as part of the run, and its log names how the Claude step ended and which commands it was refused. (2026-11-26)
 - **ve is the video engine on main; quick-edit stays the fallback until ve passes Phase 3**, at 0 of 3 counted cuts (`docs/ve/STATUS.md`, "Phase 3 count", last moved 2026-11-18). Procedure: `docs/ve/ENGINE.md` and `docs/ve/RUNBOOK.md`; `ve render` refuses a whole cut until he presses Approve proof. (2026-11-19)
 
 ## What changed recently
 
 - 2026-11-27 The Instagram inspo sheet's newest 100 rows held no carousel, so no Saturday option could pass the gate; prepare now adds the newest 30. The cover check asked every hero day for four options even on a thin week; it now reads the thin minimum.
-- 2026-11-27 The publication's promise is "AI news for the creative industries, every morning.": the daily Edition hub (`docs/HUB-PIPELINE.md`, published 06:00 UTC), pieces as 5 Whys ladders (`docs/FIVE-WHYS.md`), and one Saturday email to all subscribers (`.agents/skills/weekly-edition/SKILL.md`). Series names are internal and never shown.
-- 2026-11-27 library.json and its embedded copy in library.html, a mint phrase per text op in the renderer, library-headlines.json beside the deck, verify_static.py, verify-static-known.json, LIBRARY-GUIDE.md.
-Older lines: `docs/history/2026-11-27-NOW-moved-4.md` (it names every earlier move) and `LOG.md`.
+Older lines: `docs/history/2026-11-28-NOW-moved-1.md` (it names every earlier move) and `LOG.md`.
 
 
 ## What is next and what is waiting on Krish
