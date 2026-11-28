@@ -37,6 +37,27 @@
       "query": "AI art OR design OR illustration"
     }
   ],
+  "trends_about": "The three trend lanes above the six sectors (Ruling, Krish, 2026-11-28: the news shows the big trends in AI and why they are happening, from macroeconomic to behavioural to technical, and the week's ideas follow what is actually happening). Each lane is one British Google News search over the last two days, read outside the creative-sector filter; its stories pass the same writer, fact gate and draft judges as a sector's, and its line of what is moving and why is checked against those stories' own sources. They ride the edition as snapshot.trends, never as items, so a reader that knows only the six sectors still reads the edition.",
+  "trends": [
+    {
+      "key": "money",
+      "label": "Money",
+      "line": "Where the money in AI is going: spending, investment, prices and results.",
+      "query": "AI investment OR \"AI spending\" OR \"data centre\" OR \"AI chips\" OR \"AI earnings\" OR \"AI valuation\""
+    },
+    {
+      "key": "behaviour",
+      "label": "Behaviour",
+      "line": "How people and organisations actually use and trust AI, measured.",
+      "query": "\"AI survey\" OR \"AI adoption\" OR \"use AI\" OR \"AI users\" OR \"trust in AI\" OR \"AI study\""
+    },
+    {
+      "key": "technology",
+      "label": "Technology",
+      "line": "What AI models and tools can newly do, and what they cost to run.",
+      "query": "\"AI model\" OR OpenAI OR Anthropic OR \"Google Gemini\" OR \"AI agents\" OR \"AI benchmark\""
+    }
+  ],
   "trades": [
     {
       "subsector": "music",

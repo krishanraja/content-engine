@@ -88,6 +88,7 @@ it('persists the verified edition, serves it publicly, refreshes only prices and
   expect(morning.body.items.every((i:any) => i.coverage === 2)).toBe(true)
   expect(morning.body.items.filter((i:any) => i.image.brief)).toHaveLength(3)
   expect(morning.body.subsectors.find((s:any) => s.key === 'music').story_count).toBe(8)
+  expect(morning.body.trends.map((t:any) => [t.key,t.items.length,t.moving])).toEqual([['money',0,null],['behaviour',0,null],['technology',0,null]])
   expect(morning.body.ticker.stocks.SPOT.price).toBe(100)
   expect(io.model.mock.calls.filter(([o]) => o.agent === 'hub-relevance')).toHaveLength(1)
   expect(await refresh('daily',now + 1000)).toEqual({ skipped:'already published' })
@@ -119,4 +120,30 @@ it('counts each outlet once across repeated links, aliases and coverage on two f
   const { outletCount } = await import('../../apps/control-plane/lib/hub/editorial.js')
   const members = [['Trade','trade.example'],['Trade UK','trade.example'],['Trade UK','uk.trade.example'],['Another outlet','another.example']]
   expect(outletCount(members.map(([outlet,domain]) => ({ outlet,domain })) as any)).toBe(2)
+})
+
+it('picks trend stories by lane, and writes what is moving only from checked stories that pass the fact gate', async () => {
+  const ed = await import('../../apps/control-plane/lib/hub/editorial.js')
+  const row = (i: number, trend: string) => ({ title: 'AI spending story '+i, url: 'https://news.example/'+trend+'/'+i, summary: 'AI investment rose',
+    date: '2026-11-27T10:00:00Z', outlet: 'News '+i, domain: 'news'+i+'.example', sector: '', trend })
+  io.model.mockImplementationOnce(async (opts: any) => {
+    expect(opts.agent).toBe('hub-trends')
+    return JSON.stringify({ stories: [{ trend:'money',ids:[0] },{ trend:'money',ids:[1] },{ trend:'behaviour',ids:[0] },{ trend:'behaviour',ids:[2] },{ trend:'astrology',ids:[2] }] })
+  })
+  const groups = await ed.classifyTrends([row(1,'money'),row(2,'money'),row(3,'behaviour')])
+  expect(groups.map(g => [g.trend,g.members[0].url])).toEqual([
+    ['money','https://news.example/money/1'],['money','https://news.example/money/2'],['behaviour','https://news.example/behaviour/3']])
+
+  const items = [{ id:'t1',trend:'money',date:'2026-11-27',source:'News 1',url:'https://news.example/money/1',headline:'Spending rose',dek:'A firm said spending rose.',why:'Because demand grew.',coverage:1 }]
+  io.model.mockResolvedValueOnce(JSON.stringify({ moving:'Spending on AI is rising.',why:'The firm says demand grew.' }))
+  io.facts.mockImplementationOnce(async (body: string) => ({ version:1,body_hash:bodyHash(body),passed:true,independent_checker:'fixture',blocking:0,claims:[{ on_file:{ verdict:'supported' } }] }))
+  expect(await ed.writeTrendLine({ key:'money',label:'Money' },items)).toEqual({ moving:'Spending on AI is rising.',why:'The firm says demand grew.' })
+  expect(io.facts.mock.calls.at(-1)![2]).toContain('Because demand grew.')
+
+  io.model.mockResolvedValueOnce(JSON.stringify({ moving:'Spending on AI will triple.',why:'Everyone wants it.' }))
+  io.facts.mockImplementationOnce(async (body: string) => ({ version:1,body_hash:bodyHash(body),passed:false,independent_checker:'fixture',blocking:1,claims:[{ on_file:{ verdict:'unsupported' } }] }))
+  expect(await ed.writeTrendLine({ key:'money',label:'Money' },items)).toBeNull()
+  io.model.mockResolvedValueOnce(JSON.stringify({ moving:null,why:null }))
+  expect(await ed.writeTrendLine({ key:'money',label:'Money' },items)).toBeNull()
+  expect(await ed.writeTrendLine({ key:'money',label:'Money' },[])).toBeNull()
 })

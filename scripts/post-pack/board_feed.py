@@ -31,6 +31,7 @@ sys.path.insert(0, str(HERE))
 import making  # noqa: E402
 import idea_checks  # noqa: E402
 import lens  # noqa: E402
+import trend_tie  # noqa: E402
 import ideas_scorecard  # noqa: E402
 
 
@@ -294,7 +295,7 @@ def read_status(wk, call):
     return option_status(view, outcomes), None
 
 
-HUB_FIELDS = ('id', 'subsector', 'date', 'source', 'url', 'headline', 'dek', 'why', 'companies', 'coverage')
+HUB_FIELDS = ('id', 'subsector', 'trend', 'date', 'source', 'url', 'headline', 'dek', 'why', 'companies', 'coverage')
 HUB_ROUTES = ('/api/board/{week}/edition/news', '/api/hub/today')
 
 
@@ -302,10 +303,27 @@ def hub_items(answer):
     """The hub's story items in an answer: a daily snapshot ({items}) or a week of them ({days: [{edition_date, items}]})."""
     if not isinstance(answer, dict):
         return []
-    rows = list(answer.get('items') or [])
+    rows = list(answer.get('items') or []) + [i for t in answer.get('trends') or [] if isinstance(t, dict) for i in t.get('items') or []]
     for d in answer.get('days') or []:
-        rows += [dict(i, date=i.get('date') or d.get('edition_date')) for i in (d.get('items') or []) if isinstance(i, dict)] if isinstance(d, dict) else []
+        if not isinstance(d, dict):
+            continue
+        trend_rows = [i for t in d.get('trends') or [] if isinstance(t, dict) for i in t.get('items') or []]
+        rows += [dict(i, date=i.get('date') or d.get('edition_date')) for i in (d.get('items') or []) + trend_rows if isinstance(i, dict)]
     return [{k: r.get(k) for k in HUB_FIELDS if r.get(k) is not None} for r in rows if isinstance(r, dict) and r.get('url') and r.get('headline')]
+
+
+def hub_trends(answer, edition_date=None):
+    """Each trend lane's line of what is moving and why in an answer, with the day it was written: the first place a
+    session finds the trend an idea follows (config/trend-tie.json)."""
+    if not isinstance(answer, dict):
+        return []
+    out = [dict(key=t.get('key'), label=t.get('label'), moving=t.get('moving'), why=t.get('why'), date=answer.get('edition_date') or edition_date,
+                sources=[i.get('url') for i in t.get('items') or [] if isinstance(i, dict) and i.get('url')])
+           for t in answer.get('trends') or [] if isinstance(t, dict) and t.get('moving')]
+    for d in answer.get('days') or []:
+        if isinstance(d, dict):
+            out += hub_trends({'trends': d.get('trends'), 'edition_date': d.get('edition_date')})
+    return out
 
 
 def hub_source(wk, read, today=None):
@@ -323,11 +341,13 @@ def hub_source(wk, read, today=None):
     window = ((end - timedelta(days=7)).isoformat(), end.isoformat())
     if read is None:
         return {'read_from': [], 'items': [], 'skipped': 'no board reader (a test or an offline run)'}
-    got, read_from, why = {}, [], []
+    got, read_from, why, trends = {}, [], [], []
     for route in HUB_ROUTES:
         path = route.format(week=wk)
         try:
-            items = hub_items(read(path))
+            answer = read(path)
+            items = hub_items(answer)
+            trends += [t for t in hub_trends(answer) if window[0] <= str(t.get('date') or window[0])[:10] < window[1]]
         except Exception as error:  # an unreachable or unmerged route is a reason, never a failed gather
             why.append(f'{path}: {str(error)[:120]}')
             continue
@@ -339,7 +359,8 @@ def hub_source(wk, read, today=None):
     skipped = None if read_from else ('the hub could not be read: ' + '; '.join(why))
     if read_from and not items:
         skipped = f'the hub answered with no stories dated {window[0]} to {window[1]}'
-    return {'read_from': read_from, 'items': items, 'skipped': skipped}
+    trends = list({(t.get('key'), str(t.get('date'))[:10]): t for t in trends}.values())  # both routes can answer with one edition
+    return {'read_from': read_from, 'items': items, 'trends': trends, 'skipped': skipped}
 
 
 def gather(week, call=None, out_dir=None, read=None):
@@ -829,6 +850,9 @@ def wave1(ideas, sources, plans=None, p6=None, status=None, before=None):
     # Businesses first, and under the hood: every open hero says which way it faces and what AI changes in how the
     # business works, and no hero day is led by more than one creator (Ruling, Krish, 2026-11-27; config/lens.json).
     found += lens.lens_findings(ideas, week, status, before=before)
+    # What is actually happening in the world: every open option, memes and carousels included, follows a dated trend
+    # in one of the hub's lanes (Ruling, Krish, 2026-11-28; config/trend-tie.json).
+    found += trend_tie.trend_findings(ideas, week, status, before=before)
     # The cycle's stage 2 touches (config/cycle.json; Krish, 2026-11-26: every system involved at the right moment): a
     # required touch with no line on the week's touches.jsonl fails it too, from the story score's `from` board.
     if week:
@@ -951,7 +975,7 @@ def lookalike_of(week, plans=None):
 # reader that adds it, so the blind proof's frozen idea_checks.py is unchanged. From the lens's board a hero with no lens,
 # a lens that does not hold, or an open hero day led by more than one creator fails it too (lens; scripts/post-pack/lens.py,
 # config/lens.json; Ruling, Krish, 2026-11-27), kept out of idea_checks.py for the same reason.
-GATE_CODES = idea_checks.GATE_CODES + ('touch', lens.CODE)
+GATE_CODES = idea_checks.GATE_CODES + ('touch', lens.CODE, trend_tie.CODE)
 
 
 def gate(week, ideas_path=None, plans=None):

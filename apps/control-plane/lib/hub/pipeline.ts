@@ -34,10 +34,11 @@ export async function refresh(mode: Mode, now: number) {
     snapshot = { ...previous, generated_at, ticker: market.ticker,
       subsectors: previous.subsectors.map(s => ({ ...s, index: market.indexes[s.key] })) }
   } else {
-    const [market, catalogue, drafts] = await Promise.all([
+    const [market, catalogue, edition] = await Promise.all([
       readMarket(), optional('catalogue',previous?.pieces || [],pieces),
-      optional('editorial stage',[],() => discover(now).then(rows => writeEdition(rows,now)),['editorial_budget_unavailable']),
+      optional('editorial stage',{ drafts: [], trends: [] },() => discover(now).then(rows => writeEdition(rows,now)),['editorial_budget_unavailable']),
     ])
+    const { drafts, trends } = edition
     if (drafts.length < 8) throw Error('insufficient_verified_stories')
     const wiki = wikiClient(now + 580_000)
     const items = await Promise.all(drafts.map(async (d,i) => ({ ...d.item, image: await chooseImage(d,i,wiki.image) })))
@@ -50,7 +51,7 @@ export async function refresh(mode: Mode, now: number) {
       else console.warn('hub pageviews missing',entity.wiki_title)
     }
     const fallback = buildMarkets(now,[],{})
-    snapshot = { ok: true, version: 1, generated_at, edition_date: date, items, attention, pieces: catalogue,
+    snapshot = { ok: true, version: 1, generated_at, edition_date: date, items, attention, pieces: catalogue, trends,
       ticker: market?.ticker ?? previous?.ticker ?? fallback.ticker,
       subsectors: sectors.map(({ key,label,line }) => ({ key,label,line,story_count: items.filter(i => i.subsector === key).length,
         index: market?.indexes[key] ?? previous?.subsectors.find(s => s.key === key)?.index ?? fallback.indexes[key] })) }

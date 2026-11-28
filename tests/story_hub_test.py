@@ -66,5 +66,18 @@ class Hub(unittest.TestCase):
         self.assertIsNone(got['skipped'])
 
 
+    def test_the_trend_lanes_come_with_their_stories_and_their_line(self):
+        snap = {'ok': True, 'edition_date': '2026-11-26', 'items': [item(1, '2026-11-26')],
+                'trends': [{'key': 'money', 'label': 'Money', 'moving': 'Spending on AI is rising.', 'why': 'Demand grew.',
+                            'items': [dict(item(2, '2026-11-25', sub=None), trend='money')]},
+                           {'key': 'behaviour', 'label': 'Behaviour', 'moving': None, 'why': None, 'items': []}]}
+        got = board_feed.hub_source('2026-12-07', lambda p: snap, today=date(2026, 11, 27))
+        self.assertEqual(sorted(i['id'] for i in got['items']), ['h1', 'h2'])
+        self.assertEqual([i.get('trend') for i in got['items'] if i['id'] == 'h2'], ['money'])
+        self.assertEqual([(t['key'], t['moving']) for t in got['trends']], [('money', 'Spending on AI is rising.')], 'a lane with no line is left out')
+        old = dict(snap, edition_date='2026-11-01')
+        self.assertEqual(board_feed.hub_source('2026-12-07', lambda p: old, today=date(2026, 11, 27))['trends'], [], 'only this week\'s lines')
+
+
 if __name__ == '__main__':
     unittest.main()

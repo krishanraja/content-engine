@@ -15,8 +15,13 @@ describe('edition inputs', () => {
     const [row] = parseFeed(xml,google,now)
     expect(row).toMatchObject({ title: 'AI music & rights', summary:'Licensing', outlet:'Trade', domain:'trade.example', sector:'music' })
     expect(parseFeed(xml,google,now + 2 * dayMs)).toEqual([])
-    expect(feeds.filter(f => f.outlet === 'Google News')).toHaveLength(6)
-    expect(feeds).toHaveLength(18)
+    expect(feeds.filter(f => f.outlet === 'Google News' && !f.trend)).toHaveLength(6)
+    expect(feeds.filter(f => f.trend).map(f => f.trend)).toEqual(['money','behaviour','technology'])
+    const trend = feeds.find(f => f.trend === 'money')!
+    expect(onBeat({ title:'AI data centre spending doubles', summary:'', trend:'money' } as any)).toBe(true)
+    expect(onBeat({ title:'Data centre opens in Leeds', summary:'', trend:'money' } as any)).toBe(false)
+    expect(trend.subsector).toBe('')
+    expect(feeds).toHaveLength(21)
     expect(new URL(google.url).searchParams.get('q')).toBe('AI music when:2d')
   })
   it('reads alternate Atom links and rejects malformed XML', () => {
