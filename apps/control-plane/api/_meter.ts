@@ -702,7 +702,23 @@ export function weekStartKey(d: Date): string {
   return t.toISOString().slice(0, 10)
 }
 
-export interface ChainWeek { week: string; usd: number; by_family: Record<string, number>; cap_usd: number; over: boolean }
+export interface ChainWeek { week: string; usd: number; by_family: Record<string, number>; cap_usd: number; over: boolean
+  /** Spend this week under an allowance of its own (chain-cap.json own_allowances), taken out of usd. */
+  outside_usd?: number }
+
+type OwnAllowance = { run_prefix: string; weekly_usd: number; edition_usd?: number }
+/** The jobs with an allowance of their own, outside the chain cap (Ruling, Krish, 2026-11-28: the daily news hub). */
+export const OWN_ALLOWANCES: Record<string, OwnAllowance> = ((chainCap as { own_allowances?: Record<string, OwnAllowance> }).own_allowances) || {}
+
+/** What the runs whose id starts with `prefix` have spent since `since` (an ISO time), from meter_events; null when
+ *  the meter cannot be read. Every self-metered call inside meterScope({ runId }) lands there, however deep. */
+export async function runSpend(prefix: string, since: string): Promise<number | null> {
+  const supabase = await db()
+  if (!supabase) return null
+  const { data, error } = await supabase.from('meter_events').select('usd').like('run_id', `${prefix}%`).gte('at', since).limit(20000)
+  if (error || !data) return null
+  return round6((data as Array<{ usd: number | string }>).reduce((sum, r) => sum + (Number(r.usd) || 0), 0))
+}
 
 /** Sum the chain's rows for the week starting `week` (a Monday key); rows outside that week or the chain are ignored. */
 export function chainWeekSum(rows: Array<{ unit_kind: string; unit_key: string; day: string; usd: number | string }>, week: string): ChainWeek {
@@ -731,5 +747,17 @@ export async function chainWeekSpend(now: Date = new Date()): Promise<ChainWeek 
   const { data, error } = await supabase.from('meter_daily').select('unit_kind,unit_key,day,usd')
     .eq('unit_kind', chainCap.unit_kind).gte('day', week).limit(5000)
   if (error || !data) return null
-  return chainWeekSum(data as Array<{ unit_kind: string; unit_key: string; day: string; usd: number | string }>, week)
+  const sum = chainWeekSum(data as Array<{ unit_kind: string; unit_key: string; day: string; usd: number | string }>, week)
+  // A job with its own allowance is never counted in the chain. If its spend cannot be read it stays in, so the chain
+  // can only look fuller than it is, never emptier.
+  let outside = 0
+  for (const a of Object.values(OWN_ALLOWANCES)) outside += (await runSpend(a.run_prefix, `${week}T00:00:00Z`)) ?? 0
+  return withOutside(sum, outside)
+}
+
+/** The chain week with `outside` dollars (spend under an allowance of its own) taken out. */
+export function withOutside(w: ChainWeek, outside: number): ChainWeek {
+  if (!(outside > 0)) return w
+  const usd = round6(Math.max(0, w.usd - outside))
+  return { ...w, usd, over: usd > w.cap_usd, outside_usd: round6(outside) }
 }

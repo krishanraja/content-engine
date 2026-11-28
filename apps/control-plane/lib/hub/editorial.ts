@@ -2,13 +2,13 @@ import { createHash } from 'node:crypto'
 import { computeKeys } from '../../api/_dedup.js'
 import { callClaude, robustJson } from '../../api/_content.js'
 import { JUDGE_MODEL, UTILITY_MODEL } from '../../api/_models.js'
-import { chainWeekSpend } from '../../api/_meter.js'
+import { meterScope, runSpend, weekStartKey, OWN_ALLOWANCES } from '../../api/_meter.js'
 import { checkSourcedBody } from '../../api/content-ideas/[id]/fact-check.js'
 import { gateStatus } from '../../api/_factGate.js'
 import { runPanel, standing, READY_AT } from '../../api/_judges/panel.js'
 import { readArticle } from './articles.js'
 import { onBeat, type Candidate } from './feeds.js'
-import { sectors, stocks, validSector, optional, mapLimit, type Entity, type Draft } from './types.js'
+import { sectors, stocks, validSector, optional, mapLimit, isoDay, type Entity, type Draft } from './types.js'
 
 type Group = { sector: string; members: Candidate[] }
 const direct = (row: Candidate) => new URL(row.url).hostname !== 'news.google.com'
@@ -119,24 +119,41 @@ async function writeGroup(group: Group): Promise<Draft | null> {
     subject: typeof raw.subject === 'string' ? raw.subject.trim().slice(0,250) : '' }
 }
 
-export async function writeEdition(rows: Candidate[]) {
-  async function hasBudget() {
-    const week = await chainWeekSpend()
-    return week && week.usd < week.cap_usd
+const HUB = OWN_ALLOWANCES.hub
+
+/** Whether the hub may make another paid call: its own allowance (Ruling, Krish, 2026-11-28: $15 a week, at most $2.50
+ *  an edition, outside the chain cap). An unread meter refuses, so a fault never spends. */
+export function hubBudget(week: number | null, edition: number | null, a: { weekly_usd: number; edition_usd?: number } = HUB): 'ok' | 'week' | 'edition' | 'unread' {
+  if (!a || week === null || edition === null) return 'unread'
+  if (week >= a.weekly_usd) return 'week'
+  if (edition >= (a.edition_usd ?? a.weekly_usd)) return 'edition'
+  return 'ok'
+}
+
+export async function writeEdition(rows: Candidate[], now: number = Date.now()) {
+  const runId = (HUB?.run_prefix ?? 'hub-edition-') + isoDay(now)
+  const since = weekStartKey(new Date(now)) + 'T00:00:00Z'
+  async function budget() {
+    if (!HUB) return 'unread' as const
+    return hubBudget(await runSpend(HUB.run_prefix, since), await runSpend(runId, since))
   }
-  if (!await hasBudget()) throw Error('editorial_budget_unavailable')
-  const ranked = await classify(rows)
-  const accepted: Draft[] = []
-  for (let i = 0; i < ranked.length && accepted.length < 12;) {
-    if (!await hasBudget()) { console.warn('hub editorial budget held'); break }
-    const next = ranked.slice(i,i + Math.min(4,12 - accepted.length))
-    i += next.length
-    const batch = await mapLimit(next,4, g =>
-      optional('editorial gate ' + g.members[0].domain, null, () => writeGroup(g)))
-    for (const draft of batch) {
-      if (draft && !accepted.some(d => d.item.id === draft.item.id)) accepted.push(draft)
-      else console.warn('hub item held')
+  // Every paid call below lands in meter_events with this edition's run id, which is how the allowance is measured.
+  return meterScope({ pieceId: null, runId }, async () => {
+    if (await budget() !== 'ok') throw Error('editorial_budget_unavailable')
+    const ranked = await classify(rows)
+    const accepted: Draft[] = []
+    for (let i = 0; i < ranked.length && accepted.length < 12;) {
+      const left = await budget()
+      if (left !== 'ok') { console.warn('hub editorial budget held:', left); break }
+      const next = ranked.slice(i,i + Math.min(4,12 - accepted.length))
+      i += next.length
+      const batch = await mapLimit(next,4, g =>
+        optional('editorial gate ' + g.members[0].domain, null, () => writeGroup(g)))
+      for (const draft of batch) {
+        if (draft && !accepted.some(d => d.item.id === draft.item.id)) accepted.push(draft)
+        else console.warn('hub item held')
+      }
     }
-  }
-  return accepted
+    return accepted
+  })
 }

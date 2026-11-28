@@ -144,3 +144,15 @@ it('a stage falls back on a hiccup but a budget refusal reaches the run', async 
   expect(await optional('catalogue',['kept'],async () => { throw Error('editorial_budget_unavailable') })).toEqual(['kept'])
   warn.mockRestore()
 })
+
+it('an edition stops at the hub allowance: $15 a week, $2.50 an edition, and never on an unread meter', async () => {
+  vi.stubEnv('SUPABASE_URL','https://fixture.invalid'); vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY','fixture')
+  const { hubBudget } = await import('../../apps/control-plane/lib/hub/editorial.js')
+  const a = { weekly_usd:15, edition_usd:2.5 }
+  expect(hubBudget(4,1,a)).toBe('ok')
+  expect(hubBudget(15,0,a)).toBe('week')
+  expect(hubBudget(10,2.5,a)).toBe('edition')
+  expect(hubBudget(null,0,a)).toBe('unread')
+  expect(hubBudget(0,null,a)).toBe('unread')
+  vi.unstubAllEnvs()
+})

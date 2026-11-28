@@ -79,7 +79,7 @@ crons, the fact gate, and divergent-thinker's calls for the ideas board, which C
 `divergent-content-engine` (Ruling, Krish, 2026-11-18: content-engine's divergent calls count inside its $15 weekly chain
 cap; `scripts/post-pack/divergent.py` refuses its paid calls, the wildcard and the at-will `map`, `provoke`, `challenge`, `diverge` and an unanchored or judged `score` (`docs/DIVERGENT.md`), once the week is over); `unit_kind` agent only), and `chainWeekSpend()` in `apps/control-plane/api/_meter.ts` sums them
 for the week from Monday 00:00 UTC (`tests/control-plane/chain-cap.test.ts`). Left out, each with its reason in that
-file: `aeo-*`, Apify actors, Control Center's own agents and Claude Code on his subscription. Measured on 14 Nov 2026:
+file: `aeo-*`, Apify actors, Control Center's own agents and Claude Code on his subscription. The daily news hub has an allowance of its own, outside the chain (Ruling, Krish, 2026-11-28: $15 a week, at most $2.50 an edition; `own_allowances.hub` in that file): its editions are metered by run id in `meter_events`, and `chainWeekSpend()` takes them out of the chain (`docs/HUB-PIPELINE.md`). Measured on 14 Nov 2026:
 $15.45 (week of 26 Oct), $14.53 (2 Nov), $19.64 (9 Nov, to 14 Nov).
 
 The weekly meme-template read (Ruling, Krish, 2026-11-17: "run Apify weekly in the Sunday ideas run") is one Apify run a

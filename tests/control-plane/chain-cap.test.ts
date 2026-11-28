@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 vi.mock('../../apps/control-plane/api/_supabase.js', () => ({ supabase: null }))
 
-import { chainFamily, chainWeekSum, weekStartKey } from '../../apps/control-plane/api/_meter.js'
+import { chainFamily, chainWeekSum, weekStartKey, withOutside, OWN_ALLOWANCES } from '../../apps/control-plane/api/_meter.js'
 import cap from '../../config/chain-cap.json' with { type: 'json' }
 
 const row = (unit_key: string, usd: number, day = '2026-11-10', unit_kind = 'agent', provider = 'anthropic') =>
@@ -182,4 +182,12 @@ describe('enforcing the $15 a week chain', () => {
     expect(f.rows).toEqual([])
     expect(f.items).toEqual([])
   })
+})
+
+it('the daily news hub spends from its own allowance, never the chain cap (Ruling, Krish, 2026-11-28)', () => {
+  expect(OWN_ALLOWANCES.hub).toMatchObject({ run_prefix:'hub-edition-', weekly_usd:15, edition_usd:2.5 })
+  const week = { week:'2026-11-23', usd:16, by_family:{}, cap_usd:15, over:true }
+  expect(withOutside(week,3)).toMatchObject({ usd:13, over:false, outside_usd:3 })
+  expect(withOutside(week,0)).toBe(week)
+  expect(withOutside(week,40).usd).toBe(0)
 })
