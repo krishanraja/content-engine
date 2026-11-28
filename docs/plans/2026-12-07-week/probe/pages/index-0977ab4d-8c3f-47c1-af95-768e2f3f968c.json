@@ -1,0 +1,23 @@
+{
+  "https://newsmachines.beehiiv.com/p/new-york-times-news-agent": {
+    "file": "newsmachines-nyt-news-agent.txt"
+  },
+  "https://mediacopilot.ai/new-york-times-news-agent": {
+    "file": "mediacopilot-nyt-news-agent.txt"
+  },
+  "https://arxiv.org/abs/2609.30611": {
+    "file": "arxiv-2609-30611-abs.txt"
+  },
+  "https://arxiv.org/html/2609.30611v1": {
+    "file": "arxiv-2609-30611-html.txt"
+  },
+  "https://www.nytimes.com/2024/10/07/reader-center/how-new-york-times-uses-ai-journalism.html?unlocked_article_code=1.S1E.w1xq.gqBL7AK7rKTN&smid=url-share": {
+    "unreadable": "403, bot check page, no article text"
+  },
+  "https://www.hackshackers.com/investigative-journalism-forum-2026-program/": {
+    "file": "hackshackers-ij-forum-2026-program.txt"
+  },
+  "https://www.justice.gov/opa/pr/department-justice-publishes-35-million-responsive-pages-compliance-epstein-files": {
+    "file": "doj-epstein-files-release-2026-01-30.txt"
+  }
+}

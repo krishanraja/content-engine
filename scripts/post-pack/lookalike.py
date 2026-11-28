@@ -12,7 +12,8 @@ should always be immediate utility for the user, or interest, or humor."
 
 prepare reads the sheet ("Instagram inspo.xlsx", Drive 1N3qftTy5aHiFjMkK_2c_O4rOvTAirw3N, tabs Themes and Posts)
 through the engine (GET /api/inspiration/instagram-sheet, the operator key, read-only, no spend), takes the newest 100
-Posts rows (by Published, else Retrieved: the profile-grid backfill of 16 Nov has no Published date) and the Themes tab,
+Posts rows (by Published, else Retrieved: the profile-grid backfill of 16 Nov has no Published date), then the sheet's
+newest 30 carousels outside those (the Saturday options are modelled on one; with_carousels), and the Themes tab,
 and writes docs/plans/<Monday>-week/lookalike-input.json with how fresh the sheet is. When the sheet cannot be read, it
 says why and uses the feed the gather already holds (sources.json inspiration.lookalike_feed, the same sheet's rows over
 45 days), marked source "feed_fallback". A stale sheet (its newest row older than three days) or a fallback is a
@@ -40,6 +41,7 @@ import idea_checks  # noqa: E402
 SHEET_ROUTE = '/api/inspiration/instagram-sheet'
 XLSX_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 NEWEST = 100
+NEWEST_CAROUSELS = 30  # the sheet's newest carousels added past the newest NEWEST posts (with_carousels)
 STALE_DAYS = 3
 PATTERNS_MIN, PATTERNS_MAX = 5, 8
 AIMS = idea_checks.AIMS
@@ -215,6 +217,17 @@ def download(call_bytes=None):
     return data
 
 
+def with_carousels(posts):
+    """The newest NEWEST posts, then the sheet's newest NEWEST_CAROUSELS carousels that fell outside them. Every Saturday
+    option is modelled on a carousel in the sheet (Ruling, Krish, 2026-11-17; idea_checks.saturday_findings), and the
+    profile-grid backfill of 16 Nov filled the newest rows with posts whose type is Post or Reel, so the newest 100 alone
+    held no carousel and no Saturday option could pass on the 30 Nov and 7 Dec boards. The sheet held 151 carousels."""
+    newest = newest_first(posts)[:NEWEST]
+    seen = {p.get('url') for p in newest}
+    extra = [p for p in newest_first(posts) if is_carousel(p) and p.get('url') not in seen][:NEWEST_CAROUSELS]
+    return newest + extra
+
+
 def prepare(week, call_bytes=None, plans=None, today=None, sheet_file=None):
     """(path written, summary lines): docs/plans/<Monday>-week/lookalike-input.json."""
     wk = monday(week)
@@ -251,7 +264,7 @@ def prepare(week, call_bytes=None, plans=None, today=None, sheet_file=None):
     out = {'_about': ('The newest posts of his Instagram inspo sheet (Drive "Instagram inspo.xlsx"), read for the lookalike step '
                       '(scripts/post-pack/lookalike.py prepare). Newest first, by Published, else Retrieved.'),
            'week_start': wk, 'read_on': today.isoformat(), 'source': source, **({'reason': reason} if reason else {}),
-           'freshness': fresh, 'warnings': warnings, 'posts': newest_first(posts)[:NEWEST], 'themes': themes}
+           'freshness': fresh, 'warnings': warnings, 'posts': with_carousels(posts), 'themes': themes}
     path = folder / 'lookalike-input.json'
     path.write_text(json.dumps(out, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')
     lines = [f'lookalike input for the week of {wk}: {source}, {len(out["posts"])} of {total} posts, {len(themes)} themes; '

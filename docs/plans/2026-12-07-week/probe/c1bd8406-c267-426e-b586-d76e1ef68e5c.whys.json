@@ -1,0 +1,153 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why are some animation festival entrants marking AI films as 3D on their forms, while Manchester bans generative AI films from 2027?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why do some Ottawa entrants mark AI films as 3D?",
+      "answer": "No entrant is quoted. Ottawa's director, Chris Robinson, offers his own guess: the entry form gives only an AI-assisted box, so a fully generated film has no category of its own, and some entrants tick 3D instead. Manchester's director describes the same at his festival, with AI films labelled experimental or abstract.",
+      "evidence": [
+        {
+          "url": "https://www.cartoonbrew.com/artificial-intelligence/annecy-ottawa-manchester-festival-programmers-artificial-intelligence-269655.html",
+          "domain": "cartoonbrew.com",
+          "date": "2026-11-20",
+          "quote": "Probably because we’re only offering you an option to mark it as AI-assisted, but some are not even marking that. They just mark it as 3D or something."
+        },
+        {
+          "url": "https://www.cartoonbrew.com/artificial-intelligence/annecy-ottawa-manchester-festival-programmers-artificial-intelligence-269655.html",
+          "domain": "cartoonbrew.com",
+          "date": "2026-11-20",
+          "quote": "There have been instances of people who have clearly been using AI and labeling it as ‘experimental’ or ‘abstract,’"
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "Robinson also says the generated work is easy to spot: \"The AI-generated stuff, for now, stands out.\" No entrant's own reason was found in either source; scope is the Cartoon Brew article and the MAF policy."
+      },
+      "mechanism_type": "the entry form's categories",
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why can a wrong label on the form get through?",
+      "answer": "Judging how much generative AI is in a film rests partly on what the filmmaker declares. Programmers otherwise rely on what they see. Manchester's new policy puts the proof on the filmmaker: anyone contesting a ruling must bring evidence that the film complies.",
+      "evidence": [
+        {
+          "url": "https://www.cartoonbrew.com/artificial-intelligence/annecy-ottawa-manchester-festival-programmers-artificial-intelligence-269655.html",
+          "domain": "cartoonbrew.com",
+          "date": "2026-11-20",
+          "quote": "Determining how much genAI went into a film depends in part on filmmakers disclosing its use."
+        },
+        {
+          "url": "https://www.manchesteranimationfestival.co.uk/wp-content/uploads/2026/11/Generative-A.I-Policy.pdf",
+          "domain": "manchesteranimationfestival.co.uk",
+          "date": "2026-11-12",
+          "quote": "The MAF team will require evidence that your film does not violate this policy which will be reviewed by the festival team and/or third parties."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Robinson says programmers can see through some labels: \"When we look at some of these, it’s clear there’s something else going on here.\" Neither source names a detection tool or test."
+      },
+      "mechanism_type": "self-declaration on submission",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why is Manchester excluding generative AI films outright rather than asking for a label?",
+      "answer": "Manchester defines animation as movement made by an artist's hands. It treats generative AI as a third form of filmmaking, a calculation of movement, as separate from animation as live action is. It also cites copyright and environmental questions and will not show such films while those stay unanswered.",
+      "evidence": [
+        {
+          "url": "https://www.manchesteranimationfestival.co.uk/wp-content/uploads/2026/11/Generative-A.I-Policy.pdf",
+          "domain": "manchesteranimationfestival.co.uk",
+          "date": "2026-11-12",
+          "quote": "MAF recognises three forms of filmmaking Animation (the creation of movement) Live Action (Capturing movement) and Generative a.i (A calculation of movement)"
+        },
+        {
+          "url": "https://www.cartoonbrew.com/artificial-intelligence/annecy-ottawa-manchester-festival-programmers-artificial-intelligence-269655.html",
+          "domain": "cartoonbrew.com",
+          "date": "2026-11-20",
+          "quote": "Just as live-action films are not produced like animated films, so we wouldn’t select live-action films."
+        },
+        {
+          "url": "https://www.manchesteranimationfestival.co.uk/wp-content/uploads/2026/11/Generative-A.I-Policy.pdf",
+          "domain": "manchesteranimationfestival.co.uk",
+          "date": "2026-11-12",
+          "quote": "Whilst these questions remain unanswered we will not exhibit Gen A.I film."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Annecy and Ottawa reject a ban. Annecy's Marcel Jean: \"I don’t think I have the authority to tell that guy that he’s wrong.\" Ottawa's Robinson compares it to the arrival of computer animation: \"It wasn’t the end of animation as we knew it. It just changed.\""
+      },
+      "mechanism_type": "the festival's eligibility rule (a definition of animation)",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why does the line fall on the final moving image rather than on any use of AI?",
+      "answer": "The policy splits computer help from generative AI by who controls the result. Automated steps such as crowd scenes or in-betweens are allowed when the artist controls input and outcome. A film is out if a generative model made or changed any part of the final moving image.",
+      "evidence": [
+        {
+          "url": "https://www.manchesteranimationfestival.co.uk/wp-content/uploads/2026/11/Generative-A.I-Policy.pdf",
+          "domain": "manchesteranimationfestival.co.uk",
+          "date": "2026-11-12",
+          "quote": "Where a process is automated, it must be done where the artist is in control of the input and the outcome."
+        },
+        {
+          "url": "https://www.manchesteranimationfestival.co.uk/wp-content/uploads/2026/11/Generative-A.I-Policy.pdf",
+          "domain": "manchesteranimationfestival.co.uk",
+          "date": "2026-11-12",
+          "quote": "If any part of the final moving image has been generated or transformed by a generative audio, image or video model, it will be deemed ineligible for the festival."
+        },
+        {
+          "url": "https://www.cartoonbrew.com/artificial-intelligence/annecy-ottawa-manchester-festival-programmers-artificial-intelligence-269655.html",
+          "domain": "cartoonbrew.com",
+          "date": "2026-11-20",
+          "quote": "Under the new policy, a film is ineligible if a genAI model creates or alters any part of its final moving image."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "The article describes Danse Macabre, which \"used tools trained on Hulsing’s own oil paintings to create custom shaders\", applied to hand animation; neither source says how the MAF rule would treat that case, and the policy does not address AI used before the final image."
+      },
+      "mechanism_type": "the eligibility rule's test",
+      "stop": null
+    },
+    {
+      "n": 5,
+      "question": "Why did Manchester act for 2027 rather than earlier?",
+      "answer": "Henderson says generative AI submissions hit a record this year and that screening films that are not animation costs his team hours. The policy now lets the festival skip watching them and keep the entry fee. The policy itself gives ethics, not workload, as its reason, so the timing link is his account only.",
+      "evidence": [
+        {
+          "url": "https://www.cartoonbrew.com/artificial-intelligence/annecy-ottawa-manchester-festival-programmers-artificial-intelligence-269655.html",
+          "domain": "cartoonbrew.com",
+          "date": "2026-11-20",
+          "quote": "This year, we have received more genAI films than ever in our submissions."
+        },
+        {
+          "url": "https://www.cartoonbrew.com/artificial-intelligence/annecy-ottawa-manchester-festival-programmers-artificial-intelligence-269655.html",
+          "domain": "cartoonbrew.com",
+          "date": "2026-11-20",
+          "quote": "I also don’t want me or my team to spend hours going through non-animated films when I’m putting on an animation festival."
+        },
+        {
+          "url": "https://www.manchesteranimationfestival.co.uk/wp-content/uploads/2026/11/Generative-A.I-Policy.pdf",
+          "domain": "manchesteranimationfestival.co.uk",
+          "date": "2026-11-12",
+          "quote": "If you submit work to the festival that is Gen A.I we will not be obliged to watch it."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "The policy's stated ground is the questionable methods behind generative AI, copyright and environmental impact, not submission volume. No submission counts appear in either source."
+      },
+      "mechanism_type": "entry fees and screening workload",
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "Ottawa offers an AI-assisted box and some entrants tick 3D instead; Manchester answers with a definition, banning any film whose final image a generative model made or changed. Both festivals still depend on what filmmakers declare and what programmers can see, and Manchester puts the burden of proof on the filmmaker who contests.",
+    "open_question": "If a fully generated film can already pass as 3D on a form, what in a rule written around the final moving image tells a programmer which frames a model touched?"
+  }
+}

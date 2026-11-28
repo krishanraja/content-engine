@@ -1,0 +1,12 @@
+Verse | Fortnite Documentation | Epic Developer Community
+Table of Contents
+Developer
+Verse
+Verse
+A programming language that supports Unreal Editor for Fortnite, and also looks toward future games and how they are built.
+Verse is a statically-checked programming language with an emphasis on gameplay programming.
+uefn-glossary
+verse-glossary
+fortnite-glossary
+Ask questions and help your peers Developer Forums
+Write your own tutorials or read those from others Learning Library

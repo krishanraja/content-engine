@@ -1,0 +1,38 @@
+{
+  "https://www.eurogamer.net/binding-of-isaac-repentance-plus-ai-music-removed": {
+    "file": "eurogamer-isaac-ai-music.txt"
+  },
+  "https://www.pcgamer.com/games/roguelike/binding-of-isaac-dlc-adds-ai-music-in-gta-6-parodying-update-despite-not-having-an-ai-disclosure-steam-reviews-drop-to-overwhelmingly-negative-music-gets-pulled/": {
+    "file": "pcgamer-isaac-ai-music.txt"
+  },
+  "https://kotaku.com/binding-of-isaac-update-review-bombed-over-ai-generated-music-in-gta-6-mode-woke-up-to-a-sht-show-obviously-i-had-no-idea-2000759213": {
+    "file": "kotaku-isaac-ai-music.txt"
+  },
+  "https://www.eurogamer.net/grand-theft-auto-6-meet-the-developers-tackling-it-head-on": {
+    "file": "eurogamer-gta6-head-on.txt"
+  },
+  "https://x.com/nicalis/status/2124241453266169887": {
+    "file": "x-nicalis-2124241453266169887.txt"
+  },
+  "https://x.com/edmundmcmillen/status/2124169167880470745": {
+    "file": "x-mcmillen-2124169167880470745.txt"
+  },
+  "https://store.steampowered.com/app/250900/The_Binding_of_Isaac_Rebirth/": {
+    "file": "steam-isaac-rebirth-store.txt"
+  },
+  "https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=250900&count=10&maxlength=0": {
+    "file": "steam-news-api-250900.txt"
+  },
+  "https://store.steampowered.com/app/3353470/": {
+    "file": "steam-repentance-plus-store.txt"
+  },
+  "https://x.com/edmundmcmillen/status/2124242373761003571": {
+    "file": "x-mcmillen-2124242373761003571.txt"
+  },
+  "https://www.reddit.com/r/bindingofisaac/comments/1y1qqut/reps_gtavi_runs_music_is_100_generated_by_suno_ai/": {
+    "unreadable": "Reddit returned 403 Blocked"
+  },
+  "https://www.reddit.com/r/bindingofisaac/comments/1y150zr/the_music_in_the_crime_mode_is_ai_generated/": {
+    "unreadable": "Reddit returned 403 Blocked"
+  }
+}

@@ -1,0 +1,383 @@
+LXR-02 IS NOW OPEN SOURCE! - Blog - Erica Synths
+
+ Skip to Content 
+
+ Shop Products 
+
+ About
+
+ News
+
+ Support
+
+ Garage
+
+ Shipping to
+
+ Change country 
+
+ Display prices
+
+ Incl VAT 
+
+ Excl VAT 
+
+ Select your country 
+
+ International 
+
+ Austria 
+
+ Belgium 
+
+ Bulgaria 
+
+ Croatia 
+
+ Cyprus 
+
+ Czechia 
+
+ Denmark 
+
+ Estonia 
+
+ Finland 
+
+ France 
+
+ Germany 
+
+ Greece 
+
+ Hungary 
+
+ Ireland 
+
+ Italy 
+
+ Latvia 
+
+ Lithuania 
+
+ Luxembourg 
+
+ Malta 
+
+ Netherlands 
+
+ Poland 
+
+ Portugal 
+
+ Romania 
+
+ Slovakia 
+
+ Slovenia 
+
+ Spain 
+
+ Sweden 
+
+ Authorize 
+
+ Sign In 
+
+ Don't have account? 
+
+ Create an Account 
+
+ I am looking for... 
+
+ We couldn't find anything for your search
+
+ Popular Search Terms 
+
+ Recently Viewed 
+
+ was 
+
+ Search 
+
+ I am looking for... 
+
+ We couldn't find anything for your search
+
+ Popular Search Terms 
+
+ Recently Viewed 
+
+ was 
+
+ Shop All Categories
+
+ SYNTHESIZERS
+
+ DRUM MACHINES
+
+ FX UNITS
+
+ EURORACK MODULES
+
+ EURORACK SYSTEMS
+
+ EURORACK CASES
+
+ DIY KITS
+
+ ACCESSORIES
+
+ SPARE PARTS
+
+ MERCHANDISE
+
+ VINYL
+
+ B-STOCK
+
+ LEGACY PRODUCTS
+
+ Bestsellers
+
+ Sales
+
+ About 
+
+ News 
+
+ Support 
+
+ Garage 
+
+ Do you need help? 
+
+ Visit Support Page
+
+ Home
+
+ Blog
+
+ News
+
+ LXR-02 IS NOW OPEN SOURCE!
+
+Similar posts
+
+ News
+
+ October 29, 2026
+
+ LXR-02 EURORACK GOES OPEN SOURCE! 
+
+ LXR-02 Eurorack module is now also open source and available on the Erica Synths GitHub!
+
+ News
+
+ October 22, 2026
+
+ Desktop Resonant FB Firmware update 1.2 
+
+ This is a big maintenance update for the Resonant Filterbank, which brings many fixes and greatly improves the stability of the unit. 
+
+ News
+
+ October 20, 2026
+
+ Pērkons HD-01 Update 1.3 is out! 
+
+ This update adds new algorithm , realtime voice quantiser and other useful features. 
+
+ LXR-02 IS NOW OPEN SOURCE! 
+
+ The LXR-02 drum machine firmware is now open source and available on the Erica Synths GitHub!
+
+ October 23, 2026 
+
+ News
+
+The LXR-02 has always been a great instrument on its own, with simple yet extensive sound design capabilities, but we realized it could also be a great platform for experimentation! We live in an era of "vibe hacking", where AI-assisted tools let musicians and developers alike reshape software in ways that were hard to imagine only a few months ago. With that in mind, we have decided to open the LXR-02 firmware to the community. We are curious to see what new ideas, features and approaches emerge, and where this experiment will take the instrument.
+
+We invite you to explore the code, experiment with it, and share your results with the community.
+
+Please note: Erica Synths officially supports only the original LXR-02 firmware. Modified or community-developed firmware is installed at the user's own risk, and our support team will not be able to assist with issues caused by custom code. The official firmware will remain available, and you can return to it at any time. However, if the bootloader is damaged as a result of installing custom firmware, the unit will need to be repaired by Erica Synths, and the repair will be charged.
+
+Have fun!
+
+Erica Synths LXR-02 @ Github
+LXR-02 @ Shop 
+
+We value your privacy
+
+We use cookies to enhance your browsing experience, personalize content and ads, and analyze our traffic. 
+
+ Reject All 
+
+ Manage Cookies 
+
+ Accept All 
+
+ Accept your cookies group 
+
+ Manage your cookie preferences by selecting which cookie groups you want to allow.
+ You can accept all cookies or customize your preferences for each group. 
+
+Essential
+
+Essential cookies are necessary for the core functionality of the website.
+ Without them, the site may not function properly. These cookies ensure basic features, making the
+ website usable and accessible.
+
+ More information
+
+Marketing
+
+Marketing cookies track and gather data on visitors' actions across the website.
+ They store information about user behavior, allowing advertising services to reach broader audience
+ segments. These cookies also enable a more personalized user experience based on collected data.
+
+ More information
+
+Analytics
+
+Analytics cookies collect data and provide insights into website usage, helping
+ to generate reports on site performance without personally identifying individual
+ visitors to Google.
+
+ More information
+
+ Accept All 
+
+ Save My Preferences 
+
+ Detailed information about cookies in this group, including cookie names, providers, and descriptions. 
+
+ Cookie Name
+
+ Cookie Provider
+
+ Cookie Description
+
+ Cookie Name:
+
+ Cookie Provider:
+
+ Cookie Description:
+
+ Back 
+
+ Done 
+
+Subscribe to our newsletter
+
+Get first look at upcoming products and exclusive promotions.
+
+ Email Address 
+
+ Subscribe 
+
+ This form is protected by reCAPTCHA – the Google Privacy Policy and Terms of Service apply.
+
+ Links 
+
+ About Us 
+
+ Shipping Information 
+
+ Return Policy 
+
+ Cookies Management 
+
+ Terms & Conditions 
+
+ Privacy Policy 
+
+ Follow Us 
+
+ Facebook
+
+ Instagram
+
+ Youtube
+
+ Visit Support Page 
+
+ Need Help? 
+
+ © 2026 Erica Synths. All rights reserved.
+
+ Developed by
+
+ Loading... 
+
+ Confirmation 
+
+ Remove 
+
+ Cancel 
+
+ Authorization 
+
+ Login to continue checkout 
+
+ Login 
+
+ If you have an account, sign in with your email address 
+
+ E-mail
+
+ Password
+
+ Sign In 
+
+ Forgot Your Password? 
+
+ This form is protected by reCAPTCHA – the Google Privacy Policy and Terms of Service apply.
+
+ New Customers 
+
+ Creating an account has many benefits 
+
+Check out faster
+
+Keep more than one address
+
+Track orders
+
+ Create an Account 
+
+ My Cart 
+
+ Your cart is empty 
+
+ Looks like you haven't added any products to your cart yet. 
+
+ Start Shopping 
+
+ Pre-Order
+
+ Quantity 
+
+ You may also like 
+
+ was 
+
+ Add
+
+ was 
+
+ Pre-order item in cart. 
+
+ Checkout 
+
+ View and Edit Cart 
+
+ Recently Viewed Products 
+
+ was 
+
+ Add
+
+ was 
+
+ Loading...

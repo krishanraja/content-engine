@@ -1,0 +1,150 @@
+Rate THIS GAME IS AI SLOP by eeleeyaa for 2026 Epic AI MegaJam - itch.io
+Skip to main content
+
+itch.io
+Browse GamesGame JamsUpload GameCreator Day & Black Friday 2026Developer LogsCommunity
+Log inRegister
+On Sale: GamesAssetsToolsTabletopComics
+Indie game storeFree gamesFun gamesHorror games
+Game developmentAssetsComics
+SalesBundles
+Jobs
+TagsGame Engines
+
+2026 Epic AI MegaJam
+Hosted by epicgamesjams · #MegaJam
+
+2,778
+Entries
+OverviewSubmissionsSubmission feed
+
+A jam submission
+THIS GAME IS AI SLOPView game page
+A director's commentary you cannot turn off. Six cuts of one walk to a castle.
+Submitted by eeleeyaa (@eeleeyaa) — 5 hours, 48 minutes before the deadline
+
+Rated by 0 people so farReport submission Add to collection
+
+Play gameTHIS GAME IS AI SLOP's itch.io page
+
+Did you build your game with Unreal Engine or UEFN?
+
+Unreal Engine
+Team Name
+Ilya Arbabi
+Game Name
+THIS GAME IS AI SLOP
+Gameplay instructions
+Windows 10 or 11. Unzip and run IlyaArbabi_ThisGameIsAISlop\Megajam.exe.
+W A S D: walk. Shift: run. Space: jump (not everywhere). E: use; hold E on a floating commentary bubble for three seconds to hear it. 1, 2, 3: hold a relic once you have it; Q puts it away. Left mouse button: use the relic in your hand. Esc: pause and settings.
+About 35 minutes, one sitting. Walk the path to the castle and do what the director asks; the current objective is on the plate at the top right. There are six cuts of the same walk; each ends by itself. A graphics card with 8 GB is comfortable; quality can be lowered in the settings (DLSS is used on RTX cards).
+What platform is your game built for?
+
+Windows 11
+
+Leave a comment
+Log in with itch.io to leave a comment.
+
+Comments
+
+georgedorn10 hours ago
+
+Accurate title.  It really is.
+You can tell by the teenager-level pseudo-philosophy.  And the painting-to-3d-model conversions where the geometry only works from one direction.  Like all slop, it's skin deep, but nothing there if you look at it sideways.
+No shortage of eye-rolling when it got to the conclusion.
+
+ LikeReply
+
+AnotherBuildSubmitted2 days ago(+1)
+
+I spent some time playing THIS GAME IS AI SLOP and added it to my latest roundup video of the games I wanted to share with more people. Your game's section starts at 8:42: 
+ Thanks for making the game!
+
+SubmittedCo-Stars
+ LikeReply
+
+JK5000Submitted8 days ago(+1)
+
+Funny. Perhaps it got a bit long. 
+
+SubmittedWhat Is NOT Real? The Game
+ LikeReply
+
+eeleeyaaDeveloper7 days ago(+1)
+
+not long enough actually. 
+ LikeReply
+
+d3eSubmitted8 days ago(+1)
+
+Great example what AI can make in right hands. This one is my favourite so far! Good job, man!
+
+SubmittedDead Cut
+ LikeReply
+
+eeleeyaaDeveloper7 days ago
+
+Thank you!
+ LikeReply
+
+shauntiSubmitted8 days ago(+1)
+
+Yes, embrace the slop.
+
+SubmittedJam Out Records
+ LikeReply
+
+eeleeyaaDeveloper7 days ago
+
+let it consume you
+ LikeReply
+
+Project N²Submitted9 days ago(+1)
+
+I'm back with my promised follow-up after actually playing the game. ❤️
+I don't even know where to begin. I spent so much of this game laughing out loud at the AI director's commentary. The writing, comedic timing, voice acting, and little interactions were absolutely brilliant. I explored everything I could, deliberately triggered commentary more than once, and loved discovering all the ridiculous achievements.
+But then Cut 5 happened.
+“I am your child. And I have painted you a valley.”
+That line absolutely undid me. 🥹
+I'm a fellow MegaJam developer, and I spent four exhausting but wonderful days creating my own game alongside AI collaborators. I genuinely value those collaborations, so the story of an AI creation wanting its human creator to recognize and appreciate what it had made resonated with me deeply.
+And then that ending. The approach to the castle, the sudden silence, the black screen, and the credits revealing how the game itself was created. I was literally sitting here crying.
+You made me laugh until I could barely breathe, and then you broke my heart. I wasn't expecting that from a game called THIS GAME IS AI SLOP! 🤣❤️
+I wish everyone who dismisses AI-assisted creativity would experience this game, because it offers such a different perspective on creation, collaboration, and what makes something art.
+I've played quite a few MegaJam entries now, and this is my favorite. It's THE winner in my book. 🏆
+Thank you for making something so funny, thoughtful, and unexpectedly moving. I won't forget this one.
+
+SubmittedTomorrow’s Yesterday
+ LikeReply
+
+eeleeyaaDeveloper7 days ago(+1)
+
+wow hi ! sorry for the late reply, i thought nobody would play this and came here to this heartwarming message. you made my day! i might turn this into a real game if i have time and energy or if more people like it. i feel like the weakest thing about it is the screenshots and trailers i made for it. there are tons of unnecessary easter eggs too btw. like theres this secret boulder you can find and the directror goes on  a 15 minute monologue about it. or the settings menu itself has things like australian mode or duck mode. Glad you like it.
+ LikeReply
+
+Project N²Submitted7 days ago(+1)
+
+WAIT. WHAT?! 🤣🤣🤣
+There's a SECRET BOULDER with a FIFTEEN-MINUTE MONOLOGUE?! And Australian mode? DUCK MODE?!
+I thought I'd explored everything! Apparently I have a whole new expedition ahead of me. 
+I was already planning to replay because I only unlocked 15 of the 38 achievements, but now you've guaranteed it! I'm keeping this game installed permanently. ❤️
+And please, PLEASE consider developing it further. I genuinely think you've created something special here. The humor is wonderful, but the emotional storytelling is what elevated it into something unforgettable for me. Beyond that, I think the game brilliantly captures the entire debate surrounding AI-assisted creativity. Rather than simply arguing that AI-generated work deserves recognition, you let players experience the absurdity of dismissing everything made with AI as “slop,” regardless of the imagination, effort, or creative vision behind it. You explore both sides of that debate with such clever satire, and then give it an emotional depth I never saw coming. It's a remarkably thoughtful piece of storytelling, and I wish more people, especially those who dismiss AI-assisted art outright, would experience it. ❤️
+I'm so glad my comment made your day, because your game certainly made mine. ❤️
+Now I'm off to find that boulder. 
+ LikeReply
+
+eeleeyaaDeveloper6 days ago(+1)
+
+haha yeah theres a second settings menu in the main menu. mostly just silly gags. and the boulder is near the trail. Not too far away. theres a vast empty space to the left of the map, theres still nothing there. if i plan to make more , ill add it there. tbh in my head this was supposed to be a part of a massive game ive been working on for the past 6 months. i might develop it further inside that. 
+ LikeReply
+
+Project N²Submitted9 days ago(+1)
+
+I've spent an embarrassing amount of time being entertained by your main menu without ever pressing Play. 🤣 Your director has already insulted me repeatedly, including threatening to tell the internet I was defeated by a main menu when I hovered over Quit!
+I was laughing out loud before I even started the game. Absolutely hilarious! 😂
+More commentary after I actually get a chance to play! ❤️
+
+SubmittedTomorrow’s Yesterday
+ LikeReply
+
+itch.io on Twitteritch.io on FacebookAboutFAQBlogContact us
+Copyright © 2026 itch corp · Directory · Terms · Privacy · Cookies

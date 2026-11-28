@@ -1,0 +1,177 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why do Kuaishou's accounts book a yearly return on the money investors put into Kling?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why did Kling take money from outside investors?",
+      "answer": "Kuaishou's filing says the money is for business expansion, daily operation and working capital, and that outside investors let Kling be valued on its own merits. Kling's investors paid in about RMB19.8 billion by 30 October 2026, while Kuaishou says it raised AI spending this year, above all on Kling.",
+      "evidence": [
+        {
+          "url": "https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0702/2026070204065.pdf",
+          "domain": "hkexnews.hk",
+          "date": "2026-07-02",
+          "quote": "Beijing Kling expects to receive proceeds of approximately RMB20,447.10 million (equivalent to\nUSD3,000.00 million) if the Subscription Limit is fully utilized, and such proceeds are expected to be\nused for business expansion, daily operation, working capital, team development and other purposes duly\napproved by the board of directors of Beijing Kling."
+        },
+        {
+          "url": "https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0702/2026070204065.pdf",
+          "domain": "hkexnews.hk",
+          "date": "2026-07-02",
+          "quote": "the introduction of external financing and the Restructuring could better reflect the value of Beijing"
+        },
+        {
+          "url": "https://www1.hkexnews.hk/listedco/listconews/sehk/2026/1030/2026103002123.pdf",
+          "domain": "hkexnews.hk",
+          "date": "2026-10-30",
+          "quote": "Upon the Completion, the aggregate Subscription Price paid by all Investors amounted to approximately\nRMB19,801.84 million (equivalent to approximately USD2,905.33 million)."
+        },
+        {
+          "url": "https://www.drweb.de/?p=608232",
+          "domain": "drweb.de",
+          "date": "2026-11-19",
+          "quote": "Geld für den Ausbau ist vorhanden:\nKling holte im Oktober 19,8 Mrd. Yuan von Investoren"
+        },
+        {
+          "url": "https://www.drweb.de/?p=608232",
+          "domain": "drweb.de",
+          "date": "2026-11-19",
+          "quote": "Kuaishou hat seine Investitionen in KI in diesem Jahr erhöht, besonders in Kling."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "The amount and the use for expansion are on two sites (hkexnews.hk and drweb.de). The other stated reasons (valuing Kling on its own, an AI-specialist investor base, freeing group resources) appear only in Kuaishou's own filing. Both results sources say the group held RMB127.2 billion of total available funds at 30 September 2026 and kept buying back shares, so the group was not shown to be short of cash. Searched: all six saved pages."
+      },
+      "mechanism_type": "money",
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why does that money carry a yearly return in Kuaishou's accounts?",
+      "answer": "Each investor holds a redemption right: if set off, Beijing Kling must buy the stake back at the original price plus 8% a year, simple interest. Kuaishou accrues a non-cash interest expense reflecting that annual return, RMB48 million in the third quarter of 2026, and adds it back when reporting adjusted net profit.",
+      "evidence": [
+        {
+          "url": "https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0702/2026070204065.pdf",
+          "domain": "hkexnews.hk",
+          "date": "2026-07-02",
+          "quote": "The repurchase amount shall be equal to the original investment price attributable to the equity interests\nsubject to the repurchase request, plus an annual return of 8% calculated on a simple interest basis from\nthe applicable Completion Date of such Investor until the date on which the repurchase price is paid"
+        },
+        {
+          "url": "https://www.prnewswire.com/apac/news-releases/kuaishou-technology-announces-third-quarter-2026-unaudited-financial-results-302945189.html",
+          "domain": "prnewswire.com",
+          "date": "2026-11-19",
+          "quote": "(2) Finance costs on redemption financial liabilities represent the non-cash interest expense accrued, reflecting the\nannual return attached to Beijing Kling's conditional obligation to repurchase equity interests under the\nredemption rights granted to its investors in connection with its capital increase."
+        },
+        {
+          "url": "https://www.prnewswire.com/apac/news-releases/kuaishou-technology-announces-third-quarter-2026-unaudited-financial-results-302945189.html",
+          "domain": "prnewswire.com",
+          "date": "2026-11-19",
+          "quote": "Finance costs on redemption\nfinancial liabilities\n(2)\n48\n-\n-\n48\n-"
+        },
+        {
+          "url": "https://www.drweb.de/kling-finanzierung-abschluss-abu-dhabi/",
+          "domain": "drweb.de",
+          "date": "2026-10-31",
+          "quote": "Ohne Börsengang bis Oktober 2031 dürfen alle Investoren ihr Geld samt 8 Prozent Jahreszins zurückverlangen."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "The 8% term is on hkexnews.hk and drweb.de; the accrued RMB48 million charge appears only in the PR Newswire release, and the HKEX filing and that release are both Kuaishou's own words, so drweb.de is the only independent site and it relays the filings. Dr. Web's results article of 19 November does not mention the charge. Searched: all six saved pages."
+      },
+      "mechanism_type": "contract",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why does the raise sit in the accounts as a debt rather than as owners' equity?",
+      "answer": "Beijing Kling cannot refuse a buy-back once it is set off, and Kuaishou carries RMB15,359 million of redemption financial liabilities at 30 September 2026, against nothing at the end of 2025, with non-controlling interests at RMB36 million. No source read names the accounting rule that links the two.",
+      "evidence": [
+        {
+          "url": "https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0702/2026070204065.pdf",
+          "domain": "hkexnews.hk",
+          "date": "2026-07-02",
+          "quote": "Since the exercises of the Redemption Rights are not at the discretion of Beijing Kling, according to\nRule 14.74(1) of the Listing Rules, the transaction in relation to the grant of the Redemption Rights will\nbe classified as if the Redemption Rights had been exercised at the time of the grant."
+        },
+        {
+          "url": "https://www.prnewswire.com/apac/news-releases/kuaishou-technology-announces-third-quarter-2026-unaudited-financial-results-302945189.html",
+          "domain": "prnewswire.com",
+          "date": "2026-11-19",
+          "quote": "Redemption financial liabilities\n15,359\n-"
+        },
+        {
+          "url": "https://www.prnewswire.com/apac/news-releases/kuaishou-technology-announces-third-quarter-2026-unaudited-financial-results-302945189.html",
+          "domain": "prnewswire.com",
+          "date": "2026-11-19",
+          "quote": "Non-controlling interests\n36\n26\nTotal equity\n80,905\n79,584"
+        },
+        {
+          "url": "https://www.drweb.de/kling-finanzierung-abschluss-abu-dhabi/",
+          "domain": "drweb.de",
+          "date": "2026-10-31",
+          "quote": "Acht Prozent Zins bei Rückgabe machen aus Risikokapital ein Darlehen mit Börsenoption."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "Only the PR Newswire release shows the liability; no second site carries it. The HKEX passage applies a Listing Rule on how the deal is sized for disclosure, not an accounting standard, and Dr. Web's line calling it a loan is its editor's comment. The liability already stands at 30 September while completion was announced on 30 October, and RMB15,359 million is below RMB19,801.84 million; the filing dates each investor's Completion Date to the day it paid in full, but no source says how much was paid by 30 September. Searched: all six saved pages."
+      },
+      "mechanism_type": "accounting rule",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why did the investors get a promise to be bought out?",
+      "answer": "Kuaishou's filing says the redemption right made the raise easier: it gives investors a defined exit in set circumstances, lowers their risk, improves funding certainty and lets Beijing Kling raise capital on more favourable terms while Kuaishou keeps strategic control. That is the company's stated reason; no other site gives one.",
+      "evidence": [
+        {
+          "url": "https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0702/2026070204065.pdf",
+          "domain": "hkexnews.hk",
+          "date": "2026-07-02",
+          "quote": "The grant of the Redemption Rights is considered a commercially appropriate arrangement that facilitates\nBeijing Kling’s fund-raising activities and enhances its attractiveness to the Investors. It provides the\nInvestors with a defined exit mechanism under specified circumstances, thereby reducing investment risk\nand improving funding certainty for Beijing Kling. From the Kuaishou Group’s perspective, this structure\nenables Beijing Kling to secure capital on more favourable terms and supports its business development\nand operations while allowing the Company to retain overall strategic control."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "Stated outright only on hkexnews.hk, in Kuaishou's own words; no second site carries a reason, so it stays below documented. Two investors (BFI MIDCO and Dakang Lanwu) did not complete payment despite the right, a termination the filing puts down to objective reasons not attributable to any party. Searched: all six saved pages."
+      },
+      "mechanism_type": "motive",
+      "stop": null
+    },
+    {
+      "n": 5,
+      "question": "Why would the investors be able to ask for their money back?",
+      "answer": "The right is set off if Beijing Kling has not listed by the fifth anniversary of the payment deadline or 30 October 2031, whichever is earlier, or if within nine months of that deadline it has not bought an overseas operating company, obtained a telecoms operating licence and filed its AI models. Investors then have 12 months to ask.",
+      "evidence": [
+        {
+          "url": "https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0702/2026070204065.pdf",
+          "domain": "hkexnews.hk",
+          "date": "2026-07-02",
+          "quote": "each of the Investors shall have the right, within 12 months after the occurrence of the below events,\nto require Beijing Kling to repurchase all or part of its equity interests in Beijing Kling:\n(i)\n\nBeijing Kling being unable to complete its initial public offering before the Latest Listing\nDate or October 30, 2031 (whichever is earlier); or"
+        },
+        {
+          "url": "https://www1.hkexnews.hk/listedco/listconews/sehk/2026/0702/2026070204065.pdf",
+          "domain": "hkexnews.hk",
+          "date": "2026-07-02",
+          "quote": "Beijing Kling being unable to complete the following matters within nine months from the\nLatest Payment Date"
+        },
+        {
+          "url": "https://www.drweb.de/kling-finanzierung-abschluss-abu-dhabi/",
+          "domain": "drweb.de",
+          "date": "2026-10-31",
+          "quote": "Bis Ende Juli 2027 muss Kling eine Auslandsgesellschaft übernehmen, bis Oktober 2031 an die Börse gehen."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "A filed listing application at the Latest Listing Date suspends the right until the offering fails within 12 months, lapses, is rejected or is withdrawn. Neither site names the overseas operating company; Dr. Web says Kuaishou does not name it (\"Welche Auslandsgesellschaft gemeint ist, nennt Kuaishou nicht.\"). Searched: all six saved pages."
+      },
+      "mechanism_type": "contract",
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "Investors paid about RMB19.8 billion into Beijing Kling by 30 October 2026, each holding a right to hand the stake back at cost plus 8% a year if Kling does not list by October 2031 or misses three tasks set for its first nine months. Kuaishou says the right made the money easier and cheaper to raise. Its accounts carry RMB15.4 billion as a redemption liability at 30 September and a RMB48 million third-quarter charge, which it strips out of adjusted profit.",
+    "open_question": "If a stake can be handed back at cost plus 8% a year, how much of the risk in Kling did its investors actually take on?"
+  }
+}

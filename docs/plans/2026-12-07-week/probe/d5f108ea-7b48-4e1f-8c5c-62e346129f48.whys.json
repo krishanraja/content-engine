@@ -1,0 +1,97 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why did Prime Video build an AI-powered Progressive Actions graphic for its Champions League coverage?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why did Prime Video build Progressive Actions for its Champions League coverage?",
+      "answer": "To put on screen the passes and ball carries that move a team up the pitch, and the players who make them, whose work often does not show in goals, assists or other traditional match statistics.",
+      "evidence": [
+        {
+          "url": "https://www.advanced-television.com/2026/11/23/prime-video-unveils-progressive-actions-for-champions-league/",
+          "domain": "advanced-television.com",
+          "date": "2026-11-23",
+          "quote": "highlights the passes and ball carries that drive a team up the pitch, and the often-unsung players behind them."
+        },
+        {
+          "url": "https://indiantelevision.com/iworld/prime-video-introduces-ai-powered-progressive-actions-for-champions-league/",
+          "domain": "indiantelevision.com",
+          "date": "2026-11-23",
+          "quote": "It focuses on players whose contributions may not always appear in traditional match statistics but can be crucial in moving a team forward and creating scoring opportunities."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "none found; scope: the two source pages, which carry no outside view and no criticism of the feature."
+      },
+      "mechanism_type": null,
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why has that build-up work gone unseen by viewers until now?",
+      "answer": "Both reports say clubs already use this kind of data behind the scenes, but it has been hard to show clearly during a live broadcast.",
+      "evidence": [
+        {
+          "url": "https://www.advanced-television.com/2026/11/23/prime-video-unveils-progressive-actions-for-champions-league/",
+          "domain": "advanced-television.com",
+          "date": "2026-11-23",
+          "quote": "The metric mirrors the data used behind the scenes at Europe’s elite clubs, yet has historically been difficult to show during a live broadcast."
+        },
+        {
+          "url": "https://indiantelevision.com/iworld/prime-video-introduces-ai-powered-progressive-actions-for-champions-league/",
+          "domain": "indiantelevision.com",
+          "date": "2026-11-23",
+          "quote": "While similar data is used behind the scenes by some of Europe’s leading football clubs, presenting it clearly during a live broadcast has traditionally been difficult."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Neither source names a club that uses the metric or says what made live display difficult; scope: the two source pages."
+      },
+      "mechanism_type": null,
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why does the graphic count one pass or carry and not another?",
+      "answer": "Prime Video's own AI models judge how far the ball travels in each phase of the pitch. The distance needed gets shorter nearer the opposition goal, where defences are tighter. When an action counts, an on-pitch graphic shows its start, end, the player and the distance gained.",
+      "evidence": [
+        {
+          "url": "https://www.advanced-television.com/2026/11/23/prime-video-unveils-progressive-actions-for-champions-league/",
+          "domain": "advanced-television.com",
+          "date": "2026-11-23",
+          "quote": "Progressive Actions is built on proprietary AI-powered models that identify a Progressive Action based on how far the ball travels in each phase of the pitch, with the threshold becoming shorter closer to the opposition goal where defences are more compact and space is harder to find."
+        },
+        {
+          "url": "https://indiantelevision.com/iworld/prime-video-introduces-ai-powered-progressive-actions-for-champions-league/",
+          "domain": "indiantelevision.com",
+          "date": "2026-11-23",
+          "quote": "The distance threshold changes according to the ball’s position, becoming shorter as play moves closer to the opposition goal."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Neither source gives the thresholds, the tracking data the models read, or any error rate, so what the AI models add beyond a distance rule is not shown. The threshold also means not every forward pass or carry is flagged. Scope: the two source pages."
+      },
+      "mechanism_type": "the model",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why can Prime Video show this live now when it was hard before?",
+      "answer": "Nothing read answers this. Both reports state the difficulty and the new feature but do not say what changed, whether in data, speed or graphics, to make live display possible.",
+      "evidence": [],
+      "strength": "open",
+      "counter": {
+        "text": "none found; scope: the two source pages, neither of which links to a primary announcement."
+      },
+      "mechanism_type": null,
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "Two trade reports from 23 November say the same things: the graphic exists to credit build-up play that traditional statistics miss, clubs already use such data, and Prime Video's own models flag actions by distance, with a shorter threshold near goal. Both were written before the Arsenal against Dortmund match and describe its debut as scheduled. Neither gives the thresholds, the data source, accuracy, or what made live display possible.",
+    "open_question": "If the thresholds and the models behind them are not published, how would a viewer check that the graphic is crediting the right passes?"
+  }
+}

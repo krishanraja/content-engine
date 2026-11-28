@@ -1,0 +1,112 @@
+The New York Times · 620 8th Ave, New York, NY 10018 · 15th floor
+From document analysis to pattern detection to verification, AI is changing how investigative journalists dig and how fast they can move. The open question is how to scale those skills and get them into the hands of reporters working on deadline.
+Hacks/Hackers and The New York Times are convening investigative reporters, data journalists, editors and engineers for a full day of case studies and hands-on skill-building. You will leave with techniques you can use in your newsroom.
+Thursday, September 24
+6:00–9:00pm — Pre-forum reception
+Hosted by Everlaw. Space is limited; registered attendees will receive a separate invitation.
+Friday, September 25
+9:00–9:30am — Registration and breakfast
+9:30–9:45am — Welcome
+9:45–10:45am — An illustrated guide to A.I. for investigative reporting
+A hand-drawn presentation on the art of applying A.I. to investigative reporting from two multidisciplinary journalists on The New York Times's A.I. Initiatives team. In this session, they will share how A.I. is and isn't useful to the journalistic process, emphasizing the importance of human input and expertise. From needle-in-the-haystack multimedia analyses to holding the powerful A.I. companies that shape our everyday lives to account, they will share stories, tools and best practices they've uncovered as they've taught journalists to use A.I. responsibly.
+With
+Dylan Freedman
+and
+Juliana Castro Varon
+of The New York Times.
+10:45–11:00am — Break
+11:00am–12:00pm — When errors are expensive: A.I. evaluation for investigative journalism
+A reporter can now have a model classify 250,000 public comments in an afternoon. The moment the story says 63% of them oppose a rule, the newsroom owns a harder question: how do we know that number is right? Legal and finance teams answer it with rubrics and sampling plans that penalize unsupported claims. This session brings those methods across, and covers what evaluation failures reveal about where AI should not be used at all. The examples come from work including
+The Visa Pulse
+, an automated system that tracks U.S. immigration policy.
+With
+Teresa Mondria Terol
+of NPR and
+Bruno Savoca Albors
+of JPMorgan.
+11:00am–12:00pm — Bringing journalism out of the dark ages
+The facts that explain a community sit in public records, agency portals and a newsroom's own back catalog of reporting, in formats that resist a quick query at exactly the moment a reporter is on deadline. Hearst Connecticut's data team has been building AI tooling that lets reporters pull answers grounded in those records and turn them into repeatable workflows. An honest account of building it inside a working newsroom: what the effort is worth, where it fails, and how to keep a human between the analysis and the reader.
+With
+Philip Bump
+of Hearst Connecticut Media Group.
+11:00am–12:00pm — Finding the headline in a mountain of documents: Hands-on with an AI-powered investigation tool
+Try out the tools that Le Monde, USA Today, the Associated Press and WIRED use in large document investigations to find the facts that matter. Everlaw is an AI-powered document review platform used by legal teams to identify evidence and build case narratives verifiable in the courtroom, and it's available to journalists at free and heavily discounted rates. You'll run a realistic investigation in a live sandbox: ask questions across 100k documents and get back answers with excerpts, source links, and a fact-check trail your editors can replicate.
+Bring your laptop, and
+sign up in advance (by Sept. 23)
+to get access to the sandbox.
+With
+Chuck Kellner
+,
+Chris Miles
+,
+Sean Wiederkehr
+and
+Renata Bystritsky
+of
+Everlaw
+.
+12:00–1:15pm — Lunch
+1:15–2:15pm — Revealing the truth, avoiding harm: Ethical practices for A.I. in investigations
+A working framework for spotting the ethical risks that different kinds of investigations carry, and the practical steps that shrink them. The session covers validating AI output drawn from large datasets, using complementary methods to push accuracy up, enlisting public feedback to improve data quality, and the particular trouble that arrives when AI makes qualitative rather than quantitative judgments.
+With
+Jon Greenberg
+of the Poynter Institute,
+Sisi Wei
+of CalMatters and The Markup, and
+James O'Toole
+of The New York Times.
+1:15–2:15pm — Vibe coding for open-source investigations
+Flight data, satellite imagery, vessel tracking: the hard part of an open-source investigation is rarely any single tool, it's getting messy sources to work together. This is a build session, going from a vague hunch to a working script, then showing how a throwaway flight-tracking API call at CNN grew into an automated analysis pipeline. It closes on the safeguards that keep AI-generated code from becoming a published mistake. Attendees will work with live flight data.
+Bring a laptop and an AI account, setup details to follow.
+With
+Avery Schmitz
+of CNN.
+1:15–2:15pm — Throw out your RAGs: Using custom tools to report with document dumps
+Two years of experiments on Reuters' data team point one way: preprocessing documents and pointing an LLM at custom-built search tools beats RAG and semantic search almost every time. The session works through what did and didn't hold up, from a 2024 famine investigation to Syrian government documents to a recent story on
+Iran's largest cryptocurrency exchange
+, plus quirkier experiments like multimodal embeddings of handwritten pages. You'll leave with a pattern for finding the news in a document set too big to read in full.
+With Allison Martell of Reuters.
+2:15–2:30pm — Break
+2:30–3:30pm — Digging into the Epstein Files
+Journalists and technologists from three newsrooms will share case studies of how they used A.I. to sift through millions of documents in The Epstein Files. They’ll explain how they surfaced connections and identified leads worth reporting, while preserving editorial judgment and verification. This session offers a behind-the-scenes look at the process of rapidly prototyping tools and workflows for a major developing story with a vast archive.
+With
+Duy Nguyen
+of The New York Times,
+Larry Fenn
+of The Associated Press and
+Kriti Singh
+of NPR.
+2:30–3:30pm — Building a verification toolkit for investigative journalists
+In this hands-on workshop, you’ll be introduced to Backstory, which helps uncover the history and context of online images, and SynthID, which helps identify AI-generated content. Participants will then tackle a real-world verification challenge and step into the role of product manager. Working in small groups, you’ll identify the evidence reporters need, where AI helps, where human judgment matters, and the guardrails investigative tools require. By the end, each group will design a verification workflow or product concept grounded in a real investigative reporting need.
+With
+Zoe Darme
+of Google DeepMind and
+Zeve Sanderson
+of Google.
+2:30–3:30pm — Build your own A.I.-assisted backgrounding workflow
+Backgrounding a company or a person eats the early weeks of an investigation, and it is the same set of moves every time: the same sites, the same databases, the same checks. Repetition like that is worth automating. You'll build a skill that runs your process for you and returns a dossier with what it found, where it searched and auditable sourcing. The method is written up in
+After the Moat
+.
+Bring a laptop and an AI account, setup details to follow.
+With
+Adiel Kaplan
+of the Tow-Knight Center for Journalism Futures at CUNY.
+3:30–3:45pm — Break
+3:45–4:35pm — Lightning talks
+Short talks, about 10 minutes each. More to be announced.
+Building investigative tools that learn alongside reporters.
+Building AI tools that get sharper as reporters feed in what they learn, drawn from an investigation into more than 500 hours of health-influencer podcasts and the money behind their advice.
+With Sony Salzman of ABC News and Nicole Kerson of Collected Company.
+Source management with Google Apps Script.
+A free tool built from a Gmail label and a Google Apps Script: tag a thread with a good source and it files their details to a spreadsheet, then each morning nudges you to reconnect with one of them, tied to a fresh story on your beat.
+With J.D. Capelouto of Semafor.
+AI applications in investigative journalism.
+What the evidence says about AI in investigative reporting, drawn from CNTI's review of 44 recent academic and industry studies: where the tools extend a newsroom's reach, where they fall short, and why the algorithms themselves are becoming a beat.
+With Afrooz Mosallaei of the Center for News, Technology & Innovation.
+AI-assisted journalism.
+The reporter who was open about using AI in his process, on why the part that counts stays human: working sources and the original reporting the tools buy time for.
+With Nick Lichtenberg of Fortune.
+4:35–4:45pm — Closing
+5:00–7:00pm — Happy hour
+Hosted by The New York Times to close out the day. Space is limited; only those with confirmed RSVPs given venue details.
+

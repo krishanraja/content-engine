@@ -1,0 +1,95 @@
+Home
+Posts
+What The New York Times' News Agent shows us about where newsroom AI is heading
+What The New York Times' News Agent shows us about where newsroom AI is heading
+Newsrooms have spent two years building AI tools on top of their own archives. The Times has turned that idea into an investigative method. Its agents are most useful when they tell reporters what nobody has reported yet.
+Ulrike Langer
+Nov 24, 2026
+In partnership with
+Hi, I'm media innovation journalist Ulrike Langer and you're reading my weekly AI in media newsletter. If someone has forwarded it to you, please subscribe and never miss any future post.
+Since early 2024, news organizations from Copenhagen to Philadelphia have built internal AI tools that let journalists search their own archives. Now The New York Times is showing where that path leads. In February, its AI Initiatives team built an agent to search the Epstein files. It has since applied the same approach to confidential Cornell University records and to about 155,000 pages of UFO documents. In late July, the Times consolidated its agents behind one internal interface, News Agent. Rubina Madan Fillion, the team's deputy editorial director, presented it with her colleague Duy Nguyen, the team's editor for AI science, at the
+NPA Summit in Chicago
+. It is already one of the most used AI tools in the newsroom, Fillion told me afterwards. The agents don't write the stories. Their most useful job is to tell reporters what hasn't been reported yet. For news executives, the case shifts the question from which AI model to license to what their own data is worth to their journalists, and whether they'll be ready the next time millions of pages land at once.
+SPONSORED
+The AI newsletter worth opening
+Most AI newsletters get skimmed, then archived.
+TLDR AI
+is the one worth opening. It's a free daily email curated by engineers from OpenAI, Adobe, and Google DeepMind. They read everything, then send the model releases, research, and tools that actually matter. It’s a 5-minute read, delivered every weekday morning.
+Subscribe for free
+The Times turned a tool for the Epstein files into an investigative method
+The Justice Department released about three million pages of Epstein files on Jan. 30. The Times' Epstein Files Engine went live for reporters on Feb. 9. By mid-June, more than 100 journalists had asked it 4,500 questions, and it had contributed to at least 20 published stories, according to
+a paper by Nguyen and his colleagues, presented at the Computation + Journalism Symposium
+in October.
+The Times didn't stop there. Fillion told me about two recent investigations that drew on document agents:
+one into a 2024 fraternity party at Cornell, built on more than 1,000 pages of confidential university records
+(free gift link), and a look at the Trump administration's new UFO advisory council by Danny Hakim, a reporter on the Times' Investigations team,
+for which the Times built a database of about 155,000 pages of records from seven countries
+(free gift link). The plan behind this: Swap the Epstein files for any other collection of primary documents, and the same setup works again. The team also wants to document it well enough for journalists to build their own versions.
+For this story, the Times built a database of about 155,000 pages of UFO records from seven countries and searched it with a document agent. Screenshot: The New York Times
+The agents' most valuable job is telling reporters what is new
+The Epstein agent didn't just search the files. It checked every result against the Times' own archive and an internal feed of other outlets' Epstein headlines, and each report had a section on what had already been published. A reporter assigned to a person in the files only had to type the name to find out what was new about them. A duplicate filter removed pages the government had already released under different numbers. As a side effect, it surfaced pages released twice with different parts blacked out, which can reveal names one version hides.
+Verification was built into the rollout. Reporters were told not to trust the agent's statistical claims, to treat its reports as fallible and to verify every finding against the original documents. Many leads concerned living people and unproven allegations, and most of them didn't survive. In the paper's words, the verification standard worked "precisely because most leads did not survive it." Access to the team's tools comes with a condition. "We require legal standards training for everybody who wants to use [these tools]," Juliana Castro Varón, senior design editor of AI initiatives at the Times, said at the
+AI x Investigative Journalism Forum
+in September. Journalists "have to do it in order for us to unlock it." The paper's conclusion: A newsroom agent is most useful as an interface "to source material and institutional knowledge," not as an autonomous writer.
+News Agent puts the archive, the stylebook and a FOIA generator behind one interface
+News Agent is where these agents come together. According to Fillion, the most popular uses include searching all 175 years of the Times, updated within seconds of publication; checking copy against the stylebook; drafting Freedom of Information Act requests; and working through large document collections. Reporters can also build their own agents for specific projects,
+Nieman Lab reported
+. The Times doesn't disclose which AI models run News Agent.
+News Agent also drafts suggestions for its own instructions. Editors and engineers on the team review them and decide what to implement, Fillion told me: "News Agent helps come up with the first drafts, but as with everything we do involving A.I., it's humans who are ultimately making the decisions and refining them."
+Other newsrooms built archive tools first, but the Times links them to investigations
+The Times is part of a wider pattern:
+JP/Politikens (Denmark):
+In February 2024, the group's new shared AI unit rolled out MAGNA Basic, an in-house ChatGPT clone, so tech vendors wouldn't get access to its data and the company would keep control of it, according to Kasper Lindskow, head of AI at JP/Politikens Media Group. The next version, MAGNA Custom, connected the model to the newsrooms' own data, including the archive (
+WAN-IFRA, July 2024
+).
+The Philadelphia Inquirer:
+After a hackathon in January 2025, the Inquirer built an archive research tool in which agents and personas, such as a virtual librarian, help reporters search material back to 1978. It kept the tool internal to minimize the risk of errors reaching the public, as
+I reported in April 2025
+.
+The Guardian:
+Its internal chatbot Ask the Guardian searches past stories and summarizes them with citations. Chris Moran, head of editorial innovation at the Guardian, called it intentionally narrow (
+Nieman Lab, March 2026
+).
+Delfi (Estonia):
+Under chief AI officer Ivar Krustok, the publisher runs a searchable 25-year archive and bots that scan new court cases and send summaries to editors, tools it only built after spending years cleaning up its data, for example by standardizing article tags and merging advertising and editorial data (
+Newsroom Robots, September 2025
+).
+Since February 2024, newsrooms have built AI tools on their own archives and document collections. Sources: WAN-IFRA, News Machines, Newsroom Robots, The New York Times / arXiv, Nieman Lab, Digiday, Der Spiegel. Graphic: Ulrike Langer / News Machines
+The other newsrooms on this list have each built parts of this. The Times does three things at once: It puts many specialized agents behind one interface, it builds an agent for each large investigation, and it checks every find against what has already been published.
+In January, I described two paths
+beyond AI pilots: building internal capability, as the Times did, or buying a platform, as News Corp did with Symbolic.ai. News Agent shows what the first path can produce once a team has been at it for more than two years.
+Der Spiegel takes its data to the chatbots, while the Times keeps its data inside
+All these tools rest on the same asset: data a chatbot can't find on the open web. Newsrooms are using it in two directions.
+Der Spiegel went outward by opening its Nazi party membership files
+to readers in ChatGPT and Claude in October. "These use cases only work if you have really good data that is not available on the open web," Ole Reissmann, head of AI at Der Spiegel, told me then. The Times, the Guardian and the Inquirer point their archives inward, at their own journalists. The Guardian’s Moran is skeptical of the reader-facing route: "Just because you point an LLM that you don't own...at your archive, does that mean what it spits out is Guardian journalism?"
+The two directions aren't mutually exclusive. The Guardian tested its first reader-facing AI product, Storylines, in spring. It groups articles on a topic page under three AI-written subheads. The model only sees headlines, never the article text, and the tool runs on 10 of the Guardian's 27,000 tag pages. "We're not going to die if we don't build a chatbot tomorrow," Moran said at the
+Digiday Publishing Summit
+in March. "What we have is something that's worth protecting." Each newsroom has to decide which direction comes first, and the inward route is the lower-risk way to learn what its data is worth.
+Smaller newsrooms can copy the method, but they need to prepare before the next document release
+When the Epstein files dropped, AP, NPR and the Times all built tools to sift them,
+Nieman Lab reported
+. The next release of that size and relevance is likely to favor newsrooms that have such tools at the ready. The Times' scale isn't required. The Epstein agent ran on
+LibreChat
+, a free, open-source chat platform. What transfers is the method: Check every find against your own published coverage, let humans verify the highest-ranked results, and train people before they get access. Delfi's experience adds the prerequisite: clean, well-tagged data before any AI tool.
+Research agents raise a disclosure question for every newsroom
+The Times'
+public explainer on its AI use
+, last updated Sept. 2, lists data analysis, drafts of headlines and summaries, translations and audio, and article recommendations, and says AI "is always used with human guidance and review." Document agents fit none of those categories neatly. They shape what reporters find without writing any of the published story. As more newsrooms build them, each will have to decide what readers should be told when an agent did part of the research.
+Five learnings:
+Your data is the asset, not the model.
+Every example here rests on material a public chatbot can't reach: archives, document collections, court records.
+Use your archive to detect what is new.
+Checking a find against your own coverage is what turns a search hit into a lead.
+Put specialized agents behind one interface.
+Separate tools become a newsroom product once people can reach all of them in one place every day.
+Prepare before the next document release.
+Newsrooms with a working agent and clean data are likely to get to the story first. Building one under deadline is too late.
+An agent whose leads mostly fail can still pay off:
+it surfaces candidates much faster than reporters could, and the few that hold up against the original documents become stories. That only works if reporters expect most leads to fail and check every one, and if editors, not the agent, decide how it works.
+Keep Reading
+View more
+News Machines
+How news organizations in the US and worldwide put AI to work: weekly case studies and analysis for media leaders.
+Subscribe
+© 2026 News Machines.
+Powered by beehiiv

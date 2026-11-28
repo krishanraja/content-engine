@@ -1,0 +1,315 @@
+Moments – Nectar 5 User ManualSkip to content
+User Manual
+Search...
+CTRL K
+iZotope Support
+User Manual
+Features
+Global Controls
+Auto-Level
+Pitch
+Moments
+Overview
+Getting started
+Selecting words
+Applying effects
+Effects
+Playback
+Navigating by the lyrics
+Keyboard shortcuts
+Notices
+DAW notes
+Breath Control
+Vocal Assistant
+Vocal Unmask
+Nectar 5 Elements
+Processing Modules
+Backer
+Compressor
+De-esser
+Delay
+Dimension
+Equalizer
+Gate
+Reverb
+Saturation
+Serial Compressor
+Vocal Stabilizer
+Voices
+Reference
+Presets
+Options
+License Information
+iZotope Support
+Printable manual
+Features
+Global Controls
+Auto-Level
+Pitch
+Moments
+Breath Control
+Vocal Assistant
+Vocal Unmask
+Nectar 5 Elements
+Processing Modules
+Backer
+Compressor
+De-esser
+Delay
+Dimension
+Equalizer
+Gate
+Reverb
+Saturation
+Serial Compressor
+Vocal Stabilizer
+Voices
+Reference
+Presets
+Options
+License Information
+Printable manual
+LightDark
+System
+Light
+Dark
+System
+On this page
+Overview
+Getting started
+Adding Moments to a track
+Transcription
+Correcting words
+Selecting words
+Fine-tuning with the waveform handles
+Applying effects
+Copying and pasting effects
+Removing effects
+Undo and redo
+Effects
+Doubler
+Delay
+Reverb
+Preverb
+Distortion
+Harmony
+Pitch
+Playback
+Mute Dry
+Navigating by the lyrics
+Searching the lyrics
+Keyboard shortcuts
+Notices
+DAW notes
+Scroll to top
+Nectar 5
+Moments
+Moments
+Overview
+Moments applies creative effects to the words themselves.
+It transcribes your vocal into lyrics, so you can select a word or phrase like any other text on your computer and add reverb and delay throws, reverse reverb swells, doubling, up to 4-voice harmonies, pitch and formant shifts, or distortion to exactly those words.
+There’s no hunting through the waveform for the right syllable and no juggling of automation lanes across several plugins: pick the words, pick the effect, and play it back.
+Moments is an industry first. It runs right in your timeline, in DAWs that support ARA, and is fluent in dozens of languages.
+Reach for Moments when:
+One word needs a throw. Put a reverb or delay throw on the last word of the chorus.
+One line needs a lift. Add harmonies, a double, or a reverse reverb swell into a single phrase.
+A word needs character. Drop the pitch on an ad-lib, or distort one line for contrast.
+You’re tracking. Use the transcript to find the line to punch in from (“Let me punch in from…”).
+You’re making a radio edit. Search the lyrics to find every expletive.
+Moments is a separate plugin, Nectar 5 Moments, included with iZotope Nectar 5. It isn’t a module inside Nectar 5, so you can use it on any vocal track alongside your usual chain.
+Find words: Search the transcript for a word or phrase.
+Select: Select the first words or the last words of every line.
+Mute Dry: Output only what Moments adds, without the original vocal.
+Re-transcribe: Transcribe the clip again. While a transcription is running, this button reads Cancel.
+Remove All: Remove every Moments effect from this track.
+Help: Open Moments help in your browser.
+Transcript: The lyrics of the clip. Words with effects are highlighted in the colors of their effects.
+Effect buttons: Turn each effect on or off for the selected words.
+Effect cards: The controls for each effect that’s on.
+Apply: Apply the effects to the selected words.
+Copy and Paste: Copy a phrase’s effects and paste them onto another selection.
+Remove: Remove the effects from the selected phrase.
+Waveform strip: The audio around the selected phrase. Drag its handles to fine-tune where the effects start and end.
+Preview: Play the selection between the handles.
+Getting started
+Adding Moments to a track
+Moments works on audio clips through ARA, which lets it read the whole clip, not just the audio playing at the moment.
+In a DAW that supports ARA, add Nectar 5 Moments to your vocal track or clip as an ARA extension. Your DAW decides where this lives; it may be on the track’s insert slots or on the clip itself.
+Open the Moments window. Moments links to the clip’s audio and starts transcribing.
+When the words appear, select some and start adding effects.
+Every clip on the track appears in one transcript, with a divider between clips. A phrase can run across a divider.
+Important
+If your DAW loads Moments as an ordinary effect instead of an ARA extension, Moments can’t hear your audio and shows a notice. Remove it from that slot and add it to the clip as an ARA extension. See DAW notes for setup tips in specific DAWs.
+Transcription
+Transcription starts automatically when audio is linked. While it runs, the header shows Transcribing with the percentage done, and the Re-transcribe button becomes Cancel.
+Transcription runs on your computer.
+When a transcription finishes, the words fill the left side of the window. Lines follow the phrasing of the vocal, and a long silence or a change of language starts a new line.
+Click Re-transcribe to transcribe the clip again, for example after you replace or edit the audio. Your effects are kept.
+Correcting words
+Transcription won’t always spell every word the way you would, especially in a sung vocal. To correct a word, double-click it, or right-click it and choose Edit word…. Type the correction and press Return. Press Escape to cancel.
+Corrected words stay until you re-transcribe. If you click Re-transcribe after correcting words, Moments asks first, because a new transcription replaces every word, including yours. Your effects are kept either way.
+Selecting words
+Select words in the transcript the way you would in a text editor:
+Click a word to select it. Clicking also moves your DAW’s playhead to that word.
+Click and drag across words to select a phrase.
+Shift-click to extend the selection to another word.
+Shift+Left Arrow and Shift+Right Arrow shrink or grow the phrase one word at a time.
+Cmd-click (Ctrl-click on Windows) adds a word to the selection, or takes it out again. Cmd-drag (Ctrl-drag) adds another phrase. This lets you select several separate words or phrases and give them all the same effects at once.
+Cmd+A (Ctrl+A) selects the whole transcript.
+Click an applied phrase to open it again and change its effects. Dragging across words always starts a new selection, even inside an applied phrase.
+Click empty space in the transcript, or press Escape, to deselect.
+The Select menu in the header makes a selection from the shape of the lyrics:
+First words of lines selects the first word of every line.
+Last words of lines selects the last word of every line, which makes it quick to put a throw on every line ending.
+To select every place a word or phrase appears, right-click it and choose Select every “…”. You can also search the lyrics.
+Fine-tuning with the waveform handles
+When you select a single phrase, the waveform strip at the bottom of the window shows the audio around it, with the phrase highlighted and a handle at each end.
+Drag a handle to move where the effects start or end, for example to catch a breath before the first word or to let the last word’s tail in.
+Moving the start handle also moves the playhead there, so the next playback starts at the new boundary.
+The waveform strip appears for a single phrase only. When several separate words or phrases are selected, each covers its words exactly.
+Applying effects
+Select the words.
+Click one or more of the effect buttons on the left of the effects panel. Each effect you turn on adds its card to the panel, and the selected words take on its color.
+Adjust the controls on the cards. You hear your changes when you play the selection, before you apply them.
+Click Apply, or press Return.
+Press Escape, or click empty space in the transcript, to drop a selection without applying it. Any effects you turned on but didn’t apply are discarded.
+Applied phrases stay highlighted in the colors of their effects. Hover over a phrase to see all of it, and click it to change its effects or settings, then click Apply again.
+To turn an effect off for the selection, click its button again, or click the × on its card.
+Tip
+A new selection starts with the settings you last applied, so you can move from line to line with the same throw. Moments remembers these settings between sessions.
+Copying and pasting effects
+Copy a phrase’s effects and paste them onto another selection, so the same throw lands the same way each time:
+Click a phrase, then click Copy or press Cmd+C (Ctrl+C).
+Select the words to paste onto, then click Paste or press Cmd+V (Ctrl+V).
+Pasting applies the effects straight away, with the copied settings, in place of any effects the selection had. Copy FX and Paste FX are also in the right-click menu.
+Removing effects
+Remove (or Delete) removes the effects from the applied phrase you’ve clicked open.
+Remove FX in the right-click menu removes the effects from the phrase under the pointer.
+Remove All removes every Moments effect from this track. Moments asks before it does this. The transcription is kept.
+Undo and redo
+Cmd+Z (Ctrl+Z) undoes your last change to the applied effects in Moments, and Shift+Cmd+Z or Cmd+Y (Shift+Ctrl+Z or Ctrl+Y) redoes it.
+Effects
+Moments has seven effects. Turn on as many as you like for one selection; each shows its own card, and the cards stack in this order:
+Doubler
+Delay
+Reverb
+Preverb
+Distortion
+Harmony
+Pitch
+Every card has an Amount knob on the left, which sets how loud that effect is in the mix.
+Using the knobs: Drag up or down to change a value. Double-click a knob, or Option-click it (Alt-click on Windows), to return it to its default. Double-click a knob’s value to type a number.
+How the effects fit together: Pitch and Distortion change the selected words themselves. Doubler, Delay, and Reverb are added to the words after that, so a pitched word is doubled, delayed, and reverberated at its new pitch. Delay and Reverb are throws: only the selected words go into them, and their tails ring out after the selection ends. Preverb rises into the first word from before it, and Harmony adds new voices that follow the selected words.
+Doubler
+Adds a slightly delayed, slightly detuned copy of the selected words, for a thicker, double-tracked sound on one line.
+#ControlRangeDefaultWhat it does
+1Amount0–100%50%Level of the double.
+2Delay1–35 ms17 msHow far the double lags behind the vocal. Shorter is tighter; longer sounds more like a second take.
+3Detune4–19 cents9.5 centsHow far the double is pitched away from the vocal. More detune sounds wider and looser.
+4Remove (×)Turns Doubler off for the selection.
+Delay
+A delay throw: echoes of the selected words that continue after the phrase ends.
+#ControlRangeDefaultWhat it does
+1Ping PongOn, OffOffBounces the echoes between left and right.
+2Amount0–100%50%Level of the echoes.
+3Note1/32T to 1.1/4Time between echoes as a note value at your song’s tempo: straight, triplet (T), or dotted (.) values from 1/32 to a whole note. The time in milliseconds is shown below. With Tempo Sync off, this is the Time knob instead: 1–1000 ms, default 250 ms.
+4Tempo SyncOn, OffOffSwitches between Note (on) and Time (off). A tempo-synced delay follows your song’s tempo, including when the tempo changes.
+5Feedback0–100%50%How many echoes you hear. Higher values repeat longer.
+6Remove (×)Turns Delay off for the selection.
+Reverb
+A reverb throw: space on the selected words, with a tail that rings out after the phrase ends.
+#ControlRangeDefaultWhat it does
+1ModeHall, Room, Chamber, Plate, Ambience, CathedralHallThe type of space.
+2Amount0–100%50%Level of the reverb.
+3Decay0.1–10 s2.0 sHow long the tail lasts.
+4Pre-Delay0–100 ms10 msThe gap between the word and the start of the reverb. A little pre-delay keeps the word clear of its own reverb.
+5Width0–100%50%Stereo width of the reverb.
+6Remove (×)Turns Reverb off for the selection.
+Preverb
+A reverse reverb swell that rises into the first selected word, the classic “sucked-in” lead-in. The swell can start before the clip does, so a Preverb on the very first word still has room to rise.
+#ControlRangeDefaultWhat it does
+1ModeHall, Room, Chamber, Plate, Ambience, CathedralHallThe type of space the swell is made from.
+2Amount0–100%80%Level of the swell.
+3Length0.25–4 s1.5 sHow long the swell takes to rise.
+4Offset−2 to +2 s0 sSlides the whole swell earlier or later. Positive values land the peak later, which closes the gap when your selection starts a little before the word.
+5Remove (×)Turns Preverb off for the selection.
+Distortion
+Saturates or crushes the selected words, for grit on one line or a lo-fi contrast.
+#ControlRangeDefaultWhat it does
+1ModeRetro, Tape, Tube, BitcrushRetroThe character of the distortion. Bitcrush reduces the resolution of the audio for a digital, lo-fi sound.
+2Amount0–100%100%Blend of the distorted words with the original.
+3Drive0–100%50%How hard the words are driven. In Bitcrush mode, Drive sets how heavily the audio is crushed.
+4Remove (×)Turns Distortion off for the selection.
+Harmony
+Adds up to 4 harmony voices that sing along with the selected words, in the key of your song.
+#ControlRangeDefaultWhat it does
+1Amount0–100%100%Level of all the harmony voices together.
+2KeyLearn, C Major to B MinorDetected from the clipThe key and scale the harmonies follow. Learn listens to the clip and detects the key again.
+3Humanize0–100%50%Adds natural variation in pitch and timing to each voice. At 0% the voices are perfectly tight copies; higher values sound more like separate singers.
+4Amount (each voice)0–100%See belowLevel of this voice.
+5Voice 1–4Oct. Up, 5th Up, 4th Up, 3rd Up, Unison, 3rd Down, 4th Down, 5th Down, Oct. DownSee belowThe interval of this voice above or below the vocal. Intervals follow the scale of the key, so a 3rd up is a major or minor third as the key requires.
+6Pan (each voice)100 left to 100 rightCenterPosition of this voice in the stereo field.
+7Remove voice (×)Removes the last voice. It appears on the last voice once there are two or more.
+8+ Add VoiceAdds the next voice, up to 4.
+9Remove (×)Turns Harmony off for the selection.
+Harmony starts with one voice. As you add voices, they build a classic stack:
+VoiceDefault intervalDefault amount
+Voice 13rd Up80%
+Voice 25th Down70%
+Voice 3Oct. Down60%
+Voice 4Oct. Up60%
+The first time you turn on Harmony, Moments detects the key of the clip and fills in Key for you. The key belongs to the clip: if you change it, the other Harmony phrases that used the old key change with it.
+Pitch
+Shifts the pitch and formant of the selected words, from a subtle octave-down ad-lib to a chipmunk or monster voice.
+#ControlRangeDefaultWhat it does
+1Replace DryOn, OffOffWhen on, the shifted words replace the original. When off, they’re layered with the original.
+2Amount0–100%100%Level of the shifted words.
+3Pitch−12 to +12 semitones0 stShifts the pitch of the words.
+4Formant−12 to +12 semitones0 stShifts the formants, the resonances that make a voice sound bigger or smaller, without changing the pitch. Shift the formant along with the pitch for a natural sound, or against it for a character voice.
+5Remove (×)Turns Pitch off for the selection.
+Playback
+Press Space in the Moments window to start or stop your DAW’s playback.
+Selecting words moves the playhead to the start of the selection, so pressing Space plays from there.
+Click Preview, the round play button in the waveform strip, to play just the selection between the handles.
+As the song plays, the word being sung lights up in the transcript.
+Mute Dry
+Turn on Mute Dry to output only what Moments adds, without the original vocal. Use it when Moments sits on a duplicate of your vocal track: the original keeps its own chain, and the Moments track carries just the throws, swells, doubles, and harmonies, which you can then process and mix on their own.
+Navigating by the lyrics
+The transcript is also a map of the take.
+Punch-ins while tracking. Click the word you want to punch in from, and the playhead jumps there. No more scrubbing the waveform to find the start of the second verse.
+Searching the lyrics
+Click Find words or press Cmd+F (Ctrl+F), then type. Every match is highlighted in the transcript as you type. Press Return to select all the matches, or Escape to clear the search.
+Radio edits. Search for an expletive to find every place it’s sung, then click each one to jump the playhead to it.
+Tip
+Since Return selects every match, a search is also a fast way to put the same effect on a word every time it’s sung.
+Keyboard shortcuts
+On Windows, use Ctrl in place of Cmd.
+ShortcutAction
+SpaceStart or stop playback
+ReturnApply the effects to the selection
+EscapeDeselect, and discard effects that haven’t been applied
+DeleteRemove the effects from the clicked phrase
+Shift+Left Arrow / Shift+Right ArrowShrink or grow the selected phrase by one word
+Cmd+ASelect the whole transcript
+Cmd+FFind words
+Cmd+CCopy the selection’s effects
+Cmd+VPaste effects onto the selection
+Cmd+ZUndo
+Shift+Cmd+Z or Cmd+YRedo
+Right-click a word for Edit word…, Select every “…”, Copy FX, Paste FX, and Remove FX.
+Notices
+When Moments needs you to do something, it shows a notice across the top of the window. The most common:
+Moments isn’t loaded as an ARA extension. Remove it from the slot and add it to the clip as an ARA extension.
+There’s no audio clip to transcribe. Add audio to the track, then click Re-transcribe.
+Moments didn’t hear any speech in this clip. Moments keeps the existing words and effects.
+Transcription failed. Moments keeps the existing words and effects. Click Re-transcribe to try again.
+The clip’s sample rate doesn’t match the session. Moments can show the words but can’t apply effects to that clip. Convert the clip to the session’s sample rate, or set the project to the clip’s rate.
+DAW notes
+Moments works in DAWs that support ARA. A few DAWs need a specific setup:
+Logic Pro: ARA plugins run when Logic Pro is opened using Rosetta on Apple silicon Macs, or on Intel Macs.
+REAPER: use the VST3 version of Nectar 5 Moments. REAPER runs ARA through VST3 only.
+PitchBreath Control
+Third-party notices
+Copyright (c) 2026 Artel Software, Inc./DBA Boris FX and iZotope, Inc. All rights reserved.
+ESC
+No results found.

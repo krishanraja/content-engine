@@ -1,0 +1,38 @@
+{
+  "kind": "wildcard",
+  "day": "mon",
+  "namespace": "content-engine:ideas",
+  "sparks": [
+    {
+      "rank": 1,
+      "title": "Burned-seed exclusivity for one-night buyers",
+      "mechanism": "Design for a couple paying out of pocket tonight for a first-dance song or a family paying for a memorial video. The thing they need, and that mainstream tools ignore, is assurance that no one else will ever get the same output. A seller generates the piece, then a human signatory destroys the prompt, seed and stems on record and signs a certificate, with a refundable bond held in escrow against any near-duplicate appearing later. The money goes to whoever can credibly certify scarcity, and that makes exclusivity a priced product that also benefits brands and games buying assets.",
+      "whyNonObvious": "Generative tools are sold on abundance, so nobody builds the opposite: paying a premium to guarantee that something will never be made again.",
+      "firstStep": "Offer ten custom wedding songs at two prices, one standard and one with a signed destroyed-seed certificate and a $200 escrow bond, and record which one sells.",
+      "lens": "multi",
+      "score": 0.699
+    },
+    {
+      "rank": 2,
+      "title": "The data-center town as the hidden royalty recipient",
+      "mechanism": "Remove the creative industry as the endpoint of the money. Part of a $10 music-generation subscription becomes a payment for electricity, grid capacity and land in places like Loudoun County or rural Ireland. Some of the money that once went as a session fee to a musician in Nashville now goes to a utility and a landowner several states away. Converting creative AI spend into kilowatt-hours and the tax receipts of specific counties shows a geographic transfer from creative cities to grid-rich towns.",
+      "whyNonObvious": "People picture AI money stopping at the model company, and do not follow it through the compute bill to municipal budgets.",
+      "firstStep": "Estimate the energy cost per generated three-minute song from published inference figures, then map which utilities and counties host the inference capacity of the two largest music generators.",
+      "lens": "multi",
+      "score": 0.649
+    },
+    {
+      "rank": 3,
+      "title": "One-person likeness trust with splits to collaborators",
+      "mechanism": "Solve it for exactly one person, such as a dead football commentator whose voice is being revived. Every licensed use of the voice pays into a trust, and the trust deed splits income with the producers, writers and broadcast engineers whose work shaped that voice, not only the estate. The core survives at scale: a likeness ledger per person that sends money to the collaborators who built the persona, which current likeness deals cut out.",
+      "whyNonObvious": "Likeness rights are treated as belonging to one face, but a famous voice is a team product, and nobody has priced the team's share.",
+      "firstStep": "Work with one estate of a deceased broadcaster to draft a trust schedule listing the five collaborators who shaped the signature delivery, and the percentage each would receive on a licensing deal.",
+      "lens": "multi",
+      "score": 0.672
+    }
+  ],
+  "chain": "this week's chain spend could not be read, and unknown stops nothing",
+  "run_id": "1655579045",
+  "label": "engine-made: source_kind engine, divergent {\"run_id\", \"spark\"}; never his",
+  "status": "ok"
+}

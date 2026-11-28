@@ -1,0 +1,297 @@
+Computer Science > Human-Computer Interaction
+
+arXiv:2609.30611
+(cs)
+
+[Submitted on 24 Sep 2026]
+
+Title:
+Epstein Files Engine: Agentic Search for Investigative Journalism
+
+Authors:
+Duy K. Nguyen
+,
+Teresa Mondría Terol
+,
+Dylan Freedman
+,
+Zach Seward
+
+View a PDF of the paper titled Epstein Files Engine: Agentic Search for Investigative Journalism, by Duy K. Nguyen and 3 other authors
+
+View PDF
+
+HTML (experimental)
+
+Abstract:
+On Jan. 30, 2026, the U.S. Department of Justice released a mixed-media collection concerning Jeffrey Epstein, including about three million pages of PDFs. We describe the Epstein Files Engine, an A.I. agent The New York Times deployed to investigate the files. The Engine translated reporter questions into Google BigQuery SQL queries across three corpora: Epstein-related releases, the Times's archive and external, Epstein-related news headlines. It used an LLM to plan queries and returned citation-rich answers a reporter could verify and trust. More than 100 journalists used the Engine, and it contributed to at least 20 published stories. We report how reporters queried it and describe Diff, our text-and-visual duplicate matching method that amplified novelty signals and allowed the Engine to surface genuinely new information. We argue that newsroom agents serve newsrooms best not as autonomous writers, but as interfaces to source material and institutional knowledge.
+
+Comments:
+
+6 pages, 2 figures, 2 tables. Presented at the Computation + Journalism Symposium (C+J 2026)
+
+Subjects:
+
+Human-Computer Interaction (cs.HC)
+; Computation and Language (cs.CL); Computers and Society (cs.CY); Information Retrieval (cs.IR)
+
+ACM
+classes:
+
+H.3.3; H.5.2
+
+Cite as:
+
+arXiv:2609.30611
+[cs.HC]
+
+(or
+
+arXiv:2609.30611v1
+[cs.HC]
+for this version)
+
+https://doi.org/10.48550/arXiv.2609.30611
+
+Focus to learn more
+
+arXiv-issued DOI via DataCite
+
+Submission history
+From: Duy K. Nguyen [
+view email
+]
+
+[v1]
+
+Thu, 24 Sep 2026 22:54:42 UTC (488 KB)
+
+Full-text links:
+
+Access Paper:
+
+View a PDF of the paper titled Epstein Files Engine: Agentic Search for Investigative Journalism, by Duy K. Nguyen and 3 other authors
+View PDF
+HTML (experimental)
+TeX Source
+
+view license
+
+Additional Features
+
+Audio Summary
+
+Current browse context:
+
+cs.HC
+
+< prev
+
+|
+
+next >
+
+new
+
+|
+
+recent
+
+|
+2026-09
+
+Change to browse by:
+
+cs
+
+cs.CL
+
+cs.CY
+
+cs.IR
+
+References & Citations
+
+SciX
+Google Scholar
+
+Semantic Scholar
+
+export BibTeX citation
+
+Loading...
+
+BibTeX formatted citation
+
+×
+
+loading...
+
+Data provided by:
+
+Bookmark
+
+Bibliographic Tools
+
+Bibliographic and Citation Tools
+
+Bibliographic Explorer Toggle
+
+Bibliographic Explorer
+
+(
+What is the Explorer?
+)
+
+Connected Papers Toggle
+
+Connected Papers
+
+(
+What is Connected Papers?
+)
+
+Litmaps Toggle
+
+Litmaps
+
+(
+What is Litmaps?
+)
+
+scite.ai Toggle
+
+scite Smart Citations
+
+(
+What are Smart Citations?
+)
+
+Code, Data, Media
+
+Code, Data and Media Associated with this Article
+
+alphaXiv Toggle
+
+alphaXiv
+
+(
+What is alphaXiv?
+)
+
+Links to Code Toggle
+
+CatalyzeX Code Finder for Papers
+
+(
+What is CatalyzeX?
+)
+
+DagsHub Toggle
+
+DagsHub
+
+(
+What is DagsHub?
+)
+
+GotitPub Toggle
+
+Gotit.pub
+
+(
+What is GotitPub?
+)
+
+Huggingface Toggle
+
+Hugging Face
+
+(
+What is Huggingface?
+)
+
+ScienceCast Toggle
+
+ScienceCast
+
+(
+What is ScienceCast?
+)
+
+Demos
+
+Demos
+
+Replicate Toggle
+
+Replicate
+
+(
+What is Replicate?
+)
+
+Spaces Toggle
+
+Hugging Face Spaces
+
+(
+What is Spaces?
+)
+
+Spaces Toggle
+
+TXYZ.AI
+
+(
+What is TXYZ.AI?
+)
+
+Related Papers
+
+Recommenders and Search Tools
+
+Link to Influence Flower
+
+Influence Flower
+
+(
+What are Influence Flowers?
+)
+
+Core recommender toggle
+
+CORE Recommender
+
+(
+What is CORE?
+)
+
+Author
+
+Venue
+
+Institution
+
+Topic
+
+About arXivLabs
+
+arXivLabs: experimental projects with community collaborators
+
+arXivLabs is a framework that allows collaborators to develop and share new arXiv features directly on our website.
+
+Both individuals and organizations that work with arXivLabs have embraced and accepted our values of openness, community, excellence, and user data privacy. arXiv is committed to these values and only works with partners that adhere to them.
+
+Have an idea for a project that will add value for arXiv's community?
+Learn more about arXivLabs
+.
+
+Which authors of this paper are endorsers?
+|
+
+Disable MathJax
+(
+What is MathJax?
+)
+

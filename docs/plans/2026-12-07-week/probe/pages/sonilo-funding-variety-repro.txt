@@ -1,0 +1,51 @@
+AI Audio Startup Sonilo, Founded by TikTok Veterans, Raises $11 Million in B Capital-Led Round30% offExtra 30% off annual plansExtra 30% offClaim offer
+HomeSolutionsPricing
+Library
+Royalty-free sound effectsMusic libraryTutorialsAPIMCP & CLI
+DashboardSign inSign up
+HomeSolutionsPricing
+Library
+Royalty-free sound effectsMusic libraryTutorialsAPIMCP & CLI
+DashboardSign inSign up
+← Blog
+Industry
+AI Audio Startup Sonilo, Founded by TikTok Veterans, Raises $11 Million in B Capital-Led Round
+Written byNaman Ramachandran
+PublishedOct 8, 2026
+By Naman Ramachandran. Originally published by Variety on October 8, 2026. Reproduced with permission. Image credit: Sonilo.
+A generative audio startup run by people who came out of TikTok‘s AI and music divisions has raised $11 million to build models that write music and sound effects to match what happens on screen.
+San Francisco-based Sonilo secured the round with B Capital leading and Redpoint also taking part. The money will pay for the computing power needed to scale its models. The company also plans to widen its footprint with creators and developer platforms and build out its music licensing business.
+Sonilo’s core technology, which it calls the Sound World Model, is a multimodal system that ties video comprehension to audio generation and timing. It doesn’t handle music and effects as standalone pieces. Instead, it reads a scene’s movement and emotional shifts, then produces audio built for that particular footage. Users can upload a clip, type a description or combine the two to get a synced soundtrack ready for commercial use.
+“We built Sonilo to understand the visual story. You give us the footage, and Sonilo understands what’s happening frame by frame, including the pacing, emotion, and story, and generates music and sound effects that naturally fit the scene,” said Shawn Song, Sonilo’s CEO and co-founder.
+Song, who trained at CMU, led multimodal AI technology work at TikTok, where he worked alongside Alex Yin, Sonilo’s CTO. Yin earned a doctorate in computer music at the University of York. COO Keli Li built and ran TikTok’s global music operation and has a background in rights deals and partnerships with the music business. CMO Trista Taylor, who runs product and the company’s market launch, has helped develop consumer AI apps that made a16z’s Top 50 rankings.
+The platform is aimed at creators working in short-form video and short dramas, at developer platforms assembling AI video tools, and at enterprise production teams. It also offers AI dubbing with lip-sync, which lets short-drama outfits and content studios localize video into other languages without editing by hand in post. AI creator aggregator TapNow and ComfyUI have signed on as early distribution partners.
+“We believe generative audio will become an essential part of the AI-native video stack. Sonilo stands out because its multimodal technology gives creators two ways to generate music and sound effects: describe what they want in text, or provide a video and let the model create audio that fits the scene,” said Daisy Cai, general partner at B Capital.
+On the rights side, Shutterstock is an early licensing partner. Sonilo said its models learn from licensed music, and that artists and rights owners receive licensing fees plus a share of revenue. The company is wrapping up publishing and master recording agreements with major rights organizations, which it expects to close within weeks.
+The consumer app is set to launch in the fourth quarter, putting the video-to-music tool directly in the hands of individual creators.
+B Capital, founded in 2015, manages more than $9 billion and has teams in nine locations across the U.S. and Asia.
+Recommended reads
+IndustryOct 27, 2026
+Sonilo and Musical AI Partner to Ensure AI Music Empowers Creators and Rewards Rights Holders
+IndustryAug 10, 2026
+Music API Sublicensing — What Every Developer Must Know Before Building on a Licensed Music Platform
+IndustryAug 3, 2026
+AI Music for E-Commerce Product Videos
+Company
+About
+Reviews
+News
+Blog
+Docs
+Alternatives
+AI Music
+API access
+Contact
+Pricing
+Support
+Sales
+Legal
+Commercial Use
+Privacy Policy
+Terms of Service
+TikTokInstagramYouTubeXRedditDiscord
+© 2026 Sonilo. All rights reserved.

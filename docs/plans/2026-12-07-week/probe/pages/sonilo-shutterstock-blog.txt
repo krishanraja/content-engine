@@ -1,0 +1,82 @@
+Sonilo Partners with Shutterstock to Build the Gold Standard in Licensed AI Music30% offExtra 30% off annual plansExtra 30% offClaim offer
+
+HomeSolutionsPricing
+Library
+
+Royalty-free sound effectsMusic libraryTutorialsAPIMCP & CLI
+
+DashboardSign inSign up
+
+HomeSolutionsPricing
+Library
+
+Royalty-free sound effectsMusic libraryTutorialsAPIMCP & CLI
+
+DashboardSign inSign up
+← Blog
+Product
+Sonilo Partners with Shutterstock to Build the Gold Standard in Licensed AI Music
+Written bySonilo Team
+PublishedMay 11, 2026
+
+Today, we’re one step closer to the future we’re building—where every video has music that was made for it.Sonilo has officially partnered with Shutterstock (NYSE: SSTK), one of the world’s largest providers of licensed creative content, to license their music catalog for AI model training. This makes Shutterstock’s first-ever partnership with a video-to-music AI platform, and it marks a significant step in how we’re building Sonilo: responsibly, and with the music industry’s trust at the center of everything we do.Through this agreement, Sonilo has licensed Shutterstock’s high-quality music catalog to train its proprietary Sonilo v1.0 model—the AI that powers every soundtrack you generate on our platform.In plain terms: the music Sonilo learns from is fully licensed. The artists who created it have consented to its use and are compensated for it. Training-source authorization and permission to use generated output are separate: commercial-use rights depend on the plan or API agreement under which the output is generated. See https://sonilo.com/licensing for the current rules.“AI innovation depends on access to high-quality, rights-cleared content and trusted licensing partnerships,” said Jessica April, Vice President, Data Licensing & AI Services, Shutterstock. “Sonilo’s approach reflects the growing demand for responsibly sourced training data and commercially safe AI workflows. We’re pleased to support companies building generative AI products with licensed content and scalable data solutions that help accelerate innovation while respecting creators and rights holders.”
+Why Licensed AI Music Training Matters Right Now
+The AI music space has a problem that doesn’t get talked about enough.
+In 2025, infringement cases filed against AI music companies had surged by more than 130% year over year. The pattern has been consistent: platforms train on copyrighted music without authorization, launch, and deal with the legal fallout later. The result is an industry flooded with AI-generated music that raises serious copyright concerns—and leaves the artists who actually created the training data without a cent.
+Sonilo was built to be the alternative to that model.
+We secured professional licensing partnerships before we launched—not after. This partnership with Shutterstock is a direct expression of that commitment. When you generate music with Sonilo, you’re not just getting a great soundtrack. You’re getting one that was built the right way.
+
+How Sonilo Works For Creators
+Here’s the short version: you upload your video, and Sonilo composes original music to match it. No text prompts. No library searches. No manually trimming a track to fit. Sonilo’s AI reads your footage—the pacing, the emotional arc, the structure—and generates a soundtrack that fits frame by frame, in seconds.
+Most AI music tools still ask you to describe what you want in words. Sonilo skips that step entirely because the information needed to score a video is already inside the video. You made something original. The music should match it. For nonfiction edits where editorial truth and speech space come first, follow the documentary music scoring guide.
+
+Every track generated is:
+Full-length — matched to the exact duration of your video
+Production-ready — broadcast quality, straight out of the platform
+Commercial-use rights depend on your plan: Free and Creator outputs are for personal, non-commercial use. Pro and Premium include commercial-use rights under Sonilo’s current terms; Enterprise and eligible API usage follow their applicable agreements.
+
+Sonilo’s Broader Momentum
+This partnership is part of a bigger picture. Earlier this month, Sonilo launched as a native node inside ComfyUI—the open-source AI workflow tool trusted by over four million creators—becoming the default way to generate music inside ComfyUI pipelines. Sonilo is also available via API for integration into video tools, creator platforms, game engines, and AI systems, and is live on Free, Pro, and Premium tiers. More platform integrations are coming throughout the rest of this year.
+“Music has always been the last unsolved layer of video creation, and video has always carried its own soundtrack,” said Shawn Song, CEO, Sonilo. “We built Sonilo to hear it and compose from it, without a single text prompt. But how we build matters as much as what we build. While others have chosen to take artists’ work without permission and charge creators for the privilege, we’ve chosen a different path — one where artists are compensated from day one.”
+That’s the standard we’re holding ourselves to. And it’s the standard we believe the industry deserves.
+Try Sonilo free →
+
+Frequently Asked Questions
+What is the Sonilo and Shutterstock partnership? Sonilo has licensed Shutterstock’s music catalog for AI model training. This is Shutterstock’s first-ever partnership with a video-to-music AI platform, and it ensures that Sonilo’s model is trained on fully licensed, commercially cleared content.
+Does this change how Sonilo works for creators? No—the experience remains the same. Upload your video, get original music in seconds. What this partnership strengthens is the foundation the platform is built on: licensed training data, artist compensation, and commercially safe output.
+Is the music Sonilo generates cleared for commercial use? Commercial-use permission depends on the plan or API agreement under which the output is generated. Free and Creator outputs are for personal, non-commercial use. Pro and Premium include commercial-use rights under Sonilo’s current terms; Enterprise and eligible API usage follow their applicable agreements. See https://sonilo.com/licensing for the current rules.
+What makes Sonilo different from other AI music platforms? Most AI music tools start with a text prompt. Sonilo starts with your video. It reads the footage directly — the pacing, structure, and emotional arc—and composes a matching soundtrack without any text input. It’s also the world’s first professionally licensed video-to-music AI platform, meaning the model is trained on authorized, rights-cleared content from day one.
+Where is Sonilo available? Sonilo is available globally on Free, Pro, and Premium tiers at sonilo.com. It’s also available as a native node inside ComfyUI and via API for platform integrations.
+
+Recommended reads
+
+ProductApr 14, 2026
+Exciting News: Sonilo is Now Live on ComfyUI!
+
+ProductApr 13, 2026
+Sonilo: AI Music for Video Creators
+
+ComparisonsJul 26, 2026
+Aimi Sync API Alternative for Video Soundtracks
+
+Company
+About
+Reviews
+News
+Blog
+Docs
+Alternatives
+AI Music
+API access
+
+Contact
+Pricing
+Support
+Sales
+
+Legal
+Commercial Use
+Privacy Policy
+Terms of Service
+TikTokInstagramYouTubeXRedditDiscord
+© 2026 Sonilo. All rights reserved.

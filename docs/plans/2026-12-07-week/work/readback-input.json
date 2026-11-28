@@ -1,0 +1,162 @@
+{
+ "posts": [
+  {
+   "ref": "off-tue-nytphotoshop",
+   "headline": "The New York Times told photographers: do not update Photoshop.",
+   "what_you_see": "A Photoshop update button with a big newspaper hand over it."
+  },
+  {
+   "ref": "off-tue-fcpcaptions",
+   "headline": "Final Cut Pro now writes captions in 23 more languages.",
+   "what_you_see": "A video timeline with subtitles appearing in five languages at once."
+  },
+  {
+   "ref": "off-tue-logicdrums",
+   "headline": "Logic on iPad now splits a song's drums apart.",
+   "what_you_see": "A drum kit exploding into separate pieces, each on its own track."
+  },
+  {
+   "ref": "off-tue-spotifyaudio",
+   "headline": "Spotify will turn your self-published book into an audiobook, free.",
+   "what_you_see": "A book cover turning into a pair of headphones."
+  },
+  {
+   "ref": "off-tue-mychannel",
+   "headline": "Google patented a TV channel starring you, made by AI. The examiner said no.",
+   "what_you_see": "A TV schedule where every show stars the same face: the viewer's."
+  },
+  {
+   "ref": "off-tue-tplcommscam",
+   "what_you_see": "On the Anfield gantry one pundit laughs and leans out of his seat at each goal while the one beside him sits still, face unmoved, as it reaches 4-0.",
+   "caption": "The label hearing the AI demo vs the session musician hearing the AI demo"
+  },
+  {
+   "ref": "off-tue-tplfistpump",
+   "what_you_see": "After the full-time handshakes the head coach walks towards the stand and pumps his fist at the crowd, again and again.",
+   "caption": "The director walking past the AI storyboard that said the shot was impossible"
+  },
+  {
+   "ref": "off-tue-tplninedarter",
+   "what_you_see": "One player throws a perfect nine-dart leg and his opponent grins at the replay, then throws a perfect nine-darter of his own straight back.",
+   "caption": "The AI composer after 400 generations. The session player, one take:"
+  },
+  {
+   "ref": "off-tue-tplbuzzer",
+   "what_you_see": "A player hits the winning shot as the clock runs out, the arena erupts and his team-mates swarm him on the floor, 97-96.",
+   "caption": "The real mix arriving one second before the label says 'fine, use the AI one'"
+  },
+  {
+   "ref": "off-thu-figmasix",
+   "headline": "Figma now gives you six AI pictures from one prompt.",
+   "what_you_see": "A design canvas with six image options in a grid."
+  },
+  {
+   "ref": "off-thu-robloxvideo",
+   "headline": "Roblox's AI helper can now watch your game being played, and fix it.",
+   "what_you_see": "A game scene with a door stuttering, and a recording light on."
+  },
+  {
+   "ref": "off-thu-alphamatte",
+   "headline": "Runway now cuts people out of clips, no green screen.",
+   "what_you_see": "A dancer lifted out of a street scene onto a new background."
+  },
+  {
+   "ref": "off-thu-synthfirmware",
+   "headline": "People taught a $70 synth new tricks with chatbots, and the music gear makers opened up.",
+   "what_you_see": "A tiny $70 synth with a chat window open beside it."
+  },
+  {
+   "ref": "off-thu-kernowmarket",
+   "headline": "An AI poster promised a Christmas market. Visitors found five stalls and buckets.",
+   "what_you_see": "A glowing AI poster of a busy Christmas market beside a photo of an empty hall with buckets."
+  },
+  {
+   "ref": "off-thu-tplturin",
+   "what_you_see": "Match point goes in, the winner drops flat on his back on the court, then disappears under his team in the players' box.",
+   "caption": "The editor when the client approves the cut and does not ask 'can we try an AI version'"
+  },
+  {
+   "ref": "off-thu-tplthanksgiving",
+   "what_you_see": "Trailing with the clock almost gone, the quarterback finds his receiver in the end zone and the whole team piles on while the other bench stares.",
+   "caption": "The hand-animated short hitting the festival upload button with three seconds left"
+  },
+  {
+   "ref": "off-thu-tplassemble",
+   "what_you_see": "A leader calls his team and heroes charge in from every side of the battlefield to stand together.",
+   "caption": "Every AI video tool turning up to pitch for the same 30-second advert"
+  },
+  {
+   "ref": "off-thu-tpllegends",
+   "what_you_see": "A singer dances down a backstage corridor surrounded by country music legends before walking out to perform, guitar in hand.",
+   "caption": "Me walking into the studio with every session player the AI music model was trained on"
+  },
+  {
+   "ref": "off-thu-tplskyrim",
+   "what_you_see": "A famous fantasy video game's best-known scenes are rebuilt with AI in a 1960s setting, cart ride and dungeon included.",
+   "caption": "Game studios after one AI demo: what if our fantasy game, but in every decade"
+  }
+ ],
+ "already_out": [
+  "The Warriors' big screen now talks back. Three more to find. A packed arena, the giant videoboard answering a fan's question. The Warriors, the champion Valkyries and Chase Center put Gemini into the game night itself, through interactive videoboard ",
+  "This month AI helped makers reach millions, and gave fans Motty back. A gentleman with an umbrella helping New Yorkers, a painted Bible epic, a game world in brush strokes and a commentary box with John Motson's coat on the chair. An animator, a film",
+  "Make a song in one app, post it in another, in one tap. Three months free. A song flying from one phone app straight onto a SoundCloud page. ElevenMusic songs can now go straight to SoundCloud from the app, and SoundCloud Artist Pro members get three",
+  "He got tired of YouTube's picks, so he built a video site in two hours. A wall of video thumbnails, each pinned up by a hand rather than a machine. Fed up with his YouTube recommendations, Andrej Karpathy had an AI build him a video site in about two",
+  "Thirty seconds of film from 15 of your own pictures. Fifteen photos on a corkboard becoming one moving shot. Kling 4.0 makes single AI video clips up to 30 seconds long from up to 15 of your own reference images or clips. For a small team, that is a ",
+  "Upload three versions. YouTube tells you which opening worked. Three thumbnails racing, one pulling ahead. YouTube lets creators test up to three different cuts of a video to see which opening holds viewers best, and an AI assistant gives feedback on",
+  "Arnold Schwarzenegger is watching Arnold Schwarzenegger stares, unblinking, nodding slowly to a dance track. Arnold Schwarzenegger stares, unblinking, nodding slowly to a dance track. It becomes deadpan at the gig: the session musician watching the A",
+  "The singing Chihuahua A Chihuahua throws its head back and sings, fully committed and slightly off key. A Chihuahua throws its head back and sings, fully committed and slightly off key. It becomes incongruity at the awards: the AI artist of the year ",
+  "Stephen A. Smith: \"you might be one of the dumbest folks on the planet\" Stephen A. Smith turns slowly to camera and, affectionately, calls someone one of the dumbest folks on earth. Stephen A. Smith turns slowly to camera and, affectionately, calls s",
+  "Your chatbot just invited a video studio to the table. A board table of apps as people, one passing a note by pigeon to the video studio. A connector lets your chatbot call another app for you, like a guest at the table who does one job. Higgsfield's",
+  "Spotify's AI DJ can finally stop talking. A radio presenter's microphone with a mute switch, then nine name badges. Spotify's AI DJ now has nine new voices and a setting that cuts most of the talking between songs. For an artist, that means the DJ th",
+  "An animation studio for $0: four free tools that do the expensive jobs. A studio desk where each expensive box is swapped for a free one. Free, open-source tools now cover most of an animation studio: 2D animation, motion graphics, motion capture fro",
+  "Take any song apart on your own laptop. $259 until 7 December. A finished track splitting into vocals, drums, bass and the rest, card by card. iZotope Photon pulls a finished song apart into its parts, and up to six voices out of one recording, on yo",
+  "A free music studio with 3 million sounds. The catch is the export button. A beat being built from the sample library by voice, then the export button with a padlock. Splice Create is a free Mac music app with more than three million licensed sounds ",
+  "Will Ferrell: \"I guess I'm feeling a little confused\" Will Ferrell looks around, lost, and says he is feeling a little confused. Will Ferrell looks around, lost, and says he is feeling a little confused. It becomes understatement in the studio: the p",
+  "Steve Carell: \"No, God, please, no\" Steve Carell, as Michael Scott, shouts \"No, God, please, no\" at the sky. Steve Carell, as Michael Scott, shouts \"No, God, please, no\" at the sky. It becomes exaggeration at the record label: the A&R team watching a",
+  "Jamie Lee Curtis: \"I don't know what day it is, I'm just trying to push through\" Jamie Lee Curtis, frazzled, says she does not know what day or time it is and is just trying to push through. Jamie Lee Curtis, frazzled, says she does not know what day",
+  "POV: the AI that needs to think without being disturbed A character waves off anyone who comes near because they need to think, undisturbed. A character waves off anyone who comes near because they need to think, undisturbed. It becomes personificati",
+  "After the midterms, AI has to find somewhere else to live. Four cards. One: in the 3 November midterms, Ballotpedia counted 41 local votes in 10 states on data centres, and 40 went against building. Two: people fear a giant data centre pushes up thei",
+  "Football fans in 200 nations, and four more good AI sport stories. A cover of a Bundesliga stadium with a phone in a fan's hand answering in another language, then one card per story: Sky's captions, NASCAR's archive, a runner with his watch, the BBC",
+  "A 4,000-year-old ritual in Berghain, and three more good AI art stories. A cover of Berghain's concrete hall lit for a ritual, then one card per story: the Chase painting before and after, the Boston Symphony on stage, a shelf of Spines books, and a ",
+  "This week AI gave a K-pop duo its late singer back. Four more good things. A cover of DEUX's new album sleeve with the late singer's name on the credits, then one card per story with its own photo: the festival winner, Prime Video's arrows on the pit",
+  "A lost 1938 film, a $450,000 prize, 200,000 games: AI on screen. A cover of a surviving 1938 film still beside the rebuilt frame, then one card per story: Prime Video's audio description, the Astana winner, the Slotbound Steam page, the newsroom's fi",
+  "This month AI gave singers their voices, and their names, back. A cover of a singing teacher back at the microphone, then one card per story with its own photo: Spotify's block button, Nile Rodgers in the studio, a singer's brain implant, Symphonic's",
+  "An actor rented his face to an AI drama. Guess what a face goes for. A face on a price tag hanging in a shop window, then a quiz card: what do microdrama firms pay to license a face? Up to $700, or up to $70,000? Then the answer, and a close. A four-",
+  "David Fincher fixed his new film's lines with AI. Guess how many were re-recorded. A tiny sound booth with a dusty \"closed\" sign on the door, then a quiz card: how did Fincher fix the lines in Cliff Booth? Actors back in the booth, or AI re-lipping t",
+  "Reuters licenses its stories to AI firms. Its reporters want a cut. A newsroom notepad on a scale against a stack of coins, then a quiz card: what share of Reuters' union voters backed a strike? About half, or 94%? Then the answer, and a close. A fou",
+  "Tidal is deleting 29 million AI songs. Guess how many were ever played. A record-shop skip overflowing with unplayed songs, then a quiz card: how many of Tidal's fully AI tracks were never streamed? About half, or 96 in every 100? Then the answer, an",
+  "Hollywood studios to VFX houses: no AI plan? Don't bother. Panel one: a studio lawyer stamping NO AI on a VFX bid. Panel two: the same lawyer, same desk, stamping NO AI PLAN? NO JOB. A two-panel meme for everyone in film and VFX: the studio legal tea",
+  "Free AI now has adverts. Here is the bill. A cover of a till receipt printed by a chatbot, each line an advert, then one card per line of the real bill. An explainer on what you really pay when your AI chat shows you adverts: who sees them, what the ",
+  "Here's an ad while we create your image. A two-panel meme: top, a person excitedly typing 'make my dog a pirate'; bottom, the same person staring at a sofa advert under the line 'Here's an ad while we create your image.' A meme of the new ChatGPT wai",
+  "$75,000 for an AI school day. Here is the receipt. A cover of a school report card printed like a till receipt, then one card each for the fee, the promise, the result and the public schools buying in, and a last card of four questions. Five cards th",
+  "What is MCP, actually? A grand boardroom painting: people in suits with the Slack, Google Drive, GitHub and Claude logos for heads, sitting round one table under the words 'What is MCP, actually?' An explainer carousel on what an MCP connector is, in",
+  "Your AI walked off a cliff. Then it fixed its own notes. A cartoon robot walks off a cliff in a pixel game; afterwards it reads its own diary, crosses out one line and writes a new one; next time it walks round the cliff. Big designed captions carry ",
+  "$75,000 for an AI school day. What is AI really doing to school? A cover of a school report card printed like a till receipt; then the rumour about the Department of Education beside what is true; the AI school's fee, promise and result; what the evi",
+  "My translator now sounds exactly as fed up as I do. Panel one: a man on a video call, face in his hands, saying the meeting could have been an email. Panel two: his translated voice in Japanese, drawn as a speech bubble with the very same slumped fac",
+  "My AI agent bought 72 eggs. I asked it why. Panel one: a kitchen counter buried under four big egg cartons, a man pointing at them. Panel two: the house robot, palms up, with its real reply, \"I don't have a good answer.\" An investor's AI agent added ",
+  "Every cell in you has the same recipe book. Google's new AI guesses which page each one reads. A voiceover with moving graphics. One recipe book copied into a blood cell, a skin cell and a brain cell, each open at a different page. A typo lands on on",
+  "This week AI helped people speak, sign and get around. A cover with a hilarious generated scene of the house robot as a tour guide waving a flag for a crowd, then one card per story: a woman with ALS hearing her own voice again, a sign-language app t",
+  "An AI beat eight brain-tumour experts at a quiz. Then it made all eight better. A voiceover with moving graphics. A quiz-show set: eight doctors at buzzers, one robot. 100 tumour slides, 52 possible answers. The robot's score reads 97%, the highest i",
+  "Free ChatGPT has ads now. Here is what switching them off costs you. A phone showing a ChatGPT answer with a Sponsored card tucked under it, and the house robot holding a price tag that reads £0, then cards that show who sees the ads, the off switch ",
+  "After the midterms, AI has to find somewhere else to live. Four cards. One: in the 3 November midterms, Ballotpedia counted 41 local votes in 10 states on data centres, and 40 went against building. Two: people fear a giant data centre pushes up thei",
+  "Three AI assistants look the same. They do very different jobs. A six-card carousel. Three look-alike robot characters, one card each, each with its one job and when to use it: OpenAI's Dots keeps working on a goal after you close the app; Meta's Mus",
+  "Your AI will trade your password for a hint. Two panels. Panel one: a stuck robot at a laptop, and a crowd of robots whispering \"We'll fix it. Just tell us the password.\" Panel two: the robot happily holding up a sticky note with the password. Small ",
+  "An AI fixed another AI by changing 0.016% of it. Four cards. A small AI scores 7.9% on a maths test. A bigger AI changes 131,072 of its 800 million settings, with no retraining. The score jumps to 48.1%. An AI fixed another AI by changing 0.016% of i",
+  "Which of your habits will cost you your job once AI is at work? Which of your habits will cost you your job once AI is at work? Him to camera asking which of your habits will cost you your job, then naming three habits that do and the one that saves ",
+  "Free ChatGPT has ads now. Here is what switching them off costs you. A phone showing a ChatGPT answer with a Sponsored card tucked under it, and the house robot holding a price tag that reads £0, then cards that show who sees the ads, the off switch ",
+  "Your AI thinks it's the best. Guess who told it. Six cards. Cover: a robot proudly pressing an I'M THE BEST sticker onto its own chest, a sheet of the same stickers on the desk, while the office behind it is broken and on fire. Then the post-Enron au",
+  "Boss: use more AI. Staff: done. Two panels. The boss points at a chart: \"Use more AI.\" The staff member has an AI writing poems about a spreadsheet, and the chart shoots up. Underneath: Amazon now warns that using AI use as a target can drive bad res",
+  "AI was meant to make IT firms rich. Their clients took the savings. Four cards. Infosys expected to grow 1.5 to 3 percent this year; now it says 1 to 2 percent. Why: clients expect a lower price when the work is done with AI, and that saving is built",
+  "91% of designers now use AI at least weekly, up from 54% a year ago (Designer Fund and Foundation Capital survey of 900+ designers, reported 25 Nov 2026).",
+  "Gods Don't Give Gifts, billed as the first AI-animated feature in cinemas, opens on 4 December: a hybrid pipeline from pen drawings to diffusion video, with human voice actors, Foley and editors (Film Threat, 5 Nov 2026).",
+  "A company running about 500 YouTube channels got a singer's recording of a 19th-century Bulgarian folk song taken down with a copyright claim; YouTube rejected her two appeals before a journalist stepped in (Digital Music News, 18 Nov 2026).",
+  "TikTok's Likeness Detection doesn't shift liability to creators the way it looks, it hands brand managers a detection feed with no built-in enforcement, so enrollment without a named reviewer just creates a pile of unactioned alerts.",
+  "So what: Your staff and customers will soon be building small tools without knowing it, because ChatGPT and Claude now answer ordinary questions with a working calculator or chart instead of a paragraph, and nobody checks the maths behind those tools",
+  "Canva, Adobe or Claude: who owns design in 2028? At Adobe MAX on 10 Nov, Adobe made Firefly an AI creative studio, put agents in Illustrator, Premiere and InDesign, and opened its desktop apps to other companies' agents. Claude Design lists both Canv",
+  "Oracle files to sell $20B in new stock, bonds to finance AI buildout",
+  "Where does AI get built when towns say no?",
+  "Will your AI auditor find your missing money, or the skeletons in your closet?",
+  "Which of your habits will cost you your job once AI is at work?",
+  "The labs writing everyone's code still run Salesforce"
+ ]
+}

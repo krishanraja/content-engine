@@ -1,0 +1,63 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why did Maxon put AI model generation inside Cinema 4D and ZBrush as a separate, credit-billed service running on other firms' models?",
+  "rungs": [
+    {"n": 1, "question": "Why did Maxon put AI model generation inside Cinema 4D and ZBrush at all?",
+     "answer": "Both sources describe the generators as a fast, editable starting point that artists then refine in the Maxon tools they already use, not as finished artwork.",
+     "evidence": [
+       {"url": "https://www.maxon.net/en/maxon-plus", "domain": "maxon.net", "date": "2026-11-23", "quote": "You get an art-directable starting point in 3D fast and refine it in your existing Maxon tools to make the final result completely yours."},
+       {"url": "https://www.creativebloq.com/news/every-3d-artist-should-have-an-ai-assistant-maxon-says-as-it-launches-new-tools-and-agentic-licences", "domain": "creativebloq.com", "date": "2026-11-23", "quote": "The emphasis across the suite of generators is on providing starting points rather than finished artwork"}
+     ],
+     "strength": "documented",
+     "counter": {"text": "The generators are not tied to the apps: Maxon's own page says \"You can use Maxon Plus on the web even if you work in other 3D tools.\""},
+     "mechanism_type": null, "stop": null},
+    {"n": 2, "question": "Why is the generation sold as a separate, optional subscription rather than inside existing Cinema 4D, ZBrush or Maxon One licences?",
+     "answer": "Maxon and Creative Bloq both say artists hold mixed views on AI and that Maxon wants each artist to choose whether to use it. The generators sit in an optional plan, apart from existing licences, with a switch that turns AI off.",
+     "evidence": [
+       {"url": "https://www.creativebloq.com/news/every-3d-artist-should-have-an-ai-assistant-maxon-says-as-it-launches-new-tools-and-agentic-licences", "domain": "creativebloq.com", "date": "2026-11-23", "quote": "Aware that many artists remain suspicious of AI tools, it's trying to take an approach that sets it apart from the likes of Adobe"},
+       {"url": "https://www.creativebloq.com/news/every-3d-artist-should-have-an-ai-assistant-maxon-says-as-it-launches-new-tools-and-agentic-licences", "domain": "creativebloq.com", "date": "2026-11-23", "quote": "Today, Maxon's launching a suite of generative tools for 3D work but under a separate, optional subscription plan called Maxon Plus. If you don't want to see the AI generators, you don't have to."},
+       {"url": "https://www.maxon.net/en/responsible-ai", "domain": "maxon.net", "date": "2026-11-24", "quote": "Generative AI can have significant social, ethical, and legal implications, and artists have good reasons to approach it with different expectations and concerns."},
+       {"url": "https://www.maxon.net/en/responsible-ai", "domain": "maxon.net", "date": "2026-11-24", "quote": "A key priority for us is to give everyone a choice in how they participate, including a central, unified control to turn off AI functionality."},
+       {"url": "https://www.maxon.net/en/maxon-plus", "domain": "maxon.net", "date": "2026-11-23", "quote": "Maxon Plus is a separate subscription and isn't automatically included with Maxon One or standalone product licenses."}
+     ],
+     "strength": "documented",
+     "counter": {"text": "The plan is more than an AI wrapper: Maxon's service description says \"Maxon Plus can be used without AI Features by turning the Maxon Plus setting on and the Global AI setting off.\", and Creative Bloq says \"But the most exciting part of Maxon Plus for many artists may not actually involve any kind of asset generation.\" Neither site says artist choice alone required a separate paid plan."},
+     "mechanism_type": "the product split", "stop": null},
+    {"n": 3, "question": "Why is the generation billed in credits rather than a flat fee?",
+     "answer": "Only cloud operations use credits, and each costs a different amount depending on the input, the settings, the job's complexity and which outside AI provider runs it, within limits set by that provider. A monthly allowance comes with each pack and does not roll over.",
+     "evidence": [
+       {"url": "https://www.maxon.net/en/maxon-plus", "domain": "maxon.net", "date": "2026-11-23", "quote": "Operations consume different amounts of Maxon Plus credits depending on your input, the selected third-party AI provider and the settings, and the scope and complexity of the task or result."},
+       {"url": "https://www.maxon.net/en/maxon-plus", "domain": "maxon.net", "date": "2026-11-23", "quote": "Only cloud-based operations consume Maxon Plus credits."},
+       {"url": "https://www.maxon.net/en/legal/service-description", "domain": "maxon.net", "date": "2026-11-23", "quote": "The AI Features of Maxon Plus have technical limits, based on the respective Third-Party AI Provider."},
+       {"url": "https://www.creativebloq.com/news/every-3d-artist-should-have-an-ai-assistant-maxon-says-as-it-launches-new-tools-and-agentic-licences", "domain": "creativebloq.com", "date": "2026-11-23", "quote": "Starting at $10/€10 per month, it provides cloud services, collaboration features and generative AI-powered tools"}
+     ],
+     "strength": "inferred",
+     "counter": {"text": "Every credit quote is on maxon.net; Creative Bloq gives a monthly price but never mentions credits, and the records it cites are all on maxon.net, so no second site says it. Neither site says credits mirror what the providers charge Maxon. Maxon Review, also a cloud service, uses no credits during its preview (\"Maxon Review requires a Maxon Plus subscription but consumes no Maxon Plus credits during the preview.\"). The Maxon Plus buy page would not render its plans."},
+     "mechanism_type": "the money", "stop": null},
+    {"n": 4, "question": "Why does the generation run on other firms' models such as Tripo and Rodin?",
+     "answer": "Maxon holds the provider accounts and data agreements and lets the artist pick a provider inside the product where more than one is offered. Creative Bloq reports Rodin at launch, with more providers planned so artists can choose.",
+     "evidence": [
+       {"url": "https://www.maxon.net/en/maxon-plus", "domain": "maxon.net", "date": "2026-11-23", "quote": "We work with third-party AI providers, such as Tripo and Rodin. Where more than one is available for an operation, you can choose inside the product. Maxon manages the provider relationships, so you never need a separate account."},
+       {"url": "https://www.maxon.net/en/responsible-ai", "domain": "maxon.net", "date": "2026-11-24", "quote": "Maxon has data processing agreements in place with the Third-Party AI providers it engages."},
+       {"url": "https://www.creativebloq.com/news/every-3d-artist-should-have-an-ai-assistant-maxon-says-as-it-launches-new-tools-and-agentic-licences", "domain": "creativebloq.com", "date": "2026-11-23", "quote": "Initially, the AI generation is provided by Rodin, although there are plans to add more providers, allowing artist to choose which model to use."}
+     ],
+     "strength": "documented",
+     "counter": {"text": "The sources disagree on the launch line-up: Creative Bloq says Rodin alone, the Maxon Plus page names Tripo and Rodin, and the service description says \"The providers currently used are Rodin, Tripo and Google Gemini.\" All describe choice of provider; none says why outside providers were used rather than a Maxon model."},
+     "mechanism_type": "the contract", "stop": null},
+    {"n": 5, "question": "Why does Maxon resell outside firms' models instead of building its own?",
+     "answer": "Maxon describes its role as choosing and vetting providers and giving artists one route to them inside their own production, aimed at the control and repeatability it says generative AI lacks. Neither site says Maxon decided against building a model, or why.",
+     "evidence": [
+       {"url": "https://www.maxon.net/en/responsible-ai", "domain": "maxon.net", "date": "2026-11-24", "quote": "We maintain the context of your production and offer a unified way to access AI services, driven by your inputs and data, and directed by your artistic vision."},
+       {"url": "https://www.maxon.net/en/responsible-ai", "domain": "maxon.net", "date": "2026-11-24", "quote": "Generative AI can create impressive visuals, but we know that artists require more: consistency, precision, control, and repeatability. These are areas where AI struggles."},
+       {"url": "https://www.maxon.net/en/responsible-ai", "domain": "maxon.net", "date": "2026-11-24", "quote": "This is taken into account during the AI model selection process."},
+       {"url": "https://www.creativebloq.com/news/every-3d-artist-should-have-an-ai-assistant-maxon-says-as-it-launches-new-tools-and-agentic-licences", "domain": "creativebloq.com", "date": "2026-11-23", "quote": "Steve says the company has been thinking a lot about how it in integrates with real workflows in different creative disciplines"}
+     ],
+     "strength": "inferred",
+     "counter": {"text": "The role statement is a statement of goals, not a record of a decision: the page says \"This page is for general information only and describes Maxon’s current approach to and goals for AI.\" Nothing found on either site says whether Maxon has or plans a model of its own."},
+     "mechanism_type": "the model", "stop": "motive_not_mechanism"}
+  ],
+  "landing": {
+    "shows": "Maxon offers outside firms' 3D generators (Rodin, Tripo and Google Gemini by its own service description) as opt-in starting points inside Cinema 4D and ZBrush, in a plan sold apart from its existing licences, metered by monthly credits whose cost per job varies with the provider. Maxon casts itself as the vetted, controlled route to those models; the record does not say why it rents them rather than making one.",
+    "open_question": "When the model belongs to Rodin, Tripo or Google, what exactly is the artist's credit buying from Maxon?"
+  }
+}

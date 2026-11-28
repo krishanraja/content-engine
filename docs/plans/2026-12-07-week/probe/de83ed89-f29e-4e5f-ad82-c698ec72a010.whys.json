@@ -1,0 +1,165 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why will Unreal Engine 6 ship without Blueprints?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why will Unreal Engine 6 ship without Blueprints?",
+      "answer": "Epic has made Verse on its new Scene Graph framework the one way to build gameplay in UE6, Early Access included. Blueprints and the Actor gameplay framework are left out, so UE5 projects built on Blueprints have to be converted to move across.",
+      "evidence": [
+        {
+          "url": "https://www.vp-land.com/stories/unreal-engine-6-drops-blueprints-as-epic-uses-ai-to-port-20-000-fortnite-blueprints-to-ver",
+          "domain": "vp-land.com",
+          "date": "2026-11-21",
+          "quote": "Unreal Engine 6, Early Access included, will ship without Blueprints or the Actor gameplay framework, according to Epic's update on Blueprints, so gameplay moves to Verse on the new Scene Graph framework."
+        },
+        {
+          "url": "https://www.gaming.net/epic-uses-ai-to-port-over-20-000-fortnite-blueprints-to-verse/",
+          "domain": "gaming.net",
+          "date": "2026-11-20",
+          "quote": "UE6, including Early Access, will not include Blueprints or the Actor Gameplay Framework; gameplay will instead be built in the Verse programming language on the new Scene Graph gameplay framework."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "The story's 'on that basis' is not borne out by the dates. Gaming.net reports that 'news of the framework decision had already emerged from Unreal Fest Tokyo, held November 3–4, 2026' and that the Fortnite experiment 'started two weeks before the update' of 20 November, so the decision was public before the conversion began. Gaming.net calls the prototype support for the plan: 'The prototype supports a revised migration plan.' Both sources relay Epic's own post, which returned HTTP 403 and was not read."
+      },
+      "mechanism_type": "the engine's gameplay framework",
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why does Epic want a single Verse-first framework in UE6?",
+      "answer": "UE6 merges UE5 and Unreal Editor for Fortnite into one engine, and Epic's stated design goals for it are a new data model, an architecture built first around Verse, modularity and AI operability. Scene Graph, the framework gameplay moves to, is described in Epic's own documentation as native to Verse.",
+      "evidence": [
+        {
+          "url": "https://www.vp-land.com/stories/unreal-engine-6-drops-blueprints-as-epic-uses-ai-to-port-20-000-fortnite-blueprints-to-ver",
+          "domain": "vp-land.com",
+          "date": "2026-11-21",
+          "quote": "Epic lists its design goals for UE6 as a new data model, an architecture built first around Verse, Epic's programming language, modularity and AI operability."
+        },
+        {
+          "url": "https://www.gaming.net/epic-uses-ai-to-port-over-20-000-fortnite-blueprints-to-verse/",
+          "domain": "gaming.net",
+          "date": "2026-11-20",
+          "quote": "Epic’s design goals for the engine are a new data model, a Verse-first architecture, modularity and AI operability."
+        },
+        {
+          "url": "https://www.vp-land.com/stories/unreal-engine-6-drops-blueprints-as-epic-uses-ai-to-port-20-000-fortnite-blueprints-to-ver",
+          "domain": "vp-land.com",
+          "date": "2026-11-21",
+          "quote": "One engine replaces two. UE6 merges UE5 and Unreal Editor for Fortnite, with Scene Graph built from scratch on Verse."
+        },
+        {
+          "url": "https://dev.epicgames.com/documentation/fortnite/scene-graph-in-unreal-editor-for-fortnite",
+          "domain": "dev.epicgames.com",
+          "date": "2026-04-17",
+          "quote": "Scene Graph is a Verse native system that takes advantage of Verse characteristics."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "The goals are listed, but neither report quotes Epic explaining why those goals rule out keeping Blueprints, and Epic's June roadmap, as Gaming.net reports it, had planned for Actors and Blueprints to 'coexist in UE6 Early Access and 6.0 while Scene Graph matured'. The UE 5.9 release notes Epic published do not mention UE6. Scope searched: the two reports, Epic's Scene Graph, Verse and UE 5.9 pages; Epic's two UE6 posts and the Unreal Fest Tokyo page returned HTTP 403."
+      },
+      "mechanism_type": "the engine's architecture: one data model and one language for UE5 and UEFN",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why is Epic willing to drop Blueprints when its earlier UE6 roadmap kept them alongside Scene Graph?",
+      "answer": "Epic's stated case is that AI will make converting UE5 projects to Verse practical and cost-efficient. It ran an AI-assisted port of more than 20,000 Fortnite Battle Royale Blueprints, a job it had expected to take years, which produced a working prototype of about 3 million lines of Verse.",
+      "evidence": [
+        {
+          "url": "https://www.vp-land.com/stories/unreal-engine-6-drops-blueprints-as-epic-uses-ai-to-port-20-000-fortnite-blueprints-to-ver",
+          "domain": "vp-land.com",
+          "date": "2026-11-21",
+          "quote": "The company expects AI to make converting UE5 projects practical and cost-efficient, with potentially modest costs by the time UE 6.0 ships."
+        },
+        {
+          "url": "https://www.gaming.net/epic-uses-ai-to-port-over-20-000-fortnite-blueprints-to-verse/",
+          "domain": "gaming.net",
+          "date": "2026-11-20",
+          "quote": "Epic expects AI to make UE5-to-UE6 conversion practical and cost-efficient, with potentially modest costs by the time UE 6.0 is released, and to keep UE6 on its existing schedule or deliver it sooner."
+        },
+        {
+          "url": "https://www.vp-land.com/stories/unreal-engine-6-drops-blueprints-as-epic-uses-ai-to-port-20-000-fortnite-blueprints-to-ver",
+          "domain": "vp-land.com",
+          "date": "2026-11-21",
+          "quote": "The conversion, which Epic Games had expected to take years, set out to move every Battle Royale Blueprint to Verse. The AI-assisted run produced a working prototype with roughly 3 million lines of Verse."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "The prototype is not yet proven. Gaming.net: 'The team is still iterating to validate the prototype’s performance, memory usage and architecture.' VP Land: 'That cost outlook is Epic's projection'. Neither source reports a shipped or playable converted Battle Royale. Scope searched: the two reports and the pages they cite, including Epic's UE 5.9 release notes, which say nothing about the Fortnite port; Epic's own UE6 posts returned HTTP 403."
+      },
+      "mechanism_type": "the conversion: AI translating Blueprint logic into Verse code",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why does Epic expect converting a game with AI to cost little?",
+      "answer": "Epic's reasoning, as both reports give it, is that the cost of AI tasks keeps falling while the work of converting a game stays about the same size, so the same conversion gets cheaper over time.",
+      "evidence": [
+        {
+          "url": "https://www.vp-land.com/stories/unreal-engine-6-drops-blueprints-as-epic-uses-ai-to-port-20-000-fortnite-blueprints-to-ver",
+          "domain": "vp-land.com",
+          "date": "2026-11-21",
+          "quote": "Its reasoning is that AI task costs keep falling while the complexity of converting a game stays roughly constant."
+        },
+        {
+          "url": "https://www.gaming.net/epic-uses-ai-to-port-over-20-000-fortnite-blueprints-to-verse/",
+          "domain": "gaming.net",
+          "date": "2026-11-20",
+          "quote": "The rationale is that AI task costs are falling while the complexity of converting a game remains broadly constant."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "No cost figure for the Fortnite port appears in either report, so the reasoning is stated without a measured price for the job itself. Scope searched: the two reports and the pages they cite."
+      },
+      "mechanism_type": "the money: falling price per AI task against a fixed amount of conversion work",
+      "stop": null
+    },
+    {
+      "n": 5,
+      "question": "Why would AI task costs keep falling?",
+      "answer": "The sources do not give Epic's own basis. Gaming.net sets beside it an Epoch AI estimate that the cost of a fixed level of AI performance fell about 47% per quarter, roughly 13 times a year, across five benchmarks since 2023, and says Epic's forecast extends that trend to game conversion.",
+      "evidence": [
+        {
+          "url": "https://www.gaming.net/epic-uses-ai-to-port-over-20-000-fortnite-blueprints-to-verse/",
+          "domain": "gaming.net",
+          "date": "2026-11-20",
+          "quote": "Epic’s forecast extends that benchmark trend to game conversion."
+        },
+        {
+          "url": "https://epoch.ai/publications/the-plunging-price-of-thought",
+          "domain": "epoch.ai",
+          "date": "2026-09-22",
+          "quote": "The cost of achieving a given level of AI performance has fallen about 47% per quarter since 2023, or 13× per year."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "Epoch measures a past fall and lists its own limits: 'Our data are incomplete and noisy: the timeframe is barely three years, and we do not include all combinations of AI model and benchmark.' It also finds the rate slows as a performance level ages, from 66% to 32% per quarter two years after it debuts. Neither report says Epic itself cited Epoch."
+      },
+      "mechanism_type": "the money: price of a fixed level of AI performance over time",
+      "stop": null
+    },
+    {
+      "n": 6,
+      "question": "Why would a falling price on AI benchmarks carry over to converting a real game's code?",
+      "answer": "Nothing read answers this. Epic's own post could not be read, neither report gives a cost or quality measure for the Fortnite conversion, and the study the reporting leans on says benchmark results are not the same as useful work.",
+      "evidence": [],
+      "strength": "open",
+      "counter": {
+        "text": "Epoch: 'Even if they are not, doing well on a benchmark is not synonymous with useful work.' Scope searched: VP Land, Gaming.net, the Epoch AI report, Epic's Scene Graph, Verse and UE 5.9 documentation; Epic's 20 November update, 22 June roadmap and Unreal Fest Tokyo page returned HTTP 403, so Epic's own case for the carry-over was not read."
+      },
+      "mechanism_type": null,
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "UE6 drops Blueprints because Epic has chosen one Verse-first framework for an engine that merges UE5 and Fortnite's editor, and says AI makes converting old projects practical and cheap. Its evidence is a two-week AI port of Fortnite's Blueprints that is still being validated, and the decision was public at Unreal Fest Tokyo before that port began. The cost case rests on falling AI prices measured on benchmarks, whose own authors say benchmarks are not useful work.",
+    "open_question": "If the decision was announced before the Fortnite port began and the port is still being validated, what did Epic know about the cost of converting Blueprints when it chose to drop them?"
+  }
+}

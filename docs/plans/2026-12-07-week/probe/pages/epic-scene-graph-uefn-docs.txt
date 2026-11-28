@@ -1,0 +1,46 @@
+Scene Graph in Unreal Editor for Fortnite | Fortnite Documentation | Epic Developer Community
+Table of Contents
+Developer
+Scene Graph
+Scene Graph
+Learn how Scene Graph can be used to quickly scale your game environment.
+Learn to use this Beta feature, but use caution when shipping with it.
+Scene Graph is a unified structure that connects all the objects in the world. Think of it as a toolbox that contains all the tools you need for set dressing, gameplay systems, audio, VFX, and much more, to create experiences for the metaverse.
+Building with Scene Graph means you can perform operations on related objects in your project. You can also use Scene Graph to duplicate and iterate on structures and code as you create them. You can even turn the objects you create into reusable prefabs, and use them across different projects.
+Scene Graph is a Verse native system that takes advantage of Verse characteristics. This provides a way for you to add more customization to your projects with interactive, custom-built objects and gameplay experiences.
+Getting Started in Scene Graph
+Learn how to use Scene Graph to build game environments and gameplay.
+Working with Entities and Components
+Learn how to build out entities and add data and behaviors to them with components.
+Prefabs and Prefab Instances
+Reuse and edit game objects and game elements by creating prefabs in Scene Graph.
+Creating Your Own Component using Verse
+Define custom behaviors for entities in Scene Graph by creating your own component using Verse.
+Custom Items and Inventories with Scene Graph
+Learn how to use Verse and Scene Graph to create custom items, customize the Fortnite player inventory, and more!
+Scene Events
+Learn about creating Scene Events to change your component's behavior and add interesting events to your scene.
+Prefab Editor User Interface
+An overview of the interface and editing capabilities of the Prefab Editor.
+Transforms in Scene Graph
+Transform Scene Graph entities to manipulate their translation, rotation, and scale.
+Perception with Scene Graph
+Learn how to use pre-made senses like sight, hearing and touch and create custom senses using Scene Graph.
+Scene Graph Tutorials
+Learn the numerous ways you can use Scene Graph to create new and interesting gameplay with the Scene Graph tutorials.
+Components
+Components allow you to add functionality and behavior to your Scene Graph entities.
+Scene Graph Best Practices
+A collection of best practices you can use when developing your projects using Scene Graph.
+Scene Graph Known Issues
+Learn more about some of the known issues within Scene Graph.
+Data Recovery System
+Learn how UEFN protects your data when a Verse class goes missing, and how to fix placeholders with the Data Recovery tool.
+Scene Graph Experimental Features
+Features that are still in flux and not quite ready for use in shipping projects.
+performance
+building
+level design
+verse tools
+Ask questions and help your peers Developer Forums
+Write your own tutorials or read those from others Learning Library

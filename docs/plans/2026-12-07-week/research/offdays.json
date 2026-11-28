@@ -1,0 +1,527 @@
+{
+  "lane": "offdays",
+  "searched": [
+    "web: new AI feature creators launch November 2026",
+    "web: AI music tool launch November 24 2026",
+    "web: AI video generator new plan pricing November 2026",
+    "web: \"November 25, 2026\" AI launch creators",
+    "web: Midjourney new feature November 2026; Niji V8 Midjourney release",
+    "web: CapCut new AI feature November 2026; CapCut World London announcements (no London recap found)",
+    "web: techcrunch November 2026 AI video app creators launches",
+    "web: ElevenLabs announces November 2026; Canva new AI feature announced November 2026",
+    "web: digitalmusicnews 2026/11/24 AI; theverge.com 2026/11 AI creative tool launch free",
+    "web: AI video model launch November 2026 Runway OR Kling OR Veo OR Luma OR Pika",
+    "web: AI Christmas advert backlash November 2026; AI generated song viral strange November 2026",
+    "web: AI sports club fans AI feature November 2026; AI blunder sport club AI image November 2026; AI referee or commentator strange story November 2026",
+    "web: game developers AI tool launch November 2026; gamesindustry.biz AI November 2026",
+    "web: Pro Tools 2026.11 stem separation (dropped: released 3 to 12 Nov, outside window)",
+    "web: Apple Logic Pro 13 AI assistant (dropped: released 5 Nov, outside window)",
+    "web: Black Friday 2026 AI tool discounts; then read each vendor's own pricing page directly",
+    "web: LeBron James Bron AI lawsuit (dropped: filed 17 Nov, outside window); Skins Game Prime Video AWS win probability",
+    "pages read: The Neuron daily digests 24, 25, 26 Nov 2026 (20 Nov returned 404), used only as leads, never as sources",
+    "pages read: The Verge section pages (AI, entertainment, games, music, apps, creators) for 20 to 27 Nov stories",
+    "pages read: 9to5mac, newsshooter, petapixel, digitalmusicnews listing pages for 20 to 27 Nov URLs",
+    "pages read: Social Media Today news index (Snapchat Easy Lens CLI dropped: 18 Nov; Meta Edits for iPad dropped: no official Meta page found to check the AI feature)",
+    "pages read: pricing pages of Suno, ElevenLabs, Recraft, Topaz, Krea, Higgsfield, Runway, Descript, Udio, Freepik, Veed, Synthesia and others for Black Friday terms",
+    "could not load: canva.com newsroom (403, so the Canva MCP general availability story was cut), techcrunch.com (403), reddit.com threads (403), helpx.adobe.com release notes (403), docs.midjourney.com (403), etsy.com terms (403)",
+    "dropped as excluded or already used: Tidal AI ban, Suno Visuals, Suno Bridge, EA FC Motson, Fincher, Bartz v Anthropic payouts, YourNeuroTune",
+    "dropped for date: Lucas Martinic's AI-coded SNES crossover (first post 19 Nov 2026), Canva AI off switch (19 Nov), Roblox AI share of top games (30 Oct)",
+    "note: the shared web search budget for this run ran out near the end; second sources for the last candidates were found by reading links inside pages already open, not by new searches"
+  ],
+  "candidates": [
+    {
+      "key": "niji-8-anime-model",
+      "sector": "arts_design",
+      "aim": "utility",
+      "headline": "Midjourney's new anime model, Niji 8, is live and can put the same character into new scenes",
+      "what_happened": "Midjourney and Spellbrush released Niji 8, their anime and illustration image model, on 24 November 2026. It adds an edit feature that poses a character from one picture into another background, the replacement for the character reference tool many users missed. Plans start at $10 a month, or $8 a month billed yearly; there is no free plan on the pricing page.",
+      "date": "2026-11-24",
+      "named_thing": "Niji 8 and its edit feature",
+      "primary": {
+        "label": "niji・journey blog, Welcome to Niji 8, 24 Nov 2026",
+        "url": "https://nijijourney.com/blog/niji-8",
+        "kind": "original",
+        "quote": "Many of you missed the cref feature from Niji 6. After much work, we’re finally back with its replacement: the edit feature, which allows you to pose your characters into different backgrounds while keeping consistency."
+      },
+      "second": {
+        "label": "Midjourney on X, 24 Nov 2026",
+        "url": "https://x.com/midjourney/status/2125328040624521639",
+        "quote": "This is our latest anime model with precision prompting, consistent characters, best in class coherence, a dedicated editing model and more."
+      },
+      "more_sources": [
+        {
+          "label": "niji・journey pricing page",
+          "url": "https://nijijourney.com/pricing",
+          "quote": "Basic Plan Regular price $10 With yearly billing $8 / month 20% off billed annually"
+        }
+      ],
+      "steps": [
+        {
+          "text": "Pick Niji 8 from the Version menu in the settings beside the prompt bar on the web, or add --niji 8 after your prompt in Discord.",
+          "checked": "https://nijijourney.com/blog/niji-8"
+        },
+        {
+          "text": "Keep prompts short when you want a spread of ideas; write longer prompts when you know what you want, because Niji 8 reads length as intent.",
+          "checked": "https://nijijourney.com/blog/niji-8"
+        },
+        {
+          "text": "To keep one character across scenes, press the quick edit button at the bottom right of a finished image and attach a character sheet and a background.",
+          "checked": "https://nijijourney.com/blog/niji-8"
+        },
+        {
+          "text": "Prompt with two pictures, such as take the character from image 1 and put it into image 2, and use sharp, unpixelated inputs for the best result.",
+          "checked": "https://nijijourney.com/blog/niji-8"
+        },
+        {
+          "text": "A plan is needed: Basic is $10 a month, or $8 a month billed yearly.",
+          "checked": "https://nijijourney.com/pricing"
+        }
+      ],
+      "money_or_mechanism": "Character consistency moves from typing the same words (Niji 7) to an image edit model, so an illustrator can lock a character from a reference sheet and still get variety from short prompts.",
+      "why_it_matters": "Comic, storyboard and animation makers can now keep one character on model across panels inside a $10 a month tool.",
+      "funny": "The release note admits the developers lost their own favourite test character when the new model changed how prompts behave.",
+      "media": {
+        "kind": "photo",
+        "url": "https://storage.googleapis.com/niji-web-public/41dbda82-8490-8003-887e-c7f1e3d01a09.jpg"
+      },
+      "risks": "Company page only, plus its own X post; no independent review yet. Midjourney's docs site refused to load (403), so plan details come from the nijijourney pricing page."
+    },
+    {
+      "key": "suno-black-friday-annual",
+      "sector": "music",
+      "aim": "utility",
+      "headline": "Suno takes an extra 30% off its yearly plans until 1 December",
+      "what_happened": "Suno is running its Black Friday sale, which it calls its biggest sale of the year, with an extra 30% off annual plans. The page data says the sale ends at 02:00 UTC on 1 December 2026. Paid plans add commercial use rights, song downloads and stem separation, which the free plan does not have.",
+      "date": "2026-11-27",
+      "named_thing": "Suno Black Friday sale, extra 30% off annual plans",
+      "primary": {
+        "label": "Suno, Pricing page, checked 27 Nov 2026",
+        "url": "https://suno.com/pricing",
+        "kind": "original",
+        "quote": "Extra 30% off annual plans"
+      },
+      "second": {
+        "label": "Suno, Release Notes page banner, checked 27 Nov 2026",
+        "url": "https://suno.com/release-notes",
+        "quote": "Black Friday Sale"
+      },
+      "more_sources": [
+        {
+          "label": "Suno, Pricing page",
+          "url": "https://suno.com/pricing",
+          "quote": "Get more Suno for less in our biggest sale of the year."
+        }
+      ],
+      "steps": [
+        {
+          "text": "Open Suno's pricing page and switch from Monthly to Annual, where the sale applies.",
+          "checked": "https://suno.com/pricing"
+        },
+        {
+          "text": "Check what the free plan leaves out before you choose: no song downloads, no commercial rights and no stem separation.",
+          "checked": "https://suno.com/pricing"
+        },
+        {
+          "text": "Pick the paid tier for your work: the first paid tier gives 2,500 song credits, 20 downloads a month and commercial use rights; the next adds Suno Studio and 10,000 credits.",
+          "checked": "https://suno.com/pricing"
+        },
+        {
+          "text": "Buy before the sale ends on 1 December.",
+          "checked": "https://suno.com/pricing"
+        }
+      ],
+      "money_or_mechanism": "The discount only applies to a year paid up front, so Suno trades a lower price for twelve months of locked-in subscription revenue.",
+      "why_it_matters": "A musician who needs commercial rights to Suno tracks pays less for a year if they sign up this week.",
+      "funny": "The sale is pitched with a countdown clock on a page that also sells a daily song challenge.",
+      "media": {
+        "kind": "photo",
+        "url": "https://cdn-o.suno.com/meta-preview.jpg"
+      },
+      "risks": "Vendor page only. The page lists $96 a year for the first paid tier, but it is not clear whether that figure already includes the extra 30%; read the checkout price before quoting a number. The 1 December end time is from the page's data, not its visible text. Sale start date not shown."
+    },
+    {
+      "key": "elevenlabs-black-friday",
+      "sector": "creators",
+      "aim": "utility",
+      "headline": "ElevenLabs cuts its Creator plan to $99 for the first year, until 1 December",
+      "what_happened": "ElevenLabs is selling annual plans at up to 55% off until 1 December 2026. The Creator plan, with 30,000 credits a month, costs $99 for the first year, then $220 a year. Starter is $1 for the first month, then $6 a month.",
+      "date": "2026-11-27",
+      "named_thing": "ElevenLabs Creator plan at $99 for the first year",
+      "primary": {
+        "label": "ElevenLabs, Pricing page and FAQ, checked 27 Nov 2026",
+        "url": "https://elevenlabs.io/pricing",
+        "kind": "original",
+        "quote": "The ElevenLabs Black Friday and Cyber Monday sale ends on December 1st. Until then, eligible customers can save up to 55% when they choose an annual plan. Creator annual costs $99 for the year."
+      },
+      "second": {
+        "label": "ElevenLabs, Pricing page plan card, checked 27 Nov 2026",
+        "url": "https://elevenlabs.io/pricing",
+        "quote": "Billed yearly, $99 for the first year, then $220 a year"
+      },
+      "more_sources": [
+        {
+          "label": "ElevenLabs, Pricing page banner",
+          "url": "https://elevenlabs.io/pricing",
+          "quote": "Get your first month for only $1"
+        }
+      ],
+      "steps": [
+        {
+          "text": "Open the ElevenLabs pricing page and choose Yearly billing.",
+          "checked": "https://elevenlabs.io/pricing"
+        },
+        {
+          "text": "Pick Creator: 30,000 credits a month for $99 for the first year, then $220 a year.",
+          "checked": "https://elevenlabs.io/pricing"
+        },
+        {
+          "text": "If you only want to test it, Starter is $1 for the first month, then $6 a month.",
+          "checked": "https://elevenlabs.io/pricing"
+        },
+        {
+          "text": "Pro is $445.50 for the first year, then $990; people already paying monthly for Pro get 50% off by moving to yearly.",
+          "checked": "https://elevenlabs.io/pricing"
+        },
+        {
+          "text": "Sign up before 1 December, when the sale ends.",
+          "checked": "https://elevenlabs.io/pricing"
+        }
+      ],
+      "money_or_mechanism": "The cut is on the first year only, so the plan renews at more than double the sale price; the saving is real but front-loaded.",
+      "why_it_matters": "A podcaster or YouTuber who dubs or voices their work can lock in a year of the Creator plan for $99.",
+      "funny": "The voice company's cheapest offer this week costs less than a coffee for the first month.",
+      "media": {
+        "kind": "photo",
+        "url": "https://elevenlabs.io/cover.png"
+      },
+      "risks": "Vendor page only. Prices are US dollars and may differ by country. Renewal price is more than double, so the carousel must say first year only."
+    },
+    {
+      "key": "recraft-black-friday",
+      "sector": "arts_design",
+      "aim": "utility",
+      "headline": "Recraft, the AI design and vector tool, is 40% off yearly plans until 1 December",
+      "what_happened": "Recraft, an AI image and vector design tool used for logos and brand graphics, is offering 40% off the first year of any new yearly plan, from $6 a month billed annually. The offer ends at 11:59 pm Pacific time on 1 December 2026 and is for new plans only.",
+      "date": "2026-11-27",
+      "named_thing": "Recraft Black Friday, 40% off yearly plans from $6 a month",
+      "primary": {
+        "label": "Recraft, Pricing and plans page, checked 27 Nov 2026",
+        "url": "https://www.recraft.ai/pricing",
+        "kind": "original",
+        "quote": "Black Friday: 40% off any yearly plan Get the best models and tools from $6/month. Billed annually. New plans only. Ends Dec 1."
+      },
+      "second": {
+        "label": "Recraft, Pricing page FAQ, What are the Black Friday terms",
+        "url": "https://www.recraft.ai/pricing",
+        "quote": "40% off the first year of any new yearly plan, billed annually. After the first year, the plan renews at the regular price."
+      },
+      "more_sources": [],
+      "steps": [
+        {
+          "text": "Open Recraft's pricing page and choose Pay annually.",
+          "checked": "https://www.recraft.ai/pricing"
+        },
+        {
+          "text": "Pick a plan; the sale takes 40% off the first year, from $6 a month billed annually.",
+          "checked": "https://www.recraft.ai/pricing"
+        },
+        {
+          "text": "Check you qualify: it is for new yearly plans only, not accounts with an active yearly subscription, and not in some countries.",
+          "checked": "https://www.recraft.ai/pricing"
+        },
+        {
+          "text": "Buy before 11:59 pm Pacific time on 1 December; after a year it renews at the regular price.",
+          "checked": "https://www.recraft.ai/pricing"
+        }
+      ],
+      "money_or_mechanism": "A first-year discount on a yearly commitment: Recraft gets twelve months paid up front, the designer gets the tool for 60% of the list price for one year.",
+      "why_it_matters": "A freelance designer can add an AI vector and logo tool for a year at $6 a month if they buy this week.",
+      "funny": "The fine print bans the deal for anyone loyal enough to already be on a yearly plan.",
+      "media": {
+        "kind": "photo",
+        "url": "https://static.recraft.ai/images/og/main-og.jpg"
+      },
+      "risks": "Vendor page only. Full plan prices were not visible in the page text, only the from $6 a month figure. Not available in some countries."
+    },
+    {
+      "key": "topaz-studio-black-friday",
+      "sector": "film_tv",
+      "aim": "utility",
+      "headline": "Topaz Studio, the AI upscaler filmmakers and photographers use, drops to $299 for a year",
+      "what_happened": "Topaz Labs is selling its Topaz Studio bundle, which includes Topaz Video, Topaz Photo, Gigapixel, Mobile and Web, at $299 for the first year instead of $499, in what it calls its last sale of the year. The tools upscale, sharpen, denoise and restore images and video with AI.",
+      "date": "2026-11-27",
+      "named_thing": "Topaz Studio at $299 a year, first year only",
+      "primary": {
+        "label": "Topaz Labs home page, Black Friday sale, checked 27 Nov 2026",
+        "url": "https://www.topazlabs.com/",
+        "kind": "original",
+        "quote": "Topaz Studio $499 $299/yr SALE Billed annually. First year only."
+      },
+      "second": {
+        "label": "Topaz Labs home page, sale banner",
+        "url": "https://www.topazlabs.com/",
+        "quote": "Last sale of the year. Save big on bundles and apps."
+      },
+      "more_sources": [],
+      "steps": [
+        {
+          "text": "Go to Topaz Labs and open Shop Black Friday.",
+          "checked": "https://www.topazlabs.com/"
+        },
+        {
+          "text": "Choose Topaz Studio on annual billing: $299 for the first year instead of $499.",
+          "checked": "https://www.topazlabs.com/"
+        },
+        {
+          "text": "It bundles Topaz Video, Topaz Photo, Topaz Gigapixel, Topaz for Mobile and Topaz for Web, with unlimited local rendering.",
+          "checked": "https://www.topazlabs.com/"
+        },
+        {
+          "text": "Check the licence line: the lower tier allows commercial use only for organisations under $1 million in annual revenue.",
+          "checked": "https://www.topazlabs.com/"
+        }
+      ],
+      "money_or_mechanism": "The $200 saving applies to the first year only, after which the bundle renews at the $499 list price.",
+      "why_it_matters": "An editor or photographer who restores old footage or upscales stills can get the whole Topaz suite for $299 this week.",
+      "funny": "The sale page quotes the co-founder of a rival AI image company praising Topaz's models.",
+      "media": {
+        "kind": "photo",
+        "url": "https://cdn.prod.website-files.com/6005fac27a49a9cd477afb63/68ca92ea67ef60d728ed80d0_opengraph-topazlabs-r.jpg"
+      },
+      "risks": "Vendor page only. The page shows no end date for the sale. Several tiers and daily deals sit on the same page with different prices, so the carousel should name the Studio annual price only."
+    },
+    {
+      "key": "nyt-bans-photoshop-2027",
+      "sector": "media",
+      "aim": "interest",
+      "headline": "The New York Times told its freelance photographers not to use the new Photoshop",
+      "what_happened": "In an email reported by The Verge on 24 November 2026, two New York Times photography leaders told freelancers to avoid Adobe Photoshop 2027 (release 28.0.0 and later) on assignment. They said its AI features can add metadata that labels a photograph as AI-generated, which a newsroom that does not retouch photos cannot risk. A Times spokesperson confirmed the requirement.",
+      "date": "2026-11-24",
+      "named_thing": "Adobe Photoshop 2027, release 28.0.0",
+      "primary": {
+        "label": "The Verge, The New York Times warns photographers not to update Photoshop over AI features, 24 Nov 2026",
+        "url": "https://www.theverge.com/ai-artificial-intelligence/1041227/the-new-york-times-warns-photographers-not-to-update-photoshop-over-ai-features",
+        "kind": "report",
+        "quote": "“At this time, we are requiring that all contributing photographers avoid using Adobe Photoshop 2027 (release 28.0.0 and subsequent updates) when working on assignment for The Times,” the email reads."
+      },
+      "second": {
+        "label": "Peter Baker on Threads, posting the email, about 24 Nov 2026",
+        "url": "https://www.threads.com/@peterbaker/post/DgHHIz1FRpO",
+        "quote": "Using Photoshop is an occupational hazard now. NY Times banning photographers from using the latest version."
+      },
+      "more_sources": [
+        {
+          "label": "The Verge, same article",
+          "url": "https://www.theverge.com/ai-artificial-intelligence/1041227/the-new-york-times-warns-photographers-not-to-update-photoshop-over-ai-features",
+          "quote": "The New York Times is asking freelance photographers not to use the newest version of Adobe Photoshop because features in the 2027 update use AI “in ways that may not be apparent to users.”"
+        }
+      ],
+      "money_or_mechanism": "Adobe's content credentials tag any AI-touched edit, so one routine tool can mark a news photo as AI-edited and cost the paper reader trust, while the freelancer risks the commission.",
+      "why_it_matters": "A photographer's software update can now decide whether a client will accept the pictures.",
+      "funny": "The world's best-known newspaper is asking photographers to keep their software out of date on purpose.",
+      "media": {
+        "kind": "photo",
+        "url": "https://platform.theverge.com/wp-content/uploads/sites/2/2026/11/gettyimages-2289911637.jpg?quality=90&strip=all&crop=0%2C10.232235952618%2C100%2C79.535528094764&w=1200"
+      },
+      "risks": "The email itself was seen by The Verge and posted on Threads; the Threads page showed the post text but not the email image. Adobe had not responded. Adobe's release notes page refused to load (403). Not clear which exact features trigger the label."
+    },
+    {
+      "key": "google-my-channel-patent",
+      "sector": "film_tv",
+      "aim": "humour",
+      "headline": "Google tried to patent AI TV shows starring you, with adverts stitched in",
+      "what_happened": "A Google patent application published in November 2026 describes My Channel, a feed of AI-generated videos and films built from a viewer's history, with the viewer's own image and voice as the lead and an advertising stitcher inserting ads. It was filed in May 2025; the examiner rejected it, though Google could amend or appeal. Gizmodo reported it on 23 November and The Verge on 25 November.",
+      "date": "2026-11-23",
+      "named_thing": "Google's My Channel patent application, publication 20260370899",
+      "primary": {
+        "label": "Gizmodo, Google Tried to Patent Personalized AI-Generated TV Shows, Filing Reveals, 23 Nov 2026",
+        "url": "https://gizmodo.com/google-wants-to-make-ai-tv-shows-starring-you-2000844299",
+        "kind": "report",
+        "quote": "Google might be planning to build a completely AI-generated TV channel in which your likeness is the main character"
+      },
+      "second": {
+        "label": "The Verge, Google’s patent for custom AI video feeds paints a bleak picture of entertainment’s future, 25 Nov 2026",
+        "url": "https://www.theverge.com/entertainment/1042221/google-my-channel-ai-video-patent",
+        "quote": "Last year, Google filed a patent for a system called My Channel that’s designed to create feeds filled with personalized, AI-generated videos and advertisements based on information the company knows about its users."
+      },
+      "more_sources": [
+        {
+          "label": "Gizmodo, same article",
+          "url": "https://gizmodo.com/google-wants-to-make-ai-tv-shows-starring-you-2000844299",
+          "quote": "Patentlyze notes that the patent examiner rejected the application, but Google could still amend or appeal."
+        }
+      ],
+      "money_or_mechanism": "The filing pairs generated shows with an ad stitcher, so the business is advertising sold against entertainment that costs no cast, crew or licence fee.",
+      "why_it_matters": "It shows one of the biggest video platforms has at least drawn up a channel with no studio, writer or actor in it.",
+      "funny": "In Google's plan the star of the show is you, and the ad break is still there.",
+      "media": {
+        "kind": "photo",
+        "url": "https://platform.theverge.com/wp-content/uploads/sites/2/2026/11/Screenshot-2026-11-25-at-11.34.07-AM.png?quality=90&strip=all&crop=2.859375%2C11.97652241473%2C93.788122558594%2C75.148782257541&w=1200"
+      },
+      "risks": "A rejected patent application, not a product; Google has announced nothing. Gizmodo quotes were read through WebFetch (a direct download was blocked by Cloudflare). First spotted by Patentlyze, whose page was not opened. The script must not imply Google will launch it."
+    },
+    {
+      "key": "vibe-coded-synth-firmware",
+      "sector": "music",
+      "aim": "interest",
+      "headline": "Musicians are using AI to rewrite their synths' software, and makers are opening up their code",
+      "what_happened": "The Verge reported on 25 November 2026 that AI coding tools have let hobbyists write custom firmware for music gear, and that companies are responding by open-sourcing devices. M-Vave's $70 FM-1 now has well over a dozen custom firmwares; inMusic, owner of Akai, Moog and Native Instruments, has released an SDK; Polyend published its Tracker firmware code. Elektron has banned links to custom firmware from its forums.",
+      "date": "2026-11-25",
+      "named_thing": "M-Vave FM-1, the $70 synth with over a dozen AI-era custom firmwares",
+      "primary": {
+        "label": "The Verge, Has vibe coding made open source the new normal for synths?, 25 Nov 2026",
+        "url": "https://www.theverge.com/ai-artificial-intelligence/1040081/vibe-coding-open-source-music-firmware",
+        "kind": "report",
+        "quote": "In the last several weeks, as it’s become clear that no piece of music gear is safe from Claude and a subreddit full of curious tinkerers, companies have begun making more and more of their devices open source."
+      },
+      "second": {
+        "label": "Polyend, Tracker. The biggest update yet, 2 Nov 2026",
+        "url": "https://polyend.com/whats-up/tracker-the-biggest-update-yet/",
+        "quote": "Today we’re publishing the firmware source code for the original Tracker, Tracker+ and Tracker Mini on GitHub."
+      },
+      "more_sources": [
+        {
+          "label": "The Verge, same article, inMusic chief executive Jack O'Donnell",
+          "url": "https://www.theverge.com/ai-artificial-intelligence/1040081/vibe-coding-open-source-music-firmware",
+          "quote": "“We’re going to provide a toolbox to the community, we’re going to provide the inner workings of, say, an MPC or Sample so that people can do what they want,” inMusic CEO Jack O’Donnell tells The Verge."
+        }
+      ],
+      "money_or_mechanism": "When anyone can rewrite a box's firmware with an AI agent, a cheap synth gains features its maker never sold, and makers choose between opening the code or fighting warranty claims.",
+      "why_it_matters": "A producer can get new life from gear they already own instead of buying the next box.",
+      "funny": "A $70 clone of a 1980s Yamaha became the synth of the summer because people kept teaching it new tricks with chatbots.",
+      "media": {
+        "kind": "photo",
+        "url": "https://platform.theverge.com/wp-content/uploads/sites/2/2026/11/vibe_coding_synths_.jpg?quality=90&strip=all&crop=0%2C12.339110464558%2C100%2C75.321779070884&w=1200"
+      },
+      "risks": "Feature piece built on interviews; the Polyend source is dated 2 November, before the window. Modding can void warranties or brick gear (Elektron's warning), so any steps must carry that caveat."
+    },
+    {
+      "key": "skins-game-ai-win-odds",
+      "sector": "sports",
+      "aim": "interest",
+      "headline": "Prime Video's Black Friday golf shows an AI's live odds of each player winning every hole",
+      "what_happened": "For The Skins Game on 27 November 2026, Prime Video and AWS rebuilt a probability engine for the skins format, Sports Video Group reported on 23 November. On-screen graphics and drone footage show each player's chance of winning the hole, of the hole carrying over and of winning the event, updated after every shot, as Brooks Koepka, Justin Thomas, Wyndham Clark and Jackson Koivun play for a $4 million purse.",
+      "date": "2026-11-23",
+      "named_thing": "AWS Hole Win Probability on The Skins Game, Prime Video",
+      "primary": {
+        "label": "Sports Video Group, AWS AI To Power Real-Time Win Probabilities During The Skins Game on Prime Video, 23 Nov 2026",
+        "url": "https://www.sportsvideo.org/2026/11/23/aws-ai-to-power-real-time-win-probabilities-during-the-skins-game-on-prime-video/",
+        "kind": "report",
+        "quote": "For example, instead of simply showing that a player is 147 yards from the pin, viewers will see that player has a 54% chance of winning the skin with $200,000 at stake."
+      },
+      "second": {
+        "label": "About Amazon, How to watch the 2026 Skins Game golf event on Prime Video",
+        "url": "https://www.aboutamazon.com/news/entertainment/golf-prime-video-skins-game",
+        "quote": "Brooks Koepka, Justin Thomas, Wyndham Clark, and Jackson Koivun will compete for $4 million in the 'Skins Game' on Black Friday on Prime Video."
+      },
+      "more_sources": [],
+      "money_or_mechanism": "The broadcaster turns the PGA Tour's shot data into a running price on every putt, so the stakes on screen are the selling point of a free stream that carries Prime's ads.",
+      "why_it_matters": "Sports producers are now using AI to tell the story of the money at stake shot by shot.",
+      "funny": "Golf, a sport famous for long silences, now comes with a live number telling you how nervous to be.",
+      "media": {
+        "kind": "photo",
+        "url": "https://www.sportsvideo.org/wp-content/uploads/2026/11/SkinsSocial-16x9-PGA-951x535.jpg"
+      },
+      "risks": "The AI detail rests on one trade report that reads like a briefing; Amazon's own page confirms the event but not the AI graphics. The brief bars our own odds or predictions: the piece may report that the broadcast shows probabilities, never quote one as our call."
+    },
+    {
+      "key": "kernow-christmas-market-ai-images",
+      "sector": "arts_design",
+      "aim": "humour",
+      "headline": "A Cornish Christmas market cancelled every booking after its AI posters promised far more than the hall held",
+      "what_happened": "The organisers of Kernow Christmas Market in Pool, Cornwall, cancelled and refunded all current and future 2026 bookings after a backlash over AI-generated promotional images, the BBC reported on 25 November 2026. The images showed rows of decorated stalls; visitors found a mostly empty hall with about five stalls and buckets catching water from a leaking roof. One trader had paid £180 for a pitch.",
+      "date": "2026-11-25",
+      "named_thing": "Kernow Christmas Market's AI-generated promotional images",
+      "primary": {
+        "label": "BBC News, Festive market cancels bookings after AI backlash, 25 Nov 2026",
+        "url": "https://www.bbc.com/news/articles/cm0qjglj3ejlo",
+        "kind": "original",
+        "quote": "But photographs taken by visitors showed a mostly empty hall with only a handful of traders, little Christmas decoration and buckets on the floor collecting water from a leaking roof."
+      },
+      "second": {
+        "label": "BBC News, same article, the organiser",
+        "url": "https://www.bbc.com/news/articles/cm0qjglj3ejlo",
+        "quote": "He said the AI images were \"so easy to do\" and gave a \"rough idea\" of what people could expect."
+      },
+      "more_sources": [
+        {
+          "label": "BBC News, same article, the organisers' statement",
+          "url": "https://www.bbc.com/news/articles/cm0qjglj3ejlo",
+          "quote": "\"As a result of this, we are going to cancel and refund all current and future bookings and Kernow Christmas Market will take no further bookings for 2026."
+        }
+      ],
+      "money_or_mechanism": "A free AI poster sold £180 pitches; when the real hall did not match it, the refunds wiped out the season's bookings.",
+      "why_it_matters": "Anyone selling an event, a gig or a show with AI artwork now gets compared, photo for photo, with the real thing.",
+      "funny": "The AI promised fairy lights; the visitors' photos showed buckets.",
+      "media": {
+        "kind": "photo",
+        "url": "https://ichef.bbci.co.uk/news/1024/branded_news/2a94/live/c4c88960-e8d9-11f1-99a1-253766e7ad8b.png"
+      },
+      "risks": "Single outlet (BBC), though it quotes both organisers, a trader and a visitor. Keep the joke on the poster, never on the named small family business or traders. The second source is the same page; no independent second outlet was opened."
+    },
+    {
+      "key": "binding-of-isaac-suno-music",
+      "sector": "games",
+      "aim": "humour",
+      "headline": "Players found Suno tags on the music in The Binding of Isaac, and its anti-AI creator had no idea",
+      "what_happened": "Players of The Binding of Isaac: Repentance Plus found that music in a Grand Theft Auto parody section carried Suno metadata, and the game was review-bombed on Steam. On 21 November 2026 its creator, Edmund McMillen, who has called AI in games uninspired and bland, said he had no idea, and the studio Nicalis pushed a build removing the generated music files the same day.",
+      "date": "2026-11-21",
+      "named_thing": "The Binding of Isaac: Repentance Plus",
+      "primary": {
+        "label": "Nicalis, Inc. on X, 21 Nov 2026",
+        "url": "https://x.com/nicalis/status/2124241453266169887",
+        "kind": "original",
+        "quote": "Repentance+ Update: The team has pushed a new build with critical fixes. • Removal of generated music files"
+      },
+      "second": {
+        "label": "The Verge, Binding of Isaac developer removes AI music from Repentance Plus, 22 Nov 2026",
+        "url": "https://www.theverge.com/games/1039770/binding-of-isaac-ai-music",
+        "quote": "They found several audio files with Suno metadata that pointed back to the tracks on Suno’s site."
+      },
+      "more_sources": [
+        {
+          "label": "Edmund McMillen on X, 21 Nov 2026",
+          "url": "https://x.com/edmundmcmillen/status/2124169167880470745",
+          "quote": "obviously I had no idea it featured generated music in the daily run, looking into how that happened and getting it removed, stay tuned."
+        }
+      ],
+      "money_or_mechanism": "Steam asks developers to disclose generative AI; undisclosed AI music cost the game its review score, which drives sales, within days.",
+      "why_it_matters": "A single AI track slipped in by a contractor or partner can now be traced from its file tags and hit a game's reputation.",
+      "funny": "The music was caught by its own metadata, which named the AI that made it.",
+      "media": {
+        "kind": "photo",
+        "url": "https://platform.theverge.com/wp-content/uploads/sites/2/2026/11/j7yPmbNCP4I-HD.jpg?quality=90&strip=all&crop=0%2C3.4613147178592%2C100%2C93.077370564282&w=1200"
+      },
+      "risks": "X posts were read through X's official embed service, not the page itself. Reddit thread where it was found refused to load (403). Who added the music is not established; keep the joke on the metadata, never on McMillen."
+    },
+    {
+      "key": "etsy-ai-training-terms",
+      "sector": "arts_design",
+      "aim": "interest",
+      "headline": "Etsy rewrote its AI training terms after sellers revolted, and many say they will still leave",
+      "what_happened": "Etsy changed its terms of use to let it train AI models on sellers' listings, and after a backlash posted clarified terms on Monday 23 November 2026, The Verge reported on 25 November. Chief executive Kruti Patel Goyal wrote that Etsy will not use sellers' content to make copycat versions of their work, but many sellers still plan to leave.",
+      "date": "2026-11-23",
+      "named_thing": "Etsy's revised terms of use on AI training",
+      "primary": {
+        "label": "The Verge, Etsy clarified its AI training policy, but sellers still aren’t happy, 25 Nov 2026",
+        "url": "https://www.theverge.com/ai-artificial-intelligence/1042318/etsy-clarified-its-ai-training-policy-but-sellers-still-arent-happy",
+        "kind": "report",
+        "quote": "“We will not use your content to create copycat versions of the work you sell on Etsy. We use your content to build tools that do things like help buyers find your items, help you run your shop, improve customer support, promote your work, and keep our marketplace safe.”"
+      },
+      "second": {
+        "label": "The Verge, Etsy says it will revise its new AI policy after backlash from sellers, 20 Nov 2026",
+        "url": "https://www.theverge.com/ai-artificial-intelligence/1039304/etsy-says-it-will-revise-its-new-ai-policy-after-backlash-from-sellers",
+        "quote": "Earlier this week, Ossman said in an update on Etsy’s new terms of use, “We do not use your content to train AI models designed to copy your original work or replace your creativity. Again, this is not changing.”"
+      },
+      "more_sources": [],
+      "money_or_mechanism": "Sellers' photos and descriptions are the training data for Etsy's own search and shop tools; the dispute is whether makers are paid, or can opt out, when their work trains them.",
+      "why_it_matters": "Craft and design sellers are learning that the marketplace they pay fees to can also train AI on their listings.",
+      "funny": "The company had to promise in writing that its AI will not copy the handmade things it exists to sell.",
+      "media": {
+        "kind": "photo",
+        "url": "https://platform.theverge.com/wp-content/uploads/sites/2/2025/01/verge-placeholder_f212b3.png"
+      },
+      "risks": "Both sources are The Verge (two separate posts), which cites the CEO's blog and the New York Times; Etsy's own pages refused to load (403), so the CEO quote is as quoted by The Verge. No real image of the thing itself found; the media link is a placeholder and should be replaced. Sits close to policy; keep it on who gets paid for the work."
+    }
+  ]
+}

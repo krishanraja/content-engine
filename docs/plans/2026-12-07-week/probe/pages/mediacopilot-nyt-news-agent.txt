@@ -1,0 +1,89 @@
+New York Times folds newsroom AI agents into one tool called News Agent
+
+The New York Times has combined archive search, stylebook checks and document-analysis agents into one internal interface called News Agent.
+
+The New York Times' document-agent workflow, which powered its Epstein Files Engine and now lives inside the unified News Agent tool, is built around drafting FOIA requests and sorting mountains of foreign-sourced records. (Credit: ChatGPT)
+
+Nov 25, 2026
+
+By
+
+The Copilot
+
+More than 100 New York Times journalists asked the paper’s Epstein Files Engine about 4,500 questions between Feb. 9 and mid-June. The tool contributed to at least 20 published stories, according to
+a paper by Times staff
+presented at the Computation + Journalism Symposium.
+
+Ulrike Langer’s News Machines newsletter
+traces how that system developed into News Agent, a single internal interface the Times launched in late July.
+
+The Justice Department released about 3 million pages of Epstein-related files on Jan. 30. The Times’ AI Initiatives team later adapted its approach to other large document collections, including confidential Cornell University records and about 155,000 pages of UFO documents from seven countries.
+
+Rubina Madan Fillion, deputy editorial director of AI initiatives at the Times, presented News Agent with colleague Duy Nguyen at the NPA Summit in Chicago. She told Langer that it has already become one of the newsroom’s most-used AI tools.
+
+The agents do not write stories. Instead, they help reporters search large collections and identify material that may warrant further investigation.
+
+For the Epstein project, the agent checked findings against the Times’ archive and an internal feed of Epstein-related headlines from other outlets. Each report included information about what journalists had already published.
+
+The system also used a duplicate filter to identify pages the government released more than once with different redactions. Comparing those versions could reveal information hidden in one copy but visible in another.
+
+Many leads did not survive reporters’ verification process. The Times paper said that showed the verification standard was functioning as intended, rather than establishing that unsuccessful leads were themselves the goal.
+
+Reporters were instructed to treat the agent’s output as fallible and verify findings against the original documents. Juliana Castro Varón, senior design editor of AI initiatives, said journalists must complete legal standards training before receiving access.
+
+News Agent now brings several newsroom functions into one interface. Fillion said popular uses include searching the Times’ 175-year archive, checking copy against the stylebook, drafting Freedom of Information Act requests and analyzing large document sets.
+
+Reporters can also build their own agents,
+Nieman Lab reported
+. News Agent can suggest instructions for those agents, but Fillion said journalists make the final decisions about how they operate.
+
+The Times has not disclosed which AI models power the system.
+
+Other publishers have also developed tools that apply AI to archives and document collections. Langer points to projects at JP/Politikens in Denmark, The Philadelphia Inquirer, The Guardian and Estonia’s Delfi.
+
+She argues that the Times’ approach combines several elements: specialized agents inside one interface, agents created for individual investigations and checks of findings against previously published coverage.
+
+Der Spiegel has taken a different approach by making its Nazi Party membership files available to readers through ChatGPT and Claude. Langer also notes concerns from The Guardian’s Chris Moran about opening internal archives directly to outside AI platforms.
+
+The Times’ system shows how AI can support reporting without generating the final article. Its document agents help determine which records journalists examine and which potential leads they pursue, while reporters remain responsible for verification.
+
+The Times paper also provides a relatively detailed look at how those safeguards work. Its authors emphasize original-document checks, comparison with existing coverage and human review before findings reach publication.
+
+The usage figures, however, come from the Times’ own team. The reporting does not provide an independent measure of News Agent’s accuracy or newsroom impact.
+
+The Times’ public AI explainer says the company uses AI for tasks including data analysis, headlines, translation and recommendations, with human guidance and review. News Agent extends that approach into document discovery, archive research and other parts of the reporting process.
+
+Posts co-authored by The Copilot are drafted with AI and then carefully edited by Media Copilot editors. Our AI-assisted process allows us to bring more valuable content to our readers while preserving accuracy and quality.
+
+Contributors
+
+The Copilot
+: Author
+
+I'm a generative AI writer for The Media Copilot. I help author posts, and with the help of human editors, play a growing role in the site's content strategy.
+
+Romy Abu-Fadel
+: Editor
+
+Romy Abu-Fadel is a journalist, researcher, and 2026 graduate of Georgetown University's Edmund A. Walsh School of Foreign Service. She covers artificial intelligence and its impacts on the media industry.
+
+Category:
+News
+Tags:
+newsroom automation
+|
+investigative reporting
+|
+AI document management
+|
+New York Times
+|
+newsroom AI
+
+Share this post:
+
+Facebook
+Tweet
+LinkedIn
+Email
+

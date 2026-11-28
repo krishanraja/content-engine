@@ -1,0 +1,510 @@
+{
+ "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#8af89381e45b": null,
+   "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#25143c083971": null,
+   "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#10cd9f45432a": null,
+   "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#7b4474d70657": null,
+   "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#a9aebe82b6c9": null,
+   "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#69b945d7864c": null,
+   "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#6c4e758fd962": null,
+   "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#3d2879414868": {
+    "comic_reading": "not_supported",
+    "attempted": false,
+    "needs_explaining": true,
+    "mechanism": [],
+    "target": [
+     "situation"
+    ]
+   },
+   "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#32e95f89f1e1": null,
+   "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#25714aed70dd": null
+  }
+ },
+ "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#14c02bb8ce8e": null,
+   "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#ebff7b08cdb3": {
+    "comic_reading": "not_supported",
+    "attempted": false,
+    "needs_explaining": true,
+    "mechanism": [],
+    "target": []
+   },
+   "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#a597254a6047": null,
+   "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#a4df9bcaf5d6": null,
+   "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#c97b1ef92ccd": null,
+   "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#55f1d4291de1": null,
+   "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#40fb2d7261e8": null,
+   "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#7012aa07372a": null,
+   "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#fde0ca5af408": null,
+   "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#194462d46dfe": null,
+   "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#6d933e121807": null
+  }
+ },
+ "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#8b2d5d89c00e": null,
+   "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#20a265853aba": null,
+   "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#306382695553": null,
+   "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#fc4eca71db2a": null,
+   "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#dcf6f92ddf28": null,
+   "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#9f805e098e9b": null,
+   "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#9752a5727644": null,
+   "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#c66946642e9a": null,
+   "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#9992948f9716": null,
+   "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#343c7b0efbb1": null,
+   "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#d6dcd6d19ba7": null
+  }
+ },
+ "wed/41874364-fcd8-4fd1-b7e7-91aca6235019": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#455fce60eadc": null,
+   "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#23461798be9d": null,
+   "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#9e7648b72d14": null,
+   "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#df72314e145a": null,
+   "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#337cc5665b7d": null,
+   "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#6bbf6ed23b25": null,
+   "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#ee76ed4ce1a8": null,
+   "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#7326f1b4a34f": null,
+   "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#5436325c33cd": null,
+   "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#ef80bd1dbe96": null,
+   "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#b57ae65989b7": null
+  }
+ },
+ "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#f2b8d02d3a3e": null,
+   "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#794ed5b75033": null,
+   "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#0e8d8d5075f2": null,
+   "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#259f1969e2a2": null,
+   "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#39a48ed64ed6": null,
+   "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#217954a6a85a": null,
+   "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#57a1ade277d2": null,
+   "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#009053524de5": null,
+   "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#eb63d1bad27d": null,
+   "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#fd7ed71e131e": null,
+   "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#5cdd405fc6c3": null,
+   "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#8054e4979e23": null
+  }
+ },
+ "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#29da7936b9f8": null,
+   "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#c31147aabad5": null,
+   "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#0bc9b94efd4c": null,
+   "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#d874999c0a67": null,
+   "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#211800152ffc": null,
+   "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#3f6260b1c121": null,
+   "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#520fe80b966f": null,
+   "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#4879ea1e7b40": null,
+   "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#88f185b396d1": null,
+   "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#40f78027689a": {
+    "comic_reading": "supported",
+    "attempted": true,
+    "needs_explaining": true,
+    "mechanism": [
+     "incongruity",
+     "personification"
+    ],
+    "target": [
+     "situation"
+    ]
+   }
+  }
+ },
+ "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#21ce67289cc5": null,
+   "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#fbc74e980c3f": null,
+   "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#6029ef12ed3c": null,
+   "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#935d05bd03a1": null,
+   "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#1db1531656ee": null,
+   "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#592a6afe2001": null,
+   "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#281d294dc37f": null,
+   "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#c806fdeee1e7": null,
+   "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#9ad0c683d5bd": null,
+   "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#5f498f3a2ea1": {
+    "comic_reading": "not_supported",
+    "attempted": false,
+    "needs_explaining": true,
+    "mechanism": [],
+    "target": [
+     "none"
+    ]
+   },
+   "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#6ad04e508a00": null
+  }
+ },
+ "fri/acb58370-aaca-4040-9c13-83f227a628ec": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "fri/acb58370-aaca-4040-9c13-83f227a628ec#d817b98898ee": {
+    "comic_reading": "not_supported",
+    "attempted": false,
+    "needs_explaining": true,
+    "mechanism": [],
+    "target": []
+   },
+   "fri/acb58370-aaca-4040-9c13-83f227a628ec#1d4c8da22119": {
+    "comic_reading": "not_supported",
+    "attempted": false,
+    "needs_explaining": true,
+    "mechanism": [],
+    "target": []
+   },
+   "fri/acb58370-aaca-4040-9c13-83f227a628ec#5ef84555ee38": null,
+   "fri/acb58370-aaca-4040-9c13-83f227a628ec#f072644c309f": null,
+   "fri/acb58370-aaca-4040-9c13-83f227a628ec#45c188701551": null,
+   "fri/acb58370-aaca-4040-9c13-83f227a628ec#a8f813de5bce": null,
+   "fri/acb58370-aaca-4040-9c13-83f227a628ec#f7d09054e6ba": null
+  }
+ },
+ "tue/nytphotoshop": {
+  "fact": {
+   "comic_reading": "not_supported",
+   "attempted": false,
+   "needs_explaining": true,
+   "mechanism": [],
+   "target": []
+  },
+  "line": null,
+  "angles": {
+   "tue/nytphotoshop#156b207b0d6c": null,
+   "tue/nytphotoshop#1b29bca60b54": null,
+   "tue/nytphotoshop#14aa8140e223": null,
+   "tue/nytphotoshop#4263c180becc": null,
+   "tue/nytphotoshop#b7757769be28": null,
+   "tue/nytphotoshop#a35a297d5b7c": null,
+   "tue/nytphotoshop#64ac5f59415e": null
+  }
+ },
+ "tue/fcpcaptions": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "tue/fcpcaptions#462d9b5462c0": null,
+   "tue/fcpcaptions#345aa3c003fc": null,
+   "tue/fcpcaptions#1fcf8cbf0dc8": null,
+   "tue/fcpcaptions#a496135931d5": null,
+   "tue/fcpcaptions#9f249285331a": null
+  }
+ },
+ "tue/logicdrums": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "tue/logicdrums#a13361d75819": null,
+   "tue/logicdrums#b491abb3bcfb": {
+    "comic_reading": "not_supported",
+    "attempted": false,
+    "needs_explaining": true,
+    "mechanism": [],
+    "target": []
+   },
+   "tue/logicdrums#7a3eba76f681": null,
+   "tue/logicdrums#486d4fe7d9c0": {
+    "comic_reading": "not_supported",
+    "attempted": false,
+    "needs_explaining": true,
+    "mechanism": [],
+    "target": []
+   },
+   "tue/logicdrums#c01593e65326": null,
+   "tue/logicdrums#a8f6612ed9ba": null
+  }
+ },
+ "tue/spotifyaudio": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "tue/spotifyaudio#8b2a6f5df2a9": null,
+   "tue/spotifyaudio#8622fa3dd2ef": null,
+   "tue/spotifyaudio#f9b3ec97c55b": null,
+   "tue/spotifyaudio#550b68b2b0c8": null,
+   "tue/spotifyaudio#a27c0210b913": null,
+   "tue/spotifyaudio#60bca05819ed": null
+  }
+ },
+ "tue/mychannel": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "tue/mychannel#7124db204df2": null,
+   "tue/mychannel#089fe3f42050": null,
+   "tue/mychannel#12519f613eae": null,
+   "tue/mychannel#34ba20c397bc": null,
+   "tue/mychannel#6e03936dfdf3": null,
+   "tue/mychannel#8f98fae0720d": null,
+   "tue/mychannel#4ccc947c4e04": null,
+   "tue/mychannel#ee0ea09a552b": null
+  }
+ },
+ "tue/tplcommscam": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "tue/tplcommscam#a74788a9000d": null,
+   "tue/tplcommscam#652b64b43a24": null,
+   "tue/tplcommscam#9836f52a03ca": null,
+   "tue/tplcommscam#f466c680cfd5": null
+  }
+ },
+ "tue/tplfistpump": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "tue/tplfistpump#bac5beaca2e4": null,
+   "tue/tplfistpump#4c372c207227": null,
+   "tue/tplfistpump#8656b93f2bb4": null,
+   "tue/tplfistpump#0705f9d5f417": null
+  }
+ },
+ "tue/tplninedarter": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "tue/tplninedarter#67eec3e4977d": null,
+   "tue/tplninedarter#d880d52c285d": null,
+   "tue/tplninedarter#1a0101ac9e96": null,
+   "tue/tplninedarter#55716c20cfe2": null
+  }
+ },
+ "tue/tplbuzzer": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "tue/tplbuzzer#a3dabdb36c7e": null,
+   "tue/tplbuzzer#7d083927f049": {
+    "comic_reading": "not_supported",
+    "attempted": false,
+    "needs_explaining": true,
+    "mechanism": [],
+    "target": []
+   },
+   "tue/tplbuzzer#b98e6bbeb7cb": null,
+   "tue/tplbuzzer#094f7c6603f8": null
+  }
+ },
+ "thu/figmasix": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "thu/figmasix#0aceb61b6ca3": null,
+   "thu/figmasix#7f24d3ed87b4": null,
+   "thu/figmasix#84e9b1b4ca10": null,
+   "thu/figmasix#25699385d1bc": null,
+   "thu/figmasix#81363ed282bb": null,
+   "thu/figmasix#896d543dcaad": null
+  }
+ },
+ "thu/robloxvideo": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "thu/robloxvideo#61a7a311346c": null,
+   "thu/robloxvideo#118d354d97df": null,
+   "thu/robloxvideo#7ab66a85c3d0": null,
+   "thu/robloxvideo#a76cc68517f0": null,
+   "thu/robloxvideo#6c961853aa9c": {
+    "comic_reading": "supported",
+    "attempted": true,
+    "needs_explaining": true,
+    "mechanism": [
+     "incongruity",
+     "understatement"
+    ],
+    "target": [
+     "situation"
+    ]
+   }
+  }
+ },
+ "thu/alphamatte": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "thu/alphamatte#d847219be2cf": null,
+   "thu/alphamatte#e48ab4e13779": null,
+   "thu/alphamatte#9de34c8632cc": null,
+   "thu/alphamatte#1b118265183e": null,
+   "thu/alphamatte#8401ef732257": null
+  }
+ },
+ "thu/synthfirmware": {
+  "fact": {
+   "comic_reading": "not_supported",
+   "attempted": false,
+   "needs_explaining": false,
+   "mechanism": [],
+   "target": []
+  },
+  "line": null,
+  "angles": {
+   "thu/synthfirmware#70437c7e10eb": null,
+   "thu/synthfirmware#2a23db2d669c": null,
+   "thu/synthfirmware#00bb0b0c5b33": null,
+   "thu/synthfirmware#6bfe1de70f25": null,
+   "thu/synthfirmware#29fdc406f3c9": {
+    "comic_reading": "not_supported",
+    "attempted": false,
+    "needs_explaining": true,
+    "mechanism": [],
+    "target": []
+   },
+   "thu/synthfirmware#a9a556e3d9b2": null
+  }
+ },
+ "thu/pixelfill": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "thu/pixelfill#529199f97032": null,
+   "thu/pixelfill#26d979bc2200": null,
+   "thu/pixelfill#177c81f9cad8": null,
+   "thu/pixelfill#dab8fc0a95f3": {
+    "comic_reading": "ambiguous",
+    "attempted": true,
+    "needs_explaining": true,
+    "mechanism": [],
+    "target": []
+   },
+   "thu/pixelfill#9ce8bfd94bc6": null,
+   "thu/pixelfill#f5ae6ba2f2e1": null
+  }
+ },
+ "thu/tplturin": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "thu/tplturin#f2d0ec9e8ee1": null,
+   "thu/tplturin#fb997e6ee85f": null,
+   "thu/tplturin#641c604e8a81": null,
+   "thu/tplturin#2c82a47e03b4": null
+  }
+ },
+ "thu/tplthanksgiving": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "thu/tplthanksgiving#9ac3e6fc6044": null,
+   "thu/tplthanksgiving#3df8dcda3fe4": null,
+   "thu/tplthanksgiving#82823b62bcee": null,
+   "thu/tplthanksgiving#5c757cf4ee80": null
+  }
+ },
+ "thu/tplassemble": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "thu/tplassemble#03fcf5a152fe": null,
+   "thu/tplassemble#881aced60aae": null,
+   "thu/tplassemble#6ad84a5171b5": null,
+   "thu/tplassemble#eb1d80d3e3f0": null
+  }
+ },
+ "thu/tpllegends": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "thu/tpllegends#da6b28fbca94": null,
+   "thu/tpllegends#582ce1e16090": null,
+   "thu/tpllegends#e7e4dd96944d": null,
+   "thu/tpllegends#305abaa52afe": null
+  }
+ },
+ "thu/tplskyrim": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "thu/tplskyrim#af3fb217c46b": null,
+   "thu/tplskyrim#f46f005cf064": null,
+   "thu/tplskyrim#067cc590732f": null,
+   "thu/tplskyrim#4b84488b5d4f": null,
+   "thu/tplskyrim#e9898babcae9": null
+  }
+ },
+ "sat/goodnews": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "sat/goodnews#fac0f52e143e": null,
+   "sat/goodnews#6b948f59fe53": null,
+   "sat/goodnews#b67f29f19598": null,
+   "sat/goodnews#f1e4d1b49fef": null,
+   "sat/goodnews#43ac1c5245a1": null,
+   "sat/goodnews#d10bc3e432a0": null,
+   "sat/goodnews#6bdf796b6348": null,
+   "sat/goodnews#22a0b66d2768": null,
+   "sat/goodnews#7de3df760669": null,
+   "sat/goodnews#918973e3418d": null,
+   "sat/goodnews#ad1e79ec26b3": null
+  }
+ },
+ "sat/screen": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "sat/screen#ff3ebaa86b09": null,
+   "sat/screen#3d270d7cefee": null,
+   "sat/screen#8a3664734e7f": null,
+   "sat/screen#7961d726f8fa": null,
+   "sat/screen#f9f392dcd635": null,
+   "sat/screen#3b6c4c906dda": null,
+   "sat/screen#d99056d245ca": null,
+   "sat/screen#dc37a3be79da": null,
+   "sat/screen#02437d014de2": null,
+   "sat/screen#9d1ac0dd2981": null,
+   "sat/screen#239d89e5bcdb": null
+  }
+ },
+ "sat/makers": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "sat/makers#f7ff3ca44d39": null,
+   "sat/makers#10a692bcc16c": null,
+   "sat/makers#79ff26a7eb07": null,
+   "sat/makers#3c4acedca426": null,
+   "sat/makers#8a51d66880b1": null,
+   "sat/makers#d5c787fdcfdf": null,
+   "sat/makers#c64a3be01a03": null,
+   "sat/makers#58923881a543": null,
+   "sat/makers#dac06fb20241": null,
+   "sat/makers#60dc8d6db728": null,
+   "sat/makers#619c8c84b49b": null
+  }
+ },
+ "sat/newsrooms": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "sat/newsrooms#738bfc0cf06e": null,
+   "sat/newsrooms#cd4df92999cb": null,
+   "sat/newsrooms#249354be240c": null,
+   "sat/newsrooms#cf877d393aae": null,
+   "sat/newsrooms#06858d06a377": null,
+   "sat/newsrooms#41c0b5928a52": null,
+   "sat/newsrooms#ad3652044906": null,
+   "sat/newsrooms#fdb99b8966b7": null,
+   "sat/newsrooms#095403eea010": null,
+   "sat/newsrooms#58ae29f43a93": null,
+   "sat/newsrooms#137df1c05c91": null
+  }
+ }
+}

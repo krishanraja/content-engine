@@ -1,0 +1,122 @@
+Unreal Engine 5.9 Release Notes | Unreal Engine 5.9 Documentation | Epic Developer Community
+Table of Contents
+Developer
+Unreal Engine 5.9 Preview Release Notes
+Unreal Engine 5.9 Preview Release Notes
+Overview of new and updated features in Unreal Engine 5.9 Preview.
+On this page
+Last updated 11/19/26
+What's New
+Unreal Engine 5.9 Preview comes with significant improvements to Python scripting and the Unreal MCP, as well as improvements to AI-assisted workflows and machine learning.
+This release introduces a new experimental feature called Unreal Canvas that provides a way to combine your development and iterative processes with agentic workflows and tools.
+UE 5.9 also includes improvements in animation, rendering, world building, gameplay and much more.
+Unreal Canvas
+UE 5.9 introduces Unreal Canvas, a shared workspace where people and agents create and refine content using Unreal Engine and the other connected tools.
+Its canvases include text, images, videos, and mesh generators that you drive with a prompt and a chosen generation service. Several companion plugins arrive with it:
+Unreal Canvas Bridge exposes Movie Render Graph rendering to Canvas as MCP tools. This plugin requires the Model Context Protocol plugin.
+Unreal Canvas Spatial Annotations places annotations in the 3D scene and captures the scene for use in Canvas.
+In Preview 2, Unreal Canvas Bridge now ships version 0.24.0 of the Unreal Canvas server for each platform and can report which video decoders are available. The Unreal Canvas Blueprint project template also has a new icon and preview image.
+You can learn more about these new features by reading our documentation.
+Python & MCP updates
+Python scripting receives several improvements, such as the ability to manage extra Python search paths. The old Python Foundation Packages plugin was removed.
+Scripting the editor also gets improvements with new Blueprint and Python libraries that let you edit Blueprints, chooser tables, StateTrees and Dataflow graphs from scripts.
+The Unreal MCP also receives improvements, with new Editor Preferences to set the MCP server's port, its allowed origins and the highest protocol version it accepts. A new project-level Model Context Protocol settings page joins them.
+Unreal MCP and Semantic Search add server and provider settings so external agents can connect to the editor and search project content. A new Knowledge Base lets the assistant and agents query knowledge built from the live engine state or from markdown files on disk.
+In addition, this release increases the available AI toolsets that let agents work across the editor: Blueprints, editor actions, MVVM, Slate inspection, performance, files, scene capture, console, Texture Graph, widget animation and more.
+A Toolset Registry controls which toolsets agents may use, and an MCP Client toolset manages a list of external MCP servers.
+Preview 2 makes the MCP settings easier to find: search for "MCP" or "Model Context Protocol" in Editor Preferences or Project Settings to go straight to them. The MCP server now accepts prefixed tool names when an agent calls a tool, and the deprecated MCP Tool Library was removed. The AllToolsets plugin is now enabled by default, so agents can use the full set of editor toolsets without extra setup.
+Several toolsets are also more reliable. Play In Editor can be started with no options, console commands always run through the console instead of Python, and screenshot tools report an error instead of returning a black image when the editor can't render. The MCP Client toolset handles OAuth callback ports more reliably, the Fab toolset adds seller search and more search filters, and Sequencer scripting registers its own toolsets.
+Editing Blueprints through the Blueprint Graph language is also safer: undoing or refusing an AI edit no longer makes placed actors disappear from the level.
+Preview 2 also brings more robust Python scripting. A Python delegate listener that raises an error no longer stops the listeners after it stops running, init_unreal.py scripts only run for plugins whose modules are loaded, and several crashes involving Python and Blueprints were fixed.
+You can learn more about these new features by reading our documentation.
+AI Assisted Workflows and Machine Learning
+The Unreal Assistant gains notification preferences, so it can play a sound, flash the taskbar or show a taskbar badge when it needs your attention. It can also hand work to an external agent through a custom command, and a new tool-access setting (Ask, Read, Edit, Auto or Full) controls how much it may do on its own.
+UE 5.9 also adds a live AI-processed viewport preview and several generative-service integrations: Fab image and mesh generation, chat completion, ElevenLabs voice, Google Gemini and Claude Code.
+On the machine learning side, UAF gains AI-driven animation generation, Learning Agents observation functions, and the Neural Network Engine gets a new LiteRT inference runtime.
+In Preview 2, the ML Deformer gains improved Python and agent support, and Rig Mapper now supports AI-assisted authoring. In the editor, the Assistant's button in the status bar stays visible in narrow windows.
+Animation & Rigging
+UE 5.9 includes significant improvements to its animation and rigging capabilities.
+The IK Retargeter gains three spatially aware operations: the Proximity IK keeps limbs and contacts correct relative to the body, the Pelvis Volume places the pelvis sensibly across characters with different proportions, and the Limb Twist spreads twist along the limbs.
+Control Rig can now be referenced as an asset as well as a class, with new Blueprint nodes to check, convert and spawn rigs from those references. Several older nodes are deprecated in favor of the asset-reference versions. Control Rig also adds hierarchy-key helpers and edit-mode options for mirroring controls, and Control Rig Dynamics and Control Rig Physics gain new options.
+The Unreal Animation Framework has been significantly expanded in 5.9. It adds new animation node and layering settings. It also gains a notify system with built-in Play Sound and Play Niagara Effect handlers, new StateTree conditions such as Animation Is Looping and Animation Time Remaining, and updates to its Chooser, Pose Search, Warping, Mirroring and Control Rig integrations.
+A new UAF AnimGen plugin brings AI-driven animation generation into UAF. Chooser tables can now be built and edited from Blueprint or Python, and smaller updates reach the morph target editing tools, Sequencer animation tools, IK Rig, Motion Warping, Rig Mapper, the Ease Curve tool and Animation Insights.
+The new AnimGenOffline plugin allows generated animation directly inside Sequencer. Additionally, the new NVIDIA Kimodo plugin integrates with this and allows you to use an AI-guided workflow to make characters follow trajectories, set key poses and describe animations based on text descriptions.
+Preview 2 brings a large set of AnimDatabase and AnimGen improvements. Pose Search now skips databases whose schema roles aren't part of the search context, which cuts unnecessary searching, and Pose Search and Chooser handle cooked data more reliably. UAF lets you rename variables while graphless entries are loaded, and Control Rig action utilities that target rigs through Supported Rigs now pass data validation. Several crashes in Persona, the Pose Driver and the Deformer Graph editor were also fixed.
+Rendering & Lighting
+Adaptive Voxel-Based Order Independent Transparency (ABVOIT)
+AVBOIT blends overlapping translucent surfaces, such as glass, smoke and particles, correctly no matter what order they're drawn in. That removes the popping and sorting errors you get where transparent objects overlap. It works with both Nanite and non-Nanite translucency, handles coloured glass, and skips pixels hidden behind fully opaque smoke. Translucent materials need to output only their own colour for it to composite correctly.
+Nanite Culling Improvements
+Nanite culling decides which pieces of Nanite geometry are visible each frame, so only what's on screen gets drawn. It sorts instances into simple and complex work, such as skinned, spline-deformed or World Position Offset meshes, and handles each kind separately. It can also test several levels of a mesh's detail hierarchy in a single step. Scenes get the benefit automatically with no content changes, and the gains grow with scene size.
+Debugging Shadows
+Unreal Engine has a set of visualization modes for tracking down shadow problems, such as blurry or blocky shadows, visible cascade seams, or objects that shadow the wrong way. A Virtual Shadow Map Overview mode shows several shadow debug views side by side. For cascaded shadow maps, one view colors each pixel by the cascade it falls in and another shows the shadow depth buffers as tiles. A Far Shadow view highlights which objects cast far shadows. You can also set far shadows to update at their own rate and turn far shadow casting on or off per component from Blueprint or code, which helps you tune their cost.
+Dynamic Wind for Nanite Foliage
+Dynamic Wind is an Experimental plugin that makes foliage and other skeletal plants move in the wind. It simulates each bone's motion on the GPU: a slow sway combined with a fast flutter, based on each part's mass and how much wind it catches. Plants share a small set of simulations to stay cheap, then switch to their own simulation when a local force reaches them. Those forces include radial bursts, swirls, cone-shaped gusts and directional pushes, or a character brushing through. A lighter mode is also available that gives stylized animated wind at lower cost.
+Virtual Shadow Maps
+Directional light Virtual Shadow Maps gain projection and page-management optimizations, along with Stochastic PCSS, a soft-shadow technique that keeps shadows sharp near contact points and softens them further away. A crash when shadow quality drops to 0 during shadow projection was also fixed.
+Mobile Rendering
+The mobile deferred renderer can now light every lit shading model in a single lighting pass (r.Mobile.DeferredLighting.SingleShadingModelPass). A new option, off by default, depth-tests a local light's back faces when the camera is inside the light's geometry (r.Mobile.DeferredLighting.CameraInsideLightDepthTest). Mobile reflection captures without build data no longer render black, and the Material Editor's previews of the web mobile tiers use the distance-field fallback.
+Material Rendering Updates
+In the Material Editor, expanding a node on a call to a pass-through material function now keeps the caller's wires. Masked single layer water no longer leaves depth behind when it has no depth prepass, and volumetric clouds no longer draw past the edges of a view or cubemap face.
+On Mac (Metal), compute pipelines are now compiled when they are created instead of at first use, which avoids hitches.
+Lighting Documentation Audit
+Using AI, we reviewed the entire Lighting the Environment section, all 72 pages, against the UE 5.9 engine source and its scanned property and console-variable index. We had AI address the drift in documentation and engine source between late UE4 and early UE5, such as outdated labels and menu paths, added and removed features, renamed settings, and defaults that no longer match the project. These changes have been writer-reviewed and approved. Some suggestions still require SME and verification approvals, but what you’ll see in this audit (and experiment) is improved accuracy and trustworthiness of documentation making its way directly from the source code to the content you reference. Here are just some of the stats from this exercise:
+Pages reviewed: 72, across 11 subsections, each with a tracked-suggestions draft alongside a clean copy of the live page.
+671 fixes to inaccurate text
+162 additions, including 177 missing property-table rows
+76 removals of content for features or settings that no longer exist
+5.9-specific changes, confirmed against the source delta, folded into the affected sections
+World Building and Procedural Content
+The Procedural Content Generation framework adds a Concave Hull node. Blueprints can now read and write the source of custom HLSL nodes, and new functions add and validate graph edges from script.
+Mesh Partition gains mesh simplification settings, a ray-tracing proxy option and better interop with PCG.
+Shallow-water rivers can now exclude chosen actors from capture and set their collision resolution, and a new paint tool paints water input.
+World Partition gains many new Blueprint functions, and new Data Layer nodes get child layers and check whether an actor can be added to a layer.
+In Preview 2, the Landscape gives each raw heightmap import failure (.r16, .r8 and .raw) its own error message and checks the .json metadata and file size before importing. World Partition landscape bounds now include the loaded proxies of an unsaved landscape, landscape spline tools are protected when the active world changes, and PCG no longer raises Python errors when reading hidden enum values.
+Gameplay, AI and Mass
+StateTrees can now be edited from Blueprint or Python scripts: tasks, considerations, evaluators and global tasks can all be added and rearranged in code.
+The new Mass Characters plugin brings Mass traits for character interpolation and visualization, selective pawn replication, and a game feature action that sets up Mass characters.
+The Navmesh can now build progressively, with control over how many tiles build per tick, and a new option keeps tiles outside the invoker radius.
+In Preview 2, the Gameplay StateTree plugin is now enabled by default, so projects created from Blueprint templates that use it stay content-only. A World Partition navmesh now keeps its tiles when a level streams in, because its tile pool only grows with its bounds. Mover releases its state machine data earlier and keeps user-defined structs in Mover data alive, and new Visual Logger categories start with rendering turned off in the category filter.
+Editor and Workflows
+UE 5.9 adds a new set of scripting functions that lets you create and edit Blueprints, graphs, nodes and variables from Python or Editor Utility Blueprints.
+The editor adds a Map Check subsystem with Blueprint logging, functions to replace actors with an asset or class, and preview-platform options in Editor Preferences.
+In Sequencer, marked frames become "marks and mark ranges", with new Blueprint nodes and preferences for mark range duration, snapping and playback. Data Validation, the Curve Editor and user asset tags have also received updates.
+For UI work, widget components can output depth and velocity, editable text gains selection events and colors, and list and tile views gain orientation and selection options. Common UI adds editor passthrough commands.
+This release also introduces Forge, a collection of web-based designer tools inside the editor.
+Preview 2 updates the Terminal with keyboard, selection and session improvements. The editor can now detect engines installed by the new Epic Games Launcher, and Project Launcher keeps the selected device when it has a platform variant. Many stability fixes also landed, including crashes when undoing level asset creation, Blueprint subobject issues, and a Content Browser rename assertion.
+The Terminal panel gains rectangular selection. Doodle can copy images to the clipboard on Mac and Linux, and the AI badge on assets is now hidden by default. The
+FBX import of dense meshes is now faster.
+This release also comes with improvements to the modeling tools. The Move sculpt brush now respects Strength, so at a Strength of 0.1 the surface moves a tenth as far as the cursor; pen pressure is no longer offered for Move. Deleting the last morph target and applying now removes it from the asset. For UI, the Common UI viewport client check is off by default, so projects that don't use Common UI no longer log an error every time you start PIE.
+Cinematics, Media and Virtual Production
+In Preview 2, Movie Render Graph flattens graphs about 30x faster than before when they declare many variables and a job is part of the traversal, and graph modifiers only change an actor's hidden state when that override is turned on. Take Recorder gets timecode estimation and performance fixes for recording in PIE, along with crash fixes for animation recording, preset undo, and multiple sources on the same actor.
+In this release Composure adds an AI segmentation pass (RF-DETR) and a high-quality chromatic aberration pass, and Camera Calibration lens files can now be fully authored from Python
+Bink Media can now play movies on the web, including sound on iPhone Safari after the first tap. Tiled Mipmap Video (TMV) media updates its OpenAPV support with batched tile decoding across mips, and fixes several transcoder issues with EXR precision, 16K frames and cancelled jobs. The old Process EXR panel was removed; use Transcode to EXR on media sources instead.
+Core Engine and Programming
+UE 5.9 introduces a new experimental WebAssembly target with its own project settings and WebGPU rendering support.
+Two new frameworks arrive: the Modular Test Framework, for writing and running scoped plugin tests, and GraphDsl, a text-based language for authoring and editing graph assets.
+Platform settings also change, with a new iOS home-indicator option, a source-control option to validate soft dependencies, and updated bandwidth-manager settings.
+The web platform expands significantly in Preview 2. You can preview web (Wasm) platforms in the editor, and web builds can be installed as a progressive web app, with a web app manifest, home-screen icons and Install settings. The web platform now builds only 64-bit WebAssembly (wasm64), supports heaps larger than 2 GB, and offers ICU as an opt-in. Web pages handle touch-only devices, out-of-memory errors and lost connections more gracefully, and a new getting-started guide takes you from a source sync to a running web game.
+When a web game can't start, the page now explains why (no GPU, out of memory, lost connection, a missing or damaged game file, or a server that sends the wrong file types) instead of staying on "Starting..."
+Blueprint-only projects can now be packaged for the web. In Preview 1 a project needed at least one C++ class; now a content-only project packages and runs with the engine's standard game executable. The web toolkit (emsdk) is still required.
+Web image quality also sees improvements with the mobile tiers now using the engine's default anti-aliasing (TAA) instead of FXAA, and the deferred tier uses the extended GBuffer, so clear coat, decal normals and material ambient occlusion render fully.
+Web games load lighter and more reliably. Phones and tablets load the lighter ASTC texture set first, each device downloads only the shader data for the tier it runs, return visits no longer download the game again, and the frame rate is capped at the display's refresh rate by default to save battery and heat. Saved games survive a page reload with an installed engine, and web games can send optional crash reports, which are off by default.
+The experimental desktop tier no longer runs in Linux browsers; they use the deferred tier instead.
+In Preview 2, games whose settings don't set a frame rate limit now use a platform default limit, and unused legacy reflection captures are no longer cooked or resaved with map build data.
+UBA Cloud (experimental) is new in Preview 2. It lets you run Unreal Build Accelerator remote helpers in your own cloud account (Engine/Extras/UBACloud). Packaging now works when the project path contains parentheses or commas, the long-path error message tells you when to move your project, and Mac builds map Xcode versions to the right LLVM version.
+Other Updates
+In Preview 2, Lyra runs better on the web, with texture and sky light caps that keep the mobile tier within its streaming budget, updated pipeline prewarm lists, and a Quick Play option that's hidden on platforms that can't host. In Unreal Insights, Trim and Save As works again for affected traces, and trimmed traces keep their thread names. Niagara no longer logs misleading "Could not create script runtime data" messages, and the Data Channel Write GPU shader compiles correctly.
+For XR, OpenXR extension plugins can now create fully custom composition layers.
+Ask questions and help your peers Developer Forums
+Write your own tutorials or read those from others Learning Library
+On this page
+What's New
+Unreal Canvas
+Python & MCP updates
+AI Assisted Workflows and Machine Learning
+Animation & Rigging
+Rendering & Lighting
+World Building and Procedural Content
+Gameplay, AI and Mass
+Editor and Workflows
+Cinematics, Media and Virtual Production
+Core Engine and Programming
+Other Updates

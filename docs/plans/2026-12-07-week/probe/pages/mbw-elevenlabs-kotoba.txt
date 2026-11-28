@@ -1,0 +1,142 @@
+ElevenLabs agrees to acquire Japan-focused voice AI company Kotoba in reported $100M deal - Music Business Worldwide 
+ Music Business Worldwide
+ News
+ Interviews All Interviews
+ Inspiring Women
+ Key Songs In The Life Of
+ Trailblazers
+ World’s Greatest Managers
+ World’s Greatest Songwriters
+ Analysis All Analysis
+ MBW Explains
+ MBW Views
+ Tim’s Take
+ Database
+ Podcast
+ Jobs
+ MBW+ Subscribe
+ Login
+ElevenLabs agrees to acquire Japan-focused voice AI company Kotoba in reported $100M deal
+ November 17, 2026
+By Mandy Dalugdug
+Photo credit: ElevenLabsKotoba co-founder and CEO Noriyuki Kojima, ElevenLabs co-founder and CEO Mati Staniszewski, and Kotoba co-founder and CTO Jungo Kasai
+ElevenLabs has agreed to acquire Japan-focused voice AI developer Kotoba Technologies.
+Continue to article...
+The London and New York-headquartered company, which operates AI music platform ElevenMusic, announced the deal in a blog post on Monday (November 16).
+ElevenLabs did not disclose financial terms in its blog post, but Nikkei Asia reports that the deal is worth more than USD $100 million.
+Business Insider Japan reports that ElevenLabs CEO Mati Staniszewski put the price at around $100 million at a press conference on Tuesday (November 17, Japan time).
+According to Nikkei Asia, ElevenLabs will buy all of Kotoba’s shares, and Kotoba will become a wholly owned subsidiary.
+ElevenLabs says it expects the acquisition to close later in Q4 2026, subject to customary regulatory approvals and closing conditions.
+Kotoba was founded in 2023 by AI researchers Noriyuki Kojima, its CEO, and Jungo Kasai, its CTO.
+The company is headquartered in San Francisco, with its research and development base in Tokyo.
+ElevenLabs calls Kotoba “the leading Japanese voice AI lab.”
+Kotoba’s voice model, Koto, covers Japanese text-to-speech, speech-to-text, and speech-to-speech for simultaneous interpretation, according to ElevenLabs.
+Salesforce uses Koto to handle Japanese-language conversations in its Agentforce Voice product.
+“To bring the value of AI to every person, it needs to be natural and intuitive to interact with,” said Mati Staniszewski, co-founder and CEO of ElevenLabs. “The language people speak and the social norms they follow need to be reflected in the technology’s architecture from the very start.
+“Kotoba has done exactly that for Japan, building state-of-the-art voice models that have already been adopted by some of the world’s leading enterprises. Together, we can take that even further together and build the full interaction layer for AI in Japan.”
+“When we founded Kotoba, our goal was to build a frontier AI lab from Japan,” said Kojima, co-founder and CEO of Kotoba Technologies, Inc. “Along the way, we’ve seen the enormous potential of voice AI, and three years later, we’re more determined than ever to build technology that benefits society.
+“I’m incredibly excited for Kotoba to join ElevenLabs. Together, we can accelerate the development and adoption of voice AI, bringing tangible benefits to people and businesses in Japan and beyond.”
+“I’m incredibly excited for Kotoba to join ElevenLabs. Together, we can accelerate the development and adoption of voice AI, bringing tangible benefits to people and businesses in Japan and beyond.”
+Noriyuki Kojima, Kotoba Technologies
+Kojima holds a PhD in computer science from Cornell and previously worked as a research scientist at Hugging Face, according to ElevenLabs.
+He also co-built Fugaku-LLM, an open-source Japanese model trained from scratch on RIKEN‘s Fugaku supercomputer.
+“Kotoba’s team has done exceptional research on the Japanese language,” said Piotr Dąbkowski, co-founder and CTO of ElevenLabs. “It is an incredibly intricate language that poses a whole range of technical challenges when building voice models. Bringing their research together with ours will improve Japanese across the entire stack ElevenLabs builds.”
+Kasai holds a PhD in computer science and engineering from the University of Washington, and was previously a research assistant professor at the Toyota Technological Institute at Chicago.
+ElevenLabs describes him as “one of Japan’s most-cited researchers.”
+“I’m incredibly excited for Kotoba and ElevenLabs to join forces and lead the next wave of voice AI in Japan and East Asia,” said Kasai. “Since I began my AI research career, I’ve dreamed of building a frontier AI research lab in Tokyo and creating products that transform people’s lives, from voice AI agents to simultaneous translation. Our journey is just beginning.”
+ElevenLabs says the acquisition is “just the first step” in a long-term plan for Japan.
+Over the coming months, ElevenLabs intends to expand its local sales leadership in Japan and continue investing in infrastructure there.
+ElevenLabs already has a subsidiary in Japan.
+It launched ElevenLabs G.K. in Tokyo in April 2025, describing it at the time as its first international subsidiary.
+Salesforce Ventures has invested in both companies.
+“Voice is emerging as a powerful new interface for AI, with potential to transform how people interact with technology,” said Nowi Kallen, a partner at Salesforce Ventures. “We’ve been proud to back both ElevenLabs and Kotoba, and together, they’re uniquely positioned to bring more natural, intuitive AI experiences to businesses and consumers worldwide.”
+Salesforce Ventures took part in Kotoba’s $10 million seed round in June, which was led by Kindred Ventures and also included Sony Innovation Fund.
+That round brought Kotoba’s total funding to date to $23 million, the company said at the time.
+Developers at Salesforce also use ElevenLabs’ voice infrastructure, according to ElevenLabs.
+ElevenLabs was valued at $22 billion in a $300 million employee tender offer completed in September.
+That was double the $11 billion valuation it reached in its $500 million Series D round, announced in February.
+At the time of the tender, ElevenLabs said its ElevenAgents platform was fielding more than 15 million conversations per week, and that enterprise customers accounted for 55% of its revenues.
+The company entered AI music generation in August 2025, launching Eleven Music (now ElevenMusic) alongside licensing agreements with Merlin and Kobalt.
+In September, ElevenLabs signed a multi-year licensing agreement with Universal Music Group, which the two companies described as its first with a major music company.
+Under that deal, ElevenLabs is building a separate AI-powered platform for fans, covering remixes, mashups, and “new track interpretations.”Music Business Worldwide
+News Japan United States ElevenLabs Kotoba Technologies
+Related Posts
+ ElevenLabs in early talks to raise at $33B valuation – more than six times that of AI music rival Suno (report)
+ SoundCloud cracks down on ‘AI slop, spam, and excessive uploads’ – weeks after striking AI deals with Moises and ElevenLabs
+ 5 things You Need to Know About ElevenLabs, the UMG AI partner with an $11B valuation – and big ambitions in music.
+ ElevenLabs launched Music v2.5 – shortly after announcing its UMG licensing deal.
+Latest Music Industry Jobs
+LN Concerts, Operational Finance Manager
+Nashville, United States Live Nation ANZ
+Coordinator, Artist Lead, Marketing – Columbia Records
+New York, United States Sony Music Entertainment
+Head of Music, Canada – Amazon Music, Music Industry
+Toronto, Canada Amazon Music
+VP, Finance
+Connect Music
+LN Concerts, Accounting Manager
+Atlanta, United States Live Nation ANZ
+Digital Audience Development Manager
+London Deutsch Englische Freundschaft Ltd
+Manager, Artist Relations
+Los Angeles, New York, United States Universal Music Group
+Publishing A&R Manager, Domino Publishing Company
+Los Angeles / Domino Recording Company
+A&R & Writer Acquisition Manager
+chaser publishing
+Manager, Business Intelligence / Data Analytics
+EXCELERATION SERVICES, LLC
+Music Catalog Acquisition Marketing and Business Development Intern
+New York / Seasons Music Group
+Junior Finance Assistant
+London / The Other Songs
+Music Business Worldwide
+Stay on top of the real stories shaping the music industry: Join over 60,000 industry professionals who rely on MBW's free emails for essential insights and breaking news.
+ Receive MBW Industry Jobs
+MBW occasionally sends important promotional emails that involve strategic collaborations with industry partners. These emails form part of the service you elect to receive when you subscribe to any of MBW's free email services. MBW does not and will not share your data with any third-parties. You can unsubscribe from said promotional emails at any time.
+ Sign Up Close
+Popular Articles
+ TikTok users watch the app for an average of 89 minutes per day – and there's 732m of them worldwide
+ Warner Music Group launches Global Diversity, Equity and Inclusion Institute
+ Taylor Swift just crashed Ticketmaster's site and sold over 2 million tickets. To meet demand, she would have had to play 900 stadium shows.
+ ElevenLabs in early talks to raise at $33B valuation – more than six times that of AI music rival Suno (report)
+ Universal, Warner, and the BPI back charter to tackle barriers keeping people with dementia from accessing music
+ Music Business Worldwide
+ Who We Are
+ What We Do
+Policies
+Terms Of Use
+ Comments Policy
+ Privacy Policy
+ Cookie Declaration
+Contact Us
+Contact Us
+ Advertise With Us
+ Send Us News
+ General Enquiries
+ Report A Problem
+Follow Us
+ Facebook
+ LinkedIn
+ Twitter
+ RSS
+ © 2025 Music Business Worldwide 
+ 27 Old Gloucester Street, London, WC1N 3AX
+ Website by 44 Bytes
+News
+ Interviews All Interviews
+ Inspiring Women
+ Key Songs In The Life Of
+ Trailblazers
+ World’s Greatest Managers
+ World’s Greatest Songwriters
+ Analysis All Analysis
+ MBW Explains
+ MBW Views
+ Tim’s Take
+ Database
+ Podcast
+ Jobs
+ MBW+ Subscribe
+ Login
+ Search

@@ -1,0 +1,528 @@
+{
+ "lane": "offdays2",
+ "searched": [
+  "fetched changelogs and release notes: ElevenLabs docs changelog, Descript (canny, last entry 6 Nov), Runway changelog, Figma release notes, Krea changelog, Luma (last 2025), Suno blog and release notes (only Bridge and Visuals, both excluded), Unity what's new (no AI), Ableton Live 12 (last 30 Oct), Roblox DevForum announcements and weekly recap, Beehiiv product roundup, Ghost changelog, Spotify newsroom, TikTok newsroom, SoundCloud newsroom, Apple support release notes for Final Cut Pro, Logic Pro for Mac and iPad, Pixelmator Pro",
+  "web: new AI feature musicians producers November 2026; DaVinci Resolve update November 2026 (21.2 dated 4 Nov, outside window); YouTube new creator feature November 2026; Canva or CapCut AI feature week of 17 Nov; sports clubs AI video highlights November 2026; Ideogram 4.6 release; Suno Studio 2.0 release date",
+  "could not load: helpx.adobe.com release notes (403), canva.com newsroom and help (403), Midjourney updates (empty Ghost shell) and docs (403), meshy.ai (403), Unreal news (403), Blackmagic forum (403), Spotify UK support pages (404), Pika changelog (login wall), Ideogram pricing (403)",
+  "dropped for date: Roblox Prompt to Animation (posted 5 Nov), Roblox image translation (9 Nov), DaVinci Resolve 21.2 (4 Nov), Logic Pro for Mac 13 (6 Nov), Pro Tools 2026.11, iZotope Photon (6 Nov), Suno Studio 2.0 (13 Aug), ElevenMusic Composer (25 Aug)",
+  "dropped as excluded or off-beat: Suno Visuals, Suno Bridge, TikTok Likeness Detection, Runway MCP connectors (chatbot story already posted), Kling 4.0, Figma agent in FigJam and Slides (office productivity), Beehiiv Tip Jar (not AI), Ghost cards (not AI), Krea Drama Studio (page would not render to check)",
+  "dropped as unverifiable or time-limited: Ideogram 4.6 (no Ideogram page found with the date), ElevenLabs Speech to Text price cut and 100,000-character requests (API pricing, not a same-day app step), Black Friday prices on Krea and Runway pages (standard prices used instead)",
+  "note: no sports or media utility found in the window on vendor pages; the five sectors covered are arts_design, film_tv, music, creators and games"
+ ],
+ "candidates": [
+  {
+   "key": "figma-six-images-one-prompt",
+   "sector": "arts_design",
+   "aim": "utility",
+   "headline": "Figma's image tool now gives two, four or six options from one prompt",
+   "what_happened": "On 18 November 2026 Figma updated Make image and Edit image so one image model can return two, four or six pictures from a single prompt, or run the same prompt across up to three models side by side. It works in Figma Design, FigJam, Slides and Draw. Starter is free with 150 AI credits a day; Professional is $16 a month per full seat.",
+   "date": "2026-11-18",
+   "named_thing": "Make image with 2, 4 or 6 options",
+   "primary": {
+    "label": "Figma release notes, Generate multiple images from a single prompt, 18 Nov 2026",
+    "url": "https://www.figma.com/release-notes/",
+    "kind": "original",
+    "quote": "One model, multiple images: Have a single image model generate two, four, or six images from one prompt, so you spend less time re-prompting."
+   },
+   "second": {
+    "label": "Figma Help Center, Generate and edit images with Figma AI",
+    "url": "https://help.figma.com/hc/en-us/articles/24004542669463-Generate-and-edit-images-with-Figma-AI",
+    "quote": "To generate multiple options using a single model, open the model picker and choose 2, 4, or 6 images."
+   },
+   "more_sources": [
+    {
+     "label": "Figma pricing page",
+     "url": "https://www.figma.com/pricing/",
+     "quote": "150 AI credits/day, up to 500 AI credits/mo"
+    }
+   ],
+   "steps": [
+    {
+     "text": "Click where you want the picture, open the Actions menu and choose Make an image.",
+     "checked": "https://help.figma.com/hc/en-us/articles/24004542669463-Generate-and-edit-images-with-Figma-AI"
+    },
+    {
+     "text": "Type your prompt, then open the model picker and choose 2, 4 or 6 images from one model.",
+     "checked": "https://help.figma.com/hc/en-us/articles/24004542669463-Generate-and-edit-images-with-Figma-AI"
+    },
+    {
+     "text": "To compare models instead, add up to three of them and keep the version you like best.",
+     "checked": "https://www.figma.com/release-notes/"
+    },
+    {
+     "text": "Add a reference image if you want to steer the look, then press Send or Command and Enter.",
+     "checked": "https://help.figma.com/hc/en-us/articles/24004542669463-Generate-and-edit-images-with-Figma-AI"
+    },
+    {
+     "text": "Starter is free with 150 AI credits a day, up to 500 a month, but on Starter the image tools work only in Figma Design; Professional is $16 a month per full seat with 3,000 credits.",
+     "checked": "https://www.figma.com/pricing/"
+    }
+   ],
+   "price": {
+    "text": "Starter free (150 AI credits a day, up to 500 a month); Professional $16 a month per full seat",
+    "url": "https://www.figma.com/pricing/"
+   },
+   "money_or_mechanism": "Each extra option spends the shared Figma AI credits, so a designer trades credits for fewer rounds of re-prompting.",
+   "why_it_matters": "A designer pitching a cover or a poster can put six directions in front of a client from one line of text, inside the file they already work in.",
+   "funny": "The release note's selling point is that you will spend less time re-prompting, which is the most honest description of AI image work yet.",
+   "media": {
+    "kind": "photo",
+    "url": "https://cdn.sanity.io/images/599r6htc/regionalized/342e17642c7afa81206490b0dd21c3e5724ae040-2400x1260.png?w=1200&q=70&fit=max&auto=format"
+   },
+   "risks": "Credit cost per image is not listed on the help page; the release-notes image is Figma's general release-notes card, not a screenshot of the feature."
+  },
+  {
+   "key": "pixelmator-generate-fill",
+   "sector": "arts_design",
+   "aim": "utility",
+   "headline": "Pixelmator Pro 5.0 adds Generate Fill: circle part of a picture and describe the change",
+   "what_happened": "Apple released Pixelmator Pro 5.0 on 18 November 2026 with Generate Fill, which edits a chosen area of an image from a typed description and matches the light, perspective and texture around it. The edit lands on its own masked layer, so the original stays untouched. It needs an Apple Creator Studio subscription, $12.99 a month after a 30-day free trial, and a Mac with Apple silicon.",
+   "date": "2026-11-18",
+   "named_thing": "Generate Fill in Pixelmator Pro 5.0",
+   "primary": {
+    "label": "Apple Support, Pixelmator Pro for Mac release notes, Pixelmator Pro 5.0, released 18 November 2026",
+    "url": "https://support.apple.com/en-gb/126257",
+    "kind": "original",
+    "quote": "Transform any detail in your image with Generate Fill, adding edits that blend naturally to match the lighting, perspective and texture of surrounding areas, using natural language."
+   },
+   "second": {
+    "label": "Pixelmator Pro User Guide for Mac, Modify an image using generative AI",
+    "url": "https://support.apple.com/guide/pixelmator-pro/modify-an-image-using-generative-ai-zvg3g88runqn/5.0/mac/27",
+    "quote": "The Generate Fill tool uses generative AI* to modify an image with a text description."
+   },
+   "more_sources": [
+    {
+     "label": "Apple, Pixelmator Pro page",
+     "url": "https://www.apple.com/pixelmator-pro/",
+     "quote": "Pixelmator Pro for Mac is also available as a one-time purchase for $49.99."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Select an image layer in the Layers sidebar, then choose the Generate Fill tool in the Tools sidebar.",
+     "checked": "https://support.apple.com/guide/pixelmator-pro/modify-an-image-using-generative-ai-zvg3g88runqn/5.0/mac/27"
+    },
+    {
+     "text": "To change only one spot, drag over it, or circle it with Magnetic Selection, Free Selection or Quick Selection.",
+     "checked": "https://support.apple.com/en-gb/126257"
+    },
+    {
+     "text": "Type the change in the text field at the bottom of the screen, for example \"Make the sky purple\", and run it.",
+     "checked": "https://support.apple.com/guide/pixelmator-pro/modify-an-image-using-generative-ai-zvg3g88runqn/5.0/mac/27"
+    },
+    {
+     "text": "The result arrives as a new layer with a mask; untick \"Add as a new layer\" if you want to change the original layer instead.",
+     "checked": "https://support.apple.com/guide/pixelmator-pro/modify-an-image-using-generative-ai-zvg3g88runqn/5.0/mac/27"
+    },
+    {
+     "text": "Generate Fill needs an Apple Creator Studio subscription ($12.99 a month or $129 a year after a 30-day free trial) and a Mac with Apple silicon on macOS 26 or later; the $49.99 one-time app does not include it.",
+     "checked": "https://support.apple.com/guide/pixelmator-pro/modify-an-image-using-generative-ai-zvg3g88runqn/5.0/mac/27"
+    }
+   ],
+   "price": {
+    "text": "Apple Creator Studio, free for 30 days, then $12.99 a month or $129 a year",
+    "url": "https://www.apple.com/pixelmator-pro/"
+   },
+   "money_or_mechanism": "The tool is the reason to pay the subscription rather than the $49.99 one-time app, and the guide says it runs on third-party generative AI models with usage limits.",
+   "why_it_matters": "An illustrator or photographer fixing a sky, a sign or a stray object gets the change on a separate layer they can mask, keep or throw away.",
+   "funny": "Apple's own example of what to ask the AI for is a purple sky.",
+   "media": {
+    "kind": "photo",
+    "url": "https://www.apple.com/v/pixelmator-pro/a/images/overview/meta/pixelmator__c4dlsmpcudw2_og.png?202603241546"
+   },
+   "risks": "Usage limits apply and the guide does not state them; outputs come from unnamed third-party models; the photo is Apple's general Pixelmator Pro image, not the new tool. Same Apple release day as the Final Cut Pro and Logic Pro candidates."
+  },
+  {
+   "key": "final-cut-13-captions-23-languages",
+   "sector": "film_tv",
+   "aim": "utility",
+   "headline": "Final Cut Pro 13 writes captions in 23 more languages, and saves them as SRT by default",
+   "what_happened": "Final Cut Pro 13.0, released on 18 November 2026, can generate captions and search transcripts in 23 more languages; in June the same tool was U.S. English only. Closed captions now default to SRT, the file most platforms accept. It costs $299.99 once, or comes in Apple Creator Studio at $12.99 a month after a 30-day trial.",
+   "date": "2026-11-18",
+   "named_thing": "Generate Captions in 23 new languages",
+   "primary": {
+    "label": "Apple Support, Final Cut Pro release notes, Final Cut Pro 13.0, released 18 November 2026",
+    "url": "https://support.apple.com/en-us/102825",
+    "kind": "original",
+    "quote": "Generate captions and search transcripts in 23 new supported languages."
+   },
+   "second": {
+    "label": "Final Cut Pro User Guide, Generate subtitles automatically",
+    "url": "https://support.apple.com/guide/final-cut-pro/generate-subtitles-automatically-verd6d52c4e8/mac",
+    "quote": "In the menu that appears, choose the language spoken in the selected clips, choose the country (if necessary), then click Generate."
+   },
+   "more_sources": [
+    {
+     "label": "Apple Support, Final Cut Pro release notes, 13.0",
+     "url": "https://support.apple.com/en-us/102825",
+     "quote": "Closed captions now default to the SRT format when adding them manually or using Generate Captions."
+    },
+    {
+     "label": "Apple Support, Final Cut Pro release notes, June 2026 entry",
+     "url": "https://support.apple.com/en-us/102825",
+     "quote": "(Requires a Mac with Apple silicon, available in U.S. English only)."
+    },
+    {
+     "label": "Apple, Final Cut Pro page",
+     "url": "https://www.apple.com/final-cut-pro/",
+     "quote": "Final Cut Pro is also available as a one-time purchase for $299.99."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Update to Final Cut Pro 13.0; some of the new languages need macOS 27 or later.",
+     "checked": "https://support.apple.com/guide/final-cut-pro/generate-subtitles-automatically-verd6d52c4e8/mac"
+    },
+    {
+     "text": "In the timeline, select one or more clips that contain speech.",
+     "checked": "https://support.apple.com/guide/final-cut-pro/generate-subtitles-automatically-verd6d52c4e8/mac"
+    },
+    {
+     "text": "Choose Edit > Generate Captions > Subtitles (Shift-Command-S), or Control-click the clips and choose the same.",
+     "checked": "https://support.apple.com/guide/final-cut-pro/generate-subtitles-automatically-verd6d52c4e8/mac"
+    },
+    {
+     "text": "Choose the language spoken and the country if asked, then click Generate; closed captions now come out as SRT unless you change it.",
+     "checked": "https://support.apple.com/guide/final-cut-pro/generate-subtitles-automatically-verd6d52c4e8/mac"
+    },
+    {
+     "text": "Price: $299.99 one-time purchase, or Apple Creator Studio at $12.99 a month or $129 a year after a 30-day free trial.",
+     "checked": "https://www.apple.com/final-cut-pro/"
+    }
+   ],
+   "price": {
+    "text": "$299.99 one-time; or Apple Creator Studio, free for 30 days then $12.99 a month",
+    "url": "https://www.apple.com/final-cut-pro/"
+   },
+   "money_or_mechanism": "Captioning a film or a client edit in another language moves from a paid transcription service to a menu item in the editor.",
+   "why_it_matters": "An editor cutting in French, German or Spanish can caption and search their own footage in the edit, without sending it out.",
+   "funny": "For five months the caption tool in a $299.99 editor spoke one language, American.",
+   "media": {
+    "kind": "photo",
+    "url": "https://www.apple.com/v/final-cut-pro/w/images/meta/final_cut__cumj84xteas2_og.png?202603241546"
+   },
+   "risks": "The release notes do not list which 23 languages; the asterisk ties some to macOS 27. Photo is Apple's general Final Cut Pro image."
+  },
+  {
+   "key": "runway-ltx-alphagen-matte",
+   "sector": "film_tv",
+   "aim": "utility",
+   "headline": "Runway now cuts a subject out of any video with a separate alpha matte, in ProRes",
+   "what_happened": "On 13 November 2026 Runway added LTX Alphagen, a model from Lightricks that turns any clip into a matte with a separate alpha channel cutout, with no green screen, mask or prompt. It returns two files and can output ProRes. It is on Runway's paid plans, from $15 a month or $12 billed yearly.",
+   "date": "2026-11-13",
+   "named_thing": "LTX Alphagen in Runway",
+   "primary": {
+    "label": "Runway changelog, LTX Alphagen, 13 Nov 2026",
+    "url": "https://runway.com/changelog",
+    "kind": "original",
+    "quote": "LTX Alphagen is the first third-party model to return two outputs and support ProRes as an output type."
+   },
+   "second": {
+    "label": "LTX (Lightricks), Alpha channel generation",
+    "url": "https://ltx.io/model/capabilities/alpha-channel-video-generation",
+    "quote": "Generate a frame-matched alpha matte without a green screen, hand-drawn mask, or prompt."
+   },
+   "more_sources": [
+    {
+     "label": "Runway changelog, LTX Alphagen",
+     "url": "https://runway.com/changelog",
+     "quote": "Turn any video into a production-grade matte with a separate alpha channel cutout."
+    },
+    {
+     "label": "Runway pricing page",
+     "url": "https://runway.com/pricing",
+     "quote": "625 credits monthly = 52s of Gen-4.5, 104s of Gen-4 Turbo, or 78 Gen-4 Images (1080p)."
+    }
+   ],
+   "steps": [
+    {
+     "text": "On a Runway paid plan, pick LTX Alphagen and give it a clip you already have.",
+     "checked": "https://runway.com/changelog"
+    },
+    {
+     "text": "No prompt, mask or green screen is needed; through the API it takes video up to 4K.",
+     "checked": "https://ltx.io/model/capabilities/alpha-channel-video-generation"
+    },
+    {
+     "text": "You get two videos back, frame for frame: a grayscale matte and a cutout with the transparency built in, and you can ask for ProRes.",
+     "checked": "https://ltx.io/model/capabilities/alpha-channel-video-generation"
+    },
+    {
+     "text": "Put the cutout over a new background in your editor; hair, smoke and motion blur keep their soft edges. The output has no audio, so keep the original sound track.",
+     "checked": "https://ltx.io/model/capabilities/alpha-channel-video-generation"
+    },
+    {
+     "text": "Price: Standard is $15 a month, or $12 a month billed yearly, with 625 credits; the free plan has 125 one-time credits.",
+     "checked": "https://runway.com/pricing"
+    }
+   ],
+   "price": {
+    "text": "Paid plans from $15 a month, $12 billed yearly; free plan 125 one-time credits",
+    "url": "https://runway.com/pricing"
+   },
+   "money_or_mechanism": "Rotoscoping a subject by hand is paid by the hour; here it becomes a credit charge per clip.",
+   "why_it_matters": "A filmmaker or editor can lift a person off a plate shot without a green screen and composite them in Resolve, Premiere or After Effects.",
+   "funny": "The headline feature of the model is that it gives you two files instead of one.",
+   "media": {
+    "kind": "photo",
+    "url": "https://cdn.prod.website-files.com/68c6ddbeb26cbd692adc0291/6abe3fe597a70ad6abf25dd0_alphagen-og.jpg"
+   },
+   "risks": "Runway's own page gives no step-by-step or credit cost per clip; the step detail comes from Lightricks' model page, which carries no date. Runway's pricing page showed a Kling discount until 30 November, not used here."
+  },
+  {
+   "key": "krea-video-swap",
+   "sector": "film_tv",
+   "aim": "utility",
+   "headline": "Krea's Video Swap recasts a person, outfit or prop in a clip and keeps the original take",
+   "what_happened": "Krea launched Video Swap on 20 November 2026. You upload a clip and up to four reference photos, and it replaces a person, face, outfit, object or setting while keeping the original motion, camera moves, cuts and sound. Clips run 4 to 30 seconds at up to 1080p, on paid plans.",
+   "date": "2026-11-20",
+   "named_thing": "Krea Video Swap",
+   "primary": {
+    "label": "Krea changelog, Video Swap, 20 Nov 2026",
+    "url": "https://www.krea.ai/changelog",
+    "kind": "original",
+    "quote": "Upload the video and 1 to 4 reference images. Krea keeps the original motion, camera moves, cuts, and audio."
+   },
+   "second": {
+    "label": "Krea, AI Face Swap Video (Video Swap tool page)",
+    "url": "https://www.krea.ai/apps/video-face-swap",
+    "quote": "Clips up to 30 seconds · Up to 1080p · Paid plans"
+   },
+   "more_sources": [
+    {
+     "label": "Krea user guide, Swapping a Person in a Video",
+     "url": "https://www.krea.ai/docs/user-guide/features/video.md",
+     "quote": "Video Swap needs a paid plan, and developers can call it through the Video Swap API."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Open Video Swap and upload an MP4, MOV, WebM or OGG clip of 4 to 30 seconds; trim a longer clip inside the tool.",
+     "checked": "https://www.krea.ai/apps/video-face-swap"
+    },
+    {
+     "text": "Upload up to four reference photos of the person, outfit, product or place to put in; you can say who goes where, such as \"@img-2 replaces the man on the left\".",
+     "checked": "https://www.krea.ai/apps/video-face-swap"
+    },
+    {
+     "text": "Choose Standard, Lite or Recast and a resolution, check the price shown before you run it, then swap.",
+     "checked": "https://www.krea.ai/apps/video-face-swap"
+    },
+    {
+     "text": "The result keeps the source clip's length, motion, timing and sound, so it drops back into the edit.",
+     "checked": "https://www.krea.ai/apps/video-face-swap"
+    },
+    {
+     "text": "Price: a paid plan is needed; Krea's pricing page lists Basic at $9 a month for 5,000 units, and the free plan gives 100 units a day.",
+     "checked": "https://www.krea.ai/pricing"
+    }
+   ],
+   "price": {
+    "text": "Paid plan needed; Basic listed at $9 a month (5,000 units); free plan 100 units a day",
+    "url": "https://www.krea.ai/pricing"
+   },
+   "money_or_mechanism": "A reshoot for a new costume, product or actor becomes a per-clip charge in compute units, shown before you run it.",
+   "why_it_matters": "A director or ad maker can try a different outfit, product or location on a take they already shot, without booking the crew again.",
+   "funny": "The tool works out which photo replaces what by itself, so you never have to tell it, unless it picks the wrong man on the left.",
+   "media": {
+    "kind": "photo",
+    "url": "https://s.krea.ai/og/og-default-v2.webp"
+   },
+   "risks": "Swapping real people raises likeness and consent questions; frame it as recasting your own cast, wardrobe and props. Krea's pricing page showed a Black Friday discount on 27 Nov, so the $9 is the struck-through standard price and should be rechecked in December. Per-swap cost is shown only in the tool. Media is Krea's default card, not the feature."
+  },
+  {
+   "key": "logic-ipad-drum-kit-stems",
+   "sector": "music",
+   "aim": "utility",
+   "headline": "Logic Pro for iPad 4.0 splits a drum track into kick, snare, hi-hat, toms and cymbals",
+   "what_happened": "Logic Pro for iPad 4.0, published by Apple on 18 November 2026, adds a Drums (Individual Kit Pieces) option to its AI Stem Splitter, which pulls kick, snare, hi-hat, toms, cymbals and other percussion out of any audio region as separate stems. The stems arrive grouped in one Track Stack. It needs an iPad with M1 or later and Apple Creator Studio, $12.99 a month after a 30-day free trial.",
+   "date": "2026-11-18",
+   "named_thing": "Stem Splitter, Drums (Individual Kit Pieces)",
+   "primary": {
+    "label": "Apple Support, Logic Pro for iPad release notes, Logic Pro for iPad 4.0, published 18 November 2026",
+    "url": "https://support.apple.com/en-us/101628",
+    "kind": "original",
+    "quote": "Choose the Drums (Individual Kit Pieces) preset in Stem Splitter to extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion."
+   },
+   "second": {
+    "label": "Logic Pro User Guide for iPad, Extract vocal and instrumental stems with Stem Splitter",
+    "url": "https://support.apple.com/guide/logicpro-ipad/extract-vocal-instrumental-stems-stem-lpip1b60ada3/ipados",
+    "quote": "Stem Splitter is available on iPads with an M1 or later Apple silicon processor."
+   },
+   "more_sources": [
+    {
+     "label": "Apple Support, Logic Pro for iPad 4.0 release notes",
+     "url": "https://support.apple.com/en-us/101628",
+     "quote": "Individual drum stems are grouped in a summing Track Stack."
+    },
+    {
+     "label": "Apple, Logic Pro for iPad page",
+     "url": "https://www.apple.com/logic-pro-for-ipad/",
+     "quote": "You can try Apple Creator Studio free for 30 days."
+    }
+   ],
+   "steps": [
+    {
+     "text": "In the Tracks area, tap the audio region to select it, tap it again, then tap Stem Splitter.",
+     "checked": "https://support.apple.com/guide/logicpro-ipad/extract-vocal-instrumental-stems-stem-lpip1b60ada3/ipados"
+    },
+    {
+     "text": "Tap the Preset pop-up menu and choose Drums (Individual Kit Pieces), or turn on the Individual Kit Pieces switch and deselect any kit pieces you do not want.",
+     "checked": "https://support.apple.com/guide/logicpro-ipad/extract-vocal-instrumental-stems-stem-lpip1b60ada3/ipados"
+    },
+    {
+     "text": "Tap Apply, the checkmark in a blue circle; the drum stems come back grouped in a summing Track Stack, and they now keep the original region's gain.",
+     "checked": "https://support.apple.com/en-us/101628"
+    },
+    {
+     "text": "You need an iPad with an M1 or later chip, and Logic Pro for iPad through Apple Creator Studio: free for 30 days, then $12.99 a month or $129 a year.",
+     "checked": "https://www.apple.com/logic-pro-for-ipad/"
+    }
+   ],
+   "price": {
+    "text": "Apple Creator Studio, free for 30 days, then $12.99 a month or $129 a year",
+    "url": "https://www.apple.com/logic-pro-for-ipad/"
+   },
+   "money_or_mechanism": "Splitting a stereo drum loop into separate kit pieces used to need a paid stem service or the original multitracks; it is now a preset in the subscription.",
+   "why_it_matters": "A producer can rebalance or replace the kick and snare on an old demo or a bounced loop without the original session.",
+   "funny": "The kit pieces list ends with \"Other\", which every drummer knows is the cowbell.",
+   "media": {
+    "kind": "photo",
+    "url": "https://www.apple.com/v/logic-pro/n/images/meta/logic_pro__bwh8nhmy69jm_og.png?202603241546"
+   },
+   "risks": "The release-notes page gives a published date, not a separate release date. Only works on a single selected stereo or mono region. Use only on audio you have the rights to. Photo is Apple's general Logic Pro image. Same Apple release day as the Final Cut Pro and Pixelmator candidates."
+  },
+  {
+   "key": "spotify-audiobook-tools-uk",
+   "sector": "creators",
+   "aim": "utility",
+   "headline": "UK self-published authors can now turn a book into a Spotify audiobook for free",
+   "what_happened": "On 18 November 2026 Spotify opened its Audiobook Creation Tools to self-published authors in 21 more markets, the UK among them, and added Spanish. An author uploads an EPUB, picks one of Spotify's licensed digital voices, checks pronunciation and previews each chapter before it goes live. Each eligible author can make up to five audiobooks at no cost.",
+   "date": "2026-11-18",
+   "named_thing": "Spotify Audiobook Creation Tools, five free audiobooks",
+   "primary": {
+    "label": "Spotify Newsroom, Spotify Brings Audiobook Creation Tools to 21 New Markets, 18 Nov 2026",
+    "url": "https://newsroom.spotify.com/2026-11-18/audiobook-creation-tools-expansion/",
+    "kind": "original",
+    "quote": "Starting today, they’re available to self-published authors in 21 more markets: the U.K., Canada, Australia, Ireland, New Zealand, Spain, Mexico, Colombia, Chile, Peru, Ecuador, Guatemala, Bolivia, the Dominican Republic, Honduras, Paraguay, El Salvador, Nicaragua, Costa Rica, Panama, and Uruguay."
+   },
+   "second": {
+    "label": "Spotify for Authors support, Audiobook Creation Tools on Spotify",
+    "url": "https://support.spotify.com/us/authors/article/audiobook-creation-tools/",
+    "quote": "Upload your manuscript as an EPUB file."
+   },
+   "more_sources": [
+    {
+     "label": "Spotify Newsroom, 18 Nov 2026",
+     "url": "https://newsroom.spotify.com/2026-11-18/audiobook-creation-tools-expansion/",
+     "quote": "Each eligible author can create up to five audiobooks through the program at no cost, and titles made with the tools can be published in 180 markets."
+    },
+    {
+     "label": "Spotify for Authors support, Getting access to Audiobook Creation Tools",
+     "url": "https://support.spotify.com/us/authors/article/getting-access-to-audiobook-creation-tools/",
+     "quote": "Payment profile approval can take up to 5 business days."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Sign in to Spotify for Authors and complete your payment profile in a supported country; approval can take up to five business days.",
+     "checked": "https://support.spotify.com/us/authors/article/getting-access-to-audiobook-creation-tools/"
+    },
+    {
+     "text": "Upload your finished manuscript as an EPUB file.",
+     "checked": "https://support.spotify.com/us/authors/article/audiobook-creation-tools/"
+    },
+    {
+     "text": "Choose a digital voice and preview it, then review how it says names, places and acronyms.",
+     "checked": "https://support.spotify.com/us/authors/article/audiobook-creation-tools/"
+    },
+    {
+     "text": "Listen to the chapter previews, make changes, then submit; the audiobook is published to Spotify within 72 hours.",
+     "checked": "https://support.spotify.com/us/authors/article/audiobook-creation-tools/"
+    },
+    {
+     "text": "Price: free for eligible authors, up to five audiobook projects per account.",
+     "checked": "https://newsroom.spotify.com/2026-11-18/audiobook-creation-tools-expansion/"
+    }
+   ],
+   "price": {
+    "text": "Free, up to five audiobooks per eligible author",
+    "url": "https://newsroom.spotify.com/2026-11-18/audiobook-creation-tools-expansion/"
+   },
+   "money_or_mechanism": "Narration, the biggest cost of making an audiobook, is replaced by a licensed digital voice at no charge for the first five titles.",
+   "why_it_matters": "A self-published novelist in the UK can put a backlist title on Spotify as an audiobook without paying a narrator or a studio.",
+   "funny": "Spotify estimates 99 of every 100 books in the world have no audiobook, and it is offering to fix five of them per author.",
+   "media": {
+    "kind": "photo",
+    "url": "https://storage.googleapis.com/pr-newsroom-wp/1/2026/11/Blog-Post-4-1-1024x439.png"
+   },
+   "risks": "Same-day use only if the author's payment profile is already approved (up to five business days otherwise). Royalty terms are not stated in the post. The support pages read here are the US versions; the UK URLs returned 404. Human narrators may see this as competition; keep it utility, not a verdict."
+  },
+  {
+   "key": "roblox-mcp-video-playtest",
+   "sector": "games",
+   "aim": "utility",
+   "headline": "Roblox Studio lets an AI assistant record a playtest video and check its own animation fixes",
+   "what_happened": "On 20 November 2026 Roblox updated its Studio MCP server so a connected AI assistant, such as Claude Code, Cursor or VS Code, can record video during a playtest to spot stutters, flicker or bad timing, fix them and record again. It still uses screenshots by default because they are cheaper. Roblox Studio itself is free.",
+   "date": "2026-11-20",
+   "named_thing": "screen_capture video in the Studio MCP server",
+   "primary": {
+    "label": "Roblox Developer Forum, Studio MCP Server Updates: Video Capture, save_place, and submit_feedback, 20 Nov 2026",
+    "url": "https://devforum.roblox.com/t/studio-mcp-server-updates-video-capture-saveplace-and-submitfeedback/4998177",
+    "kind": "original",
+    "quote": "screen_capture can now record video during a playtest, so the agent can see motion for itself."
+   },
+   "second": {
+    "label": "Roblox Creator Docs, Studio MCP server",
+    "url": "https://create.roblox.com/docs/studio/mcp",
+    "quote": "During a playtest, it can also record video so the agent can check motion and timing, such as animation stutter, flicker, or whether an event happens at the right moment."
+   },
+   "more_sources": [
+    {
+     "label": "Roblox Creator Docs, Roblox Studio setup",
+     "url": "https://create.roblox.com/docs/studio/setup",
+     "quote": "Create immersive 3D games on Roblox with Roblox Studio, a free application available on Windows and Mac."
+    },
+    {
+     "label": "Roblox Developer Forum, 20 Nov 2026",
+     "url": "https://devforum.roblox.com/t/studio-mcp-server-updates-video-capture-saveplace-and-submitfeedback/4998177",
+     "quote": "Screenshots are still the default for checking visuals because they’re much cheaper."
+    }
+   ],
+   "steps": [
+    {
+     "text": "Update Roblox Studio, open Assistant, click the menu and choose Manage MCP Servers, then turn on Enable Studio as MCP server.",
+     "checked": "https://create.roblox.com/docs/studio/mcp"
+    },
+    {
+     "text": "Use quick connect to link your AI client, such as Claude Code, Claude Desktop, Cursor or Visual Studio Code, then restart that client; a green indicator shows it is connected.",
+     "checked": "https://create.roblox.com/docs/studio/mcp"
+    },
+    {
+     "text": "Ask the agent to playtest the scene and record it; it records video only when stills cannot show the problem, or when you ask for a recording.",
+     "checked": "https://devforum.roblox.com/t/studio-mcp-server-updates-video-capture-saveplace-and-submitfeedback/4998177"
+    },
+    {
+     "text": "Let it play, record, fix and record again to confirm the fix, so you do not have to watch every attempt.",
+     "checked": "https://devforum.roblox.com/t/studio-mcp-server-updates-video-capture-saveplace-and-submitfeedback/4998177"
+    },
+    {
+     "text": "Price: Roblox Studio is free on Windows and Mac; the AI client you connect has its own plan.",
+     "checked": "https://create.roblox.com/docs/studio/setup"
+    }
+   ],
+   "price": {
+    "text": "Roblox Studio free; the connected AI client is priced separately",
+    "url": "https://create.roblox.com/docs/studio/setup"
+   },
+   "money_or_mechanism": "The cost of checking a fix moves from a developer's own playtesting time to the AI client's usage, with video kept for when stills cannot show the fault.",
+   "why_it_matters": "A solo Roblox game maker can hand the dull loop of testing a door animation to an assistant that now watches the result itself.",
+   "funny": "Roblox's demo is an AI noticing that a door stutters, which is roughly where every game developer's career begins.",
+   "media": {
+    "kind": "photo",
+    "url": "https://devforum-uploads.s3.dualstack.us-east-2.amazonaws.com/uploads/original/5X/1/8/6/1/1861cb5318945aaa5d22ebcc5defa679510a0993.png"
+   },
+   "risks": "Useful only with an AI client the maker already pays for or can run; the client's price is not on a Roblox page. The forum page is the developer forum, the vendor's own announcement channel. Media is the post's header image."
+  }
+ ]
+}

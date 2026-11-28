@@ -1,0 +1,35 @@
+{
+ "reader": "reader B",
+ "answers": [
+  {
+   "ref": "off-thu-pixelfill",
+   "says": "Pixelmator Pro lets you type what you want and it repaints just that part of a photo, like the sky.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-sat-goodnews",
+   "says": "A round-up of good news where AI helped songwriters and bands get heard by millions, like an AI-helped song topping a Korean chart.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-sat-screen",
+   "says": "A round-up of film and TV makers using AI to try new things, like an epic with an AI lead actor and AI short films.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-sat-makers",
+   "says": "A round-up of people working on their own who used AI to make things that look like big studio films.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-sat-newsrooms",
+   "says": "A round-up of newspapers using AI to check headlines, keep readers from cancelling and save time.",
+   "repeat": "new"
+  },
+  {
+   "ref": "off-sat-talent",
+   "says": "A round-up of AI helping people get noticed: a teenage footballer's video reaching a big European club, a NASCAR car that answers visitors' questions, and a cinema helper that answers the easy questions.",
+   "repeat": "new"
+  }
+ ]
+}

@@ -1,0 +1,128 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why did Polyend publish its Tracker firmware code?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why did Polyend publish the Tracker firmware source code?",
+      "answer": "Polyend says owners were already building unofficial Tracker mods, and it published the code to support that work, so owners can change the unit they already own. The Verge counts the move among makers opening their devices to the modding community.",
+      "evidence": [
+        {
+          "url": "https://polyend.com/whats-up/tracker-the-biggest-update-yet/",
+          "domain": "polyend.com",
+          "date": "2026-11-02",
+          "quote": "We’ve seen it firsthand in the unofficial Tracker mods you’ve built, and we’re sharing the firmware source code to support that work."
+        },
+        {
+          "url": "https://www.theverge.com/ai-artificial-intelligence/1040081/vibe-coding-open-source-music-firmware",
+          "domain": "www.theverge.com",
+          "date": "2026-11-25",
+          "quote": "Polyend has also gotten on board, open-sourcing its line of Tracker grooveboxes."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Polyend's own announcement never mentions AI or vibe coding. Linking the release to AI tools is The Verge's framing: \"The Polish company’s decision to open its arms to vibe coders isn’t too much of a surprise.\""
+      },
+      "mechanism_type": null,
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why were owners able to write their own firmware for gear like the Tracker?",
+      "answer": "AI coding agents and reverse-engineering tools let hobbyists rework the software inside music devices. The Verge says this caused chaos in the music gear world; Erica Synths describes the same shift as an era of \"vibe hacking\" that reshapes software in ways hard to imagine months earlier.",
+      "evidence": [
+        {
+          "url": "https://www.theverge.com/ai-artificial-intelligence/1040081/vibe-coding-open-source-music-firmware",
+          "domain": "www.theverge.com",
+          "date": "2026-11-25",
+          "quote": "The emergence of powerful vibe-coding agents and tools like Reverse Engineer Anything has caused chaos in the music gear world, leaving companies scrambling to figure out how to respond."
+        },
+        {
+          "url": "https://www.ericasynths.lv/news/post/lxropen/",
+          "domain": "www.ericasynths.lv",
+          "date": "2026-10-23",
+          "quote": "We live in an era of \"vibe hacking\", where AI-assisted tools let musicians and developers alike reshape software in ways that were hard to imagine only a few months ago."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Nothing read says the earlier unofficial Tracker mods were made with AI tools; Polyend does not say how they were built. Erica Synths' founder also questions the premise: \"So, I’m still wondering what fundamental problem vibe coding solves.\""
+      },
+      "mechanism_type": "the tools",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why did makers like Polyend answer by opening their code rather than locking their devices down?",
+      "answer": "The Verge describes modding as reaching devices whether makers allow it or not. Opening the code let makers set the terms: Polyend built a recovery system so a faulty build cannot brick a Tracker, and Erica Synths and Akai likewise keep a way back to the official firmware.",
+      "evidence": [
+        {
+          "url": "https://www.theverge.com/ai-artificial-intelligence/1040081/vibe-coding-open-source-music-firmware",
+          "domain": "www.theverge.com",
+          "date": "2026-11-25",
+          "quote": "In the last several weeks, as it’s become clear that no piece of music gear is safe from Claude and a subreddit full of curious tinkerers, companies have begun making more and more of their devices open source."
+        },
+        {
+          "url": "https://polyend.com/whats-up/tracker-the-biggest-update-yet/",
+          "domain": "polyend.com",
+          "date": "2026-11-02",
+          "quote": "We’ve built in a recovery system to keep a faulty firmware build from bricking your Tracker."
+        },
+        {
+          "url": "https://www.ericasynths.lv/news/post/lxropen/",
+          "domain": "www.ericasynths.lv",
+          "date": "2026-10-23",
+          "quote": "The official firmware will remain available, and you can return to it at any time."
+        },
+        {
+          "url": "https://www.theverge.com/ai-artificial-intelligence/1040081/vibe-coding-open-source-music-firmware",
+          "domain": "www.theverge.com",
+          "date": "2026-11-25",
+          "quote": "O’Donnell says the company will “try to give them a reset button” so “they can experiment with it, and then not lose what they have.”"
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "Elektron weighed the same bricking risk and chose the other way: \"The company banned links to custom firmware from its official forums\". Roland, Korg, Arturia and Novation had made no public statement. No source states Polyend's reason for opening rather than resisting in those terms."
+      },
+      "mechanism_type": "the hardware: an isolated bootloader and recovery path",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why does opening the code not hand the Tracker to anyone who wants to sell it?",
+      "answer": "Polyend's licence lets owners modify and share the firmware and sell their own plugins, but bars selling compiled firmware builds or clone hardware running it. Its factory synth engines stay closed binaries.",
+      "evidence": [
+        {
+          "url": "https://polyend.com/whats-up/tracker-the-biggest-update-yet/",
+          "domain": "polyend.com",
+          "date": "2026-11-02",
+          "quote": "The plugin SDK lets you build, share and sell your own."
+        },
+        {
+          "url": "https://raw.githubusercontent.com/polyend/tracker-ce/main/README.md",
+          "domain": "raw.githubusercontent.com",
+          "date": "2026-11-27",
+          "quote": "* **No Wholesale Commercial Clones**: You may **not** sell compiled `.ptf` firmware builds, manufacture/sell commercial clone hardware running the Tracker firmware, or sell a direct port/wholesale clone of the complete Tracker application as a paid software product."
+        },
+        {
+          "url": "https://raw.githubusercontent.com/polyend/tracker-ce/main/LICENSE",
+          "domain": "raw.githubusercontent.com",
+          "date": "2026-11-27",
+          "quote": "contain Polyend's proprietary factory synthesizer engines."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Both sources are Polyend's own; The Verge does not mention the licence terms, and nothing read shows the clone restriction has been tested. The Verge does report Behringer announcing open-source clones of other makers' gear, though none of the Tracker."
+      },
+      "mechanism_type": "the contract: the licence",
+      "stop": "motive_not_mechanism"
+    }
+  ],
+  "landing": {
+    "shows": "Polyend published its Tracker code to support mods owners were already making, as AI coding and reverse-engineering tools spread firmware hacking across music gear. It opened the code on its own terms: a recovery path so a bad build cannot brick the unit, and a licence that keeps the complete firmware and its factory synth engines from being sold by others.",
+    "open_question": "If anyone with an AI coding agent can rewrite a device's software, what is a maker still selling once its code is open?"
+  }
+}

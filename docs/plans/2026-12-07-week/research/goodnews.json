@@ -1,0 +1,786 @@
+{
+  "lane": "goodnews",
+  "searched": [
+    "musician AI streams record label November 2026",
+    "film studio AI saved production cost November 2026",
+    "football club AI fans engagement November 2026",
+    "\"November 24, 2026\" OR \"November 25, 2026\" AI artist musician",
+    "AI music startup raises funding November 2026 artists paid",
+    "musically.com 2026/11 AI (Music Ally only)",
+    "Musixmatch Pro for Artists relaunch wallet license lyrics AI",
+    "independent musician used AI tool fans reached million November 2026",
+    "game studio generative AI players record launch week November 2026",
+    "YouTuber creator AI dubbing views grew languages November 2026",
+    "newsroom AI audience growth publisher announces results November 2026",
+    "AI artists royalties deal announced this week (MBW, DMN, Billboard, CMU)",
+    "AI film TV production November 2026 (Variety, THR, Deadline, IndieWire, Screen, Broadcast)",
+    "AI generated highlights club league partnership November 2026 (Sportcal, SportsPro, SVG)",
+    "AI publisher newsroom launch November 2026 (Press Gazette, Nieman Lab, journalism.co.uk, Digiday)",
+    "AI music artists / sports team fans / film studio animation press releases November 2026 (PR Newswire, Business Wire, GlobeNewswire)",
+    "AI artist exhibition sold auction record November 2026",
+    "theatre musical West End Broadway AI used production November 2026",
+    "podcast network AI translation new languages listeners November 2026",
+    "Refik Anadol Dataland visitors November 2026",
+    "ElevenLabs Iconic Marketplace voice earnings November 2026",
+    "Premier League club AI partnership 24 November 2026",
+    "audiobook publisher AI narration authors earnings November 2026",
+    "artificial intelligence artist November 2026 (The Art Newspaper, ARTnews, Hyperallergic, Artnet, Dezeen, designboom)",
+    "AI sports November 2026 fans club (Sportico, SVG, SportsPro)",
+    "Reddit, LinkedIn and YouTube searches for creative AI wins (Reddit refused by the search tool and by direct fetch; LinkedIn and YouTube returned only old or undated posts)",
+    "\"November 20/23/26, 2026\" AI music film game sport creator",
+    "Witcher/indie game AI voice actor returns November 2026",
+    "NBA NFL MLB team AI app fans November 2026",
+    "K-pop agency AI virtual idol debut November 2026",
+    "Bollywood Tollywood AI film release November 2026",
+    "Outlet listing pages read directly for 20 to 27 Nov: Music Ally day archives, Digital Music News, TechCrunch media, Tubefilter, Deadline, Variety, Billboard, IndieWire, Korea Times, Korea JoongAng Daily, GamesRadar archive, PocketGamer.biz, Game Developer, CG Channel, SportsPro, Sports Video Group, SVG Europe, Nieman Lab, The Art Newspaper, Creative Boom, The Stage, The Bookseller, MusicRadar, Synthtopia, CDM, afaqs, Indian Express, Daily Artifact topic pages and archives, The Neuron digests",
+    "NOTE: the shared web-search budget for this turn ran out part way through, so later discovery was by reading outlet listing pages only. Sites that refused this reader: GlobeNewswire (403), Business Wire, Canva newsroom (403), The Guardian, Press Gazette, Sports Video Group homepage (bot check), Variety and Hollywood Reporter AI tags via WebFetch (paid Tollbit redirect, not followed).",
+    "NOTE: only 15 candidates passed the checks (dated 20 to 27 Nov, primary opened, verbatim quote seen on the page). The brief asked for 22; the shortfall is reported rather than filled with unchecked stories. Sectors with two or more: music, film_tv, creators, creative_tools, games, sports. Media has one; arts_design, performance and rights have none."
+  ],
+  "candidates": [
+    {
+      "key": "h3arus-kpop-debut-week",
+      "sector": "music",
+      "headline": "A fully AI-made K-pop boy group released its first single in a week crowded with nonhuman debuts",
+      "what_happened": "H3ARUS, a five-member boy group made by the AI entertainment company KAIVERSE, released its debut single CRUSH and a music video on Monday 23 November 2026. The Korea Times counted four nonhuman acts, including a HYBE-backed VTuber project, putting out debut or predebut music in the last full week of November.",
+      "date": "2026-11-23",
+      "named_thing": "H3ARUS, debut single CRUSH (KAIVERSE)",
+      "primary": {
+        "label": "The Korea Times, 'Virtual, AI acts crowd K-pop debut week', 25 Nov 2026",
+        "url": "https://www.koreatimes.co.kr/entertainment/k-pop/20261125/virtual-ai-acts-crowd-k-pop-debut-week",
+        "kind": "report",
+        "quote": "H3ARUS released its debut single CRUSH and a music video on Monday; the five-member group was created by AI entertainment tech company KAIVERSE."
+      },
+      "more_sources": [
+        {
+          "label": "The Korea Times, same article",
+          "url": "https://www.koreatimes.co.kr/entertainment/k-pop/20261125/virtual-ai-acts-crowd-k-pop-debut-week",
+          "quote": "KAIVERSE CEO Park Geun-woo said AI is merely the technology that brings the artists to life, adding that what ultimately matters is the appeal of their music, characters and stories."
+        }
+      ],
+      "money_or_mechanism": "KAIVERSE generates the members' looks and videos with AI while human creatives shape the music, so a label can launch a group without casting, training or touring five people.",
+      "why_it_matters": "A production company now sits in the same release week as the big K-pop agencies with a group nobody had to train for years.",
+      "funny": "The band's backstory is that its members are secret agents posing as K-pop idols, which is about as plausible as the members existing.",
+      "media": {
+        "kind": "photo",
+        "url": "https://newsimg.koreatimes.co.kr/2026/11/24/479dc3ee-ede6-44a2-be0f-47fb86ebd5bd.png"
+      },
+      "risks": "Single source. The article also records fan backlash against another AI group, muuo:23, so the reception is mixed; no streaming numbers yet.",
+      "helps": {
+        "who": "K-pop producers and small entertainment companies",
+        "how": "more successful"
+      },
+      "found": {
+        "place": "news",
+        "url": "https://www.koreatimes.co.kr/entertainment/k-pop/20261125/virtual-ai-acts-crowd-k-pop-debut-week"
+      },
+      "second": null
+    },
+    {
+      "key": "meomuru-melon-number-one",
+      "sector": "music",
+      "headline": "Two Korean songwriters used Suno to make a ballad that is still number one on Melon",
+      "what_happened": "MEOMURU's rock ballad The Adult I Dreamed Of, by the songwriting duo Glorywave (Lee Yong-seok and Choi Sung-hyuk), is the first AI-assisted song to top Melon's Top 100, Korea's most watched chart. The pair wrote the lyrics and used Suno for the melody, arrangement and vocals, then refined them; on Wednesday 25 November it was still at number one, more than a week after it reached the top on 13 November, with no fandom or TV promotion behind it.",
+      "date": "2026-11-25",
+      "named_thing": "MEOMURU, 'The Adult I Dreamed Of', No. 1 on Melon Top 100",
+      "primary": {
+        "label": "The Korea Times, 'AI music tops local chart: What you need to know', 26 Nov 2026 (KST)",
+        "url": "https://www.koreatimes.co.kr/entertainment/music/20261126/ai-music-tops-local-chart-what-you-need-to-know",
+        "kind": "report",
+        "quote": "A song written with assistance from artificial intelligence (AI) has topped Korea's most closely watched music chart for the first time, raising questions about how the country's music industry should handle songs created with AI."
+      },
+      "more_sources": [
+        {
+          "label": "The Korea Times, same article",
+          "url": "https://www.koreatimes.co.kr/entertainment/music/20261126/ai-music-tops-local-chart-what-you-need-to-know",
+          "quote": "Despite its chart success, Glorywave receives no songwriting or arrangement royalties through copyright but continues to earn revenue from music distribution."
+        }
+      ],
+      "money_or_mechanism": "The duo earns from distribution, but because the song is not registered with KOMCA they collect no songwriting or arrangement royalties for a number one.",
+      "why_it_matters": "Two working songwriters with no fandom behind them reached the top of the country's biggest chart by writing the words themselves and letting AI play the band.",
+      "funny": "The song is about the gap between what you dreamed of as a child and adult reality, and its writers topped the chart without being paid as its writers.",
+      "media": {
+        "kind": "photo",
+        "url": "https://newsimg.koreatimes.co.kr/2026/11/25/6c062a31-2cec-44c3-b220-6a52f0597c5f.jpg"
+      },
+      "risks": "It first reached No. 1 on 13 November, before the window; the in-window fact is that it still held No. 1 on 25 November. Single source; the royalty gap is the unhappy half of the story.",
+      "helps": {
+        "who": "songwriters and independent producers",
+        "how": "more successful"
+      },
+      "found": {
+        "place": "news",
+        "url": "https://www.koreatimes.co.kr/entertainment/music/20261126/ai-music-tops-local-chart-what-you-need-to-know"
+      },
+      "second": null
+    },
+    {
+      "key": "synth-makers-open-source",
+      "sector": "music",
+      "headline": "Music gear makers are opening up their instruments after musicians started rewriting them with AI",
+      "what_happened": "The Verge reported on 25 November 2026 that musicians using AI coding tools to write custom firmware have pushed gear makers to open-source their devices. inMusic, owner of Akai and Moog, has launched an SDK and open-source devices, Behringer announced a run of open-source machines including a $150 MPC One clone, and the $70 M-Vave FM-1 now has well over a dozen custom firmwares.",
+      "date": "2026-11-25",
+      "named_thing": "inMusic SDK and the M-Vave FM-1",
+      "primary": {
+        "label": "The Verge, 'Has vibe coding made open source the new normal for synths?', 25 Nov 2026",
+        "url": "https://www.theverge.com/ai-artificial-intelligence/1040081/vibe-coding-open-source-music-firmware",
+        "kind": "original",
+        "quote": "There are well over a dozen different custom firmwares for the FM-1."
+      },
+      "more_sources": [
+        {
+          "label": "The Verge, same article",
+          "url": "https://www.theverge.com/ai-artificial-intelligence/1040081/vibe-coding-open-source-music-firmware",
+          "quote": "Polyend has also gotten on board, open-sourcing its line of Tracker grooveboxes."
+        }
+      ],
+      "money_or_mechanism": "Players use AI coding agents to rewrite what a cheap box does, and makers like inMusic and Behringer now sell open devices to that crowd instead of fighting it.",
+      "why_it_matters": "A musician can now turn one $70 synth into several instruments without being able to code.",
+      "funny": "An instrument company's best new feature this year is letting customers redesign the instrument.",
+      "media": {
+        "kind": "photo",
+        "url": "https://platform.theverge.com/wp-content/uploads/sites/2/2026/11/vibe_coding_synths_.jpg?quality=90&strip=all&crop=0%2C12.339110464558%2C100%2C75.321779070884&w=1200"
+      },
+      "risks": "Trend piece rather than a single dated event; Elektron, Roland and others are less keen. Check the Verge lead image is a photo of the devices, not an illustration.",
+      "helps": {
+        "who": "musicians and producers",
+        "how": "smarter"
+      },
+      "found": {
+        "place": "news",
+        "url": "https://www.theverge.com/ai-artificial-intelligence/1040081/vibe-coding-open-source-music-firmware"
+      },
+      "second": null
+    },
+    {
+      "key": "george-lynch-ai-session",
+      "sector": "music",
+      "headline": "A label hired guitarist George Lynch to play on a song AI had already played perfectly",
+      "what_happened": "Ex-Dokken guitarist George Lynch, 72, told the Frontera Rock podcast that he recently did a paid session on a complex progressive track, then learned from the engineer that the whole backing had been made by AI. MusicRadar reported the story on 27 November 2026.",
+      "date": "2026-11-27",
+      "named_thing": "George Lynch",
+      "primary": {
+        "label": "MusicRadar, 'Guitarist George Lynch on his very strange session for an AI track', 27 Nov 2026",
+        "url": "https://www.musicradar.com/artists/guitarists/guitarist-george-lynch-on-his-very-strange-session-for-an-ai-track-i-was-like-why-do-they-want-me-i-mean-im-just-a-human-being-machines-do-it-way-better",
+        "kind": "report",
+        "quote": "But he did have an interesting experience recently when he found himself unwittingly playing on an AI track."
+      },
+      "more_sources": [
+        {
+          "label": "MusicRadar, same article, quoting Lynch",
+          "url": "https://www.musicradar.com/artists/guitarists/guitarist-george-lynch-on-his-very-strange-session-for-an-ai-track-i-was-like-why-do-they-want-me-i-mean-im-just-a-human-being-machines-do-it-way-better",
+          "quote": "Yeah, this was created by AI."
+        }
+      ],
+      "money_or_mechanism": "Whoever made the AI track still paid a famous human guitarist to play on it, so the AI made the backing and a session player still got the job.",
+      "why_it_matters": "Even when the AI track is finished, a producer still wanted a real guitarist's name and hands on it.",
+      "funny": "He asked the engineer to mute the other guitars, and was told he could not, because the whole band was one AI file.",
+      "media": {
+        "kind": "photo",
+        "url": "https://cdn.mos.cms.futurecdn.net/Hpx3fqfTtN8vzF5LbLymZH-2000-80.jpg"
+      },
+      "risks": "The session date is not given; the dated event is the report on 27 November. The original interview is on the Frontera Rock podcast, which was not opened. No fee figure.",
+      "helps": {
+        "who": "session musicians",
+        "how": "more successful"
+      },
+      "found": {
+        "place": "news",
+        "url": "https://www.musicradar.com/artists/guitarists/guitarist-george-lynch-on-his-very-strange-session-for-an-ai-track-i-was-like-why-do-they-want-me-i-mean-im-just-a-human-being-machines-do-it-way-better"
+      },
+      "second": null
+    },
+    {
+      "key": "cyanite-concierge",
+      "sector": "creative_tools",
+      "headline": "Cyanite launched a chat search so music teams can find the right track in a catalogue by asking for it",
+      "what_happened": "Music-tagging company Cyanite, which has used AI to analyse and tag music catalogues for years, launched Cyanite Concierge on 26 November 2026, a conversational search for those catalogues aimed at labels, publishers and sync teams.",
+      "date": "2026-11-26",
+      "named_thing": "Cyanite Concierge",
+      "primary": {
+        "label": "Music Ally, 'Cyanite launches its conversational Concierge for music search', 26 Nov 2026",
+        "url": "https://musically.com/2026/11/26/cyanite-launches-its-conversational-concierge-for-music-search/",
+        "kind": "report",
+        "quote": "Its latest thing is Cyanite Concierge , which aims to make those catalogues even easier to search."
+      },
+      "more_sources": [
+        {
+          "label": "Music Ally, same article",
+          "url": "https://musically.com/2026/11/26/cyanite-launches-its-conversational-concierge-for-music-search/",
+          "quote": "The company has been using AI to analyse and tag catalogues of music for years."
+        }
+      ],
+      "money_or_mechanism": "Catalogue owners pitch more tracks for sync when a search can be typed in plain words rather than built from tags.",
+      "why_it_matters": "A music supervisor with a brief can find a usable track in a big catalogue faster.",
+      "funny": "The music industry built a robot to answer the question every supervisor asks: have you got something like this, but different.",
+      "media": {
+        "kind": "photo",
+        "url": "https://i0.wp.com/musically.com/wp-content/uploads/2026/11/news-stories-images-4x3-72.png?fit=2000%2C1500&ssl=1"
+      },
+      "risks": "Music Ally is partly paywalled; only the opening is visible and there are no numbers. The image is Music Ally's generic graphic, not the product; a product shot from Cyanite is still needed. Quote spacing before the comma is as the page renders around a link.",
+      "helps": {
+        "who": "music supervisors, labels and publishers",
+        "how": "smarter"
+      },
+      "found": {
+        "place": "news",
+        "url": "https://musically.com/2026/11/26/cyanite-launches-its-conversational-concierge-for-music-search/"
+      },
+      "second": null
+    },
+    {
+      "key": "eklavya-ai-led-series",
+      "sector": "film_tv",
+      "headline": "Lionsgate Play is making an eight-episode mythology epic with an AI lead actor, built with Google",
+      "what_happened": "Lionsgate Play has put its first AI-led original series, Eklavya, into production, Deadline reported on 25 November 2026. The eight-episode Indian mythology series stars the AI actor Yug R.Ai, uses Google's AI under a long-term production pact, and will stream on Tiger TV in several languages.",
+      "date": "2026-11-25",
+      "named_thing": "Eklavya, starring Yug R.Ai",
+      "primary": {
+        "label": "Deadline, 'Lionsgate Play Sets Eklavya As First AI-Led Series', 25 Nov 2026",
+        "url": "https://deadline.com/2026/11/lionsgate-play-eklavya-ai-series-tiger-tv-1237232555/",
+        "kind": "original",
+        "quote": "Production is underway, marking the start of a long-term production pact between Lionsgate Play and Google, whose AI technology is being used."
+      },
+      "more_sources": [
+        {
+          "label": "Deadline, same article, quoting Lionsgate Play CEO Rohit Jain",
+          "url": "https://deadline.com/2026/11/lionsgate-play-eklavya-ai-series-tiger-tv-1237232555/",
+          "quote": "an eight-episode first season built to grow into a multi-season franchise"
+        }
+      ],
+      "money_or_mechanism": "Lionsgate Play says AI lets it make mythology at a scale TV budgets usually cut down, with Google supplying the technology under a multi-title pact.",
+      "why_it_matters": "A streamer is greenlighting a show it says it could not otherwise have afforded to make at this scale.",
+      "funny": "The lead actor's surname has the word AI built into it, in case anyone missed the point.",
+      "media": {
+        "kind": "photo",
+        "url": "https://deadline.com/wp-content/uploads/2026/11/Eklavya-Creative.png?w=1024"
+      },
+      "risks": "Company claims only; no budget figure. AI actors draw heavy criticism (Deadline readers' comments are hostile). Release is 2027.",
+      "helps": {
+        "who": "streamers and producers in India",
+        "how": "more successful"
+      },
+      "found": {
+        "place": "news",
+        "url": "https://deadline.com/2026/11/lionsgate-play-eklavya-ai-series-tiger-tv-1237232555/"
+      },
+      "second": null
+    },
+    {
+      "key": "hazanavicius-third-hand",
+      "sector": "film_tv",
+      "headline": "Oscar winner Michel Hazanavicius will show how he used AI on his new film at Les Arcs",
+      "what_happened": "Michel Hazanavicius, whose The Artist won Best Picture, will unveil exclusive footage of his upcoming film The Third Hand in an AI case study at the Les Arcs Film Festival in December, Deadline reported on 26 November 2026. He and post house Digital District will explain the methods and tools they used.",
+      "date": "2026-11-26",
+      "named_thing": "The Third Hand, Michel Hazanavicius",
+      "primary": {
+        "label": "Deadline, 'Michel Hazanavicius To Present Exclusive Footage Of The Third Hand In AI Case Study At Les Arcs', 26 Nov 2026",
+        "url": "https://deadline.com/2026/11/michel-hazanavicius-exclusive-footage-third-hand-ai-1237234059/",
+        "kind": "original",
+        "quote": "Michel Hazanavicius will unveil exclusive footage of his upcoming film The Third Hand as part of an AI case study at the Les Arcs Film Festival in December."
+      },
+      "more_sources": [
+        {
+          "label": "Deadline, same article",
+          "url": "https://deadline.com/2026/11/michel-hazanavicius-exclusive-footage-third-hand-ai-1237234059/",
+          "quote": "The Oscar-winning director and post-production company Digital District will present the footage as they explain their method and tools for using AI on the film."
+        }
+      ],
+      "money_or_mechanism": "A French post house, Digital District, is building the AI workflow for a name director and showing it to the European industry.",
+      "why_it_matters": "An Oscar-winning director is putting his name to AI in his own work and showing peers exactly how.",
+      "funny": "The director of a silent film about a star who refused to move with the times is now showing everyone the new technology.",
+      "media": {
+        "kind": "photo",
+        "url": "https://deadline.com/wp-content/uploads/2026/11/GettyImages-2252572174.jpg?w=1024"
+      },
+      "risks": "An announcement of a future talk; no figures. The image is a Getty news photo of the director, not of the film.",
+      "helps": {
+        "who": "European filmmakers and post houses",
+        "how": "smarter"
+      },
+      "found": {
+        "place": "news",
+        "url": "https://deadline.com/2026/11/michel-hazanavicius-exclusive-footage-third-hand-ai-1237234059/"
+      },
+      "second": null
+    },
+    {
+      "key": "garyvee-avatar-channel",
+      "sector": "creators",
+      "headline": "Gary Vaynerchuk's AI avatar will answer one fan question a day, in the fan's own language, for a year",
+      "what_happened": "HeyGen and Gary Vaynerchuk launched @hey_garyvee on 24 November 2026, a channel on Instagram and TikTok where his AI avatar answers one real question from his comments each day for 12 months, in the language it was asked. He says he gets thousands of questions a week and cannot answer them all.",
+      "date": "2026-11-24",
+      "named_thing": "@hey_garyvee (HeyGen personal avatar)",
+      "primary": {
+        "label": "HeyGen press release via PR Newswire, 'Gary Vaynerchuk Partners with HeyGen to Launch AI Avatar-Powered Social Channel', 24 Nov 2026",
+        "url": "https://www.prnewswire.com/news-releases/gary-vaynerchuk-partners-with-heygen-to-launch-ai-avatar-powered-social-channel-302948881.html",
+        "kind": "original",
+        "quote": "Vaynerchuk receives thousands of questions a week across his channels, far more than any one person could ever possibly answer."
+      },
+      "second": {
+        "label": "Music Ally, 'Marketing veteran Gary Vaynerchuk launches AI personal avatar', 25 Nov 2026",
+        "url": "https://musically.com/2026/11/25/marketing-veteran-gary-vaynerchuk-launches-ai-personal-avatar/",
+        "quote": "answering one question from his global community every day for the next 12 months"
+      },
+      "money_or_mechanism": "HeyGen's avatar copies his face, voice and delivery across 177-plus languages, so one creator can answer fans one by one at a scale he could never film himself.",
+      "why_it_matters": "A creator with millions of followers can now answer individual fans in their own language without recording every reply.",
+      "funny": "The channel launches with a 90s-style infomercial for a product called Gary in your pocket.",
+      "media": {
+        "kind": "photo",
+        "url": "https://mmx.prnewswire.com/media/MS1995129/HenGen-logo.jpg?id=OA3097756&p=facebook"
+      },
+      "risks": "Company press release; no audience numbers yet. The press-release image is HeyGen's logo, not the channel; a still from the @hey_garyvee infomercial is still needed. Avoid the 'Avatar 6' model-launch angle (general AI product news).",
+      "helps": {
+        "who": "creators with big audiences",
+        "how": "more successful"
+      },
+      "found": {
+        "place": "news",
+        "url": "https://musically.com/2026/11/25/marketing-veteran-gary-vaynerchuk-launches-ai-personal-avatar/"
+      },
+      "more_sources": []
+    },
+    {
+      "key": "desi-batman-25m-views",
+      "sector": "creators",
+      "headline": "A Bengaluru AI creator's Desi Batman reels hit 25 million views in two weeks and landed a brand deal",
+      "what_happened": "Sujal Jaiswar's AI-made Desi Batman series, in which Batman brushes his teeth by railway tracks and rides a buffalo to a 1999 Bollywood song, drew more than 25 million views in two weeks and took his Instagram account to about 749,000 followers. Electric bike maker E-Motorad has signed him for a collaboration, afaqs reported on 27 November 2026.",
+      "date": "2026-11-27",
+      "named_thing": "Sujal Jaiswar's Desi Batman reels",
+      "primary": {
+        "label": "afaqs, 'E-Motorad teams up with Desi Batman creator as AI reels go viral', 27 Nov 2026",
+        "url": "https://www.afaqs.com/news/social-media/e-motorad-teams-up-with-desi-batman-creator-as-ai-reels-go-viral-12843698",
+        "kind": "original",
+        "quote": "Meanwhile, Jaiswar has gained more than 25 million views on the videos within two weeks. His account has since grown to around 749,000 followers."
+      },
+      "more_sources": [
+        {
+          "label": "afaqs, same article",
+          "url": "https://www.afaqs.com/news/social-media/e-motorad-teams-up-with-desi-batman-creator-as-ai-reels-go-viral-12843698",
+          "quote": "E-Motorad has tapped into the viral series created by Bengaluru-based Sujal Jaiswar, whose Desi Batman reels have drawn millions of views."
+        }
+      ],
+      "money_or_mechanism": "One creator with AI video tools built a hit series, and a brand paid to join a trend he already owned rather than start its own.",
+      "why_it_matters": "A single creator turned AI video into an audience of three quarters of a million and a paid brand deal in a fortnight.",
+      "funny": "Batman's new villain is the queue at a village tea stall.",
+      "media": {
+        "kind": "photo",
+        "url": "https://img-cdn.publive.online/fit-in/1200x675/afaqs/media/media_files/2026/11/26/desi-spiderman-2026-11-26-19-17-14.png"
+      },
+      "risks": "Single source. Deal value not disclosed. Batman is a DC Comics character, so rights are a live question for the brand deal. The afaqs image file is named desi-spiderman; check it shows the Batman reels.",
+      "helps": {
+        "who": "independent video creators",
+        "how": "more successful"
+      },
+      "found": {
+        "place": "news",
+        "url": "https://www.afaqs.com/news/social-media/e-motorad-teams-up-with-desi-batman-creator-as-ai-reels-go-viral-12843698"
+      },
+      "second": null
+    },
+    {
+      "key": "canva-mcp-500k",
+      "sector": "creative_tools",
+      "headline": "Nearly 500,000 people signed up to Canva through AI assistants in about a month",
+      "what_happened": "Canva made its MCP server generally available on 24 November 2026, letting AI assistants such as ChatGPT, Claude and Gemini make and edit Canva designs, images and video. Canva says nearly 500,000 people signed up through MCP since October, usage grew 93% in a month, and the yearly revenue it expects from MCP has more than tripled since September.",
+      "date": "2026-11-24",
+      "named_thing": "Canva MCP server",
+      "primary": {
+        "label": "The Next Web, 'Canva opens its design tools to AI agents and outside developers', 24 Nov 2026",
+        "url": "https://thenextweb.com/news/canva-mcp-ai-agents-developers",
+        "kind": "report",
+        "quote": "Moreover, Canva says nearly 500,000 people have signed up through MCP since October, and that usage grew 93% in a month."
+      },
+      "more_sources": [
+        {
+          "label": "The Next Web, same article",
+          "url": "https://thenextweb.com/news/canva-mcp-ai-agents-developers",
+          "quote": "The yearly revenue it expects from MCP has more than tripled since September."
+        }
+      ],
+      "money_or_mechanism": "People who arrive through an AI assistant are 2.5 times more likely to use Canva's AI tools, and four in ten are new or lapsed users, so the chatbot has become a sales channel.",
+      "why_it_matters": "A design company found hundreds of thousands of new users by letting other companies' chatbots do the clicking.",
+      "funny": "Canva says agents typed 72% of the commands in its command-line tool in October, so its fastest-growing users are not people.",
+      "media": {
+        "kind": "photo",
+        "url": "https://media.thenextweb.com/2026/11/canva-mcp-any-assistant-graphic.jpg"
+      },
+      "risks": "All numbers are Canva's own; the Canva newsroom page refused this reader (403), so the figures were checked only on TNW. Image is a product graphic.",
+      "helps": {
+        "who": "Canva and designers who work through AI assistants",
+        "how": "more successful"
+      },
+      "found": {
+        "place": "news",
+        "url": "https://thenextweb.com/news/canva-mcp-ai-agents-developers"
+      },
+      "second": null
+    },
+    {
+      "key": "epic-fortnite-ai-port",
+      "sector": "games",
+      "headline": "Epic used AI to port 20,000 Fortnite Blueprints in a job it expected to take years",
+      "what_happened": "Epic Games said on 24 November 2026 that Unreal Engine 6 will drop Blueprints, because AI can move old projects across. It has already used AI to convert more than 20,000 Fortnite Battle Royale Blueprints into a working prototype of about 3 million lines of Verse code, and says it built much of Unreal Engine 5.9 with AI agents.",
+      "date": "2026-11-24",
+      "named_thing": "Fortnite's Blueprints-to-Verse port for Unreal Engine 6",
+      "primary": {
+        "label": "PocketGamer.biz, 'Epic Games to drop Blueprints from Unreal Engine 6 as AI reshapes migration plans', 24 Nov 2026",
+        "url": "https://www.pocketgamer.biz/epic-games-to-drop-blueprints-from-unreal-engine-6-as-ai-reshapes-migration-plans/",
+        "kind": "report",
+        "quote": "This project was expected to take years, but we now have a working prototype of Fortnite that is about 3 million lines of Verse code after porting more than 20,000 Blueprints"
+      },
+      "more_sources": [
+        {
+          "label": "PocketGamer.biz, same article, quoting Epic's Wassmer",
+          "url": "https://www.pocketgamer.biz/epic-games-to-drop-blueprints-from-unreal-engine-6-as-ai-reshapes-migration-plans/",
+          "quote": "We built much of UE 5.9 with AI agents, including most of the web platform work"
+        }
+      ],
+      "money_or_mechanism": "If AI can do the conversion, studios on Unreal can move to the new engine without paying for years of rewriting.",
+      "why_it_matters": "Game studios facing an engine change may be spared a rewrite that once cost years of staff time.",
+      "funny": "Epic is retiring the visual scripting tool it built so people would not have to write code, because AI now writes the code.",
+      "media": {
+        "kind": "photo",
+        "url": "https://media.pocketgamer.biz/images/142343/90349/unrealengine6_l1200.jpg"
+      },
+      "risks": "Epic's own claim; the port is a prototype still being tested for performance. Primary should ideally be Epic's own Unreal Engine post, not opened here. Developers who love Blueprints may read this as bad news.",
+      "helps": {
+        "who": "game developers on Unreal Engine",
+        "how": "smarter"
+      },
+      "found": {
+        "place": "news",
+        "url": "https://www.pocketgamer.biz/epic-games-to-drop-blueprints-from-unreal-engine-6-as-ai-reshapes-migration-plans/"
+      },
+      "second": null
+    },
+    {
+      "key": "ludo-tileset-generator",
+      "sector": "games",
+      "headline": "A solo game developer can now describe a world and paint a map with it minutes later",
+      "what_happened": "Ludo.ai launched Tileset Generator on 26 November 2026, which makes sets of 2D map tiles, such as grass, sand, roads and rivers, from a text description or a reference image. A full 16-tile set costs one credit, and it exports straight to engines like Godot 4.",
+      "date": "2026-11-26",
+      "named_thing": "Ludo.ai Tileset Generator",
+      "primary": {
+        "label": "PocketGamer.biz, 'Ludo.ai launches AI-powered Tileset Generator for 2D game development', 26 Nov 2026",
+        "url": "https://www.pocketgamer.biz/ludoai-launches-ai-powered-tileset-generator-for-2d-game-development/",
+        "kind": "report",
+        "quote": "Now a solo developer can describe a world and be painting a map with it a few minutes later."
+      },
+      "more_sources": [
+        {
+          "label": "PocketGamer.biz, same article",
+          "url": "https://www.pocketgamer.biz/ludoai-launches-ai-powered-tileset-generator-for-2d-game-development/",
+          "quote": "Generating an individual tile costs 0.5 credits, with a full tileset costing one credit."
+        }
+      ],
+      "money_or_mechanism": "Tilesets are among the most tedious art a small team draws by hand, and the tool prices a full set at one credit.",
+      "why_it_matters": "Small game teams can skip days of drawing edge and corner tiles.",
+      "funny": "Somewhere an indie artist has just been freed from drawing the 16th corner of a patch of grass.",
+      "media": {
+        "kind": "photo",
+        "url": "https://media.pocketgamer.biz/images/142383/90365/ludoai_l1200.jpg"
+      },
+      "risks": "Product launch with company quotes only; no user numbers. Primary should ideally be Ludo.ai's own announcement, not opened here.",
+      "helps": {
+        "who": "indie and solo game developers",
+        "how": "smarter"
+      },
+      "found": {
+        "place": "news",
+        "url": "https://www.pocketgamer.biz/ludoai-launches-ai-powered-tileset-generator-for-2d-game-development/"
+      },
+      "second": null
+    },
+    {
+      "key": "skins-game-live-odds",
+      "sector": "sports",
+      "headline": "Prime Video's AI shows Skins Game viewers each golfer's live chance of winning the money",
+      "what_happened": "For The Skins Game on 27 November 2026, Prime Video and AWS rebuilt a win-probability engine for the skins format, so viewers see each player's chance of winning the hole, of a carry-over, and of the match, updating after every shot. Brooks Koepka, Justin Thomas, Wyndham Clark and Jackson Koivun play for a $4 million purse, free to watch with no Prime membership.",
+      "date": "2026-11-23",
+      "named_thing": "AWS win probabilities for The Skins Game on Prime Video",
+      "primary": {
+        "label": "Sports Video Group, 'AWS AI To Power Real-Time Win Probabilities During The Skins Game on Prime Video', 23 Nov 2026",
+        "url": "https://www.sportsvideo.org/2026/11/23/aws-ai-to-power-real-time-win-probabilities-during-the-skins-game-on-prime-video/",
+        "kind": "report",
+        "quote": "For example, instead of simply showing that a player is 147 yards from the pin, viewers will see that player has a 54% chance of winning the skin with $200,000 at stake."
+      },
+      "more_sources": [
+        {
+          "label": "Sports Video Group, same article",
+          "url": "https://www.sportsvideo.org/2026/11/23/aws-ai-to-power-real-time-win-probabilities-during-the-skins-game-on-prime-video/",
+          "quote": "Coverage will tee off at 9 a.m. ET Nov. 27, with no subscription or Prime membership required."
+        }
+      ],
+      "money_or_mechanism": "The model runs on the PGA Tour's own shot data and drives drone AR overlays, so the broadcaster sells drama on every shot of a made-for-TV event.",
+      "why_it_matters": "A broadcaster is using AI to make every golf shot read as money at stake, which keeps viewers on a free stream.",
+      "funny": "Golf finally has a graphic that tells you how nervous to be.",
+      "media": {
+        "kind": "photo",
+        "url": "https://www.sportsvideo.org/wp-content/uploads/2026/11/SkinsSocial-16x9-PGA-951x535.jpg"
+      },
+      "risks": "Announcement before the event; 54% is an example from the piece, not a result. Same broadcaster as the Progressive Actions story below. Primary ideally Prime Video or AWS's own release, not opened.",
+      "helps": {
+        "who": "golf broadcasters and fans",
+        "how": "happier"
+      },
+      "found": {
+        "place": "news",
+        "url": "https://www.sportsvideo.org/2026/11/23/aws-ai-to-power-real-time-win-probabilities-during-the-skins-game-on-prime-video/"
+      },
+      "second": null
+    },
+    {
+      "key": "prime-progressive-actions",
+      "sector": "sports",
+      "headline": "Prime Video's AI now picks out the passes that move a Champions League team up the pitch",
+      "what_happened": "Prime Video introduced Progressive Actions on 23 November 2026 for its UEFA Champions League coverage in the UK, Germany, Italy and Ireland. Built by its producers, engineers, AI specialists and analysts, it uses AI models to flag the passes and ball carries that move a team forward, and the players who make them.",
+      "date": "2026-11-23",
+      "named_thing": "Prime Video Progressive Actions",
+      "primary": {
+        "label": "SVG Europe, 'Prime Video launches new feature for Champions League coverage', 23 Nov 2026",
+        "url": "https://www.svgeurope.org/blog/top-stories/prime-video-launches-new-feature-for-champions-league-coverage/",
+        "kind": "report",
+        "quote": "The feature uses proprietary AI-powered models to identify a Progressive Action based on how far the ball travels"
+      },
+      "more_sources": [
+        {
+          "label": "Sports Video Group, Skins Game article (mentions the launch)",
+          "url": "https://www.sportsvideo.org/2026/11/23/aws-ai-to-power-real-time-win-probabilities-during-the-skins-game-on-prime-video/",
+          "quote": "And just this week Prime Video introduced Progressive Actions , a new feature for its UEFA Champions League coverage that highlights the passes and ball carries moving a team up the pitch and the players responsible for them."
+        }
+      ],
+      "money_or_mechanism": "The distance a pass must travel to count shortens near the opposition goal, and the feature runs on Prime Vision, the feed Prime Video uses to test what keeps viewers watching.",
+      "why_it_matters": "Football viewers get credit drawn for the unglamorous pass that made the goal possible.",
+      "funny": "The midfielder who never scores finally has a graphic of his own.",
+      "media": {
+        "kind": "photo",
+        "url": "https://www.svgeurope.org/wp-content/blogs.dir/17/files/2026/11/Prime_Video_Progressive_Actions_pass_715x429.jpg"
+      },
+      "risks": "SVG Europe page read through WebFetch, which returned quotes in excerpts of up to 125 characters, so the quote is a verbatim fragment. No viewing numbers. Second source is SVG's sister site, not independent.",
+      "helps": {
+        "who": "football broadcasters, fans and midfielders",
+        "how": "happier"
+      },
+      "found": {
+        "place": "news",
+        "url": "https://www.svgeurope.org/blog/top-stories/prime-video-launches-new-feature-for-champions-league-coverage/"
+      },
+      "second": null
+    },
+    {
+      "key": "vg-ai-200-stories",
+      "sector": "media",
+      "headline": "Norway's biggest paper uses AI on about 200 stories a day, and its sister paper has never published a critical AI mistake",
+      "what_happened": "In a piece published on 27 November 2026, Christoph Trattner of the University of Bergen reported that VG asks an AI model for a headline, search terms and other details for each of its roughly 200 new articles a day, with a second model checking the first. At Bergens Tidende, AI writes short versions of reporters' stories; the development editor says about one in ten needs a fix, almost never for hallucinations, and the paper has never published a critical mistake this way.",
+      "date": "2026-11-27",
+      "named_thing": "VG and Bergens Tidende (Schibsted Media)",
+      "primary": {
+        "label": "Fortune, 'I have a front-row seat to Norway's cutting-edge AI newsroom experiment', by Christoph Trattner, 27 Nov 2026",
+        "url": "https://fortune.com/2026/11/27/checking-ai-work-human-in-the-loop-newsrooms",
+        "kind": "original",
+        "quote": "Every day, Norway’s largest newspaper, VG, asks an AI model to suggest a headline, search terms and other details for each of its roughly 200 new articles."
+      },
+      "more_sources": [
+        {
+          "label": "Fortune, same article",
+          "url": "https://fortune.com/2026/11/27/checking-ai-work-human-in-the-loop-newsrooms",
+          "quote": "As far as BT knows, it has never published a critical mistake this way."
+        }
+      ],
+      "money_or_mechanism": "The check is cheap because the reporter who wrote the story checks the AI summary of it, in seconds to a couple of minutes.",
+      "why_it_matters": "A newsroom shows AI saving reporters time without letting errors into print, because the person checking already knows the story.",
+      "funny": "The first thing to check the AI's work is another AI, which turned down about one in six of its attempts in October.",
+      "media": {
+        "kind": "photo",
+        "url": "https://fortune.com/img-assets/wp-content/uploads/2026/11/christoph-trattner.jpg?resize=1200,600"
+      },
+      "risks": "Opinion piece by a researcher whose centre is part-funded by Schibsted and Bergens Tidende (he says so). The image is of the author, not the newsroom; a VG or Bergens Tidende newsroom photo is still needed. Figures are estimates, not measurements.",
+      "helps": {
+        "who": "journalists and editors",
+        "how": "smarter"
+      },
+      "found": {
+        "place": "news",
+        "url": "https://fortune.com/2026/11/27/checking-ai-work-human-in-the-loop-newsrooms"
+      },
+      "second": null
+    }
+  ],
+  "looked_at": [
+    {
+      "title": "Discover BOT VFX's hybrid AI VFX pipeline for Young Washington (300 shots in 17 weeks)",
+      "url": "https://www.cgchannel.com/2026/11/discover-bot-vfxs-hybrid-ai-vfx-pipeline-for-young-washington/",
+      "place": "news",
+      "date": "2026-11-24",
+      "why_dropped": "BOT VFX's own breakdown is dated 26 Oct 2026, so the event is outside the window"
+    },
+    {
+      "title": "Musixmatch adds more tools to its Pro for Artists platform",
+      "url": "https://musically.com/2026/11/26/musixmatch-adds-more-tools-to-its-pro-for-artists-platform/",
+      "place": "news",
+      "date": "2026-11-26",
+      "why_dropped": "paywalled; the AI lyric-licensing part could not be seen on the page"
+    },
+    {
+      "title": "ElevenLabs' next funding round could see a UMG-sized valuation",
+      "url": "https://musically.com/2026/11/26/elevenlabs-next-funding-round-could-see-a-umg-sized-valuation/",
+      "place": "news",
+      "date": "2026-11-26",
+      "why_dropped": "paywalled and an AI company's fundraising, not people in the industries earning more"
+    },
+    {
+      "title": "Maxon Plus brings AI 3D model generation to Cinema 4D and ZBrush",
+      "url": "https://www.unite.ai/maxon-plus-ai-3d-creation-cinema-4d-zbrush",
+      "place": "news",
+      "date": "2026-11-23",
+      "why_dropped": "only source is an AI-written aggregator; Maxon's own announcement not found"
+    },
+    {
+      "title": "From $50 million in content revenue to international AI film presales, Reverse Clock expands",
+      "url": "https://www.globenewswire.com/news-release/2026/11/27/3411094/0/en/from-50-million-in-content-revenue-to-international-ai-film-presales-reverse-clock-expands-its-global-entertainment-business.html",
+      "place": "news",
+      "date": "2026-11-27",
+      "why_dropped": "page returned 403; could not check"
+    },
+    {
+      "title": "The Bay Golf Club and Game Your Game partnership bringing AI performance technology to fans",
+      "url": "https://www.globenewswire.com/news-release/2026/11/23/3408435/0/en/the-bay-golf-club-and-game-your-game-announce-partnership-bringing-ai-powered-performance-technology-to-fans.html",
+      "place": "news",
+      "date": "2026-11-23",
+      "why_dropped": "page returned 403; could not check"
+    },
+    {
+      "title": "Polish voice actor for Geralt returns for The Witcher 3 with AI",
+      "url": "https://www.gamedeveloper.com/production/polish-voice-actor-for-geralt-returns-for-the-witcher-3-with-ai",
+      "place": "news",
+      "date": "2026-11-13",
+      "why_dropped": "outside the window"
+    },
+    {
+      "title": "How the BBC is using AI to transform live sport, and why it is licensing the tech to rivals",
+      "url": "https://www.sportspro.com/broadcast-ott/bbc-sport-ai-signals-wimbledon-broadcast/",
+      "place": "news",
+      "date": "2026-11-13",
+      "why_dropped": "outside the window and close to the BBC Wimbledon story already on a board"
+    },
+    {
+      "title": "Instagram Content Protection launched, with AI spoken-word matching test",
+      "url": "https://www.cined.com/instagram-content-protection-launched-automatic-repost-detection-credit-links-and-ai-spoken-word-matching-test/",
+      "place": "news",
+      "date": "2026-11-19",
+      "why_dropped": "outside the window and close to the excluded TikTok Likeness Detection story"
+    },
+    {
+      "title": "LAFC and AccelerAI partner to co-develop AI tools for professional sports",
+      "url": "https://www.prnewswire.com/news-releases/lafc-and-accelerai-partner-to-pioneer-co-development-ai-tools-to-drive-enterprise-business-value-in-professional-sports-302942903.html",
+      "place": "news",
+      "date": "2026-11-17",
+      "why_dropped": "outside the window"
+    },
+    {
+      "title": "Magnific passes $300M ARR and may raise outside money next year",
+      "url": "https://thenextweb.com/news/magnific-300m-arr-cuenca-outside-funding-chinese-models",
+      "place": "news",
+      "date": "2026-11-19",
+      "why_dropped": "outside the window"
+    },
+    {
+      "title": "AI is helping this Hollywood veteran make videos that would never have existed before (Ari Kuschnir)",
+      "url": "https://www.businessinsider.com/ai-ari-kuschnir-make-200-000-videos-for-1-000-2026-11",
+      "place": "news",
+      "date": "2026-11-19",
+      "why_dropped": "outside the window"
+    },
+    {
+      "title": "UK actors gain rights and pay for AI digital replicas in new deal",
+      "url": "https://www.theguardian.com/technology/2026/nov/17/actors-uk-rights-digital-replicas-ai-protections",
+      "place": "news",
+      "date": "2026-11-17",
+      "why_dropped": "outside the window"
+    },
+    {
+      "title": "Sonilo inks licensing deal with Symphonic to train on opted-in indie recordings",
+      "url": "https://www.musicbusinessworldwide.com/11m-backed-ai-startup-sonilo-founded-by-tiktok-veterans-inks-licensing-deal-with-symphonic-to-train-its-model-on-opted-in-indie-recordings/",
+      "place": "news",
+      "date": "2026-11-18",
+      "why_dropped": "outside the window"
+    },
+    {
+      "title": "Autodesk releases Maya 2027.3 with new agentic AI features",
+      "url": "https://www.cgchannel.com/2026/11/autodesk-releases-maya-2027-3-with-new-agentic-ai-features/",
+      "place": "news",
+      "date": "2026-11-19",
+      "why_dropped": "outside the window; tool release only"
+    },
+    {
+      "title": "Gallium Studios taps Artificial Agency for Will Wright's MyMems",
+      "url": "https://www.unite.ai/gallium-studios-taps-artificial-agency-for-will-wrights-mymems",
+      "place": "news",
+      "date": "2026-11-18",
+      "why_dropped": "outside the window; aggregator source"
+    },
+    {
+      "title": "Snapchat now lets developers build AR Lenses with AI coding assistants",
+      "url": "https://techcrunch.com/2026/11/18/snapchat-now-lets-developers-build-ar-lenses-with-ai-coding-assistants-like-claude-code-and-cursor",
+      "place": "news",
+      "date": "2026-11-18",
+      "why_dropped": "outside the window"
+    },
+    {
+      "title": "How OpenAI intends to lead Chip Ganassi Racing into IndyCar's future",
+      "url": "https://www.forbes.com/sites/brucemartin/2026/11/18/how-openai-intends-to-lead-chip-ganassi-racing-into-indycars-future",
+      "place": "news",
+      "date": "2026-11-18",
+      "why_dropped": "outside the window"
+    },
+    {
+      "title": "Epic Games held a gen AI game jam, but its most popular game used no AI",
+      "url": "https://www.gamesradar.com/games/epic-games-held-a-gen-ai-game-jam-but-its-most-popular-game-used-no-ai-at-all/",
+      "place": "news",
+      "date": "2026-11-17",
+      "why_dropped": "outside the window"
+    },
+    {
+      "title": "Mnet, Bandai Namco to launch survival show for virtual K-pop boy band",
+      "url": "https://www.koreajoongangdaily.com/entertainment/mnet-bandai-namco-to-launch-survival-show-for-virtual-kpop-boy-band/12994185",
+      "place": "news",
+      "date": "2026-11-27",
+      "why_dropped": "virtual characters, no AI named on the page"
+    },
+    {
+      "title": "Macy Gray is premiering her new album inside a micro-drama",
+      "url": "https://musically.com/2026/11/24/macy-gray-is-premiering-her-new-album-inside-a-micro-drama/",
+      "place": "news",
+      "date": "2026-11-24",
+      "why_dropped": "no AI in the story"
+    },
+    {
+      "title": "Audible turns to AI to help users discover audiobooks",
+      "url": "https://techcrunch.com/2026/11/16/audible-turns-to-ai-to-help-users-discover-audiobooks/",
+      "place": "news",
+      "date": "2026-11-16",
+      "why_dropped": "outside the window; listener feature, not makers earning more"
+    },
+    {
+      "title": "For creators, higher incomes mean more pressure to use AI",
+      "url": "https://www.businessinsider.com/higher-earning-creators-face-more-ai-pressure-2026-11",
+      "place": "news",
+      "date": "2026-11-13",
+      "why_dropped": "outside the window"
+    },
+    {
+      "title": "Envato State of AI in Creative Work report (LinkedIn post)",
+      "url": "https://www.linkedin.com/posts/envato_some-compelling-insights-in-contras-creative-activity-7514148943975514113-EJ49",
+      "place": "linkedin",
+      "date": "2026-11-24",
+      "why_dropped": "survey; Envato's own report page could not be found to check"
+    },
+    {
+      "title": "A solo developer's first game made $1.3 million on Steam in a week despite gen AI use (Slotbound)",
+      "url": "https://www.gamesradar.com/games/roguelike/a-solo-developers-first-game-made-usd1-3-million-on-steam-in-a-week-despite-gen-ai-use/",
+      "place": "news",
+      "date": "2026-11-19",
+      "why_dropped": "already on a previous good-news board (exclude.txt)"
+    }
+  ]
+}

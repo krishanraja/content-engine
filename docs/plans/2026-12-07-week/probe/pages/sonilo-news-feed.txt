@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Sonilo — What&apos;s new</title>
+    <link>https://sonilo.com/news</link>
+    <description>Every update to Sonilo, all in one place. New models, features, workflows, and improvements.</description>
+    <language>en</language>
+    <atom:link href="https://sonilo.com/news/feed.xml" rel="self" type="application/rss+xml"/>
+    <lastBuildDate>Thu, 15 Oct 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Turn your lyrics into a song</title>
+      <link>https://sonilo.com/news/turn-your-lyrics-into-a-song</link>
+      <guid isPermaLink="true">https://sonilo.com/news/turn-your-lyrics-into-a-song</guid>
+      <pubDate>Thu, 15 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Text to Music now sings. Write your lyrics, describe the genre, voice and language in Style, and get back a finished song. No lyrics yet? Press Write lyrics and Sonilo writes them for you.</description>
+    </item>
+    <item>
+      <title>Turn your photos into a video with music</title>
+      <link>https://sonilo.com/news/turn-your-photos-into-a-video-with-music</link>
+      <guid isPermaLink="true">https://sonilo.com/news/turn-your-photos-into-a-video-with-music</guid>
+      <pubDate>Fri, 09 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Choose up to 100 photos in Photo to Music and Sonilo makes them into a video with music written for them. Pick an occasion or describe the music you want.</description>
+    </item>
+    <item>
+      <title>Organize your library into folders</title>
+      <link>https://sonilo.com/news/organize-your-library-into-folders</link>
+      <guid isPermaLink="true">https://sonilo.com/news/organize-your-library-into-folders</guid>
+      <pubDate>Tue, 06 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Create folders in your Library and file music, sound effects, dubs and exported videos into them. Sounds you save from Discover can go in a folder too.</description>
+    </item>
+    <item>
+      <title>Put a Text to Music track on your video</title>
+      <link>https://sonilo.com/news/put-a-text-to-music-track-on-your-video</link>
+      <guid isPermaLink="true">https://sonilo.com/news/put-a-text-to-music-track-on-your-video</guid>
+      <pubDate>Tue, 06 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Every finished Text to Music variation now has an &quot;Add to video&quot; button. The track goes onto the music lane of a new video project, ready for the video you add.</description>
+    </item>
+    <item>
+      <title>Restore deleted tracks from Trash</title>
+      <link>https://sonilo.com/news/restore-deleted-tracks-from-trash</link>
+      <guid isPermaLink="true">https://sonilo.com/news/restore-deleted-tracks-from-trash</guid>
+      <pubDate>Tue, 06 Oct 2026 00:00:00 GMT</pubDate>
+      <description>What you delete from your Library now goes to Trash first. Restore it within 30 days, or delete it for good.</description>
+    </item>
+    <item>
+      <title>Get listening notes on your music</title>
+      <link>https://sonilo.com/news/get-listening-notes-on-your-music</link>
+      <guid isPermaLink="true">https://sonilo.com/news/get-listening-notes-on-your-music</guid>
+      <pubDate>Tue, 06 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Press Analyze under a Text to Music result and Sonilo listens to both variations. It writes how they differ, what plays, the rhythm and the mood, section by section, as notes you can copy.</description>
+    </item>
+    <item>
+      <title>Fade music and sound effects in and out</title>
+      <link>https://sonilo.com/news/fade-music-and-sound-effects-in-and-out</link>
+      <guid isPermaLink="true">https://sonilo.com/news/fade-music-and-sound-effects-in-and-out</guid>
+      <pubDate>Mon, 05 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Press Fade in/out on a music or sound effects lane in the Studio, then drag the handles to set how the sound starts and ends. The fades carry into your audio downloads and MP4 export.</description>
+    </item>
+    <item>
+      <title>Join several videos into one</title>
+      <link>https://sonilo.com/news/join-several-videos-into-one</link>
+      <guid isPermaLink="true">https://sonilo.com/news/join-several-videos-into-one</guid>
+      <pubDate>Sun, 04 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Pick up to 10 clips on Video to Music or Video to Sound Effects, drag them into order, and Sonilo joins them into one video before it adds sound.</description>
+    </item>
+    <item>
+      <title>Add music or sound effects to up to 10 videos at once</title>
+      <link>https://sonilo.com/news/add-music-or-sound-effects-to-up-to-10-videos-at-once</link>
+      <guid isPermaLink="true">https://sonilo.com/news/add-music-or-sound-effects-to-up-to-10-videos-at-once</guid>
+      <pubDate>Sat, 03 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Choose Batch create, add up to 10 videos, and each one gets its own music or sound effects. Analyze every video in one click, and change one video&apos;s settings or give them to all.</description>
+    </item>
+    <item>
+      <title>Remove background noise from video and audio</title>
+      <link>https://sonilo.com/news/remove-background-noise-from-video-and-audio</link>
+      <guid isPermaLink="true">https://sonilo.com/news/remove-background-noise-from-video-and-audio</guid>
+      <pubDate>Sat, 03 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Upload a video or an audio file and Sonilo takes out traffic, wind, hum and chatter while the voice stays. Set Strength to keep some of the room, then download an MP4 or MP3.</description>
+    </item>
+    <item>
+      <title>Add sound to a video by chatting with an agent</title>
+      <link>https://sonilo.com/news/add-sound-to-a-video-by-chatting-with-an-agent</link>
+      <guid isPermaLink="true">https://sonilo.com/news/add-sound-to-a-video-by-chatting-with-an-agent</guid>
+      <pubDate>Fri, 02 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Upload a video and say what you want. The agent plans the music, sound effects and dubbing, shows you the cost, and builds everything on a timeline once you approve.</description>
+    </item>
+    <item>
+      <title>Add music only where your video needs it</title>
+      <link>https://sonilo.com/news/add-music-only-where-your-video-needs-it</link>
+      <guid isPermaLink="true">https://sonilo.com/news/add-music-only-where-your-video-needs-it</guid>
+      <pubDate>Wed, 30 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Choose Sections and Sonilo analyzes your video to pick where music and sound effects belong. Adjust the sections on the timeline, then download each one or the full track.</description>
+    </item>
+    <item>
+      <title>Translate your video into other languages</title>
+      <link>https://sonilo.com/news/translate-your-video-into-other-languages</link>
+      <guid isPermaLink="true">https://sonilo.com/news/translate-your-video-into-other-languages</guid>
+      <pubDate>Tue, 29 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Upload a video and get it back dubbed in up to 23 languages, in the original speaker&apos;s voice. Proofread the translation before it is dubbed, add lip sync, and export subtitles.</description>
+    </item>
+    <item>
+      <title>Upload videos up to 30 minutes</title>
+      <link>https://sonilo.com/news/upload-videos-up-to-30-minutes</link>
+      <guid isPermaLink="true">https://sonilo.com/news/upload-videos-up-to-30-minutes</guid>
+      <pubDate>Sat, 26 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Premium uploads now go up to 30 minutes, twice the previous limit. For videos longer than 8 minutes, the music is composed in sections that follow the picture.</description>
+    </item>
+    <item>
+      <title>Process videos up to 8 minutes with the API</title>
+      <link>https://sonilo.com/news/process-videos-up-to-8-minutes-with-the-api</link>
+      <guid isPermaLink="true">https://sonilo.com/news/process-videos-up-to-8-minutes-with-the-api</guid>
+      <pubDate>Fri, 04 Sep 2026 00:00:00 GMT</pubDate>
+      <description>Video-to-sound-effects now supports videos up to 8 minutes long via the Sonilo API. Send longer clips and full edits without splitting them first.</description>
+    </item>
+    <item>
+      <title>Split any music track into stems</title>
+      <link>https://sonilo.com/news/split-any-music-track-into-stems</link>
+      <guid isPermaLink="true">https://sonilo.com/news/split-any-music-track-into-stems</guid>
+      <pubDate>Tue, 11 Aug 2026 00:00:00 GMT</pubDate>
+      <description>Separate any track into drums, bass, and other stems. Preview each stem individually and download only what you need.</description>
+    </item>
+    <item>
+      <title>Prompt writing helper</title>
+      <link>https://sonilo.com/news/prompt-writing-helper</link>
+      <guid isPermaLink="true">https://sonilo.com/news/prompt-writing-helper</guid>
+      <pubDate>Tue, 04 Aug 2026 00:00:00 GMT</pubDate>
+      <description>Analyze your video to automatically generate a sound direction based on what&apos;s happening on screen. Use it as-is, edit it, or start generating right away.</description>
+    </item>
+    <item>
+      <title>Sonilo is now available in 10 languages</title>
+      <link>https://sonilo.com/news/sonilo-is-now-available-in-10-languages</link>
+      <guid isPermaLink="true">https://sonilo.com/news/sonilo-is-now-available-in-10-languages</guid>
+      <pubDate>Fri, 31 Jul 2026 00:00:00 GMT</pubDate>
+      <description>Use the full Sonilo interface in 10 languages, including Japanese, Korean, Spanish, and German.</description>
+    </item>
+  </channel>
+</rss>

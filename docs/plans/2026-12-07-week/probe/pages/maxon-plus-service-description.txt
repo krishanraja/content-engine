@@ -1,0 +1,180 @@
+Maxon Skip to main content
+Toggle menu
+Search Go Back Search:
+Search Maxon.net Search Maxon.net
+Search Cineversity
+Search
+Reset Search
+Search
+PRODUCTS Go Back PRODUCTS:
+MAXON ONE
+MAXON PLUS
+CINEMA 4D
+CINEMA 4D FOR IPAD
+REDSHIFT
+REDSHIFT FOR ARCHITECTS
+RED GIANT
+UNIVERSE
+AUTOGRAPH
+ZBRUSH
+ZBRUSH FOR IPAD
+CAPSULES
+MOVES
+CINEWARE
+CINEBENCH
+DOWNLOADS
+SOLUTIONS Go Back SOLUTIONS:
+AGENTIC AI FOR 3D
+3D ANIMATION
+3D MODELING
+3D MOTION DESIGN
+3D RENDERING
+ARCHITECTURAL VISUALIZATION
+CHARACTER CREATION
+COLOR GRADING
+COMPOSITING
+KINETIC TYPOGRAPHY
+MEDIA & ENTERTAINMENT
+MOTION CAPTURE
+MOTION GRAPHICS
+VIDEO EDITING
+VISUAL EFFECTS
+NEWS Go Back NEWS:
+HEADLINES
+EVENTS
+GALLERY
+LEARN Go Back LEARN:
+EDUCATIONAL LICENSING
+TRAINING PARTNERS
+CINEVERSITY
+SUPPORT
+TRY
+BUY
+Language: English Go Back Language:
+English
+Deutsch (German)
+Español (Spanish)
+Français (French)
+Italiano (Italian)
+中文 (Chinese)
+日本語 (Japanese)
+한국어 (Korean)
+PRODUCTS MAXON ONE
+MAXON PLUS
+CINEMA 4D
+CINEMA 4D FOR IPAD
+REDSHIFT
+REDSHIFT FOR ARCHITECTS
+RED GIANT
+UNIVERSE
+AUTOGRAPH
+ZBRUSH
+ZBRUSH FOR IPAD
+CAPSULES
+MOVES
+CINEWARE
+CINEBENCH
+DOWNLOADS
+SOLUTIONS AGENTIC AI FOR 3D
+3D ANIMATION
+3D MODELING
+3D MOTION DESIGN
+3D RENDERING
+ARCHITECTURAL VISUALIZATION
+CHARACTER CREATION
+COLOR GRADING
+COMPOSITING
+KINETIC TYPOGRAPHY
+MEDIA & ENTERTAINMENT
+MOTION CAPTURE
+MOTION GRAPHICS
+VIDEO EDITING
+VISUAL EFFECTS
+NEWS HEADLINES
+EVENTS
+GALLERY
+LEARN EDUCATIONAL LICENSING
+TRAINING PARTNERS
+CINEVERSITY
+SUPPORT
+TRY
+BUY
+Search
+Search
+Account
+Toggle Search
+Select Language English
+Deutsch (German)
+Español (Spanish)
+Français (French)
+Italiano (Italian)
+中文 (Chinese)
+日本語 (Japanese)
+한국어 (Korean)
+LEGAL IMPRINT
+PRIVACY
+TERMS TERMS
+REPORTING INFRINGING AND ILLEGAL CONTENT
+EULA EULA
+AI TERMS
+DPA
+SUB-PROCESSORS LIST
+TOMs
+LICENSE TRANSFER
+CERTIFICATION
+SERVICE DESCRIPTION
+LEGAL IMPRINT
+PRIVACY
+TERMS Go Back TERMS:
+EULA Go Back EULA:
+CERTIFICATION
+SERVICE DESCRIPTION
+Service Description Maxon Plus Cloud Features
+Last updated: 23rd November 2026
+Features and functionality:
+Maxon integrates AI models of third-party providers. The providers currently used are Rodin, Tripo and Google Gemini. The Third-Party AI Providers may change over time.
+The following services are offered under Maxon Plus :
+Model Generator is an AI Feature that uses generative AI to create a 3D model with materials from a text prompt, sketch or reference image. Users can preview concept images first, then choose the provider, polygon count and texture resolution. The result arrives as a native Cinema 4D object. Model Generator is available on the web and in Cinema 4D. Model Generator currently uses the following third-party AI providers: Google Gemini, Deemos (Rodin) and Holymolly (Tripo); and the following third-party cloud platform providers: Microsoft Azure
+Texture Generator is an AI Feature for look development on an existing 3D model . From a prompt or reference image it creates and applies AI generated surface textures, either generating new UVs or keeping the existing UV layout. Texture Generator is available on the web and in Cinema 4D. Texture Generator currently uses the following third-party AI providers: Microsoft Azure, Google Gemini, Deemos (Rodin) and Holymolly (Tripo); and the following third-party cloud platform providers: Microsoft Azure
+Clay Builder is an AI Feature that produces AI generated untextured, low-detail base meshes meant as a starting point for sculpting. Clay Builder is initially available on the web and in ZBrush for iPad. Clay Builder currently uses the following third-party AI providers: Microsoft Azure, Google Gemini, Deemos (Rodin) and Holymolly (Tripo); and the following third-party cloud platform providers: Microsoft Azure
+Maxon Review is a collaboration tool for web-based and in-app review & approval. A user can send work from a Maxon application to a browser-based review session, share a link with a client, director or other stakeholder, and collect feedback as comments pinned to specific points on the model. Maxon Review includes cloud storage to support workflows within this feature. It is not a general-purpose cloud or file storage. To use Maxon Review and create reviews, only a Maxon Plus subscription is required; no other Maxon product licenses are needed. However, reviewers who also have licenses for supported Maxon Software can work with Maxon Review directly in-app. Maxon Review is available on the web, in Cinema 4D, and in ZBrush. Maxon Review currently uses the following third-party cloud platform providers: Microsoft Azure
+Settings:
+All Maxon Plus services, such as Maxon Review and cloud-based AI Features, are only available if the Maxon Plus setting is turned on in the account settings. When turned off, no Maxon Plus services or features are available.
+AI Features, including cloud-based AI Features, can be turned off separately with the Global AI setting in the account settings. When turned off, AI features are not available. Maxon Plus can be used without AI Features by turning the Maxon Plus setting on and the Global AI setting off.
+In case the user is part of a team, Teams administrators can control these settings for their organization. Team members cannot override a setting chosen by their Teams administrator.
+Changes to a setting apply going forward and do not affect content already submitted.
+Availability:
+Maxon Plus is provided on a best-effort basis with no guaranteed uptime. Processing times for AI Features may vary depending on demand and the capacity of Maxon’s third-party AI providers, with no guaranteed maximum processing time.
+Interruptions:
+Maxon informs users of planned maintenance in advance where reasonably possible, e.g. via banners in the affected workflows. There are no fixed maintenance windows or minimum notice periods. Unplanned interruptions may occur, e.g. due to outages affecting our hosting services or at Third-Party AI Providers.
+Cloud Storage:
+Cloud storage is used to store content created or used in Maxon Review and other Maxon Plus workflows. It is not a general-purpose cloud or file storage service.
+All files stored in the cloud storage of Maxon Review, including versions, previews and recycled files in the trash are counting towards the storage allocation.
+When the user reached the limit of the storage allocation, no uploads of files will be possible anymore and the user will be shown an error message. The user can still access the uploaded files.
+Retention and deletion:
+Deleted files stay in the trash for 30 days. After that, files remain in soft-deletion for 14 days. During soft-deletion period files can be recovered by the Maxon Support Team. Backups are kept for 30 days on top of that. Backups are used for system recovery only and cannot be used to restore individual files on request.
+When a Maxon Plus subscription ends, the user’s reviews and library become read-only for 30 days. Users can still view and download everything during that time but can’t upload or create new reviews. Maxon notifies the users when their Maxon Plus subscription ends and again 15, 7 and 1 day(s) before deletion of the files. After the 30 days read-only period, files remain in soft-deletion for 14 days and in backups for additional 30 days.
+Maxon Plus credits:
+At launch of Maxon Plus, Maxon Plus credits are only consumed by the above described 3 main AI Features of Maxon Plus. The interface shows how many Maxon Plus credits are consumed before any action is triggered. A user confirmation prompt is then shown, although the user can choose to permanently disable this secondary confirmation. The user will be alerted in case their Maxon Plus credits are low or about to expire. If an action fails because of a system error on Maxon's side or our Third-Party AI Provider's side, the Maxon Plus credits for this operation are still consumed but will be restored to the Maxon Plus credit allocation automatically.
+Technical limits:
+The AI Features of Maxon Plus have technical limits, based on the respective Third-Party AI Provider. The user will be informed about such limits before using any of the AI functionality within Maxon Plus and before any Maxon Plus credits were consumed.
+Public Preview features:
+Maxon Review, including the cloud storage as part of Maxon Review, is currently in Public Preview phase. During Public Preview, Maxon Review does not consume any Maxon Plus credits, but users still need a Maxon Plus subscription to be eligible to test the feature. Included storage allowances in Maxon Review are subject to change during Public Preview of Maxon Review.
+Maxon will inform users about the change of Maxon Review from Public Preview to a regular feature consuming Maxon Plus credits in advance.
+Support:
+For support on Maxon Plus, users can reach Maxon’s Support Center at https://www.maxon.net/en/support-center .
+Feature changes:
+Users will be notified in the web-interface about latest changes.
+System requirements:
+The web-application of Maxon Plus supports the latest versions of Microsoft Edge, Safari and Chrome.
+Model Generator requires Maxon 2027.1 as a minimum software requirement. For full capabilities, the latest version of Maxon software required.
+To use any Maxon Plus service, an internet connection is required.
+ABOUT
+CAREERS
+TEAMS PROGRAM
+GET EMAIL UPDATES
+SOCIAL
+PARTNERS
+IMPRINT
+PRIVACY
+All Rights Reserved. © 2026 Maxon Computer GmbH is part of the Nemetschek Group.

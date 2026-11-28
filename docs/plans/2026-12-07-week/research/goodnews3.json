@@ -1,0 +1,200 @@
+{
+  "lane": "goodnews3",
+  "searched": [
+    "Listing pages opened: thestage.co.uk/news, sportspro.com/news, sportsvideo.org, svgeurope.org (home and AI category), theartnewspaper.com AI tag, dezeen.com AI tag, designboom.com AI tag, whatsonstage.com/news, playbill.com/news, creativebloq.com/news, frontofficesports.com, sportsmintmedia.com, sportcal.com/news, blackbookmotorsport.com/news, museumsassociation.org news, itsnicethat.com/news, koreatimes.co.kr/sports, artasiapacific.com/news, prnewswire.com art list, art-magazine.ai",
+    "Refused or unreachable: designweek.co.uk (403), creativereview.co.uk (403), insidersport.com (403), sportbusiness.com (403), news.artnet.com (403), iol.co.za (403), scotsman.com (403), theguardian.com, bbc.co.uk, sporttechie.com, glasgowtimes.co.uk, dailyrecord.co.uk, sportsbusinessjournal.com, reuters.com (fetch tool cannot reach them), jmof.fiu.edu and jewishmuseum.fiu.edu (not in this session's allowed network)",
+    "Discovery feeds (used only to find stories, never cited): Google News RSS and Bing News RSS queries on AI with football club, athlete, team, league, golf, tennis, cricket, rugby, Olympic, stadium, theatre, stage, musical, artist, exhibition, gallery, museum, designer, fashion, dance, orchestra, for the last seven or eight days",
+    "WebSearch queries: AI sports club November 2026 partnership fans; artist AI exhibition gallery November 2026; theatre production uses AI 2026; designer AI tool award November 2026; Footbao; Bay Golf Club GameGolf AI Smart Caddie; Harry Maguire Feedz; Dahlia Dreszer AI clone; Celtic Pluto Data Analytics; Evan Roos Stormers AI; Paralympian AI; dance company AI premiere; AI commentary multilingual league November 2026",
+    "Cut because the primary could not be opened: Celtic's three-year deal with 'AI-powered' Pluto Data Analytics for recruitment (25 Nov; Celtic's site renders nothing, Glasgow Times, Daily Record and Scotsman refused), Evan Roos on the Stormers' use of AI (IOL, 26 Nov; 403), Dahlia Dreszer's AI clone at the Jewish Museum of Florida-FIU (WSVN, 26 Nov; story page not found, museum host blocked)",
+    "Cut because outside 20 to 27 November: AiDA Global Design Award, 13 AI-designed garments made real (ceremony 12 Nov), Jeju exhibition of 117 AI works by 50 residents aged 60 to 88 (19 Nov), Sibiu show of 200 AI creations (18 Nov), Freek de Jonge's AI model of his stage work (mid October), Baby Shark AI exhibition (opened June), Theo Triantafyllidis 'Funny Weather' at Aviva Studios (opened 11 Nov), Adobe and the US SailGP team (18 Nov), Harry Maguire's Feedz app (launched May; the 26 Nov piece adds no new event)",
+    "Cut as not good news or not people in the sector doing more: Sber humanoid robot ballet and ice show, Crystal Palace AI stadium mock-up, Guggenheim director calling AI art slop, Michael Reid gallery AI series (no results on the page), Whitney artport survey (AI is a passing mention), TRUE 5G for the Bangkok marathon (a telecoms story), AI tennis robot funding (an AI company raising money), Iceland Cricket's Nvidia joke, CapCut 'The Unimagined' (AI film showcase, too close to the excluded AI film festivals; Reuters page unreachable)"
+  ],
+  "candidates": [
+    {
+      "key": "footbao-26-signed-europe",
+      "sector": "sports",
+      "headline": "An AI scouting app has put 750 overlooked young footballers in front of clubs, and 26 have signed",
+      "what_happened": "Footbao, a Swiss app built in Brazil, lets young players upload videos of themselves, which its AI scores on 24 performance indicators before analysts pass the best to scouts. It now has 170,000 registered players and more than 80 partner clubs in six countries, including Santos and Corinthians, and on 25 November 2026 said players in Switzerland, Germany and Austria can register from January 2027. Its own site counts 750 players referred to clubs and 26 signed.",
+      "date": "2026-11-25",
+      "named_thing": "Footbao, 26 signed players from 750 referred",
+      "primary": {
+        "label": "Keystone-SDA via blue News (bluewin.ch), 'Bringing overlooked talents to light', 25 Nov 2026",
+        "url": "https://bluewin.ch/en/sport/football/bringing-overlooked-talents-to-light-li.3686124",
+        "kind": "report",
+        "quote": "There are now 170,000 registered players and more than 80 partner clubs in six countries."
+      },
+      "second": {
+        "label": "Futebol Interior, 'Footbao leva inteligência artificial ao scouting e abre caminho para expansão na Europa', 25 Nov 2026",
+        "url": "https://www.futebolinterior.com.br/footbao-leva-inteligencia-artificial-ao-scouting-e-abre-caminho-para-expansao-na-europa/",
+        "quote": "o aplicativo alcançou 660 mil downloads e reúne 170 mil jogadores registrados."
+      },
+      "more_sources": [
+        {
+          "label": "blue News, same article",
+          "url": "https://bluewin.ch/en/sport/football/bringing-overlooked-talents-to-light-li.3686124",
+          "quote": "Using an app, soccer players can upload videos of themselves, which are then evaluated based on 24 performance indicators."
+        },
+        {
+          "label": "blue News, same article",
+          "url": "https://bluewin.ch/en/sport/football/bringing-overlooked-talents-to-light-li.3686124",
+          "quote": "Starting in January 2027, players from Switzerland, Germany, and Austria will also be able to register."
+        },
+        {
+          "label": "Footbao, home page (company's own figures)",
+          "url": "https://www.footbao.world/",
+          "quote": "26 signed players"
+        },
+        {
+          "label": "Footbao, home page (company's own figures)",
+          "url": "https://www.footbao.world/",
+          "quote": "750+ players referred to clubs"
+        }
+      ],
+      "money_or_mechanism": "A player films himself, the AI scores the clip, analysts check the top ones, and clubs get a shortlist of players no scout travelled to see, so talent from small towns reaches a trial for the price of a phone video.",
+      "why_it_matters": "Clubs are finding signings through an app that watches thousands of teenagers they would never have paid a scout to see.",
+      "funny": "The trial used to mean a bus to the big city; now it is a video your mum films on the local pitch.",
+      "media": {
+        "kind": "photo",
+        "url": "https://images.futebolinterior.com.br/2026/11/FOOTBAO-LAUNCH-25.webp"
+      },
+      "risks": "User, club and signing numbers are the company's own; the 26 signed and 750 referred figures are on Footbao's site, not in the news reports. Downloads (660,000) and players (170,000 or 180,000) differ slightly between sources. The AFP version of the story was only seen on Yahoo, a syndicator, so it is not cited.",
+      "helps": {
+        "who": "young footballers outside the big academies, and the clubs scouting them",
+        "how": "more successful"
+      },
+      "found": {
+        "place": "news",
+        "url": "https://bluewin.ch/en/sport/football/bringing-overlooked-talents-to-light-li.3686124"
+      }
+    },
+    {
+      "key": "bay-golf-club-ai-caddie",
+      "sector": "sports",
+      "headline": "Steph Curry's TGL golf team will let fans pick a club against an AI caddie and measure their drives against the pros",
+      "what_happened": "The Bay Golf Club, the San Francisco team in the TGL indoor golf league, signed a multi-year partnership on 23 November 2026 with Game Your Game, maker of the GameGolf AI Smart Caddie. Fans get a Smart Caddie Challenge to predict club selection using the AI's recommendations, a Know Your Game contest comparing their own club distances with verified professional data, and match-week driving-distance competitions. Game Your Game will present one of the team's regular-season matches each season, starting on Sunday 17 January.",
+      "date": "2026-11-23",
+      "named_thing": "GameGolf AI Smart Caddie, The Bay Golf Club",
+      "primary": {
+        "label": "The Bay Golf Club, 'The Bay Golf Club and Game Your Game Announce Partnership Bringing AI-Powered Performance Technology to Fans', 23 Nov 2026",
+        "url": "https://thebaygolfclub.com/articles/2026/11/the-bay-golf-club-and-game-your-game-announce-partnership-bringing-ai-powered-performance-technology-to-fans",
+        "kind": "original",
+        "quote": "The Smart Caddie Challenge, which invites fans to predict club selection using GameGolf's AI recommendations;"
+      },
+      "second": null,
+      "more_sources": [
+        {
+          "label": "The Bay Golf Club, same release, quoting club president Eric Kwait",
+          "url": "https://thebaygolfclub.com/articles/2026/11/the-bay-golf-club-and-game-your-game-announce-partnership-bringing-ai-powered-performance-technology-to-fans",
+          "quote": "we are excited for our fans to experience the real data and smart decisions the GameGolf platform offers"
+        }
+      ],
+      "money_or_mechanism": "A sponsor pays for a match and a presence in the team's fan programme, and in return the team turns its players' shot data into games fans play on their phones against the same AI that advises amateurs.",
+      "why_it_matters": "A young team in a new league has found a sponsor whose product gives its fans something to do between shots.",
+      "funny": "Fans now get to second-guess a professional golfer's club choice, with an AI to blame when they are wrong.",
+      "media": {
+        "kind": "photo",
+        "url": "https://res.cloudinary.com/dettuon1j/image/upload/f_auto/v1/content/dam/thebaygolfclub/articles/2026/11/Game-Your-Game-PR-16x9"
+      },
+      "risks": "Company and club release only; no fee disclosed and no second independent report opened (the GlobeNewswire copy returned 403, the others are syndicated copies). The release does not mention Steph Curry; his ownership of the team is general knowledge and should be checked before it goes in a headline. The image is a partnership graphic, not a photo of the product in use.",
+      "helps": {
+        "who": "a TGL golf team and its fans",
+        "how": "more successful"
+      },
+      "found": {
+        "place": "news",
+        "url": "https://thebaygolfclub.com/articles/2026/11/the-bay-golf-club-and-game-your-game-announce-partnership-bringing-ai-powered-performance-technology-to-fans"
+      }
+    },
+    {
+      "key": "aki-avni-licensed-face",
+      "sector": "performance",
+      "headline": "Actor Aki Avni licensed his face to an AI drama studio and was paid the going rate for a normal role",
+      "what_happened": "Aki Avni, an Israeli film and television actor who appeared on Fox's 24, licensed his face to Shortical, a microdrama start-up, which made a wholly AI series called Inevitable starring his likeness; it premiered in Los Angeles in mid November. TechCrunch reported on 21 November 2026 that Shortical says his pay was in line with industry standards for a comparable non-AI acting role, and that Avni came in as a partner on the project.",
+      "date": "2026-11-21",
+      "named_thing": "Aki Avni and Shortical's AI series Inevitable",
+      "primary": {
+        "label": "TechCrunch, 'Is selling an AI version of your face to this microdrama startup the future of Hollywood?', Lucas Ropek, 21 Nov 2026",
+        "url": "https://techcrunch.com/2026/11/21/is-selling-an-ai-version-of-your-face-to-this-microdrama-startup-the-future-of-hollywood/",
+        "kind": "report",
+        "quote": "his compensation was in line with industry standards for a comparable non-AI acting role"
+      },
+      "second": null,
+      "more_sources": [
+        {
+          "label": "TechCrunch, same article, Aki Avni",
+          "url": "https://techcrunch.com/2026/11/21/is-selling-an-ai-version-of-your-face-to-this-microdrama-startup-the-future-of-hollywood/",
+          "quote": "\"Look, it's a new era for artists,\" the actor said."
+        },
+        {
+          "label": "TechCrunch, same article",
+          "url": "https://techcrunch.com/2026/11/21/is-selling-an-ai-version-of-your-face-to-this-microdrama-startup-the-future-of-hollywood/",
+          "quote": "Its latest microdrama premiered in Los Angeles last week."
+        }
+      ],
+      "money_or_mechanism": "The actor is paid once for the use of his face, the studio generates every episode with AI, so he earns a role's fee without being on a set, and the studio gets a recognisable lead for short-form shows.",
+      "why_it_matters": "An actor has been paid a normal fee for a starring role he never had to turn up to film.",
+      "funny": "He got the standard rate for a lead role and did not have to learn a single line.",
+      "media": {
+        "kind": "photo",
+        "url": "https://techcrunch.com/wp-content/uploads/2026/11/Inevitable-Key-Art_3x4-full-size.jpg?w=1024"
+      },
+      "risks": "Single source. The pay claim is Shortical's, not Avni's, and no figure was given. The premiere was 'last week' before 21 November, so the screening itself may fall before the 20 November window; the dated news is TechCrunch's report. The article also quotes experts doubtful about the trend, so the tone is mixed. Sector could be read as film_tv rather than performance.",
+      "helps": {
+        "who": "actors",
+        "how": "more successful"
+      },
+      "found": {
+        "place": "news",
+        "url": "https://techcrunch.com/2026/11/21/is-selling-an-ai-version-of-your-face-to-this-microdrama-startup-the-future-of-hollywood/"
+      }
+    },
+    {
+      "key": "trackhouse-88bot-talking-car",
+      "sector": "sports",
+      "headline": "A NASCAR team gave its race car an AI voice so VIP guests in the pit box can ask it how the race is going",
+      "what_happened": "Trackhouse Racing built 88Bot, an AI agent that speaks as Connor Zilisch's No. 88 Chevrolet: guests download an app, ask the car questions about the race and get live updates from its racing data. The team can host up to 60 VIP guests on a race day in a pit box that fits about eight, and the system draws on roughly 25,000 telemetry messages a second. Sports Business Journal first reported it on 23 November 2026, and some fans pushed back online.",
+      "date": "2026-11-23",
+      "named_thing": "88Bot, Trackhouse Racing's No. 88 car",
+      "primary": {
+        "label": "EssentiallySports, 'Future Hendrick Star Gets an AI Alter Ego in Trackhouse's Unconventional Fan Push', 25 Nov 2026",
+        "url": "https://www.essentiallysports.com/nascar-news-future-hendrick-star-gets-an-ai-alter-ego-in-trackhouses-unconventional-fan-push/",
+        "kind": "report",
+        "quote": "On any given race day, the organization could be entertaining up to 60 VIP guests."
+      },
+      "second": null,
+      "more_sources": [
+        {
+          "label": "EssentiallySports, same article",
+          "url": "https://www.essentiallysports.com/nascar-news-future-hendrick-star-gets-an-ai-alter-ego-in-trackhouses-unconventional-fan-push/",
+          "quote": "roughly 25,000 telemetry messages travel through race-day systems every second."
+        },
+        {
+          "label": "EssentiallySports, same article (excerpt)",
+          "url": "https://www.essentiallysports.com/nascar-news-future-hendrick-star-gets-an-ai-alter-ego-in-trackhouses-unconventional-fan-push/",
+          "quote": "an AI agent called 88Bot."
+        },
+        {
+          "label": "Sports Business Journal, 'How Trackhouse Racing helps VIPs talk to cars (literally)', 23 Nov 2026 (the original; could not be opened)",
+          "url": "https://www.sportsbusinessjournal.com/Articles/2026/11/23/how-trackhouse-racing-helps-vips-talk-to-cars-literally/",
+          "quote": ""
+        }
+      ],
+      "money_or_mechanism": "Sponsors and VIP guests are the team's paying customers on race day, and 88Bot turns the car's live data into answers anyone can ask for, built by the design firm Very Good Ventures with LiveKit, so every guest gets an engineer's view without an engineer's time.",
+      "why_it_matters": "A race team is using AI to make its most valuable seats, the ones it sells to sponsors, more worth paying for.",
+      "funny": "The driver cannot talk while racing, so the car now does the talking for him.",
+      "media": {
+        "kind": "photo",
+        "url": "https://image-cdn.essentiallysports.com/wp-content/uploads/imago1051550550-e1755003251340.jpg"
+      },
+      "risks": "The original is Sports Business Journal, which this session's fetch tool cannot reach; the facts here come from EssentiallySports' report of it, so a later reader should open SBJ or Trackhouse's own post. Fans criticised 88Bot on X, so the reception is mixed. The image is an agency photo from 2025 of the team, not of 88Bot. 88Bot began as a tablet in 2025; the dated news is SBJ's 23 November report.",
+      "helps": {
+        "who": "a NASCAR team and its sponsors and VIP guests",
+        "how": "more successful"
+      },
+      "found": {
+        "place": "news",
+        "url": "https://www.essentiallysports.com/nascar-news-future-hendrick-star-gets-an-ai-alter-ego-in-trackhouses-unconventional-fan-push/"
+      }
+    }
+  ]
+}

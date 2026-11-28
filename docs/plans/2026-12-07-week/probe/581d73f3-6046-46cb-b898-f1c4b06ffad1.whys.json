@@ -1,0 +1,153 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why do 74% of music streaming users believe their playlists hold no fully AI songs when nearly 57% of the people who joined Deezer in October already had at least one?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why do the two figures disagree?",
+      "answer": "They come from different people and different methods. The 74% is what surveyed streaming users said they believe. The 57% is Deezer's detection run on the playlists of over 53,000 people who joined from other services in October. That group is not the survey sample, so the gap compares two groups, not one person's belief with their own playlist.",
+      "evidence": [
+        {
+          "url": "https://newsroom-deezer.com/2026/11/ai-music-labeling-deezer-ipsos-survey/",
+          "domain": "newsroom-deezer.com",
+          "date": "2026-11-17",
+          "quote": "Nearly three fourths of music streaming users (74%) thought that their playlists were free from 100% AI-generated music, but according to Deezer’s internal data a majority of new subscribers joining from other streaming platforms, had 100 % AI-generated music in their library."
+        },
+        {
+          "url": "https://www.digitalmusicnews.com/2026/11/19/ai-music-kill-switch-survey/",
+          "domain": "digitalmusicnews.com",
+          "date": "2026-11-19",
+          "quote": "This number is based on Deezer’s internal data on new subscribers joining from other streaming platforms, not specifically from those surveyed."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Deezer's own footnote to the 57% figure reads: \"Deezer has tuned its AI-detection tool to achieve maximum accuracy, but false positives may occur.\" Its undated business page claims \"a false positive rate below 0.01%\", a figure from the company selling the tool, checked by no independent source read. The 57% also counts anyone with \"at least one fully AI-generated track\", a threshold of a single track."
+      },
+      "mechanism_type": "measurement: an online survey of beliefs set beside platform detection data on a different group",
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why would listeners not know fully AI tracks are in their playlists?",
+      "answer": "The sources point to labelling. Deezer says it is the only streaming service that tags fully AI tracks, and these playlists were built on other services before people joined Deezer. Neither source says outright that missing labels caused the gap; Deezer's chief executive, quoted on both sites, frames it as a need for greater awareness.",
+      "evidence": [
+        {
+          "url": "https://newsroom-deezer.com/2026/11/ai-music-labeling-deezer-ipsos-survey/",
+          "domain": "newsroom-deezer.com",
+          "date": "2026-11-17",
+          "quote": "In June, Deezer became the first (and so far only) music streaming platform to explicitly tag AI-generated music."
+        },
+        {
+          "url": "https://www.digitalmusicnews.com/2026/11/19/ai-music-kill-switch-survey/",
+          "domain": "digitalmusicnews.com",
+          "date": "2026-11-19",
+          "quote": "there is a significant gap between what listeners think is in their playlists and what is actually there, which highlights the need for continued efforts to achieve greater awareness for music streaming users"
+        },
+        {
+          "url": "https://newsroom-deezer.com/2026/11/ai-music-labeling-deezer-ipsos-survey/",
+          "domain": "newsroom-deezer.com",
+          "date": "2026-11-17",
+          "quote": "54% (-4pts vs 2025) of music streaming users believe that their music streaming platform has never recommended 100% AI-generated music to them while 28% (+3pts vs 2025) are uncertain"
+        },
+        {
+          "url": "https://business.deezer.com/ai-detection/",
+          "domain": "business.deezer.com",
+          "date": null,
+          "quote": "Deezer is the only streaming platform actively detecting and tagging AI-generated music at scale. With 97% of people unable to distinguish AI-generated music from human-made tracks, according to a study by Deezer and Ipsos, detection and transparency have become essential."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "Most respondents say they have heard fully AI music: the Deezer release gives 32% \"across all respondents\" as saying they have never listened to it. Hearing it somewhere and believing none sits in one's own playlists are different claims, but this weakens a plain unawareness reading. Searched: the two source pages and the linked scorecards. The business.deezer.com page is the same company's sales page and is undated; it does not say that missing labels caused this survey's gap."
+      },
+      "mechanism_type": "disclosure: whether a platform labels fully AI tracks",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why is fully AI music common enough to reach most of those playlists?",
+      "answer": "Deezer reports a very large inflow: nearly 90,000 fully AI tracks a day, over half its daily deliveries on peak days, and its business site puts AI content at up to 39% of music delivered to streaming platforms. Neither page ties this inflow to other services' playlists, and on Deezer such music draws 1 to 3% of streams.",
+      "evidence": [
+        {
+          "url": "https://newsroom-deezer.com/2026/11/ai-music-labeling-deezer-ipsos-survey/",
+          "domain": "newsroom-deezer.com",
+          "date": "2026-11-17",
+          "quote": "Deezer, is receiving nearly 90,000 fully AI-generated tracks every day, accounting for more than 50% of the total daily delivery on peak days."
+        },
+        {
+          "url": "https://business.deezer.com/ai-detection/",
+          "domain": "business.deezer.com",
+          "date": null,
+          "quote": "now representing up to 39% of music delivered to streaming platforms"
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "The release itself: \"Although fully AI-generated music currently accounts for only a small fraction of streams on Deezer, between 1-3%\". A large share of uploads with a small share of listening does not by itself explain a majority of playlists holding one. Both pages are Deezer's own, and their figures differ (up to 39% of deliveries industry-wide against more than 50% on Deezer's peak days), with no date on the business page to reconcile them. The Digital Music News page does not give upload figures, and no independent site read does. Strength stays inferred because no page says outright that the inflow is why the tracks sit in playlists."
+      },
+      "mechanism_type": "supply: the volume of tracks delivered to streaming services",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why are so many fully AI tracks uploaded?",
+      "answer": "Deezer says the main purpose is fraud: royalties drawn by fake streams. It found up to 85% of streams on fully AI tracks in 2025 were fraudulent and removes manipulated streams from payouts. Its business site links AI uploads to fraud and royalty dilution but does not call fraud the main purpose; no independent site says so.",
+      "evidence": [
+        {
+          "url": "https://newsroom-deezer.com/2026/11/ai-music-labeling-deezer-ipsos-survey/",
+          "domain": "newsroom-deezer.com",
+          "date": "2026-11-17",
+          "quote": "it’s evident that the primary purpose of uploading these tracks to streaming platforms is fraudulent. Deezer has found that up to 85% of the streams generated by fully AI-generated tracks were in fact fraudulent in 2025."
+        },
+        {
+          "url": "https://newsroom-deezer.com/2026/11/ai-music-labeling-deezer-ipsos-survey/",
+          "domain": "newsroom-deezer.com",
+          "date": "2026-11-17",
+          "quote": "When detecting stream manipulation of any kind, Deezer excludes the streams from the royalty payments."
+        },
+        {
+          "url": "https://business.deezer.com/ai-detection/",
+          "domain": "business.deezer.com",
+          "date": null,
+          "quote": "Detect AI-generated content at ingestion to reduce spam, fraud, and related risks and costs."
+        },
+        {
+          "url": "https://business.deezer.com/ai-detection/",
+          "domain": "business.deezer.com",
+          "date": null,
+          "quote": "Flag AI-generated tracks before they dilute artist royalties."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "Deezer has a commercial stake in the problem it describes: \"Deezer is now licensing its AI-detection tech, offering the wider music industry an option to support transparency and reduce the incentive for AI-music fraud.\" The second domain, business.deezer.com, is that same company's sales page for the tool, so it is not independent. The 85% figure is a share of streams on fully AI tracks in 2025, not a share of uploads. The Digital Music News report does not address why the tracks are uploaded, and the Ipsos page the release links to is Ipsos's home page, with nothing on this survey or on fraud."
+      },
+      "mechanism_type": "money: royalty payouts from a shared pool, drawn by manipulated streams",
+      "stop": null
+    },
+    {
+      "n": 5,
+      "question": "Why do tracks uploaded for fake streams end up in ordinary listeners' playlists on other services?",
+      "answer": "Nothing read answers this. Deezer describes keeping detected tracks out of its own recommendations and editorial playlists, but no source says how fully AI tracks reached the new subscribers' playlists on other services, whether through recommendation, editorial lists or the listeners' own choices.",
+      "evidence": [
+        {
+          "url": "https://newsroom-deezer.com/2026/11/ai-music-labeling-deezer-ipsos-survey/",
+          "domain": "newsroom-deezer.com",
+          "date": "2026-11-17",
+          "quote": "Songs detected as AI-generated are automatically removed from algorithmic recommendations and are not included in editorial playlists."
+        }
+      ],
+      "strength": "open",
+      "counter": {
+        "text": "none found; searched the Deezer release, the Digital Music News report, the Ipsos scorecards and Deezer's business page linked from the release, and the Ipsos home page it links to."
+      },
+      "mechanism_type": null,
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "The headline gap sets an online survey of beliefs beside Deezer's own detection data on a different group, counted at a threshold of one track and with false positives acknowledged. Deezer, the only service that tags fully AI tracks, links the flood of such uploads to stream fraud. How those tracks came to sit in listeners' playlists on other services is not shown by anything read.",
+    "open_question": "If fully AI tracks draw only 1 to 3% of streams on Deezer, how did at least one come to sit in the playlists of more than half the people who arrived from other services?"
+  }
+}

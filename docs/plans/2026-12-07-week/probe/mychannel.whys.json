@@ -1,0 +1,63 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why did Google describe a TV channel that generates shows starring the viewer and stitches adverts into them?",
+  "rungs": [
+    {"n": 1,
+     "question": "Why did Google design a channel that makes new shows rather than recommending existing ones?",
+     "answer": "Google's own filing frames it as a fix for recommendation: suggestions built on past viewing may fail to engage and struggle to blend a viewer's mixed tastes, so the system generates new videos from that history instead. The Verge confirms the design, feeds of personalised AI videos built from what Google knows, but does not state this reason.",
+     "evidence": [
+       {"url": "https://image-ppubs.uspto.gov/dirsearch-public/print/downloadPdf/20260370899", "domain": "uspto.gov", "date": "2026-11-19", "quote": "media content recommendation system may, however, fail to provide an engaging viewing experience to the user that could be provided by customizing the recommended media content for the user."},
+       {"url": "https://www.theverge.com/entertainment/1042221/google-my-channel-ai-video-patent", "domain": "theverge.com", "date": "2026-11-25", "quote": "designed to create feeds filled with personalized, AI-generated videos and advertisements based on information the company knows about its users."}
+     ],
+     "strength": "inferred",
+     "counter": {"text": "A filing is not a launch. The Verge reports: \"The patent has been rejected, but unfortunately, Google might appeal or resubmit an amended version\". The Verge also reads the design differently: \"It all seems like a convoluted way to whip up AI knockoffs of professionally produced art\"."},
+     "mechanism_type": "the model",
+     "stop": null},
+    {"n": 2,
+     "question": "Why does the system need the viewer's location, age and viewing history?",
+     "answer": "Because those are the ingredients of the prompt. The filing's first claim has a server build a prompt for a large language model from the user's preferences, contextual information and demographic data; the contextual information can include IP address, language and GPS coordinates. The Verge reports the same: demographic data and viewing history turned into prompts fed to an LLM.",
+     "evidence": [
+       {"url": "https://image-ppubs.uspto.gov/dirsearch-public/print/downloadPdf/20260370899", "domain": "uspto.gov", "date": "2026-11-19", "quote": "the contextual information includes at least one of an Internet Protocol (IP) address of the computing device, a language of use by the computing device, and Global Positioning System (GPS) coordinates for the computing device."},
+       {"url": "https://www.theverge.com/entertainment/1042221/google-my-channel-ai-video-patent", "domain": "theverge.com", "date": "2026-11-25", "quote": "describes how My Channel would use a person’s demographic data and viewing history to create its own prompts that would then be fed into an LLM to help generate AI videos tailored to that person’s specific interests."}
+     ],
+     "strength": "documented",
+     "counter": {"text": "The filing says users may be given a say over collection: \"a user may be provided with controls allowing the user to make an election\" about if and when their information is collected, and that location may be generalised to city, ZIP code or state level."},
+     "mechanism_type": "the model",
+     "stop": null},
+    {"n": 3,
+     "question": "Why does the viewer become the lead character?",
+     "answer": "The filing presents it as the way to enhance the viewer's experience: generated videos feature the user as protagonist, using an avatar made from their photos and videos and a synthesised copy of their voice for the dialogue. The Verge reports the same avatars, built from photos, videos and audio clips, cast as the lead.",
+     "evidence": [
+       {"url": "https://image-ppubs.uspto.gov/dirsearch-public/print/downloadPdf/20260370899", "domain": "uspto.gov", "date": "2026-11-19", "quote": "A technical solution may include the media content recommendation system enhancing a viewing experience of the user by generating customized media content."},
+       {"url": "https://image-ppubs.uspto.gov/dirsearch-public/print/downloadPdf/20260370899", "domain": "uspto.gov", "date": "2026-11-19", "quote": "The customized content generator 226 may synthesize the voice of the user for the dialogue of a protagonist"},
+       {"url": "https://www.theverge.com/entertainment/1042221/google-my-channel-ai-video-patent", "domain": "theverge.com", "date": "2026-11-25", "quote": "its mentions of My Channel creating digital avatars of users and turning them into “the protagonist or lead character” in the content it pumps out."}
+     ],
+     "strength": "documented",
+     "counter": {"text": "In the filing the likeness is optional: the item \"may include an avatar of the user and/or the voice of the user\". The Verge's reading of the motive, that \"viewers would be entertained enough just by seeing themselves onscreen\", is its own interpretation, not a statement from Google."},
+     "mechanism_type": "the model",
+     "stop": null},
+    {"n": 4,
+     "question": "Why do adverts end up inside a show made for one person?",
+     "answer": "Because the delivery route passes through an advertising server. In the filing, the TV app hands the generated video's address to that server, whose ad stitcher inserts one or more adverts before the video is streamed to the screen. The Verge likewise describes feeds of personalised videos and advertisements.",
+     "evidence": [
+       {"url": "https://image-ppubs.uspto.gov/dirsearch-public/print/downloadPdf/20260370899", "domain": "uspto.gov", "date": "2026-11-19", "quote": "At step 516, an ad stitcher 232 may insert one or more advertisements into the customized media content item received from the customized content repository 126."},
+       {"url": "https://www.theverge.com/entertainment/1042221/google-my-channel-ai-video-patent", "domain": "theverge.com", "date": "2026-11-25", "quote": "create feeds filled with personalized, AI-generated videos and advertisements"}
+     ],
+     "strength": "documented",
+     "counter": {"text": "The adverts are not part of the core claim. Claim 1 ends with sending the customised item to the device; the advertising stitcher first appears in claim 4, a dependent claim, and the description introduces that step with \"In some implementations\"."},
+     "mechanism_type": "the money",
+     "stop": null},
+    {"n": 5,
+     "question": "Why would stitched adverts pay for making a new film for each single viewer?",
+     "answer": "Nothing read answers this. The filing describes where the adverts go but gives no cost of generating a video, no advert rate and no revenue figure, and the Verge piece gives none either.",
+     "evidence": [],
+     "strength": "open",
+     "counter": {"text": "none found; scope: the Verge article and the 28-page published application US 2026/0370899 A1. The Gizmodo article could not be read."},
+     "mechanism_type": "the money",
+     "stop": "evidence_exhausted"}
+  ],
+  "landing": {
+    "shows": "Google's published application lays out how My Channel would work: viewing history, device context and demographics written into a prompt for a language model, the viewer's avatar and voice cast as the lead, and an advertising stitcher in the delivery path. Its stated reason is recommendations that fail to engage. Nothing read shows the economics, or the examiner's grounds for rejection.",
+    "open_question": "If every show is made for an audience of one, what would the adverts stitched into it have to earn to cover making it?"
+  }
+}

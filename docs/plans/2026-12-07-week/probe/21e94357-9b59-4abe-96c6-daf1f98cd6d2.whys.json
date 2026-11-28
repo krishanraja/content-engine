@@ -1,0 +1,66 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why did ElevenLabs agree to buy Kotoba, a Japanese voice AI firm, for a reported $100 million?",
+  "rungs": [
+    {"n": 1,
+     "question": "Why did ElevenLabs agree to buy Kotoba?",
+     "answer": "To get Kotoba's Japanese voice research and its model, Koto, which covers Japanese text-to-speech, speech-to-text and speech-to-speech. ElevenLabs' CTO says bringing the two teams' research together will improve Japanese across everything ElevenLabs builds.",
+     "evidence": [
+       {"url": "https://www.musicbusinessworldwide.com/elevenlabs-agrees-to-acquire-japan-focused-voice-ai-company-kotoba-in-reported-100m-deal/", "domain": "musicbusinessworldwide.com", "date": "2026-11-17", "quote": "Bringing their research together with ours will improve Japanese across the entire stack ElevenLabs builds."},
+       {"url": "https://routenote.com/radar/?p=6292", "domain": "routenote.com", "date": "2026-11-17", "quote": "The Kotoba acquisition provides access to specialised research expertise and an established Japanese-language AI model."}
+     ],
+     "strength": "documented",
+     "counter": {"text": "None found that disputes the stated reason, within the two source pages. ElevenLabs' own blog post is cited by Music Business Worldwide but not linked, so it was not read."},
+     "mechanism_type": null,
+     "stop": null},
+    {"n": 2,
+     "question": "Why would ElevenLabs need a Japan-specific model rather than its own voice models?",
+     "answer": "Japanese is hard for voice models: meaning leans on context, levels of politeness and fine differences in speech. ElevenLabs' CEO says language and social norms have to be built into a model's architecture from the start, and says Kotoba did that for Japan.",
+     "evidence": [
+       {"url": "https://www.musicbusinessworldwide.com/elevenlabs-agrees-to-acquire-japan-focused-voice-ai-company-kotoba-in-reported-100m-deal/", "domain": "musicbusinessworldwide.com", "date": "2026-11-17", "quote": "It is an incredibly intricate language that poses a whole range of technical challenges when building voice models."},
+       {"url": "https://routenote.com/radar/?p=6292", "domain": "routenote.com", "date": "2026-11-17", "quote": "Japanese communication frequently relies on context, levels of politeness and subtle differences in speech patterns."}
+     ],
+     "strength": "documented",
+     "counter": {"text": "None found within the two source pages. Neither page gives any measure of how well ElevenLabs' existing models handle Japanese, so the size of the gap is not shown."},
+     "mechanism_type": "the model",
+     "stop": null},
+    {"n": 3,
+     "question": "Why Japan in particular?",
+     "answer": "ElevenLabs already had a footing there: it opened ElevenLabs G.K. in Tokyo in April 2025, its first subsidiary outside its home bases. It calls the deal a first step and says it will grow local sales leadership and invest in infrastructure in Japan.",
+     "evidence": [
+       {"url": "https://www.musicbusinessworldwide.com/elevenlabs-agrees-to-acquire-japan-focused-voice-ai-company-kotoba-in-reported-100m-deal/", "domain": "musicbusinessworldwide.com", "date": "2026-11-17", "quote": "It launched ElevenLabs G.K. in Tokyo in April 2025, describing it at the time as its first international subsidiary."},
+       {"url": "https://routenote.com/radar/?p=6292", "domain": "routenote.com", "date": "2026-11-17", "quote": "The acquisition is also expected to strengthen ElevenLabs’ presence in Japan, where it established a local subsidiary in April 2025."}
+     ],
+     "strength": "documented",
+     "counter": {"text": "None found within the two source pages. Neither gives any figure for ElevenLabs' revenue or customers in Japan."},
+     "mechanism_type": null,
+     "stop": null},
+    {"n": 4,
+     "question": "Why buy Kotoba rather than build Japanese models in-house?",
+     "answer": "The sources do not say outright. They point to Kotoba's model already being in commercial use: Salesforce runs Koto for Japanese conversations in Agentforce Voice. Kotoba's 15 staff are expected to join ElevenLabs. RouteNote, not ElevenLabs, calls that existing adoption the attraction.",
+     "evidence": [
+       {"url": "https://www.musicbusinessworldwide.com/elevenlabs-agrees-to-acquire-japan-focused-voice-ai-company-kotoba-in-reported-100m-deal/", "domain": "musicbusinessworldwide.com", "date": "2026-11-17", "quote": "Salesforce uses Koto to handle Japanese-language conversations in its Agentforce Voice product."},
+       {"url": "https://routenote.com/radar/?p=6292", "domain": "routenote.com", "date": "2026-11-17", "quote": "This existing commercial adoption makes Kotoba an attractive acquisition for ElevenLabs as it expands its AI-powered voice products."}
+     ],
+     "strength": "inferred",
+     "counter": {"text": "None found within the two source pages. No source gives ElevenLabs' own reasoning on buying against building, or what building would have cost."},
+     "mechanism_type": "the contract",
+     "stop": null},
+    {"n": 5,
+     "question": "Why did Kotoba agree to sell, five months after a $10 million seed round?",
+     "answer": "Only stated reasons are on record. Kotoba's CEO says joining ElevenLabs will speed up building and adoption of voice AI. Salesforce Ventures backed both companies. The price is reported, not disclosed: Nikkei Asia says more than $100 million, against Kotoba's $23 million raised in total.",
+     "evidence": [
+       {"url": "https://www.musicbusinessworldwide.com/elevenlabs-agrees-to-acquire-japan-focused-voice-ai-company-kotoba-in-reported-100m-deal/", "domain": "musicbusinessworldwide.com", "date": "2026-11-17", "quote": "Together, we can accelerate the development and adoption of voice AI, bringing tangible benefits to people and businesses in Japan and beyond."},
+       {"url": "https://www.musicbusinessworldwide.com/elevenlabs-agrees-to-acquire-japan-focused-voice-ai-company-kotoba-in-reported-100m-deal/", "domain": "musicbusinessworldwide.com", "date": "2026-11-17", "quote": "That round brought Kotoba’s total funding to date to $23 million, the company said at the time."},
+       {"url": "https://routenote.com/radar/?p=6292", "domain": "routenote.com", "date": "2026-11-17", "quote": "Although ElevenLabs has not officially disclosed the financial terms, reports from Nikkei Asia and Business Insider Japan place the transaction at around $100 million."}
+     ],
+     "strength": "inferred",
+     "counter": {"text": "None found within the two source pages. The founders' and investors' reasons appear only as quotes on one site; no source gives the terms, whether payment is cash or shares, or what each backer receives."},
+     "mechanism_type": "the money",
+     "stop": "motive_not_mechanism"}
+  ],
+  "landing": {
+    "shows": "ElevenLabs is buying a working Japanese voice model already used by Salesforce, its research team and 15 staff, to build on a Tokyo subsidiary it opened in April 2025. The $22 billion figure did not come from a sale of the company: it came from a $300 million employee tender offer in September, double the $11 billion Series D valuation. The price itself is reported by Nikkei Asia and Business Insider Japan, not disclosed by ElevenLabs.",
+    "open_question": "If language and social norms have to be built into a voice model from the start, what does a company that began in English have to buy for each new language it wants to speak well?"
+  }
+}

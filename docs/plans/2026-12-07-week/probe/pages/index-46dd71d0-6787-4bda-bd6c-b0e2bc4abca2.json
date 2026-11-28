@@ -1,0 +1,26 @@
+{
+  "https://www.heygen.com/research/avatar-6-model": {
+    "file": "46dd-heygen-avatar-6.txt"
+  },
+  "https://csuite.so/blog/ai-models-roundup-november-2026": {
+    "file": "46dd-csuite-roundup-nov-2026.txt"
+  },
+  "https://ik.imagekit.io/heygen/www/research/avatar-6/Avatar%206-%20Talking%20Avatars%20That%20Are%20More%20Like%20You.pdf": {
+    "file": "46dd-heygen-avatar-6-report.txt"
+  },
+  "https://www.heygen.com/research/avatar-v-model": {
+    "file": "46dd-heygen-avatar-v.txt"
+  },
+  "https://dynamic.heygen.ai/www/Paper%20Links/avatarv_tech_report.pdf": {
+    "file": "46dd-heygen-avatar-v-report.txt"
+  },
+  "https://developers.heygen.com/docs/models/avatar-6": {
+    "file": "46dd-heygen-dev-docs-avatar-6.txt"
+  },
+  "https://openrouter.ai/heygen/heygen-avatar-6": {
+    "file": "46dd-openrouter-heygen-avatar-6.txt"
+  },
+  "https://www.heygen.com/research/heygen-voice-scene-aware-voice-cloning": {
+    "file": "46dd-heygen-voice-research.txt"
+  }
+}

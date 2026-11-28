@@ -1,0 +1,38 @@
+{
+  "kind": "wildcard",
+  "day": "wed",
+  "namespace": "content-engine:ideas",
+  "sparks": [
+    {
+      "rank": 1,
+      "title": "The hashtag collection",
+      "mechanism": "Extreme-user: children on Roblox run into the text filter many times a day, when ordinary words, numbers and names come out as hashtags. The column asks a classroom or a parent group to send in phrases that got hashed, then sorts them by likely cause: number blocking aimed at sharing phone numbers, age-band rules, substring matches and context-model false positives. It explains the layered architecture of rules plus classifiers plus age settings from what got through and what did not. The adult takeaway is how a safety filter accumulates rules that are never removed.",
+      "whyNonObvious": "Moderation coverage counts the harmful content that slips through, while kids are the only people who keep a detailed record of what the filter wrongly blocks.",
+      "firstStep": "Post a short call for 'words Roblox hashtagged on you' in two parenting communities and collect fifty examples with the account's age setting.",
+      "lens": "multi",
+      "score": 0.744
+    },
+    {
+      "rank": 2,
+      "title": "The translated book that never gets updated",
+      "mechanism": "Inversion aimed at maintenance in publishing. Kindle Translate machine-translates self-published books into other languages with limited human review, and authors keep editing their originals after release. The column follows three authors who used it and checks whether corrected typos, rewritten chapters and changed character names make it into the translated editions. It also looks at whether reader reviews blame the author for translation errors. The teardown covers the pipeline from source file to segmenting, translating and publishing, and what broke is that a book became two documents with one person responsible for both and no way to read one of them.",
+      "whyNonObvious": "Translation AI gets judged on quality at launch, but in publishing the failure that grows over time is version drift between the original and the translation.",
+      "firstStep": "Find three KDP authors who announced Kindle Translate editions, ask each for one edit made after translation, and check whether it appears in the translated sample.",
+      "lens": "multi",
+      "score": 0.706
+    },
+    {
+      "rank": 3,
+      "title": "Diff the DLLs",
+      "mechanism": "Enemy-as-resource: teardowns usually die because the vendor won't explain the internals. With NVIDIA DLSS, that secrecy produced a hobbyist practice of swapping DLSS DLL versions and presets between games, which leaves a public archive of every version. The column runs one game scene through several DLL versions, from the convolutional presets to the transformer model and frame generation, and captures HUD ghosting, smearing on particles and added input latency. Version by version, it shows what each architecture change fixed and what it broke.",
+      "whyNonObvious": "A secretive vendor looks like a dead end, but the user workaround of swapping versions turns that secrecy into a controlled experiment.",
+      "firstStep": "Download three archived DLSS DLL versions, swap them into one game with a fixed benchmark scene, and record the output with a latency tool.",
+      "lens": "multi",
+      "score": 0.658
+    }
+  ],
+  "chain": "this week's chain spend could not be read, and unknown stops nothing",
+  "run_id": "1850829844",
+  "label": "engine-made: source_kind engine, divergent {\"run_id\", \"spark\"}; never his",
+  "status": "ok"
+}

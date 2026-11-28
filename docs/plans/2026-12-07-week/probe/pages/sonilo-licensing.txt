@@ -1,0 +1,122 @@
+Commercial Rights for Sonilo Music and Sound Effects | Sonilo30% offExtra 30% off annual plansExtra 30% offClaim offer
+HomeSolutionsPricing
+Library
+
+Royalty-free sound effectsMusic libraryTutorialsAPI
+
+Start creating
+Music and sound effects licensing
+Commercial Rights for Sonilo Music and Sound Effects
+Generated Sonilo music and sound effects can be used commercially when your generation-time plan and intended use qualify under the Terms of Service. Free and Creator outputs are non-commercial; Pro covers uses such as ads, client videos and monetized channels, while Premium adds film, TV, broadcast and studio games. Enterprise rights follow the applicable agreement. For API output, check the API terms and any applicable agreement rather than assuming a web subscription's rights. Sound Effects Library downloads follow the license note on the library page, not your generation plan. You remain responsible for required third-party permissions.
+Sonilo describes its music models as trained on professionally licensed catalogs, including Shutterstock. Training-source rights and permission to use generated output are separate. Pro, Premium, Enterprise, and eligible API users have commercial-use rights under Sonilo's Terms of Service for licensed AI-generated music for YouTube, ads, social clips, client videos, and commercial video projects. Free is personal and non-commercial only. Developer teams can pair those rights with API access, video-to-sound-effects workflows, and pay-as-you-go-style credit accounting for licensed music for video. The page gives API and enterprise reviewers a clear answer for paid media usage, enterprise procurement, a commercial-video soundtrack workflow, commercial release checks, and projects that combine video-to-music with video-to-sound-effects. Commercial-use rights do not remove every copyright, platform, client, or broadcast review, so teams should review the current Terms before publishing and keep output records with the release channel.
+Safe for YouTube monetization, paid ads, client work, and brand campaigns.
+Sonilo is safe for commercial videos, client work, YouTube monetization, and paid ads when the generated output is created under Pro, Premium, Enterprise, or eligible API-user terms and reviewed against the current Terms.
+Sonilo is safe for commercial videos, client work, YouTube monetization, and paid ads on Pro, Premium, Enterprise, or eligible API-user terms.
+Pro, Premium, Enterprise, and eligible API users have commercial-use rights under the current Terms.
+Use Pro, Premium, Enterprise, or eligible API-user output for YouTube monetization, paid ads, client work, social campaigns, and brand videos.
+Commercial rights are a ladder: Pro covers general commercial scoring, indie games included, Premium adds film, TV, broadcast, and studio games, and Enterprise adds custom terms. No plan includes releasing a generated track to Spotify, Apple Music, or other streaming services.
+An indie game is a commercial game, on any platform, by an individual or a team with under US$200,000 in combined revenue and funding over the last 12 months, and it is covered from Pro upwards. At or above that line it is a studio game, which starts on Premium. Apps and websites are covered from Pro upwards.
+No paid plan requires attribution. A Free-plan download that you share or publish must be credited "Music by Sonilo" (or "Sound effects by Sonilo"), per Section 6.2 of the Terms.
+Free output is for personal tests, hobby projects, and non-commercial previews, not publishing commercial work.
+Audio generated through the Sonilo API can be used commercially — in your own product and by your end users, including ads, client work and monetized channels. The API is billed pay-as-you-go from a prepaid balance on platform.sonilo.com, not through a sonilo.com subscription plan, so no Pro or Premium plan is needed; Enterprise API customers follow their enterprise agreement.
+For developer or production workflows, pair this licensing page with pricing, API docs, and video-to-sound-effects.
+
+Licensed catalog training at the source
+Sonilo describes its music models as trained on professionally licensed catalogs, including Shutterstock. Training-source rights and permission to use generated output are separate.
+
+Commercial rights start on Pro
+Pro carries the general commercial license for ads, client work, monetized channels, and indie games, with no attribution. Premium adds film, TV, broadcast, and studio games, and Enterprise adds custom terms. Free is personal and non-commercial only.
+
+Artists get paid
+Licensing at the source means the musicians behind the training catalog are compensated for their work.
+Rights and source evidence
+A summary for music and sound effects. The applicable Terms or signed agreement govern your use.
+Training sources, output rights, and release records
+QuestionScopeSources
+Music training sourcesSonilo describes its music models as trained on professionally licensed catalogs, including Shutterstock. Training-source rights and permission to use generated output are separate.
+Training-source overview
+Sonilo partnership announcement
+Shutterstock public confirmation
+Sound effects training sourcesSonilo confirms that its SFX training sources are compliant. This is not a claim that SFX uses the Shutterstock music catalog; the music partnership announcement is not an inventory of SFX sources.
+Music and SFX source scope
+Subscriptions and commercial video useFree output is for personal, non-commercial use. Free-plan downloads must also credit “Music by Sonilo” or “Sound effects by Sonilo” wherever they are shared. Pro and Premium output includes commercial-use rights under the Terms for YouTube monetization, paid ads, client work, and brand campaigns. Check eligibility at generation. The same plan rules apply to music and sound effects.
+Terms of Service
+Plans and credits
+Client work and paid ads
+Cancellation and downgrade FAQ
+Enterprise and API outputAudio generated through the Sonilo API can be used commercially — in your own product and by your end users, including ads, client work and monetized channels. The API is billed pay-as-you-go from a prepaid balance on platform.sonilo.com, not through a sonilo.com subscription plan, so no Pro or Premium plan is needed; Enterprise API customers follow their enterprise agreement. A training partnership does not expand the output license.
+API output and your users
+API documentation
+Terms of Service
+Enterprise review
+Ownership and copyrightTraining authorization, a commercial license, output ownership, and copyright protection are separate questions. Licensed training does not guarantee copyright protection or the absence of Content ID claims. In Sonilo’s test of 2,000 tracks uploaded to YouTube, none were claimed. Review the applicable Terms for output rights and restrictions.
+Terms of Service
+Licensing FAQ
+Sonilo’s Content ID test
+Evidence for a client deliveryKeep the generated asset, generation date, applicable plan or API agreement, license certificate, and intended use with the project. A certificate documents the grant; it does not expand its scope or guarantee clearance for every use.
+Get a license certificate
+Verify a certificate
+Plan your project
+Find the right guidance for your project
+Choose the question you need to answer: training sources, a subscription plan, an API integration, or an enterprise production workflow.
+Where does the training music come from?Read the training-source overview, including the Shutterstock relationship and the distinction between catalog access and generated audio.How do I integrate the audio API?Start with the integration overview, then review the API documentation and the terms that apply to your account and intended use.Which website plan fits my project?Compare sonilo.com subscription plans and generation credits. API billing is separate; use the API documentation for developer-account details.Where are the API requests and limits?Find endpoint inputs, task polling, usage checks and integration requirements in the developer documentation.How does video-to-sound-effects work?Explore the video-to-sound-effects workflow and check the applicable terms before a commercial release.What should an enterprise team review?Prepare your production volume, intended uses, asset handoff and procurement requirements for an enterprise discussion.How can I fit a soundtrack to my edit?Explore soundtrack timing for an existing cut, including ad and brand-video workflows.How do the audio APIs compare?Compare Sonilo, ElevenLabs, Mubert, Beatoven.ai and Suno by documented interface, features and licensing scope.
+Before you publish
+Questions about commercial use
+Check the permission for your output and intended release, and keep the applicable terms with your project records.
+Where can I check rights for music and sound effects?Start with the Terms of Service for your generation-time plan. For API output, check the API terms and any agreement that applies to your account; enterprise rights follow the applicable agreement. For a Sound Effects Library download, check the license note on the library page. Training-source information and output-use permission answer different questions.Can Sonilo music be used in YouTube monetization, paid ads, and client videos?Pro, Premium, Enterprise, and eligible API users have commercial-use rights under the current Terms for generated output used in monetized channels, paid ads, sponsored content, brand videos, and client deliverables, with no attribution required. Indie games are covered from Pro; film, TV, broadcast, and studio games start on Premium, and no plan includes streaming release. Free does not include commercial-use rights.Which plan covers streaming release, film, TV, and broadcast?Pro carries the general commercial license for ads, branded content, client deliverables, monetized channels, apps, websites, and indie games. Premium adds film, television, broadcast, and studio games. The game line is the maker's combined revenue and funding over the last 12 months: under US$200,000 is an indie game, at or above it a studio game, on any platform. Enterprise adds custom terms. No plan includes releasing a generated track through a distributor to Spotify, Apple Music, or other streaming services. Each tier includes the one below it, and no paid plan requires attribution.Where can I check licensed-source AI music details?Sonilo licensing covers licensed catalog training, rights-holder authorization, Shutterstock provenance, commercial release review, and output records for professional video workflows.Can my app's users use audio generated through the Sonilo API commercially?Yes. Audio generated through the Sonilo API can be used commercially — in your own product and by your end users, including ads, client work and monetized channels. The API is billed pay-as-you-go from a prepaid balance on platform.sonilo.com, not through a sonilo.com subscription plan, so no Pro or Premium plan is needed; Enterprise API customers follow their enterprise agreement. For film, TV or broadcast use, or for releasing tracks to Spotify, Apple Music or other streaming services, contact sales first.How does licensing connect to API pricing and enterprise rights?API usage is billed pay-as-you-go from a prepaid balance on platform.sonilo.com, separate from the sonilo.com plans on the pricing page; use enterprise review when a team needs custom terms, procurement support, API volume, campaign records, or broader commercial video rights.Is Sonilo a replacement for a human composer?No. Sonilo is not a human composer replacement for projects that need bespoke themes, stems, exclusivity, live recording, or detailed creative direction. Video teams can use Sonilo when they need fast soundtrack and sound-effect options shaped to an existing cut, with plan-based commercial-use review and export records.Does Sonilo eliminate every copyright or licensing review step?No. Sonilo gives teams licensed-source context, plan-based commercial-use rights, and a repeatable output record, but commercial releases should still check the current Terms, plan status, intended channel, client or campaign record, and any territory, sublicensing, broadcast, or enterprise contract requirements.
+Verifiable licensing
+Every track ships with a certificate you can check
+A Sonilo license certificate records what was generated, under which plan, and what you are allowed to do with it, so a client, a brand's legal team, or a platform can verify your rights instead of taking your word for it.
+
+Sample certificateSON-2026-07-8F3A2C7D
+Issued2026-07-20 08:31 UTC
+WorkKinetic Assembly (Video-to-Music)
+Duration00:01:24
+Licenseeacme-studio · Pro plan, active at issue
+ScopeCommercial use, incl. advertising, client deliverables and monetized channels
+TerritoryWorldwide
+ExclusivityNon-exclusive
+Training dataSonilo describes music-model training on professionally licensed catalogs, including Shutterstock
+
+How to get one
+Generate a track on Pro or above, open it in your library, and choose Download commercial license. It is issued right away, and one request covers every audio file in that generation.Open your library
+Illustrative sample. Actual terms are governed by Sonilo's Terms of Service.
+Verify a Sonilo commercial license certificate
+Frequently asked questionsCan I monetize YouTube videos?
+Yes. Music generated with Sonilo can be used in monetized YouTube videos on Pro, Premium, Enterprise, or eligible API-user terms. Free is personal and non-commercial only. For searches like licensed AI-generated music for YouTube, ads, and social clips or royalty-free AI music options for YouTube, ads, and client videos, review the active plan and Terms before publishing.Can I use Sonilo music in client projects?
+Yes. You can use Sonilo music in commercial work created for clients, including client videos, commercial video projects, ads, and social campaigns, subject to the current plan and Terms.Can I use it in advertisements?
+Yes. Sonilo music can be used in advertisements, promotional videos, and branded content. It is built for licensed AI music for video projects where teams need music for YouTube videos, ads, social videos, and commercial video release.Can I use it on TikTok, Instagram, and other social platforms?
+Yes. You can publish videos with Sonilo music across major social media platforms.Can I release a track on Spotify or Apple Music?
+No. No plan includes releasing the track itself through a distributor to Spotify, Apple Music, or other streaming services. Sonilo licenses cover music used in video, ads, client deliverables, and monetized channels, plus film, TV, and broadcast from Premium, with no attribution.Can I use it on TV or broadcast?
+On Premium and Enterprise. Film, television, broadcast, and studio game productions are covered from Premium upwards, not by the Pro license.Can I use Sonilo music in games or apps?
+Apps, websites, and indie games are covered from Pro upwards, with no attribution. An indie game is a commercial game (sold, ad-supported, or otherwise monetized, on any platform) made by an individual or a team whose combined revenue and funding over the last 12 months is under US$200,000. At or above that line it is a studio game, which sits with film and broadcast on Premium. The line is checked when the music or sound is generated: anything generated while you were under it stays covered for that game even after you grow, and anything generated after you cross it needs Premium.Can I edit or remix the generated music?
+Yes. You're free to edit, trim, loop, or combine the generated music with your own content.What does licensed catalog training mean?
+Sonilo describes its music models as trained on professionally licensed catalogs, including Shutterstock. Its Shutterstock partnership documents a music-training license; training-source rights and permission to use generated output are separate.How should API and enterprise teams review licensing?
+API and enterprise teams should confirm the current plan, Terms of Service, intended channel, paid media usage, and export records before release. For enterprise procurement, keep the generated output, project name, account or plan, and approval note attached to each video asset. When the same edit uses music and sound effects, keep both the video-to-music and video-to-sound-effects outputs in the review record.Can developers use Sonilo as a commercial-use music API?
+Yes. Eligible API users can use Sonilo API access with commercial-use rights and pay-as-you-go-style credit accounting for licensed music for video, creator platforms, apps, and automated media workflows. Developer teams can also combine video-to-music with video-to-sound-effects when an app needs licensed soundtrack generation plus scene-matched sound effects.
+Commercial use rights are included under Sonilo's Terms of Service.The Free plan is for trying Sonilo, not for publishing commercial work.
+Licensing FAQ
+One question per page
+Each answer opens with the direct answer, then the plans it applies to.
+Which Sonilo plans include commercial use?
+Do I own the music and sound effects I generate with Sonilo?
+Can I use Sonilo music and sound effects in monetized YouTube videos?
+Can I use Sonilo output in client work and paid ads?
+What is a Sonilo license certificate and how do I get one?
+What happens to my rights if I cancel or downgrade my Sonilo plan?
+Can I distribute Sonilo music to Spotify, Apple Music, and other streaming services?
+Is Sonilo music royalty-free?
+Do Sonilo sound effects have the same license as the music?
+What was Sonilo trained on, and why does it matter for my license?
+Can I edit, remix, loop, or use Sonilo output in games, apps, and broadcast?
+Can I post Free plan output publicly, and do I need to credit Sonilo?
+Is Sonilo music safe to use commercially?
+Will Sonilo music get a Content ID claim on YouTube?
+Can I use Sonilo music on TikTok and Instagram Reels?
+Can I use Sonilo music in sponsored posts and branded content?
+Can I use the free Sonilo sound effects library commercially?
+Can my app's users use audio generated through the Sonilo API commercially?
+How do AI music generator licenses compare for commercial use?
+All licensing questions
+Make something you can actually publish.
+Generate Music NowSee pricing© 2026 Sonilo. All rights reserved.

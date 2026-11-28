@@ -1,0 +1,869 @@
+Hong Kong Exchanges and Clearing Limited and The Stock Exchange of Hong Kong Limited take no responsibility for the
+contents of this announcement, make no representation as to its accuracy or completeness and expressly disclaim any liability
+whatsoever for any loss howsoever arising from or in reliance upon the whole or any part of the contents of this announcement.
+
+Kuaishou Technology
+(A company controlled through weighted voting rights and incorporated in the Cayman Islands with limited liability)
+
+(HKD Counter Stock Code: 01024 / RMB Counter Stock Code: 81024)
+
+UPDATES TO THE DISCLOSEABLE TRANSACTIONS AND CONNECTED
+TRANSACTIONS IN RELATION TO THE SUBSCRIPTIONS AND THE GRANT
+OF THE REDEMPTION RIGHTS THEREOF
+Reference is made to the Company’s announcement on July 2, 2026 (the “Announcement”), in relation
+to, among other things, the Subscriptions and the grant of the Redemption Rights. Unless the context
+requires otherwise, capitalized terms used herein shall have the same meanings as those defined in the
+Announcement.
+NEW ADDITIONAL INVESTORS
+As disclosed in the Announcement, Beijing Kling may enter into further Joinder Agreement(s) with new
+Additional Investor(s) within the Subscription Limit during the Subscription Period.
+The Board announces that on August 31, 2026, Beijing Kling entered into a Joinder Agreement separately
+with each of China Artificial Intelligence Industry Investment Fund Partnership (Limited Partnership)
+((
+)) (“China AI Fund”) and Charoen Pokphand
+Robot Limited (“Charoen Pokphand Robot”), pursuant to which each of China AI Fund and Charoen
+Pokphand Robot has agreed to become a party to the Capital Increase Agreement as an Additional Investor
+and to inject cash capital of RMB1,400.00 million and approximately USD19.29 million (equivalent to
+approximately RMB131.45 million) into Beijing Kling respectively (corresponding to RMB1,097,518
+and RMB103,047 registered capital of Beijing Kling and representing approximately 1.14% and 0.11%
+of Beijing Kling’s registered capital as enlarged by the Subscriptions and the implementation of the
+Subsidiary Share Participation Schemes respectively (assuming the Subscription Limit and the scheme
+mandate limits of the Subsidiary Share Participation Schemes are both fully utilized)). On the same date,
+Beijing Kling entered into a joinder agreement to the Shareholders’ Agreement separately with each of
+China AI Fund and Charoen Pokphand Robot, pursuant to which, among other things, China AI Fund and
+Charoen Pokphand Robot were both granted the Redemption Rights.
+China AI Fund is a limited partnership established in the PRC. It is principally engaged in equity
+investment, investment management and asset management. China AI Fund is owned as to (i)
+approximately 0.10% by Guozhi Investment Private Equity Fund Management Co., Ltd. (
+) as its general partner, which is ultimately controlled by State-owned Assets
+Supervision and Administration Commission of Shanghai (), and (ii)
+approximately 99.90% by China Integrated Circuit Industry Investment Fund Phase III Co., Ltd. (
+) as its limited partner, the single largest shareholder of which
+is the Ministry of Finance of the People’s Republic of China ().
+
+–1–
+
+Charoen Pokphand Robot is an investment holding company incorporated in Hong Kong with limited
+liability and ultimately owned as to 50% by Ms. Cheng Cheung Ling and 50% by Mr. Tse Eric S Y.
+For other details of the Capital Increase Agreement (including the Joinder Agreements thereunder), the
+Subscriptions, the Shareholders’ Agreement and the grant of the Redemption Rights, please refer to the
+Announcement.
+UPDATES TO THE SUBSCRIPTION AMOUNTS OF CERTAIN EXISTING INVESTORS
+The Board announces that on August 31, 2026, Beijing Kling entered into supplemental agreements to
+the Joinder Agreements with each of Party C, Tianjin Lisi Xingque, Junmang Yunze, Ningbo Zhichun
+Huayan, Monolith Kling, HUNDREDS PLUS LIMITED PARTNERSHIP, and PMF Select Polaris
+LP respectively, pursuant to which: (1) the amount of contribution by Party C shall increase from
+USD10.00 million (equivalent to approximately RMB68.16 million) to USD15.00 million (equivalent
+to approximately RMB102.24 million); (2) the amount of contribution by Tianjin Lisi Xingque shall
+increase from RMB700.00 million to approximately RMB936.96 million; (3) the amount of contribution
+by Junmang Yunze shall increase from RMB240.00 million to RMB260.00 million; (4) the amount of
+contribution by Ningbo Zhichun Huayan shall decrease from RMB681.57 million to approximately
+RMB634.48 million; (5) the amount of contribution by Monolith Kling shall decrease from USD20.00
+million (equivalent to approximately RMB136.31 million) to approximately USD9.74 million (equivalent
+to approximately RMB66.37 million); (6) the amount of contribution by HUNDREDS PLUS LIMITED
+PARTNERSHIP shall decrease from USD50.00 million (equivalent to approximately RMB340.79
+million) to USD30.00 million (equivalent to approximately RMB204.47 million); and (7) the amount of
+contribution by PMF Select Polaris LP shall decrease from approximately USD63.82 million (equivalent
+to approximately RMB434.95 million) to USD39.00 million (equivalent to approximately RMB265.81
+million).
+The Company further clarifies that as (i) all of the applicable ratios (as defined under the Listing Rules) in
+respect of the Subscription by and the grant of the Redemption Right to Party A are less than 0.1%, and
+(ii) all of the applicable ratios (as defined under the Listing Rules) in respect of the Subscription by Party
+C (based on the increased contribution) are less than 0.1%, each of the above transactions are fully exempt
+from the reporting, announcement, annual review, circular and independent shareholders’ approval
+requirements under Chapter 14A of the Listing Rules. Save for the above, the Listing Rules implications
+and classification as disclosed in the Announcement remain unchanged.
+All other terms of the Capital Increase Agreement (including the Joinder Agreement(s) thereunder) as
+between Beijing Kling and each of Party C, Tianjin Lisi Xingque, Junmang Yunze, Ningbo Zhichun
+Huayan, Monolith Kling, HUNDREDS PLUS LIMITED PARTNERSHIP, and PMF Select Polaris LP
+respectively remain unchanged.
+
+–2–
+
+As a result of the above updates, the Subscription Limit has been fully utilized, and the registered capital,
+percentage of equity interests and percentage of voting rights in Beijing Kling to be held by the Investors
+(including the above new Additional Investors) shall be as follows:
+Before the Subscriptions and the adoption of the After the Subscription Limit and the scheme mandate limits of the
+Subsidiary Share Participation Schemes
+Subsidiary Share Participation Schemes are both fully utilized
+Percentage
+Percentage
+Registered
+of equity Percentage of
+Amount of
+Registered
+of equity Percentage of
+Capital
+interests voting rights
+contribution
+Capital
+interests voting rights
+(%)(3) (RMB million)(3)
+(RMB)
+(%)(3)
+(%)(3)
+(RMB)
+(%)(3)
+
+Controlling Shareholders
+Lucky Labs
+Beijing Kuailingrui
+The grantees and the Shareholding Platforms
+Mr. Cheng Yixiao
+Mr. Gai Kun (equity awards granted under the
+Beijing Kling Share Incentive Scheme)
+Equity awards grantee under the Initial Grants
+other than Mr. Cheng Yixiao and Mr. Gai Kun
+The Shareholding Platforms
+Share options granted or to be granted but not yet
+exercised
+Investors
+Party A
+Party B (Shanghai Qishan Investment Co., Ltd.)
+Party B (Parallel Mars Investment Limited)
+Party C
+Party D
+Shanghai Guofang Digital Technology Enterprise
+Management Partnership (Limited Partnership)
+Hangzhou AliCloud Apsara Information
+Technology Co., Ltd.
+Beijing CAS Wentian Technology Development
+Center (Limited Partnership)(1)
+Guangdong Dakang Lanwu Equity Investment
+Partnership Enterprise (Limited Partnership)
+Tianjin Yuanfeng Qifeng Enterprise Management
+Partnership (Limited Partnership)
+CPE Spruce Investment Limited
+Goldstone Lingshu (Jiaxing) Enterprise
+Management Partnership (Limited Partnership)
+
+3,796,656
+6,203,344
+
+37.97%
+62.03%
+
+37.97%
+62.03%
+
+63,796,656
+1,923,517
+
+66.33%
+2.00%
+
+52.23%
+1.57%
+
+—
+
+—
+
+—
+
+—
+
+961,759
+
+1.00%
+
+0.79%
+
+—
+
+—
+
+—
+
+—
+
+2,885,276
+
+3.00%
+
+23.62%
+
+—
+—
+
+—
+—
+
+—
+—
+
+—
+—
+
+432,792
+2,404,398
+
+0.45%
+2.50%
+
+0.35%
+1.97%
+
+—
+
+—
+
+—
+
+—
+
+7,742,156
+
+8.05%
+
+6.34%
+
+—
+—
+—
+—
+—
+
+—
+—
+—
+—
+—
+
+—
+—
+—
+—
+—
+
+102.24
+681.57
+681.57
+102.24
+47.00
+
+80,147
+534,310
+534,310
+80,147
+36,845
+
+0.08%
+0.56%
+0.56%
+0.08%
+0.04%
+
+0.07%
+0.44%
+0.44%
+0.07%
+0.03%
+
+—
+
+—
+
+—
+
+1,690.00
+
+1,324,860
+
+1.38%
+
+1.08%
+
+—
+
+—
+
+—
+
+1,363.14
+
+1,068,621
+
+1.11%
+
+0.87%
+
+—
+
+—
+
+—
+
+943.00
+
+739,256
+
+0.77%
+
+0.61%
+
+—
+
+—
+
+—
+
+880.00
+
+689,868
+
+0.72%
+
+0.56%
+
+—
+—
+
+—
+—
+
+—
+—
+
+850.79
+850.79
+
+666,965
+666,965
+
+0.69%
+0.69%
+
+0.55%
+0.55%
+
+—
+
+—
+
+—
+
+800.00
+
+627,152
+
+0.65%
+
+0.51%
+
+–3–
+
+Before the Subscriptions and the adoption of the After the Subscription Limit and the scheme mandate limits of the
+Subsidiary Share Participation Schemes
+Subsidiary Share Participation Schemes are both fully utilized
+Percentage
+Percentage
+Registered
+of equity Percentage of
+Amount of
+Registered
+of equity Percentage of
+Capital
+interests voting rights
+contribution
+Capital
+interests voting rights
+(3)
+(3)
+(3)
+(%) (RMB million)
+(RMB)
+(%)(3)
+(%)(3)
+(RMB)
+(%)
+Shenzhen Hongtu Baichuan No.2 Investment
+Partnership (Limited Partnership)
+Suzhou Gongrong Jinzhi No.1 Venture Capital
+Partnership (Limited Partnership)
+Qingdao Huaxin Ceda Equity Investment
+Partnership (Limited Partnership)
+Beijing Hongyi Lingjing Enterprise Management
+Partnership (Limited Partnership)
+China Internet Investment Fund (Limited
+Partnership)
+Beijing Haipu No.1 Technology Development
+Partnership (Limited Partnership)
+Chongqing Manufacturing Transformation and
+Upgrading Private Equity Investment Fund
+Partnership (Limited Partnership)
+Beijing Baidu Netcom Science Technology Co.,
+Ltd.
+Nanjing Zijin Kuaiying Enterprise Management
+Partnership (Limited Partnership)
+Taizhou Jiaojiang Qiling Enterprise Management
+Consulting Partnership (Limited Partnership)
+Wealth Investment V (HK) Limited
+Beijing Information Industry Development
+Investment Fund (L.P.)
+Beijing Artificial Intelligence Industry Investment
+Fund (Limited Partnership)
+CITIC Securities Investment Company Limited
+BFI MIDCO HOLDING LIMITED(2)
+Ningbo Meishan Bonded Port Area Zhichun
+Huayan Venture Capital Partnership (Limited
+Partnership)
+Tianjin Lisi Xingque Venture Capital Partnership
+(Limited Partnership)
+Shenzhen Kunhe Juyuan Venture Capital
+Partnership (Limited Partnership)
+Wenzhou Ruida Venture Capital Partnership
+(Limited Partnership)
+Gongqingcheng Junmang Yunze Venture Capital
+Partnership (Limited Partnership)
+
+—
+
+—
+
+—
+
+700.00
+
+548,758
+
+0.57%
+
+0.45%
+
+—
+
+—
+
+—
+
+650.00
+
+509,561
+
+0.53%
+
+0.42%
+
+—
+
+—
+
+—
+
+478.00
+
+374,724
+
+0.39%
+
+0.31%
+
+—
+
+—
+
+—
+
+400.00
+
+313,576
+
+0.33%
+
+0.26%
+
+—
+
+—
+
+—
+
+400.00
+
+313,576
+
+0.33%
+
+0.26%
+
+—
+
+—
+
+—
+
+377.00
+
+295,546
+
+0.31%
+
+0.24%
+
+—
+
+—
+
+—
+
+350.00
+
+274,379
+
+0.29%
+
+0.22%
+
+—
+
+—
+
+—
+
+340.79
+
+267,155
+
+0.28%
+
+0.22%
+
+—
+
+—
+
+—
+
+340.79
+
+267,155
+
+0.28%
+
+0.22%
+
+—
+—
+
+—
+—
+
+—
+—
+
+239.47
+204.47
+
+187,731
+160,293
+
+0.20%
+0.17%
+
+0.15%
+0.13%
+
+—
+
+—
+
+—
+
+200.00
+
+156,788
+
+0.16%
+
+0.13%
+
+—
+—
+—
+
+—
+—
+—
+
+—
+—
+—
+
+200.00
+100.00
+545.26
+
+156,788
+78,394
+427,448
+
+0.16%
+0.08%
+0.44%
+
+0.13%
+0.06%
+0.35%
+
+—
+
+—
+
+—
+
+634.48
+
+497,393
+
+0.52%
+
+0.41%
+
+—
+
+—
+
+—
+
+936.96
+
+734,523
+
+0.76%
+
+0.60%
+
+—
+
+—
+
+—
+
+350.00
+
+274,379
+
+0.29%
+
+0.22%
+
+—
+
+—
+
+—
+
+340.00
+
+266,540
+
+0.28%
+
+0.22%
+
+—
+
+—
+
+—
+
+260.00
+
+203,824
+
+0.21%
+
+0.17%
+
+–4–
+
+Before the Subscriptions and the adoption of the After the Subscription Limit and the scheme mandate limits of the
+Subsidiary Share Participation Schemes
+Subsidiary Share Participation Schemes are both fully utilized
+Percentage
+Percentage
+Registered
+of equity Percentage of
+Amount of
+Registered
+of equity Percentage of
+Capital
+interests voting rights
+contribution
+Capital
+interests voting rights
+(3)
+(3)
+(3)
+(%) (RMB million)
+(RMB)
+(%)(3)
+(%)(3)
+(RMB)
+(%)
+QM323 Limited
+MONOLITH KLING FUND L.P.
+Maanshan Ruiyuan Co-Stone Enterprise
+Management Partnership (Limited Partnership)
+Yangtze River Delta Digital Intelligence Cultural
+Industry Private Equity Investment Fund
+(Shanghai) Partnership (Limited Partnership)
+Xiamen Chunhua Zhongying Fuyao Artificial
+Intelligence Investment Partnership (Limited
+Partnership)
+HUNDREDS PLUS LIMITED PARTNERSHIP
+PMF Select Polaris LP
+China Artificial Intelligence Industry Investment
+Fund Partnership (Limited Partnership)
+Charoen Pokphand Robot Limited
+Total
+
+—
+—
+
+—
+—
+
+—
+—
+
+204.47
+66.37
+
+160,293
+52,029
+
+0.17%
+0.05%
+
+0.13%
+0.04%
+
+—
+
+—
+
+—
+
+500.00
+
+391,970
+
+0.41%
+
+0.32%
+
+—
+
+—
+
+—
+
+350.00
+
+274,379
+
+0.29%
+
+0.22%
+
+—
+—
+—
+
+—
+—
+—
+
+—
+—
+—
+
+285.00
+204.47
+265.81
+
+223,423
+160,293
+208,381
+
+0.23%
+0.17%
+0.22%
+
+0.18%
+0.13%
+0.17%
+
+—
+—
+
+—
+—
+
+—
+—
+
+1,400.00
+131.45
+
+1,097,518
+103,047
+
+1.14%
+0.11%
+
+0.90%
+0.08%
+
+10,000,000
+
+100.00%
+
+100.00%
+
+20,447.10
+
+96,175,864
+
+100.00%
+
+100.00%
+
+Notes:
+(1)
+
+CAS GENERATION’s rights and obligations under each of the Capital Increase Agreement and the Shareholders’
+Agreement as between it and Beijing Kling have been novated to Beijing CAS Wentian Technology Development
+Center (Limited Partnership) (“CAS WENTIAN”), both of which have the same ultimate beneficial owners, with effect
+from August 31, 2026, while all other material terms of the agreements as between Beijing Kling and CAS WENTIAN
+remain unchanged and continue in full force and effect. CAS WENTIAN is a limited partnership established in
+the PRC, principally engaged in technical and business management consulting services. For other details of CAS
+GENERATION, please refer to the Announcement.
+
+(2)
+
+BFIH’s rights and obligations under each of the Capital Increase Agreement and the Shareholders’ Agreement as
+between it and Beijing Kling have been novated to BFI MIDCO HOLDING LIMITED (“BFI MIDCO”), its indirect
+wholly-owned subsidiary, with effect from August 31, 2026, while all other material terms of the agreements as between
+Beijing Kling and BFI MIDCO remain unchanged and continue in full force and effect. BFI MIDCO is a company
+incorporated in the Abu Dhabi Global Market (ADGM), UAE, with limited liability, principally engaged in investment
+holding activities. For other details of BFIH, please refer to the Announcement.
+
+(3)
+
+Any discrepancies between the total shown and the sum of the amounts and percentages listed are due to rounding.
+
+By order of the Board
+Kuaishou Technology
+Mr. Cheng Yixiao
+Chairman
+Hong Kong, August 31, 2026
+As at the date of this announcement, the Board of Directors comprises Mr. Cheng Yixiao and Mr. Su Hua as executive
+Directors; Mr. Li Zhaohui and Mr. Wang Huiwen as non-executive Directors; Mr. Zhang Fei, Mr. Ma Yin, Ms. Lu Rong and Mr.
+Huang Jia as independent non-executive Directors.
+
+–5–
+
+

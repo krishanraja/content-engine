@@ -1,0 +1,296 @@
+Tracker. The biggest update yet. • Polyend
+
+ Skip to content
+
+No products in the cart.
+
+ Loading... 
+
+Products 
+
+Products
+
+Guitar pedals
+
+ Loop 
+
+ Endless 
+
+ Mess 
+
+ Step 
+
+ Press 
+
+Synthesizers
+
+ Synth 
+
+Drum machines and Grooveboxes
+
+ Tracker Mystery Bundle 
+
+ Drums. 
+
+ Tracker Mini Aluminum 
+
+ Play+ 
+
+ Tracker+ 
+
+ Tracker Silver Edition 
+
+ Tracker Mini 
+
+Other
+
+ Keys 
+
+ Accessories 
+
+Digital
+
+ Palettes 
+
+ Plates 
+
+ Playground 
+
+ Legacy 
+
+ Records 
+
+What’s up
+
+Help
+
+Downloads
+
+Stores
+
+Press Kit
+
+My Account
+
+Logout
+
+Products 
+
+Products
+
+Guitar pedals
+
+ Loop 
+
+ Endless 
+
+ Mess 
+
+ Step 
+
+ Press 
+
+Synthesizers
+
+ Synth 
+
+Drum machines and Grooveboxes
+
+ Tracker Mystery Bundle 
+
+ Drums. 
+
+ Tracker Mini Aluminum 
+
+ Play+ 
+
+ Tracker+ 
+
+ Tracker Silver Edition 
+
+ Tracker Mini 
+
+Other
+
+ Keys 
+
+ Accessories 
+
+Digital
+
+ Palettes 
+
+ Plates 
+
+ Playground 
+
+ Legacy 
+
+ Records 
+
+What’s up
+
+Help
+
+Downloads
+
+Stores
+
+Press Kit
+
+My Account
+
+Logout
+
+ Eng.
+
+ Language: 
+
+ Eng. 
+
+ 日本語 
+
+ Menu
+
+ Cart
+ Shopping cart
+
+ Log in or register 
+
+ Eng.
+
+ Language: 
+
+ Eng. 
+
+ 日本語 
+
+ What’s up 
+
+ Back 
+
+ News What's up
+ Nov 02, 2026
+
+ Tracker. The biggest update yet. 
+
+ Polyend releases the Tracker firmware source code 
+
+Today we’re publishing the firmware source code for the original Tracker, Tracker+ and Tracker Mini on GitHub. We’re also releasing Tracker Community Edition 1.0 with tons of new features and improvements. You can install it on any of the three instruments, modify the firmware yourself and share your own version. We’ve built in a recovery system to keep a faulty firmware build from bricking your Tracker.
+Explore the Tracker Community Edition repository on GitHub
+
+Here at Polyend, creativity is what we value most. We’ve seen it firsthand in the unofficial Tracker mods you’ve built, and we’re sharing the firmware source code to support that work. Maybe you want to build an entirely new instrument on the Tracker hardware. Or maybe there’s just one thing you wish your Tracker did differently. Either way, you can now try it on the unit you already own. I bet some of you already have ideas for the original Tracker that never crossed our minds.
+Piotr Raczyński, CEO of Polyend
+
+What’s new in Community Edition 1.0
+
+Stream long samples from the SD card. Bring full-length stems, loops and field recordings into a project using a fraction of the sample memory they’d normally need. This works even on the original Tracker.
+
+Record timing and velocity while keeping both step FX slots free. Micro-move and Volume now have dedicated fields on every step. New Chance conditions let you bring in a snare fill every fourth pass.
+
+Load plugins in the Sample Editor. Six effects and generators are included, from an analog-style kick generator to a stereo delay. The plugin SDK lets you build, share and sell your own.
+
+Play two new synths on Tracker+ and Tracker Mini. CHIP and DIRT join the synth lineup. A new SDK lets you build your own synth engines.
+
+All three models also get wavetable envelopes and LFOs, faster project loading and saving, and tighter MIDI clock timing. You can design custom Tracker themes and fonts in your browser.
+
+See all the new features, improvements and fixes in the full changelog
+
+More stuff you might want to read
+
+ Code Unknown: Folktronica Jam 
+
+ Artists 
+
+ What's up 
+
+ Scene: Joel Nicholson – Chasten Hill 
+
+ Scene 
+
+ What's up 
+
+ Tracker Mini Live with Lennard Ypma | HÖR Berlin 
+
+ Artists 
+
+ Tutorials 
+
+ What's up 
+
+ Allmyfriendsaresynths: LoFi GlitchHop Jam 
+
+ Artists 
+
+ What's up 
+
+ More 
+
+Subscribe to the newsletter
+
+Sign up!
+OK 
+
+ © 2015 - 2026 Polyend®
+
+ Help
+ Downloads
+ Free shipping
+ Press Kit
+ Terms
+ Privacy Policy
+
+ Manage cookies
+
+Manage Consent
+
+To provide the best experiences, we use technologies like cookies to store and/or access device information. Consenting to these technologies will allow us to process data such as browsing behavior or unique IDs on this site. Not consenting or withdrawing consent, may adversely affect certain features and functions.
+
+ Functional
+
+ Functional
+
+ Always active 
+
+ The technical storage or access is strictly necessary for the legitimate purpose of enabling the use of a specific service explicitly requested by the subscriber or user, or for the sole purpose of carrying out the transmission of a communication over an electronic communications network.
+
+ Preferences
+
+ Preferences
+
+ The technical storage or access is necessary for the legitimate purpose of storing preferences that are not requested by the subscriber or user.
+
+ Statistics
+
+ Statistics
+
+ The technical storage or access that is used exclusively for statistical purposes.
+ The technical storage or access that is used exclusively for anonymous statistical purposes. Without a subpoena, voluntary compliance on the part of your Internet Service Provider, or additional records from a third party, information stored or retrieved for this purpose alone cannot usually be used to identify you.
+
+ Marketing
+
+ Marketing
+
+ The technical storage or access is required to create user profiles to send advertising, or to track the user on a website or across several websites for similar marketing purposes.
+
+Manage options
+
+Manage services
+
+Manage {vendor_count} vendors
+
+Read more about these purposes
+
+ Accept
+ Deny
+ View preferences
+ Save preferences
+ View preferences
+
+{title}
+
+{title}
+
+{title}
+
+Manage consent

@@ -1,0 +1,174 @@
+Maxon Skip to main content
+Toggle menu
+Search Go Back Search:
+Search Maxon.net Search Maxon.net
+Search Cineversity
+Search
+Reset Search
+Search
+PRODUCTS Go Back PRODUCTS:
+MAXON ONE
+MAXON PLUS
+CINEMA 4D
+CINEMA 4D FOR IPAD
+REDSHIFT
+REDSHIFT FOR ARCHITECTS
+RED GIANT
+UNIVERSE
+AUTOGRAPH
+ZBRUSH
+ZBRUSH FOR IPAD
+CAPSULES
+MOVES
+CINEWARE
+CINEBENCH
+DOWNLOADS
+SOLUTIONS Go Back SOLUTIONS:
+AGENTIC AI FOR 3D
+3D ANIMATION
+3D MODELING
+3D MOTION DESIGN
+3D RENDERING
+ARCHITECTURAL VISUALIZATION
+CHARACTER CREATION
+COLOR GRADING
+COMPOSITING
+KINETIC TYPOGRAPHY
+MEDIA & ENTERTAINMENT
+MOTION CAPTURE
+MOTION GRAPHICS
+VIDEO EDITING
+VISUAL EFFECTS
+NEWS Go Back NEWS:
+HEADLINES
+EVENTS
+GALLERY
+LEARN Go Back LEARN:
+EDUCATIONAL LICENSING
+TRAINING PARTNERS
+CINEVERSITY
+SUPPORT
+TRY
+BUY
+Language: English Go Back Language:
+English
+Deutsch (German)
+Español (Spanish)
+Français (French)
+Italiano (Italian)
+中文 (Chinese)
+日本語 (Japanese)
+한국어 (Korean)
+PRODUCTS MAXON ONE
+MAXON PLUS
+CINEMA 4D
+CINEMA 4D FOR IPAD
+REDSHIFT
+REDSHIFT FOR ARCHITECTS
+RED GIANT
+UNIVERSE
+AUTOGRAPH
+ZBRUSH
+ZBRUSH FOR IPAD
+CAPSULES
+MOVES
+CINEWARE
+CINEBENCH
+DOWNLOADS
+SOLUTIONS AGENTIC AI FOR 3D
+3D ANIMATION
+3D MODELING
+3D MOTION DESIGN
+3D RENDERING
+ARCHITECTURAL VISUALIZATION
+CHARACTER CREATION
+COLOR GRADING
+COMPOSITING
+KINETIC TYPOGRAPHY
+MEDIA & ENTERTAINMENT
+MOTION CAPTURE
+MOTION GRAPHICS
+VIDEO EDITING
+VISUAL EFFECTS
+NEWS HEADLINES
+EVENTS
+GALLERY
+LEARN EDUCATIONAL LICENSING
+TRAINING PARTNERS
+CINEVERSITY
+SUPPORT
+TRY
+BUY
+Search
+Search
+Account
+Toggle Search
+Select Language English
+Deutsch (German)
+Español (Spanish)
+Français (French)
+Italiano (Italian)
+中文 (Chinese)
+日本語 (Japanese)
+한국어 (Korean)
+RESPONSIBLE AI
+Mission Statement
+We believe in a future where anyone with a creative idea can visually create in every dimension, delivered in any format and on any device they choose, regardless of their skill level.
+The Role of AI
+At Maxon, we put technology at the service of artists – and AI, like other technologies before, is no exception. We are listening closely to the conversation about AI and recognize the significant impact it will have across our industry. We believe that exploring and developing this technology with the participation of artists is the best way to make AI work for you.
+We define our role as identifying where AI can make a meaningful contribution to your work and building tools that reflect the realities or future of creative production. That means listening to artists, taking their concerns seriously, and keeping creative control at the heart of our decisions. Our goal is that you, the artist, decide whether – and to what extent – to use AI.
+We aim to develop and deploy AI responsibly and transparently, with one clear purpose: to help you bring your ideas to life.
+Maxon’s promise about AI
+Generative AI can create impressive visuals, but we know that artists require more: consistency, precision, control, and repeatability. These are areas where AI struggles. Our goal is to focus on these challenges as we bring AI tools to our users. Your creative vision deserves more than just a prompt.
+We also recognize that artists bring different skills and interests to their work. A 3D modeler may not have deep knowledge of camera tracking, and vice versa. With the help of AI, we can make our tools more accessible, helping artists work beyond their existing areas of expertise. This can make it easier to try an unfamiliar technique, work through a technical obstacle, or develop an idea that previously felt out of reach. The goal is to augment and empower artists.
+We believe that 3D will continue to play a central role in creative production. The accuracy and repeatability of a rendered shot remain essential to production. Procedural workflows help you make updates in real time when a client asks for a change. A 3D scene gives artists direct control over geometry, materials, lighting, cameras, and motion, with a structure they can revisit and refine. Our goal is to find ways for AI to enhance that workflow and build on the control artists already have.
+To do this, we aim to make it easier to use your existing assets, tools, and knowledge alongside AI. You have already invested time in building your scenes, developing your skills, and making creative decisions. We want that work to provide the foundation for what comes next. We maintain the context of your production and offer a unified way to access AI services, driven by your inputs and data, and directed by your artistic vision.
+Our Commitment to Artists
+We believe that artists belong in the driver’s seat. Your judgment, experience, and point of view are what give the work its direction. Our AI tools are designed in a way that you can spend more of your time making creative decisions and developing the details that matter to you.
+Our vision is a future where artists see AI as another tool in their toolkit: something they understand, can direct, and can choose to use when it serves their work. Our goal is to create that future with you, guided by the ways you work and the things you want to make.
+Artists and AI
+We respect your choice about whether and how to use AI. Generative AI can have significant social, ethical, and legal implications, and artists have good reasons to approach it with different expectations and concerns. Some are eager to experiment. Others are uncertain about how it fits into their practice or whether they want to use it at all. A key priority for us is to give everyone a choice in how they participate, including a central, unified control to turn off AI functionality.
+We hope you will choose to engage in this discussion with us. If you have concerns about AI, your perspective is especially valuable. Questions about creative control, the treatment of artists' work, and the practical demands of production all deserve a place in that discussion. We believe that participating in the conversation is one of the best ways to help shape a future where AI systems are developed and deployed responsibly.
+Creator Rights and Responsible AI
+Creator rights are important to us. We believe that responsible AI development must take the origins of training data and the rights of its creators seriously. This is taken into account during the AI model selection process. Before an AI feature is released, our IT, Legal, and Product teams review aspects such as privacy and security, AI provider terms, applicable legal requirements, and production reliability.
+We do not train an AI model on our users' data or derivatives of that data, including user prompts.
+Frequently Asked Questions
+Can I switch AI off entirely? Yes. A central control disables AI functionality across your account and applications, including local AI, and MCP integrations.
+Team administrators can manage and enforce this setting for all members of a team. Team members cannot override an administrator’s decision to disable AI.
+Content you have already generated remains usable when AI is disabled.
+This control does not govern independently developed integrations or custom scripts that connect to external AI services.
+We recognize that the involvement of AI in creating or modifying works can introduce legal uncertainty around intellectual property ownership, protection, and enforceability. Depending on your intellectual property policies and requirements, this may make AI features unsuitable for certain use cases. This setting gives you the option to disable AI functionality entirely.
+Can I use local AI without cloud AI? Yes, you can deactivate Maxon Plus Cloud Services, which blocks connections to Third-Party AI models in the cloud. Local AI models like Imagesense in the Cinema 4D Asset Browser and Red Giant Depth Generator will still work in this scenario, provided the central AI control remains enabled.
+What data is shared with Third-Party AI Providers? When you use a cloud-based AI feature provided through Maxon, only the inputs required for that operation, such as your prompt and relevant scene context, are sent to the Third-Party AI provider to process that job. Maxon informs about which provider is used for a given feature, and you control whether to use cloud AI features at all. AI functionality is designed to run only when you choose to use it.
+Maxon has data processing agreements in place with the Third-Party AI providers it engages. These agreements are intended to limit processing of your data to what is needed to deliver the requested functionality and to ensure that providers delete your content after the applicable retention period, unless retention is required by applicable law. An overview of these Third-Party AI providers is available in our Sub-processor List.
+What does Maxon store, and how can I delete my content? For most AI features, content is saved in a generation history that you can manage or clear. When you clear your generation history, the associated content is deleted from Maxon’s active storage. Backup copies in Maxon’s own systems may be retained for a limited period, generally up to 30 days.
+Separately, Maxon retains transaction metadata needed for usage accounting and to confirm whether requested operations were completed successfully. These records are designed not to contain your prompts, uploaded content, or generated outputs.
+Third-Party AI provider retention is governed by the separate arrangements described above.
+For personal data contained in your content, the details are set out in our Data Processing Addendum.
+Where is my content stored? Maxon stores generation history and backups in the European Union and uses reasonable endeavors to ensure that the Third-Party AI providers we engage store your content mainly in the United States or Europe. More information is available in our Sub-processor List.
+Can my content be accessed? Access to your content is limited to what is necessary to provide the AI features, for example to provide customer-requested support, for operational troubleshooting or security investigations, to enforce our terms and to review notices of allegedly illegal or infringing content or to comply with legal obligations.
+Does Maxon use my work or my prompts to train AI models? No. Maxon does not use your work, prompts, or other user data, including derivatives of that data, to train AI models.
+When engaging with Third-Party AI providers, Maxon takes reasonable steps to contractually restrict them from using your inputs, outputs, or data derived from them to train AI models. Inputs include prompts, uploaded content, and transmitted scene information. This applies solely to AI services provided through Maxon, not external services you connect using your own account.
+Do these data protections apply to external AI services I connect to myself? When you connect an external AI service through an MCP integration, that service is a non-Maxon offering that you use under your own account and that provider’s terms.
+Maxon provides an on/off switch for MCP integrations. You are responsible for configuring and managing the external AI client.
+Do I own the output generated by AI features? Maxon does not claim ownership of the output you create using AI features included in Maxon Plus, except for any Maxon Capsules it contains. Any intellectual property rights you hold in the output remain yours, subject to applicable law and the applicable terms.
+Can I use AI-generated images and AI-generated 3D assets that I have created commercially? Yes, AI-generated images and 3D assets that you have created may generally be used in commercial projects.
+As with any asset, you remain responsible for evaluating whether specific AI-generated content is suitable for your intended use, including with regard to copyright, trademarks, and other Third-Party rights. AI-generated content may unintentionally resemble existing works, brands, or people. Please make sure that you have the necessary rights to any materials you upload.
+For further information, please refer to our End User License Agreement (EULA) .
+How is AI-generated content identified? Content generated with the AI features integrated into Maxon products is generated by Third-Party AI providers. In addition to any marking applied by the Third-Party AI provider, Maxon applies markings in the following places:
+AI-generated Cinema 4D models are equipped with an annotation tag.
+AI-generated textures carry an XMP metadata label.
+These markings may be removed or altered when content is edited, exported, or processed by other software.
+To check whether your image carries a Maxon Plus AI marker, go to https://plus.maxon.net/model-builder/ai-detector . This tool detects markings that were created by Maxon functionality and have not been modified. If no marking is found, this does not mean that the content was not generated or edited with AI.
+Is there a minimum age requirement for use of the AI features? Yes. You must be 18 or older to use certain AI features, in line with the requirements of the respective Third-Party AI providers that power them. This is reflected in the AI Terms and in the Maxon Plus purchase process, which requires age attestation to complete the purchase.
+Legal Disclaimer
+This page is for general information only and describes Maxon’s current approach to and goals for AI. It does not create any contractual obligation, warranty, or guarantee. Your use of Maxon products and services, including AI features, is governed solely by the Maxon End User License Agreement at https://www.maxon.net/en/legal/eula and the additional AI Terms at https://www.maxon.net/en/legal/eula#ai-terms . If this page conflicts with these Terms, the Terms prevail. Nothing on this page should be considered legal advice.
+ABOUT
+CAREERS
+TEAMS PROGRAM
+GET EMAIL UPDATES
+SOCIAL
+PARTNERS
+IMPRINT
+PRIVACY
+All Rights Reserved. © 2026 Maxon Computer GmbH is part of the Nemetschek Group.

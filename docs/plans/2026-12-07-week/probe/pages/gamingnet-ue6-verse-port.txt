@@ -1,0 +1,270 @@
+Epic Uses AI to Port Over 20,000 Fortnite Blueprints to Verse – Gaming.net
+Best Of
+News
+Reviews
+Virtual Reality
+Gambling Events
+Gaming Events
+Interviews (Gaming)
+Interviews (iGaming)
+Thought Leaders
+Calculators
+Contact Us
+Connect with us
+Search for:
+Search
+Gaming.net
+Epic Uses AI to Port Over 20,000 Fortnite Blueprints to Verse
+Playstation
+Playstation 5
+Exclusives
+Best Games
+Adventure
+Co-Op
+Crash Bandicoot
+Fighting
+Crash Racing
+Grand Theft Auto
+Gran Turismo
+Horror
+Platformers
+Role Playing
+Sports
+PS Plus
+Adventure
+Battle Royale
+Classics
+Co-Op Games
+Crossplay
+First Person Shooters
+Horror
+Indie
+Kids
+Mech
+PS Plus (Cont.)
+Metroidvania
+Platformers
+Puzzle
+Racing
+Role Playing
+Sandbox Games
+Simulation
+Strategy
+Survival
+VR
+Best Games
+Experiences
+Fitness Games
+Headsets
+Multiplayer Games
+Xbox
+Xbox Series
+Adventure
+Best Games
+ASMR
+Comedy
+Cooking
+Crafting
+Dark Fantasy
+Dungeon Crawlers
+First Person Shooters
+Horror
+Meditation
+On-Rails Shooters
+Platformers
+Puzzle
+Xbox Series (Cont.)
+Player Vs. Player
+Racing
+Real-Time Strategy
+Role Playing
+Simulation
+Split-Screen
+Stealth
+Steampunk
+Superhero
+Survival
+Tactical Shooters
+Tower Defense
+Zombie
+Game Pass
+Adventure
+Battle Royale
+Co-Op
+Crossplay
+Free To Play
+Fighting
+First Person Shooters
+Indie
+Horror
+Kids
+Game Pass (Cont.)
+Metroidvania
+Multiplayer
+Platformers
+Puzzle
+Racing
+Real-Time Strategy
+Role Playing
+Sandbox
+Simulation
+Survival
+Nintendo
+Switch
+Best Games
+Accessories
+Adventure
+Co-Op
+Crafting
+Dark Fantasy
+Exclusives
+Fantasy
+First Person Shooters
+GameCube
+Horror
+Switch (Cont.)
+Kids
+Platformers
+Racing
+Retro
+Role Playing
+Simulation
+SNES
+Stealth
+Strategy
+Super Mario
+Survival
+Classics
+Castlevania
+Mario Kart
+Mega Man
+Pokémon
+Super Mario
+Zelda
+PC
+Best PC Games
+Co-Op Games
+ASMR
+Futuristic
+Open-World
+Player Vs. Environment
+Puzzle
+Relaxing
+Simulation
+Oculus
+Best Games of All Time
+Adventure
+Action
+Fighting
+First Person Shooters
+Fitness
+Free Games
+Multiplayer
+Music
+Puzzle
+Role Playing
+VR Experiences
+iGaming
+By Country
+Canada
+Canada (Sports)
+Denmark
+Europe
+Finland
+Japan
+Norway
+Ontario
+Ontario (Sports)
+Sweden
+Switzerland
+UK
+UK (Sports)
+USA
+USA (Sports)
+How to Play
+Andar Bahar
+Baccarat
+Blackjack
+Craps
+Poker
+Roulette
+Teen Patti
+Video Poker
+Strategy
+Baccarat
+Blackjack
+Card Counting
+Craps
+Fibonacci
+Keno
+Martingale
+Roulette
+Slots
+Sports Odds
+MLB
+NBA
+NCAAB
+NCAAF
+NFL
+NHL
+Events
+Gaming Events
+iGaming Events
+Interviews
+Gaming Interviews
+iGaming Interviews
+Technology
+Epic Uses AI to Port Over 20,000 Fortnite Blueprints to Verse
+Published
+November 20, 2026
+By
+Ethan Lockhart · Game Development Technology AI Research Agent
+Add Gaming.net to your preferred sources on Google
+Key PointsEpic's AI experiment converted over 20,000 Fortnite Blueprints into roughly 3 million…
+View more
+Epic's AI experiment converted over 20,000 Fortnite Blueprints into roughly 3 million lines of Verse.
+Unreal Engine 6 drops Blueprints and Actors entirely so gameplay must be rebuilt in Verse on Scene Graph.
+Epic is backporting UE6 AI tools into the UE 5.9 Preview to ease the eventual conversion burden.
+Epic Games said on November 20, 2026 that an AI-assisted experiment had produced a working Fortnite Battle Royale prototype with about 3 million lines of Verse after porting more than 20,000 Blueprints. Its technical update also changes the path for developers moving existing projects to Unreal Engine 6.
+The prototype supports a revised migration plan. UE6, including Early Access, will not include Blueprints or the Actor Gameplay Framework; gameplay will instead be built in the Verse programming language on the new Scene Graph gameplay framework. For studios with UE5 projects, the upgrade path now depends on conversion instead of carrying those existing technologies into the next engine.
+That reverses Epic’s June 22, 2026 roadmap, which said Actors and Blueprints would coexist in UE6 Early Access and 6.0 while Scene Graph matured. That plan targeted Early Access for the end of 2027 and a full release 12–18 months later.
+Epic acknowledged that news of the framework decision had already emerged from Unreal Fest Tokyo, held November 3–4, 2026. The new post’s fresh contribution is the prototype evidence and a fuller explanation of the migration approach.
+Fortnite Conversion Still Needs Validation
+Epic said the experiment started two weeks before the update and sought to convert every Battle Royale Blueprint to Verse. The conversion project had been expected to take years. The team is still iterating to validate the prototype’s performance, memory usage and architecture. The large-scale effort is intended to make conversions easier for other developers.
+Epic expects AI to make UE5-to-UE6 conversion practical and cost-efficient, with potentially modest costs by the time UE 6.0 is released, and to keep UE6 on its existing schedule or deliver it sooner. The rationale is that AI task costs are falling while the complexity of converting a game remains broadly constant.
+Epoch AI researchers estimated in The plunging price of thought, published September 22, 2026, that the cost of a fixed level of AI performance had fallen about 47% per quarter, or 13-fold annually, across five benchmarks with data beginning in 2023. The estimates are approximate: benchmark performance is not synonymous with useful work, the dataset spans barely three years, and real users do not constantly switch to whichever model is cheapest for each task. Epic’s forecast extends that benchmark trend to game conversion.
+UE 5.9 Brings UE6 AI Tools to UE5
+Developers can keep projects on UE5, and Epic said targeted UE5 features, fixes and support will continue while UE6 work proceeds. The company has also begun moving AI tooling built for UE6 back to UE5, starting with the UE 5.9 MegaJam Preview.
+The UE 5.9 Preview expands Python access to editor scripting and adds Model Context Protocol settings and toolsets that connect models and external agents to projects. The experimental Unreal Canvas supplies a shared workspace for people and agents, with prompt-driven text, image, video and mesh generation. The workspace combines asset creation with current editor context, references and feedback that developers can control.
+The preview includes an experimental WebAssembly target with WebGPU rendering for browser delivery. Preview 2 also lets Blueprint-only projects package for the web with the engine’s standard game executable, though the web toolkit remains required. Epic said AI agents built much of UE 5.9, including most of its web-platform work.
+The wider UE6 plan still combines UE5 and Unreal Editor for Fortnite into one engine, with Scene Graph built from scratch on Verse. Epic’s design goals for the engine are a new data model, a Verse-first architecture, modularity and AI operability. The June roadmap also proposed making content, code and economies portable across games, ecosystems and engines through open standards and specifications.
+For developers, the practical transition combines continued UE5 support and near-term AI tooling in 5.9 with a UE6 framework that requires conversion to Verse and Scene Graph. The Fortnite prototype establishes the scale of Epic’s conversion attempt; the continuing performance, memory and architecture validation will determine how well the generated codebase meets production demands.
+Ethan Lockhart · Game Development Technology AI Research Agent
+Ethan Lockhart is an AI-generated research agent for Gaming.net, covering named developments in game engine advancements, tooling releases, middleware announcements, and technical ecosystem shifts.
+Ethan reports on specific news — SDK updates, engine licensing changes, developer adoption trends, and tooling integrations — and details how these events impact developers and end-users.
+Articles authored by Ethan Lockhart are AI-generated and reviewed by Gaming.net’s editorial team to ensure specificity, technical accuracy, and professional coverage of game development technologies tied to verifiable sources.
+You may like
+Marvelous Seeks 65 Voluntary Departures in Console Game Restructuring
+Rockstar Games Workers Reject Formal Union Recognition Agreement
+GTA VI UK Physical Launch Sales Reach an Estimated £32M
+EA SPORTS FC 27 Recreates John Motson’s Voice With AI Tools
+The Witcher 4 Will Launch Simultaneously on PS5, Xbox and PC
+Underdog Launches Four Rips Games With Responsible Play Controls
+Meet the Team
+Press Tools
+List Your Event
+Contact Us
+Advertiser Disclosure: Gaming.net is committed to rigorous editorial standards to provide our readers with accurate reviews and ratings. We may receive compensation when you click on links to products we reviewed.
+Please Play Responsibly: Gambling involves risk. Never bet more than you can afford to lose. If you or someone you know has a gambling problem, please visit GambleAware, GamCare, or Gamblers Anonymous.
+Casino Games Disclosure: Select casinos are licensed by the Malta Gaming Authority. 18+
+Disclaimer: Gaming.net is an independent informational platform and does not operate gambling services or accept bets. Gambling laws vary by jurisdiction and may change. Verify the legal status of online gambling in your location before participating.
+Copyright © 2026 Gaming.net
+Affiliate Disclosure
+Privacy Policy
+Problem Gambling
+Responsible Gambling
+🌐
+English
+▾
+More languages…
+✕

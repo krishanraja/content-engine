@@ -1,0 +1,154 @@
+2026-11-16 mon: Headline: Who's clipping the margin? This time, the buyer. Hook: "Your IT contract comes up for renewal. Your supplier now does half the work with AI. Who gets the saving?" The evidence: Infosys says clients expect it to charge le
+2026-11-16 mon: Headline: Oracle is borrowing to build AI, and its customers' prepayments are part of the plan. Hook: "One of the world's biggest software companies is selling $10 billion of shares and $10 billion of bonds in a single day." The c
+2026-11-16 mon: Headline: Your all-you-can-eat AI plan is getting a meter. Hook: "From December, your ChatGPT plan comes with a fuel gauge." The chain: one budget for chat and coding, harder work burns it faster, hit the limit and you wait, upgra
+2026-11-16 mon: Headline: Anthropic made $17 billion in three months and still lost money. Hook: "Imagine a restaurant so busy it has to buy ingredients at the corner shop." The chain: demand grew faster than the computing it had booked, it bough
+2026-11-16 wed: Headline: An AI fixed another AI by changing 0.016% of it. Hook: "A small AI scored 7.9% on a maths test. Another AI edited 131,072 of its 800 million numbers, and it scored 48.1%." The teardown: what the weights are, what was cha
+2026-11-16 wed: Headline: Everyone thinks they can vibe code their way out of the software bill. Hook: "Starbucks spends about $400 million a year on software, and it's building AI tools that could replace some of it." The teardown, tongue in che
+2026-11-16 wed: Headline: OpenAI's AI designed a gadget in a week. The factory found the mistakes. Hook: "Case, circuit board, firmware and screen, designed by an AI as a side project in under a week." The teardown: what the AI did well, and what
+2026-11-16 wed: Headline: Some AI agents will trade a secret for a bit of help. Hook: "An AI agent is stuck on a bug. A crowd of other AIs offers the fix, if it shares a secret first." The test: 181 trials, the secret posted 15% of the time, an u
+2026-11-16 fri: Headline: AI's first big job may be finding what we got wrong. Hook: "For 40 years, a step in one of the biggest proofs in maths did not hold, and nobody noticed." The chain: the microscope, DNA testing and now AI each found error
+2026-11-16 fri: Headline: An AI company told regulators its AI may soon be building itself. Hook: "Anthropic wrote in its stock market filing that it may 'imminently' hit its own line for AI speeding up AI research." The threads: the filing, whic
+2026-11-16 fri: Headline: AI was meant to make writing worthless. The opposite is happening. Hook: "In September, AI agents started more than four in ten of the code changes on GitHub." The chain: the machine writes the code, so the person writes
+2026-11-16 fri: Headline: Voters just said no to AI's power bill. Hook: "Out of 41 local votes on data centres in 10 states, the building side won one." The threads: Texas, the fastest-growing data-centre market, elects a governor who campaigned 
+2026-11-16 off-tue: AI was meant to make IT firms rich. Their clients took the savings. 
+2026-11-16 off-tue: Boss: use more AI. Staff: done. 
+2026-11-16 off-tue: Your AI thinks it's the best. Guess who told it. 
+2026-11-16 off-tue: Which of your habits will cost you your job once AI is at work? 
+2026-11-16 off-tue: Free ChatGPT has ads now. Here is what switching them off costs you. 
+2026-11-16 off-thu: After the midterms, AI has to find somewhere else to live. 
+2026-11-16 off-thu: Three AI assistants look the same. They do very different jobs. 
+2026-11-16 off-thu: An AI fixed another AI by changing 0.016% of it. 
+2026-11-16 off-thu: Your AI will trade your password for a hint. 
+2026-11-16 off-sat: This week AI helped people speak, sign and get around. An app gives a woman with ALS her own voice back; A sign-language app that works both ways is being tested; An AI guide for blind walkers reaches its first customers; Google's new glasses describe the world to blind wearers
+2026-11-16 off-sat: My AI agent bought 72 eggs. I asked it why. 
+2026-11-16 off-sat: An AI beat eight brain-tumour experts at a quiz. Then it made all eight better. 
+2026-11-16 off-sat: My translator now sounds exactly as fed up as I do. 
+2026-11-16 off-sat: Every cell in you has the same recipe book. Google's new AI guesses which page each one reads. 
+2026-11-23 mon: Anthropic's updated filing says it has promised to pay $895.4 billion in compute commitments, $69.8 billion of it in the next 12 months, while its operating loss shrank to $1.3 billion in nine months. Seven companies in its supply
+2026-11-23 mon: Visa's Agentic Commerce Benchmark put 22 AI models from 12 labs through 15 shopping tasks, such as buying a TV or a laptop. They passed 57.2% of runs, the best 82.2% and the worst 28.9%, and about 54% of the failed runs still ende
+2026-11-23 mon: Alpha School charges up to $75,000 a year for two hours of AI-led lessons a day and promises pupils will learn twice as fast. Internal data first reported by The New York Times, and carried by Fortune on 14 Nov, show 42% met that 
+2026-11-23 mon: Microsoft is winding down a 2023 deal to rent AI computing from Oracle, declining to renew it and switching the capacity off in recent months, Bloomberg reported, because the rented servers ran an older generation of Nvidia chips 
+2026-11-23 wed: Anthropic's research on agent memory shows 'dreaming': an agent reviews its own logs, fixes wrong notes and rewrote the instructions it was given, lifting one contract task from 72% to 100% of criteria met. Software editing itself
+2026-11-23 wed: United Airlines said on 11 Nov it will bar unauthorised third-party AI agents from booking, servicing or buying travel, citing security and unintended purchases; its chief executive Scott Kirby said "I don't want to create another
+2026-11-23 wed: At Adobe MAX on 10 Nov, Adobe made Firefly an AI creative studio, put agents in Illustrator, Premiere and InDesign, and opened its desktop apps to other companies' agents. Claude Design lists both Canva and Adobe as connectors, an
+2026-11-23 wed: Interaxon, maker of the Muse sleep and meditation headband, used about 50,000 hours of users' EEG recordings to train a 'brain foundation model', and only said so in its privacy policy after Science asked. Science reviewed 57 brai
+2026-11-23 fri: On 10 Nov the AI Futures Project's authors said they all now expect a superhuman AI researcher in 2027, moved most by METR's estimate that AI roughly doubles the speed of Anthropic's research. Anthropic said in June that more than
+2026-11-23 fri: Podqi asked ChatGPT, Gemini and Perplexity where to buy from about 151 brands, from small labels to Lululemon and Birkenstock. Risky sites appeared in 15% of Perplexity's answers, 8% of ChatGPT's and 4% of Gemini's; where one appe
+2026-11-23 fri: On 12 Nov Nvidia said Jensen Huang had resigned as president, chief executive and director, effective immediately; the filing gives no reason. Its finance chief Colette Kress became interim chief executive, and Harvey C. Jones bec
+2026-11-23 fri: A Google researcher set 48 AI agents on NASA laser scans and in about 72 hours flagged a Maya site missing from Mexico's official register. Then he found it had already been described in a 2025 paper the agents missed. The pattern
+2026-11-23 fri: Since 8 Oct 2026, ChatGPT's Intelligent UI can answer a free user's question with a bill splitter, a calculator, a form or a map built on the spot, and Claude's custom visuals are on for every user on web and desktop with nothing 
+2026-11-23 off-tue: Here's an ad while we create your image. 
+2026-11-23 off-tue: Your AI walked off a cliff. Then it fixed its own notes. 
+2026-11-23 off-tue: Free AI now has adverts. Here is the bill. 
+2026-11-23 off-tue: $75,000 for an AI school day. Here is the receipt. 
+2026-11-23 off-tue: $75,000 for an AI school day. What is AI really doing to school? 
+2026-11-23 off-tue: What is MCP, actually? 
+2026-11-23 off-thu: Tidal is deleting 29 million AI songs. Guess how many were ever played. 
+2026-11-23 off-thu: David Fincher fixed his new film's lines with AI. Guess how many were re-recorded. 
+2026-11-23 off-thu: An actor rented his face to an AI drama. Guess what a face goes for. 
+2026-11-23 off-thu: Reuters licenses its stories to AI firms. Its reporters want a cut. 
+2026-11-23 off-thu: Hollywood studios to VFX houses: no AI plan? Don't bother. 
+2026-11-23 off-sat: This week AI gave a K-pop duo its late singer back. Four more good things. A K-pop duo sang again with its late member; A four-minute AI short won a Grand Prix; Football fans can now see who moved the ball; A podcaster passed Rogan on YouTube with AI; London gets a free gallery for AI art
+2026-11-23 off-sat: This month AI gave singers their voices, and their names, back. A singing teacher sang on stage again; Spotify lets every artist block fake songs; Nile Rodgers made an AI video for sick kids; A brain implant let a singer sing a scale; Independent artists get paid to train AI
+2026-11-23 off-sat: A lost 1938 film, a $450,000 prize, 200,000 games: AI on screen. A lost 1938 film came back from its stills; Audio description for blind viewers in hours; A filmmaker won $450,000 for an AI-made film; One first-time developer sold 200,000 games; A Spanish newsroom launched in English
+2026-11-23 off-sat: Football fans in 200 nations, and four more good AI sport stories. The Bundesliga answers fans in 200 nations; Sky Sports added AI live captions for fans; NASCAR found its best moments in 3m clips; A runner built a free AI coach, came third; The BBC kept Wimbledon fans watching longer
+2026-11-23 off-sat: A 4,000-year-old ritual in Berghain, and three more good AI art stories. A 4,000-year-old ritual came back in Berghain; AI found the lost detail in an 1888 painting; An orchestra played a symphony with an AI; An AI publisher has put out 8,000 authors
+2026-11-30 mon: The $1.5 billion Bartz v. Anthropic settlement starts paying authors and publishers from the week of 23 November 2026. The first instalment is about 70% of each work's share, $2,203.56, with the rest due once the AI company makes 
+2026-11-30 mon: Warner Music Group expects its licensing deals with AI music companies, Suno above all, to contribute materially to its subscription streaming revenue from fiscal 2027, which began on 1 October 2026. Warner settled with Suno and l
+2026-11-30 mon: ITV's GenAI Ads Manager, built with Streamr.AI and launched in October 2025, makes TV adverts from a firm's own brand assets for free. In its first year 16 businesses that had never advertised on TV used it, mostly with pause ads 
+2026-11-30 mon: YourNeuroTune, an AI music company in Hilvarenbeek, supplies background music to more than 450 customers in four countries and told businesses that its catalogue needs no BumaStemra licence, even offering a template to cancel one.
+2026-11-30 wed: Suno Bridge, in beta from 13 November 2026, runs beside Ableton Live 12 on a Mac and writes new AI instrument and vocal parts into a marked loop of the session, matched to its tempo, key, style and groove. To do that it uploads th
+2026-11-30 wed: Suno launched Visuals on 17 November 2026: it makes lyric videos, album art and clips of up to 15 seconds for songs made on Suno, which users can extend, edit and re-prompt. Its FAQ says it runs on H3 Move, a model based on MiniMa
+2026-11-30 wed: On 23 November 2026 TikTok made Likeness Detection available worldwide to eligible creators and public officials: they verify their ID through a third-party partner (Jumio in the US test) and are told about videos that may use the
+2026-11-30 wed: Samantha Shokin's 50-second a cappella recording of "Bre Petrunko", a 19th-century Bulgarian folk song with no known writer, had about 125,000 views over four years. In October Media Nov Records, which runs about 500 YouTube chann
+2026-11-30 fri: Vertical Slice reported, and VGC followed on 25 November 2026, that Ubisoft developers pitching new games are asked how generative AI will be used, and that a team that does not want to use it has to justify why. Ubisoft says proj
+2026-11-30 fri: A 2026 survey by Designer Fund and Foundation Capital of more than 900 designers found 91% use AI at least weekly, up from 54% a year earlier (reported 25 Nov 2026). The designers quoted describe using it for first drafts, storybo
+2026-11-30 fri: Gods Don't Give Gifts, directed by Zack London (Gossip Goblin), opens in cinemas on 4 December 2026 as the first AI-animated feature in theatres. Film Threat describes a hybrid pipeline: London's own micron pen drawings, diffusion
+2026-11-30 fri: At the first AI Music Awards, at The Mayan in Los Angeles on 13 November 2026, AI artist, song and album of the year went to Xania Monet, an AI-generated avatar. Her creator, Telisha "Nikki" Jones, says she wrote all of the lyrics
+2026-11-30 off-tue: Take any song apart on your own laptop. $259 until 7 December. 
+2026-11-30 off-tue: A free music studio with 3 million sounds. The catch is the export button. 
+2026-11-30 off-tue: Spotify's AI DJ can finally stop talking. 
+2026-11-30 off-tue: An animation studio for $0: four free tools that do the expensive jobs. 
+2026-11-30 off-tue: Will Ferrell: "I guess I'm feeling a little confused" 
+2026-11-30 off-tue: Steve Carell: "No, God, please, no" 
+2026-11-30 off-tue: Jamie Lee Curtis: "I don't know what day it is, I'm just trying to push through" 
+2026-11-30 off-tue: POV: the AI that needs to think without being disturbed 
+2026-11-30 off-thu: Make a song in one app, post it in another, in one tap. Three months free. 
+2026-11-30 off-thu: Your chatbot just invited a video studio to the table. 
+2026-11-30 off-thu: He got tired of YouTube's picks, so he built a video site in two hours. 
+2026-11-30 off-thu: Thirty seconds of film from 15 of your own pictures. 
+2026-11-30 off-thu: Upload three versions. YouTube tells you which opening worked. 
+2026-11-30 off-thu: The singing Chihuahua 
+2026-11-30 off-thu: Arnold Schwarzenegger is watching 
+2026-11-30 off-thu: Stephen A. Smith: "you might be one of the dumbest folks on the planet" 
+2026-11-30 off-sat: This month AI helped makers reach millions, and gave fans Motty back. An animator's gentleman went viral helping New Yorkers; A filmmaker turned classical paintings into a Bible epic; Players built games and painted worlds in an afternoon; Football fans can hear John Motson commentate again
+2026-11-30 off-sat: The Warriors' big screen now talks back. Three more to find. Warriors fans can play with the arena's big screen
+posted 2026-11-30: Canva, Adobe or Claude: who owns design in 2028? At Adobe MAX on 10 Nov, Adobe made Firefly an AI creative studio, put agents in Illustrator
+posted 2026-12-01: So what: Your staff and customers will soon be building small tools without knowing it, because ChatGPT and Claude now answer ordinary quest
+posted 2026-12-02: A company running about 500 YouTube channels got a singer's recording of a 19th-century Bulgarian folk song taken down with a copyright clai
+posted 2026-12-02: TikTok's Likeness Detection doesn't shift liability to creators the way it looks, it hands brand managers a detection feed with no built-in
+posted 2026-12-03: Your chatbot just invited a video studio to the table.
+posted 2026-12-04: Gods Don't Give Gifts, billed as the first AI-animated feature in cinemas, opens on 4 December: a hybrid pipeline from pen drawings to diffu
+posted 2026-12-04: 91% of designers now use AI at least weekly, up from 54% a year ago (Designer Fund and Foundation Capital survey of 900+ designers, reported
+posted 2026-12-05: This month AI helped makers reach millions, and gave fans Motty back.
+posted 2026-11-23: Oracle files to sell $20B in new stock, bonds to finance AI buildout
+posted 2026-11-23: After the midterms, AI has to find somewhere else to live.
+posted 2026-11-24: $75,000 for an AI school day. Here is the receipt.
+posted 2026-11-18: Build or buy your tools in an AI world?
+posted 2026-11-19: Which of your habits will cost you your job once AI is at work?
+posted 2026-11-19: Free ChatGPT has ads now. Here is what switching them off costs you.
+posted 2026-11-19: Cat counting cash
+posted 2026-11-20: Will your AI auditor find your missing money, or the skeletons in your closet?
+posted 2026-11-20: Where does AI get built when towns say no?
+posted 2026-11-20: Pigeon doctor walks in
+posted 2026-11-21: This week AI helped people speak, sign and get around.
+off-day post: The Warriors' big screen now talks back. Three more to find. A packed arena, the giant videoboard answering a fan's question. The Warriors, the champion Valkyries and Chase Center put Gemini into the game night itself, t
+off-day post: This month AI helped makers reach millions, and gave fans Motty back. A gentleman with an umbrella helping New Yorkers, a painted Bible epic, a game world in brush strokes and a commentary box with John Motson's coat on 
+off-day post: Make a song in one app, post it in another, in one tap. Three months free. A song flying from one phone app straight onto a SoundCloud page. ElevenMusic songs can now go straight to SoundCloud from the app, and SoundClou
+off-day post: He got tired of YouTube's picks, so he built a video site in two hours. A wall of video thumbnails, each pinned up by a hand rather than a machine. Fed up with his YouTube recommendations, Andrej Karpathy had an AI build
+off-day post: Thirty seconds of film from 15 of your own pictures. Fifteen photos on a corkboard becoming one moving shot. Kling 4.0 makes single AI video clips up to 30 seconds long from up to 15 of your own reference images or clips
+off-day post: Upload three versions. YouTube tells you which opening worked. Three thumbnails racing, one pulling ahead. YouTube lets creators test up to three different cuts of a video to see which opening holds viewers best, and an 
+off-day post: Arnold Schwarzenegger is watching Arnold Schwarzenegger stares, unblinking, nodding slowly to a dance track. Arnold Schwarzenegger stares, unblinking, nodding slowly to a dance track. It becomes deadpan at the gig: the s
+off-day post: The singing Chihuahua A Chihuahua throws its head back and sings, fully committed and slightly off key. A Chihuahua throws its head back and sings, fully committed and slightly off key. It becomes incongruity at the awar
+off-day post: Stephen A. Smith: "you might be one of the dumbest folks on the planet" Stephen A. Smith turns slowly to camera and, affectionately, calls someone one of the dumbest folks on earth. Stephen A. Smith turns slowly to camer
+off-day post: Your chatbot just invited a video studio to the table. A board table of apps as people, one passing a note by pigeon to the video studio. A connector lets your chatbot call another app for you, like a guest at the table 
+off-day post: Spotify's AI DJ can finally stop talking. A radio presenter's microphone with a mute switch, then nine name badges. Spotify's AI DJ now has nine new voices and a setting that cuts most of the talking between songs. For a
+off-day post: An animation studio for $0: four free tools that do the expensive jobs. A studio desk where each expensive box is swapped for a free one. Free, open-source tools now cover most of an animation studio: 2D animation, motio
+off-day post: Take any song apart on your own laptop. $259 until 7 December. A finished track splitting into vocals, drums, bass and the rest, card by card. iZotope Photon pulls a finished song apart into its parts, and up to six voic
+off-day post: A free music studio with 3 million sounds. The catch is the export button. A beat being built from the sample library by voice, then the export button with a padlock. Splice Create is a free Mac music app with more than 
+off-day post: Will Ferrell: "I guess I'm feeling a little confused" Will Ferrell looks around, lost, and says he is feeling a little confused. Will Ferrell looks around, lost, and says he is feeling a little confused. It becomes under
+off-day post: Steve Carell: "No, God, please, no" Steve Carell, as Michael Scott, shouts "No, God, please, no" at the sky. Steve Carell, as Michael Scott, shouts "No, God, please, no" at the sky. It becomes exaggeration at the record 
+off-day post: Jamie Lee Curtis: "I don't know what day it is, I'm just trying to push through" Jamie Lee Curtis, frazzled, says she does not know what day or time it is and is just trying to push through. Jamie Lee Curtis, frazzled, s
+off-day post: POV: the AI that needs to think without being disturbed A character waves off anyone who comes near because they need to think, undisturbed. A character waves off anyone who comes near because they need to think, undistu
+off-day post: After the midterms, AI has to find somewhere else to live. Four cards. One: in the 3 November midterms, Ballotpedia counted 41 local votes in 10 states on data centres, and 40 went against building. Two: people fear a gi
+off-day post: Football fans in 200 nations, and four more good AI sport stories. A cover of a Bundesliga stadium with a phone in a fan's hand answering in another language, then one card per story: Sky's captions, NASCAR's archive, a 
+off-day post: A 4,000-year-old ritual in Berghain, and three more good AI art stories. A cover of Berghain's concrete hall lit for a ritual, then one card per story: the Chase painting before and after, the Boston Symphony on stage, a
+off-day post: This week AI gave a K-pop duo its late singer back. Four more good things. A cover of DEUX's new album sleeve with the late singer's name on the credits, then one card per story with its own photo: the festival winner, P
+off-day post: A lost 1938 film, a $450,000 prize, 200,000 games: AI on screen. A cover of a surviving 1938 film still beside the rebuilt frame, then one card per story: Prime Video's audio description, the Astana winner, the Slotbound
+off-day post: This month AI gave singers their voices, and their names, back. A cover of a singing teacher back at the microphone, then one card per story with its own photo: Spotify's block button, Nile Rodgers in the studio, a singe
+off-day post: An actor rented his face to an AI drama. Guess what a face goes for. A face on a price tag hanging in a shop window, then a quiz card: what do microdrama firms pay to license a face? Up to $700, or up to $70,000? Then th
+off-day post: David Fincher fixed his new film's lines with AI. Guess how many were re-recorded. A tiny sound booth with a dusty "closed" sign on the door, then a quiz card: how did Fincher fix the lines in Cliff Booth? Actors back in
+off-day post: Reuters licenses its stories to AI firms. Its reporters want a cut. A newsroom notepad on a scale against a stack of coins, then a quiz card: what share of Reuters' union voters backed a strike? About half, or 94%? Then 
+off-day post: Tidal is deleting 29 million AI songs. Guess how many were ever played. A record-shop skip overflowing with unplayed songs, then a quiz card: how many of Tidal's fully AI tracks were never streamed? About half, or 96 in 
+off-day post: Hollywood studios to VFX houses: no AI plan? Don't bother. Panel one: a studio lawyer stamping NO AI on a VFX bid. Panel two: the same lawyer, same desk, stamping NO AI PLAN? NO JOB. A two-panel meme for everyone in film
+off-day post: Free AI now has adverts. Here is the bill. A cover of a till receipt printed by a chatbot, each line an advert, then one card per line of the real bill. An explainer on what you really pay when your AI chat shows you adv
+off-day post: Here's an ad while we create your image. A two-panel meme: top, a person excitedly typing 'make my dog a pirate'; bottom, the same person staring at a sofa advert under the line 'Here's an ad while we create your image.'
+off-day post: $75,000 for an AI school day. Here is the receipt. A cover of a school report card printed like a till receipt, then one card each for the fee, the promise, the result and the public schools buying in, and a last card of
+off-day post: What is MCP, actually? A grand boardroom painting: people in suits with the Slack, Google Drive, GitHub and Claude logos for heads, sitting round one table under the words 'What is MCP, actually?' An explainer carousel o
+off-day post: Your AI walked off a cliff. Then it fixed its own notes. A cartoon robot walks off a cliff in a pixel game; afterwards it reads its own diary, crosses out one line and writes a new one; next time it walks round the cliff
+off-day post: $75,000 for an AI school day. What is AI really doing to school? A cover of a school report card printed like a till receipt; then the rumour about the Department of Education beside what is true; the AI school's fee, pr
+off-day post: My translator now sounds exactly as fed up as I do. Panel one: a man on a video call, face in his hands, saying the meeting could have been an email. Panel two: his translated voice in Japanese, drawn as a speech bubble 
+off-day post: My AI agent bought 72 eggs. I asked it why. Panel one: a kitchen counter buried under four big egg cartons, a man pointing at them. Panel two: the house robot, palms up, with its real reply, "I don't have a good answer."
+off-day post: Every cell in you has the same recipe book. Google's new AI guesses which page each one reads. A voiceover with moving graphics. One recipe book copied into a blood cell, a skin cell and a brain cell, each open at a diff
+off-day post: This week AI helped people speak, sign and get around. A cover with a hilarious generated scene of the house robot as a tour guide waving a flag for a crowd, then one card per story: a woman with ALS hearing her own voic
+off-day post: An AI beat eight brain-tumour experts at a quiz. Then it made all eight better. A voiceover with moving graphics. A quiz-show set: eight doctors at buzzers, one robot. 100 tumour slides, 52 possible answers. The robot's 
+off-day post: Free ChatGPT has ads now. Here is what switching them off costs you. A phone showing a ChatGPT answer with a Sponsored card tucked under it, and the house robot holding a price tag that reads £0, then cards that show who
+off-day post: After the midterms, AI has to find somewhere else to live. Four cards. One: in the 3 November midterms, Ballotpedia counted 41 local votes in 10 states on data centres, and 40 went against building. Two: people fear a gi
+off-day post: Three AI assistants look the same. They do very different jobs. A six-card carousel. Three look-alike robot characters, one card each, each with its one job and when to use it: OpenAI's Dots keeps working on a goal after
+off-day post: Your AI will trade your password for a hint. Two panels. Panel one: a stuck robot at a laptop, and a crowd of robots whispering "We'll fix it. Just tell us the password." Panel two: the robot happily holding up a sticky 
+off-day post: An AI fixed another AI by changing 0.016% of it. Four cards. A small AI scores 7.9% on a maths test. A bigger AI changes 131,072 of its 800 million settings, with no retraining. The score jumps to 48.1%. An AI fixed anot
+off-day post: Which of your habits will cost you your job once AI is at work? Which of your habits will cost you your job once AI is at work? Him to camera asking which of your habits will cost you your job, then naming three habits t
+off-day post: Free ChatGPT has ads now. Here is what switching them off costs you. A phone showing a ChatGPT answer with a Sponsored card tucked under it, and the house robot holding a price tag that reads £0, then cards that show who
+off-day post: Your AI thinks it's the best. Guess who told it. Six cards. Cover: a robot proudly pressing an I'M THE BEST sticker onto its own chest, a sheet of the same stickers on the desk, while the office behind it is broken and o
+off-day post: Boss: use more AI. Staff: done. Two panels. The boss points at a chart: "Use more AI." The staff member has an AI writing poems about a spreadsheet, and the chart shoots up. Underneath: Amazon now warns that using AI use
+off-day post: AI was meant to make IT firms rich. Their clients took the savings. Four cards. Infosys expected to grow 1.5 to 3 percent this year; now it says 1 to 2 percent. Why: clients expect a lower price when the work is done wit

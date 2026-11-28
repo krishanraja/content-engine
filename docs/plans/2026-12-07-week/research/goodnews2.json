@@ -1,0 +1,456 @@
+{
+ "lane": "goodnews2",
+ "searched": [
+  "Instagram inspo sheet (goodnews-input.json): 600 rows; only shortcodes decoding to 28 Oct to 15 Nov 2026 are in range (the 'Da'/'Db'/'Dc'/'Dd' rows retrieved 16 Nov are July to September posts). Picked the creative-industry wins: @pjacefilms, @antrofrog, @Samyazaspeaks, @tupacabra_og, @simonmeyer_director. Skipped Disney and Adobe Firefly Foundry (announced at Adobe MAX, excluded), Claude Fable 5.2 game builders (no named maker), Higgsfield Content Factory (tool promo).",
+  "Listing pages read: Creative Bloq AI, The Art Newspaper AI tag, The Stage news, Nieman Lab, It's Nice That, SportsPro, PocketGamer.biz, Music Ally, Tubefilter, Cartoon Brew, Dezeen technology, Music Business Worldwide, Hyperallergic, Digiday media, Press Gazette, Hypebot, Animation Xpress, Sportcal, Music Week, 80.lv, Front Office Sports, Rest of World, mobilegamer.biz, The Decoder, Spotify newsroom, ElevenLabs blog, YouTube blog, Net Influencer, 49ers.com, Nine for Brands.",
+  "Refused or failed: The Verge (cannot fetch), LBB (403), Creative Review (403), gamesindustry.biz, GamesBeat (403), Screen Daily (405), Animation Magazine (403), exchange4media (403), journalism.co.uk (404), Korea Herald list (404), Sportico (Tollbit redirect, not followed), Business Insider, MediaPost (403), Epidemic Sound newsroom (404), HK Phil (500), HKU newsroom (empty).",
+  "Google News RSS used only to find stories, never as a source: creative AI wins, theatre and performance AI, AI licensing paid, newsroom AI revenue, sports AI fans, music AI deals, AI film production, AI creators earning, AI games sales.",
+  "Web searches (a handful worked): AI artist record sale, theatre AI, licensing payments to visual artists, publisher licensing deals, AI film festival winners, Higgsfield film prize, museum AI visitors, newspaper AI audio, YouTube AI dubbing, Peter Gabriel Lamb AI show, Flight of Kinaree, KBO and Google, Diario Occidente, Jewish Museum of Florida Dahlia Dreszer, Yale 1808 sketchbook, iSonic, Maharaja in Denims, Korean directors AI films.",
+  "Dropped after checking: Footballco Goal-e 1.1bn page views (Press Gazette, 7 Sep 2026, out of window); 38-0-0 iOS number one built with Claude (mobilegamer.biz, June 2026); Higgsfield $1m festival winners (July); Adobe and US SailGP Team (17 Nov, out of window, no numbers); Sonilo and Symphonic (excluded); Tidal AI ban (not makers earning more); Yahoo and the Internet Licensing Collective (12 Nov); News/Media Alliance and Bria (March); iSonic 80% to creators (plan only, nothing paid, no AI deals); Dahlia Dreszer AI clone (exhibition dates unclear, may be 2025); GPT-6.2 names the 1808 sketchbook artist (primary not reached, art history rather than creative industry); Peter Gabriel Lamb AI show (no current production confirmed); HKU and HK Phil AI documentary (primary would not load); Maharaja in Denims April 2027 release (Variety via Tollbit, release date not confirmed, a forecast); KBO and Google (not confirmed); Team Ninja AI QA (source not reached); Desi Batman via The Pioneer (same story as desi-batman-25m-views).",
+  "NOTE: no theatre or art-and-design story survived checking. Performance leads (Roma City Ballet's AI scenery in Turin, Thai dance-theatre Flight of Kinaree, Sber robot ballet) were either aggregator-only, unconfirmed or Russian state-bank promotion.",
+  "Media fixes: desi-batman from Navbharat Live (credited 'source: social media', likely a frame of the reel); garyvee from the @hey_garyvee channel itself. No product screenshot of Cyanite Concierge exists on Cyanite's page or launch blog (only icon illustrations), and the only Hazanavicius image found (A.V. Club, a Warner Bros. France YouTube screenshot) may be from The Artist, so neither was changed."
+ ],
+ "candidates": [
+  {
+   "key": "musixmatch-ai-lyric-licensing",
+   "sector": "rights",
+   "headline": "Musixmatch gave 1.5 million artists a wallet for their lyric earnings, with paid AI licensing of their lyrics to come",
+   "what_happened": "Musixmatch relaunched Pro for Artists on 25 November 2026 with a Wallet that tracks what artists earn from their lyrics, lyric merchandise they can sell to fans, and engagement analytics. The Bologna company says more than 1.5 million artists use it, and that an optional setting will let them earn when AI platforms license their lyrics.",
+   "date": "2026-11-25",
+   "named_thing": "Musixmatch Pro for Artists Wallet, optional AI lyric licensing",
+   "primary": {
+    "label": "Music Business Worldwide, 'Musixmatch launches enhanced Pro for Artists platform...with optional AI licensing coming soon', 25 Nov 2026",
+    "url": "https://www.musicbusinessworldwide.com/musixmatch-launches-enhanced-pro-for-artists-platform-adding-fan-engagement-analytics-and-lyric-merch-sales-with-optional-ai-licensing-coming-soon/",
+    "kind": "report",
+    "quote": "Musixmatch says optional AI licensing is 'coming soon' to the Wallet, giving artists an additional opportunity to earn from the authorized use of their lyrics by AI platforms."
+   },
+   "second": null,
+   "more_sources": [
+    {
+     "label": "Music Business Worldwide, same article",
+     "url": "https://www.musicbusinessworldwide.com/musixmatch-launches-enhanced-pro-for-artists-platform-adding-fan-engagement-analytics-and-lyric-merch-sales-with-optional-ai-licensing-coming-soon/",
+     "quote": "The Bologna-based company says Musixmatch Pro for Artists is now used by more than 1.5 million artists."
+    }
+   ],
+   "money_or_mechanism": "Musixmatch already holds licences to more than 15 million works from the three majors' publishers; the Wallet is where an artist's lyric merch sales and, later, AI licensing fees land.",
+   "why_it_matters": "Songwriters get a named place to be paid when an AI service uses their words, run by the company that already supplies lyrics to the big streaming apps.",
+   "funny": "The lyrics you misheard for years are about to have a licensing department.",
+   "media": {
+    "kind": "photo",
+    "url": "https://www.musicbusinessworldwide.com/files/2026/11/TikTokMM_Luminate_MusicImpactReport_v2-1.png"
+   },
+   "helps": {
+    "who": "songwriters and artists who own their lyrics",
+    "how": "more successful"
+   },
+   "found": {
+    "place": "news",
+    "url": "https://www.musicbusinessworldwide.com/"
+   },
+   "risks": "The AI licensing part is announced as 'coming soon' with no launch date and no AI platforms named; the merch Wallet is live. Company claim only. The picture on the MBW page may be a stock report graphic, not the product. Music Ally's version of this story was dropped by the first reader for its paywall; this is the open MBW report."
+  },
+  {
+   "key": "49ers-meta-ai-glasses-4700",
+   "sector": "sports",
+   "headline": "The 49ers signed Meta as a sponsor, and every suite and club season ticket holder gets free AI glasses",
+   "what_happened": "The San Francisco 49ers announced a multi-year partnership with Meta on 24 November 2026, built around Meta's AI glasses. More than 4,700 suite partners and club season ticket members will get a free pair of Oakley Meta HSTN glasses at home, fullback Kyle Juszczyk becomes a Meta ambassador, and Meta joins the club's marketing in the UK, UAE and Mexico.",
+   "date": "2026-11-24",
+   "named_thing": "49ers x Meta, 4,700 pairs of Oakley Meta HSTN AI glasses",
+   "primary": {
+    "label": "San Francisco 49ers, '49ers and Meta Announce Multi-Year Partnership Centered Around Meta AI Glasses', 24 Nov 2026",
+    "url": "https://www.49ers.com/news/49ers-and-meta-announce-multi-year-partnership-centered-around-meta-ai-glasses",
+    "kind": "original",
+    "quote": "more than 4,700 members will receive Meta's next-gen technology directly to their homes"
+   },
+   "second": {
+    "label": "Sportcal, 'Meta's AI glasses to power new 49ers sponsorship deal', 24 Nov 2026",
+    "url": "https://www.sportcal.com/news/metas-ai-glasses-to-power-new-49ers-sponsorship-deal/",
+    "quote": "The initiative covers more than 4,700 members"
+   },
+   "more_sources": [
+    {
+     "label": "San Francisco 49ers, same release",
+     "url": "https://www.49ers.com/news/49ers-and-meta-announce-multi-year-partnership-centered-around-meta-ai-glasses",
+     "quote": "Meta has joined the 49ers global marketing efforts in the UK, UAE, and Mexico"
+    }
+   ],
+   "money_or_mechanism": "Meta pays for a sponsorship and hands its hardware to the club's best customers, who then film and share game days on the glasses.",
+   "why_it_matters": "A club turned its season ticket list into a launch audience for an AI device and got a global sponsor for it.",
+   "funny": "The 49ers' official title for Meta is 'official moment maker', which is the first sponsorship category named after a camera.",
+   "media": {
+    "kind": "photo",
+    "url": "https://www.sportcal.com/wp-content/uploads/sites/32/2026/11/main6b0598eec042d-430x241.jpg"
+   },
+   "helps": {
+    "who": "sports clubs selling sponsorship, and their season ticket holders",
+    "how": "more successful"
+   },
+   "found": {
+    "place": "news",
+    "url": "https://www.sportcal.com/news/"
+   },
+   "risks": "No fee or contract length disclosed. The quotes from the 49ers page are sentence fragments because the page sentences are long. The 49ers page gave no usable image; the photo is Sportcal's. Not the Golden State Warriors/Gemini story on the exclusion list."
+  },
+  {
+   "key": "spiegel-churn-score",
+   "sector": "media",
+   "headline": "Der Spiegel built a model that spots which subscribers are about to cancel, and it finds a third of them",
+   "what_happened": "Der Spiegel's lead data scientist, Alexander Held, published how the German news magazine built a machine-learning score for subscriber churn, in a WAN-IFRA piece on 23 November 2026. The riskiest group it flags, close to 10,000 subscriptions, cancels at 28% against a base rate of about 4%, and that group holds about 36% of everyone who leaves.",
+   "date": "2026-11-23",
+   "named_thing": "Der Spiegel's churn score (AUC 0.82)",
+   "primary": {
+    "label": "WAN-IFRA, 'Addressing subscriber churn at Der Spiegel, part one: building the score', Alexander Held, 23 Nov 2026",
+    "url": "https://wan-ifra.org/2026/11/addressing-subscriber-churn-at-der-spiegel-part-one-building-the-score/",
+    "kind": "original",
+    "quote": "That came close to 10,000 subscriptions and they churn at 28% against a base rate of around 4%, seven times as high."
+   },
+   "second": null,
+   "more_sources": [
+    {
+     "label": "WAN-IFRA, same article",
+     "url": "https://wan-ifra.org/2026/11/addressing-subscriber-churn-at-der-spiegel-part-one-building-the-score/",
+     "quote": "It holds about 36% of everyone who leaves."
+    },
+    {
+     "label": "WAN-IFRA, same article",
+     "url": "https://wan-ifra.org/2026/11/addressing-subscriber-churn-at-der-spiegel-part-one-building-the-score/",
+     "quote": "subscriptions in their first 30 days leave at around 30%, those older than a year at 2.3%."
+    }
+   ],
+   "money_or_mechanism": "The score lets the newsroom spend its retention offers on the tenth of readers who carry half of all cancellations instead of on everyone.",
+   "why_it_matters": "A news publisher can now see a cancellation coming and act before the reader goes, which is subscription money kept.",
+   "funny": "Spiegel built a model that can tell you are about to leave before you have opened the cancel page.",
+   "media": {
+    "kind": "photo",
+    "url": "https://cdn.wan-ifra.org/wp-content/uploads/2026/11/20141041/Screenshot-2026-11-20-at-15.09.54-235x300.png"
+   },
+   "helps": {
+    "who": "news publishers living on subscriptions",
+    "how": "more successful"
+   },
+   "found": {
+    "place": "news",
+    "url": "https://www.niemanlab.org/"
+   },
+   "risks": "Written by Spiegel's own data lead, so a first-person account. Part one only: how many subscribers the score actually saved is promised for part two. Machine learning rather than generative AI. The only real image on the page is the author's portrait; the lead photo is a placeholder."
+  },
+  {
+   "key": "nine-mcp-journalism-pilot",
+   "sector": "media",
+   "headline": "Nine is letting paying companies plug the AFR and the Sydney Morning Herald straight into their AI tools",
+   "what_happened": "Australian publisher Nine announced on 25 November 2026 a pilot that lets licensed business subscribers connect its journalism from The Australian Financial Review, The Sydney Morning Herald, The Age, Brisbane Times and WAtoday to their own AI tools through the Model Context Protocol. It is testing with a group of business clients before a wider commercial rollout through 2027.",
+   "date": "2026-11-25",
+   "named_thing": "Nine's authenticated MCP publishing pilot",
+   "primary": {
+    "label": "Nine for Brands, 'Nine Leads With First-of-Its-Kind Authenticated MCP Publishing AI Pilot in Australia', 25 Nov 2026",
+    "url": "https://www.nineforbrands.com.au/media-releases/nine-leads-with-first-of-its-kind-authenticated-mcp-publishing-ai-pilot-in-australia/",
+    "kind": "original",
+    "quote": "allowing licensed B2B subscribers to securely authenticate and integrate Nine's trusted journalism"
+   },
+   "second": null,
+   "more_sources": [
+    {
+     "label": "Nine for Brands, same release",
+     "url": "https://www.nineforbrands.com.au/media-releases/nine-leads-with-first-of-its-kind-authenticated-mcp-publishing-ai-pilot-in-australia/",
+     "quote": "Nine's MCP recognises licensed B2B subscribers within their own secure enterprise environments."
+    }
+   ],
+   "money_or_mechanism": "Instead of AI companies scraping the articles, the business that already pays for a subscription gets the reporting inside its own AI assistant, so the publisher keeps the customer and the fee.",
+   "why_it_matters": "A newspaper group found a way to sell its journalism to AI users without giving it away to the AI companies.",
+   "funny": "The newspaper's newest reader is a corporate chatbot, and it still has to log in.",
+   "media": {
+    "kind": "photo",
+    "url": ""
+   },
+   "helps": {
+    "who": "news publishers with business subscribers",
+    "how": "more successful"
+   },
+   "found": {
+    "place": "news",
+    "url": "https://news.google.com/rss/search?q=Nine+authenticated+AI+pilot+publishers"
+   },
+   "risks": "Company release only; no subscriber numbers, prices or revenue given. Pilot, with the commercial rollout set for 2027. The release page had no usable image. Also covered by iTnews and Mediaweek (24 to 25 Nov), not opened."
+  },
+  {
+   "key": "seoul-indie-fest-ai-cinema",
+   "sector": "film_tv",
+   "headline": "Seven Korean directors, Lee Myung-se among them, made AI short films for the Seoul Independent Film Festival",
+   "what_happened": "Seven directors, including Lee Myung-se, Shin Youn-shick and Jang Cheol-soo, each made a short film with an AI team for the Seoul Independent Film Festival's AI Cinema Special, which runs from 25 November to 4 December 2026. Kling AI, BytePlus, TapNow, MiniMax and ElevenLabs supplied the tools.",
+   "date": "2026-11-25",
+   "named_thing": "AI Cinema Special, Seoul Independent Film Festival 2026",
+   "primary": {
+    "label": "Korea JoongAng Daily, 'Seven directors to unveil AI short films at Seoul Independent Film Festival', Na Won-jeong, 4 Nov 2026",
+    "url": "https://www.koreajoongangdaily.com/entertainment/seven-directors-to-unveil-ai-short-films-at-seoul-independent-film-festival/12955399",
+    "kind": "report",
+    "quote": "Directors Lee Myung-se, Shin Youn-shick, Jang Cheol-soo, Ahn Sang-hoon, Park Sin-woo, Jo Ba-reun and Kim Da-min"
+   },
+   "second": null,
+   "more_sources": [
+    {
+     "label": "Korea JoongAng Daily, same article",
+     "url": "https://www.koreajoongangdaily.com/entertainment/seven-directors-to-unveil-ai-short-films-at-seoul-independent-film-festival/12955399",
+     "quote": "Global AI companies, including Kling AI, BytePlus, TapNow, MiniMax and ElevenLabs,"
+    },
+    {
+     "label": "Korea JoongAng Daily, same article",
+     "url": "https://www.koreajoongangdaily.com/entertainment/seven-directors-to-unveil-ai-short-films-at-seoul-independent-film-festival/12955399",
+     "quote": "which runs from Nov. 25 to Dec. 4."
+    }
+   ],
+   "money_or_mechanism": "The AI companies supplied the tools, so established directors could make a short each without a full crew or budget.",
+   "why_it_matters": "Name directors with decades of features behind them are now premiering AI work at a major festival, which gives AI filmmaking a place in the programme rather than outside it.",
+   "funny": "The festival for independent film now has a section made with seven of the world's biggest AI suppliers.",
+   "media": {
+    "kind": "photo",
+    "url": "https://image.koreajoongangdaily.com/12955618.webp?imageId=12955618&width=960&height=548&format=jpg"
+   },
+   "helps": {
+    "who": "film directors and independent festivals",
+    "how": "better"
+   },
+   "found": {
+    "place": "news",
+    "url": "https://news.google.com/rss/search?q=(animation+OR+VFX+OR+studio+OR+director+OR+producer)+generative+AI+film"
+   },
+   "risks": "The article is dated 4 November; the dated event in the window is the festival opening on 25 November. A SoaplandTV write-up on 24 November was seen in a news feed but not opened. Image is a still from Ahn Sang-hoon's AI film The Signal. No audience numbers yet."
+  },
+  {
+   "key": "pjace-ai-fantasy-28775",
+   "sector": "film_tv",
+   "headline": "An AI filmmaker made a fantasy comedy with a giant war beast for $28,775",
+   "what_happened": "AI filmmaker PJ Ace (@pjacefilms) released a fantasy comedy about an Imperial army that recruits a wild warrior with a gigantic war beast who keeps destroying his own side. Evolving AI shared it on 31 October 2026 and said the whole film cost $28,775.",
+   "date": "2026-10-31",
+   "named_thing": "@pjacefilms' fantasy comedy, $28,775 budget",
+   "primary": {
+    "label": "Instagram, @evolving.ai post crediting @pjacefilms, 31 Oct 2026",
+    "url": "https://www.instagram.com/evolving.ai/reel/DfKgAKVgDhn/",
+    "kind": "original",
+    "quote": "Made for $28,775 total, the film features impressive animation, detailed fantasy worlds, expressive characters, and surprisingly good comedic timing."
+   },
+   "second": null,
+   "more_sources": [
+    {
+     "label": "Instagram, same post",
+     "url": "https://www.instagram.com/evolving.ai/reel/DfKgAKVgDhn/",
+     "quote": "That’s the premise of this AI-generated fantasy comedy by @pjacefilms, where an Imperial army recruits a wildly unpredictable savage who commands a gigantic war beast capable of wiping out entire armies."
+    }
+   ],
+   "money_or_mechanism": "A full fantasy short with creatures, armies and worlds came in under $30,000, a fraction of what the same effects would cost on a set.",
+   "why_it_matters": "A creature comedy that would need a studio budget was made by a small team for the price of a used car.",
+   "funny": "The army's biggest weapon keeps flattening its own side, which is the plot and also the history of most army procurement.",
+   "media": {
+    "kind": "clip",
+    "url": "https://www.instagram.com/evolving.ai/reel/DfKgAKVgDhn/"
+   },
+   "helps": {
+    "who": "independent filmmakers",
+    "how": "more successful"
+   },
+   "found": {
+    "place": "sheet",
+    "label": "Your Instagram inspo sheet",
+    "url": "https://www.instagram.com/evolving.ai/reel/DfKgAKVgDhn/"
+   },
+   "risks": "The post is a repost by @evolving.ai, not the creator's own post; the $28,775 figure appears only in that caption and a web search could not confirm it elsewhere. The film's title is not given in the caption. Dated 31 October, inside the sheet window but a month old."
+  },
+  {
+   "key": "antrofrog-englishman-new-york",
+   "sector": "film_tv",
+   "headline": "An AI animator brought back his viral English gentleman for a Sting-scored short set in New York",
+   "what_happened": "Creator @antrofrog released 'Englishman in New York', a hand-drawn-looking animated short in which his viral gentleman helps strangers, street performers and the pizza rat around New York to Sting's song. Evolving AI shared it on 30 October 2026, saying the style is reaching millions of viewers, and that it was made with Midjourney 8.2, Seedance 2.5 and Krea.",
+   "date": "2026-10-30",
+   "named_thing": "'Englishman in New York' by @antrofrog",
+   "primary": {
+    "label": "Instagram, @evolving.ai post crediting @antrofrog, 30 Oct 2026",
+    "url": "https://www.instagram.com/evolving.ai/reel/DfHwPJsgbeb/",
+    "kind": "original",
+    "quote": "The creator used Midjourney 8.2 for character design and Seedance 2.5 for animation, bringing the entire short together through Krea."
+   },
+   "second": null,
+   "more_sources": [
+    {
+     "label": "Instagram, same post",
+     "url": "https://www.instagram.com/evolving.ai/reel/DfHwPJsgbeb/",
+     "quote": "The expressive movements, hand-drawn aesthetic and attention to detail give it the charm of a classic animated film, a style that seems to be resonating with millions of viewers."
+    }
+   ],
+   "money_or_mechanism": "Three off-the-shelf AI tools replaced a character designer, an animation team and an edit suite for a recurring character with a following.",
+   "why_it_matters": "One animator now runs a returning cartoon character with sequels, the thing that used to need a studio.",
+   "funny": "The most polite man in animation has been made entirely by software that has never queued for anything.",
+   "media": {
+    "kind": "clip",
+    "url": "https://www.instagram.com/evolving.ai/reel/DfHwPJsgbeb/"
+   },
+   "helps": {
+    "who": "independent animators",
+    "how": "more successful"
+   },
+   "found": {
+    "place": "sheet",
+    "label": "Your Instagram inspo sheet",
+    "url": "https://www.instagram.com/evolving.ai/reel/DfHwPJsgbeb/"
+   },
+   "risks": "Repost by @evolving.ai; no view count given ('millions of viewers' is the account's phrase). Uses a Sting song; whether it was licensed is not said. The creator's own post was not opened."
+  },
+  {
+   "key": "samyaza-two-ai-films",
+   "sector": "film_tv",
+   "headline": "Independent AI filmmaker Samyaza Speaks put out two epic films in three days",
+   "what_happened": "Samyaza Speaks released 'The Biblical Experience', an AI-made journey through the Bible from the fall of Lucifer to the last battle, and 'OBLITERATION', a five-minute dystopian short about an order that destroys the world in the name of peace. Evolving AI shared them on 1 and 3 November 2026 as examples of what independent filmmakers can now make.",
+   "date": "2026-11-03",
+   "named_thing": "'OBLITERATION' and 'The Biblical Experience' by Samyaza Speaks",
+   "primary": {
+    "label": "Instagram, @evolving.ai post crediting @Samyazaspeaks, 3 Nov 2026",
+    "url": "https://www.instagram.com/evolving.ai/reel/DfR7b8JA4q1/",
+    "kind": "original",
+    "quote": "It’s another example of what independent filmmakers can create with AI in 2026, especially when they have a distinct story and visual style."
+   },
+   "second": null,
+   "more_sources": [
+    {
+     "label": "Instagram, @evolving.ai post, 1 Nov 2026",
+     "url": "https://www.instagram.com/evolving.ai/reel/DfMf7sYgHIt/",
+     "quote": "The use of classical paintings, dramatic camera movements, and music makes this one of the most striking examples of AI filmmaking we've seen."
+    }
+   ],
+   "money_or_mechanism": "One filmmaker with AI tools turned out two large-scale films, warships, temples and burning cities included, in the time a studio takes to book a location.",
+   "why_it_matters": "A single maker now has the output of a small studio, and a distinct style is what lifts the work above the flood.",
+   "funny": "He covered the whole Bible and then the end of the world in one week, which is ambitious even by Old Testament standards.",
+   "media": {
+    "kind": "clip",
+    "url": "https://www.instagram.com/evolving.ai/reel/DfR7b8JA4q1/"
+   },
+   "helps": {
+    "who": "independent filmmakers",
+    "how": "more successful"
+   },
+   "found": {
+    "place": "sheet",
+    "label": "Your Instagram inspo sheet",
+    "url": "https://www.instagram.com/evolving.ai/reel/DfR7b8JA4q1/"
+   },
+   "risks": "Reposts by @evolving.ai; no views, budget or earnings given, so no number beyond 'five minutes'. Release dates are the repost dates. Religious subject matter may need care."
+  },
+  {
+   "key": "tupacabra-nuremberg-trailer",
+   "sector": "film_tv",
+   "headline": "An AI creator's alternate-history trailer 'Nuremberg' looks like a $200 million blockbuster",
+   "what_happened": "Creator @tupacabra_og released 'Nuremberg', an AI-made trailer for an alternate-history epic mixing the Second World War, time travel, medieval Europe and future warfare, set to a 1903 recording of Kipling's poem 'Boots'. Evolving AI shared it on 14 November 2026, saying the visuals look like they belong in a $200 million Hollywood production.",
+   "date": "2026-11-14",
+   "named_thing": "'Nuremberg' AI trailer by @tupacabra_og",
+   "primary": {
+    "label": "Instagram, @evolving.ai post crediting @tupacabra_og, 14 Nov 2026",
+    "url": "https://www.instagram.com/evolving.ai/reel/DftiVdpgoBj/",
+    "kind": "original",
+    "quote": "From massive warships hovering over ancient cities to armies fighting across centuries, the visuals look like they belong in a $200 million Hollywood production."
+   },
+   "second": null,
+   "more_sources": [
+    {
+     "label": "Instagram, same post",
+     "url": "https://www.instagram.com/evolving.ai/reel/DftiVdpgoBj/",
+     "quote": "Created by @tupacabra_og, “Nuremberg” might be one of the most impressive AI-generated movie trailers we've seen yet."
+    }
+   ],
+   "money_or_mechanism": "A one-person trailer reaches for the look of a nine-figure production, which is a pitch tool for a film nobody has had to fund yet.",
+   "why_it_matters": "A creator can now show a studio what the film would look like before anyone pays for it.",
+   "funny": "The soundtrack is a poem from 1903, which makes it the oldest thing in a trailer about time travel.",
+   "media": {
+    "kind": "clip",
+    "url": "https://www.instagram.com/evolving.ai/reel/DftiVdpgoBj/"
+   },
+   "helps": {
+    "who": "independent filmmakers pitching projects",
+    "how": "more successful"
+   },
+   "found": {
+    "place": "sheet",
+    "label": "Your Instagram inspo sheet",
+    "url": "https://www.instagram.com/evolving.ai/reel/DftiVdpgoBj/"
+   },
+   "risks": "The $200 million is the account's comparison, not a cost; no budget or views given. The caption also says 'Hollywood is about to get into serious trouble', a forecast we must not repeat. The title 'Nuremberg' may invite confusion with the 2025 courtroom film."
+  },
+  {
+   "key": "simon-meyer-no-more-monsters",
+   "sector": "film_tv",
+   "headline": "An AI filmmaker made a charity film with the monsters under a child's bed for the NO MORE campaign",
+   "what_happened": "Director Simon Meyer (@simonmeyer_director) and Promptr Studios made a three-minute short with Kling AI 4.0, in association with the anti-violence campaign NO MORE, in which three childhood monsters find out why the girl they scare, Mila, has stopped being afraid. Evolving AI shared it on 30 October 2026.",
+   "date": "2026-10-30",
+   "named_thing": "Simon Meyer and Promptr Studios' short for NO MORE, made with Kling AI 4.0",
+   "primary": {
+    "label": "Instagram, @evolving.ai post crediting @simonmeyer_director and @promptrstudios, 30 Oct 2026",
+    "url": "https://www.instagram.com/evolving.ai/reel/DfHHP0VA-PD/",
+    "kind": "original",
+    "quote": "AI filmmaker @simonmeyer_director and @promptrstudios created a powerful 3-minute short film that interviews three childhood monsters who have spent years frightening a little girl named Mila."
+   },
+   "second": null,
+   "more_sources": [
+    {
+     "label": "Instagram, same post",
+     "url": "https://www.instagram.com/evolving.ai/reel/DfHHP0VA-PD/",
+     "quote": "Created with Kling AI 4.0 in association with @nomore, the film shows how AI filmmaking can be used to tell meaningful stories and raise awareness about serious issues."
+    }
+   ],
+   "money_or_mechanism": "A charity got a polished, character-driven campaign film from a small AI studio, the kind of spot that usually needs an agency and a shoot.",
+   "why_it_matters": "AI is letting campaign groups commission film work they could not otherwise pay for.",
+   "funny": "",
+   "media": {
+    "kind": "clip",
+    "url": "https://www.instagram.com/evolving.ai/reel/DfHHP0VA-PD/"
+   },
+   "helps": {
+    "who": "directors and small studios making campaign films",
+    "how": "more successful"
+   },
+   "found": {
+    "place": "sheet",
+    "label": "Your Instagram inspo sheet",
+    "url": "https://www.instagram.com/evolving.ai/reel/DfHHP0VA-PD/"
+   },
+   "risks": "The film is about domestic violence against children, so it is good news about the makers but a heavy subject for a cheerful slot; no joke offered on purpose. Repost by @evolving.ai; no budget or views. Dated 30 October."
+  },
+  {
+   "key": "odeon-odi-40-percent",
+   "sector": "film_tv",
+   "headline": "Odeon's AI assistant now answers about 40% of up to 10,000 cinema-goer questions a week, and no agents lost their jobs",
+   "what_happened": "Odeon Cinemas told diginomica on 27 November 2026 that its AI assistant Odi, built on Zendesk, resolves about 40% of guest queries, from showtimes to ticket problems, while human agents take the harder ones. The chain says it gets up to 10,000 queries a week, satisfaction has risen over 18 months, and it has kept its service teams.",
+   "date": "2026-11-27",
+   "named_thing": "Odi, Odeon Cinemas' AI guest assistant",
+   "primary": {
+    "label": "diginomica, 'Projecting success on EX and CX at Odeon Cinemas', Stuart Lauchlan, 27 Nov 2026",
+    "url": "https://diginomica.com/projecting-success-ex-and-cx-odeon-cinemas-how-movie-theater-chain-tapping-ai-without-losing",
+    "kind": "original",
+    "quote": "We're at the minute with our AI agent probably resolving around 40% of them."
+   },
+   "second": null,
+   "more_sources": [
+    {
+     "label": "diginomica, same article",
+     "url": "https://diginomica.com/projecting-success-ex-and-cx-odeon-cinemas-how-movie-theater-chain-tapping-ai-without-losing",
+     "quote": "We've managed to retain our teams during the last 18 months."
+    }
+   ],
+   "money_or_mechanism": "The AI takes the routine questions so the same human team can handle a cinema chain's peak weeks without hiring for them.",
+   "why_it_matters": "Cinemas run on thin margins, and Odeon is using AI to absorb the busy weeks without cutting the people who handle the hard cases.",
+   "funny": "The most common question a cinema AI gets is still what time the film starts.",
+   "media": {
+    "kind": "photo",
+    "url": "https://diginomica.com/sites/default/files/styles/scaled_370/public/images/2026-11/molnarszabolcserdely-popcorn-4885565_1920.jpg.webp"
+   },
+   "helps": {
+    "who": "cinema operators and their guest service staff",
+    "how": "better"
+   },
+   "found": {
+    "place": "news",
+    "url": "https://news.google.com/rss/search?q=(theatre+OR+theater+OR+Broadway)+AI"
+   },
+   "risks": "Customer service, close to the brief's 'office productivity' line; the cinema setting is what keeps it in. Company spokesperson's own figures; no cost savings given. The picture is a Pixabay stock popcorn image, not Odeon."
+  }
+ ],
+ "media_fixes": {
+  "desi-batman-25m-views": "https://media.assettype.com/navbharatlive%2F2026-11-17%2Fd1y9381d%2FDesi-Batman-Viral-Video.jpg",
+  "garyvee-avatar-channel": "https://www.instagram.com/hey_garyvee"
+ }
+}
