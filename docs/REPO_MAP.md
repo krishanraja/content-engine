@@ -4805,7 +4805,7 @@ After the daily edition is saved, makeyourmindup.ai is asked to tell IndexNow th
 - `type Attention`
 - `type Snapshot`
 - `async function mapLimit<T, U>(rows: T[], limit: number, fn: (row: T) => Promise<U>): Promise<U[]>`
-- `async function optional<T>(stage: string, fallback: T, read: () => Promise<T>): Promise<T>`
+- `async function optional<T>(stage: string, fallback: T, read: () => Promise<T>, keep: readonly string[] = []): Promise<T>`
 
 ### `apps/control-plane/lib/hub/wiki.ts`
 
