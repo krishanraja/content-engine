@@ -235,7 +235,11 @@ in-session, so it costs nothing. The probe is judged by the same reader as the p
 cannot hold the whys is found before the board, not after.
 
 1. For each option, start one `whys-prober` subagent with the brief below. Fill in only the option's id, its
-   "what happened" line and its source links. Give it nothing else.
+   "what happened" line and its source links. Give it nothing else. Its description begins "Separate reader: blind
+   whys probe, <option_id>": the cost guard (G6, `scripts/hooks/cost_gate.py`) refuses a subagent whose description or
+   prompt does not say it is a separate reader, and on 28 Nov it refused every probe of that day's run. Every other
+   subagent this skill starts (the lenses, the judge, the reviewer, the fresh readers) is described the same way,
+   "Separate reader: <what it reads for>", with its prompt unchanged.
 2. It writes `docs/plans/<Monday>-week/probe/<option_id>.whys.json` and caches every page it read under
    `docs/plans/<Monday>-week/probe/pages/`.
 3. Run `node --import tsx scripts/whys-probe-check.ts <Monday>` (or `<Monday> <option_id>` for one). It prints, per

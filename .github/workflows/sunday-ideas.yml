@@ -348,6 +348,11 @@ jobs:
             again; only when it still refuses after that, stop and say why in your reply, refusal by refusal.
             You can run only the commands listed for this run: write ideas.json and every working file with Write and
             Edit, never through a script of your own under docs/plans (it is refused and costs turns).
+            Every subagent you start (the Task tool: each whys-prober, lens, judge, reviewer and fresh reader) has a
+            description that begins "Separate reader: " and says what it reads for, e.g. "Separate reader: blind whys
+            probe, <option id>"; the prompt stays exactly as the skill gives it. The repository's cost guard (G6,
+            scripts/hooks/cost_gate.py) refuses any other, and on 28 Nov it refused the probes, so the new options of
+            Wednesday and Friday reached the gate with no whys and no score (runs 46150968860 and 46155979434).
             The cycle's touches (config/cycle.json; .agents/skills/plan-week/references/story-score.md, "The cycle's
             touches"): run python3 scripts/post-pack/touch.py run 0 --week <Monday> as you start, python3
             scripts/post-pack/touch.py run 1 --week <Monday> after the gather (with --set topic="<topic>" per candidate
