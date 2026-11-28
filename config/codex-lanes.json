@@ -16,6 +16,10 @@
     "growth-heartside": {
       "repo": "krishanraja/growth-heartside",
       "engine": "growth-heartside"
+    },
+    "mindmake": {
+      "repo": "krishanraja/mindmake",
+      "engine": "growth-mindmake"
     }
   }
 }
