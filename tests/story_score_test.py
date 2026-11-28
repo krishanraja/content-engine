@@ -370,6 +370,11 @@ class Angles(unittest.TestCase):
     def test_judge_numbers_and_the_archive_status(self):
         self.assertEqual(ss.judge_numbers({'status': 'novel', 'scores': {'originality': 0.8, 'usefulness': 0.5, 'specificity': 0.7}}),
                          {'originality': 8.0, 'usefulness': 5.0, 'specificity': 7.0, 'status': 'novel'})
+        # The engine's own scale is 1 to 5 (divergence-engine JudgeSchema): 1 is 0, 3 is 5, 5 is 10 (28 Nov 2026).
+        five = ss.judge_numbers({'status': 'accepted', 'scores': {'originality': 1, 'usefulness': 3, 'specificity': 5}})
+        self.assertEqual(five, {'originality': 0.0, 'usefulness': 5.0, 'specificity': 10.0, 'status': 'accepted'})
+        self.assertEqual(ss.judge_numbers({'status': 'x', 'scores': {'originality': 8, 'usefulness': 6, 'specificity': 7}})['originality'], 8,
+                         'a score above 5 is already on 0 to 10')
         self.assertEqual(ss.angle_score({'status': 'rejected_archive', 'originality': 9}, 8), 0.0)
         j = {'originality': 8, 'usefulness': 6, 'specificity': 6}
         self.assertAlmostEqual(ss.angle_score(j, 8), 0.35 * 8 + 0.25 * 6 + 0.2 * 6 + 0.2 * 8)
@@ -632,6 +637,15 @@ class Spend(unittest.TestCase):
         self.assertAlmostEqual(ss.judge_numbers(results[0])['originality'], 7.0, msg='a 0 to 1 scale is put on 0 to 10')
         self.assertEqual(skipped, [])
         self.assertAlmostEqual(ledger.spent(), 0.45)
+
+    def test_a_judged_batch_fits_the_engines_call_ceiling(self):
+        # 27 Nov 2026: batches of 100 came back with about 48 judged; each call now carries at most judge_batch ideas.
+        poster = Poster(scale=1)
+        ledger = ss.Ledger(None, 10, today='2026-11-26')
+        size = ss.RUBRIC['angle']['divergent']['judge_batch']
+        results, skipped = ss.judge(['angle %d' % n for n in range(size + 4)], [], ledger, poster=poster, cap=UNDER)
+        self.assertEqual([len(b['ideas']) for b in poster.calls], [size, 4])
+        self.assertTrue(all(r is not None for r in results))
 
     def test_a_served_call_is_settled_to_its_metered_cost(self):
         class Metered(Poster):

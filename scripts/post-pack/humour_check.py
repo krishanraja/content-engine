@@ -99,6 +99,36 @@ def request(lines, surface, request_id, context=()):
     }
 
 
+def prune_to_schema(payload, model=None):
+    """The model's reply with only the keys the engine's candidate schema defines. The schema forbids extra keys, and with
+    one model call a request (max_calls_per_request=1) there is no repair pass, so one stray key the model added (an
+    interpretation's `mechanism` or `mechanism_labels`, seen on 27 and 28 Nov 2026) failed the whole read as
+    malformed_output: 264 of 278 reads on the 7 Dec board. Only keys the schema does not name are dropped; nothing is
+    added, renamed or filled in, and every value the schema does name is left for the engine to validate as before."""
+    import typing
+    from pydantic import BaseModel
+    if model is None:
+        try:
+            from humour_engine.analysis.candidate import Candidate as model
+        except ImportError:
+            return payload
+
+    def walk(value, ann):
+        args = typing.get_args(ann)
+        inner = next((a for a in args if isinstance(a, type) and issubclass(a, BaseModel)), None)
+        if isinstance(ann, type) and issubclass(ann, BaseModel):
+            return prune_to_schema(value, ann) if isinstance(value, dict) else value
+        if inner is not None and isinstance(value, list):
+            return [prune_to_schema(v, inner) if isinstance(v, dict) else v for v in value]
+        if inner is not None and isinstance(value, dict):
+            return prune_to_schema(value, inner)
+        return value
+    if not isinstance(payload, dict):
+        return payload
+    fields = model.model_fields
+    return {k: walk(v, fields[k].annotation) for k, v in payload.items() if k in fields}
+
+
 def reader(transport=None):
     """lines-request -> analysis dict, or None without the token or the package."""
     if not os.environ.get(TOKEN_ENV) and transport is None:
@@ -110,7 +140,14 @@ def reader(transport=None):
     except ImportError:
         return None
     os.environ.setdefault(ControlCenterProvider.ENGINE_ENV, CALLER)  # the provider needs it; the transport sets the URL
-    deps = EngineDeps(providers={'controlcenter': ControlCenterProvider(transport=transport or (lambda _u, b: post(b)))},
+    base = transport or (lambda _u, b: post(b))
+
+    def pruned(u, b):
+        status, body = base(u, b)
+        if isinstance(body, dict) and isinstance(body.get('payload'), dict):
+            body = dict(body, payload=prune_to_schema(body['payload']))
+        return status, body
+    deps = EngineDeps(providers={'controlcenter': ControlCenterProvider(transport=pruned)},
                       max_calls_per_request=1)
     return lambda req: json.loads(analyse(AnalysisRequest.model_validate(req), deps).model_dump_json())
 
