@@ -26,6 +26,16 @@
       "keys": ["divergent-content-engine"]
     }
   },
+  "own_allowances": {
+    "hub": {
+      "what": "the daily news hub's editions, which makeyourmindup.ai and the Sunday ideas gather read (apps/control-plane/lib/hub/editorial.ts)",
+      "run_prefix": "hub-edition-",
+      "weekly_usd": 15,
+      "edition_usd": 2.5,
+      "ruling": "Ruling (Krish, 2026-11-28): the daily news hub gets its own allowance of $15 a week, at most $2.50 an edition, outside the $15 chain cap",
+      "how": "Each edition runs inside meterScope with run id run_prefix plus its date, so every paid call it makes (its writer, the fact gate, the draft judges) lands in meter_events with that id. The hub stops at either limit, and chainWeekSpend subtracts the same rows, so the chain cap never counts them."
+    }
+  },
   "skip_when_over": ["inspirationhouse-tag"],
   "skip_note": "Optional runs the daily sweep (the triage sweep, 03:00 UTC) skips once the week passes weekly_usd, in this order, inspirationhouse tagging first. Recorded as job chain_cap in content_engine_runs, where the run reads it, with one board item a week (apps/control-plane/api/_chainCap.ts). The fact gate on a piece Krish picked is never skipped, whatever this list says.",
   "left_out": {

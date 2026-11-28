@@ -1,0 +1,13 @@
+{
+  "_about": "What is actually happening in the world, on every idea (Ruling, Krish, 2026-11-28). Read by scripts/post-pack/trend_tie.py (the Sunday gate, code trend, from the `from` board): every open Monday, Wednesday and Friday option, and every open off-day option but the Saturday good news (already dated stories), carries trend {lane, line, source_url, date}: its lane is one of the hub's trend lanes (config/hub-sources.json trends: money, behaviour, technology), its line one plain sentence of the trend it follows that is not its so-what, its source an https page that shows the trend, dated within max_age_days before the week starts. An option from his own words or his Inspiration tick is his and is never checked. The hub's trends (snapshot.trends, read into sources.json by the gather as hub.trends) are the first place to find one. Its own file, beside config/lens.json, so the story engine v5 blind proof's frozen engine files are unchanged. Changed only by a pull request carrying his ruling.",
+  "from": "2026-12-14",
+  "his_words": [
+    {"at": "2026-11-28", "said": "Helping people understand the trends in and why things are happening the way they are, all the way from huge macroeconomic to huge behavioural trends, in AI, to huge technical trends in AI, as well as all of the categories that we are trying to target. Ultimately that week's ideas, memes, and carousels should be aligned to what is actually happening in the world.", "note": "in a Claude Code session in krishanraja/content-engine, about the news hub and the ideas board"},
+    {"at": "2026-11-28", "said": "agree with all of those,", "note": "his answer to the proposal of the trend lanes and a tie-to-a-trend rule on the Sunday board"}
+  ],
+  "ruling": "Every idea on the board, memes and carousels included, follows a dated trend in AI: money, behaviour or technology.",
+  "max_age_days": 21,
+  "line_min_words": 8,
+  "line_max_chars": 240,
+  "skip_offday_kinds": ["good_news"]
+}

@@ -5,6 +5,9 @@ import type { CatalogueEntry } from '../../api/_publicationCatalogue.js'
 export const sectors = sources.subsectors
 export const stocks = universe
 export const validSector = (key: unknown): key is string => sectors.some(s => s.key === key)
+/** The three trend lanes above the sectors (config/hub-sources.json trends; Ruling, Krish, 2026-11-28). */
+export const trendLanes: { key: string; label: string; line: string; query: string }[] = sources.trends
+export const validTrend = (key: unknown): key is string => trendLanes.some(t => t.key === key)
 export const dayMs = 86_400_000
 export const isoDay = (ms: number) => new Date(ms).toISOString().slice(0, 10)
 export const userAgent = 'MakeYourMindUpEdition/1.0 (+https://makeyourmindup.ai)'
@@ -16,11 +19,14 @@ export type Image = { kind: 'person' | 'company' | 'generated' | null; url: stri
 export type Entity = { name: string; wiki_title: string }
 export type Story = { id: string; subsector: string; date: string; source: string; url: string;
   headline: string; dek: string; why: string; companies: string[]; tickers: string[]; coverage: number; image: Image }
-export type Draft = { item: Story; people: Entity[]; organisations: Entity[]; accusation: boolean; subject: string }
+export type Draft = { item: Story; people: Entity[]; organisations: Entity[]; accusation: boolean; subject: string; trend?: string }
+export type TrendStory = { id: string; trend: string; date: string; source: string; url: string; headline: string; dek: string; why: string; coverage: number }
+/** One lane: its checked stories and, when they share a direction, what is moving and why, in their own sources' words. */
+export type Trend = { key: string; label: string; line: string; moving: string | null; why: string | null; items: TrendStory[] }
 export type Attention = Entity & { views_today: number; avg_30d: number; spiking: boolean; as_of: string }
 export type Snapshot = { ok: true; version: 1; generated_at: string; edition_date: string;
   subsectors: { key: string; label: string; line: string; story_count: number; index: Index }[];
-  items: Story[]; ticker: Ticker; attention: Attention[]; pieces: CatalogueEntry[] }
+  items: Story[]; ticker: Ticker; attention: Attention[]; pieces: CatalogueEntry[]; trends?: Trend[] }
 
 export async function mapLimit<T, U>(rows: T[], limit: number, fn: (row: T) => Promise<U>): Promise<U[]> {
   const output: U[] = []

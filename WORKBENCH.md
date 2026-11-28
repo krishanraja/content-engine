@@ -283,6 +283,7 @@ run puts the new week's line here and moves this one under "Last week's
 publish board", which every session's tick copy still reads until every
 day on it is at 100% (Friday's reposts go out at the weekend).
 
+- Week of 7 to 12 December (recorded from Saturday 28 November): https://controlcenter.krishraja.com/#/content?week=2026-12-07. Planned in a Claude Code session on 27 and 28 Nov (the Sunday ideas run had failed its gate five runs running): 7 hero options with a business lens each, 10 Tuesday and Thursday options, 9 meme templates and 5 Saturday good-news carousels. 11 memes and shorts carry "Humour not read" or "Humour not passed" on their cards (Ruling, Krish, 2026-11-28: land them marked). Board item `week-publish-board-2026-12-07`. The weeks of 23 and 30 Nov are on the live board at their own week.
 - Week of 2 to 6 November: https://controlcenter.krishraja.com/#/content?week=2026-11-02.
 - Week of 9 to 13 November (recorded from Sunday 1 November): https://controlcenter.krishraja.com/#/content?week=2026-11-09.
 - Week of 16 to 21 November (recorded from Sunday 8 November): https://controlcenter.krishraja.com/#/content?week=2026-11-16. Ideas tab

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { sectors, stocks, type Snapshot } from './types.js'
+import { sectors, stocks, trendLanes, type Snapshot } from './types.js'
 
 const number = z.number().nullable()
 const index = z.object({ day_pct: number, month_pct: number, series: z.array(z.number()) })
@@ -12,6 +12,11 @@ const image = z.object({ kind: z.enum(['person','company','generated']).nullable
       !!photo.url?.startsWith('https://upload.wikimedia.org/wikipedia/commons/')
   })
 const sector = z.string().refine(s => sectors.some(row => row.key === s))
+const trendKey = z.string().refine(t => trendLanes.some(row => row.key === t))
+const trend = z.object({ key: trendKey, label: z.string().min(1), line: z.string(), moving: z.string().min(1).nullable(), why: z.string().min(1).nullable(),
+  items: z.array(z.object({ id: z.string().min(1), trend: trendKey, date: z.iso.date(), source: z.string().min(1), url: z.url(),
+    headline: z.string().min(1), dek: z.string().min(1), why: z.string().min(1), coverage: z.int().positive() })).max(3) })
+  .refine(t => t.items.every(i => i.trend === t.key) && (t.moving === null) === (t.why === null) && (t.moving === null || t.items.length > 0))
 const shape = z.object({
   ok: z.literal(true), version: z.literal(1), generated_at: z.iso.datetime(), edition_date: z.iso.date(),
   subsectors: z.array(z.object({ key: sector, label: z.string(), line: z.string(), story_count: z.int().nonnegative(), index })).length(6),
@@ -26,6 +31,7 @@ const shape = z.object({
     avg_30d: z.number().nonnegative(), spiking: z.boolean(), as_of: z.iso.date() })),
   pieces: z.array(z.object({ piece_id: z.string(), title: z.string(), series: z.string().nullable(), published_at: z.string(),
     article_url: z.url().nullable(), video, short: video })).max(3),
+  trends: z.array(trend).max(3).optional(),
 })
 export function readSnapshot(payload: unknown): Snapshot | null {
   const result = shape.safeParse(payload)
@@ -33,6 +39,7 @@ export function readSnapshot(payload: unknown): Snapshot | null {
   const s = result.data
   if (new Set(s.items.map(item => item.id)).size !== s.items.length || sectors.some(({key}) =>
     s.subsectors.find(r => r.key === key)?.story_count !== s.items.filter(i => i.subsector === key).length) ||
-    Object.keys(stocks).some(symbol => !Object.hasOwn(s.ticker.stocks, symbol))) return null
+    Object.keys(stocks).some(symbol => !Object.hasOwn(s.ticker.stocks, symbol)) ||
+    new Set((s.trends || []).map(t => t.key)).size !== (s.trends || []).length) return null
   return s as Snapshot
 }

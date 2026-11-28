@@ -15,8 +15,13 @@ describe('edition inputs', () => {
     const [row] = parseFeed(xml,google,now)
     expect(row).toMatchObject({ title: 'AI music & rights', summary:'Licensing', outlet:'Trade', domain:'trade.example', sector:'music' })
     expect(parseFeed(xml,google,now + 2 * dayMs)).toEqual([])
-    expect(feeds.filter(f => f.outlet === 'Google News')).toHaveLength(6)
-    expect(feeds).toHaveLength(18)
+    expect(feeds.filter(f => f.outlet === 'Google News' && !f.trend)).toHaveLength(6)
+    expect(feeds.filter(f => f.trend).map(f => f.trend)).toEqual(['money','behaviour','technology'])
+    const trend = feeds.find(f => f.trend === 'money')!
+    expect(onBeat({ title:'AI data centre spending doubles', summary:'', trend:'money' } as any)).toBe(true)
+    expect(onBeat({ title:'Data centre opens in Leeds', summary:'', trend:'money' } as any)).toBe(false)
+    expect(trend.subsector).toBe('')
+    expect(feeds).toHaveLength(21)
     expect(new URL(google.url).searchParams.get('q')).toBe('AI music when:2d')
   })
   it('reads alternate Atom links and rejects malformed XML', () => {
@@ -143,4 +148,16 @@ it('a stage falls back on a hiccup but a budget refusal reaches the run', async 
     .rejects.toThrow('editorial_budget_unavailable')
   expect(await optional('catalogue',['kept'],async () => { throw Error('editorial_budget_unavailable') })).toEqual(['kept'])
   warn.mockRestore()
+})
+
+it('an edition stops at the hub allowance: $15 a week, $2.50 an edition, and never on an unread meter', async () => {
+  vi.stubEnv('SUPABASE_URL','https://fixture.invalid'); vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY','fixture')
+  const { hubBudget } = await import('../../apps/control-plane/lib/hub/editorial.js')
+  const a = { weekly_usd:15, edition_usd:2.5 }
+  expect(hubBudget(4,1,a)).toBe('ok')
+  expect(hubBudget(15,0,a)).toBe('week')
+  expect(hubBudget(10,2.5,a)).toBe('edition')
+  expect(hubBudget(null,0,a)).toBe('unread')
+  expect(hubBudget(0,null,a)).toBe('unread')
+  vi.unstubAllEnvs()
 })

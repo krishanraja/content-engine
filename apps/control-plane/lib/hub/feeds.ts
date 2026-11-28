@@ -2,18 +2,24 @@ import { SaxesParser } from 'saxes'
 import { decode } from 'html-entities'
 import sources from '../../../../config/hub-sources.json' with { type: 'json' }
 import { inFocusSector, keywordRegex, onAvoidList } from '../../api/_beat.js'
-import { dayMs, isoDay, sectors } from './types.js'
+import { dayMs, isoDay, sectors, trendLanes } from './types.js'
 
-export type Feed = { url: string; subsector: string; outlet: string }
-export type Candidate = { title: string; url: string; summary: string; date: string; outlet: string; domain: string; sector: string }
+export type Feed = { url: string; subsector: string; outlet: string; trend?: string }
+export type Candidate = { title: string; url: string; summary: string; date: string; outlet: string; domain: string; sector: string; trend?: string }
 export const feeds: Feed[] = [...sources.trades, ...sectors.map(s => ({
   subsector: s.key, outlet: 'Google News',
   url: 'https://news.google.com/rss/search?' + new URLSearchParams({ q: s.query + ' when:2d', hl: 'en-GB', gl: 'GB', ceid: 'GB:en' }),
+})), ...trendLanes.map(t => ({
+  subsector: '', trend: t.key, outlet: 'Google News',
+  url: 'https://news.google.com/rss/search?' + new URLSearchParams({ q: t.query + ' when:2d', hl: 'en-GB', gl: 'GB', ceid: 'GB:en' }),
 }))]
+const aiWords = /\b(?:AI|artificial intelligence|machine learning|generative|ChatGPT|OpenAI|Anthropic|Gemini|LLMs?|chatbots?)\b/i
 const sports = keywordRegex([{ keywords: sources.sport_keywords }])
 const exceptions = keywordRegex([{ keywords: sources.sport_exceptions }], 'gi')
 export function onBeat(row: Candidate) {
   const text = row.title + ' ' + row.summary
+  // A trend lane is read outside the creative-sector filter: it is about AI itself, so it needs AI words, not a sector.
+  if (row.trend) return !onAvoidList(row.title) && aiWords.test(text)
   return !onAvoidList(row.title) && (inFocusSector(text) || sports.test(text.replace(exceptions, ' ')))
 }
 export function plain(html: string) {
@@ -64,7 +70,7 @@ export function parseFeed(xml: string, feed: Feed, now: number): Candidate[] {
       if (google && title.endsWith(' - ' + outlet)) title = title.slice(0, -(outlet.length + 3))
       if (url && title && outlet && domain && at <= now && at >= now - 2 * dayMs) {
         rows.push({ title, url: url.href, date: new Date(at).toISOString(), summary: plain(fields.description || fields.summary || '').slice(0, 380),
-          outlet, domain, sector: feed.subsector })
+          outlet, domain, sector: feed.subsector, ...(feed.trend ? { trend: feed.trend } : {}) })
       }
     }
     stack.pop()
