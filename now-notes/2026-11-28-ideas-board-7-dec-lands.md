@@ -1,0 +1,4 @@
+Status: The 7 Dec ideas board is on the live board: 7 Monday, Wednesday and Friday options, each with a business lens (Krish's 27 Nov ruling, businesses first and under the hood), 10 Tuesday and Thursday options, 9 meme templates and 5 Saturday good-news carousels. The gate passes every check except the humour floor of 11 memes and shorts, which land marked on their cards as humour not read or not passed, by Krish's choice on 28 Nov.
+Next: Krish presses on the 7 Dec ideas board; the humour engine's grounding rejections that left 9 of those 11 unread are recorded for the humour engine (inbox 383).
+Changed: Each hero option carries lens {subject, who, under_the_hood}; two hooks, one question and one story line were reworded to lead on the business with the same facts (Maxon, the Manchester and Ottawa festivals).
+North Star check (2026-11-28): holds.

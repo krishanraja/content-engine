@@ -87,6 +87,11 @@
      "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true,
      "close_call": "close call, your pick"
+    },
+    "lens": {
+     "subject": "business",
+     "who": "ElevenLabs",
+     "under_the_hood": "An AI voice company is buying a whole language's speech model instead of training one, which puts a price on dubbing work in that language."
     }
    },
    {
@@ -181,6 +186,11 @@
      "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true,
      "close_call": "close call, your pick"
+    },
+    "lens": {
+     "subject": "business",
+     "who": "Kuaishou",
+     "under_the_hood": "Kuaishou funds its Kling video unit with money investors can reclaim with interest, so the tool's runway rests on a buyback promise."
     }
    },
    {
@@ -264,6 +274,11 @@
      "rubric_version": "story-score/1",
      "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
+    },
+    "lens": {
+     "subject": "business",
+     "who": "Symphonic",
+     "under_the_hood": "A music distributor is turning its catalogue into licensed AI training data, paid as a fee plus a revenue share at a rate nobody has published."
     }
    }
   ],
@@ -365,6 +380,11 @@
      "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true,
      "thin_week": "a thin week: only two options passed every floor after a second gather"
+    },
+    "lens": {
+     "subject": "business",
+     "who": "Epic Games",
+     "under_the_hood": "Epic used AI to rewrite its own game's code into a new language, then dropped the old visual tool from its next engine."
     }
    },
    {
@@ -372,7 +392,7 @@
     "source_kind": "engine",
     "source_tag": "trade_press",
     "so_what": "3D artists using Cinema 4D and ZBrush now get AI model generation inside their apps, but the models come from other firms and the credits expire monthly, so any studio budgeting for it knows what it is actually paying for.",
-    "story": "Maxon, maker of Cinema 4D and ZBrush for 3D artists and designers, launched Maxon Plus in November 2026, a cloud subscription whose Model Generator turns a prompt, photo or sketch into an editable 3D model. The work runs on third-party AI providers such as Tripo and Rodin, and is sold in credits.",
+    "story": "Maxon, the company behind Cinema 4D and ZBrush, which 3D studios and artists use, launched Maxon Plus in November 2026, a cloud subscription whose Model Generator turns a prompt, photo or sketch into an editable 3D model. The work runs on third-party AI providers such as Tripo and Rodin, and is sold in credits.",
     "why_now": "Creative Bloq, 23 Nov 2026.",
     "fact": "Maxon: \"We work with third-party AI providers, such as Tripo and Rodin.\"; Creative Bloq, 23 Nov 2026: \"AI generation comes to Cinema 4D and ZBrush, but artists have an 'off' switch.\"",
     "source": {
@@ -397,7 +417,7 @@
     "pitch": {
      "question": "When your design software adds AI, whose AI is it, and who are you paying?",
      "headline": "Cinema 4D's new AI is someone else's AI, sold in credits that expire.",
-     "hook": "Maxon Plus puts AI model generation inside Cinema 4D and ZBrush for 3D artists, run on other firms' models such as Tripo and Rodin, billed in credits.",
+     "hook": "Maxon, the software company behind Cinema 4D and ZBrush, now sells AI model generation inside its apps, run on other firms' models such as Tripo and Rodin and billed in credits.",
      "examples": [
       "A prompt, photo or sketch becomes an editable model.",
       "Third-party AI providers such as Tripo and Rodin.",
@@ -449,6 +469,11 @@
      "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true,
      "thin_week": "a thin week: only two options passed every floor after a second gather"
+    },
+    "lens": {
+     "subject": "business",
+     "who": "Maxon",
+     "under_the_hood": "Maxon resells other firms' AI models inside its own software, billed in credits that expire monthly, so it is a reseller as much as a maker."
     }
    }
   ],
@@ -481,9 +506,9 @@
      "What this shows about honesty when the stakes are a prize."
     ],
     "pitch": {
-     "question": "If a festival asks filmmakers to declare AI themselves, what stops them ticking the wrong box?",
+     "question": "If a festival asks for AI to be declared on an entry form, what stops the box being gamed?",
      "headline": "Animation festivals ask if you used AI. Some entries say they are '3D'.",
-     "hook": "Ottawa's animation festival director says some entrants are lying on their forms, marking AI films as 3D, as Manchester bans generative AI films from 2027.",
+     "hook": "Manchester Animation Festival will bar generative AI films from 2027, as Ottawa's festival says entrants are lying on their forms, and festivals decide which animated films win distribution deals.",
      "examples": [
       "Manchester: any generated part of the final image makes a film ineligible.",
       "Ottawa: one AI box to tick.",
@@ -537,7 +562,12 @@
      "close_call": "close call, your pick",
      "thin_week": "a thin week: only two options passed every floor after a second gather"
     },
-    "recommended": true
+    "recommended": true,
+    "lens": {
+     "subject": "business",
+     "who": "Manchester Animation Festival",
+     "under_the_hood": "Festivals that decide awards and distribution are moving from trusting entry forms to banning AI outright, because self-declaration has stopped working."
+    }
    },
    {
     "id": "456c4fc3-530b-4fc8-9e92-5b5ea662ad87",
@@ -636,6 +666,11 @@
      "humour_unread": true,
      "close_call": "close call, your pick",
      "thin_week": "a thin week: only two options passed every floor after a second gather"
+    },
+    "lens": {
+     "subject": "business",
+     "who": "Nicalis",
+     "under_the_hood": "Steam's AI label rests on the developer's own tick, and here the music files' metadata disclosed what the store page did not."
     }
    }
   ]
@@ -1174,7 +1209,7 @@
     "fact": "Gizmodo, 23 Nov 2026: \"Google might be planning to build a completely AI-generated TV channel in which your likeness is the main character\"; The Verge: a system \"designed to create feeds filled with personalized, AI-generated videos and advertisements\".",
     "pitch": {
      "see": "A TV schedule where every show stars the same face: the viewer's.",
-     "lands": "It is absurd and real: a giant planned AI films starring the viewer, with the ad breaks kept in, and the patent office turned it down.",
+     "lands": "Humour not read: the humour engine could not read this joke, so its funny line is unchecked. It is absurd and real: a giant planned AI films starring the viewer, with the ad breaks kept in, and the patent office turned it down.",
      "why_now": "Gizmodo, 23 Nov 2026; The Verge, 25 Nov 2026.",
      "share": "Google wanted to make you the star of your own TV channel, ads included."
     },
@@ -1250,6 +1285,11 @@
      "rubric_version": "story-score/1",
      "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
+    },
+    "humour_unchecked": {
+     "line": "Humour not read: the humour engine could not read this joke, so its funny line is unchecked.",
+     "why": "board_feed gate story_floor, 28 Nov 2026",
+     "ruling": "Krish, 2026-11-28: land the 7 Dec board with its memes and shorts marked as having no humour read"
     }
    },
    {
@@ -1265,7 +1305,7 @@
     "hook": "Carragher cheers, Neville sinks: the 4-0 comms cam",
     "pitch": {
      "see": "On the Anfield gantry one pundit laughs and leans out of his seat at each goal while the one beside him sits still, face unmoved, as it reaches 4-0.",
-     "lands": "Two faces watching the same thing is the split between an AI music start-up's pitch and the songwriter who read the contract; the reversal is in the faces."
+     "lands": "Humour not read: the humour engine could not read this joke, so its funny line is unchecked. Two faces watching the same thing is the split between an AI music start-up's pitch and the songwriter who read the contract; the reversal is in the faces."
     },
     "aim": "humour",
     "shape": "story",
@@ -1327,6 +1367,11 @@
      "rubric_version": "story-score/1",
      "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
+    },
+    "humour_unchecked": {
+     "line": "Humour not read: the humour engine could not read this joke, so its funny line is unchecked.",
+     "why": "board_feed gate story_floor, 28 Nov 2026",
+     "ruling": "Krish, 2026-11-28: land the 7 Dec board with its memes and shorts marked as having no humour read"
     }
    },
    {
@@ -1342,7 +1387,7 @@
     "hook": "Two perfect legs in one match",
     "pitch": {
      "see": "One player throws a perfect nine-dart leg and his opponent grins at the replay, then throws a perfect nine-darter of his own straight back.",
-     "lands": "One perfect take answered by another is the human session player matching the AI track first time; the callback is the grin."
+     "lands": "Humour not read: the humour engine could not read this joke, so its funny line is unchecked. One perfect take answered by another is the human session player matching the AI track first time; the callback is the grin."
     },
     "aim": "humour",
     "shape": "story",
@@ -1404,6 +1449,11 @@
      "rubric_version": "story-score/1",
      "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
+    },
+    "humour_unchecked": {
+     "line": "Humour not read: the humour engine could not read this joke, so its funny line is unchecked.",
+     "why": "board_feed gate story_floor, 28 Nov 2026",
+     "ruling": "Krish, 2026-11-28: land the 7 Dec board with its memes and shorts marked as having no humour read"
     }
    },
    {
@@ -1419,7 +1469,7 @@
     "hook": "The manager's fist pumps to the Kop",
     "pitch": {
      "see": "After the full-time handshakes the head coach walks towards the stand and pumps his fist at the crowd, again and again.",
-     "lands": "Pure triumph over a small win is the director walking past the AI storyboard that got the shot wrong; the exaggeration lands because the win is tiny."
+     "lands": "Humour not read: the humour engine could not read this joke, so its funny line is unchecked. Pure triumph over a small win is the director walking past the AI storyboard that got the shot wrong; the exaggeration lands because the win is tiny."
     },
     "aim": "humour",
     "shape": "story",
@@ -1481,6 +1531,11 @@
      "rubric_version": "story-score/1",
      "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
+    },
+    "humour_unchecked": {
+     "line": "Humour not read: the humour engine could not read this joke, so its funny line is unchecked.",
+     "why": "board_feed gate story_floor, 28 Nov 2026",
+     "ruling": "Krish, 2026-11-28: land the 7 Dec board with its memes and shorts marked as having no humour read"
     }
    },
    {
@@ -1496,7 +1551,7 @@
     "hook": "The buzzer-beater at the Garden",
     "pitch": {
      "see": "A player hits the winning shot as the clock runs out, the arena erupts and his team-mates swarm him on the floor, 97-96.",
-     "lands": "Winning with no time left is the human mix landing a second before the label settles for the AI version; exaggeration of a deadline everyone in music has lived."
+     "lands": "Humour not read: the humour engine could not read this joke, so its funny line is unchecked. Winning with no time left is the human mix landing a second before the label settles for the AI version; exaggeration of a deadline everyone in music has lived."
     },
     "aim": "humour",
     "shape": "story",
@@ -1558,6 +1613,11 @@
      "rubric_version": "story-score/1",
      "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
+    },
+    "humour_unchecked": {
+     "line": "Humour not read: the humour engine could not read this joke, so its funny line is unchecked.",
+     "why": "board_feed gate story_floor, 28 Nov 2026",
+     "ruling": "Krish, 2026-11-28: land the 7 Dec board with its memes and shorts marked as having no humour read"
     }
    }
   ],
@@ -2102,7 +2162,7 @@
     "fact": "The Verge, 25 Nov 2026: \"companies have begun making more and more of their devices open source.\"; Polyend: \"Today we're publishing the firmware source code for the original Tracker, Tracker+ and Tracker Mini on GitHub.\"",
     "pitch": {
      "see": "A tiny $70 synth with a chat window open beside it.",
-     "lands": "It is a surprising, true twist: AI coding tools let hobbyists rewrite music gear, and some makers answered by publishing their code.",
+     "lands": "Humour not passed: the humour engine read its plain fact as not funny, and could not read its funny line, so the joke is unchecked. It is a surprising, true twist: AI coding tools let hobbyists rewrite music gear, and some makers answered by publishing their code.",
      "why_now": "The Verge, 25 Nov 2026.",
      "share": "AI turned bedroom musicians into synth makers."
     },
@@ -2176,6 +2236,11 @@
      ],
      "rubric_version": "story-score/1",
      "at": "2026-11-28T11:36:41+00:00"
+    },
+    "humour_unchecked": {
+     "line": "Humour not passed: the humour engine read its plain fact as not funny, and could not read its funny line, so the joke is unchecked.",
+     "why": "board_feed gate story_floor, 28 Nov 2026",
+     "ruling": "Krish, 2026-11-28: land the 7 Dec board with its memes and shorts marked as having no humour read"
     }
    },
    {
@@ -2191,7 +2256,7 @@
     "hook": "The champion on his back in Turin",
     "pitch": {
      "see": "Match point goes in, the winner drops flat on his back on the court, then disappears under his team in the players' box.",
-     "lands": "Collapse-on-the-floor joy is how an editor feels when the client approves the cut with no request for an AI version; understatement of the trigger, exaggeration of the joy."
+     "lands": "Humour not read: the humour engine could not read this joke, so its funny line is unchecked. Collapse-on-the-floor joy is how an editor feels when the client approves the cut with no request for an AI version; understatement of the trigger, exaggeration of the joy."
     },
     "aim": "humour",
     "shape": "story",
@@ -2253,6 +2318,11 @@
      "rubric_version": "story-score/1",
      "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
+    },
+    "humour_unchecked": {
+     "line": "Humour not read: the humour engine could not read this joke, so its funny line is unchecked.",
+     "why": "board_feed gate story_floor, 28 Nov 2026",
+     "ruling": "Krish, 2026-11-28: land the 7 Dec board with its memes and shorts marked as having no humour read"
     }
    },
    {
@@ -2268,7 +2338,7 @@
     "hook": "The heroes run in together",
     "pitch": {
      "see": "A leader calls his team and heroes charge in from every side of the battlefield to stand together.",
-     "lands": "Everyone turning up at once is every AI video tool arriving at the same advertising pitch; personification of the tools does the work."
+     "lands": "Humour not read: the humour engine could not read this joke, so its funny line is unchecked. Everyone turning up at once is every AI video tool arriving at the same advertising pitch; personification of the tools does the work."
     },
     "aim": "humour",
     "shape": "story",
@@ -2330,6 +2400,11 @@
      "rubric_version": "story-score/1",
      "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
+    },
+    "humour_unchecked": {
+     "line": "Humour not read: the humour engine could not read this joke, so its funny line is unchecked.",
+     "why": "board_feed gate story_floor, 28 Nov 2026",
+     "ruling": "Krish, 2026-11-28: land the 7 Dec board with its memes and shorts marked as having no humour read"
     }
    },
    {
@@ -2345,7 +2420,7 @@
     "hook": "The headliner brings the legends backstage",
     "pitch": {
      "see": "A singer dances down a backstage corridor surrounded by country music legends before walking out to perform, guitar in hand.",
-     "lands": "A headliner surrounded by the people who made the sound is the cruel truth about AI music models; the irony is aimed at the AI, never the artist."
+     "lands": "Humour not read: the humour engine could not read this joke, so its funny line is unchecked. A headliner surrounded by the people who made the sound is the cruel truth about AI music models; the irony is aimed at the AI, never the artist."
     },
     "aim": "humour",
     "shape": "story",
@@ -2407,6 +2482,11 @@
      "rubric_version": "story-score/1",
      "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
+    },
+    "humour_unchecked": {
+     "line": "Humour not read: the humour engine could not read this joke, so its funny line is unchecked.",
+     "why": "board_feed gate story_floor, 28 Nov 2026",
+     "ruling": "Krish, 2026-11-28: land the 7 Dec board with its memes and shorts marked as having no humour read"
     }
    },
    {
@@ -2422,7 +2502,7 @@
     "hook": "A fantasy game remade in another decade by AI",
     "pitch": {
      "see": "A famous fantasy video game's best-known scenes are rebuilt with AI in a 1960s setting, cart ride and dungeon included.",
-     "lands": "An AI parody that keeps every famous game moment and swaps the decade is the literal version of how studios pitch AI remakes; literalisation of the pitch."
+     "lands": "Humour not read: the humour engine could not read this joke, so its funny line is unchecked. An AI parody that keeps every famous game moment and swaps the decade is the literal version of how studios pitch AI remakes; literalisation of the pitch."
     },
     "aim": "humour",
     "shape": "story",
@@ -2484,6 +2564,11 @@
      "rubric_version": "story-score/1",
      "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
+    },
+    "humour_unchecked": {
+     "line": "Humour not read: the humour engine could not read this joke, so its funny line is unchecked.",
+     "why": "board_feed gate story_floor, 28 Nov 2026",
+     "ruling": "Krish, 2026-11-28: land the 7 Dec board with its memes and shorts marked as having no humour read"
     }
    },
    {
@@ -2499,7 +2584,7 @@
     "hook": "The touchdown with three seconds left",
     "pitch": {
      "see": "Trailing with the clock almost gone, the quarterback finds his receiver in the end zone and the whole team piles on while the other bench stares.",
-     "lands": "A last-second win is the hand-made short film beating the AI entries to the festival deadline; the reversal is who was expected to win."
+     "lands": "Humour not passed: the humour engine read the caption as funny but needing explaining, so it may not land on first read. A last-second win is the hand-made short film beating the AI entries to the festival deadline; the reversal is who was expected to win."
     },
     "aim": "humour",
     "shape": "story",
@@ -2559,6 +2644,11 @@
      ],
      "rubric_version": "story-score/1",
      "at": "2026-11-28T11:36:41+00:00"
+    },
+    "humour_unchecked": {
+     "line": "Humour not passed: the humour engine read the caption as funny but needing explaining, so it may not land on first read.",
+     "why": "board_feed gate story_floor, 28 Nov 2026",
+     "ruling": "Krish, 2026-11-28: land the 7 Dec board with its memes and shorts marked as having no humour read"
     }
    }
   ],
