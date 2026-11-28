@@ -127,6 +127,8 @@ export const EngineRenderPropsSchema = z.object({
    *  (Ruling, Krish, 2026-11-16: a style may bring its own colours). Absent, the marks use tokens. */
   brandTokens: EngineTokensSchema.optional(),
   series: z.object({ label: z.string().min(1), day: z.string().min(1), promise: z.string().min(1), site: z.string().min(1) }).strict(),
+  /** The house marks. stacked is the theme's V10 on a cut dated before 27 Nov, as signed (F33), and S3h from 27 Nov (ve
+   *  compile stacked_slot; Ruling, Krish, 2026-11-25: wordmark on ink only; V10 retired), drawn only as the closing wordmark. */
   brand: z.object({ mark: EngineImageSchema, logo: EngineImageSchema, stacked: EngineImageSchema }).strict(),
   /** true: the body of the cut carries the mark tile and the stage header's logo, only for a piece the palette still lets
    *  (dated before its logo rule). Absent or false: no logo in the body (Ruling, Krish, 2026-11-17 and 18: the logo only on

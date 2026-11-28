@@ -798,6 +798,38 @@ class StingCloseTest(unittest.TestCase):
             late = dict(props, seriesPill=False)
             self.assertRegex(' '.join(ve_compile.marks_problems(late, spec)), 'keeps the body it was signed with')
 
+    def test_from_27_nov_the_stacked_slot_carries_s3h_and_never_v10(self):
+        # Ruling (Krish, 2026-11-25): wordmark on ink only; V10 retired. The theme still pins v10.svg as stacked (studio.json
+        # is hash-pinned for V2 jobs), so compile hands S3h to the renderer from 27 Nov and keeps V10 for a cut dated before.
+        with self.env():
+            spec = self.spec('2026-11-27', 'proof-wide')
+            props = compile_cut(spec, 'proof-wide', timed_words(), FIXTURE)
+            stacked = props['brand']['stacked']
+            self.assertTrue(stacked['src'].replace('\\', '/').endswith('assets/brand/makeyourmindup/v5/s3h.svg'), stacked)
+            self.assertEqual((stacked['pixelWidth'], stacked['pixelHeight']), (700, 700))
+            self.assertEqual(ve_compile.marks_problems(props, spec), [])
+            before = compile_cut(self.spec('2026-11-26', 'proof-wide'), 'proof-wide', timed_words(), FIXTURE)
+            self.assertTrue(before['brand']['stacked']['src'].replace('\\', '/').endswith('makeyourmindup/v5/v10.svg'))
+            sha = {Path(f).name: s for f, s in zip(ve_compile._PALETTE['marks']['retired']['files'],
+                                                    ve_compile._PALETTE['marks']['retired']['sha256'])}
+            for name, value in (('V10 in the stacked slot', str(ROOT / 'assets/brand/makeyourmindup/v5/v10.svg')),
+                                ('V6', 'assets/brand/makeyourmindup/v5/v6.svg'),
+                                ('an -ink drawing', 'assets\\brand\\makeyourmindup\\v5\\v9-ink.svg'),
+                                ('V10 by sha256', sha['v10.svg'])):
+                with self.subTest(name):
+                    marked = copy.deepcopy(props)
+                    marked['brand']['stacked']['src'] = value
+                    found = ' '.join(ve_compile.marks_problems(marked, spec))
+                    self.assertRegex(found, r'retired mark .* at props\.brand\.stacked\.src')
+                    self.assertIn('V10 retired', found)
+
+    def test_a_cut_dated_before_27_nov_with_s3h_in_its_stacked_slot_is_refused(self):
+        with self.env():
+            spec = self.spec('2026-11-26', 'proof-wide')
+            props = compile_cut(spec, 'proof-wide', timed_words(), FIXTURE)
+            props['brand']['stacked']['src'] = str(ROOT / 'assets/brand/makeyourmindup/v5/s3h.svg')
+            self.assertRegex(' '.join(ve_compile.marks_problems(props, spec)), 'brand.stacked S3h.*keeps the body it was signed with')
+
     def test_the_tall_outro_stays_a_2_s_beat(self):
         # Ruling, Krish, 2026-11-27: "agree", to keeping the 9:16 outro at 2 s, settled by 1.33 s, not the template's 3.6 s.
         self.assertEqual(ve_compile.ENDING_FRAMES_BY_ASPECT['9:16'], 2 * ve_compile.FPS)

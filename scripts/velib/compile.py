@@ -41,6 +41,12 @@ MARKS_RULING = f'Ruling, Krish, {MARKS_RULE["from"]}: "{MARKS_RULE["words"]}"'
 # What names V4: its file, in either drawing (v4.svg, v4-ink.svg), by path or sha256 (config/brand-palette.json marks).
 V4_MARKS = {'makeyourmindup/v5/v4.svg', 'makeyourmindup/v5/v4-ink.svg', _PALETTE['marks']['wordmark']['sha256'],
             *_PALETTE['marks']['wordmark'].get('same_drawing', [])}
+# S3h, the one wordmark per video, and what it retired (Ruling, Krish, 2026-11-25: wordmark on ink only; V10 retired;
+# config/brand-palette.json marks square, marks retired). From 27 Nov compile hands S3h to the renderer in the stacked
+# slot in place of the theme's V10, and no video names V10, V6 or any -ink drawing, props.brand included.
+SQUARE_MARK = _PALETTE['marks']['square']
+RETIRED_MARKS = {*(f.split('assets/brand/', 1)[-1] for f in _PALETTE['marks']['retired']['files']),
+                 *_PALETTE['marks']['retired']['sha256']}
 # The opening, under test (Krish, 29 Oct 2026: "I'd pick number one here but I think that we need to test and learn.
 # We need to figure out what the right tone is over time based on real engagement. Let's go with number one for
 # now."): the hook is the intro. The first beat owns frame 0 with the logo and the series tag in its corners, and no
@@ -238,6 +244,31 @@ def carried_v4(value, where: str = 'props') -> list[str]:
     return []
 
 
+def carried_retired(value, where: str = 'props') -> list[str]:
+    """Every place in value (props or a spec, props.brand included) that names a retired mark: V10 or V6, or any -ink
+    drawing, by path or sha256 (Ruling, Krish, 2026-11-25: wordmark on ink only; V10 retired; marks retired)."""
+    if isinstance(value, dict):
+        return [hit for key, item in value.items() for hit in carried_retired(item, f'{where}.{key}')]
+    if isinstance(value, list):
+        return [hit for i, item in enumerate(value) for hit in carried_retired(item, f'{where}.{i}')]
+    if isinstance(value, str):
+        low = value.lower().replace('\\', '/')
+        if (low in RETIRED_MARKS or any(low.endswith(mark) for mark in RETIRED_MARKS if '/' in mark)
+                or re.search(r'makeyourmindup/v5/[a-z0-9-]+-ink\.svg$', low)):
+            return [where]
+    return []
+
+
+def stacked_slot(spec: dict, theme_id: str, image: dict) -> dict:
+    """The mark in the renderer's stacked slot (props.brand.stacked): S3h on a v5 cut dated from 27 Nov, where it can only
+    be the closing wordmark, and the title lockup draws nothing (FormatMaster titleWordmark, on titleCardMark false), in place of the theme's V10
+    (Ruling, Krish, 2026-11-25: wordmark on ink only; V10 retired). A cut dated before keeps the mark it was signed with."""
+    if theme_id != 'makeyourmindup-v5' or not bare_body(spec):
+        return image
+    return {'src': source(SQUARE_MARK['file'], ROOT), 'pixelWidth': SQUARE_MARK['pixel_width'],
+            'pixelHeight': SQUARE_MARK['pixel_height']}
+
+
 def marks_problems(props: dict, spec: dict | None = None) -> list[str]:
     """Why this cut's props would draw a wordmark or a series name where the palette has none (Ruling, Krish, 2026-11-27:
     "agree"; config/brand-palette.json marks_rule). From 27 Nov the one wordmark is S3h on the v5 outro, so the props say
@@ -249,6 +280,8 @@ def marks_problems(props: dict, spec: dict | None = None) -> list[str]:
     day = str(spec.get('publish_day') or '')[:10]
     if day < MARKS_RULE['from']:
         late = [key for key in ('seriesPill', 'titleCardMark') if key in props]
+        square = str(((props.get('brand') or {}).get('stacked') or {}).get('src') or '').lower().replace('\\', '/')
+        late += ['brand.stacked S3h'] if square.endswith('/' + SQUARE_MARK['file'].split('/')[-1]) else []
         return [f'the props say {", ".join(late)}, and a cut dated {day or "without a date"} keeps the body it was signed '
                 f'with (the marks rule binds cuts dated from {MARKS_RULE["from"]}; F33); run ve compile again'] if late else []
     out = []
@@ -268,6 +301,11 @@ def marks_problems(props: dict, spec: dict | None = None) -> list[str]:
     if hits:
         out.append(f'the props name V4 at {", ".join(hits)}: from {MARKS_RULE["from"]} no body beat or title card carries '
                    f'it ({MARKS_RULING}); remove it')
+    retired = carried_retired(props)
+    if retired:
+        out.append(f'the props name a retired mark (V10, V6 or an -ink drawing) at {", ".join(retired)}: from '
+                   f'{MARKS_RULE["from"]} the stacked slot carries S3h, the one wordmark, and a video draws on ink only (Ruling, '
+                   f'Krish, 2026-11-25: wordmark on ink only; V10 retired; {MARKS_RULING}); run ve compile again')
     return out
 
 
@@ -940,6 +978,9 @@ def compile_cut(spec: dict, cut_id: str, words: list[dict], assets_dir: str | Pa
            if moment else {}),
         'beats': beats, 'objects': objects, 'events': events,
     }
+    # From 27 Nov the stacked slot carries S3h, not the theme's retired V10 (Ruling, Krish, 2026-11-25: wordmark on ink only;
+    # V10 retired): only a close draws that slot, and the title lockup draws nothing. Older cuts keep V10 (F33).
+    props['brand']['stacked'] = stacked_slot(spec, theme['theme_id'], props['brand']['stacked'])
     if sting:
         # After the hook, never in front of it (config/brand-palette.json long_cut sting after_hook): every frame in the
         # props stays on the cut's own clock, and the render plays the sting from this one (VeCut.tsx).

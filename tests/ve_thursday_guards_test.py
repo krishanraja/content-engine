@@ -197,6 +197,22 @@ class OneWordmark(unittest.TestCase):
                 self.assertIn('agree', found[0])
                 self.assertIn('marks.one_wordmark', codes(guards.spec_lints(spec)))
 
+    def test_v10_v6_or_an_ink_drawing_anywhere_in_the_spec_is_refused(self):
+        # Ruling (Krish, 2026-11-25): wordmark on ink only; V10 retired.
+        retired = json.loads((ROOT / 'config' / 'brand-palette.json').read_text(encoding='utf-8'))['marks']['retired']
+        for name, value in (('V10', 'assets/brand/makeyourmindup/v5/v10.svg'), ('V6', r'brand\makeyourmindup\v5\v6.svg'),
+                            ('V9 on light', 'assets/brand/makeyourmindup/v5/v9-ink.svg'), ('V10 by sha256', retired['sha256'][0])):
+            with self.subTest(name):
+                spec = self.spec()
+                spec['assets'].append({'id': 'close-mark', 'kind': 'image', 'path': value})
+                found = guards.marks_problems(spec)
+                self.assertEqual(codes(found), ['marks.one_wordmark'])
+                self.assertIn('V10 retired', found[0])
+                self.assertIn('marks.one_wordmark', codes(guards.spec_lints(spec)))
+        spec = self.spec(day='2026-11-26')
+        spec['assets'].append({'id': 'close-mark', 'kind': 'image', 'path': 'assets/brand/makeyourmindup/v5/v10.svg'})
+        self.assertEqual(guards.marks_problems(spec), [])
+
     def test_a_body_logo_a_series_pill_or_a_title_wordmark_is_refused(self):
         for where in ('body_logo', 'series_pill', 'title_wordmark'):
             with self.subTest(where):
@@ -230,7 +246,9 @@ class OffDays(unittest.TestCase):
 
     def test_an_off_day_on_a_rotation_track_passes_and_a_series_day_is_not_held(self):
         beds = guards.off_day_beds()
-        self.assertGreaterEqual(len(beds), 2, 'the off-day rotation is the ledger\'s "for": "off-day" tracks')
+        # The rotation is whatever the ledger marks "for": "off-day". Since Krish's 26 Nov music ruling ("the rest are good
+        # to go behind carousels") moved Goodie Bags to carousel, that is Aspire alone (d4a0e216); every one listed must pass.
+        self.assertGreaterEqual(len(beds), 1, 'the off-day rotation is the ledger\'s "for": "off-day" tracks')
         self.assertNotIn('no-curves-instrumental', beds)
         for bed in beds:
             spec = whole(day='2026-11-12')
