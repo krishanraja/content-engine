@@ -1,0 +1,250 @@
+{
+  "_about": "The content calendar for the week of 30 Nov 2026 (scripts/calendar/make_calendar.py; .agents/skills/content-calendar/SKILL.md). Topics, words and statuses come from the live board view of 28 Nov 2026 and the weeks' ideas.json; nothing here is published or sent. Mock words are drafts for review: Krish picks the real cover words after he records.",
+  "week": "2026-11-30",
+  "title": "The week of 30 Nov to 5 Dec",
+  "as_of": "Board read 28 Nov 2026",
+  "days": [
+    {"date": "2026-11-29", "rest": "No posts. Sunday is when next week's ideas are chosen."},
+    {
+      "date": "2026-11-30", "series": "follow.the.money",
+      "pieces": [
+        {
+          "id": "mon-design",
+          "kind": "hero",
+          "title": "Canva, Adobe or Claude: who owns design in 2028?",
+          "question": "When AI can design a poster in seconds, which design company still gets paid in two years?",
+          "so_what": "The design tools your team pays for are turning into agents that work for each other: before renewing Canva or Adobe seats, ask which one your other AI tools can drive.",
+          "hook": "Adobe has just opened Photoshop and Premiere so that another company's AI can drive them.",
+          "examples": [
+            "Adobe's new integrations, in preview, let other companies' AI agents drive Photoshop, Illustrator, Premiere and After Effects (10 Nov).",
+            "Canva and Adobe are both connectors inside Claude Design (Anthropic, June 2026).",
+            "Over one million people used Claude Design in its first week (Anthropic, 17 June 2026)."
+          ],
+          "human": "Krish puts the three side by side and scores them on one real job, live, in his own room: the same poster brief given to Canva, Adobe and Claude.",
+          "source": {"label": "Adobe newsroom, 10 Nov 2026", "url": "https://news.adobe.com/news/2026/11/adobe-powers-new-era-of-creativity"},
+          "krish": "k4",
+          "photo": "File:Wacom Cintiq13HD.JPG",
+          "mock": {
+            "wide": ["Canva, Adobe or Claude:", "who gets paid?"], "accent": "who gets paid?",
+            "kicker": ["Who owns", "design", "next?"], "kicker_accent": 1,
+            "proof_tag": "ADOBE NEWSROOM · 10 NOV 2026",
+            "proof": "Other companies' AI can now drive Photoshop, Illustrator and Premiere.",
+            "figure": {"value": "1M+", "caption": "people used Claude Design in its first week", "source": "Anthropic, 17 June 2026"},
+            "caption": "so which one gets paid?"
+          },
+          "steps": {"research": "done"}
+        }
+      ]
+    },
+    {
+      "date": "2026-12-01", "series": "off",
+      "pieces": [
+        {
+          "id": "tue-tools",
+          "kind": "hero",
+          "label": "Extra piece",
+          "title": "ChatGPT now answers with an app. You are a vibe coder and nobody told you.",
+          "question": "Will most people who use AI be making their own software within a year, without ever knowing they are doing it?",
+          "so_what": "Your staff and customers are about to start making small tools every week without knowing it, because ChatGPT and Claude now answer everyday questions with a working calculator or chart, and almost nobody checks the sums inside.",
+          "hook": "Since 8 October, ask ChatGPT what a loan costs and it can hand you a working calculator with sliders, on the free plan.",
+          "examples": [
+            "ChatGPT builds a bill splitter or calculator inside the chat, free users included, from 8 Oct 2026.",
+            "Claude's custom visuals are on for every user on web and desktop.",
+            "A UC Davis study (7 Nov 2026) found novices checked the data in 3 of 60 sessions."
+          ],
+          "human": "Krish asks ChatGPT a real money question on his phone, gets a calculator back, then checks one sum by hand on paper.",
+          "source": {"label": "Digital Trends, 7 Oct 2026", "url": "https://digitaltrends.com/computing/intelligent-ui-turns-chatgpt-answers-into-interactive-tools/"},
+          "krish": "k1",
+          "photo": null,
+          "mock": {
+            "wide": ["ChatGPT now answers", "with an app."], "accent": "with an app.",
+            "kicker": ["You're a", "vibe coder", "now"], "kicker_accent": 1,
+            "proof_tag": "UC DAVIS STUDY · 7 NOV 2026",
+            "proof": "Novices checked the data in 3 of 60 sessions.",
+            "figure": {"value": "3 of 60", "caption": "sessions where novices checked the data", "source": "UC Davis, 7 Nov 2026"},
+            "caption": "did anyone check the sums?"
+          },
+          "steps": {"format": "open"}
+        },
+        {
+          "id": "tue-offday",
+          "kind": "choice",
+          "title": "Off-day post: still to pick",
+          "so_what": "Four explainer carousels and four meme templates are on offer. Krish picks one, or none.",
+          "options": [
+            "Take any song apart on your own laptop. $259 until 7 December.",
+            "A free music studio with 3 million sounds. The catch is the export button.",
+            "Spotify's AI DJ can finally stop talking.",
+            "An animation studio for $0: four free tools that do the expensive jobs.",
+            "Four meme templates, each with Krish's own caption."
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-12-02", "series": "under.the.hood",
+      "pieces": [
+        {
+          "id": "wed-folk",
+          "kind": "hero",
+          "title": "A 19th-century folk song got a copyright strike from a 500-channel music mill.",
+          "question": "How can a song nobody has owned for a hundred years get taken down for copyright?",
+          "so_what": "A recording of a song with no known writer was taken off YouTube by a company running about 500 channels, and the appeals failed twice: anyone who records traditional music now knows how the claim system can be turned on them.",
+          "hook": "A singer's recording of \"Bre Petrunko\", a Bulgarian folk song with no known writer, was pulled from YouTube on a claim from Media Nov Records, and her two appeals failed.",
+          "examples": [
+            "About 125,000 views over four years, gone in October.",
+            "Two counterclaims, both refused.",
+            "Media Nov Records runs about 500 YouTube channels."
+          ],
+          "human": "The song itself plays under the whole explanation, and stops dead at the moment of the takedown.",
+          "source": {"label": "Digital Music News, 18 Nov 2026", "url": "https://www.digitalmusicnews.com/2026/11/18/musician-copyright-claim-loop-ai-company/"},
+          "krish": "k5",
+          "photo": "File:Bulgarian folk costumes.jpg",
+          "photo_tall": "File:Gdulka-bow copy.jpg",
+          "mock": {
+            "wide": ["Nobody owns this song.", "It got a copyright strike."], "accent": "copyright strike.",
+            "kicker": ["Who owns", "a 100-year-old", "song?"], "kicker_accent": 1,
+            "proof_tag": "DIGITAL MUSIC NEWS · 18 NOV 2026",
+            "proof": "Two appeals. Both failed.",
+            "figure": {"value": "500", "caption": "YouTube channels run by the company that made the claim", "source": "Digital Music News, 18 Nov 2026"},
+            "caption": "and that's the catch"
+          }
+        },
+        {
+          "id": "wed-tiktok",
+          "kind": "hero",
+          "title": "TikTok will now watch for fakes of your face. First it needs your ID.",
+          "question": "How does an app tell whether a video of you is really you?",
+          "so_what": "Creators can now have TikTok watch for videos that use their face without consent, after handing their ID to a third party, and anyone can check whether a clip was made with TikTok's own AI tools: a creator knows what each check can and cannot see.",
+          "hook": "TikTok's Likeness Detection flags videos that may use a creator's face, once they verify their ID with a third party; its new AI checker reads hidden labels, and only from its own apps.",
+          "examples": [
+            "ID checks through a third party, Jumio in the US test.",
+            "A free checker for TikTok, CapCut, Dreamina, Hypic and Pippit.",
+            "Available worldwide to eligible creators from 23 Nov 2026."
+          ],
+          "human": "Krish runs both checks on a clip of himself, one made in CapCut and one made elsewhere, and reads the answers to camera.",
+          "source": {"label": "Digital Music News, 23 Nov 2026", "url": "https://digitalmusicnews.com/2026/11/23/tiktok-likeness-detection-release"},
+          "krish": "k6",
+          "photo": "File:Facial Recognition22.jpg",
+          "photo_tall": "File:Blackview A60 Smartphone Android mobile phone front face lock screen.jpg",
+          "mock": {
+            "wide": ["TikTok will watch for fakes", "of your face."], "accent": "of your face.",
+            "kicker": ["Is that", "really", "you?"], "kicker_accent": 1,
+            "proof_tag": "DIGITAL MUSIC NEWS · 23 NOV 2026",
+            "proof": "First it needs your ID.",
+            "figure": {"value": "5 apps", "caption": "the free AI checker can read: TikTok, CapCut, Dreamina, Hypic, Pippit", "source": "Digital Music News, 23 Nov 2026"},
+            "caption": "here's what it can't see"
+          }
+        }
+      ]
+    },
+    {
+      "date": "2026-12-03", "series": "off",
+      "pieces": [
+        {
+          "id": "thu-connector",
+          "kind": "carousel",
+          "format": "Explainer carousel, 6 cards, 4:5",
+          "title": "Your chatbot just invited a video studio to the table.",
+          "so_what": "A connector lets your chatbot call another app for you, like a guest at the table who does one job. Higgsfield's video tools now plug into ChatGPT and Claude this way: here is what that means and how to add it.",
+          "human": "Drawn as a dinner table of apps, with a pigeon carrying notes: an everyday picture for a technical idea.",
+          "source": {"label": "evolving.ai on Instagram, Nov 2026", "url": "https://www.instagram.com/evolving.ai/p/DftxXqrgIE4/"},
+          "cards": [
+            {"words": "Your chatbot just invited a video studio to the table.", "accent": "video studio", "picture": "A table of apps drawn as people, one empty chair"},
+            {"words": "A connector is a guest who does one job.", "picture": "The video studio takes the chair"},
+            {"words": "You ask the chatbot. It passes a note.", "picture": "A pigeon carries a note across the table"},
+            {"words": "The guest makes the video and passes it back.", "picture": "The pigeon returns with a film reel"},
+            {"words": "Add it: Plugins, Connect plugins, search Higgsfield.", "accent": "Higgsfield", "picture": "The plugin menu with the search box"},
+            {"words": "Check the price on the day before you rely on it.", "picture": "A price tag face down on the table", "close": true}
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-12-04", "series": "mind.the.gap",
+      "pieces": [
+        {
+          "id": "fri-film",
+          "kind": "hero",
+          "title": "The first AI film in cinemas has a Foley artist.",
+          "question": "If a film is sold as made by AI, how many people still made it?",
+          "so_what": "The film billed as the first AI-animated feature in cinemas opens on 4 December, and its own director lists the human co-writer, editors, colourists, Foley artist and voice cast behind it: anyone pricing film work can see how much of an \"AI film\" is still people.",
+          "hook": "Gods Don't Give Gifts opens on 4 December as the first AI-animated feature in cinemas, and its director lists the co-writer, editors, colourists, Foley artist and voice actors who made it with him.",
+          "examples": [
+            "Pen drawings at the start of the pipeline.",
+            "Four days in a Stockholm studio for the cinema sound mix.",
+            "A Foley artist and a voice cast in the credits."
+          ],
+          "human": "Krish holds the poster beside the credit roll and goes job by job: AI, or a person?",
+          "source": {"label": "Film Threat, 5 Nov 2026", "url": "https://filmthreat.com/features/the-first-ai-animated-feature-film-in-theaters-gods-dont-give-gifts-director-zack-london-talks-about-the-future-of-cinema/"},
+          "krish": "k2",
+          "photo": "File:Buddy Foley's studio 01.jpg",
+          "photo_tall": "File:Piccadilly Cinema screen, Perth.jpg",
+          "mock": {
+            "wide": ["The first AI film", "has a Foley artist."], "accent": "Foley artist.",
+            "kicker": ["Who made", "the AI", "film?"], "kicker_accent": 2,
+            "proof_tag": "FILM THREAT · 5 NOV 2026",
+            "proof": "Co-writer, editors, colourists, a Foley artist and a voice cast.",
+            "figure": {"value": "4 Dec", "caption": "Gods Don't Give Gifts opens in cinemas", "source": "Film Threat, 5 Nov 2026"},
+            "caption": "so who made it?"
+          }
+        },
+        {
+          "id": "fri-designers",
+          "kind": "hero",
+          "title": "91% of designers use AI every week. It made them pickier.",
+          "question": "If almost every designer now uses AI each week, what is the designer actually doing?",
+          "so_what": "Nine in ten designers now use AI every week, up from about half a year ago, while the designers themselves describe careful, methodical work: anyone hiring or briefing a designer knows the gap between \"AI does design\" and what the job now is.",
+          "hook": "In a survey of more than 900 designers, 91% use AI at least weekly, up from 54% a year ago, and the ones who explain it describe more checking, not less.",
+          "examples": [
+            "91% weekly, up from 54% in a year.",
+            "\"AI is always my first tool, before I touch code or build a screen.\"",
+            "More than 900 designers surveyed by Designer Fund and Foundation Capital."
+          ],
+          "human": "Krish gives an AI and a designer the same brief, and shows the AI's draft beside the finished piece.",
+          "source": {"label": "Designer Fund, AI in design 2026", "url": "https://designerfund.com/blog/ai-in-design-2026"},
+          "krish": "k3",
+          "photo": "File:Stylus graphics tablet.jpg",
+          "mock": {
+            "wide": ["91% of designers use AI.", "It made them pickier."], "accent": "pickier.",
+            "kicker": ["AI made", "designers", "pickier"], "kicker_accent": 2,
+            "proof_tag": "DESIGNER FUND · NOV 2026",
+            "proof": "\"AI is always my first tool, before I touch code or build a screen.\"",
+            "figure": {"value": "91%", "caption": "of 900+ designers use AI every week, up from 54% a year ago", "source": "Designer Fund and Foundation Capital, 2026"},
+            "caption": "here's why"
+          }
+        }
+      ]
+    },
+    {
+      "date": "2026-12-05", "series": "good",
+      "pieces": [
+        {
+          "id": "sat-goodnews",
+          "kind": "carousel",
+          "format": "Good-news carousel, 6 cards, 4:5",
+          "title": "This month AI helped makers reach millions, and gave fans Motty back.",
+          "so_what": "An animator, a filmmaker, game makers and football fans all got something from AI this month that millions chose to watch, play or hear. Each one credits the people behind it.",
+          "human": "Real people, named and credited, with the number that shows it.",
+          "source": {"label": "Four stories, each linked on its card", "url": ""},
+          "good": true,
+          "cards": [
+            {"words": "This month AI helped four makers reach millions.", "picture": "An animator, a filmmaker, a game maker, a builder"},
+            {"words": "An animator's gentleman went viral helping New Yorkers.", "picture": "\"Englishman in New York\" by @antrofrog"},
+            {"words": "A filmmaker turned classical paintings into a Bible epic.", "picture": "\"The Biblical Experience\" by @samyazaspeaks"},
+            {"words": "Players built games and painted worlds in an afternoon.", "picture": "Playable games and 3D worlds made in hours"},
+            {"words": "Football fans can hear John Motson commentate again.", "accent": "John Motson", "picture": "A sheepskin coat on the commentary box chair"},
+            {"words": "Each one credits the people behind it.", "picture": "The makers' hands at work, and a crowd singing", "close": true}
+          ]
+        },
+        {
+          "id": "sat-email",
+          "kind": "email",
+          "title": "makeyourmindup weekly",
+          "so_what": "The week's pieces in one email, with six to ten news items from the creative industries, each checked against its original source. Drafted on Friday; it goes out only if Krish approves it.",
+          "rows": ["Canva, Adobe or Claude: who owns design in 2028?", "A folk song nobody owns got a copyright strike", "The first AI film in cinemas has a Foley artist", "Plus six to ten checked stories from the week"]
+        }
+      ]
+    }
+  ]
+}
