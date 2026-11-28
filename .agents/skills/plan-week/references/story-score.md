@@ -114,7 +114,10 @@ an honestly built board, and cannot be met by adding words without the fact chan
 5. **The probe check.** `node --import tsx scripts/whys-probe-check.ts <Monday>`, and write its JSON, as printed, to
    `docs/plans/<Monday>-week/story/probes.json` (the score reads it from there). A hero that holds fewer than 3
    documented whys, or fewer than 5 documented plus inferred, or whose landing fails, is under its floor: replace it, or
-   probe another source for the same story. The gate refuses a hero with fewer than 3 sourced whys.
+   probe another source for the same story. The gate refuses a hero with fewer than 3 sourced whys. A story that still
+   cannot get that deep is not dropped if it is worth telling: offer it as a Tuesday or Thursday carousel (an explainer)
+   instead (Krish, 2026-11-28: "The 5 Whys should be already qualifying what ideas make the board - if we are not able
+   to get that deep on a topic it is probably better suited to a carousel only").
 6. **The angles.** Start three blind lens subagents, one per lens in config `angle.lenses` (`series`, `funniest_true`,
    `most_absurd_true`), each with the lens brief below and every option's key, sourced fact and links. Write what they
    return, with each option's own `funny` line as one more angle (lens `funny`), into `docs/plans/<Monday>-week/story/angles.json` as
