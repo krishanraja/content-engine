@@ -246,7 +246,9 @@ class OffDays(unittest.TestCase):
 
     def test_an_off_day_on_a_rotation_track_passes_and_a_series_day_is_not_held(self):
         beds = guards.off_day_beds()
-        self.assertGreaterEqual(len(beds), 2, 'the off-day rotation is the ledger\'s "for": "off-day" tracks')
+        # The rotation is whatever the ledger marks "for": "off-day". Since Krish's 26 Nov music ruling ("the rest are good
+        # to go behind carousels") moved Goodie Bags to carousel, that is Aspire alone (d4a0e216); every one listed must pass.
+        self.assertGreaterEqual(len(beds), 1, 'the off-day rotation is the ledger\'s "for": "off-day" tracks')
         self.assertNotIn('no-curves-instrumental', beds)
         for bed in beds:
             spec = whole(day='2026-11-12')
