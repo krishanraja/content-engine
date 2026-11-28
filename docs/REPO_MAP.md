@@ -44,6 +44,7 @@ Find the file here, then open only that file. Signatures are one line each with 
 - `packages/core/`
 - `packages/moves/`
 - `scripts/`
+- `scripts/calendar/`
 - `scripts/channel-kit/`
 - `scripts/covers/`
 - `scripts/cutgates/`
