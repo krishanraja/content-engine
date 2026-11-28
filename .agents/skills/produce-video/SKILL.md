@@ -612,7 +612,8 @@ A cut dated before keeps the close it was signed with.
 **One wordmark per video.** Ruling (Krish, 2026-11-27): "agree". S3h on the
 outro is the only wordmark: no wordmark on the title lockup (from 26 Nov), and
 from 27 Nov no V4 on the wide quick-edit frame or the why-ladder title card
-and no series pill on any beat ("the sub brands do not need to feature"). The
+and no series pill on any beat ("the sub brands do not need to feature"), and
+no V10, V6 or -ink mark: S3h fills the stacked slot (V10 retired, 25 Nov). The
 9:16 outro stays 2 s, settled by 1.33 s. ve lint and render refuse a cut from
 27 Nov that breaks it; one dated before renders as signed. Read
 `.agents/skills/produce-video/references/marks.md`.

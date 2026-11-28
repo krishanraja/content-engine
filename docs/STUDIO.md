@@ -240,11 +240,22 @@ Fraunces, DM Mono), colours and channel art, and
 is in Drive as "1 Brand kit (permanent)". The marks the engine draws are in
 this repository at `assets/brand/makeyourmindup/v5`: `d-face-off.svg` (the
 icon), `v4.svg` (the wordmark), `v9.svg` (the horizontal lockup) and
-`s3h.svg` (the square lockup). `v10`, `v6` and every `-ink` file are retired (wordmark on ink only, Krish, 25 Nov 2026) and stay only for cuts signed before 26 Nov. The
-active theme `makeyourmindup-v5` in `config/studio.json` pins them by path and
-sha256. The logo is the name, never part of a sentence. If a rebuild ever
+`s3h.svg` (the square lockup). `v10`, `v6` and every `-ink` file are retired
+(Ruling (Krish, 2026-11-25): wordmark on ink only; V10 retired). The active
+theme `makeyourmindup-v5` in `config/studio.json` pins three of them by path
+and sha256: `d-face-off.svg` as `mark`, `v4.svg` as `logo`, and the retired
+`v10.svg` as `stacked`. That `stacked` pin stays because Studio V2 jobs pin the
+theme by hash and a cut dated before 27 Nov renders as signed (F33); a V2
+render on this theme still draws V10 in its ending band (`HouseShort.tsx`),
+since a V2 manifest carries no date to gate it. From 27 Nov ve compile puts
+S3h in the `stacked` slot instead (`config/brand-palette.json` `marks.square`,
+pinned there by path and sha256), so a close that draws the slot draws S3h and
+the title lockup draws nothing; `ve lint` and `ve render` refuse a cut from 27
+Nov naming V10, V6 or an `-ink` file (`marks.retired`). V9 is pinned only in
+`config/brand-palette.json` `marks`. The logo is the name, never part of a sentence. If a rebuild ever
 changes a mark, copy it into `assets/brand/makeyourmindup/v5`, pin the new
-hash in the theme, and render the proof again.
+hash in the theme and in `config/brand-palette.json` `marks`, and render the
+proof again.
 
 The record before v5: the brand kit and brand book v1.5 (2026-10-05) were in
 `krishanraja/makeyourmindup`, `docs/brandbooknew/`, and the

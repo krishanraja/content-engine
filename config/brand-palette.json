@@ -114,7 +114,7 @@
         "series_pill": "section_beats"
       }
     },
-    "never": "from 27 Nov: V4 in a body or on a title card, a series pill on any beat, or a wordmark on the title lockup. ve lint (scripts/velib/guards.py marks_problems) refuses a spec asking for one, and ve render (scripts/velib/compile.py marks_problems) refuses props that would draw one (bodyLogo true, seriesPill or titleCardMark not false, titleMoment.wordmark not false, or V4 named outside props.brand)"
+    "never": "from 27 Nov: V4 in a body or on a title card, a series pill on any beat, or a wordmark on the title lockup. ve lint (scripts/velib/guards.py marks_problems) refuses a spec asking for one, and ve render (scripts/velib/compile.py marks_problems) refuses props that would draw one (bodyLogo true, seriesPill or titleCardMark not false, titleMoment.wordmark not false, or V4 named outside props.brand); and V10, V6 or an -ink mark anywhere in a video, props.brand included (marks.retired): from 27 Nov the stacked slot carries S3h (marks.square)"
   },
   "days": {
     "monday": {
@@ -191,6 +191,32 @@
       "same_drawing": [
         "bcb84af5c86d8d4995d0cb01cbc132e9b1e663eea7dd73a85ee39e4c827eda4a"
       ]
+    },
+    "square": {
+      "file": "assets/brand/makeyourmindup/v5/s3h.svg",
+      "sha256": "23f9828341d75f26df54a2dc4016efd3c869c76add593a786b80c42d4ad093e6",
+      "pixel_width": 700,
+      "pixel_height": 700,
+      "why": "S3h, the square three-line name with the icon as the O, the one wordmark per video, on its v5 outro (ONE-MARK, Krish, 2026-11-25). From 27 Nov ve compile hands it to the renderer in the stacked slot (props.brand.stacked) in place of the theme's V10, so a close that draws that slot draws S3h and the title lockup draws nothing (FormatMaster titleWordmark)"
+    },
+    "retired": {
+      "files": [
+        "assets/brand/makeyourmindup/v5/v10.svg",
+        "assets/brand/makeyourmindup/v5/v10-ink.svg",
+        "assets/brand/makeyourmindup/v5/v6.svg",
+        "assets/brand/makeyourmindup/v5/v6-ink.svg",
+        "assets/brand/makeyourmindup/v5/v4-ink.svg",
+        "assets/brand/makeyourmindup/v5/v9-ink.svg"
+      ],
+      "sha256": [
+        "5220ac3df85ee0ddf59148e471f471a6074a5481a86b96179acff6890beb8535",
+        "8a8d20b66a6b980953487e93275b9a34d702ca7b1dd76aca16be32978dad9eb1",
+        "176d9ca565f79d9e19e183590aa7bfc6e6addef631bd7c1fb87535784223724c",
+        "474a9ae45490348afee7a364de694fde1930bde67d5831309b59b481dc68c5a1",
+        "bcb84af5c86d8d4995d0cb01cbc132e9b1e663eea7dd73a85ee39e4c827eda4a",
+        "3e80c12c4a4e85f22db36743be2b2754b0cdc0ba00032a08235767aa844e2023"
+      ],
+      "why": "Ruling (Krish, 2026-11-25): wordmark on ink only; V10 retired, and S3h replaced V10 and V6 (ONE-MARK). The theme makeyourmindup-v5 in config/studio.json still pins v10.svg as stacked, hash-pinned for the Studio's V2 jobs and kept so a cut dated before 27 Nov renders as signed (F33). From 27 Nov ve lint and ve render refuse a video naming any of these, by path, by sha256 or as any -ink file"
     },
     "source": "the v5 marks Krish locked on 2026-11-25 (\"s3h is great, lock v5\"), in this repository at assets/brand/makeyourmindup/v5 (byte for byte the SVGs in krishanraja/makeyourmindup brand-kit/makeyourmindup-brand-kit.zip logos/): the icon d-face-off.svg, the masthead the horizontal lockup v9.svg, the wordmark v4.svg; same_drawing is the -ink variant for light grounds. The v4 PNGs at makeyourmindup apps/cover/public/brand are retired and gone. Never set as type, never redrawn"
   },

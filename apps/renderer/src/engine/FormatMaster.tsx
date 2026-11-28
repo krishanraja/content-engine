@@ -140,9 +140,16 @@ export function anchorSlots(uses: readonly string[], isProp: (id: string) => boo
 }
 
 /** The title lockup's wordmark: the stacked mark on a cut dated before 26 Nov, as it was signed (F33), and none from 26 Nov
- *  (props.titleMoment.wordmark false), when S3h on the v5 outro is the cut's one wordmark and the stacked V10 is retired. */
+ *  (props.titleMoment.wordmark false), when S3h on the v5 outro is the cut's one wordmark and the stacked V10 is retired.
+ *  From 27 Nov ve compile puts S3h in the stacked slot (Ruling, Krish, 2026-11-25: wordmark on ink only; V10 retired), and
+ *  S3h is only ever the closing wordmark, so a lockup whose slot holds S3h draws none either (never a second wordmark). */
 export function titleWordmark(props: EngineRenderProps) {
-  return props.titleMoment?.wordmark === false ? undefined : props.brand.stacked
+  return props.titleMoment?.wordmark === false || isSquareMark(props.brand.stacked) ? undefined : props.brand.stacked
+}
+
+/** True when the image is S3h, the square three-line name (assets/brand/makeyourmindup/v5/s3h.svg). */
+export function isSquareMark(image: { src: string }) {
+  return /(^|\/)s3h\.svg$/i.test(image.src.replace(/\\/g, '/'))
 }
 
 export function FormatMaster({ stem = true, ...props }: EngineRenderProps & { stem?: boolean }) {

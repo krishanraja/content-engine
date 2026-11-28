@@ -341,6 +341,17 @@ describe("the title lockup's wordmark", () => {
     expect(titleWordmark(from)).toBeUndefined()
     expect(() => EngineRenderPropsSchema.parse({ ...fixture, titleMoment: { fromFrame: 0, toFrame: 40, wordmark: true, words } })).toThrow()
   })
+  // From 27 Nov ve compile puts S3h in the stacked slot in place of the retired V10 (Ruling, Krish, 2026-11-25: wordmark on
+  // ink only; V10 retired). S3h is only ever the closing wordmark, so the lockup draws none even if its wordmark flag is lost.
+  it('is none when the stacked slot holds S3h, and the close that draws the slot draws S3h', () => {
+    const s3h = { src: 'C:\\repo\\assets\\brand\\makeyourmindup\\v5\\s3h.svg', pixelWidth: 700, pixelHeight: 700 }
+    const props = EngineRenderPropsSchema.parse({ ...fixture, brand: { ...fixture.brand, stacked: s3h }, titleMoment: { fromFrame: 0, toFrame: 40, lockup: true, words } })
+    expect(titleWordmark(props)).toBeUndefined()
+    const closing = EngineRenderPropsSchema.parse({ ...props, aspect: '9:16', ending: { fromFrame: 90, url: 'makeyourmindup.ai' } })
+    const srcs = JSON.stringify(elements(EndingBand({ props: closing, frame: 100 }) as ReactElement).map((n) => (n.props as { image?: { src?: string } }).image?.src ?? null))
+    expect(srcs).toContain('s3h.svg')
+    expect(srcs).not.toContain('v10')
+  })
 })
 
 describe('face-with-proof wears one brand treatment', () => {

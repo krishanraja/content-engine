@@ -81,6 +81,14 @@ frame and panels it had. `ve lint` (`guards.marks_problems`) refuses a spec from
 logo, a series pill or a title wordmark; `ve render` (`compile.marks_problems`) refuses props from 27 Nov that would draw
 one.
 
+No V10 from 27 Nov either (Ruling (Krish, 2026-11-25): wordmark on ink only; V10 retired). The theme
+`makeyourmindup-v5` still pins `v10.svg` as `stacked` (hash-pinned for Studio V2 jobs, and kept so older cuts render as
+signed), so ve compile puts S3h (`marks.square`) in that slot for a cut dated from 27 Nov (`stacked_slot`): a close that
+draws the slot draws S3h, and the title lockup draws nothing when the slot holds S3h (`FormatMaster.tsx`
+`titleWordmark`). `ve lint` and `ve render` refuse a cut from 27 Nov naming V10, V6 or any `-ink` drawing by path or
+sha256, `props.brand` included (`marks.retired`; `carried_retired`). A Studio V2 render on the theme still draws V10 in
+`HouseShort.tsx`'s ending band: its manifest carries no date to gate it.
+
 ## The formats, in one line each
 
 - **Long cut (16:9).** Opens on the hook, with nothing before it (the sting is retired). The body carries no logo (from 16 Nov; no icon tile) and, from 27 Nov, no series pill; a series cut dated before keeps the pill on its section beats. Closes on `statement_card`, from 26 Nov the Library's `video-wide-outro`, with no days row (series pieces dated 23 to 25 Nov keep the retired `sting_card`).

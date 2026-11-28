@@ -39,3 +39,10 @@ wordmark on the title. `ve render` (`scripts/velib/compile.py`
 `seriesPill` or `titleCardMark` not false, a title lockup without
 `wordmark: false`, or V4 named anywhere outside `props.brand`. The palette
 (`scripts/brand_palette.py`) asks for no series pill on any beat from 27 Nov.
+
+**No V10.** Ruling (Krish, 2026-11-25): wordmark on ink only; V10 retired.
+The theme still pins `v10.svg` as `stacked`, so from 27 Nov ve compile puts
+S3h (`config/brand-palette.json` `marks.square`) in that slot: a close that
+draws it draws S3h, and the title lockup draws nothing. `ve lint` and
+`ve render` refuse a cut from 27 Nov naming V10, V6 or any `-ink` drawing
+(`marks.retired`), `props.brand` included.

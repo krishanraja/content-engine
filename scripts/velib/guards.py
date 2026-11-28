@@ -15,8 +15,8 @@ gate they bind a whole cut of a piece published from creative_direction.MOTION_F
     hook, ever. Remove the sting exception for good.").
   - `close_problems(spec)`: every video dated from 26 Nov ends on the plain v5 outro card, so a spec naming an intro
     sting clip anywhere, or made in another theme, is refused (Ruling, Krish, 26 Nov: "1 agreed").
-  - `marks_problems(spec)`: one wordmark per video, S3h on its v5 outro, so from 27 Nov a spec naming V4 anywhere, or
-    asking for a body logo, a series pill or a wordmark on the title, is refused (Ruling, Krish, 27 Nov: "agree").
+  - `marks_problems(spec)`: one wordmark per video, S3h on its v5 outro, so from 27 Nov a spec naming V4, V10, V6 or an
+    -ink drawing anywhere, or asking for a body logo, a series pill or a wordmark on the title, is refused (Ruling, Krish, 27 Nov: "agree").
   - `freeze(directory)` / `engine_route(...)` / `engine_problems(...)`: the engine and the rules freeze at Sign storyboard
     (ve expect). Proof and render run on the commit pinned there by themselves; a fix on main reaches the piece only under
     Krish's standing engine-follows-main yes or when the house golden test passes on it, and nothing asks him to approve
@@ -302,7 +302,8 @@ def close_problems(spec: dict) -> list[str]:
 def marks_problems(spec: dict) -> list[str]:
     """The marks of a piece dated from 27 Nov, refused before anything is drawn (Ruling, Krish, 2026-11-27: "agree";
     config/brand-palette.json marks_rule): S3h on the v5 outro is the one wordmark per video, so the spec names V4
-    nowhere (its file or sha256, either drawing), and asks for no body logo (brand.body_logo), no series pill
+    nowhere (its file or sha256, either drawing) nor a retired mark (V10, V6 or any -ink drawing; Ruling, Krish,
+    2026-11-25: wordmark on ink only; V10 retired), and asks for no body logo (brand.body_logo), no series pill
     (brand.series_pill) and no wordmark on the title (brand.title_wordmark, title_moment.wordmark). A cut dated before
     keeps the body it was signed with (F33)."""
     from . import compile as ve_compile  # noqa: PLC0415
@@ -314,6 +315,11 @@ def marks_problems(spec: dict) -> list[str]:
     if hits:
         out.append(f'marks.one_wordmark {hits[0]}: names V4 ({len(hits)} place{"s" if len(hits) > 1 else ""}), and no body beat '
                    f'or title card carries it: S3h on the v5 outro is the one wordmark ({ve_compile.MARKS_RULING}); remove it')
+    retired = ve_compile.carried_retired(spec, 'spec')
+    if retired:
+        out.append(f'marks.one_wordmark {retired[0]}: names a retired mark, V10, V6 or an -ink drawing ({len(retired)} '
+                   f'place{"s" if len(retired) > 1 else ""}): S3h on the v5 outro is the one wordmark, on ink (Ruling, Krish, '
+                   f'2026-11-25: wordmark on ink only; V10 retired; {ve_compile.MARKS_RULING}); remove it')
     brand = spec.get('brand') or {}
     asks = [(f'brand.{key}', what) for key, what in (('body_logo', 'a logo in the body'), ('series_pill', 'a series pill'),
                                                        ('title_wordmark', 'a wordmark on the title')) if brand.get(key)]
