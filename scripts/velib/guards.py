@@ -16,7 +16,8 @@ gate they bind a whole cut of a piece published from creative_direction.MOTION_F
   - `close_problems(spec)`: every video dated from 26 Nov ends on the plain v5 outro card, so a spec naming an intro
     sting clip anywhere, or made in another theme, is refused (Ruling, Krish, 26 Nov: "1 agreed").
   - `marks_problems(spec)`: one wordmark per video, S3h on its v5 outro, so from 27 Nov a spec naming V4, V10, V6 or an
-    -ink drawing anywhere, or asking for a body logo, a series pill or a wordmark on the title, is refused (Ruling, Krish, 27 Nov: "agree").
+    -ink drawing anywhere, or asking for a body logo, a series pill or a wordmark on the title, is refused (Ruling,
+    Krish, 27 Nov: "agree"; and 25 Nov: wordmark on ink only, V10 retired).
   - `freeze(directory)` / `engine_route(...)` / `engine_problems(...)`: the engine and the rules freeze at Sign storyboard
     (ve expect). Proof and render run on the commit pinned there by themselves; a fix on main reaches the piece only under
     Krish's standing engine-follows-main yes or when the house golden test passes on it, and nothing asks him to approve
