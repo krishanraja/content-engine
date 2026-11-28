@@ -921,6 +921,194 @@
     "text": "An AI music model should walk out with every musician it learned from, the way a headliner brings the legends.",
     "rests_on": "A singer dances down a backstage corridor surrounded by country music legends before walking"
    }
+  ],
+  "wed/076c5675-4aee-4ad0-b400-6b10188fdb59": [
+   {
+    "lens": "series",
+    "text": "A vocal plugin has a price that changes on a date: buy before the cut-off and you save $70 on a tool that now does a job singers used to pay a mix engineer for.",
+    "rests_on": "introductory price $179 until 7 December, then $249"
+   },
+   {
+    "lens": "series",
+    "text": "The plugin turns a vocal into words on screen, so a singer can find and treat a single sung word by reading it rather than by scrubbing through a waveform.",
+    "rests_on": "Open up Moments on a vocal recording and the plugin will transcribe the lyrics automatically in the edit window."
+   },
+   {
+    "lens": "series",
+    "text": "The promise is a chain built for your voice, but it hears only part of the take, so whatever happens in the rest of the song is a guess based on that one section.",
+    "rests_on": "This AI-powered mixing tool listens to a portion of your vocal and designs a customized processing chain to match it."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "A vocal plugin now types out the lyrics for you, which means the engineer may finally learn what the singer has been mumbling for the last six takes.",
+    "rests_on": "Open up Moments on a vocal recording and the plugin will transcribe the lyrics automatically in the edit window."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The new Nectar listens to only part of your vocal and then builds a whole effects chain around it. That is still more listening than most demos get.",
+    "rests_on": "This AI-powered mixing tool listens to a portion of your vocal and designs a customized processing chain to match it."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The tool that tunes your voice also has its own key change: $179 until 7 December, then up to $249.",
+    "rests_on": "introductory price $179 until 7 December, then $249"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Before a vocal plugin changes a single note of your heartfelt chorus, it types up the lyrics for you, like a stenographer at the session.",
+    "rests_on": "Open up Moments on a vocal recording and the plugin will transcribe the lyrics automatically in the edit window."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The mixing tool needs to hear only part of your vocal to decide how all of it should be processed. Engineers spend years building up that kind of confidence.",
+    "rests_on": "This AI-powered mixing tool listens to a portion of your vocal and designs a customized processing chain to match it."
+   },
+   {
+    "lens": "funny",
+    "text": "Music software has finally learned to read lyrics, mainly so it can put reverb on the one word you kept mumbling.",
+    "rests_on": "Open up Moments on a vocal recording and the plugin will transcribe the lyrics automatically in the edit window."
+   }
+  ],
+  "wed/5675e3e4-3420-45a2-bc45-9e9cbd5902ee": [
+   {
+    "lens": "series",
+    "text": "Generated worlds are billed by the second, like a taxi meter, so a full two-minute session costs about twelve dollars before anyone has made anything with it.",
+    "rests_on": "roughly $0.10 for every second of streamed output"
+   },
+   {
+    "lens": "series",
+    "text": "Picture and sound come out of the same model at the same moment, at film frame rate, so a game designer or video maker gets a world that already has its own soundtrack.",
+    "rests_on": "generating continuous 720p worlds at 24fps with synchronized native audio"
+   },
+   {
+    "lens": "series",
+    "text": "Sessions are sold at two minutes, but the picture can start to wobble after one, so you may be paying for the last minute of a world that is coming apart.",
+    "rests_on": "visual stability may degrade after 60 to 90 seconds"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Google's Genie 4 sessions run for up to two minutes, but the picture may start to wobble after 60 to 90 seconds. So the last stretch of every world you pay for may be the bit where it falls apart.",
+    "rests_on": "visual stability may degrade after 60 to 90 seconds"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "At about ten cents a second, a full two-minute world costs roughly $12. That is a cinema ticket for a film that may not hold together until the end.",
+    "rests_on": "roughly $0.10 for every second of streamed output"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Google built whole worlds at 24 frames a second, the old cinema frame rate, then rendered them at 720p.",
+    "rests_on": "generating continuous 720p worlds at 24fps with synchronized native audio"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "A Genie 4 world can run for 120 seconds, but the picture may start to break down after 60 to 90. That means the last half-minute you pay for can be the part where the world is coming apart.",
+    "rests_on": "visual stability may degrade after 60 to 90 seconds"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Google's generated worlds are charged by the second, like a parking meter, so a full two-minute world comes to about twelve dollars.",
+    "rests_on": "roughly $0.10 for every second of streamed output"
+   },
+   {
+    "lens": "funny",
+    "text": "Google has invented a game world that forgets where it put the door if you look away for eight seconds.",
+    "rests_on": "visual stability may degrade after 60 to 90 seconds"
+   }
+  ],
+  "fri/b38a7a98-50b4-4608-bf8e-b99d8181ac7b": [
+   {
+    "lens": "series",
+    "text": "Both the author and the publisher had written no-AI clauses, and the cover still got through, which shows that a clause on paper is a promise, not a check.",
+    "rests_on": "We have a no-AI clause in our contract. Tor also has a no-AI clause in their art contracts."
+   },
+   {
+    "lens": "series",
+    "text": "The publisher blames its review step rather than the rule, so the weak point for illustrators is who looks at the art before it is printed, not what the contract says.",
+    "rests_on": "Tor takes full responsibility for the breakdown in our review process"
+   },
+   {
+    "lens": "series",
+    "text": "Cover artists sign contracts that ban generative AI, so when a cover with AI in it gets through, the money that should protect human illustration has bought a promise and nothing more.",
+    "rests_on": "policies and contracts with cover artists prohibiting generative AI"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The cover had to get past two separate no-AI clauses, one in the author's contract and one in the artist's, and it got past both.",
+    "rests_on": "We have a no-AI clause in our contract. Tor also has a no-AI clause in their art contracts."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Tor's own policy banned generative AI on its covers, so the rule was already written down. Nobody checked the cover against it.",
+    "rests_on": "Tor takes full responsibility for the breakdown in our review process"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The author had a no-AI clause in her contract and the publisher had one in its art contracts. That is two separate bans on the same thing, and the cover still came out with generative AI on it.",
+    "rests_on": "We have a no-AI clause in our contract. Tor also has a no-AI clause in their art contracts."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The rule against AI covers was already written. The part that broke, by the publisher's own account, was the step meant to check that the rule was followed.",
+    "rests_on": "Tor takes full responsibility for the breakdown in our review process"
+   },
+   {
+    "lens": "funny",
+    "text": "Two contracts said no AI, the review said fine, and the people who caught it were the comments under the reveal post.",
+    "rests_on": "We have a no-AI clause in our contract. Tor also has a no-AI clause in their art contracts."
+   }
+  ],
+  "fri/46dd71d0-6787-4bda-bd6c-b0e2bc4abca2": [
+   {
+    "lens": "series",
+    "text": "The headline 84.4% is the real result, 42.2%, divided by 50, so it measures how close the avatar is to a coin toss, not how often it fools anyone.",
+    "rests_on": "50% would mean they cannot tell at all, so Avatar 6 is 84.4% of the way there."
+   },
+   {
+    "lens": "series",
+    "text": "Shown one clip at a time, raters judged about a fifth of genuine recordings fake, so real presenters do not pass this test every time either.",
+    "rests_on": "65.1% of Avatar 6 clips judged real against 78.9% of real recordings"
+   },
+   {
+    "lens": "series",
+    "text": "The test puts the avatar right next to the real person, so the raters can compare the two, and even then they picked the copy as the real one in more than four tries out of ten.",
+    "rests_on": "Side by side with the real recording, raters pick Avatar 6 as the real one 42.2% of the time."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "In HeyGen's own test, one in five real recordings was judged fake. The avatar is closing in on humans, and humans are not doing that well at looking human either.",
+    "rests_on": "one clip at a time, 65.1% of Avatar 6 clips judged real against 78.9% of real recordings"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Raters picked the avatar over the real person 42.2% of the time, and HeyGen's maths turns that into 84.4% of the way to fooling everyone. It counts as a fail in the test, but it doubles in the press release.",
+    "rests_on": "50% would mean they cannot tell at all, so Avatar 6 is 84.4% of the way there."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Side by side, people still picked the real person most of the time. The avatar's best result is losing to a human by a modest margin.",
+    "rests_on": "Side by side with the real recording, raters pick Avatar 6 as the real one 42.2% of the time."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "When raters saw one clip at a time, they judged real recordings to be real only 78.9% of the time. About one genuine person in five was taken for a fake.",
+    "rests_on": "65.1% of Avatar 6 clips judged real against 78.9% of real recordings"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "HeyGen's figure of \"84.4% of the way there\" is simply 42.2% doubled. On that scale a perfect fake scores 50% and gets called 100%.",
+    "rests_on": "50% would mean they cannot tell at all, so Avatar 6 is 84.4% of the way there."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Set side by side with an avatar, the real person still wins the contest of being themselves, but only by about 16 points.",
+    "rests_on": "Side by side with the real recording, raters pick Avatar 6 as the real one 42.2% of the time."
+   },
+   {
+    "lens": "funny",
+    "text": "HeyGen's avatar lost the spot-the-real-one test more often than it won, and the launch turned that into 84.4%.",
+    "rests_on": "Side by side with the real recording, raters pick Avatar 6 as the real one 42.2% of the time."
+   }
   ]
  },
  "obvious": [
@@ -954,7 +1142,11 @@
   "AI put songwriters and bands in front of millions.",
   "AI helped film and TV makers try something new.",
   "This month AI turned solo creators into studios.",
-  "This month AI helped newsrooms keep readers and save time."
+  "This month AI helped newsrooms keep readers and save time.",
+  "This plugin types out your song so you can put an echo on one word.",
+  "Google now rents out playable worlds at 10 cents a second.",
+  "Two contracts banned AI art. Readers found it on the cover anyway.",
+  "HeyGen's 84.4% real avatar was picked as real 42.2% of the time."
  ],
  "pooled": {
   "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2": [
@@ -1094,131 +1286,6 @@
     }
    }
   ],
-  "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed": [
-   {
-    "lens": "own",
-    "text": "Sonilo, an $11 million AI music start-up, will pay licence fees and a share of revenue to Symphonic's independent artists who opt in to train its model, and the rate is private.",
-    "rests_on": "Music Business Worldwide, 18 Nov 2026: Sonilo, \"$11m-backed\", signed with Symphonic so that \"rights holders and artists receive licensing fees and a share of revenue\"; the fee and split were not disclosed.",
-    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#8af89381e45b",
-    "judge": {
-     "originality": 0.0,
-     "usefulness": 2.5,
-     "specificity": 5.0,
-     "status": "rejected_gravity"
-    }
-   },
-   {
-    "lens": "series",
-    "text": "An $11m-backed AI start-up has promised indie rights holders licensing fees and a share of revenue for training on their recordings, and the one number an artist would want to see, the split, is the one nobody has published.",
-    "rests_on": "the fee and split were not disclosed",
-    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#25143c083971",
-    "judge": {
-     "originality": 2.5,
-     "usefulness": 7.5,
-     "specificity": 7.5,
-     "status": "rejected_gravity"
-    }
-   },
-   {
-    "lens": "series",
-    "text": "How the deal works: artists do not sell to Sonilo directly, Symphonic signs for them, and the payment comes in two parts, a licensing fee and a share of revenue.",
-    "rests_on": "signed with Symphonic so that \"rights holders and artists receive licensing fees and a share of revenue\"",
-    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#10cd9f45432a",
-    "judge": {
-     "originality": 2.5,
-     "usefulness": 5.0,
-     "specificity": 7.5,
-     "status": "rejected_gravity"
-    }
-   },
-   {
-    "lens": "funniest_true",
-    "text": "The deal exists so that rights holders and artists receive licensing fees and a share of revenue, and the two numbers an artist would most want from that sentence, the fee and the split, are the two nobody disclosed.",
-    "rests_on": "the fee and split were not disclosed",
-    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#7b4474d70657",
-    "judge": {
-     "originality": 2.5,
-     "usefulness": 5.0,
-     "specificity": 5.0,
-     "status": "accepted"
-    }
-   },
-   {
-    "lens": "most_absurd_true",
-    "text": "The whole point of the deal is that artists get licensing fees and a share of revenue, and the two numbers left out of the announcement are the fee and the share.",
-    "rests_on": "the fee and split were not disclosed",
-    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#a9aebe82b6c9",
-    "judge": {
-     "originality": 2.5,
-     "usefulness": 5.0,
-     "specificity": 5.0,
-     "status": "rejected_duplicate"
-    }
-   },
-   {
-    "lens": "most_absurd_true",
-    "text": "An $11m-backed startup can say exactly how much money it raised, but not how much the artists training its model will get.",
-    "rests_on": "$11m-backed",
-    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#69b945d7864c",
-    "judge": {
-     "originality": 7.5,
-     "usefulness": 7.5,
-     "specificity": 7.5,
-     "status": "accepted"
-    }
-   },
-   {
-    "lens": "funny",
-    "text": "An indie track can now be in more AI training deals than playlists.",
-    "rests_on": "Music Business Worldwide, 18 Nov 2026: Sonilo, \"$11m-backed\", signed with Symphonic so that \"rights",
-    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#6c4e758fd962",
-    "judge": {
-     "originality": 5.0,
-     "usefulness": 5.0,
-     "specificity": 2.5,
-     "status": "accepted"
-    }
-   },
-   {
-    "lens": "divergent",
-    "text": "Map the money onto a jukebox A jukebox has three structural properties. Money comes in per use. The machine owner and the venue split the takings. The operator decides which records are loaded. The angle assigns each role from the story: Sonilo owns the machine, Symphonic is the route records come in by, artists who opt in are the loaded records, and the fee and revenue share are the coins. Executives see who stands between the coin and the artist without reading a contract.",
-    "rests_on": null,
-    "run_id": "557759421",
-    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#3d2879414868",
-    "judge": {
-     "originality": 5.0,
-     "usefulness": 5.0,
-     "specificity": 7.5,
-     "status": "rejected_archive"
-    }
-   },
-   {
-    "lens": "divergent",
-    "text": "Your league or agency could run the opt-in Look at the one transaction and the contract shape is clear. A buyer signs with an intermediary, and individuals who opt in get a fee and a share. Leaders of talent agencies, sports leagues, photographer cooperatives and voice-actor rosters can copy that structure: offer members a pooled opt-in and bargain once as a group instead of one by one. The angle hands them the template the story shows, which is an opt-in, a fee and a revenue share, with no number attached.",
-    "rests_on": null,
-    "run_id": "557759421",
-    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#32e95f89f1e1",
-    "judge": {
-     "originality": 7.5,
-     "usefulness": 7.5,
-     "specificity": 7.5,
-     "status": "rejected_archive"
-    }
-   },
-   {
-    "lens": "divergent",
-    "text": "$11 million is not the pot Shrink the story to one transaction and the headline number moves out of it. \"$11m-backed\" describes the money investors gave Sonilo. It is not the licensing budget, and the report gives no deal size. The angle shows busy readers how to separate a company's funding from what it pays per deal, so they stop mentally dividing $11m by a number of artists. One clear graphic shows two boxes, \"money raised\" and \"money paid to rights holders\", with the second one blank.",
-    "rests_on": null,
-    "run_id": "557759421",
-    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#25714aed70dd",
-    "judge": {
-     "originality": 5.0,
-     "usefulness": 7.5,
-     "specificity": 7.5,
-     "status": "rejected_archive"
-    }
-   }
-  ],
   "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb": [
    {
     "lens": "own",
@@ -1352,6 +1419,131 @@
      "originality": 7.5,
      "usefulness": 7.5,
      "specificity": 5.0,
+     "status": "rejected_archive"
+    }
+   }
+  ],
+  "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed": [
+   {
+    "lens": "own",
+    "text": "Sonilo, an $11 million AI music start-up, will pay licence fees and a share of revenue to Symphonic's independent artists who opt in to train its model, and the rate is private.",
+    "rests_on": "Music Business Worldwide, 18 Nov 2026: Sonilo, \"$11m-backed\", signed with Symphonic so that \"rights holders and artists receive licensing fees and a share of revenue\"; the fee and split were not disclosed.",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#8af89381e45b",
+    "judge": {
+     "originality": 0.0,
+     "usefulness": 2.5,
+     "specificity": 5.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "An $11m-backed AI start-up has promised indie rights holders licensing fees and a share of revenue for training on their recordings, and the one number an artist would want to see, the split, is the one nobody has published.",
+    "rests_on": "the fee and split were not disclosed",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#25143c083971",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 7.5,
+     "specificity": 7.5,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "How the deal works: artists do not sell to Sonilo directly, Symphonic signs for them, and the payment comes in two parts, a licensing fee and a share of revenue.",
+    "rests_on": "signed with Symphonic so that \"rights holders and artists receive licensing fees and a share of revenue\"",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#10cd9f45432a",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 5.0,
+     "specificity": 7.5,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The deal exists so that rights holders and artists receive licensing fees and a share of revenue, and the two numbers an artist would most want from that sentence, the fee and the split, are the two nobody disclosed.",
+    "rests_on": "the fee and split were not disclosed",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#7b4474d70657",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 5.0,
+     "specificity": 5.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The whole point of the deal is that artists get licensing fees and a share of revenue, and the two numbers left out of the announcement are the fee and the share.",
+    "rests_on": "the fee and split were not disclosed",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#a9aebe82b6c9",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 5.0,
+     "specificity": 5.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "An $11m-backed startup can say exactly how much money it raised, but not how much the artists training its model will get.",
+    "rests_on": "$11m-backed",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#69b945d7864c",
+    "judge": {
+     "originality": 7.5,
+     "usefulness": 7.5,
+     "specificity": 7.5,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "An indie track can now be in more AI training deals than playlists.",
+    "rests_on": "Music Business Worldwide, 18 Nov 2026: Sonilo, \"$11m-backed\", signed with Symphonic so that \"rights",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#6c4e758fd962",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 5.0,
+     "specificity": 2.5,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "Map the money onto a jukebox A jukebox has three structural properties. Money comes in per use. The machine owner and the venue split the takings. The operator decides which records are loaded. The angle assigns each role from the story: Sonilo owns the machine, Symphonic is the route records come in by, artists who opt in are the loaded records, and the fee and revenue share are the coins. Executives see who stands between the coin and the artist without reading a contract.",
+    "rests_on": null,
+    "run_id": "557759421",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#3d2879414868",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 5.0,
+     "specificity": 7.5,
+     "status": "rejected_archive"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "Your league or agency could run the opt-in Look at the one transaction and the contract shape is clear. A buyer signs with an intermediary, and individuals who opt in get a fee and a share. Leaders of talent agencies, sports leagues, photographer cooperatives and voice-actor rosters can copy that structure: offer members a pooled opt-in and bargain once as a group instead of one by one. The angle hands them the template the story shows, which is an opt-in, a fee and a revenue share, with no number attached.",
+    "rests_on": null,
+    "run_id": "557759421",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#32e95f89f1e1",
+    "judge": {
+     "originality": 7.5,
+     "usefulness": 7.5,
+     "specificity": 7.5,
+     "status": "rejected_archive"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "$11 million is not the pot Shrink the story to one transaction and the headline number moves out of it. \"$11m-backed\" describes the money investors gave Sonilo. It is not the licensing budget, and the report gives no deal size. The angle shows busy readers how to separate a company's funding from what it pays per deal, so they stop mentally dividing $11m by a number of artists. One clear graphic shows two boxes, \"money raised\" and \"money paid to rights holders\", with the second one blank.",
+    "rests_on": null,
+    "run_id": "557759421",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#25714aed70dd",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 7.5,
+     "specificity": 7.5,
      "status": "rejected_archive"
     }
    }
@@ -1508,13 +1700,13 @@
   "wed/41874364-fcd8-4fd1-b7e7-91aca6235019": [
    {
     "lens": "own",
-    "text": "Maxon Plus puts AI model generation inside Cinema 4D and ZBrush for 3D artists, run on other firms' models such as Tripo and Rodin, billed in credits.",
+    "text": "Maxon, the software company behind Cinema 4D and ZBrush, now sells AI model generation inside its apps, run on other firms' models such as Tripo and Rodin and billed in credits.",
     "rests_on": "Maxon: \"We work with third-party AI providers, such as Tripo and Rodin.\"; Creative Bloq, 23 Nov 2026: \"AI generation comes to Cinema 4D and ZBrush, but artists have an 'off' switch.\"",
-    "id": "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#455fce60eadc",
+    "id": "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#5dbe5a498cf9",
     "judge": {
      "originality": 0.0,
-     "usefulness": 2.5,
-     "specificity": 5.0,
+     "usefulness": 5.0,
+     "specificity": 7.5,
      "status": "rejected_gravity"
     }
    },
@@ -1642,88 +1834,246 @@
     }
    }
   ],
-  "fri/acb58370-aaca-4040-9c13-83f227a628ec": [
+  "wed/076c5675-4aee-4ad0-b400-6b10188fdb59": [
    {
     "lens": "own",
-    "text": "Tencent Music, owner of China's biggest music apps, told investors that streams of AI-generated songs remain negligible and falling, while human, distinctive music gains.",
-    "rests_on": "Music Business Worldwide, 17 Nov 2026: \"Streams from AI-generated songs remain very low and with a declining trend.\"; Digital Music News: \"AI content stream volumes remain negligible, with a declining share of listening, while high-quality, differentiated content continues to gain traction.\"",
-    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#d817b98898ee",
-    "judge": {
-     "originality": 0.0,
-     "usefulness": 2.5,
-     "specificity": 5.0,
-     "status": "rejected_gravity"
-    }
-   },
-   {
-    "lens": "series",
-    "text": "For all the noise about AI songs flooding streaming, the platform says listeners are barely playing them and playing them less.",
-    "rests_on": "Streams from AI-generated songs remain very low and with a declining trend.",
-    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#1d4c8da22119",
-    "judge": {
-     "originality": 0.0,
-     "usefulness": 5.0,
-     "specificity": 2.5,
-     "status": "rejected_gravity"
-    }
-   },
-   {
-    "lens": "series",
-    "text": "The same platform says what is growing is high-quality, differentiated music, which is its own reading of where the plays go.",
-    "rests_on": "high-quality, differentiated content continues to gain traction",
-    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#5ef84555ee38",
+    "text": "iZotope's Nectar 5 transcribes a sung vocal into lyrics in the edit window, so a producer selects a single word and adds up to seven effects to it.",
+    "rests_on": "MusicRadar, 24 Nov 2026: \"Open up Moments on a vocal recording and the plugin will transcribe the lyrics automatically in the edit window.\"; \"This AI-powered mixing tool listens to a portion of your vocal and designs a customized processing chain to match it.\"; introductory price $179 until 7 December, then $249.",
+    "id": "wed/076c5675-4aee-4ad0-b400-6b10188fdb59#39cbb1716cf1",
     "judge": {
      "originality": 2.5,
-     "usefulness": 2.5,
-     "specificity": 2.5,
+     "usefulness": 7.5,
+     "specificity": 10.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "A vocal plugin has a price that changes on a date: buy before the cut-off and you save $70 on a tool that now does a job singers used to pay a mix engineer for.",
+    "rests_on": "introductory price $179 until 7 December, then $249",
+    "id": "wed/076c5675-4aee-4ad0-b400-6b10188fdb59#d74dbdd88e6e",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 5.0,
+     "specificity": 5.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "The plugin turns a vocal into words on screen, so a singer can find and treat a single sung word by reading it rather than by scrubbing through a waveform.",
+    "rests_on": "Open up Moments on a vocal recording and the plugin will transcribe the lyrics automatically in the edit window.",
+    "id": "wed/076c5675-4aee-4ad0-b400-6b10188fdb59#90bc00a859f1",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 7.5,
+     "specificity": 7.5,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "The promise is a chain built for your voice, but it hears only part of the take, so whatever happens in the rest of the song is a guess based on that one section.",
+    "rests_on": "This AI-powered mixing tool listens to a portion of your vocal and designs a customized processing chain to match it.",
+    "id": "wed/076c5675-4aee-4ad0-b400-6b10188fdb59#5417987d1917",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 7.5,
+     "specificity": 5.0,
      "status": "accepted"
     }
    },
    {
     "lens": "funniest_true",
-    "text": "A company that makes its money from streams describes AI songs' streams in the language of a kind rejection letter: very low, and declining.",
-    "rests_on": "Streams from AI-generated songs remain very low and with a declining trend.",
-    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#f072644c309f",
+    "text": "A vocal plugin now types out the lyrics for you, which means the engineer may finally learn what the singer has been mumbling for the last six takes.",
+    "rests_on": "Open up Moments on a vocal recording and the plugin will transcribe the lyrics automatically in the edit window.",
+    "id": "wed/076c5675-4aee-4ad0-b400-6b10188fdb59#82628ce95b99",
     "judge": {
      "originality": 5.0,
-     "usefulness": 5.0,
-     "specificity": 5.0,
-     "status": "rejected_gravity"
+     "usefulness": 2.5,
+     "specificity": 2.5,
+     "status": "rejected_duplicate"
     }
    },
    {
     "lens": "funniest_true",
-    "text": "The report sorts listening into two piles, 'negligible' and 'high-quality, differentiated', and leaves little doubt which pile it puts AI in.",
-    "rests_on": "AI content stream volumes remain negligible, with a declining share of listening, while high-quality, differentiated content continues to gain traction.",
-    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#45c188701551",
+    "text": "The new Nectar listens to only part of your vocal and then builds a whole effects chain around it. That is still more listening than most demos get.",
+    "rests_on": "This AI-powered mixing tool listens to a portion of your vocal and designs a customized processing chain to match it.",
+    "id": "wed/076c5675-4aee-4ad0-b400-6b10188fdb59#95dcc78d9815",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 2.5,
+     "specificity": 5.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The tool that tunes your voice also has its own key change: $179 until 7 December, then up to $249.",
+    "rests_on": "introductory price $179 until 7 December, then $249",
+    "id": "wed/076c5675-4aee-4ad0-b400-6b10188fdb59#1961cd5686e2",
     "judge": {
      "originality": 2.5,
+     "usefulness": 2.5,
+     "specificity": 7.5,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Before a vocal plugin changes a single note of your heartfelt chorus, it types up the lyrics for you, like a stenographer at the session.",
+    "rests_on": "Open up Moments on a vocal recording and the plugin will transcribe the lyrics automatically in the edit window.",
+    "id": "wed/076c5675-4aee-4ad0-b400-6b10188fdb59#8bc86bba1afb",
+    "judge": {
+     "originality": 5.0,
      "usefulness": 5.0,
+     "specificity": 5.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The mixing tool needs to hear only part of your vocal to decide how all of it should be processed. Engineers spend years building up that kind of confidence.",
+    "rests_on": "This AI-powered mixing tool listens to a portion of your vocal and designs a customized processing chain to match it.",
+    "id": "wed/076c5675-4aee-4ad0-b400-6b10188fdb59#ea21d21e6665",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 5.0,
+     "specificity": 2.5,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "Music software has finally learned to read lyrics, mainly so it can put reverb on the one word you kept mumbling.",
+    "rests_on": "Open up Moments on a vocal recording and the plugin will transcribe the lyrics automatically in the edit window.",
+    "id": "wed/076c5675-4aee-4ad0-b400-6b10188fdb59#73fa93d6cd94",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 2.5,
+     "specificity": 5.0,
+     "status": "accepted"
+    }
+   }
+  ],
+  "wed/5675e3e4-3420-45a2-bc45-9e9cbd5902ee": [
+   {
+    "lens": "own",
+    "text": "Google's Genie 4 streams a playable 720p world at 24 frames a second to game developers, at roughly $0.10 a second, for up to 120 seconds a session.",
+    "rests_on": "Google, 19 Nov 2026: \"generating continuous 720p worlds at 24fps with synchronized native audio\"; PPC Land, 19 Nov 2026: \"roughly $0.10 for every second of streamed output\", \"Each session can run for up to 120 seconds\" and \"visual stability may degrade after 60 to 90 seconds\".",
+    "id": "wed/5675e3e4-3420-45a2-bc45-9e9cbd5902ee#9d0a221b0a13",
+    "judge": {
+     "originality": 0.0,
+     "usefulness": 5.0,
+     "specificity": 10.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Generated worlds are billed by the second, like a taxi meter, so a full two-minute session costs about twelve dollars before anyone has made anything with it.",
+    "rests_on": "roughly $0.10 for every second of streamed output",
+    "id": "wed/5675e3e4-3420-45a2-bc45-9e9cbd5902ee#c766c7cf2516",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 7.5,
+     "specificity": 7.5,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Picture and sound come out of the same model at the same moment, at film frame rate, so a game designer or video maker gets a world that already has its own soundtrack.",
+    "rests_on": "generating continuous 720p worlds at 24fps with synchronized native audio",
+    "id": "wed/5675e3e4-3420-45a2-bc45-9e9cbd5902ee#be0480273791",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 5.0,
+     "specificity": 5.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Sessions are sold at two minutes, but the picture can start to wobble after one, so you may be paying for the last minute of a world that is coming apart.",
+    "rests_on": "visual stability may degrade after 60 to 90 seconds",
+    "id": "wed/5675e3e4-3420-45a2-bc45-9e9cbd5902ee#df4e3ea19153",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 7.5,
+     "specificity": 7.5,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Google's Genie 4 sessions run for up to two minutes, but the picture may start to wobble after 60 to 90 seconds. So the last stretch of every world you pay for may be the bit where it falls apart.",
+    "rests_on": "visual stability may degrade after 60 to 90 seconds",
+    "id": "wed/5675e3e4-3420-45a2-bc45-9e9cbd5902ee#ac11fb2e7dcf",
+    "judge": {
+     "originality": 7.5,
+     "usefulness": 7.5,
+     "specificity": 10.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "At about ten cents a second, a full two-minute world costs roughly $12. That is a cinema ticket for a film that may not hold together until the end.",
+    "rests_on": "roughly $0.10 for every second of streamed output",
+    "id": "wed/5675e3e4-3420-45a2-bc45-9e9cbd5902ee#d55db2e6a2e2",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 7.5,
+     "specificity": 7.5,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Google built whole worlds at 24 frames a second, the old cinema frame rate, then rendered them at 720p.",
+    "rests_on": "generating continuous 720p worlds at 24fps with synchronized native audio",
+    "id": "wed/5675e3e4-3420-45a2-bc45-9e9cbd5902ee#53c1e94021c1",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 2.5,
      "specificity": 5.0,
      "status": "accepted"
     }
    },
    {
     "lens": "most_absurd_true",
-    "text": "All the argument about AI songs flooding streaming is over a share of listening the platform itself calls negligible, and shrinking.",
-    "rests_on": "AI content stream volumes remain negligible, with a declining share of listening",
-    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#a8f813de5bce",
+    "text": "A Genie 4 world can run for 120 seconds, but the picture may start to break down after 60 to 90. That means the last half-minute you pay for can be the part where the world is coming apart.",
+    "rests_on": "visual stability may degrade after 60 to 90 seconds",
+    "id": "wed/5675e3e4-3420-45a2-bc45-9e9cbd5902ee#7c8ef63fc4ed",
     "judge": {
-     "originality": 5.0,
-     "usefulness": 7.5,
-     "specificity": 5.0,
-     "status": "rejected_gravity"
+     "originality": 7.5,
+     "usefulness": 10.0,
+     "specificity": 10.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Google's generated worlds are charged by the second, like a parking meter, so a full two-minute world comes to about twelve dollars.",
+    "rests_on": "roughly $0.10 for every second of streamed output",
+    "id": "wed/5675e3e4-3420-45a2-bc45-9e9cbd5902ee#2fc414fdd78f",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 5.0,
+     "specificity": 7.5,
+     "status": "rejected_duplicate"
     }
    },
    {
     "lens": "funny",
-    "text": "The machines can write a million songs a day, and the market's verdict, per its own earnings call, is negligible.",
-    "rests_on": "Music Business Worldwide, 17 Nov 2026: \"Streams from AI-generated songs remain very low and",
-    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#f7d09054e6ba",
+    "text": "Google has invented a game world that forgets where it put the door if you look away for eight seconds.",
+    "rests_on": "visual stability may degrade after 60 to 90 seconds",
+    "id": "wed/5675e3e4-3420-45a2-bc45-9e9cbd5902ee#74fd9f0d250b",
     "judge": {
-     "originality": 2.5,
-     "usefulness": 5.0,
-     "specificity": 5.0,
+     "originality": 7.5,
+     "usefulness": 7.5,
+     "specificity": 7.5,
      "status": "accepted"
     }
    }
@@ -1731,12 +2081,12 @@
   "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c": [
    {
     "lens": "own",
-    "text": "Ottawa's animation festival director says some entrants are lying on their forms, marking AI films as 3D, as Manchester bans generative AI films from 2027.",
+    "text": "Manchester Animation Festival will bar generative AI films from 2027, as Ottawa's festival says entrants are lying on their forms, and festivals decide which animated films win distribution deals.",
     "rests_on": "Cartoon Brew, 20 Nov 2026: \"What bothers me is the animators clearly lying on their forms,” says Robinson.\"; Manchester Animation Festival: \"If any part of the final moving image has been generated or transformed by a generative audio, image or video model, it will be deemed ineligible\".",
-    "id": "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#21ce67289cc5",
+    "id": "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#2da75e9efa70",
     "judge": {
      "originality": 0.0,
-     "usefulness": 2.5,
+     "usefulness": 5.0,
      "specificity": 5.0,
      "status": "rejected_gravity"
     }
@@ -1990,6 +2340,250 @@
     }
    }
   ],
+  "fri/b38a7a98-50b4-4608-bf8e-b99d8181ac7b": [
+   {
+    "lens": "own",
+    "text": "Tor pulled the cover of Ilona Andrews's new novel after learning generative AI was used to make it, though the authors' contract and Tor's art contracts both forbid it.",
+    "rests_on": "Publishers Weekly, 24 Nov 2026: \"Tor takes full responsibility for the breakdown in our review process,\" with its policies and contracts with cover artists prohibiting generative AI; Ilona Andrews: \"We have a no-AI clause in our contract. Tor also has a no-AI clause in their art contracts.\"",
+    "id": "fri/b38a7a98-50b4-4608-bf8e-b99d8181ac7b#ab4dbf6aa815",
+    "judge": {
+     "originality": 0.0,
+     "usefulness": 5.0,
+     "specificity": 7.5,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Both the author and the publisher had written no-AI clauses, and the cover still got through, which shows that a clause on paper is a promise, not a check.",
+    "rests_on": "We have a no-AI clause in our contract. Tor also has a no-AI clause in their art contracts.",
+    "id": "fri/b38a7a98-50b4-4608-bf8e-b99d8181ac7b#2ea985f0eb50",
+    "judge": {
+     "originality": 7.5,
+     "usefulness": 7.5,
+     "specificity": 5.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "The publisher blames its review step rather than the rule, so the weak point for illustrators is who looks at the art before it is printed, not what the contract says.",
+    "rests_on": "Tor takes full responsibility for the breakdown in our review process",
+    "id": "fri/b38a7a98-50b4-4608-bf8e-b99d8181ac7b#2aedbeed3311",
+    "judge": {
+     "originality": 7.5,
+     "usefulness": 10.0,
+     "specificity": 7.5,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Cover artists sign contracts that ban generative AI, so when a cover with AI in it gets through, the money that should protect human illustration has bought a promise and nothing more.",
+    "rests_on": "policies and contracts with cover artists prohibiting generative AI",
+    "id": "fri/b38a7a98-50b4-4608-bf8e-b99d8181ac7b#ae9c9a68978a",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 7.5,
+     "specificity": 5.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The cover had to get past two separate no-AI clauses, one in the author's contract and one in the artist's, and it got past both.",
+    "rests_on": "We have a no-AI clause in our contract. Tor also has a no-AI clause in their art contracts.",
+    "id": "fri/b38a7a98-50b4-4608-bf8e-b99d8181ac7b#943e1e39420e",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 7.5,
+     "specificity": 7.5,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Tor's own policy banned generative AI on its covers, so the rule was already written down. Nobody checked the cover against it.",
+    "rests_on": "Tor takes full responsibility for the breakdown in our review process",
+    "id": "fri/b38a7a98-50b4-4608-bf8e-b99d8181ac7b#9823b143513c",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 7.5,
+     "specificity": 7.5,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The author had a no-AI clause in her contract and the publisher had one in its art contracts. That is two separate bans on the same thing, and the cover still came out with generative AI on it.",
+    "rests_on": "We have a no-AI clause in our contract. Tor also has a no-AI clause in their art contracts.",
+    "id": "fri/b38a7a98-50b4-4608-bf8e-b99d8181ac7b#074536fc27fb",
+    "judge": {
+     "originality": 7.5,
+     "usefulness": 7.5,
+     "specificity": 7.5,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The rule against AI covers was already written. The part that broke, by the publisher's own account, was the step meant to check that the rule was followed.",
+    "rests_on": "Tor takes full responsibility for the breakdown in our review process",
+    "id": "fri/b38a7a98-50b4-4608-bf8e-b99d8181ac7b#2678627a6ce8",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 7.5,
+     "specificity": 5.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "Two contracts said no AI, the review said fine, and the people who caught it were the comments under the reveal post.",
+    "rests_on": "We have a no-AI clause in our contract. Tor also has a no-AI clause in their art contracts.",
+    "id": "fri/b38a7a98-50b4-4608-bf8e-b99d8181ac7b#6b173dbb5c11",
+    "judge": {
+     "originality": 7.5,
+     "usefulness": 7.5,
+     "specificity": 7.5,
+     "status": "accepted"
+    }
+   }
+  ],
+  "fri/46dd71d0-6787-4bda-bd6c-b0e2bc4abca2": [
+   {
+    "lens": "own",
+    "text": "HeyGen says its new Avatar 6 is 84.4% indistinguishable from real video, and its own research page shows raters picked it as the real clip 42.2% of the time.",
+    "rests_on": "HeyGen Research, 17 Nov 2026: \"Side by side with the real recording, raters pick Avatar 6 as the real one 42.2% of the time.\" and \"50% would mean they cannot tell at all, so Avatar 6 is 84.4% of the way there.\"; one clip at a time, 65.1% of Avatar 6 clips judged real against 78.9% of real recordings.",
+    "id": "fri/46dd71d0-6787-4bda-bd6c-b0e2bc4abca2#d0cd57d326b1",
+    "judge": {
+     "originality": 7.5,
+     "usefulness": 10.0,
+     "specificity": 10.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "The headline 84.4% is the real result, 42.2%, divided by 50, so it measures how close the avatar is to a coin toss, not how often it fools anyone.",
+    "rests_on": "50% would mean they cannot tell at all, so Avatar 6 is 84.4% of the way there.",
+    "id": "fri/46dd71d0-6787-4bda-bd6c-b0e2bc4abca2#f780989234ab",
+    "judge": {
+     "originality": 7.5,
+     "usefulness": 10.0,
+     "specificity": 10.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Shown one clip at a time, raters judged about a fifth of genuine recordings fake, so real presenters do not pass this test every time either.",
+    "rests_on": "65.1% of Avatar 6 clips judged real against 78.9% of real recordings",
+    "id": "fri/46dd71d0-6787-4bda-bd6c-b0e2bc4abca2#be006d0228d6",
+    "judge": {
+     "originality": 7.5,
+     "usefulness": 7.5,
+     "specificity": 7.5,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "The test puts the avatar right next to the real person, so the raters can compare the two, and even then they picked the copy as the real one in more than four tries out of ten.",
+    "rests_on": "Side by side with the real recording, raters pick Avatar 6 as the real one 42.2% of the time.",
+    "id": "fri/46dd71d0-6787-4bda-bd6c-b0e2bc4abca2#fe828c55f911",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 5.0,
+     "specificity": 5.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "In HeyGen's own test, one in five real recordings was judged fake. The avatar is closing in on humans, and humans are not doing that well at looking human either.",
+    "rests_on": "one clip at a time, 65.1% of Avatar 6 clips judged real against 78.9% of real recordings",
+    "id": "fri/46dd71d0-6787-4bda-bd6c-b0e2bc4abca2#4b5072f36520",
+    "judge": {
+     "originality": 7.5,
+     "usefulness": 7.5,
+     "specificity": 7.5,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Raters picked the avatar over the real person 42.2% of the time, and HeyGen's maths turns that into 84.4% of the way to fooling everyone. It counts as a fail in the test, but it doubles in the press release.",
+    "rests_on": "50% would mean they cannot tell at all, so Avatar 6 is 84.4% of the way there.",
+    "id": "fri/46dd71d0-6787-4bda-bd6c-b0e2bc4abca2#975a095f98b1",
+    "judge": {
+     "originality": 7.5,
+     "usefulness": 10.0,
+     "specificity": 10.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Side by side, people still picked the real person most of the time. The avatar's best result is losing to a human by a modest margin.",
+    "rests_on": "Side by side with the real recording, raters pick Avatar 6 as the real one 42.2% of the time.",
+    "id": "fri/46dd71d0-6787-4bda-bd6c-b0e2bc4abca2#248d4b85efd7",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 5.0,
+     "specificity": 2.5,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "When raters saw one clip at a time, they judged real recordings to be real only 78.9% of the time. About one genuine person in five was taken for a fake.",
+    "rests_on": "65.1% of Avatar 6 clips judged real against 78.9% of real recordings",
+    "id": "fri/46dd71d0-6787-4bda-bd6c-b0e2bc4abca2#e1d8e4745826",
+    "judge": {
+     "originality": 7.5,
+     "usefulness": 7.5,
+     "specificity": 7.5,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "HeyGen's figure of \"84.4% of the way there\" is simply 42.2% doubled. On that scale a perfect fake scores 50% and gets called 100%.",
+    "rests_on": "50% would mean they cannot tell at all, so Avatar 6 is 84.4% of the way there.",
+    "id": "fri/46dd71d0-6787-4bda-bd6c-b0e2bc4abca2#20d05c52b6c6",
+    "judge": {
+     "originality": 7.5,
+     "usefulness": 10.0,
+     "specificity": 10.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Set side by side with an avatar, the real person still wins the contest of being themselves, but only by about 16 points.",
+    "rests_on": "Side by side with the real recording, raters pick Avatar 6 as the real one 42.2% of the time.",
+    "id": "fri/46dd71d0-6787-4bda-bd6c-b0e2bc4abca2#b576ee9e3dfd",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 5.0,
+     "specificity": 5.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "HeyGen's avatar lost the spot-the-real-one test more often than it won, and the launch turned that into 84.4%.",
+    "rests_on": "Side by side with the real recording, raters pick Avatar 6 as the real one 42.2% of the time.",
+    "id": "fri/46dd71d0-6787-4bda-bd6c-b0e2bc4abca2#4b8d33e1ebed",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 5.0,
+     "specificity": 5.0,
+     "status": "accepted"
+    }
+   }
+  ],
   "tue/nytphotoshop": [
    {
     "lens": "own",
@@ -2073,80 +2667,6 @@
      "usefulness": 5.0,
      "specificity": 5.0,
      "status": "rejected_gravity"
-    }
-   }
-  ],
-  "tue/logicdrums": [
-   {
-    "lens": "own",
-    "text": "The list of kit pieces ends with Other, which every drummer knows is the cowbell.",
-    "rests_on": "Apple, 18 Nov 2026: \"Choose the Drums (Individual Kit Pieces) preset in Stem Splitter to extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion.\"",
-    "id": "tue/logicdrums#a13361d75819",
-    "judge": {
-     "originality": 5.0,
-     "usefulness": 2.5,
-     "specificity": 5.0,
-     "status": "rejected_duplicate"
-    }
-   },
-   {
-    "lens": "series",
-    "text": "Apple's Stem Splitter can now pull a recorded drum kit apart into kick, snare, hi-hat, toms and cymbals, from a single mixed region.",
-    "rests_on": "extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion",
-    "id": "tue/logicdrums#b491abb3bcfb",
-    "judge": {
-     "originality": 0.0,
-     "usefulness": 5.0,
-     "specificity": 7.5,
-     "status": "rejected_gravity"
-    }
-   },
-   {
-    "lens": "funniest_true",
-    "text": "Stem Splitter now pulls the kit apart piece by piece, kick, snare, hi-hat, toms, cymbals, and then 'other drums and percussion', where the tambourine still shares a track with everything else.",
-    "rests_on": "extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion.",
-    "id": "tue/logicdrums#7a3eba76f681",
-    "judge": {
-     "originality": 5.0,
-     "usefulness": 5.0,
-     "specificity": 7.5,
-     "status": "rejected_gravity"
-    }
-   },
-   {
-    "lens": "funniest_true",
-    "text": "A drummer's kit can now be taken apart into its pieces without anyone touching a drum key.",
-    "rests_on": "Choose the Drums (Individual Kit Pieces) preset in Stem Splitter",
-    "id": "tue/logicdrums#486d4fe7d9c0",
-    "judge": {
-     "originality": 2.5,
-     "usefulness": 2.5,
-     "specificity": 2.5,
-     "status": "accepted"
-    }
-   },
-   {
-    "lens": "most_absurd_true",
-    "text": "Stem Splitter can now take a drum kit apart piece by piece, kick to cymbals, and files everything it cannot name under \"other drums and percussion\".",
-    "rests_on": "kick, snare, hi-hat, toms, cymbals, and other drums and percussion",
-    "id": "tue/logicdrums#c01593e65326",
-    "judge": {
-     "originality": 2.5,
-     "usefulness": 5.0,
-     "specificity": 7.5,
-     "status": "rejected_gravity"
-    }
-   },
-   {
-    "lens": "funny",
-    "text": "The list of kit pieces ends with Other, which every drummer knows is the cowbell.",
-    "rests_on": "Apple, 18 Nov 2026: \"Choose the Drums (Individual Kit Pieces) preset in Stem Splitter",
-    "id": "tue/logicdrums#a8f6612ed9ba",
-    "judge": {
-     "originality": 5.0,
-     "usefulness": 2.5,
-     "specificity": 5.0,
-     "status": "rejected_duplicate"
     }
    }
   ],
@@ -2286,6 +2806,80 @@
     }
    }
   ],
+  "tue/logicdrums": [
+   {
+    "lens": "own",
+    "text": "The list of kit pieces ends with Other, which every drummer knows is the cowbell.",
+    "rests_on": "Apple, 18 Nov 2026: \"Choose the Drums (Individual Kit Pieces) preset in Stem Splitter to extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion.\"",
+    "id": "tue/logicdrums#a13361d75819",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 2.5,
+     "specificity": 5.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Apple's Stem Splitter can now pull a recorded drum kit apart into kick, snare, hi-hat, toms and cymbals, from a single mixed region.",
+    "rests_on": "extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion",
+    "id": "tue/logicdrums#b491abb3bcfb",
+    "judge": {
+     "originality": 0.0,
+     "usefulness": 5.0,
+     "specificity": 7.5,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Stem Splitter now pulls the kit apart piece by piece, kick, snare, hi-hat, toms, cymbals, and then 'other drums and percussion', where the tambourine still shares a track with everything else.",
+    "rests_on": "extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion.",
+    "id": "tue/logicdrums#7a3eba76f681",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 5.0,
+     "specificity": 7.5,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "A drummer's kit can now be taken apart into its pieces without anyone touching a drum key.",
+    "rests_on": "Choose the Drums (Individual Kit Pieces) preset in Stem Splitter",
+    "id": "tue/logicdrums#486d4fe7d9c0",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 2.5,
+     "specificity": 2.5,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Stem Splitter can now take a drum kit apart piece by piece, kick to cymbals, and files everything it cannot name under \"other drums and percussion\".",
+    "rests_on": "kick, snare, hi-hat, toms, cymbals, and other drums and percussion",
+    "id": "tue/logicdrums#c01593e65326",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 5.0,
+     "specificity": 7.5,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "The list of kit pieces ends with Other, which every drummer knows is the cowbell.",
+    "rests_on": "Apple, 18 Nov 2026: \"Choose the Drums (Individual Kit Pieces) preset in Stem Splitter",
+    "id": "tue/logicdrums#a8f6612ed9ba",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 2.5,
+     "specificity": 5.0,
+     "status": "rejected_duplicate"
+    }
+   }
+  ],
   "tue/mychannel": [
    {
     "lens": "own",
@@ -2353,6 +2947,9 @@
     "rests_on": "Google might be planning to build a completely AI-generated TV channel in which your likeness is the main character",
     "id": "tue/mychannel#8f98fae0720d",
     "judge": {
+     "originality": 0.0,
+     "usefulness": 2.5,
+     "specificity": 2.5,
      "status": "accepted"
     }
    },
@@ -2977,56 +3574,6 @@
     }
    }
   ],
-  "thu/tplthanksgiving": [
-   {
-    "lens": "own",
-    "text": "The hand-made short film gets to the festival the way football teams win on Thanksgiving: three seconds left.",
-    "rests_on": null,
-    "id": "thu/tplthanksgiving#9ac3e6fc6044",
-    "judge": {
-     "originality": 2.5,
-     "usefulness": 0.0,
-     "specificity": 0.0,
-     "status": "rejected_duplicate"
-    }
-   },
-   {
-    "lens": "funniest_true",
-    "text": "One end zone, two benches: one becomes a pile, the other a row of stares.",
-    "rests_on": "the whole team piles on while the other bench stares",
-    "id": "thu/tplthanksgiving#3df8dcda3fe4",
-    "judge": {
-     "originality": 2.5,
-     "usefulness": 2.5,
-     "specificity": 5.0,
-     "status": "accepted"
-    }
-   },
-   {
-    "lens": "most_absurd_true",
-    "text": "One end of the field is a pile of bodies; the other is a bench standing perfectly still, staring.",
-    "rests_on": "the whole team piles on while the other bench stares",
-    "id": "thu/tplthanksgiving#82823b62bcee",
-    "judge": {
-     "originality": 5.0,
-     "usefulness": 2.5,
-     "specificity": 5.0,
-     "status": "rejected_duplicate"
-    }
-   },
-   {
-    "lens": "funny",
-    "text": "The hand-made short film gets to the festival the way football teams win on Thanksgiving: three seconds left.",
-    "rests_on": "Trailing with the clock almost gone, the quarterback finds his receiver in the end",
-    "id": "thu/tplthanksgiving#5c757cf4ee80",
-    "judge": {
-     "originality": 2.5,
-     "usefulness": 0.0,
-     "specificity": 0.0,
-     "status": "rejected_duplicate"
-    }
-   }
-  ],
   "thu/tplassemble": [
    {
     "lens": "own",
@@ -3186,6 +3733,56 @@
      "usefulness": 2.5,
      "specificity": 2.5,
      "status": "rejected_gravity"
+    }
+   }
+  ],
+  "thu/tplthanksgiving": [
+   {
+    "lens": "own",
+    "text": "The hand-made short film gets to the festival the way football teams win on Thanksgiving: three seconds left.",
+    "rests_on": null,
+    "id": "thu/tplthanksgiving#9ac3e6fc6044",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 0.0,
+     "specificity": 0.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "One end zone, two benches: one becomes a pile, the other a row of stares.",
+    "rests_on": "the whole team piles on while the other bench stares",
+    "id": "thu/tplthanksgiving#3df8dcda3fe4",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 2.5,
+     "specificity": 5.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "One end of the field is a pile of bodies; the other is a bench standing perfectly still, staring.",
+    "rests_on": "the whole team piles on while the other bench stares",
+    "id": "thu/tplthanksgiving#82823b62bcee",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 2.5,
+     "specificity": 5.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "The hand-made short film gets to the festival the way football teams win on Thanksgiving: three seconds left.",
+    "rests_on": "Trailing with the clock almost gone, the quarterback finds his receiver in the end",
+    "id": "thu/tplthanksgiving#5c757cf4ee80",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 0.0,
+     "specificity": 0.0,
+     "status": "rejected_duplicate"
     }
    }
   ],
@@ -3741,5 +4338,5 @@
   ]
  },
  "unread": [],
- "at": "2026-11-28T11:32:42+00:00"
+ "at": "2026-11-28T16:03:49+00:00"
 }

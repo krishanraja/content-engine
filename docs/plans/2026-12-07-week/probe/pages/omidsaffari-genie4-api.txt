@@ -1,0 +1,383 @@
+Genie 4 API: Sessions, Events, Limits and Cost | Omid Saffari
+Blog
+AI
+Build
+Business
+Design
+Tools
+Lab
+Work
+Get a quote
+ReadAIFor everyone: the models and assistants themselvesBuildFor developers and technical foundersBusinessFor owners, operators, marketing, sales and supportDesignFor designers and creatorsToolsThe Tool Lab: one living page per tool
+PlaybooksExplainedLabResources
+ServicesAI Systems IntensiveAI Workflow AutomationAI Customer Service & Voice AgentsAI Sales Agent (SDR)AI Agent DevelopmentAI Production SystemsFractional AI CTOAll services
+BlogBWorkWAboutANewsletterNContactC
+Home
+Blog
+Build
+Genie 4 API: How One Live World Session Works, and What It Costs
+Genie 4 opened on the Gemini API on Nov 19, 2026. How one live world session runs, in Google's own code, what a minute costs and where it stops.
+Published November 19, 2026
+By Omid Saffari
+ToolsGGenie 4
+GGemini API
+GGoogle AI Studio
+Genie 4 opened on the Gemini API on November 19, 2026, generally available on the paid tier. Your app can now stream a live 720p world that a person walks through with the keyboard and changes by typing, for about $0.10 a second and at most 120 seconds a session.
+Where Genie 4 lives and what you need
+Genie 4 runs on the Gemini API through the Interactions API, on v1beta, under the model id models/genie-4 (the API also accepts genie-4). Google AI Studio gives it a canvas, the Live playground, with starter worlds you can open and steer before you write any code. Both need a paid-tier Gemini API key: Genie 4 has no free tier.
+What a session gives you, as of November 2026:
+Genie 4 on the Gemini API
+Model idmodels/genie-4 (also genie-4), stable
+WhereInteractions API on v1beta; the Live playground in Google AI Studio
+KeyPaid tier only
+Video out1280x720, 16:9, 24 fps
+Audio out48 kHz stereo, synchronized with the video
+InputsText, one 16:9 reference image, keyboard and camera keys
+Longest session120 seconds
+Served fromUnited States, Western Europe, Japan
+SDKsgoogle-genai (Python), @google/genai (JavaScript and TypeScript)
+Every output carries an imperceptible SynthID watermark. Google's guide draws the line against its clip model in its first paragraph: unlike offline clip generation with Gemini Omni 1.2 Flash, Genie 4 renders frames on the fly, in answer to live keyboard movement and to text you send mid-stream.
+Google's Genie 4 model page in the Gemini API docs
+Looking for Project Genie, Google's consumer app for the same model? Who can use it is in our Genie 4 explainer.
+How one session runs
+A session is four moves, and only one way out stops the billThe lifecycle of one Genie 4 session, in the order Google’s guide gives itOne session1 · Your serverCreateinteractions.create with models/genie-4, then a one-session token
+2 · The browserConnectinteractions.connect over WebRTC or WebSocket
+3 · The streamSeed and steerOne world_setup, then user_action keys and input text
+4 · The endCompletecomplete() stops generation and billing
+Three ways to leave itcomplete()Ends the world and its billing cleanly
+cancel()Aborts generation on the server at once
+detach() or a closed tabYour side closes, the server keeps generating
+As of Nov 19, 2026 · Source: Google AI Studio, Interactive world generation with Genie 4
+Google's quickstart world, a canal village inside an oil painting, makes one session concrete. The left column is what your app sends; the right is what Google's guide says to expect.
+Google’s quickstart world: what your app sends, and what the guide says followsPauseYour app sends
+Immersive first-person POV standing on a cobblestone canal bridge inside a … oil painting of a starry riverside village at twilight …
+key_down · key_w
+Make heavy snow fall across the painted village
+await session.complete()
+Google’s guide says
+The first frame arrives.
+The view moves forward.
+The snow appears on screen.
+interaction.completed · generation and billing stop
+Google's code for one whole session
+This is the quickstart on Google's Genie 4 model page, unchanged. It keeps the server half and the browser half in one file, so the whole life of a session reads top to bottom; the numbered comments are Google's.
+JavaScript
+import { GoogleGenAI } from '@google/genai';
+// 1. Server-side: create the interaction and mint a single-session auth token
+const serverAi = new GoogleGenAI({
+apiKey: process.env.GEMINI_API_KEY,
+apiVersion: 'v1beta',
+});
+const interaction = await serverAi.interactions.create({
+model: 'models/genie-4',
+api_version: 'v1beta',
+});
+const { auth_token } = await serverAi.interactions.authTokens.create(
+interaction.id,
+{ api_version: 'v1beta' }
+);
+// 2. Browser: connect over WebRTC and attach a <video autoplay playsinline> element
+const clientAi = new GoogleGenAI({ apiKey: auth_token, apiVersion: 'v1beta' });
+const session = await clientAi.interactions.connect(
+interaction.id,
+{ transport: 'webrtc', api_version: 'v1beta' },
+{ timeout_ms: 30000 }
+);
+session.transport.setVideoElement(document.querySelector('#world-video'));
+// 3. Seed the interactive world
+await session.send({
+event_type: 'world_setup',
+world_prompt: {
+text: 'Immersive first-person POV standing on a cobblestone canal bridge inside a vibrant, thick-impasto post-impressionist oil painting of a starry riverside village at twilight. Swirling cobalt-blue sky currents and glowing golden cafe lanterns shimmer with living, tactile brushstroke textures that ripple gently in the breeze, with a wooden rowboat moored at the stone steps ahead. Audio: Gentle water lapping against the stone steps, leaves rustling in a soft evening breeze, footsteps on cobblestone.',
+},
+});
+// 4. Steer movement with native WASD / arrow keys, then end billing cleanly
+await session.send({
+event_type: 'user_action',
+action: 'key_down',
+input: 'key_w',
+});
+setTimeout(async () => {
+await session.send({
+event_type: 'user_action',
+action: 'key_up',
+input: 'key_w',
+});
+await session.complete();
+}, 5000);
+1. Create the interaction and a token, on your server
+The interaction is created where your long-lived GEMINI_API_KEY lives: your backend. The same server then mints an auth_tokens/... token scoped to that one interaction, and hands the browser only the interaction id and the token. Google's backend endpoint:
+JavaScript
+import { GoogleGenAI } from '@google/genai';
+const serverAi = new GoogleGenAI({
+apiKey: process.env.GEMINI_API_KEY,
+apiVersion: 'v1beta',
+});
+export async function createWorldSession() {
+const interaction = await serverAi.interactions.create({
+model: 'models/genie-4',
+api_version: 'v1beta',
+});
+const { auth_token } = await serverAi.interactions.authTokens.create(
+interaction.id,
+{ api_version: 'v1beta' }
+);
+// Return ONLY { interactionId, authToken } to the browser
+return { interactionId: interaction.id, authToken: auth_token };
+}
+The token is not optional in a browser. A browser's standard WebSocket cannot attach the x-goog-api-key header, so when the SDK is given an auth_tokens/... string as its apiKey, it uses it to authenticate the WebSocket or the WebRTC signaling. Pass a raw AIza... key to { transport: 'websocket' } in a browser and the SDK throws a usage error, by design.
+2. Connect: WebRTC or WebSocket
+interactions.connect opens the live session over one of two transports. Google's comparison:
+WebRTC (transport: 'webrtc')WebSocket (transport: 'websocket', Python's default)
+Best forInteractive browser apps and gamesPython scripts, Node.js backends, frame capture, custom pipelines
+SDK@google/genai in browsersgoogle-genai (Python async) and @google/genai (Node.js and browsers)
+MediaNative video and Opus audio tracks, played by a <video> elementJSON step.delta events: base64 JPEG frames and 48 kHz stereo PCM
+Latency and lossLowest; UDP media with the browser's jitter bufferHigher overhead (about 33% from base64); TCP head-of-line blocking under loss
+Largest control message64 KB data channel (keep image seeds under 48 KB)Larger JSON payloads, no data-channel cap
+The rule that falls out of it: a browser app or game takes WebRTC, Google's recommended browser transport. The browser decodes sound and picture natively onto a <video autoplay playsinline> element, and your control events travel on a separate data channel. A Python or Node.js backend, a frame recorder or your own pipeline takes WebSocket. There, every frame arrives as one base64 JPEG in a step.delta event, the audio as raw 16-bit 48 kHz stereo PCM, and only one receive() loop is allowed per connection. Google's sample renderer numbers frames as they arrive and drops any that finishes decoding after a newer one, so a slow decode never paints over the present.
+Genie 4 serves from data centers in the United States, Western Europe and Japan. Google expects round trips under 150 ms in North America, Western and Central Europe and East Asia; further away, keyboard steering lags and the frame rate can drop. Google's advice: put backend relays near a serving region, and test browser WebRTC latency from your target region before you ship reflex-heavy controls.
+3. Seed the world: world_setup
+Send exactly one world_setup, at the start. It sets the world's state and starts the frames. It takes a text prompt (world_prompt), a 16:9 starting image (reference_image), or both. Google's text-only example:
+JSON
+{
+"event_type": "world_setup",
+"world_prompt": {
+"text": "First-person POV standing in front of an espresso machine. An empty ceramic mug rests on the drip tray beneath the spout. A glowing \"brew\" button is visible on the front panel."
+}
+}
+With a picture, reference_image sits at the top level, beside world_prompt, not inside it. Google's example from its prompt guide:
+JSON
+{
+"event_type": "world_setup",
+"world_prompt": {
+"text": "Immersive first-person walk along a sunlit wheatfield path beneath swirling painted clouds, with tactile impasto brushstrokes rippling across the tall stalks. Audio: Crisp dry wheat rustling in a steady breeze, footsteps on packed earth, distant skylark calls."
+},
+"reference_image": {
+"mime_type": "image/jpeg",
+"data": "<BASE64_1280X720_JPEG_UNDER_48KB>"
+}
+}
+The size rule is the one that breaks first builds. A WebRTC data channel carries at most 65,536 bytes a message, and base64 adds about 33%, so Google says to resize the picture to 1280x720 or 640x360 and compress it as JPEG under 48 KB. To send a larger lossless PNG, connect over WebSocket. Either way, expect roughly 5-9 seconds before the first frame.
+4. Move and look: user_action
+JSON
+{
+"event_type": "user_action",
+"action": "key_down",
+"input": "key_w"
+}
+action is key_down, key_up or key_click. Send key_down on the press, ignoring the operating system's key repeat, and key_up on release; a held key keeps applying until its key_up arrives.
+The model is trained on eight inputs: key_w forward, key_s back, key_a and key_d to strafe, and arrow_up, arrow_down, arrow_left and arrow_right to tilt and pan the camera. They show on screen in about 0.2-0.5 seconds at a low network round trip.
+The schema also accepts key_e and space, but Genie 4 gives them no built-in jump or interact behavior. A custom action, such as E to open a door, is a text event your client sends (next step).
+Google's browser client wires the keys like this. Movement keys go out as user_action; the custom keys E and Q become text:
+JavaScript
+window.addEventListener('keydown', (e) => {
+if (e.repeat) return;
+if (NATIVE_KEY_MAP[e.code]) {
+session.send({
+event_type: 'user_action',
+action: 'key_down',
+input: NATIVE_KEY_MAP[e.code],
+});
+} else if (CUSTOM_KEY_PROMPTS[e.code]) {
+triggerWorldEvent(CUSTOM_KEY_PROMPTS[e.code]);
+}
+});
+5. Change the world: input
+A text event changes the weather or an object's state, or makes a character speak, while the stream runs. Passing a plain string to send("...") wraps it in an input event for you:
+JSON
+{
+"event_type": "input",
+"content": [
+{
+"type": "text",
+"text": "Press the brew button so dark espresso pours into the ceramic mug"
+}
+]
+}
+Text is slower than a key for a reason. Genie 4 plans changes to the world between generation steps, and its planner reads incoming text only at step boundaries, every 4 frames at 24 fps. So a text change takes about 1-2 seconds to show. Google's fix is to send a short action prompt 10 times at 150 ms intervals, about 1.5 seconds, so the next planning window catches it, then wait about 2 seconds before a prompt that conflicts with it. Its client does exactly that, with the keys bound to prompts:
+JavaScript
+// Custom gameplay verbs mapped on the client to mid-session text inputs
+const CUSTOM_KEY_PROMPTS = {
+KeyE: 'Make heavy snow fall across the painted village',
+KeyQ: 'Burst bright golden fireworks above the village rooftops',
+};
+// Helper: repeat mid-session text prompts briefly so the next world step picks them up
+function triggerWorldEvent(promptText) {
+let sent = 0;
+const timer = setInterval(() => {
+session.send(promptText).catch(() => clearInterval(timer));
+if (++sent >= 10) clearInterval(timer);
+}, 150);
+}
+Two more rules from the guide. To talk to a character in front of you, wrap the words in quotation marks, as in “What vintage would you recommend?”. And describe changes inside the current view: a request for a camera cut, such as “cut to aerial view”, breaks the world's spatial continuity.
+6. End it: complete, cancel or detach
+await session.complete() sends interaction.complete, stops generation and billing on the server, and emits a final interaction.completed event on receive(). Google's words: “Always call complete() when the user finishes a session.”
+await session.cancel() aborts generation on the server at once (interaction.cancel).
+session.detach(), or leaving Python's async with block, sends interaction.disconnect and closes your socket without completing the interaction on the server. Genie 4 has no session resumption, so a detach cannot pause a world for later, and it does not stop the billing.
+Google's guide: exiting a local block or closing a browser tab detaches the transport without immediately stopping server generation. AI Studio's playground protects itself, pausing or ending a stream whose tab stays hidden for more than 10 seconds. In your own app, every way out of a world has to end in complete() or cancel().
+What makes a world hold together
+Google's prompt and controls guide opens with a warning: prompts written like movie trailers behave unpredictably in Genie 4. Room-wide triggers fire at frame 1, music keywords turn into physical sound effects, and camera cuts break the space apart. Its five tested patterns come down to five habits.
+Hang rules on objects, not places
+A Rule: clause in the world_setup prompt ties a cause to an effect. Google's example:
+Text
+A spaceship bridge with a big red lever on a console far away from me. Rule: Pulling the red lever makes the stars outside the window stretch into bright hyperspace streaks.
+Three phrasing rules come with it. Tie the trigger to a concrete object or character (“Pulling the red lever”), never to a place (“Entering the bridge”), because the model cannot measure the edge of a zone. Put the trigger “far away from me”, or Genie 4 may fire it during setup, before the player presses W. And tell a character to wait, with “who waits until a rule is triggered”. Google calls rules probabilistic steering, not a game script: when a button must work every time, bind it to a key.
+Put your game's verbs on keys
+Native keys move and look; everything else is a key your client binds to a text prompt, sent 10 times at 150 ms with a 2-second cooldown. Google's canal village binds three: E for heavy snow, Q for golden fireworks, R for “Send a flock of white doves flying past”. Google calls walk-first worlds like this the most reliable, because walking gives a 1-2 second change time to land.
+Its desert-buggy cockpit variant works when the round trip to a serving region is under 100 ms. In the buggy, S slows or reverses the view gradually instead of braking, panning while holding W bends its path toward where the camera looks, and above 150 ms of latency tight canyon turns clip through the rock walls.
+Seed with a 16:9 picture
+A 16:9 reference_image fixes the first frame's composition, palette and art style before the user takes the camera. Google prefers stylized art, architectural renders or empty landscapes. Street photos with identifiable bystanders, public figures or copyrighted logos often trip the safety filters and end the stream. A portrait or square picture forces padding or invented side walls. And the picture is not a memory: walk forward into it and it holds; turn 180 degrees and look back 10 seconds later, and you see a fresh interpretation, not the starting pixels.
+Ask for the sound of contact, and show what moves you
+Genie 4's planner rewrites prompts before it renders picture and sound, and the guide's advice is to write with it. It strips or rewrites soundtrack requests and narrow drones such as “engine hum”, “deep rumble” or “jet roar”, so ask for the sound of surfaces meeting: footsteps on wet cobblestone, gravel crunching, water lapping against wood. Give forward motion a visible cause in the first frame, or the model invents one mid-session, such as a boat hull, a kayak paddle or a vehicle hood. Even with no key held, small things keep moving: steam, ripples, leaves, lantern light.
+Weak phrasing (the planner fights or rewrites it)Planner-aligned phrasing
+“Gliding fast over an alpine lake. Audio: Deep ambient drone and relaxing piano music.”“First-person POV seated in a wooden canoe with a cedar paddle dipping into an alpine lake. Audio: Water lapping against wooden planks, droplets trickling off the paddle, wind in shoreline pines.”
+“Cyberpunk street with neon hum, synthwave soundtrack, and roaring hovercars.”“First-person walk down a rain-slicked neon alleyway with steaming street grates. Audio: Footsteps splashing through puddles, steady rain pattering on metal awnings, distant tire hiss on wet asphalt.”
+“Cut to a wide shot when I enter the courtyard.”“Continuous first-person walk through a stone archway that opens onto a sunlit courtyard with a splashing fountain.”
+Keep the camera on the thing
+Close-up interactions work best as focused 25-45 second vignettes with the camera held on the subject. Google's own verified example is an espresso machine, and its three beats are a template for any one-object scene:
+Google’s verified espresso vignette, 25 seconds, beat by beatPauseworld_setupFirst-person POV standing in front of an espresso machine. An empty ceramic mug rests on the drip tray beneath the spout.
+Agent · 0-5 sFaint steam rises from the grouphead; the mug sits empty on the metal tray.
+You · 5 s · input, 10× every 150 msPress the brew button
+Agent · within ~1-2 sDark espresso with golden crema pours into the mug, with pump and liquid sounds.
+You · 12 s · key_w for 0.5 sLean closer, then: Reach out and pick up the full mug
+AgentThe hand lifts the filled cup from the drip tray.
+25 ssession.complete()
+The boundary Google draws: pan 90-180 degrees away from the counter for 8 seconds or more, look back, and the mug may be empty again or the button may have moved. Build short scenes that face forward, not fetch quests across rooms.
+What you can build with it this week
+Google names three uses in its API post: prototyping interactive experiences, visualizing designs for spatial concepts, and training robotics and AI agents. Each fits the documented limits in its own way.
+A playable concept. For a pitch, a game idea or a brand-free campaign moment, a walk-first world with three key-bound events, like Google's canal village, is the shape the guide trusts most. Plan a forward path of 30-60 seconds; it fits in one session with room to spare.
+A one-object moment. The espresso vignette is the template: one object, one change on a key, the camera held on it, 25-45 seconds. Two warnings for product teams. Readable text such as signs, gauges and clocks deforms over time, and recognizable brand IP can block a world at startup or end it mid-stream. It can show what a thing does; it cannot be trusted with what its label says.
+A walk into a design. Seed with an architectural render, one of the picture types Google prefers, and walk forward into it. Don't promise a return trip: after 8 seconds or more out of view, landmarks shift. Where a layout or a measurement must hold, Genie 4 is the sketch, not the record.
+Frames for an agent or robotics experiment. WebSocket hands you every frame as a JPEG and the audio as PCM, and Google lists it for frame capture and custom pipelines. With no persistent 3D scene and counts that drift, a generated world is a source of test ideas, not test evidence; our Physical AI guide covers where validated simulation takes over.
+Worth a prototype this week when every line holds:
+The experience fits inside 120 seconds, and its best part inside the first 45-90.
+It moves forward or stays on one object, with no return trip.
+Your users are near the United States, Western Europe or Japan.
+It needs no exact text or counts, no real people and no brands.
+It needs no voice or camera input, no tool calls and no saved state between sessions.
+If one fails, read the limits below before you build.
+What it costs
+Genie 4 is billed on the paid tier only, at three rates per 1M tokens on Google's pricing page and in its changelog, as of November 2026:
+Input, text or reference image: $1.50
+Text output: $9.00
+Video output, audio included: $17.50
+The bill follows the video: 240 tokens a frame, which is 5,760 tokens a second at 24 fps. Worked from those rates:
+A second: 5,760 × $17.50 ÷ 1,000,000 = $0.1008, Google's “about $0.10”.
+A minute: 345,600 video tokens = $6.05, Google's own figure.
+A full 120-second session: 691,200 video tokens = about $12.10.
+Google's 25-second espresso vignette: 144,000 video tokens = about $2.52.
+Prompts and pictures bill at the input rate on top; Google's per-second figure counts the video alone. There is no Batch, Flex or Priority inference and no context caching to bring it down. If the job is a finished clip rather than a live world, our Veo pricing guide covers what Google charges for that.
+Where it stops
+Google's limitations, in its words
+Short-horizon object permanence: “Genie 4 simulates frames over a rolling temporal window rather than maintaining a persistent 3D scene graph. Looking away from an object (8+ seconds) or turning 360 degrees can cause landmarks, doors, or buttons to shift or reset, and visual stability may degrade past 60-90 seconds (hard cap 120 seconds).”
+Two-speed responsiveness: “Native WASD and arrow-key actions take effect within ~0.2-0.5s, whereas mid-session text input prompts pass through world planning and take ~1-2s to appear on screen.”
+Fixed 16:9 output and regional serving footprint: “Output streams at 1280x720 (720p, 16:9, 24 fps) from data centers in the United States, Western Europe, and Japan. Portrait aspect ratios (9:16) and configurable frame rates are not supported, and connections outside North America, Western and Central Europe, and East Asia experience higher steering latency and potentially lower frame rates.”
+No live microphone/webcam input or tool calling: “Genie 4 accepts text, a single 16:9 startup image, and keyboard/camera user_action events. It does not accept live user audio or video streams, and does not support function calling, Google Search grounding, structured outputs, or session resumption across completed interactions.”
+Safety and recitation filters: “Prompts or reference images containing identifiable real people, public figures, or copyrighted brand IP can be blocked at startup or terminate an active stream mid-session.”
+Readable text and exact counts: “Signs, gauges, and clocks deform over time, and exact object counts drift across camera pans.”
+Google's post of November 19 says Gemini reasoning keeps the world state consistent and coherent throughout. The list above is how far “throughout” reaches: a rolling window of seconds, not a world that remembers.
+Quotas
+Limits apply per project, by usage tier, on Google's rate limits page:
+Usage tierConcurrent active sessionsRequests per day
+FreeNot supportedNot supported
+Tier 1250
+Tier 25250
+Tier 3101,000
+The user_action and input events inside a session do not count against the per-minute or per-day request limits.
+The Gemini API also has spend-based limits over a rolling 10 minutes: $10 on Tier 1, $200 on Tiers 2 and 3. Google says whether they apply depends on your billing history and account standing; past one, the API answers 429 RESOURCE_EXHAUSTED. The arithmetic matters for a new project: $10 ÷ $0.1008 a second is about 99 seconds of streamed world, less than one full session. Tier 1 starts when you link an active billing account; Tier 2 takes $100 paid and 3 days since the first successful payment.
+When another model is the better pick
+Google's guide ends with its own chooser:
+Use caseModelAPI surface
+Real-time steerable worlds, playable visual prototypes, interactive spatial exploration (24 fps live stream)Genie 4 (models/genie-4)Interactions API, interactions.connect over WebRTC or WebSocket
+Offline clips of 3-15 seconds, multi-turn video editing, extension up to 30 seconds, 1080p or 4K upsampling, up to 6 reference imagesGemini Omni 1.2 Flash (gemini-omni-1.2-flash)Interactions API, interactions.create
+Real-time voice agents that understand the microphone and camera, call tools and ground in Google SearchGemini 3.8 Live (gemini-3.8-live)Live API, live.connect
+So the line is simple. A person steering a world in real time is Genie 4. A clip someone will watch, edit or post is Gemini Omni 1.2 Flash. A conversation that listens, looks and acts is Gemini 3.8 Live. And when your world needs reasoning, tool calls or structured answers around it, that work belongs to a Gemini model running beside it, such as Gemini 4 Neon, released on the same API a day earlier.
+Common questions
+When did the Genie 4 API open?On November 19, 2026. Google's changelog lists Genie 4 as generally available that day on the Interactions API (v1beta), and Google AI Studio opened its playground the same day.
+Is the Genie 4 API free?No. It needs a paid-tier Gemini API key; the free tier does not support it, and the AI Studio playground needs a paid-tier key too.
+How much does a minute of Genie 4 cost?About $6.05 of video output, at $17.50 per 1M video tokens and 5,760 tokens a second. A full 120-second session is about $12.10.
+How long can a Genie 4 session last?120 seconds at most. Google says coherence and object permanence are strongest in the first 45-90 seconds.
+Can a Genie 4 world run in portrait on a phone?No. Output is fixed at 1280x720, 16:9; portrait 9:16 and other frame rates are not supported.
+Can I save a world and come back to it?No. Genie 4 has no session resumption across completed interactions, and within a session it keeps a rolling window, not a 3D scene.
+Key Takeaways
+Genie 4 is generally available on the Gemini API since November 19, 2026: models/genie-4, on the Interactions API, paid tier only.
+One session: create it and mint a token on your server, connect over WebRTC or WebSocket, send one world_setup, steer with keys and text, end with complete().
+About $0.10 a second and $6.05 a minute; a full 120-second session is about $12.10.
+Build short and forward: one path or one object, 25-90 seconds, no return trip, nothing that must stay exact.
+A closed tab does not stop the bill. complete() or cancel() does.
+Google AI Studio
+Interactive world generation with Genie 4
+Google’s developer guide: transports, session tokens, the event protocol and the limits.
+When the team needs a finished clip and not a live world, the clip makers are compared here:
+Best AI Video Generator in 2026
+Kling 3.0, Veo 3.1, Runway Studio and Seedance 2.0 compared for teams that need a finished clip.
+PublishedThursday, November 19, 2026
+CategoryBuild
+Omid SaffariAI Systems Architect | Forward Deployed Engineer
+Dubai, United Arab Emirates
+AI-assistedResearched and drafted with the help of AI: Claude by Anthropic and GPT by OpenAI.
+AI-assisted
+I run a portfolio of AI ventures from Dubai and publish what holds up in production: build logs, tool verdicts, playbooks, and the numbers behind them. Every pattern on this site shipped in one of my own products first.
+hi@omidsaffari.com
+LinkedIn
+X
+Share
+Open in ChatGPTOpen in ClaudeOpen in GrokCopy as Markdown
+Add as a preferred sourceon Google
+Partner seat · BuildOne tool, on every Build article, in front of the people choosing build tools.Become the partner
+Related ArticlesView all Build articles
+Grok API: Get a Key and Make Your First Request
+Get a Grok API key, send the official first request, choose a model, and see how billing and rate limits work when you call Grok from code.Nov 26, 2026Build
+Claude Code Skills: Where They Live and How to Add One
+Add a Claude Code skill from a copyable SKILL.md example. See which copy wins, how slash commands work, and when a team can block inline shell commands.Nov 26, 2026Build
+Open WebUI: What It Is, What It Costs, and How to Start
+See where team chats and documents go, how the Open WebUI License works, and how to start the interface with Docker and connect a model.Nov 26, 2026Build
+Gemini CLI: Who Can Use It and How to Start
+Check which accounts still work with Gemini CLI, which models Google supports, and how to install the terminal agent or move a project to Antigravity CLI.Nov 26, 2026Build
+Open Source AI Platforms in 2026: Ollama, LibreChat, Dify and 7 More
+Compare Ollama, LibreChat, Dify and seven more by licence, hosting effort and model costs. Choose the right layer for your company’s AI stack.Nov 26, 2026Build
+Claude PR Steward
+See what Claude PR Steward does to one pull request, how to start it manually, where to cap spend, and which GitHub rules protect your merge.Nov 25, 2026Build
+LibreChat: What It Is, What It Costs, and How to Start
+See who maintains LibreChat, which models it connects to, where conversations go, and how to get from a local Docker install to your first reply.Nov 25, 2026Build
+Google AI Studio Text to Speech: Make a Voice-Over and a Dialogue
+Make a one-minute narration and a two-speaker dialogue in the Speech Playground. Choose voices, direct the delivery and download the audio or save a WAV.Nov 25, 2026Build
+NewsletterOne letter, every Sunday.Working systems, not hot takes.
+Email addressSubscribe
+Something went wrong. Try again, or email hi@omidsaffari.com
+Weekly. No spam. Unsubscribe anytime.
+Written from Dubai. Production AI systems from the person who builds them. An agent you own, not a per-resolution subscription.
+hi@omidsaffari.comPrefer this site in Google
+Add as a preferred sourceon GoogleMark omidsaffari.com as preferred and Google lifts it in Top Stories, AI Overviews and AI Mode for you.
+NavigationHome
+Start Here
+About
+Work
+Newsletter
+Partners
+Contact
+Get a Quote
+CategoriesBlog
+AI
+Build
+Business
+Design
+Tools
+Playbooks
+Explained
+Prompt packs
+SeriesLab
+The Campaign
+The Signal
+The Round Table
+ServicesAI Systems Intensive
+AI Workflow Automation
+AI Customer Service & Voice Agents
+AI Sales Agent (SDR)
+AI Agent Development
+AI Production Systems
+Fractional AI CTO
+All services
+X / TwitterLinkedInInstagramGitHub
+© 2026 omidsaffari.com🇦🇪Dubai, UAEGMT+425.2048° N, 55.2708° E
+PrivacyTermsDisclaimerDisclosureSitemapRSS Feed

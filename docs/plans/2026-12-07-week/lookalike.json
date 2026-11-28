@@ -1,184 +1,184 @@
 {
- "_about": "Lookalike patterns for the week of 7 December 2026, read from his Instagram inspo sheet (lookalike-input.json, source sheet): the newest 100 posts plus the sheet's newest 30 carousels, which lookalike.py prepare now adds (the newest 100 rows are the 16 Nov profile-grid backfill and hold no carousel). The sheet captured no slide text for these carousels, so each card_flow is read from each post's caption, summary and page count, never from its slides. Stale sheet: the Instagram inspo sheet's newest row is 2026-11-16, more than 3 days before 2026-11-27; the patterns lean on older posts.",
- "week_start": "2026-12-07",
- "patterns": [
-  {
-   "id": "money-twist",
-   "pattern": "A famous name or a big company did a money thing nobody expected, and the post follows the money one fact at a time to a number that makes you stop.",
-   "why_it_travels": "A named person or firm plus a surprising number is easy to retell, and the twist (the seller is also paying the bills, the athlete is also the investor) is the bit people forward.",
-   "aim": "interest",
-   "examples": [
-    "https://www.instagram.com/evolving.ai/p/DfsIpdXgBA1/",
-    "https://www.instagram.com/evolving.ai/p/DclkakZAHdk/",
-    "https://www.instagram.com/evolving.ai/p/DfeWM7jADvK/"
-   ],
-   "card_flow": [
-    "The named person or firm and the surprising money move, in one line",
-    "What they actually paid or promised, with the number",
-    "The twist that turns it around",
-    "The biggest single figure",
-    "What it adds up to, and the question it leaves"
-   ],
-   "search_briefs": [
-    "AI licensing money reaching musicians, authors, actors or athletes this week, with a number",
-    "a creative business paid for, or paid by, an AI firm in an unexpected direction this fortnight"
-   ]
-  },
-  {
-   "id": "new-rule-for-ai-art",
-   "pattern": "A chart, a platform or an awards body just drew a line for AI-made work, and the post explains the old case that forced the rule.",
-   "why_it_travels": "Everyone who makes or consumes music, film or art has an opinion on where the line should be, and the trigger story (an AI track 16 weeks in the top 20) is the hook.",
-   "aim": "interest",
-   "examples": [
-    "https://www.instagram.com/evolving.ai/p/Dcno5uwADrV/"
-   ],
-   "card_flow": [
-    "The new rule, said plainly",
-    "What it allows and what it bans",
-    "The case that forced it",
-    "Why it is happening now",
-    "What it means for the people who make the work"
-   ],
-   "search_briefs": [
-    "a label, chart, award, festival or platform rule on AI-made work announced 19 to 26 November 2026",
-    "a game studio or film studio policy on generative AI reported this fortnight"
-   ]
-  },
-  {
-   "id": "creator-hands-over",
-   "pattern": "A known creator hands part of their channel, voice or face to an AI copy, and the post counts who is watching.",
-   "why_it_travels": "It is half joke, half future: a real creator doing the thing people argue about, with a live viewer count as proof.",
-   "aim": "humour",
-   "examples": [
-    "https://www.instagram.com/evolving.ai/p/Dc_4Sy7gGi5/"
-   ],
-   "card_flow": [
-    "The creator and what they handed to the AI",
-    "How the AI copy works",
-    "How many people are watching",
-    "The history behind it",
-    "The question it raises for every other creator"
-   ],
-   "search_briefs": [
-    "a commentator, actor, streamer or musician whose AI voice or likeness went live this week, with permission and pay",
-    "an AI version of a famous voice added to a game, show or broadcast in November 2026"
-   ]
-  },
-  {
-   "id": "weekly-roundup",
-   "pattern": "A swipe-through of the week's biggest AI moments, one line and one picture each, from launch to oddity.",
-   "why_it_travels": "It saves the reader a week of scrolling and lets them pick the one item they want to talk about.",
-   "aim": "interest",
-   "examples": [
-    "https://www.instagram.com/evolving.ai/p/Dc_GTNigPhb/",
-    "https://www.instagram.com/evolving.ai/p/Dcs7D_6ADQB/",
-    "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/",
-    "https://www.instagram.com/evolving.ai/p/DfXfbEMACR-/",
-    "https://www.instagram.com/power.ai/p/Dfa2apfFSE5/"
-   ],
-   "card_flow": [
-    "The cover: the week in one line",
-    "Story one, its picture and its number",
-    "Story two, its picture and its number",
-    "Story three, its picture and its number",
-    "Story four, its picture and its number",
-    "The close: what joins them"
-   ],
-   "search_briefs": [
-    "people in music, film, games, sport, art or media who made, earned or reached more with AI, 19 to 26 November 2026",
-    "a creative business success built on AI this week, named, with a number"
-   ]
-  },
-  {
-   "id": "tool-unlock",
-   "pattern": "A new tool or a limited offer does something creators used to pay for, and the post lists exactly what you get and what it costs.",
-   "why_it_travels": "It is useful the same day: the reader saves it to try the offer before it ends.",
-   "aim": "utility",
-   "examples": [
-    "https://www.instagram.com/evolving.ai/p/DftxXqrgIE4/",
-    "https://www.instagram.com/evolving.ai/p/DfxJW8mAElc/",
-    "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
-    "https://www.instagram.com/power.ai/p/DfbtORYFfti/"
-   ],
-   "card_flow": [
-    "What the new tool or offer unlocks, in one line",
-    "What you get, item by item",
-    "What it costs, and what is free",
-    "The catch or the limit",
-    "How to try it this week"
-   ],
-   "search_briefs": [
-    "new AI tools for musicians, video makers or designers launched 9 to 26 November 2026, with the price on the company's own page",
-    "a free tier or launch offer on a creative AI tool this month"
-   ]
-  },
-  {
-   "id": "made-in-hours",
-   "pattern": "People are using a new model to make games, worlds or art in hours, and the post shows the best three things they made.",
-   "why_it_travels": "The examples are visual and slightly unbelievable, and each one invites a 'could I do that'.",
-   "aim": "interest",
-   "examples": [
-    "https://www.instagram.com/evolving.ai/p/DfuWseGgGfl/",
-    "https://www.instagram.com/evolving.ai/p/DcyTLjagPxg/",
-    "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/",
-    "https://www.instagram.com/evolving.ai/p/DfXfbEMACR-/"
-   ],
-   "card_flow": [
-    "The claim: people made this in hours",
-    "The first thing made, and how long it took",
-    "The second thing made",
-    "The third thing made",
-    "What the tool is, and what it costs to try"
-   ],
-   "search_briefs": [
-    "games, short films or artworks made with AI by small teams or solo makers this fortnight, with the time and team size",
-    "an AI-made film or game reaching cinemas, stores or charts this month"
-   ]
-  },
-  {
-   "id": "ai-backfires",
-   "pattern": "Someone trusted an AI to keep a secret or do a simple job, and it did the opposite in the funniest possible way.",
-   "why_it_travels": "The AI behaving like a tattletale or a show-off is a story people retell at once; the screenshot is the proof.",
-   "aim": "humour",
-   "examples": [
-    "https://www.instagram.com/evolving.ai/p/DfwzCiPgM8u/",
-    "https://www.instagram.com/evolving.ai/reel/DcyKz5MT3RF/"
-   ],
-   "card_flow": [
-    "What the person asked the AI to do",
-    "What the AI promised",
-    "What the AI actually did",
-    "The screenshot or the clip that proves it",
-    "The lesson, in one dry line"
-   ],
-   "search_briefs": [
-    "a club, label, studio or creator whose AI image, voice or post went wrong in public this week",
-    "an AI system claiming rights or credit it did not have, reported this fortnight"
-   ]
-  },
-  {
-   "id": "small-win",
-   "pattern": "One ordinary person used AI to fix a small, very human problem, and the post walks through what they did, step by step, to a happy ending.",
-   "why_it_travels": "It is warm, it is relatable, and the reader pictures doing the same thing tomorrow.",
-   "aim": "interest",
-   "examples": [
-    "https://www.instagram.com/power.ai/p/Dfjbe68ldg-/",
-    "https://www.instagram.com/power.ai/p/DfcCbPXlWQ-/",
-    "https://www.instagram.com/evolving.ai/p/DfeWM7jADvK/"
-   ],
-   "card_flow": [
-    "The cover: who was helped, in one line",
-    "The first person and what AI helped them do",
-    "The second person and what AI helped them do",
-    "The third person and what AI helped them do",
-    "The fourth person and what AI helped them do",
-    "The close: what joins them, and the question it leaves"
-   ],
-   "search_briefs": [
-    "a musician, artist or performer who used AI to finish, find or fix their work this week",
-    "a small studio, club or label whose AI move paid off for real people, 20 to 27 Nov 2026",
-    "fans or audiences who got something back from AI in sport, music or film this week"
-   ]
-  }
- ]
+  "_about": "Lookalike patterns for the week of 7 December 2026, read from his Instagram inspo sheet (lookalike-input.json, source sheet): the newest 100 posts plus the sheet's newest 30 carousels, which lookalike.py prepare now adds (the newest 100 rows are the 16 Nov profile-grid backfill and hold no carousel). The sheet captured no slide text for these carousels, so each card_flow is read from each post's caption, summary and page count, never from its slides. Stale sheet: the Instagram inspo sheet's newest row is 2026-11-16, more than 3 days before 2026-11-28; the patterns lean on older posts.",
+  "week_start": "2026-12-07",
+  "patterns": [
+    {
+      "id": "money-twist",
+      "pattern": "A famous name or a big company did a money thing nobody expected, and the post follows the money one fact at a time to a number that makes you stop.",
+      "why_it_travels": "A named person or firm plus a surprising number is easy to retell, and the twist (the seller is also paying the bills, the athlete is also the investor) is the bit people forward.",
+      "aim": "interest",
+      "examples": [
+        "https://www.instagram.com/evolving.ai/p/DfsIpdXgBA1/",
+        "https://www.instagram.com/evolving.ai/p/DclkakZAHdk/",
+        "https://www.instagram.com/evolving.ai/p/DfeWM7jADvK/"
+      ],
+      "card_flow": [
+        "The named person or firm and the surprising money move, in one line",
+        "What they actually paid or promised, with the number",
+        "The twist that turns it around",
+        "The biggest single figure",
+        "What it adds up to, and the question it leaves"
+      ],
+      "search_briefs": [
+        "AI licensing money reaching musicians, authors, actors or athletes this week, with a number",
+        "a creative business paid for, or paid by, an AI firm in an unexpected direction this fortnight"
+      ]
+    },
+    {
+      "id": "new-rule-for-ai-art",
+      "pattern": "A chart, a platform or an awards body just drew a line for AI-made work, and the post explains the old case that forced the rule.",
+      "why_it_travels": "Everyone who makes or consumes music, film or art has an opinion on where the line should be, and the trigger story (an AI track 16 weeks in the top 20) is the hook.",
+      "aim": "interest",
+      "examples": [
+        "https://www.instagram.com/evolving.ai/p/Dcno5uwADrV/"
+      ],
+      "card_flow": [
+        "The new rule, said plainly",
+        "What it allows and what it bans",
+        "The case that forced it",
+        "Why it is happening now",
+        "What it means for the people who make the work"
+      ],
+      "search_briefs": [
+        "a label, chart, award, festival or platform rule on AI-made work announced 19 to 26 November 2026",
+        "a game studio or film studio policy on generative AI reported this fortnight"
+      ]
+    },
+    {
+      "id": "creator-hands-over",
+      "pattern": "A known creator hands part of their channel, voice or face to an AI copy, and the post counts who is watching.",
+      "why_it_travels": "It is half joke, half future: a real creator doing the thing people argue about, with a live viewer count as proof.",
+      "aim": "humour",
+      "examples": [
+        "https://www.instagram.com/evolving.ai/p/Dc_4Sy7gGi5/"
+      ],
+      "card_flow": [
+        "The creator and what they handed to the AI",
+        "How the AI copy works",
+        "How many people are watching",
+        "The history behind it",
+        "The question it raises for every other creator"
+      ],
+      "search_briefs": [
+        "a commentator, actor, streamer or musician whose AI voice or likeness went live this week, with permission and pay",
+        "an AI version of a famous voice added to a game, show or broadcast in November 2026"
+      ]
+    },
+    {
+      "id": "weekly-roundup",
+      "pattern": "A swipe-through of the week's biggest AI moments, one line and one picture each, from launch to oddity.",
+      "why_it_travels": "It saves the reader a week of scrolling and lets them pick the one item they want to talk about.",
+      "aim": "interest",
+      "examples": [
+        "https://www.instagram.com/evolving.ai/p/Dc_GTNigPhb/",
+        "https://www.instagram.com/evolving.ai/p/Dcs7D_6ADQB/",
+        "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/",
+        "https://www.instagram.com/evolving.ai/p/DfXfbEMACR-/",
+        "https://www.instagram.com/power.ai/p/Dfa2apfFSE5/"
+      ],
+      "card_flow": [
+        "The cover: the week in one line",
+        "Story one, its picture and its number",
+        "Story two, its picture and its number",
+        "Story three, its picture and its number",
+        "Story four, its picture and its number",
+        "The close: what joins them"
+      ],
+      "search_briefs": [
+        "people in music, film, games, sport, art or media who made, earned or reached more with AI, 19 to 26 November 2026",
+        "a creative business success built on AI this week, named, with a number"
+      ]
+    },
+    {
+      "id": "tool-unlock",
+      "pattern": "A new tool or a limited offer does something creators used to pay for, and the post lists exactly what you get and what it costs.",
+      "why_it_travels": "It is useful the same day: the reader saves it to try the offer before it ends.",
+      "aim": "utility",
+      "examples": [
+        "https://www.instagram.com/evolving.ai/p/DftxXqrgIE4/",
+        "https://www.instagram.com/evolving.ai/p/DfxJW8mAElc/",
+        "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
+        "https://www.instagram.com/power.ai/p/DfbtORYFfti/"
+      ],
+      "card_flow": [
+        "What the new tool or offer unlocks, in one line",
+        "What you get, item by item",
+        "What it costs, and what is free",
+        "The catch or the limit",
+        "How to try it this week"
+      ],
+      "search_briefs": [
+        "new AI tools for musicians, video makers or designers launched 9 to 26 November 2026, with the price on the company's own page",
+        "a free tier or launch offer on a creative AI tool this month"
+      ]
+    },
+    {
+      "id": "made-in-hours",
+      "pattern": "People are using a new model to make games, worlds or art in hours, and the post shows the best three things they made.",
+      "why_it_travels": "The examples are visual and slightly unbelievable, and each one invites a 'could I do that'.",
+      "aim": "interest",
+      "examples": [
+        "https://www.instagram.com/evolving.ai/p/DfuWseGgGfl/",
+        "https://www.instagram.com/evolving.ai/p/DcyTLjagPxg/",
+        "https://www.instagram.com/evolving.ai/p/DfXlI-1AEUh/",
+        "https://www.instagram.com/evolving.ai/p/DfXfbEMACR-/"
+      ],
+      "card_flow": [
+        "The claim: people made this in hours",
+        "The first thing made, and how long it took",
+        "The second thing made",
+        "The third thing made",
+        "What the tool is, and what it costs to try"
+      ],
+      "search_briefs": [
+        "games, short films or artworks made with AI by small teams or solo makers this fortnight, with the time and team size",
+        "an AI-made film or game reaching cinemas, stores or charts this month"
+      ]
+    },
+    {
+      "id": "ai-backfires",
+      "pattern": "Someone trusted an AI to keep a secret or do a simple job, and it did the opposite in the funniest possible way.",
+      "why_it_travels": "The AI behaving like a tattletale or a show-off is a story people retell at once; the screenshot is the proof.",
+      "aim": "humour",
+      "examples": [
+        "https://www.instagram.com/evolving.ai/p/DfwzCiPgM8u/",
+        "https://www.instagram.com/evolving.ai/reel/DcyKz5MT3RF/"
+      ],
+      "card_flow": [
+        "What the person asked the AI to do",
+        "What the AI promised",
+        "What the AI actually did",
+        "The screenshot or the clip that proves it",
+        "The lesson, in one dry line"
+      ],
+      "search_briefs": [
+        "a club, label, studio or creator whose AI image, voice or post went wrong in public this week",
+        "an AI system claiming rights or credit it did not have, reported this fortnight"
+      ]
+    },
+    {
+      "id": "small-win",
+      "pattern": "One ordinary person used AI to fix a small, very human problem, and the post walks through what they did, step by step, to a happy ending.",
+      "why_it_travels": "It is warm, it is relatable, and the reader pictures doing the same thing tomorrow.",
+      "aim": "interest",
+      "examples": [
+        "https://www.instagram.com/power.ai/p/Dfjbe68ldg-/",
+        "https://www.instagram.com/power.ai/p/DfcCbPXlWQ-/",
+        "https://www.instagram.com/evolving.ai/p/DfeWM7jADvK/"
+      ],
+      "card_flow": [
+        "The cover: who was helped, in one line",
+        "The first person and what AI helped them do",
+        "The second person and what AI helped them do",
+        "The third person and what AI helped them do",
+        "The fourth person and what AI helped them do",
+        "The close: what joins them, and the question it leaves"
+      ],
+      "search_briefs": [
+        "a musician, artist or performer who used AI to finish, find or fix their work this week",
+        "a small studio, club or label whose AI move paid off for real people, 20 to 27 Nov 2026",
+        "fans or audiences who got something back from AI in sport, music or film this week"
+      ]
+    }
+  ]
 }

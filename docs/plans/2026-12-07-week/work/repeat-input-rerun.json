@@ -1,0 +1,160 @@
+{
+ "options": [
+  {
+   "ref": "wed-1",
+   "hook": "Epic Games used AI to convert more than 20,000 of Fortnite's Blueprints into about 3 million lines of Verse, and on that basis Unreal Engine 6 will ship without Blueprints.",
+   "story": "In an update reported on 20 November 2026, Epic Games said an AI-assisted run converted more than 20,000 of Fortnite's visual Blueprints into a working prototype in its Verse language, about 3 million lines, a job it had expected to take years. On that basis Unreal Engine 6, the engine game studios build on, will ship without Blueprints."
+  },
+  {
+   "ref": "wed-2",
+   "hook": "Maxon, the software company behind Cinema 4D and ZBrush, now sells AI model generation inside its apps, run on other firms' models such as Tripo and Rodin and billed in credits.",
+   "story": "Maxon, which makes Cinema 4D and ZBrush, the 3D software that 3D studios and artists use, launched Maxon Plus in November 2026, a cloud subscription whose Model Generator turns a prompt, photo or sketch into an editable 3D model. The work runs on third-party AI providers such as Tripo and Rodin, and is sold in credits."
+  },
+  {
+   "ref": "wed-3",
+   "hook": "Google's Genie 4 streams a playable 720p world at 24 frames a second to game developers, at roughly $0.10 a second, for up to 120 seconds a session.",
+   "story": "On 19 November 2026 Google made Genie 4 available to game developers through the Gemini API and AI Studio. It generates a continuous 720p world at 24 frames a second with sound, steered live with the keyboard and text prompts, and each frame is generated as the session runs. PPC Land reports a price of roughly $0.10 per second, sessions of up to 120 seconds, and that visual stability may degrade after 60 to 90 seconds."
+  },
+  {
+   "ref": "wed-4",
+   "hook": "iZotope's Nectar 5 transcribes a sung vocal into lyrics in the edit window, so a producer selects a single word and adds up to seven effects to it.",
+   "story": "iZotope released Nectar 5, its vocal plugin for music producers, on 24 November 2026 at an introductory $179 until 7 December, then $249. Its Moments module transcribes the sung lyrics in the edit window, so a producer selects a word or phrase and adds up to seven effects to it, and its Vocal Assistant listens to part of the vocal and designs a processing chain."
+  },
+  {
+   "ref": "fri-1",
+   "hook": "Manchester Animation Festival will bar generative AI films from 2027, as Ottawa's festival says entrants are lying on their forms, and festivals decide which animated films win distribution deals.",
+   "story": "Manchester Animation Festival announced that from 2027 a film is ineligible if a generative model creates or alters any part of its final moving image. Speaking to Cartoon Brew on 20 November 2026, Ottawa's artistic director said some animators are lying on their forms, marking AI films as 3D."
+  },
+  {
+   "ref": "fri-2",
+   "hook": "A Binding of Isaac update shipped Suno-made music with no AI label on Steam, and players found Suno's tag inside the music files' metadata.",
+   "story": "On 19 November 2026 Nicalis added a themed daily run to the video game The Binding of Isaac: Repentance+ on Steam; the next day a Reddit user showed its music files carried Suno metadata. The game's Steam page had no AI disclosure, recent reviews fell to 8% positive, and Nicalis removed the generated music."
+  },
+  {
+   "ref": "fri-3",
+   "hook": "HeyGen says its new Avatar 6 is 84.4% indistinguishable from real video, and its own research page shows raters picked it as the real clip 42.2% of the time.",
+   "story": "HeyGen released Avatar 6 on 17 November 2026, a model that turns a photo or a short clip plus an audio track into a talking video for creators. Its research page explains its headline: shown real footage and Avatar 6 side by side, raters picked Avatar 6 as the real one 42.2% of the time across 270 answers, which HeyGen scores as 84.4% of the way to a coin toss. Shown one clip at a time, 65.1% of Avatar 6 clips were judged real against 78.9% of real recordings."
+  },
+  {
+   "ref": "fri-4",
+   "hook": "Tor pulled the cover of Ilona Andrews's new novel after learning generative AI was used to make it, though the authors' contract and Tor's art contracts both forbid it.",
+   "story": "On 20 November 2026 Tor Publishing Group withdrew the newly revealed cover of Ilona Andrews's fantasy novel This Crown Will Not Rule Me after learning generative AI had been used to make it, without the knowledge of Tor or the authors. The authors' contract and Tor's contracts with cover artists both prohibit generative AI. Readers raised it after the reveal, and Tor said it takes full responsibility for the breakdown in its review process."
+  }
+ ],
+ "recent_posts": [
+  {
+   "key": "piece:bf0fddae-2fcf-4687-9079-190729234ed3",
+   "title": "Canva, Adobe or Claude: who owns design in 2028? At Adobe MAX on 10 Nov, Adobe made Firefly an AI creative studio, put agents in Illustrator",
+   "date": "2026-11-30",
+   "words": "Canva, Adobe or Claude: who owns design in 2028? At Adobe MAX on 10 Nov, Adobe made Firefly an AI creative studio, put agents in Illustrator The design tools your team pays for are turning into agents that work for each other: before renewing Canva or Adobe seats, ask which one your other AI tools can drive. At Adobe MAX on 10 Nov, Adobe made Firefly an AI creative studio, put agents in Illustrator, Premiere and InDesign, and opened its desktop apps to other companies' agents. Claude Design lists both Canva and Adobe as connectors, and Anthropic's own blog (17 June) says over a million people used it in its first week. The fight is over who the other AIs send work to. Claude Code, 2026-11-26 22:47 UTC (quiet): Sunday ideas run: researching this day's options"
+  },
+  {
+   "key": "piece:4f8f23b2-8cb2-4498-b07c-243840f8a1ba",
+   "title": "So what: Your staff and customers will soon be building small tools without knowing it, because ChatGPT and Claude now answer ordinary quest",
+   "date": "2026-12-01",
+   "words": "So what: Your staff and customers will soon be building small tools without knowing it, because ChatGPT and Claude now answer ordinary quest AI chat tools are quietly turning every user into an unwitting app builder, ChatGPT and Claude now generate calculators, charts and forms on the fly, but a UC Davis study shows people almost never verify the logic behind these tools and are often wrong when they try to fix errors, creating a hidden trust gap just as this capability goes mainstream. So what: Your staff and customers will soon be building small tools without knowing it, because ChatGPT and Claude now answer ordinary questions with a working calculator or chart instead of a paragraph, and nobody checks the maths behind those tools. Story: Since 8 Oct 2026, ChatGPT's Intelligent UI can answer a free user's question with a bill splitter, a calculator, a form or a map built on the spot, and Claude's custom visuals have been on for every user on web and desktop since spring with"
+  },
+  {
+   "key": "piece:8c6c717d-00b4-4d26-b837-06b89709220a",
+   "title": "A company running about 500 YouTube channels got a singer's recording of a 19th-century Bulgarian folk song taken down with a copyright clai",
+   "date": "2026-12-02",
+   "words": "A company running about 500 YouTube channels got a singer's recording of a 19th-century Bulgarian folk song taken down with a copyright clai A recording of a song with no known writer was taken off YouTube by Media Nov Records, which runs about 500 channels, and the appeals failed twice: anyone who records traditional or public-domain music now knows how the claim system can be turned on them. Samantha Shokin's 50-second a cappella recording of \"Bre Petrunko\", a 19th-century Bulgarian folk song with no known writer, had about 125,000 views over four years. In October Media Nov Records, which runs about 500 YouTube channels mostly of repetitive electronic music with AI imagery, filed a copyright complaint; YouTube removed the video and rejected both of her counterclaims. It came back about 24 hours after 404 Media contacted Media Nov, which withdrew the claim and says it may still sue over the arrangement. Claude Code, 2026-11-26 22:47 UTC (quiet): Sunday ideas run: researching this day's options"
+  },
+  {
+   "key": "piece:08442c41-534a-4523-9818-0884e2fc985a",
+   "title": "TikTok's Likeness Detection doesn't shift liability to creators the way it looks, it hands brand managers a detection feed with no built-in",
+   "date": "2026-12-02",
+   "words": "TikTok's Likeness Detection doesn't shift liability to creators the way it looks, it hands brand managers a detection feed with no built-in TikTok's rollout is platform-assisted detection with creator-triggered enforcement, not automatic consent enforcement: TikTok supplies matching and alerting infrastructure, but the enrolled party must verify ID, review each match, and manually flag or report it, and TikTok's own announcement does not say a flag guarantees removal or specify a review standard or response time (TikTok Newsroom; Digital Music News, 23 Nov 2026). This is provable wrong the moment TikTok documents an automatic-removal standard or a committed response SLA for confirmed matches, until then, a brand manager's Monday decision is to enroll every spokesperson whose face carries commercial or reputational value only if someone owns weekly review and escalation, because enrollment without a named reviewer is detection with no response. What I don't know: TikTok's actual moderation capacity or intent behind the design, the sources establish the mechanism, not the motive. TikTok's Likeness Detection doesn't shift liability to creators the way it looks, it hands brand managers"
+  },
+  {
+   "key": "off-thu-videoplugin",
+   "title": "Your chatbot just invited a video studio to the table.",
+   "date": "2026-12-03",
+   "words": "Your chatbot just invited a video studio to the table. A board table of apps as people, one passing a note by pigeon to the video studio. It explains connectors the way you asked, with a tool a video maker can use today. Claude Code, 2026-11-26 22:47 UTC (quiet): Sunday ideas run: researching this day's options"
+  },
+  {
+   "key": "piece:a4b34048-ab39-49da-a251-eaa58ebe2eaf",
+   "title": "Gods Don't Give Gifts, billed as the first AI-animated feature in cinemas, opens on 4 December: a hybrid pipeline from pen drawings to diffu",
+   "date": "2026-12-04",
+   "words": "Gods Don't Give Gifts, billed as the first AI-animated feature in cinemas, opens on 4 December: a hybrid pipeline from pen drawings to diffu The film billed as the first AI-animated feature in cinemas opens on 4 December, and its own director lists the human co-writer, editors, colourists, Foley artist and voice cast behind it: anyone pricing film work can see how much of an \"AI film\" is still people. Gods Don't Give Gifts, directed by Zack London (Gossip Goblin), opens in cinemas on 4 December 2026 as the first AI-animated feature in theatres. Film Threat describes a hybrid pipeline: London's own micron pen drawings, diffusion video models, then a co-writer, traditional editors and colourists, a Foley artist, a sound team that spent four days in a Stockholm studio on the theatrical mix, and a cast of professional voice actors. London calls the budget \"absurdly small\" against the $150 million a conventional version would have needed. Claude Code, 2026-11-26 22:47 UTC (quiet): Sunday ideas run: researching this day's options"
+  },
+  {
+   "key": "piece:5d55e729-43fd-433b-b4e5-056f5329cb05",
+   "title": "91% of designers now use AI at least weekly, up from 54% a year ago (Designer Fund and Foundation Capital survey of 900+ designers, reported",
+   "date": "2026-12-04",
+   "words": "91% of designers now use AI at least weekly, up from 54% a year ago (Designer Fund and Foundation Capital survey of 900+ designers, reported Weekly AI usage among designers jumped from 54% to 91% in a year, signaling that AI has moved from experimental tool to default workflow component in design practice almost overnight. 91% of designers now use AI at least weekly, up from 54% a year ago (Designer Fund and Foundation Capital survey of 900+ designers, reported 25 Nov 2026)."
+  },
+  {
+   "key": "off-sat-goodnews",
+   "title": "This month AI helped makers reach millions, and gave fans Motty back.",
+   "date": "2026-12-05",
+   "words": "This month AI helped makers reach millions, and gave fans Motty back. A gentleman with an umbrella helping New Yorkers, a painted Bible epic, a game world in brush strokes and a commentary box with John Motson's coat on the chair. It is uplifting, real and in the reader's world, and each story credits the human. Claude Code, 2026-11-26 22:47 UTC (quiet): Sunday ideas run: researching this day's options"
+  },
+  {
+   "key": "piece:8287846b-6618-4a19-9fb8-23ad4eca2718",
+   "title": "Oracle files to sell $20B in new stock, bonds to finance AI buildout",
+   "date": "2026-11-23",
+   "words": "Oracle files to sell $20B in new stock, bonds to finance AI buildout Oracle is raising $20 billion more to build for AI on top of $125 billion of debt, and says customer prepayments are part of how it gets to positive cash flow in 2028: a cloud supplier asking you to pay up front may be asking you to fund its build. Headline: Oracle is borrowing to build AI, and its customers' prepayments are part of the plan. Hook: \"One of the world's biggest software companies is selling $10 billion of shares and $10 billion of bonds in a single day.\" The chain: AI demand needs data centres, data centres need cash before revenue, Oracle already owes about $125 billion and sits one notch above junk, so it raises more and leans on vendor financing, customer hardware and customer prepayments, and expects positive free cash flow only in the second half of 2028. What's actually going on: the AI build is being funded by lenders, shareholders and, quietly, customers. Where we land: this money is real only if the demand arrives on time, and the 2028 date is the constraint that decides it. Claude Code, 2026-11-16 13:14 UTC (done, ideas): Ideas re-run done: open options made again with shape, aim, humour a"
+  },
+  {
+   "key": "off-mon-fortytoone",
+   "title": "After the midterms, AI has to find somewhere else to live.",
+   "date": "2026-11-23",
+   "words": "After the midterms, AI has to find somewhere else to live. Four cards. One: in the 3 November midterms, Ballotpedia counted 41 local votes in 10 states on data centres, and 40 went against building. Two: people fear a giant data centre pushes up their power bill. Three: the ways round, AI making its own power, small sites beside spare power, and AI small enough to run on your own devices. Four: AI gets smaller and closer to you, so ask your AI supplier where its new computing is being built. It answers what the midterms mean for AI by following where the building goes, with no guess about politics. Revised from your words: Needs to be about the future of AI under the new U.S. system after the midterms."
+  },
+  {
+   "key": "off-tue-alphacard",
+   "title": "$75,000 for an AI school day. Here is the receipt.",
+   "date": "2026-11-24",
+   "words": "$75,000 for an AI school day. Here is the receipt. A cover of a school report card printed like a till receipt, then one card each for the fee, the promise, the result and the public schools buying in, and a last card of four questions. Everyone has paid for something that promised a miracle; this one has the numbers. Claude Code, 2026-11-18 06:59 UTC (done, ideas): MCP explainer carousel idea (b33fcaf7) placed on Tuesday's ideas from your Inspiration tick; two sources filed; waits for your Approve"
+  },
+  {
+   "key": "piece:db9f9f6a-1092-49be-8024-f335e060305a",
+   "title": "Build or buy your tools in an AI world?",
+   "date": "2026-11-18",
+   "words": "Build or buy your tools in an AI world? In a survey by Retool, which sells tools for building, a third of its users said they had already swapped a software subscription for something they built, and Starbucks is building AI tools that could replace some of a $400 million software bill: the build-or-buy choice now turns on who maintains the thing, not who writes it. Headline: Everyone thinks they can vibe code their way out of the software bill. Hook: \"Starbucks spends about $400 million a year on software, and it's building AI tools that could replace some of it.\" The teardown, tongue in cheek: what a home-built app is really made of, and what the subscription was quietly paying for. Both sides: the case for building (35% of the teams Retool surveyed already swapped at least one tool, mostly workflow automations and admin tools) against the case for buying (Starbucks still runs Microsoft, and someone has to maintain, secure and answer for a home-built app at 2am). What's actually going on: the price of writing software fell, and the price of owning it did not. Where we land: the line between build and buy just moved, and it moved to what you are willing to look after. Claude Code "
+  },
+  {
+   "key": "off-thu-701a2c55-7400-4dc8-99cb-d6001147ae16",
+   "title": "Which of your habits will cost you your job once AI is at work?",
+   "date": "2026-11-19",
+   "words": "Which of your habits will cost you your job once AI is at work? AI can't be blamed or sacked, so the people who keep their jobs are the ones who check its work and put their own name on it, and the habits that cost jobs are waiting to be told, passing work on unchecked and blaming the computer. Him to camera asking which of your habits will cost you your job, then naming three habits that do and the one that saves it. It is uncomfortable on purpose: most viewers will recognise one of the three habits in themselves, and it ends on one thing he does from today. Claude Code (cloud), 2026-11-19 10:31 UTC (done, produce): Final cut, covers and captions filed in 3 Posts/2026-11-19 Thu off.day - Which of your habits will cost you your job, each read back. The card leads with Approve for publish (manifest 6b7381e8d0be): the cut, the brand cover (tall, wide), your face cover, and 8 channels' words. Your press seals it for Growth to schedule in Buffer. Nothing posted."
+  },
+  {
+   "key": "off-thu-adsswitch",
+   "title": "Free ChatGPT has ads now. Here is what switching them off costs you.",
+   "date": "2026-11-19",
+   "words": "Free ChatGPT has ads now. Here is what switching them off costs you. A phone showing a ChatGPT answer with a Sponsored card tucked under it, and the house robot holding a price tag that reads £0, then cards that show who sees the ads, the off switch and its price in lost features. Most people use the free plan, and nobody has told them the ads have a switch or what the switch costs. Claude Code (cloud), 2026-11-19 07:42 UTC (done, post): Cat counting cash (engine:2026-11-16:tpl-cat) is made: meme_tall_9x16.mp4 and meme_4x5.mp4 with social_clip receipts, filed in 3 Posts/2026-11-19 Thu off.day - Cat counting cash/3 Video. Caption verbatim from Krish. Loudness -16.5 LUFS deliberate; 9:16 wordmark below y1320 by his yes."
+  },
+  {
+   "key": "off-thu-tpl-cat",
+   "title": "Cat counting cash",
+   "date": "2026-11-19",
+   "words": "Cat counting cash A ginger cat sits upright on a green screen and counts a thick wad of cash, paw by paw. Personification: a cat doing accounts is absurd, and it maps onto any AI company taking your money for a tiny job. \"POV: Anthropic counting what you paid it to summarize an email.\""
+  },
+  {
+   "key": "piece:c00cd4e0-e1bb-4c60-b36f-cea92897e38c",
+   "title": "Will your AI auditor find your missing money, or the skeletons in your closet?",
+   "date": "2026-11-20",
+   "words": "Will your AI auditor find your missing money, or the skeletons in your closet? Every new instrument has overturned things people were sure of, and AI with a strict checker beside it has started doing the same to maths: the facts your business repeats most are the ones most worth re-checking. Headline: AI's first big job may be finding what we got wrong. Hook: \"For 40 years, a step in one of the biggest proofs in maths did not hold, and nobody noticed.\" The chain: the microscope, DNA testing and now AI each found errors in what experts had signed off; Axiom's agents rewrote 15,000 pages so a computer could check every step, and found 34 departures from the record, one a real gap in a 1986 proof; the theorem still stands. What's actually going on: AI is a poor judge on its own and a superb auditor with a checker beside it. Where we land: the next thing to be re-checked may be something you were taught as fact. Claude Code, 2026-11-19 20:34 UTC (quiet): Approve proof read back on the making record (98caa8e3). The whole 9:16 short is rendering; the 16:9 long needs its own proof and your Approve proof next."
+  },
+  {
+   "key": "piece:b019dbf8-8051-4cab-9b5e-2ad77b3f5118",
+   "title": "Where does AI get built when towns say no?",
+   "date": "2026-11-20",
+   "words": "Where does AI get built when towns say no? The midterms turned AI into a vote about the electricity bill. Whether AI gets built in America, and how fast and how cheaply, is now being decided by voters and local councils; Washington and the tech companies no longer get the last word. So the builders are looking for ways round, and those ways round will change what AI looks like and where it lives. In Krish's words, the piece is \"about the future of AI after the midterms\", and he would \"rather not make predictions about politics\". America has a new least-wanted neighbour. In a Gallup poll this spring, 71% of Americans said they did not want an AI data centre built near them; only 53% said the same about a nuclear power plant. Then on 3 November, towns in 10 states held 41 votes on data centres, 21 of them in Ohio, and 40 went against the data centre. Within days OpenAI promised, again, to pay the full cost of powering its own data centres: a promise it first made in January. Claude Code (cloud), 2026-11-18 17:35 UTC (quiet, produce): Short cut edited, spec'd and proofed; brand marks now staged (sha256 checked), engine fixes in PR 877 (auto-merges on green CI). Waiting on you: approve"
+  },
+  {
+   "key": "off-fri-tpl-pigeon",
+   "title": "Pigeon doctor walks in",
+   "date": "2026-11-20",
+   "words": "Pigeon doctor walks in A man with a pigeon's head, in a doctor's coat and stethoscope, struts down a backstage corridor like he owns it. Unearned confidence made visible: a pigeon in a doctor's coat is exactly an AI that read one article. \"POV: ChatGPT is reviewing your contract after reading one blog post about law.\""
+  },
+  {
+   "key": "off-sat-goodnews",
+   "title": "This week AI helped people speak, sign and get around.",
+   "date": "2026-11-21",
+   "words": "This week AI helped people speak, sign and get around. A cover with a hilarious generated scene of the house robot as a tour guide waving a flag for a crowd, then one card per story: a woman with ALS hearing her own voice again, a sign-language app that works both ways, and an AI guide steering a blind walker round a bin. Three real people's days made easier, each shown with its own photo. Claude Code (cloud), 2026-11-18 17:21 UTC (done, post): Good-news carousel (piece 474cd077) scheduled on Buffer on Krish's instruction for Sat 21 Nov 10:00 London: Instagram, Facebook, Threads, TikTok and X, read back as scheduled. Still unjudged: the 10/10 judges route answers 503."
+  }
+ ]
+}

@@ -4,7 +4,7 @@
     "documented": 3,
     "inferred": 1,
     "sites": 2,
-    "mechanism_rungs": 3,
+    "mechanism_rungs": 2,
     "counter_rungs": 3,
     "landing_ok": true,
     "unreadable": [],
@@ -18,13 +18,13 @@
           "izotope.com",
           "musicradar.com"
         ],
-        "mechanism": true,
+        "mechanism": false,
         "counter": true
       },
       {
         "n": 2,
-        "claimed": "documented",
-        "counted": "documented",
+        "claimed": "inferred",
+        "counted": "inferred",
         "verified_sites": [
           "izotope.com",
           "musicradar.com"
@@ -45,8 +45,8 @@
       },
       {
         "n": 4,
-        "claimed": "inferred",
-        "counted": "inferred",
+        "claimed": "documented",
+        "counted": "documented",
         "verified_sites": [
           "izotope.com",
           "musicradar.com"
@@ -422,11 +422,11 @@
   },
   "46dd71d0-6787-4bda-bd6c-b0e2bc4abca2": {
     "schema": "whys-probe/1",
-    "documented": 2,
-    "inferred": 2,
-    "sites": 5,
-    "mechanism_rungs": 2,
-    "counter_rungs": 2,
+    "documented": 3,
+    "inferred": 0,
+    "sites": 4,
+    "mechanism_rungs": 3,
+    "counter_rungs": 3,
     "landing_ok": true,
     "unreadable": [],
     "problems": [],
@@ -437,18 +437,21 @@
         "counted": "documented",
         "verified_sites": [
           "heygen.com",
-          "imagekit.io"
+          "imagekit.io",
+          "orcarouter.ai",
+          "unite.ai"
         ],
         "mechanism": true,
         "counter": true
       },
       {
         "n": 2,
-        "claimed": "inferred",
-        "counted": "inferred",
+        "claimed": "documented",
+        "counted": "documented",
         "verified_sites": [
           "heygen.com",
-          "imagekit.io"
+          "imagekit.io",
+          "orcarouter.ai"
         ],
         "mechanism": true,
         "counter": true
@@ -458,9 +461,66 @@
         "claimed": "documented",
         "counted": "documented",
         "verified_sites": [
-          "heygen.ai",
           "heygen.com",
-          "imagekit.io"
+          "unite.ai"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "open",
+        "counted": "open",
+        "verified_sites": [],
+        "mechanism": false,
+        "counter": true
+      }
+    ]
+  },
+  "5675e3e4-3420-45a2-bc45-9e9cbd5902ee": {
+    "schema": "whys-probe/1",
+    "documented": 3,
+    "inferred": 2,
+    "sites": 6,
+    "mechanism_rungs": 1,
+    "counter_rungs": 3,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "blog.google",
+          "deepmind.google",
+          "ppc.land"
+        ],
+        "mechanism": false,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "blog.google",
+          "deepmind.google"
+        ],
+        "mechanism": false,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "blog.google",
+          "omidsaffari.com",
+          "orcarouter.ai",
+          "ppc.land",
+          "testingcatalog.com"
         ],
         "mechanism": true,
         "counter": true
@@ -470,10 +530,21 @@
         "claimed": "inferred",
         "counted": "inferred",
         "verified_sites": [
-          "csuite.so",
-          "heygen.com",
-          "imagekit.io",
-          "openrouter.ai"
+          "deepmind.google",
+          "omidsaffari.com",
+          "orcarouter.ai",
+          "ppc.land"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 5,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "deepmind.google",
+          "omidsaffari.com"
         ],
         "mechanism": true,
         "counter": true
@@ -543,6 +614,62 @@
       },
       {
         "n": 5,
+        "claimed": "open",
+        "counted": "open",
+        "verified_sites": [],
+        "mechanism": false,
+        "counter": true
+      }
+    ]
+  },
+  "5f5e0f1e-9571-4eaf-9aef-da44980fe9b4": {
+    "schema": "whys-probe/1",
+    "documented": 0,
+    "inferred": 3,
+    "sites": 1,
+    "mechanism_rungs": 0,
+    "counter_rungs": 0,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [
+      "Why 1 needs a second source on a different domain",
+      "Why 2 needs a second source on a different domain",
+      "Why 3 needs a second source on a different domain",
+      "The ladder stands on one site (a90.com): verbatim quotes on two sites at least"
+    ],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "a90.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "a90.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "a90.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
         "claimed": "open",
         "counted": "open",
         "verified_sites": [],

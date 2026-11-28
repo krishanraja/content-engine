@@ -1,0 +1,109 @@
+Avatar 6: what HeyGen's 84.4% figure really measures
+OrcaRouterSearchCtrl KModelsCyberDefendat the gateway and on your site
+Agent FirewallTool and MCP calls graded before they run.GuardrailsPII Shield and content policy, enforced before you’re billed.OrcaCode ReviewSeverity rules and a merge gate on every pull request.Compliance & Governance32 framework packs with exportable evidence.ShieldNewAI-native defense against attack agents.
+Cyber modelsfor verified teams
+OrcaCyber UltraNewSecurity code scanning with multi-step reasoning across large codebases. For authorized work.OrcaCyber ZeroNewFocused on P0/P1 vulnerabilities and zero-days. For authorized security work.OrcaPod CyberEvery Cyber model and hosted attack harnesses, on one monthly plan.All cyber modelsEvery model in the cyber tier, with pricing.How access worksBusiness verification unlocks the cyber models.Acceptable Use PolicyWhat authorized, lawful security work means here.
+Introducing98%+pass@1 success rate on CyberGymOrcaCyber ZeroPowered by the OrcaCyber harness. Focused on P0/P1 vulnerabilities and zero-days, optimized to minimize false positives.See OrcaCyber Zero →1Mtoken contextOrcaCyber UltraSecurity code scanning, optimized for multi-step reasoning across large codebases.See OrcaCyber Ultra →
+Research
+AI Incident ArchiveReal AI agent incidents, with sourcesSecure AgentsGuardrails, firewall, agent hardeningTrust CenterPolicy, evidence, and the documents behind them.
+All of Cyber →
+LeaderboardOffersPlaygroundChatCompare replies side by sideImageGenerate from a promptVideoText and image to video
+DevelopersBlogEngineering notes and releasesDocsGuides, SDKs, quickstartsAPI ReferencesEvery endpoint and parameterOSS ProgramEarn from the open source you maintainMigrate from OpenRouterChange one line and keep your code
+SolutionsRoutethe gateway
+Adaptive RoutingEvery prompt graded, then routed to the model that clears your bar.Automatic FailoverConfigure a fallback chain; retries land before the response starts.Routing Rules (DSL)Express routing as code — YAML + CEL, live in seconds.Bring Your Own KeyUse your own provider keys, rate limits and credits.Orca ConnectYour own GPU behind the same key. No inbound port to open.OrcaRouter LiteThe MIT-licensed gateway. Your infrastructure, your provider keys.
+Observeproof, not vibes
+Request LogsGrade, model, latency and cost on every call. Copy as cURL.InsightsRouting, latency, spend and model quality in one view.Zero-Markup CostProvider price, $0 per token added, glass-box receipts.Prompt CachingCached tokens bill at the provider’s cache rate, not full price.OrcaReplayRecord an agent run. Replay it. Re-ask a model turn elsewhere.
+Governenforced, not logged
+GuardrailsPII Shield and content policy, enforced before you’re billed.Agent FirewallTool and MCP calls graded before they run.Compliance & Governance32 framework packs with exportable evidence.Data Residency & PrivacyDeclared region, region-partitioned evidence, retention controls.API Keys & Token GovernanceScoped keys with their own limits, budgets and revocation.Budgets, Roles & AuditSeats, spend caps, RBAC and a full audit trail.
+Buildship without a redeploy
+Prompt ManagementVersioned prompts behind labels. Roll back without a deploy.PlaygroundTest 200+ models in the browser. Battle two side by side.Integrations & MCPCursor, LangChain, n8n, Vercel AI SDK and the MCP server.Apps & Add-onsProducts built on your gateway. Pay only what runs.OrcaCode ReviewFrontier-quality PR review on your repos. Token cost only.
+By use case
+AI Product TeamsShip on every modelPlatform & InfrastructureOne endpoint, upstream 429s absorbedSecurity & CompliancePolicy before spendFinOps & FinanceEvery dollar attributedAgent BuildersIdentity and budgetsEnterpriseSSO, private, SLA
+See it liveWatch the router pickA real prompt graded and routed, model and price shown.
+EN
+Sign inGet API key
+Engineering & Research
+HeyGen Avatar 6: What the 84.4% Indistinguishability Figure Really Measures
+Author
+jinhao.song
+Date Published
+Nov 18, 2026
+Models in this article · 1View all models →‹›
+KKuaishouIN THIS ARTICLEKling: Kling 3.0 Turbo
+Newest
+OOrcaNEWOrcaCyber: Inkling 2 Mini Abliterated / Uncensored2026-11-23$0.20 / $0.50 per 1M tokens · 203 tok/s
+TthinkingmachinesNEWThinking Machines: Inkling 2 Mini2026-11-21$0.07 / $0.30 per 1M tokens · 229 tok/s
+OOrcaNEWOrcaCyber: Hy4 Flash Abliterated / Uncensored2026-11-18$0.07 / $0.28 per 1M tokens · 203 tok/s
+OopenaiNEWOpenAI: GPT-6.2 Astra2026-11-17$8.00 / $40.00 per 1M tokens · 89 tok/s
+OopenaiNEWOpenAI: GPT-6.2 Sol2026-11-17$2.00 / $10.00 per 1M tokens · 150 tok/s
+TtencentNEWTencent: Hy4 Flash2026-11-16$0.07 / $0.28 per 1M tokens · 171 tok/s
+QAlibabaNEWQwen: Qwen4 Max2026-11-16$1.50 / $4.50 per 1M tokens · 96 tok/s
+OOrcaOrcaCyber: Ling 3.2 Flash Abliterated / Uncensored2026-11-14$0.60 / $1.80 per 1M tokens · 102 tok/s
+OOrcaOrcaCyber: Step 5 Preview Abliterated / Uncensored2026-11-14$2.00 / $5.40 per 1M tokens · 134 tok/s
+GGoogleGoogle: Gemini 4 Carbon2026-11-10$2.00 / $10.00 per 1M tokens · 92 tok/s
+AAnthropicAnthropic: Claude Fable 5.22026-11-09$8.00 / $40.00 per 1M tokens · 101 tok/s
+OOrcaOrcaCyber: GLM 5.3 Abliterated / Uncensored2026-11-04$3.00 / $5.00 per 1M tokens · 100 tok/s
+OOrcaOrcaCyber: Hy4 Abliterated / Uncensored2026-11-04$0.80 / $1.60 per 1M tokens · 124 tok/s
+OOrcaOrcaCyber: Kimi K3.1 Pro Abliterated / Uncensored2026-11-04$2.00 / $5.00 per 1M tokens · 101 tok/s
+TtencentTencent: Hy42026-11-04$0.83 / $2.50 per 1M tokens · 126 tok/s
+OOrcaOrcaCyber: MiniMax M3.1 Flash Abliterated / Uncensored2026-10-29$0.80 / $1.60 per 1M tokens · 121 tok/s
+OOrcaOrcaCyber: GLM 5.3 Flash Abliterated / Uncensored2026-10-27$0.80 / $1.60 per 1M tokens · 85 tok/s
+OopenaiOpenAI: GPT-6.1 Terra2026-10-26$1.00 / $5.00 per 1M tokens · 102 tok/s
+OOrcaOrcaCyber: Qwen3.8 Flash Next Abliterated / Uncensored2026-10-26$0.80 / $1.60 per 1M tokens · 92 tok/s
+Contents
+What shipped, precisely
+The 84.4%, unrolled
+New Measure got there first
+What the model actually does differently
+What it costs, and what is not published
+Where this fits if you are building
+The open questions
+Back to all postsHeyGen's headline for Avatar 6, shipped on 17 November 2026, is that the model is 84.4% indistinguishable from real footage. Read the footnote before you repeat it: in the side-by-side test, raters were shown a real recording and an Avatar 6 clip of the same person saying the same sentence over the same audio, and picked Avatar 6 as the real one 42.2% of the time. Fifty per cent would be perfect confusion. HeyGen divides 42.2 by 50 and doubles the result to get 84.4%, which is a legitimate way to express "how far across the gap did we get" and a misleading way to express "how often does this fool someone." Both numbers describe the same 270 answers.
+This matters because Avatar 6 is not a demo. It is a shipping model with two API surfaces, two checkpoints, a free tier, and — as of today — a third-party leaderboard placing it first. The interesting question is no longer whether HeyGen built something good. It is what the evidence actually supports, and where the gap between the marketing arithmetic and the measured behaviour sits.
+What shipped, precisely
+Avatar 6 is available as two model identifiers, heygen-avatar-6 and heygen-avatar-6-turbo, through two different endpoints. The Model API at POST /v3/models/avatars takes a reference image, an optional reference video, and the speech audio you supply — no avatar training step, no voice to configure first. The Application API at POST /v3/videos renders an existing HeyGen avatar look by setting engine.type to one of those two identifiers, which is the path you take if you already have a digital twin under consent.
+• Resolution — 1080p by default, 2K on request; the Model API sizes 2K output to 2880×1620 from a 16:9 reference, the Application API to 2560×1440.
+• Length — set by the audio you pass in. There is no duration parameter, no clip cap and no stitching step; the research page demonstrates single continuous generations of 25 to 28 minutes.
+• Control — a motion_prompt of up to 1,200 characters covering gestures, expression, posture and camera, plus a motion_expressiveness switch with two settings: default, or less for smaller gestures and calmer expressions.
+• Reference video — one clip of at least two seconds, up to 50 MB by URL or base64, up to 200 MB through a direct upload. Realistic human reference video requires Enterprise access and an on-camera consent recording with a one-time code; without it the API returns 422 realistic_human_reference_not_allowed.
+• Editing — a word-level edit mode that regenerates only the changed words and leaves the rest of the footage untouched.
+The consent design is worth pausing on, because it is stricter than most avatar vendors bother with. The consent statement has to contain a code generated for that session, so footage recorded in advance cannot satisfy the check, and HeyGen verifies that the person in the consent recording matches the person in the training footage before the avatar can render at all.
+The 84.4%, unrolled
+HeyGen ran two tests, and they disagree in a useful way.
+Shown one clip at a time and asked "real or AI", raters judged 78.9% of genuine recordings as real. They judged 65.1% of Avatar 6 clips as real when the person's own voice was used. Swap in a HeyGen Voice clone and that falls to 56.5%. That is the honest headline: roughly two in three Avatar 6 clips pass as real to a stranger who is looking for fakes, against four in five real recordings.
+The side-by-side test is easier — you have a reference point, and the model only has to be the more convincing of two — and that is where the 42.2% comes from. HeyGen also reports a single-clip "judged real" study at 612 real answers and 304 and 308 AI answers respectively, which is a small enough sample that the difference between 65.1% and 56.5% deserves a second run before anyone builds a claim on it.
+Against other video models, using the person's own footage, HeyGen reports a 72.4% preference win over Seedance 2.5, 74.1% over Wan 3.0, and 54.9% over Kling 4.0. From a single photo the Kling margin widens to 73.5% — which tells you something about what reference footage is worth to a competitor's output, not just to HeyGen's. Against commercial avatar products, external raters scored Avatar 6 at 4.00 overall from a photo against VEED Fabric 1.0 at 3.68, and 3.98 from footage against Akool Talking Avatar at 2.93. All of these are HeyGen's own studies, with HeyGen's own raters and HeyGen's own prompt set. Treat them as a strong prior, not as a result.
+New Measure got there first
+The one piece of evidence HeyGen did not commission arrived today. New Measure published early Avatar Arena results from blind votes collected between 27 October and 16 November — before the launch — across eight avatar providers. Voters saw two videos of the same script, labelled A and B with the provider names hidden, and picked a winner.
+Avatar 6 finished first on both boards: 1,197 Elo on personal avatars with a range of 1,162 to 1,241, and 1,237 on stock presenters with a range of 1,207 to 1,278. Creatify Aurora 2.0 was second on both, at 1,053 and 1,088. Tavus Phoenix-4.5 landed at 920 on stock avatars, behind Creatify and ahead of JoggAI at 887 and Synthesia EXPRESS-1 at 868.
+Two details in that report are more informative than the ranking. First, New Measure discloses that three of the competitors — VEED, Creatify and Captions — used speech made with HeyGen's voice clone, so part of HeyGen's voice margin is HeyGen competing with itself. Second, and more consequentially for this launch: the arena caps scripts at 500 characters, the typical script was 62 words, and in 97% of completed comparisons both videos were 35 seconds or shorter. The arena therefore says nothing at all about the feature Avatar 6 leads with — unlimited duration. A model that can hold a coherent identity for 26 minutes has not been tested on that by anyone outside HeyGen.
+Speed is the other place the ranking and the experience diverge. Avatar 6 was typically the slowest of the five in the personal-avatar bracket at 175.6 seconds per video, against 60.2 seconds for Runway GWM-1; one in ten HeyGen personal-avatar videos took more than nine and a half minutes. Preference and patience are different scores, and New Measure says plainly that the two did not line up.
+What the model actually does differently
+The mechanical change is that Avatar 6 reads the script rather than replaying a motion loop. Previous HeyGen avatars looked like the person but gestured the same way regardless of content; this one will point at "the counter on the left", count to three on its fingers on "the taste, the choices and the feeling", and put a hand on its heart on "always happy to chat" — because the prompt said to, or because the sentence implied it. Whether the implied cases work as well as the instructed ones is the sort of thing only production use will settle.
+The second capability is two avatars in one frame holding a scripted conversation, generated in a single pass. That is a podcast-shaped feature, and it is the one most likely to be useful to teams already producing that format, since it removes the edit between speaker cuts.
+The third is the word-level edit. HeyGen's own numbers for it: lip-sync LSE-C of 7.67 on the new words against 6.25 for the original recording, face similarity 0.913 against a next-best 0.907, voice similarity 0.763 against 0.739, and 48.3 dB PSNR on untouched footage against 29.3 dB for the closest competing edit method, with 34.4% of frames changed rather than the 99%+ the comparison methods touched. That last figure is the one that matters operationally: a re-record of one sentence in a 20-minute video is cheap only if the other 19 minutes survive byte-for-byte.
+What it costs, and what is not published
+Avatar 6 is in the free tier — three watermarked videos a month, up to one minute each, no card required for the first one. Creator at $29/month carries 600 credits and lists Avatar 6 Turbo; Pro at $49/month carries 1,000 credits and lists Avatar 6 Pro. HeyGen sells access in credits, not in seconds.
+That is the gap in the launch material. HeyGen publishes a per-second rate for HeyGen Video 1 — $0.02, with a $0.03 figure appearing in its own cost chart — but no equivalent rate card for Avatar 6 exists on the public pricing pages, and the developer pricing page redirects to a logged-in app. If you are budgeting an avatar pipeline at volume, you are currently pricing credits and guessing at the conversion. Ask for the per-second number in writing before you commit a production path to it.
+Where this fits if you are building
+Avatar 6 is not on OrcaRouter. We do not serve it, and no amount of routing cleverness changes that — it is a HeyGen-hosted renderer with its own consent flow and its own billing. What we do serve is the layer around it: the script generation, the retrieval, the classification, the agent that decides what the avatar should say. That is 200+ models behind one OpenAI-compatible key at provider list price with no markup, and automatic failover when a provider wobbles. If your avatar pipeline stalls because the model writing the scripts went down, the renderer was never the fragile part.
+The open questions
+Three things would change this picture, and none of them are available yet. A per-second API price, so the economics can be compared with Seedance, Kling and HeyGen's own video model on equal terms. An independent long-form test, because every duration claim here rests on HeyGen's demos and the arena capped out at 35 seconds. And a head-to-head against a competitor of similar ambition — Tavus Griffin, say — under one protocol, by someone with no product to sell.
+Until then the fair summary is this: Avatar 6 is very likely the best talking-avatar renderer you can buy today, the 84.4% is a real result expressed in a flattering unit, and the capability that most distinguishes it is the one nobody outside HeyGen has measured. Build the pilot, but instrument it — one in ten renders taking nine minutes is a product decision, not a footnote.
+OrcaRouter
+© 2026 OrcaRouter
+Product
+AI ModelsCyberSolutionsOpen SourceOpen WeightsPricing
+Resources
+DocsBlogIntegrationsStatusSupportAI Incident ArchiveTrust Center
+Partners
+Partner programCreatorsAmbassadorsOpen source
+For Providers
+Run an inference platform? Get your models on OrcaRouter.
+[email protected]
+Join our community
+Discord[email protected]XLinkedInGitHubYouTube
+From the blog
+Cairn agents found a MONAI Label zero-day and rooted a university serverSwitzerland Confirms 5 AI-Agent Attacks, 3 on Critical InfrastructureMicrosoft's agent-framework PyPI hijack: 41 minutes, three victimsTrajectory Labs: Agents Attacked Epoch AI, Safeguards OnUnit 42: 25 autonomous Cairn operations, 10 breaches
+Model providers
+OpenAI API72Google API32Qwen API28Anthropic API14DeepSeek API12Z.ai API10Kling API8MiniMax API7Tencent API6Grok API5Orca API5Kimi API4

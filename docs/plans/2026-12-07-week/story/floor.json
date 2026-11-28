@@ -27,6 +27,16 @@
    "reasons": []
   },
   {
+   "ref": "wed-3",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "wed-4",
+   "floored": false,
+   "reasons": []
+  },
+  {
    "ref": "fri-1",
    "floored": false,
    "reasons": []
@@ -42,7 +52,17 @@
    "reasons": []
   },
   {
+   "ref": "fri-4",
+   "floored": false,
+   "reasons": []
+  },
+  {
    "ref": "off-tue-nytphotoshop",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-tue-spotifyaudio",
    "floored": false,
    "reasons": []
   },
@@ -57,11 +77,6 @@
    "reasons": []
   },
   {
-   "ref": "off-tue-spotifyaudio",
-   "floored": false,
-   "reasons": []
-  },
-  {
    "ref": "off-tue-mychannel",
    "floored": false,
    "reasons": []
@@ -72,12 +87,12 @@
    "reasons": []
   },
   {
-   "ref": "off-tue-tplfistpump",
+   "ref": "off-tue-tplninedarter",
    "floored": false,
    "reasons": []
   },
   {
-   "ref": "off-tue-tplninedarter",
+   "ref": "off-tue-tplfistpump",
    "floored": false,
    "reasons": []
   },
@@ -97,6 +112,11 @@
    "reasons": []
   },
   {
+   "ref": "off-thu-pixelfill",
+   "floored": false,
+   "reasons": []
+  },
+  {
    "ref": "off-thu-alphamatte",
    "floored": false,
    "reasons": []
@@ -107,17 +127,7 @@
    "reasons": []
   },
   {
-   "ref": "off-thu-pixelfill",
-   "floored": false,
-   "reasons": []
-  },
-  {
    "ref": "off-thu-tplturin",
-   "floored": false,
-   "reasons": []
-  },
-  {
-   "ref": "off-thu-tplthanksgiving",
    "floored": false,
    "reasons": []
   },
@@ -137,17 +147,17 @@
    "reasons": []
   },
   {
+   "ref": "off-thu-tplthanksgiving",
+   "floored": false,
+   "reasons": []
+  },
+  {
    "ref": "off-sat-goodnews",
    "floored": false,
    "reasons": []
   },
   {
-   "ref": "off-sat-screen",
-   "floored": false,
-   "reasons": []
-  },
-  {
-   "ref": "off-sat-makers",
+   "ref": "off-sat-talent",
    "floored": false,
    "reasons": []
   },
@@ -157,7 +167,12 @@
    "reasons": []
   },
   {
-   "ref": "off-sat-talent",
+   "ref": "off-sat-makers",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-sat-screen",
    "floored": false,
    "reasons": []
   }

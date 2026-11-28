@@ -1,0 +1,179 @@
+2026 Epic AI MegaJam - itch.ioSkip to main contentitch.io
+Browse GamesGame JamsUpload GameBlack Friday 2026Developer LogsCommunity
+Log inRegister
+On Sale: GamesAssetsToolsTabletopComics
+Indie game storeFree gamesFun gamesHorror games
+Game developmentAssetsComics
+SalesBundles
+Jobs
+TagsGame Engines
+2026 Epic AI MegaJam
+Hosted by epicgamesjams · #MegaJam
+2,778
+Entries
+OverviewSubmissionsSubmission feed
+Submissions open from 2026-11-12 05:00:00 to 2026-11-16 07:00:00
+Voting ends in
+years
+months
+days
+hours
+minutes
+seconds
+Submission is closed and voting is now in progress
+Submissions are closed. Thank you, jammers!
+The 2026 Epic AI MegaJam wrapped on November 15 with 2,782 games submitted. Thank you to everyone who built, shipped, and shared along the way, and to our partners for supporting the jam. Judging starts soon, and winners will be announced by January 29, 2027.
+This year’s theme: DIRECTOR’S CUT
+Your vision, your edits, your final cut. Every developer has that one feature that didn’t quite make it: the mechanic you scoped out at 2 AM, or the idea you shelved and never found a place for. Now’s your chance to finally build it. Using AI agents? You’re directing those too. Set the vision, delegate tasks, and decide what makes the cut.
+Vibe your way to $50k
+Four days. Up12 to five humans. As many AI agents as you want. Build a playable game in Unreal Engine or Unreal Editor for Fortnite (UEFN) and compete for cash prizes.
+Supported by Claude, Google, OpenAI, SpaceXSI, AMD, Diversion, fal, Hyper3D, Intel, Meshy,
+NetApp, NVIDIA, PBRgen, Reallusion, Rokoko, Tripo, and WeLoveIndies.
+Dates November 12–15, 2026Prizes$65,000 in cash prizes, plus Development Continuation Grants of up to $50,000 per team and partner prizesPerksFree AI tool credits, version control,
+materials, audio, and animation tools for
+every jammer. See Partners below.ToolsUnreal Engine or UEFN, plus any AI toolsTeamsSolo, or up to five peopleWhere* Online from anywhere
+* In person at Digital Jungle, San Francisco, Nov 14–15 (ticket required)
+* At select local Unreal Engine and UEFN community chapters worldwide.
+Who can enterOpen to developers age 18+ with an active Epic Games account.  See the Official Rules for full eligibility details.
+Select Join jam on this page.
+Joining in person? Registration for the San Francisco event is now open on Eventbrite. Space is limited.
+Set up your tools. Install Unreal Engine or UEFN, and get your coding agents and MCP working before kickoff. See Get ready. Watch your inbox on November 10 for credit codes and claim links, and see Partners below for the full list.
+Watch the kickoff livestream on November 11 at 11 AM PST / 2 PM EST to hear the theme.
+Build from November 12 to 15. Tune in to the daily livestreams for tips and to see what others are making.
+Submit before the deadline: your game (Unreal Engine) or private version code (UEFN), a 30–60 second gameplay video, and the details listed in What to submit.
+Partner Perks
+Every registered jammer can use these during the jam. Using them is optional and doesn’t affect judging. We’ll email codes and claim links on November 10 to everyone who has joined the jam on itch.io. Check your spam folder if you don’t see it.
+PartnerWhat you getHow to claimDeadline Anthropic$25 in Claude API credits for use on platform.claude.com  Claim link in your Nov 10 email. Create a free account at platform.claude.com  Claim Nov 12–27, while credits last.Credits last 90 days from when you claim them. SpaceXSI
+$50 in credits to use across Cursor and Grok BotClaim link in your Nov 10 email
+Claim by Nov 15.  Credits last 7 days from when you claim.DiversionOne month of Diversion cloud version control built for game devs and AI workflows.Code in your Nov 10 email. Sign up at https://app.diversion.dev/Redeem by Nov 22.fal$30 in fal credits for your personal fal accountCode in your Nov 10 email. Redeem at https://fal.ai/ with your personal account.Claim by Nov 30Hyper3DA Rodin Business subscription, including 208 credits. Code in your Nov 10 email. Create an account at https://hyper3d.ai, then Wallet icon > Code Redemption.Redeem by Nov 16. The benefits expire Nov 20.MeshyOne free month of Meshy Pro with 1,000 credits you can use through the Meshy web app, the API, or bothSign up for a new account through this link. Credit card required.Redeem by Nov 17NetApp + AWSA free technical session to deploy the AWS Game Development Toolkit and speed up Unreal Engine Horde build pipelines on AWS. For Unreal Engine teams. 25 slots, first come, first served.Email aaron.tunnell@netapp.com after the jam closes. Learn more at linktr.ee/netappgames.Opens after the jam closes on Nov 15, while slots lastPBRgenFree access to PBRgen, including PBRgen credits for every registered jammer. Additional credits available on request.Sign-up link sent by email Nov 10. User guide: https://app.pbrgen.com/user-guideValid Nov 7 to 15, 2026ReallusionFree iClone PERSONAL, a fully featured animation tool with up to 30 exports for first-time users.Download at https://www.reallusion.com/iclone/download.html No expirationRokokoOne month of Rokoko Basic Register through the link in your Nov 10 email, then use the voucher link Rokoko emails you when the jam starts. Lasts one month from sign-up.Tripo3,000 free credits plus 7 days of Tripo Pro access, valid November 11–17, 2026 (PT)Visit worlds.tripo3d.ai/epicaimegajam2026promotion and enter your name and email address to get your unique redemption code. Then go to https://studio.tripo3d.ai/ > Upgrade > Redeem Code and enter your code.Redeem by Nov 16. WeLoveIndiesSound and music for non-commercial useCreate a free account at https://www.weloveindies.com/en/epicmegajam  --
+WeLoveIndies’ free license covers non-commercial use. If you release your game commercially later, you’ll need a commercial license for those assets.
+Partner perks are one per person. Need more? Contact the partner directly using the support contact listed in the perks email. Creating extra accounts may get you banned from their platform.
+Claude: Anthropic is a frontier AI company whose mission is to steer the trajectory of AI to advance human progress. We are best known for building Claude, the intelligence platform trusted by millions of people and businesses worldwide. Every registered jammer gets $25 in Claude API credits to put Claude to work on your game. Our team will also be at Digital Jungle in San Francisco on Nov 14 and 15, so come say hi! claude.com
+Google: Google’s mission is to organize the world’s information and make it universally accessible and useful. Through products and platforms like Search, Maps, Gmail, Android, Google Play, Google Cloud, Chrome and YouTube, Google plays a meaningful role in the daily lives of billions of people and has become one of the most widely-known companies in the world. Google is a subsidiary of Alphabet Inc. cloud.google.com
+Meshy: Meshy is an AI 3D creation platform that takes you from idea to 3D asset in minutes. Create, texture, rig and animate models from text, images or a simple chat with our 3D Agent, then bring them straight into Unreal Engine. Spend less time on asset production and more time building the game you came to make. meshy.ai
+SpaceXSI: At SpaceXSI, we build AI to understand the universe. We’re excited about what AI makes possible for game makers, from Grok building an open world city game to Cursor and Grok Bot helping small teams ship faster. We’re proud to support the 2026 Epic AI MegaJam and can’t wait to see what you build in Unreal Engine and UEFN!
+AMD: Our passion to make the world’s most advanced processors, graphics and software is matched only by the passion of the gamers who use them. That’s why AMD is the only company with products used across PCs, handhelds, and consoles. For gamers, that means AMD powers devices that deliver an incredible experience, whether you’re chasing frame rates on a high-end rig, gaming on the go with a handheld, or settling in on the couch with a console, no matter how demanding the title or what platform you play on. https://www.amd.com/en/gaming.html
+Diversion: Diversion is cloud-native version control built for game devs and AI workflows. Stay in sync, handle huge assets, and keep your #MegaJam project safe. Work right inside Unreal Engine with our free plugin on Fab. Need help? See our docs or join our Discord. Happy jamming! diversion.dev
+fal: fal brings generative AI into your creative toolkit, with image, video, audio, and 3D models accessible through one API. Explore visual concepts, generate assets, and experiment with new ideas as you build your game. Trusted by over 2.5 million developers and leading companies, fal offers the fastest inference engine for diffusion models, on-demand serverless GPUs, and dedicated compute clusters for frontier research. We’re excited to support Epic AI MegaJam creators and we can’t wait to see what you make! fal.ai
+Hyper3D: Hyper3D is the industry leader in pioneering 3D Generative AI. Built on cutting-edge research with multiple SIGGRAPH Best Paper nominations and a Best Paper award, our platform aims to deliver production-ready assets with unparalleled editability. Today, we’re trusted by millions of users and thousands of game studios. Our core capability—Image/Text to 3D—focuses on controllability, evolving us into the world’s first true 3D GenAI editing platform. Creators can edit any model with precision via features like smart low-poly topology, local text-prompt edits, and recursive part-decomposition. hyper3d.ai
+Intel: Intel is a pioneer of modern computing and a global leader in semiconductor innovation, engineering the foundation behind today’s most immersive gaming experiences. From desktops and laptops to handheld devices, Intel powers responsive gameplay, rich visuals, and AI-enhanced realism across every way gamers play. With decades of experience and one of the broadest install bases in the world across millions of PCs, Intel brings proven scale and deep expertise to gaming. intel.com
+NetApp: You built the game. Now level up your studio. The Render Royalty winning team will score a retro gaming collection packed with legendary consoles and games from Nintendo, PlayStation, and more, celebrating some of the hardware and titles that helped define gaming. Then we’ll help you look forward. The first 25 Unreal Engine jammers to reach out after the jam get a free session with AWS and NetApp technical experts to deploy the AWS Game Development Toolkit and speed up Horde build pipelines on AWS. Game history for your shelf. Modern infrastructure for your next game. linktr.ee/netappgames
+NVIDIA: NVIDIA supports Unreal Engine 5 with key NVIDIA RTX™ technologies. This powerful combination helps developers of all levels get started and propel their games and experiences to the next level. Explore advanced rendering with the NVIDIA RTX Branch of Unreal Engine (NvRTX), boost frame rates while delivering crisp high-quality images with NVIDIA DLSS, and bring game characters to life with NVIDIA ACE. Build with GeForce RTX GPUs and get started with plugins, samples, and developer resources. We can’t wait to see what games you build with NVIDIA RTX! developer.nvidia.com
+PBRgen: PBRgen is an AI tool that generates seamless, tileable PBR materials from a text prompt or reference image. Every material comes with tweakable maps (albedo, normal, roughness, metallic, height, AO, and more) that drop straight into Unreal Engine and UEFN. All 2026 Epic AI MegaJam participants get free access to PBRgen for the duration of the jam, so your team can build the look of your game as fast as you can describe it. pbrgen.com
+Reallusion: Reallusion is proud to partner with Epic Games for the Epic AI MegaJam! Empowering creators to build next-level games in Unreal Engine and UEFN, Reallusion brings industry-leading character creation and animation software to jammers worldwide. We are sponsoring top winners with perpetual licenses for iClone 8 and Character Creator 5 (CC5). Plus, explore cutting-edge AI character workflows with our new CC Wrap tool, designed to seamlessly import, optimize, rig, and animate any AI-generated 3D model for real-time animation. Unleash your creativity and bring digital humans to life! reallusion.com
+Rokoko: Rokoko provides a complete, all-in-one character animation ecosystem built for indie developers and studios. From browser-based AI video capture and text-to-motion prompting to full-body motion capture suits, hand tracking, and facial capture, Rokoko gives you every tool needed to bring characters to life. Record natural performances anywhere and stream production-ready animation directly into Unreal Engine—no optical studio or multi-camera setups required. rokoko.com
+Tripo: AI 3D model generation for Unreal Engine and UEFN. Generate game-ready 3D models from text or images in seconds, with clean quad topology and adjustable polygon counts (up to 25K quads). Refine your assets with built-in post-processing tools, including smart UV mapping, up to 8K textures, auto-rigging, and animation. Export directly into your game development workflow with minimal manual cleanup. Every jammer gets 3,000 free credits and Tripo Pro access during the Epic AI MegaJam. tripo3d.ai
+WeLoveIndies: On WeLoveIndies, you can use our sound and music for free for your pitches, demos, and non-commercial projects—and get commercial licenses, subscriptions, and game-ready sound packs. We are not a reseller, but the team behind our work—so we would love to contribute to your projects with original works as well.
+WeLoveIndies is a collaborative initiative between Europe’s largest game audio studio, Dynamedion, and one of the world’s leading sound design companies, BOOM Library. Our mission is simple: to make high-quality sound accessible to everyone. weloveindies.com
+WhatWhenKickoff livestream + theme revealNov 11, 11 AM PST / 2 PM EST on Twitch, YouTube, and XJam startsNov 12, 12:00 AM ESTDaily livestreams11 AM PST / 2 PM EST each jam dayIn person at Digital Jungle SF
+972 Mission St. San Francisco
+CA, 94103Nov 14–15, 9AM - 7PM PST
+Registration required, space is limited. Submission deadlineNov 15, 5:59 PM PST / 8:59 PM ESTWinners announcedBy January 29, 2027
+✅ Use any AI tools you like: coding agents, asset generation, audio, writing, anything.
+✅ Work solo or in a team of up to five people. There’s no limit on agents.
+✅ Use assets you didn’t make, such as from Fab, as long as you have the right license. List them in your submission.
+✅ Build custom gameplay that goes beyond Epic’s starter templates.
+❌ Don’t start building your game before November 12. Declare anything you made earlier.
+❌ Don’t enter with both Unreal Engine and UEFN. Pick one.
+❌ Don’t submit unpackaged Unreal Engine projects.
+❌ No content that breaks the Official Rules, including other people’s IP and inappropriate content.
+This is a summary. Read the full Official Rules before you enter.
+The Official Rules are available in English, Arabic, Chinese, French, German, Italian, Japanese, Korean, Polish, Russian, Spanish, Spanish (Latin America), and Turkish.
+Unreal Engine teams
+You submit on itch.io.
+1. Package your game:
+Desktop or mobile: Windows 10 or 11, macOS, Android, or iOS. We recommend a development build for all platforms. Shipping builds are also accepted for Windows, macOS, and Android. iOS builds must be development builds.
+Web (experimental): Package for Web with the Unreal Engine 5.9 MegaJam Preview using a Shipping build.
+2. Name your .zip TeamName_GameName.
+Desktop and mobile: keep it under 1 GB. For bigger builds, use butler or Blendo Itch Uploader.
+Web: make sure index.html is at the top level of the .zip, and keep the game under 500 MB total and 200 MB per file. Mark it as playable in the browser on itch.io.
+3. Upload it to your own itch.io account, then submit to this jam.
+Include:
+Team name, plus each member’s name and the email address linked to their Epic Games account
+Game name
+Gameplay video link (30–60 seconds)
+Dev log link (optional, but required for the Glass Box modifier)
+Tools you used (optional, but needed for partner prizes such as Hyper3D’s cash pool)
+NVIDIA RTX Award (optional): check the NVIDIA features you used and describe how you used them
+OpenAI Awards (optional): which OpenAI models or products you used, and how
+UEFN teams
+You submit on itch.io. with a private version code. That's a fixed snapshot of your island that can't be changed after you create it. Follow the Fortnite Developer Rules.
+1) Your private version code must be the final, playable build you want judged, and you must create it before the deadline.
+2) Live island codes and playtest codes aren't accepted, because they can be changed after the jam ends.
+Include:
+Team name, plus each member’s name and the email address linked to their Epic Games account
+Island name and private version code
+Gameplay video link (30–60 seconds)
+Dev log link (optional, but required for Glass Box modifier)
+Tools you used (optional, but needed for partner prizes such as Hyper3D’s cash pool).
+Leave time to submit
+Late submissions will be disqualified. Upload your build or provide your private version code before November 15, 5:59 PM PST / 8:59 PM EST.
+Main categories
+CategoryFirst prizeSecond prizeThird prizePartner PrizesBest Overall, Unreal Engine$7,500
+$5,000$2,500Reallusion: iClone 8 licenses (1st place, one per team member) plus one Character Creator 5 license (1st place)
+WeLoveIndies: Sound Pack of choice, Large (1st) / Medium (2nd) / Small (3rd) - One per team member
+Rokoko: one Headcam and one pair of Smartgloves (1st place)Best Overall, Unreal Engine: OpenAI Award———OpenAI: $5,000 in OpenAI API credits for the best Best Overall, Unreal Engine entry that makes the best use OpenAI models or products. Answer the OpenAI question when you submit.Best Overall, UEFN$7,500$5,000$2,500Reallusion:  iClone 8 licenses (1st place, one per team member)Best Student* Project (Unreal Engine or UEFN)
+*must be currently enrolled at a higher-education institution$7,500$5,000$2,500Reallusion: iClone 8 licenses (1st place, one per team member)
+Rokoko: one pair of Smartgloves (1st place)
+Modifier categories
+CategoryForPrizePartner PrizeBest TeamBest game built by a team of two or more (Unreal Engine or UEFN)$5,000WeLoveIndies: Sound Pack of Choice + one-year PRO subscription (one per team member)
+Rokoko: one pair of Smartgloves  Solo DriverBest game built by a solo developer (Unreal Engine or UEFN)$2,500Rokoko: one Headcam and one pair of Smartgloves
+fal: $1,000 in fal credits plus a one-on-one AMA with fal engineers
+Intel: one Panther Lake laptopRender RoyaltyBest visuals, photoreal or stylized (Unreal Engine or UEFN)$2,500NetApp: retro gaming collection (*physical prize is US only)
+PBRgen: $500
+Rokoko: one Headcam and one pair of Smartgloves
+fal: $1,000 in fal credits plus a one-on-one AMA with fal engineersRender Royalty: NVIDIA RTX Award Best Render Royalty entry built in Unreal Engine that uses at least one feature from NvRTX (such as RTX Mega Geometry, RTX Direct Illumination, RTX Indirect Illumination (ReSTIR GI), RTX Path Tracing (ReSTIR PT), or LSS Hair), DLSS 4.5 (Unreal Engine), or NVIDIA ACE.— NVIDIA: one GeForce RTX 5090. Answer the NVIDIA questions when you submit.
+Eligibility restrictions apply.
+Render Royalty: OpenAI AwardBest Render Royalty entry built in Unreal Engine that uses OpenAI models or products, during development, gameplay, or both.—OpenAI: $2,500 in OpenAI API credits. Answer the OpenAI question when you submit.Pocket PowerhouseBest mobile game (one Unreal Engine winner and one UEFN winner)$2,500 each—Pocket Powerhouse: OpenAI AwardBest Pocket Powerhouse entry built in Unreal Engine that uses OpenAI models or products, during development, gameplay, or both.—OpenAI: $2,500 in OpenAI API credits. Answer the OpenAI question when you submit.Glass BoxBest dev log showing how you built your game (Unreal Engine or UEFN)$2,500AMD: ASUS ROG Ally handheld, powered by AMD (one per team member)Walkie-TalkieBest narrative-driven UEFN game featuring LLM-powered NPCs and characters built with conversations (UEFN)$2,500AMD: ASUS ROG Ally handheld, powered by AMD (one per team member)
+All categories: Hyper3D one-year Rodin Business membership for every winning team (one per team member), plus a $10,000 cash pool split equally among winning teams that used Rodin. Be sure to list Rodin in the “Tools you used” field when you submit.
+All categories: Tripo one month of Tripo Max (one per team member) or a shared Tripo Teams plan (up to five seats) for every winning team. Your team chooses.
+All categories: Meshy one-year Meshy Pro subscription for every winner (one per team member).
+Important note: Partner prizes are one per team unless marked ‘one per team member’. Partner prizes are delivered by each partner after the jam. Some physical prizes have shipping restrictions:
+* NetApp: US only
+* Rokoko: no shipping to Russia, Belarus, Israel, Palestine, or Ukraine
+* AMD: no shipping to Russia, Belarus, North Korea, Iran, Cuba, or Syria
+*NVIDIA RTX Award terms:  NVIDIA will provide one GeForce RTX 5090 GPU in total to the team submitting the highest-ranked eligible Render Royalty entry built in Unreal Engine that incorporates at least one of the following NVIDIA features: RTX Mega Geometry, RTX Direct Illumination, RTX Indirect Illumination, RTX Path Tracing, LSS Hair, NVIDIA DLSS, or NVIDIA ACE. Epic’s judges will determine qualification, with technical assistance from NVIDIA as needed. If the selected team does not qualify or cannot lawfully receive the GPU, Epic will select the next-highest-ranked qualifying, eligible entry for this prize, without changing the main Render Royalty category award. No GPU prize will be awarded if no entry qualifies. Fulfillment is subject to applicable export controls, sanctions, recipient screening, and import requirements. The GPU prize is unavailable to recipients located in or ordinarily resident in the excluded destinations listed below and may not be shipped to those destinations.
+NVIDIA RTX Award excluded destinations: Afghanistan; Armenia; Azerbaijan; Bahrain; Belarus; Burma (Myanmar); Cambodia; Central African Republic; China (PRC); Democratic Republic of the Congo; Cuba; Egypt; Eritrea; Georgia; Haiti; Iran; Iraq; Jordan; Kazakhstan; North Korea; Kuwait; Kyrgyzstan; Laos; Lebanon; Libya; Macau; Moldova; Mongolia; Nicaragua; Oman; Pakistan; Qatar; Russia; Saudi Arabia; Somalia; South Sudan; Sudan; Syria; Tajikistan; Turkmenistan; Uzbekistan; Venezuela; Vietnam; Yemen; Zimbabwe.
+Development Continuation Grants
+Standout Unreal Engine and UEFN entries can receive Development Continuation Grants of up to $50,000 to keep developing their jam game.
+CategoryFirst placeSecond placeThird placeUnreal Engine$50,000 + $1,000 Fab credit$25,000 + $500 Fab credit $10,000 + $250 Fab credit UEFN$50,000  + $1,000 Fab credit$25,000 + $500 Fab credit $10,000 + $250 Fab credit
+Fab credits go to each winning team’s team lead.
+Each grant team also gets one month of Tripo Teams, with up to five seats.
+A panel of judges scores each qualified entry from 1 to 5 on:
+CriterionWhat judges look forAmbition and innovationSomething you couldn’t usually pull off in a four-day jam: a new mechanic, a bold art style, or a bigger scope ThemeA fresh, clever take on the themeFun factorGameplay that's fun and satisfyingGameplaySolid, original mechanics that feel goodVisualsA strong, consistent look, photoreal or stylizedLevel design and game progressionSpaces that support the gameplay and guide the playerAudioSound and music that add to the experience
+Join us November 14–15 at Digital Jungle to build alongside teams from Anthropic,  Google, Meshy, OpenAI, SpaceXSI, and more. Register on Eventbrite. Space is limited.
+Digital Jungle SF
+972 Mission St, 2nd Floor
+San Francisco, CA 94103
+Tools
+Download Unreal Engine or UEFN
+Unreal Engine 5.9 MegaJam Preview (for experimental web builds)
+MCP in Unreal Engine: Set up video | documentation | livestream
+MCP in UEFN: documentation | livestream
+AI-powered conversations for NPCs
+Free and paid assets on Fab
+Packaging Unreal Engine projects
+Tutorials and forums on the Epic Developer Community
+NVIDIA RTX branch of Unreal Engine (NvRTX) (one way to qualify for the NVIDIA RTX Award)
+Tips
+Set up your agents before November 12. Getting MCP working on day one costs build time.
+Scope small, then polish. A finished, fun game beats an ambitious broken one.
+Package or publish early. Do a test build on day two so the last day isn’t a surprise.
+Keep notes as you go. It makes your dev log easier to write for the Glass Box modifier category.
+Make your video count. Show gameplay in the first five seconds.
+Give it a shot anyway. Four days with agents on your side is a great way to try something you’d never have time for otherwise. Even if you don’t finish, you’ll learn a lot.
+Find teammates or ask questions on the Unreal Engine Forums and UEFN Discord.
+Do I have to use AI?
+No.
+Can I start before November 12?
+You can set up your tools, agents, and MCP ahead of time, but don't start building your game until November 12. Declare any prompts, scripts, or assets you made before the jam.
+Can my team enter with both Unreal Engine and UEFN?
+No. Each team picks one and follows that submission process.
+Do I need to come to San Francisco?
+No. Online and in-person entries are judged the same way.
+Can I keep working on my game after the jam?
+Yes. Keep the jam version as your submitted build. Standout Unreal Engine and UEFN entries can also receive Development Continuation Grants of up to $50,000 to keep developing their game.
+Who owns my game?
+You do. See the Official Rules.
+Can I include attribution required by a tool or asset license?
+Yes. If a tool, plugin, SDK or asset you use requires attribution, you can include it in the way the rights owner describes.

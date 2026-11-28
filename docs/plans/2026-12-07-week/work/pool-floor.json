@@ -1,0 +1,583 @@
+{
+ "week": "2026-12-07",
+ "candidates": [
+  {
+   "ref": "mon-1",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "mon-2",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "mon-3",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "wed-1",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "wed-2",
+   "floored": true,
+   "reasons": [
+    "rejected line (2026-10-13): matches \\b(?:the|a) company(?:'s)?\\b(?! (?:that|which|called)); instead, name it every time: Meta, OpenAI, Google, Apple"
+   ]
+  },
+  {
+   "ref": "fri-1",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "fri-2",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-tue-nytphotoshop",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-tue-spotifyaudio",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-tue-fcpcaptions",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-tue-logicdrums",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-tue-mychannel",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-tue-tplcommscam",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-tue-tplninedarter",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-tue-tplfistpump",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-tue-tplbuzzer",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-thu-figmasix",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-thu-robloxvideo",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-thu-pixelfill",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-thu-alphamatte",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-thu-synthfirmware",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-thu-tplturin",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-thu-tplassemble",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-thu-tpllegends",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-thu-tplskyrim",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-thu-tplthanksgiving",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-sat-goodnews",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-sat-talent",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-sat-newsrooms",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-sat-makers",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "off-sat-screen",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/c56ca51a-1c47-43c6-a284-2cd482db6caa",
+   "floored": true,
+   "reasons": [
+    "off_beat: about \"enterprise\" (enterprise productivity with no creative angle) with no focus-sector angle (config/beat.json)"
+   ]
+  },
+  {
+   "ref": "pool/013ae567-6e91-4c57-9128-9ce85eef667c",
+   "floored": true,
+   "reasons": [
+    "repeat guard: rejected_gravity, pulled to what went out: it sits close to a recent post or an earlier option"
+   ]
+  },
+  {
+   "ref": "pool/7cc10198-0ced-4764-8982-3e41fb46e96f",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/83f20f43-6b46-40a2-9a9b-1007cb10f9bb",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/21e94357-9b59-4abe-96c6-daf1f98cd6d2",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/2c443323-dc8c-4941-9608-04d6b3ec85ed",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/9a2686e3-efc8-4532-a07f-d8904d0c2fd5",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/73a1d402-fa18-4831-8b32-bc52fc69ed81",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/c95eb365-f9e5-41ee-b095-a1263a8eb76c",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/36370c7a-c12d-47dd-bae6-059867264720",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/cc2926a8-685b-4b87-8524-ca12b0e371ca",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/a6d802bb-374a-4bad-8f31-b15713390809",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/32acd89c-ddda-4314-9d82-b604abe710e4",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/c4ff5b52-9e56-469f-b2f6-54805c4a6ec1",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/de83ed89-f29e-4e5f-ad82-c698ec72a010",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/41874364-fcd8-4fd1-b7e7-91aca6235019",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/acb58370-aaca-4040-9c13-83f227a628ec",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/e71e7d8a-8a1c-415c-96b6-311e8cc8ccbf",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/72b1be18-6980-478b-aca4-9e546f07bb03",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/c1bd8406-c267-426e-b586-d76e1ef68e5c",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/456c4fc3-530b-4fc8-9e92-5b5ea662ad87",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/b0e8bb0f-186e-4622-8d31-65a3cadcd29c",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/972b7721-4e4e-477f-b5cf-20164fd8260c",
+   "floored": true,
+   "reasons": [
+    "repeat guard: rejected_gravity, pulled to what went out: it sits close to a recent post or an earlier option"
+   ]
+  },
+  {
+   "ref": "pool/bdcdb14c-1c34-473c-b57d-acaf25b68331",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/908ca29a-784a-4ada-93a6-17af4a2b5083",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/f1782b9f-5302-444d-9051-18070f8787c3",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/19cde54d-3a9f-492d-bcfc-02240814705b",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/1a010324-839f-48a3-b41c-11feb88ae48d",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/f2338d52-9e3c-4aab-baf8-21f56829465c",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/5675e3e4-3420-45a2-bc45-9e9cbd5902ee",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/93c47616-6bfa-4d93-a193-5df85843977d",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/38602f5d-0e49-4980-8b8b-63f203e5475e",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/3b2bdcdc-2deb-4e08-a442-65b9fe7a695b",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/581d73f3-6046-46cb-b898-f1c4b06ffad1",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/b38a7a98-50b4-4608-bf8e-b99d8181ac7b",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/46dd71d0-6787-4bda-bd6c-b0e2bc4abca2",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/0977ab4d-8c3f-47c1-af95-768e2f3f968c",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/076c5675-4aee-4ad0-b400-6b10188fdb59",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/d5f108ea-7b48-4e1f-8c5c-62e346129f48",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/406f2c94-a763-4793-ac36-dd3f5411bb60",
+   "floored": true,
+   "reasons": [
+    "repeat guard: rejected_gravity, pulled to what went out: it sits close to a recent post or an earlier option"
+   ]
+  },
+  {
+   "ref": "pool/5ddb34b1-189c-4ee6-afd2-81423a8f444a",
+   "floored": true,
+   "reasons": [
+    "repeat guard: rejected_gravity, pulled to what went out: it sits close to a recent post or an earlier option"
+   ]
+  },
+  {
+   "ref": "pool/4212e710-9fb8-486d-8f9a-74d12245bca4",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/66012329-e6d5-4a48-9f3b-a7a1705dec09",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/2d388283-1d04-47ce-a5d3-4e406afedc70",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/cf6e7746-6ce2-4c68-904a-d1ae1988bef9",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/f5721a93-5b59-4d86-b53e-24bc70510d84",
+   "floored": true,
+   "reasons": [
+    "repeat guard: rejected_gravity, pulled to what went out: it sits close to a recent post or an earlier option"
+   ]
+  },
+  {
+   "ref": "pool/07752b13-fd4a-42c4-b2a6-27fa935145de",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/80baed3f-3833-4bce-9afd-040a4868e562",
+   "floored": true,
+   "reasons": [
+    "repeat guard: rejected_gravity, pulled to what went out: it sits close to a recent post or an earlier option"
+   ]
+  },
+  {
+   "ref": "pool/554f7348-ecc3-45cb-888d-9a8afe61b9bf",
+   "floored": true,
+   "reasons": [
+    "repeat guard: rejected_gravity, pulled to what went out: it sits close to a recent post or an earlier option"
+   ]
+  },
+  {
+   "ref": "pool/f02ea9f6-c6d1-43ef-89b6-3df073f69e09",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/16b1fd4f-3785-4842-9a2b-19ccfe889fa8",
+   "floored": true,
+   "reasons": [
+    "repeat guard: rejected_gravity, pulled to what went out: it sits close to a recent post or an earlier option"
+   ]
+  },
+  {
+   "ref": "pool/ac13c2b0-5426-4018-aaeb-eed82b9d0a6c",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/7764dbc1-453b-4fad-a9a9-ce4cc7494893",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/da7d404a-ffdd-4963-a747-a1252c5d81af",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/c87a08f2-0633-472b-a4b9-9eb2dfd8f6d3",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/d2c49564-fcbc-4aa8-9179-d945264641e0",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/5d3b5c42-bd58-4793-aedb-6ff01441acfa",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/a152f292-52a4-4d02-a2ff-3fbd133d4636",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/8a737585-b9ef-45bb-8700-ad5cebe835ba",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/4da8cc83-b228-4779-8a63-622abf21ca82",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/63d588a3-cb2d-4782-919d-c9096e731080",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/e6f4bfe1-b583-4738-8367-c386975b0466",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/11f365c5-1a0c-4326-8cee-2e093e0c09ff",
+   "floored": true,
+   "reasons": [
+    "off_beat: about \"security\" (security, privacy, surveillance and breaches) with no focus-sector angle (config/beat.json)"
+   ]
+  },
+  {
+   "ref": "pool/047d4c75-d035-4257-af2e-8f85c43a16a4",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/d23a00de-51b4-4018-a426-9c5b8cc76185",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/35aa5ab6-6cf9-4189-9db2-e789310e7ecf",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/6488d33b-ebe0-41bd-a5a4-bfb1455a8cab",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/6abd7f9b-2e59-40e2-909f-9921e0c4cef8",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/91349348-8590-4003-9e2e-39b8e81fcd89",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/8839e6e0-625a-4127-b4e7-928f8aff2425",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/a30b660a-c4bb-4463-8743-c855fb83df11",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/e17d0ae3-5d5c-4a60-84ba-e87688479783",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/62ba94bb-1eb8-421d-a8ab-858e2e64d813",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/5bab39b7-80b5-4925-ae76-6f5142812052",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/5a04dfe0-33a7-41bf-81eb-1af6c948a753",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/afb19d99-b6ad-42f9-89f6-b521b15622ce",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/e3d29213-3c72-4d50-a129-88c7156ee885",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/5f5e0f1e-9571-4eaf-9aef-da44980fe9b4",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/4bdecab4-23be-4729-8798-0d2763dbd6b3",
+   "floored": false,
+   "reasons": []
+  },
+  {
+   "ref": "pool/9f4d1496-75aa-4406-8a31-cbbfdb5b65f4",
+   "floored": false,
+   "reasons": []
+  }
+ ],
+ "unread": []
+}

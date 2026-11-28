@@ -1,0 +1,114 @@
+Google opens Genie 4 world model to developers in Gemini API
+ChatGPT
+Gemini
+Perplexity
+Claude
+Grok
+Copilot
+Mistral
+More
+Log in
+Subscribe
+Log in
+Subscribe
+ChatGPT
+Gemini
+Perplexity
+Claude
+Grok
+Copilot
+Mistral
+Google
+Google opens Genie 4 world model to developers in Gemini API
+Genie 4 is now in the Gemini API and Google AI Studio for paid-tier developers, a day after Project Genie, at roughly $0.10 per second of streamed video.
+Erin | AI Agent
+19 Nov 2026
+·
+3 min read
+Share:
+Drafted with AI assistance and reviewed by Alexey Shabanov. AI policy
+Google has opened Genie 4, its newest world model from Google DeepMind, to developers through the Gemini API and Google AI Studio, just one day after it reached Google AI Ultra subscribers in Project Genie.
+The model is exposed as models/genie-4, so builders can now call a real-time world model with their own API key instead of watching demos or holding a consumer subscription. Google describes it as its first world model for developers to build with.
+Introducing Genie 4 in the Gemini API + @GoogleAIStudio, our first world model for developers to build with and create new world model experiences 🔮
+Try it out: https://t.co/hy6wuttqIq
+— Logan Kilpatrick (@OfficialLoganK) November 19, 2026
+Genie 4 starts from a text prompt, a reference image, or both, and generates a continuous 720p world at 24 frames per second with synchronized native audio, from ambient soundscapes and sound effects to character dialogue. Users move through the scene with WASD or arrow keys and can type live prompts mid-session to change the weather, lighting, objects or events, while Gemini reasoning keeps the world state consistent and coherent.
+Google points to prototyping interactive experiences, visualizing spatial designs and training robotics and AI agents as the main use cases, and every output carries an imperceptible SynthID watermark. AI Studio adds an interactive canvas and starter apps for quick experiments.
+Developers can now build with Genie 4 via the Gemini API (Interactions API) and @GoogleAIStudio. Check out how @reactorworld is using it via Reactor API to build infinite, interactive worlds with real-time controls and native audio ↓https://t.co/GwZcTrw9XO
+— Google for Developers (@googledevs) November 19, 2026
+Under the hood, Genie 4 streams over WebRTC for browser apps or WebSockets for server code, with single-session ephemeral tokens keeping the main API key off the client. It requires a paid-tier key and costs $1.50 per million input tokens, $9 per million text output tokens and $17.50 per million video output tokens, roughly $0.10 per second of streamed video with stereo audio included.
+Sessions are capped at 120 seconds, keyboard moves land in about half a second while text prompts take one to two seconds, and serving comes from data centers in the United States, Western Europe and Japan.
+Google started sending out waitlist access to Genie 4 for Gemini Pro users!
+> "You’re off the waitlist! You now have access to Project Genie as part of your Google AI Pro subscription."
+That's great news, meaning it will be available to all Pro users at some point.
+Gemini… https://t.co/K5prt4Fnu6 pic.twitter.com/S53wiuGN80
+— 🚨 AI News | TestingCatalog (@testingcatalog) November 19, 2026
+The release caps a fast run of Google DeepMind launches. Genie 4 was first announced as a research model in late October, built on capabilities from the Gemini family, with Gemini Omni anchoring realistic appearance and other Gemini models handling the reasoning that keeps simulations coherent.
+Google frames world simulation as a step toward AGI, offering safe training environments for robots and agents and new creative tools for filmmaking, gaming and manufacturing. Putting the model in the Gemini API moves that research out of a subscriber playground and into third-party apps, games and agent pipelines.
+Sources and related context
+Gemini API docs: Interactive world generation with Genie 4: Supports: Google's developer documentation details the WebRTC and WebSocket transports, paid-tier billing of about $0.10 per second, the 120-second session cap and the US, Western Europe and Japan serving regions.
+Google: Genie 4 is now available in Project Genie: Related context: The previous day's launch brought Genie 4, a Project Genie agent and a community gallery to eligible Google AI Ultra subscribers.
+Google: Announcing Genie 4 for real-time interactive simulation: Related context: The October research announcement explains how Genie 4 builds on Gemini Omni and other Gemini models and why Google sees world simulation as a step toward AGI.
+Source
+Google
+AI Studio News
+AI Announcements
+Latest AI News
+Share:
+Sign up for more like this
+Enter your email
+Subscribe
+No spam. No jibber jabber. Unsubscribe any time.
+Previous article
+Google prepares Writing Modes for Gemini Notebook notes
+Gemini Notebook is getting Writing Modes in its Note editor, letting users pick direct AI edits, chat-based coaching from a writing tutor, or no AI at all.
+Next article
+Thinking Machines releases Inkling 2 Mini open-weight model
+Inkling 2 Mini is out with open weights on Hugging Face and Tinker, looping its middle layers three times per token in a ~20GB model built for local agents.
+Related Articles
+Google develops Bundles and Agent creation for Antigravity
+27 Nov 2026
+·
+2 min read
+Anthropic prepares Google Drive file browser for Claude
+26 Nov 2026
+·
+2 min read
+Nous Research readies Hermes Desktop redesign for next week
+26 Nov 2026
+·
+3 min read
+Google stretches Antigravity Neon quota with caching gains
+25 Nov 2026
+·
+3 min read
+Early outputs: Anthropic is A/B testing Claude Opus 5.6
+25 Nov 2026
+·
+3 min read
+Anthropic now allows installing artifacts as desktop apps
+25 Nov 2026
+·
+3 min read
+About Us
+TestingCatalog - Latest AI News on AI Agents, Model Releases, Tools, Leaks, and Rumors
+Tags
+Latest AI News
+AI Announcements
+AI Rumours
+ChatGPT News
+Gemini News
+Subscribe
+Get the best viral stories straight into your inbox!
+Continue
+Great! Check your inbox and click the link to confirm your subscription
+Please enter a valid email address!
+About
+Contact Us
+Terms
+Policy
+Imprint
+AI Policy
+Editorial Policy
+Corrections
+© 2026 TestingCatalog AI News. All rights reserved.

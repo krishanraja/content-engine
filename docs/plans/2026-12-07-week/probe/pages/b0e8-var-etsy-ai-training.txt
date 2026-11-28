@@ -1,0 +1,152 @@
+Etsy Expands AI Training Rights Over Seller Content, Tightens Rules For Third-Party AI Use
+ Skip to content
+📍 Home
+❓About
+📰 Archive
+✔️ Support VAR
+ Search
+Log in
+Subscribe
+ 🌙
+ Dark
+ Latest
+ All
+ Ads
+ AI
+ Depop
+ Earnings
+ eBay
+ eBay Live
+ Etsy
+ Legal
+ Mercari
+ Poshmark
+ Shipping
+ TCGPlayer
+ Vinted
+ Whatnot
+Etsy Expands AI Training Rights Over Seller Content, Tightens Rules For Third-Party AI Use
+ Liz Morton
+ Published: Oct 29 2026
+ Updated: Nov 23 2026
+Comments
+ Share on Twitter
+ Share on Facebook
+ Share on LinkedIn
+ Share on Pinterest
+ Share via Email
+ Copy link
+Update November 23, 2026
+Etsy has revised its AI training terms to address copycat product fears, but still hasn't identified a way for US sellers to opt out.
+Etsy Revises AI Training Terms Following Seller Backlash
+Etsy has revised its AI training terms to address fears of copycat products, but still hasn't identified a way for US sellers to opt out.
+Value Added ResourceLiz Morton
+Update November 17, 2026
+Etsy has issued additional clarification about its updated Terms of Use and Privacy Policy following seller concerns about the company's expanded rights to use their content for AI training.
+In a November 16 Etsy Community announcement, VP of Customer Operations James Ossman reiterated that sellers retain ownership of their creative work and said the new language clarifies how Etsy and its partners may use member content for AI development.
+"We do not use your content to train AI models designed to copy your original work or replace your creativity," Ossman said, adding that this is not a change in Etsy's existing practices.
+The post goes on to say Etsy will continue to focus on using AI to support sellers and improve the user experience, promising to be transparent about how AI is used by the platform.
+We train models to identify potentially fraudulent accounts and related listings, helping us investigate potential issues and protect our members.
+We use AI to understand the inventory across our marketplace, so we can help buyers find your items through search and provide them with tailored recommendations.
+We build AI-powered seller tools to help you run your business more efficiently, and better understand and meet your buyers’ expectations.
+Ossman also distinguished between third-party integrations that sellers choose to authorize, such as bookkeeping and multichannel management tools, and vendors Etsy permits to access seller content, including fraud detection services and advertising partners. He said Etsy uses security tools to detect and limit unauthorized scraping, while its Terms prohibit unauthorized use of marketplace content for AI training, but did not clarify whether authorized partners can use seller content to train models for applications unrelated to Etsy.
+But despite that transparency commitment, Etsy still has not identified a general opt-out for US sellers who don't want their content used for AI training, or addressed what happens to previously uploaded or deleted material. Etsy's new Terms, which take effect December 16, continue to grant the company and authorized third parties broad rights to develop, train, test and improve AI and machine-learning technologies using member content.
+Etsy is updating its Terms of Use and Privacy Policy to explicitly allow the company and authorized third parties to use seller-uploaded content to train artificial intelligence models, while tightening restrictions on how outside companies can use marketplace data and deploy AI shopping agents.
+Under the updated Terms of Use, published October 26 and effective December 16, 2026, sellers and other users continue to retain ownership of the content they upload, including listing photos, descriptions, videos, reviews and community posts, but grant Etsy and third parties it authorizes broad rights to use that material.
+Section 5 of the agreement already included a non-exclusive, worldwide, royalty-free, irrevocable, sublicensable and perpetual license allowing Etsy to reproduce, modify, distribute and create derivative works from user content. The previous version primarily explained those rights in the context of operating and promoting the marketplace, such as translating listing descriptions, enhancing photos or featuring sellers' products in advertising.
+The revised policy retains those permissions and adds explicit authorization for AI training and development:
+This also includes the right for us and our third party partners and vendors to use Your Content to develop, train, test and improve artificial intelligence and machine learning technologies, including to improve the Services and/or help keep them safe, subject to any applicable opt-out rights described in our Privacy Policy.
+Etsy's accompanying Privacy Policy also adds language identifying listing information, product reviews and community posts as examples of content that may be used to train and develop AI and machine-learning models, including for features such as AI-powered listing tools and review summaries. Etsy lists this processing among its legitimate business interests.
+An Etsy spokesperson provided the following explanation of the company's intended use of seller content for AI development:
+"The recent update to our Terms and Privacy Policy regarding AI Models is intended to enable Etsy to use user-generated content to improve LLMs that strengthen our marketplace in service of our community, like AI-powered tools that make running a shop easier for sellers, surfacing the most relevant items for buyers, and technology that helps detect fraud."
+While the updated Terms refer to applicable opt-out rights, neither policy identifies a general mechanism specifically allowing US sellers to exclude their listing photos, descriptions or other uploaded content from AI training while continuing to sell on Etsy. Sellers in the European Union and United Kingdom may have additional rights to object to processing of personal information, though those protections do not necessarily cover every type of creative content uploaded to the marketplace.
+The existing license was already broad enough to give Etsy extensive rights to use seller content, so the new language does not necessarily mean the company is beginning AI training with that information for the first time. Because the license is perpetual and irrevocable, simply removing a listing or closing a shop may not terminate Etsy's contractual permission to use previously uploaded content, although the company has not clarified how it handles that material in AI training datasets or models.
+Etsy has previously explored ways to incorporate seller-generated information into its AI systems, including engineering experiments detailed in August 2025 that used internal employee documents and historical seller community discussions to develop Etsy-specific question-answering tools through context engineering, rather than fine-tuning the underlying models on that information.
+Etsy Explores How To Turn LLMs Into Specific AI Answer Engines Using Employee & Community Forum Input
+Etsy explores using context engineering to turn LLMs into highly specific AI answer engines - with help from employee handbooks & seller community forums.
+Value Added ResourceLiz Morton
+Etsy has also restricted public access to portions of its seller community forums, making that information less accessible to outside AI companies while retaining access for its own technology development.
+The updated Terms extend those restrictions, expressly prohibiting third parties from using content or data obtained from Etsy's services to develop, train, fine-tune, evaluate, benchmark or otherwise contribute to AI systems without the company's permission, regardless of whether that information was collected manually or through automated tools.
+Etsy is also establishing more detailed controls over automated shopping agents, broadly defined to include bots, scripts, browser extensions and AI technologies acting on behalf of users or third parties.
+Under the revised Section 6, the company reserves the right to permit, restrict or prohibit automated agents from browsing the marketplace, collecting data, interacting with accounts or executing transactions. Authorized agents may be required to identify themselves and the people or businesses they represent, while users are held responsible for actions taken by agents they deploy or authorize.
+Etsy was an early partner in OpenAI's September 2025 launch of Instant Checkout in ChatGPT, allowing eligible US shoppers to purchase products directly through the chatbot. But OpenAI paused the feature just months later, shifting toward retailer-controlled shopping experiences after limited adoption and challenges with payments, inventory and other ecommerce requirements.
+Etsy has continued pursuing AI shopping partnerships through its own ChatGPT app, integrations with Google and Microsoft's Copilot Checkout, alongside internally developed shopping and gifting assistants.
+The new restrictions give Etsy more say over which AI shopping services can access its listings and facilitate purchases, even as it works with selected partners to bring its products into their shopping experiences. As more product searches and purchases move through AI assistants, marketplaces risk losing direct traffic and control over customer relationships to the companies operating those services.
+Just four days before publishing the new Terms, Etsy announced stricter rules for AI-generated products and listing images, banning AI-created craft patterns and other functional instructions, prohibiting fully automated AI listings and requiring unedited photographs of actual products in additional circumstances.
+Etsy acknowledged that buyer confusion about AI-generated content had become one of the top three barriers to shopping more frequently on the marketplace, while executives admitted the company had not always addressed seller concerns about AI as directly or quickly as it should have.
+AI-generated artwork with seller creative input and disclosure is still allowed, consistent with Etsy's August 2025 AI principles emphasizing human creativity, privacy and transparency. The company also previously told sellers its AI-powered tools would be optional, allowing them to review and approve generated content, though it has not made a comparable commitment about giving sellers control over the use of their content for AI training.
+Etsy Bans AI-Generated Patterns, Tightens Listing Photo Rules
+Etsy says AI content is hurting buyer trust as it bans generated patterns and requires unedited photos of actual products.
+Value Added ResourceLiz Morton
+The update also adds new language about responsibility for Etsy's own AI-generated output, requiring users to review and evaluate results before relying on them and disclaiming warranties about the accuracy, completeness, reliability or suitability of information provided through Etsy's AI tools.
+Etsy's response did not clarify whether authorized third parties can use seller content to develop AI products unrelated to its marketplace or whether the company has already been using that content for model training under its existing Terms. Questions about how the new permissions apply to previously uploaded or deleted content also remain unanswered.
+ EtsyAI
+ Liz Morton
+ Twitter
+ Facebook
+ LinkedIn
+Liz Morton is founder and editor of Value Added Resource. She spent 17+ years operating ecommerce businesses before launching VAR. Her reporting focuses on seller experience, marketplace strategy and corporate accountability.
+You might also like
+ Etsy Revises AI Training Terms Following Seller Backlash
+ Paid
+ Members
+ Public
+Etsy has revised its AI training terms to address fears of copycat products, but still hasn't identified a way for US sellers to opt out.
+ Published:Nov 23 26
+ Updated:Nov 24 26
+ Etsy
+ Depop Adds AI Agent Restrictions, Arbitration & Class Action Waiver In New US Terms
+ Paid
+ Members
+ Public
+Depop adds AI agent restrictions, mandatory arbitration and a class action waiver in new US Terms of Service effective Jan. 1.
+ Published:Nov 18 26
+ Updated:Nov 23 26
+ Depop
+Value Added Resource Newsletter
+Get independent marketplace news and analysis in your inbox.
+ Subscribe
+ Twitter
+ Facebook
+ LinkedIn
+ RSS
+Recent Comments
+Featured Posts
+eBay Live Touts 8x Growth, But Scale Remains Hard To Measure
+ 1 Aug 2026
+Facebook Launches Dedicated Seller App As Marketplace Steps Up eBay Competition
+ 24 Jul 2026
+Poshmark Scraps Excessive Listing Removal Policy, Adds New Seller Recognition Program
+ 23 Jul 2026
+Vinted Quietly Launches In Australia, Adds UK Shipping Connection
+ 23 Jun 2026
+What "Whatever It Takes" Leaves Out of eBay’s Stalking Scandal
+ 15 Jun 2026
+Mercari Names Jeff LeBeau US CEO As Marketplace Turnaround Continues
+ 13 Jun 2026
+StockX Joins Live Shopping Race With Focus On Sneakers, Trading Cards & Collectibles
+ 9 Jun 2026
+USPS July 2026 Competitive Rate Changes Target Bulky, Lightweight Packages
+ 14 May 2026
+GameStop CEO Ryan Cohen Takes Power to the People Message Direct to eBay Sellers
+ 9 May 2026
+Etsy Ups Regulatory Operating Fees, Passing Increasing Cost Of Doing Business To Sellers
+ 23 Apr 2026
+eBay’s C2C & Live Pivot Gains Steam - But Does It Risk Alienating Business Sellers?
+ 21 Mar 2026
+After Cyberstalking Settlement, eBay Quietly Rewrites Board Oversight Rules
+ 10 Mar 2026
+Congress Weighs Sunsetting Section 230, Putting eBay, Amazon, Etsy & More In Potential Liability Crosshairs
+ 22 Dec 2025
+From CIA To Silicon Valley: Intelligence Roots Of eBay Cyberstalking Scandal
+ 6 Apr 2025
+Value Added Resource
+Independent Marketplace News, Analysis & Commentary
+Navigation
+Contact
+Data & privacy
+Cookie Policy
+Disclaimer
+Newsletter
+Subscribe
+ © 2026 Value Added Resource -

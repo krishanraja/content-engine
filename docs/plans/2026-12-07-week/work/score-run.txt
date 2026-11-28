@@ -1,0 +1,364 @@
+{
+ "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2": {
+  "total": 76.9,
+  "type": "hero_mon",
+  "floors_failed": [],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb": {
+  "total": 77.4,
+  "type": "wildcard",
+  "floors_failed": [],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed": {
+  "total": 69.6,
+  "type": "hero_mon",
+  "floors_failed": [],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010": {
+  "total": 83.9,
+  "type": "wildcard",
+  "floors_failed": [],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "wed/41874364-fcd8-4fd1-b7e7-91aca6235019": {
+  "total": 57.7,
+  "type": "hero_wed",
+  "floors_failed": [],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "wed/5675e3e4-3420-45a2-bc45-9e9cbd5902ee": {
+  "total": 83.6,
+  "type": "hero_wed",
+  "floors_failed": [],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "wed/076c5675-4aee-4ad0-b400-6b10188fdb59": {
+  "total": 66.3,
+  "type": "hero_wed",
+  "floors_failed": [
+   "a hero reaches five whys, documented plus labelled inferred"
+  ],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c": {
+  "total": 75.1,
+  "type": "hero_fri",
+  "floors_failed": [],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87": {
+  "total": 70.1,
+  "type": "wildcard",
+  "floors_failed": [],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "fri/46dd71d0-6787-4bda-bd6c-b0e2bc4abca2": {
+  "total": 73.6,
+  "type": "hero_fri",
+  "floors_failed": [
+   "a hero reaches five whys, documented plus labelled inferred"
+  ],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "fri/b38a7a98-50b4-4608-bf8e-b99d8181ac7b": {
+  "total": 73.4,
+  "type": "hero_fri",
+  "floors_failed": [
+   "a hero reaches five whys, documented plus labelled inferred"
+  ],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "tue/nytphotoshop": {
+  "total": 72.0,
+  "type": "explainer",
+  "floors_failed": [],
+  "unread": [
+   "absurdity_humour",
+   "mechanism"
+  ],
+  "floored": false
+ },
+ "tue/spotifyaudio": {
+  "total": 73.3,
+  "type": "explainer",
+  "floors_failed": [],
+  "unread": [
+   "absurdity_humour",
+   "mechanism"
+  ],
+  "floored": false
+ },
+ "tue/fcpcaptions": {
+  "total": 73.3,
+  "type": "explainer",
+  "floors_failed": [],
+  "unread": [
+   "absurdity_humour",
+   "mechanism"
+  ],
+  "floored": false
+ },
+ "tue/logicdrums": {
+  "total": 74.7,
+  "type": "explainer",
+  "floors_failed": [],
+  "unread": [
+   "absurdity_humour",
+   "mechanism"
+  ],
+  "floored": false
+ },
+ "tue/mychannel": {
+  "total": 60.0,
+  "type": "offday_short",
+  "floors_failed": [
+   "a short leads on humour the engine can read (not read)",
+   "a short's joke never needs explaining (not read)"
+  ],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "tue/tplcommscam": {
+  "total": 63.7,
+  "type": "offday_meme",
+  "floors_failed": [
+   "a meme's humour reads as supported (not read)",
+   "a meme never needs explaining (not read)"
+  ],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "tue/tplninedarter": {
+  "total": 46.2,
+  "type": "offday_meme",
+  "floors_failed": [
+   "a meme's humour reads as supported (not read)",
+   "a meme never needs explaining (not read)"
+  ],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "tue/tplfistpump": {
+  "total": 38.5,
+  "type": "offday_meme",
+  "floors_failed": [
+   "a meme's humour reads as supported (not read)",
+   "a meme never needs explaining (not read)"
+  ],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "tue/tplbuzzer": {
+  "total": 43.1,
+  "type": "offday_meme",
+  "floors_failed": [
+   "a meme's humour reads as supported (not read)",
+   "a meme never needs explaining (not read)"
+  ],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "thu/figmasix": {
+  "total": 74.7,
+  "type": "explainer",
+  "floors_failed": [],
+  "unread": [
+   "absurdity_humour",
+   "mechanism"
+  ],
+  "floored": false
+ },
+ "thu/robloxvideo": {
+  "total": 68.0,
+  "type": "explainer",
+  "floors_failed": [],
+  "unread": [
+   "absurdity_humour",
+   "mechanism"
+  ],
+  "floored": false
+ },
+ "thu/pixelfill": {
+  "total": 68.7,
+  "type": "explainer",
+  "floors_failed": [],
+  "unread": [
+   "absurdity_humour",
+   "mechanism"
+  ],
+  "floored": false
+ },
+ "thu/alphamatte": {
+  "total": 69.3,
+  "type": "explainer",
+  "floors_failed": [],
+  "unread": [
+   "absurdity_humour",
+   "mechanism"
+  ],
+  "floored": false
+ },
+ "thu/synthfirmware": {
+  "total": 71.5,
+  "type": "offday_short",
+  "floors_failed": [
+   "a short leads on humour the engine can read (not read)",
+   "a short's joke never needs explaining (not read)"
+  ],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "thu/tplturin": {
+  "total": 43.1,
+  "type": "offday_meme",
+  "floors_failed": [
+   "a meme's humour reads as supported (not read)",
+   "a meme never needs explaining (not read)"
+  ],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "thu/tplassemble": {
+  "total": 41.5,
+  "type": "offday_meme",
+  "floors_failed": [
+   "a meme's humour reads as supported (not read)",
+   "a meme never needs explaining (not read)"
+  ],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "thu/tpllegends": {
+  "total": 46.2,
+  "type": "offday_meme",
+  "floors_failed": [
+   "a meme's humour reads as supported (not read)",
+   "a meme never needs explaining (not read)"
+  ],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "thu/tplskyrim": {
+  "total": 52.3,
+  "type": "offday_meme",
+  "floors_failed": [
+   "a meme's humour reads as supported (not read)",
+   "a meme never needs explaining (not read)"
+  ],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "thu/tplthanksgiving": {
+  "total": 43.1,
+  "type": "offday_meme",
+  "floors_failed": [
+   "a meme's humour reads as supported (not read)",
+   "a meme never needs explaining (not read)"
+  ],
+  "unread": [
+   "absurdity_humour"
+  ],
+  "floored": false
+ },
+ "sat/goodnews": {
+  "total": 67.1,
+  "type": "goodnews",
+  "floors_failed": [],
+  "unread": [
+   "wonder"
+  ],
+  "floored": false
+ },
+ "sat/talent": {
+  "total": 71.8,
+  "type": "goodnews",
+  "floors_failed": [],
+  "unread": [
+   "wonder"
+  ],
+  "floored": false
+ },
+ "sat/newsrooms": {
+  "total": 66.5,
+  "type": "goodnews",
+  "floors_failed": [],
+  "unread": [
+   "wonder"
+  ],
+  "floored": false
+ },
+ "sat/makers": {
+  "total": 72.9,
+  "type": "goodnews",
+  "floors_failed": [],
+  "unread": [
+   "wonder"
+  ],
+  "floored": false
+ },
+ "sat/screen": {
+  "total": 61.8,
+  "type": "goodnews",
+  "floors_failed": [],
+  "unread": [
+   "wonder"
+  ],
+  "floored": false
+ }
+}

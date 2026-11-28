@@ -1,0 +1,642 @@
+Google charges developers about 10 cents a second for Genie 4 worlds
+
+ Skip to Sidebar
+ Skip to Content
+
+Search
+
+ Anonymous
+
+ Sign in
+
+ Home
+
+ Membership
+
+ FAQ
+
+ About
+
+ Advertise
+
+ Contact
+
+ Tags
+
+ Pulse
+
+ Landline
+
+ Decoded
+
+ Intermission
+
+ Gridlock
+
+ Pulse
+
+ Landline
+
+ Decoded
+
+ Intermission
+
+ Gridlock
+
+ About
+
+ Privacy
+
+ RSS
+
+info@ppc.land
+
+ Genie 4 reaches the Gemini API at about $0.10 a second, with 120-second sessions at 720p
+
+ Pulse
+
+Google charges developers about 10 cents a second for Genie 4 worlds
+
+Developer sessions cap at 120 seconds of 720p video on paid keys only, a day after AI Ultra users got it. Brand IP or real people can end a stream mid-session.
+
+ by Luis Rijo
+
+ Luis Rijo
+
+Luís Rijo has written PPC Land daily since founding it in 2016. Over 10,000 articles, funded by readers, no sponsored coverage. Tips and corrections: luis@ppc.land
+
+ Website
+
+ LinkedIn
+
+ November 19, 2026
+
+•
+
+ 16 min read
+
+ Subscribe to Newsletter
+
+ Subscribe
+ Sending
+
+ Sent
+
+ Please check your inbox and click the confirmation link.
+
+ Comments
+
+ Share
+
+ Share on X
+
+ Share on Facebook
+
+ Share on LinkedIn
+
+ Share on Pinterest
+
+ Email
+
+ Copy link
+
+Google today made Genie 4, its interactive world model, available to developers through the Gemini API and Google AI Studio, at a rate its documentation puts at roughly $0.10 for every second of streamed output. Each session can run for up to 120 seconds. The developer release came a day after Google, on November 18, began rolling Genie 4 out to eligible Google AI Ultra subscribers inside Project Genie, its experimental browser-based world builder.
+Three weeks ago none of this had a number attached. When Google DeepMind introduced Genie 4 on October 27, it was a research preview for trusted testers, and the company gave no price, resolution, frame rate, latency figure or session length. Google's developer pages now supply all five.
+In Short
+Google has opened Genie 4, a model that generates explorable worlds with sound in real time, to paying developers and to its most expensive consumer subscribers. Developers pay about 10 cents a second, sessions stop after two minutes, and prompts showing real people, public figures or copyrighted brand IP can be blocked or cut off mid-stream. For marketers and studios, the tool is now priced and specified for prototyping, but it produces landscape 720p video only and remains, in Google's words, frontier research.
+Two posts, two audiences
+Google split the release across two posts on The Keyword, its company blog. The first, dated November 18 and titled "Genie 4 is now available," is signed by Diego Rivas, group product manager at Google DeepMind, and Pavan Kumar, group product manager at Google Labs. It describes a rebuilt Project Genie for consumers. The second, dated November 19 and headed "Genie 4 is now available on the Gemini API", is a short developer note filed under Developer tools and Google DeepMind.
+"Following yesterday's Genie 4 launch, Genie 4 is now available for developers through the Gemini API (via the Interactions API) and Google AI Studio," according to the developer post. Starting from a text prompt, a reference image or both, developers can generate "continuous 720p worlds at 24fps with synchronized native audio," the post states, with sound ranging from ambient soundscapes and effects to character dialogue. Navigation runs on keyboard controls, and live text prompts change weather, lighting, objects or events while the world is running. "Gemini reasoning keeps the world state consistent and coherent throughout," the post adds.
+Google names three uses for the API: prototyping interactive experiences, visualising designs for spatial concepts, and training robotics and AI agents. Advertising is not among them.
+The consumer post frames the update around feedback. "Early testers told us they wanted deeper control over what happens inside those worlds, and easier ways to build and share them," according to Rivas and Kumar. The update, they write, makes the worlds "far more responsive, creative, and social," and bundles four things: first access to Genie 4, upgrades to Genie 3, a new Project Genie agent and a community gallery.
+What the developer documentation specifies
+The technical detail sits outside both blog posts, in Google's Genie pages for AI Studio, which the developer post links. The model page lists Genie 4 as a stable model, with November 2026 as its latest update.
+
+Item
+Genie 4 in the Gemini API, according to Google's documentation
+
+Model code
+models/genie-4 (also accepts genie-4)
+
+Version status
+Stable; latest update November 2026
+
+Access route
+Interactions API (v1beta endpoint) and Google AI Studio
+
+Key requirement
+Paid-tier Gemini API key
+
+Price
+Approximately $0.10 per second of streamed output, stereo audio included
+
+Billing unit
+240 video output tokens per frame; 5,760 tokens per second at 24 fps
+
+Inputs
+Text world prompt; optional single 16:9 reference image; keyboard and camera controls; text steering during the session
+
+Video output
+1280x720 (720p), 16:9, 24 fps
+
+Audio output
+48 kHz stereo; 16-bit PCM over WebSocket, Opus over WebRTC; bundled into video output tokens
+
+Maximum session
+Up to 120 seconds
+
+Visual stability
+May degrade after 60 to 90 seconds
+
+Time to first frame
+Roughly 5 to 9 seconds
+
+Round-trip latency
+Under 150 milliseconds in North America, Western and Central Europe, and East Asia
+
+Text steering response
+About 1 to 2 seconds
+
+Serving regions
+United States, Western Europe and Japan
+
+Transport
+WebRTC in the browser; WebSocket for Python and Node.js
+
+Not supported
+Batch API, Flex and Priority inference; function calling; Google Search grounding; structured outputs; session resumption; 9:16 portrait output; configurable frame rates
+
+Watermark
+SynthID on every output, according to the November 19 blog post
+
+Two details in that table stand out. The resolution and frame rate, 720p at 24 frames per second, match what Google DeepMind gave for Genie 3 when it introduced that model in August 2025. Genie 4's gains, in Google's description, lie in realism, physics, steering and sound rather than in pixel count. And the round-trip latency target of under 150 milliseconds applies only to three broad regions; the model itself is served from data centres in the United States, Western Europe and Japan.
+The arrangement resembles cloud gaming: frames are rendered in a data centre and streamed to a browser or application, while keystrokes travel the other way. The difference is that no game exists in advance. Each frame is generated by the model as the session runs.
+Billed by the frame
+Genie 4 is priced in tokens, the same accounting unit Google uses for its language models, but the meter runs on video frames rather than words. According to the model page, every frame costs 240 video output tokens. At 24 frames a second, that is 5,760 tokens a second, which Google translates into approximately $0.10 for each second of streamed output. Audio carries no separate charge; the documentation says it is bundled into the video output tokens.
+The figures below are PPC Land calculations at Google's approximate rate. They will shift slightly once Google publishes an exact per-token price.
+
+Streamed output
+Frames
+Video output tokens
+Approximate cost
+
+1 second
+24
+5,760
+$0.10
+
+60 seconds
+1,440
+345,600
+$6
+
+120 seconds (one maximum-length session)
+2,880
+691,200
+$12
+
+1 hour (30 maximum-length sessions)
+86,400
+20,736,000
+$360
+
+The exact rate is not yet public. The Genie documentation links to a Genie 4 section of the Gemini API pricing page, but that page today listed models from Gemini 2.5 through Gemini 4 Argon, Lyria 3.5 and Gemini Robotics ER 2 Preview and had no Genie 4 entry. The rate-limits page, also linked from the Genie documentation for concurrent session limits, carried no Genie row either. How many sessions a single project may stream at once is therefore not published.
+For comparison, Google priced Gemini 4 Carbon, released on November 10, at $2 per million input tokens and $10 per million output tokens, the same introductory rate as Gemini 4 Argon. A single two-minute Genie 4 session generates close to 700,000 output tokens on its own.
+Per-second billing also brings back a question that has followed the Gemini API all year. In March, Google added Project Spend Caps to AI Studio, monthly dollar limits per project, while warning that users remain responsible for overages incurred during an enforcement delay of roughly 10 minutes. On October 8, Google Cloud added spend caps that pause its Gemini agent at the limit. Neither announcement mentions Genie, and the Genie documentation does not say how spend caps interact with live streams.
+How a Genie 4 session runs, according to the documentation
+Google's developer guide describes a session lifecycle in seven stages.
+Key. A paid-tier Gemini API key is required. No free tier is described.
+World setup. The developer creates an interaction through the Interactions API with the model set to genie-4 and an event of type world_setup. That event carries a world_prompt text field and, optionally, a single 16:9 starting image in a reference_image field.
+Connection. The session is opened with a connect call over WebRTC, for browser applications, or over WebSocket, for Python and Node.js. Genie 4 does not use Google's Live API.
+First frame. Initial setup takes roughly 5 to 9 seconds before video begins.
+Movement and camera. Navigation arrives as user_action events. The W, A, S and D keys move through the world; the four arrow keys move the camera. Actions are sent as key_down, key_up or key_click. The schema also accepts the E key and the space bar, but according to the documentation Genie 4 attaches no built-in jump or interact behaviour to them.
+Steering. Text input events sent during the stream change the world; Google says such shifts take about 1 to 2 seconds to appear.
+Ending. A complete call ends the session and, according to the guide, stops billing. Cancel and detach calls also exist. Sessions stop at the 120-second hard cap regardless, and a completed interaction cannot be resumed.
+The Interactions API is the same single-endpoint design Google uses for its agent products. In July, Google added background execution and remote MCP support to Managed Agents, which sit inside the Interactions API and launched in public preview at Google I/O on May 19. Genie 4 now shares that route with Google's agents, rather than with its real-time voice products.
+What the model refuses and where it drifts
+The documentation is specific about what Genie 4 will not generate. Under a heading on safety and recitation filters, it states that prompts or reference images containing identifiable real people, public figures or copyrighted brand IP can be blocked when a session starts, or can terminate a stream that is already running. The page describes no exception for a rights holder generating its own brand, and no appeal process.
+For advertisers, that clause matters more than the frame rate. A world built around a recognisable product, mascot or celebrity is the kind of interactive brand experience an agency might want to prototype, and the documentation says such inputs may be stopped mid-stream.
+The format limits are equally plain. Output is fixed at 16:9; portrait video at 9:16, the shape of Shorts, Reels and TikTok, is not supported, and neither are custom frame rates.
+Google also lists how worlds degrade. According to the documentation, looking away from an object for eight seconds or more, or turning through 360 degrees, can cause landmarks, doors or buttons to shift or reset, and visual stability may degrade after 60 to 90 seconds, inside the 120-second hard cap. Text, signs and clocks drift over time. The consumer post names a parallel list of open problems. "Genie 3 and Genie 4 remain world models in the frontier research space," according to Rivas and Kumar, who write that Google is "actively tackling key challenges such as camera latency, intricate physical interactions, real-time audio precision, and long-term scene permanence."
+Project Genie: Genie 4 arrives, Genie 3 runs longer
+Project Genie opened on January 29, 2026, to Google AI Ultra subscribers in the United States aged 18 and over, with each generation capped at 60 seconds on Genie 3. The November 18 update gives subscribers a model picker with both generations.
+Google calls Genie 4 "our most realistic and interactive world model yet." In Project Genie, a user can type a new prompt while navigating to change the environment: shift the weather, add a character or redirect the action. Genie 4 pairs those visuals, for the first time, "with real-time native audio that adapts as the scene unfolds, from ambient soundscapes to character dialogue," according to the post.
+Genie 3 stays in the picker for longer runs and for spaces seeded from panoramas, and it gains three features.
+
+Feature
+Genie 3 in Project Genie after November 18
+Genie 4 in Project Genie
+
+Availability
+Remains in the model picker
+First-time access
+
+Run length
+Up to 3 minutes per generation, up from 60 seconds
+Not stated
+
+World chaining
+Multiple worlds can be linked for longer journeys
+Not stated
+
+360-degree panorama grounding
+New worlds can be seeded from panorama images
+Not stated
+
+Prompting during exploration
+Real-time in-world events through natural-language prompts
+Mid-session prompts edit the environment
+
+Native audio
+Not stated
+Yes, from ambient sound to character dialogue
+
+Google's positioning
+Longer runs or panorama-seeded spaces
+"highest-fidelity visuals, physics, and native audio"
+
+The table exposes an odd trade. The older model now runs for up to three minutes a generation, while the newer one, in its developer form, stops at two. The consumer post does not say how long a Genie 4 session lasts inside Project Genie.
+An agent that sets the scene
+The Project Genie agent turns world creation into a conversation. According to the post, a user describes a vision in natural language and the agent "orchestrates Google's suite of multimodal models" to produce initial visuals that set the world's look, paired with "custom background scores tailored to the mood." The post does not name the models involved.
+Gemini can also be brought into a session while it runs. According to Google, it "observes what is happening on screen, surfaces context-aware suggestion chips for where to go next, or triggers in-world events automatically" as the journey unfolds.
+A gallery to explore and remix
+The third addition is a community gallery of curated and user-built worlds. Google highlights three of its own: "Living Memory," which turns personal photos into explorable spaces; "Dino Field Guide," a set of prehistoric habitats grounded in 360-degree panoramas; and "Rock Paper Scissors," in which themed objects compete on a desk with Gemini acting as real-time referee.
+Two worlds come from outside creators who had early access. With creative technologist Will, known as BLVCKL!GHT, Google built "Villa Giallo," described as a room-by-room mystery in a gothic manor. With filmmaker Anand Gandhi it built "The Life of Ants," in which a user navigates a colony from an ant's perspective. Users can remix gallery worlds with the agent, changing the underlying world structure, soundtrack or rules, and publish their own creations for others to explore and remix.
+Access is limited. "Eligible Google AI Ultra subscribers can try the new Project Genie experience starting today, and Google AI Pro members can join the waitlist on the same page," according to the November 18 post. The Project Genie page at Google Labs states that the product is available to Google AI Ultra subscribers aged 18 and over and calls it an early research prototype. Google AI Ultra costs $99.99 or $199.99 a month and Google AI Pro $19.99. Neither post lists countries.
+From research preview to a price list in 23 days
+The pace is notable. On October 27, Google DeepMind introduced Genie 4 as a research preview for a limited group of trusted testers, saying access for Ultra subscribers and early access API partners would follow soon. The posts that day carried no specifications. The DeepMind research page still describes the trusted-tester rollout and a waitlist.
+
+Item
+October 27 announcement
+November 18-19 release
+
+Who can use it
+Trusted testers
+Eligible Google AI Ultra subscribers (Project Genie); any developer with a paid Gemini API key
+
+API access
+Promised soon to early access partners
+Gemini API via the Interactions API, and Google AI Studio
+
+Price
+Not stated
+Approximately $0.10 per second of streamed output
+
+Resolution and frame rate
+Not stated
+1280x720, 24 fps
+
+Session length
+Not stated
+Up to 120 seconds (API)
+
+Latency
+Not stated
+Under 150 ms round trip in three regions
+
+Audio
+Native audio and dialogue
+48 kHz stereo, bundled into video tokens
+
+The release also arrives while Google says it is short of compute. On October 21, Sundar Pichai said Google remained capacity constrained after Gemini 4 Argon processed almost 25 trillion tokens in its first 72 hours. Each Genie 4 stream produces 5,760 tokens a second for a single viewer, and the absence of published concurrency limits leaves open how much of that capacity Google is prepared to sell.
+SynthID, screening and labelling
+Both posts put provenance first among the safeguards. "All video and audio generated in Project Genie includes SynthID watermarking, and all model inputs and outputs go through safety screenings," according to the November 18 post. The developer note repeats the point: "As a reminder every output includes imperceptible SynthID watermarking."
+SynthID is Google DeepMind's invisible watermarking system. On October 6, Google opened its SynthID Detector portal to anyone with a sign-in. Google's Genie developer pages, as published today, do not themselves mention the watermark, and neither post says whether Genie 4 output also carries C2PA metadata.
+That question has commercial weight. EU AI Act Article 50 transparency obligations became applicable on August 2, 2026, with penalties of up to EUR 15 million or 3% of worldwide annual turnover. Google's own "How this ad was made" panel, added on July 9, discloses AI use automatically only for ads built with Google's generative tools. Neither post says whether a video captured from a Genie 4 world and uploaded to Google Ads would be labelled automatically or would depend on the advertiser's own disclosure.
+Why it matters for the marketing community
+Genie 4 is not an advertising product, and neither post presents it as one. Its route to marketing budgets runs through the same channels as Google's other generative models: a paid API for agencies and developers, and the top consumer subscription tier for creators.
+The developer release turns a research demonstration into something an agency or studio can cost. Two minutes of interactive, sound-tracked world costs about $12, by PPC Land's calculation at Google's approximate rate. That figure puts a measurable cost on interactive pre-visualisation, playable brand concepts and walk-through product environments, at least at prototype scale. The documented limits cut the other way: landscape 720p only, stability that may slip after a minute, and filters that can stop a session when copyrighted brand IP, a public figure or a real person appears.
+Gaming is the closest commercial neighbour. On Roblox's October 29 earnings call, the company said more than 80% of its top 100 games had used AI in creation in the past month, and developers were increasingly buying ads for traffic. Google's own Playground, opened on October 7, creates games from text for US adults on AI subscription tiers. Genie 4 does not build games in the engine sense, since a session stops at two minutes and cannot be resumed once it ends, but it gives game and app developers a priced way to test a concept visually before any engine work.
+The release also fits the pattern Google has used for its recent models: the most expensive consumer tier and paid API access first, with consumer pricing set by subscription and developer pricing set by usage. Gemini 4 Carbon reached AI Mode for Ultra subscribers only on November 10, with API access on paid tiers. Genie 4 now follows the same split, for a world model.
+What the sources leave open
+Neither post nor the developer documentation gives an exact per-token price, concurrency limits, Genie 4's session length inside Project Genie, the countries where Project Genie is offered, the training data behind the model, or whether its output carries C2PA metadata. The documentation also does not explain how the content filters treat a brand that owns the IP it prompts.
+Key facts
+Product: Genie 4, a real-time interactive world model from Google DeepMind
+Model code: models/genie-4 (also accepts genie-4); listed as stable, latest update November 2026
+Developer access: Gemini API via the Interactions API (v1beta) and Google AI Studio, from November 19, 2026; paid-tier API key required
+Developer price: approximately $0.10 per second of streamed output, stereo audio included; 240 video output tokens per frame, 5,760 tokens per second
+Output: 1280x720, 16:9, 24 fps video; 48 kHz stereo audio
+Session cap: 120 seconds (API); visual stability may degrade after 60 to 90 seconds
+Serving regions: United States, Western Europe and Japan
+Consumer access: Project Genie, rolling out from November 18, 2026 to eligible Google AI Ultra subscribers (18 and over per the Google Labs page); Google AI Pro waitlist
+Genie 3 changes: up to 3 minutes per generation (from 60 seconds), world chaining, 360-degree panorama grounding, real-time in-world events
+Watermark: SynthID on all Project Genie video and audio and on every API output
+Source documents: "Genie 4 is now available," Diego Rivas and Pavan Kumar, The Keyword, November 18, 2026 (https://blog.google/innovation-and-ai/models-and-research/google-deepmind/genie-4-now-available-project-genie/); "Genie 4 is now available on the Gemini API", The Keyword, November 19, 2026 (https://blog.google/innovation-and-ai/technology/developers-tools/genie-4-in-gemini-api/)
+Developer documentation: https://aistudio.google.com/docs/genie and https://aistudio.google.com/docs/models/genie-4
+Research overview: "Genie 4: A new generation of world simulation," Google DeepMind, October 27, 2026 (https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/)
+Timeline
+August 5, 2025 - Google DeepMind introduces Genie 3, generating worlds at 720p and 24 frames per second.
+January 29, 2026 - Project Genie opens to Google AI Ultra subscribers in the United States aged 18 and over, with 60-second generations on Genie 3.
+March 16, 2026 - Google adds Project Spend Caps to the Gemini API in AI Studio.
+May 19, 2026 - Managed Agents launch in public preview at Google I/O, inside the Interactions API.
+July 7, 2026 - Google adds background execution and remote MCP support to Managed Agents.
+July 9, 2026 - Google adds "How this ad was made" AI labels to My Ad Center.
+August 2, 2026 - EU AI Act Article 50 transparency obligations become applicable.
+October 6, 2026 - Google opens the SynthID Detector portal to anyone with a sign-in.
+October 7, 2026 - Google opens Playground for game creation, tied to AI subscription tiers.
+October 8, 2026 - Google Cloud adds spend caps that pause its Gemini agent at the limit.
+October 13, 2026 - Google releases Gemini 4 Argon at $2 per million tokens.
+October 21, 2026 - Sundar Pichai says Google remains capacity constrained after Argon's 25 trillion tokens in 72 hours.
+October 27, 2026 - Google DeepMind announces Genie 4 as a research preview for trusted testers.
+October 29, 2026 - Roblox says more than 80% of its top 100 games used AI in creation in the past month.
+November 10, 2026 - Gemini 4 Carbon reaches AI Mode for Google AI Ultra subscribers only.
+November 18, 2026 - Google rolls out a new Project Genie with Genie 4, Genie 3 upgrades, the Project Genie agent and a community gallery to eligible Google AI Ultra subscribers; Google AI Pro members can join a waitlist.
+November 19, 2026 - Genie 4 becomes available through the Gemini API and Google AI Studio at approximately $0.10 per second of streamed output.
+Related PPC Land coverage
+Google's Genie 4 simulates people who talk back in real time - The October research preview, with Gemini 3.8 Flash as an agent in the loop and the robotics demonstration with Apptronik's Apollo.
+Google lets Gemini agents run background tasks without breaking connections - How Managed Agents work inside the Interactions API, the endpoint Genie 4 now uses.
+Google finally adds Gemini API spend caps - after billing chaos hit devs - Monthly per-project caps in AI Studio and the roughly 10-minute enforcement delay.
+Google Cloud adds project spend caps that pause Gemini agents at the limit - Real-time caps in Cloud Billing that pause Google's Gemini agent.
+Gemini 4 Carbon reaches AI Mode for $99.99 Ultra subscribers only - Carbon's $2 and $10 per million token API rates and its Ultra-only consumer access.
+Google prices Gemini 4 Argon at $2 per million tokens, paid users only - The Argon launch and its robotics pipeline.
+Gemini 4 Argon's 25 trillion tokens in 72 hours leave Google short of compute - Pichai on capacity constraints after the Argon launch.
+Google ties Playground game creation to AI plans for US adults 18+ - Google's text-to-game platform and its subscription tiers.
+Roblox developers buy ads for traffic as 80% of top games use AI - AI use in Roblox's top games and the platform's growing ad system.
+Gemini app now builds interactive simulations from a single prompt - The April feature that builds code-based simulations inside the Gemini app.
+Google's SynthID Detector gains public access and covers 4 companies - The October opening of Google's watermark detection portal.
+Advertisers face $5,000 New York fines and 3% EU penalties over AI labels - The disclosure rules that apply to synthetic content in ads.
+Summary
+Who: Google, through Google DeepMind and Google Labs, with the November 18 post signed by group product managers Diego Rivas and Pavan Kumar. The release affects developers with paid Gemini API keys, Google AI Ultra subscribers, Google AI Pro members on the waitlist, and agencies, studios and advertisers assessing generative video.
+What: Genie 4, a world model that generates explorable environments with native audio in real time, became available in the Gemini API and Google AI Studio at approximately $0.10 per second of streamed output, with 720p video at 24 fps and a 120-second session cap. A day earlier, a rebuilt Project Genie brought Genie 4, longer Genie 3 runs, an agent and a community gallery to Ultra subscribers.
+When: The Project Genie update began rolling out on November 18, 2026; developer access opened today, 23 days after the October 27 research preview.
+Where: Online, through Project Genie in the browser and through the Gemini API and Google AI Studio, with serving from data centres in the United States, Western Europe and Japan.
+Why: Google says testers wanted more control and easier ways to build and share worlds, and it names prototyping, spatial design and the training of robots and AI agents as developer uses. For the marketing industry, the release puts a price and a specification on interactive generated worlds for the first time, along with filters that can stop sessions involving real people, public figures or copyrighted brand IP.
+
+ Luis Rijo
+
+Luís Rijo has written PPC Land daily since founding it in 2016. Over 10,000 articles, funded by readers, no sponsored coverage. Tips and corrections: luis@ppc.land
+
+ Website
+
+ LinkedIn
+
+ On this page
+
+ Unlock full content
+
+ Subscribe to Newsletter
+
+ Subscribe
+ Sending
+
+ Sent
+
+ Please check your inbox and click the confirmation link.
+
+Read Next
+
+ 8 min read
+
+Portfolio name
+
+ Luis Rijo
+
+ Luis Rijo
+
+Luís Rijo has written PPC Land daily since founding it in 2016. Over 10,000 articles, funded by readers, no sponsored coverage. Tips and corrections: luis@ppc.land
+
+ Website
+
+ LinkedIn
+
+ •
+ Nov 28, 2026
+ •
+ Decoded
+
+ 8 min read
+
+Portfolio ID
+
+ Luis Rijo
+
+ Luis Rijo
+
+Luís Rijo has written PPC Land daily since founding it in 2016. Over 10,000 articles, funded by readers, no sponsored coverage. Tips and corrections: luis@ppc.land
+
+ Website
+
+ LinkedIn
+
+ •
+ Nov 28, 2026
+ •
+ Decoded
+
+ 8 min read
+
+Ad product
+
+ Luis Rijo
+
+ Luis Rijo
+
+Luís Rijo has written PPC Land daily since founding it in 2016. Over 10,000 articles, funded by readers, no sponsored coverage. Tips and corrections: luis@ppc.land
+
+ Website
+
+ LinkedIn
+
+ •
+ Nov 28, 2026
+ •
+ Decoded
+
+ 10 min read
+
+Prime Video sets January 22 for Our Fault: London, the trilogy's last film
+
+ Luis Rijo
+
+ Luis Rijo
+
+Luís Rijo has written PPC Land daily since founding it in 2016. Over 10,000 articles, funded by readers, no sponsored coverage. Tips and corrections: luis@ppc.land
+
+ Website
+
+ LinkedIn
+
+ •
+ Nov 28, 2026
+ •
+ Intermission
+
+ 13 min read
+
+Hiring in Italy dropped for 48 months in a row, LinkedIn data shows
+
+ Luis Rijo
+
+ Luis Rijo
+
+Luís Rijo has written PPC Land daily since founding it in 2016. Over 10,000 articles, funded by readers, no sponsored coverage. Tips and corrections: luis@ppc.land
+
+ Website
+
+ LinkedIn
+
+ •
+ Nov 28, 2026
+ •
+ Pulse
+
+ 10 min read
+
+TikTok Shop lets sellers hide photo carousels from profiles, not the feed
+
+ Luis Rijo
+
+ Luis Rijo
+
+Luís Rijo has written PPC Land daily since founding it in 2016. Over 10,000 articles, funded by readers, no sponsored coverage. Tips and corrections: luis@ppc.land
+
+ Website
+
+ LinkedIn
+
+ •
+ Nov 28, 2026
+ •
+ Pulse
+
+ 18 min read
+
+TikTok Shop lets sellers suggest 5 searches under creators' videos
+
+ Luis Rijo
+
+ Luis Rijo
+
+Luís Rijo has written PPC Land daily since founding it in 2016. Over 10,000 articles, funded by readers, no sponsored coverage. Tips and corrections: luis@ppc.land
+
+ Website
+
+ LinkedIn
+
+ •
+ Nov 28, 2026
+ •
+ Pulse
+
+ 15 min read
+
+Making Google just another bidder could take Prebid into 2028, Weide says
+
+ Luis Rijo
+
+ Luis Rijo
+
+Luís Rijo has written PPC Land daily since founding it in 2016. Over 10,000 articles, funded by readers, no sponsored coverage. Tips and corrections: luis@ppc.land
+
+ Website
+
+ LinkedIn
+
+ •
+ Nov 28, 2026
+ •
+ Pulse
+
+ 24 min read
+
+4,837 hijacked GitHub accounts show how code hosting became an attack route
+
+ Luis Rijo
+
+ Luis Rijo
+
+Luís Rijo has written PPC Land daily since founding it in 2016. Over 10,000 articles, funded by readers, no sponsored coverage. Tips and corrections: luis@ppc.land
+
+ Website
+
+ LinkedIn
+
+ •
+ Nov 28, 2026
+ •
+ Landline
+
+ 20 min read
+
+Trade Desk CEO says 43 of 60 big advertisers grew slower than the US economy
+
+ Luis Rijo
+
+ Luis Rijo
+
+Luís Rijo has written PPC Land daily since founding it in 2016. Over 10,000 articles, funded by readers, no sponsored coverage. Tips and corrections: luis@ppc.land
+
+ Website
+
+ LinkedIn
+
+ •
+ Nov 28, 2026
+ •
+ Pulse
+
+Subscribe to Newsletter
+
+Every morning, get a curated digest of the last 24 hours in programmatic advertising
+
+ Subscribe
+ Sending
+
+ Sent
+
+ Please check your inbox and click the confirmation link.
+
+Discussion
+
+info@ppc.land
+
+ About
+
+ Privacy
+
+ RSS
+
+ Home
+
+ Membership
+
+ FAQ
+
+ About
+
+ Advertise
+
+ Contact
+
+ Tags
+
+ Pulse
+
+ Landline
+
+ Decoded
+
+ Intermission
+
+ Gridlock
+
+ About
+
+ Privacy
+
+ RSS
+
+info@ppc.land
+
+Continue Reading. It's free.
+
+Every morning, receive our newsletter with marketing news. Landline is our free daily digest of the latest 24 hours. Confirm your address through the link we send, and unsubscribe anytime.
+
+ Subscribe
+ Sending
+
+ Sent
+
+ Please check your inbox and click the confirmation link.
+
+Already a member? Sign in

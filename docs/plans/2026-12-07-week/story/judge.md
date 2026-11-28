@@ -1,150 +1,165 @@
-## mon/2c443323-dc8c-4941-9608-04d6b3ec85ed
-scale: 5/10 because it is one $11 million start-up signing one distributor, Symphonic, and only opted-in independent artists are paid, at a rate nobody has disclosed, so the consequence is real but narrow and has no sourced money figure for the artists.
-fun_consume: 6/10 because the hidden rate is a genuine hook and "which email to read" gives a musician something to repeat, but the piece ends on an absence rather than a surprise.
-fun_produce: 6/10 because Follow the receipt fits with an itemised line left blank for the undisclosed rate and the opt-in box is a real object to show, but there is no number to land after the story and no named song or artist on screen.
-
 ## mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2
-scale: 7/10 because ElevenLabs, valued at $22 billion, buying Kotoba for a reported $100 million is a major player's move with a stated second-order effect on voice actors, dubbers and audiobook narrators, though the price is reported, not confirmed.
-fun_consume: 7/10 because "paid about $100 million to learn Japanese" is an oddly specific headline that holds to the end and the line about going shopping for one language is worth repeating.
-fun_produce: 7/10 because The headline that makes no sense yet fits exactly, the $100 million sits well as the number in the scene, and it matches the growth pattern of one named company then the money, though the proof object is a press report rather than something shown happening.
+scale: 7/10 because the biggest AI voice company, valued at $22 billion, buys a Japanese voice firm for a sourced, reported $100 million, with a named second-order effect on voice actors, dubbers and narrators, though the price is reported rather than confirmed.
+fun_consume: 7/10 because "paid about $100 million to learn Japanese" and the shopping-for-a-language line are worth repeating, and the named company then money pattern holds, though the payoff for the viewer is a notion of what a language is worth rather than a surprise.
+fun_produce: 7/10 because the receipt or random-headline formats fit, with the $100 million and the $22 billion valuation as numbers to put in scene and a who-gets-paid split for the voice, firm and dubber, but there is no screen proof object beyond the deal headline.
 
 ## mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb
-scale: 6/10 because Kling raised 19.8 billion yuan with a buy-back promise booked as interest, a major tool's funding with a stated risk for anyone building on it, but the effect on creators is argued rather than measured.
-fun_consume: 5/10 because "a loan in disguise" is a good turn, but the evidence is a quoted accounting line about redemption financial liabilities that a busy reader will find heavy going.
-fun_produce: 5/10 because the accounts line can be shown as screen proof and the 19.8 billion yuan can be drawn, but the mechanism is financial and abstract, with no everyday object for a receipt or a test.
+scale: 7/10 because Kling is a major named AI video tool and 19.8 billion yuan is a sourced figure from Kuaishou's own accounts, with a stated consequence for anyone choosing a tool to build on, though the effect on others is inferred.
+fun_consume: 6/10 because "promised their money back, with interest" is a strange true hook and the receipt line lands, but redemption liabilities and finance costs are accountancy that a busy reader may drop before the end.
+fun_produce: 7/10 because follow-the-receipt and random-headline fit, with the quoted line from Kuaishou's results as an on-screen proof object and 19.8 billion yuan as the number in scene, though the mechanism is abstract to draw.
 
-## wed/41874364-fcd8-4fd1-b7e7-91aca6235019
-scale: 5/10 because Maxon is a notable company and the change reaches every Cinema 4D and ZBrush artist, but the consequence is a billing model inside two apps, with no sourced figure for price or users.
-fun_consume: 5/10 because "someone else's AI" and the off switch sold as a feature are mildly wry, but the story is mostly a product note read once.
-fun_produce: 6/10 because a Head to head or a screen recording of generation inside Cinema 4D, with the Tripo and Rodin names and the expiring credits as a receipt, gives one thing to show, though there is no number that holds people.
+## mon/2c443323-dc8c-4941-9608-04d6b3ec85ed
+scale: 5/10 because an $11 million start-up's deal with one distributor, Symphonic, touches its opted-in indie artists, a real but local consequence, and the key figure, the rate, is undisclosed.
+fun_consume: 5/10 because "nobody says how much" is a decent tease and the playlists line is repeatable, but the story ends on a missing number, which leaves the reader with no payoff.
+fun_produce: 5/10 because follow-the-receipt could itemise how $11 million reaches an artist and the opt-in box could be shown, but the central receipt line is blank, so most of it would be said rather than shown.
 
 ## wed/de83ed89-f29e-4e5f-ad82-c698ec72a010
-scale: 8/10 because Unreal Engine 6 shipping without Blueprints changes the working tool of a whole sector of game makers, backed by the sourced 20,000 Blueprints and roughly 3 million lines of Verse, though "millions of game makers" is not itself sourced.
-fun_consume: 8/10 because the irony that a tool built so people need not write code is retired by an AI writing 3 million lines of it is the kind of line a stranger forwards before finishing.
-fun_produce: 7/10 because The headline that makes no sense yet fits, 20,000 in and 3 million out is a ready number in the scene, and a Blueprint graph beside Verse text is a real screen to show, though there is no named product moment from the growth evidence.
+scale: 9/10 because Epic retiring Blueprints in Unreal Engine 6 changes the working skill of millions of game makers across a whole sector, backed by the sourced 20,000 Blueprints and 3 million lines of Verse.
+fun_consume: 9/10 because the irony that the tool built so people would not have to code is retired by an AI writing 3 million lines of code is the kind of line a stranger forwards before finishing.
+fun_produce: 8/10 because voice-led pictures or random-headline fit, with a real Blueprint graph turning into lines of Verse as a screen proof and 20,000 in, 3 million out as the number in scene, close to the named-thing-then-surprise pattern that holds people.
 
-## fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87
-scale: 4/10 because it is one game update on one store, with a local consequence of 8% positive recent reviews, though it touches how Steam's AI label works.
-fun_consume: 8/10 because players unmasking the music through one metadata field that names Suno is a detective story with a punchline, and the 8% reviews give the cost.
-fun_produce: 8/10 because the metadata line naming Suno is a perfect screen proof shown on the exact words, the Reddit post and the review score are further objects, and it opens on a named concrete thing as the growth pattern asks.
+## wed/41874364-fcd8-4fd1-b7e7-91aca6235019
+scale: 5/10 because Maxon is a notable named firm and Cinema 4D and ZBrush users are a real group, but the consequence, credits for third-party models, is local and carries no sourced figure.
+fun_consume: 5/10 because the off switch as the selling point is a good wry moment, but "someone else's AI, sold in credits" is a familiar resale story that reads once.
+fun_produce: 6/10 because follow-the-receipt could itemise a credit bill and the in-app generation panel with Tripo and Rodin named is something to show, though the story gives no price to put on the receipt.
+
+## wed/076c5675-4aee-4ad0-b400-6b10188fdb59
+scale: 4/10 because one plugin from iZotope, priced at $179 then $249, changes one editing task for producers, a local consequence for a named product.
+fun_consume: 6/10 because "types out your song so you can put an echo on one word" is a clear, slightly absurd hook and the mumbled-word reverb line is repeatable, though it is a product feature at heart.
+fun_produce: 8/10 because head-to-head or face-with-proof fits with a screen recording of the lyrics appearing and one word being clicked and echoed, a real show-not-say moment, plus the before-and-after audio.
+
+## wed/5675e3e4-3420-45a2-bc45-9e9cbd5902ee
+scale: 7/10 because Google renting playable worlds through the Gemini API at a sourced $0.10 a second, up to 120 seconds, is a major player's move that sets a price for every game studio and solo maker.
+fun_consume: 8/10 because 10 cents a second for a world and the door that moves when you look away for eight seconds are both moments a reader repeats, with a named thing then money then surprise.
+fun_produce: 9/10 because the receipt format fits a per-second bill, the scoreboard-test or screen-proof fits a recorded session that wobbles after 60 to 90 seconds, and the moving door is an on-screen proof object matching the named-thing-then-surprise pattern in the growth evidence.
 
 ## fri/c1bd8406-c267-426e-b586-d76e1ef68e5c
-scale: 5/10 because festival selection governs awards and distribution for animators and Manchester's ban from 2027 is a real rule, but it is a few festivals and no figure says how many entries are affected.
-fun_consume: 7/10 because the director's quote about animators "clearly lying on their forms" and AI films ticked as 3D give one moment worth repeating.
-fun_produce: 6/10 because The debate, made everyday fits around one entry form everyone has filled in, and the form and Manchester's rule text can be shown, but there is no film or frame named to show the lie.
+scale: 6/10 because named festivals, Manchester and Ottawa, decide awards and distribution for animated films, so a gamed form has a second-order effect on animators, though there is no sourced figure.
+fun_consume: 7/10 because entrants ticking "3D or something" to dodge the AI box is a funny, repeatable moment and the honesty angle holds to the end.
+fun_produce: 6/10 because the Fry explainer or everyday-debate fits, with the festival form and its tick box as a real picture and Manchester's rule quoted on screen, but the films themselves are not shown, so much of it is said.
 
-## fri/acb58370-aaca-4040-9c13-83f227a628ec
-scale: 7/10 because Tencent Music, China's biggest music company, telling investors AI streams are negligible and falling is a major player's statement about where the sector's money goes, though no stream figure is given.
-fun_consume: 6/10 because "a million songs a day, and the market's verdict is negligible" is a good line, but the piece rests on a company's own soft word rather than a number.
-fun_produce: 5/10 because the earnings call quote can be screen proof, but One number per frame has no numbers to draw and the rest would be voice over stills.
+## fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87
+scale: 5/10 because one Binding of Isaac update and Steam's self-ticked AI label is a notable case with a sourced fall to 8% positive recent reviews, but the consequence is local to that game.
+fun_consume: 8/10 because players unmasking AI music through one metadata field that politely said who wrote it is a detective story with a punchline a stranger would share.
+fun_produce: 9/10 because face-with-proof or screen-proof fits with the metadata field reading Suno as a real on-screen proof object and the 8% review score as the number after, a named thing then a surprise.
+
+## fri/b38a7a98-50b4-4608-bf8e-b99d8181ac7b
+scale: 6/10 because Tor is a major named publisher and Ilona Andrews bestselling authors, and the failure of two no-AI clauses bears on every author, illustrator and publisher, though no figure is given.
+fun_consume: 8/10 because two contracts saying no AI and the comments under the reveal post catching it anyway is a sharp, repeatable irony that holds to the end.
+fun_produce: 7/10 because face-with-proof fits with the pulled cover, the contract clauses and Tor's statement as on-screen objects, though showing the AI cover itself may raise rights questions.
+
+## fri/46dd71d0-6787-4bda-bd6c-b0e2bc4abca2
+scale: 5/10 because HeyGen is a notable named maker and creators weighing an AI double are a real group, with sourced figures of 84.4%, 42.2%, 65.1% and 78.9%, but the consequence is understanding one claim.
+fun_consume: 8/10 because the avatar losing the spot-the-real-one test more often than it won and being sold as 84.4% is a number trick readers like to repeat.
+fun_produce: 8/10 because data-story fits with the 42.2% against the 50% coin toss drawn as one stat per frame and HeyGen's own research page as screen proof, and a play-along spot-the-real-clip moment is available.
 
 ## tue/nytphotoshop
-fun_consume: 8/10 because the New York Times telling photographers to keep Photoshop out of date on purpose is an odd, true headline a stranger would send on.
-fun_produce: 7/10 because the email's own words naming Photoshop 2027 release 28.0.0 are a real object for the first card and the paper's name carries the hook, though a carousel cannot show the AI feature itself.
-utility: 7/10 because a photographer can act today by not updating past release 28.0.0, a step stated in the Times's own email, but the story does not say which AI features cause it or what to use instead.
-
-## tue/fcpcaptions
-fun_consume: 4/10 because 23 more caption languages is useful but flat, and only the one-language line lifts it.
-fun_produce: 5/10 because the caption panel and its language list can be shown on a card, but it is a feature list with no moment.
-utility: 8/10 because any Final Cut Pro editor can generate captions in 23 new languages today, on Apple's own release notes, though the steps and which languages are not in the story.
-
-## tue/logicdrums
-fun_consume: 5/10 because splitting a song's drums into kick, snare and hi-hat is satisfying to a musician and the cowbell joke lands, but it is a feature note.
-fun_produce: 5/10 because the preset and the split regions can be shown on a card, but the real proof is sound, which a still carousel cannot play.
-utility: 9/10 because a Logic Pro for iPad user can pick the named preset, Drums (Individual Kit Pieces), in Stem Splitter today, with the step quoted from Apple's own notes.
+fun_consume: 8/10 because the best-known newspaper telling photographers to keep their software out of date on purpose is a surprising, shareable line with a direct quote.
+fun_produce: 7/10 because an explainer carousel fits, with the quoted email naming Photoshop 2027 release 28.0.0 as the proof object to show on a card.
+utility: 7/10 because a photographer can act this week by holding the Photoshop update, the release number named in the source, though the vendor's own documents are not the source of the steps.
 
 ## tue/spotifyaudio
-fun_consume: 6/10 because a free audiobook of your own book is a send-to-a-friend offer for any self-published writer, though the telling is plain.
-fun_produce: 5/10 because the tool's screens and the five-per-author limit can go on cards, but there is nothing to show happening.
-utility: 8/10 because self-published authors in 21 more markets, the UK included, can make up to five audiobooks free starting today, from Spotify's own newsroom, though the sign-up steps are not given.
+fun_consume: 6/10 because free audiobooks for self-published authors is useful and the five-books line is wry, but it reads as a product announcement.
+fun_produce: 6/10 because an explainer carousel fits and the creation tool screens could be shown, though the story gives no screen detail beyond the launch.
+utility: 9/10 because self-published authors in 21 more markets, the UK among them, can use it today for up to five books free, sourced from Spotify's own newsroom.
+
+## tue/fcpcaptions
+fun_consume: 5/10 because 23 more caption languages is useful but flat, lifted a little by the line about the tool speaking only American.
+fun_produce: 6/10 because an explainer carousel fits with the caption panel in a new language to show, though it is a feature list.
+utility: 9/10 because Final Cut Pro editors can generate captions in the new languages today, sourced from Apple's own release notes.
+
+## tue/logicdrums
+fun_consume: 6/10 because splitting drums into kick, snare and hi-hat is satisfying and the cowbell joke is repeatable for drummers.
+fun_produce: 7/10 because an explainer carousel fits, with the Stem Splitter preset and the separated kit-piece tracks as a real thing to show.
+utility: 9/10 because Logic for iPad users can choose the named Drums (Individual Kit Pieces) preset today, steps quoted from Apple's release notes.
 
 ## tue/mychannel
-scale: 4/10 because it is a rejected patent from Google, not a product, so the consequence is speculative even though the company is major.
-fun_consume: 8/10 because a TV channel starring you, with the ad break still there, and an examiner saying no, is a strange true story a stranger would forward.
-fun_produce: 7/10 because a Voice-led cut over the patent's own drawings and the examiner's refusal gives real objects to show on the words, though no number proves anything.
+scale: 5/10 because Google is a major player, but it is a patent the examiner refused, so there is no measurable effect yet on anyone.
+fun_consume: 8/10 because a TV channel starring you, with the ad break still there, and the examiner saying no, is odd enough to forward.
+fun_produce: 6/10 because a voiceover short over the patent drawings fits the voice-led format and the patent figures are something to show, though the product does not exist to demonstrate.
 
 ## tue/tplcommscam
-fun_consume: 6/10 because one pundit cheering beside one sinking at 4-0 is a strong, known reaction, but the caption about an AI music start-up's pitch and a songwriter reading the contract needs a second read to land.
-fun_produce: 5/10 because the clip is a real object to show, but a meme template is outside the catalogue formats and there is no proof object beyond the reaction.
-
-## tue/tplfistpump
-fun_consume: 4/10 because the fist pump is a familiar celebration but beating "the AI storyboard on a shoot" is not a moment the reader will recognise, so the caption falls flat.
-fun_produce: 5/10 because the clip exists and the caption sits on it, but no catalogue format fits and nothing is proved.
+fun_consume: 6/10 because the cheer-and-sink split of two pundits is a widely understood reaction, but the caption pairing an AI music start-up's pitch with a songwriter is a stretch to read in two seconds.
+fun_produce: 7/10 because the meme template is a catalogue-made format with a real clip at full frame and a clear show moment, the two faces at 4-0.
 
 ## tue/tplninedarter
-fun_consume: 6/10 because two perfect legs back to back is a real moment and "400 tries against one and a grin" maps cleanly onto human against machine.
-fun_produce: 5/10 because the clip carries the joke, but a meme template is outside the catalogue formats and the 400 tries figure is not sourced.
+fun_consume: 6/10 because a perfect nine-darter answered by another is a striking clip, and the 400 tries against one and a grin caption lands, though darts reaches a narrower audience.
+fun_produce: 7/10 because the meme template fits with a real clip whose show moment, the grin then the reply, carries the caption.
+
+## tue/tplfistpump
+fun_consume: 4/10 because a manager pumping his fist is a generic celebration and the caption about beating the AI storyboard is vague.
+fun_produce: 6/10 because the meme template fits and the clip shows the fist pump, but the moment does not map tightly to the caption.
 
 ## tue/tplbuzzer
-fun_consume: 4/10 because the buzzer-beater is vivid but "every human mix lands one second before the AI version" does not make clear sense, so the moment does not repeat.
-fun_produce: 5/10 because the clip is there to show, but no catalogue format fits and the caption has nothing to prove.
+fun_consume: 5/10 because a buzzer-beater is a strong clip, but "every human mix lands one second before the AI version" is unclear in meaning.
+fun_produce: 7/10 because the meme template fits and the shot at the clock with the team swarming is a vivid show moment.
 
 ## thu/figmasix
-fun_consume: 5/10 because the release note admitting you will spend less time re-prompting is the one honest, repeatable line in an otherwise flat feature.
-fun_produce: 5/10 because six images from one prompt can be shown as a grid on a card, but there is no test or number beyond the count.
-utility: 9/10 because any Figma user can generate two, four or six images from one prompt today, quoted from Figma's own release notes.
+fun_consume: 6/10 because the honest re-prompting line is the moment worth repeating, though six images from one prompt is a modest feature.
+fun_produce: 7/10 because an explainer carousel fits and a grid of two, four or six images from one prompt is a clear visual to show.
+utility: 9/10 because Figma users can generate several images from one prompt today, quoted from Figma's own release notes.
 
 ## thu/robloxvideo
-fun_consume: 5/10 because an AI noticing a stuttering door is a small, warm image, but the story is a developer-forum update.
-fun_produce: 5/10 because the playtest video and the agent's fix could be shown, but a still carousel cannot show motion, which is the point of the feature.
-utility: 8/10 because a Roblox developer can use screen_capture to record video during a playtest this week, from Roblox's own forum post, though it needs the Studio MCP server set up first.
-
-## thu/alphamatte
-fun_consume: 4/10 because cutting people out of clips with no green screen is useful, but the "two files instead of one" line is the flattest of the week.
-fun_produce: 6/10 because a before and after of a person lifted off a background is one clear thing to show, even on cards.
-utility: 7/10 because a Runway user can export a ProRes matte through LTX Alphagen today, on Runway's own changelog, but it needs a Runway account and the steps are not given.
-
-## thu/synthfirmware
-scale: 5/10 because several music gear makers opening their firmware, Polyend publishing three Trackers' source code among them, is a notable shift for a niche of instrument makers and players, with no wider figure.
-fun_consume: 7/10 because a $70 synth taught new tricks with chatbots until its makers opened up is a surprise with a hero object that holds to the end.
-fun_produce: 6/10 because the synth itself and Polyend's GitHub page are real objects to show in a voiceover short, though there is no test, number or named winner from the growth evidence.
+fun_consume: 6/10 because an AI noticing a door stutters is a wry, relatable moment for game makers, but the topic is niche.
+fun_produce: 7/10 because an explainer carousel fits with the playtest capture and the agent's fix as something to show.
+utility: 7/10 because Roblox developers can use the Studio MCP server's screen_capture this week, sourced from Roblox's forum, but it needs the MCP agent set up.
 
 ## thu/pixelfill
-fun_consume: 4/10 because repainting part of a photo from words is familiar by now, and Apple's purple sky example is the only smile.
-fun_produce: 6/10 because a before and after of Generate Fill on one photo is a clear thing to show on a card.
-utility: 9/10 because a Pixelmator Pro user can use Generate Fill with natural language today, quoted from Apple's own release notes.
+fun_consume: 5/10 because generative fill is familiar, lifted slightly by Apple's purple-sky example.
+fun_produce: 7/10 because an explainer carousel fits with a before-and-after photo edited by words, a natural thing to show.
+utility: 9/10 because Pixelmator Pro users can use Generate Fill today, from Apple's own release notes.
+
+## thu/alphamatte
+fun_consume: 5/10 because cutting people out with no green screen is useful, but the two-files line is dry and the hook reads once.
+fun_produce: 7/10 because an explainer carousel fits with a clip and its matte side by side as the proof object.
+utility: 8/10 because Runway users can pick LTX Alphagen today, sourced from Runway's own changelog, though it needs a Runway plan.
+
+## thu/synthfirmware
+scale: 6/10 because several music gear makers, Polyend named, opening their firmware is a sector-wide move with a second-order effect on hobbyists, though without a sourced count.
+fun_consume: 7/10 because a $70 synth taught new tricks with chatbots until makers opened up is a charming, repeatable story.
+fun_produce: 7/10 because a voiceover short fits with the synth, the GitHub firmware page and people's new features as things to show.
 
 ## thu/tplturin
-fun_consume: 6/10 because the champion flat on his back is a big reaction and a client who does not ask for an AI version is a moment a film editor will repeat.
-fun_produce: 5/10 because the clip carries the caption, but a meme template is outside the catalogue formats and nothing is proved.
-
-## thu/tplthanksgiving
-fun_consume: 5/10 because the last-second touchdown is a strong clip, but the hand-made film arriving at the festival with three seconds left is a loose fit that is read once.
-fun_produce: 5/10 because the clip is real to show, but no catalogue format fits and there is no proof object.
+fun_consume: 5/10 because a champion dropping flat on his back is a strong clip, but the caption about a client not asking for an AI version is mild.
+fun_produce: 7/10 because the meme template fits and the fall then the pile-on is a vivid show moment.
 
 ## thu/tplassemble
-fun_consume: 5/10 because heroes charging in together is a known image, but "every AI video tool turns up to a film pitch" names no tool and no moment the reader has lived.
-fun_produce: 5/10 because the trailer clip can carry the caption, but no catalogue format fits and nothing is shown that proves the line.
+fun_consume: 5/10 because the heroes-assemble shot is widely known, but the caption about every AI tool turning up to a pitch is a familiar joke.
+fun_produce: 6/10 because the meme template fits and the charge from every side is a clear visual, though trailer footage rights may be a constraint.
 
 ## thu/tpllegends
-fun_consume: 5/10 because the headliner with the legends is a warm clip, and the point that an AI model should walk out with every musician it learned from is fair but more lecture than laugh.
-fun_produce: 5/10 because the clip is there to show, but a meme template is outside the catalogue formats and there is no proof object.
+fun_consume: 6/10 because the idea that an AI model should walk out with every musician it learned from is a pointed, repeatable caption on a recognisable scene.
+fun_produce: 7/10 because the meme template fits and the corridor of legends maps directly onto the caption's point.
 
 ## thu/tplskyrim
-fun_consume: 6/10 because a famous fantasy game rebuilt in the 1960s is odd enough to watch, and the line about studios pitching AI remakes in the wrong century is wry.
-fun_produce: 5/10 because the AI remake itself is the thing to show, but it is another account's reel rather than a catalogue format, and nothing is proved beyond the clip.
+fun_consume: 7/10 because a famous fantasy game remade in the 1960s by AI is already a viral oddity and the wrong-century line lands.
+fun_produce: 6/10 because the meme template fits and the remade scenes are a show moment, but it reuses another account's AI reel from an inspo sheet, which weakens it as a source.
+
+## thu/tplthanksgiving
+fun_consume: 5/10 because a last-second touchdown is a strong clip, and the hand-made film reaching the festival with three seconds left is timely but thin.
+fun_produce: 7/10 because the meme template fits and the catch then the pile-on with the other bench staring is a clear show moment.
 
 ## sat/goodnews
-scale: 6/10 because songwriters reaching number one in Korea and a label hiring George Lynch reach millions of listeners, but the stories are separate and only the chart position is a figure.
-fun_produce: 5/10 because a good-news carousel of four named stories can be made, with chart and single art to show, but it is cards over stills with no moment that holds.
-uplift: 7/10 because named people are helped: two songwriters reached number one, a K-pop group released its debut and George Lynch was hired to play, at a modest scale.
-
-## sat/screen
-scale: 4/10 because Lionsgate Play's series, seven Korean directors' festival shorts and one Oscar winner's method are each local, with no figure, and the fourth story is still to find.
-fun_produce: 4/10 because the carousel can be made over stills of the series and films, but it is three items and a gap, with nothing to show beyond posters.
-uplift: 5/10 because the seven directors and the Oscar winner are named groups, but "try something new" leaves vague what each gained.
-
-## sat/makers
-scale: 5/10 because a creator's Desi Batman at 25 million views and a fantasy film made for $28,775 are sourced figures, but each is one creator with a local consequence.
-fun_produce: 6/10 because the Desi Batman reel and the AI trailer are real pictures to show on the cards, though it stays a carousel over stills.
-uplift: 6/10 because named creators gained reach and a cheaper film, but the Gary Vee avatar answering one fan a day helps nobody in particular.
-
-## sat/newsrooms
-scale: 6/10 because Norway's biggest paper using AI on 200 stories a day, Der Spiegel spotting a third of readers about to leave and nearly 500,000 people joining Canva through AI assistants are sourced figures across several major outlets.
-fun_produce: 5/10 because the figures can each sit on a card, but there is no picture beyond logos and numbers, so it reads as a list.
-uplift: 6/10 because named newsrooms save time and keep readers, a clear help to a named group, though the journalists and readers helped are not shown.
+scale: 7/10 because AI-assisted songs reaching number one in Korea and an AI K-pop debut reach millions of fans, though the hook's "millions" is not tied to a sourced figure here.
+fun_produce: 6/10 because a good-news carousel fits with four named stories, the chart and a named guitarist, George Lynch, to show, though each card is a still.
+uplift: 7/10 because named songwriters reaching number one and a label hiring George Lynch clearly help named people, while the AI K-pop group helps no one named.
 
 ## sat/talent
-scale: 5/10 because 26 overlooked footballers signed and Odeon's assistant answering 40% of questions are sourced figures, but each is one organisation and the fourth story is still to find.
-fun_produce: 5/10 because the scouting app, the car's voice and the cinema assistant can be shown on cards, but it is three items and a gap with no show moment.
-uplift: 7/10 because 26 overlooked footballers getting signed is a named group clearly helped, and Odeon's 40% with no jobs lost adds a second, at a modest scale.
+scale: 5/10 because 26 overlooked footballers signed and Odeon's 40% of questions answered are named, local effects.
+fun_produce: 6/10 because a good-news carousel fits with the scouting app, the talking race car and Odeon's assistant as things to show, though one story is still to find.
+uplift: 8/10 because 26 named-group footballers got signed through AI scouting and Odeon answered 40% of questions with no jobs lost, clear help to named groups.
+
+## sat/newsrooms
+scale: 6/10 because Norway's biggest paper, Der Spiegel, Nine and nearly 500,000 Canva sign-ups are named players with sourced figures, though the effects stay inside each firm.
+fun_produce: 5/10 because a good-news carousel fits, but newsroom workflow and retention models are hard to show beyond numbers on cards.
+uplift: 6/10 because newsrooms saving time and keeping readers helps named organisations, but the people helped, journalists or readers, are vaguer.
+
+## sat/makers
+scale: 6/10 because a Desi Batman reel at 25 million views and a film made for $28,775 are sourced figures, but each is one creator.
+fun_produce: 8/10 because a good-news carousel fits and Desi Batman, a cheap film and an AI trailer are strong visual proof objects with the tea-stall line as the show moment.
+uplift: 7/10 because named solo creators reached 25 million views and made a film for $28,775, clear help at a modest scale, though Gary Vee's avatar helps fans only loosely.
+
+## sat/screen
+scale: 5/10 because Lionsgate Play, seven Korean directors and one Oscar winner are named but the effect is trials, with no sourced figure.
+fun_produce: 5/10 because a good-news carousel fits with series and festival stills, but trying something new is hard to show and one story is still to find.
+uplift: 5/10 because seven Korean directors got to make films, but "try something new" leaves who is helped, and how, vague.

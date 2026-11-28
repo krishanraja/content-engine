@@ -1,0 +1,87 @@
+AI-free "fih-aura farming" game tops popularity ranking in Epic Games' major AI game jam  - AUTOMATON WEST
+Skip to content
+No results
+AUTOMATON WEST
+NEWS (JP/GLOBAL)
+INTERVIEWS
+INDIE GAMES
+REVIEWS & IMPRESSIONS
+Tips
+AUTOMATON JAPAN
+AUTOMATON WEST
+NEWS (JP/GLOBAL)
+INTERVIEWS
+INDIE GAMES
+REVIEWS & IMPRESSIONS
+Tips
+AUTOMATON JAPAN
+VERACITY IN GAMING
+Menu
+AUTOMATON WEST
+NEWS (JP/GLOBAL)
+INTERVIEWS
+INDIE GAMES
+REVIEWS & IMPRESSIONS
+Tips
+AUTOMATON JAPAN
+Search
+VERACITY IN GAMING
+Menu
+Search
+HomeNews
+AI-free “fih-aura farming” game tops popularity ranking in Epic Games’ major AI game jam
+The 2026 Epic AI MegaJam encouraged devs to use AI in their workflows, but did not make it mandatory to do so.
+Game Development, Indie Games, News
+2026-11-19 14:54
+Shion Kaneko
+Epic Games recently held the 2026 Epic AI MegaJam, a game dev contest that encouraged developers to use AI and “vibe their way” to valuable cash prizes. In a somewhat ironic twist, however, the event’s popularity ranking on itch.io is currently topped by a game that deliberately forgoes AI. (Note that the platform’s popularity ranking does not determine the winners of the game jam).
+Participants of the Epic AI MegaJam were given four days between November 12 and 16 to build a game in Unreal Engine or Unreal Editor for Fortnite (UEFN), based on the theme “Director’s Cut.” The rules encouraged devs to use AI-assisted workflows, including asset generation and coding agents. However, using AI was not mandatory, and the rules explicitly state that the extent of AI usage will not affect a game’s eligibility or score.
+Notably, the event is sponsored by Anthropic (Claude), Google, OpenAI, and SpaceXSI, alongside prominent tech companies including NVIDIA, AMD, and Intel. A total prize pool of $65,000 is available to winning entries, and highly evaluated projects may also receive individual grants of up to $50,000 to support their continued development.
+By the time entries closed on November 16, the game jam had attracted 2,782 submissions. All entries can be browsed on itch.io, where one title has been attracting particular attention – at the time of writing, LSD:FIH by developer PolyCube sits at the top of the platform’s “Popular” ranking.
+I made a game for the epic's "vibe-coding gamejam" megajam without using any ai in 4 days.  sorta ran out of time so gameplay didn't turn out how I wanted but hey it's still pretty aura#gamedev #indiegame pic.twitter.com/WGuAC2gwvo
+— PolyCube 🦆 (@ItsPolyCube) November 16, 2026
+In LSD:FIH, players control a fish with arms and legs (or just hands and feet, to be precise) and a cigarette dangling from its mouth. With a single-shot rifle twice its size, the fish (or fih) must shoot targets throughout the game’s stages. The targets come in the form of two connected spheres of different sizes. Hitting the larger sphere requires two shots to destroy, while the smaller one can be taken out with a single hit. Destroying a target triggers a sepia-toned, slow-motion cut-in, and allows you to collect bubbles representing points.
+That’s essentially the core gameplay loop, but destroying targets, collecting bubbles, or picking up a square object that is always placed somewhere in each stage causes the fish to briefly accelerate and leap into the air. This lets you soar around the stages in every direction, and chain together trick shots.
+Developer PolyCube is an independent creator from Poland, who has previously participated in various game jams using Unreal Engine. They have also entered the GMTK Game Jam, one of the world’s largest game jams, for four consecutive years since 2023, creating CubeNDCube, Window Dash, Loop Archer, and Whatever’s Loaded.
+It’s worth noting that itch.io’s “Popular” ranking is based on the platform’s own sorting algorithm. According to itch.io founder Leaf Corcoran, the algorithm takes into account various organic engagement metrics, including page views, downloads, and player numbers. In discussions about other game jams, Corcoran has also clarified that this ranking is independent of a jam’s voting and scoring systems. Meaning, a game’s position in the ranking does not necessarily reflect its standing in the competition itself.
+Meanwhile, PolyCube has been making a point of highlighting their game’s lack of AI. The game’s itch.io page features an image parodying the “I’m Joining the War on Drugs on the Side of Drugs” meme, replacing it with the caption “I’m Joining the War on AI SLOP on the Side of LSD:FIH.”
+Recently, concerns have been growing over the increasing proliferation of low-quality AI-generated games on platforms such as Steam and itch.io, with some arguing that the sheer volume of such releases makes it harder for users to discover games. Steam has also been experiencing delays in its game review process, prompting speculation that the rapid increase in AI-assisted submissions may be responsible. Against this backdrop, developers and players alike have become increasingly critical of game development that relies heavily on AI.
+These circumstances have no doubt contributed to LSD:FIH’s popularity, although the game itself has also earned praise for its simple yet entertaining design. It will be interesting to see how LSD:FIH fares in the actual judging by the event’s organizers.
+LSD:FIH is available for Windows and Linux via itch.io on a name-your-own-price basis. All entries in the 2026 Epic AI MegaJam can be viewed on itch.io. The judging results are scheduled to be announced by January 29, 2027.
+Tags# AI# News (Global)
+Shion Kaneko
+Articles: 14
+Related Posts
+Automated flagging causes Japanese speakers on X to get penalized for talking about “noodles” due to spelling similarity to “nude”
+Ad-ridden AI clone of Umamusume: Pretty Derby wiped from Google Play Store after fans mass report to Cygames
+A swimsuit or flirtatious eyes aren’t automatically a violation. Forza Horizon 6 developers clarify livery moderation standards following itasha ban controversy
+Leave a ReplyCancel Reply
+Your email address will not be published. Required fields are marked *
+Name  *
+Email  *
+Website
+Add Comment *
+Save my name, email and website in this browser for the next time I comment.
+Post Comment
+Trending Now
+Daily
+Weekly
+Japanese government develops AI agent to crack down on anime and manga piracy. Over 80% of flagged sites found to be illegal
+Final Fantasy Resonance devs designed the game with old-school FF fans in mind, but the game’s wide acclaim has exceeded their expectations
+Sci-fi visual novel Expelled from Paradise: The Stellar Angel out now on Steam and Switch, depicting events beyond the original anime’s story
+Hideki Kamiya is interested in making a “truly insane” Castlevania sequel, if Konami lets him
+Koei Tecmo’s Team Ninja uses AI for streamlining tedious tasks, but games still need to be crafted by human hands to be fun, Nioh producer says
+Japanese government develops AI agent to crack down on anime and manga piracy. Over 80% of flagged sites found to be illegal
+Final Fantasy VII Tifa Lockhart bootleg figures lead to 13 arrests in crackdown on counterfeit operation
+Final Fantasy Resonance devs designed the game with old-school FF fans in mind, but the game’s wide acclaim has exceeded their expectations
+Upcoming Girl’s Frontline third-person PvE shooter officially announced as Girls’ Frontline: The Lunasia Covenant, set to release in 2027
+Alice in Wonderland-style dark fantasy soulslike Project Rabbit gets new trailer showcasing combat
+About Us
+AUTOMATON WEST is operated by Active Gaming Media Inc.
+Reproduction in any form or medium without acknowledgment of Active Gaming Media Inc. is prohibited.
+About Us
+Contact Us
+Advertisement
+Privacy Policy / Cookie Policy
+Terms of Service
+Copyright © 2026 - AUTOMATON WEST

@@ -1,0 +1,61 @@
+{
+ "ordered": [
+  "mon",
+  "wed",
+  "fri",
+  "tue",
+  "thu",
+  "sat"
+ ],
+ "kept": [],
+ "close_calls": [
+  {
+   "day": "mon",
+   "keys": [
+    "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb",
+    "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2"
+   ],
+   "why": "within 5 of 100 (77.4 and 76.9)",
+   "council": null,
+   "says": "close call, your pick"
+  },
+  {
+   "day": "fri",
+   "keys": [
+    "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c",
+    "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87"
+   ],
+   "why": "within 5 of 100 (75.1 and 70.1)",
+   "council": null,
+   "says": "close call, your pick"
+  },
+  {
+   "day": "tue",
+   "keys": [
+    "tue/logicdrums",
+    "tue/spotifyaudio"
+   ],
+   "why": "within 5 of 100 (74.7 and 73.3)",
+   "council": null,
+   "says": "close call, your pick"
+  },
+  {
+   "day": "sat",
+   "keys": [
+    "sat/makers",
+    "sat/talent"
+   ],
+   "why": "within 5 of 100 (72.9 and 71.8)",
+   "council": null,
+   "says": "close call, your pick"
+  }
+ ],
+ "moved": [
+  "mon",
+  "wed",
+  "fri",
+  "tue",
+  "thu",
+  "sat"
+ ]
+}

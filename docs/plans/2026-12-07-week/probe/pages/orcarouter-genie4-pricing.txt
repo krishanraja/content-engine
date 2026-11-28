@@ -1,0 +1,134 @@
+Genie 4 API Pricing: $0.10 a Second, Billed Until You Stop
+
+OrcaRouterSearchCtrl K
+Models
+Cyber
+
+Defendat the gateway and on your siteAgent FirewallTool and MCP calls graded before they run.GuardrailsPII Shield and content policy, enforced before you’re billed.OrcaCode ReviewSeverity rules and a merge gate on every pull request.Compliance & Governance32 framework packs with exportable evidence.ShieldNewAI-native defense against attack agents.
+
+Cyber modelsfor verified teamsOrcaCyber UltraNewSecurity code scanning with multi-step reasoning across large codebases. For authorized work.OrcaCyber ZeroNewFocused on P0/P1 vulnerabilities and zero-days. For authorized security work.OrcaPod CyberEvery Cyber model and hosted attack harnesses, on one monthly plan.All cyber modelsEvery model in the cyber tier, with pricing.How access worksBusiness verification unlocks the cyber models.Acceptable Use PolicyWhat authorized, lawful security work means here.
+Introducing98%+pass@1 success rate on CyberGymOrcaCyber ZeroPowered by the OrcaCyber harness. Focused on P0/P1 vulnerabilities and zero-days, optimized to minimize false positives.See OrcaCyber Zero →1Mtoken contextOrcaCyber UltraSecurity code scanning, optimized for multi-step reasoning across large codebases.See OrcaCyber Ultra →
+
+ResearchAI Incident ArchiveReal AI agent incidents, with sourcesSecure AgentsGuardrails, firewall, agent hardeningTrust CenterPolicy, evidence, and the documents behind them.All of Cyber →LeaderboardOffers
+Playground
+ChatCompare replies side by sideImageGenerate from a promptVideoText and image to video
+Developers
+BlogEngineering notes and releasesDocsGuides, SDKs, quickstartsAPI ReferencesEvery endpoint and parameterOSS ProgramEarn from the open source you maintainMigrate from OpenRouterChange one line and keep your code
+Solutions
+
+Routethe gatewayAdaptive RoutingEvery prompt graded, then routed to the model that clears your bar.Automatic FailoverConfigure a fallback chain; retries land before the response starts.Routing Rules (DSL)Express routing as code — YAML + CEL, live in seconds.Bring Your Own KeyUse your own provider keys, rate limits and credits.Orca ConnectYour own GPU behind the same key. No inbound port to open.OrcaRouter LiteThe MIT-licensed gateway. Your infrastructure, your provider keys.
+
+Observeproof, not vibesRequest LogsGrade, model, latency and cost on every call. Copy as cURL.InsightsRouting, latency, spend and model quality in one view.Zero-Markup CostProvider price, $0 per token added, glass-box receipts.Prompt CachingCached tokens bill at the provider’s cache rate, not full price.OrcaReplayRecord an agent run. Replay it. Re-ask a model turn elsewhere.
+
+Governenforced, not loggedGuardrailsPII Shield and content policy, enforced before you’re billed.Agent FirewallTool and MCP calls graded before they run.Compliance & Governance32 framework packs with exportable evidence.Data Residency & PrivacyDeclared region, region-partitioned evidence, retention controls.API Keys & Token GovernanceScoped keys with their own limits, budgets and revocation.Budgets, Roles & AuditSeats, spend caps, RBAC and a full audit trail.
+
+Buildship without a redeployPrompt ManagementVersioned prompts behind labels. Roll back without a deploy.PlaygroundTest 200+ models in the browser. Battle two side by side.Integrations & MCPCursor, LangChain, n8n, Vercel AI SDK and the MCP server.Apps & Add-onsProducts built on your gateway. Pay only what runs.OrcaCode ReviewFrontier-quality PR review on your repos. Token cost only.
+
+By use caseAI Product TeamsShip on every modelPlatform & InfrastructureOne endpoint, upstream 429s absorbedSecurity & CompliancePolicy before spendFinOps & FinanceEvery dollar attributedAgent BuildersIdentity and budgetsEnterpriseSSO, private, SLASee it liveWatch the router pickA real prompt graded and routed, model and price shown.
+
+ENSign inGet API key
+
+Guides & Insights
+Genie 4 on the Gemini API: $0.10 a Second, Billed Until You Hang Up
+
+Authorjinhao.song
+
+Date PublishedNov 19, 2026
+Latest models · 20View all models →‹›
+
+OOrcaNEWOrcaCyber: Inkling 2 Mini Abliterated / Uncensored2026-11-23$0.20 / $0.50 per 1M tokens · 203 tok/s
+TthinkingmachinesNEWThinking Machines: Inkling 2 Mini2026-11-21$0.07 / $0.30 per 1M tokens · 229 tok/s
+OOrcaNEWOrcaCyber: Hy4 Flash Abliterated / Uncensored2026-11-18$0.07 / $0.28 per 1M tokens · 203 tok/s
+OopenaiNEWOpenAI: GPT-6.2 Astra2026-11-17$8.00 / $40.00 per 1M tokens · 89 tok/s
+OopenaiNEWOpenAI: GPT-6.2 Sol2026-11-17$2.00 / $10.00 per 1M tokens · 150 tok/s
+TtencentNEWTencent: Hy4 Flash2026-11-16$0.07 / $0.28 per 1M tokens · 171 tok/s
+QAlibabaNEWQwen: Qwen4 Max2026-11-16$1.50 / $4.50 per 1M tokens · 96 tok/s
+OOrcaOrcaCyber: Ling 3.2 Flash Abliterated / Uncensored2026-11-14$0.60 / $1.80 per 1M tokens · 102 tok/s
+OOrcaOrcaCyber: Step 5 Preview Abliterated / Uncensored2026-11-14$2.00 / $5.40 per 1M tokens · 134 tok/s
+GGoogleGoogle: Gemini 4 Carbon2026-11-10$2.00 / $10.00 per 1M tokens · 92 tok/s
+AAnthropicAnthropic: Claude Fable 5.22026-11-09$8.00 / $40.00 per 1M tokens · 101 tok/s
+OOrcaOrcaCyber: GLM 5.3 Abliterated / Uncensored2026-11-04$3.00 / $5.00 per 1M tokens · 100 tok/s
+OOrcaOrcaCyber: Hy4 Abliterated / Uncensored2026-11-04$0.80 / $1.60 per 1M tokens · 124 tok/s
+OOrcaOrcaCyber: Kimi K3.1 Pro Abliterated / Uncensored2026-11-04$2.00 / $5.00 per 1M tokens · 101 tok/s
+TtencentTencent: Hy42026-11-04$0.83 / $2.50 per 1M tokens · 126 tok/s
+OOrcaOrcaCyber: MiniMax M3.1 Flash Abliterated / Uncensored2026-10-29$0.80 / $1.60 per 1M tokens · 121 tok/s
+OOrcaOrcaCyber: GLM 5.3 Flash Abliterated / Uncensored2026-10-27$0.80 / $1.60 per 1M tokens · 85 tok/s
+OopenaiOpenAI: GPT-6.1 Terra2026-10-26$1.00 / $5.00 per 1M tokens · 102 tok/s
+OOrcaOrcaCyber: Qwen3.8 Flash Next Abliterated / Uncensored2026-10-26$0.80 / $1.60 per 1M tokens · 92 tok/s
+OOrcaOrcaCyber: MiMo V2.6 Flash Abliterated / Uncensored2026-10-26$0.80 / $1.60 per 1M tokens · 43 tok/s
+
+Contents
+Three Dates, and Only One of Them Is the Launch
+The Real Price of a World, Per Second
+What Calling It Actually Looks Like
+The Limits That Decide Whether It Ships
+Genie 4 or Gem​ini Omni 1.2 Flash?
+What the Pro Waitlist Actually Changes
+Where a Router Fits in a Streaming Stack
+Who Should Spend the Money This WeekBack to all posts
+
+The detail that decides whether Genie 4 is a toy or a line item is not the 720p picture. It is that Goog​le bills the model by the second of streamed output and keeps billing until your code tells it to stop. Genie 4 reached the Gem​ini API on November 19, 2026, one day after it went live inside Project Genie for Goog​le AI Ultra subscribers, and on the same day Project Genie invitations started reaching Goog​le AI Pro members who had joined the waitlist. That pricing model — roughly $0.10 per second, no free tier, no caching, no batch discounts — is the part worth reading carefully before anyone puts a world model behind a product surface. The comparison everyone will make is against Gem​ini Omni 1.2 Flash, Goog​le's offline video model at about $0.07 per second of 720p; the two look close on a rate card and behave nothing alike in a build.
+Three Dates, and Only One of Them Is the Launch
+Genie 4 has been announced three times in three weeks, which is why the coverage of it keeps talking past itself. Goog​le DeepMind published the research announcement on October 27, 2026, with access limited to trusted testers and a public waitlist. On November 18 it began rolling the model out inside Project Genie to eligible Goog​le AI Ultra subscribers, alongside upgrades to Genie 3 and a community gallery. On November 19 it opened the door developers actually care about: models/genie-4 on the Gem​ini API, through the Interactions API and Goog​le AI Studio.
+The fourth event is the one in the signal: on the evening of November 19, TestingCatalog posted a screenshot of an invitation telling a Goog​le AI Pro member they were off the Project Genie waitlist and now had access "as part of your Goog​le AI Pro subscription." That is a user report, not a Goog​le announcement, and at the time of writing the Project Genie page still reads "available at launch for eligible Goog​le AI Ultra subscribers. Goog​le AI Pro members can join the waitlist." But waitlist invitations going out in volume is how a staged rollout widens, and it is the difference between a $99.99 subscription and a $19.99 one for the consumer half of this product.
+What none of those four events changed: the model. Same weights, same session cap, same limitations Goog​le published in October and again in the November model card.
+The Real Price of a World, Per Second
+Genie 4 is priced as video tokens rather than as a request. Goog​le's rate card lists $1.50 per million input tokens for text and reference images, $9.00 per million output text tokens, and $17.50 per million output video tokens with the 48 kHz stereo audio bundled in. Because the model emits 240 video tokens per frame at 24 frames per second — 5,760 tokens a second — that works out to roughly $0.10 per second of streamed world, or about $6.05 a minute. These are Goog​le's published numbers, not an independent measurement; nobody outside Goog​le has published a metered bill to check them against.
+The arithmetic that matters is what a session can cost. Goog​le caps a session at 120 seconds, and says visual coherence and object permanence are strongest during the first 45 to 90 seconds. So the useful part of a session is $4.50 to $9.00, and the ceiling on one uninterrupted session is about $12.00. That is cheap for a pre-visualization pass and expensive for anything that runs while a user is idle.
+The billing mechanics are where a prototype turns into an incident. Goog​le's own documentation warns that exiting a local block or closing a browser tab detaches the transport without stopping server-side generation. The only things that stop the meter are complete() or cancel(); detachment does not, and Genie 4 has no session resumption, so a dropped socket cannot be resumed and still costs you until the session ends. Goog​le's prompt guide notes that AI Studio itself pauses a stream when the tab is hidden for more than 10 seconds, precisely so idle tabs do not burn paid video tokens. Your client has to do that job yourself.
+What Calling It Actually Looks Like
+Genie 4 is not a generateContent model and it is not on the Live API. It runs on the Interactions API, which Goog​le has described as generally available since June 2026 and as the place new models and capabilities launch. The endpoint accepts models/genie-4 or the bare genie-4, requires api_version v1beta, and requires a paid-tier API key — the free tier is listed as not available.
+The connection model is the unusual part, and it shapes what you can build:
+• Transport — WebRTC for browsers (video element plus an SCTP data channel for JSON control events) or WebSocket for Python and Node, which delivers base64 JPEG frames and 48 kHz 16-bit stereo PCM you decode yourself.
+• Session tokens — the server creates an interaction, mints a single-session auth token, and only that token goes to the client. The API key never reaches the browser, which is the one piece of this design that is straightforwardly good.
+• Events — a world_setup event seeds the world from text, a 16:9 reference image under 48 KB on WebRTC, or both; user_action carries native key_down/key_up for WASD and the four arrow keys; mid-session input events carry text that changes weather, objects or events while the stream runs.
+• Startup cost — first frame arrives roughly 5 to 9 seconds after the world prompt, per Goog​le's integration guide. That is dead air you pay for only insofar as tokens are emitted, but it is dead air a user stares at.
+• Steering latency — about 0.2 to 0.5 seconds of visual response at low network round-trip time. Goog​le serves the model from the United States, Western Europe and Japan, and says higher latency outside those regions delays steering and can reduce frame rate. A product aimed at users in, say, Brazil or India is not running this at the frame rate the demos show.
+The Limits That Decide Whether It Ships
+Rate limits are stated in concurrent sessions, not requests, which is the right unit for a streaming model and an awkward one for capacity planning. On API tier 1 you get two concurrent active sessions and 50 requests per day; tier 2 gives five and 250; tier 3 gives ten and 1,000. In-session control messages do not consume separate quota. Two simultaneous worlds is a demo budget, not a launch budget.
+Capability gaps are just as consequential, because they are the ones an architect discovers late:
+• No function calling, no structured outputs, no code execution and no context caching on Genie 4. The reasoning has to happen in a different model and be pushed in as text.
+• No Batch API, no Flex inference and no Priority inference. You cannot trade latency for cost, and you cannot buy your way to the front of a queue.
+• Safety filters are session-fatal, not request-fatal. Goog​le's prompt guide says real human faces, public figures and recognizable brand IP can block a world_setup or close an active session mid-run — which, given the billing model, means a blocked session is a session you were paying for.
+• Roughly a minute of usable coherence. Two minutes is the cap, 45 to 90 seconds is the honest working range, and Goog​le lists camera latency, intricate physical interactions, audio precision and long-term scene permanence as open problems.
+Genie 4 or Gem​ini Omni 1.2 Flash?
+Both are video models with native audio on the same API key, and they answer different questions. Gem​ini Omni 1.2 Flash generates and edits fixed clips of up to 15 seconds, is generally available on the paid tier, charges $12.00 per million video tokens — about $0.07 per second at 720p, $0.023 at 360p, $0.104 at 1080p with upsampling, $0.209 at 4K — and can be batched, edited and upsampled offline. Genie 4 generates a world you steer in real time and cannot be scheduled, batched or cached at all.
+• Interactive vs. fixed — Genie 4 responds to keys and mid-session prompts; Omni renders a clip you then edit.
+• Cost per second — about $0.10 for Genie 4 vs. about $0.07 for Omni at 720p, before Omni's cheaper 360p option and Genie's unavoidable session overhead.
+• Ceiling — 120 seconds of live stream vs. 15 seconds of clip, but the clip can go to 4K and the stream tops out at 720p.
+• Transport — a persistent WebRTC or WebSocket session vs. an ordinary request.
+• Ops burden — Genie 4 needs session lifecycle management and a billing kill switch; Omni needs neither.
+If the output is a shot, use Omni. If the output is someone walking around inside it, pay the extra three cents a second and accept the operational weight.
+What the Pro Waitlist Actually Changes
+For a developer, nothing measurable. The Gem​ini API path to Genie 4 is gated by billing tier, not by subscription, and a Goog​le AI Pro membership does not come with an API key that unlocks it. What the invitations in the signal change is the consumer side: Project Genie is drifting from a $99.99 Goog​le AI Ultra feature toward something the $19.99 Goog​le AI Pro tier can reach, which is roughly how Goog​le has widened access to every Gem​ini-adjacent product it has shipped. If invitations are going out now, the reasonable planning assumption is broader Pro access in weeks, not quarters — but assume it, do not quote it, because Goog​le has not published a date and the waitlist page still reads as a waitlist.
+If you already pay for AI Ultra, the API is a separate meter and a separate key. Nothing about the subscription discount carries over.
+Where a Router Fits in a Streaming Stack
+Genie 4 is not on OrcaRouter and there is no honest way to pretend a stateful, per-second video stream is a chat completion. The reasoning half of a Genie pipeline is a different matter: the prompt construction, the event planning, the safety pre-checks and the post-session analysis are ordinary model calls, and Gemini 4 Argon at $2.00 / $10.00 per million tokens and Gemini 3.8 Flash at $0.75 / $3.75 per million are both live on our catalogue through one OpenAI-compatible key. That is one contract and one bill for the text side while the video side stays on Goog​le's meter, and the 0% markup means a Goog​le price change on those models lands on our side the same day rather than whenever a reseller reprices.
+Automatic failover matters more here than in a normal chat workload, because a Genie session cannot be retried cheaply: if the planning call that produces a world prompt fails, you have burned the setup latency and, in the worst case, part of a paid session. Routing that call across providers is the cheap insurance.
+Who Should Spend the Money This Week
+Build the prototype if the thing you are testing is whether an interactive world changes a user's behaviour — a spatial design review, an agent-training environment, a pre-visualization pass where a director wants to walk the set. At $12 for a two-minute session you can run fifty sessions for the price of a day of a contractor's time, and the 720p ceiling is not the constraint on that decision.
+Wait if the thing you are testing is cost per output minute for finished video. Genie 4 is more expensive per second than Gem​ini Omni 1.2 Flash, capped at 720p, and offers no batch or priority path; the world model's advantage is that a human is inside it, and that advantage evaporates the moment your pipeline is unattended. Wait too if your users are outside the three serving regions, because the frame rate you demo in California is not the frame rate a user in São Paulo sees.
+The open question worth watching is whether Goog​le publishes an idle or paused-session rate. Right now the meter runs on streamed output until completion is called, which makes every Genie 4 integration a small exercise in billing discipline. A pause primitive, or a cheaper low-motion mode, would change the economics of this model more than any quality improvement in the next release.
+Compared in this article1
+
+GGoogle: Gemini 3.8 FlashvsGGoogle: Gemini 4 Argon31Intelligence5076Coding—$0.75In / 1M$2.00Compare →Discussed together
+Detected from this article · Benchmarks: Artificial Analysis · updated daily
+
+OrcaRouter
+© 2026 OrcaRouter
+
+ProductAI ModelsCyberSolutionsOpen SourceOpen WeightsPricing
+
+ResourcesDocsBlogIntegrationsStatusSupportAI Incident ArchiveTrust Center
+
+PartnersPartner programCreatorsAmbassadorsOpen source
+
+For Providers
+Run an inference platform? Get your models on OrcaRouter.[email protected]
+
+Join our communityDiscord[email protected]XLinkedInGitHubYouTube
+
+From the blog
+Cairn agents found a MONAI Label zero-day and rooted a university serverSwitzerland Confirms 5 AI-Agent Attacks, 3 on Critical InfrastructureMicrosoft's agent-framework PyPI hijack: 41 minutes, three victimsTrajectory Labs: Agents Attacked Epoch AI, Safeguards OnUnit 42: 25 autonomous Cairn operations, 10 breaches
+Model providers
+OpenAI API72Google API32Qwen API28Anthropic API14DeepSeek API12Z.ai API10Kling API8MiniMax API7Tencent API6Grok API5Orca API5Kimi API4

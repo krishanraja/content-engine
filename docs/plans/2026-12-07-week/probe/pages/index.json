@@ -60,13 +60,13 @@
   "file": "72b1-coca-cola-q3-2026-release.txt"
  },
  "https://www.izotope.com/en/products/nectar.html": {
-  "file": "izotope-nectar-product.txt"
+  "file": "izotope-nectar5-product.txt"
  },
  "https://www.musicradar.com/music-tech/izotopes-nectar-5-introduces-a-clever-new-way-to-add-effects-to-vocals-one-word-at-a-time": {
-  "file": "musicradar-nectar5-moments.txt"
+  "file": "musicradar-nectar5.txt"
  },
  "https://izotope.com/community/blog/introducing-izotope-nectar-5": {
-  "file": "izotope-blog-introducing-nectar5.txt"
+  "file": "izotope-nectar5-blog.txt"
  },
  "https://www.izotope.com/pages/release-notes/nectar": {
   "file": "izotope-nectar-release-notes.txt"
@@ -117,13 +117,13 @@
   "unreadable": "Reddit returned 403 Blocked"
  },
  "https://www.heygen.com/research/avatar-6-model": {
-  "file": "46dd-heygen-avatar-6.txt"
+  "file": "heygen-avatar6-research.txt"
  },
  "https://csuite.so/blog/ai-models-roundup-november-2026": {
-  "file": "46dd-csuite-roundup-nov-2026.txt"
+  "file": "csuite-models-nov-2026.txt"
  },
  "https://ik.imagekit.io/heygen/www/research/avatar-6/Avatar%206-%20Talking%20Avatars%20That%20Are%20More%20Like%20You.pdf": {
-  "file": "46dd-heygen-avatar-6-report.txt"
+  "file": "heygen-avatar6-report-pdf.txt"
  },
  "https://www.heygen.com/research/avatar-v-model": {
   "file": "46dd-heygen-avatar-v.txt"
@@ -132,7 +132,7 @@
   "file": "46dd-heygen-avatar-v-report.txt"
  },
  "https://developers.heygen.com/docs/models/avatar-6": {
-  "file": "46dd-heygen-dev-docs-avatar-6.txt"
+  "file": "heygen-avatar6-devdocs.txt"
  },
  "https://openrouter.ai/heygen/heygen-avatar-6": {
   "file": "46dd-openrouter-heygen-avatar-6.txt"
@@ -258,10 +258,10 @@
   "file": "hkex-2026-10-30-kling-completion.txt"
  },
  "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/": {
-  "file": "ilona-andrews-crown-cover-ai.txt"
+  "file": "b38a-ilona-andrews-blog.txt"
  },
  "http://www.publishersweekly.com/pw/by-topic/industry-news/publisher-news/article/101841-tor-pulls-ilona-andrews-cover-over-generative-ai-use.html": {
-  "file": "pw-tor-pulls-andrews-cover.txt"
+  "file": "b38a-pw-tor-pulls-cover.txt"
  },
  "https://www.instagram.com/markovart_/": {
   "unreadable": "empty without login, script-rendered profile"
@@ -270,10 +270,10 @@
   "unreadable": "empty without login, script-rendered profile"
  },
  "https://www.cartoonbrew.com/artificial-intelligence/etsy-ai-training-terms-of-use-269553.html": {
-  "file": "cartoonbrew-etsy-ai-terms.txt"
+  "file": "b0e8-cartoonbrew-etsy-terms.txt"
  },
  "https://arstechnica.com/tech-policy/2026/11/etsy-clarifies-ai-terms-after-seller-backlash/": {
-  "file": "ars-etsy-clarifies-ai-terms.txt"
+  "file": "b0e8-ars-etsy-clarifies.txt"
  },
  "https://www.etsy.com/news/etsyas-terms-of-use?ref=news": {
   "unreadable": "403, bot check page (captcha)"
@@ -282,7 +282,7 @@
   "unreadable": "403, bot check page (captcha)"
  },
  "https://www.etsy.com/legal/terms-of-use": {
-  "unreadable": "403, bot check page (captcha)"
+  "unreadable": "HTTP 403 Forbidden"
  },
  "https://www.musicbusinessworldwide.com/11m-backed-ai-startup-sonilo-founded-by-tiktok-veterans-inks-licensing-deal-with-symphonic-to-train-its-model-on-opted-in-indie-recordings/": {
   "file": "sonilo-symphonic-mbw.txt"
@@ -324,19 +324,19 @@
   "unreadable": "Cloudflare bot check, HTTP 403, tried twice"
  },
  "https://itch.io/jam/2026-epic-ai-megajam": {
-  "file": "megajam-itch-overview.txt"
+  "file": "e71e-itch-megajam.txt"
  },
  "https://www.rockpapershotgun.com/fish-with-a-sniper-rifle-takes-aim-at-tim-sweeneys-hopes-and-dreams-as-genai-free-meme-game-tops-epic-games-vibe-coding-megajam": {
   "file": "megajam-rps-fih.txt"
  },
  "https://itch.io/jam/2026-epic-ai-megajam/entries": {
-  "file": "megajam-itch-entries.txt"
+  "file": "e71e-itch-megajam-entries.txt"
  },
  "https://itch.io/jam/421245/entries.json": {
   "file": "megajam-itch-entries-json.txt"
  },
  "https://polycube2.itch.io/fih": {
-  "file": "megajam-itch-fih-game.txt"
+  "file": "e71e-itch-lsd-fih-page.txt"
  },
  "https://x.com/ItsPolyCube/status/2122151071800008961": {
   "file": "megajam-x-polycube.txt"
@@ -370,5 +370,92 @@
  },
  "https://indiantelevision.com/iworld/prime-video-introduces-ai-powered-progressive-actions-for-champions-league/": {
   "file": "indiantv-prime-progressive-actions.txt"
+ },
+ "https://a90.com/experiments/same-advice/": {
+  "file": "5f5e-a90-same-advice.txt"
+ },
+ "https://ruben.substack.com/p/73": {
+  "unreadable": "403, Cloudflare challenge page"
+ },
+ "https://blog.google/innovation-and-ai/technology/developers-tools/genie-4-in-gemini-api/": {
+  "file": "genie4-gemini-api-blog.txt"
+ },
+ "https://ppc.land/google-charges-developers-about-10-cents-a-second-for-genie-4-worlds/": {
+  "file": "ppcland-genie4-price.txt"
+ },
+ "https://blog.google/innovation-and-ai/models-and-research/google-deepmind/genie-4-now-available-project-genie/": {
+  "file": "genie4-project-genie-blog.txt"
+ },
+ "https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/": {
+  "file": "deepmind-genie4-research.txt"
+ },
+ "https://aistudio.google.com/docs/genie": {
+  "unreadable": "page renders by script; fetched text is title only"
+ },
+ "https://aistudio.google.com/docs/models/genie-4": {
+  "unreadable": "page renders by script; fetched text is title only"
+ },
+ "https://www.unite.ai/?p=522488": {
+  "file": "46dd-unite-avatar6.txt"
+ },
+ "https://www.orcarouter.ai/blog/heygen-avatar-6-launch": {
+  "file": "46dd-orcarouter-avatar6.txt"
+ },
+ "https://www.orcarouter.ai/blog/genie-4-gemini-api-pricing": {
+  "file": "orcarouter-genie4-pricing.txt"
+ },
+ "https://fourweekmba.com/ai-genie-4-hits-the-gemini-api-at-6-05-a-minute-363-an-hour/": {
+  "unreadable": "403, browser check page with no article text"
+ },
+ "https://www.goodreads.com/author_blog_posts/23237882-a-post-from-ilona-andrews": {
+  "file": "b38a-goodreads-neumeier-2022.txt"
+ },
+ "https://www.instagram.com/torbooks/p/Df-TWrYF1KH/?hl=en": {
+  "unreadable": "Instagram page loads without the caption text"
+ },
+ "https://www.testingcatalog.com/google-opens-genie-4-world-model-to-developers-in-gemini-api/": {
+  "file": "testingcatalog-genie4-api.txt"
+ },
+ "https://omidsaffari.com/blog/genie-4-api": {
+  "file": "omidsaffari-genie4-api.txt"
+ },
+ "https://ai-tldr.dev/releases/google-genie-4-gemini-api/": {
+  "unreadable": "403, Cloudflare challenge page"
+ },
+ "https://aibusiness.com/robotics/google-genie-4-world-models-closer-robot-ai-testing": {
+  "unreadable": "403, Cloudflare challenge page"
+ },
+ "https://unrealengine.com/news/2026-epic-ai-megajam": {
+  "unreadable": "403, Cloudflare challenge page"
+ },
+ "https://kotaku.com/epic-ai-megajam-game-jam-slop-lsd-fih-aura-farming-tim-sweeney-2000758352": {
+  "file": "e71e-kotaku-lsd-fih.txt"
+ },
+ "https://automaton-media.com/en/news/ai-free-fih-aura-farming-game-tops-popularity-ranking-in-epic-games-major-ai-game-jam/": {
+  "file": "e71e-automaton-lsd-fih.txt"
+ },
+ "https://www.tweaktown.com/news/114250/epic-games-2026-ai-megajam-offers-65-000-in-prizes-but-the-ai-requirements-are-confusing/index.html": {
+  "file": "e71e-tweaktown-megajam.txt"
+ },
+ "https://www.valueaddedresource.net/etsy-expands-ai-training-rights/": {
+  "file": "b0e8-var-etsy-ai-training.txt"
+ },
+ "https://cybernews.com/ai-news/etsy-ai-training-seller-data/": {
+  "file": "b0e8-cybernews-etsy-ai.txt"
+ },
+ "https://creativebloq.com/news/artists-and-creators-are-leaving-etsy-in-droves-over-its-new-ai-policy": {
+  "file": "b0e8-creativebloq-etsy-exodus.txt"
+ },
+ "https://www.etsy.com/legal/privacy": {
+  "unreadable": "HTTP 403 Forbidden"
+ },
+ "https://www.etsy.com/legal/policy/terms-of-use-effective-through-december/1511358430874": {
+  "unreadable": "HTTP 403 Forbidden"
+ },
+ "https://www.etsy.com/news/etsyas-terms-of-use": {
+  "unreadable": "HTTP 403 Forbidden"
+ },
+ "https://community.etsy.com/forum/announcements-290/topic/our-recent-terms-of-use-update-192097/": {
+  "unreadable": "post body loads by script, not in page"
  }
 }

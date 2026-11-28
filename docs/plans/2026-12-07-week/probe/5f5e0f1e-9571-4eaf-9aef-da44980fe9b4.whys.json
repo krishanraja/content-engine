@@ -1,0 +1,103 @@
+{
+ "schema": "why-ladder/1",
+ "question": "Why did 73 in 100 AI answers name the same book, Man's Search for Meaning?",
+ "rungs": [
+  {
+   "n": 1,
+   "question": "Why did so many answers, across 65 models, name the same book?",
+   "answer": "Each model was asked in a fresh chat with no system prompt and nothing about the asker, and in that state each model keeps returning its own favourite. A new chat starts over, so everyone asking plainly gets the first answer.",
+   "evidence": [
+    {
+     "url": "https://a90.com/experiments/same-advice/",
+     "domain": "a90.com",
+     "date": "2026-11-20",
+     "quote": "Every model, ten times per request, no system prompt."
+    },
+    {
+     "url": "https://a90.com/experiments/same-advice/",
+     "domain": "a90.com",
+     "date": "2026-11-20",
+     "quote": "In a new chat it starts over, and gives the same book."
+    },
+    {
+     "url": "https://a90.com/experiments/same-advice/",
+     "domain": "a90.com",
+     "date": "2026-11-20",
+     "quote": "It told 73 of every 100 people the same thing."
+    }
+   ],
+   "strength": "inferred",
+   "counter": {
+    "text": "Only one of the two sources was readable (ruben.substack.com returned 403), so no second site confirms it. The same page reports not every question collapses: \"Not everything collapses. For a movie, dinner, a baby name or names for testimonials, no single answer reaches a third of replies\". Real users with memory or personal details may see more spread; the page reports a stranger match of 4% when the asker describes themselves."
+   },
+   "mechanism_type": "sampling defaults: no context, fresh chat, default settings",
+   "stop": null
+  },
+  {
+   "n": 2,
+   "question": "Why does each model have a favourite answer at all?",
+   "answer": "The author reports the favourite is added in training, not inherited from the internet. In one open model measured at every stage, answers were near random after pretraining and narrowed in a single step, supervised fine-tuning, where the model copies example answers.",
+   "evidence": [
+    {
+     "url": "https://a90.com/experiments/same-advice/",
+     "domain": "a90.com",
+     "date": "2026-11-20",
+     "quote": "The habit is added in training, not copied from the internet."
+    },
+    {
+     "url": "https://a90.com/experiments/same-advice/",
+     "domain": "a90.com",
+     "date": "2026-11-20",
+     "quote": "The favorite arrives in a single step, supervised fine-tuning, where a model learns to copy example answers, many written by other AIs."
+    }
+   ],
+   "strength": "inferred",
+   "counter": {
+    "text": "The stage-by-stage measurement used the random-number question in small open models (OLMo 2 1B, two Qwen 2.5 models), not the book question or the large commercial models: \"From the training data of one small open model. The large labs don't publish theirs.\" Applying it to the book answer is an inference."
+   },
+   "mechanism_type": "model training: supervised fine-tuning on example answers",
+   "stop": null
+  },
+  {
+   "n": 3,
+   "question": "Why would models from 30 different companies converge on the same favourite?",
+   "answer": "The page points to fine-tuning data that contains other AIs' answers, so one model's habits pass into another lab's model. It found ChatGPT-written names in an open fine-tuning set and cites NVIDIA training on Qwen answers.",
+   "evidence": [
+    {
+     "url": "https://a90.com/experiments/same-advice/",
+     "domain": "a90.com",
+     "date": "2026-11-20",
+     "quote": "556 of 573 Vances and 132 of 136 Marisols in the set were written by ChatGPT. One model's imagination, passed on as another's homework."
+    },
+    {
+     "url": "https://a90.com/experiments/same-advice/",
+     "domain": "a90.com",
+     "date": "2026-11-20",
+     "quote": "NVIDIA says it trained Nemotron 3 on answers written by Qwen3."
+    }
+   ],
+   "strength": "inferred",
+   "counter": {
+    "text": "The same dataset does not contain every default: \"The favorite number and the age 34 are not in it\". The author also leaves the cause of cross-lab likeness open: \"Shared training data could do this; so could learning from another model's answers.\" Scope: the a90 page only; NVIDIA's own statement was not fetched."
+   },
+   "mechanism_type": "training data: model-written answers reused across labs",
+   "stop": null
+  },
+  {
+   "n": 4,
+   "question": "Why Man's Search for Meaning, rather than any other book?",
+   "answer": "Nothing read answers this. The page traces invented names into one open fine-tuning set but does not trace the book, and the large labs' training data is not published.",
+   "evidence": [],
+   "strength": "open",
+   "counter": {
+    "text": "none found, scope: the a90.com page; the Substack source was unreadable"
+   },
+   "mechanism_type": null,
+   "stop": "evidence_exhausted"
+  }
+ ],
+ "landing": {
+  "shows": "One author's measurement shows 65 models, asked cold in a new chat, mostly name the same book, and his tests on small open models place the narrowing at supervised fine-tuning on example answers, some written by other AIs. Why this particular book became the shared favourite is not traced in anything read.",
+  "open_question": "If the favourite is set when a model copies example answers, whose taste in books were those examples written with?"
+ }
+}

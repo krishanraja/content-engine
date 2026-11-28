@@ -1,0 +1,13 @@
+{
+ "angles": 258,
+ "provoked": [],
+ "unread": [],
+ "ledger": {
+  "budget_usd": 3.0,
+  "spent_usd": 0.6,
+  "today": "2026-11-28",
+  "today_usd": 0.6,
+  "today_divergent_ops": 2,
+  "calls": 2
+ }
+}

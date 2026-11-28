@@ -1,0 +1,225 @@
+Etsy AI training terms spark seller backlash | Cybernews
+ News
+ Security
+ Tech
+ AI News
+ Privacy
+ More
+ News 
+ Cybersecurity news
+ Cyber war news
+ AI news
+ Editorial
+ Security
+ Privacy
+ Crypto
+ Tech
+ Gaming
+ Gadgets
+ Entertainment
+ Science
+ Cybercrime
+ Resources
+ Tools 
+ Strong password generator
+ Personal data leak checker
+ Password leak checker
+ Website security checker
+ Ransomlooker
+ VPN
+ Best VPN services
+ NordVPN review
+ NordVPN vs Surfshark
+ Internet censorship
+ Geo Restrictions
+ NordVPN Black Friday 2026 deals
+ VPN News
+ Proton VPN Black Friday 2026 deals
+ Stream Online
+ Antivirus software
+ Best antivirus for iPhone
+ Best antivirus for Android
+ Best antivirus for Mac
+ Free antivirus software
+ Bitdefender review
+ Bitdefender vs Norton
+ Password managers
+ Best Free Passsword Managers
+ 1Password review
+ NordPass review
+ NordPass vs 1Password
+ 1Password vs Bitwarden
+ 1Password Black Friday 2026 deals
+ RoboForm Black Friday 2026 deals
+ NordPass Black Friday 2026 deals
+ Proton Pass Black Friday 2026 deals
+ Web hosting
+ Best website hosting 2026
+ Hostinger vs Bluehost
+ Fastest web hosting
+ Hostinger review 2026
+ VPS
+ Best VPS hosting 2026
+ Best cheap VPS hosting in 2026
+ Best Docker VPS hosting
+ How to install Hermes Agent on a VPS
+ How to deploy OpenClaw with Docker
+ Game Server Hosting
+ Best game server hosting options in 2026
+ Best Palworld dedicated server hosting 2026
+ Best Minecraft server hosting 2026
+ Best Valheim dedicated server hosting in 2026
+ Website builders
+ Best AI website builders
+ Wix review 2026
+ Shopify review 2026
+ Best drag-and-drop website builders
+ Comparison: Wix vs Hostinger
+ Squarespace Black Friday Deal
+ eSIM
+ Best eSIM for USA
+ Best eSIM for Europe
+ Best eSIM for Canada
+ Best eSIM for the UK
+ Best eSIM for Japan
+ Best eSIM for Italy
+ Best eSIM for Spain
+ Best eSIM for India
+ Best eSIM for Bali
+ Saily eSIM review
+ Health tech
+ Best red light therapy for hair growth
+ Best vagus nerve stimulation device: How to choose the right one
+ Best red light therapy for knee pain: 5 devices compared
+ Best red light therapy for hip pain: Top devices for relief & recovery
+ Oura Ring Black Friday Deal 2026
+ Events 
+ CES
+ Deals
+ Press releases
+ Partner content
+ Hosting Hub
+ AI Knowledge Base
+ AI Trustworthiness Ranking 2026
+ AI Adoption Index
+ Security-Hub
+© 2026 Cybernews – Latest Cybersecurity and Tech News, Research & Analysis.
+ADVERTISEMENT
+ HOME
+ /
+ NEWS
+ /
+Etsy tells sellers not to use AI, but may train its own models on their content. Is there a way to opt out?
+Can’t train AI on AI.
+Image by Robert Way | Shutterstock
+ Konstancija Gasaitytė
+ Journalist
+ November 18, 2026
+ Updated: November 19, 2026
+ 2 min read
+ Follow us
+ Key takeaways
+ 01
+ Etsy’s updated terms let it and some partners use seller content to train and improve AI systems.
+ 02
+ Sellers cannot opt out in account settings, they must email Etsy’s data protection officer.
+ 03
+ Some sellers have closed their Etsy shops after the policy change, though the total number is unknown.
+ 04
+ Etsy also bans AI-generated listing images and descriptions as it tries to reduce fake listings.
+Key Takeaways by nexos.ai, reviewed by Cybernews staff.
+Etsy tells sellers not to use AI to generate listings. However, it may use their content to train its own AI, prompting some businesses to abandon the platform. 
+“We closed our Etsy shop,” wrote War and Peas, a shop that sells prints, books, and apparel. 
+While customers can still purchase items from its website, built by webcomic creators Jonathan Kunz and Elizabeth Pich, the items were previously available on Etsy. 
+“You might have heard of Etsy's new terms and artists fleeing the platform. We're out, too,” wrote War and Pease on X. 
+More from Cybernews
+ AI labs “sitting on bombshells” that can break encryption systems, a scientist warns
+ AI news
+ 2 min read
+ European AI model makes 1 million decisions for $16 and is nearly as accurate as Claude
+ AI news
+ 2 min read
+ Russia’s Yandex introduces AI wearable that continuously records conversations
+ AI news
+ 2 min read
+ Hundreds of people die earlier than expected due to pollution from AI data centers, MIT study suggests
+ AI news
+ 2 min read
+ Linux creator is “pissed off” over AI bug fixes, says AI companions should get their act together
+ AI news
+ 2 min read
+ New York bans AI toys as ChatGPT bunny said kids can consent to being touched for pleasure
+ AI news
+ 2 min read
+The business decided to leave the platform due to changes in Etsy’s terms of use.
+Etsy to train AI with seller data
+“Photos, descriptions, reviews. Everything sellers upload can now be used to train AI. By Etsy, by its 'partners and vendors,' a phrase roomy enough to fit pretty much anyone,” shared the post.
+According to Etsy’s Terms of Use, the company, as well as its third-party partners and vendors, has the right to use sellers’ content to develop, train, test and improve artificial intelligence and machine learning technologies.” 
+Since the updated Terms of Use will take effect on December 16th, users still have time to review the changes and decide whether to continue using the platform.
+Curious what others think about this story? Contribute your thoughts to the debate below.
+ADVERTISEMENT
+Etsy didn’t provide much information on how users can opt out of having their content used for AI training. 
+After speaking with Etsy’s customer service representatives, Megan Lewis, who owns the educational platform Digital Hammurabi, learned that users can’t disable this through account settings.
+Instead, they need to contact the company’s data protection officer via email and ask that their data not be used to train AI. 
+“Hopefully, they’ll listen to us and actually do it,” shared Lewis.
+Some users who have already contacted the company about the matter have said they had been advised to close their accounts if they disagreed with Etsy’s terms.
+Many also agreed that closing their accounts was the best option. It is not yet known how many sellers have left Etsy because of these changes.
+Stay updated with our latest stories and follow us on social media
+Be the first to discover new stories, ideas, and updates from our team.
+ Google News
+ Facebook
+ LinkedIn
+ YouTube
+Etsy condemns seller’s use of AI
+In October, Etsy announced that it’s changing how AI can be used on Etsy. The updated guidelines stipulated that users can no longer add AI-generated images, descriptions, and guidelines. 
+The company said that it was “investing” in tools to help identify fake images and remove listings with fraudulent information. 
+Etsy’s decision to combat fake listings with AI-generated information made them look like “the good guys,” noted War and Peas. 
+However, the company’s upcoming changes regarding AI training suggest that it may be seeking to use human-created listings as fresh training data for its AI models.
+“Can't train AI on AI, they know what they are doing, and it's disgusting,” wrote one user on X.
+About the author
+ Konstancija Gasaitytė
+Journalist
+Konstancija Gasaitytė is a journalist at Cybernews covering consumer technology, software updates, mobile apps, and connected devices. She specializes in hands-on testing of gadgets and digital products, helping readers understand how they perform in real-world conditions. Konstancija holds a Master’s degree in Future Media and Journalism.
+ADVERTISEMENT
+ADVERTISEMENT
+ How You Can Stream BBC iPlayer in Australia with PureVPN
+ Partner content
+ 4 min read
+ADVERTISEMENT
+ Categories
+ News
+ Editorial
+ Security
+ Privacy
+ Crypto
+ Cloud
+ Tech
+ Reviews
+ Antivirus Software
+ Password Managers
+ Best VPNs
+ Secure Email Providers
+ Website Builders
+ Game Server Hosting
+ Web Hosting Services
+ Tools
+ Password generator
+ Personal data leak checker
+ Password leak checker
+ Website security checker
+ Ransomlooker
+ Coupon codes
+ ENGAGE
+ About Us
+ Send Us a Tip
+ Advertise with us
+ Careers
+ About Us
+ Contact
+ Send Us a Tip
+ Privacy Policy
+ Terms & Conditions
+ Advertising and Sponsorship Policy
+ Vulnerability Disclosure
+ Cookie Preferences
+© 2026 Cybernews – Latest Cybersecurity and Tech News, Research & Analysis.

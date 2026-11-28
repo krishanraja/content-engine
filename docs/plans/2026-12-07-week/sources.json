@@ -1,11 +1,11 @@
 {
  "week_start": "2026-12-07",
- "gathered_at": "2026-11-27T15:09:47Z",
+ "gathered_at": "2026-11-28T15:51:19Z",
  "how": "Read-only gather (board_feed.py). Write ideas.json from series[].pool and inspiration (routed, liked, fresh, corpora, creators) and his feedback cues (cues), his ideas first, each with source_kind, why_here, beats and style (config/styles.json); every must_cover id is in some idea's covers or in ideas.json accounted with a reason (board_feed.py cover); write combine.json; build with --ideas --queue --combine.",
  "counts": {
   "his": 0,
   "inspo": 13,
-  "engine": 40
+  "engine": 67
  },
  "empty": [
   {
@@ -61,6 +61,66 @@
      "why_here": null,
      "near": null,
      "near_drop": null
+    },
+    {
+     "id": "83f20f43-6b46-40a2-9a9b-1007cb10f9bb",
+     "idea": "Kling's investors hold redemption rights with a yearly return, booked by Kuaishou as an interest cost (Kuaishou third-quarter 2026 results, PR Newswire (19 Nov 2026))",
+     "thesis": "Kling's investor redemption rights with a guaranteed yearly return reveal that its funding carries debt-like obligations booked as interest expense, a structural detail that complicates the narrative around AI video startup valuations and profitability.",
+     "lane_slot": "follow_the_money",
+     "source_type": "week_research",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://www.prnewswire.com/apac/news-releases/kuaishou-technology-announces-third-quarter-2026-unaudited-financial-results-302945189.html",
+     "created_at": "2026-11-27T15:45:54.452379+00:00",
+     "score": null,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
+    },
+    {
+     "id": "21e94357-9b59-4abe-96c6-daf1f98cd6d2",
+     "idea": "ElevenLabs, the AI voice company behind ElevenMusic, agreed to buy Japanese voice firm Kotoba for about $100 million (Music Business Worldwide, ElevenLabs to buy Kotoba (16 Nov 2026))",
+     "thesis": "ElevenLabs' acquisition of Kotoba signals accelerating consolidation in AI voice/music tech and growing strategic interest in the Japanese market, a notable data point for tracking how generative audio startups are scaling through M&A.",
+     "lane_slot": "follow_the_money",
+     "source_type": "week_research",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://www.musicbusinessworldwide.com/elevenlabs-agrees-to-acquire-japan-focused-voice-ai-company-kotoba-in-reported-100m-deal/",
+     "created_at": "2026-11-27T15:45:49.732731+00:00",
+     "score": null,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
+    },
+    {
+     "id": "2c443323-dc8c-4941-9608-04d6b3ec85ed",
+     "idea": "Sonilo, an $11m AI music start-up, will pay Symphonic's opted-in indie artists a licence fee and a revenue share to train on their songs (Music Business Worldwide, Sonilo and Symphonic (18 Nov 2026))",
+     "thesis": "This deal signals a shift toward consent-based AI training models in music, where indie artists opt in for licence fees and revenue share rather than having their work scraped without compensation, a potential template for resolving AI-music industry tensions.",
+     "lane_slot": "follow_the_money",
+     "source_type": "week_research",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://www.musicbusinessworldwide.com/11m-backed-ai-startup-sonilo-founded-by-tiktok-veterans-inks-licensing-deal-with-symphonic-to-train-its-model-on-opted-in-indie-recordings/",
+     "created_at": "2026-11-27T15:45:17.161738+00:00",
+     "score": null,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
+    },
+    {
+     "id": "9a2686e3-efc8-4532-a07f-d8904d0c2fd5",
+     "idea": "iQIYI's 21 AI short dramas took first place in China's short-drama market while its revenue fell 10% to RMB6.01 billion (iQIYI Q3 2026 results, 16 Nov 2026)",
+     "thesis": "iQIYI's AI-produced short dramas topping China's market even as overall company revenue declined suggests AI content production may be outpacing traditional content economics, offering an early signal of how generative media is reshaping streaming business models.",
+     "lane_slot": "follow_the_money",
+     "source_type": "week_research",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": null,
+     "created_at": "2026-11-27T15:45:04.392859+00:00",
+     "score": null,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
     }
    ],
    "mandate": "Work out where the money moves and who ends up better or worse off, one Why at a time. That is the standing question and it leads every piece. THE LADDER: Why 1 asks who pays, and why the price moved. Each Why is answered from evidence on two domains, a filing, a contract, a pricing page, a royalty split, or it is marked as an open question and the ladder stops there; a Why is never climbed past without its evidence. Each rung joins the last with \"because\" or \"but\", never \"and then\", and ends on the next question. Three to seven rungs, five as the target, never padded. The channel covers the whole money system, from any side of the invoice: what a business can charge for AI-powered work, what AI actually costs to run and whether it pays back, how the labs themselves make money, and when it is worth owning the thing rather than renting it. A piece that traces one chain end to end is the best version of this channel. THE READER is anyone standing at the invoice, on either side of it: the leader of a five to fifty million pound business who has just seen the renewal quote, the operator setting a price for work a model now does, and the founder deciding whether to build the thing or keep renting it. SUBJECTS are giants, and after that whoever leaves the best paper trail. Product surfaces are evidence for the money question and are never a follow.the.money subject in their own right. THE BOUNDARY, and it decides every contested subject: what does the reader change next? If they would go and change a price, a budget or a contract, it is follow.the.money. If they would change what they build or buy, it is under.the.hood. If they would change how they think or what they expect, it is mind.the.gap. The question decides, never the surface. NAMING: name whoever the number came from. A public decision by a named executive is fair game; their character is not. THE LANDING: what the ladder shows about who ends up better or worse off, and the strongest version names something already fixed that has not yet shown up in the price (a lease, a depreciation schedule, a liability cap), then hands the reader one open question. Never a forecast, a date to check, odds or a confidence number. Diagram language: the money map, where the dollars enter and where they leave, one rung at a time. HARD GATES, applied before scoring. NOT US: the subject is never Krish, mind/make, CTRL or his own accounts, however available the material. MATERIAL EXISTS: if the evidence has to be created rather than found, it is not commissioned, however good the idea. THE BEAT: who gets paid when AI helps make creative work, in music, film and TV, games, art and design, theatre, media and creator tech: the money behind the hit, the royalty, the licence and the tool. Not governance, regulation, security or data breaches."
@@ -79,21 +139,6 @@
      "source_url": "https://huggingface.co/nari-labs/Qwen3.8-27B-NariQ-GGUF",
      "created_at": "2026-11-24T11:30:35.413842+00:00",
      "score": 6,
-     "why_here": null,
-     "near": null,
-     "near_drop": null
-    },
-    {
-     "id": "cc2926a8-685b-4b87-8524-ca12b0e371ca",
-     "idea": "Clay helps sales teams win with Codex and ChatGPT",
-     "thesis": "ChatGPT and Codex integrations help Clay’s users research deals and turn data into go-to-market plays, with GPT-6 models handling the reasoning.",
-     "lane_slot": "under_the_hood",
-     "source_type": "pool_headline",
-     "source_kind": "engine",
-     "his_via": null,
-     "source_url": "https://openai.com/business/customer-stories/clay-plugins-openai",
-     "created_at": "2026-11-25T11:30:30.417861+00:00",
-     "score": 3,
      "why_here": null,
      "near": null,
      "near_drop": null
@@ -129,6 +174,21 @@
      "near_drop": null
     },
     {
+     "id": "cc2926a8-685b-4b87-8524-ca12b0e371ca",
+     "idea": "Clay helps sales teams win with Codex and ChatGPT",
+     "thesis": "ChatGPT and Codex integrations help Clay’s users research deals and turn data into go-to-market plays, with GPT-6 models handling the reasoning.",
+     "lane_slot": "under_the_hood",
+     "source_type": "pool_headline",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://openai.com/business/customer-stories/clay-plugins-openai",
+     "created_at": "2026-11-25T11:30:30.417861+00:00",
+     "score": 3,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
+    },
+    {
      "id": "a6d802bb-374a-4bad-8f31-b15713390809",
      "idea": "OpenAI updates ChatGPT to handle complex everyday questions, web searches, and images more reliably",
      "thesis": "OpenAI is making GPT-6.2 Sol the new default model in ChatGPT's chat tab, rolling it out worldwide. In internal tests, image understanding jumped from 47.4 to 71.7 per...",
@@ -138,6 +198,21 @@
      "his_via": null,
      "source_url": "https://the-decoder.com/openai-updates-chatgpt-to-handle-complex-everyday-questions-web-searches-and-images-more-reliably/",
      "created_at": "2026-11-24T11:30:35.413842+00:00",
+     "score": 3,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
+    },
+    {
+     "id": "32acd89c-ddda-4314-9d82-b604abe710e4",
+     "idea": "Perplexity and Intelligence",
+     "thesis": "How perplexity measures progress in AI models, and why it could help developers establish a shared approach to evaluating emerging capabilities.",
+     "lane_slot": "under_the_hood",
+     "source_type": "pool_headline",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://openai.com/index/perplexity-and-intelligence",
+     "created_at": "2026-11-23T11:30:26.699666+00:00",
      "score": 3,
      "why_here": null,
      "near": null,
@@ -159,16 +234,31 @@
      "near_drop": null
     },
     {
-     "id": "32acd89c-ddda-4314-9d82-b604abe710e4",
-     "idea": "Perplexity and Intelligence",
-     "thesis": "How perplexity measures progress in AI models, and why it could help developers establish a shared approach to evaluating emerging capabilities.",
+     "id": "de83ed89-f29e-4e5f-ad82-c698ec72a010",
+     "idea": "Epic used AI to convert over 20,000 Fortnite Blueprints into about 3 million lines of Verse, then dropped Blueprints from Unreal Engine 6 (VP Land, Unreal Engine 6 drops Blueprints (20 Nov 2026))",
+     "thesis": "Epic's AI-driven migration of 20,000+ Fortnite Blueprints into 3 million lines of Verse code, followed by dropping Blueprints entirely from Unreal Engine 6, is a concrete case study of large-scale AI-assisted code migration being used to force a platform transition rather than just assist developers.",
      "lane_slot": "under_the_hood",
-     "source_type": "pool_headline",
+     "source_type": "week_research",
      "source_kind": "engine",
      "his_via": null,
-     "source_url": "https://openai.com/index/perplexity-and-intelligence",
-     "created_at": "2026-11-23T11:30:26.699666+00:00",
-     "score": 3,
+     "source_url": "https://www.vp-land.com/stories/unreal-engine-6-drops-blueprints-as-epic-uses-ai-to-port-20-000-fortnite-blueprints-to-ver",
+     "created_at": "2026-11-27T15:46:26.049497+00:00",
+     "score": null,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
+    },
+    {
+     "id": "41874364-fcd8-4fd1-b7e7-91aca6235019",
+     "idea": "Maxon Plus puts AI model generation into Cinema 4D and ZBrush, run on Tripo and Rodin and sold in monthly credits (Maxon, Maxon Plus (Nov 2026))",
+     "thesis": "Maxon bundling third-party AI 3D generators (Tripo, Rodin) directly into Cinema 4D and ZBrush via a credit-based subscription signals that generative AI is becoming infrastructure inside legacy creative tools rather than a standalone product category.",
+     "lane_slot": "under_the_hood",
+     "source_type": "week_research",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://www.maxon.net/en/maxon-plus",
+     "created_at": "2026-11-27T15:46:14.75993+00:00",
+     "score": null,
      "why_here": null,
      "near": null,
      "near_drop": null
@@ -178,11 +268,102 @@
   },
   {
    "slug": "mind_the_gap",
-   "pool": [],
+   "pool": [
+    {
+     "id": "acb58370-aaca-4040-9c13-83f227a628ec",
+     "idea": "Tencent's chairman says AI-song streams are 'negligible and declining', but the bottleneck he's actually describing isn't listener taste, it's recommendation inventory, and that's a decision every DSP exec can act on this week",
+     "thesis": "On Tencent Music's Q3 2026 call, Executive Chairman Cussion Pang called AI-generated-song streams 'very low,' 'negligible,' and falling as a share of listening, but he credited this partly to Tencent's own labeling, catalog controls, and infringement enforcement, not to listener rejection alone, which means the 'demand gap' is partly a supply gate Tencent built itself (Music Business Worldwide / Globe and Mail earnings transcript, 17-18 Nov 2026). No percentage was disclosed, so the real lesson for a DSP discovery executive isn't 'AI music fails,' it's that recommendation weight is the scarce resource once production stops being one: the Monday decision is to cohort AI-tagged tracks separately and gate their discovery placement on repeat listens, saves, and revenue-per-hour rather than upload volume, exactly as Tencent's own enforcement posture implies it is already doing. This is wrong if Tencent discloses an actual percentage later that shows AI streams are a rounding error regardless of controls, then the mechanism is listener taste, not platform gating, and the whole claim collapses.",
+     "lane_slot": "mind_the_gap",
+     "source_type": "week_research",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/",
+     "created_at": "2026-11-27T15:58:18.561259+00:00",
+     "score": 6,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
+    },
+    {
+     "id": "e71e7d8a-8a1c-415c-96b6-311e8cc8ccbf",
+     "idea": "Epic's AI MegaJam drew 2,782 game entries; the most popular one says no generative AI was used (itch.io, 2026 Epic AI MegaJam (Nov 2026))",
+     "thesis": "Epic's AI-themed game jam drew massive participation, yet the top-voted entry explicitly rejected generative AI, suggesting a growing backlash or skepticism toward AI tools even within communities built to showcase them.",
+     "lane_slot": "mind_the_gap",
+     "source_type": "week_research",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://itch.io/jam/2026-epic-ai-megajam",
+     "created_at": "2026-11-27T15:46:51.589725+00:00",
+     "score": 4,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
+    },
+    {
+     "id": "72b1be18-6980-478b-aca4-9e546f07bb03",
+     "idea": "Coca-Cola's AI holiday ads beat its internal benchmarks; its 2026 US holiday ad is live-action, made without generative AI (Marketing Dive, Coca-Cola pivots from AI-generated holiday ads (19 Nov 2026))",
+     "thesis": "Coca-Cola's reported pivot back to live-action for its 2026 US holiday ad, despite claiming its AI-generated ads beat internal benchmarks, signals that brand trust and cultural reception may outweigh pure performance metrics when it comes to generative AI in marketing, a tension worth tracking as more major brands test AI creative.",
+     "lane_slot": "mind_the_gap",
+     "source_type": "week_research",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://www.marketingdive.com/news/coca-cola-pivots-from-divisive-ai-generated-ads-for-holiday-campaign/875215/",
+     "created_at": "2026-11-27T15:58:28.932958+00:00",
+     "score": 3,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
+    },
+    {
+     "id": "c1bd8406-c267-426e-b586-d76e1ef68e5c",
+     "idea": "Animation festivals ask filmmakers to declare AI; programmers say some mark AI films as 3D or experimental (Cartoon Brew, festival programmers on AI (20 Nov 2026))",
+     "thesis": "Animation festivals' new AI-disclosure rules are already being gamed, as some filmmakers reportedly mislabel AI-generated work as '3D' or 'experimental' to dodge scrutiny, exposing how hard transparency policies are to enforce in creative fields.",
+     "lane_slot": "mind_the_gap",
+     "source_type": "week_research",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://www.cartoonbrew.com/artificial-intelligence/annecy-ottawa-manchester-festival-programmers-artificial-intelligence-269655.html",
+     "created_at": "2026-11-27T15:46:47.222515+00:00",
+     "score": null,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
+    },
+    {
+     "id": "456c4fc3-530b-4fc8-9e92-5b5ea662ad87",
+     "idea": "A Binding of Isaac update shipped Suno-made music with no AI label on Steam, and players found it in the file metadata (Eurogamer, Binding of Isaac AI music removed (Nov 2026))",
+     "thesis": "Undisclosed AI-generated music shipped in a major Steam game and was only caught via file metadata, highlighting how AI content is slipping into commercial products without disclosure and how players are becoming de facto auditors of AI use in games.",
+     "lane_slot": "mind_the_gap",
+     "source_type": "week_research",
+     "source_kind": "engine",
+     "his_via": null,
+     "source_url": "https://www.eurogamer.net/binding-of-isaac-repentance-plus-ai-music-removed",
+     "created_at": "2026-11-27T15:46:42.945458+00:00",
+     "score": null,
+     "why_here": null,
+     "near": null,
+     "near_drop": null
+    }
+   ],
    "mandate": "Notice the pattern, and trace why it is there, one Why at a time. Take a shift that is visible across several threads and resolve it into one observation the reader has half-noticed and never named. THE LADDER: Why 1 asks where the claim and the reality part. Each Why is answered from evidence on two domains, or it is marked as an open question and the ladder stops there; a Why is never climbed past without its evidence. Each rung joins the last with \"because\" or \"but\", never \"and then\", and ends on the next question. Three to seven rungs, five as the target, never padded. When the evidence splits, follow the better-evidenced branch and park the other; when a Why lands on a person, ask how it made sense to them, never who is to blame; when a Why leaves the subject, stop and name who owns that question. The gap is any of three, and the piece says which one it is working: between what is claimed and what is actually happening; between what people believe and what the evidence shows; or no gap at all, just a pattern worth naming and what it shows. SEVERAL THREADS, ONE SPINE. A piece may and should draw on several subjects, shifts or themes. What it may not do is survey them: they resolve into one ladder with one spine, or it is a roundup. Covers thinking, usage, habit, technology and application; public decisions and what they say about the wider picture; historical shifts; and the human stories underneath the technology. The question the opening artifact asks the reader: what is the pattern here, and why is it there? THE BOUNDARY, and it decides every contested subject: what does the reader change next? If they would change how they think or what they expect, it is mind.the.gap. If they would change a price, a budget or a contract, it is follow.the.money. If they would change what they build or buy, it is under.the.hood. The question decides, never the surface. Diagram language: two columns, belief against evidence, and the pattern timeline. Register is human, observant and connected to the real world. Strongest subjects invert a well-covered story rather than restating it. THE LANDING: the pattern, said as the ladder found it, then one open question handed to the reader. Never a forecast, a date to check, odds or a confidence number, and never what is coming next. HARD RULE, and the one that overrides every other instruction in this mandate: no preaching. No closing moral, no lesson for leaders, no sentence telling the reader what to conclude or become. The not-us gate applies here too: the subject is never Krish, mind/make, CTRL or his own operating loop, however available the material. THE BEAT: the gap between what makers, performers and creators are promised about AI and what the record shows, in their earnings, their audiences and their work. Not governance, regulation, security or data breaches."
   }
  ],
  "unassigned": [
+  {
+   "id": "b0e8bb0f-186e-4622-8d31-65a3cadcd29c",
+   "idea": "Etsy's new terms let partners train AI on sellers' work; illustrators are closing shops despite the chief executive's reassurance (Cartoon Brew, artists close Etsy shops over AI training terms (18 Nov 2026))",
+   "thesis": "Etsy's updated terms permitting AI training on seller content are triggering a trust breakdown among creators, highlighting the growing tension between platform monetization of user-generated work and the livelihoods of independent artists.",
+   "lane_slot": null,
+   "source_type": "week_research",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://www.cartoonbrew.com/artificial-intelligence/etsy-ai-training-terms-of-use-269553.html",
+   "created_at": "2026-11-27T15:58:23.796016+00:00",
+   "score": 6,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
   {
    "id": "972b7721-4e4e-477f-b5cf-20164fd8260c",
    "idea": "Suno Visuals makes lyric videos, album art and 15-second clips for songs, running on a model built on MiniMax's H3 video model, with filters that block real artists (MBW, 23 Nov 2026).",
@@ -209,6 +390,231 @@
    "source_url": "https://www.anthropic.com/research/working-with-ai",
    "created_at": "2026-11-25T11:30:30.417861+00:00",
    "score": 0,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "908ca29a-784a-4ada-93a6-17af4a2b5083",
+   "idea": "Avid's survey of 120 American Cinema Editors found 77.5% use AI, mostly for transcription and audio cleanup, and few want it to cut",
+   "thesis": "Professional editors are quietly adopting AI for grunt work like transcription and audio cleanup while resisting it for creative decisions like cutting, suggesting a practical, labor-dividing pattern of AI adoption rather than wholesale creative replacement.",
+   "lane_slot": null,
+   "source_type": "week_research",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": null,
+   "created_at": "2026-11-28T14:54:08.666312+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "f1782b9f-5302-444d-9051-18070f8787c3",
+   "idea": "McClatchy plans to rebuild its newspapers around AI agents, including a content scaling agent that repackages reporters' stories under their names",
+   "thesis": "McClatchy's move to rebuild newsroom operations around AI agents, including a tool that repackages reporters' own stories under their bylines, signals a major shift in how legacy media will try to scale content production, raising questions about labor, bylines, and editorial integrity that will ripple across the industry.",
+   "lane_slot": null,
+   "source_type": "week_research",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": null,
+   "created_at": "2026-11-28T14:54:04.236873+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "19cde54d-3a9f-492d-bcfc-02240814705b",
+   "idea": "Spotify opened Artist Profile Protection to every artist on 17 November, so musicians can review or block releases delivered under their name",
+   "thesis": "Spotify's rollout of Artist Profile Protection to all artists signals a platform-level response to AI-generated impersonation and unauthorized uploads, marking a shift toward giving creators direct control over their identity on streaming services.",
+   "lane_slot": null,
+   "source_type": "week_research",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": null,
+   "created_at": "2026-11-28T14:53:59.616703+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "1a010324-839f-48a3-b41c-11feb88ae48d",
+   "idea": "Intelliflicks' generative AI feature Maharaja in Denims, built across six AI models, had every still rebuilt three times and now opens in April 2027",
+   "thesis": "A generative AI production pipeline spanning six AI models, with every still rebuilt three times before release, signals how labor-intensive and iterative AI-assisted filmmaking actually is behind the scenes, useful context as 'AI-generated' media claims proliferate.",
+   "lane_slot": null,
+   "source_type": "week_research",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": null,
+   "created_at": "2026-11-28T14:53:55.481267+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "f2338d52-9e3c-4aab-baf8-21f56829465c",
+   "idea": "Spotify opened Artist Profile Protection to every artist on 17 Nov 2026, eight months after a beta: by default an artist gets an email when a delivery lists them and can remove themselves, a stricter Block releases mode holds a delivery until they approve it, and trusted distributors can pass an artist key to skip the step (TechCrunch, 17 Nov 2026; Digital Trends, 18 Nov 2026).",
+   "thesis": "Spotify's rollout of Artist Profile Protection to all artists signals a broader industry shift toward giving creators control over unauthorized use of their identity on distribution platforms, which matters as AI-generated and impersonation content on music platforms grows; the tiered system (default alert/removal, stricter approval mode, trusted distributor bypass) is a useful case study in balancing creator control with platform friction.",
+   "lane_slot": null,
+   "source_type": "week_research",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": null,
+   "created_at": "2026-11-28T14:03:39.124443+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "5675e3e4-3420-45a2-bc45-9e9cbd5902ee",
+   "idea": "Google opened Genie 4 to game developers through the Gemini API on 19 Nov 2026: it streams a playable 720p world at 24 frames a second, every frame generated as the session runs, at about $0.10 a second, for sessions of up to 120 seconds (Google, The Keyword, 19 Nov 2026; PPC Land).",
+   "thesis": "Genie 4's API launch marks a concrete step toward commercially viable real-time generative world models, shifting the conversation from research demo to priced, usable product with real constraints (720p, 24fps, 120s sessions, $0.10/sec) that developers can now evaluate against actual game-dev economics.",
+   "lane_slot": null,
+   "source_type": "week_research",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": null,
+   "created_at": "2026-11-28T13:59:19.429637+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "93c47616-6bfa-4d93-a193-5df85843977d",
+   "idea": "42 state AGs are trying to stop Character.AI from selling users’ chats",
+   "thesis": "A coalition of 42 state attorneys general is trying to prevent Character.AI from selling off user data as it navigates Chapter 11 bankruptcy proceedings. In a deluge o...",
+   "lane_slot": null,
+   "source_type": "pool_headline",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://www.theverge.com/policy/1042620/character-ai-sale-state-ags-block-selling-users-chats",
+   "created_at": "2026-11-28T11:30:27.202779+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "38602f5d-0e49-4980-8b8b-63f203e5475e",
+   "idea": "the Mindmake site: the week's build, week ending 2026-11-27",
+   "thesis": "Reposition mindmake.co for creative work, culture and sport; Fix: Hero text is hard to read over the bright background image; Show how an AI brain improves the next decision",
+   "lane_slot": null,
+   "source_type": "build_signal",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://github.com/krishanraja/mindmake/compare/952e0816fe5b...5f855e633c38",
+   "created_at": "2026-11-28T05:00:49.814505+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "3b2bdcdc-2deb-4e08-a442-65b9fe7a695b",
+   "idea": "Control Center: the week's build, week ending 2026-11-27",
+   "thesis": "His one list shows the week's edition waiting for Approve for send (draft, for Krish); Retire persona names as owners: repository slugs from now on; Fix the rebuilt-UI browser tests red on main: stale tests updated, four layout bugs fixed",
+   "lane_slot": null,
+   "source_type": "build_signal",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://github.com/krishanraja/control-center/compare/fbb3cf577ba7...994fdb7eb4cd",
+   "created_at": "2026-11-28T05:00:48.362664+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "581d73f3-6046-46cb-b898-f1c4b06ffad1",
+   "idea": "74% of streaming users think their playlists hold no fully AI songs; 57% of Deezer's October joiners already had one (Deezer newsroom, AI music labelling survey (17 Nov 2026))",
+   "thesis": "There's a striking perception gap between how much AI music listeners believe they're consuming versus reality, most Deezer users think their playlists are AI-free, but over half of new tracks added in October already included fully AI-generated songs, revealing how invisible AI music has become.",
+   "lane_slot": null,
+   "source_type": "week_research",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://newsroom-deezer.com/2026/11/ai-music-labeling-deezer-ipsos-survey/",
+   "created_at": "2026-11-27T15:46:38.256152+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "b38a7a98-50b4-4608-bf8e-b99d8181ac7b",
+   "idea": "Tor pulled Ilona Andrews's new cover after learning generative AI was used, despite no-AI clauses in its contracts (Ilona Andrews, Generative AI on This Crown's cover (20 Nov 2026))",
+   "thesis": "A major publisher pulling a book cover after discovering undisclosed generative AI use, despite existing contractual bans, signals that AI provenance in creative work is becoming a real enforceable line, not just a policy on paper, which matters for authors, illustrators, and publishers navigating trust and contracts.",
+   "lane_slot": null,
+   "source_type": "week_research",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/",
+   "created_at": "2026-11-27T15:46:33.270054+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "46dd71d0-6787-4bda-bd6c-b0e2bc4abca2",
+   "idea": "HeyGen says Avatar 6 is 84.4% indistinguishable from real video; its own test shows viewers picked it as real 42.2% of the time (HeyGen, Avatar 6 research (17 Nov 2026))",
+   "thesis": "HeyGen's own data undercuts its headline claim: a 42.2% pick rate for 'real' is actually below the 50% chance baseline for indistinguishability, suggesting the 84.4% figure is a more favorable (and differently defined) metric being used to mask a weaker underlying result, a useful case study in how AI companies frame benchmark numbers.",
+   "lane_slot": null,
+   "source_type": "week_research",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://www.heygen.com/research/avatar-6-model",
+   "created_at": "2026-11-27T15:46:21.599692+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "0977ab4d-8c3f-47c1-af95-768e2f3f968c",
+   "idea": "The New York Times combined its newsroom AI agents into News Agent, and journalists must pass legal training before using it (News Machines, New York Times News Agent (24 Nov 2026))",
+   "thesis": "The New York Times requiring legal training before journalists can use its new unified News Agent AI tool signals how newsrooms are institutionalizing AI governance amid legal and ethical risk, a notable shift from ad hoc experimentation to formal compliance structures.",
+   "lane_slot": null,
+   "source_type": "week_research",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://newsmachines.beehiiv.com/p/new-york-times-news-agent",
+   "created_at": "2026-11-27T15:46:09.922822+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "076c5675-4aee-4ad0-b400-6b10188fdb59",
+   "idea": "iZotope's Nectar 5 transcribes a sung vocal so producers can put effects on single words, and an AI builds the vocal chain (iZotope, Nectar 5 product page (Nov 2026))",
+   "thesis": "Nectar 5's word-level vocal transcription and AI-built vocal chains show how AI is moving audio production from blunt, track-wide effects toward granular, semantic editing, letting producers treat individual words as editable objects rather than waveforms.",
+   "lane_slot": null,
+   "source_type": "week_research",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://www.izotope.com/en/products/nectar.html",
+   "created_at": "2026-11-27T15:46:05.164066+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "d5f108ea-7b48-4e1f-8c5c-62e346129f48",
+   "idea": "Prime Video's Progressive Actions uses its own AI models to flag every pass and carry that moves the ball forward in Champions League football (Advanced Television, Prime Video Progressive Actions (23 Nov 2026))",
+   "thesis": "Prime Video's use of proprietary AI to automatically identify ball-progressing actions in Champions League football shows how sports broadcasters are embedding machine learning directly into live viewer analytics, raising the bar for real-time match insight.",
+   "lane_slot": null,
+   "source_type": "week_research",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://www.advanced-television.com/2026/11/23/prime-video-unveils-progressive-actions-for-champions-league/",
+   "created_at": "2026-11-27T15:45:59.554925+00:00",
+   "score": null,
    "why_here": null,
    "near": null,
    "near_drop": null
@@ -244,6 +650,21 @@
    "near_drop": null
   },
   {
+   "id": "4212e710-9fb8-486d-8f9a-74d12245bca4",
+   "idea": "78% of Firms With Multiple Payment Capabilities See Improved Conversion",
+   "thesis": "A shopper who hands a purchase to an artificial intelligence (AI) assistant also hands the merchant a new job at checkout: recognizing the customer behind the software...",
+   "lane_slot": null,
+   "source_type": "pool_headline",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://biztoc.com/x/1577cc5b97bd4151",
+   "created_at": "2026-11-27T11:30:28.943637+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
    "id": "66012329-e6d5-4a48-9f3b-a7a1705dec09",
    "idea": "New AI research suggests AI bubble bursting and to expect major market collapse",
    "thesis": null,
@@ -267,21 +688,6 @@
    "source_kind": "engine",
    "his_via": null,
    "source_url": "https://the-decoder.com/gpt-6-2-astra-users-now-hit-limits-40-faster-after-openai-patched-a-pricing-error/",
-   "created_at": "2026-11-27T11:30:28.943637+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "4212e710-9fb8-486d-8f9a-74d12245bca4",
-   "idea": "78% of Firms With Multiple Payment Capabilities See Improved Conversion",
-   "thesis": "A shopper who hands a purchase to an artificial intelligence (AI) assistant also hands the merchant a new job at checkout: recognizing the customer behind the software...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://biztoc.com/x/1577cc5b97bd4151",
    "created_at": "2026-11-27T11:30:28.943637+00:00",
    "score": null,
    "why_here": null,
@@ -409,21 +815,6 @@
    "near_drop": null
   },
   {
-   "id": "da7d404a-ffdd-4963-a747-a1252c5d81af",
-   "idea": "Amazon and Meta are in talks to end the block on Meta's AI shopping agent Muse in Amazon's online store.",
-   "thesis": "Amazon and Meta are in talks to bring back Muse, Meta's AI shopping agent that Amazon kicked off its platform in September. The two sides are stuck on ad revenue and w...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://the-decoder.com/amazon-and-meta-are-in-talks-to-end-the-block-on-metas-ai-shopping-agent-muse-in-amazons-online-store/",
-   "created_at": "2026-11-26T11:30:28.538419+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
    "id": "7764dbc1-453b-4fad-a9a9-ce4cc7494893",
    "idea": "The New York Times warns photographers not to update Photoshop over AI features",
    "thesis": "https://archive.ph/pcUgy",
@@ -432,6 +823,21 @@
    "source_kind": "engine",
    "his_via": null,
    "source_url": "https://www.theverge.com/ai-artificial-intelligence/1041227/the-new-york-times-warns-photographers-not-to-update-photoshop-over-ai-features",
+   "created_at": "2026-11-26T11:30:28.538419+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "da7d404a-ffdd-4963-a747-a1252c5d81af",
+   "idea": "Amazon and Meta are in talks to end the block on Meta's AI shopping agent Muse in Amazon's online store.",
+   "thesis": "Amazon and Meta are in talks to bring back Muse, Meta's AI shopping agent that Amazon kicked off its platform in September. The two sides are stuck on ad revenue and w...",
+   "lane_slot": null,
+   "source_type": "pool_headline",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://the-decoder.com/amazon-and-meta-are-in-talks-to-end-the-block-on-metas-ai-shopping-agent-muse-in-amazons-online-store/",
    "created_at": "2026-11-26T11:30:28.538419+00:00",
    "score": null,
    "why_here": null,
@@ -514,21 +920,6 @@
    "near_drop": null
   },
   {
-   "id": "63d588a3-cb2d-4782-919d-c9096e731080",
-   "idea": "How iFood scales coding agents across 15,000 repositories",
-   "thesis": null,
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://openai.com/business/customer-stories/ifood",
-   "created_at": "2026-11-25T11:30:30.417861+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
    "id": "4da8cc83-b228-4779-8a63-622abf21ca82",
    "idea": "An Indic Voice Agent with CUGA",
    "thesis": null,
@@ -537,6 +928,21 @@
    "source_kind": "engine",
    "his_via": null,
    "source_url": "https://huggingface.co/blog/ibm-research/an-indic-voice-agent-with-cuga",
+   "created_at": "2026-11-25T11:30:30.417861+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
+   "id": "63d588a3-cb2d-4782-919d-c9096e731080",
+   "idea": "How iFood scales coding agents across 15,000 repositories",
+   "thesis": null,
+   "lane_slot": null,
+   "source_type": "pool_headline",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://openai.com/business/customer-stories/ifood",
    "created_at": "2026-11-25T11:30:30.417861+00:00",
    "score": null,
    "why_here": null,
@@ -604,6 +1010,21 @@
    "near_drop": null
   },
   {
+   "id": "35aa5ab6-6cf9-4189-9db2-e789310e7ecf",
+   "idea": "NVIDIA and Microsoft Expand Accelerated Computing From Azure to Windows PCs",
+   "thesis": "NVIDIA and Microsoft are extending their full-stack collaboration to help organizations build, customize and deploy intelligent applications — from next-generation inf...",
+   "lane_slot": null,
+   "source_type": "pool_headline",
+   "source_kind": "engine",
+   "his_via": null,
+   "source_url": "https://blogs.nvidia.com/blog/microsoft-ignite-accelerated-computing-azure-windows-pcs/",
+   "created_at": "2026-11-24T11:30:35.413842+00:00",
+   "score": null,
+   "why_here": null,
+   "near": null,
+   "near_drop": null
+  },
+  {
    "id": "6488d33b-ebe0-41bd-a5a4-bfb1455a8cab",
    "idea": "Anthropic says it will put humanity first. Will its IPO change that?",
    "thesis": "Critics say now that the AI giant is a public company, its commitment to put safety ahead of commercial success will be tested. (Image credit: Michael M. Santiago)",
@@ -627,21 +1048,6 @@
    "source_kind": "engine",
    "his_via": null,
    "source_url": "https://www.theverge.com/ai-artificial-intelligence/1030422/nvidia-jensen-huang-ai-china-alice-huang",
-   "created_at": "2026-11-24T11:30:35.413842+00:00",
-   "score": null,
-   "why_here": null,
-   "near": null,
-   "near_drop": null
-  },
-  {
-   "id": "35aa5ab6-6cf9-4189-9db2-e789310e7ecf",
-   "idea": "NVIDIA and Microsoft Expand Accelerated Computing From Azure to Windows PCs",
-   "thesis": "NVIDIA and Microsoft are extending their full-stack collaboration to help organizations build, customize and deploy intelligent applications — from next-generation inf...",
-   "lane_slot": null,
-   "source_type": "pool_headline",
-   "source_kind": "engine",
-   "his_via": null,
-   "source_url": "https://blogs.nvidia.com/blog/microsoft-ignite-accelerated-computing-azure-windows-pcs/",
    "created_at": "2026-11-24T11:30:35.413842+00:00",
    "score": null,
    "why_here": null,
@@ -1997,14 +2403,6 @@
     "support": 4
    },
    {
-    "id": "2740c46f-2f6e-41b5-9b77-c8e2958f0544",
-    "layer": "packaging",
-    "status": "candidate",
-    "statement": "He wants thumbnails purposefully designed with more than just a face on a plain background, matching curated style references rather than defaulting to a flat look.",
-    "his_words": "They usually don't have just the authors face in them and usually not juts a black background",
-    "support": 3
-   },
-   {
     "id": "37404281-53e3-4504-985a-566cc58c6fe5",
     "layer": "tone",
     "status": "candidate",
@@ -2019,6 +2417,14 @@
     "statement": "He wants captions designed with bold, unique, art-directed styling, rejecting plain, boring, or under-animated default caption treatments.",
     "his_words": "The captions are very unique and well-designed, like an art director would do them",
     "support": 4
+   },
+   {
+    "id": "2740c46f-2f6e-41b5-9b77-c8e2958f0544",
+    "layer": "packaging",
+    "status": "candidate",
+    "statement": "He wants thumbnails purposefully designed with more than just a face on a plain background, matching curated style references rather than defaulting to a flat look.",
+    "his_words": "They usually don't have just the authors face in them and usually not juts a black background",
+    "support": 3
    },
    {
     "id": "86383f00-51e2-407c-a8d0-9e7367e7af34",
@@ -3159,7 +3565,7 @@
    "recent": 11,
    "feed": 0,
    "lookalike_feed": 100,
-   "corrections": 195,
+   "corrections": 196,
    "hindsight": 3
   },
   "feed": [],
@@ -3767,6 +4173,13 @@
   ],
   "corrections": [
    {
+    "said": "My ideas board has become a little bit too focused on individual creators and not enough on what it was before, which is businesses and, under the hood, how AI is changing things.",
+    "about": null,
+    "where": "Claude Code session in krishanraja/content-engine",
+    "repository": "krishanraja/content-engine",
+    "at": "2026-11-27T15:00:00+00:00"
+   },
+   {
     "said": "No I want this signed off with Krish, with a handwritten Krish signature and my headshot. as well as my krishraja.com hyperlink underneath I also want to say that maybe one sentence at the bottom, saying who I am and that I'm very grateful that you're supporting this. I hope that I can be of value to you and if you want to check out my AI brain company at MindMake.co, you can as well. Can you craft all of that into a nice footnote?",
     "about": null,
     "where": "Claude Code session (makeyourmindup v5 rebrand), on the weekly edition email sign-off",
@@ -4271,14 +4684,14 @@
     "at": "2026-11-20T09:48:25.697+00:00"
    },
    {
-    "said": "I'd also like to give all of the existing visuals a slight upgrade and make them classier and more consistent. I don't have any particular issue. I think we've gone to a good place with the overall brand kit but I just think there's a little bit of polish that we can do to make things just that 10% more premium to look at. This goes for: the covers, the thumbnails, the ways in which the title cards come in, the card animations, the way that photography slides in, the way that big epic moments in my script are visualised. Here are some examples of things I think are better than what we currently have. Visually it might be: the way that the burnt orange gradients, the cards, or the photos can horizontally slide in and out; the wires that connect different images to one another; the differen…",
+    "said": "when you say \"no AI-generated images,\" we actually do use AI to generate a lot of striking imagery that comes in and out of our pieces. We often then source real-life screenshots or I provide video/image screenshots and then they're integrated into the video to make the point a lot clearer. The AI music video is a really good example of world-class treatment of video footage and social media videos being integrated really nicely alongside generated animations.",
     "about": null,
     "where": "Claude Code session in krishanraja/content-engine",
     "repository": "krishanraja/content-engine",
     "at": "2026-11-20T09:40:00+00:00"
    },
    {
-    "said": "when you say \"no AI-generated images,\" we actually do use AI to generate a lot of striking imagery that comes in and out of our pieces. We often then source real-life screenshots or I provide video/image screenshots and then they're integrated into the video to make the point a lot clearer. The AI music video is a really good example of world-class treatment of video footage and social media videos being integrated really nicely alongside generated animations.",
+    "said": "I'd also like to give all of the existing visuals a slight upgrade and make them classier and more consistent. I don't have any particular issue. I think we've gone to a good place with the overall brand kit but I just think there's a little bit of polish that we can do to make things just that 10% more premium to look at. This goes for: the covers, the thumbnails, the ways in which the title cards come in, the card animations, the way that photography slides in, the way that big epic moments in my script are visualised. Here are some examples of things I think are better than what we currently have. Visually it might be: the way that the burnt orange gradients, the cards, or the photos can horizontally slide in and out; the wires that connect different images to one another; the differen…",
     "about": null,
     "where": "Claude Code session in krishanraja/content-engine",
     "repository": "krishanraja/content-engine",
@@ -4348,16 +4761,16 @@
     "at": "2026-11-19T21:00:00+00:00"
    },
    {
-    "said": "This palette close is fine, but what about this one in future, with built to help you decide layered on? https://claude.ai/artifact/FnDVNoCk1CqxGKTHRYENKH",
-    "about": "The tall close: the intro sting with \"Built to help you decide\" layered on, as a future end card",
-    "where": "Claude Code session in krishanraja/content-engine, answering which wins between the palette close and the plain-black guard",
+    "said": "Keep shadow only",
+    "about": "Art-directed captions over a bright photo: shadow only, no scrim",
+    "where": "Claude Code session in krishanraja/content-engine, answering whether captions over the white bill on the steak beat need a scrim",
     "repository": "krishanraja/content-engine",
     "at": "2026-11-19T20:55:00+00:00"
    },
    {
-    "said": "Keep shadow only",
-    "about": "Art-directed captions over a bright photo: shadow only, no scrim",
-    "where": "Claude Code session in krishanraja/content-engine, answering whether captions over the white bill on the steak beat need a scrim",
+    "said": "This palette close is fine, but what about this one in future, with built to help you decide layered on? https://claude.ai/artifact/FnDVNoCk1CqxGKTHRYENKH",
+    "about": "The tall close: the intro sting with \"Built to help you decide\" layered on, as a future end card",
+    "where": "Claude Code session in krishanraja/content-engine, answering which wins between the palette close and the plain-black guard",
     "repository": "krishanraja/content-engine",
     "at": "2026-11-19T20:55:00+00:00"
    },
@@ -4446,17 +4859,17 @@
     "at": "2026-11-19T10:50:00+00:00"
    },
    {
-    "said": "monthly live session + a teardown for annual, and then for founding members all brain modules are free, plus a monthly check in with Krish to unpick your biggest AI bottlenecks",
-    "about": null,
-    "where": "Claude Code cloud session in krishanraja/makeyourmindup, setting the paid Substack perks per plan",
-    "repository": "krishanraja/makeyourmindup",
-    "at": "2026-11-19T10:20:00+00:00"
-   },
-   {
     "said": "These Perplexity prompts are not deep enough at all. They're so vague.",
     "about": null,
     "where": "Claude Code cloud session in krishanraja/content-engine, on the 10 whys Perplexity prompts for Wed 25 Nov, Fri 27 Nov and the vibe coding idea",
     "repository": "krishanraja/content-engine",
+    "at": "2026-11-19T10:20:00+00:00"
+   },
+   {
+    "said": "monthly live session + a teardown for annual, and then for founding members all brain modules are free, plus a monthly check in with Krish to unpick your biggest AI bottlenecks",
+    "about": null,
+    "where": "Claude Code cloud session in krishanraja/makeyourmindup, setting the paid Substack perks per plan",
+    "repository": "krishanraja/makeyourmindup",
     "at": "2026-11-19T10:20:00+00:00"
    },
    {
@@ -4544,6 +4957,13 @@
     "at": "2026-11-19T02:40:00+00:00"
    },
    {
+    "said": "either ai music or character.ai is fine - both are good for different reasons. DELETE THOSE FRAMES FOREVER. you need to rebuild everywhere it was to be 10X better using those two new references",
+    "about": null,
+    "where": "a Claude Code session in krishanraja/content-engine",
+    "repository": "krishanraja/content-engine",
+    "at": "2026-11-18T22:11:36+00:00"
+   },
+   {
     "said": "\"Dont cut the top of my head off\" should not really need a reference image, should it?",
     "about": null,
     "where": "a Claude Code session in krishanraja/content-engine",
@@ -4552,13 +4972,6 @@
    },
    {
     "said": "this font is crappy, I have given this feedback before - why would it still keep popping up in carousels?",
-    "about": null,
-    "where": "a Claude Code session in krishanraja/content-engine",
-    "repository": "krishanraja/content-engine",
-    "at": "2026-11-18T22:11:36+00:00"
-   },
-   {
-    "said": "either ai music or character.ai is fine - both are good for different reasons. DELETE THOSE FRAMES FOREVER. you need to rebuild everywhere it was to be 10X better using those two new references",
     "about": null,
     "where": "a Claude Code session in krishanraja/content-engine",
     "repository": "krishanraja/content-engine",
@@ -4824,16 +5237,16 @@
     "at": "2026-11-18T00:20:00+00:00"
    },
    {
-    "said": "the first one is better.",
-    "about": "Tue 17 data-centres short: podcast (Two-line scroll) preferred over karaoke",
-    "where": "Claude Code post-production session on the Tue 17 data-centres short, shown the same 8 seconds in podcast (Two-line scroll) and karaoke; his pick was podcast; quoted verbatim in the repair brief; date known, time of day not",
+    "said": "I have some issues with the subtitles. They are really jolty, and each word moving from left to right is really hard to look at and stressful. We can't have each new word appear somewhere else on the screen, and we need the previous word to stick around for a tiny bit longer. I think you're going to need to get creative here or use a different caption set because this one feels really stressful.",
+    "about": "Tue 17 data-centres short, art-directed captions on one-word pages",
+    "where": "Claude Code post-production session on the Tue 17 data-centres short (art-directed captions), quoted verbatim in the repair brief to this session; date known, time of day not",
     "repository": "krishanraja/content-engine",
     "at": "2026-11-18T00:00:00+00:00"
    },
    {
-    "said": "I have some issues with the subtitles. They are really jolty, and each word moving from left to right is really hard to look at and stressful. We can't have each new word appear somewhere else on the screen, and we need the previous word to stick around for a tiny bit longer. I think you're going to need to get creative here or use a different caption set because this one feels really stressful.",
-    "about": "Tue 17 data-centres short, art-directed captions on one-word pages",
-    "where": "Claude Code post-production session on the Tue 17 data-centres short (art-directed captions), quoted verbatim in the repair brief to this session; date known, time of day not",
+    "said": "the first one is better.",
+    "about": "Tue 17 data-centres short: podcast (Two-line scroll) preferred over karaoke",
+    "where": "Claude Code post-production session on the Tue 17 data-centres short, shown the same 8 seconds in podcast (Two-line scroll) and karaoke; his pick was podcast; quoted verbatim in the repair brief; date known, time of day not",
     "repository": "krishanraja/content-engine",
     "at": "2026-11-18T00:00:00+00:00"
    },
@@ -9110,13 +9523,44 @@
   }
  ],
  "option_status": {
+  "idea:21e94357-9b59-4abe-96c6-daf1f98cd6d2": "open",
+  "idea:83f20f43-6b46-40a2-9a9b-1007cb10f9bb": "open",
+  "idea:2c443323-dc8c-4941-9608-04d6b3ec85ed": "open",
+  "off:tue:nytphotoshop": "open",
+  "off:tue:spotifyaudio": "open",
+  "off:tue:fcpcaptions": "open",
+  "off:tue:logicdrums": "open",
+  "off:tue:mychannel": "open",
+  "off:tue:tplcommscam": "open",
+  "off:tue:tplninedarter": "open",
+  "off:tue:tplfistpump": "open",
+  "off:tue:tplbuzzer": "open",
   "off:tue:tplconfused": "open",
   "off:tue:tplnogod": "open",
   "off:tue:tplpushthrough": "open",
   "off:tue:tplwoke": "open",
+  "idea:de83ed89-f29e-4e5f-ad82-c698ec72a010": "open",
+  "idea:41874364-fcd8-4fd1-b7e7-91aca6235019": "open",
+  "off:thu:figmasix": "open",
+  "off:thu:robloxvideo": "open",
+  "off:thu:pixelfill": "open",
+  "off:thu:alphamatte": "open",
+  "off:thu:synthfirmware": "open",
+  "off:thu:tplturin": "open",
+  "off:thu:tplassemble": "open",
+  "off:thu:tpllegends": "open",
+  "off:thu:tplskyrim": "open",
+  "off:thu:tplthanksgiving": "open",
   "off:thu:tplchihuahua": "open",
   "off:thu:tplarnold": "open",
-  "off:thu:tpldumbest": "open"
+  "off:thu:tpldumbest": "open",
+  "idea:c1bd8406-c267-426e-b586-d76e1ef68e5c": "open",
+  "idea:456c4fc3-530b-4fc8-9e92-5b5ea662ad87": "open",
+  "off:sat:goodnews": "open",
+  "off:sat:talent": "open",
+  "off:sat:newsrooms": "open",
+  "off:sat:makers": "open",
+  "off:sat:screen": "open"
  },
  "outcomes": {
   "filed": [
@@ -9478,6 +9922,7 @@
    "/api/board/2026-12-07/edition/news"
   ],
   "items": [],
-  "skipped": "the hub answered with no stories dated 2026-11-30 to 2026-12-07"
+  "trends": [],
+  "skipped": "the hub answered with no stories dated 2026-11-22 to 2026-11-29"
  }
 }

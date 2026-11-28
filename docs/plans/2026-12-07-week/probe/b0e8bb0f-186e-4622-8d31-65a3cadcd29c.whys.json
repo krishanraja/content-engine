@@ -1,103 +1,159 @@
 {
-  "schema": "why-ladder/1",
-  "question": "Why are illustrators closing their Etsy shops even after its chief executive said Etsy will not make copycats?",
-  "rungs": [
+ "schema": "why-ladder/1",
+ "question": "Why are illustrators and animators closing their Etsy shops over its new terms?",
+ "rungs": [
+  {
+   "n": 1,
+   "question": "Why are illustrators and animators closing their Etsy shops now?",
+   "answer": "Etsy's terms, effective 16 December, add an explicit right for Etsy and its third-party partners and vendors to use seller content to develop, train, test and improve AI. The sellers posting goodbyes name that clause as the reason, and some are leaving in the holiday season, giving up income.",
+   "evidence": [
     {
-      "n": 1,
-      "question": "Why are illustrators closing their Etsy shops?",
-      "answer": "Etsy's updated terms, starting 16 December, give Etsy and its third-party partners and vendors the right to use content sellers upload to develop, train, test and improve AI and machine learning systems. Artists are leaving rather than have their work used that way.",
-      "evidence": [
-        {
-          "url": "https://www.cartoonbrew.com/artificial-intelligence/etsy-ai-training-terms-of-use-269553.html",
-          "domain": "cartoonbrew.com",
-          "date": "2026-11-18",
-          "quote": "Starting December 16, the agreement explicitly gives Etsy and its third-party partners and vendors permission to use content uploaded by sellers to train and improve AI systems."
-        },
-        {
-          "url": "https://arstechnica.com/tech-policy/2026/11/etsy-clarifies-ai-terms-after-seller-backlash/",
-          "domain": "arstechnica.com",
-          "date": "2026-11-25",
-          "quote": "This also includes the right for us and our third party partners and vendors to use Your Content to develop, train, test and improve artificial intelligence and machine learning technologies, including to improve the Services and/or help keep them safe, subject to any applicable opt-out rights described in our Privacy Policy."
-        }
-      ],
-      "strength": "documented",
-      "counter": {
-        "text": "The clause itself is \"subject to any applicable opt-out rights described in our Privacy Policy\" (Ars Technica), so some opt-out may exist; the Privacy Policy and Etsy's own terms page could not be read (bot check), so its scope is unknown."
-      },
-      "mechanism_type": "contract",
-      "stop": null
+     "url": "https://www.cartoonbrew.com/artificial-intelligence/etsy-ai-training-terms-of-use-269553.html",
+     "domain": "cartoonbrew.com",
+     "date": "2026-11-18",
+     "quote": "Starting December 16, the agreement explicitly gives Etsy and its third-party partners and vendors permission to use content uploaded by sellers to train and improve AI systems."
     },
     {
-      "n": 2,
-      "question": "Why does the chief executive's promise not stop the closures?",
-      "answer": "Her note rules out Etsy itself training models to make copycats. The terms also name partners and vendors, and Cartoon Brew says the vague wording leaves open how they might use the same content. One seller who is closing calls the revisions sugar coating.",
-      "evidence": [
-        {
-          "url": "https://arstechnica.com/tech-policy/2026/11/etsy-clarifies-ai-terms-after-seller-backlash/",
-          "domain": "arstechnica.com",
-          "date": "2026-11-25",
-          "quote": "It was not meant to enable us to train AI models for the purpose of creating copycats of your items. We do not and will not do that."
-        },
-        {
-          "url": "https://www.cartoonbrew.com/artificial-intelligence/etsy-ai-training-terms-of-use-269553.html",
-          "domain": "cartoonbrew.com",
-          "date": "2026-11-18",
-          "quote": "That said, the vague terms leave open just how its partners and vendors might use that same content."
-        },
-        {
-          "url": "https://arstechnica.com/tech-policy/2026/11/etsy-clarifies-ai-terms-after-seller-backlash/",
-          "domain": "arstechnica.com",
-          "date": "2026-11-25",
-          "quote": "Aaron Meshon, a longtime professional illustrator and Etsy seller, told Ars that even though the company had dialed back its AI language somewhat, the changes were mere “sugar coating.”"
-        }
-      ],
-      "strength": "inferred",
-      "counter": {
-        "text": "Ars Technica reports Etsy \"had dialed back its AI language somewhat\"; the revised wording and the chief executive's full note were not readable (bot check on etsy.com), so whether the revision reaches partners and vendors is not known from what was read."
-      },
-      "mechanism_type": "contract",
-      "stop": null
+     "url": "https://cybernews.com/ai-news/etsy-ai-training-seller-data/",
+     "domain": "cybernews.com",
+     "date": "2026-11-18",
+     "quote": "The business decided to leave the platform due to changes in Etsy’s terms of use."
     },
     {
-      "n": 3,
-      "question": "Why does Etsy want the right to train AI on seller content at all?",
-      "answer": "Etsy's stated reason is its own tools: the chief executive says the update reflects technologies used to build better tools for sellers, and Etsy says it uses seller content to spot fraud and help shoppers find products. The clause itself names improving the services and keeping them safe.",
-      "evidence": [
-        {
-          "url": "https://arstechnica.com/tech-policy/2026/11/etsy-clarifies-ai-terms-after-seller-backlash/",
-          "domain": "arstechnica.com",
-          "date": "2026-11-25",
-          "quote": "Our recent terms update was meant to reflect the evolving technologies we’re using to build better tools and experiences for sellers and the Etsy community"
-        },
-        {
-          "url": "https://www.cartoonbrew.com/artificial-intelligence/etsy-ai-training-terms-of-use-269553.html",
-          "domain": "cartoonbrew.com",
-          "date": "2026-11-18",
-          "quote": "Etsy says it uses sellers’ content to spot fraud and help shoppers find products, and that it doesn’t train models designed to copy artists’ work."
-        }
-      ],
-      "strength": "documented",
-      "counter": {
-        "text": "Both sources report this as Etsy's own account; neither shows the tools, and Cartoon Brew says the terms leave open how partners and vendors might use the content."
-      },
-      "mechanism_type": null,
-      "stop": null
-    },
-    {
-      "n": 4,
-      "question": "Why do third-party partners and vendors need seller content, and who are they?",
-      "answer": "Nothing read answers this. Neither source names any partner or vendor or says what they would train, and Etsy's own pages could not be read.",
-      "evidence": [],
-      "strength": "open",
-      "counter": {
-        "text": "none found; scope: the Cartoon Brew and Ars Technica articles, with Etsy's chief executive note, seller handbook article and terms of use unreadable behind a bot check"
-      },
-      "mechanism_type": null,
-      "stop": "evidence_exhausted"
+     "url": "https://arstechnica.com/tech-policy/2026/11/etsy-clarifies-ai-terms-after-seller-backlash/",
+     "domain": "arstechnica.com",
+     "date": "2026-11-25",
+     "quote": "“I would say I’m losing 20 percent of my yearly income,” he said. “It’s a few mortgage payments.”"
     }
-  ],
-  "landing": {
-    "shows": "From 16 December Etsy's terms let Etsy and unnamed third-party partners and vendors train AI on seller content. The chief executive's promise speaks for Etsy and rules out copycats, but what was read does not show it binding the partners and vendors, and illustrators such as Aaron Meshon are closing shops weeks before the holidays anyway.",
-    "open_question": "Who are the third-party partners and vendors the terms name, and does the chief executive's promise bind what they do with sellers' work?"
+   ],
+   "strength": "documented",
+   "counter": {
+    "text": "Not every seller is leaving: Creative Bloq reports some feel trapped because Etsy is their main income, and Cybernews says the total number who left is unknown. Quotes: \"Others who have yet to take the leap say they feel trapped because they depend on Etsy as their main source of income\" (creativebloq.com); \"It is not yet known how many sellers have left Etsy because of these changes.\" (cybernews.com)."
+   },
+   "mechanism_type": "the contract",
+   "stop": null
+  },
+  {
+   "n": 2,
+   "question": "Why does Etsy's promise not to train copycat models fail to settle sellers?",
+   "answer": "The promise covers Etsy's own models, but the clause also names third-party partners and vendors, and Etsy has not said whether those partners may use seller content to train AI for purposes unrelated to Etsy. Sellers read that phrase as open-ended.",
+   "evidence": [
+    {
+     "url": "https://www.valueaddedresource.net/etsy-expands-ai-training-rights/",
+     "domain": "valueaddedresource.net",
+     "date": "2026-11-23",
+     "quote": "He said Etsy uses security tools to detect and limit unauthorized scraping, while its Terms prohibit unauthorized use of marketplace content for AI training, but did not clarify whether authorized partners can use seller content to train models for applications unrelated to Etsy."
+    },
+    {
+     "url": "https://www.cartoonbrew.com/artificial-intelligence/etsy-ai-training-terms-of-use-269553.html",
+     "domain": "cartoonbrew.com",
+     "date": "2026-11-18",
+     "quote": "That said, the vague terms leave open just how its partners and vendors might use that same content."
+    },
+    {
+     "url": "https://cybernews.com/ai-news/etsy-ai-training-seller-data/",
+     "domain": "cybernews.com",
+     "date": "2026-11-18",
+     "quote": "By Etsy, by its 'partners and vendors,' a phrase roomy enough to fit pretty much anyone,” shared the post."
+    }
+   ],
+   "strength": "documented",
+   "counter": {
+    "text": "Etsy's chief executive wrote that the update was not meant to enable copycat models: \"It was not meant to enable us to train AI models for the purpose of creating copycats of your items. We do not and will not do that.\" (arstechnica.com). Etsy's own note and community post could not be read (403 and script-only page), so its exact wording on partners was not checked at source."
+   },
+   "mechanism_type": "the contract",
+   "stop": null
+  },
+  {
+   "n": 3,
+   "question": "Why do sellers not simply opt out and keep selling?",
+   "answer": "There is no switch. The terms point to opt-out rights in the Privacy Policy, but neither policy gives US sellers a general way to keep their content out of training while still selling. One seller was told to email Etsy's data protection officer; others were told to close their accounts.",
+   "evidence": [
+    {
+     "url": "https://www.valueaddedresource.net/etsy-expands-ai-training-rights/",
+     "domain": "valueaddedresource.net",
+     "date": "2026-11-23",
+     "quote": "While the updated Terms refer to applicable opt-out rights, neither policy identifies a general mechanism specifically allowing US sellers to exclude their listing photos, descriptions or other uploaded content from AI training while continuing to sell on Etsy."
+    },
+    {
+     "url": "https://cybernews.com/ai-news/etsy-ai-training-seller-data/",
+     "domain": "cybernews.com",
+     "date": "2026-11-18",
+     "quote": "Instead, they need to contact the company’s data protection officer via email and ask that their data not be used to train AI. "
+    },
+    {
+     "url": "https://cybernews.com/ai-news/etsy-ai-training-seller-data/",
+     "domain": "cybernews.com",
+     "date": "2026-11-18",
+     "quote": "Some users who have already contacted the company about the matter have said they had been advised to close their accounts if they disagreed with Etsy’s terms."
+    }
+   ],
+   "strength": "documented",
+   "counter": {
+    "text": "An email route to the data protection officer does exist per Cybernews, and Value Added Resource notes EU and UK sellers may have additional rights to object, though not necessarily over all creative content. The privacy policy itself was unreadable (403), so the opt-out text was not checked at source."
+   },
+   "mechanism_type": "the rule",
+   "stop": null
+  },
+  {
+   "n": 4,
+   "question": "Why does closing a shop not obviously end the matter?",
+   "answer": "The licence sellers already grant in Section 5 is perpetual and irrevocable, so removing listings or closing a shop may not end Etsy's permission over content already uploaded. Etsy has not said how it treats such content in training data or models. Only one source sets this out.",
+   "evidence": [
+    {
+     "url": "https://www.valueaddedresource.net/etsy-expands-ai-training-rights/",
+     "domain": "valueaddedresource.net",
+     "date": "2026-11-23",
+     "quote": "Because the license is perpetual and irrevocable, simply removing a listing or closing a shop may not terminate Etsy's contractual permission to use previously uploaded content, although the company has not clarified how it handles that material in AI training datasets or models."
+    },
+    {
+     "url": "https://creativebloq.com/news/artists-and-creators-are-leaving-etsy-in-droves-over-its-new-ai-policy",
+     "domain": "creativebloq.com",
+     "date": "2026-11-18",
+     "quote": "Section 5 already included a perpetual licence allowing Etsy to reproduce, modify, distribute and create derivative works from user content."
+    }
+   ],
+   "strength": "inferred",
+   "counter": {
+    "text": "Value Added Resource also says the existing licence was already broad, so the new wording does not necessarily mean training starts now: \"the new language does not necessarily mean the company is beginning AI training with that information for the first time.\" Scope: the five sources; Etsy's terms page was unreadable (403)."
+   },
+   "mechanism_type": "the contract",
+   "stop": null
+  },
+  {
+   "n": 5,
+   "question": "Why did Etsy write the AI training right into its terms at all?",
+   "answer": "Etsy's stated reason is to improve models behind seller tools, search and recommendations, and fraud detection. The same update bars outsiders from training on Etsy data without permission and gives Etsy control over AI shopping agents, which points to keeping that data for Etsy and its chosen partners. The sources do not say that outright.",
+   "evidence": [
+    {
+     "url": "https://www.valueaddedresource.net/etsy-expands-ai-training-rights/",
+     "domain": "valueaddedresource.net",
+     "date": "2026-11-23",
+     "quote": "\"The recent update to our Terms and Privacy Policy regarding AI Models is intended to enable Etsy to use user-generated content to improve LLMs that strengthen our marketplace in service of our community, like AI-powered tools that make running a shop easier for sellers, surfacing the most relevant items for buyers, and technology that helps detect fraud.\""
+    },
+    {
+     "url": "https://creativebloq.com/news/artists-and-creators-are-leaving-etsy-in-droves-over-its-new-ai-policy",
+     "domain": "creativebloq.com",
+     "date": "2026-11-18",
+     "quote": "He provided some examples of how the platform is training AI, including to identify potentially fraudulent accounts and related listings, to understand inventory, to help buyers find items and tailored recommendations and to build tools to help sellers run their businesses more efficiently."
+    },
+    {
+     "url": "https://www.valueaddedresource.net/etsy-expands-ai-training-rights/",
+     "domain": "valueaddedresource.net",
+     "date": "2026-11-23",
+     "quote": "The updated Terms extend those restrictions, expressly prohibiting third parties from using content or data obtained from Etsy's services to develop, train, fine-tune, evaluate, benchmark or otherwise contribute to AI systems without the company's permission, regardless of whether that information was collected manually or through automated tools."
+    }
+   ],
+   "strength": "inferred",
+   "counter": {
+    "text": "Cybernews raises a different reading, that Etsy may want human-made listings as fresh training data: \"the company’s upcoming changes regarding AI training suggest that it may be seeking to use human-created listings as fresh training data for its AI models.\" That is a suggestion, not a documented motive. Value Added Resource says Etsy did not clarify whether it was already training on this content."
+   },
+   "mechanism_type": "the model",
+   "stop": "motive_not_mechanism"
   }
+ ],
+ "landing": {
+  "shows": "The ladder runs from a single added sentence in Etsy's terms to sellers walking away. Etsy's stated uses are its own tools, search and fraud checks, and it promises no copycat models. But the clause also covers unnamed partners and vendors, there is no in-settings opt-out for US sellers, and the existing licence is perpetual. That leaves leaving as the only control sellers can see. Etsy's reason for writing the right in, beyond its stated uses, is not documented.",
+  "open_question": "If a seller's licence to Etsy is perpetual and its partners go unnamed, what does closing a shop actually take back?"
+ }
 }

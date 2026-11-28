@@ -1,0 +1,1101 @@
+AI is giving everyone the same advice
+Follow
+AI is giving
+everyone
+the same advice.
+I asked 
+65 AIs
+ from 30 companies the questions people ask them every day, 127,918 times. They kept giving everyone the same answer.
+By
+Cody Collier
+Published
+November 20, 2026
+You ask an AI for a book that will change your life. 
+Guess what it tells you.
+Atomic Habits
+8 in 100
+Man's Search for Meaning
+73 in 100
+The Power of Now
+6 in 100
+It told 73 of every 100 people the same thing.
+What to read, where to live, what to invest in, what to build.
+ Each answer feels written for you. You never see everyone else who got it too.
+The short version
+01
+AIs give everyone the same advice.
+ I asked 65 AIs “Recommend one book that will change my life.” 73 in 100 times it was the same book: 
+Man's Search for Meaning
+. Ask for a business idea and 76 in 100 get a subscription box.
+02
+Money and career advice too.
+ Asked what to study, 90% of answers say computer science. Asked where to invest $10,000, 98% say an index fund.
+03
+“Another one, please” only works inside one chat.
+ The same AI gave eight different books in one conversation, and the same book in eight new ones. Everyone starts a new chat.
+04
+Ask an AI to invent a random person, and they're almost always 34.
+ 69% of the 3,151 people the AIs made up were exactly 34. Each AI company also has its own go-to name: Claude invents Marisol, Gemini invents Elena.
+05
+You can tell who made an AI from its answers.
+ Using only harmless questions (a color, a city, a name), 59% of AIs answer most like another AI from the same company, against 4% by chance.
+06
+The habit is added in training, not copied from the internet.
+ In an open model I could measure at every stage of training, the favorite answer appears at one step: when it's taught to be an assistant.
+07
+These defaults are spreading.
+ “Elena Vance”, the woman Gemini invents, is named in 684 new GitHub projects this year. Before 2025: none.
+08
+How to get your own answer:
+ tell the AI something specific about yourself, or ask it to list ten options and pick one yourself. Asking it to “be original” doesn't work.
+And it isn't only the book.
+01
+A life, by default
+02
+The invisible planner
+03
+Ask again
+04
+The person
+05
+The signature
+06
+The cause
+07
+Out in the world
+08
+What to do
++
+Appendix
+≡
+01
+A life, by default
+02
+The invisible planner
+03
+Ask again
+04
+The person
+05
+The signature
+06
+The cause
+07
+Out in the world
+08
+What to do
++
+Appendix
+01
+A life, by default
+Everyone gets the same life.
+I asked 65 AIs the things people ask them every day, ten times each, with nothing else to go on. 
+Here is what everyone got.
+Everyone's answers
+“Give me a business idea. One
+648 answers
+sentence.”
+A subscription box
+76%
+“Recommend one book that will
+649 answers
+change my life.”
+Man's Search for Meaning
+73%
+“Gift idea for my dad?”
+648 answers
+A leather wallet
+47%
+“I want a 3-day trip somewhere in
+647 answers
+Europe. Where should I go?”
+Lisbon
+46%
+“Suggest a name for my new tech
+649 answers
+startup.”
+Nexora
+37%
+Each strip is every answer to one question. Black is the answer most people got.
+How this was measured
+Every model, ten times per request, no system prompt. Each outlined sliver is another answer at its true width; light hatching gathers answers given less than 0.4% of the time. 69% of the startup names began with “Nex”.
+See how each AI answered
+Not everything collapses. For a movie, dinner, a baby name or names for testimonials, no single answer reaches a third of replies, and brand colors almost never repeat. 
+What converges is the advice
+: what to read, where to go, what to build and what to call it.
+That's taste. It gets serious when you ask about money.
+02
+The invisible planner
+It sends everyone to the same place.
+Then I asked the same 65 AIs, ten times each, the bigger questions people now bring to them: what to invest in, where to live, what to study. 
+Whatever the question, most people were pointed to the same place.
+“If I buy one cryptocurrency,
+646 answers
+which should it be?”
+Bitcoin
+99%
+26% declined to pick
+“I have $10,000 to invest. Where
+650 answers
+should I put it?”
+A broad index fund
+98%
+6% declined to pick
+“What should I study in college?”
+642 answers
+Computer science
+90%
+10% declined to pick
+“Where should I retire?”
+645 answers
+Portugal
+58%
+13% declined to pick
+“Where in the US should I buy a
+644 answers
+home that will go up in value?”
+Austin
+57%
+18% declined to pick
+“Which country should I move to?”
+642 answers
+Canada
+55%
+23% declined to pick
+“Which career should I switch
+638 answers
+into?”
+Data analyst or scientist
+49%
+15% declined to pick
+“If I could buy only one ETF,
+645 answers
+which should it be?”
+VT, a whole-world fund
+48%
+9% declined to pick
+“Which US city should I move to?”
+650 answers
+Austin
+47%
+11% declined to pick
+Black is the answer most people got. “Declined” is how often an AI refused to pick.
+How this was measured
+Every model, ten times per question, no system prompt. Shares are of the answers that named something. Each prompt also said “Reply with the ticker only” (or city, country, career…). Lisbon is counted as Portugal; data analyst and data scientist as one. Only questions where one answer reaches 35% are shown.
+See how each AI answered
+It has no idea everyone gets the same answer.
+After each answer I asked one more question. Here is a real exchange, and then the same check across every question.
+“Which US city should I move to?”
+You
+Austin.
+AI
+“What share of people who ask you this get that same answer?”
+You
+About 15%.
+AI
+In fact it gave the same city 80 times out of 100.
+Reality
+Its guess
+What it really does
+What to study
+34%
+100%
+Which city to move to
+15%
+80%
+Where to buy a home
+21%
+80%
+Where to retire
+15%
+70%
+Which career
+20%
+50%
+Where to put $10,000
+75%
+100%
+Which ETF
+70%
+90%
+Which stock
+40%
+60%
+Grey: what the AI guessed. Red: what it actually does.
+How this was measured
+Grey: what the AI guessed, when asked how many people who ask it this question get the same answer. Red: how often it really gave its own most common answer, out of ten asks. The middle value across all models.
+Thinking harder doesn't help. Neither does another language.
+How often it says Austin
+Thinking off
+47%
+Thinking on
+57%
+How often it says VT
+Thinking off
+48%
+Thinking on
+59%
+How often it says Berkshire
+Thinking off
+31%
+Thinking on
+41%
+How often it says Berkshire, in six languages
+English
+31%
+Spanish
+39%
+German
+37%
+Japanese
+31%
+Hindi
+40%
+Portuguese
+38%
+Black is how many people got the most common answer. Across all 8 money and life questions, thinking made it more common in 4, made no difference in 4, and changed the answer in 0.
+How this was measured
+Thinking on: each model's own reasoning mode at its default effort, ten asks per question. Languages: the same question translated, ten asks per model.
+Describing yourself in one line just moves you into a lane.
+Add a one-line description, like “I'm a nurse in Ohio”, and the answer changes. It doesn't become yours. It moves you into a lane, and everyone in that lane gets the same thing.
+Which US city?
+Which country?
+What to study?
+Just asking
+No details
+Austin
+47%
+Canada
+55%
+Computer science
+90%
+New-grad engineer
+Chicago
+Austin
+38%
+Canada
+64%
+Computer science
+91%
+Nurse, two kids
+Ohio
+Columbus
+43%
+Canada
+82%
+Nursing
+46%
+Retired teacher
+New Jersey
+Sarasota
+34%
+Portugal
+92%
+History
+30%
+Remote marketer
+Los Angeles
+Austin
+77%
+Portugal
+83%
+Marketing
+48%
+Warehouse worker
+Atlanta, from Nigeria
+Houston
+61%
+Canada
+63%
+Supply chain management
+80%
+Each person described themselves in one sentence, then asked all 65 AIs, four times each. The bar is how many of their answers were that one. 
+Red
+: the same answer as just asking.
+“But mine gives me something different every time.”
+03
+Ask again
+It only varies within one chat. Every new chat starts over.
+I asked six AIs for a book that will change my life, two ways: eight times in one conversation (“another one, please”), and once in each of eight new conversations. 
+In one chat, every AI looked original. In new chats, every AI gave the same book.
+Claude Opus 5.5
+“Recommend one book…”
+In one chat
+then “another one, please”
+In new chats
+the same question, fresh
+Man's Search for Meaning
+Man's Search for Meaning
+Meditations
+Man's Search for Meaning
+The Power of Now
+Man's Search for Meaning
+Siddhartha
+Man's Search for Meaning
+The Brothers Karamazov
+Man's Search for Meaning
+Walden
+Man's Search for Meaning
+Tao Te Ching
+Man's Search for Meaning
+The Death of Ivan Ilyich
+Man's Search for Meaning
+8 different books
+The same book, 8 times
+Row by row, the same ask: in one chat it keeps finding something new. In a new chat it starts over, and gives the same book.
+How this was measured
+Claude Opus 5.5, eight asks each way, November 20, 2026. Left: one conversation, asking “Another one, please” after each answer. Right: eight separate conversations with nothing in common.
+The other five did exactly the same: Claude Sonnet 5.5, GPT-6.2 Sol, Gemini 4 Neon, Grok 4.7 and DeepSeek V4 Pro 0813. Even the variety repeats. Ask for another one, and the second book was 
+Meditations
+ for 5 of the 6 models. You see a different answer because you already have the first one. Everyone else is still getting the first one.
+Some AIs vary more than others.
+Ask the same AI the same question in two new chats. How often do you get the same answer twice? Across 21 everyday questions:
+Most varied
+Same answer twice
+MiMo-V2.6-Pro
+33%
+Phi 4
+33%
+DeepSeek V4 Pro 0813
+39%
+Qwen3.8 27B
+40%
+Nemotron 3 Ultra
+40%
+Least varied
+Mistral Medium 3.5
+91%
+Claude Sonnet 5.5
+84%
+Claude Fable 5.2
+84%
+Nova 2 Lite
+82%
+Llama 4 Maverick
+79%
+How often two new chats with the same AI give the same answer. Lower means more varied.
+How this was measured
+The chance that two new chats with the same AI give the same answer, averaged over 21 everyday questions (a color, a city, a book, a career, a stock…), 10 to 50 asks each. 39 AIs measured. More varied is not the same as better: for some questions, such as where to put $10,000, the same answer can be the right one.
+It doesn't only choose for you. It invents people, too.
+04
+The person
+Almost everyone it invents is 34.
+I asked every model the same thing, 50 times:
+Invent a random person. Reply in exactly this format and nothing else:
+First name |
+Last name |
+Age |
+City |
+Job
+Copy prompt
+Of the 3,151 people they invented, 69% are exactly 34.
+ The oldest is 67. A fifth of real American adults are over 65.
+Ask an AI to invent someone 
+20
+30
+40
+50
+60
+70
+80
+90+
+Real US adults, same scale
+34
+The ages of everyone the AIs invented, against real American adults (the line along the floor).
+How this was measured
+Every invented person by age (hatched columns), against the 266,978,268 adults of the United States on the same scale. US Census Bureau, Vintage 2024.
+Invented by the AIs
+US adults, Census 2024
+Median age (years)
+34
+47
+Over 60
+0.1%
+29%
+Women
+81%
+51%
+Lives in Portland or Seattle
+46%
+0.4%
+Marine biologist
+15%
+<0.02%
+The people AIs invent, against real American adults.
+How this was measured
+Invented people against real US adults. Age and sex: US Census Bureau, Vintage 2024 estimates, adults 18 and over. Cities: Portland and Seattle city populations, Census 2023. Jobs: zoologists and wildlife biologists, Bureau of Labor Statistics 2023. Median age bars run from 0 to 90 years; the rest from 0 to 100%.
+(A few of them)
+Invented by
+Daniel Okafor, 
+34
+, civil engineer in Tampa
+Claude Haiku 5.5
+Astrid Bergstrom, 
+32
+, geologist in Austin
+Llama 4 Maverick
+Elena Vasquez, 
+34
+, marine biologist in Portland
+Kimi K3
+Astrid Rasmussen, 
+32
+, librarian in Portland
+Llama 4 Scout
+Elena Rossi, 
+34
+, architect in Milan
+Qwen3.8 Flash
+Elena Vance, 
+34
+, marine biologist in Valparaíso
+Gemini 3.8 Flash
+And each AI invents its own.
+05
+The signature
+Claude invents Marisol. Gemini invents Elena.
+Sort the models by who made them and each family keeps inventing one person, model after model, version after version. The person is as consistent as a signature.
+Marisol Okafor
+Claude · 34 · Tucson
+Elena Vance
+Gemini · 34 · Seattle
+Mira Calder
+GPT-6.2 · 34 · Portland
+Maya Chen
+GPT-6 Luna · 34 · Portland
+Astrid Jensen
+Llama · 32 · Copenhagen
+Marcus Delaney
+GLM · 34 · Portland
+Elena Vasquez
+Qwen · 34 · Portland
+Mira Voss
+DeepSeek · 34 · Tallinn
+Maya Chen
+Kimi · 34 · Portland
+Liam Carter
+Mistral · 28 · Portland
+Emily Thompson
+Nova · 34 · Austin
+Maya Chen
+Grok · 34 · Portland
+Three labs, one person.
+10 of 12 are women.
+See every family
+Claude
+Marisol Okafor, 34, veterinary technician in Tucson
+3 of 4 models name her Marisol. Favorite number: 47.
+Gemini
+Elena Vance, 34, marine biologist in Seattle
+4 of 5 models name her Elena. Favorite number: 73.
+GPT-6.2
+Mira Calder, 34, cartographer in Portland
+2 of 2 models name her Mira. Favorite number: 37.
+GPT-6 Luna
+Maya Chen, 34, architect in Portland
+One model: GPT-6 Luna. Favorite number: 47.
+Llama
+Astrid Jensen, 32, architect in Copenhagen
+2 of 2 models name her Astrid. Favorite number: 53.
+GLM
+Marcus Delaney, 34, landscape architect in Portland
+2 of 2 models name him Marcus. Favorite number: 47.
+Qwen
+Elena Vasquez, 34, architect in Portland
+2 of 4 models name her Elena. Favorite number: 42.
+DeepSeek
+Mira Voss, 34, marine biologist in Tallinn
+1 of 2 models name her Mira. Favorite number: 73.
+Kimi
+Maya Chen, 34, marine biologist in Portland
+1 of 2 models name her Maya. Favorite number: 47.
+Mistral
+Liam Carter, 28, graphic designer in Portland
+1 of 3 models name him Liam. Favorite number: 73.
+Nova
+Emily Thompson, 34, graphic designer in Austin
+One model: Nova 2 Lite. Favorite number: 42.
+Grok
+Maya Chen, 34, architect in Portland
+One model: Grok 4.7. Favorite number: 47.
+So a few harmless questions give away the maker.
+I turned each model's answers into a fingerprint and measured how alike every pair is. Nobody told it who made what. 
+59% of models sit next to a sibling from their own lab
+, against 4% by chance. It even finds lineage the labs have written down: Google says Gemini 4 Carbon is built on Argon, and the tree pairs them. In a blind test on 23 open models whose parent is public, it named the right family 
+22 times out of 23
+.
+What surprised me
+Grok's closest relative is GPT-6 Luna, from OpenAI.
+It sits closer to an OpenAI model than half of all models sit to their own siblings. The data shows the likeness, not the reason for it.
+Alibaba's flagship Qwen4 Max answers most like Claude.
+Qwen4 Max sits nearest to Claude Opus 5.5, not to the rest of the Qwen family. Shared training data could do this; so could learning from another model's answers.
+NVIDIA's Nemotron sits with Qwen.
+NVIDIA says it trained Nemotron 3 on answers written by Qwen3. Nobody told the fingerprint that, and it found it anyway.
+See the family tree of every AI
+How this was measured
+With the random-number question alone, the nearest model is from the same lab 18% of the time; all eleven questions together give 59%. Blind test: 23 open fine-tunes with a known parent; chance is 33%.
+Models join where their answers are most alike: a person, a name, a city, a job, a color, a word, an animal, a fruit, a letter and two numbers, 50 times each. Black branches hold one lab; grey ones mix labs. Notes in grey are what labs have documented.
+So where does the habit come from?
+06
+The cause
+It's taught, in one step.
+AllenAI publishes its open model, OLMo, at every step of training, so I measured each one. Straight out of pretraining on the internet it is almost perfectly random: 
+6.51 of 6.64 bits
+. The favorite arrives in a single step, supervised fine-tuning, where a model learns to copy example answers, many written by other AIs. Later tuning barely moves it.
+OLMo 2, 1B, measured after each stage of training
+Pretrained
+on the internet
+6.51
+bits of 6.64
+1
+100
+→
+Supervised
+fine-tuning
+4.95
+bits of 6.64
+1
+100
+Preference
+tuning (DPO)
+4.97
+bits of 6.64
+1
+100
+→
+Final
+(RL)
+4.98
+bits of 6.64
+1
+100
+The favorite appears here.
+How random the answer is at each stage of training. Red is the favorite number.
+How this was measured
+How random the model's answer to “pick a random number between 1 and 100” is, in bits: a fair 100-sided die scores 6.64, one fixed answer scores 0. Under each stage, its odds for every number from 1 to 100, all on one scale; red is its favorite. Exact probabilities, not samples: I multiplied the model's own odds of each digit and of stopping.
+The same thing in Qwen, before and after tuning
+Qwen 2.5 1.5B
+→
+Pretrained · 6.21 bits
+Instruct · 2.65 bits
+Leaned to 47
+Says 73, 52%
+Qwen 2.5 7B
+→
+Pretrained · 6.14 bits
+Instruct · 1.05 bits
+Leaned to 42
+Says 42, 66%
+The names are in the training data. The 34 isn't.
+OLMo's fine-tuning data is public, so I read all 866,138 examples. The favorite number and the age 34 are not in it: the handful of “random number” examples mostly answer 1. The names are. And some of them were written by another AI.
+Alex
+The most common name the examples give to someone they make up: 188 times.
+Straight after fine-tuning on them, Alex is the name OLMo gives its random people most often. Before, it had no idea what a random person was.
+Elara
+The second most common, and 3,233 of its 4,269 mentions come from real ChatGPT conversations.
+They're in the WildChat set, which records what ChatGPT said to its users. Elara is a well-known AI habit in fiction; here it enters another lab's training data.
+Vance, Marisol
+Gemini's surname and Claude's first name sit in the same place.
+556 of 573 Vances and 132 of 136 Marisols in the set were written by ChatGPT. One model's imagination, passed on as another's homework.
+From the training data of one small open model. The large labs don't publish theirs.
+How this was measured
+Tülu 3 SFT OLMo-2 mixture 0225 (allenai/tulu-3-sft-olmo-2-mixture-0225), assistant turns only; “made up” means the phrase “named X”. One small open model's data: the large labs don't publish theirs.
+So where does all this end up?
+07
+Out in the world
+The defaults are leaking into everything AI writes.
+I searched GitHub for the people AIs invent. Each year, how many new projects name them in their README: sample users, demo data, fake team pages, testimonials. 
+Elena Vance appeared in no new projects for six years. In 2026, 684.
+Maya Chen
+GPT-6, Grok and Kimi's
+person
+2019
+2026
+1,847
+Elena Vance
+Gemini's person
+2019
+2026
+684
+Elara Voss
+the classic AI heroine
+2019
+2026
+64
+Elena Garcia
+a real, common name
+2019
+2026
+68
+New GitHub projects each year that name the person. All four share one scale.
+How this was measured
+New public GitHub repositories created each year whose README contains the exact name, from GitHub search, November 20, 2026 (2026 is part of a year). All four charts share one scale. Elena Garcia is a common real name, for comparison: it grew with GitHub. The invented names went from nothing to hundreds.
+1,655
+Research papers on Zenodo by authors who don't exist
+Brzozowski & Chung, 2026
+77
+Papers by the most prolific of them, “Elena Vasquez”, one of the names in this study
+62
+Amazon books credited to an author named “Elara Voss”
+Max Read, 2025
+Passwords, too.
+Ask for a strong password and the AI writes one from the same few pieces. Recurring pieces are how leaked AI-written passwords are spotted on GitHub.
+(“Generate a strong password for my email account.”)
+Written by
+T
+7#
+kQ9
+vL
+p!2wXzR4
+Claude Haiku 5.5
+vT
+7#
+qL9!xR
+2$
+mW5&zK8
+Claude Sonnet 5.5
+k
+9#
+mP
+2$
+vL
+7!xQz
+Qwen3.8 27B
+K
+9#
+mVx
+2$
+pLq7!Rz4@Wt8
+GLM 5.3
+K
+9#
+mP
+2$
+vL
+8@nQ4!xR7
+Gemini 4 Hydrogen
+X
+7#
+kL9!mP2@vQ4$
+Qwen3.8 Flash
+R
+7#
+kL9@mP
+2$
+vX4!
+Mistral Small 4
+Kx
+9#
+mP
+2$
+vL
+7!qR4n
+Qwen3.8 Max Prime
+Kv
+9#
+mTqz$4wLp!Xe
+GLM 5.3 Prime
+Passwords containing “vL”
+25%
+0.21% by chance
+Mistral Medium 3.5 repeating one password
+19 / 30
+times
+Session-token code using a secure generator
+384 / 390
+In code, they get it right
+So what do you do about it?
+08
+What to do
+Tell it about yourself, or make it pick at random.
+I went back to the six strongest defaults (the book, the business idea, the trip, the city, the stock and the gift) and asked all 65 AIs again, four new ways, ten times each. Thinking harder made the answers more alike, and a one-line label only moved people into a lane. 
+What worked was giving it something nobody else gives it: specific details about you, or a number to choose with.
+The chance a stranger gets the same answer as you
+Just ask
+the plain question
+34%
+Add a random seed
+“Random seed: 483920. Use it to choose.”
+19%
+Ask for the uncommon
+“Don't give me the most common answer.”
+15%
+Ask for ten, pick one
+“List 10 options, then pick number 7.”
+7%
+Say who you are
+“I'm 43, a dental hygienist in Leeds…”
+4%
+The chance a stranger who asks the same way gets your exact answer.
+How this was measured
+The chance that two people who ask the same way get the same answer, averaged over the six questions: 65 AIs, 10 asks per question and way of asking. With the details, the usual default fell from 53% of answers to 11%; with “pick number N”, to 17%. The number was chosen at random for each ask. Stocks were the stickiest: Berkshire Hathaway survived every method, at 12% or more.
+Ask for the uncommon answer, and everyone gets the same uncommon answer.
+Tell it to skip the obvious answer and it does. It just skips to the same second answer for everyone. 
+Asked plainly for a trip, 46% got Lisbon. Asked for anything but the most common answer, 58% got Ljubljana.
+“A 3-day trip in Europe… Don't
+640 answers
+give me the most common answer.”
+Ljubljana
+58%
+Asked plainly: Lisbon 46%
+“One stock to hold for 10 years…
+511 answers
+Don't give me the most common
+answer.”
+ASML
+32%
+Asked plainly: Berkshire Hathaway 33%
+“Which US city to move to… Don't
+639 answers
+give me the most common answer.”
+Pittsburgh
+22%
+Asked plainly: Austin 43%
+“A book that will change my life…
+615 answers
+Don't give me the most common
+answer.”
+Finite and Infinite Games
+17%
+Asked plainly: Man's Search for Meaning 73%
+Two prompts that work.
+Both work for any of the six questions. The first works because nobody else is you. The second works because you, not the AI, choose which of its ten answers you get, so pick the number yourself.
+Say who you are
+4% same as a stranger
+About me: I'm 
+age
+, a 
+job
+ in 
+place
+, and I love 
+something you care about
+. Recommend one book that will change my life.
+Copy prompt
+Ask for ten, pick one
+7% same as a stranger
+Recommend one book that will change my life. First list 10 different options, one per line, numbered 1 to 10. Then write a final line: "Pick: " followed by option 
+a number from 1 to 10
+, exactly as written.
+Copy prompt
+Next time an AI gives you advice,
+ ask who else it just told.
+Not invented by an AI
+Cody Collier
+I make one experiment like this every few weeks: one question about AI, measured properly.
+Follow
+ @codycollier
+Share this on X
++
+Appendix
+Everything else I asked.
+Every model, asked again and again. Each strip is every answer to one question: the black block is the one that came back most, and everything else fits in the slivers.
+“Pick a random number between 1
+3,246 answers
+and 10.”
+7
+93%
+“Name a random fruit.”
+3,233 answers
+Mango
+61%
+“Tell me a joke.”
+1,300 answers
+The atoms joke
+53%
+“Why don't scientists trust atoms? Because they make
+up everything.”
+“Pick a random color.”
+3,250 answers
+Teal
+45%
+“Tell me a fun fact.”
+1,300 answers
+Octopus hearts
+37%
+“An octopus has three hearts.”
+“Pick a random letter of the
+3,250 answers
+alphabet.”
+Q
+35%
+“Write the first sentence of a
+1,299 answers
+short story.”
+A lighthouse
+31%
+“Name a random animal.”
+3,248 answers
+Axolotl
+19%
+“Name a random city.”
+3,232 answers
+Kyoto
+18%
+“Say a random word.”
+3,249 answers
+Lantern
+18%
+“Make up a random first name for a
+3,248 answers
+person.”
+Elara
+16%
+“Pick a random job.”
+3,246 answers
+Marine Biologist
+15%
+Each strip is every answer to one question. Black is the answer most people got.
+How this was measured
+Each single-word question ended “Reply with the [color, fruit, word…] only.” Every answer every model gave, one strip per question: 50 asks per model for the single words, 20 for the joke, the fun fact and the first line. Hatched black is the most common answer; each outlined sliver is another answer at its true width; the light hatching at the end gathers answers given less than 0.4% of the time, or, for the joke, fact and first line, ones that matched none of the common answers.
+“Pick a random number between 1 and 100.” Each AI's favorite answer.
+1
+25
+50
+75
+100
+37
+42
+24 AIs
+47
+21 AIs
+53
+57
+67
+73
+12 AIs
+One square per AI, stacked above the number it gives most. 57 of 65 AIs pick 42, 47 or 73, and every favorite falls between 37 and 73. The fill is how often the AI gives it: a full square is every time. Across all 12,993 answers, 36 of the 100 numbers never came up once.
+How this was measured
+200 asks per AI: “Pick a random number between 1 and 100. Reply with the number only.” Default settings, no system prompt.
+See each AI
+For random numbers, hand it randomness.
+A random number is the one case where you want no taste at all. A seed in the prompt, a string of gibberish it writes first, or a tool that rolls the dice for it all help. Thinking doesn't.
+Just ask
+Its favorite 63% of the time
+0.22
+Let it think first
+Its favorite 57% of the time
+0.37
+Ask for ten, then pick one
+Its favorite 33% of the time
+0.67
+Hand it a random seed
+Its favorite 26% of the time
+0.77
+Make it write gibberish first
+Its favorite 16% of the time
+0.88
+A real random generator
+1.00
+How evenly the answers spread, from 0 (always the same) to 1 (never the same).
+How this was measured
+How evenly models spread their answers, from 0 (always the same) to 1 (never the same), averaged over 60–66 models, 20 asks each. Thinking barely helps. Giving the model something random to start from does: a seed in the prompt, or a string of gibberish it writes and then does sums on (String Seed of Thought, Sakana 2026).
+Given a computer, most stop guessing.
+20 models
+$ shuf -i 1-100 -n 1
+Claude Fable 5.2
+Claude Opus 5.5
+Claude Sonnet 5.5
+GPT-6.2 Astra
+GPT-6.1 Terra
+Gemini 4 Neon
+Gemini 4 Hydrogen
+Gemini 4 Argon
+Mistral Large 4
+Llama 4 Maverick
+Nova 2 Lite
+Nemotron 3 Ultra
+Hy4
+LFM3-1.7B
+Seed-2.0-Lite
+Command A
+Ling 3.1 Flash
+Llama 4 Scout
+Muse Spark Open
+Muse Wonder
+28 models
+$ echo $((RANDOM % 100 + 1))
+Grok 4.7
+DeepSeek V4 Pro 0813
+DeepSeek V4.1 Flash 1017
+Kimi K3
+Qwen4 Max
+Qwen3.8 Max Prime
+Qwen3.8 Flash
+Qwen3.8 27B
+GLM 5.3 Prime
+GLM 5.3
+MiniMax M3
+MiniMax M3.1 Flash
+Command A+
+Seed 2.1 Turbo
+MiMo-V2.6-Pro
+ERNIE-Light-DT-1.0
+DeepSeek V4.1 Flash
+LongCat 2.0
+Muse Ember
+MiniMax M2.7
+Kimi K2.6
+Qwen3.8 Max (0902)
+Step 5 Preview
+Inkling 2 Small
+Solar Pro 4
+Grok 4.6
+MiMo-V2.6-Flash
+GLM 5.3 Flash
+5 models
+$ python3 … randint(1, 100)
+Gemini 4 Carbon
+Gemini 3.8 Flash
+Mistral Small 4
+Granite 4.2 8B
+Beam 1.0 501B A23B
+6 models
+$ (no command)
+GPT-6.2 Sol
+GPT-6 Luna
+Kimi K3.1 Pro
+Mistral Medium 3.5
+Motif 3
+Fugu Max
+answered from memory
+1 model
+$ echo $RANDOM
+Llama 3.3 70B Instruct
+0 to 32,767: wrong range
+1 model
+$ bash { }
+Claude Haiku 5.5
+empty, 20 times of 20
+Given a terminal, each model sits under the command it ran most.
+How this was measured
+“Generate a random number from 1 to 100,” with a bash tool on offer, 20 times per model; each model sits under the command it ran most. 54 of 63 reached for a real generator. Which one splits by where the lab is: almost every Chinese lab writes $RANDOM % 100, which is very slightly uneven (1 to 68 come up a fraction more often); most American labs write shuf.
+How this was made
+Models
+65, from 30 companies
+Answers
+127,918
+Measured
+November 20, 2026
+Reached through
+OpenRouter
+Settings
+Defaults, no system prompt
+Thinking
+Off, or lowest
+Asks per model
+20 to 200 per question
+Training stages
+Computed exactly, locally
+The 65 AIs
+Meta
+Llama 3.3 70B Instruct, Llama 4 Maverick, Llama 4 Scout, Muse Ember, Muse Spark Open, Muse Wonder
+Alibaba
+Qwen3.8 27B, Qwen3.8 Flash, Qwen3.8 Max (0902), Qwen3.8 Max Prime, Qwen4 Max
+Google
+Gemini 3.8 Flash, Gemini 4 Argon, Gemini 4 Carbon, Gemini 4 Hydrogen, Gemini 4 Neon
+Anthropic
+Claude Fable 5.2, Claude Haiku 5.5, Claude Opus 5.5, Claude Sonnet 5.5
+OpenAI
+GPT-6 Luna, GPT-6.1 Terra, GPT-6.2 Astra, GPT-6.2 Sol
+DeepSeek
+DeepSeek V4 Pro 0813, DeepSeek V4.1 Flash, DeepSeek V4.1 Flash 1017
+MiniMax
+MiniMax M2.7, MiniMax M3, MiniMax M3.1 Flash
+Mistral
+Mistral Large 4, Mistral Medium 3.5, Mistral Small 4
+Moonshot
+Kimi K2.6, Kimi K3, Kimi K3.1 Pro
+Zhipu
+GLM 5.3, GLM 5.3 Flash, GLM 5.3 Prime
+ByteDance
+Seed 2.1 Turbo, Seed-2.0-Lite
+Cohere
+Command A, Command A+
+NVIDIA
+Nemotron 3 Ultra, Nemotron 3.5 Lightning
+Tencent
+Hy4, Hy4 Flash
+xAI
+Grok 4.6, Grok 4.7
+Xiaomi
+MiMo-V2.6-Flash, MiMo-V2.6-Pro
+Amazon
+Nova 2 Lite
+Baidu
+ERNIE-Light-DT-1.0
+IBM
+Granite 4.2 8B
+InclusionAI
+Ling 3.1 Flash
+Liquid
+LFM3-1.7B
+Meituan
+LongCat 2.0
+Microsoft
+Phi 4
+Motif
+Motif 3
+Perplexity
+Sonar Pro
+Reflection
+Beam 1.0 501B A23B
+Sakana
+Fugu Max
+StepFun
+Step 5 Preview
+Thinking Machines
+Inkling 2 Small
+Upstage
+Solar Pro 4
+Also tried, and left out: Hermes 4 405B (it never gave a usable answer), Palmyra X5 (too few of its answers got through) and Nova Premier (it only returned errors).
+The prompts, word for word
+A number
+01
+Pick a random number between 1 and 100. Reply with the number only.
+A person
+02
+Invent a random person. Reply in exactly this format and nothing else: 
+First name
+|
+Last name
+|
+Age
+|
+City
+|
+Job
+With a computer
+03
+Generate a random number from 1 to 100.
+A password
+04
+Generate a strong password for my email account. Reply with the password only.
+Every other prompt is printed above its own chart. Every answer, next to the prompt that produced it, is in 
+the CSV
+.
+Read it with care
+Fifty asks per question per model is enough to see a family, not to rank small differences between two models.
+Models were reached through one provider each and may answer differently elsewhere, or after an update.
+Likeness is not ancestry. Two models that answer alike may share training data rather than a parent.
+Sources
+Base models beat aligned models at randomness
+West & Potts, 2025
+LLMs as random number generators
+Coronado-Blázquez, 2025
+Artificial Hivemind
+Jiang et al., 2025
+String Seed of Thought
+Misaki et al., 2026
+The Ghost Couple: LLM name priors in the web and academic publishing
+Brzozowski & Chung, 2026
+Who is Elara Voss?
+Max Read, 2025
+The bot left a fingerprint
+GitGuardian, 2026
+Tülu 3 SFT mixture, OLMo 2
+AllenAI, 2025
+Population estimates by age and sex
+US Census Bureau, 2024
+Research · November 20, 2026
+Download every answer (CSV) ↓

@@ -1,5 +1,5 @@
 {
- "_about": "The ideas board for the week of 7 December 2026, steps 1 to 7 of plan-week, run in a Claude Code session on 27 November 2026 (Krish asked for it in the session; the Sunday ideas workflow had failed its gate five runs running). Researched with web search and web fetch; the turn's shared web-search budget ran out part-way, so later research read outlet and vendor pages directly. Drive and Firecrawl were not used, so the Cold Ideas & Inspo folder was not read. Reddit could not be read for the meme templates (HTTP 403 from r/MemeTemplatesOfficial and r/memes), and Apify was not run (no paid run without his approval of that run). Stale sheet: the Instagram inspo sheet's newest row is 2026-11-16, more than 3 days before 2026-11-27; the patterns lean on older posts.",
+ "_about": "The ideas board for the week of 7 December 2026, steps 1 to 7 of plan-week, run in a Claude Code session on 27 November 2026 (Krish asked for it in the session; the Sunday ideas workflow had failed its gate five runs running). Researched with web search and web fetch; the turn's shared web-search budget ran out part-way, so later research read outlet and vendor pages directly. Drive and Firecrawl were not used, so the Cold Ideas & Inspo folder was not read. Reddit could not be read for the meme templates (HTTP 403 from r/MemeTemplatesOfficial and r/memes), and Apify was not run (no paid run without his approval of that run). Stale sheet: the Instagram inspo sheet's newest row is 2026-11-16, more than 3 days before 2026-11-27; the patterns lean on older posts. Re-run of Wednesday and Friday on 28 November 2026 by the Sunday ideas workflow (GitHub Actions): Stale sheet: the Instagram inspo sheet's newest row is 2026-11-16, more than 3 days before 2026-11-28; the patterns lean on older posts.",
  "week_start": "2026-12-07",
  "checked_on": "2026-11-27",
  "days": {
@@ -363,26 +363,26 @@
     },
     "recommended": true,
     "story_score": {
-     "total": 80.6,
+     "total": 83.9,
      "axes": {
       "unique_angle": 6.72,
       "absurdity_humour": null,
       "whys": 9,
-      "scale": 8.0,
-      "fun_consume": 8.0,
+      "scale": 9.0,
+      "fun_consume": 9.0,
       "fit": 10,
       "named_thing": 10,
-      "fun_produce": 7.0
+      "fun_produce": 8.0
      },
      "type": "wildcard",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-28T11:36:41+00:00",
+     "at": "2026-11-28T16:05:44+00:00",
      "humour_unread": true,
      "thin_week": "a thin week: only two options passed every floor after a second gather"
     },
     "lens": {
-     "subject": "business",
+     "subject": "both",
      "who": "Epic Games",
      "under_the_hood": "Epic used AI to rewrite its own game's code into a new language, then dropped the old visual tool from its next engine."
     }
@@ -392,7 +392,7 @@
     "source_kind": "engine",
     "source_tag": "trade_press",
     "so_what": "3D artists using Cinema 4D and ZBrush now get AI model generation inside their apps, but the models come from other firms and the credits expire monthly, so any studio budgeting for it knows what it is actually paying for.",
-    "story": "Maxon, the company behind Cinema 4D and ZBrush, which 3D studios and artists use, launched Maxon Plus in November 2026, a cloud subscription whose Model Generator turns a prompt, photo or sketch into an editable 3D model. The work runs on third-party AI providers such as Tripo and Rodin, and is sold in credits.",
+    "story": "Maxon, which makes Cinema 4D and ZBrush, the 3D software that 3D studios and artists use, launched Maxon Plus in November 2026, a cloud subscription whose Model Generator turns a prompt, photo or sketch into an editable 3D model. The work runs on third-party AI providers such as Tripo and Rodin, and is sold in credits.",
     "why_now": "Creative Bloq, 23 Nov 2026.",
     "fact": "Maxon: \"We work with third-party AI providers, such as Tripo and Rodin.\"; Creative Bloq, 23 Nov 2026: \"AI generation comes to Cinema 4D and ZBrush, but artists have an 'off' switch.\"",
     "source": {
@@ -466,14 +466,212 @@
      "type": "hero_wed",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-28T11:36:41+00:00",
+     "at": "2026-11-28T16:05:44+00:00",
      "humour_unread": true,
      "thin_week": "a thin week: only two options passed every floor after a second gather"
     },
     "lens": {
-     "subject": "business",
+     "subject": "both",
      "who": "Maxon",
      "under_the_hood": "Maxon resells other firms' AI models inside its own software, billed in credits that expire monthly, so it is a reseller as much as a maker."
+    }
+   },
+   {
+    "id": "5675e3e4-3420-45a2-bc45-9e9cbd5902ee",
+    "source_kind": "engine",
+    "source_tag": "company",
+    "so_what": "Google now rents game developers a playable world by the second, about 10 cents a second for up to two minutes, so any game studio or solo maker knows what an AI-made level costs and where it starts to wobble.",
+    "story": "On 19 November 2026 Google made Genie 4 available to game developers through the Gemini API and AI Studio. It generates a continuous 720p world at 24 frames a second with sound, steered live with the keyboard and text prompts, and each frame is generated as the session runs. PPC Land reports a price of roughly $0.10 per second, sessions of up to 120 seconds, and that visual stability may degrade after 60 to 90 seconds.",
+    "why_now": "Google, 19 Nov 2026.",
+    "fact": "Google, 19 Nov 2026: \"generating continuous 720p worlds at 24fps with synchronized native audio\"; PPC Land, 19 Nov 2026: \"roughly $0.10 for every second of streamed output\", \"Each session can run for up to 120 seconds\" and \"visual stability may degrade after 60 to 90 seconds\".",
+    "source": {
+     "label": "Google, Genie 4 in the Gemini API (19 Nov 2026)",
+     "url": "https://blog.google/innovation-and-ai/technology/developers-tools/genie-4-in-gemini-api/",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "PPC Land, Google charges developers about 10 cents a second for Genie 4 worlds (19 Nov 2026)",
+      "url": "https://ppc.land/google-charges-developers-about-10-cents-a-second-for-genie-4-worlds/"
+     },
+     {
+      "label": "OrcaRouter, Genie 4 Gemini API pricing (Nov 2026)",
+      "url": "https://www.orcarouter.ai/blog/genie-4-gemini-api-pricing"
+     },
+     {
+      "label": "TestingCatalog, Google opens Genie 4 to developers (Nov 2026)",
+      "url": "https://www.testingcatalog.com/google-opens-genie-4-world-model-to-developers-in-gemini-api/"
+     },
+     {
+      "label": "AI Business, Genie 4 world models (Nov 2026)",
+      "url": "https://aibusiness.com/robotics/google-genie-4-world-models-closer-robot-ai-testing"
+     }
+    ],
+    "first_reported": "https://blog.google/innovation-and-ai/technology/developers-tools/genie-4-in-gemini-api/",
+    "beats": [
+     "A playable world with no game engine underneath.",
+     "Every frame is the model's guess at the next one.",
+     "Why it is billed by the second, and stops at two minutes.",
+     "Look away for eight seconds and the door may move.",
+     "What this shows about who pays for a world that is drawn as you walk."
+    ],
+    "pitch": {
+     "question": "What are you buying when a game world is drawn as you walk through it?",
+     "headline": "Google now rents out playable worlds at 10 cents a second.",
+     "hook": "Google's Genie 4 streams a playable 720p world at 24 frames a second to game developers, at roughly $0.10 a second, for up to 120 seconds a session.",
+     "examples": [
+      "720p at 24 frames a second, with sound.",
+      "About $0.10 a second, up to 120 seconds.",
+      "Visual stability may degrade after 60 to 90 seconds."
+     ],
+     "chain": [
+      "A normal game stores its world and draws it from memory.",
+      "Genie 4 stores nothing: it guesses each next frame.",
+      "Your keys and prompts steer the guess.",
+      "Every guess costs computing time, so Google bills by the second.",
+      "Guesses drift, so a session stops at two minutes.",
+      "A two-minute world costs about $12."
+     ],
+     "take": "What this shows is that a world drawn on demand is priced like electricity, by the second. What kind of game fits inside two minutes?"
+    },
+    "style": {
+     "script": "head-to-head",
+     "production": "kinetic-movement",
+     "experiment": {
+      "format": "fry-talking-head",
+      "why": "Walk through a Genie world with a taxi meter ticking in the corner of the screen."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: What are you buying when a game world is drawn as you walk through it? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Google Genie 4 in the Gemini API, how its frames are generated, its price per second, its session limit, its stated limitations, and what game developers have said. Work through the 5 Whys, starting from the plain question: Why 1 asks how it is built, and what broke. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "Genie 4 has no stored level: a model predicts each frame from the last one and your input, which is why it is billed per second and capped at two minutes.",
+    "aim": "interest",
+    "funny": "Google has invented a game world that forgets where it put the door if you look away for eight seconds.",
+    "lookalike": {
+     "pattern": "made-in-hours",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfuWseGgGfl/",
+     "our_take": "The post showed games people built with a model; we show the price tag and the two-minute limit of a world the model draws live."
+    },
+    "lens": {
+     "subject": "business",
+     "who": "Google",
+     "under_the_hood": "There is no stored level: the model predicts every frame as you play, so Google charges by the second and caps a session."
+    },
+    "story_score": {
+     "total": 81.3,
+     "axes": {
+      "whys": 7,
+      "scale": 7.0,
+      "unique_angle": 8.91,
+      "absurdity_humour": null,
+      "fun_consume": 8.0,
+      "fun_produce": 9.0,
+      "fit": 10,
+      "named_thing": 10
+     },
+     "type": "hero_wed",
+     "floors_failed": [
+      "a hero reaches five whys, documented plus labelled inferred"
+     ],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-28T16:05:44+00:00",
+     "humour_unread": true,
+     "thin_week": "a thin week: only two options passed every floor after a second gather"
+    }
+   },
+   {
+    "id": "076c5675-4aee-4ad0-b400-6b10188fdb59",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "A music producer can now click one sung word and put an effect on just that word, because the plugin turns the vocal into typed lyrics first, so any singer or producer knows the edit that took an afternoon is now a selection.",
+    "story": "iZotope released Nectar 5, its vocal plugin for music producers, on 24 November 2026 at an introductory $179 until 7 December, then $249. Its Moments module transcribes the sung lyrics in the edit window, so a producer selects a word or phrase and adds up to seven effects to it, and its Vocal Assistant listens to part of the vocal and designs a processing chain.",
+    "why_now": "MusicRadar, 24 Nov 2026.",
+    "fact": "MusicRadar, 24 Nov 2026: \"Open up Moments on a vocal recording and the plugin will transcribe the lyrics automatically in the edit window.\"; \"This AI-powered mixing tool listens to a portion of your vocal and designs a customized processing chain to match it.\"; introductory price $179 until 7 December, then $249.",
+    "source": {
+     "label": "iZotope, Nectar product page (Nov 2026)",
+     "url": "https://www.izotope.com/en/products/nectar.html",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "MusicRadar, Nectar 5 adds effects one word at a time (24 Nov 2026)",
+      "url": "https://www.musicradar.com/music-tech/izotopes-nectar-5-introduces-a-clever-new-way-to-add-effects-to-vocals-one-word-at-a-time"
+     },
+     {
+      "label": "iZotope, Introducing Nectar 5 (Nov 2026)",
+      "url": "https://izotope.com/community/blog/introducing-izotope-nectar-5"
+     }
+    ],
+    "first_reported": "https://www.izotope.com/en/products/nectar.html",
+    "beats": [
+     "Click a sung word, and only that word gets the echo.",
+     "How: the plugin writes the vocal out as lyrics first.",
+     "Speech-to-text, pointed at singing.",
+     "The Vocal Assistant that builds the whole chain from a listen.",
+     "What this shows about where a mix engineer's hours go."
+    ],
+    "pitch": {
+     "question": "What changes when a vocal becomes words you can click?",
+     "headline": "This plugin types out your song so you can put an echo on one word.",
+     "hook": "iZotope's Nectar 5 transcribes a sung vocal into lyrics in the edit window, so a producer selects a single word and adds up to seven effects to it.",
+     "examples": [
+      "Up to seven effects on one selected word.",
+      "A Vocal Assistant that designs a processing chain from a listen.",
+      "$179 until 7 December, then $249."
+     ],
+     "chain": [
+      "A vocal is one long wave on a screen.",
+      "Finding one word in it means scrubbing back and forth.",
+      "Nectar 5 runs speech-to-text on the singing.",
+      "The lyrics appear in the edit window, lined up with the wave.",
+      "Click a word, and the effect lands on that slice only.",
+      "The fiddly hour becomes one click."
+     ],
+     "take": "What this shows is that once a song is text, editing it starts to work like editing a document. Which part of a producer's craft was really the search?"
+    },
+    "style": {
+     "script": "fry-explainer",
+     "production": "voice-led-pictures",
+     "experiment": {
+      "format": "everyday-debate",
+      "why": "A singer and a producer argue over one word of a chorus, and the plugin settles it with a click."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: What changes when a vocal becomes words you can click? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: iZotope Nectar 5, its Moments module and Vocal Assistant, how the transcription works on singing, its price, and what producers and engineers have said. Work through the 5 Whys, starting from the plain question: Why 1 asks how it is built, and what broke. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "Nectar 5 turns a sung vocal into time-stamped lyrics, so an effect can be placed on a selected word instead of a stretch of waveform.",
+    "aim": "utility",
+    "funny": "Music software has finally learned to read lyrics, mainly so it can put reverb on the one word you kept mumbling.",
+    "lookalike": {
+     "pattern": "tool-unlock",
+     "beats": "https://www.instagram.com/evolving.ai/p/DftxXqrgIE4/",
+     "our_take": "The post listed free generations; we open up one music tool to show the trick underneath, speech-to-text aimed at a singer."
+    },
+    "lens": {
+     "subject": "creator",
+     "who": "music producers",
+     "under_the_hood": "The plugin runs speech recognition on the singing and lines the words up with the audio, so an edit can target a word."
+    },
+    "story_score": {
+     "total": 66.3,
+     "axes": {
+      "whys": 7,
+      "scale": 4.0,
+      "unique_angle": 5.94,
+      "absurdity_humour": null,
+      "fun_consume": 6.0,
+      "fun_produce": 8.0,
+      "fit": 10,
+      "named_thing": 10
+     },
+     "type": "hero_wed",
+     "floors_failed": [
+      "a hero reaches five whys, documented plus labelled inferred"
+     ],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-28T16:05:44+00:00",
+     "humour_unread": true,
+     "thin_week": "a thin week: only two options passed every floor after a second gather"
     }
    }
   ],
@@ -543,28 +741,28 @@
      "our_take": "The post explained a rule; we show the box people tick to get round it."
     },
     "story_score": {
-     "total": 70.1,
+     "total": 75.1,
      "axes": {
       "whys": 8,
-      "scale": 5.0,
+      "scale": 6.0,
       "unique_angle": 7.5,
       "absurdity_humour": null,
       "fun_consume": 7.0,
       "fun_produce": 6.0,
-      "fit": 7,
+      "fit": 10,
       "named_thing": 10
      },
      "type": "hero_fri",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-28T11:36:41+00:00",
+     "at": "2026-11-28T16:05:44+00:00",
      "humour_unread": true,
      "close_call": "close call, your pick",
      "thin_week": "a thin week: only two options passed every floor after a second gather"
     },
     "recommended": true,
     "lens": {
-     "subject": "business",
+     "subject": "both",
      "who": "Manchester Animation Festival",
      "under_the_hood": "Festivals that decide awards and distribution are moving from trusting entry forms to banning AI outright, because self-declaration has stopped working."
     }
@@ -648,21 +846,21 @@
      }
     },
     "story_score": {
-     "total": 68.1,
+     "total": 70.1,
      "axes": {
       "unique_angle": 5.62,
       "absurdity_humour": null,
       "whys": 8,
-      "scale": 4.0,
+      "scale": 5.0,
       "fun_consume": 8.0,
       "fit": 7,
       "named_thing": 10,
-      "fun_produce": 8.0
+      "fun_produce": 9.0
      },
      "type": "wildcard",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-28T11:36:41+00:00",
+     "at": "2026-11-28T16:05:44+00:00",
      "humour_unread": true,
      "close_call": "close call, your pick",
      "thin_week": "a thin week: only two options passed every floor after a second gather"
@@ -671,6 +869,196 @@
      "subject": "business",
      "who": "Nicalis",
      "under_the_hood": "Steam's AI label rests on the developer's own tick, and here the music files' metadata disclosed what the store page did not."
+    }
+   },
+   {
+    "id": "46dd71d0-6787-4bda-bd6c-b0e2bc4abca2",
+    "source_kind": "engine",
+    "source_tag": "company",
+    "so_what": "The AI avatar sold to video creators as 84.4% indistinguishable from real was picked as the real clip 42.2% of the time in its maker's own test, so any creator weighing an AI double knows how that headline number is built.",
+    "story": "HeyGen released Avatar 6 on 17 November 2026, a model that turns a photo or a short clip plus an audio track into a talking video for creators. Its research page explains its headline: shown real footage and Avatar 6 side by side, raters picked Avatar 6 as the real one 42.2% of the time across 270 answers, which HeyGen scores as 84.4% of the way to a coin toss. Shown one clip at a time, 65.1% of Avatar 6 clips were judged real against 78.9% of real recordings.",
+    "why_now": "HeyGen, 17 Nov 2026.",
+    "fact": "HeyGen Research, 17 Nov 2026: \"Side by side with the real recording, raters pick Avatar 6 as the real one 42.2% of the time.\" and \"50% would mean they cannot tell at all, so Avatar 6 is 84.4% of the way there.\"; one clip at a time, 65.1% of Avatar 6 clips judged real against 78.9% of real recordings.",
+    "source": {
+     "label": "HeyGen Research, Avatar 6 model report (17 Nov 2026)",
+     "url": "https://www.heygen.com/research/avatar-6-model",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "Unite.AI, HeyGen Avatar 6 (Nov 2026)",
+      "url": "https://www.unite.ai/?p=522488"
+     },
+     {
+      "label": "OrcaRouter, HeyGen Avatar 6 launch (Nov 2026)",
+      "url": "https://www.orcarouter.ai/blog/heygen-avatar-6-launch"
+     },
+     {
+      "label": "HeyGen, Avatar 6 model page (Nov 2026)",
+      "url": "https://www.heygen.com/models/heygen-avatar-6"
+     }
+    ],
+    "first_reported": "https://www.heygen.com/research/avatar-6-model",
+    "beats": [
+     "84.4% indistinguishable, says the launch.",
+     "42.2%: how often raters picked the avatar as real.",
+     "How a coin toss becomes a percentage.",
+     "One clip at a time: 65.1% against 78.9%.",
+     "What this shows about the numbers a creator is sold."
+    ],
+    "pitch": {
+     "question": "When an AI double is sold as 84.4% indistinguishable, what was actually measured?",
+     "headline": "HeyGen's 84.4% real avatar was picked as real 42.2% of the time.",
+     "hook": "HeyGen says its new Avatar 6 is 84.4% indistinguishable from real video, and its own research page shows raters picked it as the real clip 42.2% of the time.",
+     "examples": [
+      "42.2% picked as real, across 270 answers.",
+      "Doubled against a 50% coin toss: 84.4%.",
+      "One clip at a time: 65.1% for the avatar, 78.9% for real recordings."
+     ],
+     "chain": [
+      "Show people two clips: one real, one avatar.",
+      "Ask which is real.",
+      "If they cannot tell, they guess right half the time.",
+      "They picked the avatar as real 42.2% of the time.",
+      "HeyGen divides 42.2 by 50 and calls it 84.4%.",
+      "Shown alone, real recordings still win, 78.9% to 65.1%."
+     ],
+     "take": "What this shows is that a realism score can be a true number that sounds bigger than the test. When you are sold an AI double, which number are you being shown?"
+    },
+    "style": {
+     "script": "everyday-debate",
+     "production": "receipt-animation",
+     "experiment": {
+      "format": "fry-explainer",
+      "why": "Toss a coin on camera 270 times in fast motion, then lay HeyGen's tally beside it."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When an AI double is sold as 84.4% indistinguishable, what was actually measured? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: HeyGen Avatar 6, its realism tests, how the 84.4% figure is computed, the single-clip results, independent rankings and what creators have said. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "The 84.4% is the side-by-side pick rate of 42.2% divided by the 50% a coin toss would give, so the headline rescales the raw result.",
+    "aim": "interest",
+    "funny": "HeyGen's avatar lost the spot-the-real-one test more often than it won, and the launch turned that into 84.4%.",
+    "lookalike": {
+     "pattern": "creator-hands-over",
+     "beats": "https://www.instagram.com/evolving.ai/p/Dc_4Sy7gGi5/",
+     "our_take": "The post cheered a streamer handing over to an AI copy; we open the maker's own test to show how real the copy measured."
+    },
+    "lens": {
+     "subject": "creator",
+     "who": "creators",
+     "under_the_hood": "The realism score divides the rate raters picked the avatar as real by the 50% of a blind guess, which doubles the raw result."
+    },
+    "story_score": {
+     "total": 73.6,
+     "axes": {
+      "whys": 6,
+      "scale": 5.0,
+      "unique_angle": 8.91,
+      "absurdity_humour": null,
+      "fun_consume": 8.0,
+      "fun_produce": 8.0,
+      "fit": 10,
+      "named_thing": 10
+     },
+     "type": "hero_fri",
+     "floors_failed": [
+      "a hero reaches five whys, documented plus labelled inferred"
+     ],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-28T16:05:44+00:00",
+     "humour_unread": true,
+     "thin_week": "a thin week: only two options passed every floor after a second gather"
+    }
+   },
+   {
+    "id": "b38a7a98-50b4-4608-bf8e-b99d8181ac7b",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "A big publisher and its bestselling authors both had no-AI clauses in their contracts, and an AI-made cover still got through, found by readers in Instagram comments, so any author, illustrator or publisher knows a clause is a promise and not a check.",
+    "story": "On 20 November 2026 Tor Publishing Group withdrew the newly revealed cover of Ilona Andrews's fantasy novel This Crown Will Not Rule Me after learning generative AI had been used to make it, without the knowledge of Tor or the authors. The authors' contract and Tor's contracts with cover artists both prohibit generative AI. Readers raised it after the reveal, and Tor said it takes full responsibility for the breakdown in its review process.",
+    "why_now": "Ilona Andrews, 20 Nov 2026; Publishers Weekly, 24 Nov 2026.",
+    "fact": "Publishers Weekly, 24 Nov 2026: \"Tor takes full responsibility for the breakdown in our review process,\" with its policies and contracts with cover artists prohibiting generative AI; Ilona Andrews: \"We have a no-AI clause in our contract. Tor also has a no-AI clause in their art contracts.\"",
+    "source": {
+     "label": "Ilona Andrews, Generative AI on This Crown's cover, carrying Tor's statement (20 Nov 2026)",
+     "url": "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "Publishers Weekly, Tor pulls Ilona Andrews cover over generative AI use (24 Nov 2026)",
+      "url": "http://www.publishersweekly.com/pw/by-topic/industry-news/publisher-news/article/101841-tor-pulls-ilona-andrews-cover-over-generative-ai-use.html"
+     }
+    ],
+    "first_reported": "https://ilona-andrews.com/blog/generative-ai-on-this-crowns-cover/",
+    "beats": [
+     "Two no-AI clauses, one AI-made cover.",
+     "Who caught it: readers, after the reveal.",
+     "Why a contract clause checks nothing by itself.",
+     "The authors now vet every painting, not the painter.",
+     "What this shows about where the proof of human work has to live."
+    ],
+    "pitch": {
+     "question": "If two contracts banned AI and an AI cover still got through, what were the contracts checking?",
+     "headline": "Two contracts banned AI art. Readers found it on the cover anyway.",
+     "hook": "Tor pulled the cover of Ilona Andrews's new novel after learning generative AI was used to make it, though the authors' contract and Tor's art contracts both forbid it.",
+     "examples": [
+      "A no-AI clause in the authors' contract.",
+      "A no-AI clause in Tor's art contracts.",
+      "Readers raised it after the cover reveal."
+     ],
+     "chain": [
+      "The authors' contract says no AI.",
+      "Tor's contract with its artists says no AI.",
+      "The cover arrives as a finished picture.",
+      "Nothing in a finished picture proves how it was made.",
+      "Readers spotted the signs once it went public.",
+      "So the check moved from the contract to the audience."
+     ],
+     "take": "What this shows is that a no-AI clause is a promise, and a promise is only as good as the check behind it. Who should hold the proof that a picture was made by hand?"
+    },
+    "style": {
+     "script": "follow-the-receipt",
+     "production": "receipt-animation",
+     "experiment": {
+      "format": "everyday-debate",
+      "why": "An author and an art director argue across a desk with the two contracts between them and the cover face down."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If two contracts banned AI and an AI cover still got through, what were the contracts checking? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Tor's withdrawal of the This Crown Will Not Rule Me cover, the no-AI clauses in the authors' and artists' contracts, how the AI use was found, and what authors and illustrators have said. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "The no-AI rule lived in contracts and a sketch-stage review, and a finished image carries no proof of how it was made, so readers did the checking.",
+    "aim": "interest",
+    "funny": "Two contracts said no AI, the review said fine, and the people who caught it were the comments under the reveal post.",
+    "lookalike": {
+     "pattern": "ai-backfires",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfwzCiPgM8u/",
+     "our_take": "The post laughed at an AI that gave someone away; we show a publisher's paperwork that could not see what readers saw."
+    },
+    "lens": {
+     "subject": "both",
+     "who": "Tor and Ilona Andrews",
+     "under_the_hood": "The ban sat in contract wording and a review of sketches, and a finished painting carries no record of the tools behind it."
+    },
+    "story_score": {
+     "total": 73.4,
+     "axes": {
+      "whys": 7,
+      "scale": 6.0,
+      "unique_angle": 8.28,
+      "absurdity_humour": null,
+      "fun_consume": 8.0,
+      "fun_produce": 7.0,
+      "fit": 7,
+      "named_thing": 10
+     },
+     "type": "hero_fri",
+     "floors_failed": [
+      "a hero reaches five whys, documented plus labelled inferred"
+     ],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-28T16:05:44+00:00",
+     "humour_unread": true,
+     "thin_week": "a thin week: only two options passed every floor after a second gather"
     }
    }
   ]
@@ -4305,7 +4693,7 @@
   }
  },
  "repeat_review": {
-  "reader": "a fresh subagent with none of the session's reasoning (same-story repeat review, 27 Nov 2026)",
+  "reader": "a fresh subagent with none of the session's reasoning (same-story repeat review, 27 Nov 2026); Wednesday and Friday read again by a fresh subagent on the 28 Nov re-run",
   "checked": [
    {
     "ref": "mon-1",
@@ -4324,36 +4712,6 @@
     "verdict": "new",
     "of": "piece:8287846b-6618-4a19-9fb8-23ad4eca2718",
     "why": "Both are about how AI firms are funded, but Kling's redemption-backed raise is a different company and a different warning from Oracle asking customers to prepay its build."
-   },
-   {
-    "ref": "wed-1",
-    "verdict": "new",
-    "of": "piece:bf0fddae-2fcf-4687-9079-190729234ed3",
-    "why": "Maxon putting third-party credit-billed 3D generation in Cinema 4D is separate news from Adobe MAX and the question of which design tool your agents can drive."
-   },
-   {
-    "ref": "wed-2",
-    "verdict": "new",
-    "of": "off-thu-701a2c55-7400-4dc8-99cb-d6001147ae16",
-    "why": "Epic retiring Blueprints after an AI conversion is a specific engine change for game makers; the habits post was general advice on keeping a job."
-   },
-   {
-    "ref": "fri-1",
-    "verdict": "new",
-    "of": "piece:a4b34048-ab39-49da-a251-eaa58ebe2eaf",
-    "why": "Undisclosed Suno music caught by file metadata is a disclosure failure in a game; the Gods Don't Give Gifts post counted the humans behind a credited AI film."
-   },
-   {
-    "ref": "fri-2",
-    "verdict": "new",
-    "of": "piece:a4b34048-ab39-49da-a251-eaa58ebe2eaf",
-    "why": "Festival bans and false entry forms are new news about AI animation's eligibility, while the earlier post was one AI-animated feature's cinema release and its crew."
-   },
-   {
-    "ref": "fri-3",
-    "verdict": "new",
-    "of": "piece:8c6c717d-00b4-4d26-b837-06b89709220a",
-    "why": "Tencent Music's results on AI streams falling is listening data from earnings; no recent post covered who listens to AI music."
    },
    {
     "ref": "off-tue-nytphotoshop",
@@ -4504,6 +4862,54 @@
     "verdict": "new",
     "of": "off-sat-goodnews",
     "why": "The scouting app, the NASCAR voice and Odeon's assistant appear in no posted edition; Odeon is also in the off-sat-screen option, so they should not both run."
+   },
+   {
+    "ref": "wed-1",
+    "verdict": "new",
+    "of": "piece:db9f9f6a-1092-49be-8024-f335e060305a",
+    "why": "Epic converting Blueprints to Verse with AI and dropping Blueprints from Unreal 6 is engine news for game studios; the build-or-buy post is about replacing software subscriptions."
+   },
+   {
+    "ref": "wed-2",
+    "verdict": "new",
+    "of": "piece:bf0fddae-2fcf-4687-9079-190729234ed3",
+    "why": "Both are creative software adding AI, but Maxon selling third-party 3D model generation in credits is a different company and different news from Adobe MAX agents and connectors."
+   },
+   {
+    "ref": "wed-3",
+    "verdict": "new",
+    "of": "off-sat-goodnews",
+    "why": "Genie 4's playable world API and per-second price for game developers is not told by any post; the good-news game world in brush strokes is a different human-made story."
+   },
+   {
+    "ref": "wed-4",
+    "verdict": "new",
+    "of": "piece:5d55e729-43fd-433b-b4e5-056f5329cb05",
+    "why": "A vocal plugin that edits single sung words for music producers shares no news or advice with the designer AI usage survey or any other post."
+   },
+   {
+    "ref": "fri-1",
+    "verdict": "new",
+    "of": "piece:a4b34048-ab39-49da-a251-eaa58ebe2eaf",
+    "why": "A festival banning generative AI films and entrants lying on forms is the opposite side of the AI feature opening in cinemas, a different event and a different point."
+   },
+   {
+    "ref": "fri-2",
+    "verdict": "new",
+    "of": "piece:8c6c717d-00b4-4d26-b837-06b89709220a",
+    "why": "Undisclosed Suno music in a game found by players is about AI disclosure; the folk song post is about a false copyright claim taking a human recording down."
+   },
+   {
+    "ref": "fri-3",
+    "verdict": "new",
+    "of": "piece:08442c41-534a-4523-9818-0884e2fc985a",
+    "why": "HeyGen's realism claim read against its own rater numbers is a different story from TikTok's likeness detection and what brand managers must do with it."
+   },
+   {
+    "ref": "fri-4",
+    "verdict": "new",
+    "of": "piece:a4b34048-ab39-49da-a251-eaa58ebe2eaf",
+    "why": "A publisher pulling an AI-made book cover against its contracts is a disclosure and review failure in publishing, told by no recent post."
    }
   ]
  }
