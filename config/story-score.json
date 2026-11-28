@@ -402,7 +402,7 @@
     ],
     "divergent": {"op": "provoke", "lane": "angles", "count": 3, "temperament": {"hero": "balanced", "offday": "wild"}, "per_hero_day": 2, "cliches": "divergent.worn(sources)",
       "problem": "Angles on one true story for {audience}. Each angle rests on a fact in the story as quoted below; never add a detail the story does not give. The story: {what}",
-      "score_problem": "Angles on true stories for {audience}. Which is the most original, useful and specific way to tell each story, judged on the words alone?"},
+      "score_problem": "Angles on true stories for {audience}. Which is the most original, useful and specific way to tell each story, judged on the words alone?", "judge_batch": 36, "judge_scale": {"min": 1, "max": 5, "source": "krishanraja/divergence-engine src/prompts.ts JudgeSchema: originality, usefulness and specificity are each described as 1 to 5 (read 2026-11-28 at 3344061)"}},
     "score_weights": {"originality": 0.35, "usefulness": 0.25, "specificity": 0.2, "humour": 0.2},
     "zero_on_status": ["rejected_archive", "rejected_gravity"],
     "humour_margin": 1.0,

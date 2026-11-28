@@ -400,7 +400,17 @@
  },
  "thu/tplthanksgiving": {
   "fact": null,
-  "line": null,
+  "line": {
+   "comic_reading": "supported",
+   "attempted": true,
+   "needs_explaining": true,
+   "mechanism": [
+    "incongruity"
+   ],
+   "target": [
+    "situation"
+   ]
+  },
   "angles": {
    "thu/tplthanksgiving#9ac3e6fc6044": null,
    "thu/tplthanksgiving#3df8dcda3fe4": null,

@@ -70,11 +70,11 @@
     },
     "recommended": true,
     "story_score": {
-     "total": 65.5,
+     "total": 76.9,
      "axes": {
       "whys": 8,
       "scale": 7.0,
-      "unique_angle": 0.0,
+      "unique_angle": 6.72,
       "absurdity_humour": null,
       "fun_consume": 7.0,
       "fun_produce": 7.0,
@@ -82,97 +82,11 @@
       "named_thing": 10
      },
      "type": "hero_mon",
-     "floors_failed": [
-      "a hero has at least one sound angle"
-     ],
+     "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
-     "humour_unread": true
-    }
-   },
-   {
-    "id": "2c443323-dc8c-4941-9608-04d6b3ec85ed",
-    "source_kind": "engine",
-    "source_tag": "trade_press",
-    "so_what": "Independent musicians can now be paid to have an AI learn from their songs, through their distributor, but only if they tick the box, and nobody has said the rate: anyone with music on a distributor knows which email to read.",
-    "story": "On 18 November 2026 Sonilo, an AI music company that raised $11 million in October, signed a licence with the music distributor Symphonic to train its model on recordings from Symphonic's independent artists and labels who opt in. Sonilo says rights holders get licensing fees and a share of revenue, with attribution reporting; neither side disclosed the fee or the split.",
-    "why_now": "Music Business Worldwide, 18 Nov 2026.",
-    "fact": "Music Business Worldwide, 18 Nov 2026: Sonilo, \"$11m-backed\", signed with Symphonic so that \"rights holders and artists receive licensing fees and a share of revenue\"; the fee and split were not disclosed.",
-    "source": {
-     "label": "Music Business Worldwide, Sonilo and Symphonic (18 Nov 2026)",
-     "url": "https://www.musicbusinessworldwide.com/11m-backed-ai-startup-sonilo-founded-by-tiktok-veterans-inks-licensing-deal-with-symphonic-to-train-its-model-on-opted-in-indie-recordings/",
-     "kind": "original"
-    },
-    "sources": [
-     {
-      "label": "AI Musicpreneur, Sonilo and Symphonic (Nov 2026)",
-      "url": "https://www.aimusicpreneur.com/ai-tools-news/sonilo-symphonic-opt-in-ai-training-licensing-deal-2026/"
-     }
-    ],
-    "first_reported": "https://www.musicbusinessworldwide.com/11m-backed-ai-startup-sonilo-founded-by-tiktok-veterans-inks-licensing-deal-with-symphonic-to-train-its-model-on-opted-in-indie-recordings/",
-    "beats": [
-     "An AI start-up offers to pay indie musicians for their songs.",
-     "How $11 million of venture money reaches an artist: through the distributor.",
-     "The box you have to tick, and what ticking it signs.",
-     "The number nobody printed: the rate.",
-     "What this shows about who sets the price of a song an AI learns from."
-    ],
-    "pitch": {
-     "question": "When a computer pays to learn from your song, who decides what the song is worth?",
-     "headline": "An AI music start-up will pay indie artists to learn from their songs. Nobody says how much.",
-     "hook": "Sonilo, an $11 million AI music start-up, will pay licence fees and a share of revenue to Symphonic's independent artists who opt in to train its model, and the rate is private.",
-     "examples": [
-      "$11 million raised by Sonilo in October.",
-      "Symphonic's fourth AI training partner.",
-      "Fees and a revenue share, at a rate neither side published."
-     ],
-     "chain": [
-      "An AI music model needs songs to learn from.",
-      "Taking them without asking has led to lawsuits.",
-      "So the start-up pays a distributor that represents thousands of indie artists.",
-      "The distributor offers its artists a box to tick.",
-      "Artists who tick it get a fee and a share of revenue.",
-      "The rate is set between the start-up and the distributor, not the artist."
-     ],
-     "take": "The money is real and it is opt-in, and what this shows is that the price of an indie song's training rights is being set in a deal the artist never reads. Would you tick the box without seeing the number?"
-    },
-    "style": {
-     "script": "follow-the-receipt",
-     "production": "receipt-animation",
-     "experiment": {
-      "format": "everyday-debate",
-      "why": "Two indie artists argue over a kitchen table about whether to tick the box, each holding the same email."
-     }
-    },
-    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When a computer pays to learn from your song, who decides what the song is worth? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: the Sonilo and Symphonic AI training licence, the fees and revenue share, the opt-in terms, Symphonic's other AI training partners and what independent artists have been offered. Work through the 5 Whys, starting from the plain question: Why 1 asks who pays, and why the price moved. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
-    "shape": "story",
-    "dive": "Venture money reaches indie artists through their distributor as a licence fee plus a revenue share, only for songs whose owners opt in, at a private rate.",
-    "aim": "utility",
-    "funny": "An indie track can now be in more AI training deals than playlists.",
-    "lookalike": {
-     "pattern": "money-twist",
-     "beats": "https://www.instagram.com/evolving.ai/p/DfeWM7jADvK/",
-     "our_take": "The post showed one man paying people to sign up; we show a start-up paying songwriters, and the box that decides it."
-    },
-    "story_score": {
-     "total": 58.9,
-     "axes": {
-      "whys": 8,
-      "scale": 5.0,
-      "unique_angle": 0.0,
-      "absurdity_humour": null,
-      "fun_consume": 6.0,
-      "fun_produce": 6.0,
-      "fit": 10,
-      "named_thing": 10
-     },
-     "type": "hero_mon",
-     "floors_failed": [
-      "a hero has at least one sound angle"
-     ],
-     "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
-     "humour_unread": true
+     "at": "2026-11-28T11:36:41+00:00",
+     "humour_unread": true,
+     "close_call": "close call, your pick"
     }
    },
    {
@@ -246,13 +160,13 @@
       "status": "accepted",
       "divergent": true,
       "text_hash": "a3c5c6e6d0272b0a",
-      "at": "2026-11-27T16:36:43Z"
+      "at": "2026-11-28T11:36:49Z"
      }
     },
     "story_score": {
-     "total": 50.0,
+     "total": 73.4,
      "axes": {
-      "unique_angle": 0.0,
+      "unique_angle": 7.5,
       "absurdity_humour": null,
       "whys": 8,
       "scale": 6.0,
@@ -262,11 +176,93 @@
       "fun_produce": 5.0
      },
      "type": "wildcard",
-     "floors_failed": [
-      "truth: a wildcard's angle rests on its sourced fact; strange never adds a detail the source does not give"
-     ],
+     "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
+     "at": "2026-11-28T11:36:41+00:00",
+     "humour_unread": true,
+     "close_call": "close call, your pick"
+    }
+   },
+   {
+    "id": "2c443323-dc8c-4941-9608-04d6b3ec85ed",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "Independent musicians can now be paid to have an AI learn from their songs, through their distributor, but only if they tick the box, and nobody has said the rate: anyone with music on a distributor knows which email to read.",
+    "story": "On 18 November 2026 Sonilo, an AI music company that raised $11 million in October, signed a licence with the music distributor Symphonic to train its model on recordings from Symphonic's independent artists and labels who opt in. Sonilo says rights holders get licensing fees and a share of revenue, with attribution reporting; neither side disclosed the fee or the split.",
+    "why_now": "Music Business Worldwide, 18 Nov 2026.",
+    "fact": "Music Business Worldwide, 18 Nov 2026: Sonilo, \"$11m-backed\", signed with Symphonic so that \"rights holders and artists receive licensing fees and a share of revenue\"; the fee and split were not disclosed.",
+    "source": {
+     "label": "Music Business Worldwide, Sonilo and Symphonic (18 Nov 2026)",
+     "url": "https://www.musicbusinessworldwide.com/11m-backed-ai-startup-sonilo-founded-by-tiktok-veterans-inks-licensing-deal-with-symphonic-to-train-its-model-on-opted-in-indie-recordings/",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "AI Musicpreneur, Sonilo and Symphonic (Nov 2026)",
+      "url": "https://www.aimusicpreneur.com/ai-tools-news/sonilo-symphonic-opt-in-ai-training-licensing-deal-2026/"
+     }
+    ],
+    "first_reported": "https://www.musicbusinessworldwide.com/11m-backed-ai-startup-sonilo-founded-by-tiktok-veterans-inks-licensing-deal-with-symphonic-to-train-its-model-on-opted-in-indie-recordings/",
+    "beats": [
+     "An AI start-up offers to pay indie musicians for their songs.",
+     "How $11 million of venture money reaches an artist: through the distributor.",
+     "The box you have to tick, and what ticking it signs.",
+     "The number nobody printed: the rate.",
+     "What this shows about who sets the price of a song an AI learns from."
+    ],
+    "pitch": {
+     "question": "When a computer pays to learn from your song, who decides what the song is worth?",
+     "headline": "An AI music start-up will pay indie artists to learn from their songs. Nobody says how much.",
+     "hook": "Sonilo, an $11 million AI music start-up, will pay licence fees and a share of revenue to Symphonic's independent artists who opt in to train its model, and the rate is private.",
+     "examples": [
+      "$11 million raised by Sonilo in October.",
+      "Symphonic's fourth AI training partner.",
+      "Fees and a revenue share, at a rate neither side published."
+     ],
+     "chain": [
+      "An AI music model needs songs to learn from.",
+      "Taking them without asking has led to lawsuits.",
+      "So the start-up pays a distributor that represents thousands of indie artists.",
+      "The distributor offers its artists a box to tick.",
+      "Artists who tick it get a fee and a share of revenue.",
+      "The rate is set between the start-up and the distributor, not the artist."
+     ],
+     "take": "The money is real and it is opt-in, and what this shows is that the price of an indie song's training rights is being set in a deal the artist never reads. Would you tick the box without seeing the number?"
+    },
+    "style": {
+     "script": "follow-the-receipt",
+     "production": "receipt-animation",
+     "experiment": {
+      "format": "everyday-debate",
+      "why": "Two indie artists argue over a kitchen table about whether to tick the box, each holding the same email."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: When a computer pays to learn from your song, who decides what the song is worth? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: the Sonilo and Symphonic AI training licence, the fees and revenue share, the opt-in terms, Symphonic's other AI training partners and what independent artists have been offered. Work through the 5 Whys, starting from the plain question: Why 1 asks who pays, and why the price moved. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "Venture money reaches indie artists through their distributor as a licence fee plus a revenue share, only for songs whose owners opt in, at a private rate.",
+    "aim": "utility",
+    "funny": "An indie track can now be in more AI training deals than playlists.",
+    "lookalike": {
+     "pattern": "money-twist",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfeWM7jADvK/",
+     "our_take": "The post showed one man paying people to sign up; we show a start-up paying songwriters, and the box that decides it."
+    },
+    "story_score": {
+     "total": 71.6,
+     "axes": {
+      "whys": 8,
+      "scale": 5.0,
+      "unique_angle": 7.5,
+      "absurdity_humour": null,
+      "fun_consume": 6.0,
+      "fun_produce": 6.0,
+      "fit": 10,
+      "named_thing": 10
+     },
+     "type": "hero_mon",
+     "floors_failed": [],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
     }
    }
@@ -347,14 +343,14 @@
       "status": "accepted",
       "divergent": true,
       "text_hash": "3021aa0bb0a199c1",
-      "at": "2026-11-27T16:36:43Z"
+      "at": "2026-11-28T11:36:49Z"
      }
     },
     "recommended": true,
     "story_score": {
-     "total": 59.6,
+     "total": 80.6,
      "axes": {
-      "unique_angle": 0.0,
+      "unique_angle": 6.72,
       "absurdity_humour": null,
       "whys": 9,
       "scale": 8.0,
@@ -364,12 +360,11 @@
       "fun_produce": 7.0
      },
      "type": "wildcard",
-     "floors_failed": [
-      "truth: a wildcard's angle rests on its sourced fact; strange never adds a detail the source does not give"
-     ],
+     "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
-     "humour_unread": true
+     "at": "2026-11-28T11:36:41+00:00",
+     "humour_unread": true,
+     "thin_week": "a thin week: only two options passed every floor after a second gather"
     }
    },
    {
@@ -449,102 +444,15 @@
       "named_thing": 10
      },
      "type": "hero_wed",
-     "floors_failed": [
-      "a hero has at least one sound angle"
-     ],
+     "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
-     "humour_unread": true
+     "at": "2026-11-28T11:36:41+00:00",
+     "humour_unread": true,
+     "thin_week": "a thin week: only two options passed every floor after a second gather"
     }
    }
   ],
   "fri": [
-   {
-    "id": "acb58370-aaca-4040-9c13-83f227a628ec",
-    "source_kind": "engine",
-    "source_tag": "trade_press",
-    "so_what": "China's biggest music company says AI songs are flooding in and almost nobody is listening, so every artist and label worried about AI music can see where the money is still going: to human, distinctive music.",
-    "story": "On its third-quarter 2026 earnings call on 17 November, Tencent Music Entertainment, owner of the QQ Music, Kugou and Kuwo music apps, said streams of AI-generated songs remain negligible and falling while human, distinctive music gains. Its executive chairman Cussion Pang said listeners are becoming more selective as AI makes music more abundant; revenue was RMB8.94 billion, up 5.6%.",
-    "why_now": "Tencent Music third-quarter 2026 earnings call, 17 Nov 2026.",
-    "fact": "Music Business Worldwide, 17 Nov 2026: \"Streams from AI-generated songs remain very low and with a declining trend.\"; Digital Music News: \"AI content stream volumes remain negligible, with a declining share of listening, while high-quality, differentiated content continues to gain traction.\"",
-    "source": {
-     "label": "Music Business Worldwide, Tencent Music on AI streams (17 Nov 2026)",
-     "url": "https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/",
-     "kind": "report"
-    },
-    "sources": [
-     {
-      "label": "Digital Music News, Tencent Music on AI music (17 Nov 2026)",
-      "url": "https://www.digitalmusicnews.com/2026/11/17/tencent-music-ai-consumption-comments/"
-     }
-    ],
-    "first_reported": "https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/",
-    "beats": [
-     "AI can make a million songs a day. Almost nobody plays them.",
-     "What the biggest music company in China told its investors.",
-     "Why more supply made listeners pickier.",
-     "Where the money still goes: concerts, merch and human artists.",
-     "What this shows about what AI music is worth."
-    ],
-    "pitch": {
-     "question": "If machines can make endless songs, why are listeners still choosing the ones people make?",
-     "headline": "AI is flooding China's biggest music apps. Streams of it are 'negligible'.",
-     "hook": "Tencent Music, owner of China's biggest music apps, told investors that streams of AI-generated songs remain negligible and falling, while human, distinctive music gains.",
-     "examples": [
-      "Owner of QQ Music, Kugou and Kuwo.",
-      "AI streams 'negligible, with a declining share of listening'.",
-      "Revenue up 5.6%, to RMB8.94 billion."
-     ],
-     "chain": [
-      "AI tools make songs cheap and fast.",
-      "So the apps fill up with them.",
-      "Listeners face more choice than ever.",
-      "More choice makes them pickier.",
-      "They keep playing music by people they know.",
-      "So the AI flood costs the apps filtering and lawyers, and earns little."
-     ],
-     "take": "What this shows is that making music is no longer scarce, and being chosen is. What makes a listener pick one song out of a million?"
-    },
-    "style": {
-     "script": "random-headline",
-     "production": "data-story",
-     "experiment": {
-      "format": "everyday-debate",
-      "why": "A label boss and a bedroom producer argue over the chart, each holding the same earnings quote."
-     }
-    },
-    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If machines can make endless songs, why are listeners still choosing the ones people make? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Tencent Music's comments on AI-generated streams, its filtering and legal action, its revenue and what other music platforms report about AI listening. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
-    "shape": "story",
-    "dive": "AI makes music supply abundant, listeners grow more selective, and AI tracks earn a negligible share of streams while costing moderation and legal spend.",
-    "aim": "interest",
-    "funny": "The machines can write a million songs a day, and the market's verdict, per its own earnings call, is negligible.",
-    "lookalike": {
-     "pattern": "ai-backfires",
-     "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
-     "our_take": "The post showed AI doing something unexpected; we show listeners simply not playing it."
-    },
-    "recommended": true,
-    "story_score": {
-     "total": 64.8,
-     "axes": {
-      "whys": 9,
-      "scale": 7.0,
-      "unique_angle": 0.0,
-      "absurdity_humour": null,
-      "fun_consume": 6.0,
-      "fun_produce": 5.0,
-      "fit": 10,
-      "named_thing": 10
-     },
-     "type": "hero_fri",
-     "floors_failed": [
-      "a hero has at least one sound angle"
-     ],
-     "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
-     "humour_unread": true
-    }
-   },
    {
     "id": "c1bd8406-c267-426e-b586-d76e1ef68e5c",
     "source_kind": "engine",
@@ -610,11 +518,11 @@
      "our_take": "The post explained a rule; we show the box people tick to get round it."
     },
     "story_score": {
-     "total": 57.3,
+     "total": 70.1,
      "axes": {
       "whys": 8,
       "scale": 5.0,
-      "unique_angle": 0.0,
+      "unique_angle": 7.5,
       "absurdity_humour": null,
       "fun_consume": 7.0,
       "fun_produce": 6.0,
@@ -622,13 +530,14 @@
       "named_thing": 10
      },
      "type": "hero_fri",
-     "floors_failed": [
-      "a hero has at least one sound angle"
-     ],
+     "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
-     "humour_unread": true
-    }
+     "at": "2026-11-28T11:36:41+00:00",
+     "humour_unread": true,
+     "close_call": "close call, your pick",
+     "thin_week": "a thin week: only two options passed every floor after a second gather"
+    },
+    "recommended": true
    },
    {
     "id": "456c4fc3-530b-4fc8-9e92-5b5ea662ad87",
@@ -705,13 +614,13 @@
       "status": "accepted",
       "divergent": true,
       "text_hash": "fa7f24d5c2c5f640",
-      "at": "2026-11-27T16:36:43Z"
+      "at": "2026-11-28T11:36:49Z"
      }
     },
     "story_score": {
-     "total": 50.5,
+     "total": 68.1,
      "axes": {
-      "unique_angle": 0.0,
+      "unique_angle": 5.62,
       "absurdity_humour": null,
       "whys": 8,
       "scale": 4.0,
@@ -721,12 +630,12 @@
       "fun_produce": 8.0
      },
      "type": "wildcard",
-     "floors_failed": [
-      "truth: a wildcard's angle rests on its sourced fact; strange never adds a detail the source does not give"
-     ],
+     "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
-     "humour_unread": true
+     "at": "2026-11-28T11:36:41+00:00",
+     "humour_unread": true,
+     "close_call": "close call, your pick",
+     "thin_week": "a thin week: only two options passed every floor after a second gather"
     }
    }
   ]
@@ -855,136 +764,7 @@
      "type": "explainer",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00"
-    }
-   },
-   {
-    "id": "logicdrums",
-    "kind": "explainer",
-    "format": "Explainer carousel, 5 cards, 4:5",
-    "source": {
-     "label": "Apple, Logic Pro for iPad 4.0 release notes (18 Nov 2026)",
-     "url": "https://support.apple.com/en-us/101628"
-    },
-    "source_tag": "trade_press",
-    "copy": "Logic Pro for iPad 4.0's Stem Splitter can now pull each drum kit piece out of any recording as its own stem. Here is how musicians use it and what it needs.",
-    "hook": "Logic on iPad now splits a song's drums apart.",
-    "story": "Logic Pro for iPad 4.0, Apple's music app for musicians and producers, published on 18 November 2026, adds a Drums (Individual Kit Pieces) option to its AI Stem Splitter.",
-    "fact": "Apple, 18 Nov 2026: \"Choose the Drums (Individual Kit Pieces) preset in Stem Splitter to extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion.\"",
-    "pitch": {
-     "see": "A drum kit exploding into separate pieces, each on its own track.",
-     "lands": "Any musician or producer with an iPad can split a song's drums into kick, snare and hats to practise, remix or sample, today.",
-     "why_now": "Logic Pro for iPad 4.0, published 18 Nov 2026.",
-     "share": "My iPad just took the drummer apart."
-    },
-    "shape": "story",
-    "dive": "An AI stem splitter now separates each piece of a drum kit, so a musician gets kick, snare and hats as separate tracks.",
-    "aim": "utility",
-    "funny": "The list of kit pieces ends with Other, which every drummer knows is the cowbell.",
-    "lookalike": {
-     "pattern": "tool-unlock",
-     "beats": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
-     "our_take": "The post listed what a coding tool unlocks; ours is the same card flow for one creative tool, with the real price and the catch."
-    },
-    "cards": [
-     {
-      "words": "Logic on iPad now splits a song's drums apart.",
-      "picture": "A drum kit coming apart into labelled pieces"
-     },
-     {
-      "words": "Tap the audio region, tap it again, then tap Stem Splitter.",
-      "picture": "The Stem Splitter button on an iPad"
-     },
-     {
-      "words": "Choose Drums (Individual Kit Pieces): kick, snare, hi-hat, toms, cymbals.",
-      "picture": "Five drum stems in a Track Stack"
-     },
-     {
-      "words": "The catch: it needs an iPad with an M1 chip or later.",
-      "picture": "An iPad with an M1 badge"
-     },
-     {
-      "words": "Cost: free for 30 days, then $12.99 a month.",
-      "picture": "A price tag on a drumstick"
-     }
-    ],
-    "steps": [
-     {
-      "text": "Select the audio region, tap it again, then tap Stem Splitter.",
-      "checked": "https://support.apple.com/guide/logicpro-ipad/extract-vocal-instrumental-stems-stem-lpip1b60ada3/ipados"
-     },
-     {
-      "text": "Choose the Drums (Individual Kit Pieces) preset.",
-      "checked": "https://support.apple.com/guide/logicpro-ipad/extract-vocal-instrumental-stems-stem-lpip1b60ada3/ipados"
-     },
-     {
-      "text": "Tap Apply; the drum stems come back grouped in a Track Stack.",
-      "checked": "https://support.apple.com/en-us/101628"
-     },
-     {
-      "text": "Check you have an M1 iPad or later and Apple Creator Studio, $12.99 a month after a 30-day trial.",
-      "checked": "https://www.apple.com/logic-pro-for-ipad/"
-     }
-    ],
-    "learned_from": [
-     "\"be really helpful to the layperson to understand what they can use when\" (your Improve, 16 Nov, of the assistants explainer)"
-    ],
-    "direction": {
-     "look": "The v5 explainer look, modelled on the tool-unlock carousels in your Instagram inspo sheet",
-     "format": "5 cards, 4:5",
-     "frames": [
-      {
-       "words": "Logic on iPad now splits a song's drums apart.",
-       "picture": "A drum kit coming apart into labelled pieces"
-      },
-      {
-       "words": "Tap the audio region, tap it again, then tap Stem Splitter.",
-       "picture": "The Stem Splitter button on an iPad"
-      },
-      {
-       "words": "Choose Drums (Individual Kit Pieces): kick, snare, hi-hat, toms, cymbals.",
-       "picture": "Five drum stems in a Track Stack"
-      },
-      {
-       "words": "The catch: it needs an iPad with an M1 chip or later.",
-       "picture": "An iPad with an M1 badge"
-      },
-      {
-       "words": "Cost: free for 30 days, then $12.99 a month.",
-       "picture": "A price tag on a drumstick"
-      }
-     ],
-     "tone": "Plain, useful and a little dry: the joke is in the facts.",
-     "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
-     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
-    },
-    "read_back": {
-     "readers": [
-      "reader A",
-      "reader B"
-     ],
-     "says": [
-      "The Logic music app on iPad can now pull the drums out of a song, each drum on its own track.",
-      "Logic on the iPad can now pull the drums out of a song and put each drum on its own track."
-     ],
-     "against": 61
-    },
-    "story_score": {
-     "total": 70.0,
-     "axes": {
-      "utility": 9.0,
-      "mechanism": null,
-      "named_thing": 7,
-      "fun_consume": 5.0,
-      "fun_produce": 5.0,
-      "fit": 7,
-      "absurdity_humour": null
-     },
-     "type": "explainer",
-     "floors_failed": [],
-     "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
-     "humour_unread": true
+     "at": "2026-11-28T11:36:41+00:00"
     }
    },
    {
@@ -1112,7 +892,7 @@
      "type": "explainer",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
+     "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
     }
    },
@@ -1241,8 +1021,136 @@
      "type": "explainer",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
+     "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
+    }
+   },
+   {
+    "id": "logicdrums",
+    "kind": "explainer",
+    "format": "Explainer carousel, 5 cards, 4:5",
+    "source": {
+     "label": "Apple, Logic Pro for iPad 4.0 release notes (18 Nov 2026)",
+     "url": "https://support.apple.com/en-us/101628"
+    },
+    "source_tag": "trade_press",
+    "copy": "Logic Pro for iPad 4.0's Stem Splitter can now pull each drum kit piece out of any recording as its own stem. Here is how musicians use it and what it needs.",
+    "hook": "Logic on iPad now splits a song's drums apart.",
+    "story": "Logic Pro for iPad 4.0, Apple's music app for musicians and producers, published on 18 November 2026, adds a Drums (Individual Kit Pieces) option to its AI Stem Splitter.",
+    "fact": "Apple, 18 Nov 2026: \"Choose the Drums (Individual Kit Pieces) preset in Stem Splitter to extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion.\"",
+    "pitch": {
+     "see": "A drum kit exploding into separate pieces, each on its own track.",
+     "lands": "Any musician or producer with an iPad can split a song's drums into kick, snare and hats to practise, remix or sample, today.",
+     "why_now": "Logic Pro for iPad 4.0, published 18 Nov 2026.",
+     "share": "My iPad just took the drummer apart."
+    },
+    "shape": "story",
+    "dive": "An AI stem splitter now separates each piece of a drum kit, so a musician gets kick, snare and hats as separate tracks.",
+    "aim": "utility",
+    "funny": "The list of kit pieces ends with Other, which every drummer knows is the cowbell.",
+    "lookalike": {
+     "pattern": "tool-unlock",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/",
+     "our_take": "The post listed what a coding tool unlocks; ours is the same card flow for one creative tool, with the real price and the catch."
+    },
+    "cards": [
+     {
+      "words": "Logic on iPad now splits a song's drums apart.",
+      "picture": "A drum kit coming apart into labelled pieces"
+     },
+     {
+      "words": "Tap the audio region, tap it again, then tap Stem Splitter.",
+      "picture": "The Stem Splitter button on an iPad"
+     },
+     {
+      "words": "Choose Drums (Individual Kit Pieces): kick, snare, hi-hat, toms, cymbals.",
+      "picture": "Five drum stems in a Track Stack"
+     },
+     {
+      "words": "The catch: it needs an iPad with an M1 chip or later.",
+      "picture": "An iPad with an M1 badge"
+     },
+     {
+      "words": "Cost: free for 30 days, then $12.99 a month.",
+      "picture": "A price tag on a drumstick"
+     }
+    ],
+    "steps": [
+     {
+      "text": "Select the audio region, tap it again, then tap Stem Splitter.",
+      "checked": "https://support.apple.com/guide/logicpro-ipad/extract-vocal-instrumental-stems-stem-lpip1b60ada3/ipados"
+     },
+     {
+      "text": "Choose the Drums (Individual Kit Pieces) preset.",
+      "checked": "https://support.apple.com/guide/logicpro-ipad/extract-vocal-instrumental-stems-stem-lpip1b60ada3/ipados"
+     },
+     {
+      "text": "Tap Apply; the drum stems come back grouped in a Track Stack.",
+      "checked": "https://support.apple.com/en-us/101628"
+     },
+     {
+      "text": "Check you have an M1 iPad or later and Apple Creator Studio, $12.99 a month after a 30-day trial.",
+      "checked": "https://www.apple.com/logic-pro-for-ipad/"
+     }
+    ],
+    "learned_from": [
+     "\"be really helpful to the layperson to understand what they can use when\" (your Improve, 16 Nov, of the assistants explainer)"
+    ],
+    "direction": {
+     "look": "The v5 explainer look, modelled on the tool-unlock carousels in your Instagram inspo sheet",
+     "format": "5 cards, 4:5",
+     "frames": [
+      {
+       "words": "Logic on iPad now splits a song's drums apart.",
+       "picture": "A drum kit coming apart into labelled pieces"
+      },
+      {
+       "words": "Tap the audio region, tap it again, then tap Stem Splitter.",
+       "picture": "The Stem Splitter button on an iPad"
+      },
+      {
+       "words": "Choose Drums (Individual Kit Pieces): kick, snare, hi-hat, toms, cymbals.",
+       "picture": "Five drum stems in a Track Stack"
+      },
+      {
+       "words": "The catch: it needs an iPad with an M1 chip or later.",
+       "picture": "An iPad with an M1 badge"
+      },
+      {
+       "words": "Cost: free for 30 days, then $12.99 a month.",
+       "picture": "A price tag on a drumstick"
+      }
+     ],
+     "tone": "Plain, useful and a little dry: the joke is in the facts.",
+     "kit": "v5 Library explainer set: house type, brand palette, the vendor screenshot as the hero picture",
+     "inspo_url": "https://www.instagram.com/evolving.ai/p/DfZlAbRAISa/"
+    },
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "The Logic music app on iPad can now pull the drums out of a song, each drum on its own track.",
+      "Logic on the iPad can now pull the drums out of a song and put each drum on its own track."
+     ],
+     "against": 61
+    },
+    "story_score": {
+     "total": 61.8,
+     "axes": {
+      "utility": 9.0,
+      "mechanism": null,
+      "named_thing": 7,
+      "fun_consume": 5.0,
+      "fun_produce": 5.0,
+      "fit": 7,
+      "absurdity_humour": 0.0
+     },
+     "type": "explainer",
+     "floors_failed": [],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-28T11:36:41+00:00"
     }
    },
    {
@@ -1340,7 +1248,7 @@
       "a short's joke never needs explaining (not read)"
      ],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
+     "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
     }
    },
@@ -1402,11 +1310,11 @@
      "against": 61
     },
     "story_score": {
-     "total": 47.7,
+     "total": 60.7,
      "axes": {
       "absurdity_humour": null,
       "fun_consume": 6.0,
-      "unique_angle": 0.0,
+      "unique_angle": 5.62,
       "named_thing": 10,
       "fun_produce": 5.0,
       "fit": 4
@@ -1417,7 +1325,7 @@
       "a meme never needs explaining (not read)"
      ],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
+     "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
     }
    },
@@ -1494,7 +1402,7 @@
       "a meme never needs explaining (not read)"
      ],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
+     "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
     }
    },
@@ -1571,7 +1479,7 @@
       "a meme never needs explaining (not read)"
      ],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
+     "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
     }
    },
@@ -1648,7 +1556,7 @@
       "a meme never needs explaining (not read)"
      ],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
+     "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
     }
    }
@@ -1780,7 +1688,7 @@
      "type": "explainer",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
+     "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true,
      "close_call": "close call, your pick"
     }
@@ -1910,7 +1818,7 @@
      "type": "explainer",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
+     "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true,
      "close_call": "close call, your pick"
     }
@@ -2040,7 +1948,7 @@
      "type": "explainer",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
+     "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
     }
    },
@@ -2169,7 +2077,7 @@
      "type": "explainer",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
+     "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
     }
    },
@@ -2251,13 +2159,13 @@
      "against": 61
     },
     "story_score": {
-     "total": 46.0,
+     "total": 51.6,
      "axes": {
       "absurdity_humour": 0.0,
       "fun_consume": 7.0,
       "named_thing": 7,
       "fun_produce": 6.0,
-      "unique_angle": 0.0,
+      "unique_angle": 5.62,
       "fit": 10,
       "scale": 5.0,
       "whys": 7
@@ -2267,7 +2175,7 @@
       "a short leads on humour the engine can read"
      ],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00"
+     "at": "2026-11-28T11:36:41+00:00"
     }
    },
    {
@@ -2343,84 +2251,7 @@
       "a meme never needs explaining (not read)"
      ],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
-     "humour_unread": true
-    }
-   },
-   {
-    "id": "tplthanksgiving",
-    "kind": "meme",
-    "format": "Meme template, your caption on the clip, 9:16 and 4:5",
-    "source": {
-     "label": "This week in American football: NFL on YouTube",
-     "url": "https://www.youtube.com/watch?v=Etsgla0KIoE"
-    },
-    "source_tag": "trade_press",
-    "copy": "Trailing with the clock almost gone, the quarterback finds his receiver in the end zone and the whole team piles on while the other bench stares. It becomes the AI moment the caption names, in the reader's world.",
-    "hook": "The touchdown with three seconds left",
-    "pitch": {
-     "see": "Trailing with the clock almost gone, the quarterback finds his receiver in the end zone and the whole team piles on while the other bench stares.",
-     "lands": "A last-second win is the hand-made short film beating the AI entries to the festival deadline; the reversal is who was expected to win."
-    },
-    "aim": "humour",
-    "shape": "story",
-    "funny": "The hand-made short film gets to the festival the way football teams win on Thanksgiving: three seconds left.",
-    "template": {
-     "title": "The touchdown with three seconds left",
-     "clip": {
-      "url": "https://www.youtube.com/watch?v=Etsgla0KIoE",
-      "page": "https://www.youtube.com/watch?v=Etsgla0KIoE",
-      "poster": null,
-      "seconds": 858
-     },
-     "found": {
-      "place": "pop_culture",
-      "label": "This week in American football: NFL on YouTube",
-      "url": "https://www.youtube.com/watch?v=Etsgla0KIoE"
-     },
-     "credit": "NFL (CBS Sports broadcast)",
-     "what_happens": "Trailing with the clock almost gone, the quarterback finds his receiver in the end zone and the whole team piles on while the other bench stares.",
-     "why_it_works": "A last-second win is the hand-made short film beating the AI entries to the festival deadline; the reversal is who was expected to win.",
-     "mechanism": [
-      "reversal",
-      "exaggeration"
-     ],
-     "moment": "Caleb Williams to Rome Odunze with three seconds left, Bears 39-35 Lions, Detroit, 2026-11-26",
-     "date": "2026-11-26"
-    },
-    "caption_ideas": [
-     "The hand-animated short hitting the festival upload button with three seconds left",
-     "Writers' room finishing the script before the producer opens the AI draft",
-     "The real band's song beating 2,000 AI songs to the playlist slot"
-    ],
-    "read_back": {
-     "readers": [
-      "reader A",
-      "reader B"
-     ],
-     "says": [
-      "A meme: a hand-drawn cartoon film gets uploaded to a film festival with seconds to spare before the deadline.",
-      "A meme: a hand-drawn cartoon getting uploaded to a film festival just seconds before the deadline, like a last-second winning score."
-     ],
-     "against": 61
-    },
-    "story_score": {
-     "total": 40.0,
-     "axes": {
-      "absurdity_humour": null,
-      "fun_consume": 5.0,
-      "unique_angle": 0.0,
-      "named_thing": 7,
-      "fun_produce": 5.0,
-      "fit": 4
-     },
-     "type": "offday_meme",
-     "floors_failed": [
-      "a meme's humour reads as supported (not read)",
-      "a meme never needs explaining (not read)"
-     ],
-     "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
+     "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
     }
    },
@@ -2497,7 +2328,7 @@
       "a meme never needs explaining (not read)"
      ],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
+     "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
     }
    },
@@ -2574,7 +2405,7 @@
       "a meme never needs explaining (not read)"
      ],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
+     "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
     }
    },
@@ -2651,8 +2482,83 @@
       "a meme never needs explaining (not read)"
      ],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
+     "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
+    }
+   },
+   {
+    "id": "tplthanksgiving",
+    "kind": "meme",
+    "format": "Meme template, your caption on the clip, 9:16 and 4:5",
+    "source": {
+     "label": "This week in American football: NFL on YouTube",
+     "url": "https://www.youtube.com/watch?v=Etsgla0KIoE"
+    },
+    "source_tag": "trade_press",
+    "copy": "Trailing with the clock almost gone, the quarterback finds his receiver in the end zone and the whole team piles on while the other bench stares. It becomes the AI moment the caption names, in the reader's world.",
+    "hook": "The touchdown with three seconds left",
+    "pitch": {
+     "see": "Trailing with the clock almost gone, the quarterback finds his receiver in the end zone and the whole team piles on while the other bench stares.",
+     "lands": "A last-second win is the hand-made short film beating the AI entries to the festival deadline; the reversal is who was expected to win."
+    },
+    "aim": "humour",
+    "shape": "story",
+    "funny": "The hand-made short film gets to the festival the way football teams win on Thanksgiving: three seconds left.",
+    "template": {
+     "title": "The touchdown with three seconds left",
+     "clip": {
+      "url": "https://www.youtube.com/watch?v=Etsgla0KIoE",
+      "page": "https://www.youtube.com/watch?v=Etsgla0KIoE",
+      "poster": null,
+      "seconds": 858
+     },
+     "found": {
+      "place": "pop_culture",
+      "label": "This week in American football: NFL on YouTube",
+      "url": "https://www.youtube.com/watch?v=Etsgla0KIoE"
+     },
+     "credit": "NFL (CBS Sports broadcast)",
+     "what_happens": "Trailing with the clock almost gone, the quarterback finds his receiver in the end zone and the whole team piles on while the other bench stares.",
+     "why_it_works": "A last-second win is the hand-made short film beating the AI entries to the festival deadline; the reversal is who was expected to win.",
+     "mechanism": [
+      "reversal",
+      "exaggeration"
+     ],
+     "moment": "Caleb Williams to Rome Odunze with three seconds left, Bears 39-35 Lions, Detroit, 2026-11-26",
+     "date": "2026-11-26"
+    },
+    "caption_ideas": [
+     "The hand-animated short hitting the festival upload button with three seconds left",
+     "Writers' room finishing the script before the producer opens the AI draft",
+     "The real band's song beating 2,000 AI songs to the playlist slot"
+    ],
+    "read_back": {
+     "readers": [
+      "reader A",
+      "reader B"
+     ],
+     "says": [
+      "A meme: a hand-drawn cartoon film gets uploaded to a film festival with seconds to spare before the deadline.",
+      "A meme: a hand-drawn cartoon getting uploaded to a film festival just seconds before the deadline, like a last-second winning score."
+     ],
+     "against": 61
+    },
+    "story_score": {
+     "total": 33.0,
+     "axes": {
+      "absurdity_humour": 2.0,
+      "fun_consume": 5.0,
+      "unique_angle": 0.0,
+      "named_thing": 7,
+      "fun_produce": 5.0,
+      "fit": 4
+     },
+     "type": "offday_meme",
+     "floors_failed": [
+      "a meme never needs explaining"
+     ],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-28T11:36:41+00:00"
     }
    }
   ],
@@ -3323,7 +3229,7 @@
      "type": "goodnews",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
+     "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true,
      "close_call": "close call, your pick"
     }
@@ -3521,7 +3427,7 @@
      "type": "goodnews",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
+     "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true,
      "close_call": "close call, your pick"
     }
@@ -3727,7 +3633,7 @@
      "type": "goodnews",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
+     "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
     }
    },
@@ -3907,7 +3813,7 @@
      "type": "goodnews",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-27T17:01:42+00:00",
+     "at": "2026-11-28T11:36:41+00:00",
      "humour_unread": true
     }
    }
@@ -4274,6 +4180,12 @@
     "label": "The YouTube short you saved for a woke-Claude POV meme",
     "url": "https://youtube.com/shorts/y7V-VXhHEhc?is=pp59I23mfTUuPqd7"
    }
+  },
+  {
+   "ref": "fri-tmenegligible",
+   "day": "fri",
+   "title": "Tencent Music says streams of AI-generated songs are negligible and falling",
+   "reason": "Cut on 28 Nov: no angle on it reached the soundness minimums once the judge's 1 to 5 scale was read correctly (story/angles.json), so it is under its floor."
   }
  ],
  "vetoes": [

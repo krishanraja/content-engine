@@ -518,9 +518,13 @@ def _norm(text):
     return re.sub(r'\s+', ' ', t).strip()
 
 
-def judge_numbers(result):
+def judge_numbers(result, cfg=None):
     """{originality, usefulness, specificity, status} from one divergent judged-score result, on 0 to 10. The route's
-    numbers are read from `scores`, `judge` or the result itself; a 0 to 1 scale is put on 0 to 10."""
+    numbers are read from `scores`, `judge` or the result itself; a 0 to 1 scale is put on 0 to 10, and the engine's own
+    1 to 5 scale (config angle.divergent.judge_scale, its JudgeSchema) is put on 0 to 10 with 1 as 0 and 5 as 10. Until
+    28 Nov 2026 a 1 to 5 score was read as if it were out of 10, so a 3 of 5 counted as 3 of 10 and no hero angle on the
+    7 Dec board could reach the soundness minimums (usefulness 5, specificity 6)."""
+    cfg = cfg or RUBRIC
     if not isinstance(result, dict):
         return None
     src = next((result[k] for k in ('scores', 'judge', 'judgement') if isinstance(result.get(k), dict)), result)
@@ -531,8 +535,12 @@ def judge_numbers(result):
             out[k] = float(v)
     if not out:
         return {'status': result.get('status')}
+    scale = ((cfg.get('angle') or {}).get('divergent') or {}).get('judge_scale') or {}
+    lo, hi = scale.get('min'), scale.get('max')
     if max(out.values()) <= 1:
         out = {k: v * 10 for k, v in out.items()}
+    elif isinstance(lo, (int, float)) and isinstance(hi, (int, float)) and hi > lo and all(lo <= v <= hi for v in out.values()):
+        out = {k: round((v - lo) / (hi - lo) * 10, 2) for k, v in out.items()}
     out['status'] = result.get('status')
     return out
 
@@ -1227,8 +1235,12 @@ def judge(texts, obvious, ledger, *, poster=None, cap=None, cfg=None):
     cfg = cfg or RUBRIC
     spec = cfg['angle']['divergent']
     out, skipped = [None] * len(texts), []
-    for i in range(0, len(texts), divergent.MAX_IDEAS):
-        chunk = texts[i:i + divergent.MAX_IDEAS]
+    # The engine judges 12 ideas a model call under a ceiling of calls a request, so a batch of 100 came back with only
+    # about 48 judged and the rest as a bare status (7 Dec board, 27 Nov 2026). config angle.divergent.judge_batch keeps
+    # each call inside that ceiling.
+    size = max(1, min(divergent.MAX_IDEAS, int(spec.get('judge_batch') or divergent.MAX_IDEAS)))
+    for i in range(0, len(texts), size):
+        chunk = texts[i:i + size]
         body = divergent.at_will_body('score', problem=spec['score_problem'].format(audience=audience()), ideas=chunk,
                                       obvious=obvious, judge=True, lane=spec['lane'])
         entry, why = ledger.reserve('score_judge', cfg['unit_costs']['score_judge'], divergent=True)
@@ -1445,11 +1457,19 @@ def cmd_angles(a, ideas, plans, ledger, poster, cap, kill, cfg):
             seen.setdefault(x['id'], x)
         pooled[key] = list(seen.values())
     if a.judge:
+        # A judge read stays with the words it judged (the id hashes the key, the lens and the text), so a judged run asks
+        # only for the angles with no numbers yet and keeps every number already paid for.
+        old = {x.get('id'): x.get('judge') for k in earlier for x in earlier[k] if isinstance(x, dict)}
         flat = [x for k in pooled for x in pooled[k]]
-        results, skipped = judge([x['text'] for x in flat], doc.get('obvious') or [], ledger, poster=poster, cap=cap, cfg=cfg)
+        has = lambda j: isinstance(j, dict) and j.get('usefulness') is not None
+        for x in flat:
+            if has(old.get(x['id'])):
+                x['judge'] = old[x['id']]
+        todo = [x for x in flat if not has(x.get('judge'))]
+        results, skipped = judge([x['text'] for x in todo], doc.get('obvious') or [], ledger, poster=poster, cap=cap, cfg=cfg)
         unread += [f'judged score: {w}' for w in skipped]
-        for x, r in zip(flat, results):
-            x['judge'] = judge_numbers(r) if r is not None else None
+        for x, r in zip(todo, results):
+            x['judge'] = judge_numbers(r, cfg) if r is not None else (old.get(x['id']) if isinstance(old.get(x['id']), dict) else None)
     else:
         # A judge read stays with the words it judged: the id is a hash of the key, the lens and the text.
         old = {x.get('id'): x.get('judge') for k in earlier for x in earlier[k] if isinstance(x, dict)}
@@ -1469,7 +1489,11 @@ def cmd_humour(a, ideas, plans, ledger, read, cfg):
     reads = load(path, {}) or {}
     pooled = (load(file_of(a.week, 'angles', plans, cfg), {}) or {}).get('pooled') or {}
     unread, n = [], 0
+    keys = {k.strip() for k in (getattr(a, 'keys', None) or '').split(',') if k.strip()}
+    slots = {k.strip() for k in (getattr(a, 'slots', None) or '').split(',') if k.strip()}
     for key, day, main, o in board(ideas):
+        if keys and key not in keys:
+            continue
         view = blind_view(o, cfg)
         r = reads.setdefault(key, {'fact': None, 'line': None, 'angles': {}})
         jobs = [('fact', fact_text(view, main), 'fact', None)]
@@ -1477,11 +1501,20 @@ def cmd_humour(a, ideas, plans, ledger, read, cfg):
             jobs.append(('line', view['funny'], 'funny', None))
         jobs += [('angle', x['text'], 'funny', x['id']) for x in pooled.get(key) or []]
         for slot, text, surface, aid in jobs:
+            if slots and slot not in slots:
+                continue
             if a.max is not None and n >= a.max:
                 unread.append(f'{key} {slot}: over --max {a.max}')
                 continue
             labels, why = humour(text, surface, f'{key}:{aid or slot}', ledger, read, cfg)
             n += 1
+            # The engine rejects a reply whose quotes it cannot ground (interpretation_rejected); a fresh read of the same
+            # words is a new draw, never a softer floor. --retries bounds it, and each try is reserved like any read.
+            tries = 0
+            while labels is None and tries < (getattr(a, 'retries', 0) or 0) and 'cap' not in str(why) and 'over' not in str(why):
+                labels, why = humour(text, surface, f'{key}:{aid or slot}:retry{tries + 1}', ledger, read, cfg)
+                n += 1
+                tries += 1
             if labels is None:
                 unread.append(f'{key} {slot}{" " + aid if aid else ""}: {why}')
             if aid:
@@ -1635,6 +1668,9 @@ def main(argv=None, *, poster=None, cap=None, read=None, kill=None, plans=None, 
     g.add_argument('--judge', action='store_true')
     h = paid(wk(sub.add_parser('humour')))
     h.add_argument('--max', type=int)
+    h.add_argument('--keys', help='read only these options (comma list of <day>/<id> keys); every other read is kept')
+    h.add_argument('--slots', help='read only these slots (comma list of fact, line, angle)')
+    h.add_argument('--retries', type=int, default=0, help='read a slot again when the engine gave no reading, up to this many times')
     b = wk(sub.add_parser('brief'))
     b.add_argument('--axes', default='scale,fun_consume,fun_produce,uplift,utility')
     r = wk(sub.add_parser('record'))

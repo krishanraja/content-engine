@@ -161,3 +161,33 @@ class Live(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class PruneToSchema(unittest.TestCase):
+    """28 Nov 2026: the model added keys the engine's candidate schema forbids (an interpretation's `mechanism`), and with
+    one model call a read there is no repair pass, so 264 of 278 reads failed as malformed_output."""
+
+    def setUp(self):
+        try:
+            from humour_engine.analysis.candidate import Candidate
+        except ImportError:
+            self.skipTest('humour-engine is not installed')
+        self.Candidate = Candidate
+
+    def test_a_key_the_schema_does_not_name_is_dropped_and_nothing_else_changes(self):
+        reply = {'comic_reading': 'supported',
+                 'interpretations': [{'id': 'main', 'is_main': True, 'mechanism': 'irony', 'mechanism_labels': ['x'],
+                                      'triggers': ['a line'], 'evidence': [{'segment_id': 'p1', 'quote': 'a line', 'stray': 1}]}],
+                 'stray_top': True}
+        out = hc.prune_to_schema(reply)
+        self.assertNotIn('stray_top', out)
+        self.assertNotIn('mechanism', out['interpretations'][0])
+        self.assertNotIn('mechanism_labels', out['interpretations'][0])
+        self.assertNotIn('stray', out['interpretations'][0]['evidence'][0])
+        self.assertEqual(out['interpretations'][0]['triggers'], ['a line'])
+        self.assertEqual(out['comic_reading'], 'supported')
+
+    def test_a_wrong_value_is_still_refused_by_the_engine(self):
+        bad = hc.prune_to_schema({'comic_reading': 'supported', 'interpretations': 'not a list'})
+        with self.assertRaises(Exception):
+            self.Candidate.model_validate(bad)
