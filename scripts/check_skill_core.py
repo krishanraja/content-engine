@@ -50,7 +50,9 @@ CORE_CAPS = {'make-piece': 63_000, 'plan-week': 49_000, 'produce-video': 60_000,
              'antislop': 59_000, 'antislop-copywriting': 31_000, 'antislop-ui': 33_500, 'antislop-layoutmobile': 18_000,
              'antislop-human': 17_500, 'antislop-code': 10_000,
              # weekly-edition (25 Nov 2026): its size that day with about a tenth of headroom.
-             'weekly-edition': 11_200}
+             'weekly-edition': 11_200,
+             # content-calendar (28 Nov 2026): its size that day with about a tenth of headroom.
+             'content-calendar': 8_400}
 
 
 def cap_problems(skills=SKILLS, caps=CORE_CAPS) -> list[str]:

@@ -53,6 +53,7 @@ Covers and thumbnails come from the approved cover systems with `python scripts/
 | A piece on ve (its spec is `schema_version: 2`), or a ve Codex task card | `/ve` |
 | Any carousel, made, redrawn or reviewed: filled from a Library carousel set with `python scripts/library/make_piece.py <piece> --set <set>` (the guaranteed floor, one named experiment above it) | `/carousel` |
 | Any meme, video or static (the guaranteed floor, one named experiment above it) | `/meme` |
+| A clickable content calendar of the coming week for someone to review: each day opens its idea, its road to ready and branded mocks at every asset size, built around Krish (`python3 scripts/calendar/make_calendar.py`) | `/content-calendar` |
 | A piece's cover art across its channels, rendered by `python scripts/covers/make_covers.py <piece> --out <folder>` (the approved image-led systems; the old skins and cover templates are retired) | `/cover-art` |
 | A ve piece's per-beat motion plan, written into its spec before Sign storyboard (the ve skill, step 6, points to it) | `/motion-designer` |
 | Any video script checked against Hannah Fry's teaching craft (make-piece's Scripts step, 3c, points to it) | `/hannah-fry` |
@@ -61,7 +62,7 @@ Covers and thumbnails come from the approved cover systems with `python scripts/
 | A Studio station (brief, script, render, qa...) | the `mindmake-studio` MCP tools, inside a tracked session (`docs/ENGINE_SESSION.md`) |
 | Krish's voice or a channel decision | his account-wide `krish-voice` and `content-corpus` |
 
-The skills live once in `.agents/skills/`; `.claude/skills/` holds exact copies of the seventeen
+The skills live once in `.agents/skills/`; `.claude/skills/` holds exact copies of the eighteen
 above (AGENTS.md, Verification). `mindmake-video` and `video-engine` are not loaded here on
 purpose; `scripts/validate-skills.py` (`NOT_FOR_CLAUDE`) says why and fails on any new skill that
 is neither copied nor listed.

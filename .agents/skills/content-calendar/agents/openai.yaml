@@ -1,0 +1,4 @@
+interface:
+  display_name: "Content calendar"
+  short_description: "A clickable week calendar: each day's idea, its road to ready and branded mocks at every asset size"
+  default_prompt: "Use $content-calendar to make the clickable content calendar for the coming week, for <who will review it>."
