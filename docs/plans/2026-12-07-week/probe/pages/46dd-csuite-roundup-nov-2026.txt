@@ -1,11 +1,22 @@
 AI models roundup, November 2026 - CSuite
 Skip to content
-CSuiteFeaturesModelsDownloadPricing (25% off)Black Friday sale · 25% off
+CSuite
+Features
+Models
+Download
+Pricing (25% off)
+Black Friday sale · 25% off
 All posts
-Published Nov 6, 2026·Updated Nov 26, 2026·45 min read
+Published
+Nov 6, 2026
+·
+Updated
+Nov 26, 2026
+·
+45
+min read
 AI models roundup, November 2026
 Kimi’s weights arrived early and 720p video fell to 2 cents a second. One new open image model excludes the US and the EU.
-
 On this page
 The TL;DR so far: three things to act on
 Text: four of this month’s models score 60 or more, and all take a credit card
@@ -17,376 +28,1437 @@ Local-runnable: Ripple needs 39 GB, and H3 Image got local support on launch day
 Skipped on purpose
 Watching: October’s open items and November’s dates
 Update log
-
 The monthly roundup · Edition 5 · November 2026 · live
-
-94 entries in the first twenty-six days. 3 dated changes still to come before the month ends.
-
-MonTueWedThuFriSatSun
-
+94
+entries in the first twenty-six days.
+3
+dated changes still to come before the month ends.
+Mon
+Tue
+Wed
+Thu
+Fri
+Sat
+Sun
 26
 27
 28
 29
 30
-311
+31
 1
-28
-34
-44
-57
-61
-71
+1
+2
 8
-94
-105
-113
-126
-135
-141
-152
-167
-179
-184
-195
-206
+3
+4
+4
+4
+5
+7
+6
+1
+7
+1
+8
+9
+4
+10
+5
+11
+3
+12
+6
+13
+5
+14
+1
+15
+2
+16
+7
+17
+9
+18
+4
+19
+5
+20
+6
 21
 22
-235
-245
-251
+23
+5
+24
+5
+25
+1
 26
 27
 28
 29
 30
-
-Nov 13Hume’s TTS and EVI APIs endNov 15MiniMax H3 Max’s 30% off on Runware endsNov 17H3 Image’s half-price 4K ends (Google moved its TTS preview shutdown to December 18)Nov 18Kimi K2.5 was due to leave OpenRouter (still listed on November 26)Nov 19P-Video-2 Pro Replace half price on Runware endsNov 20Cloudflare retires its Workers AI models; Liquid’s d1 leaves OpenRouterNov 21Speechify’s Simba 3.5 launch rates endNov 24Liquid’s d1.1 leaves OpenRouterNov 27Microsoft’s MAI-Image-2.5 leaves OpenRouterNov 28Recraft V4.1 Flash V2’s free route on OpenRouter endsNov 30Claude Sonnet 4.5 retires; Gemini 4 Carbon and Argon’s intro prices, Opus 4.8 fast mode and Fish Drama 3’s launch price end
-Violet days carry the number of entries in the ledger below, from October 31 to November 26, 2026. Amber dots are dates already on a vendor’s calendar, past ones included. Seven October releases our last edition missed are in the ledger too, marked by their October dates. This post is updated every Friday and summarised once the month closes.
-
+Nov
+13
+Hume’s TTS and EVI APIs end
+Nov
+15
+MiniMax H3 Max’s 30% off on Runware ends
+Nov
+17
+H3 Image’s half-price 4K ends (Google moved its TTS preview shutdown to December 18)
+Nov
+18
+Kimi K2.5 was due to leave OpenRouter (still listed on November 26)
+Nov
+19
+P-Video-2 Pro Replace half price on Runware ends
+Nov
+20
+Cloudflare retires its Workers AI models; Liquid’s d1 leaves OpenRouter
+Nov
+21
+Speechify’s Simba 3.5 launch rates end
+Nov
+24
+Liquid’s d1.1 leaves OpenRouter
+Nov
+27
+Microsoft’s MAI-Image-2.5 leaves OpenRouter
+Nov
+28
+Recraft V4.1 Flash V2’s free route on OpenRouter ends
+Nov
+30
+Claude Sonnet 4.5 retires; Gemini 4 Carbon and Argon’s intro prices, Opus 4.8 fast mode and Fish Drama 3’s launch price end
+Violet days carry the number of entries in the ledger below, from October 31 to November
+26
+, 2026. Amber dots are dates already on a vendor’s calendar, past ones included. Seven October releases our last edition missed are in the ledger too, marked by their October dates. This post is updated every Friday and summarised once the month closes.
 On November 2, two days before the date it had promised, Moonshot put the full weights of Kimi K3.1 Pro on Hugging Face: 2.8 trillion parameters in about 1.56 TB of files. Three days later OpenAI launched GPT-6 Cyber, a model most readers cannot call without an application. Those two releases sum up the first week of November. Plenty arrived, and the most useful question for each one is not how good it is but who is allowed to use it, where, and on what terms.
 The second week moved the other way. On November 9 Anthropic released Claude Fable 5.2 at a lower price than the version before it, and on November 10 Google opened Gemini 4 Carbon, which had been limited to security teams, to every paying developer. Those were then the two highest-scoring models on Artificial Analysis’s index, and both take a credit card instead of an application.
 The third week filled in the tier below. Google released Gemini 4 Hydrogen on November 12 at $1.50 and $7.50 per million tokens, with a free tier, and Alibaba followed on November 16 with Qwen4 Max at $1.50 and $4.50. Thinking Machines also posted the Inkling 2 Small weights it had promised a week earlier.
 The days since crowded the top of the board. OpenAI released GPT-6.2 Astra on November 17 at $8 and $40, the same price as Fable 5.2, and Google added Gemini 4 Neon a day later at $3 and $15. Microsoft announced seven models at its Ignite conference the same week, and the image model on our waiting list since October was one of them.
 The fourth week belonged to downloads. Thinking Machines released Inkling 2 Mini on November 20, an Apache 2.0 model of about 20 GB that runs on a Mac with 32 GB of memory. Tencent and Baidu both posted weights this roundup had been waiting for, and Google made Genie 4, which generates a world you can steer as it plays, generally available to paying developers.
-This is edition five of the monthly roundup, and the second live one. It opened on November 6, covering everything since October’s final sweep, and it is updated every Friday and summarised once the month closes. The method has not changed: every date, price and spec below was checked against a primary source on the day of its pass and linked in place, vendor benchmarks are labeled as such, and the non-events are named at the end. As of the November 26 pass, 94 entries have landed since October 31, and seven October releases we missed open the ledger.
+This is edition five of
+the monthly roundup
+, and the second live one. It opened on November 6, covering everything since October’s final sweep, and it is updated every Friday and summarised once the month closes. The method has not changed: every date, price and spec below was checked against a primary source on the day of its pass and linked in place, vendor benchmarks are labeled as such, and the non-events are named at the end. As of the November 26 pass,
+94
+entries have landed since October 31, and seven October releases we missed open the ledger.
 The TL;DR so far: three things to act on
-If you pay for a top-tier text model, there are four new ones to test, and one of their prices doubles on December 1. Claude Fable 5.2 and GPT-6.2 Astra both cost $8 in and $40 out per million tokens, each down from $10 and $50. Gemini 4 Neon costs $3 and $15. Gemini 4 Carbon costs $2 and $10 until November 30, then $4 and $20, which will make it dearer than Neon. One tier down, Gemini 4 Hydrogen costs $1.50 and $7.50 and has a free tier to try it on. If you make images or short video clips, price them again, because the cheap end moved. Gemini Omni 1.2 Flash costs $0.07 a second at 720p, MiniMax’s H3 Lite costs $0.02 a second through Replicate, GPT Image 2.6 returns SVG files and animated GIFs at GPT Image 2.5’s prices, Seedream 5.5 now has an API at $0.02 to $0.035 an image, and Microsoft prices MAI-Image-2.7 Flash at about a cent. Ideogram 4.6, new on November 19, renders at up to 4096×4096. If you plan to download any of this month’s open models, read the license before the model card. Three releases in the MiniMax H3 family (P-H3-Image, H3 Image and inclusionAI’s Duo) exclude the US, the EU, the UK and Korea, and three inclusionAI repositories still state no license at all. The plainest new download for a laptop is Inkling 2 Mini: Apache 2.0, about 20 GB, and built for a Mac with 32 GB of memory.The month so far on one card, in release order
-
-Oct 15ZwZ2 Visual reasoning models at 4B, 9B and 27B on Qwen3.5 and 3.6 bases; GGUFs on October 30. Missed by the October edition.Open
-Oct 21Simba 3.5 Speechify’s text-to-speech model; its list price fell to $15 per 1M characters on November 9. Missed by the October edition.Audio
-Oct 25Parallel Decisions API Decisions that search the web first, at $1 per 1,000 requests. Missed by the October edition.Text
-Oct 26Maya 2 Native Streaming speech for 11 Indian languages and English, 20 voices, Apache 2.0. Missed by the October edition.Open
-Oct 29H3 Lite + H3 Highspeed MiniMax’s cheaper H3 tiers, from $0.025 a second at 480P direct and half that on Replicate. Missed by the October edition.Video
-Oct 29Mi:dm K 3.0 Pro KT’s 120B reasoning model with 12B active, at $0.20/$0.80 per 1M tokens; no public weights. Missed by the October edition.Text
-Oct 31GLiDE 0.4B to 9B Four smaller sizes of Fastino’s decision model, after a 27B on October 19; custom community license.Open
-Nov 2Kimi K3.1 Pro weights 2.8T parameters, 104B active, about 1.56 TB of files; promised by November 4, posted November 2.Open
-Nov 2GLM-5.3-FlashX-Legal A legal-domain variant at $0.37/$1.25 per 1M tokens with a 1M context; no weights.Text
-Nov 2Eleven SFX v3 Sound effects model, now the default, with seamless loops; v2 leaves the API on March 1, 2027.Audio
-Nov 2Hume Audio Decisions Ask plain-language questions about an audio file and get probabilities back.Audio
-Nov 2Maya Transcribe Hindi and Hinglish speech recognition on a Qwen3-ASR 0.6B base, Apache 2.0.Open
-Nov 2Grok Imagine Image quality + pro Retired; requests are now served by grok-imagine-image-2.0-low at a lower price.Retired
-Nov 2Gemini 2.5 Pro + 2.5 Flash Deprecated; from December 1 requests go to 3.8 Flash and 3.5 Flash-Lite.Retired
-Nov 2Drex for Finance Nace’s decision model trained further on financial decisions; $0.06 per 1M input tokens on OpenRouter since November 10.Text
-Nov 3Reflex Decision model at $0.042 per 1M input tokens, output free, 65K context.Text
-Nov 3Wonder 4 Topaz’s one-click restore and upscale, up to 6x; $0.0428 an image on Runware.Image
-Nov 3P-H3-Image Open image model on MiniMax H3, 8 steps; the license excludes the US, EU, UK and Korea.Open
-Nov 3Embed 5 + Rerank 5 on OpenRouter A new route for retrieval models Cohere launched on September 30 and October 21; embeddings at $0.08 and $0.12 per 1M tokens.Text
-Nov 4GPT Image 2.6 Sunburst + Flare SVG and animated GIF output and a complexity setting, at GPT Image 2.5’s token prices.Image
-Nov 4Hy4 $0.417/$1.25 on OpenRouter at a 50% discount, 1M context; 34.6 on the index.Text
-Nov 4Ripple-65B Preview 65B dense model trained from scratch on 12T tokens, Apache 2.0; $0.20/$0.60 hosted.Open
-Nov 4Kling 4.0 Flash 3 to 20 seconds at 720p for $0.094 a second on Runware.Video
-Nov 5GPT-6 Cyber Security model at $20/$100 per 1M tokens, for approved organizations only.Text
-Nov 5Gemini Omni 1.2 Flash Generally available at $0.07 a second for 720p, 30% below 1.1; clips up to 15 seconds.Video
-Nov 5P-Video-2 Pro Replace Puts a person from one or two photos into an existing video; $0.05 to $0.18 a second.Video
-Nov 5Workers AI retirements MeloTTS, whisper-tiny-en, SDXL, SD 1.5 and 16 LLMs leave on November 20, moved from November 15.Retired
-Nov 5gpt-5.5-cyber-preview Removal set for February 1, 2027, the day GPT-6 Cyber arrived.Retired
-Nov 5Celeris-1.1 Decision Decision model at $0.004 per 1M input tokens, output free; 62.0 on the Decision Index.Text
-Nov 5Inkling 2 Small 594B parameters with 17B active, $0.30/$1.00 on Tinker; the promised open weights followed on November 12.Text
-Nov 6gemini-embedding-2-preview Requests now go to gemini-embedding-2 at the same price, with no re-indexing needed.Retired
-Nov 7Sophon-Realtime v1 32B speech-to-speech models for Chinese and English that listen while they talk, Apache 2.0.Open
-Nov 9Claude Fable 5.2 + Mythos 5.2 $8/$40 per 1M tokens, down from $10/$50, with a 1M context; Mythos is for verified organizations only.Text
-Nov 9Muse Ember Meta’s smallest model, $0.10/$0.50 up to 200K input tokens, with a 1M context; closed weights.Text
-Nov 9Seedream 5.5 Transparent backgrounds and steadier repeat edits; the API followed within the week at $0.02 to $0.035 an image.Image
-Nov 9ZONOS3-Mini 800M text-to-speech model with voice cloning in 43 languages, Apache 2.0.Open
-Nov 10Gemini 4 Carbon Generally available at $2/$10 through November 30, then $4/$20; no free tier.Text
-Nov 10MiniMax H3 Image + Highspeed 4K image generation and editing from about $0.02 an image; the weights’ license excludes the US, EU, UK and Korea.Open
-Nov 10Nex-N2.6 321B agent model built on GLM-5.3-Flash, Apache 2.0; $0.12/$0.40 on OpenRouter.Open
-Nov 10ERNIE-Light-DT-1.0 Baidu text model with a 1M context; $1.13/$3.94 on OpenRouter, listed November 10.Text
-Nov 10GPT Image 2 Deprecated; removal set for February 10, 2027, with GPT Image 2.6 as the replacement.Retired
-Nov 11Gemini Decision 1 Google’s first decision model, $0.10 per 1M input tokens, up to 1,000 questions a request.Text
-Nov 11ERNIE 5.5 Flash Preview 280B parameters with 14B active and a 1M context; Apache 2.0 weights promised “soon.”Text
-Nov 11ZoomGain 4B + 9B, SingVL S1 Two vision models and a 4B decision model; the repositories state no license.Open
-Nov 12meta-encoder-v1 28B embedding model for text and images, 57 GB; an Apache 2.0 license file was added on November 17.Open
-Nov 12Gemini 4 Hydrogen Google’s everyday Gemini 4 model, $1.50/$7.50 per 1M tokens with a free tier and a 1M context; 54 on the index.Text
-Nov 12Inkling 2 Small weights The weights promised on November 5, under Apache 2.0: about 394 GB, for a GPU cluster with 500 GB of memory.Open
-Nov 12Decider v1.3 + Decider Flash v1.3 Perplexity’s 27B and 4B decision models at v1.2’s prices, $0.02 and $0.01 per 1M input tokens, plus a question type that finds passages in text.Text
-Nov 12Haru-4B 4B speech-to-speech research model that listens while it talks, in nine languages, Apache 2.0.Open
-Nov 12Duo 1.0 + 1.2 Research models for live audio-and-video conversation, built on MiniMax H3 and bound by its community license.Open
-Nov 13HeyGen Decision 1 Decision model for text, images and video, up to 400 questions a request; $0.14 per 1M input tokens on OpenRouter.Text
-Nov 13DeepSeek TTS + ASR APIs DeepSeek’s first speech APIs: $0.45 per 10,000 characters spoken and $0.116 per hour transcribed, both half price for now.Audio
-Nov 13Recraft V4.1 Flash V2 Recraft’s fast tier, updated, at $0.007 an image.Image
-Nov 13HY-World 2.1 Panorama One 360-degree panorama from a text prompt; listed on OpenRouter with no Tencent launch post found.Image
-Nov 13LongCat-Video-Avatar 1.6 Meituan’s talking-person video model, driven by audio and stable past 10 minutes, under MIT; 78 GB.Open
-Nov 14KORMo-Web 4B, 9B + 11B Korean and English models that operate a web browser from screenshots, Apache 2.0. Missed by the November 17 pass.Open
-Nov 15Seedance 2.5 Flash The cheaper Seedance 2.5 tier: 4 to 30 seconds at 480p or 720p, $0.07 and $0.15 a second on BytePlus.Video
-Nov 15Sage S2.1 Flash 321B science model from Shanghai AI Laboratory that reads molecules, crystals and proteins, under MIT; 643 GB.Open
-Nov 16Qwen4 Max Alibaba’s new flagship at $1.50/$4.50 per 1M tokens, a quarter below Qwen3.8 Max, with a 1M context; 43 on the index.Text
-Nov 16d1.2 + d1.2-ultra Liquid’s decision models add audio input and five new answer types at unchanged prices, $0.02 and $0.042 per 1M input tokens.Text
-Nov 16Hy4 flash Tencent’s smaller Hy4, $0.035/$0.14 on OpenRouter at a 50% discount, with a 1M context.Text
-Nov 16Sophon-Realtime 4B A 4B version of the speech-to-speech model that fits one 24 GB GPU, with a build for 16 GB Macs; Apache 2.0.Open
-Nov 16FastFrames-S + FastFrames-L Apple’s 1.3B and 14B research models for near-instant 480p video, under a research-only license.Open
-Nov 16Invoker-Render 1.0 A 33B research model that renders video from a scene layout, built on MiniMax H3; 135 GB and not licensed for commercial use.Open
-Nov 16WePocketModel 1.0 2B + 4B Tencent’s small models that chat about images, make embeddings and answer decision questions, with GGUF and Apple silicon builds; Apache 2.0. Missed by the November 19 pass.Open
-Nov 17GPT-6.2 Astra + GPT-6.2 Sol Astra at $8/$40 per 1M tokens, down from $10/$50, and Sol at $2/$10, both with a 1.05M context; 62 and 57 on the index.Text
-Nov 17MAI-Image-2.7 + MAI-Image-2.7 Flash Text-to-image and editing in public preview, about $35 and $10 per 1,000 images by Microsoft’s estimate.Image
-Nov 17Microsoft-Decision-1.1 Microsoft’s decision model for text and images, $0.042 per 1M input tokens on OpenRouter, output free.Text
-Nov 17MAI Code 2 + MAI Code 2 Flash Coding models inside GitHub Copilot; Flash is a limited preview on Microsoft Foundry, with no public price yet.Text
-Nov 17MAI Realtime 1 Microsoft’s first speech-to-speech model, from $0.01 per audio minute, in a limited-access preview.Audio
-Nov 17HeyGen Avatar 6 + Avatar 6 Turbo A photo or short clip plus an audio track becomes a talking video at 1080p or 2K; from $0.10 and $0.05 a second on OpenRouter.Video
-Nov 17Hy4 flash weights 220B parameters with 12B active, about 440 GB; Tencent’s license asks large companies for a separate agreement.Open
-Nov 17SenseNova-Loop-9B SenseTime’s 9B model for text and images, Apache 2.0, about 19 GB; the login it first asked for is gone.Open
-Nov 17Kling Image 4.0 Kuaishou’s image model, with sets of images that keep one subject; on Runware from about $0.06 an image. Missed by the November 19 pass.Image
-Nov 18Gemini 4 Neon Between Hydrogen and Carbon at $3/$15 per 1M tokens, paid tier only, with a 1M context; 61 on the index.Text
-Nov 18DaisyRose-27B RadixArk’s first model: Qwen3.8-27B trained further on long agent tasks, a drop-in replacement under Apache 2.0.Open
-Nov 18Aion 1.0 Instruct A 2.3B model from Microsoft’s Windows team under MIT, 4.6 GB, a preview of the model Windows will ship.Open
-Nov 18WeMM-Ecom 0.8B to 35B Five sizes of a vision model tuned for shopping listings, from WeChat’s vision team; the quantized builds carry Apache 2.0. Missed by the November 19 pass.Open
-Nov 19Genie 4 Generally available: a world you steer live with the keyboard, streamed as 24 fps video with sound, at about $0.10 a second on the paid tier.Video
-Nov 19Ideogram 4.6 + Precise Edit Native output up to 4096×4096 and editing from several images; Runware’s example runs cost $0.06 to $0.20.Image
-Nov 19GPT-Live-1.1 OpenAI’s voice conversation model, updated for multilingual speech, at GPT-Live-1’s $0.05 per active minute.Audio
-Nov 19LingSante-3.1-flash + air-VL Ant Group’s medical models, 560B and 124B, under MIT; for research and evaluation, not for diagnosis.Open
-Nov 19grok-build-0.1 Reached end of life and is no longer served on xAI’s API.Retired
-Nov 20Inkling 2 Mini 26.4B parameters in about 20 GB under Apache 2.0, built for a 32 GB Mac; $0.075/$0.30 per 1M tokens on OpenRouter.Open
-Nov 20Hy4 weights 770B parameters with 49B active, about 1.55 TB, under the Tencent Hy License; on this list since November 4.Open
-Nov 20bison-1 + groundhog-1 Baseten’s open decision models on Gemma 4, 31B and 26B, at $0.10 and $0.035 per 1M input tokens hosted.Open
-Nov 20GigaChat 4 708B + 37B 708B with 41B active under MIT, 726 GB; the 37B model’s license allows non-commercial use by individuals only.Open
-Nov 20pplx-embed-v2-context 9B + 0.6B Perplexity’s embedding models for text, chunked documents and images; $0.12 and $0.02 per 1M tokens on OpenRouter.Text
-Nov 20MemT-1.0-Pro A research model with built-in memory on NVIDIA’s Nemotron 3 Ultra 550B, 1.13 TB, under the OpenMDW 1.1 license.Open
-Nov 23Kolibri 1.1 Aleph Alpha’s German and English model, 75B with 3B active and a context up to 1M, Apache 2.0; 78 GB.Open
-Nov 23ERNIE 5.5 Flash Preview weights The weights promised on November 11, under Apache 2.0: 280B with 14B active, about 166 GB.Open
-Nov 23Ling-3.2-air 124B with 5.5B active under MIT, 129 GB; its card reports 23 on the index.Open
-Nov 23Sage-Interaction A 9B model that listens, watches and speaks in real time, built on MiniCPM-o 4.5; the repository states no license.Open
-Nov 23Claude Opus 4.5 Deprecated; retirement set for January 22, 2027, with Claude Opus 5.5 as the replacement.Retired
-Nov 24Solar Mini 4.5 Preview Upstage’s compact model, 35B with 3B active and a 524K context; $0.01/$0.04 per 1M tokens on OpenRouter.Text
-Nov 24Raon-1 mini KRAFTON’s 30B model with 4B active, trained from scratch with a focus on Korean, Apache 2.0; fits 20 GiB of GPU memory in its 4-bit build.Open
-Nov 24Ternary Bonsai 2.5 27B Qwen3.8-27B squeezed to 5.93 GB at 1.76 bits per weight, tuned for agent work; Apache 2.0.Open
-Nov 24OmniEVIE-4B A 4.5B retrieval model for text, images and video on a Qwen3.5 base, Apache 2.0; 9 GB.Open
-Nov 24Kandinsky ImageSR 2.0 One set of weights that upscales images 2x or 4x, under MIT; 10.5 GB.Open
-Nov 25Seed-TTS 3.0 ByteDance’s streaming text-to-speech model with inline delivery cues; listed on OpenRouter, with no ByteDance post found.Audio
-100 entries from 55 vendors. “Open” marks weights you could download on the day. The 6 rows dated before October 31 hold seven October releases the October edition missed. Index scores are Artificial Analysis’s Intelligence Index and Decision Index, read on the day of the pass that added the row, most recently November 17.
+If you pay for a top-tier text model, there are four new ones to test, and one of their prices doubles on December 1.
+Claude Fable 5.2 and GPT-6.2 Astra both cost $8 in and $40 out per million tokens, each down from $10 and $50. Gemini 4 Neon costs $3 and $15. Gemini 4 Carbon costs $2 and $10 until November 30, then $4 and $20, which will make it dearer than Neon. One tier down, Gemini 4 Hydrogen costs $1.50 and $7.50 and has a free tier to try it on.
+If you make images or short video clips, price them again, because the cheap end moved.
+Gemini Omni 1.2 Flash costs $0.07 a second at 720p, MiniMax’s H3 Lite costs $0.02 a second through Replicate, GPT Image 2.6 returns SVG files and animated GIFs at GPT Image 2.5’s prices, Seedream 5.5 now has an API at $0.02 to $0.035 an image, and Microsoft prices MAI-Image-2.7 Flash at about a cent. Ideogram 4.6, new on November 19, renders at up to 4096×4096.
+If you plan to download any of this month’s open models, read the license before the model card.
+Three releases in the MiniMax H3 family (P-H3-Image, H3 Image and inclusionAI’s Duo) exclude the US, the EU, the UK and Korea, and three inclusionAI repositories still state no license at all. The plainest new download for a laptop is Inkling 2 Mini: Apache 2.0, about 20 GB, and built for a Mac with 32 GB of memory.
+The month so far on one card, in release order
+Oct 15
+ZwZ2
+Visual reasoning models at 4B, 9B and 27B on Qwen3.5 and 3.6 bases; GGUFs on October 30. Missed by the October edition.
+Open
+Oct 21
+Simba 3.5
+Speechify’s text-to-speech model; its list price fell to $15 per 1M characters on November 9. Missed by the October edition.
+Audio
+Oct 25
+Parallel Decisions API
+Decisions that search the web first, at $1 per 1,000 requests. Missed by the October edition.
+Text
+Oct 26
+Maya 2 Native
+Streaming speech for 11 Indian languages and English, 20 voices, Apache 2.0. Missed by the October edition.
+Open
+Oct 29
+H3 Lite
++
+H3 Highspeed
+MiniMax’s cheaper H3 tiers, from $0.025 a second at 480P direct and half that on Replicate. Missed by the October edition.
+Video
+Oct 29
+Mi:dm K 3.0 Pro
+KT’s 120B reasoning model with 12B active, at $0.20/$0.80 per 1M tokens; no public weights. Missed by the October edition.
+Text
+Oct 31
+GLiDE 0.4B to 9B
+Four smaller sizes of Fastino’s decision model, after a 27B on October 19; custom community license.
+Open
+Nov 2
+Kimi K3.1 Pro
+weights
+2.8T parameters, 104B active, about 1.56 TB of files; promised by November 4, posted November 2.
+Open
+Nov 2
+GLM-5.3-FlashX-Legal
+A legal-domain variant at $0.37/$1.25 per 1M tokens with a 1M context; no weights.
+Text
+Nov 2
+Eleven SFX v3
+Sound effects model, now the default, with seamless loops; v2 leaves the API on March 1, 2027.
+Audio
+Nov 2
+Hume Audio Decisions
+Ask plain-language questions about an audio file and get probabilities back.
+Audio
+Nov 2
+Maya Transcribe
+Hindi and Hinglish speech recognition on a Qwen3-ASR 0.6B base, Apache 2.0.
+Open
+Nov 2
+Grok Imagine Image quality + pro
+Retired; requests are now served by grok-imagine-image-2.0-low at a lower price.
+Retired
+Nov 2
+Gemini 2.5 Pro + 2.5 Flash
+Deprecated; from December 1 requests go to 3.8 Flash and 3.5 Flash-Lite.
+Retired
+Nov 2
+Drex for Finance
+Nace’s decision model trained further on financial decisions; $0.06 per 1M input tokens on OpenRouter since November 10.
+Text
+Nov 3
+Reflex
+Decision model at $0.042 per 1M input tokens, output free, 65K context.
+Text
+Nov 3
+Wonder 4
+Topaz’s one-click restore and upscale, up to 6x; $0.0428 an image on Runware.
+Image
+Nov 3
+P-H3-Image
+Open image model on MiniMax H3, 8 steps; the license excludes the US, EU, UK and Korea.
+Open
+Nov 3
+Embed 5 + Rerank 5 on OpenRouter
+A new route for retrieval models Cohere launched on September 30 and October 21; embeddings at $0.08 and $0.12 per 1M tokens.
+Text
+Nov 4
+GPT Image 2.6 Sunburst
++
+Flare
+SVG and animated GIF output and a complexity setting, at GPT Image 2.5’s token prices.
+Image
+Nov 4
+Hy4
+$0.417/$1.25 on OpenRouter at a 50% discount, 1M context; 34.6 on the index.
+Text
+Nov 4
+Ripple-65B Preview
+65B dense model trained from scratch on 12T tokens, Apache 2.0; $0.20/$0.60 hosted.
+Open
+Nov 4
+Kling 4.0 Flash
+3 to 20 seconds at 720p for $0.094 a second on Runware.
+Video
+Nov 5
+GPT-6 Cyber
+Security model at $20/$100 per 1M tokens, for approved organizations only.
+Text
+Nov 5
+Gemini Omni 1.2 Flash
+Generally available at $0.07 a second for 720p, 30% below 1.1; clips up to 15 seconds.
+Video
+Nov 5
+P-Video-2 Pro Replace
+Puts a person from one or two photos into an existing video; $0.05 to $0.18 a second.
+Video
+Nov 5
+Workers AI retirements
+MeloTTS, whisper-tiny-en, SDXL, SD 1.5 and 16 LLMs leave on November 20, moved from November 15.
+Retired
+Nov 5
+gpt-5.5-cyber-preview
+Removal set for February 1, 2027, the day GPT-6 Cyber arrived.
+Retired
+Nov 5
+Celeris-1.1 Decision
+Decision model at $0.004 per 1M input tokens, output free; 62.0 on the Decision Index.
+Text
+Nov 5
+Inkling 2 Small
+594B parameters with 17B active, $0.30/$1.00 on Tinker; the promised open weights followed on November 12.
+Text
+Nov 6
+gemini-embedding-2-preview
+Requests now go to gemini-embedding-2 at the same price, with no re-indexing needed.
+Retired
+Nov 7
+Sophon-Realtime v1
+32B speech-to-speech models for Chinese and English that listen while they talk, Apache 2.0.
+Open
+Nov 9
+Claude Fable 5.2
++ Mythos 5.2
+$8/$40 per 1M tokens, down from $10/$50, with a 1M context; Mythos is for verified organizations only.
+Text
+Nov 9
+Muse Ember
+Meta’s smallest model, $0.10/$0.50 up to 200K input tokens, with a 1M context; closed weights.
+Text
+Nov 9
+Seedream 5.5
+Transparent backgrounds and steadier repeat edits; the API followed within the week at $0.02 to $0.035 an image.
+Image
+Nov 9
+ZONOS3-Mini
+800M text-to-speech model with voice cloning in 43 languages, Apache 2.0.
+Open
+Nov 10
+Gemini 4 Carbon
+Generally available at $2/$10 through November 30, then $4/$20; no free tier.
+Text
+Nov 10
+MiniMax H3 Image + Highspeed
+4K image generation and editing from about $0.02 an image; the weights’ license excludes the US, EU, UK and Korea.
+Open
+Nov 10
+Nex-N2.6
+321B agent model built on GLM-5.3-Flash, Apache 2.0; $0.12/$0.40 on OpenRouter.
+Open
+Nov 10
+ERNIE-Light-DT-1.0
+Baidu text model with a 1M context; $1.13/$3.94 on OpenRouter, listed November 10.
+Text
+Nov 10
+GPT Image 2
+Deprecated; removal set for February 10, 2027, with GPT Image 2.6 as the replacement.
+Retired
+Nov 11
+Gemini Decision 1
+Google’s first decision model, $0.10 per 1M input tokens, up to 1,000 questions a request.
+Text
+Nov 11
+ERNIE 5.5 Flash Preview
+280B parameters with 14B active and a 1M context; Apache 2.0 weights promised “soon.”
+Text
+Nov 11
+ZoomGain 4B + 9B, SingVL S1
+Two vision models and a 4B decision model; the repositories state no license.
+Open
+Nov 12
+meta-encoder-v1
+28B embedding model for text and images, 57 GB; an Apache 2.0 license file was added on November 17.
+Open
+Nov 12
+Gemini 4 Hydrogen
+Google’s everyday Gemini 4 model, $1.50/$7.50 per 1M tokens with a free tier and a 1M context; 54 on the index.
+Text
+Nov 12
+Inkling 2 Small weights
+The weights promised on November 5, under Apache 2.0: about 394 GB, for a GPU cluster with 500 GB of memory.
+Open
+Nov 12
+Decider v1.3 + Decider Flash v1.3
+Perplexity’s 27B and 4B decision models at v1.2’s prices, $0.02 and $0.01 per 1M input tokens, plus a question type that finds passages in text.
+Text
+Nov 12
+Haru-4B
+4B speech-to-speech research model that listens while it talks, in nine languages, Apache 2.0.
+Open
+Nov 12
+Duo 1.0 + 1.2
+Research models for live audio-and-video conversation, built on MiniMax H3 and bound by its community license.
+Open
+Nov 13
+HeyGen Decision 1
+Decision model for text, images and video, up to 400 questions a request; $0.14 per 1M input tokens on OpenRouter.
+Text
+Nov 13
+DeepSeek TTS + ASR APIs
+DeepSeek’s first speech APIs: $0.45 per 10,000 characters spoken and $0.116 per hour transcribed, both half price for now.
+Audio
+Nov 13
+Recraft V4.1 Flash V2
+Recraft’s fast tier, updated, at $0.007 an image.
+Image
+Nov 13
+HY-World 2.1 Panorama
+One 360-degree panorama from a text prompt; listed on OpenRouter with no Tencent launch post found.
+Image
+Nov 13
+LongCat-Video-Avatar 1.6
+Meituan’s talking-person video model, driven by audio and stable past 10 minutes, under MIT; 78 GB.
+Open
+Nov 14
+KORMo-Web 4B, 9B + 11B
+Korean and English models that operate a web browser from screenshots, Apache 2.0. Missed by the November 17 pass.
+Open
+Nov 15
+Seedance 2.5 Flash
+The cheaper Seedance 2.5 tier: 4 to 30 seconds at 480p or 720p, $0.07 and $0.15 a second on BytePlus.
+Video
+Nov 15
+Sage S2.1 Flash
+321B science model from Shanghai AI Laboratory that reads molecules, crystals and proteins, under MIT; 643 GB.
+Open
+Nov 16
+Qwen4 Max
+Alibaba’s new flagship at $1.50/$4.50 per 1M tokens, a quarter below Qwen3.8 Max, with a 1M context; 43 on the index.
+Text
+Nov 16
+d1.2
++
+d1.2-ultra
+Liquid’s decision models add audio input and five new answer types at unchanged prices, $0.02 and $0.042 per 1M input tokens.
+Text
+Nov 16
+Hy4 flash
+Tencent’s smaller Hy4, $0.035/$0.14 on OpenRouter at a 50% discount, with a 1M context.
+Text
+Nov 16
+Sophon-Realtime 4B
+A 4B version of the speech-to-speech model that fits one 24 GB GPU, with a build for 16 GB Macs; Apache 2.0.
+Open
+Nov 16
+FastFrames-S + FastFrames-L
+Apple’s 1.3B and 14B research models for near-instant 480p video, under a research-only license.
+Open
+Nov 16
+Invoker-Render 1.0
+A 33B research model that renders video from a scene layout, built on MiniMax H3; 135 GB and not licensed for commercial use.
+Open
+Nov 16
+WePocketModel 1.0 2B + 4B
+Tencent’s small models that chat about images, make embeddings and answer decision questions, with GGUF and Apple silicon builds; Apache 2.0. Missed by the November 19 pass.
+Open
+Nov 17
+GPT-6.2 Astra
++
+GPT-6.2 Sol
+Astra at $8/$40 per 1M tokens, down from $10/$50, and Sol at $2/$10, both with a 1.05M context; 62 and 57 on the index.
+Text
+Nov 17
+MAI-Image-2.7
++
+MAI-Image-2.7 Flash
+Text-to-image and editing in public preview, about $35 and $10 per 1,000 images by Microsoft’s estimate.
+Image
+Nov 17
+Microsoft-Decision-1.1
+Microsoft’s decision model for text and images, $0.042 per 1M input tokens on OpenRouter, output free.
+Text
+Nov 17
+MAI Code 2 + MAI Code 2 Flash
+Coding models inside GitHub Copilot; Flash is a limited preview on Microsoft Foundry, with no public price yet.
+Text
+Nov 17
+MAI Realtime 1
+Microsoft’s first speech-to-speech model, from $0.01 per audio minute, in a limited-access preview.
+Audio
+Nov 17
+HeyGen Avatar 6
++
+Avatar 6 Turbo
+A photo or short clip plus an audio track becomes a talking video at 1080p or 2K; from $0.10 and $0.05 a second on OpenRouter.
+Video
+Nov 17
+Hy4 flash weights
+220B parameters with 12B active, about 440 GB; Tencent’s license asks large companies for a separate agreement.
+Open
+Nov 17
+SenseNova-Loop-9B
+SenseTime’s 9B model for text and images, Apache 2.0, about 19 GB; the login it first asked for is gone.
+Open
+Nov 17
+Kling Image 4.0
+Kuaishou’s image model, with sets of images that keep one subject; on Runware from about $0.06 an image. Missed by the November 19 pass.
+Image
+Nov 18
+Gemini 4 Neon
+Between Hydrogen and Carbon at $3/$15 per 1M tokens, paid tier only, with a 1M context; 61 on the index.
+Text
+Nov 18
+DaisyRose-27B
+RadixArk’s first model: Qwen3.8-27B trained further on long agent tasks, a drop-in replacement under Apache 2.0.
+Open
+Nov 18
+Aion 1.0 Instruct
+A 2.3B model from Microsoft’s Windows team under MIT, 4.6 GB, a preview of the model Windows will ship.
+Open
+Nov 18
+WeMM-Ecom 0.8B to 35B
+Five sizes of a vision model tuned for shopping listings, from WeChat’s vision team; the quantized builds carry Apache 2.0. Missed by the November 19 pass.
+Open
+Nov 19
+Genie 4
+Generally available: a world you steer live with the keyboard, streamed as 24 fps video with sound, at about $0.10 a second on the paid tier.
+Video
+Nov 19
+Ideogram 4.6 + Precise Edit
+Native output up to 4096×4096 and editing from several images; Runware’s example runs cost $0.06 to $0.20.
+Image
+Nov 19
+GPT-Live-1.1
+OpenAI’s voice conversation model, updated for multilingual speech, at GPT-Live-1’s $0.05 per active minute.
+Audio
+Nov 19
+LingSante-3.1-flash + air-VL
+Ant Group’s medical models, 560B and 124B, under MIT; for research and evaluation, not for diagnosis.
+Open
+Nov 19
+grok-build-0.1
+Reached end of life and is no longer served on xAI’s API.
+Retired
+Nov 20
+Inkling 2 Mini
+26.4B parameters in about 20 GB under Apache 2.0, built for a 32 GB Mac; $0.075/$0.30 per 1M tokens on OpenRouter.
+Open
+Nov 20
+Hy4 weights
+770B parameters with 49B active, about 1.55 TB, under the Tencent Hy License; on this list since November 4.
+Open
+Nov 20
+bison-1 + groundhog-1
+Baseten’s open decision models on Gemma 4, 31B and 26B, at $0.10 and $0.035 per 1M input tokens hosted.
+Open
+Nov 20
+GigaChat 4 708B + 37B
+708B with 41B active under MIT, 726 GB; the 37B model’s license allows non-commercial use by individuals only.
+Open
+Nov 20
+pplx-embed-v2-context 9B + 0.6B
+Perplexity’s embedding models for text, chunked documents and images; $0.12 and $0.02 per 1M tokens on OpenRouter.
+Text
+Nov 20
+MemT-1.0-Pro
+A research model with built-in memory on NVIDIA’s Nemotron 3 Ultra 550B, 1.13 TB, under the OpenMDW 1.1 license.
+Open
+Nov 23
+Kolibri 1.1
+Aleph Alpha’s German and English model, 75B with 3B active and a context up to 1M, Apache 2.0; 78 GB.
+Open
+Nov 23
+ERNIE 5.5 Flash Preview weights
+The weights promised on November 11, under Apache 2.0: 280B with 14B active, about 166 GB.
+Open
+Nov 23
+Ling-3.2-air
+124B with 5.5B active under MIT, 129 GB; its card reports 23 on the index.
+Open
+Nov 23
+Sage-Interaction
+A 9B model that listens, watches and speaks in real time, built on MiniCPM-o 4.5; the repository states no license.
+Open
+Nov 23
+Claude Opus 4.5
+Deprecated; retirement set for January 22, 2027, with Claude Opus 5.5 as the replacement.
+Retired
+Nov 24
+Solar Mini 4.5 Preview
+Upstage’s compact model, 35B with 3B active and a 524K context; $0.01/$0.04 per 1M tokens on OpenRouter.
+Text
+Nov 24
+Raon-1 mini
+KRAFTON’s 30B model with 4B active, trained from scratch with a focus on Korean, Apache 2.0; fits 20 GiB of GPU memory in its 4-bit build.
+Open
+Nov 24
+Ternary Bonsai 2.5 27B
+Qwen3.8-27B squeezed to 5.93 GB at 1.76 bits per weight, tuned for agent work; Apache 2.0.
+Open
+Nov 24
+OmniEVIE-4B
+A 4.5B retrieval model for text, images and video on a Qwen3.5 base, Apache 2.0; 9 GB.
+Open
+Nov 24
+Kandinsky ImageSR 2.0
+One set of weights that upscales images 2x or 4x, under MIT; 10.5 GB.
+Open
+Nov 25
+Seed-TTS 3.0
+ByteDance’s streaming text-to-speech model with inline delivery cues; listed on OpenRouter, with no ByteDance post found.
+Audio
+100
+entries from
+55
+vendors. “Open” marks weights you could download on the day. The
+6
+rows dated before October 31 hold seven October releases the October edition missed. Index scores are Artificial Analysis’s Intelligence Index and Decision Index, read on the day of the pass that added the row, most recently November 17.
 Text: four of this month’s models score 60 or more, and all take a credit card
-Anthropic released Claude Fable 5.2 on November 9. The release notes price it at $8 per million input tokens and $40 per million output, against $10 and $50 for Fable 5.1, with a 1M context and up to 128K tokens of output. It scores 65 at its highest effort setting on Artificial Analysis’s Intelligence Index, still the top of the board on November 19. Anthropic’s launch post says it writes “up to 30% faster” than 5.1, and it also says most coding and knowledge work should start with the cheaper Claude Opus 5.5. Claude Mythos 5.2 is the same underlying model for security and biomedical research, offered “only to organizations verified through Anthropic’s verification programs.” OpenRouter and Runware list Fable 5.2 at the same price.
-Google’s Gemini 4 Carbon became generally available on November 10. Its first release on October 28 went to “a subset of cyber defenders,” and the new post opens it to “all paying developers and enterprises.” The pricing page lists $2 in and $10 out per million tokens through November 30, then $4 and $20, with no free tier and a 1M context. It scores 60 on the same index, second to Fable 5.2 on the day it opened. Google still recommends Gemini 4 Argon for most work and describes Carbon as the model for tasks that “test the limits.” A version tuned for security work remains inside Google’s Fairwind Program.
-Two days later Google filled in the tier most people will use. Gemini 4 Hydrogen (November 12) is, per the release notes, built “for everyday coding and agentic workflows.” It costs $1.50 in and $7.50 out per million tokens, takes text, images, video, audio and PDFs in a 1M context, and unlike Carbon it is on the free tier. It adds a fourth thinking level, xhigh, above the default high. At that level it scores 54 on the index, six points under Carbon for less than 40% of what Carbon will cost from December 1. Google’s migration guide treats it as the successor to Gemini 3.8 Flash. That model’s introductory price ends on December 31, when it rises to the same $1.50 and $7.50.
-OpenAI answered on November 17 with GPT-6.2 Astra and GPT-6.2 Sol. The changelog offers Astra “for demanding reasoning and coding tasks” and Sol “for everyday coding and agent workflows.” The model page prices Astra at $8 in and $40 out per million tokens, against $10 and $50 for GPT-6 Astra, and Sol stays at GPT-6.1 Sol’s $2 and $10. Both have a 1,050,000-token context and up to 128,000 tokens of output, and requests above 272,000 input tokens are billed at a higher rate. On the index Astra scores 62 at its highest effort setting, against 65 for Fable 5.2 at the same price, and Sol scores 57. Two details matter if you are migrating: neither model supports OpenAI’s cheaper Flex processing, and a new option for background jobs takes 30% or 40% off the token rates in exchange for a two-hour or eight-hour wait. OpenRouter lists both models at OpenAI’s prices, and Runware has added both.
-Google’s third Gemini 4 release in nine days came on November 18. Gemini 4 Neon, per the migration guide, “sits between” Hydrogen and Carbon and is meant for complex work that runs often. It costs $3 in and $15 out per million tokens on the paid tier only, with a 1M context and the same four thinking levels as Hydrogen. At xhigh it scores 61 on the index, a point above Carbon’s 60 at Carbon’s high setting. That makes December’s arithmetic simple: once Carbon rises to $4 and $20, Neon is the cheaper of the two and scores about the same. Google’s guide still points to Carbon for “your hardest architecture, debugging, science, and security problems.” Four of this month’s models now score 60 or more on this index, and every one of them is open to anyone with a credit card.
-Meta’s Muse Ember (November 9) sits at the other end. Meta’s post calls it “our smallest and most efficient model,” built for the work agents repeat all day. It takes text, images, audio, video and PDFs in a 1M context, and Meta’s price list charges $0.10 in and $0.50 out per million tokens for requests up to 200K input tokens. A longer request is billed at $0.30 and $1.50 for all of its tokens, not only the ones past 200K. It scores 36 on the index and its weights are closed. Below, all three answer our standing 50-word prompt, next to Fable 5.1.Same 50-word prompt, Claude Fable 5.2 against 5.1 and Muse Ember
-
+Anthropic released
+Claude Fable 5.2
+on November 9. The
+release notes
+price it at $8 per million input tokens and $40 per million output, against $10 and $50 for Fable 5.1, with a 1M context and up to 128K tokens of output. It scores 65 at its highest effort setting on
+Artificial Analysis’s Intelligence Index
+, still the top of the board on November 19. Anthropic’s
+launch post
+says it writes “up to 30% faster” than 5.1, and it also says most coding and knowledge work should start with the cheaper Claude Opus 5.5. Claude Mythos 5.2 is the same underlying model for security and biomedical research, offered “only to organizations verified through Anthropic’s verification programs.” OpenRouter and Runware list Fable 5.2 at the same price.
+Google’s Gemini 4 Carbon became generally available on November 10. Its first release on October 28 went to “a subset of cyber defenders,” and the
+new post
+opens it to “all paying developers and enterprises.” The
+pricing page
+lists $2 in and $10 out per million tokens through November 30, then $4 and $20, with no free tier and a 1M context. It scores 60 on the same index, second to Fable 5.2 on the day it opened. Google still recommends Gemini 4 Argon for most work and describes Carbon as the model for tasks that “test the limits.” A version tuned for security work remains inside Google’s Fairwind Program.
+Two days later Google filled in the tier most people will use.
+Gemini 4 Hydrogen
+(November 12) is, per the
+release notes
+, built “for everyday coding and agentic workflows.” It costs $1.50 in and $7.50 out per million tokens, takes text, images, video, audio and PDFs in a 1M context, and unlike Carbon it is on the free tier. It adds a fourth thinking level, xhigh, above the default high. At that level it scores 54 on the index, six points under Carbon for less than 40% of what Carbon will cost from December 1. Google’s
+migration guide
+treats it as the successor to Gemini 3.8 Flash. That model’s introductory price ends on December 31, when it rises to the same $1.50 and $7.50.
+OpenAI answered on November 17 with
+GPT-6.2 Astra
+and
+GPT-6.2 Sol
+. The
+changelog
+offers Astra “for demanding reasoning and coding tasks” and Sol “for everyday coding and agent workflows.” The
+model page
+prices Astra at $8 in and $40 out per million tokens, against $10 and $50 for GPT-6 Astra, and Sol stays at GPT-6.1 Sol’s $2 and $10. Both have a 1,050,000-token context and up to 128,000 tokens of output, and requests above 272,000 input tokens are billed at a higher rate. On the index Astra scores 62 at its highest effort setting, against 65 for Fable 5.2 at the same price, and Sol scores 57. Two details matter if you are migrating: neither model supports OpenAI’s cheaper Flex processing, and a new option for background jobs takes 30% or 40% off the token rates in exchange for a two-hour or eight-hour wait. OpenRouter lists both models at OpenAI’s prices, and Runware has added both.
+Google’s third Gemini 4 release in nine days came on November 18.
+Gemini 4 Neon
+, per the
+migration guide
+, “sits between” Hydrogen and Carbon and is meant for complex work that runs often. It costs $3 in and $15 out per million tokens on the paid tier only, with a 1M context and the same four thinking levels as Hydrogen. At xhigh it scores 61 on the index, a point above Carbon’s 60 at Carbon’s high setting. That makes December’s arithmetic simple: once Carbon rises to $4 and $20, Neon is the cheaper of the two and scores about the same. Google’s guide still points to Carbon for “your hardest architecture, debugging, science, and security problems.” Four of this month’s models now score 60 or more on this index, and every one of them is open to anyone with a credit card.
+Meta’s
+Muse Ember
+(November 9) sits at the other end.
+Meta’s post
+calls it “our smallest and most efficient model,” built for the work agents repeat all day. It takes text, images, audio, video and PDFs in a 1M context, and
+Meta’s price list
+charges $0.10 in and $0.50 out per million tokens for requests up to 200K input tokens. A longer request is billed at $0.30 and $1.50 for all of its tokens, not only the ones past 200K. It scores 36 on the index and its weights are closed. Below, all three answer our standing 50-word prompt, next to Fable 5.1.
+Same 50-word prompt, Claude Fable 5.2 against 5.1 and Muse Ember
 Explain what an API is to someone who has never written code. Do not use a restaurant or waiter analogy. Plain prose only — no headings, bullet points, or markdown formatting. Maximum 50 words.
-
-Claude Fable 5.2via Replicate
-
+Claude Fable 5.2
+via
+Replicate
 An API is a set of rules that lets one piece of software ask another for information or services. Think of a wall socket: you don't need to understand the power plant, you just plug in. Similarly, a weather app plugs into a weather service's API to fetch forecasts.
-49 / 50 words
-
-Claude Fable 5.1via OpenRouter
-
+49
+/
+50
+words
+Claude Fable 5.1
+via
+OpenRouter
 An API is a set of agreed-upon rules that lets one piece of software ask another for information or actions, like a wall socket: you don't need to understand the power plant, you just plug in a standard shape and electricity arrives reliably.
-43 / 50 words
-
-Muse Embervia OpenRouter
-
+43
+/
+50
+words
+Muse Ember
+via
+OpenRouter
 An API is a defined way for two computer programs to communicate. One can ask the other for information or ask it to do a task, following agreed rules for what to send and what to expect back, without knowing how the other works inside.
-45 / 50 words
-Real outputs from each model’s page, generated through Replicate and OpenRouter. Every model in the catalog gets this same prompt and keeps its first result; click a name for the full set.
-Kimi K3.1 Pro was the first week’s biggest release. It scores 46.5 on the index, and Runware began serving it on November 4 at $2 per million input tokens and $10 per million output, with a 1M context. For scale, the same index puts GPT-6.1 Terra at 51 for half that price, so this is not a new mid-tier pick. What is new is that the weights are public, which the open-weights section covers.
-OpenAI’s GPT-6 Cyber arrived on November 5. The model page describes a model for investigating vulnerabilities and reproducing them “in an authorized test environment,” and the pricing page lists $20 in and $100 out per million tokens, with a 1,050,000-token context. An organization needs approval through OpenAI’s Daybreak program before it can call it. It was the third model in nine days released only to approved groups, after Gemini 4 Carbon and GPT-6 Rosalind; Carbon has since opened up, and Rosalind has not. On the same changelog, OpenAI set February 1, 2027 for the removal of gpt-5.5-cyber-preview.
-Tencent’s Hy4 reached OpenRouter on November 4 at $0.417/$1.25 with a 1M context and image input. The listing carries a 50% discount, so the full price would be about $0.83/$2.50, and it scores 34.6 on the index. On November 12 the discount was still in place and Tencent’s Hugging Face repository for it was still private. Z.ai’s GLM-5.3-FlashX-Legal (November 2) is a legal-domain variant at $0.37/$1.25, confirmed on Z.ai’s pricing page, and Ricursive’s Ripple-65B Preview, covered below, is the first week’s other new name at $0.20/$0.60 hosted.
-Alibaba’s Qwen4 Max went on general sale on November 16, five days after a preview limited to Alibaba’s Token Plan subscribers. Model Studio’s price list charges $1.50 in and $4.50 out per million tokens for requests up to 1M input tokens, a quarter less than the $2 and $6 of Qwen3.8 Max. It reads text, images and video, and reasoning is on by default. It scores 43 on the index, which puts it under Kimi K3.1 Pro (46.5) at less than half of Kimi’s output price. Artificial Analysis also measured it as slow: 32 minutes per task against a median of 13. OpenRouter lists it 5% lower, at $1.425/$4.275. Tencent added a smaller sibling to Hy4 the same day: Hy4 flash reached OpenRouter at $0.035/$0.14 with a 1M context, also at a 50% discount, so expect about $0.07/$0.28 later. We found no Tencent post for it at the time. Its weights followed on November 17, covered in the open-weights section, while Hy4 itself was still discounted on November 19 with its repository still private.
-Microsoft used its Ignite conference on November 17 to announce seven models at once. Two are for writing code. MAI Code 2 and MAI Code 2 Flash are tuned for everyday programming, and Microsoft says they are “explicitly not yet tuned for harder problems” such as science research or very long agent runs. Its headline figure, 98% of GPT-6.1 Sol’s performance at 40% of the cost, is the company’s own average across four benchmarks. For now both run inside GitHub Copilot, and Flash is a limited-access preview on Microsoft Foundry. No public API price is listed, and Microsoft says OpenRouter will carry them “soon.”
-The fourth week’s hosted text releases were small. Upstage’s Solar Mini 4.5 Preview reached OpenRouter on November 24 at $0.01 in and $0.04 out per million tokens, the lowest price in this edition for a model that writes text. The listing describes 35 billion parameters with 3 billion active and a 524K context, and Upstage’s own site says the preview is live on its console; we found no dated Upstage post. Thinking Machines’ Inkling 2 Mini, covered with the open weights below, is on OpenRouter at $0.075 and $0.30 with a 1M context. RadixArk’s DaisyRose-27B gained a hosted route there on November 21 at $0.15 and $1.875. And Perplexity added two embedding models, pplx-embed-v2-context 9B and 0.6B, which its changelog says embed queries, documents split into chunks, and images with one model. OpenRouter listed them on November 20 at $0.12 and $0.02 per million tokens.
-Four more text models are worth a line each. Thinking Machines’ Inkling 2 Small (November 5) has 594 billion parameters with 17 billion active, costs $0.30 in and $1.00 out per million tokens on the company’s Tinker service, and scores 31 on the index. Baidu’s ERNIE 5.5 Flash Preview (November 11) is a text-only model with 280 billion parameters, 14 billion active, and a 1M context. Both companies promised open weights. Thinking Machines posted its on November 12, hours after our last pass; Baidu’s repository was still private on November 17. Baidu’s ERNIE-Light-DT-1.0 reached OpenRouter on November 10 at $1.13/$3.94 with a 1M context; we found a price on Baidu’s own cloud, ¥8 and ¥28 per million tokens, but no launch post. And our October edition missed KT’s Mi:dm K 3.0 Pro (October 29), a 120B reasoning model with 12B active at about $0.20/$0.80, on OpenRouter since November 5.
-Decision models, which answer with one of the options you give them and a probability instead of prose, kept arriving. Google joined on November 11 with Gemini Decision 1: yes-or-no, pick-one and scoring questions about text, images, audio, video and PDFs, up to 1,000 questions a request, at $0.10 per million input tokens with no output charge and a free tier. Morph’s Reflex (November 3) costs $0.042 per million input tokens with free output and a 65K context, and Celeris-1.1 Decision (November 5) costs $0.004. Nace’s Drex for Finance (November 2) is its Drex Max model trained further on financial decisions. Fastino added four smaller sizes of GLiDE between October 31 and November 4, from 0.4B to 9B, after a 27B on October 19 that our October edition missed. That edition also missed Parallel’s Decisions API (October 25), which searches the web before it answers and costs $1 per 1,000 requests.
-Three more decision releases landed in the third week. Liquid’s d1.2 and d1.2-ultra (November 16) keep the old prices, $0.02 and $0.042 per million input tokens, and Liquid’s post adds audio input and five new kinds of answer. The models can now read a value off an invoice, mark every passage of a kind in a text, draw a box around an object in a photo, estimate a number with a range, and pick several options at once. Perplexity’s Decider v1.3 and Decider Flash v1.3, a 27B and a 4B model, hold v1.2’s prices of $0.02 and $0.01 per million input tokens; the changelog adds a question type that returns the matching passages of a text. OpenRouter has listed both since November 12, on free routes only so far. HeyGen Decision 1 answers up to 400 named questions about text, up to four images or one video in a single request. OpenRouter listed it on November 13 at $0.14 per million input tokens, next to a Turbo version at $0.09 that HeyGen’s own API still marks as a preview.
-Microsoft’s Decision 1.1, part of the Ignite set, reached OpenRouter on November 17 at $0.042 per million input tokens with no output charge. It reads text and images in a 32K context. Microsoft’s announcement says it is “50x faster and 79x cheaper than GPT-6.1 Sol,” and its keynote says it beats Google’s and OpenAI’s models on the Decision Index. Both are the company’s claims, and comparing a decision model with a general one on price flatters any decision model.
-Baseten’s research team, Base Labs, joined the decision field on November 20 with bison-1 and groundhog-1. Both are built on Google’s Gemma 4: bison-1 on the 31B model, and groundhog-1 on the 26B model that uses about 4B parameters per token. They read text and images, cost $0.10 and $0.035 per million input tokens on Baseten and on OpenRouter, and their weights are open. Baseten’s card says bison-1 scores 76 on the Decision Index, a point above d1.2-ultra. That is the vendor’s reading; we could not read the board ourselves on November 26. Perplexity’s Decider v1.3 models, on free routes only a week ago, now have paid routes on OpenRouter too.
-A note on the numbers. On Artificial Analysis’s Decision Index, version 2.1 as read on November 12, the dedicated decision models run from Drex Max v1.1 at 72.6 and GLiDE v1.2 at 72.5 down through d1-ultra at 70.6, Gemini Decision 1 at 66.0 and Celeris-1.1 Decision at 62.0. Two general models at full effort, Claude Haiku 5.5 and GPT-6 Luna, sit above all of them at about 76. Reflex and Drex for Finance are not on the board. The d1.2 models joined it after that read, and Liquid’s post says d1.2-ultra scores 75, “the highest on the index” among decision models; that is Liquid’s reading of the board, not ours. Fastino’s model cards quote a “Decision Index 0.3.1 public suite,” a different test that shares the name, so those figures cannot be set beside the board’s. The benchmark guide explains why the source of a score matters more than its size.
+45
+/
+50
+words
+Real outputs from each model’s page, generated through
+Replicate and OpenRouter
+. Every model in the catalog gets this same prompt and keeps its first result; click a name for the full set.
+Kimi K3.1 Pro
+was the first week’s biggest release. It scores 46.5 on the index, and Runware began serving it on November 4 at $2 per million input tokens and $10 per million output, with a 1M context. For scale, the same index puts GPT-6.1 Terra at 51 for half that price, so this is not a new mid-tier pick. What is new is that the weights are public, which the open-weights section covers.
+OpenAI’s
+GPT-6 Cyber
+arrived on November 5. The
+model page
+describes a model for investigating vulnerabilities and reproducing them “in an authorized test environment,” and the
+pricing page
+lists $20 in and $100 out per million tokens, with a 1,050,000-token context. An organization needs approval through OpenAI’s Daybreak program before it can call it. It was the third model in nine days released only to approved groups, after Gemini 4 Carbon and GPT-6 Rosalind; Carbon has since opened up, and Rosalind has not. On the
+same changelog
+, OpenAI set February 1, 2027 for the removal of gpt-5.5-cyber-preview.
+Tencent’s Hy4 reached
+OpenRouter
+on November 4 at $0.417/$1.25 with a 1M context and image input. The listing carries a 50% discount, so the full price would be about $0.83/$2.50, and it scores 34.6 on the index. On November 12 the discount was still in place and Tencent’s Hugging Face repository for it was still private. Z.ai’s GLM-5.3-FlashX-Legal (November 2) is a legal-domain variant at $0.37/$1.25, confirmed on
+Z.ai’s pricing page
+, and Ricursive’s Ripple-65B Preview, covered below, is the first week’s other new name at $0.20/$0.60 hosted.
+Alibaba’s
+Qwen4 Max
+went on general sale on November 16, five days after a preview limited to Alibaba’s Token Plan subscribers.
+Model Studio’s price list
+charges $1.50 in and $4.50 out per million tokens for requests up to 1M input tokens, a quarter less than the $2 and $6 of Qwen3.8 Max. It reads text, images and video, and reasoning is on by default. It scores 43 on the index, which puts it under Kimi K3.1 Pro (46.5) at less than half of Kimi’s output price. Artificial Analysis also measured it as slow: 32 minutes per task against a median of 13. OpenRouter lists it 5% lower, at $1.425/$4.275. Tencent added a smaller sibling to Hy4 the same day: Hy4 flash reached
+OpenRouter
+at $0.035/$0.14 with a 1M context, also at a 50% discount, so expect about $0.07/$0.28 later. We found no Tencent post for it at the time. Its weights followed on November 17, covered in the open-weights section, while Hy4 itself was still discounted on November 19 with its repository still private.
+Microsoft used its Ignite conference on November 17 to announce
+seven models
+at once. Two are for writing code.
+MAI Code 2 and MAI Code 2 Flash
+are tuned for everyday programming, and Microsoft says they are “explicitly not yet tuned for harder problems” such as science research or very long agent runs. Its headline figure, 98% of GPT-6.1 Sol’s performance at 40% of the cost, is the company’s own average across four benchmarks. For now both run inside GitHub Copilot, and Flash is a limited-access preview on Microsoft Foundry. No public API price is listed, and Microsoft says OpenRouter will carry them “soon.”
+The fourth week’s hosted text releases were small. Upstage’s Solar Mini 4.5 Preview reached
+OpenRouter
+on November 24 at $0.01 in and $0.04 out per million tokens, the lowest price in this edition for a model that writes text. The listing describes 35 billion parameters with 3 billion active and a 524K context, and Upstage’s own site says the preview is live on its console; we found no dated Upstage post. Thinking Machines’ Inkling 2 Mini, covered with the open weights below, is on
+OpenRouter
+at $0.075 and $0.30 with a 1M context. RadixArk’s DaisyRose-27B gained a hosted route there on November 21 at $0.15 and $1.875. And Perplexity added two embedding models, pplx-embed-v2-context 9B and 0.6B, which its
+changelog
+says embed queries, documents split into chunks, and images with one model. OpenRouter listed them on November 20 at $0.12 and $0.02 per million tokens.
+Four more text models are worth a line each. Thinking Machines’
+Inkling 2 Small
+(November 5) has 594 billion parameters with 17 billion active, costs $0.30 in and $1.00 out per million tokens on the company’s Tinker service, and scores 31 on the index. Baidu’s
+ERNIE 5.5 Flash Preview
+(November 11) is a text-only model with 280 billion parameters, 14 billion active, and a 1M context. Both companies promised open weights. Thinking Machines posted its on November 12, hours after our last pass; Baidu’s repository was still private on November 17. Baidu’s ERNIE-Light-DT-1.0 reached
+OpenRouter
+on November 10 at $1.13/$3.94 with a 1M context; we found a price on Baidu’s own cloud, ¥8 and ¥28 per million tokens, but no launch post. And our October edition missed KT’s
+Mi:dm K 3.0 Pro
+(October 29), a 120B reasoning model with 12B active at about $0.20/$0.80, on OpenRouter since November 5.
+Decision models, which answer with one of the options you give them and a probability instead of prose, kept arriving. Google joined on November 11 with
+Gemini Decision 1
+: yes-or-no, pick-one and scoring questions about text, images, audio, video and PDFs, up to 1,000 questions a request, at $0.10 per million input tokens with no output charge and a free tier. Morph’s
+Reflex
+(November 3) costs $0.042 per million input tokens with free output and a 65K context, and
+Celeris-1.1 Decision
+(November 5) costs $0.004. Nace’s
+Drex for Finance
+(November 2) is its Drex Max model
+trained further on financial decisions
+. Fastino added four smaller sizes of GLiDE between October 31 and November 4, from 0.4B to 9B, after a 27B on October 19 that our October edition missed. That edition also missed
+Parallel’s Decisions API
+(October 25), which searches the web before it answers and costs $1 per 1,000 requests.
+Three more decision releases landed in the third week. Liquid’s
+d1.2
+and
+d1.2-ultra
+(November 16) keep the old prices, $0.02 and $0.042 per million input tokens, and
+Liquid’s post
+adds audio input and five new kinds of answer. The models can now read a value off an invoice, mark every passage of a kind in a text, draw a box around an object in a photo, estimate a number with a range, and pick several options at once. Perplexity’s Decider v1.3 and Decider Flash v1.3, a 27B and a 4B model, hold v1.2’s prices of $0.02 and $0.01 per million input tokens; the
+changelog
+adds a question type that returns the matching passages of a text. OpenRouter has listed both since November 12, on free routes only so far.
+HeyGen Decision 1
+answers up to 400 named questions about text, up to four images or one video in a single request. OpenRouter listed it on November 13 at $0.14 per million input tokens, next to a Turbo version at $0.09 that HeyGen’s own API still marks as a preview.
+Microsoft’s
+Decision 1.1
+, part of the Ignite set, reached
+OpenRouter
+on November 17 at $0.042 per million input tokens with no output charge. It reads text and images in a 32K context. Microsoft’s announcement says it is “50x faster and 79x cheaper than GPT-6.1 Sol,” and its keynote says it beats Google’s and OpenAI’s models on the Decision Index. Both are the company’s claims, and comparing a decision model with a general one on price flatters any decision model.
+Baseten’s research team, Base Labs, joined the decision field on November 20 with
+bison-1 and groundhog-1
+. Both are built on Google’s Gemma 4: bison-1 on the 31B model, and groundhog-1 on the 26B model that uses about 4B parameters per token. They read text and images, cost $0.10 and $0.035 per million input tokens on Baseten and on OpenRouter, and their weights are open. Baseten’s card says bison-1 scores 76 on the Decision Index, a point above d1.2-ultra. That is the vendor’s reading; we could not read the board ourselves on November 26. Perplexity’s Decider v1.3 models, on free routes only a week ago, now have paid routes on OpenRouter too.
+A note on the numbers. On
+Artificial Analysis’s Decision Index
+, version 2.1 as read on November 12, the dedicated decision models run from Drex Max v1.1 at 72.6 and GLiDE v1.2 at 72.5 down through d1-ultra at 70.6, Gemini Decision 1 at 66.0 and Celeris-1.1 Decision at 62.0. Two general models at full effort, Claude Haiku 5.5 and GPT-6 Luna, sit above all of them at about 76. Reflex and Drex for Finance are not on the board. The d1.2 models joined it after that read, and Liquid’s post says d1.2-ultra scores 75, “the highest on the index” among decision models; that is Liquid’s reading of the board, not ours. Fastino’s
+model cards
+quote a “Decision Index 0.3.1 public suite,” a different test that shares the name, so those figures cannot be set beside the board’s. The
+benchmark guide
+explains why the source of a score matters more than its size.
 Image: GPT Image 2.6 draws vectors, and MiniMax H3 Image starts near 2 cents
-OpenAI’s GPT Image 2.6 Sunburst and its faster sibling Flare landed on November 4. The changelog lists three additions: adjustable complexity, SVG generation and animated GIF generation. Complexity is low, medium or high with no separate fee. GIFs run from 2 to 16 frames at 20 to 2,000 ms each, and SVG works on new generations only, one at a time. Token prices match 2.5: $8 per million image input tokens, $30 per million output.
-Per image, the clearest rates are on Replicate: $0.05 at low quality, $0.09 at medium, $0.128 at high and $0.50 at the maximum, with GIF and SVG billed by output tokens. Runware added both models a day later. The often-quoted “about 50% faster” for Flare comes from OpenRouter’s description, not from OpenAI, so treat it as a gateway’s claim until OpenAI repeats it. The comparison below uses our standing poster prompt, which tests lettering, against 2.5.Same poster prompt, GPT Image 2.6 against 2.5
-
+OpenAI’s
+GPT Image 2.6 Sunburst
+and its faster sibling
+Flare
+landed on November 4. The
+changelog
+lists three additions: adjustable complexity, SVG generation and animated GIF generation. Complexity is low, medium or high with no separate fee. GIFs run from 2 to 16 frames at 20 to 2,000 ms each, and SVG works on new generations only, one at a time. Token prices match 2.5: $8 per million image input tokens, $30 per million output.
+Per image, the clearest rates are on
+Replicate
+: $0.05 at low quality, $0.09 at medium, $0.128 at high and $0.50 at the maximum, with GIF and SVG billed by output tokens. Runware added both models a day later. The often-quoted “about 50% faster” for Flare comes from OpenRouter’s description, not from OpenAI, so treat it as a gateway’s claim until OpenAI repeats it. The comparison below uses our standing poster prompt, which tests lettering, against 2.5.
+Same poster prompt, GPT Image 2.6 against 2.5
 Minimalist Swiss-style concert poster on off-white paper. Large bold sans-serif headline reading "NIGHT SIGNAL" stacked over a thin rule, smaller caption below reading "LIVE - SEPT 14 - HALL C". A single geometric orange semicircle in the lower third, generous white space, printed-ink texture.
-
-GPT Image 2.6 Sunburstvia Replicate
-
-GPT Image 2.6 Flarevia Replicate
-
-GPT Image 2.5 Sunburstvia Replicate
-
-Real outputs from each model’s page, generated through Replicate. Every model in the catalog gets this same prompt and keeps its first result; click a name for the full set.
-MiniMax released H3 Image and a faster H3 Image Highspeed on November 10. Both generate and edit images up to 20 megapixels, take 1 to 16 reference images, and are billed by tokens. MiniMax’s own estimates put a 1024×1024 image at about $0.022 and a 4096×4096 one at about $0.069, or $0.035 and $0.13 on Highspeed; a half-price offer on 4K ran until November 17. Runware and OpenRouter carry both at MiniMax’s token rates. MiniMax also published the weights, under a license the open-weights section reads closely.
-ByteDance announced Seedream 5.5 on November 9. The post promises transparent backgrounds straight from the model and edits that leave untouched areas alone “across 100 rounds of editing,” with a Pro version to follow. The post gave no API, and on November 12 BytePlus’s lists did not name the model. Within days it was live as Seedream 5.5 on Runware, OpenRouter and BytePlus, whose price list charges $0.02 for an image up to about 2.6 megapixels, $0.035 up to about 4.6, and $0.008 for each image you send in. The Pro version has not appeared. On the way out, OpenAI deprecated GPT Image 2 on November 10 and will remove it on February 10, 2027.
-Microsoft’s MAI-Image-2.7 and MAI-Image-2.7 Flash arrived on November 17 and close an item this roundup has carried since October, when 2.7 could only edit. Both now generate and edit, accept reference images, and produce transparent backgrounds. They are in public preview on Microsoft Foundry, where Microsoft estimates about $35 per 1,000 images for 2.7 and about $10 for Flash. OpenRouter bills them by tokens: $34 per million image output tokens for 2.7 and $10 for Flash. Microsoft says 2.7 ranks first on Artificial Analysis’s image-editing board at a fifth of GPT Image 2.6 Sunburst’s cost. That is Microsoft’s reading of the board, and a preview price can change.
-Ideogram 4.6 arrived on November 19. Ideogram’s API documents it, and it reached two gateways the same day, Runware and Replicate. It generates and edits at up to 4096×4096 and accepts several source images in one edit. A second model, Ideogram 4.6 Precise Edit, is for exact changes to an existing picture at up to 4K. Replicate bills each image by quality level and resolution, and the example runs on Runware’s page cost $0.06 to $0.20. The weights are not public. The last pass also missed Kuaishou’s Kling Image 4.0, on Runware since November 17. It makes single images and ordered sets that keep one subject, and Runware’s examples run from about $0.06 for one image to about $0.55 for a full page design. We could not read Kling’s own price list on November 26, so Runware is the only source for those numbers.
-Two smaller items. Topaz Labs’ Wonder 4 (November 3) restores and upscales photos up to 6x in one click, and on Runware it costs $0.0428 for an output up to 8 megapixels, rising to $1.37 at 256 megapixels. Krea 3, which launched in October, gained a Runware route on November 4 at $0.025 per megapixel; its launch discount ended on November 10. Recraft’s price list gained V4.1 Flash V2, an update to its fastest tier at $0.007 an image, and OpenRouter listed it on November 13 along with Tencent’s HY-World 2.1 Panorama, which turns a text prompt into one 360-degree panorama. We found no Tencent post for the panorama model, so its only source is the listing. xAI retired its grok-imagine-image quality and pro ids on November 2, per its release notes, and now serves those requests with a cheaper 2.0 tier. Pruna’s open P-H3-Image is in the open-weights section because its license is the story.
+GPT Image 2.6 Sunburst
+via
+Replicate
+GPT Image 2.6 Flare
+via
+Replicate
+GPT Image 2.5 Sunburst
+via
+Replicate
+Real outputs from each model’s page, generated through
+Replicate
+. Every model in the catalog gets this same prompt and keeps its first result; click a name for the full set.
+MiniMax released
+H3 Image
+and a faster H3 Image Highspeed on November 10. Both generate and edit images up to 20 megapixels, take 1 to 16 reference images, and are billed by tokens.
+MiniMax’s own estimates
+put a 1024×1024 image at about $0.022 and a 4096×4096 one at about $0.069, or $0.035 and $0.13 on Highspeed; a half-price offer on 4K ran until November 17. Runware and OpenRouter carry both at MiniMax’s token rates. MiniMax also published the weights, under a license the open-weights section reads closely.
+ByteDance announced
+Seedream 5.5
+on November 9. The post promises transparent backgrounds straight from the model and edits that leave untouched areas alone “across 100 rounds of editing,” with a Pro version to follow. The post gave no API, and on November 12 BytePlus’s lists did not name the model. Within days it was live as
+Seedream 5.5
+on Runware, OpenRouter and BytePlus, whose
+price list
+charges $0.02 for an image up to about 2.6 megapixels, $0.035 up to about 4.6, and $0.008 for each image you send in. The Pro version has not appeared. On the way out, OpenAI
+deprecated GPT Image 2
+on November 10 and will remove it on February 10, 2027.
+Microsoft’s
+MAI-Image-2.7 and MAI-Image-2.7 Flash
+arrived on November 17 and close an item this roundup has carried since October, when 2.7 could only edit. Both now generate and edit, accept reference images, and produce transparent backgrounds. They are in public preview on Microsoft Foundry, where Microsoft estimates about $35 per 1,000 images for 2.7 and about $10 for Flash.
+OpenRouter
+bills them by tokens: $34 per million image output tokens for 2.7 and $10 for Flash. Microsoft says 2.7 ranks first on Artificial Analysis’s image-editing board at a fifth of GPT Image 2.6 Sunburst’s cost. That is Microsoft’s reading of the board, and a preview price can change.
+Ideogram 4.6 arrived on November 19. Ideogram’s API documents it, and it reached two gateways the same day,
+Runware
+and
+Replicate
+. It generates and edits at up to 4096×4096 and accepts several source images in one edit. A second model, Ideogram 4.6 Precise Edit, is for exact changes to an existing picture at up to 4K. Replicate bills each image by quality level and resolution, and the example runs on Runware’s page cost $0.06 to $0.20. The weights are not public. The last pass also missed Kuaishou’s Kling Image 4.0, on
+Runware
+since November 17. It makes single images and ordered sets that keep one subject, and Runware’s examples run from about $0.06 for one image to about $0.55 for a full page design. We could not read Kling’s own price list on November 26, so Runware is the only source for those numbers.
+Two smaller items. Topaz Labs’
+Wonder 4
+(November 3) restores and upscales photos up to 6x in one click, and on
+Runware
+it costs $0.0428 for an output up to 8 megapixels, rising to $1.37 at 256 megapixels. Krea 3, which launched in October, gained a Runware route on November 4 at $0.025 per megapixel; its launch discount ended on November 10. Recraft’s
+price list
+gained V4.1 Flash V2, an update to its fastest tier at $0.007 an image, and OpenRouter listed it on November 13 along with Tencent’s HY-World 2.1 Panorama, which turns a text prompt into one 360-degree panorama. We found no Tencent post for the panorama model, so its only source is the listing. xAI retired its grok-imagine-image quality and pro ids on November 2, per its
+release notes
+, and now serves those requests with a cheaper 2.0 tier. Pruna’s open P-H3-Image is in the open-weights section because its license is the story.
 Video: Google cut Omni by 30%, and 720p now starts at 2 cents
-Gemini Omni 1.2 Flash went generally available on November 5. Google’s post says it dropped the price 30% from Omni 1.1, “making it available at $0.07 per second for 720p video.” Clips run 3 to 15 seconds and extend to 30, from 360p to 4K, where 1080p and 4K are upscaled. Runware matches Google at $0.07 and charges $0.02 at 360p for drafts; Replicate charges $0.105 for the same 720p second. Google’s changelog says requests to Omni 1.1 move to 1.2 on December 3.
-Kuaishou’s Kling 4.0 Flash reached Runware on November 4, generating 3 to 20 seconds at 720p for $0.094 a second, or $0.126 when you feed it a video; a 15% launch discount ended on November 10. Replicate added it on November 9 at the same $0.094. Kling’s own price list, which we could not read a week ago, now shows $0.094 a second for Flash too, and $0.157 at 720p or $0.235 at 1080p for the full Kling 4.0. It lists no 4K or HDR mode for either. Our October edition missed MiniMax’s two cheaper H3 tiers from October 29. MiniMax’s own prices are $0.025 and $0.04 a second for H3 Lite at 480P and 768P, and $0.04 and $0.06 for H3 Highspeed. Replicate now lists half of that: $0.0125 and $0.02 for Lite, and $0.03 flat for Highspeed, with no promotion named on the page.
-ByteDance’s Seedance 2.5 Flash went live on November 15. Last week it was only an unexplained row on BytePlus’s price list; now BytePlus’s model list carries it too, at 480p or 720p, 24 frames a second, 4 to 30 seconds a clip. The price is $0.07 a second at 480p and $0.15 at 720p, and Runware and OpenRouter charge about the same. That makes it the most expensive second on the chart below. What it offers for the money is length: none of the other generators here makes a 30-second clip in one request.
-HeyGen’s Avatar 6 and Avatar 6 Turbo do one job: they take a photo or a reference clip of at least two seconds, plus an audio track, and return a video of that person speaking, as long as the audio. Output is 1080p by default or 2K, and a motion prompt steers gestures and camera. OpenRouter listed both on November 17, at $0.10 a second for 1080p and $0.145 for 2K, with Turbo at $0.05 and $0.0875. HeyGen’s changelog dates the API only to November 2026. They are not on the chart below, which compares generators at 720p. As with every model that animates a real face, use it with people who have agreed to appear.
-Genie 4 left this roundup’s waiting list on November 19, when Google’s changelog marked it generally available. It is not a clip generator. You start a world from a text prompt, a reference image or both, and steer it live with the keyboard or with typed events while it streams 24 frames a second of 16:9 video with stereo sound. It is on the paid tier only, and the pricing page charges $17.50 per million video output tokens, which Google puts at about $0.10 a second with audio included. That is a session price, so it is not on the chart below.What a second of 720p-class video costs, by route
+Gemini Omni 1.2 Flash
+went generally available on November 5.
+Google’s post
+says it dropped the price 30% from Omni 1.1, “making it available at $0.07 per second for 720p video.” Clips run 3 to 15 seconds and extend to 30, from 360p to 4K, where 1080p and 4K are upscaled. Runware matches Google at $0.07 and charges $0.02 at 360p for drafts; Replicate charges $0.105 for the same 720p second. Google’s
+changelog
+says requests to Omni 1.1 move to 1.2 on December 3.
+Kuaishou’s
+Kling 4.0 Flash
+reached
+Runware
+on November 4, generating 3 to 20 seconds at 720p for $0.094 a second, or $0.126 when you feed it a video; a 15% launch discount ended on November 10.
+Replicate
+added it on November 9 at the same $0.094.
+Kling’s own price list
+, which we could not read a week ago, now shows $0.094 a second for Flash too, and $0.157 at 720p or $0.235 at 1080p for the full Kling 4.0. It lists no 4K or HDR mode for either. Our October edition missed MiniMax’s two cheaper H3 tiers from October 29.
+MiniMax’s own prices
+are $0.025 and $0.04 a second for
+H3 Lite
+at 480P and 768P, and $0.04 and $0.06 for
+H3 Highspeed
+.
+Replicate
+now lists half of that: $0.0125 and $0.02 for Lite, and $0.03 flat for Highspeed, with no promotion named on the page.
+ByteDance’s
+Seedance 2.5 Flash
+went live on November 15. Last week it was only an unexplained row on BytePlus’s price list; now BytePlus’s
+model list
+carries it too, at 480p or 720p, 24 frames a second, 4 to 30 seconds a clip. The price is $0.07 a second at 480p and $0.15 at 720p, and
+Runware
+and OpenRouter charge about the same. That makes it the most expensive second on the chart below. What it offers for the money is length: none of the other generators here makes a 30-second clip in one request.
+HeyGen’s
+Avatar 6 and Avatar 6 Turbo
+do one job: they take a photo or a reference clip of at least two seconds, plus an audio track, and return a video of that person speaking, as long as the audio. Output is 1080p by default or 2K, and a motion prompt steers gestures and camera.
+OpenRouter
+listed both on November 17, at $0.10 a second for 1080p and $0.145 for 2K, with Turbo at $0.05 and $0.0875. HeyGen’s changelog dates the API only to November 2026. They are not on the chart below, which compares generators at 720p. As with every model that animates a real face, use it with people who have agreed to appear.
+Genie 4 left this roundup’s waiting list on November 19, when Google’s
+changelog
+marked it generally available. It is not a clip generator. You start a world from a text prompt, a reference image or both, and steer it live with the keyboard or with typed events while it streams 24 frames a second of 16:9 video with stereo sound. It is on the paid tier only, and the
+pricing page
+charges $17.50 per million video output tokens, which Google puts at about $0.10 a second with audio included. That is a session price, so it is not on the chart below.
+What a second of 720p-class video costs, by route
 List prices read November 12 and November 17, before temporary discounts. A model can appear twice because the same model costs different amounts on different routes.
-
-H3 Lite · 768P, Replicate$0.020
-H3 Highspeed · flat, Replicate$0.030
-H3 Lite · 768P, MiniMax and Runware$0.040
-P-Video-2 Pro Replace · 768p, Replicate$0.050
-H3 Highspeed · 768P, MiniMax and Runware$0.060
-Gemini Omni 1.2 Flash · 720p, Google and Runware$0.070
-Kling 4.0 Flash · 720p, Kling, Runware and Replicate$0.094
-P-Video-2 Pro Replace · 768p, Pruna and Runware list$0.100
-Gemini Omni 1.2 Flash · 720p, Replicate$0.105
-Seedance 2.5 Flash · 720p, BytePlus, Runware and OpenRouter$0.150
+H3 Lite
+·
+768P, Replicate
+$0.020
+H3 Highspeed
+·
+flat, Replicate
+$0.030
+H3 Lite
+·
+768P, MiniMax and Runware
+$0.040
+P-Video-2 Pro Replace
+·
+768p, Replicate
+$0.050
+H3 Highspeed
+·
+768P, MiniMax and Runware
+$0.060
+Gemini Omni 1.2 Flash
+·
+720p, Google and Runware
+$0.070
+Kling 4.0 Flash
+·
+720p, Kling, Runware and Replicate
+$0.094
+P-Video-2 Pro Replace
+·
+768p, Pruna and Runware list
+$0.100
+Gemini Omni 1.2 Flash
+·
+720p, Replicate
+$0.105
+Seedance 2.5 Flash
+·
+720p, BytePlus, Runware and OpenRouter
+$0.150
 A ten-second clip runs from $0.20 on H3 Lite through Replicate to $1.50 on Seedance 2.5 Flash. Resolution and length are not the only differences: Omni, Seedance and the H3 tiers generate their own audio, Seedance runs to 30 seconds in one clip, and Replace edits a video you already have.
-Pruna’s P-Video-2 Pro Replace (November 5) does a different job: it takes one or two photos of a person and puts them into an existing video, keeping the camera, the motion and the soundtrack, and matching the lips to the audio. Source clips can run from 1 to 120 seconds. Pruna and Runware list $0.05 a second at 480p up to $0.18 at 4K, with Runware at half price until November 19, and Replicate lists $0.025 to $0.09. Use it with photos of people who have agreed to appear. Below, three of the first week’s video tiers answer our standing establishing-shot prompt.Same establishing shot, three of the first week’s video tiers
-
+Pruna’s P-Video-2 Pro Replace (November 5) does a different job: it takes one or two photos of a person and puts them into an existing video, keeping the camera, the motion and the soundtrack, and matching the lips to the audio. Source clips can run from 1 to 120 seconds. Pruna and
+Runware
+list $0.05 a second at 480p up to $0.18 at 4K, with Runware at half price until November 19, and
+Replicate
+lists $0.025 to $0.09. Use it with photos of people who have agreed to appear. Below, three of the first week’s video tiers answer our standing establishing-shot prompt.
+Same establishing shot, three of the first week’s video tiers
 Slow aerial push in over a coastal cliff road at golden hour, waves breaking on rocks below, a single car travelling along the road. Smooth continuous camera movement, warm cinematic colour grade.
-
-Gemini Omni 1.2 Flashvia Runware
-
-Kling 4.0 Flashvia Runware
-
-H3 Litevia Replicate
-Real outputs from each model’s page, generated through Runware and Replicate. Every model in the catalog gets this same prompt and keeps its first result; click a name for the full set.
-Prices for every tier in this section move often, so the text-to-video guide is the place for the method rather than the numbers.
+Gemini Omni 1.2 Flash
+via
+Runware
+Kling 4.0 Flash
+via
+Runware
+H3 Lite
+via
+Replicate
+Real outputs from each model’s page, generated through
+Runware and Replicate
+. Every model in the catalog gets this same prompt and keeps its first result; click a name for the full set.
+Prices for every tier in this section move often, so the
+text-to-video guide
+is the place for the method rather than the numbers.
 Audio: sound effects that loop, and open voices that fit a laptop
-ElevenLabs made its third sound effects model, eleven_text_to_sound_v3, generally available on November 2 and the default across its products, with a loop option for seamless background audio. The changelog also says v2 “is deprecated and will be removed on March 1, 2027.” Hume launched an Audio Decisions API the same day: you ask plain-language questions about an audio file, such as whether a caller sounds frustrated, and get probabilities back. It is the decision-model idea applied to sound. Hume’s older TTS and EVI APIs were due to end on November 13, and their documentation has left Hume’s site.
-DeepSeek, whose API had offered only its two chat models, opened speech APIs on November 13 along with the web search, file reading and OCR its own app uses. Its price list charges $0.45 per 10,000 characters of text to speech and $0.116 per hour of transcription, each at half that under a “limited-time” offer with no end date given. At list price that is $45 per million characters, three times Speechify’s Simba 3.5 below, so the transcription rate is the one worth testing.
-Transcription got cheaper elsewhere too. On November 17 the ElevenLabs changelog cut speech to text to $0.20 per hour of audio for batch jobs and $0.22 for realtime, across every Scribe model on self-serve and Business plans. The same day Microsoft announced MAI Realtime 1, its first speech-to-speech model, at $0.01 per audio minute, with reasoning billed separately at $1 in and $5 out per million tokens. It works with code written for OpenAI’s Realtime API. For now it is a limited-access preview on Microsoft Foundry, and preview customers are not billed until the public preview begins.
-OpenAI released GPT-Live-1.1 on November 19. The changelog says it “improves pronunciation, accent consistency, and transcription in multilingual voice conversations,” and the pricing page keeps GPT-Live-1’s rates: $0.05 per active minute and $0.02 per minute on standby. ByteDance’s Seed-TTS 3.0, a streaming text-to-speech model that takes delivery cues written into the text, appeared on OpenRouter on November 25. We found no ByteDance post for it and no row on BytePlus’s price list, so the listing is its only source.
-Maya Research shipped two open models for Indian languages. Maya 2 Native (October 26, missed in October) is a streaming text-to-speech model for 11 Indian languages and English, with 24 kHz output, 20 built-in voices and voice cloning, under Apache 2.0. Maya Transcribe (November 2) is a Hindi and Hinglish transcriber on a Qwen3-ASR 0.6B base, also Apache 2.0, with a self-reported 9.36% word error rate on the Kathbath Hindi test. Both are small enough for a laptop.
-The second week added two more open speech releases. Zyphra’s ZONOS3-Mini (November 9) is an 800M text-to-speech model with voice cloning and 44.1 kHz output in 43 languages under Apache 2.0, and its card says it “runs in real time on phones and laptops.” Sophon-Realtime v1 (November 7) is a family of 32B speech-to-speech models for Chinese and English that listen and talk at the same time, also Apache 2.0, in downloads from 41 to 108 GB. One more October miss: Speechify launched Simba 3.5, its text-to-speech model, on October 21. Its changelog cut the list price from $20 to $15 per million characters on November 9, with a $10 launch rate until November 21, and OpenRouter added the model on November 11.
-The third week’s open speech model is Haru-4B (November 12), a 4B model under Apache 2.0 that, like Sophon, listens and speaks at once. It covers nine languages, takes its voice from a clip you supply, and runs in about 12 GB of GPU memory. The whole download is 10.6 GB, about a quarter of Sophon’s smallest. Its card is plain about the limits: it is “a pretrained base model, released for research,” and “not a reliable source of facts.”
-Sophon’s makers then went smaller. Sophon-Realtime 4B (November 16) keeps the listen-while-talking design of the 32B models in three builds. The Flash build runs on one 24 GB GPU and uses about 21 GB, and the other two need a 32 GB card. A version for Apple silicon Macs with 16 GB or more followed on November 18. All of it is Apache 2.0, and the 4B models handle speech only, with no vision.
+ElevenLabs made its third sound effects model, eleven_text_to_sound_v3, generally available on November 2 and the default across its products, with a loop option for seamless background audio. The
+changelog
+also says v2 “is deprecated and will be removed on March 1, 2027.” Hume launched an
+Audio Decisions API
+the same day: you ask plain-language questions about an audio file, such as whether a caller sounds frustrated, and get probabilities back. It is the decision-model idea applied to sound. Hume’s older TTS and EVI APIs were due to end on November 13, and their documentation has left Hume’s site.
+DeepSeek, whose API had offered only its two chat models, opened
+speech APIs
+on November 13 along with the web search, file reading and OCR its own app uses. Its
+price list
+charges $0.45 per 10,000 characters of text to speech and $0.116 per hour of transcription, each at half that under a “limited-time” offer with no end date given. At list price that is $45 per million characters, three times Speechify’s Simba 3.5 below, so the transcription rate is the one worth testing.
+Transcription got cheaper elsewhere too. On November 17 the
+ElevenLabs changelog
+cut speech to text to $0.20 per hour of audio for batch jobs and $0.22 for realtime, across every Scribe model on self-serve and Business plans. The same day Microsoft announced
+MAI Realtime 1
+, its first speech-to-speech model, at $0.01 per audio minute, with reasoning billed separately at $1 in and $5 out per million tokens. It works with code written for OpenAI’s Realtime API. For now it is a limited-access preview on Microsoft Foundry, and preview customers are not billed until the public preview begins.
+OpenAI released GPT-Live-1.1 on November 19. The
+changelog
+says it “improves pronunciation, accent consistency, and transcription in multilingual voice conversations,” and the
+pricing page
+keeps GPT-Live-1’s rates: $0.05 per active minute and $0.02 per minute on standby. ByteDance’s
+Seed-TTS 3.0
+, a streaming text-to-speech model that takes delivery cues written into the text, appeared on
+OpenRouter
+on November 25. We found no ByteDance post for it and no row on BytePlus’s price list, so the listing is its only source.
+Maya Research shipped two open models for Indian languages. Maya 2 Native (October 26, missed in October) is a
+streaming text-to-speech model
+for 11 Indian languages and English, with 24 kHz output, 20 built-in voices and voice cloning, under Apache 2.0. Maya Transcribe (November 2) is a
+Hindi and Hinglish transcriber
+on a Qwen3-ASR 0.6B base, also Apache 2.0, with a self-reported 9.36% word error rate on the Kathbath Hindi test. Both are small enough for a laptop.
+The second week added two more open speech releases. Zyphra’s
+ZONOS3-Mini
+(November 9) is an 800M text-to-speech model with voice cloning and 44.1 kHz output in 43 languages under Apache 2.0, and its card says it “runs in real time on phones and laptops.”
+Sophon-Realtime v1
+(November 7) is a family of 32B speech-to-speech models for Chinese and English that listen and talk at the same time, also Apache 2.0, in downloads from 41 to 108 GB. One more October miss: Speechify launched Simba 3.5, its text-to-speech model, on October 21. Its
+changelog
+cut the list price from $20 to $15 per million characters on November 9, with a $10 launch rate until November 21, and OpenRouter added the model on November 11.
+The third week’s open speech model is
+Haru-4B
+(November 12), a 4B model under Apache 2.0 that, like Sophon, listens and speaks at once. It covers nine languages, takes its voice from a clip you supply, and runs in about 12 GB of GPU memory. The whole download is 10.6 GB, about a quarter of Sophon’s smallest. Its card is plain about the limits: it is “a pretrained base model, released for research,” and “not a reliable source of facts.”
+Sophon’s makers then went smaller.
+Sophon-Realtime 4B
+(November 16) keeps the listen-while-talking design of the 32B models in three builds. The Flash build runs on one 24 GB GPU and uses about 21 GB, and the other two need a 32 GB card. A version for Apple silicon Macs with 16 GB or more followed on November 18. All of it is Apache 2.0, and the 4B models handle speech only, with no vision.
 Open weights: Kimi kept its date, and the licenses got longer
-Moonshot’s Kimi K3.1 Pro repository appeared on November 2, inside the window its launch post promised. It is 2.8 trillion parameters with 104 billion active per token, which makes it a download for a data center rather than a desk. The license is a modified MIT: free to use, but a product with more than 100 million monthly users or $20 million in monthly revenue must show “Kimi K3.1-Pro,” and a hosting company above $20 million a year needs a separate agreement.
-Ricursive’s Ripple-65B Preview (November 4) was the cleanest release of the first week: a 65B dense model trained from scratch on 12 trillion tokens, with a 1M context, under Apache 2.0. Its launch page claims 80.52 on TerminalBench 2.1, a vendor number with no independent score yet. inclusionAI’s ZwZ2, which our October edition missed, adds visual reasoning to Qwen3.5 and 3.6 bases at 4B, 9B and 27B; the 9B card reports a gain from 51.63 to 56.59 across 25 benchmarks, its makers’ figure.
-Pruna’s P-H3-Image (November 3) is an open image model for generation and editing, built on MiniMax H3, that renders in 8 steps. Its model card says the MiniMax H3 Community License “excludes the European Union, the United Kingdom, the Republic of Korea and the United States” unless you hold a separate license from MiniMax, and that products built on it must show “Powered by MiniMax H3.” The same base license sits under Pika’s H3 Flex weights from October, so it is worth reading once before downloading anything in the H3 family.
-MiniMax’s own H3 Image weights (November 10) come with a sibling of that license. The model is a 33.1B image generator that makes roughly 16-megapixel pictures in 6 steps: 69 GB of files, plus a 67 GB text encoder from the H3 repository. Its license defines “Excluded Territories” as “the European Union, the United Kingdom, the Republic of Korea and the United States of America.” Elsewhere, a company with more than $1 million in annual revenue, or anyone hosting the model for others, needs MiniMax’s written approval. The hosted API from the image section has no such limit.
-Nex-N2.6 (November 10) is the plain-licensed release of the second week: a 321B model for computer use and coding, built on GLM-5.3-Flash, in 328 GB of files under Apache 2.0. Its makers report 83.0 on OSWorld against 78.0 for the base model, and their own table also shows it slightly behind the base on Terminal-Bench 2.1, 84.1 to 84.3. Three inclusionAI repositories from November 10 and 11, the ZoomGain vision models and the SingVL S1 decision model, stated no license on November 17. Two days later the ZoomGain repositories still had none, and SingVL S1’s was no longer public. Meta’s meta-encoder-v1, a 28B embedding model for text and images, was posted on November 12 without one and gained an Apache 2.0 license file on November 17. Until a license appears, a public download grants you nothing.
-Thinking Machines kept its promise as well. The Inkling 2 Small weights went up on November 12 under Apache 2.0, a week after the company said “next week.” Like Kimi, this is a download for a server room: about 394 GB of files, and the card asks for “a GPU cluster with at least 500GB of aggregated VRAM.” Shanghai AI Laboratory’s Sage S2.1 Flash (November 15) is the same size class with a narrower job. It is a 321B model for scientific work that takes molecular graphs, crystal structures and protein sequences as input alongside text, in 643 GB of files. Its card states the MIT license.
-Two video releases round out the week. Meituan’s LongCat-Video-Avatar 1.6 (November 13) animates a person from an audio track, and its card says it holds together in videos “exceeding 10 minutes”; it is MIT-licensed and 78 GB. As with Pruna’s Replace, use it with people who have agreed to appear. inclusionAI’s Duo (November 12) is a research model for live conversation in sound and picture. Its weights “were initialized from MiniMax H3,” so the H3 Community License travels with them, regional exclusions included.
-Tencent opened the smaller of its two Hy4 models on November 17. Hy4 flash has 220 billion parameters with 12 billion active per token, reads text and images in a 1M context, and comes to about 440 GB of files. Its Tencent Hy License is Apache 2.0 with one added section. A company with more than $50 million in yearly revenue, or a product with more than 100 million monthly users, needs a separate written license, and purely internal use is exempt. Unlike the H3 licenses above, it names no excluded countries. The larger Hy4 repository was still private on November 19.
-Three smaller releases suit a desk better. SenseTime’s SenseNova-Loop-9B (November 17) is a 9.4B model for text and images under Apache 2.0, in about 19 GB, with the company’s own GGUF files a day later; the repository asks you to log in first. RadixArk’s DaisyRose-27B (November 18) is Qwen3.8-27B trained further on about 1,200 long agent tasks, also Apache 2.0. Its card reports Terminal Bench 4.1 rising from 5.6 to 12.0, and the same table shows it behind the far larger Inkling 2 Small on most rows. It keeps the base model’s format, so it swaps in wherever Qwen3.8-27B already runs. Microsoft’s Aion 1.0 Instruct (November 18) is a 2.3B model under MIT, 4.6 GB before quantizing, with a 32K context. Its card says a tuned version “will become the Windows OS SLM by the end of January 2027.” And the last pass missed KORMo-Web (November 14), Korean and English models at 4B, 9B and 11B that operate a web browser, under Apache 2.0.
-Two research releases come with terms that rule out products. Apple’s FastFrames (November 16) are 1.3B and 14B video models that produce 480p frames fast enough to steer live; the card times the small one at about 35 ms a frame on one GPU. Apple’s license releases them “for the sole purpose of scientific research.” inclusionAI’s Invoker-Render 1.0 (November 16) turns a rough layout of a scene into video and streams it for as long as the layout keeps arriving. It is a 33B model in 135 GB, its default setup uses eight GPUs, and its license tag includes CC BY-NC 4.0, which means non-commercial.
-The fourth week’s most useful download is Inkling 2 Mini (November 20). Thinking Machines’ post calls it “small enough to run on your laptop,” and the model card backs that with specifics: 26.4 billion parameters in one checkpoint of about 20 GB, text and image input, Apache 2.0, and a supported list that starts with Apple silicon machines with 32 GB of memory or more. The model runs its middle layers three times for every token, which the company says buys more reasoning from a small model. Its claim to be the best open model of its size on most tasks is its own, and the same post says Qwen3.8-27B is ahead on some of them.
-Two promised sets of weights arrived. Tencent made the Hy4 repository public on November 20, sixteen days after the hosted model: 770 billion parameters with 49 billion active per token, in about 1.55 TB of files, under the Tencent Hy License. Baidu posted ERNIE 5.5 Flash Preview on November 23 under Apache 2.0, twelve days after saying “soon.” It is 280 billion parameters with 14 billion active, about 166 GB, and the card calls it “an intermediate checkpoint from post-training.” Both are downloads for a server room.
-Three more large releases came from outside the usual names. The GigaChat team’s GigaChat 4 (November 20) has 708 billion parameters with 41 billion active, a 1M context and an MIT license, in 726 GB. Its 37B sibling is different: the license is a “Noncommercial License for individuals.” Aleph Alpha’s Kolibri 1.1 (November 23) is a German and English model with 75 billion parameters, 3 billion active, and a context of up to 1M tokens, under Apache 2.0 in 78 GB. KRAFTON’s Raon-1 mini (November 24) is a 30B model with 4B active, trained from scratch with a focus on Korean, also Apache 2.0. Its card says the 4-bit build runs a full 256K context in 20 GiB of GPU memory.
-Ant Group’s inclusionAI posted three models under MIT. LingSante-3.1-flash and LingSante-3.1-air-VL (November 19) are medical models of 560 billion and 124 billion parameters; the first card says the model “is not a medical device and must not be used as an independent basis for diagnosis, prescriptions, or treatment.” Ling-3.2-air (November 23) is a general 124B model with 5.5B active in 129 GB, and its card reports 23 on the Artificial Analysis index, a figure we have not checked against the board. MemT-1.0-Pro (November 20) is a research model that keeps a memory of earlier conversations inside the model itself. It is built on NVIDIA’s Nemotron 3 Ultra 550B, weighs 1.13 TB, and names the OpenMDW 1.1 license.
-The small end was busy too. Prism ML’s Ternary Bonsai 2.5 27B (November 24) stores Qwen3.8-27B at 1.76 bits per weight, 5.93 GB against 53.8 GB at full precision, under Apache 2.0. Prism says it keeps 90% of the full model’s score on agent coding tests, its own measurement. Tencent posted three small families: WePocketModel 1.0 (November 16 and 17), 2B and 4B models that chat about images, make embeddings and answer decision questions; OmniEVIE-4B (November 24), a retrieval model for text, images and video; and WeMM-Ecom (November 18), five sizes tuned for shopping listings. All three carry Apache 2.0, and the last pass missed the first and the third. Shanghai AI Laboratory’s Sage-Interaction (November 23) is a 9B model that listens, watches and speaks in real time, with no license stated yet. And Kandinsky ImageSR 2.0 (November 24) upscales images 2x or 4x under MIT.This month’s downloads so far, and what their licenses ask of you
-
-Ripple-65B Preview · 65B denseKeep the notice. Nothing else.Apache 2.0
-Maya 2 Native, Maya Transcribe · 2.5B and 0.8BKeep the notice. Nothing else.Apache 2.0
-Kimi K3.1 Pro · 2.8T, 1.56 TBShow “Kimi K3.1-Pro” above 100M monthly users or $20M monthly revenue; hosts above $20M a year need a deal.Modified MIT
-GLiDE 0.4B to 27B · 0.4B to 27BA custom license; read it before shipping a product.Custom
-ZwZ2 4B, 9B, 27B · 4B to 27BThe model cards point to a license “accompanying the released weights”; the GGUF repos say Apache 2.0.Unclear
-P-H3-Image · 13 to 40 GBExcludes the EU, UK, Korea and US without a separate MiniMax license; products must show “Powered by MiniMax H3”.H3 license
-MiniMax H3 Image · 33.1B, 69 GB plus a 67 GB text encoderExcludes the EU, UK, Korea and US. Needs MiniMax’s written approval above $1M in annual revenue or to host it for others, and products must show “MiniMax-H3-Image”.H3 Image license
-Nex-N2.6 · 321B, 328 GBKeep the notice. Nothing else.Apache 2.0
-ZONOS3-Mini · 800MKeep the notice. Nothing else.Apache 2.0
-Sophon-Realtime v1 · 32B, 41 to 108 GBKeep the notice. Nothing else.Apache 2.0
-ZoomGain 4B and 9B, SingVL S1 · 4.5B and 9.4BThe ZoomGain repositories carry no license yet, so nothing is granted until one appears. SingVL S1’s repository was no longer public on November 19, and both were unchanged on November 26.None stated
-meta-encoder-v1 · 28B, 57 GBKeep the notice. Nothing else. The license file arrived on November 17, five days after the weights.Apache 2.0
-Inkling 2 Small · 594B, 394 GBKeep the notice. Nothing else.Apache 2.0
-Haru-4B · 4B, 10.6 GBKeep the notice. Nothing else.Apache 2.0
-Duo 1.0 and 1.2 · up to 154 GBTrained from MiniMax H3, so the same terms apply: no EU, UK, Korea or US, and products must show “Powered by MiniMax H3”.H3 license
-LongCat-Video-Avatar 1.6 · 78 GBKeep the notice. Nothing else.MIT
-Sage S2.1 Flash · 321B, 643 GBKeep the notice. Nothing else. The model card states MIT; the repository has no separate license file.MIT
-KORMo-Web 4B, 9B and 11B · 4B to 11BKeep the notice. Nothing else.Apache 2.0
-Sophon-Realtime 4B · 4B, 9 to 13 GBKeep the notice. Nothing else.Apache 2.0
-FastFrames-S and FastFrames-L · 1.3B and 14BApple’s research model license: released “for the sole purpose of scientific research,” so not for a product.Research only
-Invoker-Render 1.0 · 33B, 135 GBThe card names Apache 2.0 together with CC BY-NC 4.0, and the model uses MiniMax H3’s architecture. Treat it as non-commercial until you have read the linked terms.Non-commercial
-Hy4 flash · 220B, 440 GBApache 2.0 with one addition: a company above $50 million in yearly revenue, or a product above 100 million monthly users, needs a separate written license. Internal use is exempt.Tencent Hy License
-SenseNova-Loop-9B · 9.4B, 19 GBKeep the notice. Nothing else. The login the repository asked for at first was gone by November 26.Apache 2.0
-DaisyRose-27B · 27B, 56 GBKeep the notice. Nothing else.Apache 2.0
-Aion 1.0 Instruct · 2.3B, 4.6 GBKeep the notice. Nothing else.MIT
-WePocketModel 1.0 2B and 4B · 2B and 4B, 9 GB at 4BKeep the notice. Nothing else.Apache 2.0
-WeMM-Ecom 0.8B to 35B · 0.8B to 35BKeep the notice. Nothing else. Read from the quantized builds’ repositories.Apache 2.0
-LingSante-3.1-flash and air-VL · 560B, 574 GB and 124B, 250 GBKeep the notice. Nothing else. The cards add that the models are for research and evaluation and are not a medical device.MIT
-Inkling 2 Mini · 26.4B, 20 GBKeep the notice. Nothing else. The card also links Thinking Machines’ acceptable use policy.Apache 2.0
-Hy4 · 770B, 1.55 TBVersion 1.0 of the license Hy4 flash carries: derived from Apache 2.0, with added commercial terms for large businesses that host the model for others.Tencent Hy License
-bison-1 and groundhog-1 · 31B, 65 GB and 26B, 53 GBBaseten’s changes are under MIT and the Gemma 4 base is under Apache 2.0. Keep both notices.MIT + Apache 2.0
-GigaChat 4 708B · 708B, 726 GBKeep the notice. Nothing else.MIT
-GigaChat 4 37B · 37B, 41 GBA “Noncommercial License for individuals.” Read it before any use at work.Non-commercial
-MemT-1.0-Pro · 565B, 1.13 TBThe card names the OpenMDW 1.1 license and links to it. We did not read the terms of the NVIDIA base model it was trained from.OpenMDW 1.1
-Kolibri 1.1 · 75B, 78 GBKeep the notice. Nothing else.Apache 2.0
-ERNIE 5.5 Flash Preview · 280B, 166 GBKeep the notice. Nothing else.Apache 2.0
-Ling-3.2-air · 124B, 129 GBKeep the notice. Nothing else.MIT
-Sage-Interaction · 9B, 20 GBThe repository carries no license yet, so nothing is granted until one appears.None stated
-Raon-1 mini · 30B, 33 GBKeep the notice. Nothing else.Apache 2.0
-Ternary Bonsai 2.5 27B · 27B in 5.93 GBKeep the notice. Nothing else.Apache 2.0
-OmniEVIE-4B · 4.5B, 9 GBKeep the notice. Nothing else.Apache 2.0
-Kandinsky ImageSR 2.0 · 4.5B, 10.5 GBKeep the notice. Nothing else.MIT
-28 of these 42 rows are plain Apache 2.0 or MIT. The rest attach conditions on audience, revenue, region or labelling, or leave the terms unclear. Summaries are ours, from each model card and license file read on the day of its pass, most recently November 26; the license file is the authority.
+Moonshot’s
+Kimi K3.1 Pro repository
+appeared on November 2, inside the window its launch post promised. It is 2.8 trillion parameters with 104 billion active per token, which makes it a download for a data center rather than a desk. The license is a modified MIT: free to use, but a product with more than 100 million monthly users or $20 million in monthly revenue must show “Kimi K3.1-Pro,” and a hosting company above $20 million a year needs a separate agreement.
+Ricursive’s
+Ripple-65B Preview
+(November 4) was the cleanest release of the first week: a 65B dense model trained from scratch on 12 trillion tokens, with a 1M context, under Apache 2.0. Its
+launch page
+claims 80.52 on TerminalBench 2.1, a vendor number with no independent score yet. inclusionAI’s ZwZ2, which our October edition missed, adds visual reasoning to Qwen3.5 and 3.6 bases at 4B, 9B and 27B; the
+9B card
+reports a gain from 51.63 to 56.59 across 25 benchmarks, its makers’ figure.
+Pruna’s
+P-H3-Image
+(November 3) is an open image model for generation and editing, built on MiniMax H3, that renders in 8 steps. Its
+model card
+says the MiniMax H3 Community License “excludes the European Union, the United Kingdom, the Republic of Korea and the United States” unless you hold a separate license from MiniMax, and that products built on it must show “Powered by MiniMax H3.” The same base license sits under Pika’s H3 Flex weights from October, so it is worth reading once before downloading anything in the H3 family.
+MiniMax’s own
+H3 Image weights
+(November 10) come with a sibling of that license. The model is a 33.1B image generator that makes roughly 16-megapixel pictures in 6 steps: 69 GB of files, plus a 67 GB text encoder from the H3 repository. Its license defines “Excluded Territories” as “the European Union, the United Kingdom, the Republic of Korea and the United States of America.” Elsewhere, a company with more than $1 million in annual revenue, or anyone hosting the model for others, needs MiniMax’s written approval. The hosted API from the image section has no such limit.
+Nex-N2.6
+(November 10) is the plain-licensed release of the second week: a 321B model for computer use and coding, built on GLM-5.3-Flash, in 328 GB of files under Apache 2.0. Its makers report 83.0 on OSWorld against 78.0 for the base model, and their own table also shows it slightly behind the base on Terminal-Bench 2.1, 84.1 to 84.3. Three inclusionAI repositories from November 10 and 11, the
+ZoomGain
+vision models and the SingVL S1 decision model, stated no license on November 17. Two days later the ZoomGain repositories still had none, and SingVL S1’s was no longer public. Meta’s
+meta-encoder-v1
+, a 28B embedding model for text and images, was posted on November 12 without one and gained an Apache 2.0 license file on November 17. Until a license appears, a public download grants you nothing.
+Thinking Machines kept its promise as well. The
+Inkling 2 Small weights
+went up on November 12 under Apache 2.0, a week after the company said “next week.” Like Kimi, this is a download for a server room: about 394 GB of files, and the card asks for “a GPU cluster with at least 500GB of aggregated VRAM.” Shanghai AI Laboratory’s
+Sage S2.1 Flash
+(November 15) is the same size class with a narrower job. It is a 321B model for scientific work that takes molecular graphs, crystal structures and protein sequences as input alongside text, in 643 GB of files. Its card states the MIT license.
+Two video releases round out the week. Meituan’s
+LongCat-Video-Avatar 1.6
+(November 13) animates a person from an audio track, and its card says it holds together in videos “exceeding 10 minutes”; it is MIT-licensed and 78 GB. As with Pruna’s Replace, use it with people who have agreed to appear. inclusionAI’s
+Duo
+(November 12) is a research model for live conversation in sound and picture. Its weights “were initialized from MiniMax H3,” so the H3 Community License travels with them, regional exclusions included.
+Tencent opened the smaller of its two Hy4 models on November 17.
+Hy4 flash
+has 220 billion parameters with 12 billion active per token, reads text and images in a 1M context, and comes to about 440 GB of files. Its Tencent Hy License is Apache 2.0 with one added section. A company with more than $50 million in yearly revenue, or a product with more than 100 million monthly users, needs a separate written license, and purely internal use is exempt. Unlike the H3 licenses above, it names no excluded countries. The larger Hy4 repository was still private on November 19.
+Three smaller releases suit a desk better. SenseTime’s
+SenseNova-Loop-9B
+(November 17) is a 9.4B model for text and images under Apache 2.0, in about 19 GB, with the company’s own GGUF files a day later; the repository asks you to log in first. RadixArk’s
+DaisyRose-27B
+(November 18) is Qwen3.8-27B trained further on about 1,200 long agent tasks, also Apache 2.0. Its card reports Terminal Bench 4.1 rising from 5.6 to 12.0, and the same table shows it behind the far larger Inkling 2 Small on most rows. It keeps the base model’s format, so it swaps in wherever Qwen3.8-27B already runs. Microsoft’s
+Aion 1.0 Instruct
+(November 18) is a 2.3B model under MIT, 4.6 GB before quantizing, with a 32K context. Its card says a tuned version “will become the Windows OS SLM by the end of January 2027.” And the last pass missed
+KORMo-Web
+(November 14), Korean and English models at 4B, 9B and 11B that operate a web browser, under Apache 2.0.
+Two research releases come with terms that rule out products. Apple’s
+FastFrames
+(November 16) are 1.3B and 14B video models that produce 480p frames fast enough to steer live; the card times the small one at about 35 ms a frame on one GPU. Apple’s license releases them “for the sole purpose of scientific research.” inclusionAI’s
+Invoker-Render 1.0
+(November 16) turns a rough layout of a scene into video and streams it for as long as the layout keeps arriving. It is a 33B model in 135 GB, its default setup uses eight GPUs, and its license tag includes CC BY-NC 4.0, which means non-commercial.
+The fourth week’s most useful download is
+Inkling 2 Mini
+(November 20). Thinking Machines’
+post
+calls it “small enough to run on your laptop,” and the
+model card
+backs that with specifics: 26.4 billion parameters in one checkpoint of about 20 GB, text and image input, Apache 2.0, and a supported list that starts with Apple silicon machines with 32 GB of memory or more. The model runs its middle layers three times for every token, which the company says buys more reasoning from a small model. Its claim to be the best open model of its size on most tasks is its own, and the same post says Qwen3.8-27B is ahead on some of them.
+Two promised sets of weights arrived. Tencent made the
+Hy4 repository
+public on November 20, sixteen days after the hosted model: 770 billion parameters with 49 billion active per token, in about 1.55 TB of files, under the Tencent Hy License. Baidu posted
+ERNIE 5.5 Flash Preview
+on November 23 under Apache 2.0, twelve days after saying “soon.” It is 280 billion parameters with 14 billion active, about 166 GB, and the card calls it “an intermediate checkpoint from post-training.” Both are downloads for a server room.
+Three more large releases came from outside the usual names. The GigaChat team’s
+GigaChat 4
+(November 20) has 708 billion parameters with 41 billion active, a 1M context and an MIT license, in 726 GB. Its 37B sibling is different: the license is a “Noncommercial License for individuals.” Aleph Alpha’s
+Kolibri 1.1
+(November 23) is a German and English model with 75 billion parameters, 3 billion active, and a context of up to 1M tokens, under Apache 2.0 in 78 GB. KRAFTON’s
+Raon-1 mini
+(November 24) is a 30B model with 4B active, trained from scratch with a focus on Korean, also Apache 2.0. Its card says the 4-bit build runs a full 256K context in 20 GiB of GPU memory.
+Ant Group’s inclusionAI posted three models under MIT.
+LingSante-3.1-flash
+and LingSante-3.1-air-VL (November 19) are medical models of 560 billion and 124 billion parameters; the first card says the model “is not a medical device and must not be used as an independent basis for diagnosis, prescriptions, or treatment.”
+Ling-3.2-air
+(November 23) is a general 124B model with 5.5B active in 129 GB, and its card reports 23 on the Artificial Analysis index, a figure we have not checked against the board.
+MemT-1.0-Pro
+(November 20) is a research model that keeps a memory of earlier conversations inside the model itself. It is built on NVIDIA’s Nemotron 3 Ultra 550B, weighs 1.13 TB, and names the OpenMDW 1.1 license.
+The small end was busy too. Prism ML’s
+Ternary Bonsai 2.5 27B
+(November 24) stores Qwen3.8-27B at 1.76 bits per weight, 5.93 GB against 53.8 GB at full precision, under Apache 2.0. Prism says it keeps 90% of the full model’s score on agent coding tests, its own measurement. Tencent posted three small families: WePocketModel 1.0 (November 16 and 17), 2B and 4B models that chat about images, make embeddings and answer decision questions;
+OmniEVIE-4B
+(November 24), a retrieval model for text, images and video; and WeMM-Ecom (November 18), five sizes tuned for shopping listings. All three carry Apache 2.0, and the last pass missed the first and the third. Shanghai AI Laboratory’s
+Sage-Interaction
+(November 23) is a 9B model that listens, watches and speaks in real time, with no license stated yet. And
+Kandinsky ImageSR 2.0
+(November 24) upscales images 2x or 4x under MIT.
+This month’s downloads so far, and what their licenses ask of you
+Ripple-65B Preview
+·
+65B dense
+Keep the notice. Nothing else.
+Apache 2.0
+Maya 2 Native, Maya Transcribe
+·
+2.5B and 0.8B
+Keep the notice. Nothing else.
+Apache 2.0
+Kimi K3.1 Pro
+·
+2.8T, 1.56 TB
+Show “Kimi K3.1-Pro” above 100M monthly users or $20M monthly revenue; hosts above $20M a year need a deal.
+Modified MIT
+GLiDE 0.4B to 27B
+·
+0.4B to 27B
+A custom license; read it before shipping a product.
+Custom
+ZwZ2 4B, 9B, 27B
+·
+4B to 27B
+The model cards point to a license “accompanying the released weights”; the GGUF repos say Apache 2.0.
+Unclear
+P-H3-Image
+·
+13 to 40 GB
+Excludes the EU, UK, Korea and US without a separate MiniMax license; products must show “Powered by MiniMax H3”.
+H3 license
+MiniMax H3 Image
+·
+33.1B, 69 GB plus a 67 GB text encoder
+Excludes the EU, UK, Korea and US. Needs MiniMax’s written approval above $1M in annual revenue or to host it for others, and products must show “MiniMax-H3-Image”.
+H3 Image license
+Nex-N2.6
+·
+321B, 328 GB
+Keep the notice. Nothing else.
+Apache 2.0
+ZONOS3-Mini
+·
+800M
+Keep the notice. Nothing else.
+Apache 2.0
+Sophon-Realtime v1
+·
+32B, 41 to 108 GB
+Keep the notice. Nothing else.
+Apache 2.0
+ZoomGain 4B and 9B, SingVL S1
+·
+4.5B and 9.4B
+The ZoomGain repositories carry no license yet, so nothing is granted until one appears. SingVL S1’s repository was no longer public on November 19, and both were unchanged on November 26.
+None stated
+meta-encoder-v1
+·
+28B, 57 GB
+Keep the notice. Nothing else. The license file arrived on November 17, five days after the weights.
+Apache 2.0
+Inkling 2 Small
+·
+594B, 394 GB
+Keep the notice. Nothing else.
+Apache 2.0
+Haru-4B
+·
+4B, 10.6 GB
+Keep the notice. Nothing else.
+Apache 2.0
+Duo 1.0 and 1.2
+·
+up to 154 GB
+Trained from MiniMax H3, so the same terms apply: no EU, UK, Korea or US, and products must show “Powered by MiniMax H3”.
+H3 license
+LongCat-Video-Avatar 1.6
+·
+78 GB
+Keep the notice. Nothing else.
+MIT
+Sage S2.1 Flash
+·
+321B, 643 GB
+Keep the notice. Nothing else. The model card states MIT; the repository has no separate license file.
+MIT
+KORMo-Web 4B, 9B and 11B
+·
+4B to 11B
+Keep the notice. Nothing else.
+Apache 2.0
+Sophon-Realtime 4B
+·
+4B, 9 to 13 GB
+Keep the notice. Nothing else.
+Apache 2.0
+FastFrames-S and FastFrames-L
+·
+1.3B and 14B
+Apple’s research model license: released “for the sole purpose of scientific research,” so not for a product.
+Research only
+Invoker-Render 1.0
+·
+33B, 135 GB
+The card names Apache 2.0 together with CC BY-NC 4.0, and the model uses MiniMax H3’s architecture. Treat it as non-commercial until you have read the linked terms.
+Non-commercial
+Hy4 flash
+·
+220B, 440 GB
+Apache 2.0 with one addition: a company above $50 million in yearly revenue, or a product above 100 million monthly users, needs a separate written license. Internal use is exempt.
+Tencent Hy License
+SenseNova-Loop-9B
+·
+9.4B, 19 GB
+Keep the notice. Nothing else. The login the repository asked for at first was gone by November 26.
+Apache 2.0
+DaisyRose-27B
+·
+27B, 56 GB
+Keep the notice. Nothing else.
+Apache 2.0
+Aion 1.0 Instruct
+·
+2.3B, 4.6 GB
+Keep the notice. Nothing else.
+MIT
+WePocketModel 1.0 2B and 4B
+·
+2B and 4B, 9 GB at 4B
+Keep the notice. Nothing else.
+Apache 2.0
+WeMM-Ecom 0.8B to 35B
+·
+0.8B to 35B
+Keep the notice. Nothing else. Read from the quantized builds’ repositories.
+Apache 2.0
+LingSante-3.1-flash and air-VL
+·
+560B, 574 GB and 124B, 250 GB
+Keep the notice. Nothing else. The cards add that the models are for research and evaluation and are not a medical device.
+MIT
+Inkling 2 Mini
+·
+26.4B, 20 GB
+Keep the notice. Nothing else. The card also links Thinking Machines’ acceptable use policy.
+Apache 2.0
+Hy4
+·
+770B, 1.55 TB
+Version 1.0 of the license Hy4 flash carries: derived from Apache 2.0, with added commercial terms for large businesses that host the model for others.
+Tencent Hy License
+bison-1 and groundhog-1
+·
+31B, 65 GB and 26B, 53 GB
+Baseten’s changes are under MIT and the Gemma 4 base is under Apache 2.0. Keep both notices.
+MIT + Apache 2.0
+GigaChat 4 708B
+·
+708B, 726 GB
+Keep the notice. Nothing else.
+MIT
+GigaChat 4 37B
+·
+37B, 41 GB
+A “Noncommercial License for individuals.” Read it before any use at work.
+Non-commercial
+MemT-1.0-Pro
+·
+565B, 1.13 TB
+The card names the OpenMDW 1.1 license and links to it. We did not read the terms of the NVIDIA base model it was trained from.
+OpenMDW 1.1
+Kolibri 1.1
+·
+75B, 78 GB
+Keep the notice. Nothing else.
+Apache 2.0
+ERNIE 5.5 Flash Preview
+·
+280B, 166 GB
+Keep the notice. Nothing else.
+Apache 2.0
+Ling-3.2-air
+·
+124B, 129 GB
+Keep the notice. Nothing else.
+MIT
+Sage-Interaction
+·
+9B, 20 GB
+The repository carries no license yet, so nothing is granted until one appears.
+None stated
+Raon-1 mini
+·
+30B, 33 GB
+Keep the notice. Nothing else.
+Apache 2.0
+Ternary Bonsai 2.5 27B
+·
+27B in 5.93 GB
+Keep the notice. Nothing else.
+Apache 2.0
+OmniEVIE-4B
+·
+4.5B, 9 GB
+Keep the notice. Nothing else.
+Apache 2.0
+Kandinsky ImageSR 2.0
+·
+4.5B, 10.5 GB
+Keep the notice. Nothing else.
+MIT
+28
+of these
+42
+rows are plain Apache 2.0 or MIT. The rest attach conditions on audience, revenue, region or labelling, or leave the terms unclear. Summaries are ours, from each model card and license file read on the day of its pass, most recently November 26; the license file is the authority.
 Local-runnable: Ripple needs 39 GB, and H3 Image got local support on launch day
-stable-diffusion.cpp added P-H3-Image in master-1049 (November 4), alongside a second, higher-resolution pass for H3. The smallest diffusion file is 13.36 GB, and with the 3.6 GB text encoder and a 3.2 GB VAE the total lands near 20 GB before anything is generated. master-1051 and master-1052 added packed 4-bit models and faster 4-bit kernels on NVIDIA cards. Since master-1044 the Linux CPU and Vulkan builds target Ubuntu 26.04 only, so older distributions need an older build.
-The project kept that pace in the second week. Builds from November 7 and 8 added ControlNet Union for SDXL, RelayVSR video upscaling on NVIDIA cards, HyperFlow H3 Flash and SeedVR2 upscaling for images and video. master-1088 added MiniMax H3 Image on November 10, the day MiniMax released it, along with a lighter decoder for H3 video. H3 Image is not a small model: the smallest repackaged file we found, in Comfy-Org’s repository, is 12.55 GB before the text encoder, and the license above still applies at home.
-The third week was quieter. Builds master-1090 to master-1106 (November 12 to 16) let H3 Image reuse P-H3-Image’s smaller text encoder, added prompts that mix several images for vision models, sped up MOSS-Image on NVIDIA cards, and moved the project to ggml 1.0. Unsloth posted H3 Image in GGUF on November 12, a second source of repackaged files under the same H3 Image license. The project published no new build between November 16 and November 19.
-Ollama v0.40.16 (November 9) added Ripple Preview, the 65B Apache 2.0 model from the first week: 39 GB at 4-bit, 46 GB in the Apple silicon build, and 130 GB or more at full precision. The same release cut Qwen3.8 Flash Next’s memory use on Apple silicon by about 27 GiB and added CUDA 13.5 for Windows on ARM. There has been no stable release since; v0.40.17 was still a release candidate on November 19, and Inkling 2 Small appeared in Ollama’s library as a cloud-only tag.
-Ollama v0.40.15 added two families in the first week. Xiaomi’s MiMo V2.6 is a 9B model for code and agent work under MIT, 6.6 GB at 4-bit; its weights date from September, so the news is that it now runs with one command. AutoTrust’s JEV decision models come at 9B (11 GB), 27B with vision (21 GB) and 35B (26 GB) under Apache 2.0, on Apple silicon only in this release. Perplexity’s pplx-decider-flash, a 4B decision model from October, also arrived on Ollama as MLX tags from 4.6 to 9.1 GB, so Apple silicon only too.
-llama.cpp’s v0.9.0 (November 4) added Chatterbox speech, NVIDIA’s Nemotron 3.5 Transcribe and the Mistral Large 4 architecture, and later builds added Ripple and Fish Audio’s Drama 3. There has been no numbered release since, but the rolling builds added Kimi K3.1 Pro’s text model on November 6 and its vision side on November 10, audio input for Gemma 4, and a speech endpoint in the built-in server. Builds from November 15 to 17 added ZONOS3-Mini and Fish Audio’s S2 for speech, Higgs v3 and VibeVoice for transcription, MiniMax-M3.1, and the chat format Inkling 2 Small needs. Builds from November 17 to 19 added Kokoro speech, voice cloning from a reference clip for Qwen3-TTS, VoxCPM2, and Zyphra’s Zaya1 8B. Whether any of this fits your machine is the same arithmetic as before; the RAM and VRAM guide does it.
-The fourth week was about Inkling 2 Mini, which reached every local runtime within days. Ollama v0.40.17 added inkling-2-mini at about 20 GB, on Apple silicon only for now, with PC support promised in a later release. Its downloads are dated November 21, and v0.40.18 (November 24) made the model faster on Macs. Unsloth posted GGUF files on launch day. llama.cpp shipped v1.1.0 on November 26 with the Inkling 2 family, Raon-1 mini, Hy4 flash, Zaya1 8B and Domyn Edge 4B, plus the speech models its rolling builds had collected. stable-diffusion.cpp resumed on November 22 after six quiet days: builds master-1111 to master-1133 added edit LoRAs for MOSS-Image, a small language for describing generation pipelines, and server options that load models on demand, unload idle ones and accept an API key.
+stable-diffusion.cpp added P-H3-Image in
+master-1049
+(November 4), alongside a second, higher-resolution pass for H3. The smallest diffusion file is 13.36 GB, and with the 3.6 GB text encoder and a 3.2 GB VAE the total lands near 20 GB before anything is generated. master-1051 and master-1052 added packed 4-bit models and faster 4-bit kernels on NVIDIA cards. Since master-1044 the Linux CPU and Vulkan builds target Ubuntu 26.04 only, so older distributions need an older build.
+The project kept that pace in the second week. Builds from November 7 and 8 added ControlNet Union for SDXL, RelayVSR video upscaling on NVIDIA cards, HyperFlow H3 Flash and SeedVR2 upscaling for images and video. master-1088 added MiniMax H3 Image on November 10, the day MiniMax released it, along with a lighter decoder for H3 video. H3 Image is not a small model: the smallest repackaged file we found, in
+Comfy-Org’s repository
+, is 12.55 GB before the text encoder, and the license above still applies at home.
+The third week was quieter. Builds master-1090 to master-1106 (November 12 to 16) let H3 Image reuse P-H3-Image’s smaller text encoder, added prompts that mix several images for vision models, sped up MOSS-Image on NVIDIA cards, and moved the project to ggml 1.0. Unsloth posted
+H3 Image in GGUF
+on November 12, a second source of repackaged files under the same H3 Image license. The project published no new build between November 16 and November 19.
+Ollama v0.40.16
+(November 9) added
+Ripple Preview
+, the 65B Apache 2.0 model from the first week: 39 GB at 4-bit, 46 GB in the Apple silicon build, and 130 GB or more at full precision. The same release cut Qwen3.8 Flash Next’s memory use on Apple silicon by about 27 GiB and added CUDA 13.5 for Windows on ARM. There has been no stable release since; v0.40.17 was still a release candidate on November 19, and Inkling 2 Small appeared in Ollama’s library as a cloud-only tag.
+Ollama v0.40.15
+added two families in the first week. Xiaomi’s MiMo V2.6 is a 9B model for code and agent work under MIT, 6.6 GB at 4-bit; its weights date from September, so the news is that it now runs with one command. AutoTrust’s JEV decision models come at 9B (11 GB), 27B with vision (21 GB) and 35B (26 GB) under Apache 2.0, on Apple silicon only in this release. Perplexity’s pplx-decider-flash, a 4B decision model from October, also arrived on Ollama as MLX tags from 4.6 to 9.1 GB, so Apple silicon only too.
+llama.cpp’s
+v0.9.0
+(November 4) added Chatterbox speech, NVIDIA’s Nemotron 3.5 Transcribe and the Mistral Large 4 architecture, and later builds added Ripple and Fish Audio’s Drama 3. There has been no numbered release since, but the rolling builds added Kimi K3.1 Pro’s text model on November 6 and its vision side on November 10, audio input for Gemma 4, and a speech endpoint in the built-in server. Builds from November 15 to 17 added ZONOS3-Mini and Fish Audio’s S2 for speech, Higgs v3 and VibeVoice for transcription, MiniMax-M3.1, and the chat format Inkling 2 Small needs. Builds from November 17 to 19 added Kokoro speech, voice cloning from a reference clip for Qwen3-TTS, VoxCPM2, and Zyphra’s Zaya1 8B. Whether any of this fits your machine is the same arithmetic as before; the
+RAM and VRAM guide
+does it.
+The fourth week was about Inkling 2 Mini, which reached every local runtime within days.
+Ollama v0.40.17
+added
+inkling-2-mini
+at about 20 GB, on Apple silicon only for now, with PC support promised in a later release. Its downloads are dated November 21, and v0.40.18 (November 24) made the model faster on Macs. Unsloth posted
+GGUF files
+on launch day. llama.cpp shipped
+v1.1.0
+on November 26 with the Inkling 2 family, Raon-1 mini, Hy4 flash, Zaya1 8B and Domyn Edge 4B, plus the speech models its rolling builds had collected. stable-diffusion.cpp resumed on November 22 after six quiet days: builds master-1111 to master-1133 added edit LoRAs for MOSS-Image, a small language for describing generation pipelines, and server options that load models on demand, unload idle ones and accept an API key.
 Skipped on purpose
-What we cut, and why. Crouton Alpha: a free, unnamed stealth model on OpenRouter. OpenRouter Auto and Auto Code: routers, not models. Parakeet Ultra on OpenRouter: a new route at $0.001 a minute for a model Moondream launched on September 22. Gemini Omni 1.1 on OpenRouter: a new route for an August model that retires into 1.2 on December 3. Kimi K3.1 Pro on Ollama: a cloud-only tag. Fireworks Forge: faster serving, background jobs and desktop plans, but no new model. Gemini 3.8 TTS voice remixing, Suno’s MIDI input, ElevenLabs Realtime: features, not models. Claude platform updates: message threads, watermarking and IP allowlists, no new model.
-Added on November 12. Lyria 3.5 on Replicate, Grok STT 2.0 on OpenRouter, LFM3-1.7B on OpenRouter: new routes for models from September and October. Fable 5.2 fast mode: a speed option at $16/$80, not a model. Recraft Vectorizer Pro: a tool inside Recraft Studio with no API or price published. Runway Praxis-1: an open model for controlling robots, outside what this roundup covers. Fine-tunes, draft models and experiments built on Qwen3.8-27B, quantized copies of Kimi K3.1 Pro and H3 Image, and research checkpoints under 100M parameters: real uploads, but not releases most readers can act on.
-Added on November 17. Qwen4 Max and Gemini 4 Carbon on Runware, Inkling 2 Small on OpenRouter, MindLab’s Macaron models on Alibaba’s Model Studio: new routes, not new models. Qwen4 Max Preview: a November 11 preview for Token Plan subscribers, replaced by the release five days later. Ling 3.2 Flash: a free-only OpenRouter listing from inclusionAI with no vendor post or price to check. Zyphra ZAC-1: the audio codec already inside ZONOS3-Mini, repackaged. tiny-voca: a hobby speech model of about 18 MB, under our size floor. DeepSeek’s web search, file reading and OCR APIs, ElevenLabs agent updates, self-hosted Claude Managed Agents and Claude’s text watermark: features, not models. OpenAI’s image classifier for approved organizations: a moderation tool, not a generative model.
-Added on November 19. GPT-6.2 Sol Pro and Astra Pro on OpenRouter: the same two models with a higher reasoning mode, plus batch routes. Astra for Law 6.2: a legal variant on OpenAI’s price list at Astra’s rates, with no post of its own. MAI Cyber 2 Flash: a Microsoft security model that runs only inside Microsoft’s security products. MAI Licensed Weights and Dragon Copilot Transcribe: a deployment program and a product built on MAI Transcribe 2. Arete-27B and Edge0-145B: held over from the last pass. The first is a fine-tune of Qwen3.8-27B that changes how it answers sensitive questions, not what it can do; the second is a 4-bit build of Qwen3.8 Flash Next under a custom license. Inworld Voice Isolator: a noise-removal model of about 64M parameters, under our size floor. JoyAI-VL-Preview: a benchmark listing with no public repository or vendor post to check. Voice editing in Gemini 3.5 Transcribe, Office files in the Gemini API, OpenAI’s background windows, Claude’s linked billing and ElevenLabs’ agent tools: features, not models.
-Added on November 26. OpenAI’s Healthcare model configurations: four existing models paired with a setup for clinical questions, not new models. Solar Pro 4 Contributor: Upstage’s existing model at a lower rate in exchange for letting Upstage use your data. MiMo-V2.6-Flash-MOPD, Qwen3 TTS 1.7B, Gemini 2.5 Flash TTS and Pro TTS, and Pixtral Large 2502 on OpenRouter: new routes for older models. Hy4 on Ollama: a cloud-only tag. Quantized, merged and “uncensored” copies of Inkling 2 Mini, Hy4 flash and Qwen3.8-27B, and add-on files for MiniMax H3: dozens of real uploads, but not releases most readers can act on. MiniTranslator-2B, shot-reader-8b, CCORE-Web-Coder-4B, Libra-TTS and oruk-fourier-2b: small single-purpose models from individual teams, most of them fine-tunes of Qwen models. Apple’s DepthPro2: a depth-estimation model, outside what this roundup covers. Anthropic’s Enterprise Frontier Safeguards, Gemini’s tool retrieval, and ElevenLabs’ agents as code: features, not models.
-One correction to October. That edition skipped Canva Craft because Canva’s page was unreachable and there was “no API or price yet.” In fact Canva’s developer blog opened an image generation API with the craft_v1_2k model on October 28. It is “currently in preview and can change without notice,” and apps that use it cannot pass Canva’s public-app review yet, so it stays out of the ledger until it leaves preview. It was still in preview on November 17.
-Three corrections to this edition’s first pass. It dated Cohere’s Embed 5 and Rerank 5 to November 3, which was only the day they reached OpenRouter; Cohere’s own posts date Embed 5 to September 30 and Rerank 5 to October 21, so both roundups missed them. It quoted Decision Index scores of 65.0 and 65.2 for GLiDE v1.2 and d1-ultra; the board no longer shows those figures, and the text section now carries the November 12 read. And it said Cloudflare would retire four LLMs on November 15; Cloudflare’s notice now lists 16 and gives November 20.
-Watching: October’s open items and November’s datesOctober’s open items, as of November 26
-
-Kimi K3.1 Pro weights, by November 4Posted to Hugging Face on November 2, two days early. In the open-weights section.Shipped
-Kling 4.0 FlashOn Runware since November 4 and Replicate since November 9. Kling’s own price list is now readable and matches at $0.094 a second. Its API lists 720p only for Flash, and we found no source for 4K or HDR modes.Shipped
-Gemini 4 CarbonGenerally available to paying developers since November 10. The version tuned for security work stays inside Google’s Fairwind Program.Shipped
-Fireworks Ember-1 and the Forge keynote, November 3Forge launched products, not models. Ember-1 is “available on serverless and dedicated deployments,” still with no general-availability post.Passed
-Genie 4Generally available in the Gemini API since November 19, on the paid tier, at about $0.10 a second. In the video section.Shipped
-GPT-6 RosalindStill limited to approved research through OpenAI’s trusted-access program.Waiting
-DessaBlock’s page for the speech model now offers a waitlist, with no API and no launch post yet.Waiting
-FLUX 3 Dev open weightsNo post and no repository. BFL’s latest is still FLUX 3 Image Klein.Waiting
-Ideogram 4.5 open weightsIdeogram 4.6 arrived on November 19 as a hosted model. Only Ideogram 4.0 has weights on Hugging Face.Waiting
-MAI-Image-2.7 API and text-to-imageReleased on November 17 with a Flash tier: text-to-image and editing, in public preview on Microsoft Foundry and on OpenRouter. In the image section.Shipped
-Clairic open weightsStill “soon,” with no Cloudflare repository yet.Waiting
-CLM-35BThe CLM-8B card still says “coming in early October.” Only tiny experimental checkpoints exist.Waiting
-Mercury 3 at half price$0.10/$0.35 at Inception on November 26, still with no end date. Inception’s models were still missing from OpenRouter’s list that day, and neither side has explained why.Due
-Drama 3 launch price, now November 30Fish Audio extended it from November 12: $10 per million UTF-8 bytes through November 30, then the $50 list price.Due
-Hume TTS and EVI APIs, November 13The date has passed. Hume’s developer site now documents Audio Decisions and Expression Measurement only, and its changelog covers Audio Decisions alone.Passed
-Google TTS previews, now December 18Moved from November 17. Google’s deprecations page now gives December 18 for three TTS preview ids, among them gemini-3.1-flash-tts-preview, and no shutdown date for gemini-3.1-flash-live-preview.Due
-Claude Sonnet 4.5 and Opus 4.8 fast mode, November 30Both unchanged. HeyGen Video 1.0’s half price on Runware ends the same day.Due
-Gemini 4 Argon to $4/$20, December 1Unchanged: $2/$10 through November 30. Gemini 4 Carbon follows the same schedule.Due
-Gemini 3.6 and 3.8 Flash intro prices, December 31$0.75/$3.75 now, $1.50/$7.50 from January 1. October named 3.7 Flash here; it was 3.6.Due
-Fish S1 and Kimi K2, December 31S1 requests move to s2.1-pro; Fish’s transcribe-1 retires the same day. Moonshot plans to retire all K2 models by the end of December.Due
-tts-1 on January 6 and whisper-1 on February 26, 2027Both unchanged.Due
+What we cut, and why.
+Crouton Alpha:
+a free, unnamed stealth model on OpenRouter.
+OpenRouter Auto and Auto Code:
+routers, not models.
+Parakeet Ultra on OpenRouter:
+a new route at $0.001 a minute for a model Moondream launched on September 22.
+Gemini Omni 1.1 on OpenRouter:
+a new route for an August model that retires into 1.2 on December 3.
+Kimi K3.1 Pro on Ollama:
+a cloud-only tag.
+Fireworks Forge:
+faster serving, background jobs and desktop plans, but no new model.
+Gemini 3.8 TTS voice remixing, Suno’s MIDI input, ElevenLabs Realtime:
+features, not models.
+Claude platform updates:
+message threads, watermarking and IP allowlists, no new model.
+Added on November 12.
+Lyria 3.5 on Replicate, Grok STT 2.0 on OpenRouter, LFM3-1.7B on OpenRouter:
+new routes for models from September and October.
+Fable 5.2 fast mode:
+a speed option at $16/$80, not a model.
+Recraft Vectorizer Pro:
+a tool inside Recraft Studio with no API or price published.
+Runway Praxis-1:
+an open model for controlling robots, outside what this roundup covers.
+Fine-tunes, draft models and experiments built on Qwen3.8-27B, quantized copies of Kimi K3.1 Pro and H3 Image, and research checkpoints under 100M parameters:
+real uploads, but not releases most readers can act on.
+Added on November 17.
+Qwen4 Max and Gemini 4 Carbon on Runware, Inkling 2 Small on OpenRouter, MindLab’s Macaron models on Alibaba’s Model Studio:
+new routes, not new models.
+Qwen4 Max Preview:
+a November 11 preview for Token Plan subscribers, replaced by the release five days later.
+Ling 3.2 Flash:
+a free-only OpenRouter listing from inclusionAI with no vendor post or price to check.
+Zyphra ZAC-1:
+the audio codec already inside ZONOS3-Mini, repackaged.
+tiny-voca:
+a hobby speech model of about 18 MB, under our size floor.
+DeepSeek’s web search, file reading and OCR APIs, ElevenLabs agent updates, self-hosted Claude Managed Agents and Claude’s text watermark:
+features, not models.
+OpenAI’s image classifier for approved organizations:
+a moderation tool, not a generative model.
+Added on November 19.
+GPT-6.2 Sol Pro and Astra Pro on OpenRouter:
+the same two models with a higher reasoning mode, plus batch routes.
+Astra for Law 6.2:
+a legal variant on OpenAI’s price list at Astra’s rates, with no post of its own.
+MAI Cyber 2 Flash:
+a Microsoft security model that runs only inside Microsoft’s security products.
+MAI Licensed Weights and Dragon Copilot Transcribe:
+a deployment program and a product built on MAI Transcribe 2.
+Arete-27B and Edge0-145B:
+held over from the last pass. The first is a fine-tune of Qwen3.8-27B that changes how it answers sensitive questions, not what it can do; the second is a 4-bit build of Qwen3.8 Flash Next under a custom license.
+Inworld Voice Isolator:
+a noise-removal model of about 64M parameters, under our size floor.
+JoyAI-VL-Preview:
+a benchmark listing with no public repository or vendor post to check.
+Voice editing in Gemini 3.5 Transcribe, Office files in the Gemini API, OpenAI’s background windows, Claude’s linked billing and ElevenLabs’ agent tools:
+features, not models.
+Added on November 26.
+OpenAI’s Healthcare model configurations:
+four existing models paired with a setup for clinical questions, not new models.
+Solar Pro 4 Contributor:
+Upstage’s existing model at a lower rate in exchange for letting Upstage use your data.
+MiMo-V2.6-Flash-MOPD, Qwen3 TTS 1.7B, Gemini 2.5 Flash TTS and Pro TTS, and Pixtral Large 2502 on OpenRouter:
+new routes for older models.
+Hy4 on Ollama:
+a cloud-only tag.
+Quantized, merged and “uncensored” copies of Inkling 2 Mini, Hy4 flash and Qwen3.8-27B, and add-on files for MiniMax H3:
+dozens of real uploads, but not releases most readers can act on.
+MiniTranslator-2B, shot-reader-8b, CCORE-Web-Coder-4B, Libra-TTS and oruk-fourier-2b:
+small single-purpose models from individual teams, most of them fine-tunes of Qwen models.
+Apple’s DepthPro2:
+a depth-estimation model, outside what this roundup covers.
+Anthropic’s Enterprise Frontier Safeguards, Gemini’s tool retrieval, and ElevenLabs’ agents as code:
+features, not models.
+One correction to October. That edition skipped Canva Craft because Canva’s page was unreachable and there was “no API or price yet.” In fact
+Canva’s developer blog
+opened an image generation API with the craft_v1_2k model on October 28. It is “currently in preview and can change without notice,” and apps that use it cannot pass Canva’s public-app review yet, so it stays out of the ledger until it leaves preview. It was still in preview on November 17.
+Three corrections to this edition’s first pass. It dated Cohere’s Embed 5 and Rerank 5 to November 3, which was only the day they reached OpenRouter;
+Cohere’s own posts
+date Embed 5 to September 30 and Rerank 5 to October 21, so both roundups missed them. It quoted Decision Index scores of 65.0 and 65.2 for GLiDE v1.2 and d1-ultra; the board no longer shows those figures, and the text section now carries the November 12 read. And it said Cloudflare would retire four LLMs on November 15; Cloudflare’s notice now lists 16 and gives November 20.
+Watching: October’s open items and November’s dates
+October’s open items, as of November 26
+Kimi K3.1 Pro weights, by November 4
+Posted to Hugging Face on November 2, two days early. In the open-weights section.
+Shipped
+Kling 4.0 Flash
+On Runware since November 4 and Replicate since November 9. Kling’s own price list is now readable and matches at $0.094 a second. Its API lists 720p only for Flash, and we found no source for 4K or HDR modes.
+Shipped
+Gemini 4 Carbon
+Generally available to paying developers since November 10. The version tuned for security work stays inside Google’s Fairwind Program.
+Shipped
+Fireworks Ember-1 and the Forge keynote, November 3
+Forge launched products, not models. Ember-1 is “available on serverless and dedicated deployments,” still with no general-availability post.
+Passed
+Genie 4
+Generally available in the Gemini API since November 19, on the paid tier, at about $0.10 a second. In the video section.
+Shipped
+GPT-6 Rosalind
+Still limited to approved research through OpenAI’s trusted-access program.
+Waiting
+Dessa
+Block’s page for the speech model now offers a waitlist, with no API and no launch post yet.
+Waiting
+FLUX 3 Dev open weights
+No post and no repository. BFL’s latest is still FLUX 3 Image Klein.
+Waiting
+Ideogram 4.5 open weights
+Ideogram 4.6 arrived on November 19 as a hosted model. Only Ideogram 4.0 has weights on Hugging Face.
+Waiting
+MAI-Image-2.7 API and text-to-image
+Released on November 17 with a Flash tier: text-to-image and editing, in public preview on Microsoft Foundry and on OpenRouter. In the image section.
+Shipped
+Clairic open weights
+Still “soon,” with no Cloudflare repository yet.
+Waiting
+CLM-35B
+The CLM-8B card still says “coming in early October.” Only tiny experimental checkpoints exist.
+Waiting
+Mercury 3 at half price
+$0.10/$0.35 at Inception on November 26, still with no end date. Inception’s models were still missing from OpenRouter’s list that day, and neither side has explained why.
+Due
+Drama 3 launch price, now November 30
+Fish Audio extended it from November 12: $10 per million UTF-8 bytes through November 30, then the $50 list price.
+Due
+Hume TTS and EVI APIs, November 13
+The date has passed. Hume’s developer site now documents Audio Decisions and Expression Measurement only, and its changelog covers Audio Decisions alone.
+Passed
+Google TTS previews, now December 18
+Moved from November 17. Google’s deprecations page now gives December 18 for three TTS preview ids, among them gemini-3.1-flash-tts-preview, and no shutdown date for gemini-3.1-flash-live-preview.
+Due
+Claude Sonnet 4.5 and Opus 4.8 fast mode, November 30
+Both unchanged. HeyGen Video 1.0’s half price on Runware ends the same day.
+Due
+Gemini 4 Argon to $4/$20, December 1
+Unchanged: $2/$10 through November 30. Gemini 4 Carbon follows the same schedule.
+Due
+Gemini 3.6 and 3.8 Flash intro prices, December 31
+$0.75/$3.75 now, $1.50/$7.50 from January 1. October named 3.7 Flash here; it was 3.6.
+Due
+Fish S1 and Kimi K2, December 31
+S1 requests move to s2.1-pro; Fish’s transcribe-1 retires the same day. Moonshot plans to retire all K2 models by the end of December.
+Due
+tts-1 on January 6 and whisper-1 on February 26, 2027
+Both unchanged.
+Due
 Five shipped, two dates have passed, six are still waiting, and eight are dates on a calendar. This table is refreshed on every pass.
-New to the list this edition: Cloudflare’s Workers AI retirements, now on November 20, which move MeloTTS to Deepgram’s Aura-2 and the old Stable Diffusion models to FLUX.2 klein; BytePlus shutting down Seedance 1.5 Pro on November 11 with no automatic migration, after which the model left BytePlus’s model and price lists; Liquid’s d1 leaving OpenRouter on November 20, with d1.1 as its successor; and Google rerouting gemini-2.5-flash to 3.5 Flash-Lite and gemini-2.5-pro to 3.8 Flash from December 1, per its deprecations page. Anthropic’s deprecations page still shows Claude Sonnet 4.5 retiring on November 30.
+New to the list this edition:
+Cloudflare’s Workers AI retirements
+, now on November 20, which move MeloTTS to Deepgram’s Aura-2 and the old Stable Diffusion models to FLUX.2 klein; BytePlus shutting down
+Seedance 1.5 Pro
+on November 11 with no automatic migration, after which the model left BytePlus’s model and price lists; Liquid’s d1 leaving OpenRouter on November 20, with d1.1 as its successor; and Google rerouting gemini-2.5-flash to 3.5 Flash-Lite and gemini-2.5-pro to 3.8 Flash from December 1, per its
+deprecations page
+. Anthropic’s
+deprecations page
+still shows Claude Sonnet 4.5 retiring on November 30.
 Added on November 12, in date order. Thinking Machines said on November 5 that Inkling 2 Small’s weights would follow “next week” under Apache 2.0, and Baidu says ERNIE 5.5 Flash Preview’s will come “soon.” Kimi K2.5 leaves OpenRouter on November 18. Speechify’s $10 launch rate for Simba 3.5 ends on November 21. Seedream 5.5 still needs an API and its Pro version. BytePlus’s price list already carries rows for a Seedance 2.5 Flash at $0.07 a second, with no announcement and no entry in its model list. Gemini 4 Carbon doubles to $4/$20 on December 1, the same day as Argon. And OpenAI removes GPT Image 2 on February 10, 2027.
 Added on November 17. Three items left this list by shipping: Inkling 2 Small’s weights, Seedream 5.5’s API, and Seedance 2.5 Flash, which went from a stray price row to a listed model. Still open: Seedream 5.5 Pro, ERNIE 5.5 Flash Preview’s weights, and Hy4’s weights and full price. MiniMax’s half-price 4K offer for H3 Image ended on November 17, as scheduled. Google’s TTS preview shutdown moved to December 18. OpenRouter showed no removal date for Kimi K2.5 on November 17, a day before the date it gave earlier, and it lists November 28 as the end of Recraft V4.1 Flash V2’s free route. DeepSeek’s half-price speech rates carry no end date. Canva Craft was still in preview.
-Added on November 19. MAI-Image-2.7 left this list by shipping, with the text-to-image mode it lacked in October. Tencent released Hy4 flash’s weights, but Hy4’s own repository is still private and both models are still half price on OpenRouter. Still open: Seedream 5.5 Pro, which is not on BytePlus’s model list, and ERNIE 5.5 Flash Preview’s weights. Kimi K2.5 was still on OpenRouter on November 19, a day after the date it gave earlier, with no removal date shown. New dates: Liquid’s d1.1 leaves OpenRouter on November 24, four days after d1; OpenAI deprecated its audio translations endpoint on November 18 and removes it on February 26, 2027, the same day as whisper-1; and Microsoft says MAI Cyber 2 Flash reaches its security products in mid-December. Microsoft also promised MAI Code 2 on OpenRouter “soon” and a public preview for MAI Realtime 1, both without dates. Runware lists Qwen4 Plus as coming soon. Cloudflare’s retirements were still set for November 20. Between editions, the sortable model comparison table stays current.
-Added on November 26. Three items left this list by shipping: Genie 4, Hy4’s weights and ERNIE 5.5 Flash Preview’s weights. Hy4 and Hy4 flash were still at their discounted prices on OpenRouter. Liquid’s d1 and d1.1 are gone from OpenRouter’s list, as scheduled, and Kimi K2.5 was still there with no removal date. Still open: Seedream 5.5 Pro, MAI Code 2 on OpenRouter, and Qwen4 Plus, which Runware still lists as coming soon. New dates: Anthropic deprecated Claude Opus 4.5 on November 23 and retires it on January 22, 2027, while Claude Sonnet 4.5 still retires on November 30; OpenRouter shows MAI-Image-2.5 leaving on November 27 and the original GPT-5 models and o3 on December 11. Unchanged: Recraft V4.1 Flash V2’s free route ends on November 28, Fish Audio’s Drama 3 launch price runs through November 30, DeepSeek’s half-price speech rates have no end date, and Canva Craft is still a preview. SenseNova-Loop-9B no longer asks for a login.
+Added on November 19. MAI-Image-2.7 left this list by shipping, with the text-to-image mode it lacked in October. Tencent released Hy4 flash’s weights, but Hy4’s own repository is still private and both models are still half price on OpenRouter. Still open: Seedream 5.5 Pro, which is not on BytePlus’s model list, and ERNIE 5.5 Flash Preview’s weights. Kimi K2.5 was still on OpenRouter on November 19, a day after the date it gave earlier, with no removal date shown. New dates: Liquid’s d1.1 leaves OpenRouter on November 24, four days after d1; OpenAI
+deprecated
+its audio translations endpoint on November 18 and removes it on February 26, 2027, the same day as whisper-1; and Microsoft says MAI Cyber 2 Flash reaches its security products in mid-December. Microsoft also promised MAI Code 2 on OpenRouter “soon” and a public preview for MAI Realtime 1, both without dates. Runware lists Qwen4 Plus as coming soon. Cloudflare’s retirements were still set for November 20. Between editions, the
+sortable model comparison table
+stays current.
+Added on November 26. Three items left this list by shipping: Genie 4, Hy4’s weights and ERNIE 5.5 Flash Preview’s weights. Hy4 and Hy4 flash were still at their discounted prices on OpenRouter. Liquid’s d1 and d1.1 are gone from OpenRouter’s list, as scheduled, and Kimi K2.5 was still there with no removal date. Still open: Seedream 5.5 Pro, MAI Code 2 on OpenRouter, and Qwen4 Plus, which Runware still lists as coming soon. New dates: Anthropic
+deprecated Claude Opus 4.5
+on November 23 and retires it on January 22, 2027, while Claude Sonnet 4.5 still retires on November 30; OpenRouter shows MAI-Image-2.5 leaving on November 27 and the original GPT-5 models and o3 on December 11. Unchanged: Recraft V4.1 Flash V2’s free route ends on November 28, Fish Audio’s Drama 3 launch price runs through November 30, DeepSeek’s half-price speech rates have no end date, and Canva Craft is still a preview. SenseNova-Loop-9B no longer asks for a login.
 Update log
-November 6: edition opened, covering October 31 to November 6, plus four October releases the October edition missed: ZwZ2, Maya 2 Native, H3 Lite and H3 Highspeed.
-November 12: added 21 entries. New releases: Claude Fable 5.2 and Mythos 5.2, Gemini 4 Carbon’s general availability, Muse Ember, Gemini Decision 1, MiniMax H3 Image and H3 Image Highspeed, Seedream 5.5, Nex-N2.6, ZONOS3-Mini, Sophon-Realtime v1, ERNIE 5.5 Flash Preview, ERNIE-Light-DT-1.0, ZoomGain, SingVL S1 and meta-encoder-v1, plus two retirements. Earlier releases the first pass missed: Drex for Finance, Celeris-1.1 Decision and Inkling 2 Small from November, and Simba 3.5, Parallel’s Decisions API and Mi:dm K 3.0 Pro from October. Refreshed the TL;DR, the video price chart, the license table and the watching table, and corrected three items from the first pass, listed under “Skipped on purpose.”
-November 17: added 15 entries. New releases: Gemini 4 Hydrogen, Qwen4 Max, Hy4 flash, d1.2 and d1.2-ultra, Decider v1.3 and Decider Flash v1.3, HeyGen Decision 1, Seedance 2.5 Flash, Recraft V4.1 Flash V2, HY-World 2.1 Panorama, DeepSeek’s speech APIs, and the open releases Inkling 2 Small (weights), Haru-4B, Duo, LongCat-Video-Avatar 1.6 and Sage S2.1 Flash. Updated: Seedream 5.5 now has an API and a price, meta-encoder-v1 has an Apache 2.0 license, and Google’s TTS preview shutdown moved from November 17 to December 18. Refreshed the TL;DR, the video price chart, the license table and the watching table.
-November 19: added 15 entries. New releases: GPT-6.2 Astra and GPT-6.2 Sol, Gemini 4 Neon, Microsoft’s MAI-Image-2.7 and MAI-Image-2.7 Flash, MAI Code 2 and MAI Code 2 Flash, Microsoft-Decision-1.1 and MAI Realtime 1, HeyGen Avatar 6 and Avatar 6 Turbo, and the open releases Hy4 flash (weights), SenseNova-Loop-9B, DaisyRose-27B, Aion 1.0 Instruct, Sophon-Realtime 4B, FastFrames and Invoker-Render 1.0, plus KORMo-Web from November 14, which the last pass missed. Updated: ElevenLabs cut its speech-to-text prices, MAI-Image-2.7 moved from waiting to shipped, and SingVL S1’s repository is no longer public. Refreshed the TL;DR, the license table and the watching table.
-November 26: added 25 entries. New releases: Genie 4’s general availability, Ideogram 4.6 and Ideogram 4.6 Precise Edit, GPT-Live-1.1, Solar Mini 4.5 Preview, pplx-embed-v2-context, Seed-TTS 3.0, and the open releases Inkling 2 Mini, Hy4 (weights), ERNIE 5.5 Flash Preview (weights), bison-1 and groundhog-1, GigaChat 4, Kolibri 1.1, Raon-1 mini, LingSante-3.1, Ling-3.2-air, MemT-1.0-Pro, Ternary Bonsai 2.5 27B, OmniEVIE-4B, Sage-Interaction and Kandinsky ImageSR 2.0, plus two retirements. Earlier releases the last pass missed: WePocketModel 1.0, Kling Image 4.0 and WeMM-Ecom. Updated: Genie 4 moved from waiting to shipped, Decider v1.3 gained paid routes on OpenRouter, and SenseNova-Loop-9B no longer asks for a login. Refreshed the TL;DR, the license table and the watching table.
-Disclaimer: The license descriptions in this post are plain-English summaries, not legal advice. Model licenses change between releases, and what counts as permitted use depends on your situation. Read the license text that ships with the model, and consult counsel before relying on it in a product. Details reflect sources available as of November 2026.Tags:RoundupAI ModelsNews
-
+November 6:
+edition opened, covering October 31 to November 6, plus four October releases the October edition missed: ZwZ2, Maya 2 Native, H3 Lite and H3 Highspeed.
+November 12:
+added 21 entries. New releases: Claude Fable 5.2 and Mythos 5.2, Gemini 4 Carbon’s general availability, Muse Ember, Gemini Decision 1, MiniMax H3 Image and H3 Image Highspeed, Seedream 5.5, Nex-N2.6, ZONOS3-Mini, Sophon-Realtime v1, ERNIE 5.5 Flash Preview, ERNIE-Light-DT-1.0, ZoomGain, SingVL S1 and meta-encoder-v1, plus two retirements. Earlier releases the first pass missed: Drex for Finance, Celeris-1.1 Decision and Inkling 2 Small from November, and Simba 3.5, Parallel’s Decisions API and Mi:dm K 3.0 Pro from October. Refreshed the TL;DR, the video price chart, the license table and the watching table, and corrected three items from the first pass, listed under “Skipped on purpose.”
+November 17:
+added 15 entries. New releases: Gemini 4 Hydrogen, Qwen4 Max, Hy4 flash, d1.2 and d1.2-ultra, Decider v1.3 and Decider Flash v1.3, HeyGen Decision 1, Seedance 2.5 Flash, Recraft V4.1 Flash V2, HY-World 2.1 Panorama, DeepSeek’s speech APIs, and the open releases Inkling 2 Small (weights), Haru-4B, Duo, LongCat-Video-Avatar 1.6 and Sage S2.1 Flash. Updated: Seedream 5.5 now has an API and a price, meta-encoder-v1 has an Apache 2.0 license, and Google’s TTS preview shutdown moved from November 17 to December 18. Refreshed the TL;DR, the video price chart, the license table and the watching table.
+November 19:
+added 15 entries. New releases: GPT-6.2 Astra and GPT-6.2 Sol, Gemini 4 Neon, Microsoft’s MAI-Image-2.7 and MAI-Image-2.7 Flash, MAI Code 2 and MAI Code 2 Flash, Microsoft-Decision-1.1 and MAI Realtime 1, HeyGen Avatar 6 and Avatar 6 Turbo, and the open releases Hy4 flash (weights), SenseNova-Loop-9B, DaisyRose-27B, Aion 1.0 Instruct, Sophon-Realtime 4B, FastFrames and Invoker-Render 1.0, plus KORMo-Web from November 14, which the last pass missed. Updated: ElevenLabs cut its speech-to-text prices, MAI-Image-2.7 moved from waiting to shipped, and SingVL S1’s repository is no longer public. Refreshed the TL;DR, the license table and the watching table.
+November 26:
+added 25 entries. New releases: Genie 4’s general availability, Ideogram 4.6 and Ideogram 4.6 Precise Edit, GPT-Live-1.1, Solar Mini 4.5 Preview, pplx-embed-v2-context, Seed-TTS 3.0, and the open releases Inkling 2 Mini, Hy4 (weights), ERNIE 5.5 Flash Preview (weights), bison-1 and groundhog-1, GigaChat 4, Kolibri 1.1, Raon-1 mini, LingSante-3.1, Ling-3.2-air, MemT-1.0-Pro, Ternary Bonsai 2.5 27B, OmniEVIE-4B, Sage-Interaction and Kandinsky ImageSR 2.0, plus two retirements. Earlier releases the last pass missed: WePocketModel 1.0, Kling Image 4.0 and WeMM-Ecom. Updated: Genie 4 moved from waiting to shipped, Decider v1.3 gained paid routes on OpenRouter, and SenseNova-Loop-9B no longer asks for a login. Refreshed the TL;DR, the license table and the watching table.
+Disclaimer: The license descriptions in this post are plain-English summaries, not legal advice. Model licenses change between releases, and what counts as permitted use depends on your situation. Read the license text that ships with the model, and consult counsel before relying on it in a product. Details reflect sources available as of
+November 2026
+.
+Tags:
+Roundup
+AI Models
+News
 Summarize with
-
-Compare the latest AI models side by side in one app.Get CSuite
-
+Compare the latest AI models side by side in one app.
+Get CSuite
 On this page
-
 The TL;DR so far: three things to act on
 Text: four of this month’s models score 60 or more, and all take a credit card
 Image: GPT Image 2.6 draws vectors, and MiniMax H3 Image starts near 2 cents
@@ -397,40 +1469,73 @@ Local-runnable: Ripple needs 39 GB, and H3 Image got local support on launch day
 Skipped on purpose
 Watching: October’s open items and November’s dates
 Update log
-
 Summarize with
-
-Compare the latest AI models side by side in one app.Get CSuite
-
+Compare the latest AI models side by side in one app.
+Get CSuite
 More reading
-
-Updated Nov 1, 2026·37 min read
+Updated Nov 1, 2026
+·
+37
+min read
 AI models roundup, October 2026
 October’s mid-tier and image prices halved and decision models multiplied, while the new first place stayed behind an access list.
-Roundup·AI Models·News
-
-September 28, 2026·12 min read
+Roundup
+·
+AI Models
+·
+News
+September 28, 2026
+·
+12
+min read
 AI models roundup, September 2026: the frontier got cheaper
 Three new flagships in thirty days, and the best one costs less than the one it replaced. September's releases, sorted, with receipts.
-Roundup·AI Models·News
-
-August 27, 2026·10 min read
+Roundup
+·
+AI Models
+·
+News
+August 27, 2026
+·
+10
+min read
 AI models roundup, August 2026: the promises that shipped
 July's AI labs promised weights, APIs, and price cuts. August had to deliver. What actually shipped, sorted, with receipts linked.
-Roundup·AI Models·News
-
+Roundup
+·
+AI Models
+·
+News
 Black Friday sale · 25% off
-One-time payment. Yours forever.
+One-time payment.
+Yours forever.
 No subscriptions. No renewals. Buy CSuite once, future updates included.
 Pricing
-Secure checkout via Stripe. Already have a license? Download the app
-
-CSuiteAI studio on your machine, fully private.© 2026 July Labs, LLCEnglish
-
-ProductPricingFeaturesModelsProvidersDownload
-
-ResourcesBlogUpdatesGuideAbout
-
-LegalTermsPrivacyCookies
-
-ContactEmailLinkedInInstagramX (Twitter)YouTube
+Secure checkout via Stripe. Already have a license?
+Download the app
+CSuite
+AI studio on your machine, fully private.
+© 2026
+July Labs, LLC
+English
+Product
+Pricing
+Features
+Models
+Providers
+Download
+Resources
+Blog
+Updates
+Guide
+About
+Legal
+Terms
+Privacy
+Cookies
+Contact
+Email
+LinkedIn
+Instagram
+X (Twitter)
+YouTube

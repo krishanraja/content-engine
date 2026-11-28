@@ -10,15 +10,7 @@
    "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#a9aebe82b6c9": null,
    "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#69b945d7864c": null,
    "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#6c4e758fd962": null,
-   "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#3d2879414868": {
-    "comic_reading": "not_supported",
-    "attempted": false,
-    "needs_explaining": true,
-    "mechanism": [],
-    "target": [
-     "situation"
-    ]
-   },
+   "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#3d2879414868": null,
    "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#32e95f89f1e1": null,
    "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#25714aed70dd": null
   }
@@ -28,13 +20,7 @@
   "line": null,
   "angles": {
    "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#14c02bb8ce8e": null,
-   "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#ebff7b08cdb3": {
-    "comic_reading": "not_supported",
-    "attempted": false,
-    "needs_explaining": true,
-    "mechanism": [],
-    "target": []
-   },
+   "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#ebff7b08cdb3": null,
    "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#a597254a6047": null,
    "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#a4df9bcaf5d6": null,
    "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2#c97b1ef92ccd": null,
@@ -77,7 +63,8 @@
    "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#7326f1b4a34f": null,
    "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#5436325c33cd": null,
    "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#ef80bd1dbe96": null,
-   "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#b57ae65989b7": null
+   "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#b57ae65989b7": null,
+   "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#5dbe5a498cf9": null
   }
  },
  "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010": {
@@ -111,18 +98,7 @@
    "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#520fe80b966f": null,
    "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#4879ea1e7b40": null,
    "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#88f185b396d1": null,
-   "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#40f78027689a": {
-    "comic_reading": "supported",
-    "attempted": true,
-    "needs_explaining": true,
-    "mechanism": [
-     "incongruity",
-     "personification"
-    ],
-    "target": [
-     "situation"
-    ]
-   }
+   "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#40f78027689a": null
   }
  },
  "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c": {
@@ -138,16 +114,9 @@
    "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#281d294dc37f": null,
    "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#c806fdeee1e7": null,
    "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#9ad0c683d5bd": null,
-   "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#5f498f3a2ea1": {
-    "comic_reading": "not_supported",
-    "attempted": false,
-    "needs_explaining": true,
-    "mechanism": [],
-    "target": [
-     "none"
-    ]
-   },
-   "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#6ad04e508a00": null
+   "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#5f498f3a2ea1": null,
+   "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#6ad04e508a00": null,
+   "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#2da75e9efa70": null
   }
  },
  "fri/acb58370-aaca-4040-9c13-83f227a628ec": {
@@ -172,17 +141,20 @@
    "fri/acb58370-aaca-4040-9c13-83f227a628ec#f072644c309f": null,
    "fri/acb58370-aaca-4040-9c13-83f227a628ec#45c188701551": null,
    "fri/acb58370-aaca-4040-9c13-83f227a628ec#a8f813de5bce": null,
-   "fri/acb58370-aaca-4040-9c13-83f227a628ec#f7d09054e6ba": null
+   "fri/acb58370-aaca-4040-9c13-83f227a628ec#f7d09054e6ba": null,
+   "fri/acb58370-aaca-4040-9c13-83f227a628ec#43facb845d2b": null,
+   "fri/acb58370-aaca-4040-9c13-83f227a628ec#f626a21ad5c8": null,
+   "fri/acb58370-aaca-4040-9c13-83f227a628ec#54e7aee227c3": null,
+   "fri/acb58370-aaca-4040-9c13-83f227a628ec#7ee375859e68": null,
+   "fri/acb58370-aaca-4040-9c13-83f227a628ec#5a2b069a32f8": null,
+   "fri/acb58370-aaca-4040-9c13-83f227a628ec#d2bdad17bf0b": null,
+   "fri/acb58370-aaca-4040-9c13-83f227a628ec#b93928c712f4": null,
+   "fri/acb58370-aaca-4040-9c13-83f227a628ec#5dd2adbd6a2e": null,
+   "fri/acb58370-aaca-4040-9c13-83f227a628ec#a8be4b3031fc": null
   }
  },
  "tue/nytphotoshop": {
-  "fact": {
-   "comic_reading": "not_supported",
-   "attempted": false,
-   "needs_explaining": true,
-   "mechanism": [],
-   "target": []
-  },
+  "fact": null,
   "line": null,
   "angles": {
    "tue/nytphotoshop#156b207b0d6c": null,
@@ -210,21 +182,9 @@
   "line": null,
   "angles": {
    "tue/logicdrums#a13361d75819": null,
-   "tue/logicdrums#b491abb3bcfb": {
-    "comic_reading": "not_supported",
-    "attempted": false,
-    "needs_explaining": true,
-    "mechanism": [],
-    "target": []
-   },
+   "tue/logicdrums#b491abb3bcfb": null,
    "tue/logicdrums#7a3eba76f681": null,
-   "tue/logicdrums#486d4fe7d9c0": {
-    "comic_reading": "not_supported",
-    "attempted": false,
-    "needs_explaining": true,
-    "mechanism": [],
-    "target": []
-   },
+   "tue/logicdrums#486d4fe7d9c0": null,
    "tue/logicdrums#c01593e65326": null,
    "tue/logicdrums#a8f6612ed9ba": null
   }
@@ -290,13 +250,7 @@
   "line": null,
   "angles": {
    "tue/tplbuzzer#a3dabdb36c7e": null,
-   "tue/tplbuzzer#7d083927f049": {
-    "comic_reading": "not_supported",
-    "attempted": false,
-    "needs_explaining": true,
-    "mechanism": [],
-    "target": []
-   },
+   "tue/tplbuzzer#7d083927f049": null,
    "tue/tplbuzzer#b98e6bbeb7cb": null,
    "tue/tplbuzzer#094f7c6603f8": null
   }
@@ -321,18 +275,7 @@
    "thu/robloxvideo#118d354d97df": null,
    "thu/robloxvideo#7ab66a85c3d0": null,
    "thu/robloxvideo#a76cc68517f0": null,
-   "thu/robloxvideo#6c961853aa9c": {
-    "comic_reading": "supported",
-    "attempted": true,
-    "needs_explaining": true,
-    "mechanism": [
-     "incongruity",
-     "understatement"
-    ],
-    "target": [
-     "situation"
-    ]
-   }
+   "thu/robloxvideo#6c961853aa9c": null
   }
  },
  "thu/alphamatte": {
@@ -347,26 +290,14 @@
   }
  },
  "thu/synthfirmware": {
-  "fact": {
-   "comic_reading": "not_supported",
-   "attempted": false,
-   "needs_explaining": false,
-   "mechanism": [],
-   "target": []
-  },
+  "fact": null,
   "line": null,
   "angles": {
    "thu/synthfirmware#70437c7e10eb": null,
    "thu/synthfirmware#2a23db2d669c": null,
    "thu/synthfirmware#00bb0b0c5b33": null,
    "thu/synthfirmware#6bfe1de70f25": null,
-   "thu/synthfirmware#29fdc406f3c9": {
-    "comic_reading": "not_supported",
-    "attempted": false,
-    "needs_explaining": true,
-    "mechanism": [],
-    "target": []
-   },
+   "thu/synthfirmware#29fdc406f3c9": null,
    "thu/synthfirmware#a9a556e3d9b2": null
   }
  },
@@ -377,13 +308,7 @@
    "thu/pixelfill#529199f97032": null,
    "thu/pixelfill#26d979bc2200": null,
    "thu/pixelfill#177c81f9cad8": null,
-   "thu/pixelfill#dab8fc0a95f3": {
-    "comic_reading": "ambiguous",
-    "attempted": true,
-    "needs_explaining": true,
-    "mechanism": [],
-    "target": []
-   },
+   "thu/pixelfill#dab8fc0a95f3": null,
    "thu/pixelfill#9ce8bfd94bc6": null,
    "thu/pixelfill#f5ae6ba2f2e1": null
   }
@@ -400,17 +325,7 @@
  },
  "thu/tplthanksgiving": {
   "fact": null,
-  "line": {
-   "comic_reading": "supported",
-   "attempted": true,
-   "needs_explaining": true,
-   "mechanism": [
-    "incongruity"
-   ],
-   "target": [
-    "situation"
-   ]
-  },
+  "line": null,
   "angles": {
    "thu/tplthanksgiving#9ac3e6fc6044": null,
    "thu/tplthanksgiving#3df8dcda3fe4": null,
@@ -515,6 +430,27 @@
    "sat/newsrooms#095403eea010": null,
    "sat/newsrooms#58ae29f43a93": null,
    "sat/newsrooms#137df1c05c91": null
+  }
+ },
+ "mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5#4f9e5a045d58": null,
+   "mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5#62b7ecad8432": null,
+   "mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5#7c13c6b15c63": null,
+   "mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5#33a6d60ee39d": null,
+   "mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5#1aaadf6ca00b": null,
+   "mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5#fc60bf9eeb97": null,
+   "mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5#c4fc1639bea3": null,
+   "mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5#7c691ec4347a": null
+  }
+ },
+ "sat/talent": {
+  "fact": null,
+  "line": null,
+  "angles": {
+   "sat/talent#756b2da79728": null
   }
  }
 }

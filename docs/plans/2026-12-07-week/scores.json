@@ -1,7 +1,7 @@
 {
  "rubric_version": "story-score/1",
  "week": "2026-12-07",
- "at": "2026-11-28T11:36:49+00:00",
+ "at": "2026-11-28T14:17:20+00:00",
  "options": {
   "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2": {
    "total": 76.9,
@@ -40,11 +40,11 @@
    },
    "why": {
     "whys": "3 documented, 2 inferred",
-    "scale": "ElevenLabs, valued at $22 billion, buying Kotoba for a reported $100 million is a major player's move with a stated second-order effect on voice actors, dubbers and audiobook narrators, though the price is reported, not confirmed.",
+    "scale": "the biggest AI voice company, valued at $22 billion, paid a reported $100 million for Japanese voice firm Kotoba, which touches voice actors, dubbers and narrators, though the price is reported rather than confirmed",
     "unique_angle": "best sound angle",
     "absurdity_humour": "humour engine: fact None, angle None",
-    "fun_consume": "\"paid about $100 million to learn Japanese\" is an oddly specific headline that holds to the end and the line about going shopping for one language is worth repeating.",
-    "fun_produce": "The headline that makes no sense yet fits exactly, the $100 million sits well as the number in the scene, and it matches the growth pattern of one named company then the money, though the proof object is a press report rather than something shown happening.",
+    "fun_consume": "\"paid about $100 million to learn Japanese\" and \"had to go shopping for one\" are lines worth repeating, but the deal is a standard acquisition once explained",
+    "fun_produce": "follow-the-receipt or random-headline fits a named company and one price, and the named-then-money pattern holds people, but there is little to show on screen beyond the logo and the figure",
     "fit": "focus sector and its economics in the sentence that carries the fact",
     "named_thing": "named in the hook, with a number or twist"
    },
@@ -55,73 +55,19 @@
     "rule": "best sound angle"
    },
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
-  },
-  "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed": {
-   "total": 71.6,
-   "axes": {
-    "whys": 8,
-    "scale": 5.0,
-    "unique_angle": 7.5,
-    "absurdity_humour": null,
-    "fun_consume": 6.0,
-    "fun_produce": 6.0,
-    "fit": 10,
-    "named_thing": 10
-   },
-   "type": "hero_mon",
-   "floors_failed": [],
-   "notes": [],
-   "unread": [
-    "absurdity_humour"
-   ],
-   "floored": false,
-   "humour_unread": true,
-   "read_weight": 8.8,
-   "checks": {
-    "probe_documented": 3,
-    "probe_rungs": 5,
-    "landing_ok": true,
-    "primary_sources": 1,
-    "sound_angle": true,
-    "money_figure_sourced": true,
-    "mechanism_rungs": 3,
-    "counter_rungs": 3,
-    "comic_reading": null,
-    "needs_explaining": null,
-    "steps_verifiable": null,
-    "goodnews_sector_share": null
-   },
-   "why": {
-    "whys": "3 documented, 2 inferred",
-    "scale": "it is one $11 million start-up signing one distributor, Symphonic, and only opted-in independent artists are paid, at a rate nobody has disclosed, so the consequence is real but narrow and has no sourced money figure for the artists.",
-    "unique_angle": "best sound angle",
-    "absurdity_humour": "humour engine: fact None, angle None",
-    "fun_consume": "the hidden rate is a genuine hook and \"which email to read\" gives a musician something to repeat, but the piece ends on an absence rather than a surprise.",
-    "fun_produce": "Follow the receipt fits with an itemised line left blank for the undisclosed rate and the opt-in box is a real object to show, but there is no number to land after the story and no named song or artist on screen.",
-    "fit": "focus sector and its economics in the sentence that carries the fact",
-    "named_thing": "named in the hook, with a number or twist"
-   },
-   "angle": {
-    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#69b945d7864c",
-    "lens": "most_absurd_true",
-    "text": "An $11m-backed startup can say exactly how much money it raised, but not how much the artists training its model will get.",
-    "rule": "best sound angle"
-   },
-   "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb": {
-   "total": 73.4,
+   "total": 74.9,
    "axes": {
     "unique_angle": 7.5,
     "absurdity_humour": null,
     "whys": 8,
-    "scale": 6.0,
-    "fun_consume": 5.0,
+    "scale": 7.0,
+    "fun_consume": 4.0,
     "fit": 10,
     "named_thing": 10,
-    "fun_produce": 5.0
+    "fun_produce": 7.0
    },
    "type": "wildcard",
    "floors_failed": [],
@@ -150,11 +96,11 @@
     "unique_angle": "best sound angle",
     "absurdity_humour": "humour engine: fact None, angle None",
     "whys": "3 documented, 2 inferred",
-    "scale": "Kling raised 19.8 billion yuan with a buy-back promise booked as interest, a major tool's funding with a stated risk for anyone building on it, but the effect on creators is argued rather than measured.",
-    "fun_consume": "\"a loan in disguise\" is a good turn, but the evidence is a quoted accounting line about redemption financial liabilities that a busy reader will find heavy going.",
+    "scale": "Kling raised 19.8 billion yuan and its owner's filing books a yearly return on a buy-back promise, which bears on everyone choosing an AI video tool, though no figure for the effect on others is given",
+    "fun_consume": "\"redemption financial liabilities\" and non-cash interest are accounting language a busy reader will struggle with, despite the \"asked for a receipt\" line",
     "fit": "focus sector and its economics in the sentence that carries the fact",
     "named_thing": "named in the hook, with a number or twist",
-    "fun_produce": "the accounts line can be shown as screen proof and the 19.8 billion yuan can be drawn, but the mechanism is financial and abstract, with no everyday object for a receipt or a test."
+    "fun_produce": "the filing line itself is a screen-proof object and follow-the-receipt fits a named tool, but the mechanism is abstract and the growth evidence warns abstract framing loses"
    },
    "angle": {
     "id": "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb#dcf6f92ddf28",
@@ -163,16 +109,124 @@
     "rule": "best sound angle"
    },
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
+  },
+  "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed": {
+   "total": 68.0,
+   "axes": {
+    "whys": 8,
+    "scale": 4.0,
+    "unique_angle": 7.5,
+    "absurdity_humour": null,
+    "fun_consume": 4.0,
+    "fun_produce": 7.0,
+    "fit": 10,
+    "named_thing": 10
+   },
+   "type": "hero_mon",
+   "floors_failed": [],
+   "notes": [],
+   "unread": [
+    "absurdity_humour"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 8.8,
+   "checks": {
+    "probe_documented": 3,
+    "probe_rungs": 5,
+    "landing_ok": true,
+    "primary_sources": 1,
+    "sound_angle": true,
+    "money_figure_sourced": true,
+    "mechanism_rungs": 3,
+    "counter_rungs": 3,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null,
+    "goodnews_sector_share": null
+   },
+   "why": {
+    "whys": "3 documented, 2 inferred",
+    "scale": "Sonilo is an $11 million start-up with one distributor deal and an undisclosed rate, a local consequence for opted-in Symphonic artists",
+    "unique_angle": "best sound angle",
+    "absurdity_humour": "humour engine: fact None, angle None",
+    "fun_consume": "the hook is a missing number, so the payoff is \"nobody says how much\", though the playlists line is a small smile",
+    "fun_produce": "itemised-receipt can show how $11 million reaches an artist through the distributor and the opt-in box is a real object to show, but the key line on the receipt is blank",
+    "fit": "focus sector and its economics in the sentence that carries the fact",
+    "named_thing": "named in the hook, with a number or twist"
+   },
+   "angle": {
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#69b945d7864c",
+    "lens": "most_absurd_true",
+    "text": "An $11m-backed startup can say exactly how much money it raised, but not how much the artists training its model will get.",
+    "rule": "best sound angle"
+   },
+   "rubric_version": "story-score/1",
+   "at": "2026-11-28T14:17:14+00:00"
+  },
+  "mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5": {
+   "total": 67.7,
+   "axes": {
+    "whys": 9,
+    "scale": 7.0,
+    "unique_angle": 0.0,
+    "absurdity_humour": null,
+    "fun_consume": 7.0,
+    "fun_produce": 7.0,
+    "fit": 10,
+    "named_thing": 10
+   },
+   "type": "hero_mon",
+   "floors_failed": [],
+   "notes": [],
+   "unread": [
+    "absurdity_humour"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 8.8,
+   "checks": {
+    "probe_documented": 4,
+    "probe_rungs": 5,
+    "landing_ok": true,
+    "primary_sources": 2,
+    "sound_angle": true,
+    "money_figure_sourced": true,
+    "mechanism_rungs": 4,
+    "counter_rungs": 4,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null,
+    "goodnews_sector_share": null
+   },
+   "why": {
+    "whys": "4 documented, 1 inferred",
+    "scale": "a major streamer filed with the SEC that revenue fell 10% to RMB6.01 billion while 21 AI dramas took it to first place, and its revenue-share model moves the cost onto producers",
+    "unique_angle": "best sound angle",
+    "absurdity_humour": "humour engine: fact None, angle None",
+    "fun_consume": "the paradox of topping the chart while sales fall by a tenth is a repeatable moment, though the revenue-share mechanism takes some following",
+    "fun_produce": "random-headline and data-story fit with two sourced numbers drawn side by side, but there is no named single product or face for a show moment the growth evidence rewards",
+    "fit": "focus sector and its economics in the sentence that carries the fact",
+    "named_thing": "named in the hook, with a number or twist"
+   },
+   "angle": {
+    "id": "mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5#4f9e5a045d58",
+    "lens": "own",
+    "text": "iQIYI released 21 AI-generated short dramas in one quarter and took first place in China's short-drama market, in the same results where its revenue fell 10% to RMB6.01 billion.",
+    "rule": "best sound angle"
+   },
+   "rubric_version": "story-score/1",
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010": {
-   "total": 80.6,
+   "total": 85.6,
    "axes": {
     "unique_angle": 6.72,
     "absurdity_humour": null,
     "whys": 9,
-    "scale": 8.0,
-    "fun_consume": 8.0,
+    "scale": 10.0,
+    "fun_consume": 10.0,
     "fit": 10,
     "named_thing": 10,
     "fun_produce": 7.0
@@ -204,11 +258,11 @@
     "unique_angle": "best sound angle",
     "absurdity_humour": "humour engine: fact None, angle None",
     "whys": "4 documented, 1 inferred",
-    "scale": "Unreal Engine 6 shipping without Blueprints changes the working tool of a whole sector of game makers, backed by the sourced 20,000 Blueprints and roughly 3 million lines of Verse, though \"millions of game makers\" is not itself sourced.",
-    "fun_consume": "the irony that a tool built so people need not write code is retired by an AI writing 3 million lines of it is the kind of line a stranger forwards before finishing.",
+    "scale": "Unreal Engine 6 shipping without Blueprints changes the working skill of millions of game makers, with sourced figures of 20,000 Blueprints and about 3 million lines of Verse",
+    "fun_consume": "the irony of a no-code tool retired by an AI that wrote 3 million lines of code is the kind of thing a stranger sends on before finishing",
     "fit": "focus sector and its economics in the sentence that carries the fact",
     "named_thing": "named in the hook, with a number or twist",
-    "fun_produce": "The headline that makes no sense yet fits, 20,000 in and 3 million out is a ready number in the scene, and a Blueprint graph beside Verse text is a real screen to show, though there is no named product moment from the growth evidence."
+    "fun_produce": "screen-proof of a Blueprint graph beside Verse code and a 20,000-in, 3-million-out data frame fit under.the.hood, though he cannot run the test himself"
    },
    "angle": {
     "id": "wed/de83ed89-f29e-4e5f-ad82-c698ec72a010#009053524de5",
@@ -217,17 +271,17 @@
     "rule": "best sound angle"
    },
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "wed/41874364-fcd8-4fd1-b7e7-91aca6235019": {
-   "total": 57.7,
+   "total": 55.2,
    "axes": {
     "whys": 8,
-    "scale": 5.0,
+    "scale": 4.0,
     "unique_angle": 0.0,
     "absurdity_humour": null,
-    "fun_consume": 5.0,
-    "fun_produce": 6.0,
+    "fun_consume": 4.0,
+    "fun_produce": 7.0,
     "fit": 10,
     "named_thing": 10
    },
@@ -256,33 +310,33 @@
    },
    "why": {
     "whys": "3 documented, 2 inferred",
-    "scale": "Maxon is a notable company and the change reaches every Cinema 4D and ZBrush artist, but the consequence is a billing model inside two apps, with no sourced figure for price or users.",
+    "scale": "Maxon is one notable software company and the consequence is a pricing detail for its 3D artists",
     "unique_angle": "best sound angle",
     "absurdity_humour": "humour engine: fact None, angle None",
-    "fun_consume": "\"someone else's AI\" and the off switch sold as a feature are mildly wry, but the story is mostly a product note read once.",
-    "fun_produce": "a Head to head or a screen recording of generation inside Cinema 4D, with the Tripo and Rodin names and the expiring credits as a receipt, gives one thing to show, though there is no number that holds people.",
+    "fun_consume": "credits that expire and third-party models are useful but flat, with the off-switch line the only moment worth repeating",
+    "fun_produce": "living-ui of the AI panel inside Cinema 4D and an itemised credit receipt give something to show, but there is no test or growth-evidence moment",
     "fit": "focus sector and its economics in the sentence that carries the fact",
     "named_thing": "named in the hook, with a number or twist"
    },
    "angle": {
-    "id": "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#23461798be9d",
-    "lens": "series",
-    "text": "The AI inside Cinema 4D and ZBrush is not Maxon's own: the generation is handed to outside companies, Tripo and Rodin.",
+    "id": "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#5dbe5a498cf9",
+    "lens": "own",
+    "text": "Maxon, the software company behind Cinema 4D and ZBrush, now sells AI model generation inside its apps, run on other firms' models such as Tripo and Rodin and billed in credits.",
     "rule": "best sound angle"
    },
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c": {
-   "total": 70.1,
+   "total": 78.2,
    "axes": {
     "whys": 8,
-    "scale": 5.0,
+    "scale": 7.0,
     "unique_angle": 7.5,
     "absurdity_humour": null,
     "fun_consume": 7.0,
-    "fun_produce": 6.0,
-    "fit": 7,
+    "fun_produce": 7.0,
+    "fit": 10,
     "named_thing": 10
    },
    "type": "hero_fri",
@@ -310,12 +364,12 @@
    },
    "why": {
     "whys": "3 documented, 2 inferred",
-    "scale": "festival selection governs awards and distribution for animators and Manchester's ban from 2027 is a real rule, but it is a few festivals and no figure says how many entries are affected.",
+    "scale": "Manchester barring generative AI from 2027 and Ottawa reporting lying on forms affect which animated films win awards and distribution, though no sourced figure is given",
     "unique_angle": "best sound angle",
     "absurdity_humour": "humour engine: fact None, angle None",
-    "fun_consume": "the director's quote about animators \"clearly lying on their forms\" and AI films ticked as 3D give one moment worth repeating.",
-    "fun_produce": "The debate, made everyday fits around one entry form everyone has filled in, and the form and Manchester's rule text can be shown, but there is no film or frame named to show the lie.",
-    "fit": "focus sector in the sentence that carries the fact",
+    "fun_consume": "\"some entries say they are 3D\" and a programmer quoted saying animators are lying are moments worth repeating",
+    "fun_produce": "the festival form and the rule's exact wording are real objects to show with everyday-debate, but the films themselves may not be showable",
+    "fit": "focus sector and its economics in the sentence that carries the fact",
     "named_thing": "named in the hook, with a number or twist"
    },
    "angle": {
@@ -325,19 +379,19 @@
     "rule": "best sound angle"
    },
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87": {
-   "total": 68.1,
+   "total": 72.1,
    "axes": {
     "unique_angle": 5.62,
     "absurdity_humour": null,
     "whys": 8,
     "scale": 4.0,
-    "fun_consume": 8.0,
+    "fun_consume": 10.0,
     "fit": 7,
     "named_thing": 10,
-    "fun_produce": 8.0
+    "fun_produce": 10.0
    },
    "type": "wildcard",
    "floors_failed": [],
@@ -366,11 +420,11 @@
     "unique_angle": "best sound angle",
     "absurdity_humour": "humour engine: fact None, angle None",
     "whys": "4 documented, 0 inferred",
-    "scale": "it is one game update on one store, with a local consequence of 8% positive recent reviews, though it touches how Steam's AI label works.",
-    "fun_consume": "players unmasking the music through one metadata field that names Suno is a detective story with a punchline, and the 8% reviews give the cost.",
+    "scale": "one game update and one store label are involved, with a local consequence of reviews at 8% positive",
+    "fun_consume": "players catching AI music through a metadata field that names Suno is a detective story a stranger would forward",
     "fit": "focus sector in the sentence that carries the fact",
     "named_thing": "named in the hook, with a number or twist",
-    "fun_produce": "the metadata line naming Suno is a perfect screen proof shown on the exact words, the Reddit post and the review score are further objects, and it opens on a named concrete thing as the growth pattern asks."
+    "fun_produce": "the metadata line is a screen-proof object, the 8% figure lands as one number after, and it matches the named-then-surprise pattern and the workplace-absurdity humour that held people"
    },
    "angle": {
     "id": "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87#3f6260b1c121",
@@ -379,28 +433,83 @@
     "rule": "best sound angle"
    },
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
+  },
+  "fri/acb58370-aaca-4040-9c13-83f227a628ec": {
+   "total": 65.0,
+   "axes": {
+    "whys": 9,
+    "scale": 7.0,
+    "unique_angle": 0.0,
+    "absurdity_humour": null,
+    "fun_consume": 7.0,
+    "fun_produce": 4.0,
+    "fit": 10,
+    "named_thing": 10
+   },
+   "type": "hero_fri",
+   "floors_failed": [],
+   "notes": [],
+   "unread": [
+    "absurdity_humour"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 8.8,
+   "checks": {
+    "probe_documented": 4,
+    "probe_rungs": 5,
+    "landing_ok": true,
+    "primary_sources": 1,
+    "sound_angle": true,
+    "money_figure_sourced": false,
+    "mechanism_rungs": 3,
+    "counter_rungs": 4,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null,
+    "goodnews_sector_share": null
+   },
+   "why": {
+    "whys": "4 documented, 1 inferred",
+    "scale": "China's biggest music company told investors AI plays are negligible while saying its own controls keep them low, which shapes how artists and labels read AI demand, though there is no number",
+    "unique_angle": "best sound angle",
+    "absurdity_humour": "humour engine: fact None, angle None",
+    "fun_consume": "the chairman contradicting the reason in the same call is a repeatable moment, but \"negligible\" with no figure is thin",
+    "fun_produce": "the proof is two quotes from an earnings call with no number to draw, so it is close to a talking head over stills",
+    "fit": "focus sector and its economics in the sentence that carries the fact",
+    "named_thing": "named in the hook, with a number or twist"
+   },
+   "angle": {
+    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#43facb845d2b",
+    "lens": "own",
+    "text": "Tencent Music, owner of QQ Music, Kugou and Kuwo, told investors on 17 November that streams of AI content are negligible because listeners are more selective, while its chairman also said its own controls keep AI plays low.",
+    "rule": "best sound angle"
+   },
+   "rubric_version": "story-score/1",
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "tue/nytphotoshop": {
-   "total": 63.5,
+   "total": 76.0,
    "axes": {
     "utility": 7.0,
     "mechanism": null,
     "named_thing": 7,
-    "fun_consume": 8.0,
+    "fun_consume": 10.0,
     "fun_produce": 7.0,
     "fit": 7,
-    "absurdity_humour": 0.0
+    "absurdity_humour": null
    },
    "type": "explainer",
    "floors_failed": [],
    "notes": [],
    "unread": [
+    "absurdity_humour",
     "mechanism"
    ],
    "floored": false,
-   "humour_unread": false,
-   "read_weight": 8.5,
+   "humour_unread": true,
+   "read_weight": 7.5,
    "checks": {
     "probe_documented": null,
     "probe_rungs": null,
@@ -410,20 +519,20 @@
     "money_figure_sourced": false,
     "mechanism_rungs": null,
     "counter_rungs": null,
-    "comic_reading": "not_supported",
-    "needs_explaining": true,
+    "comic_reading": null,
+    "needs_explaining": null,
     "steps_verifiable": true,
     "goodnews_sector_share": null,
     "carousel_format": true
    },
    "why": {
-    "utility": "a photographer can act today by not updating past release 28.0.0, a step stated in the Times's own email, but the story does not say which AI features cause it or what to use instead.",
+    "utility": "a photographer can act this week by holding back the update, with the exact release number in the email, though the steps are not checked on Adobe's own documents",
     "mechanism": "not probed",
     "named_thing": "named, the number or twist in the body",
-    "fun_consume": "the New York Times telling photographers to keep Photoshop out of date on purpose is an odd, true headline a stranger would send on.",
-    "fun_produce": "the email's own words naming Photoshop 2027 release 28.0.0 are a real object for the first card and the paper's name carries the hook, though a carousel cannot show the AI feature itself.",
+    "fun_consume": "the New York Times telling photographers not to update Photoshop is an oddly specific fact a stranger would send on",
+    "fun_produce": "the quoted email with release 28.0.0 named is a clear proof object for a five-card carousel, though the growth evidence says carousels reach fewer people than video",
     "fit": "focus sector in the sentence that carries the fact",
-    "absurdity_humour": "humour engine: fact 0, angle None"
+    "absurdity_humour": "humour engine: fact None, angle None"
    },
    "angle": {
     "id": "tue/nytphotoshop#14aa8140e223",
@@ -432,69 +541,16 @@
     "rule": "best sound angle"
    },
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
-  },
-  "tue/logicdrums": {
-   "total": 61.8,
-   "axes": {
-    "utility": 9.0,
-    "mechanism": null,
-    "named_thing": 7,
-    "fun_consume": 5.0,
-    "fun_produce": 5.0,
-    "fit": 7,
-    "absurdity_humour": 0.0
-   },
-   "type": "explainer",
-   "floors_failed": [],
-   "notes": [],
-   "unread": [
-    "mechanism"
-   ],
-   "floored": false,
-   "humour_unread": false,
-   "read_weight": 8.5,
-   "checks": {
-    "probe_documented": null,
-    "probe_rungs": null,
-    "landing_ok": null,
-    "primary_sources": 0,
-    "sound_angle": true,
-    "money_figure_sourced": false,
-    "mechanism_rungs": null,
-    "counter_rungs": null,
-    "comic_reading": "not_supported",
-    "needs_explaining": true,
-    "steps_verifiable": true,
-    "goodnews_sector_share": null,
-    "carousel_format": true
-   },
-   "why": {
-    "utility": "a Logic Pro for iPad user can pick the named preset, Drums (Individual Kit Pieces), in Stem Splitter today, with the step quoted from Apple's own notes.",
-    "mechanism": "not probed",
-    "named_thing": "named, the number or twist in the body",
-    "fun_consume": "splitting a song's drums into kick, snare and hi-hat is satisfying to a musician and the cowbell joke lands, but it is a feature note.",
-    "fun_produce": "the preset and the split regions can be shown on a card, but the real proof is sound, which a still carousel cannot play.",
-    "fit": "focus sector in the sentence that carries the fact",
-    "absurdity_humour": "humour engine: fact None, angle 0"
-   },
-   "angle": {
-    "id": "tue/logicdrums#b491abb3bcfb",
-    "lens": "series",
-    "text": "Apple's Stem Splitter can now pull a recorded drum kit apart into kick, snare, hi-hat, toms and cymbals, from a single mixed region.",
-    "rule": "best sound angle"
-   },
-   "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "tue/spotifyaudio": {
-   "total": 68.7,
+   "total": 80.0,
    "axes": {
-    "utility": 8.0,
+    "utility": 10.0,
     "mechanism": null,
     "named_thing": 7,
-    "fun_consume": 6.0,
-    "fun_produce": 5.0,
+    "fun_consume": 7.0,
+    "fun_produce": 7.0,
     "fit": 7,
     "absurdity_humour": null
    },
@@ -524,11 +580,11 @@
     "carousel_format": true
    },
    "why": {
-    "utility": "self-published authors in 21 more markets, the UK included, can make up to five audiobooks free starting today, from Spotify's own newsroom, though the sign-up steps are not given.",
+    "utility": "a self-published author in the UK can do it today, sourced to Spotify's own newsroom with the markets and the five-book limit",
     "mechanism": "not probed",
     "named_thing": "named, the number or twist in the body",
-    "fun_consume": "a free audiobook of your own book is a send-to-a-friend offer for any self-published writer, though the telling is plain.",
-    "fun_produce": "the tool's screens and the five-per-author limit can go on cards, but there is nothing to show happening.",
+    "fun_consume": "a free audiobook from your self-published book is a named, usable surprise, with the five-per-author line",
+    "fun_produce": "the Spotify tool's screens and the five-free limit fit the-usable-rule as a carousel, with something to show",
     "fit": "focus sector in the sentence that carries the fact",
     "absurdity_humour": "humour engine: fact None, angle None"
    },
@@ -539,16 +595,16 @@
     "rule": "best sound angle"
    },
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "tue/fcpcaptions": {
-   "total": 66.7,
+   "total": 76.0,
    "axes": {
-    "utility": 8.0,
+    "utility": 10.0,
     "mechanism": null,
     "named_thing": 10,
     "fun_consume": 4.0,
-    "fun_produce": 5.0,
+    "fun_produce": 7.0,
     "fit": 4,
     "absurdity_humour": null
    },
@@ -578,11 +634,11 @@
     "carousel_format": true
    },
    "why": {
-    "utility": "any Final Cut Pro editor can generate captions in 23 new languages today, on Apple's own release notes, though the steps and which languages are not in the story.",
+    "utility": "a Final Cut Pro editor can generate captions in the new languages today, sourced to Apple's release notes",
     "mechanism": "not probed",
     "named_thing": "named in the hook, with a number or twist",
-    "fun_consume": "23 more caption languages is useful but flat, and only the one-language line lifts it.",
-    "fun_produce": "the caption panel and its language list can be shown on a card, but it is a feature list with no moment.",
+    "fun_consume": "23 more caption languages is useful but flat, with the \"American\" line the only spark",
+    "fun_produce": "the caption panel before and after is a screen to show in a carousel",
     "fit": "focus sector only in the body",
     "absurdity_humour": "humour engine: fact None, angle None"
    },
@@ -593,13 +649,67 @@
     "rule": "best sound angle"
    },
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
+  },
+  "tue/logicdrums": {
+   "total": 80.0,
+   "axes": {
+    "utility": 10.0,
+    "mechanism": null,
+    "named_thing": 7,
+    "fun_consume": 7.0,
+    "fun_produce": 7.0,
+    "fit": 7,
+    "absurdity_humour": null
+   },
+   "type": "explainer",
+   "floors_failed": [],
+   "notes": [],
+   "unread": [
+    "absurdity_humour",
+    "mechanism"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 7.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": true,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": true,
+    "goodnews_sector_share": null,
+    "carousel_format": true
+   },
+   "why": {
+    "utility": "a Logic on iPad user can choose the named preset today, with the step quoted from Apple's release notes",
+    "mechanism": "not probed",
+    "named_thing": "named, the number or twist in the body",
+    "fun_consume": "splitting a song's drums into kick, snare and hi-hat is a satisfying capability, and the cowbell line is worth repeating",
+    "fun_produce": "the stem splitter's separated kit pieces are a clear visual for a carousel, though sound would show it better than stills",
+    "fit": "focus sector in the sentence that carries the fact",
+    "absurdity_humour": "humour engine: fact None, angle None"
+   },
+   "angle": {
+    "id": "tue/logicdrums#b491abb3bcfb",
+    "lens": "series",
+    "text": "Apple's Stem Splitter can now pull a recorded drum kit apart into kick, snare, hi-hat, toms and cymbals, from a single mixed region.",
+    "rule": "best sound angle"
+   },
+   "rubric_version": "story-score/1",
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "tue/mychannel": {
-   "total": 61.3,
+   "total": 58.7,
    "axes": {
     "absurdity_humour": null,
-    "fun_consume": 8.0,
+    "fun_consume": 7.0,
     "named_thing": 7,
     "fun_produce": 7.0,
     "unique_angle": 0.0,
@@ -635,26 +745,26 @@
    },
    "why": {
     "absurdity_humour": "humour engine: fact None, angle None",
-    "fun_consume": "a TV channel starring you, with the ad break still there, and an examiner saying no, is a strange true story a stranger would forward.",
+    "fun_consume": "a TV channel starring you, with the ad break still there, is a repeatable moment, though the examiner's no deflates it",
     "named_thing": "named, the number or twist in the body",
-    "fun_produce": "a Voice-led cut over the patent's own drawings and the examiner's refusal gives real objects to show on the words, though no number proves anything.",
+    "fun_produce": "the patent drawings are a proof object for a voiceover short with motion graphics, but there is no real product to show",
     "unique_angle": "no sound angle",
     "fit": "focus sector in the sentence that carries the fact",
-    "scale": "it is a rejected patent from Google, not a product, so the consequence is speculative even though the company is major.",
+    "scale": "it is one patent from Google that an examiner rejected, so the consequence is speculative",
     "whys": "3 documented, 1 inferred"
    },
    "angle": null,
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "tue/tplcommscam": {
-   "total": 60.7,
+   "total": 66.8,
    "axes": {
     "absurdity_humour": null,
-    "fun_consume": 6.0,
+    "fun_consume": 7.0,
     "unique_angle": 5.62,
     "named_thing": 10,
-    "fun_produce": 5.0,
+    "fun_produce": 7.0,
     "fit": 4
    },
    "type": "offday_meme",
@@ -686,10 +796,10 @@
    },
    "why": {
     "absurdity_humour": "humour engine: fact None, angle None",
-    "fun_consume": "one pundit cheering beside one sinking at 4-0 is a strong, known reaction, but the caption about an AI music start-up's pitch and a songwriter reading the contract needs a second read to land.",
+    "fun_consume": "one pundit cheering while the other sits still at 4-0 is a familiar reaction, though the caption about an AI music start-up and a songwriter is a stretch",
     "unique_angle": "best sound angle",
     "named_thing": "named in the hook, with a number or twist",
-    "fun_produce": "the clip is a real object to show, but a meme template is outside the catalogue formats and there is no proof object beyond the reaction.",
+    "fun_produce": "the meme template has a ready clip at full frame with a clear contrast to show",
     "fit": "focus sector only in the body"
    },
    "angle": {
@@ -699,16 +809,16 @@
     "rule": "best sound angle"
    },
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "tue/tplninedarter": {
-   "total": 43.1,
+   "total": 49.2,
    "axes": {
     "absurdity_humour": null,
-    "fun_consume": 6.0,
+    "fun_consume": 7.0,
     "unique_angle": 0.0,
     "named_thing": 7,
-    "fun_produce": 5.0,
+    "fun_produce": 7.0,
     "fit": 4
    },
    "type": "offday_meme",
@@ -740,10 +850,10 @@
    },
    "why": {
     "absurdity_humour": "humour engine: fact None, angle None",
-    "fun_consume": "two perfect legs back to back is a real moment and \"400 tries against one and a grin\" maps cleanly onto human against machine.",
+    "fun_consume": "two perfect nine-darters back to back with a grin is a striking moment, and the 400 tries against one line lands",
     "unique_angle": "best sound angle",
     "named_thing": "named in the body, with a number or twist",
-    "fun_produce": "the clip carries the joke, but a meme template is outside the catalogue formats and the 400 tries figure is not sourced.",
+    "fun_produce": "the clip carries the show moment and the meme template fits directly",
     "fit": "focus sector only in the body"
    },
    "angle": {
@@ -753,16 +863,16 @@
     "rule": "best sound angle"
    },
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "tue/tplfistpump": {
-   "total": 36.9,
+   "total": 40.0,
    "axes": {
     "absurdity_humour": null,
     "fun_consume": 4.0,
     "unique_angle": 0.0,
     "named_thing": 7,
-    "fun_produce": 5.0,
+    "fun_produce": 7.0,
     "fit": 4
    },
    "type": "offday_meme",
@@ -794,24 +904,24 @@
    },
    "why": {
     "absurdity_humour": "humour engine: fact None, angle None",
-    "fun_consume": "the fist pump is a familiar celebration but beating \"the AI storyboard on a shoot\" is not a moment the reader will recognise, so the caption falls flat.",
+    "fun_consume": "a manager's fist pump is a common sight and the film crew beating an AI storyboard caption is weak",
     "unique_angle": "no sound angle",
     "named_thing": "named, the number or twist in the body",
-    "fun_produce": "the clip exists and the caption sits on it, but no catalogue format fits and nothing is proved.",
+    "fun_produce": "the meme template fits a ready clip, though the moment itself is ordinary",
     "fit": "focus sector only in the body"
    },
    "angle": null,
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "tue/tplbuzzer": {
-   "total": 36.9,
+   "total": 40.0,
    "axes": {
     "absurdity_humour": null,
     "fun_consume": 4.0,
     "unique_angle": 0.0,
     "named_thing": 7,
-    "fun_produce": 5.0,
+    "fun_produce": 7.0,
     "fit": 4
    },
    "type": "offday_meme",
@@ -843,24 +953,24 @@
    },
    "why": {
     "absurdity_humour": "humour engine: fact None, angle None",
-    "fun_consume": "the buzzer-beater is vivid but \"every human mix lands one second before the AI version\" does not make clear sense, so the moment does not repeat.",
+    "fun_consume": "the caption about a human mix landing one second before the AI version is hard to follow",
     "unique_angle": "no sound angle",
     "named_thing": "named, the number or twist in the body",
-    "fun_produce": "the clip is there to show, but no catalogue format fits and the caption has nothing to prove.",
+    "fun_produce": "a 97-96 buzzer-beater clip is a strong show moment for the meme template",
     "fit": "focus sector only in the body"
    },
    "angle": null,
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "thu/figmasix": {
-   "total": 70.0,
+   "total": 80.0,
    "axes": {
-    "utility": 9.0,
+    "utility": 10.0,
     "mechanism": null,
     "named_thing": 7,
-    "fun_consume": 5.0,
-    "fun_produce": 5.0,
+    "fun_consume": 7.0,
+    "fun_produce": 7.0,
     "fit": 7,
     "absurdity_humour": null
    },
@@ -890,11 +1000,11 @@
     "carousel_format": true
    },
    "why": {
-    "utility": "any Figma user can generate two, four or six images from one prompt today, quoted from Figma's own release notes.",
+    "utility": "a Figma user can set two, four or six images today, quoted from Figma's own release notes",
     "mechanism": "not probed",
     "named_thing": "named, the number or twist in the body",
-    "fun_consume": "the release note admitting you will spend less time re-prompting is the one honest, repeatable line in an otherwise flat feature.",
-    "fun_produce": "six images from one prompt can be shown as a grid on a card, but there is no test or number beyond the count.",
+    "fun_consume": "the release note admitting you will spend less time re-prompting is a line worth repeating",
+    "fun_produce": "a grid of six images from one prompt is a clear thing to show in a carousel",
     "fit": "focus sector in the sentence that carries the fact",
     "absurdity_humour": "humour engine: fact None, angle None"
    },
@@ -905,16 +1015,16 @@
     "rule": "best sound angle"
    },
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "thu/robloxvideo": {
-   "total": 66.7,
+   "total": 70.0,
    "axes": {
-    "utility": 8.0,
+    "utility": 7.0,
     "mechanism": null,
     "named_thing": 7,
-    "fun_consume": 5.0,
-    "fun_produce": 5.0,
+    "fun_consume": 7.0,
+    "fun_produce": 7.0,
     "fit": 7,
     "absurdity_humour": null
    },
@@ -944,11 +1054,11 @@
     "carousel_format": true
    },
    "why": {
-    "utility": "a Roblox developer can use screen_capture to record video during a playtest this week, from Roblox's own forum post, though it needs the Studio MCP server set up first.",
+    "utility": "a Roblox developer can use it this week after connecting the Studio MCP server, sourced to Roblox's developer forum",
     "mechanism": "not probed",
     "named_thing": "named, the number or twist in the body",
-    "fun_consume": "an AI noticing a stuttering door is a small, warm image, but the story is a developer-forum update.",
-    "fun_produce": "the playtest video and the agent's fix could be shown, but a still carousel cannot show motion, which is the point of the feature.",
+    "fun_consume": "an AI watching a playtest and noticing a door stutter is a vivid image with a good joke",
+    "fun_produce": "the playtest capture is a screen to show, though stills undersell motion",
     "fit": "focus sector in the sentence that carries the fact",
     "absurdity_humour": "humour engine: fact None, angle None"
    },
@@ -959,16 +1069,16 @@
     "rule": "best sound angle"
    },
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "thu/pixelfill": {
-   "total": 65.3,
+   "total": 70.0,
    "axes": {
-    "utility": 9.0,
+    "utility": 10.0,
     "mechanism": null,
     "named_thing": 7,
     "fun_consume": 4.0,
-    "fun_produce": 6.0,
+    "fun_produce": 7.0,
     "fit": 4,
     "absurdity_humour": null
    },
@@ -998,11 +1108,11 @@
     "carousel_format": true
    },
    "why": {
-    "utility": "a Pixelmator Pro user can use Generate Fill with natural language today, quoted from Apple's own release notes.",
+    "utility": "a Pixelmator Pro 5.0 user can use Generate Fill today, quoted from Apple's release notes",
     "mechanism": "not probed",
     "named_thing": "named, the number or twist in the body",
-    "fun_consume": "repainting part of a photo from words is familiar by now, and Apple's purple sky example is the only smile.",
-    "fun_produce": "a before and after of Generate Fill on one photo is a clear thing to show on a card.",
+    "fun_consume": "generative fill is now common and the purple-sky line is the only spark",
+    "fun_produce": "a before-and-after photo is a clear carousel object",
     "fit": "focus sector only in the body",
     "absurdity_humour": "humour engine: fact None, angle None"
    },
@@ -1013,16 +1123,16 @@
     "rule": "best sound angle"
    },
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "thu/alphamatte": {
-   "total": 62.7,
+   "total": 64.0,
    "axes": {
     "utility": 7.0,
     "mechanism": null,
     "named_thing": 7,
     "fun_consume": 4.0,
-    "fun_produce": 6.0,
+    "fun_produce": 7.0,
     "fit": 7,
     "absurdity_humour": null
    },
@@ -1052,11 +1162,11 @@
     "carousel_format": true
    },
    "why": {
-    "utility": "a Runway user can export a ProRes matte through LTX Alphagen today, on Runway's own changelog, but it needs a Runway account and the steps are not given.",
+    "utility": "a Runway user can try it this week, but the quote does not confirm the steps for cutting people out",
     "mechanism": "not probed",
     "named_thing": "named, the number or twist in the body",
-    "fun_consume": "cutting people out of clips with no green screen is useful, but the \"two files instead of one\" line is the flattest of the week.",
-    "fun_produce": "a before and after of a person lifted off a background is one clear thing to show, even on cards.",
+    "fun_consume": "the sourced line is about two outputs and ProRes, which is technical and flat for most readers",
+    "fun_produce": "a person cut out of a clip with no green screen is a strong before-and-after to show",
     "fit": "focus sector in the sentence that carries the fact",
     "absurdity_humour": "humour engine: fact None, angle None"
    },
@@ -1067,29 +1177,32 @@
     "rule": "best sound angle"
    },
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "thu/synthfirmware": {
-   "total": 51.6,
+   "total": 72.2,
    "axes": {
-    "absurdity_humour": 0.0,
+    "absurdity_humour": null,
     "fun_consume": 7.0,
     "named_thing": 7,
-    "fun_produce": 6.0,
+    "fun_produce": 7.0,
     "unique_angle": 5.62,
     "fit": 10,
-    "scale": 5.0,
+    "scale": 7.0,
     "whys": 7
    },
    "type": "offday_short",
    "floors_failed": [
-    "a short leads on humour the engine can read"
+    "a short leads on humour the engine can read (not read)",
+    "a short's joke never needs explaining (not read)"
    ],
    "notes": [],
-   "unread": [],
+   "unread": [
+    "absurdity_humour"
+   ],
    "floored": false,
-   "humour_unread": false,
-   "read_weight": 10.0,
+   "humour_unread": true,
+   "read_weight": 7.5,
    "checks": {
     "probe_documented": 3,
     "probe_rungs": 4,
@@ -1099,19 +1212,19 @@
     "money_figure_sourced": false,
     "mechanism_rungs": 2,
     "counter_rungs": 3,
-    "comic_reading": "not_supported",
-    "needs_explaining": false,
+    "comic_reading": null,
+    "needs_explaining": null,
     "steps_verifiable": null,
     "goodnews_sector_share": null
    },
    "why": {
-    "absurdity_humour": "humour engine: fact 0, angle None",
-    "fun_consume": "a $70 synth taught new tricks with chatbots until its makers opened up is a surprise with a hero object that holds to the end.",
+    "absurdity_humour": "humour engine: fact None, angle None",
+    "fun_consume": "a $70 synth taught new tricks with chatbots is a warm, repeatable story",
     "named_thing": "named in the body, with a number or twist",
-    "fun_produce": "the synth itself and Polyend's GitHub page are real objects to show in a voiceover short, though there is no test, number or named winner from the growth evidence.",
+    "fun_produce": "the GitHub release and the synth itself are objects to show in a voiceover short, though the source names the firm without a demo moment",
     "unique_angle": "best sound angle",
     "fit": "focus sector and its economics in the sentence that carries the fact",
-    "scale": "several music gear makers opening their firmware, Polyend publishing three Trackers' source code among them, is a notable shift for a niche of instrument makers and players, with no wider figure.",
+    "scale": "music gear makers such as Polyend publishing firmware source code is a named move with a second-order effect on players and makers, though no figure for reach is given",
     "whys": "3 documented, 1 inferred"
    },
    "angle": {
@@ -1121,16 +1234,16 @@
     "rule": "best sound angle"
    },
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "thu/tplturin": {
-   "total": 43.1,
+   "total": 49.2,
    "axes": {
     "absurdity_humour": null,
-    "fun_consume": 6.0,
+    "fun_consume": 7.0,
     "unique_angle": 0.0,
     "named_thing": 7,
-    "fun_produce": 5.0,
+    "fun_produce": 7.0,
     "fit": 4
    },
    "type": "offday_meme",
@@ -1162,70 +1275,24 @@
    },
    "why": {
     "absurdity_humour": "humour engine: fact None, angle None",
-    "fun_consume": "the champion flat on his back is a big reaction and a client who does not ask for an AI version is a moment a film editor will repeat.",
+    "fun_consume": "the champion dropping flat on his back is a strong emotional clip, and the editor's championship point caption is relatable",
     "unique_angle": "no sound angle",
     "named_thing": "named, the number or twist in the body",
-    "fun_produce": "the clip carries the caption, but a meme template is outside the catalogue formats and nothing is proved.",
+    "fun_produce": "the clip carries the moment and the meme template fits",
     "fit": "focus sector only in the body"
    },
    "angle": null,
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
-  },
-  "thu/tplthanksgiving": {
-   "total": 33.0,
-   "axes": {
-    "absurdity_humour": 2.0,
-    "fun_consume": 5.0,
-    "unique_angle": 0.0,
-    "named_thing": 7,
-    "fun_produce": 5.0,
-    "fit": 4
-   },
-   "type": "offday_meme",
-   "floors_failed": [
-    "a meme never needs explaining"
-   ],
-   "notes": [],
-   "unread": [],
-   "floored": false,
-   "humour_unread": false,
-   "read_weight": 10.0,
-   "checks": {
-    "probe_documented": null,
-    "probe_rungs": null,
-    "landing_ok": null,
-    "primary_sources": 0,
-    "sound_angle": false,
-    "money_figure_sourced": false,
-    "mechanism_rungs": null,
-    "counter_rungs": null,
-    "comic_reading": "supported",
-    "needs_explaining": true,
-    "steps_verifiable": null,
-    "goodnews_sector_share": null,
-    "template_ok": true
-   },
-   "why": {
-    "absurdity_humour": "humour engine: fact None, angle 2",
-    "fun_consume": "the last-second touchdown is a strong clip, but the hand-made film arriving at the festival with three seconds left is a loose fit that is read once.",
-    "unique_angle": "no sound angle",
-    "named_thing": "named in the body, with a number or twist",
-    "fun_produce": "the clip is real to show, but no catalogue format fits and there is no proof object.",
-    "fit": "focus sector only in the body"
-   },
-   "angle": null,
-   "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "thu/tplassemble": {
    "total": 40.0,
    "axes": {
     "absurdity_humour": null,
-    "fun_consume": 5.0,
+    "fun_consume": 4.0,
     "unique_angle": 0.0,
     "named_thing": 7,
-    "fun_produce": 5.0,
+    "fun_produce": 7.0,
     "fit": 4
    },
    "type": "offday_meme",
@@ -1257,24 +1324,24 @@
    },
    "why": {
     "absurdity_humour": "humour engine: fact None, angle None",
-    "fun_consume": "heroes charging in together is a known image, but \"every AI video tool turns up to a film pitch\" names no tool and no moment the reader has lived.",
+    "fun_consume": "the superhero roster caption about AI video tools is a familiar joke",
     "unique_angle": "no sound angle",
     "named_thing": "named in the body, with a number or twist",
-    "fun_produce": "the trailer clip can carry the caption, but no catalogue format fits and nothing is shown that proves the line.",
+    "fun_produce": "a ready trailer clip fits the meme template, though rights on a Marvel trailer may limit it",
     "fit": "focus sector only in the body"
    },
    "angle": null,
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "thu/tpllegends": {
-   "total": 40.0,
+   "total": 49.2,
    "axes": {
     "absurdity_humour": null,
-    "fun_consume": 5.0,
+    "fun_consume": 7.0,
     "unique_angle": 0.0,
     "named_thing": 7,
-    "fun_produce": 5.0,
+    "fun_produce": 7.0,
     "fit": 4
    },
    "type": "offday_meme",
@@ -1306,24 +1373,24 @@
    },
    "why": {
     "absurdity_humour": "humour engine: fact None, angle None",
-    "fun_consume": "the headliner with the legends is a warm clip, and the point that an AI model should walk out with every musician it learned from is fair but more lecture than laugh.",
+    "fun_consume": "an AI model walking out with every musician it learned from makes a clear point about credit through a known image",
     "unique_angle": "no sound angle",
     "named_thing": "named in the body, with a number or twist",
-    "fun_produce": "the clip is there to show, but a meme template is outside the catalogue formats and there is no proof object.",
+    "fun_produce": "the backstage corridor clip is a show moment for the meme template",
     "fit": "focus sector only in the body"
    },
    "angle": null,
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "thu/tplskyrim": {
-   "total": 38.5,
+   "total": 53.8,
    "axes": {
     "absurdity_humour": null,
-    "fun_consume": 6.0,
+    "fun_consume": 7.0,
     "unique_angle": 0.0,
-    "named_thing": 1,
-    "fun_produce": 5.0,
+    "named_thing": 7,
+    "fun_produce": 7.0,
     "fit": 7
    },
    "type": "offday_meme",
@@ -1355,10 +1422,10 @@
    },
    "why": {
     "absurdity_humour": "humour engine: fact None, angle None",
-    "fun_consume": "a famous fantasy game rebuilt in the 1960s is odd enough to watch, and the line about studios pitching AI remakes in the wrong century is wry.",
+    "fun_consume": "a fantasy game remade in the 1960s by AI is strange enough to watch, with a pointed studio joke",
     "unique_angle": "best sound angle",
-    "named_thing": "nothing named",
-    "fun_produce": "the AI remake itself is the thing to show, but it is another account's reel rather than a catalogue format, and nothing is proved beyond the clip.",
+    "named_thing": "named in the body, with a number or twist",
+    "fun_produce": "the AI remake clip is itself the show object for the meme template, though it comes from another account's reel",
     "fit": "focus sector in the sentence that carries the fact"
    },
    "angle": {
@@ -1368,16 +1435,65 @@
     "rule": "best sound angle"
    },
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
+  },
+  "thu/tplthanksgiving": {
+   "total": 40.0,
+   "axes": {
+    "absurdity_humour": null,
+    "fun_consume": 4.0,
+    "unique_angle": 0.0,
+    "named_thing": 7,
+    "fun_produce": 7.0,
+    "fit": 4
+   },
+   "type": "offday_meme",
+   "floors_failed": [
+    "a meme's humour reads as supported (not read)",
+    "a meme never needs explaining (not read)"
+   ],
+   "notes": [],
+   "unread": [
+    "absurdity_humour"
+   ],
+   "floored": false,
+   "humour_unread": true,
+   "read_weight": 6.5,
+   "checks": {
+    "probe_documented": null,
+    "probe_rungs": null,
+    "landing_ok": null,
+    "primary_sources": 0,
+    "sound_angle": false,
+    "money_figure_sourced": false,
+    "mechanism_rungs": null,
+    "counter_rungs": null,
+    "comic_reading": null,
+    "needs_explaining": null,
+    "steps_verifiable": null,
+    "goodnews_sector_share": null,
+    "template_ok": true
+   },
+   "why": {
+    "absurdity_humour": "humour engine: fact None, angle None",
+    "fun_consume": "the hand-made film reaching the festival with three seconds left is a loose fit for the clip",
+    "unique_angle": "no sound angle",
+    "named_thing": "named in the body, with a number or twist",
+    "fun_produce": "a last-second touchdown clip is a strong show moment for the meme template",
+    "fit": "focus sector only in the body"
+   },
+   "angle": null,
+   "rubric_version": "story-score/1",
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "sat/goodnews": {
-   "total": 64.1,
+   "total": 68.2,
    "axes": {
     "uplift": 7.0,
     "named_thing": 4,
-    "scale": 6.0,
+    "scale": 7.0,
     "wonder": null,
-    "fun_produce": 5.0,
+    "fun_produce": 7.0,
     "fit": 7,
     "evidence": 10
    },
@@ -1407,26 +1523,26 @@
     "goodnews_checks": true
    },
    "why": {
-    "uplift": "named people are helped: two songwriters reached number one, a K-pop group released its debut and George Lynch was hired to play, at a modest scale.",
+    "uplift": "the songwriters who reached number one and George Lynch being hired are named people helped, at a modest scale",
     "named_thing": "named in the body only",
-    "scale": "songwriters reaching number one in Korea and a label hiring George Lynch reach millions of listeners, but the stories are separate and only the chart position is a figure.",
+    "scale": "two songwriters reaching number one in Korea and a debut from an AI K-pop group are named moves with reach in a large market, though no sourced figure is given",
     "wonder": null,
-    "fun_produce": "a good-news carousel of four named stories can be made, with chart and single art to show, but it is cards over stills with no moment that holds.",
+    "fun_produce": "a good-news carousel fits with four named stories to show, though the format reaches fewer people than video",
     "fit": "focus sector in the sentence that carries the fact",
     "evidence": "every story sourced and dated"
    },
    "angle": null,
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "sat/talent": {
-   "total": 67.6,
+   "total": 82.4,
    "axes": {
-    "uplift": 7.0,
+    "uplift": 10.0,
     "named_thing": 7,
-    "scale": 5.0,
+    "scale": 7.0,
     "wonder": null,
-    "fun_produce": 5.0,
+    "fun_produce": 7.0,
     "fit": 7,
     "evidence": 10
    },
@@ -1456,26 +1572,26 @@
     "goodnews_checks": true
    },
    "why": {
-    "uplift": "26 overlooked footballers getting signed is a named group clearly helped, and Odeon's 40% with no jobs lost adds a second, at a modest scale.",
+    "uplift": "26 named-group footballers got signed and Odeon cut queries with no jobs lost, clearly helping named people",
     "named_thing": "named in the body, with a number or twist",
-    "scale": "26 overlooked footballers signed and Odeon's assistant answering 40% of questions are sourced figures, but each is one organisation and the fourth story is still to find.",
+    "scale": "26 overlooked footballers signed and Odeon's assistant answering 40% of questions are sourced figures with a measurable effect",
     "wonder": null,
-    "fun_produce": "the scouting app, the car's voice and the cinema assistant can be shown on cards, but it is three items and a gap with no show moment.",
+    "fun_produce": "three named stories with numbers fit the good-news carousel, one card short with \"1 more to find\"",
     "fit": "focus sector in the sentence that carries the fact",
     "evidence": "every story sourced and dated"
    },
    "angle": null,
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "sat/newsrooms": {
-   "total": 66.5,
+   "total": 64.7,
    "axes": {
-    "uplift": 6.0,
+    "uplift": 4.0,
     "named_thing": 7,
-    "scale": 6.0,
+    "scale": 7.0,
     "wonder": null,
-    "fun_produce": 5.0,
+    "fun_produce": 7.0,
     "fit": 7,
     "evidence": 10
    },
@@ -1505,26 +1621,26 @@
     "goodnews_checks": true
    },
    "why": {
-    "uplift": "named newsrooms save time and keep readers, a clear help to a named group, though the journalists and readers helped are not shown.",
+    "uplift": "the help goes to newsrooms and companies keeping readers, and the people helped are vague",
     "named_thing": "named in the body, with a number or twist",
-    "scale": "Norway's biggest paper using AI on 200 stories a day, Der Spiegel spotting a third of readers about to leave and nearly 500,000 people joining Canva through AI assistants are sourced figures across several major outlets.",
+    "scale": "Norway's biggest paper on 200 stories a day, Der Spiegel finding a third of readers about to leave and 500,000 Canva sign-ups are major named players with figures",
     "wonder": null,
-    "fun_produce": "the figures can each sit on a card, but there is no picture beyond logos and numbers, so it reads as a list.",
+    "fun_produce": "four named stories with numbers fit the good-news carousel",
     "fit": "focus sector in the sentence that carries the fact",
     "evidence": "every story sourced and dated"
    },
    "angle": null,
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "sat/makers": {
-   "total": 65.9,
+   "total": 77.1,
    "axes": {
-    "uplift": 6.0,
+    "uplift": 7.0,
     "named_thing": 7,
-    "scale": 5.0,
+    "scale": 7.0,
     "wonder": null,
-    "fun_produce": 6.0,
+    "fun_produce": 10.0,
     "fit": 7,
     "evidence": 10
    },
@@ -1554,26 +1670,26 @@
     "goodnews_checks": true
    },
    "why": {
-    "uplift": "named creators gained reach and a cheaper film, but the Gary Vee avatar answering one fan a day helps nobody in particular.",
+    "uplift": "named creators and a small film team clearly gained, at a modest scale",
     "named_thing": "named in the body, with a number or twist",
-    "scale": "a creator's Desi Batman at 25 million views and a fantasy film made for $28,775 are sourced figures, but each is one creator with a local consequence.",
+    "scale": "a Desi Batman at 25 million views and a film made for $28,775 are sourced figures showing solo creators reaching scale",
     "wonder": null,
-    "fun_produce": "the Desi Batman reel and the AI trailer are real pictures to show on the cards, though it stays a carousel over stills.",
+    "fun_produce": "the Desi Batman reel and an AI trailer are real clips to show, and the named creator with a number matches the pattern that held people",
     "fit": "focus sector in the sentence that carries the fact",
     "evidence": "every story sourced and dated"
    },
    "angle": null,
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   },
   "sat/screen": {
-   "total": 58.8,
+   "total": 59.4,
    "axes": {
-    "uplift": 5.0,
+    "uplift": 4.0,
     "named_thing": 7,
     "scale": 4.0,
     "wonder": null,
-    "fun_produce": 4.0,
+    "fun_produce": 7.0,
     "fit": 7,
     "evidence": 10
    },
@@ -1603,17 +1719,17 @@
     "goodnews_checks": true
    },
    "why": {
-    "uplift": "the seven directors and the Oscar winner are named groups, but \"try something new\" leaves vague what each gained.",
+    "uplift": "\"try something new\" helps film makers in a vague way, with only the seven directors and an unnamed Oscar winner as people",
     "named_thing": "named, the number or twist in the body",
-    "scale": "Lionsgate Play's series, seven Korean directors' festival shorts and one Oscar winner's method are each local, with no figure, and the fourth story is still to find.",
+    "scale": "a Lionsgate Play series and seven Korean directors' shorts are notable but carry no sourced figure",
     "wonder": null,
-    "fun_produce": "the carousel can be made over stills of the series and films, but it is three items and a gap, with nothing to show beyond posters.",
+    "fun_produce": "three named stories fit the good-news carousel, one card short with \"1 more to find\"",
     "fit": "focus sector in the sentence that carries the fact",
     "evidence": "every story sourced and dated"
    },
    "angle": null,
    "rubric_version": "story-score/1",
-   "at": "2026-11-28T11:36:41+00:00"
+   "at": "2026-11-28T14:17:14+00:00"
   }
  },
  "unscored": [],
@@ -1624,37 +1740,17 @@
     "mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2",
     "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb"
    ],
-   "why": "within 5 of 100 (76.9 and 73.4)",
+   "why": "within 5 of 100 (76.9 and 74.9)",
    "council": null,
    "says": "close call, your pick"
   },
   {
-   "day": "fri",
+   "day": "tue",
    "keys": [
-    "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c",
-    "fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87"
+    "tue/spotifyaudio",
+    "tue/logicdrums"
    ],
-   "why": "within 5 of 100 (70.1 and 68.1)",
-   "council": null,
-   "says": "close call, your pick"
-  },
-  {
-   "day": "thu",
-   "keys": [
-    "thu/figmasix",
-    "thu/robloxvideo"
-   ],
-   "why": "within 5 of 100 (70.0 and 66.7)",
-   "council": null,
-   "says": "close call, your pick"
-  },
-  {
-   "day": "sat",
-   "keys": [
-    "sat/talent",
-    "sat/newsrooms"
-   ],
-   "why": "within 5 of 100 (67.6 and 66.5)",
+   "why": "within 5 of 100 (80.0 and 80.0)",
    "council": null,
    "says": "close call, your pick"
   }

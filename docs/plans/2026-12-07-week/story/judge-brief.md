@@ -645,23 +645,6 @@ fun_produce (Fun to make): 10: A format in the catalogue fits it, with an on-scr
 uplift (Uplift): 10: Clearly makes named people smarter, better, happier or more successful, at scale (config/good-news.json bar.helps).; 7: Clearly helps a named group, at a modest scale.; 4: Helps, but the people helped are vague.; 1: Not good news for anyone in particular.
 utility (Useful today): 10: A reader in the sectors can do the thing today, with steps checked on the vendor's own documents.; 7: Usable this week with one sign-up or setting.; 4: Interesting but needs tools the reader does not have.; 1: Nothing to do with it.
 
-## mon/2c443323-dc8c-4941-9608-04d6b3ec85ed
-
-Headline: An AI music start-up will pay indie artists to learn from their songs. Nobody says how much.
-Hook: Sonilo, an $11 million AI music start-up, will pay licence fees and a share of revenue to Symphonic's independent artists who opt in to train its model, and the rate is private.
-What happened: Music Business Worldwide, 18 Nov 2026: Sonilo, "$11m-backed", signed with Symphonic so that "rights holders and artists receive licensing fees and a share of revenue"; the fee and split were not disclosed.
-So what: Independent musicians can now be paid to have an AI learn from their songs, through their distributor, but only if they tick the box, and nobody has said the rate: anyone with music on a distributor knows which email to read.
-Aim: utility
-Funny line: An indie track can now be in more AI training deals than playlists.
-- An AI start-up offers to pay indie musicians for their songs.
-- How $11 million of venture money reaches an artist: through the distributor.
-- The box you have to tick, and what ticking it signs.
-- The number nobody printed: the rate.
-- What this shows about who sets the price of a song an AI learns from.
-Source: Music Business Worldwide, Sonilo and Symphonic (18 Nov 2026) https://www.musicbusinessworldwide.com/11m-backed-ai-startup-sonilo-founded-by-tiktok-veterans-inks-licensing-deal-with-symphonic-to-train-its-model-on-opted-in-indie-recordings/
-
-Score: scale, fun_consume, fun_produce
-
 ## mon/21e94357-9b59-4abe-96c6-daf1f98cd6d2
 
 Headline: ElevenLabs paid about $100 million to learn Japanese.
@@ -696,20 +679,37 @@ Source: Kuaishou third-quarter 2026 results, PR Newswire (19 Nov 2026) https://w
 
 Score: scale, fun_consume, fun_produce
 
-## wed/41874364-fcd8-4fd1-b7e7-91aca6235019
+## mon/2c443323-dc8c-4941-9608-04d6b3ec85ed
 
-Headline: Cinema 4D's new AI is someone else's AI, sold in credits that expire.
-Hook: Maxon Plus puts AI model generation inside Cinema 4D and ZBrush for 3D artists, run on other firms' models such as Tripo and Rodin, billed in credits.
-What happened: Maxon: "We work with third-party AI providers, such as Tripo and Rodin."; Creative Bloq, 23 Nov 2026: "AI generation comes to Cinema 4D and ZBrush, but artists have an 'off' switch."
-So what: 3D artists using Cinema 4D and ZBrush now get AI model generation inside their apps, but the models come from other firms and the credits expire monthly, so any studio budgeting for it knows what it is actually paying for.
+Headline: An AI music start-up will pay indie artists to learn from their songs. Nobody says how much.
+Hook: Sonilo, an $11 million AI music start-up, will pay licence fees and a share of revenue to Symphonic's independent artists who opt in to train its model, and the rate is private.
+What happened: Music Business Worldwide, 18 Nov 2026: Sonilo, "$11m-backed", signed with Symphonic so that "rights holders and artists receive licensing fees and a share of revenue"; the fee and split were not disclosed.
+So what: Independent musicians can now be paid to have an AI learn from their songs, through their distributor, but only if they tick the box, and nobody has said the rate: anyone with music on a distributor knows which email to read.
 Aim: utility
-Funny line: The headline feature for 3D artists is an AI assistant, and the selling point in the subtitle is that you can switch it off.
-- An AI model maker inside the 3D artist's favourite apps.
-- Whose AI it really is: Tripo and Rodin.
-- Why the credits run out every month.
-- The off switch, and why it is a selling point.
-- What this shows about who makes money from AI in 3D.
-Source: Maxon, Maxon Plus (Nov 2026) https://www.maxon.net/en/maxon-plus
+Funny line: An indie track can now be in more AI training deals than playlists.
+- An AI start-up offers to pay indie musicians for their songs.
+- How $11 million of venture money reaches an artist: through the distributor.
+- The box you have to tick, and what ticking it signs.
+- The number nobody printed: the rate.
+- What this shows about who sets the price of a song an AI learns from.
+Source: Music Business Worldwide, Sonilo and Symphonic (18 Nov 2026) https://www.musicbusinessworldwide.com/11m-backed-ai-startup-sonilo-founded-by-tiktok-veterans-inks-licensing-deal-with-symphonic-to-train-its-model-on-opted-in-indie-recordings/
+
+Score: scale, fun_consume, fun_produce
+
+## mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5
+
+Headline: iQIYI made 21 AI dramas and won its short-drama market. Its sales still fell 10%.
+Hook: iQIYI released 21 AI-generated short dramas in one quarter and took first place in China's short-drama market, in the same results where its revenue fell 10% to RMB6.01 billion.
+What happened: iQIYI, 16 Nov 2026: total revenue fell 10% to RMB6.01 billion, and "our short-form dramas claimed the No. 1 domestic market share for the first time on a quarterly basis"; VP Land: "It released 21 AI-generated short-form dramas"; iQIYI earnings call: "content creators are incentivized to optimize content costs".
+So what: Chinese streamer iQIYI pays the studios that make its short dramas a share of what viewers watch instead of a fixed fee, and in the quarter it released 21 AI-made ones it took first place while its revenue fell, so any producer selling drama to a streamer knows who now carries the cost of making it.
+Aim: interest
+Funny line: iQIYI's short dramas hit number one in the same quarter its total sales went down by a tenth.
+- A streamer tops its short-drama chart in the quarter its sales shrink.
+- How iQIYI pays for a show: a share of what viewers watch, not a fixed fee.
+- Why that pushes the studio, not the streamer, to cut the cost.
+- Where AI comes in: 21 AI-generated dramas in one quarter.
+- What this shows about who carries the cost of a minute of TV.
+Source: iQIYI third-quarter 2026 results, SEC filing (16 Nov 2026) https://www.sec.gov/Archives/edgar/data/1722608/000119312526462100/d123902dex991.htm
 
 Score: scale, fun_consume, fun_produce
 
@@ -730,6 +730,40 @@ Source: VP Land, Unreal Engine 6 drops Blueprints (20 Nov 2026) https://www.vp-l
 
 Score: scale, fun_consume, fun_produce
 
+## wed/41874364-fcd8-4fd1-b7e7-91aca6235019
+
+Headline: Cinema 4D's new AI is someone else's AI, sold in credits that expire.
+Hook: Maxon, the software company behind Cinema 4D and ZBrush, now sells AI model generation inside its apps, run on other firms' models such as Tripo and Rodin and billed in credits.
+What happened: Maxon: "We work with third-party AI providers, such as Tripo and Rodin."; Creative Bloq, 23 Nov 2026: "AI generation comes to Cinema 4D and ZBrush, but artists have an 'off' switch."
+So what: 3D artists using Cinema 4D and ZBrush now get AI model generation inside their apps, but the models come from other firms and the credits expire monthly, so any studio budgeting for it knows what it is actually paying for.
+Aim: utility
+Funny line: The headline feature for 3D artists is an AI assistant, and the selling point in the subtitle is that you can switch it off.
+- An AI model maker inside the 3D artist's favourite apps.
+- Whose AI it really is: Tripo and Rodin.
+- Why the credits run out every month.
+- The off switch, and why it is a selling point.
+- What this shows about who makes money from AI in 3D.
+Source: Maxon, Maxon Plus (Nov 2026) https://www.maxon.net/en/maxon-plus
+
+Score: scale, fun_consume, fun_produce
+
+## fri/c1bd8406-c267-426e-b586-d76e1ef68e5c
+
+Headline: Animation festivals ask if you used AI. Some entries say they are '3D'.
+Hook: Manchester Animation Festival will bar generative AI films from 2027, as Ottawa's festival says entrants are lying on their forms, and festivals decide which animated films win distribution deals.
+What happened: Cartoon Brew, 20 Nov 2026: "What bothers me is the animators clearly lying on their forms,” says Robinson."; Manchester Animation Festival: "If any part of the final moving image has been generated or transformed by a generative audio, image or video model, it will be deemed ineligible".
+So what: Festival selection, which decides awards and distribution for animated films, rests on a form filmmakers fill in themselves, and programmers say the form and the film no longer match, so every animator entering festivals knows the box is being gamed.
+Aim: interest
+Funny line: Faced with one AI box to tick, some entrants have decided their film is simply 3D or something.
+- A box on a festival form: did you use AI?
+- What programmers see: AI films ticked as 3D.
+- Why the form matters: awards and distribution.
+- Why a rule cannot see inside a frame.
+- What this shows about honesty when the stakes are a prize.
+Source: Cartoon Brew, festival programmers on AI (20 Nov 2026) https://www.cartoonbrew.com/artificial-intelligence/annecy-ottawa-manchester-festival-programmers-artificial-intelligence-269655.html
+
+Score: scale, fun_consume, fun_produce
+
 ## fri/456c4fc3-530b-4fc8-9e92-5b5ea662ad87
 
 Headline: A game had no AI label. Its music files said 'made with Suno'.
@@ -747,36 +781,19 @@ Source: Eurogamer, Binding of Isaac AI music removed (Nov 2026) https://www.euro
 
 Score: scale, fun_consume, fun_produce
 
-## fri/c1bd8406-c267-426e-b586-d76e1ef68e5c
-
-Headline: Animation festivals ask if you used AI. Some entries say they are '3D'.
-Hook: Ottawa's animation festival director says some entrants are lying on their forms, marking AI films as 3D, as Manchester bans generative AI films from 2027.
-What happened: Cartoon Brew, 20 Nov 2026: "What bothers me is the animators clearly lying on their forms,” says Robinson."; Manchester Animation Festival: "If any part of the final moving image has been generated or transformed by a generative audio, image or video model, it will be deemed ineligible".
-So what: Festival selection, which decides awards and distribution for animated films, rests on a form filmmakers fill in themselves, and programmers say the form and the film no longer match, so every animator entering festivals knows the box is being gamed.
-Aim: interest
-Funny line: Faced with one AI box to tick, some entrants have decided their film is simply 3D or something.
-- A box on a festival form: did you use AI?
-- What programmers see: AI films ticked as 3D.
-- Why the form matters: awards and distribution.
-- Why a rule cannot see inside a frame.
-- What this shows about honesty when the stakes are a prize.
-Source: Cartoon Brew, festival programmers on AI (20 Nov 2026) https://www.cartoonbrew.com/artificial-intelligence/annecy-ottawa-manchester-festival-programmers-artificial-intelligence-269655.html
-
-Score: scale, fun_consume, fun_produce
-
 ## fri/acb58370-aaca-4040-9c13-83f227a628ec
 
-Headline: AI is flooding China's biggest music apps. Streams of it are 'negligible'.
-Hook: Tencent Music, owner of China's biggest music apps, told investors that streams of AI-generated songs remain negligible and falling, while human, distinctive music gains.
-What happened: Music Business Worldwide, 17 Nov 2026: "Streams from AI-generated songs remain very low and with a declining trend."; Digital Music News: "AI content stream volumes remain negligible, with a declining share of listening, while high-quality, differentiated content continues to gain traction."
-So what: China's biggest music company says AI songs are flooding in and almost nobody is listening, so every artist and label worried about AI music can see where the money is still going: to human, distinctive music.
+Headline: Tencent Music says almost nobody plays AI songs. It also says it keeps it that way.
+Hook: Tencent Music, owner of QQ Music, Kugou and Kuwo, told investors on 17 November that streams of AI content are negligible because listeners are more selective, while its chairman also said its own controls keep AI plays low.
+What happened: Tencent Music earnings call, 17 Nov 2026: "AI content stream volume remains negligible with a declining share of listening, while high-quality differentiated content continues to gain traction"; Music Business Worldwide: "Pang said TME’s own proactive control measures had kept the share of plays of AI-generated songs on its platforms at a relatively low level."
+So what: China's biggest music company told investors that listeners are choosing not to play AI songs, but its own chairman also said its own controls keep those plays low, so every artist and label hearing that AI music does not sell knows the number was partly set by the platform.
 Aim: interest
-Funny line: The machines can write a million songs a day, and the market's verdict, per its own earnings call, is negligible.
-- AI can make a million songs a day. Almost nobody plays them.
-- What the biggest music company in China told its investors.
-- Why more supply made listeners pickier.
-- Where the money still goes: concerts, merch and human artists.
-- What this shows about what AI music is worth.
+Funny line: Tencent Music reports that almost nobody plays AI songs, in the same breath as saying it makes sure of that.
+- China's biggest music apps say almost nobody plays AI songs.
+- The reason they gave investors: listeners have become choosier.
+- The other reason, in the chairman's Chinese remarks: their own controls.
+- What a number with no number behind it can and cannot tell you.
+- What this shows about who decides what an AI song is worth.
 Source: Music Business Worldwide, Tencent Music on AI streams (17 Nov 2026) https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/
 
 Score: scale, fun_consume, fun_produce
@@ -789,6 +806,17 @@ Format: Explainer carousel, 5 cards, 4:5
 Aim: utility
 Funny line: The world's best-known newspaper is asking photographers to keep their software out of date on purpose.
 Source: The Verge, the New York Times warns photographers not to update Photoshop (24 Nov 2026) https://www.theverge.com/ai-artificial-intelligence/1041227/the-new-york-times-warns-photographers-not-to-update-photoshop-over-ai-features
+
+Score: fun_consume, fun_produce, utility
+
+## tue/spotifyaudio
+
+Hook: Spotify will turn your self-published book into an audiobook, free.
+What happened: Spotify, 18 Nov 2026: "Starting today, they're available to self-published authors in 21 more markets", the UK among them, with up to five audiobooks free per author.
+Format: Explainer carousel, 5 cards, 4:5
+Aim: utility
+Funny line: Spotify reckons most books in the world have no audiobook, and it is offering to fix five of them per author.
+Source: Spotify newsroom, Audiobook Creation Tools expansion (18 Nov 2026) https://newsroom.spotify.com/2026-11-18/audiobook-creation-tools-expansion/
 
 Score: fun_consume, fun_produce, utility
 
@@ -814,17 +842,6 @@ Source: Apple, Logic Pro for iPad 4.0 release notes (18 Nov 2026) https://suppor
 
 Score: fun_consume, fun_produce, utility
 
-## tue/spotifyaudio
-
-Hook: Spotify will turn your self-published book into an audiobook, free.
-What happened: Spotify, 18 Nov 2026: "Starting today, they're available to self-published authors in 21 more markets", the UK among them, with up to five audiobooks free per author.
-Format: Explainer carousel, 5 cards, 4:5
-Aim: utility
-Funny line: Spotify reckons most books in the world have no audiobook, and it is offering to fix five of them per author.
-Source: Spotify newsroom, Audiobook Creation Tools expansion (18 Nov 2026) https://newsroom.spotify.com/2026-11-18/audiobook-creation-tools-expansion/
-
-Score: fun_consume, fun_produce, utility
-
 ## tue/mychannel
 
 Hook: Google patented a TV channel starring you, made by AI. The examiner said no.
@@ -847,17 +864,6 @@ Source: This week in football: Sky Sports Premier League on YouTube https://www.
 
 Score: fun_consume, fun_produce
 
-## tue/tplfistpump
-
-Hook: The manager's fist pumps to the Kop
-What happened: After the full-time handshakes the head coach walks towards the stand and pumps his fist at the crowd, again and again. It becomes the AI moment the caption names, in the reader's world.
-Format: Meme template, your caption on the clip, 9:16 and 4:5
-Aim: humour
-Funny line: A fist pump this big is how a film crew celebrates beating the AI storyboard on a shoot.
-Source: This week in football: This Is Anfield on YouTube https://www.youtube.com/watch?v=TX8IhY3r6cY
-
-Score: fun_consume, fun_produce
-
 ## tue/tplninedarter
 
 Hook: Two perfect legs in one match
@@ -866,6 +872,17 @@ Format: Meme template, your caption on the clip, 9:16 and 4:5
 Aim: humour
 Funny line: The AI music tool needed 400 tries to be perfect; the session musician needed one and a grin.
 Source: This week in darts: PDC on YouTube https://www.youtube.com/watch?v=69ex7G4stfM
+
+Score: fun_consume, fun_produce
+
+## tue/tplfistpump
+
+Hook: The manager's fist pumps to the Kop
+What happened: After the full-time handshakes the head coach walks towards the stand and pumps his fist at the crowd, again and again. It becomes the AI moment the caption names, in the reader's world.
+Format: Meme template, your caption on the clip, 9:16 and 4:5
+Aim: humour
+Funny line: A fist pump this big is how a film crew celebrates beating the AI storyboard on a shoot.
+Source: This week in football: This Is Anfield on YouTube https://www.youtube.com/watch?v=TX8IhY3r6cY
 
 Score: fun_consume, fun_produce
 
@@ -902,6 +919,17 @@ Source: Roblox developer forum, Studio MCP server updates (20 Nov 2026) https://
 
 Score: fun_consume, fun_produce, utility
 
+## thu/pixelfill
+
+Hook: Pixelmator Pro now repaints part of a photo from words.
+What happened: Apple, 18 Nov 2026: "Transform any detail in your image with Generate Fill, adding edits that blend naturally to match the lighting, perspective and texture of surrounding areas, using natural language."
+Format: Explainer carousel, 5 cards, 4:5
+Aim: utility
+Funny line: Apple's own example of what to ask the AI for is a purple sky.
+Source: Apple, Pixelmator Pro 5.0 release notes (18 Nov 2026) https://support.apple.com/en-gb/126257
+
+Score: fun_consume, fun_produce, utility
+
 ## thu/alphamatte
 
 Hook: Runway now cuts people out of clips, no green screen.
@@ -924,17 +952,6 @@ Source: The Verge, vibe coding and open-source music firmware (25 Nov 2026) http
 
 Score: scale, fun_consume, fun_produce
 
-## thu/pixelfill
-
-Hook: Pixelmator Pro now repaints part of a photo from words.
-What happened: Apple, 18 Nov 2026: "Transform any detail in your image with Generate Fill, adding edits that blend naturally to match the lighting, perspective and texture of surrounding areas, using natural language."
-Format: Explainer carousel, 5 cards, 4:5
-Aim: utility
-Funny line: Apple's own example of what to ask the AI for is a purple sky.
-Source: Apple, Pixelmator Pro 5.0 release notes (18 Nov 2026) https://support.apple.com/en-gb/126257
-
-Score: fun_consume, fun_produce, utility
-
 ## thu/tplturin
 
 Hook: The champion on his back in Turin
@@ -943,17 +960,6 @@ Format: Meme template, your caption on the clip, 9:16 and 4:5
 Aim: humour
 Funny line: A film editor's championship point is a client who does not ask for an AI version.
 Source: This week in tennis: Tennis TV on YouTube https://www.youtube.com/watch?v=wBR51UlMKW8
-
-Score: fun_consume, fun_produce
-
-## thu/tplthanksgiving
-
-Hook: The touchdown with three seconds left
-What happened: Trailing with the clock almost gone, the quarterback finds his receiver in the end zone and the whole team piles on while the other bench stares. It becomes the AI moment the caption names, in the reader's world.
-Format: Meme template, your caption on the clip, 9:16 and 4:5
-Aim: humour
-Funny line: The hand-made short film gets to the festival the way football teams win on Thanksgiving: three seconds left.
-Source: This week in American football: NFL on YouTube https://www.youtube.com/watch?v=Etsgla0KIoE
 
 Score: fun_consume, fun_produce
 
@@ -990,6 +996,17 @@ Source: Your Instagram inspo sheet https://www.instagram.com/evolving.ai/reel/Dc
 
 Score: fun_consume, fun_produce
 
+## thu/tplthanksgiving
+
+Hook: The touchdown with three seconds left
+What happened: Trailing with the clock almost gone, the quarterback finds his receiver in the end zone and the whole team piles on while the other bench stares. It becomes the AI moment the caption names, in the reader's world.
+Format: Meme template, your caption on the clip, 9:16 and 4:5
+Aim: humour
+Funny line: The hand-made short film gets to the festival the way football teams win on Thanksgiving: three seconds left.
+Source: This week in American football: NFL on YouTube https://www.youtube.com/watch?v=Etsgla0KIoE
+
+Score: fun_consume, fun_produce
+
 ## sat/goodnews
 
 Hook: AI put songwriters and bands in front of millions.
@@ -1005,32 +1022,17 @@ Source: Each story's own source https://www.koreatimes.co.kr/entertainment/music
 
 Score: scale, fun_produce, uplift
 
-## sat/screen
+## sat/talent
 
-Hook: AI helped film and TV makers try something new.
-What happened: AI helped film and TV makers try something new. Three real things AI did for film and TV this month, each with who it helped and how, and 1 more to find.
+Hook: AI helped footballers, a race team and cinemas get noticed.
+What happened: AI helped footballers, a race team and cinemas get noticed. Three real things AI did for scouts, race teams and cinemas this month, each with who it helped and how, and 1 more to find.
 Format: Good-news carousel, 6 cards, 4:5
 Aim: interest
-Funny line: The lead actor's surname has the letters AI in it, in case anyone missed the point.
-- Lionsgate Play started an AI-led mythology series.
-- Seven Korean directors made AI short films for a festival.
-- An Oscar winner is showing how he used AI on his film.
-Source: Each story's own source https://deadline.com/2026/11/lionsgate-play-eklavya-ai-series-tiger-tv-1237232555/
-
-Score: scale, fun_produce, uplift
-
-## sat/makers
-
-Hook: This month AI turned solo creators into studios.
-What happened: This month AI turned solo creators into studios. Four real things AI did for creators this month, each with who it helped and how.
-Format: Good-news carousel, 6 cards, 4:5
-Aim: humour
-Funny line: Batman's newest villain is the queue at a village tea stall.
-- An AI creator's Desi Batman reached 25 million views.
-- A fantasy comedy film was made for $28,775.
-- A creator's AI trailer looks like a blockbuster.
-- Gary Vee's AI avatar answers a fan a day.
-Source: Each story's own source https://www.afaqs.com/news/social-media/e-motorad-teams-up-with-desi-batman-creator-as-ai-reels-go-viral-12843698
+Funny line: The driver cannot talk while racing, so the car now does the talking for him.
+- An AI scouting app got 26 overlooked footballers signed.
+- A NASCAR team gave its race car an AI voice for guests.
+- Odeon's cinema assistant answers 40% of questions, no jobs lost.
+Source: Each story's own source https://bluewin.ch/en/sport/football/bringing-overlooked-talents-to-light-li.3686124
 
 Score: scale, fun_produce, uplift
 
@@ -1049,16 +1051,31 @@ Source: Each story's own source https://fortune.com/2026/11/27/checking-ai-work-
 
 Score: scale, fun_produce, uplift
 
-## sat/talent
+## sat/makers
 
-Hook: AI helped footballers, a race team and cinemas get noticed.
-What happened: AI helped footballers, a race team and cinemas get noticed. Three real things AI did for scouts, race teams and cinemas this month, each with who it helped and how, and 1 more to find.
+Hook: This month AI turned solo creators into studios.
+What happened: This month AI turned solo creators into studios. Four real things AI did for creators this month, each with who it helped and how.
+Format: Good-news carousel, 6 cards, 4:5
+Aim: humour
+Funny line: Batman's newest villain is the queue at a village tea stall.
+- An AI creator's Desi Batman reached 25 million views.
+- A fantasy comedy film was made for $28,775.
+- A creator's AI trailer looks like a blockbuster.
+- Gary Vee's AI avatar answers a fan a day.
+Source: Each story's own source https://www.afaqs.com/news/social-media/e-motorad-teams-up-with-desi-batman-creator-as-ai-reels-go-viral-12843698
+
+Score: scale, fun_produce, uplift
+
+## sat/screen
+
+Hook: AI helped film and TV makers try something new.
+What happened: AI helped film and TV makers try something new. Three real things AI did for film and TV this month, each with who it helped and how, and 1 more to find.
 Format: Good-news carousel, 6 cards, 4:5
 Aim: interest
-Funny line: The driver cannot talk while racing, so the car now does the talking for him.
-- An AI scouting app got 26 overlooked footballers signed.
-- A NASCAR team gave its race car an AI voice for guests.
-- Odeon's cinema assistant answers 40% of questions, no jobs lost.
-Source: Each story's own source https://bluewin.ch/en/sport/football/bringing-overlooked-talents-to-light-li.3686124
+Funny line: The lead actor's surname has the letters AI in it, in case anyone missed the point.
+- Lionsgate Play started an AI-led mythology series.
+- Seven Korean directors made AI short films for a festival.
+- An Oscar winner is showing how he used AI on his film.
+Source: Each story's own source https://deadline.com/2026/11/lionsgate-play-eklavya-ai-series-tiger-tv-1237232555/
 
 Score: scale, fun_produce, uplift

@@ -1,0 +1,176 @@
+Genie 4 - Gemini API | Google AI Studio
+> ## AI Agent Context
+> - Full documentation index: https://aistudio.google.com/llms.txt
+> - Gemini Docs MCP server (consistent live info): https://gemini-api-docs-mcp.dev
+> - Coding agent skills & setup guide: https://aistudio.google.com/docs/coding-agents.md
+# Genie 4
+Genie 4 (`genie-4`) is a real-time interactive world generation model on
+the [Interactions API](/docs/interactions-overview). Seed a world from a text
+prompt, a 16:9 reference image, or both, then explore and steer the live 24 fps
+video and 48 kHz stereo audio stream in real time using keyboard movement
+controls (`WASD` and arrow keys) and mid-session text events.
+For offline, fixed-duration clip generation, multi-turn video editing, and
+upsampling up to 4K, use
+[Gemini Omni 1.2 Flash](/docs/models/gemini-omni-flash) instead.
+{% button href="https://aistudio.google.com/live?model=genie-4" variant="ais" %}Try in Google AI Studio{% /button %}
+## Documentation  {% id="documentation" %}
+*   [Interactive world generation with Genie 4](/docs/genie): End-to-end setup
+with `@google/genai` (WebRTC and WebSocket) and `google-genai` (async
+WebSocket), ephemeral session tokens, event protocol, and media stream
+decoding.
+*   [Genie 4 prompt and controls guide](/docs/genie-prompting): Tested prompt
+patterns for causal object rules, custom key-bound action verbs, 16:9
+landscape painting seeds, broadband Foley audio, and Google AI Studio Live
+playground controls.
+## genie-4  {% id="genie-4" %}
+{% table variant="model" %}
+* Property
+* Description
+---
+*     {% section class="model-property" %}
+{% icon name="id_card" /%}Model code
+{% /section %}
+* `genie-4`
+---
+*     {% section class="model-property" %}
+{% icon name="save" /%}Supported data types
+{% /section %}
+*     **Inputs** Text (`world_setup` and mid-session `input` steering), 16:9 Reference Image (`world_setup`), Keyboard and camera controls (`user_action`)
+**Output** Streaming Video (16:9, 24 fps) with synchronized 48 kHz stereo Audio
+---
+*     {% section class="model-property" %}
+{% icon name="token_auto" /%}Stream & session limits
+{% /section %}
+*     **Output video** 1280x720 (720p, 16:9, 24 fps), 240 video output tokens per frame (5,760 tokens/sec)
+**Max session duration** Up to 120 seconds per session (visual coherence and object permanence are strongest during the first 45-90 seconds)
+**Output audio** 48 kHz stereo (16-bit PCM over WebSocket; Opus over WebRTC), bundled into video output tokens
+**Reference image** Single 16:9 image in `world_setup` (keep compressed JPEG under 48 KB on WebRTC so the base64 JSON event stays within the 64 KB SCTP data channel limit)
+**Serving regions** United States, Western Europe, and Japan (< 150 ms RTT in North America, Western/Central Europe, and East Asia; higher latency outside these regions delays steering and can reduce frame rate)
+---
+*     {% section class="model-property" %}
+{% icon name="handyman" /%}Capabilities
+{% /section %}
+*     {% section class="three-column-grid" %}
+{% section %}
+[**Interactive world generation**](/docs/genie)
+{% badge type="supported" /%}
+{% /section %}
+{% section %}
+[**Audio generation**](/docs/genie)
+{% badge label=Supported (bundled Foley & speech) type="supported" /%}
+{% /section %}
+{% section %}
+[**Code execution**](/docs/code-execution)
+{% badge type="not-supported" /%}
+{% /section %}
+{% section %}
+[**Context caching**](/docs/caching)
+{% badge type="not-supported" /%}
+{% /section %}
+{% section %}
+[**File search**](/docs/file-search)
+{% badge type="not-supported" /%}
+{% /section %}
+{% section %}
+[**Function calling**](/docs/function-calling)
+{% badge type="not-supported" /%}
+{% /section %}
+{% section %}
+[**Grounding with Google Maps**](/docs/maps-grounding)
+{% badge type="not-supported" /%}
+{% /section %}
+{% section %}
+[**Grounding with Google Search**](/docs/google-search)
+{% badge type="not-supported" /%}
+{% /section %}
+{% section %}
+[**Image generation**](/docs/image-generation)
+{% badge type="not-supported" /%}
+{% /section %}
+{% section %}
+[**Live API**](/docs/live-api)
+{% badge label="Uses Interactions API" type="not-supported" /%}
+{% /section %}
+{% section %}
+[**Structured outputs**](/docs/structured-output)
+{% badge type="not-supported" /%}
+{% /section %}
+{% section %}
+[**URL context**](/docs/url-context)
+{% badge type="not-supported" /%}
+{% /section %}
+{% /section %}
+---
+*     {% section class="model-property" %}
+{% icon name="speed" /%}Consumption options
+{% /section %}
+*     {% section class="three-column-grid" %}
+{% section %}
+[**Batch API**](/docs/batch-api)
+{% badge type="not-supported" /%}
+{% /section %}
+{% section %}
+[**Flex inference**](/docs/flex-inference)
+{% badge type="not-supported" /%}
+{% /section %}
+{% section %}
+[**Priority inference**](/docs/priority-inference)
+{% badge type="not-supported" /%}
+{% /section %}
+{% /section %}
+---
+*     {% section class="model-property" %}
+{% icon name="123" /%}Versions
+{% /section %}
+*     Read the [model version patterns](/docs/models#model-versions) for more details.
+*     Stable: `genie-4`
+---
+*     {% section class="model-property" %}
+{% icon name="calendar_month" /%}Latest update
+{% /section %}
+* November 2026
+---
+*     {% section class="model-property" %}
+{% icon name="paid" /%}Pricing
+{% /section %}
+* See [Pricing](/docs/models/genie-4#pricing) below.
+---
+*     {% section class="model-property" %}
+{% icon name="speed" /%}Rate limits
+{% /section %}
+* [Rate limits](/docs/rate-limits#genie-4)
+{% /table %}
+## Pricing  {% id="pricing" %}
+{% tabs %}
+{% tab title="Standard" %}
+{% table %}
+* Feature
+* Free Tier
+* Paid Tier, per 1M tokens in USD
+---
+* Input price
+* Not available
+* $1.50 (text / reference image)
+---
+* Output price
+* Not available
+* $9.00 (text)
+$17.50 (video, audio included){% sup %}*{% /sup %}
+---
+* Context caching price
+* Not available
+* Not available
+---
+* Used to improve our products
+* Not available
+* [No](/docs/terms)
+{% /table %}
+{% /tab %}
+{% /tabs %}
+{% sup %}*{% /sup %} Billing is based on emitted video output tokens at `240`
+tokens per frame (`5,760` tokens per second at `24 fps`), with `48 kHz` stereo
+audio bundled into the video token rate. Under Standard pricing (`$17.50` per 1M
+video output tokens), this equates to an effective rate of approximately `$0.10`
+per second (`~$6.05` per minute). Always call `complete()` to end an active
+session and stop billing. Genie 4 does not support the Free tier, Batch API,
+Flex inference, or Priority inference.

@@ -1,152 +1,54 @@
 {
   "schema": "why-ladder/1",
-  "question": "Why does HeyGen call Avatar 6 84.4% indistinguishable from real video when raters picked it as the real one only 42.2% of the time?",
+  "question": "Why does HeyGen say Avatar 6 is 84.4% of the way to being indistinguishable from real video?",
   "rungs": [
-    {
-      "n": 1,
-      "question": "Why is the headline figure exactly double the share of raters who picked the avatar?",
-      "answer": "HeyGen defines an indistinguishability rate as twice the share of side-by-side choices that pick the Avatar 6 clip as real. If raters could not tell the two clips apart they would pick each half the time, so 50% scores 100%. Doubling 42.2% gives 84.4%.",
-      "evidence": [
-        {
-          "url": "https://www.heygen.com/research/avatar-6-model",
-          "domain": "heygen.com",
-          "date": "2026-11-17",
-          "quote": "Side by side with the real recording, raters pick Avatar 6 as the real one 42.2% of the time. 50% would mean they cannot tell at all, so Avatar 6 is 84.4% of the way there."
-        },
-        {
-          "url": "https://ik.imagekit.io/heygen/www/research/avatar-6/Avatar%206-%20Talking%20Avatars%20That%20Are%20More%20Like%20You.pdf",
-          "domain": "ik.imagekit.io",
-          "date": "2026-11-17",
-          "quote": "We report this as the indistinguishability rate, twice the share of choices that pick the Avatar 6"
-        }
-      ],
-      "strength": "documented",
-      "counter": {
-        "text": "Both sources are HeyGen's own publications on two hosts (the report PDF is HeyGen's file on an image host). The csuite roundup's Avatar 6 entry gives neither figure and describes only what the model does and its price. Nothing read disputes the arithmetic."
-      },
-      "mechanism_type": "the metric",
-      "stop": null
-    },
-    {
-      "n": 2,
-      "question": "Why is 42.2% the share, and out of which answers?",
-      "answer": "The 42.2% is 114 picks out of 270 side-by-side choices. The report says a further 11.2% of 304 side-by-side answers were \"can't tell\", and those sit outside the 270. Counted against all 304 answers, 114 picks would be 37.5%; no source gives that figure.",
-      "evidence": [
-        {
-          "url": "https://ik.imagekit.io/heygen/www/research/avatar-6/Avatar%206-%20Talking%20Avatars%20That%20Are%20More%20Like%20You.pdf",
-          "domain": "ik.imagekit.io",
-          "date": "2026-11-17",
-          "quote": "Avatar 6 clip as the real one in 42.2% of their choices (114 of 270), against 50% if the two could not be"
-        },
-        {
-          "url": "https://ik.imagekit.io/heygen/www/research/avatar-6/Avatar%206-%20Talking%20Avatars%20That%20Are%20More%20Like%20You.pdf",
-          "domain": "ik.imagekit.io",
-          "date": "2026-11-17",
-          "quote": "a further 11.2% of the 304 side-by-side answers were “can’t tell”."
-        },
-        {
-          "url": "https://www.heygen.com/research/avatar-6-model",
-          "domain": "heygen.com",
-          "date": "2026-11-17",
-          "quote": "Avatar 6 picked as real42.2%270"
-        }
-      ],
-      "strength": "inferred",
-      "counter": {
-        "text": "The report discloses the \"can't tell\" answers rather than hiding them, and a \"can't tell\" answer is itself a rater failing to spot the avatar, so leaving them out does not plainly flatter Avatar 6. The research page shows 270 answers but does not mention the 34 left out. Searched: both Avatar 6 pages, the csuite roundup and the pages it cites for Avatar 6 (HeyGen's developer docs and the OpenRouter listing); only the report states the exclusion."
-      },
-      "mechanism_type": "the metric",
-      "stop": null
-    },
-    {
-      "n": 3,
-      "question": "Why does HeyGen set 84.4% beside 44.4% for Avatar V?",
-      "answer": "The Avatar 6 report restates its earlier model's test on the new scale: 22.2% picked as real, doubled to 44.4%. Avatar V's own April report gave the 22.2% as a \"fooled rate\" from 54 judgments by three annotators and printed no doubled figure. The new test is larger: 270 decisive choices from 20 raters.",
-      "evidence": [
-        {
-          "url": "https://ik.imagekit.io/heygen/www/research/avatar-6/Avatar%206-%20Talking%20Avatars%20That%20Are%20More%20Like%20You.pdf",
-          "domain": "ik.imagekit.io",
-          "date": "2026-11-17",
-          "quote": "measured the same way, Avatar V reaches 44.4% (22.2% picked as real) in its technical report [1]."
-        },
-        {
-          "url": "https://www.heygen.com/research/avatar-6-model",
-          "domain": "heygen.com",
-          "date": "2026-11-17",
-          "quote": "indistinguishable from real footage side by side (Avatar V: 44.4%)"
-        },
-        {
-          "url": "https://dynamic.heygen.ai/www/Paper%20Links/avatarv_tech_report.pdf",
-          "domain": "dynamic.heygen.ai",
-          "date": "2026-04-08",
-          "quote": "Table 4 Avatar Turing Test results. Three annotators each evaluated 18 pairs of Avatar V outputs and ground truth"
-        },
-        {
-          "url": "https://dynamic.heygen.ai/www/Paper%20Links/avatarv_tech_report.pdf",
-          "domain": "dynamic.heygen.ai",
-          "date": "2026-04-08",
-          "quote": "videos, yielding 54 total judgments."
-        },
-        {
-          "url": "https://dynamic.heygen.ai/www/Paper%20Links/avatarv_tech_report.pdf",
-          "domain": "dynamic.heygen.ai",
-          "date": "2026-04-08",
-          "quote": "Across all judgments, annotators correctly selected the real video 77.8% of the time, indicating that the"
-        }
-      ],
-      "strength": "documented",
-      "counter": {
-        "text": "Avatar V's report already treated 50% identification accuracy as the mark of footage that cannot be told from real, so the doubling keeps the same reference point and changes only the scale. Why HeyGen chose the doubled scale for Avatar 6 is not stated in anything read."
-      },
-      "mechanism_type": "the metric",
-      "stop": null
-    },
-    {
-      "n": 4,
-      "question": "Why do both numbers rest on HeyGen's own test?",
-      "answer": "HeyGen filmed its own employees, split each recording so Avatar 6 copied one half against the real other half, and had 20 raters it calls external judge 76 people's pairs, about four raters per pair. It published the results itself. The roundup listing Avatar 6 repeats neither figure, and nothing read shows anyone else running the test.",
-      "evidence": [
-        {
-          "url": "https://ik.imagekit.io/heygen/www/research/avatar-6/Avatar%206-%20Talking%20Avatars%20That%20Are%20More%20Like%20You.pdf",
-          "domain": "ik.imagekit.io",
-          "date": "2026-11-17",
-          "quote": "use real recordings of HeyGen employees; each recording is split in two, one part serving as the Avatar 6"
-        },
-        {
-          "url": "https://ik.imagekit.io/heygen/www/research/avatar-6/Avatar%206-%20Talking%20Avatars%20That%20Are%20More%20Like%20You.pdf",
-          "domain": "ik.imagekit.io",
-          "date": "2026-11-17",
-          "quote": "side-by-side test 76, with 20 external raters and about four raters per clip or pair. To our knowledge, this is"
-        },
-        {
-          "url": "https://www.heygen.com/research/avatar-6-model",
-          "domain": "heygen.com",
-          "date": "2026-11-17",
-          "quote": "All people shown in this report are HeyGen employees or contracted actors who consented to the use of their likeness in this report."
-        },
-        {
-          "url": "https://csuite.so/blog/ai-models-roundup-november-2026",
-          "domain": "csuite.so",
-          "date": "2026-11-26",
-          "quote": "HeyGen’s Avatar 6 and Avatar 6 Turbo do one job: they take a photo or a reference clip of at least two seconds, plus an audio track, and return a video of that person speaking, as long as the audio."
-        },
-        {
-          "url": "https://openrouter.ai/heygen/heygen-avatar-6",
-          "domain": "openrouter.ai",
-          "date": "2026-11-17",
-          "quote": "Avatar 6 was released on November 17, 2026."
-        }
-      ],
-      "strength": "inferred",
-      "counter": {
-        "text": "The report does not say who recruited the 20 raters or how they were chosen, only that they are external. In the single-clip test real recordings of the same people were judged real 78.9% of the time, so raters also doubted genuine footage. No independent test was found; scope: the two HeyGen Avatar 6 pages, both HeyGen reports, the HeyGen Voice page the report cites, the csuite roundup and the two pages it cites for Avatar 6 (HeyGen's developer docs, which cover access and consent, and the OpenRouter listing, which gives price, release date and latency but no rater results), with no open-web search."
-      },
-      "mechanism_type": "the study design",
-      "stop": "evidence_exhausted"
-    }
+    {"n": 1,
+     "question": "Why is the number 84.4% when raters picked Avatar 6 as real only 42.2% of the time?",
+     "answer": "HeyGen defines its own score: in a two-choice test, 50% is what pure guessing gives, so it doubles the share of choices that picked the avatar as real. 114 of 270 choices is 42.2%, and doubled that is 84.4%. A score of 100% would mean raters could not tell the two apart at all.",
+     "evidence": [
+       {"url": "https://www.heygen.com/research/avatar-6-model", "domain": "heygen.com", "date": "2026-11-17", "quote": "Side by side with the real recording, raters pick Avatar 6 as the real one 42.2% of the time. 50% would mean they cannot tell at all, so Avatar 6 is 84.4% of the way there."},
+       {"url": "https://ik.imagekit.io/heygen/www/research/avatar-6/Avatar%206-%20Talking%20Avatars%20That%20Are%20More%20Like%20You.pdf", "domain": "ik.imagekit.io", "date": "2026-11-17", "quote": "We report this as the indistinguishability rate, twice the share of choices that pick the Avatar 6"},
+       {"url": "https://ik.imagekit.io/heygen/www/research/avatar-6/Avatar%206-%20Talking%20Avatars%20That%20Are%20More%20Like%20You.pdf", "domain": "ik.imagekit.io", "date": "2026-11-17", "quote": "Avatar 6 clip as the real one in 42.2% of their choices (114 of 270), against 50% if the two could not be"}
+     ],
+     "strength": "documented",
+     "counter": {"text": "Both sites carry HeyGen's own words (its research page and its report PDF), so the two sources share one publisher. The 270 answers also leave out the raters who said they could not tell: the report says \"a further 11.2% of the 304 side-by-side answers were “can’t tell”.\""},
+     "mechanism_type": "the metric's definition",
+     "stop": null},
+    {"n": 2,
+     "question": "Why were raters choosing close to chance in the side-by-side test?",
+     "answer": "The test was built so only the picture differed. Each HeyGen employee's real recording was split: Avatar 6 learned from one part and generated the other, then raters saw the real and generated clip saying the same sentence over the same audio. 20 external raters judged pairs from 76 people, about four raters per pair.",
+     "evidence": [
+       {"url": "https://www.heygen.com/research/avatar-6-model", "domain": "heygen.com", "date": "2026-11-17", "quote": "Real vs Avatar 6, same sentence over the same audio."},
+       {"url": "https://ik.imagekit.io/heygen/www/research/avatar-6/Avatar%206-%20Talking%20Avatars%20That%20Are%20More%20Like%20You.pdf", "domain": "ik.imagekit.io", "date": "2026-11-17", "quote": "use real recordings of HeyGen employees; each recording is split in two, one part serving as the Avatar 6"},
+       {"url": "https://ik.imagekit.io/heygen/www/research/avatar-6/Avatar%206-%20Talking%20Avatars%20That%20Are%20More%20Like%20You.pdf", "domain": "ik.imagekit.io", "date": "2026-11-17", "quote": "side-by-side test 76, with 20 external raters and about four raters per clip or pair. To our knowledge, this is"}
+     ],
+     "strength": "documented",
+     "counter": {"text": "When clips were shown one at a time, raters still separated them: \"Shown alone, Avatar 6 with the person’s own voice is judged real in 65.1% of answers, against 78.9% for\" real recordings. The people filmed were HeyGen employees, and the report does not say how the 20 raters were recruited."},
+     "mechanism_type": "the test design",
+     "stop": null},
+    {"n": 3,
+     "question": "Why does Avatar 6 score so much higher than HeyGen's previous model, Avatar V, at 44.4%?",
+     "answer": "HeyGen's reports describe Avatar 6 as building on Avatar V's approach of learning a person from a short video of them, not one photo, capturing how they speak and move as well as how they look. The reports set the two scores side by side but do not tie the gain to any one change.",
+     "evidence": [
+       {"url": "https://ik.imagekit.io/heygen/www/research/avatar-6/Avatar%206-%20Talking%20Avatars%20That%20Are%20More%20Like%20You.pdf", "domain": "ik.imagekit.io", "date": "2026-11-17", "quote": "It extends the video-reference formulation of Avatar V into a unified framework: the person is specified by a"},
+       {"url": "https://dynamic.heygen.ai/www/Paper%20Links/avatarv_tech_report.pdf", "domain": "dynamic.heygen.ai", "date": "2026-04-08", "quote": "full token sequence of a reference video, learning to extract and reproduce both static identity"},
+       {"url": "https://ik.imagekit.io/heygen/www/research/avatar-6/Avatar%206-%20Talking%20Avatars%20That%20Are%20More%20Like%20You.pdf", "domain": "ik.imagekit.io", "date": "2026-11-17", "quote": "measured the same way, Avatar V reaches 44.4% (22.2% picked as real) in its technical report [1]."}
+     ],
+     "strength": "inferred",
+     "counter": {"text": "The two tests differ in size. Avatar V's figure came from a much smaller test: \"Table 4 Avatar Turing Test results. Three annotators each evaluated 18 pairs of Avatar V outputs and ground truth\", 54 judgments in all, against 270 choices from 20 raters for Avatar 6."},
+     "mechanism_type": "the model",
+     "stop": null},
+    {"n": 4,
+     "question": "Why should the 84.4% hold outside HeyGen's own test?",
+     "answer": "Nothing read answers this. Every figure for the test comes from HeyGen's own reports. OpenRouter and the csuite.so roundup list Avatar 6's release and prices but repeat none of the test, and neither describes a test run by anyone else.",
+     "evidence": [],
+     "strength": "open",
+     "counter": {"text": "none found; scope: the five given sources plus HeyGen's Avatar V research page, which the Avatar 6 report cites. OpenRouter says \"Avatar 6 was released on November 17, 2026.\" and csuite.so says it was \"listed both on November 17, at $0.10 a second for 1080p and $0.145 for 2K, with Turbo at $0.05 and $0.0875.\", with no test results."},
+     "mechanism_type": null,
+     "stop": "evidence_exhausted"}
   ],
   "landing": {
-    "shows": "The 84.4% is a rescaling of a 42.2% pick rate onto a scale HeyGen's report sets, where 50% scores 100%. The 42.2% is taken over 270 decisive choices, with 34 \"can't tell\" answers out of 304 left aside, and Avatar V's 22.2% was restated on the same scale. Every figure comes from HeyGen's own test on footage of its own employees.",
-    "open_question": "Would raters picking between real and generated clips still choose the avatar 42.2% of the time if someone outside HeyGen chose the people, the footage and the raters?"
+    "shows": "The 84.4% is HeyGen's own score, made by doubling the 42.2% of side-by-side choices (114 of 270) that took Avatar 6 for the real recording. The test kept the real audio and the same sentence, used HeyGen employees' own footage and left out 11.2% of answers that said they could not tell. Shown alone, real clips were still judged real more often (78.9% against 65.1%). The jump from Avatar V's 44.4% compares a 270-choice test with a 54-judgment one, and no source read reports anyone outside HeyGen running the test.",
+    "open_question": "If the same side-by-side test were run by someone outside HeyGen, with strangers' footage and the \"can't tell\" answers counted, what share of choices would pick Avatar 6 as real?"
   }
 }

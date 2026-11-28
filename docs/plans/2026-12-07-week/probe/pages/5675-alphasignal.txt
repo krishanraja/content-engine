@@ -1,0 +1,199 @@
+Google Opens Genie 4 World Model to Developers at $6 per Minute
+Skip to main content
+Feed
+Topics
+Companies
+Editorial
+Newsletter
+Search
+⌘K
+Sign in
+Sign up
+Back
+Menu
+Google Opens Genie 4 World Model to Developers at $6 per Minute
+Google's Genie 4 world model is now open to paid Gemini API users. It streams 720p worlds with native audio that you can steer live from code, at about $0.10 per second.
+Google AI Studio
+·
+Nov 19, 2026
+Upvote
+749
+·
+Details
+By AlphaSignal newsroom
+Author
+By
+AlphaSignal newsroom
+Type
+News
+Topics
+Video
+API
+Subtopics
+World models
+Video generation
+Set AI source
+Copy page
+Takeaways
+Google opened
+Genie 4
+to developers through the Gemini Interactions API and AI Studio.
+It streams steerable 720p, 24fps worlds with native audio, controlled by WASD keys and live text prompts.
+Gemini 3.8 Flash supervises the world: it plans steps, checks frames, and keeps scenes coherent.
+Paid tier only, about $0.10 per second ($6.05 per minute); always call complete() to stop billing.
+Limits: objects drift after looking away, 120-second session cap, US-only serving, no tool calling.
+Best for game prototyping, film previs, and agent or robotics scenarios. See the
+docs
+.
+Google DeepMind has opened its Genie 4 world model to developers using a Gemini API project with billing enabled, expanding access beyond trusted testers and Google AI Ultra subscribers. Through the Gemini API’s Interactions API or Google AI Studio, developers can start a session, describe a scene, and steer the generated world from code, according to
+Google’s announcement
+.
+Each new frame depends on the user’s latest action, allowing movement and text instructions to alter what appears next. The system streams a 720p scene at 24 frames per second with synchronized audio, generated characters, and live scene edits. Its two-minute cap and continuity limits make it best suited to short prototypes.
+A prompt becomes a place
+A session can begin with a text prompt, one 16:9 reference image, or both. Genie 4 then streams a continuous 1280×720 world with native sound effects, ambient audio, and character dialogue. Developers steer it through three input paths:
+Keyboard controls:
+WASD and arrow-key events control movement and camera orientation.
+Live text edits:
+prompts can change weather, lighting, objects, dialogue, or events while the stream runs.
+Character interaction:
+users enter dialogue as text, and generated characters respond to those inputs and events in the scene.
+Genie 4 is the first model in the Genie line to generate audio natively, producing sound and frames in the same pass. Google says every output also carries imperceptible SynthID watermarking.
+Gemini plans while Genie renders
+The system pairs Genie’s visual generation with models from the Gemini family. Gemini Omni supplies knowledge of how real scenes look and behave, while other Gemini models handle planning and help preserve continuity.
+In DeepMind’s
+technical post
+, Gemini 3.8 Flash serves as a guiding agent. As Genie 4 generates the world, Gemini examines incoming frames, divides goals into steps, and checks whether each step succeeded. When a user enters “make it snow,” Gemini rewrites the instruction to match the current scene before Genie renders the change.
+DeepMind calls this architecture a hybrid world model. The language model manages goals, logic, and narrative progression; the world model generates pixels, sound, and motion. In one robotics demonstration, Gemini 4 Argon divided a task into steps while Genie 4 simulated Apptronik’s Apollo humanoid playing checkers.
+DeepMind has not published a technical report, training details, benchmarks, or a public measure of physical accuracy. Claims about quality and consistency therefore rest on Google’s demonstrations and reports from early testers.
+Keep the stream alive
+Genie 4 uses a persistent streaming connection through the Interactions API. The
+API docs
+specify four steps: create an interaction, connect through WebRTC or WebSocket, send one
+world_setup
+event, and steer the session with
+user_action
+events or text. WebRTC targets browser clients, while WebSocket supports direct streaming connections. The model ID is
+models/genie-4
+on
+v1beta
+.
+from google import genai
+client = genai.Client(http_options={"api_version": "v1beta"})
+interaction = await client.aio.interactions.create(
+model="models/genie-4"
+)
+async with client.aio.interactions.connect(interaction.id) as session:
+try:
+await session.send({
+"event_type": "world_setup",
+"world_prompt": {
+"text": "First-person walk through a rainy night market"
+}
+})
+await session.send({
+"event_type": "user_action",
+"action": "key_down",
+"input": "key_w"
+})
+await session.send("Make heavy snow fall across the market")
+# Read step.delta events containing JPEG frames
+# and 48 kHz stereo PCM audio.
+finally:
+await session.complete()
+Runtime constraints
+The first frame arrives about 5 to 9 seconds after setup.
+Keyboard actions take effect in roughly 200 to 500 milliseconds.
+Text edits take about 1 to 2 seconds because Gemini processes them through a planning step.
+Google recommends sending a one-off text prompt roughly 10 times at 150-millisecond intervals so the next planning window receives it.
+Disconnecting the client does not end server-side generation. Applications must call
+complete()
+to stop output and billing.
+Developers can test the model without writing code through the
+AI Studio canvas
+, which includes starter applications.
+Billing accrues by frame
+Google meters Genie 4 in tokens. Text and reference-image input costs $1.50 per million tokens, text output costs $9 per million, and video output with stereo audio costs $17.50 per million. At 240 video tokens per frame and 24 frames per second, the model generates 5,760 video tokens each second. That works out to about $0.1008 per second, or $6.05 per minute, for video output.
+Genie 4 API specifications
+Specification
+Genie 4 via Gemini API
+Output
+1280×720, 16:9, 24 fps, 48 kHz stereo audio
+Inputs
+Text, one 16:9 image, and keyboard events
+Practical window
+Typically stable for 60 to 90 seconds
+Session cap
+120 seconds
+Effective video cost
+About $0.10 per second or $6.05 per minute
+Billing tiers
+Paid only; no Free, Batch, or Flex tier
+Serving location
+US data centers only
+A 120-second session costs about $12.10 in video-output charges, before text and image-input costs. One cumulative hour spread across multiple sessions costs about $363. Client applications should enforce time limits and call
+complete()
+during errors, cancellations, and normal shutdown.
+Continuity has a short memory
+Genie 4 retains a rolling visual history of recent frames. That history does not provide a persistent 3D map, so objects outside the active window may change when the camera returns to them.
+Object permanence:
+doors, landmarks, and controls may move or reset after eight seconds off-screen or after a full camera rotation.
+Text and quantities:
+signs, gauges, clocks, and object counts can drift as the camera moves.
+Unsupported inputs:
+sessions accept no live microphone or webcam feed.
+Missing API features:
+the preview provides no function calling, structured output, or session resumption.
+Content filters:
+prompts containing identifiable people or copyrighted brands may be blocked during setup or terminate a running stream.
+Network latency:
+round-trip times above 150 milliseconds can make keyboard steering feel delayed, especially for clients far from US serving regions.
+Early-access reports also describe deliberate or lagging camera motion, unstable vehicle controls, and inconsistent responses during complex movement. Those observations match the preview’s short coherence window and should shape any control scheme built around it.
+Best fit: two-minute prototypes
+The 120-second cap, per-minute price, and continuity drift favor disposable scenarios that can tolerate visual variation. Early uses include:
+Game concepts:
+testing visual styles, movement ideas, and simple interactions before building engine assets.
+Film previsualization:
+generating live takes while changing the camera, lighting, dialogue, or action.
+Archival exploration:
+turning a historical photograph into a short, navigable scene.
+Agent and robotics tests:
+producing varied situations for planning experiments. Waymo previously adapted Genie 3 into the Waymo World Model to simulate robotaxi edge cases.
+Developers can also map application keys to text instructions. A press of
+E
+, for example, can send “open the door,” creating a lightweight interaction without implementing the underlying object logic in a game engine.
+From prompt to programmable scene
+API access lets software and autonomous agents steer a generated environment frame by frame. A training scenario can begin as a paragraph, while a language model monitors the resulting frames and adjusts the next action. That workflow lowers the cost of exploring an idea before a team commits to models, levels, animation, and simulation code.
+Generated frames remain unsuitable as ground truth. Applications that require exact physics, durable state, reproducible outcomes, or sessions longer than two minutes still need a conventional simulator. Genie 4 fits short, varied, audio-enabled scenarios that developers want to create and revise from code while they run.
+Create a free account, or sign in
+Every news story is free with an account. It takes a minute and needs no card.
+Continue with X
+Continue with GitHub
+Continue with Google
+Continue with email
+Subscribe to the AlphaSignal newsletter
+Already have an account?
+Sign in
+By continuing, you agree to our
+Terms
+and
+Privacy Policy
+.
+Pause
+AI moves faster than any field in history. AlphaSignal tracks every paper, repo, model and
+release in real time: organized, searchable, and tuned to your work.
+Product
+Feed
+Topics
+Companies
+Resources
+Newsletter
+Archive
+Advertise
+Support
+Company
+Editorial team
+About
+Terms
+Privacy
+Cookie preferences
+© 2026 AlphaSignal

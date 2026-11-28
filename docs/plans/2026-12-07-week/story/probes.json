@@ -53,14 +53,6 @@
         ],
         "mechanism": true,
         "counter": true
-      },
-      {
-        "n": 5,
-        "claimed": "open",
-        "counted": "open",
-        "verified_sites": [],
-        "mechanism": true,
-        "counter": true
       }
     ]
   },
@@ -423,8 +415,8 @@
   "46dd71d0-6787-4bda-bd6c-b0e2bc4abca2": {
     "schema": "whys-probe/1",
     "documented": 2,
-    "inferred": 2,
-    "sites": 5,
+    "inferred": 1,
+    "sites": 3,
     "mechanism_rungs": 2,
     "counter_rungs": 2,
     "landing_ok": true,
@@ -444,8 +436,8 @@
       },
       {
         "n": 2,
-        "claimed": "inferred",
-        "counted": "inferred",
+        "claimed": "documented",
+        "counted": "documented",
         "verified_sites": [
           "heygen.com",
           "imagekit.io"
@@ -455,12 +447,68 @@
       },
       {
         "n": 3,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "heygen.ai",
+          "imagekit.io"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "open",
+        "counted": "open",
+        "verified_sites": [],
+        "mechanism": false,
+        "counter": true
+      }
+    ]
+  },
+  "5675e3e4-3420-45a2-bc45-9e9cbd5902ee": {
+    "schema": "whys-probe/1",
+    "documented": 3,
+    "inferred": 1,
+    "sites": 5,
+    "mechanism_rungs": 2,
+    "counter_rungs": 3,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
         "claimed": "documented",
         "counted": "documented",
         "verified_sites": [
-          "heygen.ai",
-          "heygen.com",
-          "imagekit.io"
+          "blog.google",
+          "deepmind.google",
+          "ppc.land"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "blog.google",
+          "deepmind.google",
+          "ppc.land"
+        ],
+        "mechanism": false,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "alphasignal.ai",
+          "omidsaffari.com",
+          "ppc.land"
         ],
         "mechanism": true,
         "counter": true
@@ -470,12 +518,18 @@
         "claimed": "inferred",
         "counted": "inferred",
         "verified_sites": [
-          "csuite.so",
-          "heygen.com",
-          "imagekit.io",
-          "openrouter.ai"
+          "alphasignal.ai",
+          "omidsaffari.com"
         ],
         "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 5,
+        "claimed": "open",
+        "counted": "open",
+        "verified_sites": [],
+        "mechanism": false,
         "counter": true
       }
     ]
@@ -490,10 +544,7 @@
     "landing_ok": true,
     "unreadable": [],
     "problems": [
-      "Why 2 source 4 (business.deezer.com) has no date",
-      "Why 3 source 2 (business.deezer.com) has no date",
-      "Why 4 source 3 (business.deezer.com) has no date",
-      "Why 4 source 4 (business.deezer.com) has no date"
+      "Why 3 needs a second source on a different domain"
     ],
     "rungs": [
       {
@@ -502,7 +553,8 @@
         "counted": "documented",
         "verified_sites": [
           "digitalmusicnews.com",
-          "newsroom-deezer.com"
+          "musicbusinessworldwide.com",
+          "musicweek.com"
         ],
         "mechanism": true,
         "counter": true
@@ -512,9 +564,8 @@
         "claimed": "inferred",
         "counted": "inferred",
         "verified_sites": [
-          "deezer.com",
-          "digitalmusicnews.com",
-          "newsroom-deezer.com"
+          "musicbusinessworldwide.com",
+          "musicweek.com"
         ],
         "mechanism": true,
         "counter": true
@@ -524,8 +575,7 @@
         "claimed": "inferred",
         "counted": "inferred",
         "verified_sites": [
-          "deezer.com",
-          "newsroom-deezer.com"
+          "musicbusinessworldwide.com"
         ],
         "mechanism": true,
         "counter": true
@@ -535,18 +585,57 @@
         "claimed": "inferred",
         "counted": "inferred",
         "verified_sites": [
-          "deezer.com",
-          "newsroom-deezer.com"
+          "digitalmusicnews.com",
+          "musicbusinessworldwide.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
+  },
+  "5f5e0f1e-9571-4eaf-9aef-da44980fe9b4": {
+    "schema": "whys-probe/1",
+    "documented": 2,
+    "inferred": 1,
+    "sites": 2,
+    "mechanism_rungs": 2,
+    "counter_rungs": 2,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [
+      "Why 3 needs a second source"
+    ],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "a90.com",
+          "arxiv.org"
         ],
         "mechanism": true,
         "counter": true
       },
       {
-        "n": 5,
-        "claimed": "open",
-        "counted": "open",
-        "verified_sites": [],
-        "mechanism": false,
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "a90.com",
+          "arxiv.org"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "a90.com"
+        ],
+        "mechanism": true,
         "counter": true
       }
     ]
@@ -669,9 +758,9 @@
   "9a2686e3-efc8-4532-a07f-d8904d0c2fd5": {
     "schema": "whys-probe/1",
     "documented": 4,
-    "inferred": 0,
+    "inferred": 1,
     "sites": 4,
-    "mechanism_rungs": 3,
+    "mechanism_rungs": 4,
     "counter_rungs": 4,
     "landing_ok": true,
     "unreadable": [],
@@ -683,10 +772,9 @@
         "counted": "documented",
         "verified_sites": [
           "marketbeat.com",
-          "sec.gov",
-          "vp-land.com"
+          "webull.com"
         ],
-        "mechanism": false,
+        "mechanism": true,
         "counter": true
       },
       {
@@ -694,8 +782,8 @@
         "claimed": "documented",
         "counted": "documented",
         "verified_sites": [
-          "sec.gov",
-          "vp-land.com"
+          "marketbeat.com",
+          "sec.gov"
         ],
         "mechanism": true,
         "counter": true
@@ -705,8 +793,8 @@
         "claimed": "documented",
         "counted": "documented",
         "verified_sites": [
-          "prnasia.com",
-          "vp-land.com"
+          "marketbeat.com",
+          "webull.com"
         ],
         "mechanism": true,
         "counter": true
@@ -718,16 +806,19 @@
         "verified_sites": [
           "marketbeat.com",
           "prnasia.com",
-          "sec.gov"
+          "webull.com"
         ],
         "mechanism": true,
         "counter": true
       },
       {
         "n": 5,
-        "claimed": "open",
-        "counted": "open",
-        "verified_sites": [],
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "marketbeat.com",
+          "webull.com"
+        ],
         "mechanism": false,
         "counter": true
       }
@@ -804,11 +895,11 @@
   },
   "b0e8bb0f-186e-4622-8d31-65a3cadcd29c": {
     "schema": "whys-probe/1",
-    "documented": 2,
+    "documented": 3,
     "inferred": 1,
-    "sites": 2,
-    "mechanism_rungs": 1,
-    "counter_rungs": 2,
+    "sites": 5,
+    "mechanism_rungs": 3,
+    "counter_rungs": 3,
     "landing_ok": true,
     "unreadable": [],
     "problems": [],
@@ -819,18 +910,22 @@
         "counted": "documented",
         "verified_sites": [
           "arstechnica.com",
-          "cartoonbrew.com"
+          "cartoonbrew.com",
+          "creativebloq.com",
+          "tutkit.com"
         ],
         "mechanism": true,
         "counter": true
       },
       {
         "n": 2,
-        "claimed": "inferred",
-        "counted": "inferred",
+        "claimed": "documented",
+        "counted": "documented",
         "verified_sites": [
-          "arstechnica.com",
-          "cartoonbrew.com"
+          "cartoonbrew.com",
+          "creativebloq.com",
+          "tutkit.com",
+          "valueaddedresource.net"
         ],
         "mechanism": true,
         "counter": true
@@ -841,17 +936,29 @@
         "counted": "documented",
         "verified_sites": [
           "arstechnica.com",
-          "cartoonbrew.com"
+          "creativebloq.com",
+          "valueaddedresource.net"
         ],
-        "mechanism": false,
+        "mechanism": true,
         "counter": true
       },
       {
         "n": 4,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "creativebloq.com",
+          "valueaddedresource.net"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 5,
         "claimed": "open",
         "counted": "open",
         "verified_sites": [],
-        "mechanism": false,
+        "mechanism": true,
         "counter": true
       }
     ]
@@ -984,6 +1091,75 @@
         "verified_sites": [
           "cartoonbrew.com",
           "manchesteranimationfestival.co.uk"
+        ],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
+  },
+  "cf6e7746-6ce2-4c68-904a-d1ae1988bef9": {
+    "schema": "whys-probe/1",
+    "documented": 3,
+    "inferred": 2,
+    "sites": 3,
+    "mechanism_rungs": 3,
+    "counter_rungs": 3,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "dubspot.com",
+          "suno.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "musicbusinessworldwide.com",
+          "suno.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "dubspot.com",
+          "musicbusinessworldwide.com",
+          "suno.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "musicbusinessworldwide.com",
+          "suno.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 5,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "musicbusinessworldwide.com",
+          "suno.com"
         ],
         "mechanism": true,
         "counter": true
@@ -1173,6 +1349,76 @@
           "itch.io",
           "rockpapershotgun.com",
           "x.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      }
+    ]
+  },
+  "f2338d52-9e3c-4aab-baf8-21f56829465c": {
+    "schema": "whys-probe/1",
+    "documented": 4,
+    "inferred": 1,
+    "sites": 4,
+    "mechanism_rungs": 3,
+    "counter_rungs": 4,
+    "landing_ok": true,
+    "unreadable": [],
+    "problems": [],
+    "rungs": [
+      {
+        "n": 1,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "musicbusinessworldwide.com",
+          "spotify.com"
+        ],
+        "mechanism": false,
+        "counter": true
+      },
+      {
+        "n": 2,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "musicbusinessworldwide.com",
+          "spotify.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 3,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "musicbusinessworldwide.com",
+          "spotify.com",
+          "techradar.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 4,
+        "claimed": "documented",
+        "counted": "documented",
+        "verified_sites": [
+          "digitaltrends.com",
+          "spotify.com"
+        ],
+        "mechanism": true,
+        "counter": true
+      },
+      {
+        "n": 5,
+        "claimed": "inferred",
+        "counted": "inferred",
+        "verified_sites": [
+          "digitaltrends.com",
+          "musicbusinessworldwide.com",
+          "spotify.com"
         ],
         "mechanism": true,
         "counter": true

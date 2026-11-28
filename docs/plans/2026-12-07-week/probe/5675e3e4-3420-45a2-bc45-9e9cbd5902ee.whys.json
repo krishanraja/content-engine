@@ -1,0 +1,68 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why did Google open Genie 4 to developers on 19 November 2026 at about $0.10 a second, with sessions capped at 120 seconds?",
+  "rungs": [
+    {"n": 1,
+     "question": "Why did the developer release come on 19 November, and not earlier?",
+     "answer": "It was the last step of a staged rollout. DeepMind announced Genie 4 on 27 October as a research preview for trusted testers, saying it wanted their feedback before a wider release. Google AI Ultra subscribers got it in Project Genie on 18 November, and paying developers on the Gemini API the next day.",
+     "evidence": [
+       {"url": "https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/", "domain": "deepmind.google", "date": "2026-10-27", "quote": "Also, we have intentionally deployed it first to trusted tester partners to get early feedback, before we release the model more broadly."},
+       {"url": "https://ppc.land/google-charges-developers-about-10-cents-a-second-for-genie-4-worlds/", "domain": "ppc.land", "date": "2026-11-19", "quote": "The developer release came a day after Google, on November 18, began rolling Genie 4 out to eligible Google AI Ultra subscribers inside Project Genie, its experimental browser-based world builder."},
+       {"url": "https://blog.google/innovation-and-ai/technology/developers-tools/genie-4-in-gemini-api/", "domain": "blog.google", "date": "2026-11-19", "quote": "Following yesterday's"}
+     ],
+     "strength": "documented",
+     "counter": {"text": "DeepMind's October post said the API would start with 'early access partners', while the 19 November release is open to any paid-tier project; no source read explains why access widened from partners to all paying developers."},
+     "mechanism_type": "release sequencing",
+     "stop": null},
+    {"n": 2,
+     "question": "Why does Google want developers building on a world model at all?",
+     "answer": "Google names three uses: prototyping interactive experiences, visualising spatial designs, and training robots and AI agents. DeepMind frames world simulation as part of building AGI and as a source of training environments for robots and agents. No source read gives a revenue or market reason.",
+     "evidence": [
+       {"url": "https://blog.google/innovation-and-ai/technology/developers-tools/genie-4-in-gemini-api/", "domain": "blog.google", "date": "2026-11-19", "quote": "Whether you’re prototyping interactive experiences, visualizing designs for spatial concepts, or training robotics and AI agents, Genie 4 opens up a blank canvas for you to test ideas and define new possibilities."},
+       {"url": "https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/", "domain": "deepmind.google", "date": "2026-10-27", "quote": "Understanding and simulating the world is a crucial aspect of building AGI."},
+       {"url": "https://ppc.land/google-charges-developers-about-10-cents-a-second-for-genie-4-worlds/", "domain": "ppc.land", "date": "2026-11-19", "quote": "Google names three uses for the API: prototyping interactive experiences, visualising designs for spatial concepts, and training robotics and AI agents."}
+     ],
+     "strength": "documented",
+     "counter": {"text": "AlphaSignal notes the output cannot stand in for a real simulator, which limits the robotics and agent training use: 'Generated frames remain unsuitable as ground truth.' (alphasignal.ai, 2026-11-19). PPC Land also places the release in a pattern of Google selling new models to its top consumer tier and paid API first, which describes a commercial habit the Google posts do not state."},
+     "mechanism_type": null,
+     "stop": null},
+    {"n": 3,
+     "question": "Why does it cost about $0.10 a second?",
+     "answer": "Google meters Genie 4 in tokens, the same unit it uses for its language models, but counts video frames. Each frame is 240 video output tokens, so 24 frames a second makes 5,760 tokens a second. At $17.50 per million video output tokens, with sound bundled in, that is about $0.10 a second, $6.05 a minute.",
+     "evidence": [
+       {"url": "https://alphasignal.ai/news/google-opens-genie-4-world-model-to-developers-at-6-per-minute", "domain": "alphasignal.ai", "date": "2026-11-19", "quote": "At 240 video tokens per frame and 24 frames per second, the model generates 5,760 video tokens each second."},
+       {"url": "https://omidsaffari.com/blog/genie-4-api", "domain": "omidsaffari.com", "date": "2026-11-19", "quote": "About $6.05 of video output, at $17.50 per 1M video tokens and 5,760 tokens a second."},
+       {"url": "https://ppc.land/google-charges-developers-about-10-cents-a-second-for-genie-4-worlds/", "domain": "ppc.land", "date": "2026-11-19", "quote": "According to the model page, every frame costs 240 video output tokens."}
+     ],
+     "strength": "documented",
+     "counter": {"text": "PPC Land found the linked Gemini API pricing page had no Genie 4 entry on 19 November: 'The exact rate is not yet public.' The $0.10 figure is Google's stated approximation from its documentation, not a line on the pricing page."},
+     "mechanism_type": "pricing (per-frame token metering)",
+     "stop": null},
+    {"n": 4,
+     "question": "Why are sessions capped at 120 seconds?",
+     "answer": "The sources set the cap beside the model's memory limit. Genie 4 works from a rolling window of recent frames, not a lasting 3D scene, so objects can shift after eight seconds out of view, and stability can slip after 60 to 90 seconds. No source says outright that this is why the hard cap sits at 120 seconds.",
+     "evidence": [
+       {"url": "https://omidsaffari.com/blog/genie-4-api", "domain": "omidsaffari.com", "date": "2026-11-19", "quote": "“Genie 4 simulates frames over a rolling temporal window rather than maintaining a persistent 3D scene graph. Looking away from an object (8+ seconds) or turning 360 degrees can cause landmarks, doors, or buttons to shift or reset, and visual stability may degrade past 60-90 seconds (hard cap 120 seconds).”"},
+       {"url": "https://alphasignal.ai/news/google-opens-genie-4-world-model-to-developers-at-6-per-minute", "domain": "alphasignal.ai", "date": "2026-11-19", "quote": "Its two-minute cap and continuity limits make it best suited to short prototypes."}
+     ],
+     "strength": "inferred",
+     "counter": {"text": "PPC Land points to a second possible reason, compute: Google said it was capacity constrained, each stream uses 5,760 tokens a second for one viewer, and concurrency limits are unpublished. Separately, Project Genie for consumers was earlier capped at 60 seconds on Genie 3, so the cap length differs by product, which no source explains."},
+     "mechanism_type": "model architecture (rolling temporal window)",
+     "stop": null},
+    {"n": 5,
+     "question": "Why does Genie 4 hold only a rolling window of frames rather than a persistent world?",
+     "answer": "Nothing read answers this. DeepMind lists long-term consistency and object permanence as open research problems, and has published no technical report, training details or benchmarks that would explain the design.",
+     "evidence": [
+       {"url": "https://alphasignal.ai/news/google-opens-genie-4-world-model-to-developers-at-6-per-minute", "domain": "alphasignal.ai", "date": "2026-11-19", "quote": "DeepMind has not published a technical report, training details, benchmarks, or a public measure of physical accuracy."},
+       {"url": "https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/", "domain": "deepmind.google", "date": "2026-10-27", "quote": "Complex physical interactions, real-time audio accuracy, rendering legible text, spatial accuracy, and long-term consistency are active areas of ongoing research."}
+     ],
+     "strength": "open",
+     "counter": {"text": "none found; searched the four readable sources and the Google DeepMind, Keyword and AI Studio pages they cite."},
+     "mechanism_type": null,
+     "stop": "evidence_exhausted"}
+  ],
+  "landing": {
+    "shows": "The ladder shows a staged rollout (testers, then Ultra subscribers, then paying developers) of a model Google itself calls frontier research. The price follows from metering every frame as 240 tokens. The two-minute cap sits next to a documented memory limit of a rolling frame window, though no source ties the two directly, and why the model works that way is unpublished. FourWeekMBA and Tech Insider refused access and were not read.",
+    "open_question": "If a generated world starts to forget itself after a minute or so, what kind of work fits inside the first ninety seconds?"
+  }
+}

@@ -1,0 +1,281 @@
+Genie 4 now available through the Gemini API
+Skip to main content
+Innovation & AI
+Products & platforms
+Company news
+Feed
+Newsletter
+Back
+Innovation & AI
+See all in Innovation & AI
+Models & Research
+Google DeepMind
+Google Research
+Google Labs
+Gemini models
+Quantum computing
+See all
+Products
+Developer tools
+Gemini app
+Gemini Notebook
+See all
+Infrastructure & cloud
+Global network
+Google Cloud
+See all
+Technology
+Safety & Security
+Health
+See all
+Learn more:
+Google DeepMind blog
+Google Research blog
+Google Developers blog
+Google Cloud blog
+Back
+Products & platforms
+See all in Products & platforms
+Products
+Search
+Maps
+Chrome
+Google Health
+Google Workspace
+Learning & Education
+Shopping
+See all
+Platforms
+Android
+Google Play
+Wear OS
+See all
+Devices
+Pixel
+Google Nest
+Fitbit
+Chromebook
+Googlebook
+See all
+Learn more:
+Google Ads & Commerce blog
+Waze blog
+Back
+Company news
+See all in Company news
+Outreach & initiatives
+Creating opportunity
+Safety & security
+Google.org
+Public policy
+Sustainability
+Health
+See all
+Leadership
+Sundar Pichai, CEO
+More authors
+See all
+Inside Google
+Around the globe
+Life at Google
+See all
+Learn more:
+Google Security blog
+Innovation & AI
+Innovation & AI
+See all in Innovation & AI
+Models & Research
+Google DeepMind
+Google Research
+Google Labs
+Gemini models
+Quantum computing
+See all
+Products
+Developer tools
+Gemini app
+Gemini Notebook
+See all
+Infrastructure & cloud
+Global network
+Google Cloud
+See all
+Technology
+Safety & Security
+Health
+See all
+Learn more:
+Google DeepMind blog
+Google Research blog
+Google Developers blog
+Google Cloud blog
+Products & platforms
+Products & platforms
+See all in Products & platforms
+Products
+Search
+Maps
+Chrome
+Google Health
+Google Workspace
+Learning & Education
+Shopping
+See all
+Platforms
+Android
+Google Play
+Wear OS
+See all
+Devices
+Pixel
+Google Nest
+Fitbit
+Chromebook
+Googlebook
+See all
+Learn more:
+Google Ads & Commerce blog
+Waze blog
+Company news
+Company news
+See all in Company news
+Outreach & initiatives
+Creating opportunity
+Safety & security
+Google.org
+Public policy
+Sustainability
+Health
+See all
+Leadership
+Sundar Pichai, CEO
+More authors
+See all
+Inside Google
+Around the globe
+Life at Google
+See all
+Learn more:
+Google Security blog
+Feed
+[]
+Preferences
+Global (English)
+Africa (English)
+Australia (English)
+Brasil (Português)
+Canada (English)
+Canada (Français)
+Česko (Čeština)
+Deutschland (Deutsch)
+España (Español)
+France (Français)
+Greece (Ελληνικά)
+India (English)
+Indonesia (Bahasa Indonesia)
+Ireland (English)
+Italia (Italiano)
+日本 (日本語)
+대한민국 (한국어)
+Latinoamérica (Español)
+Malaysia (English)
+الشرق الأوسط وشمال أفريقيا (اللغة العربية)
+MENA (English)
+Nederlands (Nederland)
+New Zealand (English)
+Polska (Polski)
+Portugal (Português)
+România (Română)
+Sverige (Svenska)
+ประเทศไทย (ไทย)
+Türkiye (Türkçe)
+台灣 (中文)
+Links
+Images
+RSS feed
+Newsletter
+Breadcrumb
+Home
+Innovation & AI
+Technology
+Developer tools
+Genie 4 is now available on the Gemini API.
+Nov 19, 2026
+Following yesterday's
+Genie 4 launch
+, Genie 4 is now available for developers through the
+Gemini API
+(via the Interactions API) and
+Google AI Studio
+.
+Starting from a text prompt, a reference image, or both, developers can experiment with generating continuous 720p worlds at 24fps with synchronized native audio — from ambient soundscapes and sound effects to character dialogue. Using real-time keyboard controls alongside live text prompts, you can navigate environments and change weather, lighting, objects, or events on the fly. Gemini reasoning keeps the world state consistent and coherent throughout.
+Whether you’re prototyping interactive experiences, visualizing designs for spatial concepts, or training robotics and AI agents, Genie 4 opens up a blank canvas for you to test ideas and define new possibilities. As a reminder every output includes imperceptible
+SynthID
+watermarking.
+Try the interactive canvas and starter apps in
+Google AI Studio
+. Review pricing details and explore the
+Gemini API documentation
+to begin building.
+Posted in:
+Developer tools
+Google DeepMind
+Related stories
+Google DeepMind
+We’re launching Humanity’s First Exam and a Kaggle hackathon to test LLM reliability.
+By
+Oran Kelly
+Developer tools
+Introducing file slicing controls in the Gemini API
+By
+Rohan Doshi
+&
+Ben Caine
+Developer tools
+Introducing Tool Retrieval in the Gemini API
+By
+Lucia Loher
+&
+Nora Kassner
+Google DeepMind
+Genie 4 is now available
+By
+Diego Rivas
+&
+Pavan Kumar
+Privacy
+Terms
+Help
+More of Google
+Google Products
+About the Blog
+Global (English)
+Africa (English)
+Australia (English)
+Brasil (Português)
+Canada (English)
+Canada (Français)
+Česko (Čeština)
+Deutschland (Deutsch)
+España (Español)
+France (Français)
+Greece (Ελληνικά)
+India (English)
+Indonesia (Bahasa Indonesia)
+Ireland (English)
+Italia (Italiano)
+日本 (日本語)
+대한민국 (한국어)
+Latinoamérica (Español)
+Malaysia (English)
+الشرق الأوسط وشمال أفريقيا (اللغة العربية)
+MENA (English)
+Nederlands (Nederland)
+New Zealand (English)
+Polska (Polski)
+Portugal (Português)
+România (Română)
+Sverige (Svenska)
+ประเทศไทย (ไทย)
+Türkiye (Türkçe)
+台灣 (中文)

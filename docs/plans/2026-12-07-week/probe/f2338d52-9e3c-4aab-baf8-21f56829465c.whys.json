@@ -1,0 +1,153 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why did Spotify open Artist Profile Protection to every artist, with a default that lets an ignored release go live?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why did Spotify build a check on which releases list an artist?",
+      "answer": "Music was landing on the wrong artist pages, through metadata mix-ups, artists sharing a name, or people deliberately attaching their tracks to someone else's profile. Spotify says easy-to-make AI tracks made this worse and named artist identity a top priority for 2026.",
+      "evidence": [
+        {
+          "url": "https://artists.spotify.com/en/blog/introducing-artist-profile-protection",
+          "domain": "artists.spotify.com",
+          "date": "2026-11-17",
+          "quote": "Music has been landing on the wrong artist pages across streaming services, and the rise of easy-to-produce AI tracks has made the problem worse."
+        },
+        {
+          "url": "https://www.musicbusinessworldwide.com/amid-rise-of-ai-deepfakes-spotify-to-let-artists-vet-releases-before-they-appear-on-their-profiles",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-03-24",
+          "quote": "has been designed to combat ongoing issues with misattributed releases, whether from metadata errors, artists sharing the same name, or “bad actors” who are “maliciously” attaching music to artists’ profiles."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Spotify's own account lists metadata errors and shared names alongside malicious uploads, so the tool is not only an AI measure; no source gives a share of how many misattributions are AI. The MBW page is from the March 2026 beta."
+      },
+      "mechanism_type": null,
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why can someone else's music land on an artist's page at all?",
+      "answer": "Open-access distribution lets anyone deliver music to dozens of services at once and move between distributors easily. Spotify says that openness leaves gaps bad actors can exploit, because a delivery can simply name an artist.",
+      "evidence": [
+        {
+          "url": "https://artists.spotify.com/en/blog/introducing-artist-profile-protection",
+          "domain": "artists.spotify.com",
+          "date": "2026-11-17",
+          "quote": "Open-access distribution channels have lowered the barrier for independent artists to share music with the world, promote collaborations easily, and transfer music between distributors seamlessly. But that openness comes with gaps that bad actors can exploit."
+        },
+        {
+          "url": "https://www.musicbusinessworldwide.com/amid-rise-of-ai-deepfakes-spotify-to-let-artists-vet-releases-before-they-appear-on-their-profiles",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-03-24",
+          "quote": "“Open-access distribution channels have lowered the barrier for independent artists to share music with the world, promote collaborations easily, and transfer music between distributors seamlessly,” says Spotify. “But that openness comes with gaps that bad actors can exploit.”"
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Both sources carry Spotify's own words; MBW quotes the March announcement rather than checking the delivery system independently. No distributor's account was among the pages read."
+      },
+      "mechanism_type": "distribution model",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why does a wrong listing matter to the artist?",
+      "answer": "A release on an artist's profile counts in their catalogue, their stats, Release Radar and how fans find them. TechRadar adds that fraudsters have used impersonation to take royalties through streams, though Spotify's own pages do not say that.",
+      "evidence": [
+        {
+          "url": "https://artists.spotify.com/en/blog/introducing-artist-profile-protection",
+          "domain": "artists.spotify.com",
+          "date": "2026-11-17",
+          "quote": "When that happens, it can impact your catalog, your stats, your Release Radar, and how fans discover your music."
+        },
+        {
+          "url": "https://www.musicbusinessworldwide.com/amid-rise-of-ai-deepfakes-spotify-to-let-artists-vet-releases-before-they-appear-on-their-profiles",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-03-24",
+          "quote": "Spotify says that when this happens, “it can impact your catalog, your stats, your Release Radar, and how fans discover your music,”"
+        },
+        {
+          "url": "https://www.techradar.com/audio/spotify/spotify-takes-its-first-major-step-in-tackling-ai-slop-now-artists-can-review-and-approve-what-music-appears-on-their-profile",
+          "domain": "techradar.com",
+          "date": "2026-03-24",
+          "quote": "Until now, it’s been easy for fraudsters to upload AI-generated music to Spotify to impersonate bigger artists and steal royalties through streams."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "The royalty mechanism rests on TechRadar alone and gives no figures or case; the pages read do not say who is paid when a misattributed track is streamed."
+      },
+      "mechanism_type": "the money",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why would a stricter gate not hold up an artist's real releases?",
+      "answer": "Under Block releases, each artist gets an artist key to share with trusted distributors. A delivery carrying the key is pre-approved and goes live without the manual step. The key works only with Block releases and may not work with every provider.",
+      "evidence": [
+        {
+          "url": "https://support.spotify.com/us/artists/article/artist-profile-protection/",
+          "domain": "support.spotify.com",
+          "date": "2026-11-23",
+          "quote": "Pre-approved when they’re delivered with your artist key"
+        },
+        {
+          "url": "https://digitaltrends.com/home-theater/spotifys-new-tool-gives-every-artist-a-way-to-keep-someone-elses-music-off-their-page",
+          "domain": "digitaltrends.com",
+          "date": "2026-11-18",
+          "quote": "Trusted distributors can include an artist key so that legitimate releases can bypass the manual step entirely."
+        },
+        {
+          "url": "https://support.spotify.com/us/artists/article/artist-profile-protection/",
+          "domain": "support.spotify.com",
+          "date": "2026-11-23",
+          "quote": "Note: Artist keys are only available when using the Block releases setting."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Spotify's support page says some providers cannot be removed or approved and artist keys may not work with every provider, and Digital Trends says some content providers are not eligible; the key does not cover every delivery."
+      },
+      "mechanism_type": "the rule",
+      "stop": null
+    },
+    {
+      "n": 5,
+      "question": "Why is the default for every artist now Review, where an ignored release goes live, when the beta held an ignored release back?",
+      "answer": "In the March beta an ignored release did not appear. In November the default became Review and Block was moved to an advanced, limited setting. Spotify says Block may delay or block legitimate releases if no one acts, which points to the reason, but it never states why it changed the default.",
+      "evidence": [
+        {
+          "url": "https://www.musicbusinessworldwide.com/amid-rise-of-ai-deepfakes-spotify-to-let-artists-vet-releases-before-they-appear-on-their-profiles",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-03-24",
+          "quote": "if an artist doesn’t take action on an incoming release, it will be blocked by default"
+        },
+        {
+          "url": "https://artists.spotify.com/en/blog/introducing-artist-profile-protection",
+          "domain": "artists.spotify.com",
+          "date": "2026-11-17",
+          "quote": "Since it requires artists to approve releases before they go live, it may delay or block legitimate releases from going live if no action is taken."
+        },
+        {
+          "url": "https://digitaltrends.com/home-theater/spotifys-new-tool-gives-every-artist-a-way-to-keep-someone-elses-music-off-their-page",
+          "domain": "digitaltrends.com",
+          "date": "2026-11-18",
+          "quote": "Spotify notes that this option is still only available to a limited number of artists, typically those with common names."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "None found in the pages read: no source quotes Spotify on the reason for the switch, and the TechCrunch piece, the one other November report, could not be read. Spotify's reason beyond the delay risk is a matter of motive the sources do not reach."
+      },
+      "mechanism_type": "the default setting",
+      "stop": "motive_not_mechanism"
+    }
+  ],
+  "landing": {
+    "shows": "Spotify's open delivery system lets any delivery name an artist, and a wrong listing feeds the artist's stats and recommendations. The tool that reached every artist on 17 November 2026 is looser than the March beta: an ignored release now goes live, the release-holding mode is limited to some artists, and removal on Spotify does not stop the track appearing under the artist's name on other services.",
+    "open_question": "If an artist who never opens the email still gets the impostor's track on their profile, how much of the protection depends on artists watching their inbox?"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "https://blog.google/innovation-and-ai/technology/developers-tools/genie-4-in-gemini-api/": {"file": "5675-keyword-gemini-api.txt"},
+  "https://ppc.land/google-charges-developers-about-10-cents-a-second-for-genie-4-worlds/": {"file": "5675-ppcland.txt"},
+  "https://fourweekmba.com/ai-genie-4-hits-the-gemini-api-at-6-05-a-minute-363-an-hour/": {"unreadable": "HTTP 403, access refused"},
+  "https://alphasignal.ai/news/google-opens-genie-4-world-model-to-developers-at-6-per-minute": {"file": "5675-alphasignal.txt"},
+  "https://tech-insider.org/google-genie-4-world-model-real-time-gaming-2026/": {"unreadable": "HTTP 403, access refused"},
+  "https://omidsaffari.com/blog/genie-4-api": {"file": "5675-omidsaffari.txt"},
+  "https://aistudio.google.com/docs/genie": {"file": "5675-aistudio-genie-docs.txt"},
+  "https://aistudio.google.com/docs/models/genie-4": {"file": "5675-aistudio-genie4-model.txt"},
+  "https://blog.google/innovation-and-ai/models-and-research/google-deepmind/genie-4-now-available-project-genie/": {"file": "5675-keyword-project-genie.txt"},
+  "https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/": {"file": "5675-deepmind-genie4.txt"}
+}

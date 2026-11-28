@@ -1,0 +1,25 @@
+Introducing Artist Profile Protection: Giving Artists More Control Over What Shows Up Under Their Name – Spotify for Artists 
+ Introducing Artist Profile Protection: Giving Artists More Control Over What Shows Up Under Their Name
+ March 15, 2026 
+ Update: As of November 17th, 2026, Artist Profile Protection is now available for all artists on Spotify. 
+ This optional feature lets you review releases that are delivered to your profile on Spotify.
+ Music has been landing on the wrong artist pages across streaming services, and the rise of easy-to-produce AI tracks has made the problem worse. That’s not the experience we want artists to have on Spotify, and that’s why we’ve made protecting artist identity a top priority for 2026 . Now, we’re launching a first-of-its-kind solution to a problem that’s affected streaming for years.
+ In the streaming age, it's easy to deliver music to dozens of streaming services and digital retailers at the same time. Open-access distribution channels have lowered the barrier for independent artists to share music with the world, promote collaborations easily, and transfer music between distributors seamlessly. But that openness comes with gaps that bad actors can exploit.
+ Sometimes, this means a release that isn’t yours appears on your profile across streaming services — whether due to a metadata mix-up, another artist with the same name, or someone maliciously attaching their music to your profile. When that happens, it can impact your catalog, your stats, your Release Radar, and how fans discover your music. We know how frustrating this can be for both artists and fans alike, and one of the top requests we’ve heard from artists over the past year is that you want more visibility into music that appears under your name.
+ Artist Profile Protection
+ That's why we’re introducing Artist Profile Protection, an optional feature in Spotify for Artists, available to all artists. It notifies you when music is delivered to your artist profile, and gives you a chance to remove yourself from misattributed releases – helping you stay in control of what music lists you as an artist on Spotify. 
+ For the first time on any music streaming service, we’re giving you the ability to review releases delivered to Spotify, and remove yourself if you’ve been incorrectly tagged, to protect your artist identity and prevent listener confusion. If you decline a release, it won't appear on your artist profile, contribute to your stats, or show up in recommendations to your listeners.
+ We spent several months testing the feature with thousands of artists, including Samia, Diplo, Searows, Dave East, and more. Here’s what Samia’s team at Grand Jury Music had to say:
+ “The connection Samia’s fans have to her music is special. We’re glad Spotify is giving us more control over what appears under her name.” - Robbie Mackey, Grand Jury Music 
+ How It Works
+ You can turn on Artist Profile Protection either from your artist settings menu on desktop, or the music tab in the mobile app. Artist team admins and editors have the ability to manage the settings. If you turn it on, you’ll receive an email notification when music is delivered to Spotify with your name attached.
+ From there, you can review eligible releases and decide whether to remove yourself.
+ If you remove yourself, the release won’t list you or appear on your profile. (Note: the release may still appear under your name on other streaming services besides Spotify, so you may still want to notify your label or distributor.)
+ If you take no action, the release will go live as scheduled – at the release date, it will appear on your artist profile and contribute to your stats and recommendations to your fans as usual.
+ Advanced Settings
+ You can also opt-in to an advanced setting, ‘Block releases’ where releases are automatically blocked until the artist approves them. This setting is best for artists who are in specific situations prone to misattributed releases – such as having a common artist name or frequently experiencing mismatch – and are comfortable actively managing their catalog. Since it requires artists to approve releases before they go live, it may delay or block legitimate releases from going live if no action is taken.
+ To learn more, visit the Spotify for Artists Help Center . 
+ Spotify for Artists helps you to develop the fanbase you need to reach your goals.
+ Share this story 
+ Related Stories 
+ From $11B in 2025 Payouts to What We're Building for Artists in 2026 A message from Charlie Hellman, Spotify's Head of Music.

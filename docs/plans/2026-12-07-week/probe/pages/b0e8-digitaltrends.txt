@@ -1,0 +1,11 @@
+Source: https://www.digitaltrends.com/?p=6010178 and https://www.digitaltrends.com/computing/etsy-sellers-are-quitting-as-ai-slop-floods-the-handmade-marketplace/ (same article)
+Fetched 2026-11-28 through WebFetch, which declined to return the text verbatim and gave only a summary. Nothing below is word for word from the page; it is not used as evidence.
+Headline (as reported by the fetch tool): Etsy sellers are quitting as AI slop floods the handmade marketplace
+Author: Manisha Priyadarshini. Published: September 25, 2026.
+Note: the article predates the 26 October 2026 terms update and is about AI-generated listings crowding out sellers, not about AI training on seller content.
+
+Summary returned by the fetch tool (not word for word):
+- Longtime Etsy sellers say AI-generated listings make it harder for buyers to find handmade goods; some are leaving. A pet-portrait artist saw sales fall about 30% in 2022 and 50% the next year and moved to Shopify.
+- A UK illustrator reported a 98% sales drop in a year; a knitwear designer said pattern sales fell at least 50% in six months, with AI copycats mimicking her designs.
+- Etsy has allowed AI-made products since 2024 if disclosed; sellers say this is rarely enforced. VP James Ossman says enforcement at Etsy's scale is complex.
+- Etsy reported $2.8 billion revenue last year; rivals such as Fybe position themselves as human-only.

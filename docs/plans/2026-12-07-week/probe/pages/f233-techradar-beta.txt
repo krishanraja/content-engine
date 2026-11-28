@@ -1,0 +1,753 @@
+Spotify takes its first major step in tackling AI slop — now artists can review and approve what music appears on their profile | TechRadar 
+ Skip to main content 
+Become a TechRadar Insider now
+Sign up with your email below to instantly access member features, newsletters and exclusive Insider perks
+Contact me with news and offers from
+techradar
+and other Future brands.
+Sign Up
+By submitting your information you agree to the
+ Terms & Conditions 
+and
+ Privacy Policy 
+and are aged 16 or over.
+ Welcome 
+to
+TechRadar Insider 
+!
+ Hi 
+ ,
+Your membership journey starts here.
+Keep exploring and earning more as a member.
+MY ACCOUNT
+Earn your first badge
+Start reading to unlock your first badge
+Keep earning badges
+Explore ways to get more involved as a member.
+ Latest in phones
+ News, deals, reviews, guides and more…
+Start reading
+ Latest in computing
+ News, deals, reviews, guides and more on the newest computing gadgets
+Start reading
+Your membership perks
+Start exploring exclusive deals, expert advice and more
+Explore now
+Member Rewards
+Unlock and manage exclusive Techradar member rewards.
+See rewards
+ Sign Out 
+ 0" :style="{ top: offsetTop + 'px' }" x-transition:enter="bf-anim" x-transition:enter-start="bf-hidden" x-transition:enter-end="bf-shown" x-transition:leave="bf-anim" x-transition:leave-start="bf-shown" x-transition:leave-end="bf-hidden" role="region" aria-label="Black Friday deals" data-hawkify-widget-type="bf-banner-sticky" data-hawkify-category="black-friday">
+ Black Friday 
+ The most sought-after deals right now 
+ See top deals 
+ Hide top deals 
+ Most popular
+ The Black Friday deals everyone wants
+ Our readers' most-wanted products, with the price and the saving at a glance.
+ Previous 
+ Next 
+ Sponsored : this deal is a paid placement 
+ Prices were correct when checked but can change. We may earn a commission when you buy through these links.
+ See all Black Friday deals 
+ TechRadar 
+ the technology experts 
+ US Edition 
+ Asia
+ Singapore
+ Europe
+ Danmark
+ Suomi
+ Norge
+ Sverige
+ UK
+ Italia
+ Nederland
+ België (Nederlands)
+ France
+ Deutschland
+ España
+ North America
+ US (English)
+ Canada
+ México
+ Australasia
+ Australia
+ New Zealand
+ RSS 
+ Sign in 
+ View Profile
+ Sign out 
+ Search 
+ Search TechRadar 
+Black Friday
+Black Friday Amazon Deals
+Black Friday Best Buy Deals
+Black Friday Walmart Deals
+Black Friday Argos Deals
+Black Friday Currys Deals
+Phones
+Popular Phone Brands
+iPhone
+Samsung Galaxy
+Google Pixel
+Nothing
+Motorola
+OnePlus
+Xiaomi
+Honor
+Oppo
+Huawei
+Operating Systems
+Android
+iOS
+More from Phones
+Network Carriers
+Phone Accessories
+Phone Reviews
+Phone Buying Guides
+Phone Deals
+Phone Coupons
+Phone News
+Computing
+Laptops
+Chromebooks
+MacBooks
+Windows Laptops
+Gaming Laptops
+PCs
+Desktop PCs
+Macs
+Gaming PCs
+Software & Security
+Windows
+macOS
+Windows 10 End of Life
+Antivirus
+Cyber Security
+Components
+CPUs
+GPUs
+Storage
+Nvidia
+Intel
+Internet
+Websites & Apps
+Wi-Fi & Broadband
+Social Media
+Wordle
+Tablets
+eReaders
+iPad
+VR & AR
+Peripherals
+Monitors
+Keyboards
+Webcams
+Mice
+Popular Computing Brands
+Dell
+HP
+Lenovo
+Acer
+More from Computing
+Computing Reviews
+Computing Buying Guides
+Computing Deals
+Computing Coupons
+Computing News
+AI
+AI Platforms & Assistants
+OpenAI
+ChatGPT
+Gemini
+Apple Intelligence
+Claude
+Streaming
+Entertainment
+Netflix
+Prime Video
+Disney+
+Apple TV
+HBO Max
+Hulu
+Paramount+
+How to Watch
+Streaming coupons
+TVs
+TV Insights
+TV Reviews
+TV Buying Guides
+TV Deals
+TV News
+TVs & home theater coupons
+TV size finder
+More for your TV
+Home Theatre
+Soundbars
+Streaming Devices
+Projectors
+Blu-ray
+Fitness
+Fitness
+Smartwatches
+Fitness Trackers
+Exercise Equipment
+Fitness Headphones
+Fitness Apps
+Smart Rings
+Watch Brands
+Apple Watch
+Fitbit
+Garmin
+Google Pixel Watch
+Samsung Galaxy Watch
+Wellbeing
+Sleep
+Oral Health
+More from Fitness
+Fitness News
+Fitness Reviews
+Fitness Buying Guides
+Fitness Deals
+Fitness coupons
+VPN
+VPN Services
+VPN Security
+ExpressVPN
+NordVPN
+Cameras
+Camera Types
+Mirrorless
+DSLRs
+Compact
+Action
+Video
+Drones
+360 Cameras
+Dash Cams
+Camera Brands
+Canon
+DJI
+Fujifilm
+Nikon
+GoPro
+Insta360
+More from Cameras
+Camera Accessories
+Camera Lenses
+Camera Reviews
+Camera Buying Guides
+Camera Deals
+Camera News
+Photography
+Camera coupons
+Audio
+Headphones
+Earbuds & AirPods
+Wireless Headphones
+Speakers
+Wireless Speakers
+Sonos
+Hi-Fi
+Turntables
+Portable Players
+DACs
+Audio Streaming
+Spotify
+Apple Music
+More from Audio
+Audio News
+Audio Reviews
+Audio Buying Guides
+Audio Deals
+Audio coupons
+EVs
+Home
+Smart Home
+Home Security
+Smart Speakers
+Smart Lights
+Smart Scales
+Smart Thermostats
+Amazon Echo
+Small Appliances
+Air Fryers
+Air Quality
+Coffee Machines
+Hair Care
+Vacuums
+Robot Vacuums
+Home Brands
+Dyson
+Philips Hue
+Ring
+Shark
+Ninja
+More from Home
+Home Reviews
+Home Buying Guides
+Home Deals
+Home News
+Mattress coupons
+Home & appliances coupons
+Browse
+By Type
+News
+Best
+Reviews
+Deals
+Versus
+How To
+Opinion
+Coupons
+Collections
+Popular Brands
+Samsung
+Sony
+Microsoft
+Apple
+More
+Black Friday
+View Black Friday
+Black Friday Amazon Deals
+Black Friday Best Buy Deals
+Black Friday Walmart Deals
+Black Friday Argos Deals
+Black Friday Currys Deals
+Phones
+View Phones
+Popular Phone Brands 
+iPhone
+Samsung Galaxy
+Google Pixel
+Nothing
+Motorola
+OnePlus
+Xiaomi
+Honor
+Oppo
+Huawei
+Operating Systems 
+Android
+iOS
+More from Phones 
+Network Carriers
+Phone Accessories
+Phone Reviews
+Phone Buying Guides
+Phone Deals
+Phone Coupons
+Phone News
+Computing
+View Computing
+Laptops 
+View Laptops
+Chromebooks
+MacBooks
+Windows Laptops
+Gaming Laptops
+PCs 
+Desktop PCs
+Macs
+Gaming PCs
+Software & Security 
+View Software & Security
+Windows
+macOS
+Windows 10 End of Life
+Antivirus
+Cyber Security
+Components 
+View Components
+CPUs
+GPUs
+Storage
+Nvidia
+Intel
+Internet 
+View Internet
+Websites & Apps
+Wi-Fi & Broadband
+Social Media
+Wordle
+Tablets 
+View Tablets
+eReaders
+iPad
+VR & AR
+Peripherals 
+View Peripherals
+Monitors
+Keyboards
+Webcams
+Mice
+Popular Computing Brands 
+Dell
+HP
+Lenovo
+Acer
+More from Computing 
+Computing Reviews
+Computing Buying Guides
+Computing Deals
+Computing Coupons
+Computing News
+AI
+View AI
+AI Platforms & Assistants
+OpenAI
+ChatGPT
+Gemini
+Apple Intelligence
+Claude
+Streaming
+View Streaming
+Entertainment
+Netflix
+Prime Video
+Disney+
+Apple TV
+HBO Max
+Hulu
+Paramount+
+How to Watch
+Streaming coupons
+TVs
+View TVs
+TV Insights 
+TV Reviews
+TV Buying Guides
+TV Deals
+TV News
+TVs & home theater coupons
+TV size finder
+More for your TV 
+Home Theatre
+Soundbars
+Streaming Devices
+Projectors
+Blu-ray
+Fitness
+View Fitness
+Fitness 
+Smartwatches
+Fitness Trackers
+Exercise Equipment
+Fitness Headphones
+Fitness Apps
+Smart Rings
+Watch Brands 
+Apple Watch
+Fitbit
+Garmin
+Google Pixel Watch
+Samsung Galaxy Watch
+Wellbeing 
+Sleep
+Oral Health
+More from Fitness 
+Fitness News
+Fitness Reviews
+Fitness Buying Guides
+Fitness Deals
+Fitness coupons
+VPN
+View VPN
+VPN Services
+VPN Security
+ExpressVPN
+NordVPN
+Cameras
+View Cameras
+Camera Types 
+Mirrorless
+DSLRs
+Compact
+Action
+Video
+Drones
+360 Cameras
+Dash Cams
+Camera Brands 
+Canon
+DJI
+Fujifilm
+Nikon
+GoPro
+Insta360
+More from Cameras 
+Camera Accessories
+Camera Lenses
+Camera Reviews
+Camera Buying Guides
+Camera Deals
+Camera News
+Photography
+Camera coupons
+Audio
+View Audio
+Headphones 
+View Headphones
+Earbuds & AirPods
+Wireless Headphones
+Speakers 
+View Speakers
+Wireless Speakers
+Sonos
+Hi-Fi 
+View Hi-Fi
+Turntables
+Portable Players
+DACs
+Audio Streaming 
+View Audio Streaming
+Spotify
+Apple Music
+More from Audio 
+Audio News
+Audio Reviews
+Audio Buying Guides
+Audio Deals
+Audio coupons
+EVs
+Home
+View Home
+Smart Home 
+View Smart Home
+Home Security
+Smart Speakers
+Smart Lights
+Smart Scales
+Smart Thermostats
+Amazon Echo
+Small Appliances 
+View Small Appliances
+Air Fryers
+Air Quality
+Coffee Machines
+Hair Care
+Vacuums
+Robot Vacuums
+Home Brands 
+Dyson
+Philips Hue
+Ring
+Shark
+Ninja
+More from Home 
+Home Reviews
+Home Buying Guides
+Home Deals
+Home News
+Mattress coupons
+Home & appliances coupons
+Browse
+View Browse
+By Type 
+News
+Best
+Reviews
+Deals
+Versus
+How To
+Opinion
+Coupons
+Collections
+Popular Brands 
+Samsung
+Sony
+Microsoft
+Apple
+ Sign up for breaking news, reviews, opinion, top tech deals, and more.
+ Contact me with news and offers from other Future brands 
+ Receive email from us on behalf of our trusted partners or sponsors 
+ By submitting your information you agree to the Terms & Conditions and Privacy Policy and are aged 16 or over. 
+ svg]:max-h-[var(--modal-logo-height,40px)] h-[var(--modal-logo-height,40px)] [&>svg]:w-auto [&>svg]:h-full my-4">
+ Get daily insight, inspiration and deals in your inbox
+ Sign up for breaking news, reviews, opinion, top tech deals, and more.
+ Become a Member in Seconds
+ Unlock instant access to exclusive member features.
+Contact me with news and offers from other Future brands
+Receive email from us on behalf of our trusted partners or sponsors
+ a]:underline font-article-copy">
+By submitting your information you agree to the Terms & Conditions and Privacy Policy and are aged 16 or over.
+ You are now subscribed
+ Your newsletter sign-up was successful
+ Join the club
+ Get full access to premium articles, exclusive features and a growing list of member rewards.
+ Explore 
+ An account already exists for this email address, please log in.
+ Trending Black Friday 
+ Best Black Friday deals 
+ Black Friday streaming deals 
+ Amazon Black Friday deals 
+ Best laptops 
+ Best VPN 
+ TV size finder 
+ NYT Wordle today 
+ TechRadar app 
+ Audio 
+ Audio Streaming 
+ Spotify 
+ Spotify takes its first major step in tackling AI slop — now artists can review and approve what music appears on their profile
+News
+By
+ Rowan Davies 
+Published
+24 March 2026
+ Here's Spotify's new artist protection system
+ a]:text-inherit [&>a]:underline">
+When you purchase through links on our site, we may earn an affiliate commission. Here’s how it works .
+ (Image credit: Future / Spotify / iOS app store) 
+ {alert('Link copied')}).catch(err => {console.error('Failed to copy: ', err)})" data-platform="copy_link" data-action="" class="font-ui-heading py-2 text-sm text-neutral-700 hover:bg-neutral-100 transition-colors no-underline block cursor-pointer border-0 bg-transparent w-full text-left normal-case" aria-label="Copy link" role="menuitem" data-analytics-id="article-social" analytics-label="utility-bar-social-share-copy-link" analytics-name="utility-bar-secondary" data-mrf-recirculation="article-social">
+Copy link
+Facebook
+X
+Whatsapp
+Reddit
+Pinterest
+Flipboard
+Threads
+Email
+Instagram
+ Share this article 
+ 0 
+ Join the conversation 
+Follow us
+ Add us as a preferred source on Google 
+Newsletter
+ Subscribe to our newsletter 
+ Spotify has announced a new music approval system called Artist Profile Protection 
+ It allows artists to approve or decline music releases before they appear on their profile 
+ The new system aims to prevent fraudulent streams and AI impersonation 
+ Spotify has had its fair share of scrutiny from loyal, yet frustrated subscribers who are tired of AI-generated music plaguing Discover Weekly and Release Radar — and now the music streaming platform is taking its first big step in conquering this with a ‘first-of-its-kind solution’.
+ Rolling out in beta today (March 24), Spotify has announced Artist Profile Protection, a new opt-in system that puts artists in direct control over what new music appears under their name and profile. Essentially, it’s an approval stage that allows artists to review eligible music releases before they're uploaded to Spotify, shielding them from AI impersonation and ensuring that listeners are streaming legitimate music.
+ (Image credit: Spotify) “Music has been landing on the wrong artist pages across streaming services, and the rise of easy-to-produce AI tracks has made the problem worse,” says Spotify in its announcement. “That’s not the experience we want artists to have on Spotify, and that’s why we’ve made protecting artist identity a top priority for 2026”.
+ Latest Videos From TechRadar 
+ Watch full video here: 
+ Though Spotify has encouraged subscribers and artists to use its reporting resources to flag AI-generated music , this marks the first time where the company gives the artist an active role in preventing AI fraud as well as avoiding common mix-ups in the release process. It follows Apple Music’s ‘Transparency Tags’ announcement, a system that leaves the responsibility of disclosing AI music to labels and distributors, which doesn’t necessarily guarantee 100% transparency. In the case of Spotify, it works slightly differently.
+ How Artist Profile Protection works 
+ (Image credit: Spotify) If a musician enables Artist Profile Protection in the Spotify For Artists settings (Artist Team Admins and Editors have the ability to manage this), they’ll receive an email notification when music is sent to Spotify in their name. This is when they can review music and choose whether to approve or decline its release.
+ You may like
+ YouTube Music and Deezer reveal plans to stem tidal wave of AI music 
+ Tidal announces full ban on AI-generated music from December 
+ No, AI music isn't taking over the world, as new Qobuz data proves — in fact, barely anyone's listening to fake music 
+ If an artist approves, it will be uploaded as normal, contributing to artist stats and recommendations for listeners. If declined or no action is taken, it won’t appear on your profile, but it may still go live on other platforms besides Spotify. With that in mind, Spotify recommends notifying the distributor. However, there’s a way for artists to bypass this process.
+ When the feature is enabled, artists will be given what Spotify is calling an ‘artist key’, which is essentially a unique code musicians can share with trusted music distributors. So, when music is delivered to Spotify with the artist key attached, the release will automatically be approved. The company goes into further detail on Artist Profile Protection functions on the Spotify For Artists page .
+ Get daily insight, inspiration and deals in your inbox
+ Sign up for breaking news, reviews, opinion, top tech deals, and more.
+ Contact me with news and offers from other Future brands 
+ Receive email from us on behalf of our trusted partners or sponsors 
+ By submitting your information you agree to the Terms & Conditions and Privacy Policy and are aged 16 or over. 
+ Tightening the screws 
+ (Image credit: Spotify / iOS app store) Until now, it’s been easy for fraudsters to upload AI-generated music to Spotify to impersonate bigger artists and steal royalties through streams. While Artist Profile Protection doesn’t necessarily remove AI-generated music from the platform altogether, it tightens the screws on the approval process and is a step towards preventing the increase of AI fraud.
+ The main difference between Spotify's approach and Apple Music 's system is that, although Team Admins and Editors manage Artist Protection Profile, musicians still have a say in what music is released. And though it's technically an opt-in system, even if an artist enables the feature and never uses it, music still won't be released unless it gets approved, so there's an added layer of protection.
+ These factors aside, the system also aims to rebuild trust with listeners, allowing them to stream their favorite artists with confidence that the music is legitimate. Additionally, it ensures that only artist-approved music appears in your recommendations, such as Discover Weekly and Release Radar, which, as we've seen with a handful of viewers , is where most of the AI slop is occurring.
+ Follow TechRadar on Google News and add us as a preferred source to get our expert news, reviews, and opinion in your feeds. Make sure to click the Follow button! 
+ And of course, you can also follow TechRadar on YouTube and TikTok for news, reviews, unboxings in video form, and get regular updates from us on WhatsApp too 
+ TOPICS
+AI
+Rowan Davies
+Social Links Navigation
+ Editorial Associate 
+ Rowan is an Editorial Associate and Apprentice Writer for TechRadar. A recent addition to the news team, he is involved in generating stories for topics that spread across TechRadar's categories. His interests in audio tech and knowledge in entertainment culture help bring the latest updates in tech news to our readers. 
+ Please follow our community guidelines .
+" data-join-the-conversation-text="Join the Conversation">
+ View More 
+ You must confirm your public display name before commenting
+ Please logout and then login again, you will then be prompted to enter your display name.
+Logout
+ Read more
+ Audio Streaming 
+ YouTube Music and Deezer reveal plans to stem tidal wave of AI music 
+ Audio Streaming 
+ Tidal announces full ban on AI-generated music from December 
+ Audio Streaming 
+ No, AI music isn't taking over the world, as new Qobuz data proves — in fact, barely anyone's listening to fake music 
+ Spotify 
+ Spotify adds feature to exclude kids' music from recommendations and Wrapped 
+ Spotify 
+ Here are the biggest Spotify updates of the year so far 
+ Spotify 
+ Spotify's Taste Profile tool is now available in beta for US Premium subscribers 
+ Latest in Spotify
+ Spotify 
+ Spotify was down for many — here's what we know about the outage 
+ Spotify 
+ Some United Airlines flights now let you sign into Spotify on your flight — and it's totally free 
+ Spotify 
+ Spotify's AI remix feature is tipped for February, but could cost you extra 
+ Spotify 
+ Spotify implements new QR code verification for Premium Family plan members 
+ Spotify 
+ Spotifast offers a speedier Spotify experience for Windows, macOS, and Linux 
+ Spotify 
+ Spotify to offer audiobooks in 180 markets and 120 languages — but what about a music-only UI? 
+ Latest in News
+ VPN Services 
+ Urban VPN under legal scrutiny over claims it harvested users' private AI prompts 
+ AI Platforms & Assistants 
+ Meta's Muse is now in your Instagram DMs 
+ GPU 
+ Nvidia is rumored to be cutting GPU supply by up to 30% 
+ Gaming 
+ Unofficial GTA 6 PC ports are speeding ahead, with Chapter 1 now playable 
+ Security 
+ Rackspace forced to shut down Spot cloud platform following security breach 
+ VPN Services 
+ Firefox 161 upgrades its free built-in VPN with custom per-site rules — but only on desktop 
+LATEST ARTICLES
+ 1
+Best Black Friday home office & small business deals 2026: Live coverage
+ 2
+The latest ESA mission to Mercury was nearly derailed by a last-minute 'software issue'
+ 3
+Best Black Friday home office & small business deals 2026: Live coverage
+ 4
+'Sell compute because we can’t compete': Elon Musk warns renting out SpaceX's compute might be more profitable than developing new AI capabilities
+ 5
+NYT Strands hints and answers for Thursday, November 26 (game #998)
+ Useful links
+ Best VPN 
+ Best Free VPN 
+ Best Web Hosting Service 
+ Best Website Builder 
+ Best Laptops 
+ Best Gaming Laptops 
+ Best Gaming PC 
+ Best PC Gaming Chair 
+ Best Phone 
+ Best TV 
+ Best Oled TVs 
+ Best Smartwatch 
+ Best Turntables 
+ Best Noise Cancelling Headphones 
+ Best Wireless Earbuds 
+ Best Office Chairs 
+ Best Camera 
+ Best Dash Cam 
+ Best Drones 
+ Best Robot Vacuums 
+TechRadar is part of Future US Inc, an international media group and leading digital publisher. Visit our corporate site .
+ Add as a preferred source on Google 
+ About Us 
+ Contact Future's experts 
+ Contact Us 
+ Terms and conditions 
+ Privacy policy 
+ Cookies policy 
+ Advertise with us 
+ Web notifications 
+ Accessibility Statement 
+ Careers 
+ ©
+Future US, Inc. Full 7th Floor, 130 West 42nd Street,
+New York,
+NY 10036. 
+ US edition for content related to your region.","homepageLink":"https:\/\/www.techradar.com"},{"locale":"MX","translatedText":"\"Parece que est\u00e1s en M\u00e9xico. Entra en la Edici\u00f3n M\u00e9xico de TechRadar para acceder a los contenidos de tu regi\u00f3n.\" ","homepageLink":"https:\/\/global.techradar.com\/es-mx"},{"locale":"SG","translatedText":"Looks like you're in SG! Visit TechRadar's edition for content related to your region.","homepageLink":"https:\/\/www.techradar.com\/sg"},{"locale":"DK","translatedText":"Det ser ud som om du er i Danmark! Visit TechRadar's edition for at se indhold fra din egen region.","homepageLink":"https:\/\/global.techradar.com\/da-dk"},{"locale":"FI","translatedText":"Sijaintisi n\u00e4ytt\u00e4isi olevan Suomi. P\u00e4\u00e4set lukemaan paikallisia sis\u00e4lt\u00f6j\u00e4 siirtym\u00e4ll\u00e4 sivulle TechRadar's .","homepageLink":"https:\/\/global.techradar.com\/fi-fi"},{"locale":"NO","translatedText":"Det ser ut som om du befinner deg i Norge! Bes\u00f8k TechRadar's edition for mer lokalt innhold.","homepageLink":"https:\/\/global.techradar.com\/no-no"},{"locale":"SE","translatedText":"Det verkar som om du \u00e4r i Sverige! Bes\u00f6k TechRadar f\u00f6r att l\u00e4sa inneh\u00e5ll fr\u00e5n din region.","homepageLink":"https:\/\/global.techradar.com\/sv-se"},{"locale":"GB","translatedText":"Looks like you're in the UK! Visit TechRadar's UK edition for content related to your region.","homepageLink":"https:\/\/www.techradar.com\/uk"},{"locale":"IT","translatedText":"Sembra che tu sia in Italia! Visita TechRadar italia per gli articoli del tuo Paese.","homepageLink":"https:\/\/global.techradar.com\/it-it"},{"locale":"NL","translatedText":"Het lijkt erop dat je in Nederland bent! Bezoek TechRadars versie voor content over je regio.","homepageLink":"https:\/\/global.techradar.com\/nl-nl"},{"locale":"BE","translatedText":"Het lijkt erop dat je in Belgium bent! Bezoek TechRadars versie voor content over je regio.","homepageLink":"https:\/\/global.techradar.com\/nl-be"},{"locale":"FR","translatedText":"Il semblerait que vous \u00eates en France ! Visitez TechRadar's edition pour acc\u00e9der aux contenus de votre pays.","homepageLink":"https:\/\/global.techradar.com\/fr-fr"},{"locale":"DE","translatedText":"Bist du aus Deutschland? Dann besuche TechRadar's edition um News aus deiner Region zu lesen.","homepageLink":"https:\/\/global.techradar.com\/de-de"},{"locale":"ES","translatedText":"Parece que est\u00e1s en Espa\u00f1a! Visita TechRadar edition para ver contenido relacionado con tu regi\u00f3n.","homepageLink":"https:\/\/global.techradar.com\/es-es"},{"locale":"AU","translatedText":"Looks like you're in Australia! Visit TechRadar's Australian edition for content related to your region.","homepageLink":"https:\/\/www.techradar.com\/au"},{"locale":"NZ","translatedText":"Looks like you're in New Zealand! Visit TechRadar's edition for content related to your region.","homepageLink":"https:\/\/www.techradar.com\/nz"}]">
+ Close 
+Please login or signup to comment
+ Please wait...
+Login
+Sign Up

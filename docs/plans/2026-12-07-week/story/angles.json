@@ -1,5 +1,84 @@
 {
  "options": {
+  "mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5": [
+   {
+    "lens": "series",
+    "text": "iQIYI's short-form dramas reached the top of the domestic market in the same quarter its total revenue fell by a tenth. Leading a format and making more money from it turn out to be two separate scoreboards.",
+    "rests_on": "total revenue fell 10% to RMB6.01 billion"
+   },
+   {
+    "lens": "series",
+    "text": "The money question for anyone who writes or acts in short dramas: a platform that tops the market while its revenue shrinks has every reason to look for cheaper ways to fill the slate.",
+    "rests_on": "our short-form dramas claimed the No. 1 domestic market share for the first time on a quarterly basis"
+   },
+   {
+    "lens": "series",
+    "text": "Twenty-one AI-generated dramas is a release schedule, not a pilot. For working writers and performers, that is the number to set beside every human-made title on the same platform.",
+    "rests_on": "It released 21 AI-generated short-form dramas"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "iQIYI finally reached No. 1 in short-form drama in a quarter when its total revenue went down by a tenth. Coming top and shrinking turned out to be the same news.",
+    "rests_on": "total revenue fell 10% to RMB6.01 billion"
+   },
+   {
+    "lens": "funniest_true",
+    "text": "iQIYI's own short dramas made No. 1 \"for the first time on a quarterly basis\", and the wording makes clear the trophy only lasts three months.",
+    "rests_on": "our short-form dramas claimed the No. 1 domestic market share for the first time on a quarterly basis"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The line the company chose to celebrate in its results was a number one ranking in the shortest kind of show it makes.",
+    "rests_on": "our short-form dramas claimed the No. 1 domestic market share for the first time on a quarterly basis"
+   },
+   {
+    "lens": "funny",
+    "text": "iQIYI's short dramas hit number one in the same quarter its total sales went down by a tenth.",
+    "rests_on": "total revenue fell 10% to RMB6.01 billion"
+   }
+  ],
+  "wed/f2338d52-9e3c-4aab-baf8-21f56829465c": [
+   {
+    "lens": "series",
+    "text": "How it works: in the stricter mode, a new release meant for your page waits until you say yes, so a stranger's track cannot simply land there under your name.",
+    "rests_on": "A stricter Block releases mode will hold a delivery until you approve it (which can take up to 24 hours)."
+   },
+   {
+    "lens": "series",
+    "text": "The protection comes with a cost of its own: your own release can sit waiting for up to a day.",
+    "rests_on": "which can take up to 24 hours"
+   },
+   {
+    "lens": "series",
+    "text": "The claim is protection for every artist on the platform. The evidence worth checking is whether the protection is switched on, since a mode you have to choose only protects the artists who choose it.",
+    "rests_on": "As of November 17th, 2026, Artist Profile Protection is now available for all artists on Spotify."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Spotify's new mode holds a release until the artist says yes, which can take up to 24 hours. That is the music industry discovering a doorbell.",
+    "rests_on": "A stricter Block releases mode will hold a delivery until you approve it (which can take up to 24 hours)."
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Every artist on Spotify can now stop strangers' songs turning up on their own page, so a feature that sounds like plain common sense finally has a launch date.",
+    "rests_on": "As of November 17th, 2026, Artist Profile Protection is now available for all artists on Spotify."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "In 2026 a musician has to switch on a setting to stop strangers' songs turning up on their own page, and the strict version of that setting can take a full day to say yes.",
+    "rests_on": "A stricter Block releases mode will hold a delivery until you approve it (which can take up to 24 hours)."
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Spotify had to announce, as news, that every artist may now keep other people's music off the page with their own name on it.",
+    "rests_on": "As of November 17th, 2026, Artist Profile Protection is now available for all artists on Spotify."
+   },
+   {
+    "lens": "funny",
+    "text": "The world's biggest music service now protects your name with the same thing that protects your parcels: an email you might not open.",
+    "rests_on": "As of November 17th, 2026, Artist Profile Protection is now available for all artists on Spotify."
+   }
+  ],
   "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed": [
    {
     "lens": "series",
@@ -257,33 +336,43 @@
   "fri/acb58370-aaca-4040-9c13-83f227a628ec": [
    {
     "lens": "series",
-    "text": "For all the noise about AI songs flooding streaming, the platform says listeners are barely playing them and playing them less.",
-    "rests_on": "Streams from AI-generated songs remain very low and with a declining trend."
+    "text": "Tencent Music says AI songs barely register with listeners, but it also says its own control measures are what keep them that way. A low share that the platform itself holds down tells you about the platform's filters, not only about what listeners want.",
+    "rests_on": "Pang said TME’s own proactive control measures had kept the share of plays of AI-generated songs on its platforms at a relatively low level."
    },
    {
     "lens": "series",
-    "text": "The same platform says what is growing is high-quality, differentiated music, which is its own reading of where the plays go.",
-    "rests_on": "high-quality, differentiated content continues to gain traction"
+    "text": "When a streaming service tells investors that AI tracks are negligible and 'differentiated content' is gaining, it is telling them what kind of catalogue it means to pay for.",
+    "rests_on": "AI content stream volume remains negligible with a declining share of listening, while high-quality differentiated content continues to gain traction"
+   },
+   {
+    "lens": "series",
+    "text": "The share of plays AI songs get on a platform depends partly on what the platform lets through, so 'negligible' can be a setting as much as a verdict from listeners.",
+    "rests_on": "TME’s own proactive control measures had kept the share of plays of AI-generated songs on its platforms at a relatively low level"
    },
    {
     "lens": "funniest_true",
-    "text": "A company that makes its money from streams describes AI songs' streams in the language of a kind rejection letter: very low, and declining.",
-    "rests_on": "Streams from AI-generated songs remain very low and with a declining trend."
+    "text": "A streaming giant spent part of its earnings call telling investors that a whole category of its catalogue is barely being listened to. For once, low engagement counts as the good news.",
+    "rests_on": "AI content stream volume remains negligible with a declining share of listening"
    },
    {
     "lens": "funniest_true",
-    "text": "The report sorts listening into two piles, 'negligible' and 'high-quality, differentiated', and leaves little doubt which pile it puts AI in.",
-    "rests_on": "AI content stream volumes remain negligible, with a declining share of listening, while high-quality, differentiated content continues to gain traction."
+    "text": "AI songs are a small share of plays partly because the platform has been actively keeping them small. That makes it less a vote by listeners and more a bouncer at the door.",
+    "rests_on": "TME’s own proactive control measures had kept the share of plays of AI-generated songs on its platforms at a relatively low level"
    },
    {
     "lens": "most_absurd_true",
-    "text": "All the argument about AI songs flooding streaming is over a share of listening the platform itself calls negligible, and shrinking.",
-    "rests_on": "AI content stream volumes remain negligible, with a declining share of listening"
+    "text": "One of China's biggest music services reported AI songs on its earnings call the way you would report a weed you are keeping on top of, and it said the number was negligible.",
+    "rests_on": "AI content stream volume remains negligible with a declining share of listening"
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The platform says its own proactive control measures keep AI songs' plays low, so the machine-made tracks are being managed like a crowd at the door.",
+    "rests_on": "TME’s own proactive control measures had kept the share of plays of AI-generated songs on its platforms at a relatively low level"
    },
    {
     "lens": "funny",
-    "text": "The machines can write a million songs a day, and the market's verdict, per its own earnings call, is negligible.",
-    "rests_on": "Music Business Worldwide, 17 Nov 2026: \"Streams from AI-generated songs remain very low and"
+    "text": "Tencent Music reports that almost nobody plays AI songs, in the same breath as saying it makes sure of that.",
+    "rests_on": "TME’s own proactive control measures had kept the share of plays of AI-generated songs on its platforms at a relatively low level"
    }
   ],
   "tue/nytphotoshop": [
@@ -924,6 +1013,8 @@
   ]
  },
  "obvious": [
+  "iQIYI released 21 AI-generated short dramas and took first place in China's short-drama market while its revenue fell 10%.",
+  "Spotify opened Artist Profile Protection to every artist, so they can review or block releases delivered under their name.",
   "Sonilo, an $11 million AI music start-up, will pay licence fees and a share of revenue to Symphonic's independent artists who opt in to train its model, and the rate is private.",
   "ElevenLabs, the AI voice company used by creators and dubbing studios, agreed to buy Japanese voice firm Kotoba for a reported $100 million, three months after a sale valued it at $22 billion.",
   "Kling, the AI video tool sold to filmmakers and creators, raised 19.8 billion yuan in October, and its owner's accounts book a yearly return on a promise to buy those investors out.",
@@ -1094,131 +1185,6 @@
     }
    }
   ],
-  "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed": [
-   {
-    "lens": "own",
-    "text": "Sonilo, an $11 million AI music start-up, will pay licence fees and a share of revenue to Symphonic's independent artists who opt in to train its model, and the rate is private.",
-    "rests_on": "Music Business Worldwide, 18 Nov 2026: Sonilo, \"$11m-backed\", signed with Symphonic so that \"rights holders and artists receive licensing fees and a share of revenue\"; the fee and split were not disclosed.",
-    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#8af89381e45b",
-    "judge": {
-     "originality": 0.0,
-     "usefulness": 2.5,
-     "specificity": 5.0,
-     "status": "rejected_gravity"
-    }
-   },
-   {
-    "lens": "series",
-    "text": "An $11m-backed AI start-up has promised indie rights holders licensing fees and a share of revenue for training on their recordings, and the one number an artist would want to see, the split, is the one nobody has published.",
-    "rests_on": "the fee and split were not disclosed",
-    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#25143c083971",
-    "judge": {
-     "originality": 2.5,
-     "usefulness": 7.5,
-     "specificity": 7.5,
-     "status": "rejected_gravity"
-    }
-   },
-   {
-    "lens": "series",
-    "text": "How the deal works: artists do not sell to Sonilo directly, Symphonic signs for them, and the payment comes in two parts, a licensing fee and a share of revenue.",
-    "rests_on": "signed with Symphonic so that \"rights holders and artists receive licensing fees and a share of revenue\"",
-    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#10cd9f45432a",
-    "judge": {
-     "originality": 2.5,
-     "usefulness": 5.0,
-     "specificity": 7.5,
-     "status": "rejected_gravity"
-    }
-   },
-   {
-    "lens": "funniest_true",
-    "text": "The deal exists so that rights holders and artists receive licensing fees and a share of revenue, and the two numbers an artist would most want from that sentence, the fee and the split, are the two nobody disclosed.",
-    "rests_on": "the fee and split were not disclosed",
-    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#7b4474d70657",
-    "judge": {
-     "originality": 2.5,
-     "usefulness": 5.0,
-     "specificity": 5.0,
-     "status": "accepted"
-    }
-   },
-   {
-    "lens": "most_absurd_true",
-    "text": "The whole point of the deal is that artists get licensing fees and a share of revenue, and the two numbers left out of the announcement are the fee and the share.",
-    "rests_on": "the fee and split were not disclosed",
-    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#a9aebe82b6c9",
-    "judge": {
-     "originality": 2.5,
-     "usefulness": 5.0,
-     "specificity": 5.0,
-     "status": "rejected_duplicate"
-    }
-   },
-   {
-    "lens": "most_absurd_true",
-    "text": "An $11m-backed startup can say exactly how much money it raised, but not how much the artists training its model will get.",
-    "rests_on": "$11m-backed",
-    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#69b945d7864c",
-    "judge": {
-     "originality": 7.5,
-     "usefulness": 7.5,
-     "specificity": 7.5,
-     "status": "accepted"
-    }
-   },
-   {
-    "lens": "funny",
-    "text": "An indie track can now be in more AI training deals than playlists.",
-    "rests_on": "Music Business Worldwide, 18 Nov 2026: Sonilo, \"$11m-backed\", signed with Symphonic so that \"rights",
-    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#6c4e758fd962",
-    "judge": {
-     "originality": 5.0,
-     "usefulness": 5.0,
-     "specificity": 2.5,
-     "status": "accepted"
-    }
-   },
-   {
-    "lens": "divergent",
-    "text": "Map the money onto a jukebox A jukebox has three structural properties. Money comes in per use. The machine owner and the venue split the takings. The operator decides which records are loaded. The angle assigns each role from the story: Sonilo owns the machine, Symphonic is the route records come in by, artists who opt in are the loaded records, and the fee and revenue share are the coins. Executives see who stands between the coin and the artist without reading a contract.",
-    "rests_on": null,
-    "run_id": "557759421",
-    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#3d2879414868",
-    "judge": {
-     "originality": 5.0,
-     "usefulness": 5.0,
-     "specificity": 7.5,
-     "status": "rejected_archive"
-    }
-   },
-   {
-    "lens": "divergent",
-    "text": "Your league or agency could run the opt-in Look at the one transaction and the contract shape is clear. A buyer signs with an intermediary, and individuals who opt in get a fee and a share. Leaders of talent agencies, sports leagues, photographer cooperatives and voice-actor rosters can copy that structure: offer members a pooled opt-in and bargain once as a group instead of one by one. The angle hands them the template the story shows, which is an opt-in, a fee and a revenue share, with no number attached.",
-    "rests_on": null,
-    "run_id": "557759421",
-    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#32e95f89f1e1",
-    "judge": {
-     "originality": 7.5,
-     "usefulness": 7.5,
-     "specificity": 7.5,
-     "status": "rejected_archive"
-    }
-   },
-   {
-    "lens": "divergent",
-    "text": "$11 million is not the pot Shrink the story to one transaction and the headline number moves out of it. \"$11m-backed\" describes the money investors gave Sonilo. It is not the licensing budget, and the report gives no deal size. The angle shows busy readers how to separate a company's funding from what it pays per deal, so they stop mentally dividing $11m by a number of artists. One clear graphic shows two boxes, \"money raised\" and \"money paid to rights holders\", with the second one blank.",
-    "rests_on": null,
-    "run_id": "557759421",
-    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#25714aed70dd",
-    "judge": {
-     "originality": 5.0,
-     "usefulness": 7.5,
-     "specificity": 7.5,
-     "status": "rejected_archive"
-    }
-   }
-  ],
   "mon/83f20f43-6b46-40a2-9a9b-1007cb10f9bb": [
    {
     "lens": "own",
@@ -1353,6 +1319,229 @@
      "usefulness": 7.5,
      "specificity": 5.0,
      "status": "rejected_archive"
+    }
+   }
+  ],
+  "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed": [
+   {
+    "lens": "own",
+    "text": "Sonilo, an $11 million AI music start-up, will pay licence fees and a share of revenue to Symphonic's independent artists who opt in to train its model, and the rate is private.",
+    "rests_on": "Music Business Worldwide, 18 Nov 2026: Sonilo, \"$11m-backed\", signed with Symphonic so that \"rights holders and artists receive licensing fees and a share of revenue\"; the fee and split were not disclosed.",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#8af89381e45b",
+    "judge": {
+     "originality": 0.0,
+     "usefulness": 2.5,
+     "specificity": 5.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "An $11m-backed AI start-up has promised indie rights holders licensing fees and a share of revenue for training on their recordings, and the one number an artist would want to see, the split, is the one nobody has published.",
+    "rests_on": "the fee and split were not disclosed",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#25143c083971",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 7.5,
+     "specificity": 7.5,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "How the deal works: artists do not sell to Sonilo directly, Symphonic signs for them, and the payment comes in two parts, a licensing fee and a share of revenue.",
+    "rests_on": "signed with Symphonic so that \"rights holders and artists receive licensing fees and a share of revenue\"",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#10cd9f45432a",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 5.0,
+     "specificity": 7.5,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "The deal exists so that rights holders and artists receive licensing fees and a share of revenue, and the two numbers an artist would most want from that sentence, the fee and the split, are the two nobody disclosed.",
+    "rests_on": "the fee and split were not disclosed",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#7b4474d70657",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 5.0,
+     "specificity": 5.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The whole point of the deal is that artists get licensing fees and a share of revenue, and the two numbers left out of the announcement are the fee and the share.",
+    "rests_on": "the fee and split were not disclosed",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#a9aebe82b6c9",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 5.0,
+     "specificity": 5.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "An $11m-backed startup can say exactly how much money it raised, but not how much the artists training its model will get.",
+    "rests_on": "$11m-backed",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#69b945d7864c",
+    "judge": {
+     "originality": 7.5,
+     "usefulness": 7.5,
+     "specificity": 7.5,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "An indie track can now be in more AI training deals than playlists.",
+    "rests_on": "Music Business Worldwide, 18 Nov 2026: Sonilo, \"$11m-backed\", signed with Symphonic so that \"rights",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#6c4e758fd962",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 5.0,
+     "specificity": 2.5,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "Map the money onto a jukebox A jukebox has three structural properties. Money comes in per use. The machine owner and the venue split the takings. The operator decides which records are loaded. The angle assigns each role from the story: Sonilo owns the machine, Symphonic is the route records come in by, artists who opt in are the loaded records, and the fee and revenue share are the coins. Executives see who stands between the coin and the artist without reading a contract.",
+    "rests_on": null,
+    "run_id": "557759421",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#3d2879414868",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 5.0,
+     "specificity": 7.5,
+     "status": "rejected_archive"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "Your league or agency could run the opt-in Look at the one transaction and the contract shape is clear. A buyer signs with an intermediary, and individuals who opt in get a fee and a share. Leaders of talent agencies, sports leagues, photographer cooperatives and voice-actor rosters can copy that structure: offer members a pooled opt-in and bargain once as a group instead of one by one. The angle hands them the template the story shows, which is an opt-in, a fee and a revenue share, with no number attached.",
+    "rests_on": null,
+    "run_id": "557759421",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#32e95f89f1e1",
+    "judge": {
+     "originality": 7.5,
+     "usefulness": 7.5,
+     "specificity": 7.5,
+     "status": "rejected_archive"
+    }
+   },
+   {
+    "lens": "divergent",
+    "text": "$11 million is not the pot Shrink the story to one transaction and the headline number moves out of it. \"$11m-backed\" describes the money investors gave Sonilo. It is not the licensing budget, and the report gives no deal size. The angle shows busy readers how to separate a company's funding from what it pays per deal, so they stop mentally dividing $11m by a number of artists. One clear graphic shows two boxes, \"money raised\" and \"money paid to rights holders\", with the second one blank.",
+    "rests_on": null,
+    "run_id": "557759421",
+    "id": "mon/2c443323-dc8c-4941-9608-04d6b3ec85ed#25714aed70dd",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 7.5,
+     "specificity": 7.5,
+     "status": "rejected_archive"
+    }
+   }
+  ],
+  "mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5": [
+   {
+    "lens": "own",
+    "text": "iQIYI released 21 AI-generated short dramas in one quarter and took first place in China's short-drama market, in the same results where its revenue fell 10% to RMB6.01 billion.",
+    "rests_on": "iQIYI, 16 Nov 2026: total revenue fell 10% to RMB6.01 billion, and \"our short-form dramas claimed the No. 1 domestic market share for the first time on a quarterly basis\"; VP Land: \"It released 21 AI-generated short-form dramas\"; iQIYI earnings call: \"content creators are incentivized to optimize content costs\".",
+    "id": "mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5#4f9e5a045d58",
+    "judge": {
+     "originality": 0.0,
+     "usefulness": 5.0,
+     "specificity": 7.5,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "iQIYI's short-form dramas reached the top of the domestic market in the same quarter its total revenue fell by a tenth. Leading a format and making more money from it turn out to be two separate scoreboards.",
+    "rests_on": "total revenue fell 10% to RMB6.01 billion",
+    "id": "mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5#62b7ecad8432",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 5.0,
+     "specificity": 5.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "The money question for anyone who writes or acts in short dramas: a platform that tops the market while its revenue shrinks has every reason to look for cheaper ways to fill the slate.",
+    "rests_on": "our short-form dramas claimed the No. 1 domestic market share for the first time on a quarterly basis",
+    "id": "mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5#7c13c6b15c63",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 7.5,
+     "specificity": 5.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Twenty-one AI-generated dramas is a release schedule, not a pilot. For working writers and performers, that is the number to set beside every human-made title on the same platform.",
+    "rests_on": "It released 21 AI-generated short-form dramas",
+    "id": "mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5#33a6d60ee39d",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 7.5,
+     "specificity": 5.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "iQIYI finally reached No. 1 in short-form drama in a quarter when its total revenue went down by a tenth. Coming top and shrinking turned out to be the same news.",
+    "rests_on": "total revenue fell 10% to RMB6.01 billion",
+    "id": "mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5#1aaadf6ca00b",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 5.0,
+     "specificity": 5.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "iQIYI's own short dramas made No. 1 \"for the first time on a quarterly basis\", and the wording makes clear the trophy only lasts three months.",
+    "rests_on": "our short-form dramas claimed the No. 1 domestic market share for the first time on a quarterly basis",
+    "id": "mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5#fc60bf9eeb97",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 2.5,
+     "specificity": 7.5,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The line the company chose to celebrate in its results was a number one ranking in the shortest kind of show it makes.",
+    "rests_on": "our short-form dramas claimed the No. 1 domestic market share for the first time on a quarterly basis",
+    "id": "mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5#c4fc1639bea3",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 2.5,
+     "specificity": 5.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "iQIYI's short dramas hit number one in the same quarter its total sales went down by a tenth.",
+    "rests_on": "total revenue fell 10% to RMB6.01 billion",
+    "id": "mon/9a2686e3-efc8-4532-a07f-d8904d0c2fd5#7c691ec4347a",
+    "judge": {
+     "originality": 0.0,
+     "usefulness": 2.5,
+     "specificity": 5.0,
+     "status": "rejected_gravity"
     }
    }
   ],
@@ -1508,13 +1697,13 @@
   "wed/41874364-fcd8-4fd1-b7e7-91aca6235019": [
    {
     "lens": "own",
-    "text": "Maxon Plus puts AI model generation inside Cinema 4D and ZBrush for 3D artists, run on other firms' models such as Tripo and Rodin, billed in credits.",
+    "text": "Maxon, the software company behind Cinema 4D and ZBrush, now sells AI model generation inside its apps, run on other firms' models such as Tripo and Rodin and billed in credits.",
     "rests_on": "Maxon: \"We work with third-party AI providers, such as Tripo and Rodin.\"; Creative Bloq, 23 Nov 2026: \"AI generation comes to Cinema 4D and ZBrush, but artists have an 'off' switch.\"",
-    "id": "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#455fce60eadc",
+    "id": "wed/41874364-fcd8-4fd1-b7e7-91aca6235019#5dbe5a498cf9",
     "judge": {
      "originality": 0.0,
-     "usefulness": 2.5,
-     "specificity": 5.0,
+     "usefulness": 5.0,
+     "specificity": 7.5,
      "status": "rejected_gravity"
     }
    },
@@ -1642,101 +1831,15 @@
     }
    }
   ],
-  "fri/acb58370-aaca-4040-9c13-83f227a628ec": [
-   {
-    "lens": "own",
-    "text": "Tencent Music, owner of China's biggest music apps, told investors that streams of AI-generated songs remain negligible and falling, while human, distinctive music gains.",
-    "rests_on": "Music Business Worldwide, 17 Nov 2026: \"Streams from AI-generated songs remain very low and with a declining trend.\"; Digital Music News: \"AI content stream volumes remain negligible, with a declining share of listening, while high-quality, differentiated content continues to gain traction.\"",
-    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#d817b98898ee",
-    "judge": {
-     "originality": 0.0,
-     "usefulness": 2.5,
-     "specificity": 5.0,
-     "status": "rejected_gravity"
-    }
-   },
-   {
-    "lens": "series",
-    "text": "For all the noise about AI songs flooding streaming, the platform says listeners are barely playing them and playing them less.",
-    "rests_on": "Streams from AI-generated songs remain very low and with a declining trend.",
-    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#1d4c8da22119",
-    "judge": {
-     "originality": 0.0,
-     "usefulness": 5.0,
-     "specificity": 2.5,
-     "status": "rejected_gravity"
-    }
-   },
-   {
-    "lens": "series",
-    "text": "The same platform says what is growing is high-quality, differentiated music, which is its own reading of where the plays go.",
-    "rests_on": "high-quality, differentiated content continues to gain traction",
-    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#5ef84555ee38",
-    "judge": {
-     "originality": 2.5,
-     "usefulness": 2.5,
-     "specificity": 2.5,
-     "status": "accepted"
-    }
-   },
-   {
-    "lens": "funniest_true",
-    "text": "A company that makes its money from streams describes AI songs' streams in the language of a kind rejection letter: very low, and declining.",
-    "rests_on": "Streams from AI-generated songs remain very low and with a declining trend.",
-    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#f072644c309f",
-    "judge": {
-     "originality": 5.0,
-     "usefulness": 5.0,
-     "specificity": 5.0,
-     "status": "rejected_gravity"
-    }
-   },
-   {
-    "lens": "funniest_true",
-    "text": "The report sorts listening into two piles, 'negligible' and 'high-quality, differentiated', and leaves little doubt which pile it puts AI in.",
-    "rests_on": "AI content stream volumes remain negligible, with a declining share of listening, while high-quality, differentiated content continues to gain traction.",
-    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#45c188701551",
-    "judge": {
-     "originality": 2.5,
-     "usefulness": 5.0,
-     "specificity": 5.0,
-     "status": "accepted"
-    }
-   },
-   {
-    "lens": "most_absurd_true",
-    "text": "All the argument about AI songs flooding streaming is over a share of listening the platform itself calls negligible, and shrinking.",
-    "rests_on": "AI content stream volumes remain negligible, with a declining share of listening",
-    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#a8f813de5bce",
-    "judge": {
-     "originality": 5.0,
-     "usefulness": 7.5,
-     "specificity": 5.0,
-     "status": "rejected_gravity"
-    }
-   },
-   {
-    "lens": "funny",
-    "text": "The machines can write a million songs a day, and the market's verdict, per its own earnings call, is negligible.",
-    "rests_on": "Music Business Worldwide, 17 Nov 2026: \"Streams from AI-generated songs remain very low and",
-    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#f7d09054e6ba",
-    "judge": {
-     "originality": 2.5,
-     "usefulness": 5.0,
-     "specificity": 5.0,
-     "status": "accepted"
-    }
-   }
-  ],
   "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c": [
    {
     "lens": "own",
-    "text": "Ottawa's animation festival director says some entrants are lying on their forms, marking AI films as 3D, as Manchester bans generative AI films from 2027.",
+    "text": "Manchester Animation Festival will bar generative AI films from 2027, as Ottawa's festival says entrants are lying on their forms, and festivals decide which animated films win distribution deals.",
     "rests_on": "Cartoon Brew, 20 Nov 2026: \"What bothers me is the animators clearly lying on their forms,” says Robinson.\"; Manchester Animation Festival: \"If any part of the final moving image has been generated or transformed by a generative audio, image or video model, it will be deemed ineligible\".",
-    "id": "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#21ce67289cc5",
+    "id": "fri/c1bd8406-c267-426e-b586-d76e1ef68e5c#2da75e9efa70",
     "judge": {
-     "originality": 0.0,
-     "usefulness": 2.5,
+     "originality": 2.5,
+     "usefulness": 5.0,
      "specificity": 5.0,
      "status": "rejected_gravity"
     }
@@ -1990,6 +2093,116 @@
     }
    }
   ],
+  "fri/acb58370-aaca-4040-9c13-83f227a628ec": [
+   {
+    "lens": "own",
+    "text": "Tencent Music, owner of QQ Music, Kugou and Kuwo, told investors on 17 November that streams of AI content are negligible because listeners are more selective, while its chairman also said its own controls keep AI plays low.",
+    "rests_on": "Tencent Music earnings call, 17 Nov 2026: \"AI content stream volume remains negligible with a declining share of listening, while high-quality differentiated content continues to gain traction\"; Music Business Worldwide: \"Pang said TME’s own proactive control measures had kept the share of plays of AI-generated songs on its platforms at a relatively low level.\"",
+    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#43facb845d2b",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 7.5,
+     "specificity": 10.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Tencent Music says AI songs barely register with listeners, but it also says its own control measures are what keep them that way. A low share that the platform itself holds down tells you about the platform's filters, not only about what listeners want.",
+    "rests_on": "Pang said TME’s own proactive control measures had kept the share of plays of AI-generated songs on its platforms at a relatively low level.",
+    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#f626a21ad5c8",
+    "judge": {
+     "originality": 7.5,
+     "usefulness": 7.5,
+     "specificity": 7.5,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "When a streaming service tells investors that AI tracks are negligible and 'differentiated content' is gaining, it is telling them what kind of catalogue it means to pay for.",
+    "rests_on": "AI content stream volume remains negligible with a declining share of listening, while high-quality differentiated content continues to gain traction",
+    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#54e7aee227c3",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 7.5,
+     "specificity": 5.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "The share of plays AI songs get on a platform depends partly on what the platform lets through, so 'negligible' can be a setting as much as a verdict from listeners.",
+    "rests_on": "TME’s own proactive control measures had kept the share of plays of AI-generated songs on its platforms at a relatively low level",
+    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#7ee375859e68",
+    "judge": {
+     "originality": 7.5,
+     "usefulness": 7.5,
+     "specificity": 2.5,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "A streaming giant spent part of its earnings call telling investors that a whole category of its catalogue is barely being listened to. For once, low engagement counts as the good news.",
+    "rests_on": "AI content stream volume remains negligible with a declining share of listening",
+    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#5a2b069a32f8",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 5.0,
+     "specificity": 2.5,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "AI songs are a small share of plays partly because the platform has been actively keeping them small. That makes it less a vote by listeners and more a bouncer at the door.",
+    "rests_on": "TME’s own proactive control measures had kept the share of plays of AI-generated songs on its platforms at a relatively low level",
+    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#d2bdad17bf0b",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 5.0,
+     "specificity": 2.5,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "One of China's biggest music services reported AI songs on its earnings call the way you would report a weed you are keeping on top of, and it said the number was negligible.",
+    "rests_on": "AI content stream volume remains negligible with a declining share of listening",
+    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#b93928c712f4",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 5.0,
+     "specificity": 5.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "The platform says its own proactive control measures keep AI songs' plays low, so the machine-made tracks are being managed like a crowd at the door.",
+    "rests_on": "TME’s own proactive control measures had kept the share of plays of AI-generated songs on its platforms at a relatively low level",
+    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#5dd2adbd6a2e",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 5.0,
+     "specificity": 5.0,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "Tencent Music reports that almost nobody plays AI songs, in the same breath as saying it makes sure of that.",
+    "rests_on": "TME’s own proactive control measures had kept the share of plays of AI-generated songs on its platforms at a relatively low level",
+    "id": "fri/acb58370-aaca-4040-9c13-83f227a628ec#a8be4b3031fc",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 5.0,
+     "specificity": 5.0,
+     "status": "rejected_gravity"
+    }
+   }
+  ],
   "tue/nytphotoshop": [
    {
     "lens": "own",
@@ -2073,80 +2286,6 @@
      "usefulness": 5.0,
      "specificity": 5.0,
      "status": "rejected_gravity"
-    }
-   }
-  ],
-  "tue/logicdrums": [
-   {
-    "lens": "own",
-    "text": "The list of kit pieces ends with Other, which every drummer knows is the cowbell.",
-    "rests_on": "Apple, 18 Nov 2026: \"Choose the Drums (Individual Kit Pieces) preset in Stem Splitter to extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion.\"",
-    "id": "tue/logicdrums#a13361d75819",
-    "judge": {
-     "originality": 5.0,
-     "usefulness": 2.5,
-     "specificity": 5.0,
-     "status": "rejected_duplicate"
-    }
-   },
-   {
-    "lens": "series",
-    "text": "Apple's Stem Splitter can now pull a recorded drum kit apart into kick, snare, hi-hat, toms and cymbals, from a single mixed region.",
-    "rests_on": "extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion",
-    "id": "tue/logicdrums#b491abb3bcfb",
-    "judge": {
-     "originality": 0.0,
-     "usefulness": 5.0,
-     "specificity": 7.5,
-     "status": "rejected_gravity"
-    }
-   },
-   {
-    "lens": "funniest_true",
-    "text": "Stem Splitter now pulls the kit apart piece by piece, kick, snare, hi-hat, toms, cymbals, and then 'other drums and percussion', where the tambourine still shares a track with everything else.",
-    "rests_on": "extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion.",
-    "id": "tue/logicdrums#7a3eba76f681",
-    "judge": {
-     "originality": 5.0,
-     "usefulness": 5.0,
-     "specificity": 7.5,
-     "status": "rejected_gravity"
-    }
-   },
-   {
-    "lens": "funniest_true",
-    "text": "A drummer's kit can now be taken apart into its pieces without anyone touching a drum key.",
-    "rests_on": "Choose the Drums (Individual Kit Pieces) preset in Stem Splitter",
-    "id": "tue/logicdrums#486d4fe7d9c0",
-    "judge": {
-     "originality": 2.5,
-     "usefulness": 2.5,
-     "specificity": 2.5,
-     "status": "accepted"
-    }
-   },
-   {
-    "lens": "most_absurd_true",
-    "text": "Stem Splitter can now take a drum kit apart piece by piece, kick to cymbals, and files everything it cannot name under \"other drums and percussion\".",
-    "rests_on": "kick, snare, hi-hat, toms, cymbals, and other drums and percussion",
-    "id": "tue/logicdrums#c01593e65326",
-    "judge": {
-     "originality": 2.5,
-     "usefulness": 5.0,
-     "specificity": 7.5,
-     "status": "rejected_gravity"
-    }
-   },
-   {
-    "lens": "funny",
-    "text": "The list of kit pieces ends with Other, which every drummer knows is the cowbell.",
-    "rests_on": "Apple, 18 Nov 2026: \"Choose the Drums (Individual Kit Pieces) preset in Stem Splitter",
-    "id": "tue/logicdrums#a8f6612ed9ba",
-    "judge": {
-     "originality": 5.0,
-     "usefulness": 2.5,
-     "specificity": 5.0,
-     "status": "rejected_duplicate"
     }
    }
   ],
@@ -2286,6 +2425,80 @@
     }
    }
   ],
+  "tue/logicdrums": [
+   {
+    "lens": "own",
+    "text": "The list of kit pieces ends with Other, which every drummer knows is the cowbell.",
+    "rests_on": "Apple, 18 Nov 2026: \"Choose the Drums (Individual Kit Pieces) preset in Stem Splitter to extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion.\"",
+    "id": "tue/logicdrums#a13361d75819",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 2.5,
+     "specificity": 5.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "series",
+    "text": "Apple's Stem Splitter can now pull a recorded drum kit apart into kick, snare, hi-hat, toms and cymbals, from a single mixed region.",
+    "rests_on": "extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion",
+    "id": "tue/logicdrums#b491abb3bcfb",
+    "judge": {
+     "originality": 0.0,
+     "usefulness": 5.0,
+     "specificity": 7.5,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "Stem Splitter now pulls the kit apart piece by piece, kick, snare, hi-hat, toms, cymbals, and then 'other drums and percussion', where the tambourine still shares a track with everything else.",
+    "rests_on": "extract only the drum kit pieces from an audio region: kick, snare, hi-hat, toms, cymbals, and other drums and percussion.",
+    "id": "tue/logicdrums#7a3eba76f681",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 5.0,
+     "specificity": 7.5,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "A drummer's kit can now be taken apart into its pieces without anyone touching a drum key.",
+    "rests_on": "Choose the Drums (Individual Kit Pieces) preset in Stem Splitter",
+    "id": "tue/logicdrums#486d4fe7d9c0",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 2.5,
+     "specificity": 2.5,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "Stem Splitter can now take a drum kit apart piece by piece, kick to cymbals, and files everything it cannot name under \"other drums and percussion\".",
+    "rests_on": "kick, snare, hi-hat, toms, cymbals, and other drums and percussion",
+    "id": "tue/logicdrums#c01593e65326",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 5.0,
+     "specificity": 7.5,
+     "status": "rejected_gravity"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "The list of kit pieces ends with Other, which every drummer knows is the cowbell.",
+    "rests_on": "Apple, 18 Nov 2026: \"Choose the Drums (Individual Kit Pieces) preset in Stem Splitter",
+    "id": "tue/logicdrums#a8f6612ed9ba",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 2.5,
+     "specificity": 5.0,
+     "status": "rejected_duplicate"
+    }
+   }
+  ],
   "tue/mychannel": [
    {
     "lens": "own",
@@ -2353,6 +2566,9 @@
     "rests_on": "Google might be planning to build a completely AI-generated TV channel in which your likeness is the main character",
     "id": "tue/mychannel#8f98fae0720d",
     "judge": {
+     "originality": 2.5,
+     "usefulness": 2.5,
+     "specificity": 2.5,
      "status": "accepted"
     }
    },
@@ -2977,56 +3193,6 @@
     }
    }
   ],
-  "thu/tplthanksgiving": [
-   {
-    "lens": "own",
-    "text": "The hand-made short film gets to the festival the way football teams win on Thanksgiving: three seconds left.",
-    "rests_on": null,
-    "id": "thu/tplthanksgiving#9ac3e6fc6044",
-    "judge": {
-     "originality": 2.5,
-     "usefulness": 0.0,
-     "specificity": 0.0,
-     "status": "rejected_duplicate"
-    }
-   },
-   {
-    "lens": "funniest_true",
-    "text": "One end zone, two benches: one becomes a pile, the other a row of stares.",
-    "rests_on": "the whole team piles on while the other bench stares",
-    "id": "thu/tplthanksgiving#3df8dcda3fe4",
-    "judge": {
-     "originality": 2.5,
-     "usefulness": 2.5,
-     "specificity": 5.0,
-     "status": "accepted"
-    }
-   },
-   {
-    "lens": "most_absurd_true",
-    "text": "One end of the field is a pile of bodies; the other is a bench standing perfectly still, staring.",
-    "rests_on": "the whole team piles on while the other bench stares",
-    "id": "thu/tplthanksgiving#82823b62bcee",
-    "judge": {
-     "originality": 5.0,
-     "usefulness": 2.5,
-     "specificity": 5.0,
-     "status": "rejected_duplicate"
-    }
-   },
-   {
-    "lens": "funny",
-    "text": "The hand-made short film gets to the festival the way football teams win on Thanksgiving: three seconds left.",
-    "rests_on": "Trailing with the clock almost gone, the quarterback finds his receiver in the end",
-    "id": "thu/tplthanksgiving#5c757cf4ee80",
-    "judge": {
-     "originality": 2.5,
-     "usefulness": 0.0,
-     "specificity": 0.0,
-     "status": "rejected_duplicate"
-    }
-   }
-  ],
   "thu/tplassemble": [
    {
     "lens": "own",
@@ -3186,6 +3352,56 @@
      "usefulness": 2.5,
      "specificity": 2.5,
      "status": "rejected_gravity"
+    }
+   }
+  ],
+  "thu/tplthanksgiving": [
+   {
+    "lens": "own",
+    "text": "The hand-made short film gets to the festival the way football teams win on Thanksgiving: three seconds left.",
+    "rests_on": null,
+    "id": "thu/tplthanksgiving#9ac3e6fc6044",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 0.0,
+     "specificity": 0.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funniest_true",
+    "text": "One end zone, two benches: one becomes a pile, the other a row of stares.",
+    "rests_on": "the whole team piles on while the other bench stares",
+    "id": "thu/tplthanksgiving#3df8dcda3fe4",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 2.5,
+     "specificity": 5.0,
+     "status": "accepted"
+    }
+   },
+   {
+    "lens": "most_absurd_true",
+    "text": "One end of the field is a pile of bodies; the other is a bench standing perfectly still, staring.",
+    "rests_on": "the whole team piles on while the other bench stares",
+    "id": "thu/tplthanksgiving#82823b62bcee",
+    "judge": {
+     "originality": 5.0,
+     "usefulness": 2.5,
+     "specificity": 5.0,
+     "status": "rejected_duplicate"
+    }
+   },
+   {
+    "lens": "funny",
+    "text": "The hand-made short film gets to the festival the way football teams win on Thanksgiving: three seconds left.",
+    "rests_on": "Trailing with the clock almost gone, the quarterback finds his receiver in the end",
+    "id": "thu/tplthanksgiving#5c757cf4ee80",
+    "judge": {
+     "originality": 2.5,
+     "usefulness": 0.0,
+     "specificity": 0.0,
+     "status": "rejected_duplicate"
     }
    }
   ],
@@ -3741,5 +3957,5 @@
   ]
  },
  "unread": [],
- "at": "2026-11-28T11:32:42+00:00"
+ "at": "2026-11-28T14:15:30+00:00"
 }

@@ -1,0 +1,9 @@
+{
+  "https://techcrunch.com/2026/11/17/spotifys-new-tool-aims-to-stop-deepfakes-from-being-attributed-to-real-artists/": {"unreadable": "Cloudflare refused the fetch; only a summary came back"},
+  "https://digitaltrends.com/home-theater/spotifys-new-tool-gives-every-artist-a-way-to-keep-someone-elses-music-off-their-page": {"file": "f233-digitaltrends.txt"},
+  "https://www.musicbusinessworldwide.com/amid-rise-of-ai-deepfakes-spotify-to-let-artists-vet-releases-before-they-appear-on-their-profiles": {"file": "f233-mbw-beta.txt"},
+  "https://www.techradar.com/audio/spotify/spotify-takes-its-first-major-step-in-tackling-ai-slop-now-artists-can-review-and-approve-what-music-appears-on-their-profile": {"file": "f233-techradar-beta.txt"},
+  "https://support.spotify.com/se/artists/article/artist-profile-protection/": {"file": "f233-spotify-support-se.txt"},
+  "https://support.spotify.com/us/artists/article/artist-profile-protection/": {"file": "f233-spotify-support-us.txt"},
+  "https://artists.spotify.com/en/blog/introducing-artist-profile-protection": {"file": "f233-spotify-blog.txt"}
+}

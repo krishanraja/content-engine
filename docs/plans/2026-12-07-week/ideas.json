@@ -1,5 +1,5 @@
 {
- "_about": "The ideas board for the week of 7 December 2026, steps 1 to 7 of plan-week, run in a Claude Code session on 27 November 2026 (Krish asked for it in the session; the Sunday ideas workflow had failed its gate five runs running). Researched with web search and web fetch; the turn's shared web-search budget ran out part-way, so later research read outlet and vendor pages directly. Drive and Firecrawl were not used, so the Cold Ideas & Inspo folder was not read. Reddit could not be read for the meme templates (HTTP 403 from r/MemeTemplatesOfficial and r/memes), and Apify was not run (no paid run without his approval of that run). Stale sheet: the Instagram inspo sheet's newest row is 2026-11-16, more than 3 days before 2026-11-27; the patterns lean on older posts.",
+ "_about": "The ideas board for the week of 7 December 2026, steps 1 to 7 of plan-week, run in a Claude Code session on 27 November 2026 (Krish asked for it in the session; the Sunday ideas workflow had failed its gate five runs running). Researched with web search and web fetch; the turn's shared web-search budget ran out part-way, so later research read outlet and vendor pages directly. Drive and Firecrawl were not used, so the Cold Ideas & Inspo folder was not read. Reddit could not be read for the meme templates (HTTP 403 from r/MemeTemplatesOfficial and r/memes), and Apify was not run (no paid run without his approval of that run). Stale sheet: the Instagram inspo sheet's newest row is 2026-11-16, more than 3 days before 2026-11-27; the patterns lean on older posts. Monday, Wednesday and Friday made again on 28 November 2026 by the Sunday ideas workflow (days mon,wed,fri), researched with web search and web fetch only; Drive and Firecrawl were not connected, so the Cold Ideas & Inspo folder was not read. Stale sheet: the Instagram inspo sheet's newest row is 2026-11-16, more than 3 days before 2026-11-28; the patterns lean on older posts.",
  "week_start": "2026-12-07",
  "checked_on": "2026-11-27",
  "days": {
@@ -84,12 +84,12 @@
      "type": "hero_mon",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-28T11:36:41+00:00",
+     "at": "2026-11-28T14:17:14+00:00",
      "humour_unread": true,
      "close_call": "close call, your pick"
     },
     "lens": {
-     "subject": "business",
+     "subject": "both",
      "who": "ElevenLabs",
      "under_the_hood": "An AI voice company is buying a whole language's speech model instead of training one, which puts a price on dubbing work in that language."
     }
@@ -165,25 +165,25 @@
       "status": "accepted",
       "divergent": true,
       "text_hash": "a3c5c6e6d0272b0a",
-      "at": "2026-11-28T11:36:49Z"
+      "at": "2026-11-28T14:17:59Z"
      }
     },
     "story_score": {
-     "total": 73.4,
+     "total": 74.9,
      "axes": {
       "unique_angle": 7.5,
       "absurdity_humour": null,
       "whys": 8,
-      "scale": 6.0,
-      "fun_consume": 5.0,
+      "scale": 7.0,
+      "fun_consume": 4.0,
       "fit": 10,
       "named_thing": 10,
-      "fun_produce": 5.0
+      "fun_produce": 7.0
      },
      "type": "wildcard",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-28T11:36:41+00:00",
+     "at": "2026-11-28T14:17:14+00:00",
      "humour_unread": true,
      "close_call": "close call, your pick"
     },
@@ -258,27 +258,119 @@
      "our_take": "The post showed one man paying people to sign up; we show a start-up paying songwriters, and the box that decides it."
     },
     "story_score": {
-     "total": 71.6,
+     "total": 68.0,
      "axes": {
       "whys": 8,
-      "scale": 5.0,
+      "scale": 4.0,
       "unique_angle": 7.5,
       "absurdity_humour": null,
-      "fun_consume": 6.0,
-      "fun_produce": 6.0,
+      "fun_consume": 4.0,
+      "fun_produce": 7.0,
       "fit": 10,
       "named_thing": 10
      },
      "type": "hero_mon",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-28T11:36:41+00:00",
+     "at": "2026-11-28T14:17:14+00:00",
      "humour_unread": true
     },
     "lens": {
-     "subject": "business",
+     "subject": "both",
      "who": "Symphonic",
      "under_the_hood": "A music distributor is turning its catalogue into licensed AI training data, paid as a fee plus a revenue share at a rate nobody has published."
+    }
+   },
+   {
+    "id": "9a2686e3-efc8-4532-a07f-d8904d0c2fd5",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "Chinese streamer iQIYI pays the studios that make its short dramas a share of what viewers watch instead of a fixed fee, and in the quarter it released 21 AI-made ones it took first place while its revenue fell, so any producer selling drama to a streamer knows who now carries the cost of making it.",
+    "story": "In its third-quarter 2026 results on 16 November, Chinese streamer iQIYI said its short-form TV dramas took the number one domestic market share for the first time, while total revenue fell 10% to RMB6.01 billion. VP Land reports it released 21 AI-generated short-form dramas. On its earnings call, iQIYI said its revenue-sharing model moves content costs from fixed investment to payouts tied to viewing, so the studios that make the shows are pushed to cut their own costs.",
+    "why_now": "iQIYI third-quarter 2026 results and earnings call, 16 Nov 2026.",
+    "fact": "iQIYI, 16 Nov 2026: total revenue fell 10% to RMB6.01 billion, and \"our short-form dramas claimed the No. 1 domestic market share for the first time on a quarterly basis\"; VP Land: \"It released 21 AI-generated short-form dramas\"; iQIYI earnings call: \"content creators are incentivized to optimize content costs\".",
+    "source": {
+     "label": "iQIYI third-quarter 2026 results, SEC filing (16 Nov 2026)",
+     "url": "https://www.sec.gov/Archives/edgar/data/1722608/000119312526462100/d123902dex991.htm",
+     "kind": "original"
+    },
+    "sources": [
+     {
+      "label": "VP Land, 21 AI short dramas (16 Nov 2026)",
+      "url": "https://www.vp-land.com/stories/chinese-streaming-platform-iqiyi-releases-21-ai-short-dramas-and-takes-top-domestic-short"
+     },
+     {
+      "label": "iQIYI third-quarter 2026 earnings call transcript (16 Nov 2026)",
+      "url": "https://www.webull.com/news/15935549021406208"
+     }
+    ],
+    "first_reported": "https://www.sec.gov/Archives/edgar/data/1722608/000119312526462100/d123902dex991.htm",
+    "beats": [
+     "A streamer tops its short-drama chart in the quarter its sales shrink.",
+     "How iQIYI pays for a show: a share of what viewers watch, not a fixed fee.",
+     "Why that pushes the studio, not the streamer, to cut the cost.",
+     "Where AI comes in: 21 AI-generated dramas in one quarter.",
+     "What this shows about who carries the cost of a minute of TV."
+    ],
+    "pitch": {
+     "question": "If a streamer only pays for what people watch, who pays for the show to be made?",
+     "headline": "iQIYI made 21 AI dramas and won its short-drama market. Its sales still fell 10%.",
+     "hook": "iQIYI released 21 AI-generated short dramas in one quarter and took first place in China's short-drama market, in the same results where its revenue fell 10% to RMB6.01 billion.",
+     "examples": [
+      "21 AI-generated short dramas in one quarter.",
+      "First place in domestic short-drama share, for the first time.",
+      "Total revenue down 10%, to RMB6.01 billion."
+     ],
+     "chain": [
+      "A streamer used to buy a show for a fixed price.",
+      "iQIYI now pays many makers a share of what viewers watch.",
+      "So the risk of a flop moves to the studio.",
+      "So the studio has every reason to make each show for less.",
+      "AI-generated dramas are one way to make them for less.",
+      "The streamer tops the chart while its own sales shrink."
+     ],
+     "take": "What this shows is that a pay-per-view deal quietly hands the cost of making TV to the people who make it. If you were paid only when people watched, what would you stop paying for?"
+    },
+    "style": {
+     "script": "follow-the-receipt",
+     "production": "data-story",
+     "experiment": {
+      "format": "receipt-animation",
+      "why": "Draw two receipts for one short drama: the old fixed fee paid by the streamer, and the new one where the studio pays up front and is paid back per view."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If a streamer only pays for what people watch, who pays for the show to be made? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 16 November to 7 December 2026 on: iQIYI's AI-generated short dramas, its revenue-sharing terms with the studios that make them, their production costs and how the short-drama share and total revenue moved. Work through the 5 Whys, starting from the plain question: Why 1 asks who pays, and why the price moved. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "Revenue sharing turns a streamer's fixed content bill into payouts tied to viewing, so the studios carry the cost and turn to AI-generated dramas to cut it.",
+    "aim": "interest",
+    "funny": "iQIYI's short dramas hit number one in the same quarter its total sales went down by a tenth.",
+    "lookalike": {
+     "pattern": "money-twist",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfeWM7jADvK/",
+     "our_take": "The post followed one man paying villagers; we follow one streamer's bill for a minute of TV, and who it stops paying."
+    },
+    "lens": {
+     "subject": "both",
+     "who": "iQIYI",
+     "under_the_hood": "Revenue sharing moves the cost of making each drama from the streamer to the studio, which then uses AI generation to make it for less."
+    },
+    "story_score": {
+     "total": 67.7,
+     "axes": {
+      "whys": 9,
+      "scale": 7.0,
+      "unique_angle": 0.0,
+      "absurdity_humour": null,
+      "fun_consume": 7.0,
+      "fun_produce": 7.0,
+      "fit": 10,
+      "named_thing": 10
+     },
+     "type": "hero_mon",
+     "floors_failed": [],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-28T14:17:14+00:00",
+     "humour_unread": true
     }
    }
   ],
@@ -358,18 +450,18 @@
       "status": "accepted",
       "divergent": true,
       "text_hash": "3021aa0bb0a199c1",
-      "at": "2026-11-28T11:36:49Z"
+      "at": "2026-11-28T14:17:59Z"
      }
     },
     "recommended": true,
     "story_score": {
-     "total": 80.6,
+     "total": 85.6,
      "axes": {
       "unique_angle": 6.72,
       "absurdity_humour": null,
       "whys": 9,
-      "scale": 8.0,
-      "fun_consume": 8.0,
+      "scale": 10.0,
+      "fun_consume": 10.0,
       "fit": 10,
       "named_thing": 10,
       "fun_produce": 7.0
@@ -377,7 +469,7 @@
      "type": "wildcard",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-28T11:36:41+00:00",
+     "at": "2026-11-28T14:17:14+00:00",
      "humour_unread": true,
      "thin_week": "a thin week: only two options passed every floor after a second gather"
     },
@@ -392,7 +484,7 @@
     "source_kind": "engine",
     "source_tag": "trade_press",
     "so_what": "3D artists using Cinema 4D and ZBrush now get AI model generation inside their apps, but the models come from other firms and the credits expire monthly, so any studio budgeting for it knows what it is actually paying for.",
-    "story": "Maxon, the company behind Cinema 4D and ZBrush, which 3D studios and artists use, launched Maxon Plus in November 2026, a cloud subscription whose Model Generator turns a prompt, photo or sketch into an editable 3D model. The work runs on third-party AI providers such as Tripo and Rodin, and is sold in credits.",
+    "story": "Maxon, maker of Cinema 4D and ZBrush, which 3D studios and artists use, launched Maxon Plus in November 2026, a cloud subscription whose Model Generator turns a prompt, photo or sketch into an editable 3D model. The work runs on third-party AI providers such as Tripo and Rodin, and is sold in credits.",
     "why_now": "Creative Bloq, 23 Nov 2026.",
     "fact": "Maxon: \"We work with third-party AI providers, such as Tripo and Rodin.\"; Creative Bloq, 23 Nov 2026: \"AI generation comes to Cinema 4D and ZBrush, but artists have an 'off' switch.\"",
     "source": {
@@ -452,26 +544,26 @@
      "our_take": "The post sold a new tool; we show whose tool is really underneath a famous 3D app."
     },
     "story_score": {
-     "total": 57.7,
+     "total": 55.2,
      "axes": {
       "whys": 8,
-      "scale": 5.0,
+      "scale": 4.0,
       "unique_angle": 0.0,
       "absurdity_humour": null,
-      "fun_consume": 5.0,
-      "fun_produce": 6.0,
+      "fun_consume": 4.0,
+      "fun_produce": 7.0,
       "fit": 10,
       "named_thing": 10
      },
      "type": "hero_wed",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-28T11:36:41+00:00",
+     "at": "2026-11-28T14:17:14+00:00",
      "humour_unread": true,
      "thin_week": "a thin week: only two options passed every floor after a second gather"
     },
     "lens": {
-     "subject": "business",
+     "subject": "both",
      "who": "Maxon",
      "under_the_hood": "Maxon resells other firms' AI models inside its own software, billed in credits that expire monthly, so it is a reseller as much as a maker."
     }
@@ -543,28 +635,26 @@
      "our_take": "The post explained a rule; we show the box people tick to get round it."
     },
     "story_score": {
-     "total": 70.1,
+     "total": 78.2,
      "axes": {
       "whys": 8,
-      "scale": 5.0,
+      "scale": 7.0,
       "unique_angle": 7.5,
       "absurdity_humour": null,
       "fun_consume": 7.0,
-      "fun_produce": 6.0,
-      "fit": 7,
+      "fun_produce": 7.0,
+      "fit": 10,
       "named_thing": 10
      },
      "type": "hero_fri",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-28T11:36:41+00:00",
-     "humour_unread": true,
-     "close_call": "close call, your pick",
-     "thin_week": "a thin week: only two options passed every floor after a second gather"
+     "at": "2026-11-28T14:17:14+00:00",
+     "humour_unread": true
     },
     "recommended": true,
     "lens": {
-     "subject": "business",
+     "subject": "both",
      "who": "Manchester Animation Festival",
      "under_the_hood": "Festivals that decide awards and distribution are moving from trusting entry forms to banning AI outright, because self-declaration has stopped working."
     }
@@ -644,33 +734,123 @@
       "status": "accepted",
       "divergent": true,
       "text_hash": "fa7f24d5c2c5f640",
-      "at": "2026-11-28T11:36:49Z"
+      "at": "2026-11-28T14:17:59Z"
      }
     },
     "story_score": {
-     "total": 68.1,
+     "total": 72.1,
      "axes": {
       "unique_angle": 5.62,
       "absurdity_humour": null,
       "whys": 8,
       "scale": 4.0,
-      "fun_consume": 8.0,
+      "fun_consume": 10.0,
       "fit": 7,
       "named_thing": 10,
-      "fun_produce": 8.0
+      "fun_produce": 10.0
      },
      "type": "wildcard",
      "floors_failed": [],
      "rubric_version": "story-score/1",
-     "at": "2026-11-28T11:36:41+00:00",
-     "humour_unread": true,
-     "close_call": "close call, your pick",
-     "thin_week": "a thin week: only two options passed every floor after a second gather"
+     "at": "2026-11-28T14:17:14+00:00",
+     "humour_unread": true
     },
     "lens": {
      "subject": "business",
      "who": "Nicalis",
      "under_the_hood": "Steam's AI label rests on the developer's own tick, and here the music files' metadata disclosed what the store page did not."
+    }
+   },
+   {
+    "id": "acb58370-aaca-4040-9c13-83f227a628ec",
+    "source_kind": "engine",
+    "source_tag": "trade_press",
+    "so_what": "China's biggest music company told investors that listeners are choosing not to play AI songs, but its own chairman also said its own controls keep those plays low, so every artist and label hearing that AI music does not sell knows the number was partly set by the platform.",
+    "story": "On its third-quarter 2026 earnings call on 17 November, Tencent Music Entertainment, owner of the QQ Music, Kugou and Kuwo music apps, said streams of AI-generated content remain negligible and falling because users are becoming more selective. Music Business Worldwide reports that in his original Chinese remarks, executive chairman Cussion Pang also said the company's own proactive control measures had kept the share of plays of AI-generated songs at a relatively low level. No figure was given.",
+    "why_now": "Tencent Music third-quarter 2026 earnings call, 17 Nov 2026.",
+    "fact": "Tencent Music earnings call, 17 Nov 2026: \"AI content stream volume remains negligible with a declining share of listening, while high-quality differentiated content continues to gain traction\"; Music Business Worldwide: \"Pang said TME’s own proactive control measures had kept the share of plays of AI-generated songs on its platforms at a relatively low level.\"",
+    "source": {
+     "label": "Music Business Worldwide, Tencent Music on AI streams (17 Nov 2026)",
+     "url": "https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/",
+     "kind": "report"
+    },
+    "sources": [
+     {
+      "label": "Digital Music News, Tencent Music on AI music (17 Nov 2026)",
+      "url": "https://www.digitalmusicnews.com/2026/11/17/tencent-music-ai-consumption-comments/"
+     },
+     {
+      "label": "The Motley Fool, Tencent Music Q3 2026 earnings call transcript (17 Nov 2026)",
+      "url": "https://www.fool.com/earnings/call-transcripts/2026/11/17/tencent-music-tme-q3-2026-earnings-call-transcript/"
+     }
+    ],
+    "first_reported": "https://www.musicbusinessworldwide.com/tencent-music-says-ai-content-streams-are-negligible-as-it-takes-legal-action-over-ai-infringement/",
+    "beats": [
+     "China's biggest music apps say almost nobody plays AI songs.",
+     "The reason they gave investors: listeners have become choosier.",
+     "The other reason, in the chairman's Chinese remarks: their own controls.",
+     "What a number with no number behind it can and cannot tell you.",
+     "What this shows about who decides what an AI song is worth."
+    ],
+    "pitch": {
+     "question": "If a music app says nobody plays AI songs, how much of that is listeners choosing and how much is the app choosing for them?",
+     "headline": "Tencent Music says almost nobody plays AI songs. It also says it keeps it that way.",
+     "hook": "Tencent Music, owner of QQ Music, Kugou and Kuwo, told investors on 17 November that streams of AI content are negligible because listeners are more selective, while its chairman also said its own controls keep AI plays low.",
+     "examples": [
+      "Owner of QQ Music, Kugou and Kuwo.",
+      "AI streams 'negligible, with a declining share of listening'.",
+      "Its own 'proactive control measures' keep AI plays low, and no figure was given."
+     ],
+     "chain": [
+      "AI makes songs cheap to supply.",
+      "A music app decides which songs it shows and recommends.",
+      "Tencent Music says it actively controls AI songs.",
+      "So fewer AI songs reach listeners' screens.",
+      "So fewer get played.",
+      "The low number is then read as listeners' verdict."
+     ],
+     "take": "What this shows is that a platform's figure for what listeners want also measures what the platform let them see. How would you tell the two apart?"
+    },
+    "style": {
+     "script": "random-headline",
+     "production": "data-story",
+     "experiment": {
+      "format": "everyday-debate",
+      "why": "A label boss and a bedroom producer argue over the chart, each holding the same earnings quote."
+     }
+    },
+    "research_prompt": "Act as a research analyst for a publication read by people who make the calls or make the work in music, film, games, publishing, art, media and sport. Plain question: If a music app says nobody plays AI songs, how much of that is listeners choosing and how much is the app choosing for them? Find, from primary sources first (the organisation's own pages, filings, official announcements, the outlet that first reported it), the newest dated facts from 13 November to 7 December 2026 on: Tencent Music's comments on AI-generated streams, its filtering and legal action, its revenue and what other music platforms report about AI listening. Work through the 5 Whys, starting from the plain question: Why 1 asks where the claim and the reality part. For each Why give one answer backed by two primary sources on different domains, each with its URL, its publication date and a short verbatim quote. Give the strongest counter-evidence for each Why, or say \"none found\" and the scope you searched. Stop where the evidence runs out and say why; never pad to five. End on what the evidence shows and one open question for the reader. No forecasts, odds, scores or dated calls. Every claim comes with its source and its date.",
+    "shape": "story",
+    "dive": "A platform that filters AI songs then reports their low share of plays as listener choice, so the figure measures its own controls as well as taste.",
+    "aim": "interest",
+    "funny": "Tencent Music reports that almost nobody plays AI songs, in the same breath as saying it makes sure of that.",
+    "lookalike": {
+     "pattern": "ai-backfires",
+     "beats": "https://www.instagram.com/evolving.ai/p/DfXRaXyAHbr/",
+     "our_take": "The post showed AI doing something unexpected; we show a platform grading a test it also sets."
+    },
+    "lens": {
+     "subject": "business",
+     "who": "Tencent Music",
+     "under_the_hood": "The music app's own controls limit how often AI songs are played, and its earnings call then reads the low share as listeners' choice."
+    },
+    "story_score": {
+     "total": 65.0,
+     "axes": {
+      "whys": 9,
+      "scale": 7.0,
+      "unique_angle": 0.0,
+      "absurdity_humour": null,
+      "fun_consume": 7.0,
+      "fun_produce": 4.0,
+      "fit": 10,
+      "named_thing": 10
+     },
+     "type": "hero_fri",
+     "floors_failed": [],
+     "rubric_version": "story-score/1",
+     "at": "2026-11-28T14:17:14+00:00",
+     "humour_unread": true
     }
    }
   ]
@@ -4352,8 +4532,14 @@
    {
     "ref": "fri-3",
     "verdict": "new",
-    "of": "piece:8c6c717d-00b4-4d26-b837-06b89709220a",
-    "why": "Tencent Music's results on AI streams falling is listening data from earnings; no recent post covered who listens to AI music."
+    "of": "off-thu-tidalpurge",
+    "why": "Tencent Music's 17 November earnings-call claim that AI streams are negligible, partly because of its own controls, is a different company and event from Tidal deleting AI tracks that nobody played (fresh reader, 28 Nov 2026)."
+   },
+   {
+    "ref": "mon-4",
+    "verdict": "new",
+    "of": "off-thu-facefee",
+    "why": "iQIYI's third-quarter results, its 21 AI short dramas and its revenue-share payments to studios are a different company and event from the microdrama face-licensing story (fresh reader, 28 Nov 2026)."
    },
    {
     "ref": "off-tue-nytphotoshop",

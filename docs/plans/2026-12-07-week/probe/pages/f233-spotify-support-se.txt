@@ -1,0 +1,267 @@
+Skydda din artistprofil på Spotify - Spotify 
+ Börja skriva i sökrutan och välj sedan ett alternativ från listan med hjälp av tabbtangenten. 
+ Hem 
+ Hantera din musik 
+ Skydda din artistprofil på Spotify
+ Hittar du inte vad du letar efter? 
+ Skydda din artistprofil på Spotify
+ Med Skydd för artistprofiler blir du meddelad när musik levereras till din artistprofil, och du kan ta bort dig själv från felaktiga releaser.
+ Med Skydd för artistprofiler kan du:
+ Få aviseringar när releaser med ditt namn levereras till Spotify
+ Granska och ta bort dig själv från berättigade releaser innan de visas på din profil – eller upp till 28 dagar efteråt
+ Se till att bara rätt releaser visas på din profil och räknas med i din statistik och dina lyssnarrekommendationer
+ Om du inte vidtar åtgärder med en release släpps den som planerat med dig angiven som artist.
+ Obs! Om du har tackat ja till Blockera releaser (i Avancerade inställningar) måste du godkänna releaser för att se till att de släpps i tid.
+ Slå på Skydd för artistprofiler 
+ För: Artistteam‑admins och -redigerare 
+ På datorn: öppna användarmenyn från din avatar och välj sedan Skydd för artistprofiler för att aktivera det.
+ I mobilappen: gå till sidan Musik och navigera till fliken Granska.
+ Standardinställningen är Granska releaser .
+ Din nuvarande inställning för Skydd för artistprofiler visas i kolumnen Status :
+ Granska innebär att releaser släpps om du inte tar bort dig själv
+ Blockera innebär att releaser behöver ditt godkännande för att släppas med dig angiven som artist
+ Granska releaser 
+ Med Granska releaser kan du granska nya releaser som levereras till Spotify där du anges som artist och ta bort dig själv från berättigade releaser som inte är dina.
+ Gå till Musik > Granska på datorn eller i mobilappen.
+ Använd För granskning och Borttagna för att hitta releaser som väntar på granskning eller releaser som du redan har tagit bort dig själv från.
+ Releaser kan lista dig som:
+ Huvudartist
+ Gästartist
+ Remixare
+ Kompositör, orkester eller dirigent för klassiska releaser
+ Skådespelare
+ För att ta bort dig själv från en release som inte är din väljer du Ta bort bredvid releasen.
+ Om du inte vidtar åtgärder släpps releasen som planerat med dig angiven som artist. Du har upp till 28 dagar på dig att vidta åtgärder efter att releasen har släppts.
+ Blockera releaser (Avancerade inställningar) 
+ Vissa artister har tillgång till Blockera releaser under Avancerade inställningar . Med den här inställningen behöver releaser ditt godkännande innan de kan ange dig som artist. Vi testar Blockera releaser med en begränsad grupp artister, så den här inställningen kanske inte är tillgänglig för dig just nu.
+ Obs! Om du använder Blockera releaser kan du när som helst byta till Granska releaser :
+ Gå till Skydd för artistprofiler från användarmenyn och stäng av det.
+ Slå på Skydd för artistprofiler igen och välj standardinställningen Granska releaser .
+ Den här inställningen passar bäst för artister som befinner sig i situationer där det finns risk för att releaser kopplas till fel artist – till exempel artister med vanliga artistnamn eller som ofta drabbas av felmatchningar – och som känner sig bekväma med att aktivt hantera sin katalog.
+ Godkänna releaser 
+ Gå till Musik > Granska på datorn eller i mobilappen.
+ Filtrera dina releaser genom att använda Alla , Godkända , Behöver godkännande och Avvisade .
+ Du har upp till 28 dagar på dig att vidta åtgärder efter att en release har släppts. Om du inte godkänner en release som behöver godkännas kommer du inte att anges som artist på den, och den kanske inte släpps i tid.
+ Det kan ta upp till 24 timmar att bearbeta godkännanden.
+ Releaser visas som:
+ Behöver godkännande när du behöver godkänna dem
+ Förhandsgodkända när de levereras med din artistnyckel
+ När du godkänner en release visas den på din profil och bidrar till din statistik och dina lyssnarrekommendationer.
+ När du avböjer en release kommer den inte att ange dig som artist, visas på din profil eller bidra till din statistik eller dina lyssnarrekommendationer.
+ Om du behöver vidta ytterligare åtgärder efter att ha avböjt en release kan du rapportera musik som har blandats ihop med en annan artist eller rapportera olagligt innehåll på Spotify .
+ Om du behöver ångra ett godkännande eller ett avvisande kan du kontakta oss .
+ Du behöver inte avvisa en release på grund av andra problem, som en felaktig roll, ett stavfel eller ett felaktigt omslag. Ta reda på hur du åtgärdar problem med din musik. 
+ Använda din artistnyckel 
+ Obs! Artistnycklar är endast tillgängliga när du använder inställningen Blockera releaser.
+ Din artistnyckel är en unik kod som gör att betrodda distributörer kan leverera förhandsgodkända releaser till din skyddade artistprofil så att legitima releaser kan släppas utan manuellt godkännande.
+ Du hittar din artistnyckel på sidan Skydd för artistprofiler i Spotify for Artists när Blockera releaser är aktiverat.
+ Dela bara din artistnyckel med distributörer som du litar på. Dela den inte offentligt. Om du tror att någon som inte borde ha din artistnyckel har den ska du kontakta oss för att uppdatera den.
+ Releaser som skickats med din gamla nyckel och som inte är live än kan behöva godkännas manuellt i Godkännanden .
+ Gästartister och remixare 
+ Om du är gästartist eller remixare på en release godkänner du den för att den ska släppas med dig angiven som artist.
+ Om du inte godkänner eller tar bort den via Skydd för artistprofiler kan releasen ändå släppas utan dig.
+ Obs! Om huvudartisten för releasen använder Blockera releaser måste hen godkänna releasen innan den kan släppas på Spotify för någon av de listade artisterna.
+ Godkännanden som följer med
+ Om du flyttar din musik mellan distributörer behöver du kanske inte godkänna releaser som innehåller låtar som redan är publicerade på din artistprofil.
+ När de här releaserna levereras till Spotify kontrollerar vi att de matchar din befintliga musik. Om de godkänns i våra kontroller publiceras de automatiskt utan att vi meddelar dig eller ber dig granska dem.
+ Kontrollera din innehållsleverantör 
+ Din innehållsleverantör är det företag som levererar din musik till Spotify, till exempel ett skivbolag, en distributör eller en leveransplattform.
+ Att kontrollera leverantören kan hjälpa dig att bekräfta om en release är legitim. Leverantörsnamnet i Spotify for Artists kan skilja sig från det företagsnamn du vanligtvis arbetar med.
+ Om du inte känner igen en leverantör:
+ Bekräfta att releasen kom från en leverantör som du känner igen
+ Stäm av med din distributör innan du godkänner releasen
+ Obs! Det kan hända att releaser från vissa leverantörer inte kan tas bort eller godkännas. Artistnycklar kanske inte heller fungerar med alla leverantörer.
+ Relaterade artiklar
+ Lägga upp musik på Spotify 
+ Osläppt musik i Spotify for Artists 
+ Finns inte musiken tillgänglig live på utgivningsdatumet? 
+ Kontrollera musikstatus på Spotify 
+ Var den här artikeln till hjälp? Ja
+ Nej
+ Komma igång 
+ Lägga upp musik på Spotify 
+ Skapa en artistprofil på Spotify 
+ Få åtkomst till Spotify for Artists 
+ Kan inte logga in 
+ Uppdateringar av bockmarkeringen för verifiering 
+ Hantera din artistprofil 
+ Royalties 
+ Behörighet för att tjäna pengar på spår 
+ Lägg upp din podd på Spotify 
+ Teamhantering 
+ Åtkomst och inloggning 
+ Få åtkomst till Spotify for Artists 
+ Kan inte logga in 
+ Bjuda in teammedlemmar till Spotify for Artists 
+ Konfigurera tvåfaktorautentisering för Spotify for Artists 
+ Ändra konfigurationen av din tvåfaktorautentisering för Spotify for Artists 
+ Problem med att logga in på Spotify for Artists med tvåfaktorautentisering 
+ Gå med i ett annat artist- eller musikbolagsteam i Spotify for Artists 
+ Åtkomstnivåer i Spotify for Artists 
+ Ta bort teammedlemmar från Spotify for Artists 
+ Musikbolagsteam i Spotify for Artists 
+ Dina inställningar 
+ Ange faktureringsland i Spotify for Artists 
+ Hitta kvitton för visningskampanjer 
+ Verifiering av personliga konton 
+ Ändra e-postadress till arbetet 
+ Ändra språk 
+ Se din artistkatalog och dina releaser 
+ Musikbolagsteam saknar artister eller releaser 
+ Meddelandeinställningar 
+ Ställa in faktureringskontakt under en grupp-e-postadress 
+ Hantera inställningarna för artistannonser 
+ Notiscenter i Spotify for Artists 
+ Artistprofil 
+ Rekommenderat 
+ Skicka in dina artistmeddelanden för 2026 Wrapped 
+ Skapa en artistprofil på Spotify 
+ Hantera dina artistbilder på Spotify 
+ Publicera merch från Shopify på Spotify 
+ Lägga till konserter på Spotify 
+ Verifierad av Spotify 
+ Uppdateringar av bockmarkeringen för verifiering 
+ Märket AI-persona på Spotify 
+ Lägga upp artistspellistor i din profil 
+ Bilder och videor 
+ Skicka in dina artistmeddelanden för 2026 Wrapped 
+ Musikvideor på Spotify 
+ Rättigheter och tillstånd för att publicera musikvideor 
+ Hantera dina artistbilder på Spotify 
+ Krav för omslagsbilder 
+ Riktlinjer för artistbilder 
+ Countdown videos 
+ Ladda upp videor i Spotify for Artists 
+ Konserter 
+ Lägga till konserter på Spotify 
+ Konserter saknas på Spotify 
+ Merch 
+ Anslut din Shopify‑butik till Spotify for Artists 
+ Publicera merch från Shopify på Spotify 
+ Fästa och tagga merch i din Spotify-profil 
+ Riktlinjer för merch 
+ Fästa artiklar, spellistor och bios 
+ Lägga upp artistspellistor i din profil 
+ SongDNA 
+ Stöd från fansen 
+ Hantera Artisten rekommenderar 
+ Lägga till en bio i din artistprofil på Spotify 
+ Lägga till länkar till sociala medier i din artistprofil på Spotify 
+ Skaffa en Stöd från fansen‑länk 
+ Artistinformation 
+ Om låten 
+ AI‑upphovspersoner på Spotify 
+ Stöd från fansen-policy 
+ Poddar i din artistprofil 
+ Hantera din musik 
+ Rekommenderat 
+ Lägga upp musik på Spotify 
+ Låttext 
+ Musik som blandats ihop med en annan artists musik 
+ Lägga till en Canvas 
+ Åtgärda problem med musikmetadata 
+ Så här ändrar du ditt artistnamn 
+ Skydda din artistprofil på Spotify 
+ Laddar upp musik 
+ Lägga upp musik på Spotify 
+ Skapa en artistprofil på Spotify 
+ Osläppt musik i Spotify for Artists 
+ Getting started with Countdown Pages on Spotify 
+ Ladda upp musik igen 
+ Lägg upp din podd på Spotify 
+ Finns inte musiken tillgänglig live på utgivningsdatumet? 
+ Förbjudet innehåll 
+ Samlingsalbum 
+ Så här åtgärdar du problem med din musik 
+ Musik som blandats ihop med en annan artists musik 
+ Så här hittar du dina artist‑, spår‑ och release‑URL:er 
+ Åtgärda problem med musikmetadata 
+ Så här ändrar du ditt artistnamn 
+ Riktlinjer för musikmetadata 
+ Fans gillar även 
+ Är det några spår som inte visas? 
+ Saknas en uppdatering på Spotify? 
+ Kontrollera musikstatus på Spotify 
+ Tar bort musik 
+ Ta bort din musik från Spotify 
+ Rapportera musik som har laddats upp utan ditt tillstånd 
+ Förbjudet innehåll 
+ Har musik oväntat tagits bort? 
+ Varför är min musik fortfarande live efter borttagning? 
+ Musik som imiterar en annan artists röst 
+ Canvas 
+ Lägga till en Canvas 
+ Canvas visas inte i Spotify-appen 
+ Canvas-riktlinjer 
+ Canvas innehållspolicy 
+ Så här räknar vi Canvas-visningar 
+ Låtskrivning och publicering 
+ Låttext 
+ Klickbara upphovspersoner på Spotify 
+ Songwriter pages på Spotify 
+ Skicka utgivardata till Spotify 
+ Spotify for Publishing 
+ Förvaltningsorganisationer för utförande‑ och upphovsrätt 
+ Ljudkvalitet och ljudnivå 
+ Ljudnivånormalisering på Spotify 
+ Har spåret en lägre ljudnivå än andra? 
+ Lossless-ljud 
+ Ljudfilsformat för Spotify 
+ Kampanj och spellistor 
+ Rekommenderat 
+ Marknadsföra musik på Spotify 
+ Pitcha musik och videor till Spotifys spellisteredaktörer 
+ Komma igång med visningskampanjer 
+ Använda Discovery Mode i Spotify for Artists 
+ Få din musik att hamna i Release Radar 
+ Marknadsför och delar din musik 
+ Marknadsföra musik på Spotify 
+ Pitcha musik och videor till Spotifys spellisteredaktörer 
+ Dela din musik 
+ Artificiella streams och avgiftsbelagda tjänster från tredje parter som garanterar streams 
+ Osläppt musik i Spotify for Artists 
+ Inbäddade spelare 
+ Sökrankning på Spotify 
+ Få musik i Nyheter 
+ Spellistor 
+ Få din musik att hamna i Release Radar 
+ Typer av Spotify-spellistor 
+ Se spellistor som du har lagts till i 
+ Unika länkar för anpassade spellistor 
+ New Music Friday 
+ Funktionell musik 
+ Marquee och Showcase 
+ Komma igång med visningskampanjer 
+ Skapa en visningskampanj 
+ Målmarknader för visningskampanjer 
+ Publikmål för visningskampanjer 
+ Prognoser och budget för visningskampanjer 
+ Anpassa din visningskampanj 
+ Fakturering och betalningar för visningskampanjer 
+ Ange faktureringsland i Spotify for Artists 
+ Hitta kvitton för visningskampanjer 
+ Spåra resultat för visningskampanjer 
+ Redigera eller avbryta en visningskampanj 
+ Discovery Mode 
+ Använda Discovery Mode i Spotify for Artists 
+ Välj längden på din Discovery Mode‑kampanj 
+ Discovery Mode‑sammanhang 
+ Förstå din resultatrapport för Discovery Mode 
+ Rekommenderade låtar för Discovery Mode 
+ Publikstatistik 
+ Förstå din statistik över lyssnare och följare 
+ Antal livestreams 
+ Så räknas dina streams 
+ Förstå Spotify-topplistor 
+ När statistiken uppdateras i Spotify for Artists 
+ Se spellistor som du har lagts till i 
+ Exportera data 
+ Förstå engagemang för releaser 
+ Publiksegment på Spotify 
+ Källan till streams 
+ Tidszon för statistik i Spotify for Artists 
+ Så här räknar vi sparade objekt 
+ Så här genererar vi populära spår 
+ Så långt tillbaka sträcker sig din statistik 
+ Så här räknar vi Canvas-visningar 
+ Musikbolagsteam saknar artister eller releaser

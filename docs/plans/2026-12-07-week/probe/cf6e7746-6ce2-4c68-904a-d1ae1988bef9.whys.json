@@ -1,0 +1,171 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why did Suno build an app that uploads a producer's Ableton session and writes AI parts straight onto its timeline?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why does Suno say it built Bridge?",
+      "answer": "Suno says Bridge came from talking with artists and producers, and that it removes the step of exporting Suno audio and dragging it into a DAW by hand. Parts are generated and placed on the Ableton timeline in sync, so the producer never leaves the session.",
+      "evidence": [
+        {
+          "url": "https://suno.com/blog/introducing-bridge",
+          "domain": "suno.com",
+          "date": "2026-11-13",
+          "quote": "Bridge came straight from those conversations, and we can’t wait to see what people make with it."
+        },
+        {
+          "url": "https://help.suno.com/en/articles/14695169",
+          "domain": "help.suno.com",
+          "date": "2026-11-28",
+          "quote": "That means no exporting, downloading, and dragging files between Suno and Ableton."
+        },
+        {
+          "url": "https://blog.dubspot.com/suno-bridge-2026",
+          "domain": "blog.dubspot.com",
+          "date": "2026-11-15",
+          "quote": "Until now, Suno lived in the browser, and getting a generation into your DAW meant exporting audio or stems and dragging files across."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "Dubspot's account is not independent of Suno: it says \"This is a first look based on Suno's official announcement, not a hands-on test.\" Every page read describes the stated purpose in Suno's own terms; none reports producers asking for it."
+      },
+      "mechanism_type": "product workflow",
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why does Bridge need to upload the producer's project to make a part that fits?",
+      "answer": "To match tempo, key, harmony and groove, Suno's models have to read the track. Bridge does this by uploading the selected Ableton project and its audio files to the user's Suno account, then generating for the loop range the producer marks.",
+      "evidence": [
+        {
+          "url": "https://suno.com/blog/introducing-bridge",
+          "domain": "suno.com",
+          "date": "2026-11-13",
+          "quote": "Bridge synchronizes with your Ableton session, and this process involves uploading your session files to Suno so that Bridge understands the musical context of your track."
+        },
+        {
+          "url": "https://www.musicbusinessworldwide.com/suno-launches-bridge-an-app-that-drops-ai-stems-into-ableton-live/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-16",
+          "quote": "When a user opens a session in Bridge, the app uploads their Ableton Live project, along with its audio files, to their Suno account, according to an FAQ on Suno’s website."
+        },
+        {
+          "url": "https://help.suno.com/en/articles/14695169",
+          "domain": "help.suno.com",
+          "date": "2026-11-28",
+          "quote": "When you open a session in Bridge, it uploads your Ableton Live project and its audio files to your Suno account."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "The upload is limited by Suno's own account: \"Bridge only uploads the project you choose. If it can’t access some audio files, it asks for your permission before including them.\" No page read shows whether the analysis could run on the producer's computer instead."
+      },
+      "mechanism_type": "the model (context from uploaded session)",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why is the app free when the parts it makes are not?",
+      "answer": "Suno is paid through the subscription and the credits each generation spends. The download costs nothing, Bridge works only on the Premier plan, and every generation uses 10 credits from the 10,000 a month Premier includes at USD 30. No page read gives Suno's reason for pricing it this way.",
+      "evidence": [
+        {
+          "url": "https://www.musicbusinessworldwide.com/suno-launches-bridge-an-app-that-drops-ai-stems-into-ableton-live/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-16",
+          "quote": "Each generation in Bridge uses 10 Suno credits, according to the company’s help center."
+        },
+        {
+          "url": "https://www.musicbusinessworldwide.com/suno-launches-bridge-an-app-that-drops-ai-stems-into-ableton-live/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-16",
+          "quote": "Suno’s pricing page lists Premier at USD $30 per month, or USD $288 billed annually, with 10,000 credits included each month."
+        },
+        {
+          "url": "https://help.suno.com/en/articles/14695169",
+          "domain": "help.suno.com",
+          "date": "2026-11-28",
+          "quote": "Credits: Generations from Bridge use 10 Credits"
+        },
+        {
+          "url": "https://blog.dubspot.com/suno-bridge-2026",
+          "domain": "blog.dubspot.com",
+          "date": "2026-11-15",
+          "quote": "Bridge is included with all Suno Premier subscriptions, so there's no separate purchase."
+        }
+      ],
+      "strength": "documented",
+      "counter": {
+        "text": "none found, within the six pages read (Music Business Worldwide, Dubspot, Suno's help centre, Bridge page, launch blog post and terms of service). The Bridge page adds that generating \"uses your Suno credits just as creating in Studio does\", so Bridge is priced like Suno's existing tools rather than separately."
+      },
+      "mechanism_type": "the money (subscription and credits)",
+      "stop": null
+    },
+    {
+      "n": 4,
+      "question": "Why does the upload matter beyond making the part?",
+      "answer": "Suno's terms count audio a user provides as Submissions and give Suno a perpetual, irrevocable licence to all Content, including for improving its AI models. The Bridge FAQ points users to those terms for how uploaded files are handled. No page says outright that Bridge uploads are used for training.",
+      "evidence": [
+        {
+          "url": "https://suno.com/terms",
+          "domain": "suno.com",
+          "date": "2026-09-03",
+          "quote": "in connection with the provision, use, monetization, promotion, marketing, and improvement of our products and services, including the Service and the artificial intelligence and machine learning models related to the Service."
+        },
+        {
+          "url": "https://www.musicbusinessworldwide.com/suno-launches-bridge-an-app-that-drops-ai-stems-into-ableton-live/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-16",
+          "quote": "Under those terms, users retain ownership of their Submissions but grant Suno a non-exclusive, “perpetual, irrevocable” license to “any and all Content” – the terms’ collective label for user submissions and the output generated from them."
+        },
+        {
+          "url": "https://help.suno.com/en/articles/14695169",
+          "domain": "help.suno.com",
+          "date": "2026-11-28",
+          "quote": "For more information on how your data is stored and processed, see our Terms of Service and Privacy Notice."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "The same terms say \"As between you and Suno, you retain all right, title, and interest in and to your Submissions.\" No Suno page read states that Bridge sessions are used to train models; the link from Bridge uploads to the licence runs through the FAQ's pointer to the terms and Music Business Worldwide's reporting."
+      },
+      "mechanism_type": "the contract (terms of service licence)",
+      "stop": null
+    },
+    {
+      "n": 5,
+      "question": "Why does Bridge screen uploaded audio for copyrighted material?",
+      "answer": "Suno says every file uploaded through Bridge passes copyright filters and flagged rightsholder material is not ingested. Suno gives no reason. Music Business Worldwide sets the launch beside Universal and Sony's second lawsuit, which accuses Suno of copying their recordings without a licence. The link between the two is the reporter's framing, not Suno's.",
+      "evidence": [
+        {
+          "url": "https://help.suno.com/en/articles/14695169",
+          "domain": "help.suno.com",
+          "date": "2026-11-28",
+          "quote": "Every audio file uploaded to Suno via Bridge goes through our filters to detect copyrighted materials. Files flagged by the system will not be ingested into Suno."
+        },
+        {
+          "url": "https://suno.com/bridge",
+          "domain": "suno.com",
+          "date": "2026-11-28",
+          "quote": "If your project contains original material and rightsholder material, only the rightsholder material will be blocked."
+        },
+        {
+          "url": "https://www.musicbusinessworldwide.com/suno-launches-bridge-an-app-that-drops-ai-stems-into-ableton-live/",
+          "domain": "musicbusinessworldwide.com",
+          "date": "2026-11-16",
+          "quote": "Universal Music Group and Sony Music Entertainment, neither of which has licensed Suno, sued the company for a second time on September 18."
+        }
+      ],
+      "strength": "inferred",
+      "counter": {
+        "text": "Suno's v6 models were, it says, developed with licensed partners: Music Business Worldwide reports they \"were developed with Warner Music Group, BMG, and Believe.\" The filter may serve those deals as much as the lawsuits; no page read says which."
+      },
+      "mechanism_type": "the rule (upload filtering)",
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "The sources document what Bridge does and how Suno is paid: it uploads the chosen Ableton project to the user's Suno account so the model can fit new parts to it, and each part costs 10 Premier credits. Past that, the ladder rests on Suno's terms, which license all uploaded Content for model improvement, and on a copyright filter Suno never explains. No page read says whether producers' Bridge sessions are used to train Suno's models.",
+    "open_question": "Once a producer's session has been uploaded to fit one part, what does Suno's licence over that session allow it to do with the music afterwards?"
+  }
+}

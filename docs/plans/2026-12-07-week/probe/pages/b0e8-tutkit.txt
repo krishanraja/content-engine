@@ -1,0 +1,16 @@
+Source: https://www.tutkit.com/en/news/1127-etsy-ai-training-terms-of-use
+Fetched 2026-11-28 through WebFetch, which returned a summary and two exact sentences, not the full page text. Only the two quoted sentences below are word for word.
+
+Etsy may use shop photos and descriptions for AI training starting December 16
+Stefan Petri, November 18, 2026, TutKit.com
+
+Exact sentence (a): "Etsy published new terms of use on October 26, 2026, which take effect on December 16."
+
+Exact sentence (b): "According to IT-Recht Kanzlei, there is no option to reject only the AI clause and continue operating the shop."
+
+Summary returned by the fetch tool (not word for word):
+- Etsy published new terms on October 26, 2026, effective December 16, letting Etsy and its partners use member content to develop and train AI and machine learning tools; citing IT-Recht Kanzlei, this extends to content already in shops.
+- Per Section 5.C, this covers product images and videos, item descriptions, shop names, profile pictures and reviews. Copyright stays with sellers; Etsy receives a broad, royalty-free, perpetual licence with no extra payment.
+- Sellers cannot reject only the AI clause and keep their shop open; a note in a listing prohibiting AI training does not change the licence.
+- Removing listings does not necessarily remove copies or influence on models already trained.
+- The article is general information, not legal advice.

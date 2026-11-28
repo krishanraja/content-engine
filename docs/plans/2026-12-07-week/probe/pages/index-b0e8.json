@@ -1,0 +1,44 @@
+{
+  "https://www.cartoonbrew.com/artificial-intelligence/etsy-ai-training-terms-of-use-269553.html": {
+    "file": "b0e8-cartoonbrew.txt"
+  },
+  "https://arstechnica.com/tech-policy/2026/11/etsy-clarifies-ai-terms-after-seller-backlash/": {
+    "file": "b0e8-arstechnica.txt"
+  },
+  "https://www.valueaddedresource.net/etsy-expands-ai-training-rights/": {
+    "file": "b0e8-valueaddedresource.txt"
+  },
+  "https://creativebloq.com/news/artists-and-creators-are-leaving-etsy-in-droves-over-its-new-ai-policy": {
+    "file": "b0e8-creativebloq.txt"
+  },
+  "https://cybernews.com/ai-news/etsy-ai-training-seller-data/": {
+    "unreadable": "HTTP 403, Cloudflare challenge"
+  },
+  "https://www.etsy.com/legal/terms-of-use": {
+    "unreadable": "HTTP 403 to automated fetch"
+  },
+  "https://www.etsy.com/news/etsyas-terms-of-use?ref=news": {
+    "unreadable": "HTTP 403 to automated fetch"
+  },
+  "https://community.etsy.com/forum/announcements-290/topic/our-recent-terms-of-use-update-192097/": {
+    "unreadable": "JavaScript shell, no post text in HTML"
+  },
+  "https://www.tutkit.com/en/news/1127-etsy-ai-training-terms-of-use": {
+    "file": "b0e8-tutkit.txt"
+  },
+  "https://www.ecommercebytes.com/30a9": {
+    "unreadable": "page is the site's closure notice, no Etsy article text"
+  },
+  "https://www.digitaltrends.com/?p=6010178": {
+    "file": "b0e8-digitaltrends.txt"
+  },
+  "https://www.digitaltrends.com/computing/etsy-sellers-are-quitting-as-ai-slop-floods-the-handmade-marketplace/": {
+    "file": "b0e8-digitaltrends.txt"
+  },
+  "https://tech-insider.org/au/?p=3402": {
+    "unreadable": "HTTP 403 Forbidden"
+  },
+  "https://craftindustryalliance.org/etsys-ai-problem": {
+    "file": "b0e8-craftindustryalliance.txt"
+  }
+}

@@ -1,0 +1,142 @@
+ Suno launches Bridge, an app that drops AI stems into Ableton Live - Music Business Worldwide 
+ Music Business Worldwide
+ News
+ Interviews All Interviews
+ Inspiring Women
+ Key Songs In The Life Of
+ Trailblazers
+ World’s Greatest Managers
+ World’s Greatest Songwriters
+ Analysis All Analysis
+ MBW Explains
+ MBW Views
+ Tim’s Take
+ Database
+ Podcast
+ Jobs
+ MBW+ Subscribe
+ Login
+Suno launches Bridge, an app that drops AI stems into Ableton Live
+ November 16, 2026
+By Mandy Dalugdug
+Photo courtesy of Suno
+Suno has launched an app that drops AI-generated instrument and vocal parts straight onto the timeline of a producer’s own digital audio workstation (DAW).
+Continue to article...
+The app, Suno Bridge, went live in beta on November 13.
+At launch, it works only with Ableton Live 12 on a Mac and requires a Suno Premier subscription.
+“Today, we are introducing Suno Bridge, a new standalone app that brings the power and inspiration of Suno into your music production software,” Suno said in a blog post announcing the launch. “For the first time you can combine your Suno workflow with the VSTs, plugins and DAW you already know.
+“At Suno, we’re always talking with artists, producers and songwriters, and their ideas shape what we build. Bridge came straight from those conversations, and we can’t wait to see what people make with it.”
+Bridge operates as a separate application from Ableton Live, and both must be open at the same time for it to function.
+Prompts typed into Bridge generate instrumentation and vocals that Suno says will “fit the tempo, key, style, harmonic content and groove” of the user’s Ableton session.
+“Bridge brings Suno’s music models straight into your favorite DAW. This means you can create new instrument and vocal parts and drop them straight onto your timeline. No leaving your session, no dragging and dropping, no manual alignment.”
+Suno
+“Bridge brings Suno’s music models straight into your favorite DAW,” said Suno. “This means you can create new instrument and vocal parts and drop them straight onto your timeline. No leaving your session, no dragging and dropping, no manual alignment.
+“And unlike stock samples, new sounds from Suno follow your chord progressions, musical groove and key perfectly.”
+Users choose the section of a track they want Bridge to write for by setting loop start and end markers in Ableton’s Arrangement View.
+In Suno’s example, a loop running from bar 9 to bar 16 yields an eight-bar section beginning on the first beat of bar 9.
+The clips Bridge generates are then placed directly onto the Ableton timeline, in sync with the track, according to the company.
+Suno‘s blog post pitches Bridge as “an endless library of unique sounds designed to fit your music,” suggesting producers use it to complete unfinished projects and overcome writer’s block.
+Each generation in Bridge uses 10 Suno credits, according to the company’s help center.
+Suno’s pricing page lists Premier at USD $30 per month, or USD $288 billed annually, with 10,000 credits included each month.
+The Bridge app itself is a free download, and the audio it generates is stored separately from users’ main Suno libraries.
+Suno states on its website that Bridge “has been developed independently of Ableton.”
+The company says it plans to bring Bridge to more operating systems and DAW platforms in the future, without specifying which.
+When a user opens a session in Bridge, the app uploads their Ableton Live project, along with its audio files, to their Suno account, according to an FAQ on Suno’s website.
+“Bridge synchronizes with your Ableton session, and this process involves uploading your session files to Suno so that Bridge understands the musical context of your track,” Suno said in its blog post.
+The FAQ adds that Bridge uploads only the project the user selects and asks for permission before including any audio files it cannot access. It also addresses what happens if that project contains music the user does not own.
+“Audio files uploaded to Suno via Bridge go through our filters to detect copyrighted materials,” it states. “Files flagged by the system will not be ingested into Suno.
+“If your project contains original material and rightsholder material, only the rightsholder material will be blocked.”
+The FAQ directs users to Suno’s Terms of Service and Privacy Notice for information on how their data is stored and processed.
+Suno’s current terms of service, in effect since September 3, define user “Submissions” as including “music, sound and other audio.”
+Under those terms, users retain ownership of their Submissions but grant Suno a non-exclusive, “perpetual, irrevocable” license to “any and all Content” – the terms’ collective label for user submissions and the output generated from them.
+That license covers uses connected to the provision, monetization, marketing, and “improvement” of Suno‘s products and services, “including the Service and the artificial intelligence and machine learning models related to the Service,” according to the terms.
+By uploading Submissions, users also warrant that Suno will not need licenses from, or have to pay, anyone else to use them, including “to train, develop, fine-tune or otherwise improve the Service” and any related AI models.
+Bridge follows Suno’s launch of its own DAW, Suno Studio, in September 2025.
+Suno Studio, which also debuted in beta for Premier subscribers, built on Suno’s acquisition of browser-based DAW WavTool in June 2025.
+On September 9 this year, Suno launched its v6 suite of AI music models, which it says were developed with Warner Music Group, BMG, and Believe.
+Universal Music Group and Sony Music Entertainment, neither of which has licensed Suno, sued the company for a second time on September 18.
+The labels’ complaint accuses Suno of copying 60,202 of their sound recordings without a license, and describes v6 as “the fruit of the same poisoned tree.”
+Suno co-founder and CEO Mikey Shulman said on October 1 that the company is “far beyond” the 2 million paid subscribers and USD $300 million in annual recurring revenue it disclosed in February.
+In June, Suno raised over USD $400 million in a Series D round at a USD $5.4 billion post-money valuation.Music Business Worldwide
+News United States Suno Suno Bridge
+Related Posts
+ Eminem co-publisher Eight Mile Style adds 108 allegedly infringing AI tracks to $47.7m Suno lawsuit, calling Suno’s denials ‘false’
+ 5 things to know about Suno’s move into AI video, the DistroKid documents, and the fight over v6
+ Universal and Sony fight Suno’s bid to freeze second lawsuit, warning its latest AI models could escape scrutiny until at least 2028
+ Elvis Presley rightsholders amend Suno lawsuit, adding more than 100 allegedly infringing AI tracks
+Latest Music Industry Jobs
+LN Concerts, Operational Finance Manager
+Nashville, United States Live Nation ANZ
+Coordinator, Artist Lead, Marketing – Columbia Records
+New York, United States Sony Music Entertainment
+Head of Music, Canada – Amazon Music, Music Industry
+Toronto, Canada Amazon Music
+VP, Finance
+Connect Music
+LN Concerts, Accounting Manager
+Atlanta, United States Live Nation ANZ
+Digital Audience Development Manager
+London Deutsch Englische Freundschaft Ltd
+Manager, Artist Relations
+Los Angeles, New York, United States Universal Music Group
+Publishing A&R Manager, Domino Publishing Company
+Los Angeles / Domino Recording Company
+A&R & Writer Acquisition Manager
+chaser publishing
+Manager, Business Intelligence / Data Analytics
+EXCELERATION SERVICES, LLC
+Music Catalog Acquisition Marketing and Business Development Intern
+New York / Seasons Music Group
+Head of Marketing
+EXCELERATION SERVICES, LLC
+Music Business Worldwide
+Stay on top of the real stories shaping the music industry: Join over 60,000 industry professionals who rely on MBW's free emails for essential insights and breaking news.
+ Receive MBW Industry Jobs
+MBW occasionally sends important promotional emails that involve strategic collaborations with industry partners. These emails form part of the service you elect to receive when you subscribe to any of MBW's free email services. MBW does not and will not share your data with any third-parties. You can unsubscribe from said promotional emails at any time.
+ Sign Up Close
+Popular Articles
+ TikTok users watch the app for an average of 89 minutes per day – and there's 732m of them worldwide
+ Warner Music Group launches Global Diversity, Equity and Inclusion Institute
+ Taylor Swift just crashed Ticketmaster's site and sold over 2 million tickets. To meet demand, she would have had to play 900 stadium shows.
+ Mary Bono asks appeals court to overturn Cher's win in Sonny Bono song royalties fight, arguing Cher 'already received nearly fifty years of royalties'
+ Revenues at ticketing and events giant CTS Eventim soared 163% YoY to $392.9m in Q1
+ Music Business Worldwide
+ Who We Are
+ What We Do
+Policies
+Terms Of Use
+ Comments Policy
+ Privacy Policy
+ Cookie Declaration
+Contact Us
+Contact Us
+ Advertise With Us
+ Send Us News
+ General Enquiries
+ Report A Problem
+Follow Us
+ Facebook
+ LinkedIn
+ Twitter
+ RSS
+ © 2025 Music Business Worldwide 
+ 27 Old Gloucester Street, London, WC1N 3AX
+ Website by 44 Bytes
+News
+ Interviews All Interviews
+ Inspiring Women
+ Key Songs In The Life Of
+ Trailblazers
+ World’s Greatest Managers
+ World’s Greatest Songwriters
+ Analysis All Analysis
+ MBW Explains
+ MBW Views
+ Tim’s Take
+ Database
+ Podcast
+ Jobs
+ MBW+ Subscribe
+ Login
+ Search 
+ 

@@ -1,0 +1,624 @@
+Interactive world generation with Genie 4 - Gemini API | Google AI Studio
+> ## AI Agent Context
+> - Full documentation index: https://aistudio.google.com/llms.txt
+> - Gemini Docs MCP server (consistent live info): https://gemini-api-docs-mcp.dev
+> - Coding agent skills & setup guide: https://aistudio.google.com/docs/coding-agents.md
+# Interactive world generation with Genie 4
+Genie 4 (`genie-4`) generates a continuous, interactive `16:9` world at
+`24 fps` with synchronized `48 kHz` stereo audio over the
+[Interactions API](/docs/interactions-overview). Unlike offline clip generation
+with [Gemini Omni 1.2 Flash](/docs/omni), Genie 4 renders frames on the fly in
+response to live keyboard movement (`WASD` and arrow keys) and natural-language
+events you send mid-stream.
+{% button href="https://aistudio.google.com/live?model=genie-4" variant="ais" %}Try in Google AI Studio{% /button %}
+{% callout type="note" %}
+Genie 4 requires a [paid-tier Gemini API key](/docs/pricing#genie-4) and bills
+at `240` video output tokens per frame (`5,760` tokens/sec at `24 fps`, or
+`~$0.10/sec` with stereo audio included). Exiting a local block or closing a
+browser tab detaches the transport without immediately stopping server
+generation. Always call `complete()` to end the session and stop billing.
+{% /callout %}
+{% callout type="caution" %}
+**Regional serving latency:** Genie 4 serves from data centers in the United
+States, Western Europe, and Japan. Expect optimal responsiveness (`< 150 ms`
+round-trip latency) in North America, Western and Central Europe, and East
+Asia. Outside these regions, higher latency delays real-time keyboard steering
+and can reduce frame rate. Place backend relays near a serving region when
+possible, and test browser WebRTC latency from your target region before
+deploying reflex-heavy controls.
+{% /callout %}
+## Quickstart: Step inside a living oil painting  {% id="quickstart" %}
+Every Genie 4 session follows a four-step lifecycle on `v1beta`:
+1.  **Create the interaction** on your server (`interactions.create` with
+`model: 'genie-4'`). For browser clients, mint a single-session
+ephemeral token (`interactions.authTokens.create(interaction.id)`) so your
+long-lived `GEMINI_API_KEY` never leaves your backend.
+2.  **Connect a live session** (`interactions.connect`) over **WebRTC** (browser
+apps) or **WebSocket** (Python, Node.js, or browser apps).
+3.  **Seed and steer the world** by sending one `world_setup` event followed by
+`user_action` movement events (`WASD` / arrow keys) or `input` text events.
+4.  **Complete the session** (`await session.complete()`) when finished so
+server-side generation and billing terminate cleanly.
+Install the latest `google-genai` (Python) or `@google/genai` (JavaScript/TypeScript) SDK:
+{% tabs %}
+{% tab label=JavaScript (WebRTC — Browser) %}
+WebRTC is the recommended browser transport. The browser decodes incoming Opus
+audio and video tracks natively onto a `<video autoplay playsinline>` element
+with adaptive jitter buffering, while JSON control events travel over an SCTP
+data channel.
+**Backend endpoint (Node.js)** — creates the interaction and mints an
+`auth_tokens/...` session token:
+```javascript
+import { GoogleGenAI } from '@google/genai';
+const serverAi = new GoogleGenAI({
+apiKey: process.env.GEMINI_API_KEY,
+apiVersion: 'v1beta',
+});
+export async function createWorldSession() {
+const interaction = await serverAi.interactions.create({
+model: 'genie-4',
+api_version: 'v1beta',
+});
+const { auth_token } = await serverAi.interactions.authTokens.create(
+interaction.id,
+{ api_version: 'v1beta' }
+);
+// Return ONLY { interactionId, authToken } to the browser
+return { interactionId: interaction.id, authToken: auth_token };
+}
+```
+**Browser client** — connects with `{ transport: 'webrtc' }`, binds native
+`WASD` / arrow movement plus custom `E` / `Q` world-shift keys, and stops
+billing on exit:
+```javascript
+import { GoogleGenAI } from '@google/genai';
+const WORLD_PROMPT =
+'Immersive first-person POV standing on a cobblestone canal bridge inside ' +
+'a vibrant, thick-impasto post-impressionist oil painting of a starry ' +
+'riverside village at twilight. Swirling cobalt-blue sky currents and ' +
+'glowing golden cafe lanterns shimmer with living, tactile brushstroke ' +
+'textures that ripple gently in the breeze, with a wooden rowboat moored ' +
+'at the stone steps ahead. Audio: Gentle water lapping against the stone ' +
+'steps, leaves rustling in a soft evening breeze, footsteps on cobblestone.';
+// Native movement & camera keys trained directly into Genie 4
+const NATIVE_KEY_MAP = {
+KeyW: 'key_w',
+KeyA: 'key_a',
+KeyS: 'key_s',
+KeyD: 'key_d',
+ArrowUp: 'arrow_up',
+ArrowDown: 'arrow_down',
+ArrowLeft: 'arrow_left',
+ArrowRight: 'arrow_right',
+};
+// Custom gameplay verbs mapped on the client to mid-session text inputs
+const CUSTOM_KEY_PROMPTS = {
+KeyE: 'Make heavy snow fall across the painted village',
+KeyQ: 'Burst bright golden fireworks above the village rooftops',
+};
+async function startWorld(interactionId, authToken, videoElement) {
+const clientAi = new GoogleGenAI({ apiKey: authToken, apiVersion: 'v1beta' });
+const session = await clientAi.interactions.connect(
+interactionId,
+{ transport: 'webrtc', api_version: 'v1beta' },
+{ timeout_ms: 30000 }
+);
+// Attach <video id="world-video" autoplay playsinline></video>
+session.transport.setVideoElement(videoElement);
+// Consume server lifecycle and error events in the background
+(async () => {
+for await (const event of session.receive()) {
+if (event.event_type === 'error') {
+console.error('Genie 4 stream error:', event.error);
+}
+}
+})();
+// Seed the world (initial generation takes ~5-9 seconds before frame 1)
+await session.send({
+event_type: 'world_setup',
+world_prompt: { text: WORLD_PROMPT },
+});
+// Helper: repeat mid-session text prompts briefly so the next world step picks them up
+function triggerWorldEvent(promptText) {
+let sent = 0;
+const timer = setInterval(() => {
+session.send(promptText).catch(() => clearInterval(timer));
+if (++sent >= 10) clearInterval(timer);
+}, 150);
+}
+window.addEventListener('keydown', (e) => {
+if (e.repeat) return;
+if (NATIVE_KEY_MAP[e.code]) {
+session.send({
+event_type: 'user_action',
+action: 'key_down',
+input: NATIVE_KEY_MAP[e.code],
+});
+} else if (CUSTOM_KEY_PROMPTS[e.code]) {
+triggerWorldEvent(CUSTOM_KEY_PROMPTS[e.code]);
+}
+});
+window.addEventListener('keyup', (e) => {
+if (NATIVE_KEY_MAP[e.code]) {
+session.send({
+event_type: 'user_action',
+action: 'key_up',
+input: NATIVE_KEY_MAP[e.code],
+});
+}
+});
+return {
+stop: async () => {
+await session.complete();
+},
+};
+}
+```
+{% /tab %}
+{% tab label=Python (WebSocket) %}
+The Python SDK connects asynchronously over WebSockets (`client.aio.interactions.connect`)
+and yields `step.delta` events containing base64-encoded `JPEG` video frames and
+`48 kHz` 16-bit stereo PCM audio chunks.
+```python
+import asyncio
+import base64
+import wave
+from google import genai
+WORLD_PROMPT = (
+"Immersive first-person POV standing on a cobblestone canal bridge inside "
+"a vibrant, thick-impasto post-impressionist oil painting of a starry "
+"riverside village at twilight. Swirling cobalt-blue sky currents and "
+"glowing golden cafe lanterns shimmer with living, tactile brushstroke "
+"textures that ripple gently in the breeze, with a wooden rowboat moored "
+"at the stone steps ahead. Audio: Gentle water lapping against the stone "
+"steps, leaves rustling in a soft evening breeze, footsteps on cobblestone."
+)
+async def send_text_impulse(session, text: str, repeats: int = 10) -> None:
+"""Repeat a mid-session text event across ~1.5s for reliable step uptake."""
+for _ in range(repeats):
+await session.send(text)
+await asyncio.sleep(0.15)
+async def main() -> None:
+client = genai.Client(http_options={"api_version": "v1beta"})  # Uses GEMINI_API_KEY
+interaction = await client.aio.interactions.create(
+model="genie-4", api_version="v1beta"
+)
+pcm_chunks: list[bytes] = []
+video_frames = 0
+async with client.aio.interactions.connect(
+interaction.id, api_version="v1beta"
+) as session:
+await session.send(
+{
+"event_type": "world_setup",
+"world_prompt": {"text": WORLD_PROMPT},
+}
+)
+async for event in session.receive():
+if event.event_type == "step.delta":
+delta_type = getattr(event.delta, "type", None)
+if delta_type == "video" and event.delta.data:
+video_frames += 1
+if video_frames == 1:
+with open("oil_painting_start.jpg", "wb") as f:
+f.write(base64.b64decode(event.delta.data))
+# Walk forward along the canal bridge
+await session.send(
+{
+"event_type": "user_action",
+"action": "key_down",
+"input": "key_w",
+}
+)
+elif video_frames == 48:  # ~2s into the stream
+asyncio.create_task(
+send_text_impulse(
+session,
+"Make heavy snow fall across the painted village",
+)
+)
+elif video_frames == 144:  # ~6s into the stream
+await session.send(
+{
+"event_type": "user_action",
+"action": "key_up",
+"input": "key_w",
+}
+)
+await session.complete()
+elif delta_type == "audio" and event.delta.data:
+pcm_chunks.append(base64.b64decode(event.delta.data))
+elif event.event_type == "interaction.completed":
+break
+if pcm_chunks:
+with wave.open("oil_painting_audio.wav", "wb") as wav_file:
+wav_file.setnchannels(2)  # Stereo
+wav_file.setsampwidth(2)  # 16-bit signed little-endian PCM
+wav_file.setframerate(48000)  # 48 kHz
+wav_file.writeframes(b"".join(pcm_chunks))
+asyncio.run(main())
+```
+{% /tab %}
+{% tab label=JavaScript (WebSocket — Node.js) %}
+Use `{ transport: 'websocket' }` in server-side Node.js scripts, recording
+pipelines, or environments without `RTCPeerConnection`:
+```javascript
+import { GoogleGenAI } from '@google/genai';
+import * as fs from 'node:fs';
+const ai = new GoogleGenAI({
+apiKey: process.env.GEMINI_API_KEY,
+apiVersion: 'v1beta',
+});
+const interaction = await ai.interactions.create({
+model: 'genie-4',
+api_version: 'v1beta',
+});
+const session = await ai.interactions.connect(
+interaction.id,
+{ transport: 'websocket', api_version: 'v1beta' },
+{ timeout_ms: 30000 }
+);
+await session.send({
+event_type: 'world_setup',
+world_prompt: {
+text: 'Immersive first-person POV standing on a cobblestone canal bridge inside a vibrant, thick-impasto post-impressionist oil painting of a starry riverside village at twilight. Audio: Gentle water lapping against the stone steps, leaves rustling in a soft evening breeze, footsteps on cobblestone.',
+},
+});
+let frameCount = 0;
+for await (const event of session.receive()) {
+if (event.event_type === 'step.delta' && event.delta?.type === 'video') {
+frameCount += 1;
+if (frameCount === 1 && event.delta.data) {
+fs.writeFileSync(
+'frame_001.jpg',
+Buffer.from(event.delta.data, 'base64')
+);
+await session.send({
+event_type: 'user_action',
+action: 'key_down',
+input: 'key_w',
+});
+}
+if (frameCount === 72) {
+await session.complete();
+}
+} else if (event.event_type === 'interaction.completed') {
+break;
+}
+}
+```
+{% /tab %}
+{% /tabs %}
+**What to expect on your first run:** Initial world setup takes roughly `5-9 seconds`
+before the first frame arrives. Mid-session text shifts (`"Make heavy snow fall..."`)
+take `~1-2 seconds` to appear on screen because Genie 4 plans environmental
+changes between generation steps. If you turn `180 degrees` away from the canal
+and turn back several seconds later, background buildings may rearrange—Genie 4
+maintains a rolling visual horizon rather than a persistent 3D mesh.
+## Choose a transport: WebRTC vs. WebSocket  {% id="transports" %}
+Genie 4 supports two live transports on `interactions.connect`:
+{% table %}
+* Capability
+* WebRTC (`transport: 'webrtc'`)
+* WebSocket (`transport: 'websocket'` / Python default)
+---
+* **Best for**
+* Interactive browser apps and games
+* Python scripts, Node.js backends, frame capture, and custom pipelines
+---
+* **SDK support**
+* `@google/genai` (JavaScript / TypeScript in browsers)
+* `google-genai` (Python async) and `@google/genai` (Node.js and browsers)
+---
+* **Media delivery**
+* Native RTP video + Opus audio tracks rendered directly by `<video>`
+* JSON `step.delta` events with base64 `JPEG` frames and `48 kHz` Int16 stereo PCM
+---
+* **Latency & packet loss**
+* Lowest latency; UDP media with built-in browser jitter buffer
+* Higher overhead (~33% base64 expansion); TCP head-of-line blocking under loss
+---
+* **Max control payload**
+* `64 KB` SCTP data channel limit (keep `world_setup` JPEG seeds `< 48 KB`)
+* Larger JSON payloads supported without SCTP fragmentation limits
+{% /table %}
+## Authentication and ephemeral session tokens  {% id="auth-tokens" %}
+Never embed a long-lived `GEMINI_API_KEY` in client-side browser code. Instead,
+create the interaction and mint an interaction-scoped `auth_token` (`auth_tokens/...`)
+on your backend, then initialize the browser `GoogleGenAI` client with that
+token:
+{% tabs %}
+{% tab label="JavaScript" %}
+```javascript
+import { GoogleGenAI } from '@google/genai';
+// Backend: mint token scoped to this single interaction ID
+const serverAi = new GoogleGenAI({
+apiKey: process.env.GEMINI_API_KEY,
+apiVersion: 'v1beta',
+});
+const interaction = await serverAi.interactions.create({
+model: 'genie-4',
+api_version: 'v1beta',
+});
+const { auth_token } = await serverAi.interactions.authTokens.create(
+interaction.id,
+{ api_version: 'v1beta' }
+);
+// Browser: pass auth_token as apiKey (works for both WebRTC and browser WebSockets)
+const browserAi = new GoogleGenAI({ apiKey: auth_token, apiVersion: 'v1beta' });
+const session = await browserAi.interactions.connect(interaction.id, {
+transport: 'webrtc',
+api_version: 'v1beta',
+});
+```
+{% /tab %}
+{% tab label="Python" %}
+```python
+from google import genai
+# Backend: create interaction and mint single-session token
+server_client = genai.Client(http_options={"api_version": "v1beta"})
+interaction = await server_client.aio.interactions.create(
+model="genie-4", api_version="v1beta"
+)
+token_resp = await server_client.aio.interactions.auth_tokens.create(
+interaction_id=interaction.id, api_version="v1beta"
+)
+# Client worker: authenticate solely with the ephemeral session token
+scoped_client = genai.Client(
+api_key=token_resp.auth_token,
+http_options={"api_version": "v1beta"},
+)
+async with scoped_client.aio.interactions.connect(
+interaction.id, api_version="v1beta"
+) as session:
+...
+```
+{% /tab %}
+{% tab label=REST (cURL) %}
+```bash
+# 1. Create the Genie 4 interaction
+INTERACTION_ID=$(curl -s -X POST \
+"https://generativelanguage.googleapis.com/v1beta/interactions" \
+-H "x-goog-api-key: ${GEMINI_API_KEY}" \
+-H "Content-Type: application/json" \
+-d '{"model": "genie-4"}' | jq -r '.id')
+# 2. Mint an ephemeral auth token scoped to INTERACTION_ID
+AUTH_TOKEN=$(curl -s -X POST \
+"https://generativelanguage.googleapis.com/v1beta/interactions/${INTERACTION_ID}/auth_tokens" \
+-H "x-goog-api-key: ${GEMINI_API_KEY}" \
+-H "Content-Type: application/json" \
+-d '{}' | jq -r '.auth_token')
+```
+{% /tab %}
+{% /tabs %}
+{% callout type="warning" %}
+**Browser WebSockets require an `auth_token`:** Standard browser `WebSocket`
+APIs cannot attach custom `x-goog-api-key` HTTP headers. When you pass an
+`auth_tokens/...` string as `apiKey` in `@google/genai`, the SDK automatically
+authenticates the browser WebSocket or WebRTC signaling request using that
+ephemeral token. Passing a raw `AIza...` API key to `{ transport: 'websocket' }`
+in a browser throws a usage error by design.
+{% /callout %}
+## Session lifecycle and event protocol  {% id="event-protocol" %}
+Once `interactions.connect()` resolves, you drive the simulation by sending JSON
+client events with `send()`.
+### 1. Initialize the world (`world_setup`)  {% id="world-setup" %}
+Send exactly one `world_setup` event at the start of the session to initialize
+world state and begin frame generation. You can supply a text prompt
+(`world_prompt`), a `16:9` starting image (`reference_image`), or both.
+`reference_image` is a **top-level field** on the `world_setup` event (sibling
+to `world_prompt`), not nested inside `world_prompt`:
+{% tabs %}
+{% tab label="Text only" %}
+```json
+{
+"event_type": "world_setup",
+"world_prompt": {
+"text": "First-person POV standing in front of an espresso machine. An empty ceramic mug rests on the drip tray beneath the spout. A glowing \"brew\" button is visible on the front panel."
+}
+}
+```
+{% /tab %}
+{% tab label="Text + 16:9 reference image" %}
+```json
+{
+"event_type": "world_setup",
+"world_prompt": {
+"text": "First-person walk along a cliffside path painted in thick post-impressionist brushstrokes. Audio: Ocean wind through tall grass, distant gulls, gravel underfoot."
+},
+"reference_image": {
+"mime_type": "image/jpeg",
+"data": "<BASE64_ENCODED_16X9_JPEG>"
+}
+}
+```
+{% /tab %}
+{% /tabs %}
+{% callout type="note" %}
+**Keep WebRTC seed images under `48 KB`:** WebRTC SCTP data channels enforce a
+`65,536`-byte (`64 KB`) maximum message size. Because base64 encoding adds ~33%
+overhead, resize reference images to `1280x720` (or `640x360`) and compress as
+`image/jpeg` under `48 KB` before base64 encoding, or connect via WebSocket when
+sending larger lossless `image/png` seeds.
+{% /callout %}
+### 2. Move and look around (`user_action`)  {% id="user-actions" %}
+Send `user_action` events to steer movement and camera orientation with minimal
+latency (`~0.2-0.5s` visual response at low network RTT):
+```json
+{
+"event_type": "user_action",
+"action": "key_down",
+"input": "key_w"
+}
+```
+*   **`action` values:** `"key_down"`, `"key_up"`, `"key_click"`. Send
+`"key_down"` when the user presses a key (suppressing OS key-repeat events)
+and `"key_up"` on release; held keys continue applying across steps until
+`"key_up"` arrives.
+*   **Natively trained movement and camera inputs:**
+*   Movement: `"key_w"` (forward), `"key_s"` (backward), `"key_a"` (strafe
+left), `"key_d"` (strafe right).
+*   Camera look: `"arrow_up"` (tilt up), `"arrow_down"` (tilt down),
+`"arrow_left"` (pan left), `"arrow_right"` (pan right).
+*   **Reserved schema inputs vs. custom action keys:** Although the wire schema
+also accepts `"key_e"` and `"space"`, Genie 4 does **not** attach built-in
+"jump" or "interact" gameplay behavior to those enum values. To build custom
+controls (such as pressing `E` to open a door, `Q` to summon weather, or `R`
+to fire a boost), intercept those keys in your client and send descriptive
+`input` text events instead. See
+[Pattern 2: Key-bound action verbs](/docs/genie-prompting#key-bound-actions).
+### 3. Steer world events and dialogue (`input`)  {% id="mid-session-input" %}
+Send mid-session text inputs to trigger environmental changes, object state
+transitions, or spoken character dialogue while the stream is running. Passing a
+plain string to `send("...")` automatically wraps it in an `input` event:
+```json
+{
+"event_type": "input",
+"content": [
+{
+"type": "text",
+"text": "Press the brew button so dark espresso pours into the ceramic mug"
+}
+]
+}
+```
+*   **Repeat brief impulses (`10×` every `150 ms`):** Because world planning
+samples incoming text at step boundaries (`4` frames per step at `24 fps`),
+sending a one-off action prompt `10` times at `150 ms` intervals (`~1.5s`)
+ensures the next planning window picks it up reliably. Enforce a `~2 second`
+client cooldown before firing a conflicting prompt.
+*   **Spoken character dialogue:** Wrap speech in quotation marks—for example,
+`"\"What vintage would you recommend?\""`—when facing a character in the
+scene.
+*   **Keep edits in-world:** Describe continuous physical changes inside the
+current view rather than requesting camera hard cuts (`"cut to aerial view"`),
+which destabilize spatial continuity.
+### 4. End vs. detach a session (`complete`, `cancel`, `detach`)  {% id="ending-sessions" %}
+Understanding the difference between local disconnection and server completion
+prevents unexpected token charges:
+*   `await session.complete()`: Sends
+`interaction.complete`, stops server-side world generation and token
+billing, and emits a terminal `interaction.completed` event on `receive()`.
+**Always call `complete()` when the user finishes a session.**
+*   `await session.cancel()`: Immediately aborts
+server-side generation (`interaction.cancel`).
+*   `session.detach()` / exiting Python's `async with`: Sends
+`interaction.disconnect` and closes the local socket **without** explicitly
+completing the server-side interaction. Because Genie 4 does not support
+session resumption, never rely on `detach()` to pause, resume, or stop
+billing—always call `complete()` or `cancel()`.
+## Decoding WebSocket media streams  {% id="decoding-stream" %}
+When connected over WebSockets (`Python` or `JavaScript` with
+`{ transport: 'websocket' }`), iterate over `receive()` (only one active
+`receive()` iterator is permitted per connection). Media arrives in `step.delta`
+events:
+*   **Video (`event.delta.type === "video"`):** Each delta carries a single
+base64-encoded `image/jpeg` frame at `24 fps`. In browsers, assign a
+monotonically increasing local frame counter as deltas arrive, decode onto a
+`<canvas>` with `createImageBitmap`, and discard any frame whose counter is
+lower than the latest rendered frame so slower decodes never overwrite newer
+frames.
+*   **Audio (`event.delta.type === "audio"`):** Base64-encoded raw signed
+16-bit little-endian stereo PCM (`audio/l16`, `48,000 Hz`, `2` channels
+interleaved `[L0, R0, L1, R1, ...]`). Schedule decoded buffers gaplessly on
+a `48000 Hz` `AudioContext` in browsers or write directly to a 2-channel,
+2-byte-sample-width, `48000 Hz` WAV container in Python.
+```javascript
+// Browser WebSocket PCM audio + JPEG canvas renderer
+const audioCtx = new AudioContext({ sampleRate: 48000 });
+let nextPlayTime = 0;
+let videoSeq = 0;
+let latestRenderedSeq = 0;
+for await (const event of session.receive()) {
+if (event.event_type !== 'step.delta' || !event.delta?.data) continue;
+if (event.delta.type === 'video') {
+const seq = ++videoSeq;
+const bytes = Uint8Array.from(atob(event.delta.data), (c) =>
+c.charCodeAt(0)
+);
+createImageBitmap(new Blob([bytes], { type: 'image/jpeg' }))
+.then((bitmap) => {
+if (seq > latestRenderedSeq) {
+latestRenderedSeq = seq;
+canvasCtx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+}
+bitmap.close();
+})
+.catch(console.error);
+} else if (event.delta.type === 'audio') {
+const bytes = Uint8Array.from(atob(event.delta.data), (c) =>
+c.charCodeAt(0)
+);
+const int16 = new Int16Array(
+bytes.buffer,
+bytes.byteOffset,
+bytes.byteLength / 2
+);
+const frameCount = Math.floor(int16.length / 2);
+const buffer = audioCtx.createBuffer(2, frameCount, 48000);
+const left = buffer.getChannelData(0);
+const right = buffer.getChannelData(1);
+for (let i = 0; i < frameCount; i++) {
+left[i] = int16[i * 2] / 32768;
+right[i] = int16[i * 2 + 1] / 32768;
+}
+const source = audioCtx.createBufferSource();
+source.buffer = buffer;
+source.connect(audioCtx.destination);
+const startAt = Math.max(audioCtx.currentTime + 0.04, nextPlayTime);
+source.start(startAt);
+nextPlayTime = startAt + buffer.duration;
+}
+}
+```
+## Choosing the right video or live model  {% id="choose-a-model" %}
+{% table %}
+* Use case
+* Recommended model
+* API surface
+---
+* Real-time steerable worlds, playable visual prototypes, interactive spatial exploration (`24 fps` live stream)
+* [**Genie 4** (`genie-4`)](/docs/models/genie-4)
+* [Interactions API](/docs/genie) (`interactions.connect` over WebRTC / WebSocket)
+---
+* Offline clip generation (`3s-15s`), multi-turn video editing, video extension up to `30s`, `1080p`/`4K` upsampling, up to 6 reference images
+* [**Gemini Omni 1.2 Flash** (`gemini-omni-1.2-flash`)](/docs/models/gemini-omni-flash)
+* [Interactions API](/docs/omni) (`interactions.create`)
+---
+* Real-time voice agents, bidirectional microphone/camera understanding, tool calling, Google Search grounding
+* [**Gemini 3.8 Live** (`gemini-3.8-live`)](/docs/models/gemini-3.8-live)
+* [Live API](/docs/live-api) (`live.connect`)
+{% /table %}
+## Limitations  {% id="limitations" %}
+Design your interactive experience around Genie 4's real-time world-model
+constraints:
+*   **Short-horizon object permanence:** Genie 4 simulates frames over a rolling
+temporal window rather than maintaining a persistent 3D scene graph. Looking
+away from an object (`8+ seconds`) or turning `360 degrees` can cause
+landmarks, doors, or buttons to shift or reset, and visual stability may
+degrade past `60-90 seconds` (hard cap `120 seconds`).
+*   **Two-speed responsiveness:** Native `WASD` and arrow-key actions take
+effect within `~0.2-0.5s`, whereas mid-session text `input` prompts pass
+through world planning and take `~1-2s` to appear on screen.
+*   **Fixed `16:9` output and regional serving footprint:** Output streams at
+`1280x720` (`720p`, `16:9`, `24 fps`) from data centers in the United
+States, Western Europe, and Japan. Portrait aspect ratios (`9:16`) and
+configurable frame rates are not supported, and connections outside North
+America, Western and Central Europe, and East Asia experience higher
+steering latency and potentially lower frame rates.
+*   **No live microphone/webcam input or tool calling:** Genie 4 accepts text,
+a single `16:9` startup image, and keyboard/camera `user_action` events. It
+does not accept live user audio or video streams, and does not support
+function calling, Google Search grounding, structured outputs, or session
+resumption across completed interactions.
+*   **Safety and recitation filters:** Prompts or reference images containing
+identifiable real people, public figures, or copyrighted brand IP can be
+blocked at startup or terminate an active stream mid-session.
+*   **Readable text and exact counts:** Signs, gauges, and clocks deform over
+time, and exact object counts drift across camera pans.
+## What's next  {% id="whats-next" %}
+*   Learn the 5 tested world-design patterns in the
+[Genie 4 prompt and controls guide](/docs/genie-prompting).
+*   Check specifications on the [Genie 4 model page](/docs/models/genie-4).
+*   Review [Genie 4 pricing](/docs/pricing#genie-4) and concurrent session
+[rate limits](/docs/rate-limits#genie-4).

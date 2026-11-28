@@ -1,165 +1,54 @@
 {
   "schema": "why-ladder/1",
-  "question": "Why did iZotope build Nectar 5 so a producer can click a sung word to add an effect, and let an AI build the vocal chain?",
+  "question": "Why did iZotope build Nectar 5 around software that reads a vocal's words and listens to its sound?",
   "rungs": [
-    {
-      "n": 1,
-      "question": "Why does Moments turn a sung vocal into lyrics at all?",
-      "answer": "So small, word-sized effects, such as a delay throw on the last word of a chorus, can be added by selecting the word instead of drawing automation. iZotope says these details tend to take an hour of automation tweaking; MusicRadar describes Moments as a way to add them without getting into automation across several plugins.",
-      "evidence": [
-        {
-          "url": "https://izotope.com/community/blog/introducing-izotope-nectar-5",
-          "domain": "izotope.com",
-          "date": "2026-11-23",
-          "quote": "Some of the best vocal details are tiny: a delay throw on the last word of the chorus, a harmony that shows up for one line, a reverse swell into the hook. They're also the ones that tend to take an hour of automation tweaking."
-        },
-        {
-          "url": "https://www.musicradar.com/music-tech/izotopes-nectar-5-introduces-a-clever-new-way-to-add-effects-to-vocals-one-word-at-a-time",
-          "domain": "www.musicradar.com",
-          "date": "2026-11-24",
-          "quote": "it’s a fast and intuitive way to spice up a vocal with effects without getting into the weeds with automation across multiple plugins."
-        },
-        {
-          "url": "https://docs.izotope.com/nectar5/docs/moments/",
-          "domain": "docs.izotope.com",
-          "date": "2026-11-17",
-          "quote": "There’s no hunting through the waveform for the right syllable and no juggling of automation lanes across several plugins: pick the words, pick the effect, and play it back."
-        }
-      ],
-      "strength": "documented",
-      "counter": {
-        "text": "The word-click route rests on the transcript, and iZotope's manual says it can be wrong: \"Transcription won’t always spell every word the way you would, especially in a sung vocal.\" The producer corrects words by hand. MusicRadar's account follows iZotope's framing closely and puts \"industry-first\" in quotation marks as iZotope's claim."
-      },
-      "mechanism_type": "the workflow",
-      "stop": null
-    },
-    {
-      "n": 2,
-      "question": "Why can a transcript replace the automation?",
-      "answer": "Moments is an ARA plugin: it reads the whole recorded clip on the DAW's timeline, not only the audio playing at that moment. So it can transcribe the take on the computer and tie each word to its stretch of audio. Highlighting text selects that audio, and the effect is applied to just that part.",
-      "evidence": [
-        {
-          "url": "https://www.musicradar.com/music-tech/izotopes-nectar-5-introduces-a-clever-new-way-to-add-effects-to-vocals-one-word-at-a-time",
-          "domain": "www.musicradar.com",
-          "date": "2026-11-24",
-          "quote": "(Moments is an ARA plugin, meaning that it can edit audio on the timeline directly, rather than working on a stream of real-time audio that’s coming in through the DAW’s playback.)"
-        },
-        {
-          "url": "https://docs.izotope.com/nectar5/docs/moments/",
-          "domain": "docs.izotope.com",
-          "date": "2026-11-17",
-          "quote": "Moments works on audio clips through ARA, which lets it read the whole clip, not just the audio playing at the moment."
-        },
-        {
-          "url": "https://docs.izotope.com/nectar5/docs/moments/",
-          "domain": "docs.izotope.com",
-          "date": "2026-11-17",
-          "quote": "Transcription runs on your computer."
-        },
-        {
-          "url": "https://izotope.com/community/blog/introducing-izotope-nectar-5",
-          "domain": "izotope.com",
-          "date": "2026-11-23",
-          "quote": "It transcribes your vocal right on your DAW's timeline, so you can highlight words the same way you'd select text in a document, nudge the edges with waveform handles, and add an effect to just that part."
-        }
-      ],
-      "strength": "documented",
-      "counter": {
-        "text": "The route depends on the host. The manual says: \"If your DAW loads Moments as an ordinary effect instead of an ARA extension, Moments can’t hear your audio and shows a notice.\" The release notes list six ARA hosts (\"Nectar Moments ARA: Logic (Rosetta), Pro Tools, Cubase, Nuendo, Fender Studio Pro, Reaper\") against fourteen DAWs and editors for Nectar 5 as a whole. Outside those hosts the automation route remains."
-      },
-      "mechanism_type": "the plugin interface (ARA)",
-      "stop": null
-    },
-    {
-      "n": 3,
-      "question": "Why does Nectar 5 also hand the chain itself to an AI?",
-      "answer": "The same aim as Moments, applied to set-up: cutting the time from a raw take to a finished-sounding vocal. Vocal Assistant listens to part of the vocal and builds a processing chain for it in one click, as a starting point. Nectar 5 adds Custom Flow to steer it with style, register, key and an a cappella reference.",
-      "evidence": [
-        {
-          "url": "https://www.musicradar.com/music-tech/izotopes-nectar-5-introduces-a-clever-new-way-to-add-effects-to-vocals-one-word-at-a-time",
-          "domain": "www.musicradar.com",
-          "date": "2026-11-24",
-          "quote": "This AI-powered mixing tool listens to a portion of your vocal and designs a customized processing chain to match it."
-        },
-        {
-          "url": "https://www.izotope.com/en/products/nectar.html",
-          "domain": "www.izotope.com",
-          "date": "2026-11-27",
-          "quote": "Skip the setup. Just like magic. Vocal Assistant analyses your sound and builds a tailored processing chain in seconds. Now including new modules from Nectar 5."
-        },
-        {
-          "url": "https://docs.izotope.com/nectar5/docs/vocal-assistant/",
-          "domain": "docs.izotope.com",
-          "date": "2026-11-16",
-          "quote": "Vocal Assistant listens to your vocal and sets up your whole chain for it, from EQ and compression to pitch correction and space."
-        }
-      ],
-      "strength": "documented",
-      "counter": {
-        "text": "None found against what the Assistant does, within the seven saved pages. Neither site reports an independent test of its results: MusicRadar's line that it has \"been calibrated to deliver superior results\" restates the maker's claim, and iZotope's manual frames the output as a starting point: \"Vocal Assistant’s chain is a starting point.\""
-      },
-      "mechanism_type": "the model",
-      "stop": null
-    },
-    {
-      "n": 4,
-      "question": "Why does Vocal Assistant set the chain it sets?",
-      "answer": "By iZotope's manual, it listens for 8 seconds by default, then moves the vocal's EQ toward a target: a built-in one for the vocal's style and register, or an a cappella the producer loads. It sets thresholds on a fixed FET-into-Opto compressor chain. Only the maker describes the targets; MusicRadar confirms the reference option alone.",
-      "evidence": [
-        {
-          "url": "https://docs.izotope.com/nectar5/docs/vocal-assistant/",
-          "domain": "docs.izotope.com",
-          "date": "2026-11-16",
-          "quote": "Equalizer: a high-pass filter set for the voice’s register, and gentle bell bands that move your vocal’s tone toward its target: the built-in target for its style and register, or your reference."
-        },
-        {
-          "url": "https://docs.izotope.com/nectar5/docs/vocal-assistant/",
-          "domain": "docs.izotope.com",
-          "date": "2026-11-16",
-          "quote": "Serial Compressor: the classic FET-into-Opto vocal chain, followed by a Limiter."
-        },
-        {
-          "url": "https://www.musicradar.com/music-tech/izotopes-nectar-5-introduces-a-clever-new-way-to-add-effects-to-vocals-one-word-at-a-time",
-          "domain": "www.musicradar.com",
-          "date": "2026-11-24",
-          "quote": "Here you can choose to disable certain modules, upload an a capella reference recording and adjust two macro controls that tweak the overall intensity and spaciousness of the results."
-        }
-      ],
-      "strength": "inferred",
-      "counter": {
-        "text": "None found that contradicts the manual, within the seven saved pages. The manual's \"tailored\" chain is partly fixed: the compressor order is the same FET-into-Opto chain each time, with only thresholds set for the vocal, and a spoken vocal gets no Dimension, Delay or Reverb."
-      },
-      "mechanism_type": "the model",
-      "stop": null
-    },
-    {
-      "n": 5,
-      "question": "Why are the built-in targets what they are?",
-      "answer": "The sources do not say. iZotope states only that the Assistant is trained on pro vocal standards and has been retuned. No page read names the training data, whose vocals set the built-in targets, what counts as a pro standard, or what changed in the retuning.",
-      "evidence": [
-        {
-          "url": "https://www.izotope.com/en/products/nectar.html",
-          "domain": "www.izotope.com",
-          "date": "2026-11-27",
-          "quote": "Trained on pro vocal standards and retuned for even better results, Vocal Assistant can set up your whole chain in one click."
-        },
-        {
-          "url": "https://docs.izotope.com/nectar5/docs/vocal-assistant/",
-          "domain": "docs.izotope.com",
-          "date": "2026-11-16",
-          "quote": "Trained on pro vocal standards, it gives you a tailored starting point in seconds, so you can spend your time dialing in your own sound."
-        }
-      ],
-      "strength": "open",
-      "counter": {
-        "text": "None found; scope: the iZotope product page, launch post, release notes, the Nectar 5 manual's home, Moments and Vocal Assistant pages, and the MusicRadar article. None describes the training data or method."
-      },
-      "mechanism_type": "the model",
-      "stop": "evidence_exhausted"
-    }
+    {"n": 1,
+     "question": "Why let a producer put an effect on a single word by selecting it in a transcript?",
+     "answer": "Effects on one word or one line usually mean drawing automation, often across several plug-ins, which iZotope says can take an hour. Selecting the word as text replaces that step.",
+     "evidence": [
+       {"url": "https://izotope.com/community/blog/introducing-izotope-nectar-5", "domain": "izotope.com", "date": "2026-11-23", "quote": "They're also the ones that tend to take an hour of automation tweaking."},
+       {"url": "https://www.musicradar.com/music-tech/izotopes-nectar-5-introduces-a-clever-new-way-to-add-effects-to-vocals-one-word-at-a-time", "domain": "musicradar.com", "date": "2026-11-24", "quote": "it’s a fast and intuitive way to spice up a vocal with effects without getting into the weeds with automation across multiple plugins"}
+     ],
+     "strength": "documented",
+     "counter": {"text": "iZotope's own documentation says the transcript can be wrong and needs fixing by hand: \"Transcription won’t always spell every word the way you would, especially in a sung vocal.\" (docs.izotope.com, 2026-11-17). Scope: the five given pages only."},
+     "mechanism_type": "workflow",
+     "stop": null},
+    {"n": 2,
+     "question": "Why can a plug-in work from the words of a whole take at all?",
+     "answer": "Moments runs through ARA, which lets it read the whole audio clip on the timeline rather than only the sound playing at that moment. It transcribes that clip on the producer's own computer and links each word to its place in time.",
+     "evidence": [
+       {"url": "https://www.musicradar.com/music-tech/izotopes-nectar-5-introduces-a-clever-new-way-to-add-effects-to-vocals-one-word-at-a-time", "domain": "musicradar.com", "date": "2026-11-24", "quote": "Moments is an ARA plugin, meaning that it can edit audio on the timeline directly, rather than working on a stream of real-time audio that’s coming in through the DAW’s playback."},
+       {"url": "https://docs.izotope.com/nectar5/docs/moments/", "domain": "docs.izotope.com", "date": "2026-11-17", "quote": "Moments works on audio clips through ARA, which lets it read the whole clip, not just the audio playing at the moment."}
+     ],
+     "strength": "documented",
+     "counter": {"text": "It only works where the DAW supports ARA, with limits: \"in Logic Pro, ARA currently runs on Intel or under Rosetta only, and in REAPER, ARA works in the VST3 format.\" (izotope.com, 2026-11-23). Loaded as an ordinary effect, the docs say Moments \"can’t hear your audio\". Scope: the five given pages only."},
+     "mechanism_type": "technical protocol (ARA clip access plus on-device transcription)",
+     "stop": null},
+    {"n": 3,
+     "question": "Why does the Vocal Assistant listen to the vocal before building a chain?",
+     "answer": "It listens to a stretch of the vocal, eight seconds by default, to learn its tone and dynamics, then sets up a whole processing chain aimed at a target for that style or a reference. iZotope frames the result as a fast starting point the producer then adjusts.",
+     "evidence": [
+       {"url": "https://www.musicradar.com/music-tech/izotopes-nectar-5-introduces-a-clever-new-way-to-add-effects-to-vocals-one-word-at-a-time", "domain": "musicradar.com", "date": "2026-11-24", "quote": "This AI-powered mixing tool listens to a portion of your vocal and designs a customized processing chain to match it."},
+       {"url": "https://docs.izotope.com/nectar5/docs/vocal-assistant/", "domain": "docs.izotope.com", "date": "2026-11-16", "quote": "Trained on pro vocal standards, it gives you a tailored starting point in seconds, so you can spend your time dialing in your own sound."}
+     ],
+     "strength": "documented",
+     "counter": {"text": "iZotope added a manual Custom Flow because the one-click result is not always where a producer wants to land: \"But sometimes you already know where you want to end up.\" (izotope.com, 2026-11-23). What \"pro vocal standards\" means is not stated on any given page. Scope: the five given pages only."},
+     "mechanism_type": "the model (listen, analyse, set a chain toward a target)",
+     "stop": null},
+    {"n": 4,
+     "question": "Why make these tools the headline of a paid release?",
+     "answer": "Nectar 5 sells at $179 until 7 December, then $249, with upgrade prices for existing owners. Moments comes only in full Nectar 5, not the cheaper Elements tier. The pages show the price and the tier split, not iZotope's reasons for drawing the line there.",
+     "evidence": [
+       {"url": "https://www.musicradar.com/music-tech/izotopes-nectar-5-introduces-a-clever-new-way-to-add-effects-to-vocals-one-word-at-a-time", "domain": "musicradar.com", "date": "2026-11-24", "quote": "iZotope Nectar 5 is available now at an introductory price of $179 as part of its Cyber Season sale through December 7, after which it’ll cost $249. Upgrade and crossgrade pricing is available."},
+       {"url": "https://izotope.com/community/blog/introducing-izotope-nectar-5", "domain": "izotope.com", "date": "2026-11-23", "quote": "Everything in Elements, plus 12 full modules and 2 mini-modules, 14 component plugins, Moments, Breath Control, and Melodyne 5 essential"}
+     ],
+     "strength": "inferred",
+     "counter": {"text": "MusicRadar does not mention the Elements tier, so the tier split rests on iZotope alone. No source states why Moments was kept out of Elements. Scope: the five given pages only."},
+     "mechanism_type": "the money (tiered pricing and upgrades)",
+     "stop": "motive_not_mechanism"}
   ],
   "landing": {
-    "shows": "Both features aim at the same thing: removing setup work from vocal mixing. Moments swaps automation lanes for selecting words in a transcript, which works because ARA gives it the recorded audio on the timeline. Vocal Assistant swaps building a chain by hand for one click. The Assistant steers each vocal toward built-in targets for its style and register, and what those targets were built from is not in any page read.",
-    "open_question": "If every vocal is nudged toward the same built-in target for its style and register, made from unnamed pro vocal standards, whose sound is a producer starting from?"
+    "shows": "The sources show how the two tools work: Moments uses ARA to read a whole take, transcribes it on the producer's computer and ties effects to words, replacing automation that iZotope says can take an hour; Vocal Assistant listens for a few seconds and sets a full chain as a starting point. They show the price and that Moments sits only in the higher tier, but not why iZotope split it that way.",
+    "open_question": "When a plug-in can find every word in a take as text, what part of a vocal producer's job is still done by ear?"
   }
 }

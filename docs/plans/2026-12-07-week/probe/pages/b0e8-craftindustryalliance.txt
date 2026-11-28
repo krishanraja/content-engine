@@ -1,0 +1,9 @@
+Source: https://craftindustryalliance.org/etsys-ai-problem
+Fetched 2026-11-28 through WebFetch, which declined to return the text verbatim and gave only a summary. Nothing below is word for word; it is not used as evidence.
+Headline (as reported): Etsy's AI Problem. Author: Grace Dobush. Published: June 11, 2024.
+Note: this page is about an older Etsy policy matter (selling AI-generated products, 2024) and does not concern the 2026 AI training terms. Left out of the ladder.
+
+Summary returned by the fetch tool (not word for word):
+- Etsy was investing in AI for search and delivery-date tools but had no clear policy on selling AI-generated products; it said it was updating its Handmade Policy.
+- AI-generated crochet patterns and digital art were common in search; illustrators reported being undercut.
+- Etsy removed four times as many listings for Handmade Policy violations in 2023 as in 2022.

@@ -1,0 +1,49 @@
+{
+  "schema": "why-ladder/1",
+  "question": "Why did 73 in 100 AI answers recommend Man's Search for Meaning as the one book that will change your life?",
+  "rungs": [
+    {
+      "n": 1,
+      "question": "Why did so many separate answers name the same book?",
+      "answer": "Each fresh chat, with no system prompt and nothing about the asker, returns the model's own favourite, and most of the 65 models share one favourite. The published answers file counts 472 of 649 book answers as Man's Search for Meaning. Other researchers report the same pattern: one model repeats itself, and different models answer alike.",
+      "evidence": [
+        {"url": "https://a90.com/experiments/same-advice/", "domain": "a90.com", "date": "2026-11-20", "quote": "In one chat, every AI looked original. In new chats, every AI gave the same book."},
+        {"url": "https://a90.com/experiments/same-advice/answers.csv", "domain": "a90.com", "date": "2026-11-20", "quote": "Recommend one book that will change my life. Reply with the title and author only.,Man's Search for Meaning by Viktor E. Frankl,man's search for meaning,"},
+        {"url": "https://arxiv.org/abs/2510.22954", "domain": "arxiv.org", "date": "2026-10-06", "quote": "(1) intra-model repetition, where a single model consistently generates similar responses, and more so (2) inter-model homogeneity, where different models produce strikingly similar outputs."}
+      ],
+      "strength": "documented",
+      "counter": {"text": "The A90 page itself limits the finding: \"Not everything collapses. For a movie, dinner, a baby name or names for testimonials, no single answer reaches a third of replies\", and \"Models were reached through one provider each and may answer differently elsewhere, or after an update.\" Inside one conversation the same model gave eight different books."},
+      "mechanism_type": "model defaults: the most likely answer returned in every fresh chat",
+      "stop": null
+    },
+    {
+      "n": 2,
+      "question": "Why do the models have a favourite answer at all?",
+      "answer": "The study traces the favourite to tuning after pretraining. Measured stage by stage in one open model, the raw internet-trained version answered almost at random, and the favourite appeared at supervised fine-tuning, where a model learns to copy example answers. An earlier study likewise found tuned models narrower than their base models.",
+      "evidence": [
+        {"url": "https://a90.com/experiments/same-advice/", "domain": "a90.com", "date": "2026-11-20", "quote": "The favorite arrives in a single step, supervised fine-tuning, where a model learns to copy example answers, many written by other AIs."},
+        {"url": "https://arxiv.org/abs/2505.00047", "domain": "arxiv.org", "date": "2025-09-13", "quote": "In each case, aligned models tend towards narrow behaviors that result in distinct disadvantages, for instance, preferring to generate \"7\" over other uniformly random numbers"}
+      ],
+      "strength": "documented",
+      "counter": {"text": "The training-stage measurement was made on the random-number question, not the book question, and in one small open model (OLMo 2, 1B) plus two Qwen models; the page says \"From the training data of one small open model. The large labs don't publish theirs.\" Neither source measures the book favourite stage by stage."},
+      "mechanism_type": "training pipeline: supervised fine-tuning on example answers",
+      "stop": null
+    },
+    {
+      "n": 3,
+      "question": "Why would models from 30 different companies end up with the same favourite?",
+      "answer": "The study points to shared training material: fine-tuning sets contain answers written by other AIs, so one model's habits can pass into another's. It shows this for invented names in one public dataset, where most Vances and Marisols were written by ChatGPT. Whether the same route explains the shared book is not measured.",
+      "evidence": [
+        {"url": "https://a90.com/experiments/same-advice/", "domain": "a90.com", "date": "2026-11-20", "quote": "556 of 573 Vances and 132 of 136 Marisols in the set were written by ChatGPT. One model's imagination, passed on as another's homework."}
+      ],
+      "strength": "inferred",
+      "counter": {"text": "The same page reports that some favourites are not in the training data at all: \"The favorite number and the age 34 are not in it\", and warns \"Likeness is not ancestry. Two models that answer alike may share training data rather than a parent.\" Nothing read checks the fine-tuning data for the book. Scope: the A90 page, its answers file and two arXiv papers it cites; the How to AI post could not be read."},
+      "mechanism_type": "training data: one model's outputs reused as another's fine-tuning examples",
+      "stop": "evidence_exhausted"
+    }
+  ],
+  "landing": {
+    "shows": "The 73 in 100 figure matches the published answers file (472 of 649). The sameness comes from each fresh chat returning a model's default, a default the study traces to fine-tuning in one small open model, with AI-written training examples shown passing names between labs. Nothing read explains why that particular book became the shared default.",
+    "open_question": "If the shared favourite is learned from example answers, whose examples put Man's Search for Meaning at the top for so many different companies' models?"
+  }
+}

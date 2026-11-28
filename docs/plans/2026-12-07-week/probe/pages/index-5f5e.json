@@ -1,0 +1,7 @@
+{
+  "https://a90.com/experiments/same-advice/": {"file": "5f5e-a90-same-advice.txt"},
+  "https://a90.com/experiments/same-advice/answers.csv": {"file": "5f5e-a90-answers-csv-book.txt"},
+  "https://arxiv.org/abs/2505.00047": {"file": "5f5e-arxiv-west-potts.txt"},
+  "https://arxiv.org/abs/2510.22954": {"file": "5f5e-arxiv-hivemind.txt"},
+  "https://ruben.substack.com/p/73": {"unreadable": "Cloudflare challenge page, then HTTP 403"}
+}

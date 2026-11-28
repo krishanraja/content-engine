@@ -370,5 +370,134 @@
  },
  "https://indiantelevision.com/iworld/prime-video-introduces-ai-powered-progressive-actions-for-champions-league/": {
   "file": "indiantv-prime-progressive-actions.txt"
+ },
+ "https://blog.google/innovation-and-ai/technology/developers-tools/genie-4-in-gemini-api/": {
+  "file": "5675-keyword-gemini-api.txt"
+ },
+ "https://ppc.land/google-charges-developers-about-10-cents-a-second-for-genie-4-worlds/": {
+  "file": "5675-ppcland.txt"
+ },
+ "https://fourweekmba.com/ai-genie-4-hits-the-gemini-api-at-6-05-a-minute-363-an-hour/": {
+  "unreadable": "HTTP 403, access refused"
+ },
+ "https://alphasignal.ai/news/google-opens-genie-4-world-model-to-developers-at-6-per-minute": {
+  "file": "5675-alphasignal.txt"
+ },
+ "https://tech-insider.org/google-genie-4-world-model-real-time-gaming-2026/": {
+  "unreadable": "HTTP 403, access refused"
+ },
+ "https://omidsaffari.com/blog/genie-4-api": {
+  "file": "5675-omidsaffari.txt"
+ },
+ "https://aistudio.google.com/docs/genie": {
+  "file": "5675-aistudio-genie-docs.txt"
+ },
+ "https://aistudio.google.com/docs/models/genie-4": {
+  "file": "5675-aistudio-genie4-model.txt"
+ },
+ "https://blog.google/innovation-and-ai/models-and-research/google-deepmind/genie-4-now-available-project-genie/": {
+  "file": "5675-keyword-project-genie.txt"
+ },
+ "https://deepmind.google/blog/genie-4-a-new-generation-of-world-simulation/": {
+  "file": "5675-deepmind-genie4.txt"
+ },
+ "https://www.musicbusinessworldwide.com/80-of-people-want-ai-music-labeled-says-deezer-ipsos-survey-as-37-of-americans-now-see-ai-as-a-valuable-tool-for-musicians-down-from-54-in-2025/": {
+  "file": "581d-mbw.txt"
+ },
+ "https://www.musicweek.com/digital/read/deezer-ipsos-survey-reveals-1-in-2-users-now-have-ai-music-in-their-playlists/095505": {
+  "file": "581d-musicweek.txt"
+ },
+ "https://a90.com/experiments/same-advice/": {
+  "file": "5f5e-a90-same-advice.txt"
+ },
+ "https://a90.com/experiments/same-advice/answers.csv": {
+  "file": "5f5e-a90-answers-csv-book.txt"
+ },
+ "https://arxiv.org/abs/2505.00047": {
+  "file": "5f5e-arxiv-west-potts.txt"
+ },
+ "https://arxiv.org/abs/2510.22954": {
+  "file": "5f5e-arxiv-hivemind.txt"
+ },
+ "https://ruben.substack.com/p/73": {
+  "unreadable": "Cloudflare challenge page, then HTTP 403"
+ },
+ "https://www.webull.com/news/15935549021406208": {
+  "file": "9a26-webull-transcript.txt"
+ },
+ "https://www.valueaddedresource.net/etsy-expands-ai-training-rights/": {
+  "file": "b0e8-valueaddedresource.txt"
+ },
+ "https://creativebloq.com/news/artists-and-creators-are-leaving-etsy-in-droves-over-its-new-ai-policy": {
+  "file": "b0e8-creativebloq.txt"
+ },
+ "https://cybernews.com/ai-news/etsy-ai-training-seller-data/": {
+  "unreadable": "HTTP 403, Cloudflare challenge"
+ },
+ "https://community.etsy.com/forum/announcements-290/topic/our-recent-terms-of-use-update-192097/": {
+  "unreadable": "JavaScript shell, no post text in HTML"
+ },
+ "https://www.tutkit.com/en/news/1127-etsy-ai-training-terms-of-use": {
+  "file": "b0e8-tutkit.txt"
+ },
+ "https://www.ecommercebytes.com/30a9": {
+  "unreadable": "page is the site's closure notice, no Etsy article text"
+ },
+ "https://www.digitaltrends.com/?p=6010178": {
+  "file": "b0e8-digitaltrends.txt"
+ },
+ "https://www.digitaltrends.com/computing/etsy-sellers-are-quitting-as-ai-slop-floods-the-handmade-marketplace/": {
+  "file": "b0e8-digitaltrends.txt"
+ },
+ "https://tech-insider.org/au/?p=3402": {
+  "unreadable": "HTTP 403 Forbidden"
+ },
+ "https://craftindustryalliance.org/etsys-ai-problem": {
+  "file": "b0e8-craftindustryalliance.txt"
+ },
+ "https://locusmag.com/2023/01/tor-ai-controversy": {
+  "file": "b38a-locus-tor-ai.txt"
+ },
+ "https://www.publishersweekly.com/pw/print/20240226/94388-tor-books-imprint-bramble-criticized-for-use-of-ai-generated-art-in-gothikana-cover-design.html": {
+  "file": "b38a-pw-gothikana.txt"
+ },
+ "https://www.musicbusinessworldwide.com/suno-launches-bridge-an-app-that-drops-ai-stems-into-ableton-live/": {
+  "file": "cf6e-mbw.txt"
+ },
+ "https://help.suno.com/en/articles/14695169": {
+  "file": "cf6e-suno-help.txt"
+ },
+ "https://suno.com/bridge": {
+  "file": "cf6e-suno-bridge.txt"
+ },
+ "https://blog.dubspot.com/suno-bridge-2026": {
+  "file": "cf6e-dubspot.txt"
+ },
+ "https://suno.com/blog/introducing-bridge": {
+  "file": "cf6e-suno-blog.txt"
+ },
+ "https://suno.com/terms": {
+  "file": "cf6e-suno-terms.txt"
+ },
+ "https://techcrunch.com/2026/11/17/spotifys-new-tool-aims-to-stop-deepfakes-from-being-attributed-to-real-artists/": {
+  "unreadable": "Cloudflare refused the fetch; only a summary came back"
+ },
+ "https://digitaltrends.com/home-theater/spotifys-new-tool-gives-every-artist-a-way-to-keep-someone-elses-music-off-their-page": {
+  "file": "f233-digitaltrends.txt"
+ },
+ "https://www.musicbusinessworldwide.com/amid-rise-of-ai-deepfakes-spotify-to-let-artists-vet-releases-before-they-appear-on-their-profiles": {
+  "file": "f233-mbw-beta.txt"
+ },
+ "https://www.techradar.com/audio/spotify/spotify-takes-its-first-major-step-in-tackling-ai-slop-now-artists-can-review-and-approve-what-music-appears-on-their-profile": {
+  "file": "f233-techradar-beta.txt"
+ },
+ "https://support.spotify.com/se/artists/article/artist-profile-protection/": {
+  "file": "f233-spotify-support-se.txt"
+ },
+ "https://support.spotify.com/us/artists/article/artist-profile-protection/": {
+  "file": "f233-spotify-support-us.txt"
+ },
+ "https://artists.spotify.com/en/blog/introducing-artist-profile-protection": {
+  "file": "f233-spotify-blog.txt"
  }
 }
