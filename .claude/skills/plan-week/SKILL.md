@@ -121,7 +121,7 @@ opinion of their own." Every idea passes six tests before it reaches him:
 
 **The beat** (Krish, 2026-11-24): creative sectors and the economics of AI in
 them, never governance or breaches. Rows: `config/beat.json` (read, never
-copy); his words, `off_beat`, `lens` and the trend every idea follows (`trend`, from the 14 Dec board): `references/beat.md`.
+copy); his words, `off_beat` and `lens`: `references/beat.md`.
 
 **His asks.** Every card he typed words on in the 45 days before the week
 (`why_here`, a typed `why_like`, `would_do`), dismissed, style-only or

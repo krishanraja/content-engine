@@ -1396,8 +1396,11 @@ A subchannel mandate with its old prediction close taken out.
 - `function chainFamily(r: { unit_kind: string; unit_key: string }): string | null`
 - `function weekStartKey(d: Date): string`
 - `interface ChainWeek`
+- `const OWN_ALLOWANCES: Record<string, OwnAllowance>`
+- `async function runSpend(prefix: string, since: string): Promise<number | null>`
 - `function chainWeekSum(rows: Array<{ unit_kind: string; unit_key: string; day: string; usd: number | string }>, week: st…`
 - `async function chainWeekSpend(now: Date = new Date()): Promise<ChainWeek | null>`
+- `function withOutside(w: ChainWeek, outside: number): ChainWeek`
 
 ### `apps/control-plane/api/_mission.ts`
 
@@ -4744,12 +4747,17 @@ After the daily edition is saved, makeyourmindup.ai is asked to tell IndexNow th
 
 - `function outletCount(rows: Candidate[]): number`
 - `function shortlist(rows: Candidate[])`
+- `function trendShortlist(rows: Candidate[])`
 - `async function classify(rows: Candidate[]): Promise<Group[]>`
-- `async function writeEdition(rows: Candidate[])`
+- `async function classifyTrends(rows: Candidate[]): Promise<Group[]>`
+- `function hubBudget(week: number | null, edition: number | null, a: { weekly_usd: number; edition_usd?: number } = HUB):…`
+- `async function writeTrendLine(lane: { key: string; label: string }, items: TrendStory[]): Promise<{ moving: string; why…`
+- `type Edition = { drafts: Draft[]; trends: Trend[] }`
+- `async function writeEdition(rows: Candidate[], now: number = Date.now()): Promise<Edition>`
 
 ### `apps/control-plane/lib/hub/feeds.ts`
 
-- `type Feed = { url: string; subsector: string; outlet: string }`
+- `type Feed`
 - `type Candidate`
 - `const feeds: Feed[]`
 - `function onBeat(row: Candidate)`
@@ -4792,6 +4800,8 @@ After the daily edition is saved, makeyourmindup.ai is asked to tell IndexNow th
 - `const sectors`
 - `const stocks`
 - `const validSector = (key: unknown): key is string =>`
+- `const trendLanes: { key: string; label: string; line: string; query: string }[]`
+- `const validTrend = (key: unknown): key is string =>`
 - `const dayMs`
 - `const isoDay = (ms: number) =>`
 - `const userAgent`
@@ -4802,6 +4812,8 @@ After the daily edition is saved, makeyourmindup.ai is asked to tell IndexNow th
 - `type Entity = { name: string; wiki_title: string }`
 - `type Story`
 - `type Draft`
+- `type TrendStory`
+- `type Trend`
 - `type Attention`
 - `type Snapshot`
 - `async function mapLimit<T, U>(rows: T[], limit: number, fn: (row: T) => Promise<U>): Promise<U[]>`
